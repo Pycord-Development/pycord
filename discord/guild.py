@@ -71,6 +71,7 @@ from .invite import Invite
 from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
+from .monetization import Entitlement
 from .permissions import PermissionOverwrite
 from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
@@ -3842,3 +3843,26 @@ class Guild(Hashable):
         """
 
         await self._state.http.delete_auto_moderation_rule(self.id, id, reason=reason)
+
+    async def create_test_entitlement(self, sku: Snowflake) -> Entitlement:
+        """|coro|
+
+        Creates a test entitlement for the guild.
+
+        Parameters
+        ----------
+        sku: :class:`Snowflake`
+            The SKU to create a test entitlement for.
+
+        Returns
+        -------
+        :class:`Entitlement`
+            The created entitlement.
+        """
+        payload = {
+            "sku_id": sku.id,
+            "owner_id": self.id,
+            "owner_type": 1,
+        }
+        data = await self._state.http.create_test_entitlement(self.id, payload)
+        return Entitlement(data=data, state=self._state)

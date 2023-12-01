@@ -69,6 +69,7 @@ if TYPE_CHECKING:
         invite,
         member,
         message,
+        monetization,
         role,
         scheduled_events,
         sticker,
@@ -2882,6 +2883,55 @@ class HTTPClient:
             application_id=application_id,
         )
         return self.request(r, json=payload)
+
+    # Monetization
+
+    def list_skus(
+        self,
+        application_id: Snowflake,
+    ) -> Response[list[monetization.SKU]]:
+        r = Route(
+            "GET",
+            "/applications/{application_id}/skus",
+            application_id=application_id,
+        )
+        return self.request(r)
+    
+    def list_entitlements(
+        self,
+        application_id: Snowflake,
+    ) -> Response[list[monetization.Entitlement]]:
+        r = Route(
+            "GET",
+            "/applications/{application_id}/entitlements",
+            application_id=application_id,
+        )
+        return self.request(r)
+
+    def create_test_entitlement(
+        self,
+        application_id: Snowflake,
+        payload: monetization.CreateTestEntitlementPayload,
+    ) -> Response[monetization.Entitlement]:
+        r = Route(
+            "POST",
+            "/applications/{application_id}/entitlements",
+            application_id=application_id,
+        )
+        return self.request(r, json=payload)
+    
+    def delete_test_entitlement(
+        self,
+        application_id: Snowflake,
+        entitlement_id: Snowflake,
+    ) -> Response[None]:
+        r = Route(
+            "DELETE",
+            "/applications/{application_id}/entitlements/{entitlement_id}",
+            application_id=application_id,
+            entitlement_id=entitlement_id,
+        )
+        return self.request(r)
 
     # Misc
 

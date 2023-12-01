@@ -59,6 +59,7 @@ from .invite import Invite
 from .member import Member
 from .mentions import AllowedMentions
 from .message import Message
+from .monetization import Entitlement
 from .object import Object
 from .partial_emoji import PartialEmoji
 from .raw_models import *
@@ -664,6 +665,18 @@ class ConnectionState:
     def parse_auto_moderation_action_execution(self, data) -> None:
         event = AutoModActionExecutionEvent(self, data)
         self.dispatch("auto_moderation_action_execution", event)
+
+    def parse_entitlement_create(self, data) -> None:
+        event = Entitlement(data=data, state=self)
+        self.dispatch("entitlement_create", event)
+
+    def parse_entitlement_update(self, data) -> None:
+        event = Entitlement(data=data, state=self)
+        self.dispatch("entitlement_update", event)
+
+    def parse_entitlement_delete(self, data) -> None:
+        event = Entitlement(data=data, state=self)
+        self.dispatch("entitlement_delete", event)
 
     def parse_message_create(self, data) -> None:
         channel, _ = self._get_guild_channel(data)

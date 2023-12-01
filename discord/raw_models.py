@@ -749,3 +749,4 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         self.extra = data.get("options")
         self.changes = data.get("changes")
         self.data: AuditLogEntryEvent = data
+

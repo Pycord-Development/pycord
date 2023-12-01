@@ -51,6 +51,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import GuildIterator
 from .mentions import AllowedMentions
+from .monetization import Entitlement, SKU
 from .object import Object
 from .stage_instance import StageInstance
 from .state import ConnectionState
@@ -2000,3 +2001,33 @@ class Client:
             self.application_id, payload
         )
         return [ApplicationRoleConnectionMetadata.from_dict(r) for r in data]
+
+    async def fetch_skus(self) -> list[SKU]:
+        """|coro|
+
+        Fetches the bot's SKUs.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        List[:class:`.SKU`]
+            The bot's SKUs.
+        """
+        data = await self._connection.http.list_skus(self.application_id)
+        return [SKU(data=s, state=self._connection) for s in data]
+    
+    async def fetch_entitlements(self) -> list[Entitlement]:
+        """|coro|
+
+        Fetches the bot's entitlements.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        List[:class:`.Entitlement`]
+            The bot's entitlements.
+        """
+        data = await self._connection.http.list_entitlements(self.application_id)
+        return [Entitlement(data=e, state=self._connection) for e in data]

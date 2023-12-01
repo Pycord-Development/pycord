@@ -32,6 +32,7 @@ import discord.abc
 from .asset import Asset
 from .colour import Colour
 from .flags import PublicUserFlags
+from .monetization import Entitlement
 from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 
 if TYPE_CHECKING:
@@ -578,3 +579,27 @@ class User(BaseUser, discord.abc.Messageable):
         state = self._state
         data: DMChannelPayload = await state.http.start_private_message(self.id)
         return state.add_dm_channel(data)
+
+    async def create_test_entitlement(self, sku: discord.abc.Snowflake) -> Entitlement:
+        """|coro|
+
+        Creates a test entitlement for the user.
+
+        Parameters
+        ----------
+        sku: :class:`Snowflake`
+            The SKU to create a test entitlement for.
+
+        Returns
+        -------
+        :class:`Entitlement`
+            The created entitlement.
+        """
+        payload = {
+            "sku_id": sku.id,
+            "owner_id": self.id,
+            "owner_type": 2,
+        }
+        data = await self._state.http.create_test_entitlement(self.id, payload)
+        return Entitlement(data=data, state=self._state)
+    

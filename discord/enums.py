@@ -656,6 +656,7 @@ class InteractionResponseType(Enum):
     message_update = 7  # for components
     auto_complete_result = 8  # for autocomplete interactions
     modal = 9  # for modal dialogs
+    premium_required = 10 
 
 
 class VideoQualityMode(Enum):
@@ -950,6 +951,19 @@ class ReactionType(Enum):
 
     normal = 0
     burst = 1
+
+
+class SKUType(Enum):
+    """The SKU type"""
+
+    subscription = 5
+    subscription_group = 6
+
+
+class EntitlementType(Enum):
+    """The entitlement type"""
+
+    application_subscription = 8
 
 
 T = TypeVar("T")
