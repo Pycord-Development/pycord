@@ -2896,7 +2896,7 @@ class HTTPClient:
             application_id=application_id,
         )
         return self.request(r)
-    
+
     def list_entitlements(
         self,
         application_id: Snowflake,
@@ -2919,7 +2919,7 @@ class HTTPClient:
             application_id=application_id,
         )
         return self.request(r, json=payload)
-    
+
     def delete_test_entitlement(
         self,
         application_id: Snowflake,

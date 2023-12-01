@@ -25,23 +25,19 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from .enums import SKUType, EntitlementType, try_enum
+from .enums import EntitlementType, SKUType, try_enum
 from .flags import SKUFlags
-from .utils import _get_as_snowflake, parse_time, MISSING
 from .mixins import Hashable
+from .utils import MISSING, _get_as_snowflake, parse_time
 
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from .types.monetization import (
-        SKU as SKUPayload,
-        Entitlement as EntitlementPayload,
-    )
     from .state import ConnectionState
+    from .types.monetization import SKU as SKUPayload
+    from .types.monetization import Entitlement as EntitlementPayload
 
 
 __all__ = (
@@ -59,6 +55,7 @@ class SKU(Hashable):
         "slug",
         "flags",
     )
+
     def __init__(self, *, data: SKUPayload, state: ConnectionState) -> None:
         self._state = state
         self.id: int = int(data["id"])
@@ -90,6 +87,7 @@ class Entitlement(Hashable):
         "starts_at",
         "ends_at",
     )
+
     def __init__(self, *, data: EntitlementPayload, state: ConnectionState) -> None:
         self._state = state
         self.id: int = int(data["id"])
@@ -98,7 +96,9 @@ class Entitlement(Hashable):
         self.user_id: int | MISSING = _get_as_snowflake(data, "user_id") or MISSING
         self.type: EntitlementType = try_enum(EntitlementType, data["type"])
         self.deleted: bool = data["deleted"]
-        self.starts_at: datetime | MISSING = parse_time(data.get("starts_at")) or MISSING
+        self.starts_at: datetime | MISSING = (
+            parse_time(data.get("starts_at")) or MISSING
+        )
         self.ends_at: datetime | MISSING = parse_time(data.get("ends_at")) or MISSING
 
     def __repr__(self) -> str:
@@ -107,7 +107,7 @@ class Entitlement(Hashable):
             f"user_id={self.user_id} type={self.type} deleted={self.deleted} "
             f"starts_at={self.starts_at} ends_at={self.ends_at}>"
         )
-    
+
     async def delete(self) -> None:
         """|coro|
 

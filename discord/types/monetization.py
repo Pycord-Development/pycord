@@ -34,6 +34,7 @@ SKUType = Literal[5, 6]
 EntitlementType = Literal[8]
 OwnerType = Literal[1, 2]
 
+
 class SKU(TypedDict):
     id: Snowflake
     type: SKUType

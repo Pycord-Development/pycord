@@ -51,7 +51,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import GuildIterator
 from .mentions import AllowedMentions
-from .monetization import Entitlement, SKU
+from .monetization import SKU, Entitlement
 from .object import Object
 from .stage_instance import StageInstance
 from .state import ConnectionState
@@ -2016,7 +2016,7 @@ class Client:
         """
         data = await self._connection.http.list_skus(self.application_id)
         return [SKU(data=s, state=self._connection) for s in data]
-    
+
     async def fetch_entitlements(self) -> list[Entitlement]:
         """|coro|
 

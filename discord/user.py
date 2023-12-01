@@ -602,4 +602,3 @@ class User(BaseUser, discord.abc.Messageable):
         }
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)
-    
