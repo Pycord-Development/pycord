@@ -619,9 +619,9 @@ class Loop(Generic[LF]):
             now
             if now is not MISSING
             else datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
-        ).timetz()
+        )
         for idx, time in enumerate(self._time):
-            if time >= time_now:
+            if time >= time_now.astimezone(time.tzinfo).timetz():
                 self._time_index = idx
                 break
         else:

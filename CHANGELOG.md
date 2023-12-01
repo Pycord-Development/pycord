@@ -190,6 +190,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2113](https://github.com/Pycord-Development/pycord/issues/2113))
 - Fixed `Option` not working on bridge commands because `ext.commands.Command` doesn't
   recognize them. ([#2256](https://github.com/Pycord-Development/pycord/pull/2256))
+- Fixed offset-aware tasks causing `TypeError` when being prepared.
+  ([#2271](https://github.com/Pycord-Development/pycord/pull/2271))
 - Fixed `AttributeError` when serializing commands with `Annotated` type hints.
   ([#2243](https://github.com/Pycord-Development/pycord/pull/2243))
 
