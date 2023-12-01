@@ -77,6 +77,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2153](https://github.com/Pycord-Development/pycord/pull/2153))
 - Added `VoiceChannel.slowmode_delay`.
   ([#2112](https://github.com/Pycord-Development/pycord/pull/2112))
+- Added support for monetization-related objects and events.
+  ([#2273](https://github.com/Pycord-Development/pycord/pull/2273))
 
 ### Changed
 
