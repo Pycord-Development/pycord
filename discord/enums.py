@@ -656,7 +656,7 @@ class InteractionResponseType(Enum):
     message_update = 7  # for components
     auto_complete_result = 8  # for autocomplete interactions
     modal = 9  # for modal dialogs
-    premium_required = 10 
+    premium_required = 10
 
 
 class VideoQualityMode(Enum):

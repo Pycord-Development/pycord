@@ -431,10 +431,10 @@ Entitlements
     :type entitlement: :class:`Entitlement`
 
 .. function:: on_entitlement_delete(entitlement)
-    
+
     Called when a user's entitlement is deleted.
 
-    Entitlements are usually only deleted when Discord issues a refund for a subscription, 
+    Entitlements are usually only deleted when Discord issues a refund for a subscription,
     or manually removes an entitlement from a user.
 
     .. note::
