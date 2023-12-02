@@ -143,7 +143,7 @@ class Option:
         Only applies to Options with an :attr:`input_type` of :class:`str`.
     autocomplete: Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         The autocomplete handler for the option. Accepts a a callable (sync or async)
-        that takes a single argument of :class:`AutocompleteContext` 
+        that takes a single argument of :class:`AutocompleteContext`
         :func:`discord.utils.basic_autocomplete` may be used to create the callable.
 
         .. note::
