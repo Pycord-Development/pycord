@@ -2015,7 +2015,7 @@ class Client:
             The bot's SKUs.
         """
         data = await self._connection.http.list_skus(self.application_id)
-        return [SKU(data=s, state=self._connection) for s in data]
+        return [SKU(data=s) for s in data]
 
     async def fetch_entitlements(self) -> list[Entitlement]:
         """|coro|

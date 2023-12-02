@@ -47,6 +47,25 @@ __all__ = (
 
 
 class SKU(Hashable):
+    """Represents a Discord SKU (stock-keeping unit).
+    
+    .. versionadded:: 2.6
+    
+    Attributes
+    ----------
+    id: :class:`int`
+        The SKU's ID.
+    type: :class:`SKUType`
+        The type of SKU.
+    application_id: :class:`int`
+        The ID of the application this SKU belongs to.
+    name: :class:`str`
+        The name of the SKU.
+    slug: :class:`str`
+        The SKU's slug.
+    flags: :class:`SKUFlags`
+        The SKU's flags.
+    """
     __slots__ = (
         "id",
         "type",
@@ -56,14 +75,13 @@ class SKU(Hashable):
         "flags",
     )
 
-    def __init__(self, *, data: SKUPayload, state: ConnectionState) -> None:
-        self._state = state
+    def __init__(self, *, data: SKUPayload) -> None:
         self.id: int = int(data["id"])
         self.type: SKUType = try_enum(SKUType, data["type"])
         self.application_id: int = int(data["application_id"])
         self.name: str = data["name"]
         self.slug: str = data["slug"]
-        self.flags: SKUFlags = SKUFlags(data["flags"])
+        self.flags: SKUFlags = SKUFlags._from_value(data["flags"])
 
     def __repr__(self) -> str:
         return (
@@ -73,9 +91,35 @@ class SKU(Hashable):
 
     def __str__(self) -> str:
         return self.name
+    
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, self.__class__) and other.id == self.id
 
 
 class Entitlement(Hashable):
+    """Represents a Discord entitlement.
+    
+    .. versionadded:: 2.6
+    
+    Attributes
+    ----------
+    id: :class:`int`
+        The entitlement's ID.
+    sku_id: :class:`int`
+        The ID of the SKU this entitlement is for.
+    application_id: :class:`int`
+        The ID of the application this entitlement belongs to.
+    user_id: Union[:class:`int`, :class:`MISSING`]
+        The ID of the user that owns this entitlement.
+    type: :class:`EntitlementType`
+        The type of entitlement.
+    deleted: :class:`bool`
+        Whether the entitlement has been deleted.
+    starts_at: Union[:class:`datetime.datetime`, :class:`MISSING`]
+        When the entitlement starts.
+    ends_at: Union[:class:`datetime.datetime`, :class:`MISSING`]
+        When the entitlement expires.
+    """
     __slots__ = (
         "_state",
         "id",
@@ -107,11 +151,16 @@ class Entitlement(Hashable):
             f"user_id={self.user_id} type={self.type} deleted={self.deleted} "
             f"starts_at={self.starts_at} ends_at={self.ends_at}>"
         )
+    
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, self.__class__) and other.id == self.id
 
     async def delete(self) -> None:
         """|coro|
 
         Deletes a test entitlement.
+
+        A test entitlement is an entitlement that was created using :meth:`Guild.create_test_entitlement` or :meth:`User.create_test_entitlement`.
 
         Raises
         ------
