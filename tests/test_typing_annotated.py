@@ -1,10 +1,9 @@
 from typing import Optional
 
-import pytest
 from typing_extensions import Annotated
 
 import discord
-from discord import ApplicationContext
+from discord import SlashCommandOptionType
 from discord.commands.core import SlashCommand, slash_command
 
 
@@ -15,6 +14,10 @@ def test_typing_annotated():
     cmd = SlashCommand(echo)
     bot = discord.Bot()
     bot.add_application_command(cmd)
+    dict_result = cmd.to_dict()
+    assert (
+        dict_result.get("options")[0].get("type") == SlashCommandOptionType.string.value
+    )
 
 
 def test_typing_annotated_decorator():
@@ -23,6 +26,12 @@ def test_typing_annotated_decorator():
     @bot.slash_command()
     async def echo(ctx, txt: Annotated[str, discord.Option(description="Some text")]):
         await ctx.respond(txt)
+
+    dict_result = echo.to_dict()
+
+    option = dict_result.get("options")[0]
+    assert option.get("type") == SlashCommandOptionType.string.value
+    assert option.get("description") == "Some text"
 
 
 def test_typing_annotated_cog():
@@ -38,7 +47,14 @@ def test_typing_annotated_cog():
             await ctx.respond(txt)
 
     bot = discord.Bot()
-    bot.add_cog(echoCog(bot))
+    cog = echoCog(bot)
+    bot.add_cog(cog)
+
+    dict_result = cog.echo.to_dict()
+
+    option = dict_result.get("options")[0]
+    assert option.get("type") == SlashCommandOptionType.string.value
+    assert option.get("description") == "Some text"
 
 
 def test_typing_annotated_cog_slashgroup():
@@ -56,7 +72,14 @@ def test_typing_annotated_cog_slashgroup():
             await ctx.respond(txt)
 
     bot = discord.Bot()
-    bot.add_cog(echoCog(bot))
+    cog = echoCog(bot)
+    bot.add_cog(cog)
+
+    dict_result = cog.echo.to_dict()
+
+    option = dict_result.get("options")[0]
+    assert option.get("type") == SlashCommandOptionType.string.value
+    assert option.get("description") == "Some text"
 
 
 def test_typing_annotated_optional():
@@ -67,6 +90,11 @@ def test_typing_annotated_optional():
     bot = discord.Bot()
     bot.add_application_command(cmd)
 
+    dict_result = cmd.to_dict()
+
+    option = dict_result.get("options")[0]
+    assert option.get("type") == SlashCommandOptionType.string.value
+
 
 def test_no_annotation():
     async def echo(ctx, txt: str):
@@ -76,6 +104,11 @@ def test_no_annotation():
     bot = discord.Bot()
     bot.add_application_command(cmd)
 
+    dict_result = cmd.to_dict()
+
+    option = dict_result.get("options")[0]
+    assert option.get("type") == SlashCommandOptionType.string.value
+
 
 def test_annotated_no_option():
     async def echo(ctx, txt: Annotated[str, "..."]):
@@ -84,3 +117,8 @@ def test_annotated_no_option():
     cmd = SlashCommand(echo)
     bot = discord.Bot()
     bot.add_application_command(cmd)
+
+    dict_result = cmd.to_dict()
+
+    option = dict_result.get("options")[0]
+    assert option.get("type") == SlashCommandOptionType.string.value

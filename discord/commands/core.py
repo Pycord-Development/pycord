@@ -746,10 +746,12 @@ class SlashCommand(ApplicationCommand):
                 option = next(option_gen, Option())
                 # Handle Optional
                 if self._is_typing_optional(type_hint):
-                    option.input_type = get_args(type_hint)[0]
+                    option.input_type = SlashCommandOptionType.from_datatype(
+                        get_args(type_hint)[0]
+                    )
                     option.default = None
                 else:
-                    option.input_type = type_hint
+                    option.input_type = SlashCommandOptionType.from_datatype(type_hint)
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
