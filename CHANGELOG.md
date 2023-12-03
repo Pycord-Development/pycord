@@ -108,8 +108,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Changed the support from `orjson` to `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
-- Changed the error message that appears after an attempt at creating a
-  subcommand group under a subcommand group.
+- Changed the error message that appears after an attempt at creating a subcommand group
+  under a subcommand group.
   ([#2275](https://github.com/Pycord-Development/pycord/pull/2275))
 
 ### Removed
