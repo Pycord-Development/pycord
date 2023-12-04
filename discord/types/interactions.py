@@ -33,6 +33,7 @@ from .components import Component, ComponentType
 from .embed import Embed
 from .member import Member
 from .message import Attachment
+from .monetization import Entitlement
 from .role import Role
 from .snowflake import Snowflake
 from .user import User
@@ -209,6 +210,7 @@ class Interaction(TypedDict):
     type: InteractionType
     token: str
     version: int
+    entitlements: list[Entitlement]
 
 
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
