@@ -48,9 +48,9 @@ __all__ = (
 
 class SKU(Hashable):
     """Represents a Discord SKU (stock-keeping unit).
-    
+
     .. versionadded:: 2.6
-    
+
     Attributes
     ----------
     id: :class:`int`
@@ -66,6 +66,7 @@ class SKU(Hashable):
     flags: :class:`SKUFlags`
         The SKU's flags.
     """
+
     __slots__ = (
         "id",
         "type",
@@ -91,16 +92,16 @@ class SKU(Hashable):
 
     def __str__(self) -> str:
         return self.name
-    
+
     def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and other.id == self.id
 
 
 class Entitlement(Hashable):
     """Represents a Discord entitlement.
-    
+
     .. versionadded:: 2.6
-    
+
     Attributes
     ----------
     id: :class:`int`
@@ -120,6 +121,7 @@ class Entitlement(Hashable):
     ends_at: Union[:class:`datetime.datetime`, :class:`MISSING`]
         When the entitlement expires.
     """
+
     __slots__ = (
         "_state",
         "id",
@@ -151,7 +153,7 @@ class Entitlement(Hashable):
             f"user_id={self.user_id} type={self.type} deleted={self.deleted} "
             f"starts_at={self.starts_at} ends_at={self.ends_at}>"
         )
-    
+
     def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and other.id == self.id
 
