@@ -1,7 +1,7 @@
 -r _.txt
 pylint~=3.0.2
 pytest~=7.4.3
-pytest-asyncio~=0.21.1
+pytest-asyncio~=0.23.2
 # pytest-order~=1.0.1
 mypy~=1.7.1
 coverage~=7.3
