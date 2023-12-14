@@ -77,6 +77,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2153](https://github.com/Pycord-Development/pycord/pull/2153))
 - Added `VoiceChannel.slowmode_delay`.
   ([#2112](https://github.com/Pycord-Development/pycord/pull/2112))
+- Added `ForumChannel.default_reaction_emoji` attribute.
+  ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
+- Added `default_reaction_emoji` parameter to `Guild.create_forum_channel()` and
+  `ForumChannel.edit()` methods.
+  ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 
 ### Changed
 
