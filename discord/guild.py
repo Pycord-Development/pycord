@@ -2933,7 +2933,7 @@ class Guild(Hashable):
             if icon is None:
                 fields["icon"] = None
             else:
-                fields["icon"] = _bytes_to_base64_data(icon)
+                fields["icon"] = utils._bytes_to_base64_data(icon)
                 fields["unicode_emoji"] = None
 
         if unicode_emoji is not MISSING:
@@ -3841,3 +3841,29 @@ class Guild(Hashable):
             self.id, payload, reason=reason
         )
         return AutoModRule(state=self._state, data=data)
+
+    async def delete_auto_moderation_rule(
+        self,
+        id: int,
+        *,
+        reason: str | None = None,
+    ) -> None:
+        """
+        Deletes an auto moderation rule.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the auto moderation rule.
+        reason: Optional[:class:`str`]
+            The reason for deleting the rule. Shows up in the audit log.
+
+        Raises
+        ------
+        HTTPException
+            Deleting the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+        """
+
+        await self._state.http.delete_auto_moderation_rule(self.id, id, reason=reason)

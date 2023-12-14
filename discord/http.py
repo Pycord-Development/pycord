@@ -757,6 +757,7 @@ class HTTPClient:
         emoji: str,
         limit: int,
         after: Snowflake | None = None,
+        type: int | None = None,
     ) -> Response[list[user.User]]:
         r = Route(
             "GET",
@@ -771,6 +772,8 @@ class HTTPClient:
         }
         if after:
             params["after"] = after
+        if type:
+            params["type"] = type
         return self.request(r, params=params)
 
     def clear_reactions(
