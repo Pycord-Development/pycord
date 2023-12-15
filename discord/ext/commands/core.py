@@ -565,7 +565,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
         if isinstance(param.annotation, Option):
             default = param.annotation.default
-            required = param.annotation.required or default is None
+            required = param.annotation.required
         else:
             default = param.default
             required = default is param.empty
