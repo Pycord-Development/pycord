@@ -430,7 +430,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         self.before = before
         self.user_id = user_id
         self.action_type = action_type
-        self.after = OLDEST_OBJECT
+        self.after = after or OLDEST_OBJECT
         self._users = {}
         self._state = guild._state
 
