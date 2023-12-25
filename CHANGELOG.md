@@ -125,7 +125,9 @@ These changes are available on the `master` branch, but have not yet been releas
   classes. ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
 
 ### Fixed
-- Fixed `AttributeError` when user has unstable internet ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
+
+- Fixed `AttributeError` when user has unstable internet
+  ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
