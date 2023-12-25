@@ -653,6 +653,8 @@ class Client:
                 # Always try to RESUME the connection
                 # If the connection is not RESUME-able then the gateway will invalidate the session.
                 # This is apparently what the official Discord client does.
+                if self.ws is None:
+                    continue
                 ws_params.update(
                     sequence=self.ws.sequence, resume=True, session=self.ws.session_id
                 )
