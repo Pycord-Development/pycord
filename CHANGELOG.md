@@ -203,8 +203,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2257](https://github.com/Pycord-Development/pycord/issues/2257))
 - Fixed `AuditLogIterator` not respecting the `after` parameter.
   ([#2295](https://github.com/Pycord-Development/pycord/issues/2295))
-- Fixed `ApplicationCommand` equality comparison method not being entirely precise
-  and causing `AttributeError`s due to its structure.
+- Fixed `ApplicationCommand` equality comparison method not being entirely precise and
+  causing `AttributeError`s due to its structure.
   ([#2299](https://github.com/Pycord-Development/pycord/issues/2299))
 
 ## [2.4.1] - 2023-03-20
