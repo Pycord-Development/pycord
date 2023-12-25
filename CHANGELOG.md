@@ -126,8 +126,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed `AttributeError` when user has unstable internet
-  ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
   in cogs. ([#1989](https://github.com/Pycord-Development/pycord/pull/1989))
@@ -205,6 +203,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2257](https://github.com/Pycord-Development/pycord/issues/2257))
 - Fixed `AuditLogIterator` not respecting the `after` parameter.
   ([#2295](https://github.com/Pycord-Development/pycord/issues/2295))
+- Fixed `AttributeError` in `client.connect` when user has unstable internet
+  ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 
 ## [2.4.1] - 2023-03-20
 
