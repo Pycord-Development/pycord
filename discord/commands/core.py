@@ -235,10 +235,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        return (
-            isinstance(other, self.__class__)
-            and self.to_dict() == other.to_dict()
-        )
+        return isinstance(other, self.__class__) and self.to_dict() == other.to_dict()
 
     async def __call__(self, ctx, *args, **kwargs):
         """|coro|
