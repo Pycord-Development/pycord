@@ -203,7 +203,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2257](https://github.com/Pycord-Development/pycord/issues/2257))
 - Fixed `AuditLogIterator` not respecting the `after` parameter.
   ([#2295](https://github.com/Pycord-Development/pycord/issues/2295))
-- Fixed `AttributeError` in `client.connect` when user has unstable internet
+- Fixed `AttributeError` when failing to establish initial websocket connection.
   ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 
 ## [2.4.1] - 2023-03-20
