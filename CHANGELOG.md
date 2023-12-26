@@ -203,6 +203,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2257](https://github.com/Pycord-Development/pycord/issues/2257))
 - Fixed `AuditLogIterator` not respecting the `after` parameter.
   ([#2295](https://github.com/Pycord-Development/pycord/issues/2295))
+- Fixed `MISSING` attribute of command under a subcommand group under a command group
+  ([#2302](https://github.com/Pycord-Development/pycord/issues/2302))
 
 ## [2.4.1] - 2023-03-20
 

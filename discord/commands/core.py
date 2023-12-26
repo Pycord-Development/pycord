@@ -254,7 +254,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         convert the arguments beforehand, so take care to pass the correct
         arguments in.
         """
-        if self.cog is not None:
+        if self.cog is not None and self.cog is not MISSING:
             return await self.callback(self.cog, ctx, *args, **kwargs)
         return await self.callback(ctx, *args, **kwargs)
 
@@ -392,7 +392,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             predicates = self.parent.checks + predicates
 
         cog = self.cog
-        if cog is not None:
+        if cog is not None and cog is not MISSING:
             local_check = cog._get_overridden_method(cog.cog_check)
             if local_check is not None:
                 ret = await maybe_coroutine(local_check, ctx)
@@ -414,13 +414,13 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             pass
         else:
             injected = wrap_callback(coro)
-            if cog is not None:
+            if cog is not None and cog is not MISSING:
                 await injected(cog, ctx, error)
             else:
                 await injected(ctx, error)
 
         try:
-            if cog is not None:
+            if cog is not None and cog is not MISSING:
                 local = cog.__class__._get_overridden_method(cog.cog_command_error)
                 if local is not None:
                     wrapped = wrap_callback(local)
@@ -544,7 +544,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 await self._after_invoke(ctx)  # type: ignore
 
         # call the cog local hook if applicable:
-        if cog is not None:
+        if cog is not None and cog is not MISSING:
             hook = cog.__class__._get_overridden_method(cog.cog_after_invoke)
             if hook is not None:
                 await hook(ctx)
@@ -998,7 +998,7 @@ class SlashCommand(ApplicationCommand):
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
 
-        if self.cog is not None:
+        if self.cog is not None and self.cog is not MISSING:
             await self.callback(self.cog, ctx, **kwargs)
         elif self.parent is not None and self.attached_to_group is True:
             await self.callback(self.parent, ctx, **kwargs)
