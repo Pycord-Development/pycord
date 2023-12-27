@@ -203,6 +203,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2257](https://github.com/Pycord-Development/pycord/issues/2257))
 - Fixed `AuditLogIterator` not respecting the `after` parameter.
   ([#2295](https://github.com/Pycord-Development/pycord/issues/2295))
+- Fixed `AttributeError` when failing to establish initial websocket connection.
+  ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 - Fixed `MISSING` attribute of command under a subcommand group under a command group
   ([#2302](https://github.com/Pycord-Development/pycord/issues/2302))
 
