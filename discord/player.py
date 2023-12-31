@@ -653,11 +653,6 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
     This does not work on audio sources that have :meth:`AudioSource.is_opus`
     set to ``True``.
 
-    .. versionchanged:: 2.5
-
-        Replaced audioop implementation of :py:meth:`discord.PCMVolumeTransformer.read`
-        method with a pure Python equivalent.
-
     Parameters
     ----------
     original: :class:`AudioSource`
