@@ -182,10 +182,11 @@ class _FilteredAsyncIterator(_AsyncIterator[T]):
 
 
 class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
-    def __init__(self, message, emoji, limit=100, after=None):
+    def __init__(self, message, emoji, limit=100, after=None, type=None):
         self.message = message
         self.limit = limit
         self.after = after
+        self.type = type
         state = message._state
         self.getter = state.http.get_reaction_users
         self.state = state
@@ -212,7 +213,12 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
 
             after = self.after.id if self.after else None
             data: list[PartialUserPayload] = await self.getter(
-                self.channel_id, self.message.id, self.emoji, retrieve, after=after
+                self.channel_id,
+                self.message.id,
+                self.emoji,
+                retrieve,
+                after=after,
+                type=self.type,
             )
 
             if data:
@@ -424,7 +430,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         self.before = before
         self.user_id = user_id
         self.action_type = action_type
-        self.after = OLDEST_OBJECT
+        self.after = after or OLDEST_OBJECT
         self._users = {}
         self._state = guild._state
 

@@ -54,6 +54,12 @@ class Reaction(TypedDict):
     count: int
     me: bool
     emoji: PartialEmoji
+    burst: bool
+
+
+class ReactionCountDetails(TypedDict):
+    normal: int
+    burst: int
 
 
 class Attachment(TypedDict):
