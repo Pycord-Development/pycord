@@ -1,5 +1,6 @@
 version: 2
-formats: htmlzip
+formats:
+  - htmlzip
 
 build:
   os: ubuntu-22.04
