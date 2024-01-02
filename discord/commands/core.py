@@ -1162,7 +1162,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = MISSING
+        self.cog = None
         self.id = None
 
         # Permissions
