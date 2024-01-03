@@ -389,12 +389,12 @@ class BucketStorage:
 
         Returns
         -------
-        :class:`.Bucket` or `None`
+        :class:`.DynamicBucket` or `None`
         """
 
         return self._temp_buckets.get(id)
 
-    async def push_temp_bucket(self, id: str, bucket: Bucket) -> None:
+    async def push_temp_bucket(self, id: str, bucket: DynamicBucket) -> None:
         """Push a temporary bucket to storage.
 
         Parameters
