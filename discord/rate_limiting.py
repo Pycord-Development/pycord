@@ -30,9 +30,8 @@ import time
 from contextlib import asynccontextmanager
 from typing import AsyncIterator, Literal, Protocol, cast
 
-from .utils import MISSING
-
 from .errors import DiscordException
+from .utils import MISSING
 
 
 class RateLimitException(DiscordException):
@@ -63,10 +62,7 @@ class GlobalRateLimit:
     """
 
     def __init__(
-        self,
-        concurrency: int,
-        per: float | int,
-        remaining: int = MISSING
+        self, concurrency: int, per: float | int, remaining: int = MISSING
     ) -> None:
         self.concurrency: int = concurrency
         self.per: float | int = per
@@ -78,7 +74,9 @@ class GlobalRateLimit:
         self.reset_at: int | float | None = None
 
         if remaining is not MISSING:
-            raise ValueError("Given rate limit remaining value is larger than concurrency limit")
+            raise ValueError(
+                "Given rate limit remaining value is larger than concurrency limit"
+            )
 
     async def __aenter__(self) -> GlobalRateLimit:
         if not self.loop:
@@ -309,17 +307,17 @@ class Bucket:
 class BucketStorageProtocol(Protocol):
     """A customizable, optionally replacable storage medium for buckets.
 
-    Attributes
-    ----------
-    ready: :class:`bool`
-        Whether the BucketStorage is ready.
-
     Parameters
     ----------
     concurrency: :class:`int`
         The concurrency to reset every `per` seconds.
     per: :class:`int` | :class:`float`
         Number of seconds to wait until resetting `concurrency`.
+
+    Attributes
+    ----------
+    ready: :class:`bool`
+        Whether the BucketStorage is ready.
     """
 
     per: int
@@ -407,6 +405,7 @@ class BucketStorageProtocol(Protocol):
         id: :class:`str`
             This bucket's identifier.
         """
+
 
 class BucketStorage(BucketStorageProtocol):
     def __init__(self, per: int = 1, concurrency: int = 50) -> None:
