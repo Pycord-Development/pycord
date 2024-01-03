@@ -92,11 +92,8 @@ class GlobalRateLimit:
         self.reset_at = current_time + self.per
         self.current = self.concurrency
 
-        for _ in range(self.concurrency):
-            try:
-                self._processing.pop().set_result(None)
-            except IndexError:
-                break
+        for _ in range(min(self.concurrency, len(self._processing))):
+            self._processing.pop().set_result(None)
 
         if len(self._processing):
             self.pending_reset = True
