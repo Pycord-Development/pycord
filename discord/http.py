@@ -44,7 +44,7 @@ from .errors import (
     NotFound,
 )
 from .gateway import DiscordClientWebSocketResponse
-from .rate_limiting import BucketStorage, DynamicBucket
+from .rate_limiting import BucketStorageProtocol, DynamicBucket
 from .utils import MISSING, warn_deprecated
 
 _log = logging.getLogger(__name__)
@@ -80,7 +80,6 @@ if TYPE_CHECKING:
     from .types.snowflake import Snowflake, SnowflakeList
 
     T = TypeVar("T")
-    BE = TypeVar("BE", bound=BaseException)
     Response = Coroutine[Any, Any, T]
 
 API_VERSION: int = 10
@@ -138,14 +137,14 @@ class HTTPClient:
 
     def __init__(
         self,
-        bucket_storage: BucketStorage,
+        bucket_storage: BucketStorageProtocol,
         connector: aiohttp.BaseConnector | None = None,
         *,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
         loop: asyncio.AbstractEventLoop | None = None,
         unsync_clock: bool = True,
-        maximum_rate_limit_wait_time: int | float = -1,
+        maximum_rate_limit_time: int | float = -1,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
@@ -157,7 +156,7 @@ class HTTPClient:
         self.proxy: str | None = proxy
         self.proxy_auth: aiohttp.BasicAuth | None = proxy_auth
         self.use_clock: bool = not unsync_clock
-        self.maximum_rate_limit_wait_time = maximum_rate_limit_wait_time
+        self.maximum_rate_limit_time = maximum_rate_limit_time
 
         user_agent = (
             "DiscordBot (https://pycord.dev, {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
@@ -202,6 +201,10 @@ class HTTPClient:
         bucket_id = route.bucket
         method = route.method
         url = route.url
+
+        if not self._rate_limit.ready:
+            await self._rate_limit.start()
+            self._rate_limit.ready = True
 
         bucket = await self._rate_limit.get_or_create(bucket_id)
 
@@ -310,12 +313,12 @@ class HTTPClient:
                                 is_global: bool = data.get("global", False)
 
                                 if (
-                                    retry_after > self.maximum_rate_limit_wait_time
-                                    and self.maximum_rate_limit_wait_time != -1
+                                    retry_after > self.maximum_rate_limit_time
+                                    and self.maximum_rate_limit_time != -1
                                 ):
                                     raise HTTPException(
                                         response,
-                                        f"rate limit wait costed over maximum of {self.maximum_rate_limit_wait_time}",
+                                        f"Retrying rate limit would take longer than the maximum of {self.maximum_rate_limit_wait_time} seconds given",
                                     )
 
                                 if is_global:

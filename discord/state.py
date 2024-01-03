@@ -61,7 +61,6 @@ from .mentions import AllowedMentions
 from .message import Message
 from .object import Object
 from .partial_emoji import PartialEmoji
-from .rate_limiting import BucketStorage
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent

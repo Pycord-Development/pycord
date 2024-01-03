@@ -28,7 +28,9 @@ import asyncio
 import gc
 import time
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, Literal, cast
+from typing import AsyncIterator, Literal, Protocol, cast
+
+from .utils import MISSING
 
 from .errors import DiscordException
 
@@ -46,6 +48,9 @@ class GlobalRateLimit:
         The concurrency to reset every `per` seconds.
     per: :class:`int` | :class:`float`
         Number of seconds to wait until resetting `concurrency`.
+    remaining: :class:`int` | MISSING
+        Number of available requests remaining. If the value of remaining
+        is larger than concurrency a `ValueError` will be raised.
 
     Attributes
     ----------
@@ -57,7 +62,12 @@ class GlobalRateLimit:
         Unix timestamp of when this class will next reset.
     """
 
-    def __init__(self, concurrency: int, per: float | int) -> None:
+    def __init__(
+        self,
+        concurrency: int,
+        per: float | int,
+        remaining: int = MISSING
+    ) -> None:
         self.concurrency: int = concurrency
         self.per: float | int = per
 
@@ -66,6 +76,9 @@ class GlobalRateLimit:
         self.loop: asyncio.AbstractEventLoop | None = None
         self.pending_reset: bool = False
         self.reset_at: int | float | None = None
+
+        if remaining is not MISSING:
+            raise ValueError("Given rate limit remaining value is larger than concurrency limit")
 
     async def __aenter__(self) -> GlobalRateLimit:
         if not self.loop:
@@ -293,8 +306,13 @@ class Bucket:
         self.release(self.limit)
 
 
-class BucketStorage:
+class BucketStorageProtocol(Protocol):
     """A customizable, optionally replacable storage medium for buckets.
+
+    Attributes
+    ----------
+    ready: :class:`bool`
+        Whether the BucketStorage is ready.
 
     Parameters
     ----------
@@ -304,10 +322,97 @@ class BucketStorage:
         Number of seconds to wait until resetting `concurrency`.
     """
 
+    per: int
+    concurrency: int
+    ready: bool
+    global_concurrency: GlobalRateLimit
+
+    def __init__(self, per: int = 1, concurrency: int = 50) -> None:
+        ...
+
+    async def start(self) -> None:
+        """An internal asynchronous function for BucketStorage
+        used for initiating certain libraries such as a database.
+        """
+
+    async def close(self) -> None:
+        """An internal asynchronous function for BucketStorage
+        used for closing connections to databases and other such.
+        """
+
+    async def append(self, id: str, bucket: Bucket) -> None:
+        """Append a permanent bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+        bucket: :class:`.Bucket`
+            The bucket to append.
+        """
+
+    async def get(self, id: str) -> Bucket | None:
+        """Get a permanent bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+
+        Returns
+        -------
+        :class:`.Bucket` or `None`
+        """
+
+    async def get_or_create(self, id: str) -> Bucket:
+        """Get or create a permanent bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+
+        Returns
+        -------
+        :class:`.Bucket`
+        """
+
+    async def temp_bucket(self, id: str) -> DynamicBucket | None:
+        """Fetch a temporary bucket.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+
+        Returns
+        -------
+        :class:`.DynamicBucket` or `None`
+        """
+
+    async def push_temp_bucket(self, id: str, bucket: DynamicBucket) -> None:
+        """Push a temporary bucket to storage.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+        """
+
+    async def pop_temp_bucket(self, id: str) -> None:
+        """Pop a temporary bucket which *may* be in storage.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            This bucket's identifier.
+        """
+
+class BucketStorage(BucketStorageProtocol):
     def __init__(self, per: int = 1, concurrency: int = 50) -> None:
         self._buckets: dict[str, Bucket] = {}
+        self.ready = True
         self.global_concurrency = GlobalRateLimit(concurrency, per)
-        self.webhook_global_concurrency = GlobalRateLimit(30, 60)
 
         gc.callbacks.append(self._collect_buckets)
 

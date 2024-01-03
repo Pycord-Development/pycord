@@ -63,7 +63,6 @@ from .user import ClientUser, User
 from .utils import MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
-from .webhook.async_ import AsyncWebhookAdapter, async_context
 from .widget import Widget
 
 if TYPE_CHECKING:
@@ -199,7 +198,7 @@ class Client:
         To enable these events, this must be set to ``True``. Defaults to ``False``.
 
         .. versionadded:: 2.0
-    bucket_storage_cls: :class:`type`[:class:`.rate_limiting.BucketStorage`]
+    bucket_storage_cls: :class:`type`[:class:`.rate_limiting.BucketStorageProtocol`]
         The class to use for storing rate limit buckets given by Discord.
 
         .. versionadded:: 2.5
@@ -260,7 +259,7 @@ class Client:
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
-            maximum_rate_limit_wait_time=options.pop("maximum_rate_limit_time", -1),
+            maximum_rate_limit_time=options.pop("maximum_rate_limit_time", -1),
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
