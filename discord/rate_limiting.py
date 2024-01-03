@@ -431,6 +431,9 @@ class BucketStorage(BucketStorageProtocol):
             if bucket.garbage:
                 del self._buckets[id]
 
+    async def close(self) -> None:
+        gc.callbacks.remove(self._collect_buckets)
+
     async def append(self, id: str, bucket: Bucket) -> None:
         """Append a permanent bucket.
 
