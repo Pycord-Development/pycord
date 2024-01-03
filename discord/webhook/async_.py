@@ -29,6 +29,7 @@ import asyncio
 import json
 import logging
 import re
+import weakref
 from contextvars import ContextVar
 from typing import TYPE_CHECKING, Any, Literal, NamedTuple, overload
 from urllib.parse import quote as urlquote
@@ -51,7 +52,6 @@ from ..http import Route
 from ..message import Attachment, Message
 from ..mixins import Hashable
 from ..object import Object
-from ..rate_limiting import DynamicBucket
 from ..threads import Thread
 from ..user import BaseUser, User
 
@@ -101,6 +101,9 @@ class AsyncDeferredLock:
 
 
 class AsyncWebhookAdapter:
+    def __init__(self):
+        self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
+
     async def request(
         self,
         route: Route,
@@ -118,7 +121,12 @@ class AsyncWebhookAdapter:
         headers: dict[str, str] = {}
         files = files or []
         to_send: str | aiohttp.FormData | None = None
-        bucket_id = f"{route.webhook_id}:{route.webhook_token}"
+        bucket = (route.webhook_id, route.webhook_token)
+
+        try:
+            lock = self._locks[bucket]
+        except KeyError:
+            self._locks[bucket] = lock = asyncio.Lock()
 
         if payload is not None:
             headers["Content-Type"] = "application/json"
@@ -136,12 +144,7 @@ class AsyncWebhookAdapter:
         url = route.url
         webhook_id = route.webhook_id
 
-        tbucket = await self._rate_limit.temp_bucket(bucket_id)
-
-        if tbucket:
-            await tbucket.wait()
-
-        async with self._rate_limit.webhook_global_concurrency:
+        async with AsyncDeferredLock(lock) as lock:
             for attempt in range(5):
                 for file in files:
                     file.reset(seek=attempt)
@@ -176,12 +179,17 @@ class AsyncWebhookAdapter:
                             data = json.loads(data)
 
                         remaining = response.headers.get("X-Ratelimit-Remaining")
-                        reset_after = response.headers.get("X-Ratelimit-Reset-After")
-
-                        if remaining:
-                            remaining = int(remaining)
-                        if reset_after:
-                            reset_after = float(reset_after)
+                        if remaining == "0" and response.status != 429:
+                            delta = utils._parse_ratelimit_header(response)
+                            _log.debug(
+                                (
+                                    "Webhook ID %s has been pre-emptively rate limited,"
+                                    " waiting %.2f seconds"
+                                ),
+                                webhook_id,
+                                delta,
+                            )
+                            lock.delay_by(delta)
 
                         if 300 > response.status >= 200:
                             return data
@@ -199,30 +207,7 @@ class AsyncWebhookAdapter:
                                 webhook_id,
                                 retry_after,
                             )
-
-                            retry_after: float = data["retry_after"]
-                            is_global: bool = data.get("global", False)
-
-                            if is_global:
-                                self.global_dynamo = DynamicBucket()
-                                await self.global_dynamo.executed(
-                                    retry_after,
-                                    remaining or 10,
-                                    is_global=is_global,
-                                )
-                                self.global_dynamo = None
-                            else:
-                                tbucket = DynamicBucket()
-                                await self._rate_limit.push_temp_bucket(
-                                    bucket_id, tbucket
-                                )
-                                await tbucket.executed(
-                                    retry_after, remaining or 10, is_global=True
-                                )
-                                await self._rate_limit.pop_temp_bucket(bucket_id)
-
-                            _log.debug("Done sleeping for the rate limit. Retrying...")
-
+                            await asyncio.sleep(retry_after)
                             continue
 
                         if response.status >= 500:
@@ -1161,7 +1146,7 @@ class Webhook(BaseWebhook):
         .. versionadded:: 2.0
     """
 
-    __slots__: tuple[str, ...] = ("session", "proxy", "proxy_auth", "_bucket_storage")
+    __slots__: tuple[str, ...] = ("session", "proxy", "proxy_auth")
 
     def __init__(
         self,
