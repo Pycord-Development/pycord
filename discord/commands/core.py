@@ -846,7 +846,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return getattr(self, "_cog", MISSING)
+        return getattr(self, "_cog", None)
 
     @cog.setter
     def cog(self, val):
@@ -1238,10 +1238,7 @@ class SlashCommandGroup(ApplicationCommand):
         return as_dict
 
     def add_command(self, command: SlashCommand) -> None:
-        # check if subcommand has no cog set
-        # also check if cog is MISSING because it
-        # might not have been set by the cog yet
-        if command.cog is MISSING and self.cog is not MISSING:
+        if command.cog is None and self.cog is not None:
             command.cog = self.cog
 
         self.subcommands.append(command)
