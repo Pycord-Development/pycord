@@ -198,14 +198,20 @@ class Client:
         To enable these events, this must be set to ``True``. Defaults to ``False``.
 
         .. versionadded:: 2.0
-    bucket_storage_cls: :class:`type`[:class:`.rate_limiting.BucketStorageProtocol`]
+    bucket_storage_cls: type[:class:`.BucketStorageProtocol`]
         The class to use for storing rate limit buckets given by Discord.
 
         .. versionadded:: 2.5
     concurrency: :class:`int`
-        Number of requests per `per_concurrency` can occur.
-        This determines your global rate limit prediction, so make sure
-        it is set properly. Defaults to `50`.
+        Number of requests that can occur every `per` seconds.
+        This determines your global rate limit prediction.
+
+        Make sure `concurrency` is properly set to maximize the
+        number of requests you can do every `per` seconds. For the
+        majority of bots, this will be the default of `50`, but if Discord
+        increases your `concurrency` make sure to change this value.
+
+        Defaults to `50`.
 
         .. versionadded:: 2.5
     per: :class:`int`
