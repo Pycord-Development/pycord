@@ -144,7 +144,7 @@ class HTTPClient:
         proxy_auth: aiohttp.BasicAuth | None = None,
         loop: asyncio.AbstractEventLoop | None = None,
         unsync_clock: bool = True,
-        maximum_rate_limit_time: int | float = -1,
+        rate_limit_timeout: float = -1,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
@@ -156,7 +156,7 @@ class HTTPClient:
         self.proxy: str | None = proxy
         self.proxy_auth: aiohttp.BasicAuth | None = proxy_auth
         self.use_clock: bool = not unsync_clock
-        self.maximum_rate_limit_time = maximum_rate_limit_time
+        self.rate_limit_timeout = rate_limit_timeout
 
         user_agent = (
             "DiscordBot (https://pycord.dev, {0}) Python/{1[0]}.{1[1]} aiohttp/{2}"
@@ -313,12 +313,12 @@ class HTTPClient:
                                 is_global: bool = data.get("global", False)
 
                                 if (
-                                    retry_after > self.maximum_rate_limit_time
-                                    and self.maximum_rate_limit_time != -1
+                                    retry_after > self.rate_limit_timeout
+                                    and self.rate_limit_timeout != -1
                                 ):
                                     raise HTTPException(
                                         response,
-                                        f"Retrying rate limit would take longer than the maximum of {self.maximum_rate_limit_wait_time} seconds given",
+                                        f"Retrying rate limit would take longer than the maximum of {self.rate_limit_timeout} seconds given",
                                     )
 
                                 if is_global:
@@ -346,7 +346,7 @@ class HTTPClient:
                                 continue
 
                             # we've received a 500, 502, or 504, unconditional retry
-                            if response.status in {500, 502, 504}:
+                            if response.status in (500, 502, 504):
                                 await asyncio.sleep(1 + tries * 2)
                                 continue
 

@@ -213,9 +213,9 @@ class Client:
         Defaults to `1` second.
 
         .. versionadded:: 2.5
-    maximum_rate_limit_time: :class:`int`
-        The maximum amount of seconds the client is allowed to wait on a rate limit,
-        or otherwise error out. Defaults to `-1`, or infinite.
+    rate_limit_timeout: :class:`float`
+        The maximum amount of seconds the client is allowed to wait on a rate limit
+        before raising an exception. Defaults to `-1`, or infinite.
 
         .. versionadded:: 2.5
 
@@ -251,6 +251,7 @@ class Client:
         bucket_storage = options.pop("bucket_storage_cls", BucketStorage)(
             options.pop("per", 1), options.pop("concurrency", 50)
         )
+        rate_limit_timeout: float = options.pop("rate_limit_timeout", -1)
 
         self.http: HTTPClient = HTTPClient(
             bucket_storage,
@@ -259,7 +260,7 @@ class Client:
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
-            maximum_rate_limit_time=options.pop("maximum_rate_limit_time", -1),
+            rate_limit_timeout=rate_limit_timeout,
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
