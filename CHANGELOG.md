@@ -82,6 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `default_reaction_emoji` parameter to `Guild.create_forum_channel()` and
   `ForumChannel.edit()` methods.
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
+- Added `.rate_limiting` module to support rate limit prediction.
+  ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Changed
 
