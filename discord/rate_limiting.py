@@ -268,9 +268,9 @@ class Bucket:
         reset_after: int | None = None,
     ) -> None:
         """Set the metadata for this Bucket.
-        If both `remaining` and `reset_after` are set to `None`
-        `metadata_unknown` is set to true, a garbage state is initialized,
-        and all pending requests are released.
+        If both `remaining` and `reset_after` are set to ``None`` and
+        :attr:`metadata_unknown` is set to ``True``, a garbage state will
+        be initialized and all pending requests will be released.
 
         Parameters
         ----------
@@ -357,7 +357,7 @@ class BucketStorageProtocol(Protocol):
 
         Returns
         -------
-        :class:`.Bucket` or `None`
+        Optional[:class:`.Bucket`]
         """
 
     async def get_or_create(self, id: str) -> Bucket:
@@ -383,7 +383,7 @@ class BucketStorageProtocol(Protocol):
 
         Returns
         -------
-        :class:`.DynamicBucket` or `None`
+        Optional[:class:`.DynamicBucket`]
         """
 
     async def push_temp_bucket(self, id: str, bucket: DynamicBucket) -> None:
@@ -455,7 +455,7 @@ class BucketStorage(BucketStorageProtocol):
 
         Returns
         -------
-        :class:`.Bucket` or `None`
+        Optional[:class:`.Bucket`]
         """
 
         return self._buckets.get(id)
@@ -491,7 +491,7 @@ class BucketStorage(BucketStorageProtocol):
 
         Returns
         -------
-        :class:`.DynamicBucket` or `None`
+        Optional[:class:`.DynamicBucket`]
         """
 
         return self._temp_buckets.get(id)
