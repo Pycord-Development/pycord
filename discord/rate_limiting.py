@@ -61,9 +61,7 @@ class GlobalRateLimit:
         Unix timestamp of when this class will next reset.
     """
 
-    def __init__(
-        self, concurrency: int, per: float, remaining: int = MISSING
-    ) -> None:
+    def __init__(self, concurrency: int, per: float, remaining: int = MISSING) -> None:
         self.concurrency: int = concurrency
         self.per: float = per
 
