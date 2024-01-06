@@ -112,7 +112,7 @@ class GlobalRateLimit:
 
 
 class PriorityFuture(asyncio.Future):
-    """A future with priority features added to it."""
+    """A subclass of :class:`~asyncio.Future` with priority features."""
 
     def __init__(
         self, *, priority: int = 0, loop: asyncio.AbstractEventLoop | None = None
