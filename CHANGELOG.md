@@ -82,7 +82,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `default_reaction_emoji` parameter to `Guild.create_forum_channel()` and
   `ForumChannel.edit()` methods.
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
-- Added `.rate_limiting` module to support rate limit prediction.
+- Added `rate_limiting` module to support rate limit prediction.
   ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Changed
@@ -115,7 +115,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Changed the support from `orjson` to `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
-- Replaces former rate limit system with a rate limit prediction and easing system.
+- Replaced former rate limit system with a rate limit prediction and easing system.
   ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Removed

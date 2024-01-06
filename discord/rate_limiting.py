@@ -47,7 +47,7 @@ class GlobalRateLimit:
         The concurrency to reset every `per` seconds.
     per: :class:`int` | :class:`float`
         Number of seconds to wait until resetting `concurrency`.
-    remaining: :class:`int` | MISSING
+    remaining: :class:`int`
         Number of available requests remaining. If the value of remaining
         is larger than concurrency a `ValueError` will be raised.
 
@@ -133,9 +133,9 @@ class Bucket:
     ----------
     metadata_unknown: :class:`bool`
         Whether the bucket's metadata is known.
-    remaining: Union[:class:`int`, None]
+    remaining: Optional[:class:`int`]
         The remaining number of requests available on this bucket.
-    limit: Union[:class:`int`, None]
+    limit: Optional[:class:`int`]
         The maximum limit of requests per reset.
     """
 
@@ -276,10 +276,10 @@ class Bucket:
 
         Parameters
         ----------
-        remaining: :class:`int` | `None`
+        remaining: Optional[:class:`int`]
             The remaining number of requests which can be made
             to this bucket.
-        reset_after: :class:`int` | `None`
+        reset_after: Optional[:class:`int`]
             The number of seconds until this bucket will next reset.
         """
 
