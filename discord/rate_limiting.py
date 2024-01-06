@@ -45,7 +45,7 @@ class GlobalRateLimit:
     ----------
     concurrency: :class:`int`
         The concurrency to reset every `per` seconds.
-    per: :class:`int` | :class:`float`
+    per: :class:`float`
         Number of seconds to wait until resetting `concurrency`.
     remaining: :class:`int`
         Number of available requests remaining. If the value of remaining
@@ -57,21 +57,21 @@ class GlobalRateLimit:
         The current concurrency.
     pending_reset: :class:`bool`
         The class is pending a reset of `concurrency`.
-    reset_at :class:`int` | :class:`float` | `None`
+    reset_at Optional[:class:`float`]
         Unix timestamp of when this class will next reset.
     """
 
     def __init__(
-        self, concurrency: int, per: float | int, remaining: int = MISSING
+        self, concurrency: int, per: float, remaining: int = MISSING
     ) -> None:
         self.concurrency: int = concurrency
-        self.per: float | int = per
+        self.per: float = per
 
         self.current: int = self.concurrency
         self._processing: list[asyncio.Future] = []
         self.loop: asyncio.AbstractEventLoop | None = None
         self.pending_reset: bool = False
-        self.reset_at: int | float | None = None
+        self.reset_at: float | None = None
 
         if remaining is not MISSING:
             raise ValueError(
