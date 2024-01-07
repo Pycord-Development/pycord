@@ -54,7 +54,7 @@ from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
 from .user import User
-from .utils import MISSING, async_all, find, get
+from .utils import async_all, find, get
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar("CFT", bound=CoroFunc)
@@ -122,9 +122,6 @@ class ApplicationCommandMixin(ABC):
         """
         if isinstance(command, SlashCommand) and command.is_subcommand:
             raise TypeError("The provided command is a sub-command of group")
-
-        if command.cog is MISSING:
-            command._set_cog(None)
 
         if self._bot.debug_guilds and command.guild_ids is None:
             command.guild_ids = self._bot.debug_guilds
@@ -267,9 +264,9 @@ class ApplicationCommandMixin(ABC):
                             for data in match["options"]
                             if data["name"] == subcommand.name
                         ),
-                        MISSING,
+                        None,
                     )
-                    if match_ is not MISSING and _check_command(subcommand, match_):
+                    if match_ and _check_command(subcommand, match_):
                         return True
             else:
                 as_dict = cmd.to_dict()
@@ -298,17 +295,15 @@ class ApplicationCommandMixin(ABC):
                         falsy_vals = (False, [])
                         for opt in value:
                             cmd_vals = (
-                                [val.get(opt, MISSING) for val in as_dict[check]]
+                                [val.get(opt) for val in as_dict[check]]
                                 if check in as_dict
                                 else []
                             )
                             for i, val in enumerate(cmd_vals):
                                 if val in falsy_vals:
-                                    cmd_vals[i] = MISSING
-                            if match.get(
-                                check, MISSING
-                            ) is not MISSING and cmd_vals != [
-                                val.get(opt, MISSING) for val in match[check]
+                                    cmd_vals[i] = None
+                            if match.get(check) and cmd_vals != [
+                                val.get(opt) for val in match[check]
                             ]:
                                 # We have a difference
                                 return True
