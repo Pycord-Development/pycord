@@ -519,7 +519,7 @@ class DynamicBucket:
         self._request_queue: asyncio.Queue[asyncio.Event] | None = None
         self.rate_limited: bool = True
 
-    async def use(self, reset_after: int | float, limit: int, is_global: bool) -> None:
+    async def use(self, reset_after: float, limit: int, is_global: bool) -> None:
         self.is_global = is_global
         self._reset_after = reset_after
         self._request_queue = asyncio.Queue()
