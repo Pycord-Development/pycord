@@ -44,7 +44,7 @@ from .errors import (
     NotFound,
 )
 from .gateway import DiscordClientWebSocketResponse
-from .rate_limiting import BucketStorageProtocol, BucketStorage, DynamicBucket
+from .rate_limiting import BucketStorage, BucketStorageProtocol, DynamicBucket
 from .utils import MISSING, warn_deprecated
 
 _log = logging.getLogger(__name__)
