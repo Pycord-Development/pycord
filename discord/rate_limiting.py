@@ -47,9 +47,10 @@ class GlobalRateLimit:
         The concurrency to reset every `per` seconds.
     per: :class:`float`
         Number of seconds to wait until resetting `concurrency`.
-    remaining: :class:`int`
+    remaining: Optional[:class:`int`]
         Number of available requests remaining. If the value of remaining
         is larger than concurrency a `ValueError` will be raised.
+        Defaults to ``None``
 
     Attributes
     ----------
@@ -61,8 +62,8 @@ class GlobalRateLimit:
         Unix timestamp of when this class will next reset.
     """
 
-    def __init__(self, concurrency: int, per: float, remaining: int = MISSING) -> None:
-        self.concurrency: int = concurrency
+    def __init__(self, concurrency: int, per: float, remaining: int | None = None) -> None:
+        self.concurrency: int = remaining or concurrency
         self.per: float = per
 
         self.current: int = self.concurrency
@@ -71,7 +72,7 @@ class GlobalRateLimit:
         self.pending_reset: bool = False
         self.reset_at: float | None = None
 
-        if remaining is not MISSING:
+        if remaining is not None and remaining > concurrency:
             raise ValueError(
                 "Given rate limit remaining value is larger than concurrency limit"
             )
