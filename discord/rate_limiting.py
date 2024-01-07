@@ -62,7 +62,9 @@ class GlobalRateLimit:
         Unix timestamp of when this class will next reset.
     """
 
-    def __init__(self, concurrency: int, per: float, remaining: int | None = None) -> None:
+    def __init__(
+        self, concurrency: int, per: float, remaining: int | None = None
+    ) -> None:
         self.concurrency: int = remaining or concurrency
         self.per: float = per
 
@@ -520,9 +522,7 @@ class DynamicBucket:
         self._request_queue: asyncio.Queue[asyncio.Event] | None = None
         self.rate_limited: bool = True
 
-    async def use(
-        self, reset_after: int | float, limit: int, is_global: bool
-    ) -> None:
+    async def use(self, reset_after: int | float, limit: int, is_global: bool) -> None:
         self.is_global = is_global
         self._reset_after = reset_after
         self._request_queue = asyncio.Queue()
