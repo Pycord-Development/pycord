@@ -323,7 +323,7 @@ class HTTPClient:
 
                                 if is_global:
                                     self.global_dynamo = DynamicBucket()
-                                    await self.global_dynamo.executed(
+                                    await self.global_dynamo.use(
                                         retry_after,
                                         remaining or 10,
                                         is_global=is_global,
@@ -334,7 +334,7 @@ class HTTPClient:
                                     await self._rate_limit.push_temp_bucket(
                                         bucket_id, tbucket
                                     )
-                                    await tbucket.executed(
+                                    await tbucket.use(
                                         retry_after, remaining or 10, is_global=True
                                     )
                                     await self._rate_limit.pop_temp_bucket(bucket_id)

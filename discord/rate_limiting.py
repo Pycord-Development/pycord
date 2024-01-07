@@ -242,17 +242,9 @@ class Bucket:
     def garbage(self) -> bool:
         """Whether this bucket should be collected by the garbage collector."""
 
-        # this bucket has futures reserved, do not collect yet
-        if self._reserved:
-            return False
-
-        # this bucket has no limit, it is garbage
-        if self.metadata_unknown:
+        # the bucket has no limit and is not reserved, it should be collected
+        if self.metadata_unknown and not self._reserved:
             return True
-
-        # this bucket has yet to expire
-        if self.remaining is not None:
-            return False
 
         return False
 
@@ -516,7 +508,7 @@ class BucketStorage(BucketStorageProtocol):
             This bucket's identifier.
         """
 
-        self._temp_buckets.pop(id, None)
+        del self._temp_buckets[id]
 
 
 class DynamicBucket:
@@ -527,7 +519,7 @@ class DynamicBucket:
         self._request_queue: asyncio.Queue[asyncio.Event] | None = None
         self.rate_limited: bool = True
 
-    async def executed(
+    async def use(
         self, reset_after: int | float, limit: int, is_global: bool
     ) -> None:
         self.is_global = is_global
@@ -549,8 +541,7 @@ class DynamicBucket:
                     await asyncio.sleep(5)
 
             requests_passed += 1
-            e = await self._request_queue.get()
-            e.set()
+            (await self._request_queue.get()).set()
         self.rate_limited = False
 
     async def wait(self) -> None:
