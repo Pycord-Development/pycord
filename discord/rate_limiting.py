@@ -245,11 +245,8 @@ class Bucket:
     def garbage(self) -> bool:
         """Whether this bucket should be collected by the garbage collector."""
 
-        # the bucket has no limit and is not reserved, it should be collected
-        if self.metadata_unknown and not self._reserved:
-            return True
-
-        return False
+        # the bucket should be collected if it has no limit and is not reserved
+        return self.metadata_unknown and not self._reserved
 
     async def stop(self) -> None:
         """Cancel all reserved futures from use."""
