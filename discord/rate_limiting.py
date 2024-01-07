@@ -387,7 +387,7 @@ class BucketStorageProtocol(Protocol):
             This bucket's identifier.
         """
 
-    async def pop_temp_bucket(self, id: str) -> None:
+    async def delete_temp_bucket(self, id: str) -> None:
         """Pop a temporary bucket which *may* be in storage.
 
         Parameters
@@ -499,8 +499,8 @@ class BucketStorage(BucketStorageProtocol):
 
         self._temp_buckets[id] = bucket
 
-    async def pop_temp_bucket(self, id: str) -> None:
-        """Pop a temporary bucket which *may* be in storage.
+    async def delete_temp_bucket(self, id: str) -> None:
+        """Delete a temporary bucket which may be in storage.
 
         Parameters
         ----------
@@ -508,7 +508,8 @@ class BucketStorage(BucketStorageProtocol):
             This bucket's identifier.
         """
 
-        del self._temp_buckets[id]
+        if id in self._temp_buckets:
+            del self._temp_buckets[id]
 
 
 class DynamicBucket:

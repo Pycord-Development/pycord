@@ -337,7 +337,7 @@ class HTTPClient:
                                     await tbucket.use(
                                         retry_after, remaining or 10, is_global=True
                                     )
-                                    await self._rate_limit.pop_temp_bucket(bucket_id)
+                                    await self._rate_limit.delete_temp_bucket(bucket_id)
 
                                 _log.debug(
                                     "Done sleeping for the rate limit. Retrying..."
