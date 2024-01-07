@@ -260,13 +260,13 @@ class Client:
         rate_limit_timeout: float = options.pop("rate_limit_timeout", -1)
 
         self.http: HTTPClient = HTTPClient(
-            bucket_storage,
             connector,
             proxy=proxy,
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
             rate_limit_timeout=rate_limit_timeout,
+            bucket_storage=bucket_storage,
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
