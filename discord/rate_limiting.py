@@ -301,7 +301,7 @@ class BucketStorageProtocol(Protocol):
     ----------
     concurrency: :class:`int`
         The concurrency to reset every `per` seconds.
-    per: :class:`int` | :class:`float`
+    per: :class:`int`
         Number of seconds to wait until resetting `concurrency`.
 
     Attributes
@@ -388,7 +388,7 @@ class BucketStorageProtocol(Protocol):
         """
 
     async def delete_temp_bucket(self, id: str) -> None:
-        """Pop a temporary bucket which *may* be in storage.
+        """Delete a temporary bucket which may be in storage.
 
         Parameters
         ----------
