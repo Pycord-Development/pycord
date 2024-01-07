@@ -513,7 +513,11 @@ class BucketStorage(BucketStorageProtocol):
 
 
 class DynamicBucket:
-    """A dynamic bucket for on-the-fly rate limits. Should not be used inside a bot directly!"""
+    """A version of `Bucket` for when the Bot runs into an unexpected 429 rate limit.
+
+    .. warning::
+        Should not be used directly inside a Bot
+    """
 
     def __init__(self) -> None:
         self.is_global: bool | None = None
