@@ -207,6 +207,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 - Fixed `AttributeError` caused by `command.cog` being `MISSING`.
   ([#2303](https://github.com/Pycord-Development/pycord/issues/2303))
+- Fixed `TypeError` caused by `WebhookMessage._thread_id` being `None`.
+  ([#2314](https://github.com/Pycord-Development/pycord/pull/2314))
 
 ## [2.4.1] - 2023-03-20
 
