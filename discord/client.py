@@ -214,7 +214,7 @@ class Client:
         Defaults to `50`.
 
         .. versionadded:: 2.5
-    per: :class:`int`
+    per: :class:`float`
         Number of seconds to wait until resetting `global_concurrency`.
         Defaults to `1` second.
 
