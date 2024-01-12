@@ -368,7 +368,12 @@ class View:
         """
         if self.disable_on_timeout:
             self.disable_all_items()
-            message = self._message or self.parent
+
+            if not self._message or self._message.flags.ephemeral:
+                message = self.parent
+            else:
+                message = self.message
+
             if message:
                 m = await message.edit(view=self)
                 if m:

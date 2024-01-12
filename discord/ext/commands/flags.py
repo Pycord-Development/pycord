@@ -33,6 +33,11 @@ from typing import TYPE_CHECKING, Any, Iterator, Literal, Pattern, TypeVar, Unio
 
 from discord.utils import MISSING, MissingField, maybe_coroutine, resolve_annotation
 
+if sys.version_info >= (3, 11):
+    _MISSING = MissingField
+else:
+    _MISSING = MISSING
+
 from .converter import run_converters
 from .errors import (
     BadFlagArgument,
@@ -81,13 +86,13 @@ class Flag:
         Whether multiple given values overrides the previous value.
     """
 
-    name: str = MissingField
+    name: str = _MISSING
     aliases: list[str] = field(default_factory=list)
-    attribute: str = MissingField
-    annotation: Any = MissingField
-    default: Any = MissingField
-    max_args: int = MissingField
-    override: bool = MissingField
+    attribute: str = _MISSING
+    annotation: Any = _MISSING
+    default: Any = _MISSING
+    max_args: int = _MISSING
+    override: bool = _MISSING
     cast_to_dict: bool = False
 
     @property

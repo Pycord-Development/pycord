@@ -32,6 +32,7 @@ import discord.abc
 
 from . import utils
 from .asset import Asset
+from .emoji import Emoji
 from .enums import (
     ChannelType,
     EmbeddedActivity,
@@ -171,7 +172,7 @@ class ForumTag(Hashable):
         payload: dict[str, Any] = {
             "name": self.name,
             "moderated": self.moderated,
-        } | self.emoji._to_forum_tag_payload()
+        } | self.emoji._to_forum_reaction_payload()
 
         if self.id:
             payload["id"] = self.id
@@ -195,6 +196,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         "last_message_id",
         "default_auto_archive_duration",
         "default_thread_slowmode_delay",
+        "default_reaction_emoji",
         "default_sort_order",
         "available_tags",
         "flags",
@@ -228,7 +230,6 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         self.name: str = data["name"]
         self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
         self._type: int = data["type"]
-
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
             self.topic: str | None = data.get("topic")
@@ -751,7 +752,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
     def _update(self, guild: Guild, data: TextChannelPayload) -> None:
         super()._update(guild, data)
 
-    async def _get_channel(self) -> "TextChannel":
+    async def _get_channel(self) -> TextChannel:
         return self
 
     def is_news(self) -> bool:
@@ -1008,6 +1009,10 @@ class ForumChannel(_TextChannel):
         The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
+    default_reaction_emoji: Optional[:class:`str` | :class:`discord.Emoji`]
+        The default forum reaction emoji.
+
+        .. versionadded:: 2.5
     """
 
     def __init__(
@@ -1022,6 +1027,15 @@ class ForumChannel(_TextChannel):
             for tag in (data.get("available_tags") or [])
         ]
         self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
+        reaction_emoji_ctx: dict = data.get("default_reaction_emoji")
+        if reaction_emoji_ctx is not None:
+            emoji_name = reaction_emoji_ctx.get("emoji_name")
+            if emoji_name is not None:
+                self.default_reaction_emoji = reaction_emoji_ctx["emoji_name"]
+            else:
+                self.default_reaction_emoji = self._state.get_emoji(
+                    utils._get_as_snowflake(reaction_emoji_ctx, "emoji_id")
+                )
 
     @property
     def guidelines(self) -> str | None:
@@ -1061,14 +1075,15 @@ class ForumChannel(_TextChannel):
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
+        default_reaction_emoji: Emoji | int | str | None = ...,
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> "ForumChannel" | None:
+    ) -> ForumChannel | None:
         ...
 
     @overload
-    async def edit(self) -> "ForumChannel" | None:
+    async def edit(self) -> ForumChannel | None:
         ...
 
     async def edit(self, *, reason=None, **options):
@@ -1113,6 +1128,12 @@ class ForumChannel(_TextChannel):
             The default sort order type to use to order posts in this channel.
 
             .. versionadded:: 2.3
+        default_reaction_emoji: Optional[:class:`discord.Emoji` | :class:`int` | :class:`str`]
+            The default reaction emoji.
+            Can be a unicode emoji or a custom emoji in the forms:
+            :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+
+            .. versionadded:: 2.5
         available_tags: List[:class:`ForumTag`]
             The set of tags that can be used in this channel. Must be less than `20`.
 
@@ -1274,26 +1295,7 @@ class ForumChannel(_TextChannel):
         if file is not None and files is not None:
             raise InvalidArgument("cannot pass both file and files parameter to send()")
 
-        if file is not None:
-            if not isinstance(file, File):
-                raise InvalidArgument("file parameter must be File")
-
-            try:
-                data = await state.http.send_files(
-                    self.id,
-                    files=[file],
-                    allowed_mentions=allowed_mentions,
-                    content=message_content,
-                    embed=embed,
-                    embeds=embeds,
-                    nonce=nonce,
-                    stickers=stickers,
-                    components=components,
-                )
-            finally:
-                file.close()
-
-        elif files is not None:
+        if files is not None:
             if len(files) > 10:
                 raise InvalidArgument(
                     "files parameter must be a list of up to 10 elements"
@@ -1301,26 +1303,17 @@ class ForumChannel(_TextChannel):
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
-            try:
-                data = await state.http.send_files(
-                    self.id,
-                    files=files,
-                    content=message_content,
-                    embed=embed,
-                    embeds=embeds,
-                    nonce=nonce,
-                    allowed_mentions=allowed_mentions,
-                    stickers=stickers,
-                    components=components,
-                )
-            finally:
-                for f in files:
-                    f.close()
-        else:
+        if file is not None:
+            if not isinstance(file, File):
+                raise InvalidArgument("file parameter must be File")
+            files = [file]
+
+        try:
             data = await state.http.start_forum_thread(
                 self.id,
                 content=message_content,
                 name=name,
+                files=files,
                 embed=embed,
                 embeds=embeds,
                 nonce=nonce,
@@ -1333,6 +1326,11 @@ class ForumChannel(_TextChannel):
                 applied_tags=applied_tags,
                 reason=reason,
             )
+        finally:
+            if files is not None:
+                for f in files:
+                    f.close()
+
         ret = Thread(guild=self.guild, state=self._state, data=data)
         msg = ret.get_partial_message(data["last_message_id"])
         if view:
@@ -1352,6 +1350,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         "user_limit",
         "_state",
         "position",
+        "slowmode_delay",
         "_overwrites",
         "category_id",
         "rtc_region",
@@ -1399,6 +1398,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
                 data, "last_message_id"
             )
             self.position: int = data.get("position")
+            self.slowmode_delay = data.get("rate_limit_per_user", 0)
             self.bitrate: int = data.get("bitrate")
             self.user_limit: int = data.get("user_limit")
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
@@ -1506,6 +1506,13 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
 
         .. versionadded:: 2.0
+    slowmode_delay: :class:`int`
+        The number of seconds a member must wait between sending messages
+        in this channel. A value of `0` denotes that it is disabled.
+        Bots and users with :attr:`~Permissions.manage_channels` or
+        :attr:`~Permissions.manage_messages` bypass slowmode.
+
+        .. versionadded:: 2.5
     flags: :class:`ChannelFlags`
         Extra features of the channel.
 
@@ -1814,6 +1821,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
+        slowmode_delay: int = ...,
         reason: str | None = ...,
     ) -> VoiceChannel | None:
         ...
@@ -2840,7 +2848,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
         self._state: ConnectionState = state
         self.recipient: User | None = None
         if r := data.get("recipients"):
-            self.recipient: state.store_user(r[0])
+            self.recipient = state.store_user(r[0])
         self.me: ClientUser = me
         self.id: int = int(data["id"])
 

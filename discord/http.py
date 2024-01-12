@@ -757,6 +757,7 @@ class HTTPClient:
         emoji: str,
         limit: int,
         after: Snowflake | None = None,
+        type: int | None = None,
     ) -> Response[list[user.User]]:
         r = Route(
             "GET",
@@ -771,6 +772,8 @@ class HTTPClient:
         }
         if after:
             params["after"] = after
+        if type:
+            params["type"] = type
         return self.request(r, params=params)
 
     def clear_reactions(
@@ -1093,6 +1096,7 @@ class HTTPClient:
             "rtc_region",
             "video_quality_mode",
             "auto_archive_duration",
+            "default_reaction_emoji",
         )
         payload.update(
             {k: v for k, v in options.items() if k in valid_keys and v is not None}
@@ -1170,6 +1174,7 @@ class HTTPClient:
         invitable: bool = True,
         applied_tags: SnowflakeList | None = None,
         reason: str | None = None,
+        files: Sequence[File] | None = None,
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
         nonce: str | None = None,
@@ -1177,43 +1182,74 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
     ) -> Response[threads.Thread]:
-        payload = {
+        payload: dict[str, Any] = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
             "invitable": invitable,
         }
-        if content:
-            payload["content"] = content
 
         if applied_tags:
             payload["applied_tags"] = applied_tags
 
-        if embed:
-            payload["embeds"] = [embed]
-
-        if embeds:
-            payload["embeds"] = embeds
-
-        if nonce:
-            payload["nonce"] = nonce
-
-        if allowed_mentions:
-            payload["allowed_mentions"] = allowed_mentions
-
-        if components:
-            payload["components"] = components
-
-        if stickers:
-            payload["sticker_ids"] = stickers
-
         if rate_limit_per_user:
             payload["rate_limit_per_user"] = rate_limit_per_user
-        # TODO: Once supported by API, remove has_message=true query parameter
+
+        message = {}
+
+        if content:
+            message["content"] = content
+
+        if embed:
+            message["embeds"] = [embed]
+
+        if embeds:
+            message["embeds"] = embeds
+
+        if nonce:
+            message["nonce"] = nonce
+
+        if allowed_mentions:
+            message["allowed_mentions"] = allowed_mentions
+
+        if components:
+            message["components"] = components
+
+        if stickers:
+            message["sticker_ids"] = stickers
+
+        if message != {}:
+            payload["message"] = message
+
         route = Route(
             "POST",
-            "/channels/{channel_id}/threads?has_message=true",
+            "/channels/{channel_id}/threads",
             channel_id=channel_id,
         )
+
+        if files:
+            form = [{"name": "payload_json"}]
+
+            attachments = []
+            for index, file in enumerate(files):
+                attachments.append(
+                    {
+                        "id": index,
+                        "filename": file.filename,
+                        "description": file.description,
+                    }
+                )
+                form.append(
+                    {
+                        "name": f"files[{index}]",
+                        "value": file.fp,
+                        "filename": file.filename,
+                        "content_type": "application/octet-stream",
+                    }
+                )
+
+            payload["attachments"] = attachments
+            form[0]["value"] = utils._to_json(payload)
+            return self.request(route, form=form, reason=reason)
         return self.request(route, json=payload, reason=reason)
 
     def join_thread(self, channel_id: Snowflake) -> Response[None]:

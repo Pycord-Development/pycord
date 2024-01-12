@@ -1580,6 +1580,18 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.5
 
+    .. attribute:: creator_monetization_request_created
+
+        A creator monetization request was created.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: creator_monetization_terms_accepted
+
+        The creator monetization terms were accepted.
+
+        .. versionadded:: 2.5
+
 
 .. class:: AuditLogActionCategory
 
@@ -1946,6 +1958,18 @@ of :class:`enum.Enum`.
 
         Represents the embedded application Fishington.io.
 
+    .. attribute:: gartic_phone
+
+        Represents the embedded application Gartic Phone.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: jamspace
+
+        Represents the embedded application Jamspace.
+
+        .. versionadded:: 2.5
+
     .. attribute:: know_what_i_meme
 
         Represents the embedded application Know What I Meme.
@@ -2268,3 +2292,17 @@ of :class:`enum.Enum`.
     .. attribute:: slurs
 
         Represents the slurs keyword preset rule.
+
+.. class:: ReactionType
+
+    Represents a Reaction's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: normal
+
+        Represents a normal reaction.
+
+    .. attribute:: burst
+
+        Represents a super reaction.

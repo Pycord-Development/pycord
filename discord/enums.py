@@ -37,7 +37,6 @@ __all__ = (
     "VerificationLevel",
     "ContentFilter",
     "Status",
-    "DefaultAvatar",
     "AuditLogAction",
     "AuditLogActionCategory",
     "UserFlags",
@@ -68,6 +67,7 @@ __all__ = (
     "AutoModActionType",
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
+    "ReactionType",
 )
 
 
@@ -354,20 +354,6 @@ class Status(Enum):
         return self.value
 
 
-class DefaultAvatar(Enum):
-    """Default avatar"""
-
-    blurple = 0
-    grey = 1
-    gray = 1
-    green = 2
-    orange = 3
-    red = 4
-
-    def __str__(self):
-        return self.name
-
-
 class NotificationLevel(Enum, comparable=True):
     """Notification level"""
 
@@ -440,6 +426,8 @@ class AuditLogAction(Enum):
     auto_moderation_block_message = 143
     auto_moderation_flag_to_channel = 144
     auto_moderation_user_communication_disabled = 145
+    creator_monetization_request_created = 150
+    creator_monetization_terms_accepted = 151
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -500,6 +488,8 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_block_message: None,
             AuditLogAction.auto_moderation_flag_to_channel: None,
             AuditLogAction.auto_moderation_user_communication_disabled: None,
+            AuditLogAction.creator_monetization_request_created: None,
+            AuditLogAction.creator_monetization_terms_accepted: None,
         }
         return lookup[self]
 
@@ -852,6 +842,8 @@ class EmbeddedActivity(Enum):
     doodle_crew = 878067389634314250
     doodle_crew_dev = 878067427668275241
     fishington = 814288819477020702
+    gartic_phone = 1007373802981822582
+    jamspace = 1070087967294631976
     know_what_i_meme = 950505761862189096
     land = 903769130790969345
     letter_league = 879863686565621790
@@ -951,6 +943,13 @@ class ApplicationRoleConnectionMetadataType(Enum):
     datetime_greater_than_or_equal = 6
     boolean_equal = 7
     boolean_not_equal = 8
+
+
+class ReactionType(Enum):
+    """The reaction type"""
+
+    normal = 0
+    burst = 1
 
 
 T = TypeVar("T")

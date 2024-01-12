@@ -62,6 +62,9 @@ class ReactionActionEvent(_ReactionEventOptional):
     channel_id: Snowflake
     message_id: Snowflake
     emoji: PartialEmoji
+    burst: bool
+    burst_colors: list
+    type: int
 
 
 class ReactionClearEvent(_ReactionEventOptional):
@@ -73,6 +76,9 @@ class ReactionClearEmojiEvent(_ReactionEventOptional):
     channel_id: int
     message_id: int
     emoji: PartialEmoji
+    burst: bool
+    burst_colors: list
+    type: int
 
 
 class IntegrationDeleteEvent(TypedDict):
@@ -134,7 +140,7 @@ class ThreadMembersUpdateEvent(TypedDict):
 
 class AuditLogEntryEvent(TypedDict):
     id: Snowflake
-    user_id: Snowflake
+    user_id: NotRequired[Snowflake]
     guild_id: Snowflake
     target_id: NotRequired[Snowflake]
     action_type: int

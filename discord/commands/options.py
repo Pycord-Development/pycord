@@ -395,7 +395,7 @@ class OptionChoice:
 
 
 def option(name, type=None, **kwargs):
-    """A decorator that can be used instead of typehinting :class:`Option`.
+    """A decorator that can be used instead of typehinting :class:`.Option`.
 
     .. versionadded:: 2.0
 
