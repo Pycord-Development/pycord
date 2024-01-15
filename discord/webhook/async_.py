@@ -54,6 +54,9 @@ from ..mixins import Hashable
 from ..object import Object
 from ..threads import Thread
 from ..user import BaseUser, User
+from ..types.message import Message as MessagePayload
+from ..state import ConnectionState
+from ..abc import MessageableChannel
 
 __all__ = (
     "Webhook",
