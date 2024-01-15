@@ -819,7 +819,25 @@ class WebhookMessage(Message):
     """
 
     _state: _WebhookState
-    _thread_id: int | None = None
+    _thread: Object | None = MISSING
+
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePayload,
+        thread_id: int | None = None
+    ):
+        super().__init__(state=state, channel=channel, data=data)
+
+        if thread_id is not None:
+            self._thread = Object(thread_id)
+        elif isinstance(self.channel, Thread):
+            self._thread = Object(self.channel.id)
+        elif isinstance(self.channel, ForumChannel):
+            self._thread = Object(self.id)
+
 
     async def edit(
         self,
@@ -894,13 +912,6 @@ class WebhookMessage(Message):
         InvalidArgument
             There was no token associated with this webhook.
         """
-        thread = MISSING
-        if self._thread_id is not None:
-            thread = Object(self._thread_id)
-        elif isinstance(self.channel, Thread):
-            thread = Object(self.channel.id)
-        elif isinstance(self.channel, ForumChannel):
-            thread = Object(self.id)
 
         if attachments is MISSING:
             attachments = self.attachments or MISSING
@@ -918,7 +929,7 @@ class WebhookMessage(Message):
             attachments=attachments,
             view=view,
             allowed_mentions=allowed_mentions,
-            thread=thread,
+            thread=self.thread,
             suppress=suppress,
         )
 
@@ -942,11 +953,6 @@ class WebhookMessage(Message):
         HTTPException
             Deleting the message failed.
         """
-        thread_id: int | None = None
-        if self._thread_id is not None:
-            thread_id = self._thread_id
-        elif isinstance(self.channel, Thread):
-            thread_id = self.channel.id
 
         if delay is not None:
 
@@ -954,14 +960,14 @@ class WebhookMessage(Message):
                 await asyncio.sleep(delay)
                 try:
                     await self._state._webhook.delete_message(
-                        self.id, thread_id=thread_id
+                        self.id, thread_id=self._thread.id
                     )
                 except HTTPException:
                     pass
 
             asyncio.create_task(inner_call())
         else:
-            await self._state._webhook.delete_message(self.id, thread_id=thread_id)
+            await self._state._webhook.delete_message(self.id, thread_id=self._thread.id)
 
 
 class BaseWebhook(Hashable):
@@ -1840,8 +1846,6 @@ class Webhook(BaseWebhook):
             thread_id=thread_id,
         )
         msg = self._create_message(data)
-        if isinstance(msg.channel, PartialMessageable):
-            msg._thread_id = thread_id
 
         return msg
 
