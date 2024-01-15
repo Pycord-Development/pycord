@@ -819,6 +819,7 @@ class WebhookMessage(Message):
     """
 
     _state: _WebhookState
+    _thread_id: int | None = None
 
     async def edit(
         self,
@@ -894,7 +895,7 @@ class WebhookMessage(Message):
             There was no token associated with this webhook.
         """
         thread = MISSING
-        if hasattr(self, "_thread_id") and self._thread_id is not None:
+        if self._thread_id is not None:
             thread = Object(self._thread_id)
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
@@ -942,7 +943,7 @@ class WebhookMessage(Message):
             Deleting the message failed.
         """
         thread_id: int | None = None
-        if hasattr(self, "_thread_id") and self._thread_id is not None:
+        if self._thread_id is not None:
             thread_id = self._thread_id
         elif isinstance(self.channel, Thread):
             thread_id = self.channel.id
