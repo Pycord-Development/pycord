@@ -27,7 +27,9 @@ class MyContext(commands.Context):  # Custom context
 class MyApplicationContext(discord.ApplicationContext):  # Custom application context
     async def success(self, message: str):
         try:  # Respond with a green embed with a title of "Success"
-            embed = discord.Embed(title="Success", description=message, colour=discord.Colour.green())
+            embed = discord.Embed(
+                title="Success", description=message, colour=discord.Colour.green()
+            )
             await self.respond(embeds=[embed])
         except discord.HTTPException:  # Ignore exceptions
             pass
@@ -40,7 +42,9 @@ class MyBot(commands.Bot):
         # use the new MyContext class.
         return await super().get_context(message, cls=cls)
 
-    async def get_application_context(self, interaction: discord.Interaction, cls=MyApplicationContext):
+    async def get_application_context(
+        self, interaction: discord.Interaction, cls=MyApplicationContext
+    ):
         # The same method for custom application context.
         return await super().get_application_context(interaction, cls=cls)
 
@@ -48,7 +52,9 @@ class MyBot(commands.Bot):
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = MyBot(command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents)
+bot = MyBot(
+    command_prefix=commands.when_mentioned_or("!"), debug_guilds=[...], intents=intents
+)
 
 
 @bot.command()
@@ -68,7 +74,9 @@ async def slash_guess(ctx: MyApplicationContext, number: int):
     """Guess a random number from 1 to 6."""
     value = random.randint(1, 6)
     if number == value:
-        await ctx.success("Congratulations! You guessed the number.")  # Use the new helper function
+        await ctx.success(
+            "Congratulations! You guessed the number."
+        )  # Use the new helper function
     else:
         await ctx.respond("You are wrong! Try again.")
 

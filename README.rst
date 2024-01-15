@@ -32,7 +32,7 @@ Installing
 
 **Python 3.8 or higher is required**
 
-To install the library without full voice support, you can just run the following command:
+To install the library without full voice support, run the following command:
 
 .. code:: sh
 
@@ -42,7 +42,7 @@ To install the library without full voice support, you can just run the followin
     # Windows
     py -3 -m pip install -U py-cord
 
-Otherwise to get voice support you should run the following command:
+Otherwise, to get full voice support, run the following command:
 
 .. code:: sh
 
@@ -69,7 +69,7 @@ To install the development version, do the following:
     $ git clone https://github.com/Pycord-Development/pycord
     $ cd pycord
     $ python3 -m pip install -U .[voice]
-    
+
 or if you do not want to clone the repository:
 
 .. code:: sh
@@ -85,7 +85,7 @@ Optional Packages
 
 * `PyNaCl <https://pypi.org/project/PyNaCl/>`__ (for voice support)
 * `aiodns <https://pypi.org/project/aiodns/>`__, `brotlipy <https://pypi.org/project/brotlipy/>`__, `cchardet <https://pypi.org/project/cchardet/>`__ (for aiohttp speedup)
-* `orjson <https://pypi.org/project/orjson/>`__ (for json speedup)
+* `msgspec <https://pypi.org/project/msgspec/>`__ (for json speedup)
 
 Please note that while installing voice support on Linux, you must install the following packages via your preferred package manager (e.g. ``apt``, ``dnf``, etc) BEFORE running the above commands:
 
@@ -130,9 +130,9 @@ Traditional Commands Example
 
     bot.run("token")
 
-You can find more examples in the examples directory.
+You can find more code examples in the ``examples`` directory.
 
-Note: Make sure you do not reveal your bot token to anyone, it can grant access to your bot.
+Note: Make sure you do not reveal your bot token to anyone, as it can grant access to your bot.
 
 Useful Links
 ------------
@@ -141,4 +141,3 @@ Useful Links
 - `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
-- `Unofficial Discord API Server <https://discord.gg/discord-api>`_

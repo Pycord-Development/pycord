@@ -25,8 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Literal, Optional, TypedDict, Union
+from typing import Literal, Union
 
+from .._typed_dict import NotRequired, TypedDict
 from .automod import AutoModRule
 from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
 from .guild import (
@@ -187,8 +188,8 @@ class _AuditLogChange_Int(TypedDict):
 
 class _AuditLogChange_ListRole(TypedDict):
     key: Literal["$add", "$remove"]
-    new_value: List[Role]
-    old_value: List[Role]
+    new_value: list[Role]
+    old_value: list[Role]
 
 
 class _AuditLogChange_MFALevel(TypedDict):
@@ -235,8 +236,8 @@ class _AuditLogChange_VideoQualityMode(TypedDict):
 
 class _AuditLogChange_Overwrites(TypedDict):
     key: Literal["permission_overwrites"]
-    new_value: List[PermissionOverwrite]
-    old_value: List[PermissionOverwrite]
+    new_value: list[PermissionOverwrite]
+    old_value: list[PermissionOverwrite]
 
 
 AuditLogChange = Union[
@@ -266,26 +267,26 @@ class AuditEntryInfo(TypedDict):
     id: Snowflake
     type: Literal["0", "1"]
     role_name: str
+    application_id: Snowflake
+    auto_moderation_rule_name: str
+    auto_moderation_rule_trigger_type: str
 
 
-class _AuditLogEntryOptional(TypedDict, total=False):
-    changes: List[AuditLogChange]
-    options: AuditEntryInfo
-    reason: str
-
-
-class AuditLogEntry(_AuditLogEntryOptional):
-    target_id: Optional[str]
-    user_id: Optional[Snowflake]
+class AuditLogEntry(TypedDict):
+    changes: NotRequired[list[AuditLogChange]]
+    options: NotRequired[AuditEntryInfo]
+    reason: NotRequired[str]
+    target_id: str | None
+    user_id: Snowflake | None
     id: Snowflake
     action_type: AuditLogEvent
 
 
 class AuditLog(TypedDict):
-    webhooks: List[Webhook]
-    users: List[User]
-    audit_log_entries: List[AuditLogEntry]
-    integrations: List[PartialIntegration]
-    threads: List[Thread]
-    scheduled_events: List[ScheduledEvent]
-    auto_moderation_rules: List[AutoModRule]
+    webhooks: list[Webhook]
+    users: list[User]
+    audit_log_entries: list[AuditLogEntry]
+    integrations: list[PartialIntegration]
+    threads: list[Thread]
+    scheduled_events: list[ScheduledEvent]
+    auto_moderation_rules: list[AutoModRule]

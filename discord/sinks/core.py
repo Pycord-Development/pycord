@@ -34,7 +34,7 @@ from ..types import snowflake
 from .errors import SinkException
 
 if TYPE_CHECKING:
-    from ..channel import VoiceChannel
+    from ..voice_client import VoiceClient
 
 __all__ = (
     "Filters",
@@ -109,10 +109,13 @@ class RawData:
 
         unpacker = struct.Struct(">xxHII")
         self.sequence, self.timestamp, self.ssrc = unpacker.unpack_from(self.header)
-        self.decrypted_data = getattr(self.client, f"_decrypt_{self.client.mode}")(self.header, self.data)
+        self.decrypted_data = getattr(self.client, f"_decrypt_{self.client.mode}")(
+            self.header, self.data
+        )
         self.decoded_data = None
 
         self.user_id = None
+        self.receive_time = time.perf_counter()
 
 
 class AudioData:
@@ -198,11 +201,11 @@ class Sink(Filters):
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
-        self.vc: VoiceChannel = None
+        self.vc: VoiceClient = None
         self.audio_data = {}
 
     def init(self, vc):  # called under listen
-        self.vc: VoiceChannel = vc
+        self.vc: VoiceClient = vc
         super().init()
 
     @Filters.container

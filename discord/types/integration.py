@@ -25,20 +25,18 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Optional, TypedDict, Union
+from typing import Literal, Union
 
+from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
 from .user import User
 
 
-class _IntegrationApplicationOptional(TypedDict, total=False):
-    bot: User
-
-
-class IntegrationApplication(_IntegrationApplicationOptional):
+class IntegrationApplication(TypedDict):
+    bot: NotRequired[User]
     id: Snowflake
     name: str
-    icon: Optional[str]
+    icon: str | None
     description: str
     summary: str
 
@@ -71,7 +69,7 @@ class BaseIntegration(PartialIntegration):
 
 
 class StreamIntegration(BaseIntegration):
-    role_id: Optional[Snowflake]
+    role_id: Snowflake | None
     enable_emoticons: bool
     subscriber_count: int
     revoked: bool

@@ -27,22 +27,34 @@ from __future__ import annotations
 
 import inspect
 import os
-from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Callable, TypeVar
 
+from ..channel import _threaded_guild_channel_factory
 from ..components import SelectMenu, SelectOption
 from ..emoji import Emoji
-from ..enums import ComponentType
+from ..enums import ChannelType, ComponentType
+from ..errors import InvalidArgument
 from ..interactions import Interaction
+from ..member import Member
 from ..partial_emoji import PartialEmoji
+from ..role import Role
+from ..threads import Thread
+from ..user import User
 from ..utils import MISSING
 from .item import Item, ItemCallbackType
 
 __all__ = (
     "Select",
     "select",
+    "string_select",
+    "user_select",
+    "role_select",
+    "mentionable_select",
+    "channel_select",
 )
 
 if TYPE_CHECKING:
+    from ..abc import GuildChannel
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .view import View
@@ -60,8 +72,19 @@ class Select(Item[V]):
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.3
+
+        Added support for :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
+        :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
+        and :attr:`discord.ComponentType.channel_select`.
+
     Parameters
-    ------------
+    ----------
+    select_type: :class:`discord.ComponentType`
+        The type of select to create. Must be one of
+        :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
+        :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
+        or :attr:`discord.ComponentType.channel_select`.
     custom_id: :class:`str`
         The ID of the select menu that gets received during an interaction.
         If not given then one is generated for you.
@@ -75,6 +98,10 @@ class Select(Item[V]):
         Defaults to 1 and must be between 1 and 25.
     options: List[:class:`discord.SelectOption`]
         A list of options that can be selected in this menu.
+        Only valid for selects of type :attr:`discord.ComponentType.string_select`.
+    channel_types: List[:class:`discord.ChannelType`]
+        A list of channel types that can be selected in this menu.
+        Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not.
     row: Optional[:class:`int`]
@@ -85,27 +112,38 @@ class Select(Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
-    __item_repr_attributes__: Tuple[str, ...] = (
+    __item_repr_attributes__: tuple[str, ...] = (
+        "type",
         "placeholder",
         "min_values",
         "max_values",
         "options",
+        "channel_types",
         "disabled",
     )
 
     def __init__(
         self,
+        select_type: ComponentType = ComponentType.string_select,
         *,
-        custom_id: Optional[str] = None,
-        placeholder: Optional[str] = None,
+        custom_id: str | None = None,
+        placeholder: str | None = None,
         min_values: int = 1,
         max_values: int = 1,
-        options: List[SelectOption] = MISSING,
+        options: list[SelectOption] = None,
+        channel_types: list[ChannelType] = None,
         disabled: bool = False,
-        row: Optional[int] = None,
+        row: int | None = None,
     ) -> None:
+        if options and select_type is not ComponentType.string_select:
+            raise InvalidArgument("options parameter is only valid for string selects")
+        if channel_types and select_type is not ComponentType.channel_select:
+            raise InvalidArgument(
+                "channel_types parameter is only valid for channel selects"
+            )
         super().__init__()
-        self._selected_values: List[str] = []
+        self._selected_values: list[str] = []
+        self._interaction: Interaction | None = None
         if min_values < 0 or min_values > 25:
             raise ValueError("min_values must be between 0 and 25")
         if max_values < 1 or max_values > 25:
@@ -113,25 +151,27 @@ class Select(Item[V]):
         if placeholder and len(placeholder) > 150:
             raise ValueError("placeholder must be 150 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
+            raise TypeError(
+                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
+            )
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        options = [] if options is MISSING else options
-        self._underlying = SelectMenu._raw_construct(
+        self._underlying: SelectMenu = SelectMenu._raw_construct(
             custom_id=custom_id,
-            type=ComponentType.select,
+            type=select_type,
             placeholder=placeholder,
             min_values=min_values,
             max_values=max_values,
-            options=options,
             disabled=disabled,
+            options=options or [],
+            channel_types=channel_types or [],
         )
         self.row = row
 
     @property
     def custom_id(self) -> str:
-        """:class:`str`: The ID of the select menu that gets received during an interaction."""
+        """The ID of the select menu that gets received during an interaction."""
         return self._underlying.custom_id
 
     @custom_id.setter
@@ -143,12 +183,12 @@ class Select(Item[V]):
         self._underlying.custom_id = value
 
     @property
-    def placeholder(self) -> Optional[str]:
-        """Optional[:class:`str`]: The placeholder text that is shown if nothing is selected, if any."""
+    def placeholder(self) -> str | None:
+        """The placeholder text that is shown if nothing is selected, if any."""
         return self._underlying.placeholder
 
     @placeholder.setter
-    def placeholder(self, value: Optional[str]):
+    def placeholder(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise TypeError("placeholder must be None or str")
         if value and len(value) > 150:
@@ -158,7 +198,7 @@ class Select(Item[V]):
 
     @property
     def min_values(self) -> int:
-        """:class:`int`: The minimum number of items that must be chosen for this select menu."""
+        """The minimum number of items that must be chosen for this select menu."""
         return self._underlying.min_values
 
     @min_values.setter
@@ -169,7 +209,7 @@ class Select(Item[V]):
 
     @property
     def max_values(self) -> int:
-        """:class:`int`: The maximum number of items that must be chosen for this select menu."""
+        """The maximum number of items that must be chosen for this select menu."""
         return self._underlying.max_values
 
     @max_values.setter
@@ -179,12 +219,34 @@ class Select(Item[V]):
         self._underlying.max_values = int(value)
 
     @property
-    def options(self) -> List[SelectOption]:
-        """List[:class:`discord.SelectOption`]: A list of options that can be selected in this menu."""
+    def disabled(self) -> bool:
+        """Whether the select is disabled or not."""
+        return self._underlying.disabled
+
+    @disabled.setter
+    def disabled(self, value: bool):
+        self._underlying.disabled = bool(value)
+
+    @property
+    def channel_types(self) -> list[ChannelType]:
+        """A list of channel types that can be selected in this menu."""
+        return self._underlying.channel_types
+
+    @channel_types.setter
+    def channel_types(self, value: list[ChannelType]):
+        if self._underlying.type is not ComponentType.channel_select:
+            raise InvalidArgument("channel_types can only be set on channel selects")
+        self._underlying.channel_types = value
+
+    @property
+    def options(self) -> list[SelectOption]:
+        """A list of options that can be selected in this menu."""
         return self._underlying.options
 
     @options.setter
-    def options(self, value: List[SelectOption]):
+    def options(self, value: list[SelectOption]):
+        if self._underlying.type is not ComponentType.string_select:
+            raise InvalidArgument("options can only be set on string selects")
         if not isinstance(value, list):
             raise TypeError("options must be a list of SelectOption")
         if not all(isinstance(obj, SelectOption) for obj in value):
@@ -197,8 +259,8 @@ class Select(Item[V]):
         *,
         label: str,
         value: str = MISSING,
-        description: Optional[str] = None,
-        emoji: Optional[Union[str, Emoji, PartialEmoji]] = None,
+        description: str | None = None,
+        emoji: str | Emoji | PartialEmoji | None = None,
         default: bool = False,
     ):
         """Adds an option to the select menu.
@@ -207,7 +269,7 @@ class Select(Item[V]):
         :meth:`append_option` method instead.
 
         Parameters
-        -----------
+        ----------
         label: :class:`str`
             The label of the option. This is displayed to users.
             Can only be up to 100 characters.
@@ -224,10 +286,12 @@ class Select(Item[V]):
             Whether this option is selected by default.
 
         Raises
-        -------
+        ------
         ValueError
             The number of options exceeds 25.
         """
+        if self._underlying.type is not ComponentType.string_select:
+            raise Exception("options can only be set on string selects")
 
         option = SelectOption(
             label=label,
@@ -243,15 +307,17 @@ class Select(Item[V]):
         """Appends an option to the select menu.
 
         Parameters
-        -----------
+        ----------
         option: :class:`discord.SelectOption`
             The option to append to the select menu.
 
         Raises
-        -------
+        ------
         ValueError
             The number of options exceeds 25.
         """
+        if self._underlying.type is not ComponentType.string_select:
+            raise Exception("options can only be set on string selects")
 
         if len(self._underlying.options) > 25:
             raise ValueError("maximum number of options already provided")
@@ -259,18 +325,80 @@ class Select(Item[V]):
         self._underlying.options.append(option)
 
     @property
-    def disabled(self) -> bool:
-        """:class:`bool`: Whether the select is disabled or not."""
-        return self._underlying.disabled
-
-    @disabled.setter
-    def disabled(self, value: bool):
-        self._underlying.disabled = bool(value)
-
-    @property
-    def values(self) -> List[str]:
-        """List[:class:`str`]: A list of values that have been selected by the user."""
-        return self._selected_values
+    def values(
+        self,
+    ) -> (
+        list[str]
+        | list[Member | User]
+        | list[Role]
+        | list[Member | User | Role]
+        | list[GuildChannel | Thread]
+    ):
+        """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] |
+        List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None:
+        A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet.
+        """
+        if self._interaction is None:
+            # The select has not been interacted with yet
+            return None
+        select_type = self._underlying.type
+        if select_type is ComponentType.string_select:
+            return self._selected_values
+        resolved = []
+        selected_values = list(self._selected_values)
+        state = self._interaction._state
+        guild = self._interaction.guild
+        resolved_data = self._interaction.data.get("resolved", {})
+        if select_type is ComponentType.channel_select:
+            for channel_id, _data in resolved_data.get("channels", {}).items():
+                if channel_id not in selected_values:
+                    continue
+                if (
+                    int(channel_id) in guild._channels
+                    or int(channel_id) in guild._threads
+                ):
+                    result = guild.get_channel_or_thread(int(channel_id))
+                    _data["_invoke_flag"] = True
+                    (
+                        result._update(_data)
+                        if isinstance(result, Thread)
+                        else result._update(guild, _data)
+                    )
+                else:
+                    # NOTE:
+                    # This is a fallback in case the channel/thread is not found in the
+                    # guild's channels/threads. For channels, if this fallback occurs, at the very minimum,
+                    # permissions will be incorrect due to a lack of permission_overwrite data.
+                    # For threads, if this fallback occurs, info like thread owner id, message count,
+                    # flags, and more will be missing due to a lack of data sent by Discord.
+                    obj_type = _threaded_guild_channel_factory(_data["type"])[0]
+                    result = obj_type(state=state, data=_data, guild=guild)
+                resolved.append(result)
+        elif select_type in (
+            ComponentType.user_select,
+            ComponentType.mentionable_select,
+        ):
+            cache_flag = state.member_cache_flags.interaction
+            resolved_user_data = resolved_data.get("users", {})
+            resolved_member_data = resolved_data.get("members", {})
+            for _id in selected_values:
+                if (_data := resolved_user_data.get(_id)) is not None:
+                    if (_member_data := resolved_member_data.get(_id)) is not None:
+                        member = dict(_member_data)
+                        member["user"] = _data
+                        _data = member
+                        result = guild._get_and_update_member(
+                            _data, int(_id), cache_flag
+                        )
+                    else:
+                        result = User(state=state, data=_data)
+                    resolved.append(result)
+        if select_type in (ComponentType.role_select, ComponentType.mentionable_select):
+            for role_id, _data in resolved_data.get("roles", {}).items():
+                if role_id not in selected_values:
+                    continue
+                resolved.append(Role(guild=guild, state=state, data=_data))
+        return resolved
 
     @property
     def width(self) -> int:
@@ -285,15 +413,18 @@ class Select(Item[V]):
     def refresh_state(self, interaction: Interaction) -> None:
         data: ComponentInteractionData = interaction.data  # type: ignore
         self._selected_values = data.get("values", [])
+        self._interaction = interaction
 
     @classmethod
-    def from_component(cls: Type[S], component: SelectMenu) -> S:
+    def from_component(cls: type[S], component: SelectMenu) -> S:
         return cls(
+            select_type=component.type,
             custom_id=component.custom_id,
             placeholder=component.placeholder,
             min_values=component.min_values,
             max_values=component.max_values,
             options=component.options,
+            channel_types=component.channel_types,
             disabled=component.disabled,
             row=None,
         )
@@ -306,15 +437,26 @@ class Select(Item[V]):
         return True
 
 
+_select_types = (
+    ComponentType.string_select,
+    ComponentType.user_select,
+    ComponentType.role_select,
+    ComponentType.mentionable_select,
+    ComponentType.channel_select,
+)
+
+
 def select(
+    select_type: ComponentType = ComponentType.string_select,
     *,
-    placeholder: Optional[str] = None,
-    custom_id: Optional[str] = None,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
     min_values: int = 1,
     max_values: int = 1,
-    options: List[SelectOption] = MISSING,
+    options: list[SelectOption] = MISSING,
+    channel_types: list[ChannelType] = MISSING,
     disabled: bool = False,
-    row: Optional[int] = None,
+    row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a select menu to a component.
 
@@ -325,8 +467,17 @@ def select(
     In order to get the selected items that the user has chosen within the callback
     use :attr:`Select.values`.
 
+    .. versionchanged:: 2.3
+
+        Creating select menus of different types is now supported.
+
     Parameters
-    ------------
+    ----------
+    select_type: :class:`discord.ComponentType`
+        The type of select to create. Must be one of
+        :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
+        :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
+        or :attr:`discord.ComponentType.channel_select`.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
     custom_id: :class:`str`
@@ -340,30 +491,179 @@ def select(
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     min_values: :class:`int`
         The minimum number of items that must be chosen for this select menu.
-        Defaults to 1 and must be between 1 and 25.
+        Defaults to 1 and must be between 0 and 25.
     max_values: :class:`int`
         The maximum number of items that must be chosen for this select menu.
         Defaults to 1 and must be between 1 and 25.
     options: List[:class:`discord.SelectOption`]
         A list of options that can be selected in this menu.
+        Only valid for the :attr:`discord.ComponentType.string_select` type.
+    channel_types: List[:class:`discord.ChannelType`]
+        The channel types that should be selectable.
+        Only valid for the :attr:`discord.ComponentType.channel_select` type.
+        Defaults to all channel types.
     disabled: :class:`bool`
         Whether the select is disabled or not. Defaults to ``False``.
     """
+    if select_type not in _select_types:
+        raise ValueError(
+            "select_type must be one of " + ", ".join([i.name for i in _select_types])
+        )
+
+    if options is not MISSING and select_type not in (
+        ComponentType.select,
+        ComponentType.string_select,
+    ):
+        raise TypeError("options may only be specified for string selects")
+
+    if channel_types is not MISSING and select_type is not ComponentType.channel_select:
+        raise TypeError("channel_types may only be specified for channel selects")
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
         if not inspect.iscoroutinefunction(func):
             raise TypeError("select function must be a coroutine function")
 
-        func.__discord_ui_model_type__ = Select
-        func.__discord_ui_model_kwargs__ = {
+        model_kwargs = {
+            "select_type": select_type,
             "placeholder": placeholder,
             "custom_id": custom_id,
             "row": row,
             "min_values": min_values,
             "max_values": max_values,
-            "options": options,
             "disabled": disabled,
         }
+        if options:
+            model_kwargs["options"] = options
+        if channel_types:
+            model_kwargs["channel_types"] = channel_types
+
+        func.__discord_ui_model_type__ = Select
+        func.__discord_ui_model_kwargs__ = model_kwargs
+
         return func
 
     return decorator
+
+
+def string_select(
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    options: list[SelectOption] = MISSING,
+    disabled: bool = False,
+    row: int | None = None,
+) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.string_select`.
+
+    .. versionadded:: 2.3
+    """
+    return select(
+        ComponentType.string_select,
+        placeholder=placeholder,
+        custom_id=custom_id,
+        min_values=min_values,
+        max_values=max_values,
+        options=options,
+        disabled=disabled,
+        row=row,
+    )
+
+
+def user_select(
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    row: int | None = None,
+) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.user_select`.
+
+    .. versionadded:: 2.3
+    """
+    return select(
+        ComponentType.user_select,
+        placeholder=placeholder,
+        custom_id=custom_id,
+        min_values=min_values,
+        max_values=max_values,
+        disabled=disabled,
+        row=row,
+    )
+
+
+def role_select(
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    row: int | None = None,
+) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
+
+    .. versionadded:: 2.3
+    """
+    return select(
+        ComponentType.role_select,
+        placeholder=placeholder,
+        custom_id=custom_id,
+        min_values=min_values,
+        max_values=max_values,
+        disabled=disabled,
+        row=row,
+    )
+
+
+def mentionable_select(
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    row: int | None = None,
+) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
+
+    .. versionadded:: 2.3
+    """
+    return select(
+        ComponentType.mentionable_select,
+        placeholder=placeholder,
+        custom_id=custom_id,
+        min_values=min_values,
+        max_values=max_values,
+        disabled=disabled,
+        row=row,
+    )
+
+
+def channel_select(
+    *,
+    placeholder: str | None = None,
+    custom_id: str | None = None,
+    min_values: int = 1,
+    max_values: int = 1,
+    disabled: bool = False,
+    channel_types: list[ChannelType] = MISSING,
+    row: int | None = None,
+) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
+
+    .. versionadded:: 2.3
+    """
+    return select(
+        ComponentType.channel_select,
+        placeholder=placeholder,
+        custom_id=custom_id,
+        min_values=min_values,
+        max_values=max_values,
+        disabled=disabled,
+        channel_types=channel_types,
+        row=row,
+    )

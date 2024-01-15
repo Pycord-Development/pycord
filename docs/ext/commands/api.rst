@@ -1,22 +1,22 @@
 .. currentmodule:: discord
 
 API Reference
-===============
+=============
 
 The following section outlines the API of Pycord's prefixed command extension module.
 
 .. note::
 
     Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled.
-    
+
 
 .. _ext_commands_api_bot:
 
 Bots
-------
+----
 
 Bot
-~~~~
+~~~
 
 .. attributetable:: discord.ext.commands.Bot
 
@@ -46,11 +46,11 @@ Bot
     .. automethod:: Bot.group(*args, **kwargs)
         :decorator:
 
-    .. automethod:: Bot.listen(name=None)
+    .. automethod:: Bot.listen(name=None, once=False)
         :decorator:
 
 AutoShardedBot
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.commands.AutoShardedBot
 
@@ -58,7 +58,7 @@ AutoShardedBot
     :members:
 
 Prefix Helpers
-----------------
+--------------
 
 .. autofunction:: discord.ext.commands.when_mentioned
 
@@ -67,7 +67,7 @@ Prefix Helpers
 .. _ext_commands_api_events:
 
 Event Reference
------------------
+---------------
 
 These events function similar to :ref:`the regular events <discord-api-events>`, except they
 are custom to the command extension module.
@@ -108,10 +108,10 @@ are custom to the command extension module.
 .. _ext_commands_api_command:
 
 Commands
-----------
+--------
 
 Decorators
-~~~~~~~~~~~~
+~~~~~~~~~~
 
 .. autofunction:: discord.ext.commands.command
     :decorator:
@@ -120,7 +120,7 @@ Decorators
     :decorator:
 
 Command
-~~~~~~~~~
+~~~~~~~
 
 .. attributetable:: discord.ext.commands.Command
 
@@ -139,7 +139,7 @@ Command
         :decorator:
 
 Group
-~~~~~~
+~~~~~
 
 .. attributetable:: discord.ext.commands.Group
 
@@ -164,7 +164,7 @@ Group
         :decorator:
 
 GroupMixin
-~~~~~~~~~~~
+~~~~~~~~~~
 
 .. attributetable:: discord.ext.commands.GroupMixin
 
@@ -181,10 +181,10 @@ GroupMixin
 .. _ext_commands_api_cogs:
 
 Cogs
-------
+----
 
 Cog
-~~~~
+~~~
 
 .. attributetable:: discord.ext.commands.Cog
 
@@ -192,7 +192,7 @@ Cog
     :members:
 
 CogMeta
-~~~~~~~~
+~~~~~~~
 
 .. attributetable:: discord.cog.CogMeta
 
@@ -202,10 +202,10 @@ CogMeta
 .. _ext_commands_help_command:
 
 Help Commands
----------------
+-------------
 
 HelpCommand
-~~~~~~~~~~~~
+~~~~~~~~~~~
 
 .. attributetable:: discord.ext.commands.HelpCommand
 
@@ -213,7 +213,7 @@ HelpCommand
     :members:
 
 DefaultHelpCommand
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.commands.DefaultHelpCommand
 
@@ -222,7 +222,7 @@ DefaultHelpCommand
     :exclude-members: send_bot_help, send_cog_help, send_group_help, send_command_help, prepare_help_command
 
 MinimalHelpCommand
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 .. attributetable:: discord.ext.commands.MinimalHelpCommand
 
@@ -231,7 +231,7 @@ MinimalHelpCommand
     :exclude-members: send_bot_help, send_cog_help, send_group_help, send_command_help, prepare_help_command
 
 Paginator
-~~~~~~~~~~
+~~~~~~~~~
 
 .. attributetable:: discord.ext.commands.Paginator
 
@@ -239,7 +239,7 @@ Paginator
     :members:
 
 Enums
-------
+-----
 
 .. class:: BucketType
     :module: discord.ext.commands
@@ -274,7 +274,7 @@ Enums
 .. _ext_commands_api_checks:
 
 Checks
--------
+------
 
 .. autofunction:: discord.ext.commands.check(predicate)
     :decorator:
@@ -336,7 +336,7 @@ Checks
 .. _ext_commands_api_context:
 
 Cooldown
----------
+--------
 
 .. attributetable:: discord.ext.commands.Cooldown
 
@@ -344,7 +344,7 @@ Cooldown
     :members:
 
 Context
---------
+-------
 
 .. attributetable:: discord.ext.commands.Context
 
@@ -362,7 +362,7 @@ Context
 .. _ext_commands_api_converters:
 
 Converters
-------------
+----------
 
 .. autoclass:: discord.ext.commands.Converter
     :members:
@@ -435,7 +435,7 @@ Converters
 .. autofunction:: discord.ext.commands.run_converters
 
 Flag Converter
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 .. autoclass:: discord.ext.commands.FlagConverter
     :members:
@@ -448,7 +448,7 @@ Flag Converter
 .. _ext_commands_api_errors:
 
 Exceptions
------------
+----------
 
 .. autoexception:: discord.ext.commands.CommandError
     :members:
@@ -599,7 +599,7 @@ Exceptions
 
 
 Exception Hierarchy
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 .. exception_hierarchy::
 

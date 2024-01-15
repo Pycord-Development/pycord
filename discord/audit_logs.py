@@ -25,23 +25,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    ClassVar,
-    Dict,
-    Generator,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 
 from . import enums, utils
 from .asset import Asset
+from .automod import AutoModAction, AutoModTriggerMetadata
 from .colour import Colour
 from .invite import Invite
 from .mixins import Hashable
@@ -70,6 +58,8 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.audit_log import AuditLogChange as AuditLogChangePayload
     from .types.audit_log import AuditLogEntry as AuditLogEntryPayload
+    from .types.automod import AutoModAction as AutoModActionPayload
+    from .types.automod import AutoModTriggerMetadata as AutoModTriggerMetadataPayload
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .types.role import Role as RolePayload
     from .types.snowflake import Snowflake
@@ -88,27 +78,47 @@ def _transform_snowflake(entry: AuditLogEntry, data: Snowflake) -> int:
     return int(data)
 
 
-def _transform_channel(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optional[Union[abc.GuildChannel, Object]]:
+def _transform_channel(
+    entry: AuditLogEntry, data: Snowflake | None
+) -> abc.GuildChannel | Object | None:
     if data is None:
         return None
     return entry.guild.get_channel(int(data)) or Object(id=data)
 
 
-def _transform_member_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Union[Member, User, None]:
+def _transform_channels(
+    entry: AuditLogEntry, data: list[Snowflake] | None
+) -> list[abc.GuildChannel | Object] | None:
+    if data is None:
+        return None
+    return [_transform_channel(entry, channel) for channel in data]
+
+
+def _transform_roles(
+    entry: AuditLogEntry, data: list[Snowflake] | None
+) -> list[Role | Object] | None:
+    if data is None:
+        return None
+    return [entry.guild.get_role(int(r)) or Object(id=r) for r in data]
+
+
+def _transform_member_id(
+    entry: AuditLogEntry, data: Snowflake | None
+) -> Member | User | None:
     if data is None:
         return None
     return entry._get_member(int(data))
 
 
-def _transform_guild_id(entry: AuditLogEntry, data: Optional[Snowflake]) -> Optional[Guild]:
+def _transform_guild_id(entry: AuditLogEntry, data: Snowflake | None) -> Guild | None:
     if data is None:
         return None
     return entry._state._get_guild(data)
 
 
 def _transform_overwrites(
-    entry: AuditLogEntry, data: List[PermissionOverwritePayload]
-) -> List[Tuple[Object, PermissionOverwrite]]:
+    entry: AuditLogEntry, data: list[PermissionOverwritePayload]
+) -> list[tuple[Object, PermissionOverwrite]]:
     overwrites = []
     for elem in data:
         allow = Permissions(int(elem["allow"]))
@@ -118,9 +128,9 @@ def _transform_overwrites(
         ow_type = elem["type"]
         ow_id = int(elem["id"])
         target = None
-        if ow_type == "0":
+        if ow_type == 0:
             target = entry.guild.get_role(ow_id)
-        elif ow_type == "1":
+        elif ow_type == 1:
             target = entry._get_member(ow_id)
 
         if target is None:
@@ -131,19 +141,21 @@ def _transform_overwrites(
     return overwrites
 
 
-def _transform_icon(entry: AuditLogEntry, data: Optional[str]) -> Optional[Asset]:
+def _transform_icon(entry: AuditLogEntry, data: str | None) -> Asset | None:
     if data is None:
         return None
     return Asset._from_guild_icon(entry._state, entry.guild.id, data)
 
 
-def _transform_avatar(entry: AuditLogEntry, data: Optional[str]) -> Optional[Asset]:
+def _transform_avatar(entry: AuditLogEntry, data: str | None) -> Asset | None:
     if data is None:
         return None
     return Asset._from_avatar(entry._state, entry._target_id, data)  # type: ignore
 
 
-def _transform_scheduled_event_cover(entry: AuditLogEntry, data: Optional[str]) -> Optional[Asset]:
+def _transform_scheduled_event_cover(
+    entry: AuditLogEntry, data: str | None
+) -> Asset | None:
     if data is None:
         return None
     return Asset._from_scheduled_event_cover(entry._state, entry._target_id, data)
@@ -151,8 +163,8 @@ def _transform_scheduled_event_cover(entry: AuditLogEntry, data: Optional[str]) 
 
 def _guild_hash_transformer(
     path: str,
-) -> Callable[[AuditLogEntry, Optional[str]], Optional[Asset]]:
-    def _transform(entry: AuditLogEntry, data: Optional[str]) -> Optional[Asset]:
+) -> Callable[[AuditLogEntry, str | None], Asset | None]:
+    def _transform(entry: AuditLogEntry, data: str | None) -> Asset | None:
         if data is None:
             return None
         return Asset._from_guild_image(entry._state, entry.guild.id, data, path=path)
@@ -163,25 +175,45 @@ def _guild_hash_transformer(
 T = TypeVar("T", bound=enums.Enum)
 
 
-def _enum_transformer(enum: Type[T]) -> Callable[[AuditLogEntry, int], T]:
+def _enum_transformer(enum: type[T]) -> Callable[[AuditLogEntry, int], T]:
     def _transform(entry: AuditLogEntry, data: int) -> T:
         return enums.try_enum(enum, data)
 
     return _transform
 
 
-def _transform_type(entry: AuditLogEntry, data: int) -> Union[enums.ChannelType, enums.StickerType]:
+def _transform_type(
+    entry: AuditLogEntry, data: int
+) -> enums.ChannelType | enums.StickerType:
     if entry.action.name.startswith("sticker_"):
         return enums.try_enum(enums.StickerType, data)
     else:
         return enums.try_enum(enums.ChannelType, data)
 
 
+def _transform_actions(
+    entry: AuditLogEntry, data: list[AutoModActionPayload] | None
+) -> AutoModAction | None:
+    if data is None:
+        return None
+    else:
+        return [AutoModAction.from_dict(d) for d in data]
+
+
+def _transform_trigger_metadata(
+    entry: AuditLogEntry, data: list[AutoModActionPayload] | None
+) -> AutoModAction | None:
+    if data is None:
+        return None
+    else:
+        return AutoModTriggerMetadata.from_dict(data)
+
+
 class AuditLogDiff:
     def __len__(self) -> int:
         return len(self.__dict__)
 
-    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+    def __iter__(self) -> Generator[tuple[str, Any], None, None]:
         yield from self.__dict__.items()
 
     def __repr__(self) -> str:
@@ -201,7 +233,7 @@ Transformer = Callable[["AuditLogEntry", Any], Any]
 
 
 class AuditLogChanges:
-    TRANSFORMERS: ClassVar[Dict[str, Tuple[Optional[str], Optional[Transformer]]]] = {
+    TRANSFORMERS: ClassVar[dict[str, tuple[str | None, Transformer | None]]] = {
         "verification_level": (None, _enum_transformer(enums.VerificationLevel)),
         "explicit_content_filter": (None, _enum_transformer(enums.ContentFilter)),
         "allow": (None, _transform_permissions),
@@ -245,12 +277,18 @@ class AuditLogChanges:
         ),
         "command_id": ("command_id", _transform_snowflake),
         "image_hash": ("cover", _transform_scheduled_event_cover),
+        "trigger_type": (None, _enum_transformer(enums.AutoModTriggerType)),
+        "event_type": (None, _enum_transformer(enums.AutoModEventType)),
+        "actions": (None, _transform_actions),
+        "trigger_metadata": (None, _transform_trigger_metadata),
+        "exempt_roles": (None, _transform_roles),
+        "exempt_channels": (None, _transform_channels),
     }
 
     def __init__(
         self,
         entry: AuditLogEntry,
-        data: List[AuditLogChangePayload],
+        data: list[AuditLogChangePayload],
         *,
         state: ConnectionState,
     ):
@@ -260,12 +298,30 @@ class AuditLogChanges:
         for elem in sorted(data, key=lambda i: i["key"]):
             attr = elem["key"]
 
-            # special cases for role add/remove
+            # special cases for role/trigger_metadata add/remove
             if attr == "$add":
                 self._handle_role(self.before, self.after, entry, elem["new_value"])  # type: ignore
                 continue
             elif attr == "$remove":
                 self._handle_role(self.after, self.before, entry, elem["new_value"])  # type: ignore
+                continue
+            elif attr in [
+                "$add_keyword_filter",
+                "$add_regex_patterns",
+                "$add_allow_list",
+            ]:
+                self._handle_trigger_metadata(
+                    self.before, self.after, entry, elem["new_value"], attr
+                )
+                continue
+            elif attr in [
+                "$remove_keyword_filter",
+                "$remove_regex_patterns",
+                "$remove_allow_list",
+            ]:
+                self._handle_trigger_metadata(
+                    self.after, self.before, entry, elem["new_value"], attr
+                )
                 continue
 
             try:
@@ -276,7 +332,7 @@ class AuditLogChanges:
                 if key:
                     attr = key
 
-            transformer: Optional[Transformer]
+            transformer: Transformer | None
 
             try:
                 before = elem["old_value"]
@@ -289,10 +345,15 @@ class AuditLogChanges:
             if attr == "location" and hasattr(self.before, "location_type"):
                 from .scheduled_events import ScheduledEventLocation
 
-                if self.before.location_type is enums.ScheduledEventLocationType.external:
+                if (
+                    self.before.location_type
+                    is enums.ScheduledEventLocationType.external
+                ):
                     before = ScheduledEventLocation(state=state, value=before)
                 elif hasattr(self.before, "channel"):
-                    before = ScheduledEventLocation(state=state, value=self.before.channel)
+                    before = ScheduledEventLocation(
+                        state=state, value=self.before.channel
+                    )
 
             setattr(self.before, attr, before)
 
@@ -307,10 +368,15 @@ class AuditLogChanges:
             if attr == "location" and hasattr(self.after, "location_type"):
                 from .scheduled_events import ScheduledEventLocation
 
-                if self.after.location_type is enums.ScheduledEventLocationType.external:
+                if (
+                    self.after.location_type
+                    is enums.ScheduledEventLocationType.external
+                ):
                     after = ScheduledEventLocation(state=state, value=after)
                 elif hasattr(self.after, "channel"):
-                    after = ScheduledEventLocation(state=state, value=self.after.channel)
+                    after = ScheduledEventLocation(
+                        state=state, value=self.after.channel
+                    )
 
             setattr(self.after, attr, after)
 
@@ -330,7 +396,7 @@ class AuditLogChanges:
         first: AuditLogDiff,
         second: AuditLogDiff,
         entry: AuditLogEntry,
-        elem: List[RolePayload],
+        elem: list[RolePayload],
     ) -> None:
         if not hasattr(first, "roles"):
             setattr(first, "roles", [])
@@ -349,6 +415,23 @@ class AuditLogChanges:
             data.append(role)
 
         setattr(second, "roles", data)
+
+    def _handle_trigger_metadata(
+        self,
+        first: AuditLogDiff,
+        second: AuditLogDiff,
+        entry: AuditLogEntry,
+        elem: list[AutoModTriggerMetadataPayload],
+        attr: str,
+    ) -> None:
+        if not hasattr(first, "trigger_metadata"):
+            setattr(first, "trigger_metadata", None)
+
+        key = attr.split("_", 1)[-1]
+        data = {key: elem}
+        tm = AutoModTriggerMetadata.from_dict(data)
+
+        setattr(second, "trigger_metadata", tm)
 
 
 class _AuditLogProxyMemberPrune:
@@ -400,7 +483,7 @@ class AuditLogEntry(Hashable):
     -----------
     action: :class:`AuditLogAction`
         The action that was done.
-    user: :class:`abc.User`
+    user: Optional[:class:`abc.User`]
         The user who initiated this action. Usually a :class:`Member`\, unless gone
         then it's a :class:`User`.
     id: :class:`int`
@@ -412,12 +495,14 @@ class AuditLogEntry(Hashable):
         The reason this action was done.
     extra: Any
         Extra information that this entry has that might be useful.
-        For most actions, this is ``None``. However in some cases it
+        For most actions, this is ``None``. However, in some cases it
         contains extra information. See :class:`AuditLogAction` for
         which actions have this field filled out.
     """
 
-    def __init__(self, *, users: Dict[int, User], data: AuditLogEntryPayload, guild: Guild):
+    def __init__(
+        self, *, users: dict[int, User], data: AuditLogEntryPayload, guild: Guild
+    ):
         self._state = guild._state
         self.guild = guild
         self._users = users
@@ -437,27 +522,38 @@ class AuditLogEntry(Hashable):
                 self.extra: _AuditLogProxyMemberPrune = type(
                     "_AuditLogProxy", (), {k: int(v) for k, v in self.extra.items()}
                 )()
-            elif self.action is enums.AuditLogAction.member_move or self.action is enums.AuditLogAction.message_delete:
+            elif (
+                self.action is enums.AuditLogAction.member_move
+                or self.action is enums.AuditLogAction.message_delete
+            ):
                 channel_id = int(self.extra["channel_id"])
                 elems = {
                     "count": int(self.extra["count"]),
-                    "channel": self.guild.get_channel(channel_id) or Object(id=channel_id),
+                    "channel": self.guild.get_channel(channel_id)
+                    or Object(id=channel_id),
                 }
-                self.extra: _AuditLogProxyMemberMoveOrMessageDelete = type("_AuditLogProxy", (), elems)()
+                self.extra: _AuditLogProxyMemberMoveOrMessageDelete = type(
+                    "_AuditLogProxy", (), elems
+                )()
             elif self.action is enums.AuditLogAction.member_disconnect:
                 # The member disconnect action has a dict with some information
                 elems = {
                     "count": int(self.extra["count"]),
                 }
-                self.extra: _AuditLogProxyMemberDisconnect = type("_AuditLogProxy", (), elems)()
+                self.extra: _AuditLogProxyMemberDisconnect = type(
+                    "_AuditLogProxy", (), elems
+                )()
             elif self.action.name.endswith("pin"):
                 # the pin actions have a dict with some information
                 channel_id = int(self.extra["channel_id"])
                 elems = {
-                    "channel": self.guild.get_channel(channel_id) or Object(id=channel_id),
+                    "channel": self.guild.get_channel(channel_id)
+                    or Object(id=channel_id),
                     "message_id": int(self.extra["message_id"]),
                 }
-                self.extra: _AuditLogProxyPinAction = type("_AuditLogProxy", (), elems)()
+                self.extra: _AuditLogProxyPinAction = type(
+                    "_AuditLogProxy", (), elems
+                )()
             elif self.action.name.startswith("overwrite_"):
                 # the overwrite_ actions have a dict with some information
                 instance_id = int(self.extra["id"])
@@ -472,20 +568,25 @@ class AuditLogEntry(Hashable):
                     self.extra: Role = role
             elif self.action.name.startswith("stage_instance"):
                 channel_id = int(self.extra["channel_id"])
-                elems = {"channel": self.guild.get_channel(channel_id) or Object(id=channel_id)}
-                self.extra: _AuditLogProxyStageInstanceAction = type("_AuditLogProxy", (), elems)()
+                elems = {
+                    "channel": self.guild.get_channel(channel_id)
+                    or Object(id=channel_id)
+                }
+                self.extra: _AuditLogProxyStageInstanceAction = type(
+                    "_AuditLogProxy", (), elems
+                )()
 
-        self.extra: Union[
-            _AuditLogProxyMemberPrune,
-            _AuditLogProxyMemberMoveOrMessageDelete,
-            _AuditLogProxyMemberDisconnect,
-            _AuditLogProxyPinAction,
-            _AuditLogProxyStageInstanceAction,
-            Member,
-            User,
-            None,
-            Role,
-        ]
+        self.extra: (
+            _AuditLogProxyMemberPrune
+            | _AuditLogProxyMemberMoveOrMessageDelete
+            | _AuditLogProxyMemberDisconnect
+            | _AuditLogProxyPinAction
+            | _AuditLogProxyStageInstanceAction
+            | Member
+            | User
+            | None
+            | Role
+        )
 
         # this key is not present when the above is present, typically.
         # It's a list of { new_value: a, old_value: b, key: c }
@@ -497,7 +598,7 @@ class AuditLogEntry(Hashable):
         self.user = self._get_member(utils._get_as_snowflake(data, "user_id"))  # type: ignore
         self._target_id = utils._get_as_snowflake(data, "target_id")
 
-    def _get_member(self, user_id: int) -> Union[Member, User, None]:
+    def _get_member(self, user_id: int) -> Member | User | None:
         return self.guild.get_member(user_id) or self._users.get(user_id)
 
     def __repr__(self) -> str:
@@ -505,26 +606,26 @@ class AuditLogEntry(Hashable):
 
     @utils.cached_property
     def created_at(self) -> datetime.datetime:
-        """:class:`datetime.datetime`: Returns the entry's creation time in UTC."""
+        """Returns the entry's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     @utils.cached_property
     def target(
         self,
-    ) -> Union[
-        Guild,
-        abc.GuildChannel,
-        Member,
-        User,
-        Role,
-        Invite,
-        Emoji,
-        StageInstance,
-        GuildSticker,
-        Thread,
-        Object,
-        None,
-    ]:
+    ) -> (
+        Guild
+        | abc.GuildChannel
+        | Member
+        | User
+        | Role
+        | Invite
+        | Emoji
+        | StageInstance
+        | GuildSticker
+        | Thread
+        | Object
+        | None
+    ):
         try:
             converter = getattr(self, f"_convert_target_{self.action.target_type}")
         except AttributeError:
@@ -534,42 +635,46 @@ class AuditLogEntry(Hashable):
 
     @utils.cached_property
     def category(self) -> enums.AuditLogActionCategory:
-        """Optional[:class:`AuditLogActionCategory`]: The category of the action, if applicable."""
+        """The category of the action, if applicable."""
         return self.action.category
 
     @utils.cached_property
     def changes(self) -> AuditLogChanges:
-        """:class:`AuditLogChanges`: The list of changes this entry has."""
+        """The list of changes this entry has."""
         obj = AuditLogChanges(self, self._changes, state=self._state)
         del self._changes
         return obj
 
     @utils.cached_property
     def before(self) -> AuditLogDiff:
-        """:class:`AuditLogDiff`: The target's prior state."""
+        """The target's prior state."""
         return self.changes.before
 
     @utils.cached_property
     def after(self) -> AuditLogDiff:
-        """:class:`AuditLogDiff`: The target's subsequent state."""
+        """The target's subsequent state."""
         return self.changes.after
 
     def _convert_target_guild(self, target_id: int) -> Guild:
         return self.guild
 
-    def _convert_target_channel(self, target_id: int) -> Union[abc.GuildChannel, Object]:
+    def _convert_target_channel(self, target_id: int) -> abc.GuildChannel | Object:
         return self.guild.get_channel(target_id) or Object(id=target_id)
 
-    def _convert_target_user(self, target_id: int) -> Union[Member, User, None]:
+    def _convert_target_user(self, target_id: int) -> Member | User | None:
         return self._get_member(target_id)
 
-    def _convert_target_role(self, target_id: int) -> Union[Role, Object]:
+    def _convert_target_role(self, target_id: int) -> Role | Object:
         return self.guild.get_role(target_id) or Object(id=target_id)
 
     def _convert_target_invite(self, target_id: int) -> Invite:
         # invites have target_id set to null
         # so figure out which change has the full invite data
-        changeset = self.before if self.action is enums.AuditLogAction.invite_delete else self.after
+        changeset = (
+            self.before
+            if self.action is enums.AuditLogAction.invite_delete
+            else self.after
+        )
 
         fake_payload = {
             "max_age": changeset.max_age,
@@ -586,20 +691,22 @@ class AuditLogEntry(Hashable):
             pass
         return obj
 
-    def _convert_target_emoji(self, target_id: int) -> Union[Emoji, Object]:
+    def _convert_target_emoji(self, target_id: int) -> Emoji | Object:
         return self._state.get_emoji(target_id) or Object(id=target_id)
 
-    def _convert_target_message(self, target_id: int) -> Union[Member, User, None]:
+    def _convert_target_message(self, target_id: int) -> Member | User | None:
         return self._get_member(target_id)
 
-    def _convert_target_stage_instance(self, target_id: int) -> Union[StageInstance, Object]:
+    def _convert_target_stage_instance(self, target_id: int) -> StageInstance | Object:
         return self.guild.get_stage_instance(target_id) or Object(id=target_id)
 
-    def _convert_target_sticker(self, target_id: int) -> Union[GuildSticker, Object]:
+    def _convert_target_sticker(self, target_id: int) -> GuildSticker | Object:
         return self._state.get_sticker(target_id) or Object(id=target_id)
 
-    def _convert_target_thread(self, target_id: int) -> Union[Thread, Object]:
+    def _convert_target_thread(self, target_id: int) -> Thread | Object:
         return self.guild.get_thread(target_id) or Object(id=target_id)
 
-    def _convert_target_scheduled_event(self, target_id: int) -> Union[ScheduledEvent, Object]:
+    def _convert_target_scheduled_event(
+        self, target_id: int
+    ) -> ScheduledEvent | Object:
         return self.guild.get_scheduled_event(target_id) or Object(id=target_id)

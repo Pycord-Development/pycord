@@ -21,8 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-import io
-import os
 import wave
 
 from .core import Filters, Sink, default_filters
@@ -56,7 +54,9 @@ class WaveSink(Sink):
             Formatting the audio failed.
         """
         if self.vc.recording:
-            raise WaveSinkError("Audio may only be formatted after recording is finished.")
+            raise WaveSinkError(
+                "Audio may only be formatted after recording is finished."
+            )
         data = audio.file
 
         with wave.open(data, "wb") as f:

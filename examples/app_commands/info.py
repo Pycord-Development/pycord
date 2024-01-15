@@ -14,7 +14,9 @@ bot = discord.Bot(
 
 @bot.slash_command(name="userinfo", description="Gets info about a user.")
 async def info(ctx: discord.ApplicationContext, user: discord.Member = None):
-    user = user or ctx.author  # If no user is provided it'll use the author of the message
+    user = (
+        user or ctx.author
+    )  # If no user is provided it'll use the author of the message
     embed = discord.Embed(
         fields=[
             discord.EmbedField(name="ID", value=str(user.id), inline=False),  # User ID

@@ -22,13 +22,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+from __future__ import annotations
 
-from typing import List, TypedDict
-
+from .._typed_dict import NotRequired, TypedDict
 from .automod import AutoModAction, AutoModTriggerType
 from .emoji import PartialEmoji
 from .member import Member
 from .snowflake import Snowflake
+from .threads import Thread, ThreadMember
+from .user import User
 
 
 class _MessageEventOptional(TypedDict, total=False):
@@ -41,13 +43,8 @@ class MessageDeleteEvent(_MessageEventOptional):
 
 
 class BulkMessageDeleteEvent(_MessageEventOptional):
-    ids: List[Snowflake]
+    ids: list[Snowflake]
     channel_id: Snowflake
-
-
-class _ReactionActionEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-    member: Member
 
 
 class MessageUpdateEvent(_MessageEventOptional):
@@ -55,39 +52,42 @@ class MessageUpdateEvent(_MessageEventOptional):
     channel_id: Snowflake
 
 
-class ReactionActionEvent(_ReactionActionEventOptional):
+class _ReactionEventOptional(TypedDict, total=False):
+    guild_id: Snowflake
+
+
+class ReactionActionEvent(_ReactionEventOptional):
+    member: NotRequired[Member]
     user_id: Snowflake
     channel_id: Snowflake
     message_id: Snowflake
     emoji: PartialEmoji
+    burst: bool
+    burst_colors: list
+    type: int
 
 
-class _ReactionClearEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-
-
-class ReactionClearEvent(_ReactionClearEventOptional):
+class ReactionClearEvent(_ReactionEventOptional):
     channel_id: Snowflake
     message_id: Snowflake
 
 
-class _ReactionClearEmojiEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-
-
-class ReactionClearEmojiEvent(_ReactionClearEmojiEventOptional):
+class ReactionClearEmojiEvent(_ReactionEventOptional):
     channel_id: int
     message_id: int
     emoji: PartialEmoji
+    burst: bool
+    burst_colors: list
+    type: int
 
 
-class _IntegrationDeleteEventOptional(TypedDict, total=False):
-    application_id: Snowflake
-
-
-class IntegrationDeleteEvent(_IntegrationDeleteEventOptional):
+class IntegrationDeleteEvent(TypedDict):
+    application_id: NotRequired[Snowflake]
     id: Snowflake
     guild_id: Snowflake
+
+
+ThreadUpdateEvent = Thread
 
 
 class ThreadDeleteEvent(TypedDict, total=False):
@@ -97,12 +97,9 @@ class ThreadDeleteEvent(TypedDict, total=False):
     parent_id: Snowflake
 
 
-class _TypingEventOptional(TypedDict, total=False):
-    guild_id: Snowflake
-    member: Member
-
-
-class TypingEvent(_TypingEventOptional):
+class TypingEvent(TypedDict):
+    guild_id: NotRequired[Snowflake]
+    member: NotRequired[Member]
     channel_id: Snowflake
     user_id: Snowflake
     timestamp: int
@@ -114,18 +111,39 @@ class ScheduledEventSubscription(TypedDict, total=False):
     guild_id: Snowflake
 
 
-class _AutoModActionExecutionEventOptional(TypedDict, total=False):
-    channel_id: Snowflake
-    message_id: Snowflake
-    alert_system_message_id: Snowflake
-    matched_keyword: str
-    matched_content: str
-        
-        
-class AutoModActionExecutionEvent(_AutoModActionExecutionEventOptional):
+class AutoModActionExecutionEvent(TypedDict):
+    channel_id: NotRequired[Snowflake]
+    message_id: NotRequired[Snowflake]
+    alert_system_message_id: NotRequired[Snowflake]
+    matched_keyword: NotRequired[str]
+    matched_content: NotRequired[str]
     guild_id: Snowflake
     action: AutoModAction
     rule_id: Snowflake
     rule_trigger_type: AutoModTriggerType
     user_id: Snowflake
     content: str
+
+
+class MemberRemoveEvent(TypedDict):
+    guild_id: Snowflake
+    user: User
+
+
+class ThreadMembersUpdateEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    member_count: int
+    added_members: NotRequired[list[ThreadMember]]
+    removed_member_ids: NotRequired[list[Snowflake]]
+
+
+class AuditLogEntryEvent(TypedDict):
+    id: Snowflake
+    user_id: NotRequired[Snowflake]
+    guild_id: Snowflake
+    target_id: NotRequired[Snowflake]
+    action_type: int
+    changes: NotRequired[list[dict]]
+    reason: NotRequired[str]
+    options: NotRequired[dict]

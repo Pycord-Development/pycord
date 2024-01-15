@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional, Union, overload
+from typing import TYPE_CHECKING, overload
 
 from .partial_emoji import _EmojiTag
 from .utils import _get_as_snowflake, get
@@ -57,16 +57,16 @@ class WelcomeScreenChannel:
     channel: :class:`abc.Snowflake`
         The channel that is being referenced.
     description: :class:`str`
-        The description of channel that is shown on the welcome screen.
-    emoji: :class:`Union[Emoji, PartialEmoji, str]`
-        The emoji of channel that is shown on welcome screen.
+        The description of the channel that is shown on the welcome screen.
+    emoji: Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]
+        The emoji of the channel that is shown on welcome screen.
     """
 
     def __init__(
         self,
         channel: Snowflake,
         description: str,
-        emoji: Union[Emoji, PartialEmoji, str],
+        emoji: Emoji | PartialEmoji | str,
     ):
         self.channel = channel
         self.description = description
@@ -95,7 +95,9 @@ class WelcomeScreenChannel:
         return dict_
 
     @classmethod
-    def _from_dict(cls, data: WelcomeScreenChannelPayload, guild: Guild) -> WelcomeScreenChannel:
+    def _from_dict(
+        cls, data: WelcomeScreenChannelPayload, guild: Guild
+    ) -> WelcomeScreenChannel:
         channel_id = _get_as_snowflake(data, "channel_id")
         channel = guild.get_channel(channel_id)
         description = data.get("description")
@@ -125,32 +127,36 @@ class WelcomeScreen:
         self._update(data)
 
     def __repr__(self):
-        return f"<WelcomeScreen description={self.description} welcome_channels={self.welcome_channels}"
+        return (
+            "<WelcomeScreen"
+            f" description={self.description} welcome_channels={self.welcome_channels}"
+        )
 
     def _update(self, data: WelcomeScreenPayload):
         self.description: str = data.get("description")
-        self.welcome_channels: List[WelcomeScreenChannel] = [
-            WelcomeScreenChannel._from_dict(channel, self._guild) for channel in data.get("welcome_channels", [])
+        self.welcome_channels: list[WelcomeScreenChannel] = [
+            WelcomeScreenChannel._from_dict(channel, self._guild)
+            for channel in data.get("welcome_channels", [])
         ]
 
     @property
     def enabled(self) -> bool:
-        """:class:`bool`: Indicates whether the welcome screen is enabled or not."""
+        """Indicates whether the welcome screen is enabled or not."""
         return "WELCOME_SCREEN_ENABLED" in self._guild.features
 
     @property
     def guild(self) -> Guild:
-        """:class:`Guild`: The guild this welcome screen belongs to."""
+        """The guild this welcome screen belongs to."""
         return self._guild
 
     @overload
     async def edit(
         self,
         *,
-        description: Optional[str] = ...,
-        welcome_channels: Optional[List[WelcomeScreenChannel]] = ...,
-        enabled: Optional[bool] = ...,
-        reason: Optional[str] = ...,
+        description: str | None = ...,
+        welcome_channels: list[WelcomeScreenChannel] | None = ...,
+        enabled: bool | None = ...,
+        reason: str | None = ...,
     ) -> None:
         ...
 
@@ -166,8 +172,30 @@ class WelcomeScreen:
         You must have the :attr:`~Permissions.manage_guild` permission in the
         guild to do this.
 
+        Parameters
+        ----------
+
+        description: Optional[:class:`str`]
+            The new description of welcome screen.
+        welcome_channels: Optional[List[:class:`WelcomeScreenChannel`]]
+            The welcome channels. The order of the channels would be same as the passed list order.
+        enabled: Optional[:class:`bool`]
+            Whether the welcome screen should be displayed.
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the welcome screen failed somehow.
+        Forbidden
+            You don't have permissions to edit the welcome screen.
+        NotFound
+            This welcome screen does not exist.
+
         Example
-        --------
+        -------
         .. code-block:: python3
 
             rules_channel = guild.get_channel(12345678)
@@ -177,35 +205,13 @@ class WelcomeScreen:
                 description='This is a very cool community server!',
                 welcome_channels=[
                     WelcomeChannel(channel=rules_channel, description='Read the rules!', emoji='👨‍🏫'),
-                    WelcomeChannel(channel=announcements_channel, description='Watch out for announcements!', emoji=custom_emoji),
+                    WelcomeChannel(channel=announcements_channel, description='Watch out for announcements!',
+                                   emoji=custom_emoji),
                 ]
             )
 
         .. note::
             Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above.
-
-        Parameters
-        ------------
-
-        description: Optional[:class:`str`]
-            The new description of welcome screen.
-        welcome_channels: Optional[List[:class:`WelcomeChannel`]]
-            The welcome channels. The order of the channels would be same as the passed list order.
-        enabled: Optional[:class:`bool`]
-            Whether the welcome screen should be displayed.
-        reason: Optional[:class:`str`]
-            The reason that shows up on Audit log.
-
-        Raises
-        -------
-
-        HTTPException
-            Editing the welcome screen failed somehow.
-        Forbidden
-            You don't have permissions to edit the welcome screen.
-        NotFound
-            This welcome screen does not exist.
-
         """
 
         welcome_channels = options.get("welcome_channels", [])
@@ -213,7 +219,9 @@ class WelcomeScreen:
 
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
-                raise TypeError("welcome_channels parameter must be a list of WelcomeScreenChannel.")
+                raise TypeError(
+                    "welcome_channels parameter must be a list of WelcomeScreenChannel."
+                )
 
             welcome_channels_data.append(channel.to_dict())
 

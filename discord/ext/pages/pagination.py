@@ -21,7 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-from typing import Dict, List, Optional, Union
+from __future__ import annotations
+
+from typing import List
 
 import discord
 from discord.ext.bridge import BridgeContext
@@ -65,7 +67,7 @@ class PaginatorButton(discord.ui.Button):
         self,
         button_type: str,
         label: str = None,
-        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
+        emoji: str | discord.Emoji | discord.PartialEmoji = None,
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
@@ -82,7 +84,7 @@ class PaginatorButton(discord.ui.Button):
         )
         self.button_type = button_type
         self.label = label if label or emoji else button_type.capitalize()
-        self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
+        self.emoji: str | discord.Emoji | discord.PartialEmoji = emoji
         self.style = style
         self.disabled = disabled
         self.loop_label = self.label if not loop_label else loop_label
@@ -94,7 +96,7 @@ class PaginatorButton(discord.ui.Button):
         The coroutine that is called when the navigation button is clicked.
 
         Parameters
-        -----------
+        ----------
         interaction: :class:`discord.Interaction`
             The interaction created by clicking the navigation button.
         """
@@ -106,13 +108,18 @@ class PaginatorButton(discord.ui.Button):
             else:
                 self.paginator.current_page -= 1
         elif self.button_type == "next":
-            if self.paginator.loop_pages and self.paginator.current_page == self.paginator.page_count:
+            if (
+                self.paginator.loop_pages
+                and self.paginator.current_page == self.paginator.page_count
+            ):
                 self.paginator.current_page = 0
             else:
                 self.paginator.current_page += 1
         elif self.button_type == "last":
             self.paginator.current_page = self.paginator.page_count
-        await self.paginator.goto_page(page_number=self.paginator.current_page, interaction=interaction)
+        await self.paginator.goto_page(
+            page_number=self.paginator.current_page, interaction=interaction
+        )
 
 
 class Page:
@@ -134,20 +141,22 @@ class Page:
 
     def __init__(
         self,
-        content: Optional[str] = None,
-        embeds: Optional[List[Union[List[discord.Embed], discord.Embed]]] = None,
-        custom_view: Optional[discord.ui.View] = None,
-        files: Optional[List[discord.File]] = None,
+        content: str | None = None,
+        embeds: list[list[discord.Embed] | discord.Embed] | None = None,
+        custom_view: discord.ui.View | None = None,
+        files: list[discord.File] | None = None,
         **kwargs,
     ):
         if content is None and embeds is None:
-            raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
+            raise discord.InvalidArgument(
+                "A page cannot have both content and embeds equal to None."
+            )
         self._content = content
         self._embeds = embeds or []
         self._custom_view = custom_view
         self._files = files or []
 
-    async def callback(self, interaction: Optional[discord.Interaction] = None):
+    async def callback(self, interaction: discord.Interaction | None = None):
         """|coro|
 
         The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called.
@@ -157,58 +166,55 @@ class Page:
         interaction: Optional[:class:`discord.Interaction`]
             The interaction associated with the callback, if any.
         """
-        pass
 
-    def update_files(self) -> Optional[List[discord.File]]:
-        """Updates the files associated with the page by re-uploading them.
-        Typically used when the page is changed."""
+    def update_files(self) -> list[discord.File] | None:
+        """Updates :class:`discord.File` objects so that they can be sent multiple
+        times. This is called internally each time the page is sent.
+        """
         for file in self._files:
-            with open(file.fp.name, "rb") as fp:  # type: ignore
-                self._files[self._files.index(file)] = discord.File(
-                    fp,  # type: ignore
-                    filename=file.filename,
-                    description=file.description,
-                    spoiler=file.spoiler,
-                )
+            if file.fp.closed and (fn := getattr(file.fp, "name", None)):
+                file.fp = open(fn, "rb")
+            file.reset()
+            file.fp.close = lambda: None
         return self._files
 
     @property
-    def content(self) -> Optional[str]:
+    def content(self) -> str | None:
         """Gets the content for the page."""
         return self._content
 
     @content.setter
-    def content(self, value: Optional[str]):
+    def content(self, value: str | None):
         """Sets the content for the page."""
         self._content = value
 
     @property
-    def embeds(self) -> Optional[List[Union[List[discord.Embed], discord.Embed]]]:
+    def embeds(self) -> list[list[discord.Embed] | discord.Embed] | None:
         """Gets the embeds for the page."""
         return self._embeds
 
     @embeds.setter
-    def embeds(self, value: Optional[List[Union[List[discord.Embed], discord.Embed]]]):
+    def embeds(self, value: list[list[discord.Embed] | discord.Embed] | None):
         """Sets the embeds for the page."""
         self._embeds = value
 
     @property
-    def custom_view(self) -> Optional[discord.ui.View]:
+    def custom_view(self) -> discord.ui.View | None:
         """Gets the custom view assigned to the page."""
         return self._custom_view
 
     @custom_view.setter
-    def custom_view(self, value: Optional[discord.ui.View]):
+    def custom_view(self, value: discord.ui.View | None):
         """Assigns a custom view to be shown when the page is displayed."""
         self._custom_view = value
 
     @property
-    def files(self) -> Optional[List[discord.File]]:
+    def files(self) -> list[discord.File] | None:
         """Gets the files associated with the page."""
         return self._files
 
     @files.setter
-    def files(self, value: Optional[List[discord.File]]):
+    def files(self, value: list[discord.File] | None):
         """Sets the files associated with the page."""
         self._files = value
 
@@ -220,8 +226,8 @@ class PageGroup:
 
     .. note::
 
-        If multiple ``PageGroup`` objects have different options, they should all be set explicitly when creating each instance.
-
+        If multiple :class:`PageGroup` objects have different options,
+        they should all be set explicitly when creating each instance.
 
     Parameters
     ----------
@@ -265,28 +271,28 @@ class PageGroup:
 
     def __init__(
         self,
-        pages: Union[List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]],
+        pages: (list[str] | list[Page] | list[list[discord.Embed] | discord.Embed]),
         label: str,
-        description: Optional[str] = None,
-        emoji: Union[str, discord.Emoji, discord.PartialEmoji] = None,
-        default: Optional[bool] = None,
-        show_disabled: Optional[bool] = None,
-        show_indicator: Optional[bool] = None,
-        author_check: Optional[bool] = None,
-        disable_on_timeout: Optional[bool] = None,
-        use_default_buttons: Optional[bool] = None,
+        description: str | None = None,
+        emoji: str | discord.Emoji | discord.PartialEmoji = None,
+        default: bool | None = None,
+        show_disabled: bool | None = None,
+        show_indicator: bool | None = None,
+        author_check: bool | None = None,
+        disable_on_timeout: bool | None = None,
+        use_default_buttons: bool | None = None,
         default_button_row: int = 0,
-        loop_pages: Optional[bool] = None,
-        custom_view: Optional[discord.ui.View] = None,
-        timeout: Optional[float] = None,
-        custom_buttons: Optional[List[PaginatorButton]] = None,
-        trigger_on_display: Optional[bool] = None,
+        loop_pages: bool | None = None,
+        custom_view: discord.ui.View | None = None,
+        timeout: float | None = None,
+        custom_buttons: list[PaginatorButton] | None = None,
+        trigger_on_display: bool | None = None,
     ):
         self.label = label
-        self.description: Optional[str] = description
-        self.emoji: Union[str, discord.Emoji, discord.PartialEmoji] = emoji
-        self.pages: Union[List[str], List[Union[List[discord.Embed], discord.Embed]]] = pages
-        self.default: Optional[bool] = default
+        self.description: str | None = description
+        self.emoji: str | discord.Emoji | discord.PartialEmoji = emoji
+        self.pages: (list[str] | list[list[discord.Embed] | discord.Embed]) = pages
+        self.default: bool | None = default
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.author_check = author_check
@@ -296,7 +302,7 @@ class PageGroup:
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
         self.timeout: float = timeout
-        self.custom_buttons: List = custom_buttons
+        self.custom_buttons: list = custom_buttons
         self.trigger_on_display = trigger_on_display
 
 
@@ -307,7 +313,8 @@ class Paginator(discord.ui.View):
     ----------
     pages: Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]
         The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
-        If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed.
+        If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``,
+        only the first page group will be displayed.
     show_disabled: :class:`bool`
         Whether to show disabled buttons.
     show_indicator: :class:`bool`
@@ -329,7 +336,8 @@ class Paginator(discord.ui.View):
         Whether to loop the pages when clicking prev/next while at the first/last page in the list.
     custom_view: Optional[:class:`discord.ui.View`]
         A custom view whose items are appended below the pagination components.
-        If the currently displayed page has a `custom_view` assigned, it will replace these view components when that page is displayed.
+        If the currently displayed page has a `custom_view` assigned, it will replace these
+        view components when that page is displayed.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the paginator before no longer accepting input.
     custom_buttons: Optional[List[:class:`PaginatorButton`]]
@@ -346,7 +354,8 @@ class Paginator(discord.ui.View):
     page_groups: Optional[List[:class:`PageGroup`]]
         List of :class:`PageGroup` objects the user can switch between.
     default_page_group: Optional[:class:`int`]
-        The index of the default page group shown when the paginator is initially sent. Defined by setting ``default`` to ``True`` on a :class:`PageGroup`.
+        The index of the default page group shown when the paginator is initially sent.
+        Defined by setting ``default`` to ``True`` on a :class:`PageGroup`.
     current_page: :class:`int`
         A zero-indexed value showing the current page number.
     page_count: :class:`int`
@@ -361,7 +370,12 @@ class Paginator(discord.ui.View):
 
     def __init__(
         self,
-        pages: Union[List[PageGroup], List[Page], List[str], List[Union[List[discord.Embed], discord.Embed]]],
+        pages: (
+            list[PageGroup]
+            | list[Page]
+            | list[str]
+            | list[list[discord.Embed] | discord.Embed]
+        ),
         show_disabled: bool = True,
         show_indicator=True,
         show_menu=False,
@@ -371,21 +385,24 @@ class Paginator(discord.ui.View):
         use_default_buttons=True,
         default_button_row: int = 0,
         loop_pages=False,
-        custom_view: Optional[discord.ui.View] = None,
-        timeout: Optional[float] = 180.0,
-        custom_buttons: Optional[List[PaginatorButton]] = None,
-        trigger_on_display: Optional[bool] = None,
+        custom_view: discord.ui.View | None = None,
+        timeout: float | None = 180.0,
+        custom_buttons: list[PaginatorButton] | None = None,
+        trigger_on_display: bool | None = None,
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout: float = timeout
-        self.pages: Union[
-            List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]
-        ] = pages
+        self.pages: (
+            list[PageGroup]
+            | list[str]
+            | list[Page]
+            | list[list[discord.Embed] | discord.Embed]
+        ) = pages
         self.current_page = 0
-        self.menu: Optional[PaginatorMenu] = None
+        self.menu: PaginatorMenu | None = None
         self.show_menu = show_menu
         self.menu_placeholder = menu_placeholder
-        self.page_groups: Optional[List[PageGroup]] = None
+        self.page_groups: list[PageGroup] | None = None
         self.default_page_group: int = 0
 
         if all(isinstance(pg, PageGroup) for pg in pages):
@@ -396,11 +413,13 @@ class Paginator(discord.ui.View):
                 if pg.default:
                     self.default_page_group = self.page_groups.index(pg)
                     break
-            self.pages: List[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
+            self.pages: list[Page] = self.get_page_group_content(
+                self.page_groups[self.default_page_group]
+            )
 
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
-        self.custom_buttons: List = custom_buttons
+        self.custom_buttons: list = custom_buttons
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
         self.disable_on_timeout = disable_on_timeout
@@ -409,7 +428,7 @@ class Paginator(discord.ui.View):
         self.loop_pages = loop_pages
         self.custom_view: discord.ui.View = custom_view
         self.trigger_on_display = trigger_on_display
-        self.message: Union[discord.Message, discord.WebhookMessage, None] = None
+        self.message: discord.Message | discord.WebhookMessage | None = None
 
         if self.custom_buttons and not self.use_default_buttons:
             for button in custom_buttons:
@@ -425,30 +444,36 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: Optional[
-            Union[List[PageGroup], List[Page], List[str], List[Union[List[discord.Embed], discord.Embed]]]
-        ] = None,
-        show_disabled: Optional[bool] = None,
-        show_indicator: Optional[bool] = None,
-        show_menu: Optional[bool] = None,
-        author_check: Optional[bool] = None,
-        menu_placeholder: Optional[str] = None,
-        disable_on_timeout: Optional[bool] = None,
-        use_default_buttons: Optional[bool] = None,
-        default_button_row: Optional[int] = None,
-        loop_pages: Optional[bool] = None,
-        custom_view: Optional[discord.ui.View] = None,
-        timeout: Optional[float] = None,
-        custom_buttons: Optional[List[PaginatorButton]] = None,
-        trigger_on_display: Optional[bool] = None,
-        interaction: Optional[discord.Interaction] = None,
+        pages: None
+        | (
+            list[PageGroup]
+            | list[Page]
+            | list[str]
+            | list[list[discord.Embed] | discord.Embed]
+        ) = None,
+        show_disabled: bool | None = None,
+        show_indicator: bool | None = None,
+        show_menu: bool | None = None,
+        author_check: bool | None = None,
+        menu_placeholder: str | None = None,
+        disable_on_timeout: bool | None = None,
+        use_default_buttons: bool | None = None,
+        default_button_row: int | None = None,
+        loop_pages: bool | None = None,
+        custom_view: discord.ui.View | None = None,
+        timeout: float | None = None,
+        custom_buttons: list[PaginatorButton] | None = None,
+        trigger_on_display: bool | None = None,
+        interaction: discord.Interaction | None = None,
+        current_page: int = 0,
     ):
         """Updates the existing :class:`Paginator` instance with the provided options.
 
         Parameters
         ----------
         pages: Optional[Union[List[:class:`PageGroup`], List[:class:`Page`], List[:class:`str`], List[Union[List[:class:`discord.Embed`], :class:`discord.Embed`]]]]
-            The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate.
+            The list of :class:`PageGroup` objects, :class:`Page` objects, strings,
+            embeds, or list of embeds to paginate.
         show_disabled: :class:`bool`
             Whether to show disabled buttons.
         show_indicator: :class:`bool`
@@ -481,12 +506,17 @@ class Paginator(discord.ui.View):
         interaction: Optional[:class:`discord.Interaction`]
             The interaction to use when updating the paginator. If not provided, the paginator will be updated
             by using its stored :attr:`message` attribute instead.
+        current_page: :class:`int`
+            The initial page number to display when updating the paginator.
         """
 
         # Update pages and reset current_page to 0 (default)
-        self.pages: Union[List[PageGroup], List[str], List[Page], List[Union[List[discord.Embed], discord.Embed]]] = (
-            pages if pages is not None else self.pages
-        )
+        self.pages: (
+            list[PageGroup]
+            | list[str]
+            | list[Page]
+            | list[list[discord.Embed] | discord.Embed]
+        ) = (pages if pages is not None else self.pages)
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if self.show_menu else None
@@ -496,21 +526,45 @@ class Paginator(discord.ui.View):
                 if pg.default:
                     self.default_page_group = self.page_groups.index(pg)
                     break
-            self.pages: List[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
+            self.pages: list[Page] = self.get_page_group_content(
+                self.page_groups[self.default_page_group]
+            )
         self.page_count = max(len(self.pages) - 1, 0)
-        self.current_page = 0
+        self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
-        self.show_disabled = show_disabled if show_disabled is not None else self.show_disabled
-        self.show_indicator = show_indicator if show_indicator is not None else self.show_indicator
+        self.show_disabled = (
+            show_disabled if show_disabled is not None else self.show_disabled
+        )
+        self.show_indicator = (
+            show_indicator if show_indicator is not None else self.show_indicator
+        )
         self.usercheck = author_check if author_check is not None else self.usercheck
-        self.menu_placeholder = menu_placeholder if menu_placeholder is not None else self.menu_placeholder
-        self.disable_on_timeout = disable_on_timeout if disable_on_timeout is not None else self.disable_on_timeout
-        self.use_default_buttons = use_default_buttons if use_default_buttons is not None else self.use_default_buttons
-        self.default_button_row = default_button_row if default_button_row is not None else self.default_button_row
+        self.menu_placeholder = (
+            menu_placeholder if menu_placeholder is not None else self.menu_placeholder
+        )
+        self.disable_on_timeout = (
+            disable_on_timeout
+            if disable_on_timeout is not None
+            else self.disable_on_timeout
+        )
+        self.use_default_buttons = (
+            use_default_buttons
+            if use_default_buttons is not None
+            else self.use_default_buttons
+        )
+        self.default_button_row = (
+            default_button_row
+            if default_button_row is not None
+            else self.default_button_row
+        )
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view: discord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
-        self.trigger_on_display = trigger_on_display if trigger_on_display is not None else self.trigger_on_display
+        self.trigger_on_display = (
+            trigger_on_display
+            if trigger_on_display is not None
+            else self.trigger_on_display
+        )
         if custom_buttons and not self.use_default_buttons:
             self.buttons = {}
             for button in custom_buttons:
@@ -538,7 +592,7 @@ class Paginator(discord.ui.View):
     async def disable(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Page, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: None | (str | Page | list[discord.Embed] | discord.Embed) = None,
     ) -> None:
         """Stops the paginator, disabling all of its components.
 
@@ -551,7 +605,11 @@ class Paginator(discord.ui.View):
         """
         page = self.get_page_content(page)
         for item in self.children:
-            if include_custom or not self.custom_view or item not in self.custom_view.children:
+            if (
+                include_custom
+                or not self.custom_view
+                or item not in self.custom_view.children
+            ):
                 item.disabled = True
         if page:
             await self.message.edit(
@@ -565,7 +623,7 @@ class Paginator(discord.ui.View):
     async def cancel(
         self,
         include_custom: bool = False,
-        page: Optional[Union[str, Page, Union[List[discord.Embed], discord.Embed]]] = None,
+        page: None | (str | Page | list[discord.Embed] | discord.Embed) = None,
     ) -> None:
         """Cancels the paginator, removing all of its components from the message.
 
@@ -579,7 +637,11 @@ class Paginator(discord.ui.View):
         items = self.children.copy()
         page = self.get_page_content(page)
         for item in items:
-            if include_custom or not self.custom_view or item not in self.custom_view.children:
+            if (
+                include_custom
+                or not self.custom_view
+                or item not in self.custom_view.children
+            ):
                 self.remove_item(item)
         if page:
             await self.message.edit(
@@ -590,7 +652,9 @@ class Paginator(discord.ui.View):
         else:
             await self.message.edit(view=self)
 
-    async def goto_page(self, page_number: int = 0, *, interaction: Optional[discord.Interaction] = None) -> None:
+    async def goto_page(
+        self, page_number: int = 0, *, interaction: discord.Interaction | None = None
+    ) -> None:
         """Updates the paginator message to show the specified page number.
 
         Parameters
@@ -600,11 +664,12 @@ class Paginator(discord.ui.View):
 
             .. note::
 
-                Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user.
+                Page numbers are zero-indexed when referenced internally,
+                but appear as one-indexed when shown to the user.
 
         interaction: Optional[:class:`discord.Interaction`]
-            The interaction to use when editing the message. If not provided, the message will be edited using the paginator's
-            stored :attr:`message` attribute instead.
+            The interaction to use when editing the message. If not provided, the message will be
+            edited using the paginator's stored :attr:`message` attribute instead.
 
         Returns
         -------
@@ -614,7 +679,9 @@ class Paginator(discord.ui.View):
         self.update_buttons()
         self.current_page = page_number
         if self.show_indicator:
-            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            self.buttons["page_indicator"][
+                "object"
+            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
 
         page = self.pages[page_number]
         page = self.get_page_content(page)
@@ -658,7 +725,8 @@ class Paginator(discord.ui.View):
 
     def add_default_buttons(self):
         """Adds the full list of default buttons that can be used with the paginator.
-        Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."""
+        Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``.
+        """
         default_buttons = [
             PaginatorButton(
                 "first",
@@ -701,11 +769,15 @@ class Paginator(discord.ui.View):
         self.buttons[button.button_type] = {
             "object": discord.ui.Button(
                 style=button.style,
-                label=button.label
-                if button.label or button.emoji
-                else button.button_type.capitalize()
-                if button.button_type != "page_indicator"
-                else f"{self.current_page + 1}/{self.page_count + 1}",
+                label=(
+                    button.label
+                    if button.label or button.emoji
+                    else (
+                        button.button_type.capitalize()
+                        if button.button_type != "page_indicator"
+                        else f"{self.current_page + 1}/{self.page_count + 1}"
+                    )
+                ),
                 disabled=button.disabled,
                 custom_id=button.custom_id,
                 emoji=button.emoji,
@@ -713,7 +785,11 @@ class Paginator(discord.ui.View):
             ),
             "label": button.label,
             "loop_label": button.loop_label,
-            "hidden": button.disabled if button.button_type != "page_indicator" else not self.show_indicator,
+            "hidden": (
+                button.disabled
+                if button.button_type != "page_indicator"
+                else not self.show_indicator
+            ),
         }
         self.buttons[button.button_type]["object"].callback = button.callback
         button.paginator = self
@@ -721,10 +797,12 @@ class Paginator(discord.ui.View):
     def remove_button(self, button_type: str):
         """Removes a :class:`PaginatorButton` from the paginator."""
         if button_type not in self.buttons.keys():
-            raise ValueError(f"no button_type {button_type} was found in this paginator.")
+            raise ValueError(
+                f"no button_type {button_type} was found in this paginator."
+            )
         self.buttons.pop(button_type)
 
-    def update_buttons(self) -> Dict:
+    def update_buttons(self) -> dict:
         """Updates the display state of the buttons (disabled/hidden)
 
         Returns
@@ -765,7 +843,9 @@ class Paginator(discord.ui.View):
                     button["object"].label = button["label"]
         self.clear_items()
         if self.show_indicator:
-            self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            self.buttons["page_indicator"][
+                "object"
+            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
         for key, button in self.buttons.items():
             if key != "page_indicator":
                 if button["hidden"]:
@@ -796,12 +876,14 @@ class Paginator(discord.ui.View):
         for item in custom_view.children:
             self.add_item(item)
 
-    def get_page_group_content(self, page_group: PageGroup) -> List[Page]:
+    def get_page_group_content(self, page_group: PageGroup) -> list[Page]:
         """Returns a converted list of `Page` objects for the given page group based on the content of its pages."""
         return [self.get_page_content(page) for page in page_group.pages]
 
     @staticmethod
-    def get_page_content(page: Union[Page, str, discord.Embed, List[discord.Embed]]) -> Page:
+    def get_page_content(
+        page: Page | str | discord.Embed | list[discord.Embed],
+    ) -> Page:
         """Converts a page into a :class:`Page` object based on its content."""
         if isinstance(page, Page):
             return page
@@ -820,10 +902,11 @@ class Paginator(discord.ui.View):
                 raise TypeError("All list items must be embeds or files.")
         else:
             raise TypeError(
-                "Page content must be a Page object, string, an embed, a list of embeds, a file, or a list of files."
+                "Page content must be a Page object, string, an embed, a list of"
+                " embeds, a file, or a list of files."
             )
 
-    async def page_action(self, interaction: Optional[discord.Interaction] = None) -> None:
+    async def page_action(self, interaction: discord.Interaction | None = None) -> None:
         """Triggers the callback associated with the current page, if any.
 
         Parameters
@@ -832,22 +915,25 @@ class Paginator(discord.ui.View):
             The interaction that was used to trigger the page action.
         """
         if self.get_page_content(self.pages[self.current_page]).callback:
-            await self.get_page_content(self.pages[self.current_page]).callback(interaction=interaction)
+            await self.get_page_content(self.pages[self.current_page]).callback(
+                interaction=interaction
+            )
 
     async def send(
         self,
         ctx: Context,
-        target: Optional[discord.abc.Messageable] = None,
-        target_message: Optional[str] = None,
-        reference: Optional[Union[discord.Message, discord.MessageReference, discord.PartialMessage]] = None,
-        allowed_mentions: Optional[discord.AllowedMentions] = None,
-        mention_author: Optional[bool] = None,
-        delete_after: Optional[float] = None,
+        target: discord.abc.Messageable | None = None,
+        target_message: str | None = None,
+        reference: None
+        | (discord.Message | discord.MessageReference | discord.PartialMessage) = None,
+        allowed_mentions: discord.AllowedMentions | None = None,
+        mention_author: bool | None = None,
+        delete_after: float | None = None,
     ) -> discord.Message:
         """Sends a message with the paginated items.
 
         Parameters
-        ------------
+        ----------
         ctx: Union[:class:`~discord.ext.commands.Context`]
             A command's invocation context.
         target: Optional[:class:`~discord.abc.Messageable`]
@@ -855,10 +941,11 @@ class Paginator(discord.ui.View):
         target_message: Optional[:class:`str`]
             An optional message shown when the paginator message is sent elsewhere.
         reference: Optional[Union[:class:`discord.Message`, :class:`discord.MessageReference`, :class:`discord.PartialMessage`]]
-            A reference to the :class:`~discord.Message` to which you are replying with the paginator. This can be created using
-            :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control
-            whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user`
-            attribute of ``allowed_mentions`` or by setting ``mention_author``.
+            A reference to the :class:`~discord.Message` to which you are replying with the paginator.
+            This can be created using :meth:`~discord.Message.to_reference` or passed directly as a
+            :class:`~discord.Message`. You can control whether this mentions the author of the referenced message
+            using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by
+            setting ``mention_author``.
         allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
             Controls the mentions being processed in this message. If this is
             passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
@@ -872,7 +959,7 @@ class Paginator(discord.ui.View):
             If set, deletes the paginator after the specified time.
 
         Returns
-        --------
+        -------
         :class:`~discord.Message`
             The message that was sent with the paginator.
         """
@@ -883,12 +970,20 @@ class Paginator(discord.ui.View):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
         if reference is not None and not isinstance(
-            reference, (discord.Message, discord.MessageReference, discord.PartialMessage)
+            reference,
+            (discord.Message, discord.MessageReference, discord.PartialMessage),
         ):
-            raise TypeError(f"expected Message, MessageReference, or PartialMessage not {reference.__class__!r}")
+            raise TypeError(
+                "expected Message, MessageReference, or PartialMessage not"
+                f" {reference.__class__!r}"
+            )
 
-        if allowed_mentions is not None and not isinstance(allowed_mentions, discord.AllowedMentions):
-            raise TypeError(f"expected AllowedMentions not {allowed_mentions.__class__!r}")
+        if allowed_mentions is not None and not isinstance(
+            allowed_mentions, discord.AllowedMentions
+        ):
+            raise TypeError(
+                f"expected AllowedMentions not {allowed_mentions.__class__!r}"
+            )
 
         if mention_author is not None and not isinstance(mention_author, bool):
             raise TypeError(f"expected bool not {mention_author.__class__!r}")
@@ -928,19 +1023,18 @@ class Paginator(discord.ui.View):
     async def edit(
         self,
         message: discord.Message,
-        suppress: Optional[bool] = None,
-        allowed_mentions: Optional[discord.AllowedMentions] = None,
-        delete_after: Optional[float] = None,
-    ) -> Optional[discord.Message]:
+        suppress: bool | None = None,
+        allowed_mentions: discord.AllowedMentions | None = None,
+        delete_after: float | None = None,
+    ) -> discord.Message | None:
         """Edits an existing message to replace it with the paginator contents.
 
         .. note::
 
             If invoked from an interaction, you will still need to respond to the interaction.
 
-
         Parameters
-        -----------
+        ----------
         message: :class:`discord.Message`
             The message to edit with the paginator.
         suppress: :class:`bool`
@@ -959,7 +1053,7 @@ class Paginator(discord.ui.View):
             If set, deletes the paginator after the specified time.
 
         Returns
-        --------
+        -------
         Optional[:class:`discord.Message`]
             The message that was edited. Returns ``None`` if the operation failed.
         """
@@ -968,7 +1062,9 @@ class Paginator(discord.ui.View):
 
         self.update_buttons()
 
-        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
+        page: Page | str | discord.Embed | list[discord.Embed] = self.pages[
+            self.current_page
+        ]
         page_content: Page = self.get_page_content(page)
 
         if page_content.custom_view:
@@ -994,15 +1090,15 @@ class Paginator(discord.ui.View):
 
     async def respond(
         self,
-        interaction: Union[discord.Interaction, BridgeContext],
+        interaction: discord.Interaction | BridgeContext,
         ephemeral: bool = False,
-        target: Optional[discord.abc.Messageable] = None,
+        target: discord.abc.Messageable | None = None,
         target_message: str = "Paginator sent!",
-    ) -> Union[discord.Message, discord.WebhookMessage]:
+    ) -> discord.Message | discord.WebhookMessage:
         """Sends an interaction response or followup with the paginated items.
 
         Parameters
-        ------------
+        ----------
         interaction: Union[:class:`discord.Interaction`, :class:`BridgeContext`]
             The interaction or BridgeContext which invoked the paginator.
             If passing a BridgeContext object, you cannot make this an ephemeral paginator.
@@ -1012,33 +1108,40 @@ class Paginator(discord.ui.View):
 
             .. warning::
 
-                If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be persistent).
+                If your paginator is ephemeral, it cannot have a timeout
+                longer than 15 minutes (and cannot be persistent).
 
         target: Optional[:class:`~discord.abc.Messageable`]
-            A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`
+            A target where the paginated message should be sent,
+            if different from the original :class:`discord.Interaction`
         target_message: :class:`str`
             The content of the interaction response shown when the paginator message is sent elsewhere.
 
         Returns
-        --------
+        -------
         Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]
             The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator.
         """
 
         if not isinstance(interaction, (discord.Interaction, BridgeContext)):
-            raise TypeError(f"expected Interaction or BridgeContext, not {interaction.__class__!r}")
+            raise TypeError(
+                f"expected Interaction or BridgeContext, not {interaction.__class__!r}"
+            )
 
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
         if ephemeral and (self.timeout >= 900 or self.timeout is None):
             raise ValueError(
-                "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
+                "paginator responses cannot be ephemeral if the paginator timeout is 15"
+                " minutes or greater"
             )
 
         self.update_buttons()
 
-        page: Union[Page, str, discord.Embed, List[discord.Embed]] = self.pages[self.current_page]
+        page: Page | str | discord.Embed | list[discord.Embed] = self.pages[
+            self.current_page
+        ]
         page_content: Page = self.get_page_content(page)
 
         if page_content.custom_view:
@@ -1048,7 +1151,9 @@ class Paginator(discord.ui.View):
             self.user = interaction.user
 
             if target:
-                await interaction.response.send_message(target_message, ephemeral=ephemeral)
+                await interaction.response.send_message(
+                    target_message, ephemeral=ephemeral
+                )
                 msg = await target.send(
                     content=page_content.content,
                     embeds=page_content.embeds,
@@ -1063,7 +1168,8 @@ class Paginator(discord.ui.View):
                     view=self,
                     ephemeral=ephemeral,
                 )
-                # convert from WebhookMessage to Message reference to bypass 15min webhook token timeout (non-ephemeral messages only)
+                # convert from WebhookMessage to Message reference to bypass
+                # 15min webhook token timeout (non-ephemeral messages only)
                 if not ephemeral:
                     msg = await msg.channel.fetch_message(msg.id)
             else:
@@ -1095,7 +1201,7 @@ class Paginator(discord.ui.View):
         if isinstance(msg, (discord.Message, discord.WebhookMessage)):
             self.message = msg
         elif isinstance(msg, discord.Interaction):
-            self.message = await msg.original_message()
+            self.message = await msg.original_response()
 
         return self.message
 
@@ -1117,12 +1223,12 @@ class PaginatorMenu(discord.ui.Select):
 
     def __init__(
         self,
-        page_groups: List[PageGroup],
-        placeholder: Optional[str] = None,
-        custom_id: Optional[str] = None,
+        page_groups: list[PageGroup],
+        placeholder: str | None = None,
+        custom_id: str | None = None,
     ):
         self.page_groups = page_groups
-        self.paginator: Optional[Paginator] = None
+        self.paginator: Paginator | None = None
         opts = [
             discord.SelectOption(
                 label=page_group.label,
@@ -1132,7 +1238,13 @@ class PaginatorMenu(discord.ui.Select):
             )
             for page_group in self.page_groups
         ]
-        super().__init__(placeholder=placeholder, max_values=1, min_values=1, options=opts, custom_id=custom_id)
+        super().__init__(
+            placeholder=placeholder,
+            max_values=1,
+            min_values=1,
+            options=opts,
+            custom_id=custom_id,
+        )
 
     async def callback(self, interaction: discord.Interaction):
         """|coro|
@@ -1140,7 +1252,7 @@ class PaginatorMenu(discord.ui.Select):
         The coroutine that is called when a menu option is selected.
 
         Parameters
-        -----------
+        ----------
         interaction: :class:`discord.Interaction`
             The interaction created by selecting the menu option.
         """

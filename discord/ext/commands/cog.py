@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable, Generator, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Callable, Generator, TypeVar
 
 import discord
 
@@ -43,7 +43,7 @@ MISSING: Any = discord.utils.MISSING
 
 
 class Cog(Cog):
-    def __new__(cls: Type[CogT], *args: Any, **kwargs: Any) -> CogT:
+    def __new__(cls: type[CogT], *args: Any, **kwargs: Any) -> CogT:
         # For issue 426, we need to store a copy of the command objects
         # since we modify them to inject `self` to them.
         # To do this, we need to interfere with the Cog creation process.
@@ -70,7 +70,7 @@ class Cog(Cog):
             else:
                 yield command
 
-    def get_commands(self) -> List[Union[ApplicationCommand, Command]]:
+    def get_commands(self) -> list[ApplicationCommand | Command]:
         r"""
         Returns
         --------

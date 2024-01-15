@@ -12,11 +12,15 @@ class summary(nodes.General, nodes.Element):
 
 
 def visit_details_node(self, node):
-    self.body.append(self.starttag(node, "details", CLASS=node.attributes.get("class", "")))
+    self.body.append(
+        self.starttag(node, "details", CLASS=node.attributes.get("class", ""))
+    )
 
 
 def visit_summary_node(self, node):
-    self.body.append(self.starttag(node, "summary", CLASS=node.attributes.get("summary-class", "")))
+    self.body.append(
+        self.starttag(node, "summary", CLASS=node.attributes.get("summary-class", ""))
+    )
     self.body.append(node.rawsource)
 
 

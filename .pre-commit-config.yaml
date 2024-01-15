@@ -1,0 +1,94 @@
+ci:
+  autoupdate_commit_msg: "chore(pre-commit): pre-commit autoupdate"
+  autofix_commit_msg: "style(pre-commit): auto fixes from pre-commit.com hooks"
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.2.1
+    hooks:
+      - id: autoflake
+  #        args:
+  #          - --in-place
+  #          - --remove-all-unused-imports
+  #          - --expand-star-imports
+  #          - --remove-duplicate-keys
+  #          - --remove-unused-variables
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.15.0
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.0
+    hooks:
+      - id: isort
+  - repo: https://github.com/psf/black
+    rev: 23.11.0
+    hooks:
+      - id: black
+        args: [--safe, --quiet]
+  - repo: https://github.com/Pierre-Sassoulas/black-disable-checker
+    rev: v1.1.3
+    hooks:
+      - id: black-disable-checker
+  #  - repo: https://github.com/PyCQA/flake8
+  #    rev: 4.0.1
+  #    hooks:
+  #      - id: flake8
+  #        additional_dependencies: [flake8-typing-imports==1.12.0]
+  #  - repo: local
+  #    hooks:
+  #      - id: pylint
+  #        name: pylint
+  #        entry: pylint
+  #        language: system
+  #        types: [python]
+  #        args: ["-rn", "-sn", "--rcfile=.pylintrc", "--fail-on=I"]
+  #      # We define an additional manual step to allow running pylint with a spelling
+  #      # checker in CI.
+  #      - id: pylint
+  #        alias: pylint-with-spelling
+  #        name: pylint
+  #        entry: pylint
+  #        language: system
+  #        types: [python]
+  #        args: ["-rn", "-sn", "--rcfile=.pylintrc", "--fail-on=I", "--spelling-dict=en"]
+  #        stages: [manual]
+  #      - id: mypy
+  #        name: mypy
+  #        entry: mypy
+  #        language: system
+  #        types: [python]
+  #        args: ["--non-interactive"]
+  #  - repo: https://github.com/myint/rstcheck
+  #    rev: "v5.0.0"
+  #    hooks:
+  #      - id: rstcheck
+  #        args: ["--ignore-roles=func,class,mod", "--report=warning"]
+  #        types: [text]
+  #  - repo: https://github.com/pre-commit/mirrors-mypy
+  #    rev: v0.950
+  #    hooks:
+  #      - id: mypy
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.4
+    hooks:
+      - id: prettier
+        args: [--prose-wrap=always, --print-width=88]
+  - repo: https://github.com/DanielNoord/pydocstringformatter
+    rev: v0.7.3
+    hooks:
+      - id: pydocstringformatter
+        args:
+          [
+            --style=numpydoc,
+            --no-numpydoc-name-type-spacing,
+            --no-final-period,
+            --no-capitalize-first-letter,
+          ]

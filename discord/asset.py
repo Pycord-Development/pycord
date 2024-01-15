@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import io
 import os
-from typing import TYPE_CHECKING, Any, Literal, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Literal
 
 import yarl
 
@@ -49,12 +49,17 @@ MISSING = utils.MISSING
 
 class AssetMixin:
     url: str
-    _state: Optional[Any]
+    _state: Any | None
 
     async def read(self) -> bytes:
         """|coro|
 
         Retrieves the content of this asset as a :class:`bytes` object.
+
+        Returns
+        -------
+        :class:`bytes`
+            The content of the asset.
 
         Raises
         ------
@@ -64,11 +69,6 @@ class AssetMixin:
             Downloading the asset failed.
         NotFound
             The asset was deleted.
-
-        Returns
-        -------
-        :class:`bytes`
-            The content of the asset.
         """
         if self._state is None:
             raise DiscordException("Invalid state (no ConnectionState provided)")
@@ -77,7 +77,7 @@ class AssetMixin:
 
     async def save(
         self,
-        fp: Union[str, bytes, os.PathLike, io.BufferedIOBase],
+        fp: str | bytes | os.PathLike | io.BufferedIOBase,
         *,
         seek_begin: bool = True,
     ) -> int:
@@ -95,6 +95,11 @@ class AssetMixin:
             Whether to seek to the beginning of the file after saving is
             successfully done.
 
+        Returns
+        -------
+        :class:`int`
+            The number of bytes written.
+
         Raises
         ------
         DiscordException
@@ -103,11 +108,6 @@ class AssetMixin:
             Downloading the asset failed.
         NotFound
             The asset was deleted.
-
-        Returns
-        --------
-        :class:`int`
-            The number of bytes written.
         """
 
         data = await self.read()
@@ -147,7 +147,7 @@ class Asset(AssetMixin):
             Returns the hash of the asset.
     """
 
-    __slots__: Tuple[str, ...] = (
+    __slots__: tuple[str, ...] = (
         "_state",
         "_url",
         "_animated",
@@ -183,7 +183,9 @@ class Asset(AssetMixin):
         )
 
     @classmethod
-    def _from_guild_avatar(cls, state, guild_id: int, member_id: int, avatar: str) -> Asset:
+    def _from_guild_avatar(
+        cls, state, guild_id: int, member_id: int, avatar: str
+    ) -> Asset:
         animated = avatar.startswith("a_")
         format = "gif" if animated else "png"
         return cls(
@@ -258,7 +260,9 @@ class Asset(AssetMixin):
         )
 
     @classmethod
-    def _from_scheduled_event_cover(cls, state, event_id: int, cover_hash: str) -> Asset:
+    def _from_scheduled_event_cover(
+        cls, state, event_id: int, cover_hash: str
+    ) -> Asset:
         return cls(
             state,
             url=f"{cls.BASE}/guild-events/{event_id}/{cover_hash}.png",
@@ -284,16 +288,16 @@ class Asset(AssetMixin):
 
     @property
     def url(self) -> str:
-        """:class:`str`: Returns the underlying URL of the asset."""
+        """Returns the underlying URL of the asset."""
         return self._url
 
     @property
     def key(self) -> str:
-        """:class:`str`: Returns the identifying key of the asset."""
+        """Returns the identifying key of the asset."""
         return self._key
 
     def is_animated(self) -> bool:
-        """:class:`bool`: Returns whether the asset is animated."""
+        """Returns whether the asset is animated."""
         return self._animated
 
     def replace(
@@ -306,7 +310,7 @@ class Asset(AssetMixin):
         """Returns a new asset with the passed components replaced.
 
         Parameters
-        -----------
+        ----------
         size: :class:`int`
             The new size of the asset.
         format: :class:`str`
@@ -316,15 +320,15 @@ class Asset(AssetMixin):
             The new format to change it to if the asset isn't animated.
             Must be either 'webp', 'jpeg', 'jpg', or 'png'.
 
-        Raises
-        -------
-        InvalidArgument
-            An invalid size or format was passed.
-
         Returns
-        --------
+        -------
         :class:`Asset`
             The newly updated asset.
+
+        Raises
+        ------
+        InvalidArgument
+            An invalid size or format was passed.
         """
         url = yarl.URL(self._url)
         path, _ = os.path.splitext(url.path)
@@ -332,16 +336,22 @@ class Asset(AssetMixin):
         if format is not MISSING:
             if self._animated:
                 if format not in VALID_ASSET_FORMATS:
-                    raise InvalidArgument(f"format must be one of {VALID_ASSET_FORMATS}")
+                    raise InvalidArgument(
+                        f"format must be one of {VALID_ASSET_FORMATS}"
+                    )
                 url = url.with_path(f"{path}.{format}")
             elif static_format is MISSING:
                 if format not in VALID_STATIC_FORMATS:
-                    raise InvalidArgument(f"format must be one of {VALID_STATIC_FORMATS}")
+                    raise InvalidArgument(
+                        f"format must be one of {VALID_STATIC_FORMATS}"
+                    )
                 url = url.with_path(f"{path}.{format}")
 
         if static_format is not MISSING and not self._animated:
             if static_format not in VALID_STATIC_FORMATS:
-                raise InvalidArgument(f"static_format must be one of {VALID_STATIC_FORMATS}")
+                raise InvalidArgument(
+                    f"static_format must be one of {VALID_STATIC_FORMATS}"
+                )
             url = url.with_path(f"{path}.{static_format}")
 
         if size is not MISSING:
@@ -358,19 +368,19 @@ class Asset(AssetMixin):
         """Returns a new asset with the specified size.
 
         Parameters
-        ------------
+        ----------
         size: :class:`int`
             The new size of the asset.
 
-        Raises
-        -------
-        InvalidArgument
-            The asset had an invalid size.
-
         Returns
-        --------
+        -------
         :class:`Asset`
             The new updated asset.
+
+        Raises
+        ------
+        InvalidArgument
+            The asset had an invalid size.
         """
         if not utils.valid_icon_size(size):
             raise InvalidArgument("size must be a power of 2 between 16 and 4096")
@@ -382,19 +392,19 @@ class Asset(AssetMixin):
         """Returns a new asset with the specified format.
 
         Parameters
-        ------------
+        ----------
         format: :class:`str`
             The new format of the asset.
 
-        Raises
-        -------
-        InvalidArgument
-            The asset has an invalid format.
-
         Returns
-        --------
+        -------
         :class:`Asset`
             The new updated asset.
+
+        Raises
+        ------
+        InvalidArgument
+            The asset has an invalid format.
         """
 
         if self._animated:
@@ -415,19 +425,19 @@ class Asset(AssetMixin):
         not animated. Otherwise, the asset is not changed.
 
         Parameters
-        ------------
+        ----------
         format: :class:`str`
             The new static format of the asset.
 
-        Raises
-        -------
-        InvalidArgument
-            The asset had an invalid format.
-
         Returns
-        --------
+        -------
         :class:`Asset`
             The new updated asset.
+
+        Raises
+        ------
+        InvalidArgument
+            The asset had an invalid format.
         """
 
         if self._animated:

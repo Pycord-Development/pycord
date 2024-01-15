@@ -152,7 +152,7 @@ class StringView:
                     raise ExpectedClosingQuoteError(close_quote)
                 return "".join(result)
 
-            # currently we accept strings in the format of "hello world"
+            # currently, we accept strings in the format of "hello world"
             # to embed a quote inside the string you must escape it: "a \"world\""
             if current == "\\":
                 next_char = self.get()
@@ -194,4 +194,7 @@ class StringView:
             result.append(current)
 
     def __repr__(self):
-        return f"<StringView pos: {self.index} prev: {self.previous} end: {self.end} eof: {self.eof}>"
+        return (
+            f"<StringView pos: {self.index} prev: {self.previous} end: {self.end} eof:"
+            f" {self.eof}>"
+        )

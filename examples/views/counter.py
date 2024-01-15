@@ -8,7 +8,9 @@ class CounterBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
-        super().__init__(command_prefix=commands.when_mentioned_or("!"), intents=intents)
+        super().__init__(
+            command_prefix=commands.when_mentioned_or("!"), intents=intents
+        )
 
     async def on_ready(self):
         print(f"Logged in as {self.user} (ID: {self.user.id})")
@@ -17,7 +19,6 @@ class CounterBot(commands.Bot):
 
 # Define a simple View that gives us a counter button.
 class Counter(discord.ui.View):
-
     # When pressed, this increments the number displayed until it hits 5.
     # When it hits 5, the counter button is disabled, and it turns green.
     # NOTE: The name of the function does not matter to the library.

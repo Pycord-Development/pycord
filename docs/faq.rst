@@ -9,16 +9,14 @@ Frequently Asked Questions
 This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a
 new question or submit one via pull requests.
 
-.. contents:: Questions
-    :local:
 
 Coroutines
-------------
+----------
 
 Questions regarding coroutines and asyncio belong here.
 
 What is a coroutine?
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops
 the function's execution at that point and works on other things until it comes back to that point and finishes off its work.
@@ -28,12 +26,12 @@ multiprocessing.
 **If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**
 
 Where can I use ``await``\?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can only use ``await`` inside ``async def`` functions and nowhere else.
 
 What does "blocking" mean?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In asynchronous programming a blocking call is essentially all the parts of the function that are not ``await``. Do not
 despair however, because not all forms of blocking are bad! Using blocking calls is inevitable, but you must work to make
@@ -74,18 +72,18 @@ Consider the following example: ::
                 await channel.send(js['file'])
 
 General
----------
+-------
 
 General questions regarding library usage belong here.
 
 Where can I find usage examples?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Example code can be found in the `examples folder <https://github.com/Pycord-Development/pycord/tree/master/examples>`_
 in the repository.
 
 How do I set the "Playing" status?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``activity`` keyword argument may be passed in the :class:`Client` constructor or :meth:`Client.change_presence`, given an :class:`Activity` object.
 
@@ -112,7 +110,7 @@ Putting both of these pieces of info together, you get the following: ::
     client = discord.Client(activity=activity)
 
 How do I send a message to a specific channel?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You must fetch the channel directly and then call the appropriate method. Example: ::
 
@@ -182,7 +180,7 @@ and then pass an :class:`io.BytesIO` instance to :class:`File` like so:
 
 
 How can I add a reaction to a message?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You use the :meth:`Message.add_reaction` method.
 
@@ -225,7 +223,7 @@ Quick example: ::
     await message.add_reaction(emoji)
 
 How do I pass a coroutine to the player's "after" function?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The library's music player launches on a separate thread, ergo it does not execute inside a coroutine.
 This does not mean that it is not possible to call a coroutine in the ``after`` parameter. To do so you must pass a callable
@@ -251,12 +249,12 @@ this together we can do the following: ::
     voice.play(discord.FFmpegPCMAudio(url), after=my_after)
 
 How do I run something in the background?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `Check the background_task.py example. <https://github.com/Pycord-Development/pycord/blob/master/examples/background_task.py>`_
 
 How do I get a specific model?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are multiple ways of doing this. If you have a specific model's ID then you can use
 one of the following functions:
@@ -295,7 +293,7 @@ Quick example: ::
         channel = discord.utils.get(guild.text_channels, name='cool-channel')
 
 How do I make a web request?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To make a request, you should use a non-blocking library.
 This library already uses and requires a 3rd party library for making requests, :doc:`aiohttp <aio:index>`.
@@ -310,7 +308,7 @@ Quick example: ::
 See `aiohttp's full documentation <http://aiohttp.readthedocs.io/en/stable/>`_ for more information.
 
 How do I use a local image file for an embed image?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Discord special-cases uploading an image attachment and using it within an embed so that it will not
 display separately, but instead in the embed's thumbnail, image, footer or author icon.
@@ -328,10 +326,9 @@ Quick example: ::
     await channel.send(file=file, embed=embed)
 
 Is there an event for audit log entries being created?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Since Discord does not dispatch this information in the gateway, the library cannot provide this information.
-This is currently a Discord limitation.
+As of version 2.5, you can receive audit log entries with the :func:`on_audit_log_entry` event.
 
 Commands Extension
 -------------------
@@ -339,7 +336,7 @@ Commands Extension
 Questions regarding ``discord.ext.commands`` belong here.
 
 Why does ``on_message`` make my commands stop working?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Overriding the default provided ``on_message`` forbids any extra commands from running. To fix this, add a
 ``bot.process_commands(message)`` line at the end of your ``on_message``. For example: ::
@@ -360,7 +357,7 @@ to a message. Example::
         # do not process commands here
 
 Why do my arguments require quotes?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In a simple command defined as: ::
 
@@ -390,7 +387,7 @@ Example: ::
         await ctx.send(f'Your message is {len(ctx.message.content)} characters long.')
 
 How do I make a subcommand?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use the :func:`~ext.commands.group` decorator. This will transform the callback into a :class:`~ext.commands.Group` which will allow you to add commands into
 the group operating as "subcommands". These groups can be arbitrarily nested as well.

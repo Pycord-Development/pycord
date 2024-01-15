@@ -3,7 +3,7 @@
 .. _ext_commands_commands:
 
 Commands
-==========
+========
 
 One of the most appealing aspects of the command extension is how easy it is to define commands and
 how you can arbitrarily nest groups and commands to have a rich sub-command system.
@@ -75,7 +75,7 @@ parameters.
 Certain parameter types do different things in the user side and most forms of parameter types are supported.
 
 Positional
-++++++++++++
+++++++++++
 
 The most basic form of parameter passing is the positional parameter. This is where we pass a parameter as-is:
 
@@ -107,7 +107,7 @@ Since positional arguments are just regular Python arguments, you can have as ma
         await ctx.send(f'You passed {arg1} and {arg2}')
 
 Variable
-++++++++++
+++++++++
 
 Sometimes you want users to pass in an undetermined number of parameters. The library supports this
 similar to how variable list parameters are done in Python:
@@ -139,7 +139,7 @@ Since the ``args`` variable is a :class:`py:tuple`,
 you can do anything you would usually do with one.
 
 Keyword-Only Arguments
-++++++++++++++++++++++++
+++++++++++++++++++++++
 
 When you want to handle parsing of the argument yourself or do not feel like you want to wrap multi-word user input into
 quotes, you can ask the library to give you the rest as a single argument. We do this by using a **keyword-only argument**,
@@ -169,7 +169,7 @@ toggled by the :attr:`.Command.rest_is_raw` argument in the decorator.
 .. _ext_commands_context:
 
 Invocation Context
--------------------
+------------------
 
 As seen earlier, every command must take at least a single parameter, called the :class:`~ext.commands.Context`.
 
@@ -185,7 +185,7 @@ The context implements the :class:`abc.Messageable` interface, so anything you c
 can do on the :class:`~ext.commands.Context`.
 
 Converters
-------------
+----------
 
 Adding bot arguments with function parameters is only the first step in defining your bot's command interface. To actually
 make use of the arguments, we usually want to convert the data into a target type. We call these
@@ -202,7 +202,7 @@ Converters come in a few flavours:
 .. _ext_commands_basic_converters:
 
 Basic Converters
-++++++++++++++++++
+++++++++++++++++
 
 At its core, a basic converter is a callable that takes in an argument and turns it into something else.
 
@@ -230,7 +230,7 @@ This works with any callable, such as a function that would convert a string to 
         await ctx.send(content)
 
 bool
-^^^^^^
+^^^^
 
 Unlike the other basic converters, the :class:`bool` converter is treated slightly different. Instead of casting directly to the :class:`bool` type, which would result in any non-empty argument returning ``True``, it instead evaluates the argument as ``True`` or ``False`` based on its given content:
 
@@ -244,7 +244,7 @@ Unlike the other basic converters, the :class:`bool` converter is treated slight
 .. _ext_commands_adv_converters:
 
 Advanced Converters
-+++++++++++++++++++++
++++++++++++++++++++
 
 Sometimes a basic converter doesn't have enough information that we need. For example, sometimes we want to get some
 information from the :class:`Message` that called the command or we want to do some asynchronous processing.
@@ -302,7 +302,7 @@ If a converter fails to convert an argument to its designated target type, the :
 raised.
 
 Inline Advanced Converters
-+++++++++++++++++++++++++++++
+++++++++++++++++++++++++++
 
 If we don't want to inherit from :class:`~ext.commands.Converter`, we can still provide a converter that has the
 advanced functionalities of an advanced converter and save us from specifying two types.
@@ -360,7 +360,7 @@ This can get tedious, so an inline advanced converter is possible through a :fun
             await ctx.send("Hm you're not so new.")
 
 Discord Converters
-++++++++++++++++++++
+++++++++++++++++++
 
 Working with :ref:`discord_api_models` is a fairly common thing when defining commands, as a result the library makes
 working with them easy.
@@ -461,14 +461,14 @@ By providing the converter it allows us to use them as building blocks for anoth
 .. _ext_commands_special_converters:
 
 Special Converters
-++++++++++++++++++++
+++++++++++++++++++
 
 The command extension also has support for certain converters to allow for more advanced and intricate use cases that go
 beyond the generic linear parsing. These converters allow you to introduce some more relaxed and dynamic grammar to your
 commands in an easy to use manner.
 
 typing.Union
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^
 
 A :data:`typing.Union` is a special type hint that allows for the command to take in any of the specific types instead of
 a singular type. For example, given the following:
@@ -490,7 +490,7 @@ then a special error is raised, :exc:`~ext.commands.BadUnionArgument`.
 Note that any valid converter discussed above can be passed in to the argument list of a :data:`typing.Union`.
 
 typing.Optional
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^
 
 A :data:`typing.Optional` is a special type hint that allows for "back-referencing" behaviour. If the converter fails to
 parse into the specified type, the parser will skip the parameter and then either ``None`` or the specified default will be
@@ -517,7 +517,7 @@ resumes handling, which in this case would be to pass it into the ``liquid`` par
     This converter only works in regular positional parameters, not variable parameters or keyword-only parameters.
 
 typing.Literal
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
 
 A :data:`typing.Literal` is a special type hint that requires the passed parameter to be equal to one of the listed values
 after being converted to the same type. For example, given the following:
@@ -538,7 +538,7 @@ The ``buy_sell`` parameter must be either the literal string ``"buy"`` or ``"sel
 Note that ``typing.Literal[True]`` and ``typing.Literal[False]`` still follow the :class:`bool` converter rules.
 
 Greedy
-^^^^^^^^
+^^^^^^
 
 The :class:`~ext.commands.Greedy` converter is a generalisation of the :data:`typing.Optional` converter, except applied
 to a list of arguments. In simple terms, this means that it tries to convert as much as it can until it can't convert
@@ -605,7 +605,7 @@ This command can be invoked any of the following ways:
 .. _ext_commands_flag_converter:
 
 FlagConverter
-++++++++++++++
++++++++++++++
 
 .. versionadded:: 2.0
 
@@ -687,7 +687,7 @@ The flag converter is similar to regular commands and allows you to use most typ
 annotations as described below.
 
 typing.List
-^^^^^^^^^^^^^
+^^^^^^^^^^^
 
 If a list is given as a flag annotation it tells the parser that the argument can be passed multiple times.
 
@@ -718,7 +718,7 @@ This is called by repeatedly specifying the flag:
 .. image:: /images/commands/flags2.png
 
 typing.Tuple
-^^^^^^^^^^^^^
+^^^^^^^^^^^^
 
 Since the above syntax can be a bit repetitive when specifying a flag many times, the :class:`py:tuple` type annotation
 allows for "greedy-like" semantics using a variadic tuple:
@@ -754,7 +754,7 @@ The :class:`py:tuple` annotation also allows for parsing of pairs. For example, 
     then quotes should be used to disambiguate it from the other element of the tuple.
 
 typing.Dict
-^^^^^^^^^^^^^
+^^^^^^^^^^^
 
 A :class:`dict` annotation is functionally equivalent to ``List[Tuple[K, V]]`` except with the return type
 given as a :class:`dict` rather than a :class:`list`.
@@ -763,7 +763,7 @@ given as a :class:`dict` rather than a :class:`list`.
 .. _ext_commands_error_handler:
 
 Error Handling
-----------------
+--------------
 
 When our commands fail to parse we will, by default, receive a noisy error in ``stderr`` of our console that tells us
 that an error has happened and has been silently ignored.
@@ -792,7 +792,7 @@ The first parameter of the error handler is the :class:`.Context` while the seco
 :exc:`~ext.commands.CommandError`. A list of errors is found in the :ref:`ext_commands_api_errors` page of the documentation.
 
 Checks
--------
+------
 
 There are cases when we don't want a user to use our commands. They don't have permissions to do so or maybe we blocked
 them from using our bot earlier. The commands extension comes with full support for these things in a concept called a
@@ -899,6 +899,7 @@ If you want a more robust error system, you can derive from the exception and ra
             return True
         return commands.check(predicate)
 
+    @bot.command()
     @guild_only()
     async def test(ctx):
         await ctx.send('Hey this is not a DM! Nice.')
@@ -913,7 +914,7 @@ If you want a more robust error system, you can derive from the exception and ra
     Since having a ``guild_only`` decorator is pretty common, it comes built-in via :func:`~ext.commands.guild_only`.
 
 Global Checks
-++++++++++++++
++++++++++++++
 
 Sometimes we want to apply a check to **every** command, not just certain commands. The library supports this as well
 using the global check concept.

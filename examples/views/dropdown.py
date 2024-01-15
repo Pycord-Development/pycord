@@ -11,9 +11,15 @@ class Dropdown(discord.ui.Select):
         self.bot = bot_
         # Set the options that will be presented inside the dropdown:
         options = [
-            discord.SelectOption(label="Red", description="Your favourite colour is red", emoji="🟥"),
-            discord.SelectOption(label="Green", description="Your favourite colour is green", emoji="🟩"),
-            discord.SelectOption(label="Blue", description="Your favourite colour is blue", emoji="🟦"),
+            discord.SelectOption(
+                label="Red", description="Your favourite colour is red", emoji="🟥"
+            ),
+            discord.SelectOption(
+                label="Green", description="Your favourite colour is green", emoji="🟩"
+            ),
+            discord.SelectOption(
+                label="Blue", description="Your favourite colour is blue", emoji="🟦"
+            ),
         ]
 
         # The placeholder is what will be shown when no option is selected.
@@ -31,7 +37,9 @@ class Dropdown(discord.ui.Select):
         # the user's favourite colour or choice. The self object refers to the
         # Select object, and the values attribute gets a list of the user's
         # selected options. We only want the first one.
-        await interaction.response.send_message(f"Your favourite colour is {self.values[0]}")
+        await interaction.response.send_message(
+            f"Your favourite colour is {self.values[0]}"
+        )
 
 
 # Defines a simple View that allows the user to use the Select menu.

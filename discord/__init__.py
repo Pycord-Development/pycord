@@ -6,25 +6,31 @@ A basic wrapper for the Discord API.
 
 :copyright: (c) 2015-2021 Rapptz & (c) 2021-present Pycord Development
 :license: MIT, see LICENSE for more details.
-
 """
 
 __title__ = "pycord"
 __author__ = "Pycord Development"
 __license__ = "MIT"
 __copyright__ = "Copyright 2015-2021 Rapptz & Copyright 2021-present Pycord Development"
-__version__ = "2.0.0rc1"
 
 __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
 import logging
-from typing import Literal, NamedTuple
+
+# We need __version__ to be imported first
+# isort: off
+from ._version import *
+
+# isort: on
+
 
 from . import abc, opus, sinks, ui, utils
 from .activity import *
 from .appinfo import *
+from .application_role_connection import *
 from .asset import *
 from .audit_logs import *
+from .automod import *
 from .bot import *
 from .channel import *
 from .client import *
@@ -65,16 +71,5 @@ from .voice_client import *
 from .webhook import *
 from .welcome_screen import *
 from .widget import *
-
-
-class VersionInfo(NamedTuple):
-    major: int
-    minor: int
-    micro: int
-    releaselevel: Literal["alpha", "beta", "candidate", "final"]
-    serial: int
-
-
-version_info: VersionInfo = VersionInfo(major=2, minor=0, micro=0, releaselevel="candidate", serial=1)
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import struct
-from typing import IO, TYPE_CHECKING, ClassVar, Generator, Optional, Tuple
+from typing import IO, TYPE_CHECKING, ClassVar, Generator
 
 from .errors import DiscordException
 
@@ -39,8 +39,6 @@ __all__ = (
 
 class OggError(DiscordException):
     """An exception that is thrown for Ogg stream parsing errors."""
-
-    pass
 
 
 # https://tools.ietf.org/html/rfc3533
@@ -76,7 +74,7 @@ class OggPage:
         except Exception:
             raise OggError("bad data stream") from None
 
-    def iter_packets(self) -> Generator[Tuple[bytes, bool], None, None]:
+    def iter_packets(self) -> Generator[tuple[bytes, bool], None, None]:
         packetlen = offset = 0
         partial = True
 
@@ -99,7 +97,7 @@ class OggStream:
     def __init__(self, stream: IO[bytes]) -> None:
         self.stream: IO[bytes] = stream
 
-    def _next_page(self) -> Optional[OggPage]:
+    def _next_page(self) -> OggPage | None:
         head = self.stream.read(4)
         if head == b"OggS":
             return OggPage(self.stream)

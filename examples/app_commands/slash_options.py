@@ -29,7 +29,9 @@ async def hello(
     gender: str,
     age: int,
 ):
-    await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
+    await ctx.respond(
+        f"Hello {name}! Your gender is {gender} and you are {age} years old."
+    )
 
 
 @bot.slash_command(name="channel")
@@ -51,7 +53,7 @@ async def select_channel(
     "attachment",
     discord.Attachment,
     description="A file to attach to the message",
-    required=False  # The default value will be None if the user doesn't provide a file.
+    required=False,  # The default value will be None if the user doesn't provide a file.
 )
 async def say(
     ctx: discord.ApplicationContext,

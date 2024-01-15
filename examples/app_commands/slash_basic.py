@@ -21,13 +21,15 @@ bot = discord.Bot(intents=intents)
 async def hello(ctx: discord.ApplicationContext):
     """Say hello to the bot"""  # The command description can be supplied as the docstring
     await ctx.respond(f"Hello {ctx.author}!")
-    # Please note that you MUST respond with ctx.respond(), ctx.defer(), or any other
-    # interaction response within 3 seconds in your slash command code, otherwise the
-    # interaction will fail.
+    # Note: interactions must be responded to within 3 seconds, if they're not, an
+    # "Unknown interaction" error will be raised, you can circumvent this by using "ctx.defer()".
+    # Additional note: You cannot respond to the same interaction twice!
 
 
 @bot.slash_command(name="hi")
-async def global_command(ctx: discord.ApplicationContext, num: int):  # Takes one integer parameter
+async def global_command(
+    ctx: discord.ApplicationContext, num: int
+):  # Takes one integer parameter
     await ctx.respond(f"This is a global command, {num}!")
 
 
@@ -35,7 +37,9 @@ async def global_command(ctx: discord.ApplicationContext, num: int):  # Takes on
 async def joined(ctx: discord.ApplicationContext, member: discord.Member = None):
     # Setting a default value for the member parameter makes it optional ^
     user = member or ctx.author
-    await ctx.respond(f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}")
+    await ctx.respond(
+        f"{user.name} joined at {discord.utils.format_dt(user.joined_at)}"
+    )
 
 
 # To learn how to add descriptions and choices to options, check slash_options.py
