@@ -482,8 +482,6 @@ class SyncWebhookMessage(Message):
             self._thread = Object(thread_id)
         elif isinstance(self.channel, Thread):
             self._thread = Object(self.channel.id)
-        elif isinstance(self.channel, ForumChannel):
-            self._thread = Object(self.id)
 
     def edit(
         self,
