@@ -54,6 +54,9 @@ from ..message import Message
 from ..object import Object
 from ..threads import Thread
 from .async_ import BaseWebhook, _WebhookState, handle_message_parameters
+from ..types.message import Message as MessagePayload
+from ..state import ConnectionState
+from ..abc import MessageableChannel
 
 __all__ = (
     "SyncWebhook",
