@@ -569,7 +569,7 @@ class Paginator(discord.ui.View):
             self.buttons = {}
             for button in custom_buttons:
                 self.add_button(button)
-        else:
+        elif self.use_default_buttons:
             self.buttons = {}
             self.add_default_buttons()
 
