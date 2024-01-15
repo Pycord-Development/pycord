@@ -471,7 +471,7 @@ class SyncWebhookMessage(Message):
         state: ConnectionState,
         channel: MessageableChannel,
         data: MessagePayload,
-        thread_id: int | None = None
+        thread_id: int | None = None,
     ):
         super().__init__(state=state, channel=channel, data=data)
 
