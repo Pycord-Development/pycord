@@ -827,7 +827,7 @@ class WebhookMessage(Message):
         state: ConnectionState,
         channel: MessageableChannel,
         data: MessagePayload,
-        thread_id: int | None = None
+        thread_id: int | None = None,
     ):
         super().__init__(state=state, channel=channel, data=data)
 
@@ -837,7 +837,6 @@ class WebhookMessage(Message):
             self._thread = Object(self.channel.id)
         elif isinstance(self.channel, ForumChannel):
             self._thread = Object(self.id)
-
 
     async def edit(
         self,
@@ -967,7 +966,9 @@ class WebhookMessage(Message):
 
             asyncio.create_task(inner_call())
         else:
-            await self._state._webhook.delete_message(self.id, thread_id=self._thread.id)
+            await self._state._webhook.delete_message(
+                self.id, thread_id=self._thread.id
+            )
 
 
 class BaseWebhook(Hashable):
