@@ -463,7 +463,24 @@ class SyncWebhookMessage(Message):
     """
 
     _state: _WebhookState
-    _thread_id: int | None = None
+    _thread: Object | None = MISSING
+
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePayload,
+        thread_id: int | None = None
+    ):
+        super().__init__(state=state, channel=channel, data=data)
+
+        if thread_id is not None:
+            self._thread = Object(thread_id)
+        elif isinstance(self.channel, Thread):
+            self._thread = Object(self.channel.id)
+        elif isinstance(self.channel, ForumChannel):
+            self._thread = Object(self.id)
 
     def edit(
         self,
@@ -1148,8 +1165,6 @@ class SyncWebhook(BaseWebhook):
             thread_id=thread_id,
         )
         msg = self._create_message(data)
-        if isinstance(msg.channel, PartialMessageable):
-            msg._thread_id = thread_id
 
         return msg
 
