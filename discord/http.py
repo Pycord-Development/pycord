@@ -54,6 +54,7 @@ if TYPE_CHECKING:
 
     from .enums import AuditLogAction, InteractionResponseType
     from .file import File
+    from .soundboard import SoundboardSound
     from .types import (
         appinfo,
         application_role_connection,
@@ -83,6 +84,7 @@ if TYPE_CHECKING:
         widget,
     )
     from .types.snowflake import Snowflake, SnowflakeList
+    from .types.soundboard import SoundboardSound as SoundboardSoundPayload
 
     T = TypeVar("T")
     BE = TypeVar("BE", bound=BaseException)
@@ -1748,7 +1750,7 @@ class HTTPClient:
         initial_bytes = file.fp.read(16)
 
         try:
-            mime_type = utils._get_mime_type_for_image(initial_bytes)
+            mime_type = utils._get_mime_type_for_file(initial_bytes)
         except InvalidArgument:
             if initial_bytes.startswith(b"{"):
                 mime_type = "application/json"
@@ -3172,3 +3174,59 @@ class HTTPClient:
 
     def get_user(self, user_id: Snowflake) -> Response[user.User]:
         return self.request(Route("GET", "/users/{user_id}", user_id=user_id))
+
+    def delete_sound(
+        self, sound: SoundboardSound, *, reason: str | None
+    ) -> Response[None]:
+        return self.request(
+            Route(
+                "DELETE",
+                "/guilds/{guild_id}/soundboard-sounds/{sound_id}",
+                guild_id=sound.guild.id,
+                sound_id=sound.id,
+            ),
+            reason=reason,
+        )
+
+    def get_default_sounds(self):
+        return self.request(Route("GET", "/soundboard-default-sounds"))
+
+    def create_sound(self, guild_id: Snowflake, reason: str | None, **payload):
+        keys = (
+            "name",
+            "suond",
+            "volume",
+            "emoji_id",
+            "emoji_name",
+        )
+
+        payload = {k: v for k, v in payload.items() if k in keys and v is not None}
+
+        return self.request(
+            Route("POST", "/guilds/{guild_id}/soundboard-sounds", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
+
+    def edit_sound(
+        self, guild_id: Snowflake, sound_Id: Snowflake, *, reason: str | None, **payload
+    ):
+        keys = (
+            "name",
+            "volume",
+            "emoji_id",
+            "emoji_name",
+        )
+
+        payload = {k: v for k, v in payload.items() if k in keys and v is not None}
+
+        return self.request(
+            Route(
+                "PATCH",
+                "/guilds/{guild_id}/soundboard-sounds/{sound_id}",
+                guild_id=guild_id,
+                sound_id=sound_Id,
+            ),
+            json=payload,
+            reason=reason,
+        )

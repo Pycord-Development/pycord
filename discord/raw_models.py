@@ -29,7 +29,13 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
+from .enums import (
+    AuditLogAction,
+    ChannelType,
+    ReactionType,
+    VoiceChannelEffectAnimationType,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -37,6 +43,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
+    from .soundboard import PartialSoundboardSound, SoundboardSound
     from .state import ConnectionState
     from .threads import Thread
     from .types.raw_models import AuditLogEntryEvent
@@ -56,8 +63,9 @@ if TYPE_CHECKING:
         ThreadMembersUpdateEvent,
         ThreadUpdateEvent,
         TypingEvent,
-        VoiceChannelStatusUpdateEvent,
     )
+    from .types.raw_models import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.raw_models import VoiceChannelStatusUpdateEvent
     from .user import User
 
 
