@@ -746,10 +746,12 @@ class SlashCommand(ApplicationCommand):
                 option = next(option_gen, Option())
                 # Handle Optional
                 if self._is_typing_optional(type_hint):
-                    option.input_type = get_args(type_hint)[0]
+                    option.input_type = SlashCommandOptionType.from_datatype(
+                        get_args(type_hint)[0]
+                    )
                     option.default = None
                 else:
-                    option.input_type = type_hint
+                    option.input_type = SlashCommandOptionType.from_datatype(type_hint)
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
@@ -844,7 +846,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return getattr(self, "_cog", MISSING)
+        return getattr(self, "_cog", None)
 
     @cog.setter
     def cog(self, val):
@@ -1160,7 +1162,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = MISSING
+        self.cog = None
         self.id = None
 
         # Permissions
@@ -1236,10 +1238,7 @@ class SlashCommandGroup(ApplicationCommand):
         return as_dict
 
     def add_command(self, command: SlashCommand) -> None:
-        # check if subcommand has no cog set
-        # also check if cog is MISSING because it
-        # might not have been set by the cog yet
-        if command.cog is MISSING and self.cog is not MISSING:
+        if command.cog is None and self.cog is not None:
             command.cog = self.cog
 
         self.subcommands.append(command)
