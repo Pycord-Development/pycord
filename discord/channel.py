@@ -26,7 +26,16 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Iterable,
+    Mapping,
+    NamedTuple,
+    TypeVar,
+    overload,
+)
 
 import discord.abc
 
@@ -40,6 +49,7 @@ from .enums import (
     SortOrder,
     StagePrivacyLevel,
     VideoQualityMode,
+    VoiceChannelEffectAnimationType,
     VoiceRegion,
     try_enum,
 )
@@ -52,6 +62,7 @@ from .mixins import Hashable
 from .object import Object
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
+from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .threads import Thread
 from .utils import MISSING
@@ -66,6 +77,8 @@ __all__ = (
     "PartialMessageable",
     "ForumChannel",
     "ForumTag",
+    # "VoiceChannelEffect",
+    "VoiceChannelEffectSendEvent",
 )
 
 if TYPE_CHECKING:
@@ -84,6 +97,7 @@ if TYPE_CHECKING:
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
+    from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .user import BaseUser, ClientUser, User
@@ -3218,6 +3232,79 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
         from .message import PartialMessage
 
         return PartialMessage(channel=self, id=message_id)
+
+
+class VoiceChannelEffectAnimation(NamedTuple):
+    id: int
+    type: VoiceChannelEffectAnimationType
+
+
+class VoiceChannelSoundEffect(PartialSoundboardSound): ...
+
+
+class VoiceChannelEffectSendEvent:
+    """Represents the payload for an :func:`on_voice_channel_effect_send`
+
+    .. versionadded:: 2.4
+
+    Attributes
+    ----------
+    animation_type: :class:`int`
+        The type of animation that is being sent.
+    animation_id: :class:`int`
+        The ID of the animation that is being sent.
+    sound: Optional[:class:`SoundboardSound`]
+        The sound that is being sent, might be None if the effect is not a sound effect.
+    guild: :class:`Guild`
+        The guild that the sound is being sent in.
+    user: :class:`Member`
+        The member that is sending the sound.
+    channel: :class:`VoiceChannel`
+        The voice channel that the sound is being sent in.
+    data: :class:`dict`
+        The raw data sent by the gateway([#6025](https://github.com/discord/discord-api-docs/pull/6025)).
+    """
+
+    __slots__ = (
+        "_state",
+        "animation_type",
+        "animation_id",
+        "sound",
+        "guild",
+        "user",
+        "channel",
+        "data",
+        "emoji",
+    )
+
+    def __init__(
+        self,
+        data: VoiceChannelEffectSend,
+        state: ConnectionState,
+        sound: SoundboardSound | PartialSoundboardSound | None = None,
+    ) -> None:
+        self._state = state
+        channel_id = int(data["channel_id"])
+        user_id = int(data["user_id"])
+        guild_id = int(data["guild_id"])
+        self.animation_type: VoiceChannelEffectAnimationType = try_enum(
+            VoiceChannelEffectAnimationType, data["animation_type"]
+        )
+        self.animation_id = int(data["animation_id"])
+        self.sound = sound
+        self.guild = state._get_guild(guild_id)
+        self.user = self.guild.get_member(user_id)
+        self.channel = self.guild.get_channel(channel_id)
+        self.emoji = (
+            PartialEmoji(
+                name=data["emoji"]["name"],
+                animated=data["emoji"]["animated"],
+                id=data["emoji"]["id"],
+            )
+            if data.get("emoji", None)
+            else None
+        )
+        self.data = data
 
 
 def _guild_channel_factory(channel_type: int):
