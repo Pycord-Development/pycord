@@ -256,7 +256,7 @@ class RawReactionActionEvent(_RawReprMixin):
         self.burst: bool = data.get("burst")
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
-        self.type: ReactionType = try_enum(data.get("type", 0))
+        self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
@@ -333,7 +333,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.burst: bool = data.get("burst")
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
-        self.type: ReactionType = try_enum(data.get("type", 0))
+        self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
 
         try:
             self.guild_id: int | None = int(data["guild_id"])

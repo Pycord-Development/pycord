@@ -782,8 +782,8 @@ class ApplicationCommandMixin(ABC):
                         lambda cmd: cmd.name == i["name"]
                         and cmd.type == i.get("type")
                         and cmd.guild_ids is not None
-                        # TODO: fix this type error (guild_id is not defined in ApplicationCommand Typed Dict)
-                        and int(i["guild_id"]) in cmd.guild_ids,  # type: ignore
+                        and (guild_id := i.get("guild_id"))
+                        and guild_id in cmd.guild_ids,
                         self.pending_application_commands,
                     )
                     if not cmd:

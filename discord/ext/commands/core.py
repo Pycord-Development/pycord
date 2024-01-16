@@ -45,6 +45,7 @@ from discord import utils
 from ...commands import (
     ApplicationCommand,
     BaseContext,
+    Option,
     _BaseCommand,
     message_command,
     slash_command,
@@ -294,7 +295,13 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
         ctx.bot.dispatch("command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
-        required = param.default is param.empty
+        if isinstance(param.annotation, Option):
+            default = param.annotation.default
+            required = param.annotation.required
+        else:
+            default = param.default
+            required = default is param.empty
+
         converter = get_converter(param)
         consume_rest_is_special = (
             param.kind == param.KEYWORD_ONLY and not self.rest_is_raw
@@ -331,7 +338,7 @@ class Command(Invokable, _BaseCommand, Generic[CogT, P, T]):
                 ):
                     return await converter._construct_default(ctx)
                 raise MissingRequiredArgument(param)
-            return param.default
+            return default
 
         previous = view.index
         if consume_rest_is_special:
