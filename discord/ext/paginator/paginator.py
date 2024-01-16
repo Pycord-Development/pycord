@@ -1,6 +1,7 @@
 from __future__ import annotations
+
 from collections.abc import Mapping
-from typing import overload, TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 import discord
 
@@ -8,10 +9,7 @@ from .buttons import PaginatorButton, PaginatorButtonType, PaginatorMenu
 from .pages import Page, PageGroup
 
 if TYPE_CHECKING:
-    from discord.ext.bridge import (
-        BridgeExtContext,
-        BridgeApplicationContext,
-    )
+    from discord.ext.bridge import BridgeApplicationContext, BridgeExtContext
 
 __all__ = ("Paginator",)
 
@@ -257,7 +255,6 @@ class Paginator(discord.ui.View, Mapping):
         self.show_menu = show_menu if show_menu is not None else self.show_menu
 
         if pages is not None:
-
             all_groups = True
             default_group: PageGroup | None = None
 
@@ -658,7 +655,7 @@ class Paginator(discord.ui.View, Mapping):
         destination: discord.abc.Messageable,
         **kwargs,
     ) -> discord.Message:
-        """Sends a message with the paginated items.
+        r"""Sends a message with the paginated items.
 
         Parameters
         ----------
@@ -716,7 +713,7 @@ class Paginator(discord.ui.View, Mapping):
         | BridgeExtContext,
         **kwargs,
     ) -> discord.Message | discord.InteractionMessage | None:
-        """Edits an existing message to replace it with the paginator.
+        r"""Edits an existing message to replace it with the paginator.
 
         .. note::
 
@@ -766,7 +763,7 @@ class Paginator(discord.ui.View, Mapping):
         ephemeral: bool = False,
         **kwargs,
     ) -> discord.Message | discord.WebhookMessage:
-        """Sends an interaction response or followup with the paginated items. This will use the `respond` method.
+        r"""Sends an interaction response or followup with the paginated items. This will use the `respond` method.
 
         Parameters
         ----------
