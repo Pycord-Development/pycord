@@ -63,6 +63,7 @@ from .utils import MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
+from .soundboard import DefaultSoundboardSound
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
@@ -70,6 +71,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .voice_client import VoiceProtocol
+    from .soundboard import SoundboardSound
 
 __all__ = ("Client",)
 
@@ -2002,3 +2004,43 @@ class Client:
             self.application_id, payload
         )
         return [ApplicationRoleConnectionMetadata.from_dict(r) for r in data]
+
+    def get_sound(self, sound_id: int) -> SoundboardSound | None:
+        """Gets a :class:`.Sound` from the bot's sound cache.
+
+        .. versionadded:: 2.4
+
+        Parameters
+        ----------
+        sound_id: :class:`int`
+            The ID of the sound to get.
+
+        Returns
+        -------
+        :class:`.Sound`
+            The sound from the ID.
+        """
+        return self._connection._get_sound(sound_id)
+    
+    @property
+    def sounds(self) -> list[SoundboardSound]:
+        """A list of all the sounds the bot can see.
+
+        .. versionadded:: 2.4
+        """
+        return self._connection.sounds
+    
+    async def fetch_default_sounds(self) -> list[SoundboardSound]:
+        """|coro|
+
+        Fetches the bot's default sounds.
+
+        .. versionadded:: 2.4
+
+        Returns
+        -------
+        List[:class:`.Sound`]
+            The bot's default sounds.
+        """
+        data = await self._connection.http.get_default_sounds()
+        return [DefaultSoundboardSound(self.http, s) for s in data]

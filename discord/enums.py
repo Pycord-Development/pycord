@@ -68,6 +68,7 @@ __all__ = (
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
     "ReactionType",
+    "VoiceChannelEffectAnimationType"
 )
 
 
@@ -950,6 +951,13 @@ class ReactionType(Enum):
 
     normal = 0
     burst = 1
+
+
+class VoiceChannelEffectAnimationType(Enum):
+    """Voice channel effect animation type"""
+
+    premium = 0
+    basic = 1
 
 
 T = TypeVar("T")

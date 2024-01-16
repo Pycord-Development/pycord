@@ -29,19 +29,22 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
+from .enums import AuditLogAction, ChannelType, ReactionType, VoiceChannelEffectAnimationType, try_enum
 from .types.user import User
 
 if TYPE_CHECKING:
+    from typing import Union, Optional
     from .abc import MessageableChannel
     from .guild import Guild
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .state import ConnectionState
+    from .soundboard import SoundboardSound, PartialSoundboardSound
     from .threads import Thread
     from .types.raw_models import AuditLogEntryEvent
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
+    from .types.raw_models import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.raw_models import (
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
