@@ -29,7 +29,7 @@ import asyncio
 import logging
 import sys
 import weakref
-from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar, Optional
+from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Optional, Sequence, TypeVar
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -54,6 +54,7 @@ if TYPE_CHECKING:
 
     from .enums import AuditLogAction, InteractionResponseType
     from .file import File
+    from .soundboard import SoundboardSound
     from .types import (
         appinfo,
         application_role_connection,
@@ -80,7 +81,6 @@ if TYPE_CHECKING:
         widget,
     )
     from .types.snowflake import Snowflake, SnowflakeList
-    from .soundboard import SoundboardSound
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
 
     T = TypeVar("T")
@@ -2930,13 +2930,23 @@ class HTTPClient:
     def get_user(self, user_id: Snowflake) -> Response[user.User]:
         return self.request(Route("GET", "/users/{user_id}", user_id=user_id))
 
-    def delete_sound(self, sound: SoundboardSound, *, reason: Optional[str]) -> Response[None]:
-        return self.request(Route("DELETE", "/guilds/{guild_id}/soundboard-sounds/{sound_id}", guild_id = sound.guild.id, sound_id=sound.id), reason=reason)
-    
+    def delete_sound(
+        self, sound: SoundboardSound, *, reason: str | None
+    ) -> Response[None]:
+        return self.request(
+            Route(
+                "DELETE",
+                "/guilds/{guild_id}/soundboard-sounds/{sound_id}",
+                guild_id=sound.guild.id,
+                sound_id=sound.id,
+            ),
+            reason=reason,
+        )
+
     def get_default_sounds(self):
         return self.request(Route("GET", "/soundboard-default-sounds"))
-    
-    def create_sound(self, guild_id: Snowflake, reason: Optional[str], **payload):
+
+    def create_sound(self, guild_id: Snowflake, reason: str | None, **payload):
         keys = (
             "name",
             "suond",
@@ -2947,9 +2957,15 @@ class HTTPClient:
 
         payload = {k: v for k, v in payload.items() if k in keys and v is not None}
 
-        return self.request(Route("POST", "/guilds/{guild_id}/soundboard-sounds", guild_id=guild_id), json=payload, reason=reason)
-    
-    def edit_sound(self, guild_id: Snowflake, sound_Id: Snowflake, *, reason: Optional[str], **payload):
+        return self.request(
+            Route("POST", "/guilds/{guild_id}/soundboard-sounds", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
+
+    def edit_sound(
+        self, guild_id: Snowflake, sound_Id: Snowflake, *, reason: str | None, **payload
+    ):
         keys = (
             "name",
             "volume",
@@ -2959,4 +2975,13 @@ class HTTPClient:
 
         payload = {k: v for k, v in payload.items() if k in keys and v is not None}
 
-        return self.request(Route("PATCH", "/guilds/{guild_id}/soundboard-sounds/{sound_id}", guild_id=guild_id, sound_id=sound_Id), json=payload, reason=reason)
+        return self.request(
+            Route(
+                "PATCH",
+                "/guilds/{guild_id}/soundboard-sounds/{sound_id}",
+                guild_id=guild_id,
+                sound_id=sound_Id,
+            ),
+            json=payload,
+            reason=reason,
+        )

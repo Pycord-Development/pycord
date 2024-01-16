@@ -74,13 +74,13 @@ from .mixins import Hashable
 from .permissions import PermissionOverwrite
 from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
+from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
-from .soundboard import SoundboardSound
 
 __all__ = ("Guild",)
 
@@ -547,7 +547,9 @@ class Guild(Hashable):
             self._update_voice_state(obj, int(obj["channel_id"]))
 
         for sound in guild.get("soundboard_sounds", []):
-            sound = SoundboardSound(state=state, http=state.http, data=sound, guild=self)
+            sound = SoundboardSound(
+                state=state, http=state.http, data=sound, guild=self
+            )
             self._add_sound(sound)
 
     def _add_sound(self, sound: SoundboardSound) -> None:
@@ -562,8 +564,8 @@ class Guild(Hashable):
         name: str,
         sound: bytes,
         volume: float = 1.0,
-        emoji: Optional[Union[PartialEmoji, Emoji, str]] = None,
-        reason: Optional[str] = None,
+        emoji: PartialEmoji | Emoji | str | None = None,
+        reason: str | None = None,
     ):
         """|coro|
         Creates a :class:`SoundboardSound` in the guild.
@@ -585,17 +587,17 @@ class Guild(Hashable):
         reason: Optional[:class:`str`]
             The reason for creating this sound. Shows up on the audit log.
 
+        Returns
+        -------
+        :class:`SoundboardSound`
+            The created sound.
+
         Raises
         ------
         :exc:`HTTPException`
             Creating the sound failed.
         :exc:`Forbidden`
             You do not have permissions to create sounds.
-
-        Returns
-        -------
-        :class:`SoundboardSound`
-            The created sound.
         """
 
         payload: dict[str, Any] = {
@@ -615,13 +617,19 @@ class Guild(Hashable):
                 partial_emoji = None
 
             if partial_emoji is not None:
-                if partial_emoji.id is None :
+                if partial_emoji.id is None:
                     payload["emoji_name"] = partial_emoji.name
                 else:
                     payload["emoji_id"] = partial_emoji.id
 
         data = await self._state.http.create_sound(self.id, reason=reason, **payload)
-        return SoundboardSound(state=self._state, http=self._state.http, data=data, guild=self, owner_id=self._state.self_id)
+        return SoundboardSound(
+            state=self._state,
+            http=self._state.http,
+            data=data,
+            guild=self,
+            owner_id=self._state.self_id,
+        )
 
     # TODO: refactor/remove?
     def _sync(self, data: GuildPayload) -> None:
@@ -3958,6 +3966,7 @@ class Guild(Hashable):
         """
 
         await self._state.http.delete_auto_moderation_rule(self.id, id, reason=reason)
+
     def get_sound(self, sound_id: int):
         """Returns a sound with the given ID.
 

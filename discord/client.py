@@ -52,6 +52,7 @@ from .invite import Invite
 from .iterators import GuildIterator
 from .mentions import AllowedMentions
 from .object import Object
+from .soundboard import DefaultSoundboardSound
 from .stage_instance import StageInstance
 from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
@@ -63,15 +64,14 @@ from .utils import MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
-from .soundboard import DefaultSoundboardSound
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import DMChannel
     from .member import Member
     from .message import Message
-    from .voice_client import VoiceProtocol
     from .soundboard import SoundboardSound
+    from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
 
@@ -2021,7 +2021,7 @@ class Client:
             The sound from the ID.
         """
         return self._connection._get_sound(sound_id)
-    
+
     @property
     def sounds(self) -> list[SoundboardSound]:
         """A list of all the sounds the bot can see.
@@ -2029,7 +2029,7 @@ class Client:
         .. versionadded:: 2.4
         """
         return self._connection.sounds
-    
+
     async def fetch_default_sounds(self) -> list[SoundboardSound]:
         """|coro|
 

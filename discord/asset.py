@@ -269,7 +269,7 @@ class Asset(AssetMixin):
             key=cover_hash,
             animated=False,
         )
-    
+
     @classmethod
     def _from_soundboard_sound(cls, state, sound_id: int) -> Asset:
         return cls(

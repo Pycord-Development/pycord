@@ -23,8 +23,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TypedDict, Union, Optional
+from typing import Optional, TypedDict, Union
+
 from .snowflake import Snowflake
+
 
 class PartialSoundboardSound(TypedDict):
     sound_id: Union[Snowflake, int]
@@ -32,11 +34,13 @@ class PartialSoundboardSound(TypedDict):
     emoji_id: Optional[Snowflake]
     volume: float
 
+
 class SoundboardSound(PartialSoundboardSound):
     user_id: Snowflake
     name: str
     guild_id: Snowflake
     available: bool
+
 
 class DefaultSoundboardSound(PartialSoundboardSound):
     name: str

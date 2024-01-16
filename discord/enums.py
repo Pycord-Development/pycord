@@ -68,7 +68,7 @@ __all__ = (
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
     "ReactionType",
-    "VoiceChannelEffectAnimationType"
+    "VoiceChannelEffectAnimationType",
 )
 
 

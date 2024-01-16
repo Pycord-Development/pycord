@@ -26,7 +26,18 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, overload, Optional, Union, NamedTuple
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Iterable,
+    Mapping,
+    NamedTuple,
+    Optional,
+    TypeVar,
+    Union,
+    overload,
+)
 
 import discord.abc
 
@@ -40,8 +51,8 @@ from .enums import (
     SortOrder,
     StagePrivacyLevel,
     VideoQualityMode,
-    VoiceRegion,
     VoiceChannelEffectAnimationType,
+    VoiceRegion,
     try_enum,
 )
 from .errors import ClientException, InvalidArgument
@@ -53,10 +64,10 @@ from .mixins import Hashable
 from .object import Object
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
+from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .threads import Thread
 from .utils import MISSING
-from .soundboard import SoundboardSound, PartialSoundboardSound
 
 __all__ = (
     "TextChannel",
@@ -68,7 +79,7 @@ __all__ = (
     "PartialMessageable",
     "ForumChannel",
     "ForumTag",
-    #"VoiceChannelEffect",
+    # "VoiceChannelEffect",
     "VoiceChannelEffectSendEvent",
 )
 
@@ -3221,21 +3232,35 @@ class VoiceChannelEffectSendEvent:
         "channel",
         "data",
         "emoji",
-
     )
 
-    def __init__(self, data: VoiceChannelEffectSend, state: ConnectionState, sound: Optional[Union[SoundboardSound, PartialSoundboardSound]] = None) -> None:
+    def __init__(
+        self,
+        data: VoiceChannelEffectSend,
+        state: ConnectionState,
+        sound: SoundboardSound | PartialSoundboardSound | None = None,
+    ) -> None:
         self._state = state
         channel_id = int(data["channel_id"])
         user_id = int(data["user_id"])
         guild_id = int(data["guild_id"])
-        self.animation_type: VoiceChannelEffectAnimationType = try_enum(VoiceChannelEffectAnimationType, data["animation_type"])
+        self.animation_type: VoiceChannelEffectAnimationType = try_enum(
+            VoiceChannelEffectAnimationType, data["animation_type"]
+        )
         self.animation_id = int(data["animation_id"])
         self.sound = sound
         self.guild = state._get_guild(guild_id)
         self.user = self.guild.get_member(user_id)
         self.channel = self.guild.get_channel(channel_id)
-        self.emoji = PartialEmoji(name=data["emoji"]["name"], animated=data["emoji"]["animated"], id=data["emoji"]["id"]) if data.get("emoji", None) else None
+        self.emoji = (
+            PartialEmoji(
+                name=data["emoji"]["name"],
+                animated=data["emoji"]["animated"],
+                id=data["emoji"]["id"],
+            )
+            if data.get("emoji", None)
+            else None
+        )
         self.data = data
 
 

@@ -651,8 +651,8 @@ def _get_mime_type_for_file(data: bytes):
         return "image/gif"
     elif data.startswith(b"RIFF") and data[8:12] == b"WEBP":
         return "image/webp"
-    elif data.startswith(b'\x49\x44\x33') or data.startswith(b'\xff\xfb'):
-        return 'audio/mpeg'
+    elif data.startswith(b"\x49\x44\x33") or data.startswith(b"\xff\xfb"):
+        return "audio/mpeg"
     else:
         raise InvalidArgument("Unsupported file type given")
 

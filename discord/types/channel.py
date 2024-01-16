@@ -29,10 +29,10 @@ from typing import Literal, Union
 from .._typed_dict import NotRequired, TypedDict
 from ..enums import SortOrder
 from ..flags import ChannelFlags
+from .emoji import PartialEmoji
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
 from .user import PartialUser
-from .emoji import PartialEmoji
 
 OverwriteType = Literal[0, 1]
 
@@ -186,7 +186,7 @@ class VoiceChannelEffectSendEvent(TypedDict):
     channel_id: Snowflake
     guild_id: Snowflake
     user_id: Snowflake
-    sound_id: Union[Snowflake, int]
+    sound_id: Snowflake | int
     sound_volume: float
     emoji: PartialEmoji | None
     animation_type: int
