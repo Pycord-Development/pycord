@@ -621,6 +621,7 @@ def handle_message_parameters(
     embed: Embed | None = MISSING,
     embeds: list[Embed] = MISSING,
     view: View | None = MISSING,
+    applied_tags: [Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
@@ -653,6 +654,9 @@ def handle_message_parameters(
 
     flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
     payload["flags"] = flags.value
+
+    if applied_tags is not MISSING:
+        payload["applied_tags"] = applied_tags
 
     if allowed_mentions:
         if previous_allowed_mentions is not None:
@@ -1566,6 +1570,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: [Snowflake] = MISSING,
         wait: Literal[True],
         delete_after: float = None,
     ) -> WebhookMessage:
@@ -1588,6 +1593,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: [Snowflake] = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
     ) -> None:
@@ -1609,6 +1615,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: [Snowflake] = MISSING,
         wait: bool = False,
         delete_after: float = None,
     ) -> WebhookMessage | None:
@@ -1679,6 +1686,10 @@ class Webhook(BaseWebhook):
         thread_name: :class:`str`
             The name of the thread to create. Only works for forum channels.
 
+            .. versionadded:: 2.6
+        applied_tags: List[:class:`Snowflake`]
+            A list of tags to apply to the message. Only works for threads.
+
             .. versionadded:: 2.0
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
@@ -1721,6 +1732,9 @@ class Webhook(BaseWebhook):
         if thread and thread_name:
             raise InvalidArgument("You cannot specify both a thread and thread_name")
 
+        if applied_tags and not (thread or thread_name):
+            raise InvalidArgument("You cannot specify applied_tags without a thread")
+
         application_webhook = self.type is WebhookType.application
         if ephemeral and not application_webhook:
             raise InvalidArgument(
@@ -1749,6 +1763,7 @@ class Webhook(BaseWebhook):
             embeds=embeds,
             ephemeral=ephemeral,
             view=view,
+            applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
         )
