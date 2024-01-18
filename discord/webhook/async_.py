@@ -1686,11 +1686,11 @@ class Webhook(BaseWebhook):
         thread_name: :class:`str`
             The name of the thread to create. Only works for forum channels.
 
-            .. versionadded:: 2.5
+            .. versionadded:: 2.0
         applied_tags: List[:class:`Snowflake`]
             A list of tags to apply to the message. Only works for threads.
 
-            .. versionadded:: 2.0
+            .. versionadded:: 2.5
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
