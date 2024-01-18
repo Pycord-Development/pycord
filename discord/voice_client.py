@@ -638,7 +638,7 @@ class VoiceClient(VoiceProtocol):
         self,
         source: AudioSource,
         *,
-        after: Callable[[Exception | None], Any] = None,
+        after: Callable[[Exception | None], Any] | None = None,
         wait_finish: Literal[True],
     ) -> asyncio.Future:
         ...
