@@ -163,3 +163,8 @@ Option
 
 BridgeOption
 ~~~~~~~~~~~~
+
+.. attributetable:: discord.ext.bridge.BridgeOption
+
+.. autoclass:: discord.ext.bridge.BridgeOption
+    :members:
