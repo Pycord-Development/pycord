@@ -621,7 +621,7 @@ def handle_message_parameters(
     embed: Embed | None = MISSING,
     embeds: list[Embed] = MISSING,
     view: View | None = MISSING,
-    applied_tags: [Snowflake] = MISSING,
+    applied_tags: list[Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
@@ -1570,7 +1570,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
-        applied_tags: [Snowflake] = MISSING,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[True],
         delete_after: float = None,
     ) -> WebhookMessage:
@@ -1593,7 +1593,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
-        applied_tags: [Snowflake] = MISSING,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
     ) -> None:
@@ -1615,7 +1615,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
-        applied_tags: [Snowflake] = MISSING,
+        applied_tags: list[Snowflake] = MISSING,
         wait: bool = False,
         delete_after: float = None,
     ) -> WebhookMessage | None:
@@ -1686,7 +1686,7 @@ class Webhook(BaseWebhook):
         thread_name: :class:`str`
             The name of the thread to create. Only works for forum channels.
 
-            .. versionadded:: 2.6
+            .. versionadded:: 2.5
         applied_tags: List[:class:`Snowflake`]
             A list of tags to apply to the message. Only works for threads.
 
