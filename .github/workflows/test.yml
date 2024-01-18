@@ -35,7 +35,7 @@ jobs:
           pip install -r requirements/dev.txt
       - name: Setup cache
         id: cache-pytest
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .pytest_cache
           key: ${{ matrix.os }}-${{ matrix.python-version }}-pytest
