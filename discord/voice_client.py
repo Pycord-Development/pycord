@@ -647,7 +647,7 @@ class VoiceClient(VoiceProtocol):
         self,
         source: AudioSource,
         *,
-        after: Callable[[Exception | None], Any] = None,
+        after: Callable[[Exception | None], Any] | None = None,
         wait_finish: bool = False,
     ) -> None | asyncio.Future:
         """Plays an :class:`AudioSource`.
