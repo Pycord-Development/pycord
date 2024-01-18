@@ -630,7 +630,8 @@ class VoiceClient(VoiceProtocol):
         *,
         after: Callable[[Exception | None], Any] = None,
         wait_finish: Literal[False] = False,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     @overload
     def play(
@@ -639,7 +640,8 @@ class VoiceClient(VoiceProtocol):
         *,
         after: Callable[[Exception | None], Any] = None,
         wait_finish: Literal[True],
-    ) -> asyncio.Future: ...
+    ) -> asyncio.Future:
+        ...
 
     def play(
         self,
