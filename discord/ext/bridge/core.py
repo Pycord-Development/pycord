@@ -591,8 +591,7 @@ BRIDGE_CONVERTER_MAPPING = {
 
 
 class BridgeOption(Option, Converter):
-    """Represents a selectable slash command option and a prefixed command argument for bridge commands.
-    """
+    """Represents a selectable slash command option and a prefixed command argument for bridge commands."""
 
     async def convert(self, ctx, argument: str) -> Any:
         try:
