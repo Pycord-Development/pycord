@@ -66,6 +66,7 @@ __all__ = (
     "BridgeSlashCommand",
     "BridgeExtGroup",
     "BridgeSlashGroup",
+    "BridgeContext",
     "map_to",
     "guild_only",
     "has_permissions",
