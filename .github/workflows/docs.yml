@@ -19,10 +19,11 @@ on:
 
 jobs:
   docs:
+    name: "Build Docs"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.8
         uses: actions/setup-python@v5
         with:
           python-version: "3.8"
