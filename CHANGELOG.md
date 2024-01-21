@@ -206,9 +206,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `AttributeError` when failing to establish initial websocket connection.
   ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
 - Fixed `AttributeError` caused by `command.cog` being `MISSING`.
-  ([#2303](https://github.com/Pycord-Development/pycord/issues/2303))
-- Fixed command options instantiated from @bot.slash_command().
-  ([#2313](https://github.com/Pycord-Development/pycord/issues/2313))
+  ([#2303](https://github.com/Pycord-Development/pycord/issues/2303) &
+  [#2313](https://github.com/Pycord-Development/pycord/issues/2313))
 
 ## [2.4.1] - 2023-03-20
 
