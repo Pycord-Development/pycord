@@ -47,7 +47,7 @@ from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
-from .emoji import Emoji
+from .emoji import Emoji, PartialEmoji, _EmojiTag
 from .enums import (
     AuditLogAction,
     AutoModEventType,
@@ -1395,6 +1395,7 @@ class Guild(Hashable):
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_reaction_emoji: Emoji | int | str = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1436,6 +1437,12 @@ class Guild(Hashable):
             To mark the channel as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
+        default_reaction_emoji: Optional[:class:`Emoji` | :class:`int` | :class:`str`]
+            The default reaction emoji.
+            Can be a unicode emoji or a custom emoji in the forms:
+            :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+
+            .. versionadded:: v2.5
 
         Returns
         -------
@@ -1449,7 +1456,7 @@ class Guild(Hashable):
         HTTPException
             Creating the channel failed.
         InvalidArgument
-            The permission overwrite information is not in proper form.
+            The argument is not in proper form.
 
         Examples
         --------
@@ -1484,6 +1491,24 @@ class Guild(Hashable):
 
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
+
+        if default_reaction_emoji is not MISSING:
+            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+                default_reaction_emoji = default_reaction_emoji._to_partial()
+            elif isinstance(default_reaction_emoji, int):
+                default_reaction_emoji = PartialEmoji(
+                    name=None, id=default_reaction_emoji
+                )
+            elif isinstance(default_reaction_emoji, str):
+                default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            else:
+                raise InvalidArgument(
+                    "default_reaction_emoji must be of type: Emoji | int | str"
+                )
+
+            options[
+                "default_reaction_emoji"
+            ] = default_reaction_emoji._to_forum_reaction_payload()
 
         data = await self._create_channel(
             name,
@@ -2908,7 +2933,7 @@ class Guild(Hashable):
             if icon is None:
                 fields["icon"] = None
             else:
-                fields["icon"] = _bytes_to_base64_data(icon)
+                fields["icon"] = utils._bytes_to_base64_data(icon)
                 fields["unicode_emoji"] = None
 
         if unicode_emoji is not MISSING:
@@ -3816,3 +3841,29 @@ class Guild(Hashable):
             self.id, payload, reason=reason
         )
         return AutoModRule(state=self._state, data=data)
+
+    async def delete_auto_moderation_rule(
+        self,
+        id: int,
+        *,
+        reason: str | None = None,
+    ) -> None:
+        """
+        Deletes an auto moderation rule.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the auto moderation rule.
+        reason: Optional[:class:`str`]
+            The reason for deleting the rule. Shows up in the audit log.
+
+        Raises
+        ------
+        HTTPException
+            Deleting the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+        """
+
+        await self._state.http.delete_auto_moderation_rule(self.id, id, reason=reason)

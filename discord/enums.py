@@ -67,6 +67,7 @@ __all__ = (
     "AutoModActionType",
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
+    "ReactionType",
 )
 
 
@@ -425,6 +426,8 @@ class AuditLogAction(Enum):
     auto_moderation_block_message = 143
     auto_moderation_flag_to_channel = 144
     auto_moderation_user_communication_disabled = 145
+    creator_monetization_request_created = 150
+    creator_monetization_terms_accepted = 151
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -485,6 +488,8 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_block_message: None,
             AuditLogAction.auto_moderation_flag_to_channel: None,
             AuditLogAction.auto_moderation_user_communication_disabled: None,
+            AuditLogAction.creator_monetization_request_created: None,
+            AuditLogAction.creator_monetization_terms_accepted: None,
         }
         return lookup[self]
 
@@ -938,6 +943,13 @@ class ApplicationRoleConnectionMetadataType(Enum):
     datetime_greater_than_or_equal = 6
     boolean_equal = 7
     boolean_not_equal = 8
+
+
+class ReactionType(Enum):
+    """The reaction type"""
+
+    normal = 0
+    burst = 1
 
 
 T = TypeVar("T")
