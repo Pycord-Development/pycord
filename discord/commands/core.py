@@ -694,6 +694,7 @@ class SlashCommand(ApplicationCommand):
         self.attached_to_group: bool = False
 
         self.options: list[Option] = kwargs.get("options", [])
+        self._validate_parameters()
 
         try:
             checks = func.__commands_checks__
