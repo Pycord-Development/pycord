@@ -41,6 +41,14 @@ Shortcut Decorators
 Objects
 ~~~~~~~
 
+.. attributetable:: Invokable
+.. autoclass:: Invokable
+    :members:
+
+.. attributetable:: BaseContext
+.. autoclass:: BaseContext
+    :members:
+
 .. attributetable:: ApplicationCommand
 .. autoclass:: ApplicationCommand
     :members:
@@ -51,6 +59,10 @@ Objects
 
 .. attributetable:: SlashCommandGroup
 .. autoclass:: SlashCommandGroup
+    :members:
+
+.. attributetable:: ContextMenuCommand
+.. autoclass:: ContextMenuCommand
     :members:
 
 .. attributetable:: UserCommand

@@ -69,6 +69,25 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `suppress` and `allowed_mentions` parameters to `Webhook` and
   `InteractionResponse` edit methods.
   ([#2138](https://github.com/Pycord-Development/pycord/pull/2138))
+- Added `_parse_arguments` function to slash commands to parse arguments instead of in
+  `prepare`. ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Added the `parents`, `root_parent`, and `cog_name` attribute to slash commands.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Added the `error` decorator to slash commands.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Added the `cooldown_after_parsing` parameter & attribute to slash commands.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Added the `reinvoke` function to `ApplicationContext`.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Added the `invoked_with`, `invoked_parents`, `invoked_subcommand`,
+  `subcommand_passed`, and `command_failed` parameters & attributes to
+  `ApplicationContext`.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Added the `source` attribute to `ext.commands.Context` & `ApplicationContext` for a
+  common way to either retrieve the message or the interaction that triggered the
+  command. ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Documented `ContextMenuCommand`.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
 - Added `wait_finish` parameter to `VoiceClient.play` for awaiting the end of a play.
   ([#2194](https://github.com/Pycord-Development/pycord/pull/2194))
 - Added support for custom bot status.
@@ -113,6 +132,13 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Changed the support from `orjson` to `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
+- Renamed `_invoke` in application commands to `invoke`.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Deprecated `ext/commands/cooldowns` in favour of `commands/cooldowns`.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
+- Deprecated `ApplicationCommandError` & `ApplicationCommandInvokeError` in favour of
+  `CommandError` & `CommandInvokeError` respectively.
+  ([#1606](https://github.com/Pycord-Development/pycord/pull/1606))
 
 ### Removed
 

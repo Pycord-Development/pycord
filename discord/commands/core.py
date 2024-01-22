@@ -26,43 +26,29 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import datetime
-import functools
 import inspect
 import re
 import sys
 import types
 from collections import OrderedDict
 from enum import Enum
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Coroutine,
-    Generator,
-    Generic,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, Generator, Generic, TypeVar, Union
+
+from discord import utils
 
 from ..channel import _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
 from ..enums import MessageType, SlashCommandOptionType, try_enum
-from ..errors import (
-    ApplicationCommandError,
-    ApplicationCommandInvokeError,
-    CheckFailure,
-    ClientException,
-    ValidationError,
-)
+from ..errors import CheckFailure, ClientException, DisabledCommand, ValidationError
 from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow
+from ..utils import MISSING, find
 from .context import ApplicationContext, AutocompleteContext
+from .mixins import CogT, Invokable, _BaseCommand
 from .options import Option, OptionChoice
 
 if sys.version_info >= (3, 11):
@@ -86,78 +72,17 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec
+    from typing_extensions import ParamSpec
 
     from .. import Permissions
-    from ..cog import Cog
-    from ..ext.commands.cooldowns import CooldownMapping, MaxConcurrency
+    from .cooldowns import CooldownMapping, MaxConcurrency
+    from .mixins import BaseContext
 
-T = TypeVar("T")
-CogT = TypeVar("CogT", bound="Cog")
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
-
-if TYPE_CHECKING:
     P = ParamSpec("P")
 else:
     P = TypeVar("P")
 
-
-def wrap_callback(coro):
-    from ..ext.commands.errors import CommandError
-
-    @functools.wraps(coro)
-    async def wrapped(*args, **kwargs):
-        try:
-            ret = await coro(*args, **kwargs)
-        except ApplicationCommandError:
-            raise
-        except CommandError:
-            raise
-        except asyncio.CancelledError:
-            return
-        except Exception as exc:
-            raise ApplicationCommandInvokeError(exc) from exc
-        return ret
-
-    return wrapped
-
-
-def hooked_wrapped_callback(command, ctx, coro):
-    from ..ext.commands.errors import CommandError
-
-    @functools.wraps(coro)
-    async def wrapped(arg):
-        try:
-            ret = await coro(arg)
-        except ApplicationCommandError:
-            raise
-        except CommandError:
-            raise
-        except asyncio.CancelledError:
-            return
-        except Exception as exc:
-            raise ApplicationCommandInvokeError(exc) from exc
-        finally:
-            if (
-                hasattr(command, "_max_concurrency")
-                and command._max_concurrency is not None
-            ):
-                await command._max_concurrency.release(ctx)
-            await command.call_after_hooks(ctx)
-        return ret
-
-    return wrapped
-
-
-def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
-    partial = functools.partial
-    while True:
-        if hasattr(function, "__wrapped__"):
-            function = function.__wrapped__
-        elif isinstance(function, partial):
-            function = function.func
-        else:
-            return function
+T = TypeVar("T")
 
 
 def _validate_names(obj):
@@ -174,51 +99,25 @@ def _validate_descriptions(obj):
             validate_chat_input_description(string, locale=locale)
 
 
-class _BaseCommand:
-    __slots__ = ()
+class ApplicationCommand(Invokable, _BaseCommand, Generic[CogT, P, T]):
+    """Base class for all Application Commands, including:
 
+      - :class:`SlashCommand`
+      - :class:`SlashCommandGroup`
+      - :class:`ContextMenuCommand` which in turn is a superclass of
+      - :class:`MessageCommand` and
+      - :class:`UserCommand`
 
-class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
-    __original_kwargs__: dict[str, Any]
+    This is a subclass of :class:`.Invokable`.
+    """
+
     cog = None
+    parent: ApplicationCommand
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
-
-        cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
-
-        if cooldown is None:
-            buckets = CooldownMapping(cooldown, BucketType.default)
-        elif isinstance(cooldown, CooldownMapping):
-            buckets = cooldown
-        else:
-            raise TypeError(
-                "Cooldown must be a an instance of CooldownMapping or None."
-            )
-
-        self._buckets: CooldownMapping = buckets
-
-        max_concurrency = getattr(
-            func, "__commands_max_concurrency__", kwargs.get("max_concurrency")
-        )
-
-        self._max_concurrency: MaxConcurrency | None = max_concurrency
-
-        self._callback = None
-        self.module = None
-
-        self.name: str = kwargs.get("name", func.__name__)
-
-        try:
-            checks = func.__commands_checks__
-            checks.reverse()
-        except AttributeError:
-            checks = kwargs.get("checks", [])
-
-        self.checks = checks
+        super().__init__(func, **kwargs)
         self.id: int | None = kwargs.get("id")
         self.guild_ids: list[int] | None = kwargs.get("guild_ids", None)
-        self.parent = kwargs.get("parent")
 
         # Permissions
         self.default_member_permissions: Permissions | None = getattr(
@@ -246,347 +145,72 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             isinstance(other, self.__class__) and self.parent == other.parent and check
         )
 
-    async def __call__(self, ctx, *args, **kwargs):
+    def _get_signature_parameters(self):
+        return OrderedDict(inspect.signature(self.callback).parameters)
+
+    async def _dispatch_error(self, ctx: BaseContext, error: Exception) -> None:
+        ctx.bot.dispatch("application_command_error", ctx, error)
+
+    async def can_run(self, ctx: ApplicationContext) -> bool:
         """|coro|
-        Calls the command's callback.
 
-        This method bypasses all checks that a command has and does not
-        convert the arguments beforehand, so take care to pass the correct
-        arguments in.
-        """
-        if self.cog is not None:
-            return await self.callback(self.cog, ctx, *args, **kwargs)
-        return await self.callback(ctx, *args, **kwargs)
+        Checks if the command can be executed by checking all the predicates
+        inside the :attr:`~ApplicationCommand.checks` attribute. This also checks whether the
+        command is disabled.
 
-    @property
-    def callback(
-        self,
-    ) -> (
-        Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]]
-        | Callable[Concatenate[ApplicationContext, P], Coro[T]]
-    ):
-        return self._callback
-
-    @callback.setter
-    def callback(
-        self,
-        function: (
-            Callable[Concatenate[CogT, ApplicationContext, P], Coro[T]]
-            | Callable[Concatenate[ApplicationContext, P], Coro[T]]
-        ),
-    ) -> None:
-        self._callback = function
-        unwrap = unwrap_function(function)
-        self.module = unwrap.__module__
-
-    def _prepare_cooldowns(self, ctx: ApplicationContext):
-        if self._buckets.valid:
-            current = datetime.datetime.now().timestamp()
-            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
-
-            if bucket is not None:
-                retry_after = bucket.update_rate_limit(current)
-
-                if retry_after:
-                    from ..ext.commands.errors import CommandOnCooldown
-
-                    raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
-
-    async def prepare(self, ctx: ApplicationContext) -> None:
-        # This should be same across all 3 types
-        ctx.command = self
-
-        if not await self.can_run(ctx):
-            raise CheckFailure(
-                f"The check functions for the command {self.name} failed"
-            )
-
-        if self._max_concurrency is not None:
-            # For this application, context can be duck-typed as a Message
-            await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
-
-        try:
-            self._prepare_cooldowns(ctx)
-            await self.call_before_hooks(ctx)
-        except:
-            if self._max_concurrency is not None:
-                await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
-            raise
-
-    def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
-        """Checks whether the command is currently on cooldown.
-
-        .. note::
-
-            This uses the current time instead of the interaction time.
+        .. versionchanged:: 1.3
+            Checks whether the command is disabled or not
 
         Parameters
         ----------
         ctx: :class:`.ApplicationContext`
-            The invocation context to use when checking the command's cooldown status.
+            The ctx of the command currently being invoked.
 
         Returns
         -------
         :class:`bool`
-            A boolean indicating if the command is on cooldown.
+            A boolean indicating if the command can be invoked.
+
+        Raises
+        ------
+        :class:`CommandError`
+            Any command error that was raised during a check call will be propagated
+            by this function.
         """
-        if not self._buckets.valid:
-            return False
 
-        bucket = self._buckets.get_bucket(ctx)
-        current = utcnow().timestamp()
-        return bucket.get_tokens(current) == 0
+        if not self.enabled:
+            raise DisabledCommand(f"{self.name} command is disabled")
 
-    def reset_cooldown(self, ctx: ApplicationContext) -> None:
-        """Resets the cooldown on this command.
+        original = ctx.command
+        ctx.command = self
 
-        Parameters
-        ----------
-        ctx: :class:`.ApplicationContext`
-            The invocation context to reset the cooldown under.
-        """
-        if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)  # type: ignore # ctx instead of non-existent message
-            bucket.reset()
+        try:
+            if not await ctx.bot.can_run(ctx):
+                raise CheckFailure(
+                    f"The global check functions for command {self.qualified_name} failed."
+                )
 
-    def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
-        """Retrieves the amount of seconds before this command can be tried again.
+            # since slash command parents don't really use checks, we can make it
+            # a feature to have "global" checks for slash commands only
+            predicates = self.checks
+            if self.parent is not None:
+                predicates = self.parent.checks + predicates
 
-        .. note::
-
-            This uses the current time instead of the interaction time.
-
-        Parameters
-        ----------
-        ctx: :class:`.ApplicationContext`
-            The invocation context to retrieve the cooldown from.
-
-        Returns
-        -------
-        :class:`float`
-            The amount of time left on this command's cooldown in seconds.
-            If this is ``0.0`` then the command isn't on cooldown.
-        """
-        if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)
-            current = utcnow().timestamp()
-            return bucket.get_retry_after(current)
-
-        return 0.0
-
-    async def invoke(self, ctx: ApplicationContext) -> None:
-        await self.prepare(ctx)
-
-        injected = hooked_wrapped_callback(self, ctx, self._invoke)
-        await injected(ctx)
-
-    async def can_run(self, ctx: ApplicationContext) -> bool:
-        if not await ctx.bot.can_run(ctx):
-            raise CheckFailure(
-                f"The global check functions for command {self.name} failed."
-            )
-
-        predicates = self.checks
-        if self.parent is not None:
-            # parent checks should be run first
-            predicates = self.parent.checks + predicates
-
-        cog = self.cog
-        if cog is not None:
-            local_check = cog._get_overridden_method(cog.cog_check)
-            if local_check is not None:
-                ret = await maybe_coroutine(local_check, ctx)
+            if (cog := self.cog) and (
+                local_check := cog._get_overridden_method(cog.cog_check)
+            ):
+                ret = await utils.maybe_coroutine(local_check, ctx)
                 if not ret:
                     return False
 
-        if not predicates:
-            # since we have no checks, then we just return True.
-            return True
+            predicates = self.checks
+            if not predicates:
+                # since we have no checks, then we just return True.
+                return True
 
-        return await async_all(predicate(ctx) for predicate in predicates)  # type: ignore
-
-    async def dispatch_error(self, ctx: ApplicationContext, error: Exception) -> None:
-        ctx.command_failed = True
-        cog = self.cog
-        try:
-            coro = self.on_error
-        except AttributeError:
-            pass
-        else:
-            injected = wrap_callback(coro)
-            if cog is not None:
-                await injected(cog, ctx, error)
-            else:
-                await injected(ctx, error)
-
-        try:
-            if cog is not None:
-                local = cog.__class__._get_overridden_method(cog.cog_command_error)
-                if local is not None:
-                    wrapped = wrap_callback(local)
-                    await wrapped(ctx, error)
+            return await utils.async_all(predicate(ctx) for predicate in predicates)
         finally:
-            ctx.bot.dispatch("application_command_error", ctx, error)
-
-    def _get_signature_parameters(self):
-        return OrderedDict(inspect.signature(self.callback).parameters)
-
-    def error(self, coro):
-        """A decorator that registers a coroutine as a local error handler.
-
-        A local error handler is an :func:`.on_command_error` event limited to
-        a single command. However, the :func:`.on_command_error` is still
-        invoked afterwards as the catch-all.
-
-        Parameters
-        ----------
-        coro: :ref:`coroutine <coroutine>`
-            The coroutine to register as the local error handler.
-
-        Raises
-        ------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The error handler must be a coroutine.")
-
-        self.on_error = coro
-        return coro
-
-    def has_error_handler(self) -> bool:
-        """Checks whether the command has an error handler registered."""
-        return hasattr(self, "on_error")
-
-    def before_invoke(self, coro):
-        """A decorator that registers a coroutine as a pre-invoke hook.
-        A pre-invoke hook is called directly before the command is
-        called. This makes it a useful function to set up database
-        connections or any type of set up required.
-
-        This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
-        See :meth:`.Bot.before_invoke` for more info.
-
-        Parameters
-        ----------
-        coro: :ref:`coroutine <coroutine>`
-            The coroutine to register as the pre-invoke hook.
-
-        Raises
-        ------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The pre-invoke hook must be a coroutine.")
-
-        self._before_invoke = coro
-        return coro
-
-    def after_invoke(self, coro):
-        """A decorator that registers a coroutine as a post-invoke hook.
-        A post-invoke hook is called directly after the command is
-        called. This makes it a useful function to clean-up database
-        connections or any type of clean up required.
-
-        This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
-        See :meth:`.Bot.after_invoke` for more info.
-
-        Parameters
-        ----------
-        coro: :ref:`coroutine <coroutine>`
-            The coroutine to register as the post-invoke hook.
-
-        Raises
-        ------
-        TypeError
-            The coroutine passed is not actually a coroutine.
-        """
-        if not asyncio.iscoroutinefunction(coro):
-            raise TypeError("The post-invoke hook must be a coroutine.")
-
-        self._after_invoke = coro
-        return coro
-
-    async def call_before_hooks(self, ctx: ApplicationContext) -> None:
-        # now that we're done preparing we can call the pre-command hooks
-        # first, call the command local hook:
-        cog = self.cog
-        if self._before_invoke is not None:
-            # should be cog if @commands.before_invoke is used
-            instance = getattr(self._before_invoke, "__self__", cog)
-            # __self__ only exists for methods, not functions
-            # however, if @command.before_invoke is used, it will be a function
-            if instance:
-                await self._before_invoke(instance, ctx)  # type: ignore
-            else:
-                await self._before_invoke(ctx)  # type: ignore
-
-        # call the cog local hook if applicable:
-        if cog is not None:
-            hook = cog.__class__._get_overridden_method(cog.cog_before_invoke)
-            if hook is not None:
-                await hook(ctx)
-
-        # call the bot global hook if necessary
-        hook = ctx.bot._before_invoke
-        if hook is not None:
-            await hook(ctx)
-
-    async def call_after_hooks(self, ctx: ApplicationContext) -> None:
-        cog = self.cog
-        if self._after_invoke is not None:
-            instance = getattr(self._after_invoke, "__self__", cog)
-            if instance:
-                await self._after_invoke(instance, ctx)  # type: ignore
-            else:
-                await self._after_invoke(ctx)  # type: ignore
-
-        # call the cog local hook if applicable:
-        if cog is not None:
-            hook = cog.__class__._get_overridden_method(cog.cog_after_invoke)
-            if hook is not None:
-                await hook(ctx)
-
-        hook = ctx.bot._after_invoke
-        if hook is not None:
-            await hook(ctx)
-
-    @property
-    def cooldown(self):
-        return self._buckets._cooldown
-
-    @property
-    def full_parent_name(self) -> str:
-        """Retrieves the fully qualified parent command name.
-
-        This the base command name required to execute it. For example,
-        in ``/one two three`` the parent name would be ``one two``.
-        """
-        entries = []
-        command = self
-        while command.parent is not None and hasattr(command.parent, "name"):
-            command = command.parent
-            entries.append(command.name)
-
-        return " ".join(reversed(entries))
-
-    @property
-    def qualified_name(self) -> str:
-        """Retrieves the fully qualified command name.
-
-        This is the full parent name with the command name as well.
-        For example, in ``/one two three`` the qualified name would be
-        ``one two three``.
-        """
-
-        parent = self.full_parent_name
-
-        if parent:
-            return f"{parent} {self.name}"
-        else:
-            return self.name
+            ctx.command = original
 
     @property
     def qualified_id(self) -> int:
@@ -602,36 +226,25 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
-    def __str__(self) -> str:
-        return self.qualified_name
-
-    def _set_cog(self, cog):
-        self.cog = cog
-
 
 class SlashCommand(ApplicationCommand):
-    r"""A class that implements the protocol for a slash command.
+    """A class that implements the protocol for a slash command.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`.Invokable`.
+
     .. versionadded:: 2.0
 
     Attributes
-    -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
-    description: Optional[:class:`str`]
-        The description for the command.
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     options: List[:class:`Option`]
         The parameters for this command.
     parent: Optional[:class:`SlashCommandGroup`]
-        The parent group that this command belongs to. ``None`` if there
-        isn't one.
+        The parent group that this command belongs to.
     mention: :class:`str`
         Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
@@ -641,18 +254,6 @@ class SlashCommand(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
-        The cooldown applied when the command is invoked. ``None`` if the command
-        doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
@@ -660,6 +261,7 @@ class SlashCommand(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -670,9 +272,6 @@ class SlashCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
-        self.callback = func
 
         self.name_localizations: dict[str, str] = kwargs.get(
             "name_localizations", MISSING
@@ -694,17 +293,6 @@ class SlashCommand(ApplicationCommand):
         self.attached_to_group: bool = False
 
         self.options: list[Option] = kwargs.get("options", [])
-
-        try:
-            checks = func.__commands_checks__
-            checks.reverse()
-        except AttributeError:
-            checks = kwargs.get("checks", [])
-
-        self.checks = checks
-
-        self._before_invoke = None
-        self._after_invoke = None
 
     def _validate_parameters(self):
         params = self._get_signature_parameters()
@@ -793,7 +381,7 @@ class SlashCommand(ApplicationCommand):
 
         return final_options
 
-    def _match_option_param_names(self, params, options):
+    def _match_option_param_names(self, params, options: list[Option]):
         params = self._check_required_params(params)
 
         check_annotations: list[Callable[[Option, type], bool]] = [
@@ -850,8 +438,11 @@ class SlashCommand(ApplicationCommand):
 
     @cog.setter
     def cog(self, val):
-        self._cog = val
-        self._validate_parameters()
+        if not hasattr(self, "_cog"):
+            self._cog = MISSING
+        else:
+            self._cog = val
+            self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
@@ -859,6 +450,7 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def mention(self) -> str:
+        """:class:`str`: Returns a string that allows you to mention the slash command."""
         return f"</{self.qualified_name}:{self.qualified_id}>"
 
     def to_dict(self) -> dict:
@@ -887,7 +479,9 @@ class SlashCommand(ApplicationCommand):
 
         return as_dict
 
-    async def _invoke(self, ctx: ApplicationContext) -> None:
+    async def _parse_arguments(self, ctx: ApplicationContext) -> None:
+        ctx.args = [ctx] if self.cog is None else [self.cog, ctx]
+
         # TODO: Parse the args better
         kwargs = {}
         for arg in ctx.interaction.data.get("options", []):
@@ -998,12 +592,7 @@ class SlashCommand(ApplicationCommand):
             if o._parameter_name not in kwargs:
                 kwargs[o._parameter_name] = o.default
 
-        if self.cog is not None:
-            await self.callback(self.cog, ctx, **kwargs)
-        elif self.parent is not None and self.attached_to_group is True:
-            await self.callback(self.parent, ctx, **kwargs)
-        else:
-            await self.callback(ctx, **kwargs)
+        ctx.kwargs = kwargs
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext):
         values = {i.name: i.default for i in self.options}
@@ -1036,54 +625,20 @@ class SlashCommand(ApplicationCommand):
                     choices=choices
                 )
 
-    def copy(self):
-        """Creates a copy of this command.
 
-        Returns
-        -------
-        :class:`SlashCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        # if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        # if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
-
-
+# TODO: implement with GroupMixin maybe
 class SlashCommandGroup(ApplicationCommand):
-    r"""A class that implements the protocol for a slash command group.
+    """A class that implements the protocol for a slash command group.
 
     These can be created manually, but they should be created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`.Invokable`.
+
+    .. versionadded:: 2.0
+
     Attributes
-    -----------
-    name: :class:`str`
-        The name of the command.
+    ----------
     description: Optional[:class:`str`]
         The description for the command.
     guild_ids: Optional[List[:class:`int`]]
@@ -1098,13 +653,6 @@ class SlashCommandGroup(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
@@ -1112,6 +660,7 @@ class SlashCommandGroup(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
@@ -1300,8 +849,9 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         if self.parent is not None:
-            # TODO: Improve this error message
-            raise Exception("a subgroup cannot have a subgroup")
+            raise Exception(
+                "A command subgroup can only have commands and not any more groups."
+            )
 
         sub_command_group = SlashCommandGroup(
             name, description, guild_ids, parent=self, **kwargs
@@ -1353,12 +903,13 @@ class SlashCommandGroup(ApplicationCommand):
 
         return inner
 
-    async def _invoke(self, ctx: ApplicationContext) -> None:
+    async def invoke(self, ctx: ApplicationContext) -> None:
         option = ctx.interaction.data["options"][0]
         resolved = ctx.interaction.data.get("resolved", None)
         command = find(lambda x: x.name == option["name"], self.subcommands)
         option["resolved"] = resolved
         ctx.interaction.data = option
+        ctx.invoked_subcommand = command
         await command.invoke(ctx)
 
     async def invoke_autocomplete_callback(self, ctx: AutocompleteContext) -> None:
@@ -1402,48 +953,6 @@ class SlashCommandGroup(ApplicationCommand):
                 yield from command.walk_commands()
             yield command
 
-    def copy(self):
-        """Creates a copy of this command group.
-
-        Returns
-        -------
-        :class:`SlashCommandGroup`
-            A new instance of this command group.
-        """
-        ret = self.__class__(
-            name=self.name,
-            description=self.description,
-            **{
-                param: value
-                for param, value in self.__original_kwargs__.items()
-                if param not in ("name", "description")
-            },
-        )
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other.parent = self.parent
-
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-
-        if self.subcommands != other.subcommands:
-            other.subcommands = self.subcommands.copy()
-
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-
-        return other
-
-    def _update_copy(self, kwargs: dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
-
     def _set_cog(self, cog):
         super()._set_cog(cog)
         for subcommand in self.subcommands:
@@ -1451,19 +960,16 @@ class SlashCommandGroup(ApplicationCommand):
 
 
 class ContextMenuCommand(ApplicationCommand):
-    r"""A class that implements the protocol for context menu commands.
+    """A base class that implements the protocol for context menu commands.
 
-    These are not created manually, instead they are created via the
-    decorator or functional interface.
+    These are not meant to be directly used, same as :class:`ApplicationCommand`.
+
+    This is a subclass of :class:`.Invokable` but does not support the ``parent`` attribute.
 
     .. versionadded:: 2.0
 
     Attributes
-    -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
@@ -1473,18 +979,6 @@ class ContextMenuCommand(ApplicationCommand):
         Apps intending to be listed in the App Directory cannot have NSFW commands.
     default_member_permissions: :class:`~discord.Permissions`
         The default permissions a member needs to be able to run the command.
-    cog: Optional[:class:`Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
-    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
-        The cooldown applied when the command is invoked. ``None`` if the command
-        doesn't have a cooldown.
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
@@ -1498,9 +992,6 @@ class ContextMenuCommand(ApplicationCommand):
 
     def __init__(self, func: Callable, *args, **kwargs) -> None:
         super().__init__(func, **kwargs)
-        if not asyncio.iscoroutinefunction(func):
-            raise TypeError("Callback must be a coroutine.")
-        self.callback = func
 
         self.name_localizations: dict[str, str] = kwargs.get(
             "name_localizations", MISSING
@@ -1508,14 +999,9 @@ class ContextMenuCommand(ApplicationCommand):
 
         # Discord API doesn't support setting descriptions for context menu commands, so it must be empty
         self.description = ""
-        if not isinstance(self.name, str):
-            raise TypeError("Name of a command must be a string.")
 
         self.cog = None
         self.id = None
-
-        self._before_invoke = None
-        self._after_invoke = None
 
         self.validate_parameters()
 
@@ -1556,10 +1042,6 @@ class ContextMenuCommand(ApplicationCommand):
         except StopIteration:
             pass
 
-    @property
-    def qualified_name(self):
-        return self.name
-
     def to_dict(self) -> dict[str, str | int]:
         as_dict = {
             "name": self.name,
@@ -1585,29 +1067,21 @@ class ContextMenuCommand(ApplicationCommand):
 
 
 class UserCommand(ContextMenuCommand):
-    r"""A class that implements the protocol for user context menu commands.
+    """A class that implements the protocol for user context menu commands.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`.Invokable` but does not support the ``parent`` attribute.
+
+    .. versionadded:: 2.0
+
     Attributes
-    -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
     """
+
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -1644,68 +1118,23 @@ class UserCommand(ContextMenuCommand):
         else:
             await self.callback(ctx, target)
 
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        -------
-        :class:`UserCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        # if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        # if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
-
 
 class MessageCommand(ContextMenuCommand):
-    r"""A class that implements the protocol for message context menu commands.
+    """A class that implements the protocol for message context menu commands.
 
     These are not created manually, instead they are created via the
     decorator or functional interface.
 
+    This is a subclass of :class:`.Invokable` but does not support the ``parent`` attribute.
+
+    .. versionadded:: 2.0
+
     Attributes
-    -----------
-    name: :class:`str`
-        The name of the command.
-    callback: :ref:`coroutine <coroutine>`
-        The coroutine that is executed when the command is called.
+    ----------
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
-        The cog that this command belongs to. ``None`` if there isn't one.
-    checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
-        A list of predicates that verifies if the command could be executed
-        with the given :class:`.ApplicationContext` as the sole parameter. If an exception
-        is necessary to be thrown to signal failure, then one inherited from
-        :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
-        :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
-        event.
     """
+
     type = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:
@@ -1740,43 +1169,6 @@ class MessageCommand(ContextMenuCommand):
             await self.callback(self.cog, ctx, target)
         else:
             await self.callback(ctx, target)
-
-    def copy(self):
-        """Creates a copy of this command.
-
-        Returns
-        -------
-        :class:`MessageCommand`
-            A new instance of this command.
-        """
-        ret = self.__class__(self.callback, **self.__original_kwargs__)
-        return self._ensure_assignment_on_copy(ret)
-
-    def _ensure_assignment_on_copy(self, other):
-        other._before_invoke = self._before_invoke
-        other._after_invoke = self._after_invoke
-        if self.checks != other.checks:
-            other.checks = self.checks.copy()
-        # if self._buckets.valid and not other._buckets.valid:
-        #    other._buckets = self._buckets.copy()
-        # if self._max_concurrency != other._max_concurrency:
-        #    # _max_concurrency won't be None at this point
-        #    other._max_concurrency = self._max_concurrency.copy()  # type: ignore
-
-        try:
-            other.on_error = self.on_error
-        except AttributeError:
-            pass
-        return other
-
-    def _update_copy(self, kwargs: dict[str, Any]):
-        if kwargs:
-            kw = kwargs.copy()
-            kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
-            return self._ensure_assignment_on_copy(copy)
-        else:
-            return self.copy()
 
 
 def slash_command(**kwargs):
@@ -1820,13 +1212,11 @@ def message_command(**kwargs):
 
 def application_command(cls=SlashCommand, **attrs):
     """A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically,
-    usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
+    one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class
     depends on the ``cls`` parameter.
-    By default, the ``description`` attribute is received automatically from the
-    docstring of the function and is cleaned up with the use of
-    ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded
-    into :class:`str` using utf-8 encoding.
-    The ``name`` attribute also defaults to the function name unchanged.
+
+    The ``description`` and ``name`` of the command are automatically inferred from the function name
+    and function docstring.
 
     .. versionadded:: 2.0
 

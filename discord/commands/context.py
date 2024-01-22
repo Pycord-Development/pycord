@@ -30,20 +30,17 @@ import discord.abc
 from discord.interactions import Interaction, InteractionMessage, InteractionResponse
 from discord.webhook.async_ import Webhook
 
+from .mixins import BaseContext
+
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     import discord
     from .. import Bot
-    from ..state import ConnectionState
-    from ..voice_client import VoiceProtocol
 
     from .core import ApplicationCommand, Option
     from ..interactions import InteractionChannel
-    from ..guild import Guild
-    from ..member import Member
     from ..message import Message
-    from ..user import User
     from ..permissions import Permissions
     from ..client import ClientUser
 
@@ -65,7 +62,7 @@ else:
 __all__ = ("ApplicationContext", "AutocompleteContext")
 
 
-class ApplicationContext(discord.abc.Messageable):
+class ApplicationContext(BaseContext):
     """Represents a Discord application command interaction context.
 
     This class is not created manually and is instead passed to application
@@ -83,85 +80,74 @@ class ApplicationContext(discord.abc.Messageable):
         The command that this context belongs to.
     """
 
-    def __init__(self, bot: Bot, interaction: Interaction):
-        self.bot = bot
+    command: ApplicationCommand | None
+
+    def __init__(
+        self,
+        bot: Bot,
+        interaction: Interaction,
+        *,
+        command: ApplicationCommand | None = None,
+        args: list[Any] = None,
+        kwargs: dict[str, Any] = None,
+        **kwargs2,
+    ):
+        super().__init__(bot=bot, command=command, args=args, kwargs=kwargs, **kwargs2)
+
         self.interaction = interaction
 
         # below attributes will be set after initialization
-        self.command: ApplicationCommand = None  # type: ignore
         self.focused: Option = None  # type: ignore
         self.value: str = None  # type: ignore
         self.options: dict = None  # type: ignore
 
-        self._state: ConnectionState = self.interaction._state
+    async def reinvoke(self, *, call_hooks: bool = False, restart: bool = True) -> None:
+        """|coro|
 
-    async def _get_channel(self) -> InteractionChannel | None:
-        return self.interaction.channel
+        Calls the command again.
 
-    async def invoke(
-        self,
-        command: ApplicationCommand[CogT, P, T],
-        /,
-        *args: P.args,
-        **kwargs: P.kwargs,
-    ) -> T:
-        r"""|coro|
-
-        Calls a command with the arguments given.
-        This is useful if you want to just call the callback that a
-        :class:`.ApplicationCommand` holds internally.
+        This is similar to :meth:`~.BaseContext.invoke` except that it bypasses
+        checks, cooldowns, and error handlers.
 
         .. note::
 
-            This does not handle converters, checks, cooldowns, pre-invoke,
-            or after-invoke hooks in any matter. It calls the internal callback
-            directly as-if it was a regular function.
-            You must take care in passing the proper arguments when
-            using this function.
+            If you want to bypass :exc:`.UserInputError` derived exceptions,
+            it is recommended to use the regular :meth:`~.Context.invoke`
+            as it will work more naturally. After all, this will end up
+            using the old arguments the user has used and will thus just
+            fail again.
 
         Parameters
-        -----------
-        command: :class:`.ApplicationCommand`
-            The command that is going to be called.
-        \*args
-            The arguments to use.
-        \*\*kwargs
-            The keyword arguments to use.
+        ----------
+        call_hooks: :class:`bool`
+            Whether to call the before and after invoke hooks.
+        restart: :class:`bool`
+            Whether to start the call chain from the very beginning
+            or where we left off (i.e. the command that caused the error).
+            The default is to start where we left off.
 
         Raises
-        -------
-        TypeError
-            The command argument to invoke is missing.
+        ------
+        ValueError
+            The context to reinvoke is not valid.
         """
-        return await command(self, *args, **kwargs)
+        cmd = self.command
+        if cmd is None:
+            raise ValueError("This context is not valid.")
 
-    @cached_property
-    def channel(self) -> InteractionChannel | None:
-        """Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]:
-        Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`.
-        """
-        return self.interaction.channel
+        if restart:
+            to_call = cmd.root_parent or cmd
+        else:
+            to_call = cmd
 
-    @cached_property
-    def channel_id(self) -> int | None:
-        """Returns the ID of the channel associated with this context's command.
-        Shorthand for :attr:`.Interaction.channel_id`.
-        """
-        return self.interaction.channel_id
+        try:
+            await to_call.reinvoke(self, call_hooks=call_hooks)
+        finally:
+            self.command = cmd
 
-    @cached_property
-    def guild(self) -> Guild | None:
-        """Returns the guild associated with this context's command.
-        Shorthand for :attr:`.Interaction.guild`.
-        """
-        return self.interaction.guild
-
-    @cached_property
-    def guild_id(self) -> int | None:
-        """Returns the ID of the guild associated with this context's command.
-        Shorthand for :attr:`.Interaction.guild_id`.
-        """
-        return self.interaction.guild_id
+    @property
+    def source(self) -> Interaction:
+        return self.interaction
 
     @cached_property
     def locale(self) -> str | None:
@@ -182,42 +168,11 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.app_permissions
 
     @cached_property
-    def me(self) -> Member | ClientUser | None:
-        """Union[:class:`.Member`, :class:`.ClientUser`]:
-        Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
-        message contexts, or when :meth:`Intents.guilds` is absent.
-        """
-        return (
-            self.interaction.guild.me
-            if self.interaction.guild is not None
-            else self.bot.user
-        )
-
-    @cached_property
     def message(self) -> Message | None:
         """Returns the message sent with this context's command.
         Shorthand for :attr:`.Interaction.message`, if applicable.
         """
         return self.interaction.message
-
-    @cached_property
-    def user(self) -> Member | User:
-        """Returns the user that sent this context's command.
-        Shorthand for :attr:`.Interaction.user`.
-        """
-        return self.interaction.user  # type: ignore # command user will never be None
-
-    author: Member | User = user
-
-    @property
-    def voice_client(self) -> VoiceProtocol | None:
-        """Returns the voice client associated with this context's command.
-        Shorthand for :attr:`Interaction.guild.voice_client<~discord.Guild.voice_client>`, if applicable.
-        """
-        if self.interaction.guild is None:
-            return None
-
-        return self.interaction.guild.voice_client
 
     @cached_property
     def response(self) -> InteractionResponse:
@@ -334,19 +289,9 @@ class ApplicationContext(discord.abc.Messageable):
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_response
 
-    @property
-    def cog(self) -> Cog | None:
-        """Returns the cog associated with this context's command.
-        ``None`` if it does not exist.
-        """
-        if self.command is None:
-            return None
-
-        return self.command.cog
-
 
 class AutocompleteContext:
-    """Represents context for a slash command's option autocomplete.
+    """Represents context for a slash command's option autocomplete. This ***does not*** inherent from :class:`.BaseContext`.
 
     This class is not created manually and is instead passed to an :class:`.Option`'s autocomplete callback.
 

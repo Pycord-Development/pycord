@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Any, Callable, Generator, TypeVar
 import discord
 
 from ...cog import Cog
-from ...commands import ApplicationCommand, SlashCommandGroup
+from ...commands import ApplicationCommand, Invokable, SlashCommandGroup
 
 if TYPE_CHECKING:
     from .core import Command
@@ -49,12 +49,12 @@ class Cog(Cog):
         # To do this, we need to interfere with the Cog creation process.
         return super().__new__(cls)
 
-    def walk_commands(self) -> Generator[Command, None, None]:
+    def walk_commands(self) -> Generator[Invokable, None, None]:
         """An iterator that recursively walks through this cog's commands and subcommands.
 
         Yields
         ------
-        Union[:class:`.Command`, :class:`.Group`]
+        :class:`.Invokable`
             A command or group from the cog.
         """
         from .core import GroupMixin
@@ -74,7 +74,7 @@ class Cog(Cog):
         r"""
         Returns
         --------
-        List[Union[:class:`~discord.ApplicationCommand`, :class:`.Command`]]
+        List[:class:`.Invokable`]
             A :class:`list` of commands that are defined inside this cog.
 
             .. note::
