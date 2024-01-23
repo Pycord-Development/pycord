@@ -560,7 +560,9 @@ class Paginator(discord.ui.View):
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view: discord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
-        self.custom_buttons = custom_buttons if custom_buttons is not None else self.custom_buttons
+        self.custom_buttons = (
+            custom_buttons if custom_buttons is not None else self.custom_buttons
+        )
         self.trigger_on_display = (
             trigger_on_display
             if trigger_on_display is not None
