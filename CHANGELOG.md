@@ -82,6 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `default_reaction_emoji` parameter to `Guild.create_forum_channel()` and
   `ForumChannel.edit()` methods.
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
+- Added `applied_tags` parameter to `Webhook.send()` method.
+  ([#2322](https://github.com/Pycord-Development/pycord/pull/2322))
 
 ### Changed
 
