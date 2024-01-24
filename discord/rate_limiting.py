@@ -537,7 +537,7 @@ class DynamicBucket:
         Should not be used directly inside a Bot
     """
 
-    __slots__ = ("id", "rate_limited", "created_at", "_request_queue", "_reset_after")
+    __slots__ = ("id", "rate_limited", "last_used", "_request_queue", "_reset_after")
 
     def __init__(self) -> None:
         self.rate_limited: bool = True
