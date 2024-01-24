@@ -537,21 +537,26 @@ class DynamicBucket:
         Should not be used directly inside a Bot
     """
 
-    __slots__ = ("id", "rate_limited", "last_used", "_request_queue", "_reset_after")
+    __slots__ = ("id", "rate_limited", "last_used", "_request_queue", "_reset_after", "_use_lock")
 
     def __init__(self) -> None:
-        self.rate_limited: bool = True
+        self.rate_limited: bool = False
         self.last_used = int(time.time())
-        self._request_queue: asyncio.Queue[asyncio.Event] | None = None
+        self._request_queue: asyncio.Queue[asyncio.Event] = asyncio.Queue()
+        self._use_lock = asyncio.Lock()
 
     async def use(self, reset_after: float) -> None:
+        await self._use_lock.acquire()
+        if not self.rate_limited:
+            return
         self._reset_after = reset_after
-        self._request_queue = asyncio.Queue()
 
         await asyncio.sleep(reset_after)
 
         self.rate_limited = False
 
+        self._use_lock.release()
+    
         for _ in range(self._request_queue.qsize() - 1):
             (await self._request_queue.get()).set()
 
@@ -561,10 +566,5 @@ class DynamicBucket:
 
         event = asyncio.Event()
 
-        if self._request_queue:
-            self._request_queue.put_nowait(event)
-        else:
-            raise RateLimitException(
-                "Request queue does not exist, rate limit may have been solved."
-            )
+        self._request_queue.put_nowait(event)
         await event.wait()
