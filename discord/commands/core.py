@@ -235,15 +235,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if (
-            getattr(self, "id", None) is not None
-            and getattr(other, "id", None) is not None
-        ):
-            check = self.id == other.id
-        else:
-            check = self.name == other.name and self.guild_ids == other.guild_ids
         return (
-            isinstance(other, self.__class__) and self.parent == other.parent and check
+            isinstance(other, self.__class__)
+            and self.qualified_name == other.qualified_name
+            and self.guild_ids == other.guild_ids
         )
 
     async def __call__(self, ctx, *args, **kwargs):
@@ -694,6 +689,7 @@ class SlashCommand(ApplicationCommand):
         self.attached_to_group: bool = False
 
         self.options: list[Option] = kwargs.get("options", [])
+        self._validate_parameters()
 
         try:
             checks = func.__commands_checks__
@@ -709,9 +705,9 @@ class SlashCommand(ApplicationCommand):
     def _validate_parameters(self):
         params = self._get_signature_parameters()
         if kwop := self.options:
-            self.options: list[Option] = self._match_option_param_names(params, kwop)
+            self.options = self._match_option_param_names(params, kwop)
         else:
-            self.options: list[Option] = self._parse_options(params)
+            self.options = self._parse_options(params)
 
     def _check_required_params(self, params):
         params = iter(params.items())
@@ -849,9 +845,18 @@ class SlashCommand(ApplicationCommand):
         return getattr(self, "_cog", None)
 
     @cog.setter
-    def cog(self, val):
-        self._cog = val
-        self._validate_parameters()
+    def cog(self, value):
+        old_cog = self.cog
+        self._cog = value
+
+        if (
+            old_cog is None
+            and value is not None
+            or value is None
+            and old_cog is not None
+        ):
+            params = self._get_signature_parameters()
+            self.options = self._parse_options(params)
 
     @property
     def is_subcommand(self) -> bool:
