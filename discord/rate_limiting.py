@@ -312,7 +312,12 @@ class BucketStorageProtocol(ABC):
     ready: bool
     global_concurrency: GlobalRateLimit
 
-    def __init__(self, per: int = 1, concurrency: int = 50) -> None:
+    def __init__(
+        self,
+        per: int = 1,
+        concurrency: int = 50,
+        temp_bucket_storage_secs: int = 600
+    ) -> None:
         ...
 
     async def start(self) -> None:
@@ -395,12 +400,18 @@ class BucketStorageProtocol(ABC):
 
 
 class BucketStorage(BucketStorageProtocol):
-    __slots__ = ("ready", "global_concurrency", "_temp_buckets", "_buckets")
+    __slots__ = ("ready", "global_concurrency", "temp_bucket_storage_secs" "_temp_buckets", "_buckets")
 
-    def __init__(self, per: int = 1, concurrency: int = 50) -> None:
+    def __init__(
+        self,
+        per: int = 1,
+        concurrency: int = 50,
+        temp_bucket_storage_secs: int = 600
+    ) -> None:
         self._buckets: dict[str, Bucket] = {}
         self.ready = True
         self.global_concurrency = GlobalRateLimit(concurrency, per)
+        self.temp_bucket_storage_secs = temp_bucket_storage_secs
 
         gc.callbacks.append(self._collect_buckets)
 
@@ -419,6 +430,12 @@ class BucketStorage(BucketStorageProtocol):
         for id, bucket in self._buckets.copy().items():
             if bucket.garbage:
                 del self._buckets[id]
+
+        for id, bucket in self._temp_buckets.copy().items():
+            # temp buckets get deleted if they are not in use after 10 minutes.
+            # this is to prevent pile up
+            if not bucket.rate_limited and (int(time.time()) - bucket.last_used) > self.temp_bucket_storage_secs:
+                del self._temp_buckets[id]
 
     async def close(self) -> None:
         gc.callbacks.remove(self._collect_buckets)
@@ -518,28 +535,18 @@ class DynamicBucket:
         Should not be used directly inside a Bot
     """
 
-    __slots__ = ("id", "is_global", "rate_limited", "_request_queue", "_reset_after")
+    __slots__ = ("id", "rate_limited", "created_at", "_request_queue", "_reset_after")
 
     def __init__(self) -> None:
-        # NOTE: this is only here to be used by people replacing BucketStorage.
-        # it makes it easier to cache that a bucket *specific* is deleted or created
-        # since everything is also mutable, it wouldn't be hard to replace this in a
-        # caching system with the actual value.
-        # NOTE(2): this is not the bucket hash given by Discord since a hash may
-        # get rate limited twice, which is what this tries to prevent.
-        self.id = str(uuid4())
-        self.is_global: bool | None = None
-        self._request_queue: asyncio.Queue[asyncio.Event] | None = None
         self.rate_limited: bool = True
+        self.last_used = int(time.time())
+        self._request_queue: asyncio.Queue[asyncio.Event] | None = None
 
-    async def use(self, reset_after: float, is_global: bool) -> None:
-        self.is_global = is_global
+    async def use(self, reset_after: float) -> None:
         self._reset_after = reset_after
         self._request_queue = asyncio.Queue()
 
         await asyncio.sleep(reset_after)
-
-        self.is_global = False
 
         self.rate_limited = False
 

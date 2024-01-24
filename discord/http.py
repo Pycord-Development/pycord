@@ -28,6 +28,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import sys
+from time import time
 from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
 from urllib.parse import quote as _uriquote
 
@@ -243,7 +244,13 @@ class HTTPClient:
 
         tbucket = await self._rate_limit.temp_bucket(bucket_id)
 
-        if tbucket:
+        if not tbucket:
+            tbucket = DynamicBucket()
+            await self._rate_limit.push_temp_bucket(bucket_id, tbucket)
+
+        tbucket.last_used = int(time())
+
+        if tbucket.rate_limited:
             await tbucket.wait()
 
         response: aiohttp.ClientResponse | None = None
@@ -323,20 +330,11 @@ class HTTPClient:
 
                                 if is_global:
                                     self.global_dynamo = DynamicBucket()
-                                    await self.global_dynamo.use(
-                                        retry_after,
-                                        is_global=is_global,
-                                    )
+                                    await self.global_dynamo.use(retry_after)
                                     self.global_dynamo = None
                                 else:
-                                    tbucket = DynamicBucket()
-                                    await self._rate_limit.push_temp_bucket(
-                                        bucket_id, tbucket
-                                    )
-                                    await tbucket.use(
-                                        retry_after, is_global=True
-                                    )
-                                    await self._rate_limit.delete_temp_bucket(bucket_id)
+                                    tbucket.rate_limited = True
+                                    await tbucket.use(retry_after)
 
                                 _log.debug(
                                     "Done sleeping for the rate limit. Retrying..."
