@@ -854,7 +854,12 @@ class SlashCommand(ApplicationCommand):
         old_cog = self.cog
         self._cog = value
 
-        if old_cog is None and value is not None or value is None and old_cog is not None:
+        if (
+            old_cog is None
+            and value is not None
+            or value is None
+            and old_cog is not None
+        ):
             params = self._get_signature_parameters()
             self.options = self._parse_options(params)
 
