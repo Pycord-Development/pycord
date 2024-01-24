@@ -82,6 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `default_reaction_emoji` parameter to `Guild.create_forum_channel()` and
   `ForumChannel.edit()` methods.
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
+- Added `applied_tags` parameter to `Webhook.send()` method.
+  ([#2322](https://github.com/Pycord-Development/pycord/pull/2322))
 
 ### Changed
 
@@ -205,6 +207,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2295](https://github.com/Pycord-Development/pycord/issues/2295))
 - Fixed `AttributeError` when failing to establish initial websocket connection.
   ([#2301](https://github.com/Pycord-Development/pycord/pull/2301))
+- Fixed `AttributeError` caused by `command.cog` being `MISSING`.
+  ([#2303](https://github.com/Pycord-Development/pycord/issues/2303))
 - Fixed `AttributeError` when comparing application commands with non-command objects.
   ([#2299](https://github.com/Pycord-Development/pycord/issues/2299))
 
