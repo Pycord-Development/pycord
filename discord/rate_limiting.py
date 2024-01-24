@@ -23,19 +23,16 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+from abc import ABC
 
 import asyncio
 import gc
 import time
 from contextlib import asynccontextmanager
-from typing import AsyncIterator, Literal, Protocol, cast
+from typing import AsyncIterator, Literal, cast
+from uuid import uuid4
 
-from .errors import DiscordException
-from .utils import MISSING
-
-
-class RateLimitException(DiscordException):
-    ...
+from .errors import RateLimitException
 
 
 class GlobalRateLimit:
@@ -294,7 +291,7 @@ class Bucket:
         self.release(self.limit)
 
 
-class BucketStorageProtocol(Protocol):
+class BucketStorageProtocol(ABC):
     """A customizable, optionally replacable storage medium for buckets.
 
     Parameters
@@ -398,6 +395,8 @@ class BucketStorageProtocol(Protocol):
 
 
 class BucketStorage(BucketStorageProtocol):
+    __slots__ = ("ready", "global_concurrency", "_temp_buckets", "_buckets")
+
     def __init__(self, per: int = 1, concurrency: int = 50) -> None:
         self._buckets: dict[str, Bucket] = {}
         self.ready = True
@@ -519,12 +518,21 @@ class DynamicBucket:
         Should not be used directly inside a Bot
     """
 
+    __slots__ = ("id", "is_global", "rate_limited", "_request_queue", "_reset_after")
+
     def __init__(self) -> None:
+        # NOTE: this is only here to be used by people replacing BucketStorage.
+        # it makes it easier to cache that a bucket *specific* is deleted or created
+        # since everything is also mutable, it wouldn't be hard to replace this in a
+        # caching system with the actual value.
+        # NOTE(2): this is not the bucket hash given by Discord since a hash may
+        # get rate limited twice, which is what this tries to prevent.
+        self.id = str(uuid4())
         self.is_global: bool | None = None
         self._request_queue: asyncio.Queue[asyncio.Event] | None = None
         self.rate_limited: bool = True
 
-    async def use(self, reset_after: float, limit: int, is_global: bool) -> None:
+    async def use(self, reset_after: float, is_global: bool) -> None:
         self.is_global = is_global
         self._reset_after = reset_after
         self._request_queue = asyncio.Queue()
@@ -533,19 +541,10 @@ class DynamicBucket:
 
         self.is_global = False
 
-        # NOTE: This could break if someone did a second rate limit somehow
-        requests_passed: int = 0
-        for _ in range(self._request_queue.qsize() - 1):
-            if requests_passed == limit:
-                requests_passed = 0
-                if not is_global:
-                    await asyncio.sleep(reset_after)
-                else:
-                    await asyncio.sleep(5)
-
-            requests_passed += 1
-            (await self._request_queue.get()).set()
         self.rate_limited = False
+
+        for _ in range(self._request_queue.qsize() - 1):
+            (await self._request_queue.get()).set()
 
     async def wait(self) -> None:
         if not self.rate_limited:

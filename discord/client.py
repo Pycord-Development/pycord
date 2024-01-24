@@ -202,7 +202,7 @@ class Client:
         The class to use for storing rate limit buckets given by Discord.
 
         .. versionadded:: 2.5
-    concurrency: :class:`int`
+    rate_limit_concurrency: :class:`int`
         Number of requests that can occur every `per` seconds.
         This determines your global rate limit prediction.
 
@@ -214,14 +214,14 @@ class Client:
         Defaults to `50`.
 
         .. versionadded:: 2.5
-    per: :class:`float`
-        Number of seconds to wait until resetting `global_concurrency`.
+    rate_limit_per: :class:`float`
+        Number of seconds to wait until resetting `concurrency`.
         Defaults to `1` second.
 
         .. versionadded:: 2.5
-    rate_limit_timeout: :class:`float`
+    rate_limit_timeout: Optional[:class:`float`]
         The maximum amount of seconds the client is allowed to wait on a rate limit
-        before raising an exception. Defaults to `-1`, or infinite.
+        before raising an exception. Defaults to None, or infinite.
 
         .. versionadded:: 2.5
 
@@ -255,9 +255,9 @@ class Client:
         proxy_auth: aiohttp.BasicAuth | None = options.pop("proxy_auth", None)
         unsync_clock: bool = options.pop("assume_unsync_clock", True)
         bucket_storage = options.pop("bucket_storage_cls", BucketStorage)(
-            options.pop("per", 1), options.pop("concurrency", 50)
+            options.pop("rate_limit_per", 1), options.pop("rate_limit_concurrency", 50)
         )
-        rate_limit_timeout: float = options.pop("rate_limit_timeout", -1)
+        rate_limit_timeout: float | None = options.pop("rate_limit_timeout", None)
 
         self.http: HTTPClient = HTTPClient(
             connector,

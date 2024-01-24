@@ -411,3 +411,7 @@ class ApplicationCommandInvokeError(ApplicationCommandError):
         super().__init__(
             f"Application Command raised an exception: {e.__class__.__name__}: {e}"
         )
+
+
+class RateLimitException(DiscordException):
+    """An exception raised from a Discord or rate limit prediction error."""

@@ -143,7 +143,7 @@ class HTTPClient:
         proxy_auth: aiohttp.BasicAuth | None = None,
         loop: asyncio.AbstractEventLoop | None = None,
         unsync_clock: bool = True,
-        rate_limit_timeout: float = -1,
+        rate_limit_timeout: float | None = None,
         bucket_storage: BucketStorageProtocol | None = None,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
@@ -313,8 +313,8 @@ class HTTPClient:
                                 is_global: bool = data.get("global", False)
 
                                 if (
-                                    retry_after > self.rate_limit_timeout
-                                    and self.rate_limit_timeout != -1
+                                    self.rate_limit_timeout
+                                    and retry_after > self.rate_limit_timeout
                                 ):
                                     raise HTTPException(
                                         response,
@@ -325,7 +325,6 @@ class HTTPClient:
                                     self.global_dynamo = DynamicBucket()
                                     await self.global_dynamo.use(
                                         retry_after,
-                                        remaining or 10,
                                         is_global=is_global,
                                     )
                                     self.global_dynamo = None
@@ -335,7 +334,7 @@ class HTTPClient:
                                         bucket_id, tbucket
                                     )
                                     await tbucket.use(
-                                        retry_after, remaining or 10, is_global=True
+                                        retry_after, is_global=True
                                     )
                                     await self._rate_limit.delete_temp_bucket(bucket_id)
 
@@ -368,14 +367,14 @@ class HTTPClient:
                             continue
                         raise
 
-            if response is not None:
-                # We've run out of retries, raise.
-                if response.status >= 500:
-                    raise DiscordServerError(response, data)
+        if response is not None:
+            # We've run out of retries, raise.
+            if response.status >= 500:
+                raise DiscordServerError(response, data)
 
-                raise HTTPException(response, data)
+            raise HTTPException(response, data)
 
-            raise RuntimeError("Unreachable code in HTTP handling")
+        raise RuntimeError("Unreachable code in HTTP handling")
 
     async def get_from_cdn(self, url: str) -> bytes:
         async with self.__session.get(url) as resp:
