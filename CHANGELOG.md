@@ -211,6 +211,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2303](https://github.com/Pycord-Development/pycord/issues/2303))
 - Fixed `self.use_default_buttons` being assumed truthy by `Paginator.update`.
   ([#2319](https://github.com/Pycord-Development/pycord/pull/2319))
+- Fixed `AttributeError` when comparing application commands with non-command objects.
+  ([#2299](https://github.com/Pycord-Development/pycord/issues/2299))
 
 ## [2.4.1] - 2023-03-20
 

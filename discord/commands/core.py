@@ -235,15 +235,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if (
-            getattr(self, "id", None) is not None
-            and getattr(other, "id", None) is not None
-        ):
-            check = self.id == other.id
-        else:
-            check = self.name == other.name and self.guild_ids == other.guild_ids
         return (
-            isinstance(other, self.__class__) and self.parent == other.parent and check
+            isinstance(other, self.__class__)
+            and self.qualified_name == other.qualified_name
+            and self.guild_ids == other.guild_ids
         )
 
     async def __call__(self, ctx, *args, **kwargs):
