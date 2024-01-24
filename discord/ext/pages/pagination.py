@@ -560,18 +560,20 @@ class Paginator(discord.ui.View):
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view: discord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
+        self.custom_buttons = (
+            custom_buttons if custom_buttons is not None else self.custom_buttons
+        )
         self.trigger_on_display = (
             trigger_on_display
             if trigger_on_display is not None
             else self.trigger_on_display
         )
-        if custom_buttons and not self.use_default_buttons:
-            self.buttons = {}
-            for button in custom_buttons:
-                self.add_button(button)
-        else:
-            self.buttons = {}
+        self.buttons = {}
+        if self.use_default_buttons:
             self.add_default_buttons()
+        elif self.custom_buttons:
+            for button in self.custom_buttons:
+                self.add_button(button)
 
         await self.goto_page(self.current_page, interaction=interaction)
 
@@ -679,9 +681,12 @@ class Paginator(discord.ui.View):
         self.update_buttons()
         self.current_page = page_number
         if self.show_indicator:
-            self.buttons["page_indicator"][
-                "object"
-            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            try:
+                self.buttons["page_indicator"][
+                    "object"
+                ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            except KeyError:
+                pass
 
         page = self.pages[page_number]
         page = self.get_page_content(page)
@@ -843,9 +848,12 @@ class Paginator(discord.ui.View):
                     button["object"].label = button["label"]
         self.clear_items()
         if self.show_indicator:
-            self.buttons["page_indicator"][
-                "object"
-            ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            try:
+                self.buttons["page_indicator"][
+                    "object"
+                ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+            except KeyError:
+                pass
         for key, button in self.buttons.items():
             if key != "page_indicator":
                 if button["hidden"]:
