@@ -262,7 +262,7 @@ class Client:
         bucket_storage = options.pop("bucket_storage_cls", BucketStorage)(
             options.pop("rate_limit_per", 1),
             options.pop("rate_limit_concurrency", 50),
-            options.pop("rate_limit_temp_bucket_storage_secs", 600)
+            options.pop("rate_limit_temp_bucket_storage_secs", 600),
         )
         rate_limit_timeout: float | None = options.pop("rate_limit_timeout", None)
 

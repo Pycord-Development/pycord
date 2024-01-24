@@ -23,14 +23,13 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
-from abc import ABC
 
 import asyncio
 import gc
 import time
+from abc import ABC
 from contextlib import asynccontextmanager
 from typing import AsyncIterator, Literal, cast
-from uuid import uuid4
 
 from .errors import RateLimitException
 
@@ -313,10 +312,7 @@ class BucketStorageProtocol(ABC):
     global_concurrency: GlobalRateLimit
 
     def __init__(
-        self,
-        per: int = 1,
-        concurrency: int = 50,
-        temp_bucket_storage_secs: int = 600
+        self, per: int = 1, concurrency: int = 50, temp_bucket_storage_secs: int = 600
     ) -> None:
         ...
 
@@ -400,13 +396,15 @@ class BucketStorageProtocol(ABC):
 
 
 class BucketStorage(BucketStorageProtocol):
-    __slots__ = ("ready", "global_concurrency", "temp_bucket_storage_secs" "_temp_buckets", "_buckets")
+    __slots__ = (
+        "ready",
+        "global_concurrency",
+        "temp_bucket_storage_secs" "_temp_buckets",
+        "_buckets",
+    )
 
     def __init__(
-        self,
-        per: int = 1,
-        concurrency: int = 50,
-        temp_bucket_storage_secs: int = 600
+        self, per: int = 1, concurrency: int = 50, temp_bucket_storage_secs: int = 600
     ) -> None:
         self._buckets: dict[str, Bucket] = {}
         self.ready = True
@@ -434,7 +432,11 @@ class BucketStorage(BucketStorageProtocol):
         for id, bucket in self._temp_buckets.copy().items():
             # temp buckets get deleted if they are not in use after 10 minutes.
             # this is to prevent pile up
-            if not bucket.rate_limited and (int(time.time()) - bucket.last_used) > self.temp_bucket_storage_secs:
+            if (
+                not bucket.rate_limited
+                and (int(time.time()) - bucket.last_used)
+                > self.temp_bucket_storage_secs
+            ):
                 del self._temp_buckets[id]
 
     async def close(self) -> None:
