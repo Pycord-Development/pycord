@@ -246,10 +246,10 @@ class HTTPClient:
         if tbucket:
             await tbucket.wait()
 
-        async with self._rate_limit.global_concurrency:
-            response: aiohttp.ClientResponse | None = None
-            data: dict[str, Any] | str | None = None
-            for tries in range(5):
+        response: aiohttp.ClientResponse | None = None
+        data: dict[str, Any] | str | None = None
+        for tries in range(5):
+            async with self._rate_limit.global_concurrency:
                 async with bucket.reserve(priority=priority):
                     if files:
                         for f in files:
