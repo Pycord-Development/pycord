@@ -52,6 +52,7 @@ from .invite import Invite
 from .iterators import GuildIterator
 from .mentions import AllowedMentions
 from .object import Object
+from .rate_limiting import BucketStorage
 from .stage_instance import StageInstance
 from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
@@ -197,6 +198,37 @@ class Client:
         To enable these events, this must be set to ``True``. Defaults to ``False``.
 
         .. versionadded:: 2.0
+    bucket_storage_cls: type[:class:`.BucketStorageProtocol`]
+        The class to use for storing rate limit buckets given by Discord.
+
+        .. versionadded:: 2.5
+    rate_limit_concurrency: :class:`float`
+        Number of requests that can occur every `per` seconds.
+        This determines your global rate limit prediction.
+
+        Make sure `concurrency` is properly set to maximize the
+        number of requests you can do every `per` seconds. For the
+        majority of bots, this will be the default of `50`, but if Discord
+        increases your `concurrency` make sure to change this value.
+
+        Defaults to `50`.
+
+        .. versionadded:: 2.5
+    rate_limit_per: :class:`float`
+        Number of seconds to wait until resetting `concurrency`.
+        Defaults to `1` second.
+
+        .. versionadded:: 2.5
+    rate_limit_timeout: Optional[:class:`float`]
+        The maximum amount of seconds the client is allowed to wait on a rate limit
+        before raising an exception. Defaults to None, or infinite.
+
+        .. versionadded:: 2.5
+    rate_limit_temp_bucket_storage_secs: :class:`float`
+        The number of seconds after an unused temporary bucket should be deleted
+        from the bucket storage. Defaults to 600 seconds, or 10 minutes.
+
+        .. versionadded:: 2.5
 
     Attributes
     -----------
@@ -227,12 +259,21 @@ class Client:
         proxy: str | None = options.pop("proxy", None)
         proxy_auth: aiohttp.BasicAuth | None = options.pop("proxy_auth", None)
         unsync_clock: bool = options.pop("assume_unsync_clock", True)
+        bucket_storage = options.pop("bucket_storage_cls", BucketStorage)(
+            options.pop("rate_limit_per", 1),
+            options.pop("rate_limit_concurrency", 50),
+            options.pop("rate_limit_temp_bucket_storage_secs", 600),
+        )
+        rate_limit_timeout: float | None = options.pop("rate_limit_timeout", None)
+
         self.http: HTTPClient = HTTPClient(
             connector,
             proxy=proxy,
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
             loop=self.loop,
+            rate_limit_timeout=rate_limit_timeout,
+            bucket_storage=bucket_storage,
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}

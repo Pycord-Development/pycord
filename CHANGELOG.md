@@ -84,6 +84,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 - Added `applied_tags` parameter to `Webhook.send()` method.
   ([#2322](https://github.com/Pycord-Development/pycord/pull/2322))
+- Added `rate_limiting` module to support rate limit prediction.
+  ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Changed
 
@@ -115,6 +117,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Changed the support from `orjson` to `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
+- Replaced former rate limit system with a system that predicts rate limits.
+  ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Removed
 
@@ -125,6 +129,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
 - Removed `Embed.Empty` in favour of `None`, and `EmbedProxy` in favour of individual
   classes. ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
+- Removed the semi-private `MaybeUnlock` class as it is not in use anymore.
+  ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Fixed
 
