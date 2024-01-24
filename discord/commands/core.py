@@ -710,9 +710,9 @@ class SlashCommand(ApplicationCommand):
     def _validate_parameters(self):
         params = self._get_signature_parameters()
         if kwop := self.options:
-            self.options: list[Option] = self._match_option_param_names(params, kwop)
+            self.options = self._match_option_param_names(params, kwop)
         else:
-            self.options: list[Option] = self._parse_options(params)
+            self.options = self._parse_options(params)
 
     def _check_required_params(self, params):
         params = iter(params.items())
@@ -850,9 +850,18 @@ class SlashCommand(ApplicationCommand):
         return getattr(self, "_cog", None)
 
     @cog.setter
-    def cog(self, val):
-        self._cog = val
-        self._validate_parameters()
+    def cog(self, value):
+        old_cog = self.cog
+        self._cog = value
+
+        if (
+            old_cog is None
+            and value is not None
+            or value is None
+            and old_cog is not None
+        ):
+            params = self._get_signature_parameters()
+            self.options = self._parse_options(params)
 
     @property
     def is_subcommand(self) -> bool:
