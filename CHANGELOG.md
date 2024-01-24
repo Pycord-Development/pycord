@@ -115,7 +115,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Changed the support from `orjson` to `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
-- Replaced former rate limit system with a rate limit prediction and easing system.
+- Replaced former rate limit system with a system that predicts rate limits.
   ([#2188](https://github.com/Pycord-Development/pycord/pull/2188))
 
 ### Removed
