@@ -1444,7 +1444,7 @@ class SlashCommandGroup(ApplicationCommand):
         if kwargs:
             kw = kwargs.copy()
             kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
+            copy = self.__class__(**kw)
             return self._ensure_assignment_on_copy(copy)
         else:
             return self.copy()
