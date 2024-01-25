@@ -117,6 +117,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Changed the support from `orjson` to `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
+- `BridgeOption` must now be used for arguments in bridge commands.
+  ([#2252](https://github.com/Pycord-Development/pycord/pull/2252))
 
 ### Removed
 
