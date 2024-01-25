@@ -960,9 +960,7 @@ class WebhookMessage(Message):
 
             asyncio.create_task(inner_call())
         else:
-            await self._state._webhook.delete_message(
-                self.id, thread_id=self.thread.id
-            )
+            await self._state._webhook.delete_message(self.id, thread_id=self.thread.id)
 
 
 class BaseWebhook(Hashable):
