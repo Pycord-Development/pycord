@@ -41,7 +41,6 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 from urllib.parse import quote as urlquote
 
 from .. import utils
-from ..abc import MessageableChannel
 from ..channel import PartialMessageable
 from ..errors import (
     DiscordServerError,
@@ -53,9 +52,8 @@ from ..errors import (
 from ..http import Route
 from ..message import Message
 from ..object import Object
-from ..state import ConnectionState
 from ..threads import Thread
-from ..types.message import Message as MessagePayload
+from ..utils import cached_property
 from .async_ import BaseWebhook, _WebhookState, handle_message_parameters
 
 __all__ = (
@@ -466,22 +464,13 @@ class SyncWebhookMessage(Message):
     """
 
     _state: _WebhookState
-    _thread: Object | None = MISSING
 
-    def __init__(
-        self,
-        *,
-        state: ConnectionState,
-        channel: MessageableChannel,
-        data: MessagePayload,
-        thread_id: int | None = None,
-    ):
-        super().__init__(state=state, channel=channel, data=data)
-
-        if thread_id is not None:
-            self._thread = Object(thread_id)
-        elif isinstance(self.channel, Thread):
-            self._thread = Object(self.channel.id)
+    @cached_property
+    def thread(self) -> Thread | Object | None:
+        if isinstance(self.channel, Thread):
+            return self.channel
+        if self._thread_id:
+            return Object(self._thread_id)
 
     def edit(
         self,
@@ -533,11 +522,6 @@ class SyncWebhookMessage(Message):
         InvalidArgument
             There was no token associated with this webhook.
         """
-        thread = MISSING
-        if self._thread_id is not None:
-            thread = Object(self._thread_id)
-        elif isinstance(self.channel, Thread):
-            thread = Object(self.channel.id)
 
         if suppress is MISSING:
             suppress = self.flags.suppress_embeds
@@ -550,8 +534,8 @@ class SyncWebhookMessage(Message):
             file=file,
             files=files,
             allowed_mentions=allowed_mentions,
-            thread=thread,
             suppress=suppress,
+            thread=self.thread,
         )
 
     def delete(self, *, delay: float | None = None) -> None:
@@ -573,16 +557,10 @@ class SyncWebhookMessage(Message):
             Deleting the message failed.
         """
 
-        thread_id: int | None = None
-        if self._thread_id is not None:
-            thread_id = self._thread_id
-        elif isinstance(self.channel, Thread):
-            thread_id = self.channel.id
-
         if delay is not None:
             time.sleep(delay)
 
-        self._state._webhook.delete_message(self.id, thread_id=thread_id)
+        self._state._webhook.delete_message(self.id, thread_id=self.thread.id)
 
 
 class SyncWebhook(BaseWebhook):

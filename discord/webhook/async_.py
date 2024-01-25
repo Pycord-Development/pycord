@@ -37,7 +37,6 @@ from urllib.parse import quote as urlquote
 import aiohttp
 
 from .. import utils
-from ..abc import MessageableChannel
 from ..asset import Asset
 from ..channel import ForumChannel, PartialMessageable
 from ..enums import WebhookType, try_enum
@@ -53,10 +52,9 @@ from ..http import Route
 from ..message import Attachment, Message
 from ..mixins import Hashable
 from ..object import Object
-from ..state import ConnectionState
 from ..threads import Thread
-from ..types.message import Message as MessagePayload
 from ..user import BaseUser, User
+from ..utils import cached_property
 
 __all__ = (
     "Webhook",
@@ -822,24 +820,13 @@ class WebhookMessage(Message):
     """
 
     _state: _WebhookState
-    _thread: Object | None = MISSING
 
-    def __init__(
-        self,
-        *,
-        state: ConnectionState,
-        channel: MessageableChannel,
-        data: MessagePayload,
-        thread_id: int | None = None,
-    ):
-        super().__init__(state=state, channel=channel, data=data)
-
-        if thread_id is not None:
-            self._thread = Object(thread_id)
-        elif isinstance(self.channel, Thread):
-            self._thread = Object(self.channel.id)
-        elif isinstance(self.channel, ForumChannel):
-            self._thread = Object(self.id)
+    @cached_property
+    def thread(self) -> Thread | Object | None:
+        if isinstance(self.channel, Thread):
+            return self.channel
+        if self._thread_id:
+            return Object(self._thread_id)
 
     async def edit(
         self,
@@ -962,7 +949,7 @@ class WebhookMessage(Message):
                 await asyncio.sleep(delay)
                 try:
                     await self._state._webhook.delete_message(
-                        self.id, thread_id=self._thread.id
+                        self.id, thread_id=self.thread.id
                     )
                 except HTTPException:
                     pass
@@ -970,7 +957,7 @@ class WebhookMessage(Message):
             asyncio.create_task(inner_call())
         else:
             await self._state._webhook.delete_message(
-                self.id, thread_id=self._thread.id
+                self.id, thread_id=self.thread.id
             )
 
 
