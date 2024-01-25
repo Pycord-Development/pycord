@@ -215,6 +215,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2319](https://github.com/Pycord-Development/pycord/pull/2319))
 - Fixed `AttributeError` when comparing application commands with non-command objects.
   ([#2299](https://github.com/Pycord-Development/pycord/issues/2299))
+- Fixed `AttributeError` when copying groups on startup.
+  ([#2331](https://github.com/Pycord-Development/pycord/issues/2331))
 
 ## [2.4.1] - 2023-03-20
 
