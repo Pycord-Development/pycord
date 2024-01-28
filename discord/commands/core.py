@@ -776,7 +776,6 @@ class SlashCommand(ApplicationCommand):
                 ):
                     option = Option(p_obj.default)
                 else:
-                    print('a')
                     option.default = p_obj.default
                     option.required = False
             if option.name is None:
