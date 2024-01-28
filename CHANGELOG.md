@@ -217,6 +217,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2299](https://github.com/Pycord-Development/pycord/issues/2299))
 - Fixed `AttributeError` when copying groups on startup.
   ([#2331](https://github.com/Pycord-Development/pycord/issues/2331))
+- Fixed application command options causing errors if declared through the option decorator or kwarg.
+  ([#2332](https://github.com/Pycord-Development/pycord/issues/2332))
 
 ## [2.4.1] - 2023-03-20
 
