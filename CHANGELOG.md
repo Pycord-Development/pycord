@@ -220,6 +220,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed application command options causing errors if declared through the option
   decorator or kwarg.
   ([#2332](https://github.com/Pycord-Development/pycord/issues/2332))
+- Fixed options declared using the 'default' syntax always being optional.
+  ([#2333](https://github.com/Pycord-Development/pycord/issues/2333))
 
 ## [2.4.1] - 2023-03-20
 
