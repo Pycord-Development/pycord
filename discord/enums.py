@@ -808,9 +808,10 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         from .commands.context import ApplicationContext
+        from .ext.bridge import BridgeContext
 
         if not issubclass(
-            datatype, ApplicationContext
+            datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
