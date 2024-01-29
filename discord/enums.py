@@ -28,8 +28,6 @@ import types
 from collections import namedtuple
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
-from .ext.bridge import BridgeContext
-
 __all__ = (
     "Enum",
     "ChannelType",
@@ -810,6 +808,7 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         from .commands.context import ApplicationContext
+        from .ext.bridge import BridgeContext
 
         if not issubclass(
             datatype, (ApplicationContext, BridgeContext)
