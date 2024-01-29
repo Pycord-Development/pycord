@@ -28,6 +28,8 @@ import types
 from collections import namedtuple
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
+from .ext.bridge import BridgeContext
+
 __all__ = (
     "Enum",
     "ChannelType",
@@ -810,7 +812,7 @@ class SlashCommandOptionType(Enum):
         from .commands.context import ApplicationContext
 
         if not issubclass(
-            datatype, ApplicationContext
+            datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
