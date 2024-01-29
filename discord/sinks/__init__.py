@@ -7,6 +7,7 @@ A place to store all officially given voice sinks.
 :copyright: 2021-present Pycord Development
 :license: MIT, see LICENSE for more details.
 """
+
 from .core import *
 from .errors import *
 from .m4a import *

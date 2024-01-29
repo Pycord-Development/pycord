@@ -1573,8 +1573,7 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: Literal[True],
         delete_after: float = None,
-    ) -> WebhookMessage:
-        ...
+    ) -> WebhookMessage: ...
 
     @overload
     async def send(
@@ -1596,8 +1595,7 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     async def send(
         self,

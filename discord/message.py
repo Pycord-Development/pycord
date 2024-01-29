@@ -1369,8 +1369,7 @@ class Message(Hashable):
         delete_after: float | None = ...,
         allowed_mentions: AllowedMentions | None = ...,
         view: View | None = ...,
-    ) -> Message:
-        ...
+    ) -> Message: ...
 
     async def edit(
         self,

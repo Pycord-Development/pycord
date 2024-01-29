@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -66,22 +67,20 @@ class BridgeContext(ABC):
     """
 
     @abstractmethod
-    async def _respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
-        ...
+    async def _respond(
+        self, *args, **kwargs
+    ) -> Interaction | WebhookMessage | Message: ...
 
     @abstractmethod
-    async def _defer(self, *args, **kwargs) -> None:
-        ...
+    async def _defer(self, *args, **kwargs) -> None: ...
 
     @abstractmethod
-    async def _edit(self, *args, **kwargs) -> InteractionMessage | Message:
-        ...
+    async def _edit(self, *args, **kwargs) -> InteractionMessage | Message: ...
 
     @overload
     async def invoke(
         self, command: BridgeSlashCommand | BridgeExtCommand, *args, **kwargs
-    ) -> None:
-        ...
+    ) -> None: ...
 
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
         """|coro|

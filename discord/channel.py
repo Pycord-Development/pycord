@@ -780,12 +780,10 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         default_thread_slowmode_delay: int = ...,
         type: ChannelType = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> TextChannel | None:
-        ...
+    ) -> TextChannel | None: ...
 
     @overload
-    async def edit(self) -> TextChannel | None:
-        ...
+    async def edit(self) -> TextChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -1090,12 +1088,10 @@ class ForumChannel(_TextChannel):
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
-    ) -> ForumChannel | None:
-        ...
+    ) -> ForumChannel | None: ...
 
     @overload
-    async def edit(self) -> ForumChannel | None:
-        ...
+    async def edit(self) -> ForumChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -1834,12 +1830,10 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
         reason: str | None = ...,
-    ) -> VoiceChannel | None:
-        ...
+    ) -> VoiceChannel | None: ...
 
     @overload
-    async def edit(self) -> VoiceChannel | None:
-        ...
+    async def edit(self) -> VoiceChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -2459,12 +2453,10 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         reason: str | None = ...,
-    ) -> StageChannel | None:
-        ...
+    ) -> StageChannel | None: ...
 
     @overload
-    async def edit(self) -> StageChannel | None:
-        ...
+    async def edit(self) -> StageChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|
@@ -2638,12 +2630,10 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         nsfw: bool = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         reason: str | None = ...,
-    ) -> CategoryChannel | None:
-        ...
+    ) -> CategoryChannel | None: ...
 
     @overload
-    async def edit(self) -> CategoryChannel | None:
-        ...
+    async def edit(self) -> CategoryChannel | None: ...
 
     async def edit(self, *, reason=None, **options):
         """|coro|

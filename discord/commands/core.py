@@ -655,6 +655,7 @@ class SlashCommand(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -887,9 +888,9 @@ class SlashCommand(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
 
         return as_dict
 
@@ -1118,6 +1119,7 @@ class SlashCommandGroup(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
@@ -1158,9 +1160,9 @@ class SlashCommandGroup(ApplicationCommand):
         validate_chat_input_name(self.name)
         validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
-        self.subcommands: list[
-            SlashCommand | SlashCommandGroup
-        ] = self.__initial_commands__
+        self.subcommands: list[SlashCommand | SlashCommandGroup] = (
+            self.__initial_commands__
+        )
         self.guild_ids = guild_ids
         self.parent = parent
         self.attached_to_group: bool = False
@@ -1237,9 +1239,9 @@ class SlashCommandGroup(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
 
         return as_dict
 
@@ -1580,9 +1582,9 @@ class ContextMenuCommand(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
 
         if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
@@ -1614,6 +1616,7 @@ class UserCommand(ContextMenuCommand):
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
+
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -1712,6 +1715,7 @@ class MessageCommand(ContextMenuCommand):
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
+
     type = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:

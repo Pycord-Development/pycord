@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from typing import List
@@ -271,7 +272,7 @@ class PageGroup:
 
     def __init__(
         self,
-        pages: (list[str] | list[Page] | list[list[discord.Embed] | discord.Embed]),
+        pages: list[str] | list[Page] | list[list[discord.Embed] | discord.Embed],
         label: str,
         description: str | None = None,
         emoji: str | discord.Emoji | discord.PartialEmoji = None,
@@ -291,7 +292,7 @@ class PageGroup:
         self.label = label
         self.description: str | None = description
         self.emoji: str | discord.Emoji | discord.PartialEmoji = emoji
-        self.pages: (list[str] | list[list[discord.Embed] | discord.Embed]) = pages
+        self.pages: list[str] | list[list[discord.Embed] | discord.Embed] = pages
         self.default: bool | None = default
         self.show_disabled = show_disabled
         self.show_indicator = show_indicator
@@ -444,8 +445,7 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: None
-        | (
+        pages: None | (
             list[PageGroup]
             | list[Page]
             | list[str]
@@ -932,8 +932,9 @@ class Paginator(discord.ui.View):
         ctx: Context,
         target: discord.abc.Messageable | None = None,
         target_message: str | None = None,
-        reference: None
-        | (discord.Message | discord.MessageReference | discord.PartialMessage) = None,
+        reference: None | (
+            discord.Message | discord.MessageReference | discord.PartialMessage
+        ) = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         mention_author: bool | None = None,
         delete_after: float | None = None,
