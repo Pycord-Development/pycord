@@ -758,6 +758,7 @@ class HTTPClient:
         emoji: str,
         limit: int,
         after: Snowflake | None = None,
+        type: int | None = None,
     ) -> Response[list[user.User]]:
         r = Route(
             "GET",
@@ -772,6 +773,8 @@ class HTTPClient:
         }
         if after:
             params["after"] = after
+        if type:
+            params["type"] = type
         return self.request(r, params=params)
 
     def clear_reactions(
@@ -1094,6 +1097,7 @@ class HTTPClient:
             "rtc_region",
             "video_quality_mode",
             "auto_archive_duration",
+            "default_reaction_emoji",
         )
         payload.update(
             {k: v for k, v in options.items() if k in valid_keys and v is not None}
@@ -1184,37 +1188,42 @@ class HTTPClient:
             "auto_archive_duration": auto_archive_duration,
             "invitable": invitable,
         }
-        if content:
-            payload["content"] = content
 
         if applied_tags:
             payload["applied_tags"] = applied_tags
 
-        if embed:
-            payload["embeds"] = [embed]
-
-        if embeds:
-            payload["embeds"] = embeds
-
-        if nonce:
-            payload["nonce"] = nonce
-
-        if allowed_mentions:
-            payload["allowed_mentions"] = allowed_mentions
-
-        if components:
-            payload["components"] = components
-
-        if stickers:
-            payload["sticker_ids"] = stickers
-
         if rate_limit_per_user:
             payload["rate_limit_per_user"] = rate_limit_per_user
 
-        # TODO: Once supported by API, remove has_message=true query parameter
+        message = {}
+
+        if content:
+            message["content"] = content
+
+        if embed:
+            message["embeds"] = [embed]
+
+        if embeds:
+            message["embeds"] = embeds
+
+        if nonce:
+            message["nonce"] = nonce
+
+        if allowed_mentions:
+            message["allowed_mentions"] = allowed_mentions
+
+        if components:
+            message["components"] = components
+
+        if stickers:
+            message["sticker_ids"] = stickers
+
+        if message != {}:
+            payload["message"] = message
+
         route = Route(
             "POST",
-            "/channels/{channel_id}/threads?has_message=true",
+            "/channels/{channel_id}/threads",
             channel_id=channel_id,
         )
 

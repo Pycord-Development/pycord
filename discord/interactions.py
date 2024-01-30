@@ -149,6 +149,8 @@ class Interaction:
         "custom_id",
         "_channel_data",
         "_message_data",
+        "_guild_data",
+        "_guild",
         "_permissions",
         "_app_permissions",
         "_state",
@@ -187,6 +189,11 @@ class Interaction:
 
         self.user: User | Member | None = None
         self._permissions: int = 0
+
+        self._guild: Guild | None = None
+        self._guild_data = data.get("guild")
+        if self.guild is None and self._guild_data:
+            self._guild = Guild(data=self._guild_data, state=self)
 
         # TODO: there's a potential data loss here
         if self.guild_id:
@@ -246,6 +253,8 @@ class Interaction:
     @property
     def guild(self) -> Guild | None:
         """The guild the interaction was sent from."""
+        if self._guild:
+            return self._guild
         return self._state and self._state._get_guild(self.guild_id)
 
     def is_command(self) -> bool:

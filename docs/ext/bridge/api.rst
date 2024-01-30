@@ -157,3 +157,14 @@ BridgeContext Subclasses
 .. data:: discord.ext.bridge.Context
 
     Alias of :data:`typing.Union` [ :class:`.BridgeExtContext`, :class:`.BridgeApplicationContext` ] for typing convenience.
+
+Option
+------
+
+BridgeOption
+~~~~~~~~~~~~
+
+.. attributetable:: discord.ext.bridge.BridgeOption
+
+.. autoclass:: discord.ext.bridge.BridgeOption
+    :members:

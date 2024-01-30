@@ -2320,3 +2320,17 @@ of :class:`enum.Enum`.
     .. attribute:: advanced
 
         Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+
+.. class:: ReactionType
+
+    Represents a Reaction's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: normal
+
+        Represents a normal reaction.
+
+    .. attribute:: burst
+
+        Represents a super reaction.

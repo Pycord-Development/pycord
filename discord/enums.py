@@ -69,6 +69,7 @@ __all__ = (
     "ApplicationRoleConnectionMetadataType",
     "PromptType",
     "OnboardingMode",
+    "ReactionType",
 )
 
 
@@ -821,9 +822,10 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         from .commands.context import ApplicationContext
+        from .ext.bridge import BridgeContext
 
         if not issubclass(
-            datatype, ApplicationContext
+            datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
@@ -970,6 +972,12 @@ class OnboardingMode(Enum):
 
     default = 0
     advanced = 1
+
+class ReactionType(Enum):
+    """The reaction type"""
+
+    normal = 0
+    burst = 1
 
 
 T = TypeVar("T")
