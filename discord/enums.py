@@ -973,6 +973,7 @@ class OnboardingMode(Enum):
     default = 0
     advanced = 1
 
+
 class ReactionType(Enum):
     """The reaction type"""
 
