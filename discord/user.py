@@ -234,7 +234,7 @@ class BaseUser(_UserTag):
         if self._avatar_decoration is None:
             return None
         return Asset._from_avatar_decoration(
-            self._state, self.id, self._avatar_decoration.get('asset')
+            self._state, self.id, self._avatar_decoration.get("asset")
         )
 
     @property
