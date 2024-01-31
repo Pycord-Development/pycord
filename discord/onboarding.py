@@ -24,12 +24,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from random import randint
 from typing import TYPE_CHECKING, Any
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import MISSING, _get_as_snowflake, cached_property, get
+from .utils import MISSING, _get_as_snowflake, cached_property, get, generate_snowflake
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -81,7 +80,7 @@ class PromptOption:
         id: int | None = None,
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = id or randint(10000000000000000)
+        self.id: int | None = id or generate_snowflake()
         self.title: str = title
         self.channels: list[Snowflake] = channels or []
         self.roles: list[Snowflake] = roles or []
@@ -89,7 +88,7 @@ class PromptOption:
         self.emoji: Emoji | PartialEmoji | None = emoji
 
     def __repr__(self):
-        return f"<PromptOption id={self.id} title={self.title}) channels={self.channels} roles={self.roles}>"
+        return f"<PromptOption id={self.id} title={self.title} channels={self.channels} roles={self.roles}>"
 
     def to_dict(self) -> PromptOptionPayload:
         dict_: PromptOptionPayload = {
@@ -97,11 +96,36 @@ class PromptOption:
             "description": self.description,
             "channel_ids": [channel.id for channel in self.channels],
             "role_ids": [role.id for role in self.roles],
-            "emoji": None,
             "id": str(self.id),
         }
         if self.emoji:
-            dict_["emoji"] = self.emoji.to_dict()
+            if isinstance(self.emoji, str):
+                dict_["emoji"] = {
+                    'id': None,
+                    'name': self.emoji,
+                    'animated': False
+                }
+                dict_["emoji_name"] = self.emoji
+                dict_["emoji_id"] = None
+                dict_["emoji_animated"] = False
+            else:
+                dict_["emoji"] = {
+                    'id': self.emoji.id,
+                    'name': self.emoji.name,
+                    'animated': self.emoji.is_animated
+                }
+                dict_["emoji_name"] = self.emoji.name
+                dict_["emoji_id"] = self.emoji.id
+                dict_["emoji_animated"] = self.emoji.is_animated
+        else:
+            dict_["emoji"] = {
+                "id": None,
+                "name": None,
+                "animated": False
+            }
+            dict_["emoji_name"] = None
+            dict_["emoji_id"] = None
+            dict_["emoji_animated"] = False
 
         return dict_
 
@@ -159,7 +183,7 @@ class OnboardingPrompt:
         id: int | None = None,  # Currently optional as users can manually create these
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = id or randint(10000000000000000)
+        self.id: int | None = id or generate_snowflake()
         self.type: PromptType = type
         if isinstance(self.type, int):
             self.type = try_enum(PromptType, self.type)
@@ -170,7 +194,7 @@ class OnboardingPrompt:
         self.in_onboarding: bool = in_onboarding
 
     def __repr__(self):
-        return f"<OnboardingPrompt (title={self.title} required={self.required})>"
+        return f"<OnboardingPrompt title={self.title} required={self.required}>"
 
     def to_dict(self) -> OnboardingPromptPayload:
         dict_: OnboardingPromptPayload = {
