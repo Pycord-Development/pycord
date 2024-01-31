@@ -231,13 +231,13 @@ class Attachment(Hashable):
         self._is: str | None = None
         self.hm: str | None = None
 
-        q = urlparse(self.url).query
+        query = urlparse(self.url).query
         extras = ["_ex", "_is", "hm"]
-        if qs := parse_qs(q):
+        if query_params := parse_qs(query):
             for attr in extras:
-                v = "".join(qs.get(attr.replace("_", ""), []))
-                if v:
-                    setattr(self, attr, v)
+                value = "".join(query_params.get(attr.replace("_", ""), []))
+                if value:
+                    setattr(self, attr, value)
 
     @property
     def expires_at(self) -> datetime.datetime:
