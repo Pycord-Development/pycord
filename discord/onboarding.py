@@ -49,7 +49,7 @@ __all__ = (
 
 
 class PromptOption:
-    """Represents an onboarding prompt option displayed in :class:`OnboardingPrompt`
+    """Represents an onboarding prompt option displayed in :class:`OnboardingPrompt`.
 
     .. versionadded:: 2.5
 
@@ -120,7 +120,8 @@ class PromptOption:
         roles = [guild.get_role(role_id) for role_id in role_ids]
         title = data.get("title")
         description = data.get("description")
-        _emoji = data.get("emoji", {}) or {}
+
+        _emoji: dict[str, Any] = data.get("emoji") or {}
         if emoji_name := _emoji.get("name"):
             # Emoji object is {'id': None, 'name': None, 'animated': False} ...
             emoji = PartialEmoji.from_dict(_emoji)
@@ -128,11 +129,12 @@ class PromptOption:
                 emoji = get(guild.emojis, id=emoji.id) or emoji
         else:
             emoji = None
+
         return cls(channels=channels, roles=roles, title=title, description=description, emoji=emoji, id=id)  # type: ignore
 
 
 class OnboardingPrompt:
-    """Represents an onboarding prompt displayed in :class:`Onboarding`
+    """Represents an onboarding prompt displayed in :class:`Onboarding`.
 
     .. versionadded:: 2.5
 
@@ -211,7 +213,7 @@ class OnboardingPrompt:
 
 
 class Onboarding:
-    """Represents the Onboarding flow for a guild.
+    """Represents the onboarding flow for a guild.
 
     .. versionadded:: 2.5
 
