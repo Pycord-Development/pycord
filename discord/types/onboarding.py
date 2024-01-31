@@ -56,6 +56,9 @@ class PromptOption(TypedDict):
     id: Snowflake
     channel_ids: SnowflakeList
     role_ids: SnowflakeList
-    emoji: Emoji
+    emoji: NotRequired[Emoji]
+    emoji_id: NotRequired[Snowflake]
+    emoji_name: NotRequired[str]
+    emoji_animated: NotRequired[bool]
     title: str
     description: NotRequired[str]
