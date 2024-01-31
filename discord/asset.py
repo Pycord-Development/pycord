@@ -183,6 +183,23 @@ class Asset(AssetMixin):
         )
 
     @classmethod
+    def _from_avatar_decoration(
+        cls, state, user_id: int, avatar_decoration: str
+    ) -> Asset:
+        animated = avatar_decoration.startswith("a_")
+        endpoint = (
+            "avatar-decoration-presets"
+            # if avatar_decoration.startswith(("v3", "v2"))
+            # else f"avatar-decorations/{user_id}"
+        )
+        return cls(
+            state,
+            url=f"{cls.BASE}/{endpoint}/{avatar_decoration}.png?size=1024",
+            key=avatar_decoration,
+            animated=animated,
+        )
+
+    @classmethod
     def _from_guild_avatar(
         cls, state, guild_id: int, member_id: int, avatar: str
     ) -> Asset:
