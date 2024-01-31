@@ -100,9 +100,9 @@ class PromptOption:
         }
         if self.emoji:
             dict_["emoji"] = {
-                'id': str(self.emoji.id) if self.emoji.id else None,
-                'name': self.emoji.name,
-                'animated': self.emoji.animated
+                "id": str(self.emoji.id) if self.emoji.id else None,
+                "name": self.emoji.name,
+                "animated": self.emoji.animated,
             }
             dict_["emoji_name"] = self.emoji.name
             if self.emoji.id:
@@ -121,7 +121,7 @@ class PromptOption:
         title = data.get("title")
         description = data.get("description")
         _emoji = data.get("emoji", {}) or {}
-        if (emoji_name := _emoji.get("name")):
+        if emoji_name := _emoji.get("name"):
             # Emoji object is {'id': None, 'name': None, 'animated': False} ...
             emoji = PartialEmoji.from_dict(_emoji)
             if emoji.id:
@@ -325,7 +325,7 @@ class Onboarding:
         self._update(new)
 
         return self
-    
+
     async def add_prompt(
         self,
         type: PromptType,
@@ -374,10 +374,12 @@ class Onboarding:
             You don't have permissions to edit the onboarding flow.
         """
 
-        prompt = OnboardingPrompt(type, title, options, single_select, required, in_onboarding)
+        prompt = OnboardingPrompt(
+            type, title, options, single_select, required, in_onboarding
+        )
         prompts = self.prompts + [prompt]
         return await self.edit(prompts=prompts, reason=reason)
-    
+
     async def append_prompt(
         self,
         prompt: OnboardingPrompt,
@@ -413,7 +415,7 @@ class Onboarding:
 
         prompts = self.prompts + [prompt]
         return await self.edit(prompts=prompts, reason=reason)
-    
+
     def get_prompt(
         self,
         id: int,
@@ -431,11 +433,10 @@ class Onboarding:
         -------
         :class:`OnboardingPrompt`
             The matching prompt, or None if it didn't exist.
-            
         """
 
         return get(self.prompts, id=id)
-    
+
     async def delete_prompt(
         self,
         id: int,
@@ -472,7 +473,7 @@ class Onboarding:
 
         to_delete = self.get_prompt(id)
         if not to_delete:
-            raise ValueError('Prompt with the given ID was not found.')
+            raise ValueError("Prompt with the given ID was not found.")
         prompts = self.prompts[:]
         prompts.remove(to_delete)
         return await self.edit(prompts=prompts, reason=reason)
