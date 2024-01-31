@@ -542,8 +542,12 @@ class AuditLogAction(Enum):
             return "application_command_permission"
         elif v < 146:
             return "auto_moderation_rule"
+        elif v < 152:
+            return "monetization"
         elif v < 168:
             return "onboarding"
+        elif v < 192:
+            return "server_guide"
 
 
 class UserFlags(Enum):
