@@ -85,7 +85,7 @@ class BaseUser(_UserTag):
         _avatar: str | None
         _banner: str | None
         _accent_colour: int | None
-        _avatar_decoration: str | None
+        _avatar_decoration: dict | None
         _public_flags: int
 
     def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
@@ -136,7 +136,7 @@ class BaseUser(_UserTag):
         self._avatar = data["avatar"]
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
-        self._avatar_decoration = data.get("avatar_decoration", None)
+        self._avatar_decoration = data.get("avatar_decoration_data", None)
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
@@ -234,7 +234,7 @@ class BaseUser(_UserTag):
         if self._avatar_decoration is None:
             return None
         return Asset._from_avatar_decoration(
-            self._state, self.id, self._avatar_decoration
+            self._state, self.id, self._avatar_decoration.get('asset')
         )
 
     @property

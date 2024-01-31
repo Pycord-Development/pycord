@@ -189,8 +189,8 @@ class Asset(AssetMixin):
         animated = avatar_decoration.startswith("a_")
         endpoint = (
             "avatar-decoration-presets"
-            if avatar_decoration.startswith(("v3", "v2"))
-            else f"avatar-decorations/{user_id}"
+            # if avatar_decoration.startswith(("v3", "v2"))
+            # else f"avatar-decorations/{user_id}"
         )
         return cls(
             state,
