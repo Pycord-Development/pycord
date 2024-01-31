@@ -80,15 +80,15 @@ class PromptOption:
         id: int | None = None,
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = id or generate_snowflake()
+        self.id: int | None = int(id) if id else generate_snowflake()
         self.title: str = title
         self.channels: list[Snowflake] = channels or []
         self.roles: list[Snowflake] = roles or []
-        self.description: str | None = description
+        self.description: str | None = description or None
         self.emoji: Emoji | PartialEmoji | None = emoji
 
     def __repr__(self):
-        return f"<PromptOption id={self.id} title={self.title} channels={self.channels} roles={self.roles}>"
+        return f"<PromptOption id={self.id} title={self.title!r} description={self.description!r} emoji={self.emoji!r}>"
 
     def to_dict(self) -> PromptOptionPayload:
         dict_: PromptOptionPayload = {
@@ -99,44 +99,35 @@ class PromptOption:
             "id": str(self.id),
         }
         if self.emoji:
-            if isinstance(self.emoji, str):
-                dict_["emoji"] = {"id": None, "name": self.emoji, "animated": False}
-                dict_["emoji_name"] = self.emoji
-                dict_["emoji_id"] = None
-                dict_["emoji_animated"] = False
-            else:
-                dict_["emoji"] = {
-                    "id": self.emoji.id,
-                    "name": self.emoji.name,
-                    "animated": self.emoji.is_animated,
-                }
-                dict_["emoji_name"] = self.emoji.name
-                dict_["emoji_id"] = self.emoji.id
-                dict_["emoji_animated"] = self.emoji.is_animated
-        else:
-            dict_["emoji"] = {"id": None, "name": None, "animated": False}
-            dict_["emoji_name"] = None
-            dict_["emoji_id"] = None
-            dict_["emoji_animated"] = False
+            dict_["emoji"] = {
+                'id': str(self.emoji.id) if self.emoji.id else None,
+                'name': self.emoji.name,
+                'animated': self.emoji.animated
+            }
+            dict_["emoji_name"] = self.emoji.name
+            if self.emoji.id:
+                dict_["emoji_id"] = str(self.emoji.id)
+                dict_["emoji_animated"] = self.emoji.animated
 
         return dict_
 
     @classmethod
     def _from_dict(cls, data: PromptOptionPayload, guild: Guild) -> PromptOption:
+        id = data.get("id", 0)
         channel_ids = [int(channel_id) for channel_id in data.get("channel_ids", [])]
         channels = [guild.get_channel(channel_id) for channel_id in channel_ids]
         role_ids = [int(role_id) for role_id in data.get("role_ids", [])]
         roles = [guild.get_role(role_id) for role_id in role_ids]
         title = data.get("title")
         description = data.get("description")
-        emoji = data.get("emoji")
-        if emoji:
-            if emoji.get(
-                "name"
-            ):  # You can currently get emoji as {'id': None, 'name': None, 'animated': False} ...
-                emoji = PartialEmoji.from_dict(emoji)
-            else:
-                emoji = None
+        _emoji = data.get("emoji", {}) or {}
+        if (emoji_name := _emoji.get("name")):
+            # Emoji object is {'id': None, 'name': None, 'animated': False} ...
+            emoji = PartialEmoji.from_dict(_emoji)
+            if emoji.id:
+                emoji = get(guild.emojis, id=emoji.id) or emoji
+        else:
+            emoji = None
         return cls(channels=channels, roles=roles, title=title, description=description, emoji=emoji, id=id)  # type: ignore
 
 
@@ -152,10 +143,10 @@ class OnboardingPrompt:
         The id of the prompt.
     type: :class:`PromptType`
         The type of onboarding prompt.
-    options: List[:class:`PromptOption`]
-        The list of options available in the prompt.
     title: :class:`str`
         The prompt's title.
+    options: List[:class:`PromptOption`]
+        The list of options available in the prompt.
     single_select: :class:`bool`
         Whether the user is limited to selecting one option on this prompt.
     required: :class:`bool`
@@ -175,7 +166,7 @@ class OnboardingPrompt:
         id: int | None = None,  # Currently optional as users can manually create these
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = id or generate_snowflake()
+        self.id: int | None = int(id) if id else generate_snowflake()
         self.type: PromptType = type
         if isinstance(self.type, int):
             self.type = try_enum(PromptType, self.type)
@@ -186,7 +177,7 @@ class OnboardingPrompt:
         self.in_onboarding: bool = in_onboarding
 
     def __repr__(self):
-        return f"<OnboardingPrompt title={self.title} required={self.required}>"
+        return f"<OnboardingPrompt id={self.id} title={self.title!r} required={self.required}>"
 
     def to_dict(self) -> OnboardingPromptPayload:
         dict_: OnboardingPromptPayload = {
@@ -205,7 +196,7 @@ class OnboardingPrompt:
     def _from_dict(
         cls, data: OnboardingPromptPayload, guild: Guild
     ) -> OnboardingPrompt:
-        id = data.get("id")
+        id = data.get("id", 0)
         type = try_enum(PromptType, data.get("type"))
         title = data.get("title")
         single_select = data.get("single_select")
@@ -236,10 +227,11 @@ class Onboarding:
 
     def __init__(self, data: OnboardingPayload, guild: Guild):
         self.guild = guild
+        print(data)
         self._update(data)
 
     def __repr__(self):
-        return f"<Onboarding enabled={self.enabled} default_channels={self.default_channels_channels}>"
+        return f"<Onboarding guild={self.guild!r} enabled={self.enabled} mode={self.mode} prompts={self.prompts}>"
 
     def _update(self, data: OnboardingPayload):
         self.guild_id: Snowflake = data["guild_id"]
@@ -300,6 +292,11 @@ class Onboarding:
         reason: Optional[:class:`str`]
             The reason that shows up on Audit log.
 
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
         Raises
         ------
 
@@ -322,9 +319,160 @@ class Onboarding:
         if mode is not MISSING:
             fields["mode"] = mode.value
 
-        new = await self._guild._state.http.edit_onboarding(
-            self._guild.id, fields, reason=reason
+        new = await self.guild._state.http.edit_onboarding(
+            self.guild.id, fields, reason=reason
         )
         self._update(new)
 
         return self
+    
+    async def add_prompt(
+        self,
+        type: PromptType,
+        title: str,
+        options: list[PromptOption],
+        single_select: bool,
+        required: bool,
+        in_onboarding: bool,
+        reason: str | None = MISSING,
+    ):
+        """|coro|
+
+        Adds a new onboarding prompt.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+        type: :class:`PromptType`
+            The type of onboarding prompt.
+        title: :class:`str`
+            The prompt's title.
+        options: List[:class:`PromptOption`]
+            The list of options available in the prompt.
+        single_select: :class:`bool`
+            Whether the user is limited to selecting one option on this prompt.
+        required: :class:`bool`
+            Whether the user is required to answer this prompt.
+        in_onboarding: :class:`bool`
+            Whether this prompt is displayed in the initial onboarding flow.
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        """
+
+        prompt = OnboardingPrompt(type, title, options, single_select, required, in_onboarding)
+        prompts = self.prompts + [prompt]
+        return await self.edit(prompts=prompts, reason=reason)
+    
+    async def append_prompt(
+        self,
+        prompt: OnboardingPrompt,
+        reason: str | None = MISSING,
+    ):
+        """|coro|
+
+        Append an onboarding prompt onto this flow.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+        prompt: :class:`OnboardingPrompt`
+            The onboarding prompt to append.
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        """
+
+        prompts = self.prompts + [prompt]
+        return await self.edit(prompts=prompts, reason=reason)
+    
+    def get_prompt(
+        self,
+        id: int,
+    ):
+        """|coro|
+
+        Get an onboarding prompt with the given ID.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the prompt to get.
+
+        Returns
+        -------
+        :class:`OnboardingPrompt`
+            The matching prompt, or None if it didn't exist.
+            
+        """
+
+        return get(self.prompts, id=id)
+    
+    async def delete_prompt(
+        self,
+        id: int,
+        reason: str | None = MISSING,
+    ):
+        """|coro|
+
+        Delete an onboarding prompt with the given ID.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the prompt to delete.
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
+        Raises
+        ------
+        ValueError
+            No prompt with this ID exists.
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        """
+
+        to_delete = self.get_prompt(id)
+        if not to_delete:
+            raise ValueError('Prompt with the given ID was not found.')
+        prompts = self.prompts[:]
+        prompts.remove(to_delete)
+        return await self.edit(prompts=prompts, reason=reason)

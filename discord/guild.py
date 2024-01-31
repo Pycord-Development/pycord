@@ -3894,6 +3894,11 @@ class Guild(Hashable):
         reason: Optional[:class:`str`]
             The reason that shows up on Audit log.
 
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
         Raises
         ------
 

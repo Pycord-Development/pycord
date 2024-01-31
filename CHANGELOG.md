@@ -84,6 +84,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2178](https://github.com/Pycord-Development/pycord/pull/2178))
 - Added `applied_tags` parameter to `Webhook.send()` method.
   ([#2322](https://github.com/Pycord-Development/pycord/pull/2322))
+- Fully implemented Onboarding related features.
+  ([#2127](https://github.com/Pycord-Development/pycord/pull/2127))
 
 ### Changed
 
