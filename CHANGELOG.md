@@ -15,8 +15,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added method to start bot via async context manager.
   ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
 - Added parameters `author`, `footer`, `image` and `thumbnail` to `discord.Embed`
-  initializer.
-  ([#1996](https://github.com/Pycord-Development/pycord/pull/1996))
+  initializer. ([#1996](https://github.com/Pycord-Development/pycord/pull/1996))
 - Added events `on_bridge_command`, `on_bridge_command_completion`, and
   `on_bridge_command_error`.
   ([#1916](https://github.com/Pycord-Development/pycord/pull/1916))
@@ -102,26 +101,24 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2014](https://github.com/Pycord-Development/pycord/pull/2014))
 - Changed the behavior of retrieving bans to accurately reflect the API.
   ([#1922](https://github.com/Pycord-Development/pycord/pull/1922))
-- Changed `Interaction.channel` to be received from the gateway, allowing
-  it to be `DMChannel` or `GroupChannel`.
+- Changed `Interaction.channel` to be received from the gateway, allowing it to be
+  `DMChannel` or `GroupChannel`.
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
 - Changed `DMChannel.recipients` to potentially be `None`.
   ([#2025](https://github.com/Pycord-Development/pycord/pull/2025))
-- Changed the behavior to store `view.message` when receiving a component
-  interaction, while also changing `view.message` not to be set when sending
-  view through `InteractionResponse.send_message`.
+- Changed the behavior to store `view.message` when receiving a component interaction,
+  while also changing `view.message` not to be set when sending view through
+  `InteractionResponse.send_message`.
   ([#2036](https://github.com/Pycord-Development/pycord/pull/2036))
-- Changed the fetching of attributes shared between text-based and Slash Commands
-  in Bridge Commands to be dynamic.
+- Changed the fetching of attributes shared between text-based and Slash Commands in
+  Bridge Commands to be dynamic.
   ([#1867](https://github.com/Pycord-Development/pycord/pull/1867))
-- `discord.Embed` attributes (such as author, footer, etc.) now return instances
-  of their respective classes when set and `None` otherwise.
+- `discord.Embed` attributes (such as author, footer, etc.) now return instances of
+  their respective classes when set and `None` otherwise.
   ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
-- Changed `default_avatar` behavior to depend on the user's username migration
-  status.
+- Changed `default_avatar` behavior to depend on the user's username migration status.
   ([#2087](https://github.com/Pycord-Development/pycord/pull/2087))
-- Changed type hints of `command_prefix` and `help_command` arguments to be
-  accurate.
+- Changed type hints of `command_prefix` and `help_command` arguments to be accurate.
   ([#2099](https://github.com/Pycord-Development/pycord/pull/2099))
 - Replaced `orjson` features with `msgspec` in the codebase.
   ([#2170](https://github.com/Pycord-Development/pycord/pull/2170))
@@ -165,8 +162,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the `individual` slash command synchronization method.
   ([#1925](https://github.com/Pycord-Development/pycord/pull/1925))
 - Fixed an issue that occurred when `webhooks_update` event payload channel ID was
-  `None`.
-  ([#2078](https://github.com/Pycord-Development/pycord/pull/2078))
+  `None`. ([#2078](https://github.com/Pycord-Development/pycord/pull/2078))
 - Fixed major `TypeError` when an `AuditLogEntry` has no user.
   ([#2079](https://github.com/Pycord-Development/pycord/pull/2079))
 - Fixed `HTTPException` when trying to create a forum thread with files.
@@ -190,8 +186,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2162](https://github.com/Pycord-Development/pycord/pull/2162))
 - Fixed `_bytes_to_base64_data` not defined.
   ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))
-- Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete`
-  to include `Iterable[OptionChoice]`.
+- Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to
+  include `Iterable[OptionChoice]`.
   ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))
 - Fixed initial message inside of the create thread payload sending legacy beta payload.
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
