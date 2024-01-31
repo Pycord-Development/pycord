@@ -3922,7 +3922,6 @@ class Guild(Hashable):
             fields["mode"] = mode.value
 
         new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
-
         return Onboarding(data=new, guild=self)
 
     async def delete_auto_moderation_rule(

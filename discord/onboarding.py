@@ -80,7 +80,7 @@ class PromptOption:
         id: int | None = None,
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = int(id) if id else generate_snowflake()
+        self.id: int = int(id) if id else generate_snowflake()
         self.title: str = title
         self.channels: list[Snowflake] = channels or []
         self.roles: list[Snowflake] = roles or []
@@ -166,7 +166,8 @@ class OnboardingPrompt:
         id: int | None = None,  # Currently optional as users can manually create these
     ):
         # ID is required when making edits, but it can be any snowflake that isn't already used by another prompt during edits
-        self.id: int | None = int(id) if id else generate_snowflake()
+        self.id: int = int(id) if id else generate_snowflake()
+
         self.type: PromptType = type
         if isinstance(self.type, int):
             self.type = try_enum(PromptType, self.type)
@@ -322,7 +323,6 @@ class Onboarding:
             self.guild.id, fields, reason=reason
         )
         self._update(new)
-
         return self
 
     async def add_prompt(
@@ -366,7 +366,6 @@ class Onboarding:
 
         Raises
         ------
-
         HTTPException
             Editing the onboarding flow failed somehow.
         Forbidden
@@ -405,7 +404,6 @@ class Onboarding:
 
         Raises
         ------
-
         HTTPException
             Editing the onboarding flow failed somehow.
         Forbidden
@@ -473,6 +471,7 @@ class Onboarding:
         to_delete = self.get_prompt(id)
         if not to_delete:
             raise ValueError("Prompt with the given ID was not found.")
+
         prompts = self.prompts[:]
         prompts.remove(to_delete)
         return await self.edit(prompts=prompts, reason=reason)
