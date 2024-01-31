@@ -219,7 +219,7 @@ class Onboarding:
     """
 
     def __init__(self, data: OnboardingPayload, guild: Guild):
-        self._guild = guild
+        self.guild = guild
         self._update(data)
 
     def __repr__(self):
@@ -228,7 +228,7 @@ class Onboarding:
     def _update(self, data: OnboardingPayload):
         self.guild_id: Snowflake = data["guild_id"]
         self.prompts: list[OnboardingPrompt] = [
-            OnboardingPrompt._from_dict(prompt, self._guild)
+            OnboardingPrompt._from_dict(prompt, self.guild)
             for prompt in data.get("prompts", [])
         ]
         self.default_channel_ids: list[int] = [
@@ -236,11 +236,6 @@ class Onboarding:
         ]
         self.enabled: bool = data["enabled"]
         self.mode: OnboardingMode = try_enum(OnboardingMode, data.get("mode"))
-
-    @property
-    def guild(self) -> Guild:
-        """The guild this onboarding flow belongs to."""
-        return self._guild
 
     @cached_property
     def default_channels(
