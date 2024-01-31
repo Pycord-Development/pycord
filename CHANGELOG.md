@@ -86,6 +86,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2322](https://github.com/Pycord-Development/pycord/pull/2322))
 - Added `User.avatar_decoration`.
   ([#2131](https://github.com/Pycord-Development/pycord/pull/2131))
+- Added support for guild onboarding related features.
+  ([#2127](https://github.com/Pycord-Development/pycord/pull/2127))
 
 ### Changed
 

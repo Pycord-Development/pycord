@@ -2293,6 +2293,34 @@ of :class:`enum.Enum`.
 
         Represents the slurs keyword preset rule.
 
+.. class:: PromptType
+
+    Represents how each prompt's options are displayed.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: multiple_choice
+
+        The options will appear in a grid form, showing the name and description.
+
+    .. attribute:: dropdown
+
+        The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt.
+
+.. class:: OnboardingMode
+
+    Represents the current mode of the guild's onboarding flow.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: default
+
+        Only default channels are counted towards the Onboarding requirements.
+
+    .. attribute:: advanced
+
+        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+
 .. class:: ReactionType
 
     Represents a Reaction's type.
