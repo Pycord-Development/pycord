@@ -116,9 +116,6 @@ class BaseFlags:
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__) and self.value == other.value
 
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
-
     def __hash__(self) -> int:
         return hash(self.value)
 
@@ -639,8 +636,8 @@ class Intents(BaseFlags):
     @classmethod
     def all(cls: type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled."""
-        bits = max(cls.VALID_FLAGS.values()).bit_length()
-        value = (1 << bits) - 1
+        value = sum({1 << (flag.bit_length() - 1) for flag in cls.VALID_FLAGS.values()})
+
         self = cls.__new__(cls)
         self.value = value
         return self
