@@ -46,7 +46,7 @@ import socket
 import struct
 import threading
 import time
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any, Callable, Literal, overload
 
 from . import opus, utils
 from .backoff import ExponentialBackoff
@@ -623,13 +623,33 @@ class VoiceClient(VoiceProtocol):
             user_id
         ]
 
+    @overload
     def play(
         self,
         source: AudioSource,
         *,
-        after: Callable[[Exception | None], Any] = None,
-        wait_finish: bool = False,
+        after: Callable[[Exception | None], Any] | None = None,
+        wait_finish: Literal[False] = False,
     ) -> None:
+        ...
+
+    @overload
+    def play(
+        self,
+        source: AudioSource,
+        *,
+        after: Callable[[Exception | None], Any] | None = None,
+        wait_finish: Literal[True],
+    ) -> asyncio.Future:
+        ...
+
+    def play(
+        self,
+        source: AudioSource,
+        *,
+        after: Callable[[Exception | None], Any] | None = None,
+        wait_finish: bool = False,
+    ) -> None | asyncio.Future:
         """Plays an :class:`AudioSource`.
 
         The finalizer, ``after`` is called after the source has been exhausted
