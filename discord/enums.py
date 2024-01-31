@@ -432,7 +432,7 @@ class AuditLogAction(Enum):
     creator_monetization_terms_accepted = 151
     onboarding_question_create = 163
     onboarding_question_update = 164
-    onboarding_update = 165
+    onboarding_update = 167
     server_guide_create = 190
     server_guide_update = 191
 
