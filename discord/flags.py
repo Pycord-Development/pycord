@@ -1525,7 +1525,7 @@ class AttachmentFlags(BaseFlags):
                Returns an iterator of ``(name, value)`` pairs. This allows it
                to be, for example, constructed as a dict or a list of pairs.
 
-    .. versionadded:: 1.3
+    .. versionadded:: 2.5
 
     Attributes
     -----------
