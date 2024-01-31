@@ -28,7 +28,7 @@ from typing import TYPE_CHECKING, Any
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import MISSING, _get_as_snowflake, cached_property, get, generate_snowflake
+from .utils import MISSING, _get_as_snowflake, cached_property, generate_snowflake, get
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -100,29 +100,21 @@ class PromptOption:
         }
         if self.emoji:
             if isinstance(self.emoji, str):
-                dict_["emoji"] = {
-                    'id': None,
-                    'name': self.emoji,
-                    'animated': False
-                }
+                dict_["emoji"] = {"id": None, "name": self.emoji, "animated": False}
                 dict_["emoji_name"] = self.emoji
                 dict_["emoji_id"] = None
                 dict_["emoji_animated"] = False
             else:
                 dict_["emoji"] = {
-                    'id': self.emoji.id,
-                    'name': self.emoji.name,
-                    'animated': self.emoji.is_animated
+                    "id": self.emoji.id,
+                    "name": self.emoji.name,
+                    "animated": self.emoji.is_animated,
                 }
                 dict_["emoji_name"] = self.emoji.name
                 dict_["emoji_id"] = self.emoji.id
                 dict_["emoji_animated"] = self.emoji.is_animated
         else:
-            dict_["emoji"] = {
-                "id": None,
-                "name": None,
-                "animated": False
-            }
+            dict_["emoji"] = {"id": None, "name": None, "animated": False}
             dict_["emoji_name"] = None
             dict_["emoji_id"] = None
             dict_["emoji_animated"] = False
