@@ -28,7 +28,7 @@ from typing import TYPE_CHECKING, Any
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import MISSING, _get_as_snowflake, cached_property, generate_snowflake, get
+from .utils import MISSING, cached_property, generate_snowflake, get
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -122,7 +122,7 @@ class PromptOption:
         description = data.get("description")
 
         _emoji: dict[str, Any] = data.get("emoji") or {}
-        if emoji_name := _emoji.get("name"):
+        if "name" in _emoji:
             # Emoji object is {'id': None, 'name': None, 'animated': False} ...
             emoji = PartialEmoji.from_dict(_emoji)
             if emoji.id:
@@ -287,12 +287,13 @@ class Onboarding:
         default_channels: Optional[List[:class:`Snowflake`]]
             The new default channels that users are opted into.
         enabled: Optional[:class:`bool`]
-            Whether onboarding should be enabled. Setting this to True requires the guild to have ``COMMUNITY`` in :attr:`~Guild.features`
-            and at least 7 ``default_channels``.
+            Whether onboarding should be enabled. Setting this to ``True`` requires
+            the guild to have ``COMMUNITY`` in :attr:`~Guild.features` and at
+            least 7 ``default_channels``.
         mode: Optional[:class:`OnboardingMode`]
             The new onboarding mode.
         reason: Optional[:class:`str`]
-            The reason that shows up on Audit log.
+            The reason for editing this onboarding flow. Shows up on the audit log.
 
         Returns
         -------
@@ -301,7 +302,6 @@ class Onboarding:
 
         Raises
         ------
-
         HTTPException
             Editing the onboarding flow failed somehow.
         Forbidden
@@ -335,7 +335,8 @@ class Onboarding:
         single_select: bool,
         required: bool,
         in_onboarding: bool,
-        reason: str | None = MISSING,
+        *,
+        reason: str | None = None,
     ):
         """|coro|
 
@@ -359,7 +360,7 @@ class Onboarding:
         in_onboarding: :class:`bool`
             Whether this prompt is displayed in the initial onboarding flow.
         reason: Optional[:class:`str`]
-            The reason that shows up on Audit log.
+            The reason for adding this prompt. Shows up on the audit log.
 
         Returns
         -------
@@ -383,7 +384,8 @@ class Onboarding:
     async def append_prompt(
         self,
         prompt: OnboardingPrompt,
-        reason: str | None = MISSING,
+        *,
+        reason: str | None = None,
     ):
         """|coro|
 
@@ -397,7 +399,7 @@ class Onboarding:
         prompt: :class:`OnboardingPrompt`
             The onboarding prompt to append.
         reason: Optional[:class:`str`]
-            The reason that shows up on Audit log.
+            The reason for appending this prompt. Shows up on the audit log.
 
         Returns
         -------
@@ -439,6 +441,7 @@ class Onboarding:
     async def delete_prompt(
         self,
         id: int,
+        *,
         reason: str | None = MISSING,
     ):
         """|coro|
@@ -453,7 +456,7 @@ class Onboarding:
         id: :class:`int`
             The ID of the prompt to delete.
         reason: Optional[:class:`str`]
-            The reason that shows up on Audit log.
+            The reason for deleting this prompt. Shows up on the audit log.
 
         Returns
         -------
