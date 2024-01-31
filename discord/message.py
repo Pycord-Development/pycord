@@ -29,7 +29,6 @@ import datetime
 import io
 import re
 from os import PathLike
-from urllib.parse import urlparse, parse_qs
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -40,6 +39,7 @@ from typing import (
     Union,
     overload,
 )
+from urllib.parse import parse_qs, urlparse
 
 from . import utils
 from .components import _component_factory
@@ -48,7 +48,7 @@ from .emoji import Emoji
 from .enums import ChannelType, MessageType, try_enum
 from .errors import InvalidArgument
 from .file import File
-from .flags import MessageFlags, AttachmentFlags
+from .flags import AttachmentFlags, MessageFlags
 from .guild import Guild
 from .member import Member
 from .mixins import Hashable
@@ -180,12 +180,12 @@ class Attachment(Hashable):
         The base64 encoded bytearray representing a sampled waveform (currently for voice messages).
 
         .. versionadded:: 2.5
-        
+
     flags: :class:`AttachmentFlags`
         Extra attributes of the attachment.
 
         .. versionadded:: 2.5
-        
+
     hm: :class:`str`
         The unique signature of this attachment's instance.
 
@@ -230,12 +230,12 @@ class Attachment(Hashable):
         self._ex: str | None = None
         self._is: str | None = None
         self.hm: str | None = None
-        
+
         q = urlparse(self.url).query
-        extras = ['_ex', '_is', 'hm']
-        if (qs := parse_qs(q)):
+        extras = ["_ex", "_is", "hm"]
+        if qs := parse_qs(q):
             for attr in extras:
-                v = ''.join(qs.get(attr.replace('_', ''), []))
+                v = "".join(qs.get(attr.replace("_", ""), []))
                 if v:
                     setattr(self, attr, v)
 
