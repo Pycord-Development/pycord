@@ -227,7 +227,6 @@ class Onboarding:
 
     def __init__(self, data: OnboardingPayload, guild: Guild):
         self.guild = guild
-        print(data)
         self._update(data)
 
     def __repr__(self):
