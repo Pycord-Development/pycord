@@ -1490,7 +1490,7 @@ class ChannelFlags(BaseFlags):
 
 @fill_with_flags()
 class AttachmentFlags(BaseFlags):
-    r"""Wraps up a Discord Attachmanet flag value.
+    r"""Wraps up the Discord Attachment flags.
 
     See :class:`SystemChannelFlags`.
 
