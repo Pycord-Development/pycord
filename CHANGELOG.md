@@ -89,8 +89,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2127](https://github.com/Pycord-Development/pycord/pull/2127))
 - Added support for monetization related objects and events.
   ([#2273](https://github.com/Pycord-Development/pycord/pull/2273))
-- Added `AttachmentFlags` and attachment attributes `expires_at`,
-  `issued_at` and `hm`.
+- Added `AttachmentFlags` and attachment attributes `expires_at`, `issued_at` and `hm`.
   ([#2342](https://github.com/Pycord-Development/pycord/pull/2342))
 
 ### Changed
