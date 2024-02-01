@@ -1005,6 +1005,7 @@ class EntitlementOwnerType(Enum):
     guild = 1
     user = 2
 
+
 T = TypeVar("T")
 
 
