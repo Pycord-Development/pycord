@@ -1553,11 +1553,11 @@ class AttachmentFlags(BaseFlags):
 @fill_with_flags()
 class SKUFlags(BaseFlags):
     r"""Wraps up the Discord SKU flags.
-                      
+
     .. container:: operations
 
         .. describe:: x == y
-            
+
             Checks if two SKUFlags are equal.
         .. describe:: x != y
 
@@ -1591,10 +1591,10 @@ class SKUFlags(BaseFlags):
     value: :class:`int`
         The raw value. You should query flags via the properties
         rather than using this raw value.
-    """       
+    """
 
     __slots__ = ()
-                      
+
     @flag_value
     def available(self):
         """:class:`bool`: Returns ``True`` if the SKU is available for purchase."""
