@@ -120,6 +120,8 @@ class Entitlement(Hashable):
         When the entitlement starts.
     ends_at: Union[:class:`datetime.datetime`, :class:`MISSING`]
         When the entitlement expires.
+    guild_id: Union[:class:`int`, :class:`MISSING`]
+        The ID of the guild that owns this entitlement.
     """
 
     __slots__ = (
@@ -132,6 +134,7 @@ class Entitlement(Hashable):
         "deleted",
         "starts_at",
         "ends_at",
+        "guild_id",
     )
 
     def __init__(self, *, data: EntitlementPayload, state: ConnectionState) -> None:
@@ -146,12 +149,13 @@ class Entitlement(Hashable):
             parse_time(data.get("starts_at")) or MISSING
         )
         self.ends_at: datetime | MISSING = parse_time(data.get("ends_at")) or MISSING
+        self.guild_id: int | MISSING = _get_as_snowflake(data, "guild_id") or MISSING
 
     def __repr__(self) -> str:
         return (
             f"<Entitlement id={self.id} sku_id={self.sku_id} application_id={self.application_id} "
             f"user_id={self.user_id} type={self.type} deleted={self.deleted} "
-            f"starts_at={self.starts_at} ends_at={self.ends_at}>"
+            f"starts_at={self.starts_at} ends_at={self.ends_at} guild_id={self.guild_id}>"
         )
 
     def __eq__(self, other: object) -> bool:

@@ -71,7 +71,7 @@ from .invite import Invite
 from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
-from .monetization import Entitlement
+from .monetization import Entitlement, EntitlementOwnerType
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role
@@ -3970,7 +3970,7 @@ class Guild(Hashable):
         payload = {
             "sku_id": sku.id,
             "owner_id": self.id,
-            "owner_type": 1,
+            "owner_type": EntitlementOwnerType.guild.value,
         }
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)

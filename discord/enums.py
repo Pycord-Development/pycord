@@ -999,6 +999,12 @@ class EntitlementType(Enum):
     application_subscription = 8
 
 
+class EntitlementOwnerType(Enum):
+    """The entitlement owner type"""
+
+    guild = 1
+    user = 2
+
 T = TypeVar("T")
 
 
