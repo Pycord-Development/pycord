@@ -1525,6 +1525,8 @@ class AttachmentFlags(BaseFlags):
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
 
+    .. versionadded:: 2.5
+
     Attributes
     -----------
     value: :class:`int`
@@ -1585,6 +1587,8 @@ class SKUFlags(BaseFlags):
             Returns an iterator of ``(name, value)`` pairs. This allows it
             to be, for example, constructed as a dict or a list of pairs.
             Note that aliases are not shown.
+
+    .. versionadded:: 2.5
 
     Attributes
     -----------
