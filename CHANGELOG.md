@@ -232,6 +232,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2337](https://github.com/Pycord-Development/pycord/pull/2337))
 - Fixed `TypeError` due to `(Sync)WebhookMessage._thread_id` being set to `None`.
   ([#2343](https://github.com/Pycord-Development/pycord/pull/2343))
+- Fixed `AttributeError` due to `entitlements` not being included in
+  `Interaction.__slots__`.
+  ([#2345](https://github.com/Pycord-Development/pycord/pull/2345))
 
 ## [2.4.1] - 2023-03-20
 

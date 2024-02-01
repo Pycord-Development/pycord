@@ -148,6 +148,7 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "entitlements",
         "_channel_data",
         "_message_data",
         "_guild_data",
