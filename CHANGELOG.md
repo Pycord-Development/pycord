@@ -230,6 +230,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2333](https://github.com/Pycord-Development/pycord/issues/2333))
 - Fixed `BridgeContext` type hints raising an exception for unsupported option type.
   ([#2337](https://github.com/Pycord-Development/pycord/pull/2337))
+- Fixed `TypeError` due to `(Sync)WebhookMessage._thread_id` being set to `None`.
+  ([#2343](https://github.com/Pycord-Development/pycord/pull/2343))
 
 ## [2.4.1] - 2023-03-20
 
