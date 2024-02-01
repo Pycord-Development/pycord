@@ -1147,7 +1147,7 @@ class SyncWebhook(BaseWebhook):
             thread_id=thread_id,
         )
         msg = self._create_message(data)
-        if isinstance(msg.channel, PartialMessageable):
+        if thread_id and isinstance(msg.channel, PartialMessageable):
             msg._thread_id = thread_id
 
         return msg
