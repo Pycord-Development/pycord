@@ -54,6 +54,7 @@ from .mentions import *
 from .message import *
 from .monetization import *
 from .object import *
+from .onboarding import *
 from .partial_emoji import *
 from .permissions import *
 from .player import *

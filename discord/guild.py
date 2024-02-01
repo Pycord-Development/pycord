@@ -47,7 +47,7 @@ from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
-from .emoji import Emoji
+from .emoji import Emoji, PartialEmoji, _EmojiTag
 from .enums import (
     AuditLogAction,
     AutoModEventType,
@@ -72,6 +72,7 @@ from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
+from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
@@ -1396,6 +1397,7 @@ class Guild(Hashable):
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_reaction_emoji: Emoji | int | str = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1437,6 +1439,12 @@ class Guild(Hashable):
             To mark the channel as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
+        default_reaction_emoji: Optional[:class:`Emoji` | :class:`int` | :class:`str`]
+            The default reaction emoji.
+            Can be a unicode emoji or a custom emoji in the forms:
+            :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+
+            .. versionadded:: v2.5
 
         Returns
         -------
@@ -1450,7 +1458,7 @@ class Guild(Hashable):
         HTTPException
             Creating the channel failed.
         InvalidArgument
-            The permission overwrite information is not in proper form.
+            The argument is not in proper form.
 
         Examples
         --------
@@ -1485,6 +1493,24 @@ class Guild(Hashable):
 
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
+
+        if default_reaction_emoji is not MISSING:
+            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+                default_reaction_emoji = default_reaction_emoji._to_partial()
+            elif isinstance(default_reaction_emoji, int):
+                default_reaction_emoji = PartialEmoji(
+                    name=None, id=default_reaction_emoji
+                )
+            elif isinstance(default_reaction_emoji, str):
+                default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            else:
+                raise InvalidArgument(
+                    "default_reaction_emoji must be of type: Emoji | int | str"
+                )
+
+            options[
+                "default_reaction_emoji"
+            ] = default_reaction_emoji._to_forum_reaction_payload()
 
         data = await self._create_channel(
             name,
@@ -3817,6 +3843,88 @@ class Guild(Hashable):
             self.id, payload, reason=reason
         )
         return AutoModRule(state=self._state, data=data)
+
+    async def onboarding(self):
+        """|coro|
+
+        Returns the :class:`Onboarding` flow for the guild.
+
+        .. versionadded:: 2.5
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The onboarding flow for the guild.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the onboarding flow failed somehow.
+        """
+        data = await self._state.http.get_onboarding(self.id)
+        return Onboarding(data=data, guild=self)
+
+    async def edit_onboarding(
+        self,
+        *,
+        prompts: list[OnboardingPrompt] | None = MISSING,
+        default_channels: list[Snowflake] | None = MISSING,
+        enabled: bool | None = MISSING,
+        mode: OnboardingMode | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> Onboarding:
+        """|coro|
+
+        A shorthand for :attr:`Onboarding.edit` without fetching the onboarding flow.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+
+        prompts: Optional[List[:class:`OnboardingPrompt`]]
+            The new list of prompts for this flow.
+        default_channels: Optional[List[:class:`Snowflake`]]
+            The new default channels that users are opted into.
+        enabled: Optional[:class:`bool`]
+            Whether onboarding should be enabled. Setting this to ``True`` requires
+            the guild to have ``COMMUNITY`` in :attr:`~Guild.features` and at
+            least 7 ``default_channels``.
+        mode: Optional[:class:`OnboardingMode`]
+            The new onboarding mode.
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        """
+
+        fields: dict[str, Any] = {}
+        if prompts is not MISSING:
+            fields["prompts"] = [prompt.to_dict() for prompt in prompts]
+
+        if default_channels is not MISSING:
+            fields["default_channel_ids"] = [channel.id for channel in default_channels]
+
+        if enabled is not MISSING:
+            fields["enabled"] = enabled
+
+        if mode is not MISSING:
+            fields["mode"] = mode.value
+
+        new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
+        return Onboarding(data=new, guild=self)
 
     async def delete_auto_moderation_rule(
         self,

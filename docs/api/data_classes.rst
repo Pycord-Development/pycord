@@ -118,6 +118,11 @@ Flags
 .. autoclass:: MessageFlags()
     :members:
 
+.. attributetable:: AttachmentFlags
+
+.. autoclass:: AttachmentFlags()
+    :members:
+
 .. attributetable:: PublicUserFlags
 
 .. autoclass:: PublicUserFlags()

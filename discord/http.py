@@ -70,6 +70,7 @@ if TYPE_CHECKING:
         member,
         message,
         monetization,
+        onboarding,
         role,
         scheduled_events,
         sticker,
@@ -1097,6 +1098,7 @@ class HTTPClient:
             "rtc_region",
             "video_quality_mode",
             "auto_archive_duration",
+            "default_reaction_emoji",
         )
         payload.update(
             {k: v for k, v in options.items() if k in valid_keys and v is not None}
@@ -2932,6 +2934,29 @@ class HTTPClient:
             entitlement_id=entitlement_id,
         )
         return self.request(r)
+
+    # Onboarding
+
+    def get_onboarding(self, guild_id: Snowflake) -> Response[onboarding.Onboarding]:
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/onboarding", guild_id=guild_id)
+        )
+
+    def edit_onboarding(
+        self, guild_id: Snowflake, payload: Any, *, reason: str | None = None
+    ) -> Response[onboarding.Onboarding]:
+        keys = (
+            "prompts",
+            "default_channel_ids",
+            "enabled",
+            "mode",
+        )
+        payload = {key: val for key, val in payload.items() if key in keys}
+        return self.request(
+            Route("PUT", "/guilds/{guild_id}/onboarding", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
 
     # Misc
 

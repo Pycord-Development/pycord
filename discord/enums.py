@@ -67,6 +67,8 @@ __all__ = (
     "AutoModActionType",
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
+    "PromptType",
+    "OnboardingMode",
     "ReactionType",
 )
 
@@ -428,6 +430,11 @@ class AuditLogAction(Enum):
     auto_moderation_user_communication_disabled = 145
     creator_monetization_request_created = 150
     creator_monetization_terms_accepted = 151
+    onboarding_question_create = 163
+    onboarding_question_update = 164
+    onboarding_update = 167
+    server_guide_create = 190
+    server_guide_update = 191
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -490,6 +497,11 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_user_communication_disabled: None,
             AuditLogAction.creator_monetization_request_created: None,
             AuditLogAction.creator_monetization_terms_accepted: None,
+            AuditLogAction.onboarding_question_create: AuditLogActionCategory.create,
+            AuditLogAction.onboarding_question_update: AuditLogActionCategory.update,
+            AuditLogAction.onboarding_update: AuditLogActionCategory.update,
+            AuditLogAction.server_guide_create: AuditLogActionCategory.create,
+            AuditLogAction.server_guide_update: AuditLogActionCategory.update,
         }
         return lookup[self]
 
@@ -530,6 +542,12 @@ class AuditLogAction(Enum):
             return "application_command_permission"
         elif v < 146:
             return "auto_moderation_rule"
+        elif v < 152:
+            return "monetization"
+        elif v < 168:
+            return "onboarding"
+        elif v < 192:
+            return "server_guide"
 
 
 class UserFlags(Enum):
@@ -809,9 +827,10 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         from .commands.context import ApplicationContext
+        from .ext.bridge import BridgeContext
 
         if not issubclass(
-            datatype, ApplicationContext
+            datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
@@ -944,6 +963,20 @@ class ApplicationRoleConnectionMetadataType(Enum):
     datetime_greater_than_or_equal = 6
     boolean_equal = 7
     boolean_not_equal = 8
+
+
+class PromptType(Enum):
+    """Guild Onboarding Prompt Type"""
+
+    multiple_choice = 0
+    dropdown = 1
+
+
+class OnboardingMode(Enum):
+    """Guild Onboarding Mode"""
+
+    default = 0
+    advanced = 1
 
 
 class ReactionType(Enum):

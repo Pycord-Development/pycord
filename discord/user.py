@@ -71,6 +71,7 @@ class BaseUser(_UserTag):
         "bot",
         "system",
         "_public_flags",
+        "_avatar_decoration",
         "_state",
     )
 
@@ -85,6 +86,7 @@ class BaseUser(_UserTag):
         _avatar: str | None
         _banner: str | None
         _accent_colour: int | None
+        _avatar_decoration: dict | None
         _public_flags: int
 
     def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
@@ -135,6 +137,7 @@ class BaseUser(_UserTag):
         self._avatar = data["avatar"]
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
+        self._avatar_decoration = data.get("avatar_decoration_data", None)
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
@@ -150,6 +153,7 @@ class BaseUser(_UserTag):
         self._avatar = user._avatar
         self._banner = user._banner
         self._accent_colour = user._accent_colour
+        self._avatar_decoration = user._avatar_decoration
         self.bot = user.bot
         self._state = user._state
         self._public_flags = user._public_flags
@@ -221,6 +225,18 @@ class BaseUser(_UserTag):
         if self._banner is None:
             return None
         return Asset._from_user_banner(self._state, self.id, self._banner)
+
+    @property
+    def avatar_decoration(self) -> Asset | None:
+        """Returns the user's avatar decoration, if available.
+
+        .. versionadded:: 2.5
+        """
+        if self._avatar_decoration is None:
+            return None
+        return Asset._from_avatar_decoration(
+            self._state, self.id, self._avatar_decoration.get("asset")
+        )
 
     @property
     def accent_colour(self) -> Colour | None:

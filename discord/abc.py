@@ -50,6 +50,7 @@ from .flags import MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
 from .mentions import AllowedMentions
+from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
@@ -506,6 +507,28 @@ class GuildChannel:
             if not isinstance(ch_type, ChannelType):
                 raise InvalidArgument("type field must be of type ChannelType")
             options["type"] = ch_type.value
+
+        try:
+            default_reaction_emoji = options["default_reaction_emoji"]
+        except KeyError:
+            pass
+        else:
+            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+                default_reaction_emoji = default_reaction_emoji._to_partial()
+            elif isinstance(default_reaction_emoji, int):
+                default_reaction_emoji = PartialEmoji(
+                    name=None, id=default_reaction_emoji
+                )
+            elif isinstance(default_reaction_emoji, str):
+                default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            else:
+                raise InvalidArgument(
+                    "default_reaction_emoji must be of type: Emoji | int | str"
+                )
+
+            options[
+                "default_reaction_emoji"
+            ] = default_reaction_emoji._to_forum_reaction_payload()
 
         if options:
             return await self._state.http.edit_channel(
