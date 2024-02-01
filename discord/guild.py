@@ -54,6 +54,7 @@ from .enums import (
     AutoModTriggerType,
     ChannelType,
     ContentFilter,
+    EntitlementOwnerType,
     NotificationLevel,
     NSFWLevel,
     ScheduledEventLocationType,
@@ -71,7 +72,7 @@ from .invite import Invite
 from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
-from .monetization import Entitlement, EntitlementOwnerType
+from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role
