@@ -1175,8 +1175,11 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         self._after_invoke = None
 
     async def on_connect(self):
-        if self.auto_sync_commands:
-            await self.sync_commands()
+        try:
+            if self.auto_sync_commands:
+                await self.sync_commands()
+        except Exception:
+            _log.exception("on_connect: Exception occurred during syncing commands.")
 
     async def on_interaction(self, interaction):
         await self.process_application_commands(interaction)
