@@ -133,6 +133,11 @@ Flags
 .. autoclass:: ChannelFlags()
     :members:
 
+.. attributetable:: SKUFlags
+
+.. autoclass:: SKUFlags()
+    :members:
+
 Colour
 ------
 

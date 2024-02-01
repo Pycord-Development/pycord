@@ -2334,3 +2334,43 @@ of :class:`enum.Enum`.
     .. attribute:: burst
 
         Represents a super reaction.
+
+.. class:: SKUType
+
+    Represents an SKU's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: subscription
+
+        Represents a recurring subscription.
+
+    .. attribute:: subscription_group
+
+        A system-generated group for each subscription SKU created. These types of SKUs are currently unused.
+
+
+.. class:: EntitlementType
+
+    Represents an entitlement's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: app_subscription
+
+        Entitlement was purchased as an app subscription.
+
+
+.. class:: EntitlementOwnerType
+
+    Represents an entitlement's ownership type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: guild
+
+        Entitlement is owned by a guild.
+
+    .. attribute:: user
+
+        Entitlement is owned by a user.

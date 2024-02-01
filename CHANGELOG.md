@@ -88,6 +88,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2131](https://github.com/Pycord-Development/pycord/pull/2131))
 - Added support for guild onboarding related features.
   ([#2127](https://github.com/Pycord-Development/pycord/pull/2127))
+- Added support for monetization-related objects and events.
+  ([#2273](https://github.com/Pycord-Development/pycord/pull/2273))
 
 ### Changed
 

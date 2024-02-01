@@ -38,6 +38,7 @@ __all__ = (
     "MemberCacheFlags",
     "ApplicationFlags",
     "ChannelFlags",
+    "SKUFlags",
 )
 
 FV = TypeVar("FV", bound="flag_value")
@@ -1492,8 +1493,6 @@ class ChannelFlags(BaseFlags):
 class AttachmentFlags(BaseFlags):
     r"""Wraps up the Discord Attachment flags.
 
-    See :class:`SystemChannelFlags`.
-
     .. container:: operations
 
         .. describe:: x == y
@@ -1519,20 +1518,20 @@ class AttachmentFlags(BaseFlags):
             Returns the inverse of a flag.
         .. describe:: hash(x)
 
-               Return the flag's hash.
+            Return the flag's hash.
         .. describe:: iter(x)
 
-               Returns an iterator of ``(name, value)`` pairs. This allows it
-               to be, for example, constructed as a dict or a list of pairs.
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
 
     .. versionadded:: 2.5
 
     Attributes
     -----------
     value: :class:`int`
-        The raw value. This value is a bit array field of a 53-bit integer
-        representing the currently available flags. You should query
-        flags via the properties rather than using this raw value.
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
     """
 
     __slots__ = ()
@@ -1551,3 +1550,66 @@ class AttachmentFlags(BaseFlags):
     def is_remix(self):
         """:class:`bool`: Returns ``True`` if the attachment has been remixed."""
         return 1 << 2
+
+
+@fill_with_flags()
+class SKUFlags(BaseFlags):
+    r"""Wraps up the Discord SKU flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two SKUFlags are equal.
+        .. describe:: x != y
+
+            Checks if two SKUFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def available(self):
+        """:class:`bool`: Returns ``True`` if the SKU is available for purchase."""
+        return 1 << 2
+
+    @flag_value
+    def guild_subscription(self):
+        """:class:`bool`: Returns ``True`` if the SKU is a guild subscription."""
+        return 1 << 7
+
+    @flag_value
+    def user_subscription(self):
+        """:class:`bool`: Returns ``True`` if the SKU is a user subscription."""
+        return 1 << 8

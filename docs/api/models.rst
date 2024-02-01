@@ -101,6 +101,19 @@ Messages
 .. autoclass:: ReactionCountDetails()
     :members:
 
+Monetization
+------------
+
+.. attributetable:: SKU
+
+.. autoclass:: SKU()
+    :members:
+
+.. attributetable:: Entitlement
+
+.. autoclass:: Entitlement()
+    :members:
+
 Guild
 -----
 
