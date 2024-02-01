@@ -2009,7 +2009,7 @@ class Client:
 
         Fetches the bot's SKUs.
 
-        .. versionadded:: 2.6
+        .. versionadded:: 2.5
 
         Returns
         -------
@@ -2024,7 +2024,7 @@ class Client:
 
         Fetches the bot's entitlements.
 
-        .. versionadded:: 2.6
+        .. versionadded:: 2.5
 
         Returns
         -------

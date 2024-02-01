@@ -70,6 +70,9 @@ __all__ = (
     "PromptType",
     "OnboardingMode",
     "ReactionType",
+    "SKUType",
+    "EntitlementType",
+    "EntitlementOwnerType",
 )
 
 

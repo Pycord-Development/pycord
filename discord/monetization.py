@@ -49,7 +49,7 @@ __all__ = (
 class SKU(Hashable):
     """Represents a Discord SKU (stock-keeping unit).
 
-    .. versionadded:: 2.6
+    .. versionadded:: 2.5
 
     Attributes
     ----------
@@ -100,7 +100,7 @@ class SKU(Hashable):
 class Entitlement(Hashable):
     """Represents a Discord entitlement.
 
-    .. versionadded:: 2.6
+    .. versionadded:: 2.5
 
     Attributes
     ----------

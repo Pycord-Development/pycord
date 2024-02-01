@@ -416,7 +416,7 @@ Entitlements
 
     Called when a user subscribes to an SKU.
 
-    .. versionadded:: 2.6
+    .. versionadded:: 2.5
 
     :param entitlement: The entitlement that was created as a result of the subscription.
     :type entitlement: :class:`Entitlement`
@@ -425,7 +425,7 @@ Entitlements
 
     Called when a user's subscription to an Entitlement is renewed for the next billing period.
 
-    .. versionadded:: 2.6
+    .. versionadded:: 2.5
 
     :param entitlement: The entitlement that was updated.
     :type entitlement: :class:`Entitlement`
@@ -441,7 +441,7 @@ Entitlements
 
         This is not called when a user's subscription is cancelled.
 
-    .. versionadded:: 2.6
+    .. versionadded:: 2.5
 
     :param entitlement: The entitlement that was deleted.
     :type entitlement: :class:`Entitlement`
