@@ -141,10 +141,11 @@ class Option:
     max_length: Optional[:class:`int`]
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
-    autocomplete: Optional[:class:`Any`]
-        The autocomplete handler for the option. Accepts an iterable of :class:`str` or :class:`OptionChoice`, a callable (sync or async)
-        that takes a single argument of :class:`AutocompleteContext`, or a coroutine.
-        Must resolve to an iterable of :class:`str` or :class:`OptionChoice`.
+    autocomplete: Optional[Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]]
+        The autocomplete handler for the option. Accepts a callable (sync or async)
+        that takes a single argument of :class:`AutocompleteContext`.
+        The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
+        Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
 
         .. note::
 
