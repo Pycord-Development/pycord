@@ -101,6 +101,19 @@ Messages
 .. autoclass:: ReactionCountDetails()
     :members:
 
+Monetization
+------------
+
+.. attributetable:: SKU
+
+.. autoclass:: SKU()
+    :members:
+
+.. attributetable:: Entitlement
+
+.. autoclass:: Entitlement()
+    :members:
+
 Guild
 -----
 
@@ -225,6 +238,24 @@ Welcome Screen
 .. attributetable:: WelcomeScreenChannel
 
 .. autoclass:: WelcomeScreenChannel()
+    :members:
+
+Onboarding
+~~~~~~~~~~~~~~
+
+.. attributetable:: Onboarding
+
+.. autoclass:: Onboarding()
+    :members:
+
+.. attributetable:: OnboardingPrompt
+
+.. autoclass:: OnboardingPrompt()
+    :members:
+
+.. attributetable:: PromptOption
+
+.. autoclass:: PromptOption()
     :members:
 
 Integration

@@ -74,6 +74,7 @@ class Attachment(TypedDict):
     proxy_url: str
     duration_secs: NotRequired[float]
     waveform: NotRequired[str]
+    flags: NotRequired[int]
 
 
 MessageActivityType = Literal[1, 2, 3, 5]

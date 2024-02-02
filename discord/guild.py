@@ -54,6 +54,7 @@ from .enums import (
     AutoModTriggerType,
     ChannelType,
     ContentFilter,
+    EntitlementOwnerType,
     NotificationLevel,
     NSFWLevel,
     ScheduledEventLocationType,
@@ -71,6 +72,8 @@ from .invite import Invite
 from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
+from .monetization import Entitlement
+from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
@@ -3842,6 +3845,88 @@ class Guild(Hashable):
         )
         return AutoModRule(state=self._state, data=data)
 
+    async def onboarding(self):
+        """|coro|
+
+        Returns the :class:`Onboarding` flow for the guild.
+
+        .. versionadded:: 2.5
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The onboarding flow for the guild.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the onboarding flow failed somehow.
+        """
+        data = await self._state.http.get_onboarding(self.id)
+        return Onboarding(data=data, guild=self)
+
+    async def edit_onboarding(
+        self,
+        *,
+        prompts: list[OnboardingPrompt] | None = MISSING,
+        default_channels: list[Snowflake] | None = MISSING,
+        enabled: bool | None = MISSING,
+        mode: OnboardingMode | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> Onboarding:
+        """|coro|
+
+        A shorthand for :attr:`Onboarding.edit` without fetching the onboarding flow.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+
+        prompts: Optional[List[:class:`OnboardingPrompt`]]
+            The new list of prompts for this flow.
+        default_channels: Optional[List[:class:`Snowflake`]]
+            The new default channels that users are opted into.
+        enabled: Optional[:class:`bool`]
+            Whether onboarding should be enabled. Setting this to ``True`` requires
+            the guild to have ``COMMUNITY`` in :attr:`~Guild.features` and at
+            least 7 ``default_channels``.
+        mode: Optional[:class:`OnboardingMode`]
+            The new onboarding mode.
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        """
+
+        fields: dict[str, Any] = {}
+        if prompts is not MISSING:
+            fields["prompts"] = [prompt.to_dict() for prompt in prompts]
+
+        if default_channels is not MISSING:
+            fields["default_channel_ids"] = [channel.id for channel in default_channels]
+
+        if enabled is not MISSING:
+            fields["enabled"] = enabled
+
+        if mode is not MISSING:
+            fields["mode"] = mode.value
+
+        new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
+        return Onboarding(data=new, guild=self)
+
     async def delete_auto_moderation_rule(
         self,
         id: int,
@@ -3867,3 +3952,26 @@ class Guild(Hashable):
         """
 
         await self._state.http.delete_auto_moderation_rule(self.id, id, reason=reason)
+
+    async def create_test_entitlement(self, sku: Snowflake) -> Entitlement:
+        """|coro|
+
+        Creates a test entitlement for the guild.
+
+        Parameters
+        ----------
+        sku: :class:`Snowflake`
+            The SKU to create a test entitlement for.
+
+        Returns
+        -------
+        :class:`Entitlement`
+            The created entitlement.
+        """
+        payload = {
+            "sku_id": sku.id,
+            "owner_id": self.id,
+            "owner_type": EntitlementOwnerType.guild.value,
+        }
+        data = await self._state.http.create_test_entitlement(self.id, payload)
+        return Entitlement(data=data, state=self._state)

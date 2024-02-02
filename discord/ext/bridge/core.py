@@ -66,6 +66,7 @@ __all__ = (
     "BridgeSlashCommand",
     "BridgeExtGroup",
     "BridgeSlashGroup",
+    "BridgeOption",
     "map_to",
     "guild_only",
     "has_permissions",
@@ -591,6 +592,10 @@ BRIDGE_CONVERTER_MAPPING = {
 
 
 class BridgeOption(Option, Converter):
+    """A subclass of :class:`discord.Option` which represents a selectable slash
+    command option and a prefixed command argument for bridge commands.
+    """
+
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
@@ -621,7 +626,3 @@ class BridgeOption(Option, Converter):
             return converted
         except ValueError as exc:
             raise BadArgument() from exc
-
-
-discord.commands.options.Option = BridgeOption
-discord.Option = BridgeOption

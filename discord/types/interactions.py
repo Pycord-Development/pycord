@@ -33,6 +33,7 @@ from .components import Component, ComponentType
 from .embed import Embed
 from .member import Member
 from .message import Attachment
+from .monetization import Entitlement
 from .role import Role
 from .snowflake import Snowflake
 from .user import User
@@ -111,7 +112,7 @@ class GuildApplicationCommandPermissions(PartialGuildApplicationCommandPermissio
     guild_id: Snowflake
 
 
-InteractionType = Literal[1, 2, 3]
+InteractionType = Literal[1, 2, 3, 4, 5]
 
 
 class _ApplicationCommandInteractionDataOption(TypedDict):
@@ -219,6 +220,7 @@ class Interaction(TypedDict):
     type: InteractionType
     token: str
     version: int
+    entitlements: list[Entitlement]
 
 
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
@@ -230,7 +232,7 @@ class InteractionApplicationCommandCallbackData(TypedDict, total=False):
     components: list[Component]
 
 
-InteractionResponseType = Literal[1, 4, 5, 6, 7]
+InteractionResponseType = Literal[1, 4, 5, 6, 7, 8, 9, 10]
 
 
 class InteractionResponse(TypedDict):

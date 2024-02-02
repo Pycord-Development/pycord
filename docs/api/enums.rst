@@ -2293,6 +2293,34 @@ of :class:`enum.Enum`.
 
         Represents the slurs keyword preset rule.
 
+.. class:: PromptType
+
+    Represents how each prompt's options are displayed.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: multiple_choice
+
+        The options will appear in a grid form, showing the name and description.
+
+    .. attribute:: dropdown
+
+        The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt.
+
+.. class:: OnboardingMode
+
+    Represents the current mode of the guild's onboarding flow.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: default
+
+        Only default channels are counted towards the Onboarding requirements.
+
+    .. attribute:: advanced
+
+        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+
 .. class:: ReactionType
 
     Represents a Reaction's type.
@@ -2306,3 +2334,43 @@ of :class:`enum.Enum`.
     .. attribute:: burst
 
         Represents a super reaction.
+
+.. class:: SKUType
+
+    Represents an SKU's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: subscription
+
+        Represents a recurring subscription.
+
+    .. attribute:: subscription_group
+
+        A system-generated group for each subscription SKU created. These types of SKUs are currently unused.
+
+
+.. class:: EntitlementType
+
+    Represents an entitlement's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: app_subscription
+
+        Entitlement was purchased as an app subscription.
+
+
+.. class:: EntitlementOwnerType
+
+    Represents an entitlement's ownership type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: guild
+
+        Entitlement is owned by a guild.
+
+    .. attribute:: user
+
+        Entitlement is owned by a user.

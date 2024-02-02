@@ -118,6 +118,11 @@ Flags
 .. autoclass:: MessageFlags()
     :members:
 
+.. attributetable:: AttachmentFlags
+
+.. autoclass:: AttachmentFlags()
+    :members:
+
 .. attributetable:: PublicUserFlags
 
 .. autoclass:: PublicUserFlags()
@@ -126,6 +131,11 @@ Flags
 .. attributetable:: ChannelFlags
 
 .. autoclass:: ChannelFlags()
+    :members:
+
+.. attributetable:: SKUFlags
+
+.. autoclass:: SKUFlags()
     :members:
 
 Colour
