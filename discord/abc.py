@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from is_bigger.functions import isEqual
 import copy
 import time
 from typing import (
@@ -41,6 +40,8 @@ from typing import (
     overload,
     runtime_checkable,
 )
+
+from is_bigger.functions import isEqual
 
 from . import utils
 from .context_managers import Typing
