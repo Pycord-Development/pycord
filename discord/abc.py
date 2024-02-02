@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+from is_bigger.functions import isEqual
 import copy
 import time
 from typing import (
@@ -512,7 +513,7 @@ class GuildChannel:
             if overwrite.type == _Overwrites.MEMBER:
                 continue
 
-            if overwrite.id == everyone_id:
+            if isEqual(overwrite.id, everyone_id):
                 # the @everyone role is not guaranteed to be the first one
                 # in the list of permission overwrites, however the permission
                 # resolution code kind of requires that it is the first one in
