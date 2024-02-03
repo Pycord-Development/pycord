@@ -868,6 +868,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         message: Snowflake | None = None,
         auto_archive_duration: ThreadArchiveDuration = MISSING,
         type: ChannelType | None = None,
+        slowmode_delay: int | None = None,
+        invitable: bool | None = None,
         reason: str | None = None,
     ) -> Thread:
         """|coro|
@@ -894,6 +896,12 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
             The type of thread to create. If a ``message`` is passed then this parameter
             is ignored, as a thread created with a message is always a public thread.
             By default, this creates a private thread if this is ``None``.
+        slowmode_delay: Optional[:class:`int`]
+            Specifies the slowmode rate limit for users in this thread, in seconds.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
+        invitable: Optional[:class:`bool`]
+            Whether non-moderators can add other non-moderators to this thread.
+            Only available for private threads, where it defaults to True.
         reason: :class:`str`
             The reason for creating a new thread. Shows up on the audit log.
 
@@ -920,6 +928,8 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
                 auto_archive_duration=auto_archive_duration
                 or self.default_auto_archive_duration,
                 type=type.value,
+                rate_limit_per_user=slowmode_delay or 0,
+                invitable=invitable or True,
                 reason=reason,
             )
         else:
@@ -929,6 +939,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
                 name=name,
                 auto_archive_duration=auto_archive_duration
                 or self.default_auto_archive_duration,
+                rate_limit_per_user=slowmode_delay or 0,
                 reason=reason,
             )
 

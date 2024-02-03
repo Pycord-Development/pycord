@@ -1130,11 +1130,13 @@ class HTTPClient:
         *,
         name: str,
         auto_archive_duration: threads.ThreadArchiveDuration,
+        rate_limit_per_user: int,
         reason: str | None = None,
     ) -> Response[threads.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
+            "rate_limit_per_user": rate_limit_per_user,
         }
 
         route = Route(
@@ -1152,13 +1154,15 @@ class HTTPClient:
         name: str,
         auto_archive_duration: threads.ThreadArchiveDuration,
         type: threads.ThreadType,
-        invitable: bool = True,
+        rate_limit_per_user: int,
+        invitable: bool,
         reason: str | None = None,
     ) -> Response[threads.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
             "type": type,
+            "rate_limit_per_user": rate_limit_per_user,
             "invitable": invitable,
         }
 
