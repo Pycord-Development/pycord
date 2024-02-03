@@ -1730,7 +1730,11 @@ class Message(Hashable):
         await self._state.http.clear_reactions(self.channel.id, self.id)
 
     async def create_thread(
-        self, *, name: str, auto_archive_duration: ThreadArchiveDuration = MISSING, slowmode_delay: int = MISSING,
+        self,
+        *,
+        name: str,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        slowmode_delay: int = MISSING,
     ) -> Thread:
         """|coro|
 
