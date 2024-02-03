@@ -929,7 +929,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
                 or self.default_auto_archive_duration,
                 type=type.value,
                 rate_limit_per_user=slowmode_delay or 0,
-                invitable=invitable or True,
+                invitable=invitable,
                 reason=reason,
             )
         else:

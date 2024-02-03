@@ -91,6 +91,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2273](https://github.com/Pycord-Development/pycord/pull/2273))
 - Added `AttachmentFlags` and attachment attributes `expires_at`, `issued_at` and `hm`.
   ([#2342](https://github.com/Pycord-Development/pycord/pull/2342))
+- Added `invitable` and `slowmode_delay` to `Thread` creation methods.
+  ([#2350](https://github.com/Pycord-Development/pycord/pull/2350))
 
 ### Changed
 
