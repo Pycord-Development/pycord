@@ -198,7 +198,9 @@ class Thread(Messageable, Hashable):
         self.member_count = data.get("member_count", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.total_message_sent = data.get("total_message_sent", None)
-        self._applied_tags: list[int] = data.get("applied_tags", [])
+        self._applied_tags: list[int] = [
+            int(tag_id) for tag_id in data.get("applied_tags", [])
+        ]
 
         # Here, we try to fill in potentially missing data
         if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
@@ -245,6 +247,9 @@ class Thread(Messageable, Hashable):
         except KeyError:
             pass
 
+        self._applied_tags: list[int] = [
+            int(tag_id) for tag_id in data.get("applied_tags", [])
+        ]
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
 
@@ -283,7 +288,7 @@ class Thread(Messageable, Hashable):
 
     @property
     def members(self) -> list[ThreadMember]:
-        """A list of thread members in this thread.
+        """A list of thread members in this thread, including the bot if it is a member of this thread.
 
         This requires :attr:`Intents.members` to be properly filled. Most of the time however,
         this data is not provided by the gateway and a call to :meth:`fetch_members` is
@@ -609,7 +614,7 @@ class Thread(Messageable, Hashable):
         Editing the thread requires :attr:`.Permissions.manage_threads`. The thread
         creator can also edit ``name``, ``archived`` or ``auto_archive_duration``.
         Note that if the thread is locked then only those with :attr:`.Permissions.manage_threads`
-        can unarchive a thread.
+        can send messages in it or unarchive a thread.
 
         The thread must be unarchived to be edited.
 

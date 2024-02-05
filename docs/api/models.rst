@@ -98,6 +98,22 @@ Messages
     .. automethod:: users
         :async-for:
 
+.. autoclass:: ReactionCountDetails()
+    :members:
+
+Monetization
+------------
+
+.. attributetable:: SKU
+
+.. autoclass:: SKU()
+    :members:
+
+.. attributetable:: Entitlement
+
+.. autoclass:: Entitlement()
+    :members:
+
 Guild
 -----
 
@@ -146,9 +162,27 @@ Guild
 .. autoclass:: Template()
     :members:
 
+AutoMod
+~~~~~~~
+
 .. attributetable:: AutoModRule
 
 .. autoclass:: AutoModRule()
+    :members:
+
+.. attributetable:: AutoModAction
+
+.. autoclass:: AutoModAction()
+    :members:
+
+.. attributetable:: AutoModActionMetadata
+
+.. autoclass:: AutoModActionMetadata()
+    :members:
+
+.. attributetable:: AutoModTriggerMetadata
+
+.. autoclass:: AutoModTriggerMetadata()
     :members:
 
 Invites
@@ -204,6 +238,24 @@ Welcome Screen
 .. attributetable:: WelcomeScreenChannel
 
 .. autoclass:: WelcomeScreenChannel()
+    :members:
+
+Onboarding
+~~~~~~~~~~~~~~
+
+.. attributetable:: Onboarding
+
+.. autoclass:: Onboarding()
+    :members:
+
+.. attributetable:: OnboardingPrompt
+
+.. autoclass:: OnboardingPrompt()
+    :members:
+
+.. attributetable:: PromptOption
+
+.. autoclass:: PromptOption()
     :members:
 
 Integration
@@ -483,6 +535,28 @@ Events
 
 .. autoclass:: RawScheduledEventSubscription()
     :members:
+
+.. attributetable:: RawMemberRemoveEvent
+
+.. autoclass:: RawMemberRemoveEvent()
+    :members:
+
+.. attributetable:: RawThreadUpdateEvent
+
+.. autoclass:: RawThreadUpdateEvent()
+    :members:
+
+.. attributetable:: RawThreadMembersUpdateEvent
+
+.. autoclass:: RawThreadMembersUpdateEvent()
+    :members:
+
+.. attributetable:: RawAuditLogEntryEvent
+
+.. autoclass:: RawAuditLogEntryEvent()
+    :members:
+
+
 
 Webhooks
 --------

@@ -37,7 +37,6 @@ __all__ = (
     "VerificationLevel",
     "ContentFilter",
     "Status",
-    "DefaultAvatar",
     "AuditLogAction",
     "AuditLogActionCategory",
     "UserFlags",
@@ -67,6 +66,13 @@ __all__ = (
     "AutoModEventType",
     "AutoModActionType",
     "AutoModKeywordPresetType",
+    "ApplicationRoleConnectionMetadataType",
+    "PromptType",
+    "OnboardingMode",
+    "ReactionType",
+    "SKUType",
+    "EntitlementType",
+    "EntitlementOwnerType",
 )
 
 
@@ -248,6 +254,14 @@ class MessageType(Enum):
     guild_invite_reminder = 22
     context_menu_command = 23
     auto_moderation_action = 24
+    role_subscription_purchase = 25
+    interaction_premium_upsell = 26
+    stage_start = 27
+    stage_end = 28
+    stage_speaker = 29
+    stage_raise_hand = 30
+    stage_topic = 31
+    guild_application_premium_subscription = 32
 
 
 class VoiceRegion(Enum):
@@ -345,20 +359,6 @@ class Status(Enum):
         return self.value
 
 
-class DefaultAvatar(Enum):
-    """Default avatar"""
-
-    blurple = 0
-    grey = 1
-    gray = 1
-    green = 2
-    orange = 3
-    red = 4
-
-    def __str__(self):
-        return self.name
-
-
 class NotificationLevel(Enum, comparable=True):
     """Notification level"""
 
@@ -429,6 +429,15 @@ class AuditLogAction(Enum):
     auto_moderation_rule_update = 141
     auto_moderation_rule_delete = 142
     auto_moderation_block_message = 143
+    auto_moderation_flag_to_channel = 144
+    auto_moderation_user_communication_disabled = 145
+    creator_monetization_request_created = 150
+    creator_monetization_terms_accepted = 151
+    onboarding_question_create = 163
+    onboarding_question_update = 164
+    onboarding_update = 167
+    server_guide_create = 190
+    server_guide_update = 191
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -480,11 +489,22 @@ class AuditLogAction(Enum):
             AuditLogAction.thread_create: AuditLogActionCategory.create,
             AuditLogAction.thread_update: AuditLogActionCategory.update,
             AuditLogAction.thread_delete: AuditLogActionCategory.delete,
-            AuditLogAction.application_command_permission_update: AuditLogActionCategory.update,
+            AuditLogAction.application_command_permission_update: (
+                AuditLogActionCategory.update
+            ),
             AuditLogAction.auto_moderation_rule_create: AuditLogActionCategory.create,
             AuditLogAction.auto_moderation_rule_update: AuditLogActionCategory.update,
             AuditLogAction.auto_moderation_rule_delete: AuditLogActionCategory.delete,
             AuditLogAction.auto_moderation_block_message: None,
+            AuditLogAction.auto_moderation_flag_to_channel: None,
+            AuditLogAction.auto_moderation_user_communication_disabled: None,
+            AuditLogAction.creator_monetization_request_created: None,
+            AuditLogAction.creator_monetization_terms_accepted: None,
+            AuditLogAction.onboarding_question_create: AuditLogActionCategory.create,
+            AuditLogAction.onboarding_question_update: AuditLogActionCategory.update,
+            AuditLogAction.onboarding_update: AuditLogActionCategory.update,
+            AuditLogAction.server_guide_create: AuditLogActionCategory.create,
+            AuditLogAction.server_guide_update: AuditLogActionCategory.update,
         }
         return lookup[self]
 
@@ -523,8 +543,14 @@ class AuditLogAction(Enum):
             return "thread"
         elif v < 122:
             return "application_command_permission"
-        elif v < 144:
+        elif v < 146:
             return "auto_moderation_rule"
+        elif v < 152:
+            return "monetization"
+        elif v < 168:
+            return "onboarding"
+        elif v < 192:
+            return "server_guide"
 
 
 class UserFlags(Enum):
@@ -607,6 +633,7 @@ class StickerFormatType(Enum):
     png = 1
     apng = 2
     lottie = 3
+    gif = 4
 
     @property
     def file_extension(self) -> str:
@@ -614,8 +641,10 @@ class StickerFormatType(Enum):
             StickerFormatType.png: "png",
             StickerFormatType.apng: "png",
             StickerFormatType.lottie: "json",
+            StickerFormatType.gif: "gif",
         }
-        return lookup[self]
+        # TODO: Improve handling of unknown sticker format types if possible
+        return lookup.get(self, "png")
 
 
 class InviteTarget(Enum):
@@ -648,6 +677,7 @@ class InteractionResponseType(Enum):
     message_update = 7  # for components
     auto_complete_result = 8  # for autocomplete interactions
     modal = 9  # for modal dialogs
+    premium_required = 10
 
 
 class VideoQualityMode(Enum):
@@ -779,6 +809,8 @@ class SlashCommandOptionType(Enum):
             "CategoryChannel",
             "ThreadOption",
             "Thread",
+            "ForumChannel",
+            "DMChannel",
         ]:
             return cls.channel
         if datatype.__name__ == "Role":
@@ -798,9 +830,10 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         from .commands.context import ApplicationContext
+        from .ext.bridge import BridgeContext
 
         if not issubclass(
-            datatype, ApplicationContext
+            datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
@@ -810,32 +843,49 @@ class SlashCommandOptionType(Enum):
 class EmbeddedActivity(Enum):
     """Embedded activity"""
 
+    ask_away = 976052223358406656
     awkword = 879863881349087252
+    awkword_dev = 879863923543785532
+    bash_out = 1006584476094177371
     betrayal = 773336526917861400
+    blazing_8s = 832025144389533716
+    blazing_8s_dev = 832013108234289153
+    blazing_8s_qa = 832025114077298718
+    blazing_8s_staging = 832025061657280566
+    bobble_league = 947957217959759964
     checkers_in_the_park = 832013003968348200
     checkers_in_the_park_dev = 832012682520428625
-    checkers_in_the_park_staging = 832012938398400562
     checkers_in_the_park_qa = 832012894068801636
+    checkers_in_the_park_staging = 832012938398400562
     chess_in_the_park = 832012774040141894
     chess_in_the_park_dev = 832012586023256104
-    chest_in_the_park_staging = 832012730599735326
-    chest_in_the_park_qa = 832012815819604009
+    chess_in_the_park_qa = 832012815819604009
+    chess_in_the_park_staging = 832012730599735326
     decoders_dev = 891001866073296967
     doodle_crew = 878067389634314250
     doodle_crew_dev = 878067427668275241
     fishington = 814288819477020702
-    letter_tile = 879863686565621790
-    ocho = 832025144389533716
-    ocho_dev = 832013108234289153
-    ocho_staging = 832025061657280566
-    ocho_qa = 832025114077298718
+    gartic_phone = 1007373802981822582
+    jamspace = 1070087967294631976
+    know_what_i_meme = 950505761862189096
+    land = 903769130790969345
+    letter_league = 879863686565621790
+    letter_league_dev = 879863753519292467
     poker_night = 755827207812677713
-    poker_night_staging = 763116274876022855
+    poker_night_dev = 763133495793942528
     poker_night_qa = 801133024841957428
+    poker_night_staging = 763116274876022855
+    putt_party = 945737671223947305
+    putt_party_dev = 910224161476083792
+    putt_party_qa = 945748195256979606
+    putt_party_staging = 945732077960188005
     putts = 832012854282158180
+    sketch_heads = 902271654783242291
+    sketch_heads_dev = 902271746701414431
     sketchy_artist = 879864070101172255
     sketchy_artist_dev = 879864104980979792
     spell_cast = 852509694341283871
+    spell_cast_staging = 893449443918086174
     watch_together = 880218394199220334
     watch_together_dev = 880218832743055411
     word_snacks = 879863976006127627
@@ -880,6 +930,7 @@ class AutoModTriggerType(Enum):
     harmful_link = 2
     spam = 3
     keyword_preset = 4
+    mention_spam = 5
 
 
 class AutoModEventType(Enum):
@@ -902,6 +953,60 @@ class AutoModKeywordPresetType(Enum):
     profanity = 1
     sexual_content = 2
     slurs = 3
+
+
+class ApplicationRoleConnectionMetadataType(Enum):
+    """Application role connection metadata type"""
+
+    integer_less_than_or_equal = 1
+    integer_greater_than_or_equal = 2
+    integer_equal = 3
+    integer_not_equal = 4
+    datetime_less_than_or_equal = 5
+    datetime_greater_than_or_equal = 6
+    boolean_equal = 7
+    boolean_not_equal = 8
+
+
+class PromptType(Enum):
+    """Guild Onboarding Prompt Type"""
+
+    multiple_choice = 0
+    dropdown = 1
+
+
+class OnboardingMode(Enum):
+    """Guild Onboarding Mode"""
+
+    default = 0
+    advanced = 1
+
+
+class ReactionType(Enum):
+    """The reaction type"""
+
+    normal = 0
+    burst = 1
+
+
+class SKUType(Enum):
+    """The SKU type"""
+
+    subscription = 5
+    subscription_group = 6
+
+
+class EntitlementType(Enum):
+    """The entitlement type"""
+
+    application_subscription = 8
+
+
+class EntitlementOwnerType(Enum):
+    """The entitlement owner type"""
+
+    guild = 1
+    user = 2
 
 
 T = TypeVar("T")

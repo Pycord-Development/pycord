@@ -66,11 +66,11 @@ from typing import (
 from .errors import HTTPException, InvalidArgument
 
 try:
-    import orjson
+    import msgspec
 except ModuleNotFoundError:
-    HAS_ORJSON = False
+    HAS_MSGSPEC = False
 else:
-    HAS_ORJSON = True
+    HAS_MSGSPEC = True
 
 
 __all__ = (
@@ -142,6 +142,7 @@ if TYPE_CHECKING:
 
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
+    from .commands.options import OptionChoice
     from .invite import Invite
     from .permissions import Permissions
     from .template import Template
@@ -156,6 +157,7 @@ if TYPE_CHECKING:
 else:
     cached_property = _cached_property
     AutocompleteContext = Any
+    OptionChoice = Any
 
 
 T = TypeVar("T")
@@ -641,7 +643,7 @@ def _get_as_snowflake(data: Any, key: str) -> int | None:
 
 
 def _get_mime_type_for_image(data: bytes):
-    if data.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"):
+    if data.startswith(b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a"):
         return "image/png"
     elif data[0:3] == b"\xff\xd8\xff" or data[6:10] in (b"JFIF", b"Exif"):
         return "image/jpeg"
@@ -660,12 +662,12 @@ def _bytes_to_base64_data(data: bytes) -> str:
     return fmt.format(mime=mime, data=b64)
 
 
-if HAS_ORJSON:
+if HAS_MSGSPEC:
 
     def _to_json(obj: Any) -> str:  # type: ignore
-        return orjson.dumps(obj).decode("utf-8")
+        return msgspec.json.encode(obj).decode("utf-8")
 
-    _from_json = orjson.loads  # type: ignore
+    _from_json = msgspec.json.decode  # type: ignore
 
 else:
 
@@ -1105,16 +1107,16 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
 
     .. versionadded:: 2.0
 
+    .. warning::
+
+        The last chunk collected may not be as large as ``max_size``.
+
     Parameters
     ----------
     iterator: Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
         The iterator to chunk, can be sync or async.
     max_size: :class:`int`
         The maximum chunk size.
-
-    .. warning::
-
-        The last chunk collected may not be as large as ``max_size``.
 
     Returns
     -------
@@ -1298,7 +1300,7 @@ def generate_snowflake(dt: datetime.datetime | None = None) -> int:
     return int(dt.timestamp() * 1000 - DISCORD_EPOCH) << 22 | 0x3FFFFF
 
 
-V = Union[Iterable[str], Iterable[int], Iterable[float]]
+V = Union[Iterable[OptionChoice], Iterable[str], Iterable[int], Iterable[float]]
 AV = Awaitable[V]
 Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
 AutocompleteFunc = Callable[[AutocompleteContext], AV]

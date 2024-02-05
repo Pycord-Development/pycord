@@ -32,11 +32,13 @@ from .enums import UserFlags
 __all__ = (
     "SystemChannelFlags",
     "MessageFlags",
+    "AttachmentFlags",
     "PublicUserFlags",
     "Intents",
     "MemberCacheFlags",
     "ApplicationFlags",
     "ChannelFlags",
+    "SKUFlags",
 )
 
 FV = TypeVar("FV", bound="flag_value")
@@ -115,9 +117,6 @@ class BaseFlags:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__) and self.value == other.value
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash(self.value)
@@ -379,7 +378,7 @@ class MessageFlags(BaseFlags):
     def loading(self):
         """:class:`bool`: Returns ``True`` if the source message is deferred.
 
-        The user sees a 'thinking' state
+        The user sees a 'thinking' state.
 
         .. versionadded:: 2.0
         """
@@ -392,6 +391,25 @@ class MessageFlags(BaseFlags):
         .. versionadded:: 2.0
         """
         return 256
+
+    @flag_value
+    def suppress_notifications(self):
+        """:class:`bool`: Returns ``True`` if the source message does not trigger push and desktop notifications.
+
+        Users will still receive mentions.
+
+        .. versionadded:: 2.4
+        """
+
+        return 4096
+
+    @flag_value
+    def is_voice_message(self):
+        """:class:`bool`: Returns ``True`` if this message is a voice message.
+
+        .. versionadded:: 2.5
+        """
+        return 8192
 
 
 @fill_with_flags()
@@ -620,8 +638,8 @@ class Intents(BaseFlags):
     @classmethod
     def all(cls: type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled."""
-        bits = max(cls.VALID_FLAGS.values()).bit_length()
-        value = (1 << bits) - 1
+        value = sum({1 << (flag.bit_length() - 1) for flag in cls.VALID_FLAGS.values()})
+
         self = cls.__new__(cls)
         self.value = value
         return self
@@ -678,6 +696,7 @@ class Intents(BaseFlags):
 
         - :func:`on_member_join`
         - :func:`on_member_remove`
+        - :func:`on_raw_member_remove`
         - :func:`on_member_update`
         - :func:`on_user_update`
 
@@ -705,12 +724,22 @@ class Intents(BaseFlags):
         """
         return 1 << 1
 
-    @flag_value
+    @alias_flag_value
     def bans(self):
-        """:class:`bool`: Whether guild ban related events are enabled.
+        """:class:`bool`: Alias of :attr:`.moderation`.
+
+        .. versionchanged:: 2.5
+            Changed to an alias.
+        """
+        return 1 << 2
+
+    @flag_value
+    def moderation(self):
+        """:class:`bool`: Whether guild moderation related events are enabled.
 
         This corresponds to the following events:
 
+        - :func:`on_audit_log_entry`
         - :func:`on_member_ban`
         - :func:`on_member_unban`
 
@@ -1055,7 +1084,7 @@ class Intents(BaseFlags):
 
         .. note::
 
-            As of September 2022 requires opting in explicitly via the Developer Portal to receive the actual content
+            As of September 2022 using this intent requires opting in explicitly via the Developer Portal to receive the actual content
             of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this
             intent would need to request this intent on the Developer Portal.
             See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information.
@@ -1317,6 +1346,14 @@ class ApplicationFlags(BaseFlags):
         return 1 << 5
 
     @flag_value
+    def application_auto_moderation_rule_create_badge(self):
+        """:class:`bool`: Returns ``True`` if the application uses the Auto Moderation API.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 6
+
+    @flag_value
     def rpc_has_connected(self):
         """:class:`bool`: Returns ``True`` if the application has connected to RPC."""
         return 1 << 11
@@ -1450,3 +1487,129 @@ class ChannelFlags(BaseFlags):
         .. versionadded:: 2.2
         """
         return 1 << 4
+
+
+@fill_with_flags()
+class AttachmentFlags(BaseFlags):
+    r"""Wraps up the Discord Attachment flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two flags are equal.
+        .. describe:: x != y
+
+            Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def is_clip(self):
+        """:class:`bool`: Returns ``True`` if the attachment is a clip."""
+        return 1 << 0
+
+    @flag_value
+    def is_thumbnail(self):
+        """:class:`bool`: Returns ``True`` if the attachment is a thumbnail."""
+        return 1 << 1
+
+    @flag_value
+    def is_remix(self):
+        """:class:`bool`: Returns ``True`` if the attachment has been remixed."""
+        return 1 << 2
+
+
+@fill_with_flags()
+class SKUFlags(BaseFlags):
+    r"""Wraps up the Discord SKU flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two SKUFlags are equal.
+        .. describe:: x != y
+
+            Checks if two SKUFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def available(self):
+        """:class:`bool`: Returns ``True`` if the SKU is available for purchase."""
+        return 1 << 2
+
+    @flag_value
+    def guild_subscription(self):
+        """:class:`bool`: Returns ``True`` if the SKU is a guild subscription."""
+        return 1 << 7
+
+    @flag_value
+    def user_subscription(self):
+        """:class:`bool`: Returns ``True`` if the SKU is a user subscription."""
+        return 1 << 8

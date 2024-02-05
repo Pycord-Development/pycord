@@ -72,6 +72,28 @@ Embed
 .. autoclass:: EmbedField
     :members:
 
+.. attributetable:: EmbedAuthor
+
+.. autoclass:: EmbedAuthor
+    :members:
+
+
+.. attributetable:: EmbedFooter
+
+.. autoclass:: EmbedFooter
+    :members:
+
+.. attributetable:: EmbedMedia
+
+.. autoclass:: EmbedMedia
+    :members:
+
+.. attributetable:: EmbedProvider
+
+.. autoclass:: EmbedProvider
+    :members:
+
+
 
 Flags
 -----
@@ -96,6 +118,11 @@ Flags
 .. autoclass:: MessageFlags()
     :members:
 
+.. attributetable:: AttachmentFlags
+
+.. autoclass:: AttachmentFlags()
+    :members:
+
 .. attributetable:: PublicUserFlags
 
 .. autoclass:: PublicUserFlags()
@@ -104,6 +131,11 @@ Flags
 .. attributetable:: ChannelFlags
 
 .. autoclass:: ChannelFlags()
+    :members:
+
+.. attributetable:: SKUFlags
+
+.. autoclass:: SKUFlags()
     :members:
 
 Colour
@@ -153,4 +185,12 @@ Permissions
 .. attributetable:: PermissionOverwrite
 
 .. autoclass:: PermissionOverwrite
+    :members:
+
+Application Role Connections
+-----------------------------
+
+.. attributetable:: ApplicationRoleConnectionMetadata
+
+.. autoclass:: ApplicationRoleConnectionMetadata
     :members:

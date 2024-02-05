@@ -45,6 +45,7 @@ import discord
 
 from ...commands import (
     ApplicationCommand,
+    Option,
     _BaseCommand,
     message_command,
     slash_command,
@@ -562,7 +563,13 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             ctx.bot.dispatch("command_error", ctx, error)
 
     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
-        required = param.default is param.empty
+        if isinstance(param.annotation, Option):
+            default = param.annotation.default
+            required = param.annotation.required
+        else:
+            default = param.default
+            required = default is param.empty
+
         converter = get_converter(param)
         consume_rest_is_special = (
             param.kind == param.KEYWORD_ONLY and not self.rest_is_raw
@@ -599,7 +606,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                 ):
                     return await converter._construct_default(ctx)
                 raise MissingRequiredArgument(param)
-            return param.default
+            return default
 
         previous = view.index
         if consume_rest_is_special:
@@ -2010,9 +2017,11 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
         # ctx.guild is None doesn't narrow ctx.author to Member
         getter = functools.partial(discord.utils.get, ctx.author.roles)  # type: ignore
         if any(
-            getter(id=item) is not None
-            if isinstance(item, int)
-            else getter(name=item) is not None
+            (
+                getter(id=item) is not None
+                if isinstance(item, int)
+                else getter(name=item) is not None
+            )
             for item in items
         ):
             return True
@@ -2072,9 +2081,11 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
         me = ctx.me
         getter = functools.partial(discord.utils.get, me.roles)
         if any(
-            getter(id=item) is not None
-            if isinstance(item, int)
-            else getter(name=item) is not None
+            (
+                getter(id=item) is not None
+                if isinstance(item, int)
+                else getter(name=item) is not None
+            )
             for item in items
         ):
             return True

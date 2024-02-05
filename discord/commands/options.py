@@ -29,10 +29,19 @@ from enum import Enum
 from typing import TYPE_CHECKING, Literal, Optional, Type, Union
 
 from ..abc import GuildChannel, Mentionable
-from ..channel import CategoryChannel, StageChannel, TextChannel, Thread, VoiceChannel
+from ..channel import (
+    CategoryChannel,
+    DMChannel,
+    ForumChannel,
+    StageChannel,
+    TextChannel,
+    Thread,
+    VoiceChannel,
+)
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
+from ..utils import MISSING
 
 if TYPE_CHECKING:
     from ..ext.commands import Converter
@@ -73,6 +82,8 @@ CHANNEL_TYPE_MAP = {
     StageChannel: ChannelType.stage_voice,
     CategoryChannel: ChannelType.category,
     Thread: ChannelType.public_thread,
+    ForumChannel: ChannelType.forum,
+    DMChannel: ChannelType.private,
 }
 
 
@@ -130,18 +141,23 @@ class Option:
     max_length: Optional[:class:`int`]
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
-    autocomplete: Optional[:class:`Any`]
-        The autocomplete handler for the option. Accepts an iterable of :class:`str`, a callable (sync or async)
-        that takes a single argument of :class:`AutocompleteContext`, or a coroutine.
-        Must resolve to an iterable of :class:`str`.
+    autocomplete: Optional[Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]]
+        The autocomplete handler for the option. Accepts a callable (sync or async)
+        that takes a single argument of :class:`AutocompleteContext`.
+        The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
+        Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
 
         .. note::
 
             Does not validate the input value against the autocomplete results.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    channel_types: list[:class:`discord.ChannelType`] | None
+        A list of channel types that can be selected in this option.
+        Only applies to Options with an :attr:`input_type` of :class:`discord.SlashCommandOptionType.channel`.
+        If this argument is used, :attr:`input_type` will be ignored.
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this option. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    description_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this option. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
 
@@ -224,11 +240,12 @@ class Option:
                                 self._raw_type = input_type.__args__  # type: ignore # Union.__args__
                             else:
                                 self._raw_type = (input_type,)
-                        self.channel_types = [
-                            CHANNEL_TYPE_MAP[t]
-                            for t in self._raw_type
-                            if t is not GuildChannel
-                        ]
+                        if not self.channel_types:
+                            self.channel_types = [
+                                CHANNEL_TYPE_MAP[t]
+                                for t in self._raw_type
+                                if t is not GuildChannel
+                            ]
         self.required: bool = (
             kwargs.pop("required", True) if "default" not in kwargs else False
         )
@@ -308,8 +325,10 @@ class Option:
 
         self.autocomplete = kwargs.pop("autocomplete", None)
 
-        self.name_localizations = kwargs.pop("name_localizations", None)
-        self.description_localizations = kwargs.pop("description_localizations", None)
+        self.name_localizations = kwargs.pop("name_localizations", MISSING)
+        self.description_localizations = kwargs.pop(
+            "description_localizations", MISSING
+        )
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -320,9 +339,9 @@ class Option:
             "choices": [c.to_dict() for c in self.choices],
             "autocomplete": bool(self.autocomplete),
         }
-        if self.name_localizations is not None:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
-        if self.description_localizations is not None:
+        if self.description_localizations is not MISSING:
             as_dict["description_localizations"] = self.description_localizations
         if self.channel_types:
             as_dict["channel_types"] = [t.value for t in self.channel_types]
@@ -353,7 +372,7 @@ class OptionChoice:
         The name of the choice. Shown in the UI when selecting an option.
     value: Optional[Union[:class:`str`, :class:`int`, :class:`float`]]
         The value of the choice. If not provided, will use the value of ``name``.
-    name_localizations: Optional[Dict[:class:`str`, :class:`str`]]
+    name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this choice. The values of this should be ``"locale": "name"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
@@ -362,7 +381,7 @@ class OptionChoice:
         self,
         name: str,
         value: str | int | float | None = None,
-        name_localizations: dict[str, str] | None = None,
+        name_localizations: dict[str, str] = MISSING,
     ):
         self.name = str(name)
         self.value = value if value is not None else name
@@ -370,16 +389,22 @@ class OptionChoice:
 
     def to_dict(self) -> dict[str, str | int | float]:
         as_dict = {"name": self.name, "value": self.value}
-        if self.name_localizations is not None:
+        if self.name_localizations is not MISSING:
             as_dict["name_localizations"] = self.name_localizations
 
         return as_dict
 
 
 def option(name, type=None, **kwargs):
-    """A decorator that can be used instead of typehinting :class:`Option`.
+    """A decorator that can be used instead of typehinting :class:`.Option`.
 
     .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    parameter_name: :class:`str`
+        The name of the target parameter this option is mapped to.
+        This allows you to have a separate UI ``name`` and parameter name.
     """
 
     def decorator(func):

@@ -38,7 +38,7 @@ import aiohttp
 
 from .. import utils
 from ..asset import Asset
-from ..channel import PartialMessageable
+from ..channel import ForumChannel, PartialMessageable
 from ..enums import WebhookType, try_enum
 from ..errors import (
     DiscordServerError,
@@ -47,6 +47,7 @@ from ..errors import (
     InvalidArgument,
     NotFound,
 )
+from ..flags import MessageFlags
 from ..http import Route
 from ..message import Attachment, Message
 from ..mixins import Hashable
@@ -181,8 +182,10 @@ class AsyncWebhookAdapter:
                         if remaining == "0" and response.status != 429:
                             delta = utils._parse_ratelimit_header(response)
                             _log.debug(
-                                "Webhook ID %s has been pre-emptively rate limited,"
-                                " waiting %.2f seconds",
+                                (
+                                    "Webhook ID %s has been pre-emptively rate limited,"
+                                    " waiting %.2f seconds"
+                                ),
                                 webhook_id,
                                 delta,
                             )
@@ -197,8 +200,10 @@ class AsyncWebhookAdapter:
 
                             retry_after: float = data["retry_after"]  # type: ignore
                             _log.warning(
-                                "Webhook ID %s is rate limited. Retrying in %.2f"
-                                " seconds",
+                                (
+                                    "Webhook ID %s is rate limited. Retrying in %.2f"
+                                    " seconds"
+                                ),
                                 webhook_id,
                                 retry_after,
                             )
@@ -616,8 +621,10 @@ def handle_message_parameters(
     embed: Embed | None = MISSING,
     embeds: list[Embed] = MISSING,
     view: View | None = MISSING,
+    applied_tags: list[Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
+    suppress: bool = False,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")
@@ -644,8 +651,12 @@ def handle_message_parameters(
         payload["avatar_url"] = str(avatar_url)
     if username:
         payload["username"] = username
-    if ephemeral:
-        payload["flags"] = 64
+
+    flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
+    payload["flags"] = flags.value
+
+    if applied_tags is not MISSING:
+        payload["applied_tags"] = applied_tags
 
     if allowed_mentions:
         if previous_allowed_mentions is not None:
@@ -823,6 +834,7 @@ class WebhookMessage(Message):
         attachments: list[Attachment] = MISSING,
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
+        suppress: bool | None = MISSING,
     ) -> WebhookMessage:
         """|coro|
 
@@ -864,6 +876,8 @@ class WebhookMessage(Message):
             the view is removed.
 
             .. versionadded:: 2.0
+        suppress: Optional[:class:`bool`]
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -888,9 +902,14 @@ class WebhookMessage(Message):
             thread = Object(self._thread_id)
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
+        elif isinstance(self.channel, ForumChannel):
+            thread = Object(self.id)
 
         if attachments is MISSING:
             attachments = self.attachments or MISSING
+
+        if suppress is MISSING:
+            suppress = self.flags.suppress_embeds
 
         return await self._state._webhook.edit_message(
             self.id,
@@ -903,6 +922,7 @@ class WebhookMessage(Message):
             view=view,
             allowed_mentions=allowed_mentions,
             thread=thread,
+            suppress=suppress,
         )
 
     async def delete(self, *, delay: float | None = None) -> None:
@@ -1261,6 +1281,7 @@ class Webhook(BaseWebhook):
             "user": {
                 "username": user.name,
                 "discriminator": user.discriminator,
+                "global_name": user.global_name,
                 "id": user.id,
                 "avatar": user._avatar,
             },
@@ -1549,7 +1570,9 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[True],
+        delete_after: float = None,
     ) -> WebhookMessage:
         ...
 
@@ -1570,7 +1593,9 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[False] = ...,
+        delete_after: float = None,
     ) -> None:
         ...
 
@@ -1590,6 +1615,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: bool = False,
         delete_after: float = None,
     ) -> WebhookMessage | None:
@@ -1661,6 +1687,10 @@ class Webhook(BaseWebhook):
             The name of the thread to create. Only works for forum channels.
 
             .. versionadded:: 2.0
+        applied_tags: List[:class:`Snowflake`]
+            A list of tags to apply to the message. Only works for threads.
+
+            .. versionadded:: 2.5
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
@@ -1685,7 +1715,8 @@ class Webhook(BaseWebhook):
         InvalidArgument
             Either there was no token associated with this webhook, ``ephemeral`` was passed
             with the improper webhook type, there was no state attached with this webhook when
-            giving it a view, or you specified both ``thread_name`` and ``thread``.
+            giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``
+            was passed with neither ``thread_name`` nor ``thread`` specified.
         """
 
         if self.token is None:
@@ -1701,6 +1732,9 @@ class Webhook(BaseWebhook):
 
         if thread and thread_name:
             raise InvalidArgument("You cannot specify both a thread and thread_name")
+
+        if applied_tags and not (thread or thread_name):
+            raise InvalidArgument("You cannot specify applied_tags without a thread")
 
         application_webhook = self.type is WebhookType.application
         if ephemeral and not application_webhook:
@@ -1730,6 +1764,7 @@ class Webhook(BaseWebhook):
             embeds=embeds,
             ephemeral=ephemeral,
             view=view,
+            applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
         )
@@ -1758,6 +1793,7 @@ class Webhook(BaseWebhook):
 
         if view is not MISSING and not view.is_finished():
             message_id = None if msg is None else msg.id
+            view.message = None if msg is None else msg
             self._state.store_view(view, message_id)
 
         if delete_after is not None:
@@ -1819,7 +1855,7 @@ class Webhook(BaseWebhook):
             thread_id=thread_id,
         )
         msg = self._create_message(data)
-        if isinstance(msg.channel, PartialMessageable):
+        if thread_id and isinstance(msg.channel, PartialMessageable):
             msg._thread_id = thread_id
 
         return msg
@@ -1837,6 +1873,7 @@ class Webhook(BaseWebhook):
         view: View | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         thread: Snowflake | None = MISSING,
+        suppress: bool = False,
     ) -> WebhookMessage:
         """|coro|
 
@@ -1884,6 +1921,8 @@ class Webhook(BaseWebhook):
             .. versionadded:: 2.0
         thread: Optional[:class:`~discord.abc.Snowflake`]
             The thread that contains the message.
+        suppress: :class:`bool`
+            Whether to suppress embeds for the message.
 
         Returns
         -------
@@ -1931,6 +1970,7 @@ class Webhook(BaseWebhook):
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            suppress=suppress,
         )
 
         thread_id: int | None = None
@@ -1953,6 +1993,7 @@ class Webhook(BaseWebhook):
 
         message = self._create_message(data)
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, message_id)
         return message
 

@@ -113,7 +113,7 @@ class Select(Item[V]):
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
-        "select_type",
+        "type",
         "placeholder",
         "min_values",
         "max_values",
@@ -327,13 +327,20 @@ class Select(Item[V]):
     @property
     def values(
         self,
-    ) -> list[str] | list[Member | User] | list[Role] | list[
-        Member | User | Role
-    ] | list[GuildChannel | Thread]:
-        """Union[List[:class:`str`], List[Union[:class:`discord.Member`, :class:`discord.User`]], List[:class:`discord.Role`]],
-        List[Union[:class:`discord.Member`, :class:`discord.User`, :class:`discord.Role`]], List[:class:`discord.abc.GuildChannel`]]:
-        A list of values that have been selected by the user.
+    ) -> (
+        list[str]
+        | list[Member | User]
+        | list[Role]
+        | list[Member | User | Role]
+        | list[GuildChannel | Thread]
+    ):
+        """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] |
+        List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None:
+        A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet.
         """
+        if self._interaction is None:
+            # The select has not been interacted with yet
+            return None
         select_type = self._underlying.type
         if select_type is ComponentType.string_select:
             return self._selected_values
@@ -352,9 +359,11 @@ class Select(Item[V]):
                 ):
                     result = guild.get_channel_or_thread(int(channel_id))
                     _data["_invoke_flag"] = True
-                    result._update(_data) if isinstance(
-                        result, Thread
-                    ) else result._update(guild, _data)
+                    (
+                        result._update(_data)
+                        if isinstance(result, Thread)
+                        else result._update(guild, _data)
+                    )
                 else:
                     # NOTE:
                     # This is a fallback in case the channel/thread is not found in the

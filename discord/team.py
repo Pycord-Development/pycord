@@ -108,7 +108,7 @@ class TeamMember(BaseUser):
 
         .. describe:: str(x)
 
-            Returns the team member's name with discriminator.
+            Returns the team member's name with discriminator or global_name.
 
     .. versionadded:: 1.3
 
@@ -120,6 +120,14 @@ class TeamMember(BaseUser):
         The team member's unique ID.
     discriminator: :class:`str`
         The team member's discriminator. This is given when the username has conflicts.
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be "0".
+    global_name: :class:`str`
+        The team member's global name.
+
+        .. versionadded:: 2.5
     avatar: Optional[:class:`str`]
         The avatar hash the team member has. Could be ``None``.
     bot: :class:`bool`
@@ -141,6 +149,16 @@ class TeamMember(BaseUser):
         super().__init__(state=state, data=data["user"])
 
     def __repr__(self) -> str:
+        if self.is_migrated:
+            if self.global_name is not None:
+                return (
+                    f"<{self.__class__.__name__} id={self.id} username={self.name!r} "
+                    f"global_name={self.global_name!r} membership_state={self.membership_state!r}>"
+                )
+            return (
+                f"<{self.__class__.__name__} id={self.id} username={self.name!r} "
+                f"membership_state={self.membership_state!r}>"
+            )
         return (
             f"<{self.__class__.__name__} id={self.id} name={self.name!r} "
             f"discriminator={self.discriminator!r} membership_state={self.membership_state!r}>"

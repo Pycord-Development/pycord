@@ -52,6 +52,7 @@ from .flags import MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
 from .mentions import AllowedMentions
+from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
@@ -79,6 +80,7 @@ if TYPE_CHECKING:
         DMChannel,
         GroupChannel,
         PartialMessageable,
+        StageChannel,
         TextChannel,
         VoiceChannel,
     )
@@ -99,7 +101,7 @@ if TYPE_CHECKING:
     from .user import ClientUser
 
     PartialMessageableChannel = Union[
-        TextChannel, VoiceChannel, Thread, DMChannel, PartialMessageable
+        TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
     ]
     MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
     SnowflakeTime = Union["Snowflake", datetime]
@@ -216,6 +218,14 @@ class User(Snowflake, Protocol):
         The user's username.
     discriminator: :class:`str`
         The user's discriminator.
+
+        .. note::
+
+            If the user has migrated to the new username system, this will always be "0".
+    global_name: :class:`str`
+        The user's global name.
+
+        .. versionadded:: 2.5
     avatar: :class:`~discord.Asset`
         The avatar asset the user has.
     bot: :class:`bool`
@@ -226,6 +236,7 @@ class User(Snowflake, Protocol):
 
     name: str
     discriminator: str
+    global_name: str | None
     avatar: Asset
     bot: bool
 
@@ -480,9 +491,11 @@ class GuildChannel:
                     "allow": allow.value,
                     "deny": deny.value,
                     "id": target.id,
-                    "type": _Overwrites.ROLE
-                    if isinstance(target, Role)
-                    else _Overwrites.MEMBER,
+                    "type": (
+                        _Overwrites.ROLE
+                        if isinstance(target, Role)
+                        else _Overwrites.MEMBER
+                    ),
                 }
 
                 perms.append(payload)
@@ -496,6 +509,28 @@ class GuildChannel:
             if not isinstance(ch_type, ChannelType):
                 raise InvalidArgument("type field must be of type ChannelType")
             options["type"] = ch_type.value
+
+        try:
+            default_reaction_emoji = options["default_reaction_emoji"]
+        except KeyError:
+            pass
+        else:
+            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+                default_reaction_emoji = default_reaction_emoji._to_partial()
+            elif isinstance(default_reaction_emoji, int):
+                default_reaction_emoji = PartialEmoji(
+                    name=None, id=default_reaction_emoji
+                )
+            elif isinstance(default_reaction_emoji, str):
+                default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            else:
+                raise InvalidArgument(
+                    "default_reaction_emoji must be of type: Emoji | int | str"
+                )
+
+            options[
+                "default_reaction_emoji"
+            ] = default_reaction_emoji._to_forum_reaction_payload()
 
         if options:
             return await self._state.http.edit_channel(
@@ -702,7 +737,7 @@ class GuildChannel:
             return Permissions.all()
 
         default = self.guild.default_role
-        base = Permissions(default.permissions.value)
+        base = Permissions(default.permissions.value if default else 0)
 
         # Handle the role case first
         if isinstance(obj, Role):
@@ -1292,6 +1327,8 @@ class Messageable:
     The following implement this ABC:
 
     - :class:`~discord.TextChannel`
+    - :class:`~discord.VoiceChannel`
+    - :class:`~discord.StageChannel`
     - :class:`~discord.DMChannel`
     - :class:`~discord.GroupChannel`
     - :class:`~discord.User`
@@ -1323,6 +1360,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1342,6 +1380,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1361,6 +1400,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1380,6 +1420,7 @@ class Messageable:
         mention_author: bool = ...,
         view: View = ...,
         suppress: bool = ...,
+        silent: bool = ...,
     ) -> Message:
         ...
 
@@ -1400,6 +1441,7 @@ class Messageable:
         mention_author=None,
         view=None,
         suppress=None,
+        silent=None,
     ):
         """|coro|
 
@@ -1473,6 +1515,10 @@ class Messageable:
             .. versionadded:: 2.0
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
+        silent: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.4
 
         Returns
         -------
@@ -1512,11 +1558,10 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
-        flags = (
-            MessageFlags.suppress_embeds.flag
-            if suppress
-            else MessageFlags.DEFAULT_VALUE
-        )
+        flags = MessageFlags(
+            suppress_embeds=bool(suppress),
+            suppress_notifications=bool(silent),
+        ).value
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]

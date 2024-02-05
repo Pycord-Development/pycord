@@ -36,6 +36,7 @@ A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
 """
 )
 
+
 # Only write if it's changed to avoid recompiling the docs
 def write_new():
     with open(new_changelog, "w") as fw:
@@ -379,7 +380,7 @@ html_js_files = ["js/custom.js"]
 
 # The name of a javascript file (relative to the configuration directory) that
 # implements a search results scorer. If empty, the default will be used.
-# html_search_scorer = "_static/scorer.js"
+html_search_scorer = "_static/js/scorer.js"
 
 # html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 

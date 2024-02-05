@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools>=62.6,<66",
+    "setuptools>=62.6,<70",
     "setuptools-scm>=6.2,<8",
 ]
 build-backend = "setuptools.build_meta"
@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Internet",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -34,7 +35,7 @@ dynamic = ["version", "dependencies", "optional-dependencies"]
 
 [project.urls]
 Homepage = "https://pycord.dev"
-Changelog = "https://github.com/Pycord-Development/pycord/blob/master/CHANGELOG.md"
+Changelog = "https://docs.pycord.dev/en/master/changelog.html"
 Source = "https://github.com/Pycord-Development/pycord"
 Documentation = "https://docs.pycord.dev"
 Tracker = "https://github.com/Pycord-Development/pycord/issues"
@@ -65,7 +66,7 @@ voice = {file = "requirements/voice.txt"}
 [tool.setuptools_scm]
 
 [tool.black]
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
 
 [tool.isort]
 profile = "black"

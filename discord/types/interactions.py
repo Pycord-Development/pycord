@@ -33,12 +33,14 @@ from .components import Component, ComponentType
 from .embed import Embed
 from .member import Member
 from .message import Attachment
+from .monetization import Entitlement
 from .role import Role
 from .snowflake import Snowflake
 from .user import User
 
 if TYPE_CHECKING:
     from .message import AllowedMentions, Message
+    from ..interactions import InteractionChannel
 
 from .._typed_dict import NotRequired, TypedDict
 
@@ -46,35 +48,45 @@ ApplicationCommandType = Literal[1, 2, 3]
 
 
 class ApplicationCommand(TypedDict):
-    options: NotRequired[list[ApplicationCommandOption]]
-    type: NotRequired[ApplicationCommandType]
-    name_localized: NotRequired[str]
-    name_localizations: NotRequired[dict[str, str]]
-    description_localized: NotRequired[str]
-    description_localizations: NotRequired[dict[str, str]]
     id: Snowflake
+    type: NotRequired[ApplicationCommandType]
     application_id: Snowflake
+    guild_id: NotRequired[Snowflake]
     name: str
+    name_localizations: NotRequired[dict[str, str] | None]
     description: str
+    description_localizations: NotRequired[dict[str, str] | None]
+    options: NotRequired[list[ApplicationCommandOption]]
+    default_member_permissions: str | None
+    dm_permission: NotRequired[bool]
+    default_permission: NotRequired[bool | None]
+    nsfw: NotRequired[bool]
+    version: Snowflake
 
 
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class ApplicationCommandOption(TypedDict):
-    choices: NotRequired[list[ApplicationCommandOptionChoice]]
-    options: NotRequired[list[ApplicationCommandOption]]
-    name_localizations: NotRequired[dict[str, str]]
-    description_localizations: NotRequired[dict[str, str]]
     type: ApplicationCommandOptionType
     name: str
+    name_localizations: NotRequired[dict[str, str] | None]
     description: str
+    description_localizations: NotRequired[dict[str, str] | None]
     required: bool
+    options: NotRequired[list[ApplicationCommandOption]]
+    choices: NotRequired[list[ApplicationCommandOptionChoice]]
+    channel_types: NotRequired[list[ChannelType]]
+    min_value: NotRequired[int | float]
+    max_value: NotRequired[int | float]
+    min_length: NotRequired[int]
+    max_length: NotRequired[int]
+    autocomplete: NotRequired[bool]
 
 
 class ApplicationCommandOptionChoice(TypedDict):
-    name_localizations: NotRequired[dict[str, str]]
     name: str
+    name_localizations: NotRequired[dict[str, str] | None]
     value: str | int
 
 
@@ -100,7 +112,7 @@ class GuildApplicationCommandPermissions(PartialGuildApplicationCommandPermissio
     guild_id: Snowflake
 
 
-InteractionType = Literal[1, 2, 3]
+InteractionType = Literal[1, 2, 3, 4, 5]
 
 
 class _ApplicationCommandInteractionDataOption(TypedDict):
@@ -196,6 +208,7 @@ class Interaction(TypedDict):
     data: NotRequired[InteractionData]
     guild_id: NotRequired[Snowflake]
     channel_id: NotRequired[Snowflake]
+    channel: NotRequired[InteractionChannel]
     member: NotRequired[Member]
     user: NotRequired[User]
     message: NotRequired[Message]
@@ -207,6 +220,7 @@ class Interaction(TypedDict):
     type: InteractionType
     token: str
     version: int
+    entitlements: list[Entitlement]
 
 
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
@@ -218,7 +232,7 @@ class InteractionApplicationCommandCallbackData(TypedDict, total=False):
     components: list[Component]
 
 
-InteractionResponseType = Literal[1, 4, 5, 6, 7]
+InteractionResponseType = Literal[1, 4, 5, 6, 7, 8, 9, 10]
 
 
 class InteractionResponse(TypedDict):

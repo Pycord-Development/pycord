@@ -1,2 +1,2 @@
-orjson>=3.5.4
-aiohttp[speed]
+msgspec~=0.18.6
+aiohttp[speedups]

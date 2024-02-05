@@ -27,6 +27,7 @@ from ._version import *
 from . import abc, opus, sinks, ui, utils
 from .activity import *
 from .appinfo import *
+from .application_role_connection import *
 from .asset import *
 from .audit_logs import *
 from .automod import *
@@ -51,7 +52,9 @@ from .invite import *
 from .member import *
 from .mentions import *
 from .message import *
+from .monetization import *
 from .object import *
+from .onboarding import *
 from .partial_emoji import *
 from .permissions import *
 from .player import *

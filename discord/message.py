@@ -39,6 +39,7 @@ from typing import (
     Union,
     overload,
 )
+from urllib.parse import parse_qs, urlparse
 
 from . import utils
 from .components import _component_factory
@@ -47,7 +48,7 @@ from .emoji import Emoji
 from .enums import ChannelType, MessageType, try_enum
 from .errors import InvalidArgument
 from .file import File
-from .flags import MessageFlags
+from .flags import AttachmentFlags, MessageFlags
 from .guild import Guild
 from .member import Member
 from .mixins import Hashable
@@ -159,7 +160,7 @@ class Attachment(Hashable):
         case of images. When the message is deleted, this URL might be valid for a few
         minutes or not valid at all.
     content_type: Optional[:class:`str`]
-        The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_
+        The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_.
     ephemeral: :class:`bool`
         Whether the attachment is ephemeral or not.
 
@@ -169,6 +170,26 @@ class Attachment(Hashable):
         The attachment's description.
 
         .. versionadded:: 2.0
+
+    duration_secs: Optional[:class:`float`]
+        The duration of the audio file (currently for voice messages).
+
+        .. versionadded:: 2.5
+
+    waveform: Optional[:class:`str`]
+        The base64 encoded bytearray representing a sampled waveform (currently for voice messages).
+
+        .. versionadded:: 2.5
+
+    flags: :class:`AttachmentFlags`
+        Extra attributes of the attachment.
+
+        .. versionadded:: 2.5
+
+    hm: :class:`str`
+        The unique signature of this attachment's instance.
+
+        .. versionadded:: 2.5
     """
 
     __slots__ = (
@@ -183,6 +204,12 @@ class Attachment(Hashable):
         "content_type",
         "ephemeral",
         "description",
+        "duration_secs",
+        "waveform",
+        "flags",
+        "_ex",
+        "_is",
+        "hm",
     )
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
@@ -197,6 +224,34 @@ class Attachment(Hashable):
         self.content_type: str | None = data.get("content_type")
         self.ephemeral: bool = data.get("ephemeral", False)
         self.description: str | None = data.get("description")
+        self.duration_secs: float | None = data.get("duration_secs")
+        self.waveform: str | None = data.get("waveform")
+        self.flags: AttachmentFlags = AttachmentFlags._from_value(data.get("flags", 0))
+        self._ex: str | None = None
+        self._is: str | None = None
+        self.hm: str | None = None
+
+        query = urlparse(self.url).query
+        extras = ["_ex", "_is", "hm"]
+        if query_params := parse_qs(query):
+            for attr in extras:
+                value = "".join(query_params.get(attr.replace("_", ""), []))
+                if value:
+                    setattr(self, attr, value)
+
+    @property
+    def expires_at(self) -> datetime.datetime:
+        """This attachment URL's expiry time in UTC."""
+        if not self._ex:
+            return None
+        return datetime.datetime.utcfromtimestamp(int(self._ex, 16))
+
+    @property
+    def issued_at(self) -> datetime.datetime:
+        """The attachment URL's issue time in UTC."""
+        if not self._is:
+            return None
+        return datetime.datetime.utcfromtimestamp(int(self._is, 16))
 
     def is_spoiler(self) -> bool:
         """Whether this attachment contains a spoiler."""
@@ -1468,6 +1523,7 @@ class Message(Hashable):
         message = Message(state=self._state, channel=self.channel, data=data)
 
         if view and not view.is_finished():
+            view.message = message
             self._state.store_view(view, self.id)
 
         if delete_after is not None:
@@ -1674,7 +1730,11 @@ class Message(Hashable):
         await self._state.http.clear_reactions(self.channel.id, self.id)
 
     async def create_thread(
-        self, *, name: str, auto_archive_duration: ThreadArchiveDuration = MISSING
+        self,
+        *,
+        name: str,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        slowmode_delay: int = MISSING,
     ) -> Thread:
         """|coro|
 
@@ -1691,9 +1751,12 @@ class Message(Hashable):
         ----------
         name: :class:`str`
             The name of the thread.
-        auto_archive_duration: :class:`int`
+        auto_archive_duration:  Optional[:class:`int`]
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
+        slowmode_delay: Optional[:class:`int`]
+            Specifies the slowmode rate limit for user in this thread, in seconds.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
 
         Returns
         -------
@@ -1722,6 +1785,7 @@ class Message(Hashable):
             name=name,
             auto_archive_duration=auto_archive_duration
             or default_auto_archive_duration,
+            rate_limit_per_user=slowmode_delay or 0,
         )
 
         self.thread = Thread(guild=self.guild, state=self._state, data=data)
@@ -1798,6 +1862,8 @@ class PartialMessage(Hashable):
     - :meth:`TextChannel.get_partial_message`
     - :meth:`Thread.get_partial_message`
     - :meth:`DMChannel.get_partial_message`
+    - :meth:`VoiceChannel.get_partial_message`
+    - :meth:`StageChannel.get_partial_message`
 
     Note that this class is trimmed down and has no rich attributes.
 
@@ -1819,7 +1885,7 @@ class PartialMessage(Hashable):
 
     Attributes
     ----------
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`]
+    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]
         The channel associated with this partial message.
     id: :class:`int`
         The message ID.
@@ -1844,6 +1910,7 @@ class PartialMessage(Hashable):
         if channel.type not in (
             ChannelType.text,
             ChannelType.voice,
+            ChannelType.stage_voice,
             ChannelType.news,
             ChannelType.private,
             ChannelType.news_thread,
@@ -1851,7 +1918,7 @@ class PartialMessage(Hashable):
             ChannelType.private_thread,
         ):
             raise TypeError(
-                "Expected TextChannel, VoiceChannel, DMChannel or Thread not"
+                "Expected TextChannel, VoiceChannel, StageChannel, DMChannel or Thread not"
                 f" {type(channel)!r}"
             )
 
@@ -2018,5 +2085,6 @@ class PartialMessage(Hashable):
             # data isn't unbound
             msg = self._state.create_message(channel=self.channel, data=data)  # type: ignore
             if view and not view.is_finished():
+                view.message = msg
                 self._state.store_view(view, self.id)
             return msg

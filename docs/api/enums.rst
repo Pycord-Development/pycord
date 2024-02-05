@@ -51,7 +51,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: attachment
 
-        An attachment. Currently in beta.
+        An attachment.
 
 .. class:: ChannelType
 
@@ -242,6 +242,58 @@ of :class:`enum.Enum`.
         The system message denoting that an context menu command was executed.
 
         .. versionadded:: 2.0
+    .. attribute:: auto_moderation_action
+
+        The system message denoting an action by automod.
+
+        .. versionadded:: 2.3
+    .. attribute:: role_subscription_purchase
+
+        The system message denoting a role-subscription purchase.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: interaction_premium_upsell
+
+        The system message denoting an interaction premium upsell.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_start
+
+        The system message denoting that a stage event has started.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_end
+
+        The system message denoting that a stage event has ended.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_speaker
+
+        The system message denoting that a stage event has a new speaker.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_raise_hand
+
+        The system message denoting that someone in a stage event is raising their hand.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: stage_topic
+
+        The system message denoting that a stage event has a new topic.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: guild_application_premium_subscription
+
+        The system message denoting that a member has subscribed to a guild application.
+
+        .. versionadded:: 2.4
 
 .. class:: UserFlags
 
@@ -303,7 +355,7 @@ of :class:`enum.Enum`.
         The user is an Early Verified Bot Developer.
     .. attribute:: discord_certified_moderator
 
-        The user is a Discord Certified Moderator.
+        The user is a Moderator Programs Alumni.
     .. attribute:: bot_http_interactions
 
         The bot has set an interactions endpoint url.
@@ -1460,6 +1512,86 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.0
 
+    .. attribute:: auto_moderation_rule_create
+
+        A guild auto moderation rule was created.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.enabled`
+        - :attr:`~AuditLogDiff.trigger_type`
+        - :attr:`~AuditLogDiff.event_type`
+        - :attr:`~AuditLogDiff.trigger_metadata`
+        - :attr:`~AuditLogDiff.actions`
+        - :attr:`~AuditLogDiff.exempt_roles`
+        - :attr:`~AuditLogDiff.exempt_channels`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_rule_update
+
+        A guild auto moderation rule was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.enabled`
+        - :attr:`~AuditLogDiff.trigger_type`
+        - :attr:`~AuditLogDiff.trigger_metadata`
+        - :attr:`~AuditLogDiff.actions`
+        - :attr:`~AuditLogDiff.exempt_roles`
+        - :attr:`~AuditLogDiff.exempt_channels`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_rule_delete
+
+        A guild auto moderation rule was deleted.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.name`
+        - :attr:`~AuditLogDiff.enabled`
+        - :attr:`~AuditLogDiff.trigger_type`
+        - :attr:`~AuditLogDiff.event_type`
+        - :attr:`~AuditLogDiff.trigger_metadata`
+        - :attr:`~AuditLogDiff.actions`
+        - :attr:`~AuditLogDiff.exempt_roles`
+        - :attr:`~AuditLogDiff.exempt_channels`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_block_message
+
+        A message was blocked by auto moderation.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_flag_to_channel
+
+        A message was flagged by auto moderation.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: auto_moderation_user_communication_disabled
+
+        A member was timed out by auto moderation.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: creator_monetization_request_created
+
+        A creator monetization request was created.
+
+        .. versionadded:: 2.5
+
+    .. attribute:: creator_monetization_terms_accepted
+
+        The creator monetization terms were accepted.
+
+        .. versionadded:: 2.5
+
 
 .. class:: AuditLogActionCategory
 
@@ -1591,6 +1723,12 @@ of :class:`enum.Enum`.
 
         Represents a sticker with a lottie image.
 
+    .. attribute:: gif
+
+        Represents a sticker with a gif image.
+
+        .. versionadded:: 2.4
+
 .. class:: InviteTarget
 
     Represents the invite type for voice channel invites.
@@ -1698,29 +1836,83 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.0
 
+    .. attribute:: ask_away
+
+        Represents the embedded application Ask Away.
+
+        .. versionadded:: 2.4
+
     .. attribute:: awkword
 
         Represents the embedded application Awkword.
 
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: awkword_dev
+
+        Development version of :attr:`.awkword`.
+
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: bash_out
+
+        Represents the embedded application Bash Out.
+
+        .. versionadded:: 2.4
+
     .. attribute:: betrayal
 
-        Represents the embedded application Betrayal.io
+        Represents the embedded application Betrayal.io.
+
+    .. attribute:: blazing_8s
+
+        Represents the embedded application Blazing 8s.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: blazing_8s_dev
+
+        Development version of :attr:`.blazing_8s`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: blazing_8s_qa
+
+        QA version of :attr:`.blazing_8s`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: blazing_8s_staging
+
+        Staging version of :attr:`.blazing_8s`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: bobble_league
+
+        Represents the embedded application Bobble League.
+
+        .. versionadded:: 2.4
 
     .. attribute:: checkers_in_the_park
 
-        Represents the embedded application Checkers in the Park Prod.
+        Represents the embedded application Checkers in the Park.
 
     .. attribute:: checkers_in_the_park_dev
 
-        Represents the embedded application Checkers in the Park Development.
-
-    .. attribute:: checkers_in_the_park_staging
-
-        Represents the embedded application Checkers in the Park Staging.
+        Development version of :attr:`.checkers_in_the_park`.
 
     .. attribute:: checkers_in_the_park_qa
 
-        Represents the embedded application Checkers in the Park QA.
+        QA version of :attr:`.checkers_in_the_park`.
+
+    .. attribute:: checkers_in_the_park_staging
+
+        Staging version of :attr:`.checkers_in_the_park`.
 
     .. attribute:: chess_in_the_park
 
@@ -1728,71 +1920,165 @@ of :class:`enum.Enum`.
 
     .. attribute:: chess_in_the_park_dev
 
-        Represents the embedded application Chess in the Park Development.
+        Development version of :attr:`.chess_in_the_park`.
 
-    .. attribute:: chest_in_the_park_staging
+    .. attribute:: chess_in_the_park_qa
 
-        Represents the embedded application Chess in the Park Staging.
+        QA version of :attr:`.chess_in_the_park`.
 
-    .. attribute:: chest_in_the_park_qa
+    .. attribute:: chess_in_the_park_staging
 
-        Represents the embedded application Chess in the Park QA.
+        Staging version of :attr:`.chess_in_the_park`.
+
+    .. attribute:: decoders_dev
+
+        Represents the embedded application Decoders Development.
+
+        .. warning::
+
+            This activity has been removed.
 
     .. attribute:: doodle_crew
 
         Represents the embedded application Doodle Crew.
 
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: doodle_crew_dev
+
+        Development version of :attr:`.doodle_crew`.
+
+        .. warning::
+
+            This activity has been removed.
+
     .. attribute:: fishington
 
-        Represents the embedded application Fishington.io
+        Represents the embedded application Fishington.io.
 
-    .. attribute:: letter_tile
+    .. attribute:: gartic_phone
 
-        Represents the embedded application Letter Tile.
+        Represents the embedded application Gartic Phone.
 
-    .. attribute:: ocho
+        .. versionadded:: 2.5
 
-        Represents the embedded application Ocho.
+    .. attribute:: jamspace
 
-    .. attribute:: ocho_dev
+        Represents the embedded application Jamspace.
 
-        Represents the embedded application Ocho Development.
+        .. versionadded:: 2.5
 
-    .. attribute:: ocho_staging
+    .. attribute:: know_what_i_meme
 
-        Represents the embedded application Ocho Staging.
+        Represents the embedded application Know What I Meme.
 
-    .. attribute:: ocho_qa
+        .. versionadded:: 2.4
 
-        Represents the embedded application Ocho QA.
+    .. attribute:: land
 
-    .. attribute:: poker_night_staging
+        Represents the embedded application Land.io.
 
-        Represents the embedded application Poker Night Staging.
+        .. versionadded:: 2.4
+
+    .. attribute:: letter_league
+
+        Represents the embedded application Letter League.
+
+    .. attribute:: letter_league_dev
+
+        Development version of :attr:`.letter_league`.
+
+        .. versionadded:: 2.4
 
     .. attribute:: poker_night
 
         Represents the embedded application Poker Night.
 
+    .. attribute:: poker_night_dev
+
+        Development version of :attr:`.poker_night`.
+
+        .. versionadded:: 2.4
+
     .. attribute:: poker_night_qa
 
-        Represents the embedded application Poker QA.
+        QA version of :attr:`.poker_night`.
+
+    .. attribute:: poker_night_staging
+
+        Staging version of :attr:`.poker_night`.
+
+    .. attribute:: putt_party
+
+        Represents the embedded application Putt Party.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: putt_party_dev
+
+        Development version of :attr:`.putt_party`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: putt_party_qa
+
+        QA version of :attr:`.putt_party`.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: putt_party_staging
+
+        Staging version of :attr:`.putt_party`.
+
+        .. versionadded:: 2.4
 
     .. attribute:: putts
 
         Represents the embedded application Putts.
 
+        .. warning::
+
+            This activity has been removed.
+
+    .. attribute:: sketch_heads
+
+        Represents the embedded application Sketch Heads.
+
+        .. versionadded:: 2.4
+
+    .. attribute:: sketch_heads_dev
+
+        Development version of :attr:`.sketch_heads`.
+
+        .. versionadded:: 2.4
+
     .. attribute:: sketchy_artist
 
         Represents the embedded application Sketchy Artist.
 
+        .. warning::
+
+            This activity has been removed.
+
     .. attribute:: sketchy_artist_dev
 
-        Represents the embedded application Sketchy Artist development version.
+        Development version of :attr:`.sketchy_artist`.
+
+        .. warning::
+
+            This activity has been removed.
 
     .. attribute:: spell_cast
 
         Represents the embedded application Spell Cast.
+
+    .. attribute:: spell_cast_staging
+
+        Staging version of :attr:`.spell_cast`.
+
+        .. versionadded:: 2.4
 
     .. attribute:: watch_together
 
@@ -1808,7 +2094,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: word_snacks_dev
 
-        Represents the embedded application word snacks. This is development version of :attr:`.word_snacks`
+        Development version of :attr:`.word_snacks`.
 
     .. attribute:: youtube_together
 
@@ -1867,3 +2153,224 @@ of :class:`enum.Enum`.
     .. attribute:: guild_only
 
         Represents a scheduled event that is only available to members inside the guild.
+
+.. class:: ApplicationRoleConnectionMetadataType
+
+    Represents an application role connection metadata type.
+
+    Each metadata type offers a comparison operation that allows guilds to
+    configure role requirements based on metadata values stored by the bot.
+    Bots specify a ``metadata value`` for each user and guilds specify the
+    required ``guild's configured value`` within the guild role settings.
+
+    .. versionadded:: 2.4
+
+    .. attribute:: integer_less_than_or_equal
+
+        The metadata value (``integer``) is less than or equal to the guild's configured value (``integer``).
+
+    .. attribute:: integer_greater_than_or_equal
+
+        The metadata value (``integer``) is greater than or equal to the guild's configured value (``integer``).
+
+    .. attribute:: integer_equal
+
+        The metadata value (``integer``) is equal to the guild's configured value (``integer``).
+
+    .. attribute:: integer_not_equal
+
+        The metadata value (``integer``) is not equal to the guild's configured value (``integer``).
+
+    .. attribute:: datetime_less_than_or_equal
+
+        The metadata value (``datetime``) is less than or equal to the guild's configured value
+        (``integer``; the number of days before the current date).
+
+    .. attribute:: datetime_greater_than_or_equal
+
+        The metadata value (``datetime``) is greater than or equal to the guild's configured value
+        (``integer``; the number of days before the current date).
+
+    .. attribute:: boolean_equal
+
+        The metadata value (``integer``) is equal to the guild's configured value (``integer``; 1).
+
+    .. attribute:: boolean_not_equal
+
+        The metadata value (``integer``) is not equal to the guild's configured value (``integer``; 1).
+
+.. class:: AutoModTriggerType
+
+    Represents an AutoMod trigger type.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: keyword
+
+        Represents a keyword rule trigger, which are customizable by a guild.
+
+        Possible attributes for :class:`AutoModTriggerMetadata`:
+
+        - :attr:`~AutoModTriggerMetadata.keyword_filter`
+        - :attr:`~AutoModTriggerMetadata.regex_patterns`
+        - :attr:`~AutoModTriggerMetadata.allow_list`
+
+    .. attribute:: keyword_preset
+
+        Represents a preset keyword rule trigger.
+
+        Possible attributes for :class:`AutoModTriggerMetadata`:
+
+        - :attr:`~AutoModTriggerMetadata.presets`
+        - :attr:`~AutoModTriggerMetadata.allow_list`
+
+    .. attribute:: spam
+
+        Represents the spam rule trigger.
+
+        There are no possible attributes for :class:`AutoModTriggerMetadata`.
+
+    .. attribute:: mention_spam
+
+        Represents a mention spam keyword rule trigger.
+
+        Possible attributes for :class:`AutoModTriggerMetadata`:
+
+        - :attr:`~AutoModTriggerMetadata.mention_total_limit`
+
+        .. versionadded:: 2.4
+
+    .. attribute:: harmful_link
+
+        Represents a harmful link rule trigger.
+
+        .. deprecated:: 2.4
+            Removed by Discord and merged into :attr:`spam`.
+
+.. class:: AutoModEventType
+
+    Represents an AutoMod event type.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: message_send
+
+        Represents a message send AutoMod event.
+
+.. class:: AutoModActionType
+
+    Represents the type of action AutoMod is performing.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: block_message
+
+        Represents a block message action.
+
+    .. attribute:: send_alert_message
+
+        Represents a send alert message action.
+
+    .. attribute:: timeout
+
+        Represents a timeout action.
+
+.. class:: AutoModKeywordPresetType
+
+    Represents an AutoMod keyword preset type.
+
+    .. versionadded:: 2.0
+
+    .. attribute:: profanity
+
+        Represents the profanity keyword preset rule.
+
+    .. attribute:: sexual_content
+
+        Represents the sexual content keyword preset rule.
+
+    .. attribute:: slurs
+
+        Represents the slurs keyword preset rule.
+
+.. class:: PromptType
+
+    Represents how each prompt's options are displayed.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: multiple_choice
+
+        The options will appear in a grid form, showing the name and description.
+
+    .. attribute:: dropdown
+
+        The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt.
+
+.. class:: OnboardingMode
+
+    Represents the current mode of the guild's onboarding flow.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: default
+
+        Only default channels are counted towards the Onboarding requirements.
+
+    .. attribute:: advanced
+
+        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+
+.. class:: ReactionType
+
+    Represents a Reaction's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: normal
+
+        Represents a normal reaction.
+
+    .. attribute:: burst
+
+        Represents a super reaction.
+
+.. class:: SKUType
+
+    Represents an SKU's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: subscription
+
+        Represents a recurring subscription.
+
+    .. attribute:: subscription_group
+
+        A system-generated group for each subscription SKU created. These types of SKUs are currently unused.
+
+
+.. class:: EntitlementType
+
+    Represents an entitlement's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: app_subscription
+
+        Entitlement was purchased as an app subscription.
+
+
+.. class:: EntitlementOwnerType
+
+    Represents an entitlement's ownership type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: guild
+
+        Entitlement is owned by a guild.
+
+    .. attribute:: user
+
+        Entitlement is owned by a user.
