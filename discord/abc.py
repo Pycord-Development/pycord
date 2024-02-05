@@ -549,7 +549,7 @@ class GuildChannel:
             if overwrite.type == _Overwrites.MEMBER:
                 continue
 
-            if isEqual(overwrite.id, everyone_id):
+            if overwrite.id == everyone_id or isEqual(overwrite.id, everyone_id):
                 # the @everyone role is not guaranteed to be the first one
                 # in the list of permission overwrites, however the permission
                 # resolution code kind of requires that it is the first one in
