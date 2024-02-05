@@ -44,6 +44,7 @@ from typing import (
 )
 
 import discord
+
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
@@ -982,12 +983,19 @@ class ConnectionState:
             thread = Thread(guild=guild, state=guild._state, data=data)
             guild._add_thread(thread)
             if data.get("newly_created"):
-                thread._add_member(ThreadMember(thread, {
-                    "id": thread.id,
-                    "user_id": data["owner_id"],
-                    "join_timestamp": data["thread_metadata"]["create_timestamp"],
-                    "flags": utils.MISSING
-                    }))
+                thread._add_member(
+                    ThreadMember(
+                        thread,
+                        {
+                            "id": thread.id,
+                            "user_id": data["owner_id"],
+                            "join_timestamp": data["thread_metadata"][
+                                "create_timestamp"
+                            ],
+                            "flags": utils.MISSING,
+                        },
+                    )
+                )
                 self.dispatch("thread_create", thread)
         else:
             self.dispatch("thread_join", cached_thread)
