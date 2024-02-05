@@ -237,6 +237,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `AttributeError` due to `entitlements` not being included in
   `Interaction.__slots__`.
   ([#2345](https://github.com/Pycord-Development/pycord/pull/2345))
+- Fixed `Thread.me` being out of date and added the thread owner to `Thread.members` on
+  creation. ([#1296](https://github.com/Pycord-Development/pycord/issues/1296))
 
 ## [2.4.1] - 2023-03-20
 

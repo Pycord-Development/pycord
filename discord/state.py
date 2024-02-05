@@ -43,6 +43,8 @@ from typing import (
     Union,
 )
 
+import discord
+
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
@@ -976,14 +978,27 @@ class ConnectionState:
             )
             return
 
-        thread = Thread(guild=guild, state=guild._state, data=data)
-        has_thread = guild.get_thread(thread.id)
-        guild._add_thread(thread)
-        if not has_thread:
+        cached_thread = guild.get_thread(int(data["id"]))
+        if not cached_thread:
+            thread = Thread(guild=guild, state=guild._state, data=data)
+            guild._add_thread(thread)
             if data.get("newly_created"):
+                thread._add_member(
+                    ThreadMember(
+                        thread,
+                        {
+                            "id": thread.id,
+                            "user_id": data["owner_id"],
+                            "join_timestamp": data["thread_metadata"][
+                                "create_timestamp"
+                            ],
+                            "flags": utils.MISSING,
+                        },
+                    )
+                )
                 self.dispatch("thread_create", thread)
-            else:
-                self.dispatch("thread_join", thread)
+        else:
+            self.dispatch("thread_join", cached_thread)
 
     def parse_thread_update(self, data) -> None:
         guild_id = int(data["guild_id"])
@@ -1095,6 +1110,7 @@ class ConnectionState:
 
         member = ThreadMember(thread, data)
         thread.me = member
+        thread._add_member(member)
 
     def parse_thread_members_update(self, data) -> None:
         guild_id = int(data["guild_id"])
@@ -1123,20 +1139,21 @@ class ConnectionState:
         removed_member_ids = [int(x) for x in data.get("removed_member_ids", [])]
         self_id = self.self_id
         for member in added_members:
+            thread._add_member(member)
             if member.id != self_id:
-                thread._add_member(member)
                 self.dispatch("thread_member_join", member)
             else:
                 thread.me = member
                 self.dispatch("thread_join", thread)
 
         for member_id in removed_member_ids:
+            member = thread._pop_member(member_id)
             if member_id != self_id:
-                member = thread._pop_member(member_id)
                 self.dispatch("raw_thread_member_remove", raw)
                 if member is not None:
                     self.dispatch("thread_member_remove", member)
             else:
+                thread.me = None
                 self.dispatch("thread_remove", thread)
 
     def parse_guild_member_add(self, data) -> None:
