@@ -43,6 +43,7 @@ from typing import (
     Union,
 )
 
+import discord
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
@@ -1129,9 +1130,6 @@ class ConnectionState:
         added_members = [ThreadMember(thread, d) for d in data.get("added_members", [])]
         removed_member_ids = [int(x) for x in data.get("removed_member_ids", [])]
         self_id = self.self_id
-        print(f"Cached Members: {thread.members}")
-        print(f"Added: {added_members}")
-        print(f"Removed: {removed_member_ids}")
         for member in added_members:
             thread._add_member(member)
             if member.id != self_id:
