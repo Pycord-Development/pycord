@@ -814,9 +814,9 @@ class VoiceClient(VoiceProtocol):
         """
         if not self.recording:
             raise RecordingException("Not currently recording audio.")
-        self.decoder.stop()
         self.recording = False
         self.paused = False
+        self.decoder.stop()
 
     def toggle_pause(self):
         """Pauses or unpauses the recording.

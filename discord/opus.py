@@ -506,8 +506,8 @@ class Decoder(_OpusStruct):
             frame_size = frames * samples_per_frame
 
         pcm = (
-            ctypes.c_int16
-            * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16))
+                ctypes.c_int16
+                * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16))
         )()
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)
 
@@ -556,11 +556,22 @@ class DecodeManager(threading.Thread, _OpusStruct):
             self.client.recv_decoded_audio(data)
 
     def stop(self):
+        start_time = time.time()  # Capture the start time of the loop
+        timeout_duration = 5  # Timeout duration in seconds
+
         while self.decoding:
+            elapsed_time = time.time() - start_time
+            if elapsed_time > timeout_duration:
+                _log.error(
+                    f"Timeout exceeded while waiting for the decoder to stop. "
+                    f"Discarding the {len(self.decode_queue)} remaining in the queue. Decoder Process Killed")
+                break
+
             time.sleep(0.1)
             self.decoder = {}
             gc.collect()
-            print("Decoder Process Killed")
+
+        print("Decoder Process Killed")
         self._end_thread.set()
 
     def get_decoder(self, ssrc):
