@@ -439,10 +439,13 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         self.after = after or OLDEST_OBJECT
         self._users = {}
         self._state = guild._state
+        self.oldest_first = oldest_first
 
         self._filter = None  # entry dict -> bool
 
         self.entries = asyncio.Queue()
+        if oldest_first:
+            self.entries = asyncio.PriorityQueue()
 
         if self.reverse:
             self._strategy = self._after_strategy
@@ -491,7 +494,11 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
             await self._fill()
 
         try:
-            return self.entries.get_nowait()
+            result = self.entries.get_nowait()
+            if self.oldest_first:
+                return result[1]
+            else:
+                return result
         except asyncio.QueueEmpty:
             raise NoMoreItems()
 
@@ -526,9 +533,11 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
                 if element["action_type"] is None:
                     continue
 
-                await self.entries.put(
-                    AuditLogEntry(data=element, users=self._users, guild=self.guild)
-                )
+                entry = AuditLogEntry(data=element, users=self._users, guild=self.guild)
+                if self.oldest_first:
+                    await self.entries.put((entry.created_at, entry))
+                else:
+                    await self.entries.put((entry))
 
 
 class GuildIterator(_AsyncIterator["Guild"]):
