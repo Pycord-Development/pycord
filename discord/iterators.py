@@ -537,7 +537,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
                 if self.oldest_first:
                     await self.entries.put((entry.created_at, entry))
                 else:
-                    await self.entries.put((entry))
+                    await self.entries.put(entry)
 
 
 class GuildIterator(_AsyncIterator["Guild"]):
