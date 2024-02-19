@@ -1137,8 +1137,7 @@ class ApplicationCommandMixin(ABC):
 
     @property
     @abstractmethod
-    def _bot(self) -> Bot | AutoShardedBot:
-        ...
+    def _bot(self) -> Bot | AutoShardedBot: ...
 
 
 class BotBase(ApplicationCommandMixin, CogMixin, ABC):

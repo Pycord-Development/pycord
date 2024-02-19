@@ -1509,9 +1509,9 @@ class Guild(Hashable):
                     "default_reaction_emoji must be of type: Emoji | int | str"
                 )
 
-            options[
-                "default_reaction_emoji"
-            ] = default_reaction_emoji._to_forum_reaction_payload()
+            options["default_reaction_emoji"] = (
+                default_reaction_emoji._to_forum_reaction_payload()
+            )
 
         data = await self._create_channel(
             name,
@@ -2829,8 +2829,7 @@ class Guild(Hashable):
         mentionable: bool = ...,
         icon: bytes | None = MISSING,
         unicode_emoji: str | None = MISSING,
-    ) -> Role:
-        ...
+    ) -> Role: ...
 
     @overload
     async def create_role(
@@ -2844,8 +2843,7 @@ class Guild(Hashable):
         mentionable: bool = ...,
         icon: bytes | None = ...,
         unicode_emoji: str | None = ...,
-    ) -> Role:
-        ...
+    ) -> Role: ...
 
     async def create_role(
         self,
@@ -3468,12 +3466,10 @@ class Guild(Hashable):
         description: str | None = ...,
         welcome_channels: list[WelcomeScreenChannel] | None = ...,
         enabled: bool | None = ...,
-    ) -> WelcomeScreen:
-        ...
+    ) -> WelcomeScreen: ...
 
     @overload
-    async def edit_welcome_screen(self) -> None:
-        ...
+    async def edit_welcome_screen(self) -> None: ...
 
     async def edit_welcome_screen(self, **options):
         """|coro|
