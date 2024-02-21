@@ -270,11 +270,9 @@ class ScheduledEvent(Hashable):
         name: str = MISSING,
         description: str = MISSING,
         status: int | ScheduledEventStatus = MISSING,
-        location: str
-        | int
-        | VoiceChannel
-        | StageChannel
-        | ScheduledEventLocation = MISSING,
+        location: (
+            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
+        ) = MISSING,
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
         cover: bytes | None = MISSING,

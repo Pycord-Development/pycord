@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import importlib
@@ -201,9 +202,9 @@ class CogMeta(type):
                     commands[f"app_{elem}"] = value.slash_variant
                     commands[elem] = value
                     for cmd in getattr(value, "subcommands", []):
-                        commands[
-                            f"ext_{cmd.ext_variant.qualified_name}"
-                        ] = cmd.ext_variant
+                        commands[f"ext_{cmd.ext_variant.qualified_name}"] = (
+                            cmd.ext_variant
+                        )
 
                 if inspect.iscoroutinefunction(value):
                     try:
@@ -808,8 +809,7 @@ class CogMixin:
         *,
         package: str | None = None,
         recursive: bool = False,
-    ) -> list[str]:
-        ...
+    ) -> list[str]: ...
 
     @overload
     def load_extension(
@@ -819,8 +819,7 @@ class CogMixin:
         package: str | None = None,
         recursive: bool = False,
         store: bool = False,
-    ) -> dict[str, Exception | bool] | list[str] | None:
-        ...
+    ) -> dict[str, Exception | bool] | list[str] | None: ...
 
     def load_extension(
         self, name, *, package=None, recursive=False, store=False
@@ -941,8 +940,7 @@ class CogMixin:
         *names: str,
         package: str | None = None,
         recursive: bool = False,
-    ) -> list[str]:
-        ...
+    ) -> list[str]: ...
 
     @overload
     def load_extensions(
@@ -951,8 +949,7 @@ class CogMixin:
         package: str | None = None,
         recursive: bool = False,
         store: bool = False,
-    ) -> dict[str, Exception | bool] | list[str] | None:
-        ...
+    ) -> dict[str, Exception | bool] | list[str] | None: ...
 
     def load_extensions(
         self, *names, package=None, recursive=False, store=False

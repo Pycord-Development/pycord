@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -297,6 +298,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         .. versionadded:: 2.0
     """
+
     __original_kwargs__: dict[str, Any]
 
     def __new__(cls: type[CommandT], *args: Any, **kwargs: Any) -> CommandT:
@@ -1395,8 +1397,7 @@ class GroupMixin(Generic[CogT]):
             )
         ],
         Command[CogT, P, T],
-    ]:
-        ...
+    ]: ...
 
     @overload
     def command(
@@ -1405,8 +1406,7 @@ class GroupMixin(Generic[CogT]):
         cls: type[CommandT] = ...,
         *args: Any,
         **kwargs: Any,
-    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], CommandT]:
-        ...
+    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], CommandT]: ...
 
     def command(
         self,
@@ -1447,8 +1447,7 @@ class GroupMixin(Generic[CogT]):
             )
         ],
         Group[CogT, P, T],
-    ]:
-        ...
+    ]: ...
 
     @overload
     def group(
@@ -1457,8 +1456,7 @@ class GroupMixin(Generic[CogT]):
         cls: type[GroupT] = ...,
         *args: Any,
         **kwargs: Any,
-    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], GroupT]:
-        ...
+    ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], GroupT]: ...
 
     def group(
         self,
@@ -1615,8 +1613,7 @@ def command(
         )
     ],
     Command[CogT, P, T],
-]:
-    ...
+]: ...
 
 
 @overload
@@ -1632,8 +1629,7 @@ def command(
         )
     ],
     Command[CogT, P, T],
-]:
-    ...
+]: ...
 
 
 @overload
@@ -1649,8 +1645,7 @@ def command(
         )
     ],
     CommandT,
-]:
-    ...
+]: ...
 
 
 def command(
@@ -1722,8 +1717,7 @@ def group(
         )
     ],
     Group[CogT, P, T],
-]:
-    ...
+]: ...
 
 
 @overload
@@ -1739,8 +1733,7 @@ def group(
         )
     ],
     GroupT,
-]:
-    ...
+]: ...
 
 
 def group(
