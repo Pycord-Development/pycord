@@ -525,7 +525,7 @@ def is_nsfw():
     return predicate
 
 
-def has_permissions(**perms: dict[str, bool]):
+def has_permissions(**perms: bool):
     r"""Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
     :func:`~ext.commands.check` that locks the command to be run by people with certain
     permissions inside guilds, and also registers the command as locked behind said permissions.
