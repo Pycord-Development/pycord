@@ -1994,7 +1994,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             Setting the status failed.
         """
         await self._state.http.set_voice_channel_status(
-            self.id, {"status": status}, reason=reason
+            self.id, status, reason=reason
         )
 
 

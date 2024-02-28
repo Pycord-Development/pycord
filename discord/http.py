@@ -2186,8 +2186,9 @@ class HTTPClient:
         )
 
     def set_voice_channel_status(
-        self, channel_id: Snowflake, payload: Any, *, reason: str | None = None
+        self, channel_id: Snowflake, status: str | None, *, reason: str | None = None
     ) -> Response[None]:
+        payload = {"status": status}
         r = Route("PUT", "/channels/{channel_id}/voice-status", channel_id=channel_id)
         return self.request(r, json=payload, reason=reason)
 
