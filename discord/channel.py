@@ -1993,9 +1993,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         HTTPException
             Setting the status failed.
         """
-        await self._state.http.set_voice_channel_status(
-            self.id, status, reason=reason
-        )
+        await self._state.http.set_voice_channel_status(self.id, status, reason=reason)
 
 
 class StageChannel(discord.abc.Messageable, VocalGuildChannel):
