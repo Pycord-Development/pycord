@@ -1786,6 +1786,8 @@ class ConnectionState:
             )
 
     def parse_voice_channel_status_update(self, data) -> None:
+        raw = RawVoiceChannelStatusUpdateEvent(data)
+        self.dispatch("raw_voice_channel_status_update", raw)
         guild = self._get_guild(int(data["guild_id"]))
         channel_id = int(data["id"])
         if guild is not None:
