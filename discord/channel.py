@@ -1520,10 +1520,12 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         :attr:`~Permissions.manage_messages` bypass slowmode.
 
         .. versionadded:: 2.5
-    flags: :class:`ChannelFlags`
-        Extra features of the channel.
     status: Optional[:class:`str`]
         The channel's status, if set.
+
+        .. versionadded:: 2.5
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
 
         .. versionadded:: 2.0
     """
@@ -1970,7 +1972,9 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             **kwargs,
         )
 
-    async def set_status(self, status: str | None, *, reason=None) -> None:
+    async def set_status(
+        self, status: str | None, *, reason: str | None = None
+    ) -> None:
         """|coro|
 
         Sets the status of the voice channel.
@@ -1991,9 +1995,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         HTTPException
             Setting the status failed.
         """
-        await self._state.http.set_voice_channel_status(
-            self.id, {"status": status}, reason=reason
-        )
+        await self._state.http.set_voice_channel_status(self.id, status, reason=reason)
 
 
 class StageChannel(discord.abc.Messageable, VocalGuildChannel):

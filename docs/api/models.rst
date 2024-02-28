@@ -556,6 +556,11 @@ Events
 .. autoclass:: RawAuditLogEntryEvent()
     :members:
 
+.. attributetable:: RawVoiceChannelStatusUpdateEvent
+
+.. autoclass:: RawVoiceChannelStatusUpdateEvent()
+    :members:
+
 
 
 Webhooks

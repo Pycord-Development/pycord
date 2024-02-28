@@ -131,6 +131,12 @@ class MemberRemoveEvent(TypedDict):
     user: User
 
 
+class VoiceChannelStatusUpdateEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    status: NotRequired[str]
+
+
 class ThreadMembersUpdateEvent(TypedDict):
     id: Snowflake
     guild_id: Snowflake
