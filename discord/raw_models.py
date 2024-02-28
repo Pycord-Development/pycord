@@ -469,7 +469,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
         try:
             self.status: str | None = data["status"]
         except KeyError:
-            self.guild_id: int | None = None
+            self.status: str | None = None
         self.data: VoiceChannelStatusUpdateEvent = data
 
 
