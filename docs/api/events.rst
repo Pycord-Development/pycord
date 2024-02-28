@@ -1303,7 +1303,7 @@ Typing
 
 Voice Channel Status Update
 ---------------------------
-.. function:: on_voice_channel_status_update(channel, old_status, status)
+.. function:: on_voice_channel_status_update(channel, before, after)
 
     Called when someone updates a voice channel status.
 
