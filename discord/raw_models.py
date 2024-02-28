@@ -445,6 +445,8 @@ class RawThreadDeleteEvent(_RawReprMixin):
 
 class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_raw_voice_channel_status_update` event.
+    
+    .. versionadded:: 2.5
 
     Attributes
     ----------
@@ -456,8 +458,6 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
         The new new voice channel status.
     data: :class:`dict`
         The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#voice-channel-status-update>`_.
-
-    .. versionadded:: 2.5
     """
 
     __slots__ = ("id", "guild_id", "status", "data")
