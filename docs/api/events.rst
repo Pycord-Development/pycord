@@ -1308,7 +1308,7 @@ Voice Channel Status Update
     Called when someone updates a voice channel status.
 
     :param channel: The channel where the voice channel status update originated from.
-    :type channel: :class:`GuildChannel`
+    :type channel: :class:`abc.GuildChannel`
     :param old_status: The old voice channel status.
     :type old_status: Optional[:class:`str`]
     :param status: The new voice channel status.
