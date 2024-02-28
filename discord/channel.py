@@ -1970,7 +1970,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             **kwargs,
         )
 
-    async def set_status(self, status: str | None, *, reason=None) -> None:
+    async def set_status(self, status: str | None, *, reason: str | None = None) -> None:
         """|coro|
 
         Sets the status of the voice channel.
