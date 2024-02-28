@@ -56,6 +56,7 @@ if TYPE_CHECKING:
         ThreadMembersUpdateEvent,
         ThreadUpdateEvent,
         TypingEvent,
+        VoiceChannelStatusUpdateEvent,
     )
 
 
@@ -75,6 +76,7 @@ __all__ = (
     "AutoModActionExecutionEvent",
     "RawThreadMembersUpdateEvent",
     "RawAuditLogEntryEvent",
+    "RawVoiceChannelStatusUpdateEvent",
 )
 
 
@@ -439,6 +441,36 @@ class RawThreadDeleteEvent(_RawReprMixin):
         self.parent_id: int = int(data["parent_id"])
         self.thread: Thread | None = None
         self.data: ThreadDeleteEvent = data
+
+
+class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_voice_channel_status_update` event.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The channel ID where the voice channel status update originated from.
+    guild_id: :class:`int`
+        The guild ID where the voice channel status update originated from.
+    status: Optional[:class:`str`]
+        The new new voice channel status.
+    data: :class:`dict`
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#voice-channel-status-update>`_.
+    """
+
+    __slots__ = ("id", "guild_id", "status", "data")
+
+    def __init__(self, data: VoiceChannelStatusUpdateEvent) -> None:
+        self.id: int = int(data["id"])
+        self.guild_id: int = int(data["guild_id"])
+
+        try:
+            self.status: str | None = data["status"]
+        except KeyError:
+            self.status: str | None = None
+        self.data: VoiceChannelStatusUpdateEvent = data
 
 
 class RawTypingEvent(_RawReprMixin):

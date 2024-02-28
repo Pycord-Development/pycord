@@ -93,6 +93,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2342](https://github.com/Pycord-Development/pycord/pull/2342))
 - Added `invitable` and `slowmode_delay` to `Thread` creation methods.
   ([#2350](https://github.com/Pycord-Development/pycord/pull/2350))
+- Added support for voice channel statuses.
+  ([#2368](https://github.com/Pycord-Development/pycord/pull/2368))
 - Added `Message.enforce_nonce`.
   ([#2370](https://github.com/Pycord-Development/pycord/pull/2370))
 
@@ -241,6 +243,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2345](https://github.com/Pycord-Development/pycord/pull/2345))
 - Fixed `Thread.me` being out of date and added the thread owner to `Thread.members` on
   creation. ([#1296](https://github.com/Pycord-Development/pycord/issues/1296))
+- Fixed keyword argument wildcard of `bridge.has_permissions` having the wrong type
+  hint. ([#2364](https://github.com/Pycord-Development/pycord/pull/2364))
+- Fixed enum to support stringified annotations.
+  ([#2367](https://github.com/Pycord-Development/pycord/pull/2367))
 
 ## [2.4.1] - 2023-03-20
 
