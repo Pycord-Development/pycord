@@ -456,7 +456,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
         The new new voice channel status.
     data: :class:`dict`
         The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway-events#voice-channel-status-update>`_.
-    
+
     .. versionadded:: 2.5
     """
 
