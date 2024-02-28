@@ -1311,10 +1311,10 @@ Voice Channel Status Update
 
     :param channel: The channel where the voice channel status update originated from.
     :type channel: :class:`abc.GuildChannel`
-    :param old_status: The old voice channel status.
-    :type old_status: Optional[:class:`str`]
-    :param status: The new voice channel status.
-    :type status: Optional[:class:`str`]
+    :param before: The old voice channel status.
+    :type before: Optional[:class:`str`]
+    :param after: The new voice channel status.
+    :type after: Optional[:class:`str`]
 
 .. function:: on_raw_voice_channel_status_update(payload)
 
