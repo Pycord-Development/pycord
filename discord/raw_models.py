@@ -444,7 +444,7 @@ class RawThreadDeleteEvent(_RawReprMixin):
 
 
 class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
-    """Represents the payload for a :func:`on_raw_voice_channel_status_update` event.
+    """Represents the payload for an :func:`on_raw_voice_channel_status_update` event.
 
     .. versionadded:: 2.5
 
