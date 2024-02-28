@@ -1520,10 +1520,12 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         :attr:`~Permissions.manage_messages` bypass slowmode.
 
         .. versionadded:: 2.5
-    flags: :class:`ChannelFlags`
-        Extra features of the channel.
     status: Optional[:class:`str`]
         The channel's status, if set.
+
+        .. versionadded:: 2.5
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
 
         .. versionadded:: 2.0
     """
