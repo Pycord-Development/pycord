@@ -465,6 +465,7 @@ class HTTPClient:
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
         nonce: str | None = None,
+        enforce_nonce: bool | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
@@ -488,6 +489,9 @@ class HTTPClient:
 
         if nonce:
             payload["nonce"] = nonce
+
+        if enforce_nonce:
+            payload["enforce_nonce"] = enforce_nonce
 
         if allowed_mentions:
             payload["allowed_mentions"] = allowed_mentions
@@ -521,6 +525,7 @@ class HTTPClient:
         embed: embed.Embed | None = None,
         embeds: Iterable[embed.Embed | None] | None = None,
         nonce: str | None = None,
+        enforce_nonce: bool | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
@@ -538,6 +543,8 @@ class HTTPClient:
             payload["embeds"] = embeds
         if nonce:
             payload["nonce"] = nonce
+        if enforce_nonce:
+            payload["enforce_nonce"] = enforce_nonce
         if allowed_mentions:
             payload["allowed_mentions"] = allowed_mentions
         if message_reference:
@@ -581,6 +588,7 @@ class HTTPClient:
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
         nonce: str | None = None,
+        enforce_nonce: bool | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
@@ -596,6 +604,7 @@ class HTTPClient:
             embed=embed,
             embeds=embeds,
             nonce=nonce,
+            enforce_nonce=enforce_nonce,
             allowed_mentions=allowed_mentions,
             message_reference=message_reference,
             stickers=stickers,

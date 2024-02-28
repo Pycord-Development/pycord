@@ -95,6 +95,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2350](https://github.com/Pycord-Development/pycord/pull/2350))
 - Added support for voice channel statuses.
   ([#2368](https://github.com/Pycord-Development/pycord/pull/2368))
+- Added `Message.enforce_nonce`.
+  ([#2370](https://github.com/Pycord-Development/pycord/pull/2370))
 
 ### Changed
 

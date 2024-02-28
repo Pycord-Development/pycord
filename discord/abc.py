@@ -1346,6 +1346,7 @@ class Messageable:
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
         nonce: str | int = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
@@ -1365,6 +1366,7 @@ class Messageable:
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
         nonce: str | int = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
@@ -1384,6 +1386,7 @@ class Messageable:
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
         nonce: str | int = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
@@ -1403,6 +1406,7 @@ class Messageable:
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
         nonce: str | int = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
@@ -1423,6 +1427,7 @@ class Messageable:
         stickers=None,
         delete_after=None,
         nonce=None,
+        enforce_nonce=None,
         allowed_mentions=None,
         reference=None,
         mention_author=None,
@@ -1463,6 +1468,10 @@ class Messageable:
         nonce: :class:`int`
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
+        enforce_nonce: Optional[:class:`bool`]
+            Whether :attr:`nonce` is enforced to be validated.
+
+            .. versionadded:: 2.5
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent. If the deletion fails,
@@ -1602,6 +1611,7 @@ class Messageable:
                     embed=embed,
                     embeds=embeds,
                     nonce=nonce,
+                    enforce_nonce=nonce,
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
@@ -1627,6 +1637,7 @@ class Messageable:
                     embed=embed,
                     embeds=embeds,
                     nonce=nonce,
+                    enforce_nonce=nonce,
                     allowed_mentions=allowed_mentions,
                     message_reference=reference,
                     stickers=stickers,
@@ -1644,6 +1655,7 @@ class Messageable:
                 embed=embed,
                 embeds=embeds,
                 nonce=nonce,
+                enforce_nonce=nonce,
                 allowed_mentions=allowed_mentions,
                 message_reference=reference,
                 stickers=stickers,

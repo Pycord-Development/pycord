@@ -111,6 +111,7 @@ class Message(TypedDict):
     mention_channels: NotRequired[list[ChannelMention]]
     reactions: NotRequired[list[Reaction]]
     nonce: NotRequired[int | str]
+    enforce_nonce: NotRequired[bool]
     webhook_id: NotRequired[Snowflake]
     activity: NotRequired[MessageActivity]
     application: NotRequired[MessageApplication]
