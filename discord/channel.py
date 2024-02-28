@@ -1522,17 +1522,32 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.5
     flags: :class:`ChannelFlags`
         Extra features of the channel.
+    status: Optional[:class:`str`]
+        The channel's status, if set.
 
         .. versionadded:: 2.0
     """
 
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        guild: Guild,
+        data: VoiceChannelPayload,
+    ):
+        self.status: str | None = None
+        super().__init__(state=state, guild=guild, data=data)
+
     def _update(self, guild: Guild, data: VoiceChannelPayload):
         super()._update(guild, data)
+        if data.get("status"):
+            self.status = data.get("status")
 
     def __repr__(self) -> str:
         attrs = [
             ("id", self.id),
             ("name", self.name),
+            ("status", self.status),
             ("rtc_region", self.rtc_region),
             ("position", self.position),
             ("bitrate", self.bitrate),
@@ -1953,6 +1968,31 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             target_type=InviteTarget.embedded_application,
             target_application_id=activity,
             **kwargs,
+        )
+
+    async def set_status(self, status: str | None, *, reason=None) -> None:
+        """|coro|
+
+        Sets the status of the voice channel.
+
+        You must have the :attr:`~Permissions.set_voice_channel_status` permission to use this.
+
+        Parameters
+        ----------
+        status: Union[:class:`str`, None]
+            The new status.
+        reason: Optional[:class:`str`]
+            The reason for setting the status. Shows up on the audit log.
+
+        Raises
+        ------
+        Forbidden
+            You do not have proper permissions to set the status.
+        HTTPException
+            Setting the status failed.
+        """
+        await self._state.http.set_voice_channel_status(
+            self.id, {"status": status}, reason=reason
         )
 
 
