@@ -1785,6 +1785,28 @@ class ConnectionState:
                 )
             )
 
+    def parse_voice_channel_status_update(self, data) -> None:
+        guild = self._get_guild(int(data["guild_id"]))
+        channel_id = int(data["id"])
+        if guild is not None:
+            channel = guild.get_channel(channel_id)
+            if channel is not None:
+                old_status = channel.status
+                channel.status = data.get("status", None)
+                self.dispatch(
+                    "voice_channel_status_update", channel, old_status, channel.status
+                )
+            else:
+                _log.debug(
+                    "VOICE_CHANNEL_STATUS_UPDATE referencing an unknown channel ID: %s. Discarding.",
+                    channel_id,
+                )
+        else:
+            _log.debug(
+                "VOICE_CHANNEL_STATUS_UPDATE referencing unknown guild ID: %s. Discarding.",
+                data["guild_id"],
+            )
+
     def parse_typing_start(self, data) -> None:
         raw = RawTypingEvent(data)
 
