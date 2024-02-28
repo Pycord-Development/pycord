@@ -108,6 +108,7 @@ VideoQualityMode = Literal[1, 2]
 class VoiceChannel(_BaseGuildChannel):
     rtc_region: NotRequired[str | None]
     video_quality_mode: NotRequired[VideoQualityMode]
+    status: NotRequired[str | None]
     type: Literal[2]
     bitrate: int
     user_limit: int

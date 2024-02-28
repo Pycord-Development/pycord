@@ -2185,6 +2185,13 @@ class HTTPClient:
             guild_id=guild_id, user_id=user_id, channel_id=channel_id, reason=reason
         )
 
+    def set_voice_channel_status(
+        self, channel_id: Snowflake, status: str | None, *, reason: str | None = None
+    ) -> Response[None]:
+        payload = {"status": status}
+        r = Route("PUT", "/channels/{channel_id}/voice-status", channel_id=channel_id)
+        return self.request(r, json=payload, reason=reason)
+
     # Stage instance management
 
     def get_stage_instance(

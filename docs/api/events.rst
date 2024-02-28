@@ -1299,3 +1299,28 @@ Typing
 
     :param payload: The raw typing payload.
     :type payload: :class:`RawTypingEvent`
+
+
+Voice Channel Status Update
+---------------------------
+.. function:: on_voice_channel_status_update(channel, before, after)
+
+    Called when someone updates a voice channel status.
+
+    .. versionadded:: 2.5
+
+    :param channel: The channel where the voice channel status update originated from.
+    :type channel: :class:`abc.GuildChannel`
+    :param before: The old voice channel status.
+    :type before: Optional[:class:`str`]
+    :param after: The new voice channel status.
+    :type after: Optional[:class:`str`]
+
+.. function:: on_raw_voice_channel_status_update(payload)
+
+    Called when someone updates a voice channels status.
+
+    .. versionadded:: 2.5
+
+    :param payload: The raw voice channel status update payload.
+    :type payload: :class:`RawVoiceChannelStatusUpdateEvent`
