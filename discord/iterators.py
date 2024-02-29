@@ -476,7 +476,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         limit=None,
         before=None,
         after=None,
-        oldest_first=None,
         user_id=None,
         action_type=None,
     ):
@@ -485,7 +484,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         if isinstance(after, datetime.datetime):
             after = Object(id=time_snowflake(after, high=True))
 
-        self.reverse = after is not None if oldest_first is None else oldest_first
         self.guild = guild
         self.loop = guild._state.loop
         self.request = guild._state.http.get_audit_logs
@@ -501,46 +499,28 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
 
         self.entries = asyncio.Queue()
 
-        if self.reverse:
-            self._strategy = self._after_strategy
-            if self.before:
-                self._filter = lambda m: int(m["id"]) < self.before.id
-        else:
-            self._strategy = self._before_strategy
-            if self.after and self.after != OLDEST_OBJECT:
-                self._filter = lambda m: int(m["id"]) > self.after.id
+        self._strategy = self._strategy_exec
 
-    async def _before_strategy(self, retrieve):
+    async def _strategy_exec(self, retrieve):
         before = self.before.id if self.before else None
-        data: AuditLogPayload = await self.request(
-            self.guild.id,
-            limit=retrieve,
-            user_id=self.user_id,
-            action_type=self.action_type,
-            before=before,
-        )
-
-        entries = data.get("audit_log_entries", [])
-        if len(data) and entries:
-            if self.limit is not None:
-                self.limit -= retrieve
-            self.before = Object(id=int(entries[-1]["id"]))
-        return data.get("users", []), entries
-
-    async def _after_strategy(self, retrieve):
         after = self.after.id if self.after else None
         data: AuditLogPayload = await self.request(
             self.guild.id,
             limit=retrieve,
             user_id=self.user_id,
             action_type=self.action_type,
+            before=before,
             after=after,
         )
+
         entries = data.get("audit_log_entries", [])
         if len(data) and entries:
             if self.limit is not None:
                 self.limit -= retrieve
-            self.after = Object(id=int(entries[0]["id"]))
+            if self.before or not self.after:
+                self.before = Object(id=int(entries[-1]["id"]))
+            if self.after or not self.before:
+                self.after = Object(id=int(entries[0]["id"]))
         return data.get("users", []), entries
 
     async def next(self) -> AuditLogEntry:
@@ -569,8 +549,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
             if len(data) < 100:
                 self.limit = 0  # terminate the infinite loop
 
-            if self.reverse:
-                data = reversed(data)
             if self._filter:
                 data = filter(self._filter, data)
 
