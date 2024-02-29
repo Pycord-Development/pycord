@@ -557,10 +557,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
                 self._users[u.id] = u
 
             for element in data:
-                # TODO: remove this if statement later
-                if element["action_type"] is None:
-                    continue
-
                 await self.entries.put(
                     AuditLogEntry(data=element, users=self._users, guild=self.guild)
                 )
