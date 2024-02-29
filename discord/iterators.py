@@ -494,14 +494,9 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         self.after = after or OLDEST_OBJECT
         self._users = {}
         self._state = guild._state
-
-        self._filter = None  # entry dict -> bool
-
         self.entries = asyncio.Queue()
 
-        self._strategy = self._strategy_exec
-
-    async def _strategy_exec(self, retrieve):
+    async def _retrieve_auditlogs(self, retrieve):
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data: AuditLogPayload = await self.request(
@@ -545,12 +540,9 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         from .user import User
 
         if self._get_retrieve():
-            users, data = await self._strategy(self.retrieve)
+            users, data = await self._retrieve_auditlogs(self.retrieve)
             if len(data) < 100:
                 self.limit = 0  # terminate the infinite loop
-
-            if self._filter:
-                data = filter(self._filter, data)
 
             for user in users:
                 u = User(data=user, state=self._state)
