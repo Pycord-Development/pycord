@@ -640,8 +640,6 @@ class Message(Hashable):
     nonce: Optional[Union[:class:`str`, :class:`int`]]
         The value used by the discord guild and the client to verify that the message is successfully sent.
         This is not stored long term within Discord's servers and is only used ephemerally.
-    enforce_nonce: Optional[:class:`bool`]
-        Whether :attr:`nonce` is enforced to be validated.
 
         .. versionadded:: 2.5
     embeds: List[:class:`Embed`]
@@ -752,7 +750,6 @@ class Message(Hashable):
         "author",
         "attachments",
         "nonce",
-        "enforce_nonce",
         "pinned",
         "role_mentions",
         "type",
@@ -807,7 +804,6 @@ class Message(Hashable):
         self.tts: bool = data["tts"]
         self.content: str = data["content"]
         self.nonce: int | str | None = data.get("nonce")
-        self.enforce_nonce: bool | None = data.get("enforce_nonce")
         self.stickers: list[StickerItem] = [
             StickerItem(data=d, state=state) for d in data.get("sticker_items", [])
         ]
@@ -988,9 +984,6 @@ class Message(Hashable):
 
     def _handle_nonce(self, value: str | int) -> None:
         self.nonce = value
-
-    def _handle_enforce_none(self, value: bool) -> None:
-        self.enforce_nonce = value
 
     def _handle_author(self, author: UserPayload) -> None:
         self.author = self._state.store_user(author)
