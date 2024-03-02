@@ -51,6 +51,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import GuildIterator
 from .mentions import AllowedMentions
+from .monetization import SKU, Entitlement
 from .object import Object
 from .stage_instance import StageInstance
 from .state import ConnectionState
@@ -217,9 +218,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[
-            str, list[tuple[asyncio.Future, Callable[..., bool]]]
-        ] = {}
+        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
+            {}
+        )
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
@@ -653,6 +654,8 @@ class Client:
                 # Always try to RESUME the connection
                 # If the connection is not RESUME-able then the gateway will invalidate the session.
                 # This is apparently what the official Discord client does.
+                if self.ws is None:
+                    continue
                 ws_params.update(
                     sequence=self.ws.sequence, resume=True, session=self.ws.session_id
                 )
@@ -2000,3 +2003,33 @@ class Client:
             self.application_id, payload
         )
         return [ApplicationRoleConnectionMetadata.from_dict(r) for r in data]
+
+    async def fetch_skus(self) -> list[SKU]:
+        """|coro|
+
+        Fetches the bot's SKUs.
+
+        .. versionadded:: 2.5
+
+        Returns
+        -------
+        List[:class:`.SKU`]
+            The bot's SKUs.
+        """
+        data = await self._connection.http.list_skus(self.application_id)
+        return [SKU(data=s) for s in data]
+
+    async def fetch_entitlements(self) -> list[Entitlement]:
+        """|coro|
+
+        Fetches the bot's entitlements.
+
+        .. versionadded:: 2.5
+
+        Returns
+        -------
+        List[:class:`.Entitlement`]
+            The bot's entitlements.
+        """
+        data = await self._connection.http.list_entitlements(self.application_id)
+        return [Entitlement(data=e, state=self._connection) for e in data]

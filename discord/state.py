@@ -43,6 +43,8 @@ from typing import (
     Union,
 )
 
+import discord
+
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
@@ -59,6 +61,7 @@ from .invite import Invite
 from .member import Member
 from .mentions import AllowedMentions
 from .message import Message
+from .monetization import Entitlement
 from .object import Object
 from .partial_emoji import PartialEmoji
 from .raw_models import *
@@ -665,6 +668,18 @@ class ConnectionState:
         event = AutoModActionExecutionEvent(self, data)
         self.dispatch("auto_moderation_action_execution", event)
 
+    def parse_entitlement_create(self, data) -> None:
+        event = Entitlement(data=data, state=self)
+        self.dispatch("entitlement_create", event)
+
+    def parse_entitlement_update(self, data) -> None:
+        event = Entitlement(data=data, state=self)
+        self.dispatch("entitlement_update", event)
+
+    def parse_entitlement_delete(self, data) -> None:
+        event = Entitlement(data=data, state=self)
+        self.dispatch("entitlement_delete", event)
+
     def parse_message_create(self, data) -> None:
         channel, _ = self._get_guild_channel(data)
         # channel would be the correct type here
@@ -963,14 +978,27 @@ class ConnectionState:
             )
             return
 
-        thread = Thread(guild=guild, state=guild._state, data=data)
-        has_thread = guild.get_thread(thread.id)
-        guild._add_thread(thread)
-        if not has_thread:
+        cached_thread = guild.get_thread(int(data["id"]))
+        if not cached_thread:
+            thread = Thread(guild=guild, state=guild._state, data=data)
+            guild._add_thread(thread)
             if data.get("newly_created"):
+                thread._add_member(
+                    ThreadMember(
+                        thread,
+                        {
+                            "id": thread.id,
+                            "user_id": data["owner_id"],
+                            "join_timestamp": data["thread_metadata"][
+                                "create_timestamp"
+                            ],
+                            "flags": utils.MISSING,
+                        },
+                    )
+                )
                 self.dispatch("thread_create", thread)
-            else:
-                self.dispatch("thread_join", thread)
+        else:
+            self.dispatch("thread_join", cached_thread)
 
     def parse_thread_update(self, data) -> None:
         guild_id = int(data["guild_id"])
@@ -1082,6 +1110,7 @@ class ConnectionState:
 
         member = ThreadMember(thread, data)
         thread.me = member
+        thread._add_member(member)
 
     def parse_thread_members_update(self, data) -> None:
         guild_id = int(data["guild_id"])
@@ -1110,20 +1139,21 @@ class ConnectionState:
         removed_member_ids = [int(x) for x in data.get("removed_member_ids", [])]
         self_id = self.self_id
         for member in added_members:
+            thread._add_member(member)
             if member.id != self_id:
-                thread._add_member(member)
                 self.dispatch("thread_member_join", member)
             else:
                 thread.me = member
                 self.dispatch("thread_join", thread)
 
         for member_id in removed_member_ids:
+            member = thread._pop_member(member_id)
             if member_id != self_id:
-                member = thread._pop_member(member_id)
                 self.dispatch("raw_thread_member_remove", raw)
                 if member is not None:
                     self.dispatch("thread_member_remove", member)
             else:
+                thread.me = None
                 self.dispatch("thread_remove", thread)
 
     def parse_guild_member_add(self, data) -> None:
@@ -1753,6 +1783,30 @@ class ConnectionState:
                 logging_coroutine(
                     coro, info="Voice Protocol voice server update handler"
                 )
+            )
+
+    def parse_voice_channel_status_update(self, data) -> None:
+        raw = RawVoiceChannelStatusUpdateEvent(data)
+        self.dispatch("raw_voice_channel_status_update", raw)
+        guild = self._get_guild(int(data["guild_id"]))
+        channel_id = int(data["id"])
+        if guild is not None:
+            channel = guild.get_channel(channel_id)
+            if channel is not None:
+                old_status = channel.status
+                channel.status = data.get("status", None)
+                self.dispatch(
+                    "voice_channel_status_update", channel, old_status, channel.status
+                )
+            else:
+                _log.debug(
+                    "VOICE_CHANNEL_STATUS_UPDATE referencing an unknown channel ID: %s. Discarding.",
+                    channel_id,
+                )
+        else:
+            _log.debug(
+                "VOICE_CHANNEL_STATUS_UPDATE referencing unknown guild ID: %s. Discarding.",
+                data["guild_id"],
             )
 
     def parse_typing_start(self, data) -> None:

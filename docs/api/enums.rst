@@ -1592,6 +1592,34 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.5
 
+    .. attribute:: voice_channel_status_update
+
+        A voice channel status was updated.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`VoiceChannel` or :class:`Object` with the ID of the voice
+        channel which was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.status`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: voice_channel_status_delete
+
+        A voice channel status was deleted.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`VoiceChannel` or :class:`Object` with the ID of the voice
+        channel which was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.status`
+
+        .. versionadded:: 2.5
+
 
 .. class:: AuditLogActionCategory
 
@@ -2292,3 +2320,85 @@ of :class:`enum.Enum`.
     .. attribute:: slurs
 
         Represents the slurs keyword preset rule.
+
+.. class:: PromptType
+
+    Represents how each prompt's options are displayed.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: multiple_choice
+
+        The options will appear in a grid form, showing the name and description.
+
+    .. attribute:: dropdown
+
+        The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt.
+
+.. class:: OnboardingMode
+
+    Represents the current mode of the guild's onboarding flow.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: default
+
+        Only default channels are counted towards the Onboarding requirements.
+
+    .. attribute:: advanced
+
+        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+
+.. class:: ReactionType
+
+    Represents a Reaction's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: normal
+
+        Represents a normal reaction.
+
+    .. attribute:: burst
+
+        Represents a super reaction.
+
+.. class:: SKUType
+
+    Represents an SKU's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: subscription
+
+        Represents a recurring subscription.
+
+    .. attribute:: subscription_group
+
+        A system-generated group for each subscription SKU created. These types of SKUs are currently unused.
+
+
+.. class:: EntitlementType
+
+    Represents an entitlement's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: app_subscription
+
+        Entitlement was purchased as an app subscription.
+
+
+.. class:: EntitlementOwnerType
+
+    Represents an entitlement's ownership type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: guild
+
+        Entitlement is owned by a guild.
+
+    .. attribute:: user
+
+        Entitlement is owned by a user.

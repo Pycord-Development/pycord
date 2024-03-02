@@ -39,6 +39,7 @@ from typing import (
     Union,
     overload,
 )
+from urllib.parse import parse_qs, urlparse
 
 from . import utils
 from .components import _component_factory
@@ -47,7 +48,7 @@ from .emoji import Emoji
 from .enums import ChannelType, MessageType, try_enum
 from .errors import InvalidArgument
 from .file import File
-from .flags import MessageFlags
+from .flags import AttachmentFlags, MessageFlags
 from .guild import Guild
 from .member import Member
 from .mixins import Hashable
@@ -179,6 +180,16 @@ class Attachment(Hashable):
         The base64 encoded bytearray representing a sampled waveform (currently for voice messages).
 
         .. versionadded:: 2.5
+
+    flags: :class:`AttachmentFlags`
+        Extra attributes of the attachment.
+
+        .. versionadded:: 2.5
+
+    hm: :class:`str`
+        The unique signature of this attachment's instance.
+
+        .. versionadded:: 2.5
     """
 
     __slots__ = (
@@ -195,6 +206,10 @@ class Attachment(Hashable):
         "description",
         "duration_secs",
         "waveform",
+        "flags",
+        "_ex",
+        "_is",
+        "hm",
     )
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
@@ -211,6 +226,32 @@ class Attachment(Hashable):
         self.description: str | None = data.get("description")
         self.duration_secs: float | None = data.get("duration_secs")
         self.waveform: str | None = data.get("waveform")
+        self.flags: AttachmentFlags = AttachmentFlags._from_value(data.get("flags", 0))
+        self._ex: str | None = None
+        self._is: str | None = None
+        self.hm: str | None = None
+
+        query = urlparse(self.url).query
+        extras = ["_ex", "_is", "hm"]
+        if query_params := parse_qs(query):
+            for attr in extras:
+                value = "".join(query_params.get(attr.replace("_", ""), []))
+                if value:
+                    setattr(self, attr, value)
+
+    @property
+    def expires_at(self) -> datetime.datetime:
+        """This attachment URL's expiry time in UTC."""
+        if not self._ex:
+            return None
+        return datetime.datetime.utcfromtimestamp(int(self._ex, 16))
+
+    @property
+    def issued_at(self) -> datetime.datetime:
+        """The attachment URL's issue time in UTC."""
+        if not self._is:
+            return None
+        return datetime.datetime.utcfromtimestamp(int(self._is, 16))
 
     def is_spoiler(self) -> bool:
         """Whether this attachment contains a spoiler."""
@@ -1328,8 +1369,7 @@ class Message(Hashable):
         delete_after: float | None = ...,
         allowed_mentions: AllowedMentions | None = ...,
         view: View | None = ...,
-    ) -> Message:
-        ...
+    ) -> Message: ...
 
     async def edit(
         self,
@@ -1689,7 +1729,11 @@ class Message(Hashable):
         await self._state.http.clear_reactions(self.channel.id, self.id)
 
     async def create_thread(
-        self, *, name: str, auto_archive_duration: ThreadArchiveDuration = MISSING
+        self,
+        *,
+        name: str,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        slowmode_delay: int = MISSING,
     ) -> Thread:
         """|coro|
 
@@ -1706,9 +1750,12 @@ class Message(Hashable):
         ----------
         name: :class:`str`
             The name of the thread.
-        auto_archive_duration: :class:`int`
+        auto_archive_duration:  Optional[:class:`int`]
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
+        slowmode_delay: Optional[:class:`int`]
+            Specifies the slowmode rate limit for user in this thread, in seconds.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
 
         Returns
         -------
@@ -1737,6 +1784,7 @@ class Message(Hashable):
             name=name,
             auto_archive_duration=auto_archive_duration
             or default_auto_archive_duration,
+            rate_limit_per_user=slowmode_delay or 0,
         )
 
         self.thread = Thread(guild=self.guild, state=self._state, data=data)

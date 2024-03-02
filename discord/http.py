@@ -71,6 +71,8 @@ if TYPE_CHECKING:
         invite,
         member,
         message,
+        monetization,
+        onboarding,
         role,
         scheduled_events,
         sticker,
@@ -465,6 +467,7 @@ class HTTPClient:
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
         nonce: str | None = None,
+        enforce_nonce: bool | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
@@ -488,6 +491,9 @@ class HTTPClient:
 
         if nonce:
             payload["nonce"] = nonce
+
+        if enforce_nonce:
+            payload["enforce_nonce"] = enforce_nonce
 
         if allowed_mentions:
             payload["allowed_mentions"] = allowed_mentions
@@ -521,6 +527,7 @@ class HTTPClient:
         embed: embed.Embed | None = None,
         embeds: Iterable[embed.Embed | None] | None = None,
         nonce: str | None = None,
+        enforce_nonce: bool | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
@@ -538,6 +545,8 @@ class HTTPClient:
             payload["embeds"] = embeds
         if nonce:
             payload["nonce"] = nonce
+        if enforce_nonce:
+            payload["enforce_nonce"] = enforce_nonce
         if allowed_mentions:
             payload["allowed_mentions"] = allowed_mentions
         if message_reference:
@@ -582,6 +591,7 @@ class HTTPClient:
         embed: embed.Embed | None = None,
         embeds: list[embed.Embed] | None = None,
         nonce: str | None = None,
+        enforce_nonce: bool | None = None,
         allowed_mentions: message.AllowedMentions | None = None,
         message_reference: message.MessageReference | None = None,
         stickers: list[sticker.StickerItem] | None = None,
@@ -597,6 +607,7 @@ class HTTPClient:
             embed=embed,
             embeds=embeds,
             nonce=nonce,
+            enforce_nonce=enforce_nonce,
             allowed_mentions=allowed_mentions,
             message_reference=message_reference,
             stickers=stickers,
@@ -760,6 +771,7 @@ class HTTPClient:
         emoji: str,
         limit: int,
         after: Snowflake | None = None,
+        type: int | None = None,
     ) -> Response[list[user.User]]:
         r = Route(
             "GET",
@@ -774,6 +786,8 @@ class HTTPClient:
         }
         if after:
             params["after"] = after
+        if type:
+            params["type"] = type
         return self.request(r, params=params)
 
     def clear_reactions(
@@ -1096,6 +1110,7 @@ class HTTPClient:
             "rtc_region",
             "video_quality_mode",
             "auto_archive_duration",
+            "default_reaction_emoji",
         )
         payload.update(
             {k: v for k, v in options.items() if k in valid_keys and v is not None}
@@ -1127,11 +1142,13 @@ class HTTPClient:
         *,
         name: str,
         auto_archive_duration: threads.ThreadArchiveDuration,
+        rate_limit_per_user: int,
         reason: str | None = None,
     ) -> Response[threads.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
+            "rate_limit_per_user": rate_limit_per_user,
         }
 
         route = Route(
@@ -1149,13 +1166,15 @@ class HTTPClient:
         name: str,
         auto_archive_duration: threads.ThreadArchiveDuration,
         type: threads.ThreadType,
-        invitable: bool = True,
+        rate_limit_per_user: int,
+        invitable: bool,
         reason: str | None = None,
     ) -> Response[threads.Thread]:
         payload = {
             "name": name,
             "auto_archive_duration": auto_archive_duration,
             "type": type,
+            "rate_limit_per_user": rate_limit_per_user,
             "invitable": invitable,
         }
 
@@ -1193,6 +1212,14 @@ class HTTPClient:
         if content:
             payload["message"]["content"] = content
 
+        if rate_limit_per_user:
+            payload["rate_limit_per_user"] = rate_limit_per_user
+
+        message = {}
+
+        if content:
+            message["content"] = content
+
         if embed:
             payload["message"]["embeds"] = [embed]
 
@@ -1200,10 +1227,10 @@ class HTTPClient:
             payload["message"]["embeds"] = embeds
 
         if nonce:
-            payload["nonce"] = nonce
+            message["nonce"] = nonce
 
         if allowed_mentions:
-            payload["allowed_mentions"] = allowed_mentions
+            message["allowed_mentions"] = allowed_mentions
 
         if components:
             payload["message"]["components"] = components
@@ -1211,8 +1238,8 @@ class HTTPClient:
         if stickers:
             payload["message"]["sticker_ids"] = stickers
 
-        if rate_limit_per_user:
-            payload["rate_limit_per_user"] = rate_limit_per_user
+        if message != {}:
+            payload["message"] = message
 
 
         if tag:
@@ -2180,6 +2207,13 @@ class HTTPClient:
             guild_id=guild_id, user_id=user_id, channel_id=channel_id, reason=reason
         )
 
+    def set_voice_channel_status(
+        self, channel_id: Snowflake, status: str | None, *, reason: str | None = None
+    ) -> Response[None]:
+        payload = {"status": status}
+        r = Route("PUT", "/channels/{channel_id}/voice-status", channel_id=channel_id)
+        return self.request(r, json=payload, reason=reason)
+
     # Stage instance management
 
     def get_stage_instance(
@@ -2884,6 +2918,78 @@ class HTTPClient:
             application_id=application_id,
         )
         return self.request(r, json=payload)
+
+    # Monetization
+
+    def list_skus(
+        self,
+        application_id: Snowflake,
+    ) -> Response[list[monetization.SKU]]:
+        r = Route(
+            "GET",
+            "/applications/{application_id}/skus",
+            application_id=application_id,
+        )
+        return self.request(r)
+
+    def list_entitlements(
+        self,
+        application_id: Snowflake,
+    ) -> Response[list[monetization.Entitlement]]:
+        r = Route(
+            "GET",
+            "/applications/{application_id}/entitlements",
+            application_id=application_id,
+        )
+        return self.request(r)
+
+    def create_test_entitlement(
+        self,
+        application_id: Snowflake,
+        payload: monetization.CreateTestEntitlementPayload,
+    ) -> Response[monetization.Entitlement]:
+        r = Route(
+            "POST",
+            "/applications/{application_id}/entitlements",
+            application_id=application_id,
+        )
+        return self.request(r, json=payload)
+
+    def delete_test_entitlement(
+        self,
+        application_id: Snowflake,
+        entitlement_id: Snowflake,
+    ) -> Response[None]:
+        r = Route(
+            "DELETE",
+            "/applications/{application_id}/entitlements/{entitlement_id}",
+            application_id=application_id,
+            entitlement_id=entitlement_id,
+        )
+        return self.request(r)
+
+    # Onboarding
+
+    def get_onboarding(self, guild_id: Snowflake) -> Response[onboarding.Onboarding]:
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/onboarding", guild_id=guild_id)
+        )
+
+    def edit_onboarding(
+        self, guild_id: Snowflake, payload: Any, *, reason: str | None = None
+    ) -> Response[onboarding.Onboarding]:
+        keys = (
+            "prompts",
+            "default_channel_ids",
+            "enabled",
+            "mode",
+        )
+        payload = {key: val for key, val in payload.items() if key in keys}
+        return self.request(
+            Route("PUT", "/guilds/{guild_id}/onboarding", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
 
     # Misc
 

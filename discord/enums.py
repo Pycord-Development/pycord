@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import types
@@ -67,6 +68,12 @@ __all__ = (
     "AutoModActionType",
     "AutoModKeywordPresetType",
     "ApplicationRoleConnectionMetadataType",
+    "PromptType",
+    "OnboardingMode",
+    "ReactionType",
+    "SKUType",
+    "EntitlementType",
+    "EntitlementOwnerType",
 )
 
 
@@ -427,6 +434,13 @@ class AuditLogAction(Enum):
     auto_moderation_user_communication_disabled = 145
     creator_monetization_request_created = 150
     creator_monetization_terms_accepted = 151
+    onboarding_question_create = 163
+    onboarding_question_update = 164
+    onboarding_update = 167
+    server_guide_create = 190
+    server_guide_update = 191
+    voice_channel_status_update = 192
+    voice_channel_status_delete = 193
 
     @property
     def category(self) -> AuditLogActionCategory | None:
@@ -489,6 +503,13 @@ class AuditLogAction(Enum):
             AuditLogAction.auto_moderation_user_communication_disabled: None,
             AuditLogAction.creator_monetization_request_created: None,
             AuditLogAction.creator_monetization_terms_accepted: None,
+            AuditLogAction.onboarding_question_create: AuditLogActionCategory.create,
+            AuditLogAction.onboarding_question_update: AuditLogActionCategory.update,
+            AuditLogAction.onboarding_update: AuditLogActionCategory.update,
+            AuditLogAction.server_guide_create: AuditLogActionCategory.create,
+            AuditLogAction.server_guide_update: AuditLogActionCategory.update,
+            AuditLogAction.voice_channel_status_update: AuditLogActionCategory.update,
+            AuditLogAction.voice_channel_status_delete: AuditLogActionCategory.delete,
         }
         return lookup[self]
 
@@ -529,6 +550,14 @@ class AuditLogAction(Enum):
             return "application_command_permission"
         elif v < 146:
             return "auto_moderation_rule"
+        elif v < 152:
+            return "monetization"
+        elif v < 168:
+            return "onboarding"
+        elif v < 192:
+            return "server_guide"
+        elif v < 194:
+            return "voice_channel_status"
 
 
 class UserFlags(Enum):
@@ -655,6 +684,7 @@ class InteractionResponseType(Enum):
     message_update = 7  # for components
     auto_complete_result = 8  # for autocomplete interactions
     modal = 9  # for modal dialogs
+    premium_required = 10
 
 
 class VideoQualityMode(Enum):
@@ -776,9 +806,13 @@ class SlashCommandOptionType(Enum):
             # Type checking fails for this case, so ignore it.
             return cls.from_datatype(datatype.__args__)  # type: ignore
 
-        if datatype.__name__ in ["Member", "User"]:
+        if isinstance(datatype, str):
+            datatype_name = datatype
+        else:
+            datatype_name = datatype.__name__
+        if datatype_name in ["Member", "User"]:
             return cls.user
-        if datatype.__name__ in [
+        if datatype_name in [
             "GuildChannel",
             "TextChannel",
             "VoiceChannel",
@@ -790,14 +824,14 @@ class SlashCommandOptionType(Enum):
             "DMChannel",
         ]:
             return cls.channel
-        if datatype.__name__ == "Role":
+        if datatype_name == "Role":
             return cls.role
-        if datatype.__name__ == "Attachment":
+        if datatype_name == "Attachment":
             return cls.attachment
-        if datatype.__name__ == "Mentionable":
+        if datatype_name == "Mentionable":
             return cls.mentionable
 
-        if issubclass(datatype, str):
+        if isinstance(datatype, str) or issubclass(datatype, str):
             return cls.string
         if issubclass(datatype, bool):
             return cls.boolean
@@ -807,9 +841,10 @@ class SlashCommandOptionType(Enum):
             return cls.number
 
         from .commands.context import ApplicationContext
+        from .ext.bridge import BridgeContext
 
         if not issubclass(
-            datatype, ApplicationContext
+            datatype, (ApplicationContext, BridgeContext)
         ):  # TODO: prevent ctx being passed here in cog commands
             raise TypeError(
                 f"Invalid class {datatype} used as an input type for an Option"
@@ -942,6 +977,47 @@ class ApplicationRoleConnectionMetadataType(Enum):
     datetime_greater_than_or_equal = 6
     boolean_equal = 7
     boolean_not_equal = 8
+
+
+class PromptType(Enum):
+    """Guild Onboarding Prompt Type"""
+
+    multiple_choice = 0
+    dropdown = 1
+
+
+class OnboardingMode(Enum):
+    """Guild Onboarding Mode"""
+
+    default = 0
+    advanced = 1
+
+
+class ReactionType(Enum):
+    """The reaction type"""
+
+    normal = 0
+    burst = 1
+
+
+class SKUType(Enum):
+    """The SKU type"""
+
+    subscription = 5
+    subscription_group = 6
+
+
+class EntitlementType(Enum):
+    """The entitlement type"""
+
+    application_subscription = 8
+
+
+class EntitlementOwnerType(Enum):
+    """The entitlement owner type"""
+
+    guild = 1
+    user = 2
 
 
 T = TypeVar("T")

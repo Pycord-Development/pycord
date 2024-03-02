@@ -235,15 +235,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if (
-            getattr(self, "id", None) is not None
-            and getattr(other, "id", None) is not None
-        ):
-            check = self.id == other.id
-        else:
-            check = self.name == other.name and self.guild_ids == other.guild_ids
         return (
-            isinstance(other, self.__class__) and self.parent == other.parent and check
+            isinstance(other, self.__class__)
+            and self.qualified_name == other.qualified_name
+            and self.guild_ids == other.guild_ids
         )
 
     async def __call__(self, ctx, *args, **kwargs):
@@ -660,6 +655,7 @@ class SlashCommand(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -693,7 +689,9 @@ class SlashCommand(ApplicationCommand):
 
         self.attached_to_group: bool = False
 
-        self.options: list[Option] = kwargs.get("options", [])
+        self._options_kwargs = kwargs.get("options", [])
+        self.options: list[Option] = []
+        self._validate_parameters()
 
         try:
             checks = func.__commands_checks__
@@ -708,10 +706,10 @@ class SlashCommand(ApplicationCommand):
 
     def _validate_parameters(self):
         params = self._get_signature_parameters()
-        if kwop := self.options:
-            self.options: list[Option] = self._match_option_param_names(params, kwop)
+        if kwop := self._options_kwargs:
+            self.options = self._match_option_param_names(params, kwop)
         else:
-            self.options: list[Option] = self._parse_options(params)
+            self.options = self._parse_options(params)
 
     def _check_required_params(self, params):
         params = iter(params.items())
@@ -731,6 +729,8 @@ class SlashCommand(ApplicationCommand):
     def _parse_options(self, params, *, check_params: bool = True) -> list[Option]:
         if check_params:
             params = self._check_required_params(params)
+        else:
+            params = iter(params.items())
 
         final_options = []
         for p_name, p_obj in params:
@@ -746,10 +746,12 @@ class SlashCommand(ApplicationCommand):
                 option = next(option_gen, Option())
                 # Handle Optional
                 if self._is_typing_optional(type_hint):
-                    option.input_type = get_args(type_hint)[0]
+                    option.input_type = SlashCommandOptionType.from_datatype(
+                        get_args(type_hint)[0]
+                    )
                     option.default = None
                 else:
-                    option.input_type = type_hint
+                    option.input_type = SlashCommandOptionType.from_datatype(type_hint)
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
@@ -759,23 +761,21 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 if isinstance(p_obj.default, Option):
-                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(
-                        option
-                    )
+                    if p_obj.default.input_type is None:
+                        p_obj.default.input_type = SlashCommandOptionType.from_datatype(
+                            option
+                        )
                     option = p_obj.default
                 else:
                     option = Option(option)
 
             if option.default is None and not p_obj.default == inspect.Parameter.empty:
-                if isinstance(p_obj.default, type) and issubclass(
+                if isinstance(p_obj.default, Option):
+                    pass
+                elif isinstance(p_obj.default, type) and issubclass(
                     p_obj.default, (DiscordEnum, Enum)
                 ):
                     option = Option(p_obj.default)
-                elif (
-                    isinstance(p_obj.default, Option)
-                    and not (default := p_obj.default.default) is None
-                ):
-                    option.default = default
                 else:
                     option.default = p_obj.default
                     option.required = False
@@ -792,6 +792,7 @@ class SlashCommand(ApplicationCommand):
         return final_options
 
     def _match_option_param_names(self, params, options):
+        options = list(options)
         params = self._check_required_params(params)
 
         check_annotations: list[Callable[[Option, type], bool]] = [
@@ -844,12 +845,20 @@ class SlashCommand(ApplicationCommand):
 
     @property
     def cog(self):
-        return getattr(self, "_cog", MISSING)
+        return getattr(self, "_cog", None)
 
     @cog.setter
-    def cog(self, val):
-        self._cog = val
-        self._validate_parameters()
+    def cog(self, value):
+        old_cog = self.cog
+        self._cog = value
+
+        if (
+            old_cog is None
+            and value is not None
+            or value is None
+            and old_cog is not None
+        ):
+            self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
@@ -879,9 +888,9 @@ class SlashCommand(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
 
         return as_dict
 
@@ -1110,6 +1119,7 @@ class SlashCommandGroup(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     """
+
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
@@ -1150,9 +1160,9 @@ class SlashCommandGroup(ApplicationCommand):
         validate_chat_input_name(self.name)
         validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
-        self.subcommands: list[
-            SlashCommand | SlashCommandGroup
-        ] = self.__initial_commands__
+        self.subcommands: list[SlashCommand | SlashCommandGroup] = (
+            self.__initial_commands__
+        )
         self.guild_ids = guild_ids
         self.parent = parent
         self.attached_to_group: bool = False
@@ -1160,7 +1170,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = MISSING
+        self.cog = None
         self.id = None
 
         # Permissions
@@ -1229,17 +1239,14 @@ class SlashCommandGroup(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
 
         return as_dict
 
     def add_command(self, command: SlashCommand) -> None:
-        # check if subcommand has no cog set
-        # also check if cog is MISSING because it
-        # might not have been set by the cog yet
-        if command.cog is MISSING and self.cog is not MISSING:
+        if command.cog is None and self.cog is not None:
             command.cog = self.cog
 
         self.subcommands.append(command)
@@ -1440,7 +1447,7 @@ class SlashCommandGroup(ApplicationCommand):
         if kwargs:
             kw = kwargs.copy()
             kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
+            copy = self.__class__(**kw)
             return self._ensure_assignment_on_copy(copy)
         else:
             return self.copy()
@@ -1575,9 +1582,9 @@ class ContextMenuCommand(ApplicationCommand):
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
 
         if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
@@ -1609,6 +1616,7 @@ class UserCommand(ContextMenuCommand):
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
+
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -1707,6 +1715,7 @@ class MessageCommand(ContextMenuCommand):
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
     """
+
     type = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:

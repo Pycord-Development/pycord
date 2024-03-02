@@ -25,39 +25,38 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from typing import Literal
+
 from .._typed_dict import NotRequired, TypedDict
-from .activity import Activity
 from .snowflake import Snowflake
-from .user import User
+
+SKUType = Literal[5, 6]
+EntitlementType = Literal[8]
+OwnerType = Literal[1, 2]
 
 
-class WidgetChannel(TypedDict):
+class SKU(TypedDict):
     id: Snowflake
+    type: SKUType
+    application_id: Snowflake
     name: str
-    position: int
+    slug: str
+    flags: int
 
 
-class WidgetMember(User, total=False):
-    nick: str
-    game: Activity
-    status: str
-    avatar_url: str
-    deaf: bool
-    self_deaf: bool
-    mute: bool
-    self_mute: bool
-    suppress: bool
-
-
-class Widget(TypedDict):
-    channels: NotRequired[list[WidgetChannel]]
-    members: NotRequired[list[WidgetMember]]
-    presence_count: NotRequired[int]
+class Entitlement(TypedDict):
     id: Snowflake
-    name: str
-    instant_invite: str
+    sku_id: Snowflake
+    application_id: Snowflake
+    user_id: NotRequired[Snowflake]
+    type: EntitlementType
+    deleted: bool
+    starts_at: NotRequired[str]
+    ends_at: NotRequired[str]
+    guild_id: NotRequired[Snowflake]
 
 
-class WidgetSettings(TypedDict):
-    enabled: bool
-    channel_id: Snowflake | None
+class CreateTestEntitlementPayload(TypedDict):
+    sku_id: Snowflake
+    owner_id: Snowflake
+    owner_type: OwnerType

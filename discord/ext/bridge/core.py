@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import inspect
@@ -66,6 +67,7 @@ __all__ = (
     "BridgeSlashCommand",
     "BridgeExtGroup",
     "BridgeSlashGroup",
+    "BridgeOption",
     "map_to",
     "guild_only",
     "has_permissions",
@@ -523,7 +525,7 @@ def is_nsfw():
     return predicate
 
 
-def has_permissions(**perms: dict[str, bool]):
+def has_permissions(**perms: bool):
     r"""Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
     :func:`~ext.commands.check` that locks the command to be run by people with certain
     permissions inside guilds, and also registers the command as locked behind said permissions.
@@ -591,6 +593,10 @@ BRIDGE_CONVERTER_MAPPING = {
 
 
 class BridgeOption(Option, Converter):
+    """A subclass of :class:`discord.Option` which represents a selectable slash
+    command option and a prefixed command argument for bridge commands.
+    """
+
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
@@ -621,7 +627,3 @@ class BridgeOption(Option, Converter):
             return converted
         except ValueError as exc:
             raise BadArgument() from exc
-
-
-discord.commands.options.Option = BridgeOption
-discord.Option = BridgeOption

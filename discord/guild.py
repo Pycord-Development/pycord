@@ -47,13 +47,14 @@ from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
 from .channel import _guild_channel_factory, _threaded_guild_channel_factory
 from .colour import Colour
-from .emoji import Emoji
+from .emoji import Emoji, PartialEmoji, _EmojiTag
 from .enums import (
     AuditLogAction,
     AutoModEventType,
     AutoModTriggerType,
     ChannelType,
     ContentFilter,
+    EntitlementOwnerType,
     NotificationLevel,
     NSFWLevel,
     ScheduledEventLocationType,
@@ -71,6 +72,8 @@ from .invite import Invite
 from .iterators import AuditLogIterator, BanIterator, MemberIterator
 from .member import Member, VoiceState
 from .mixins import Hashable
+from .monetization import Entitlement
+from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
@@ -1395,6 +1398,7 @@ class Guild(Hashable):
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_reaction_emoji: Emoji | int | str = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1436,6 +1440,12 @@ class Guild(Hashable):
             To mark the channel as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
+        default_reaction_emoji: Optional[:class:`Emoji` | :class:`int` | :class:`str`]
+            The default reaction emoji.
+            Can be a unicode emoji or a custom emoji in the forms:
+            :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+
+            .. versionadded:: v2.5
 
         Returns
         -------
@@ -1449,7 +1459,7 @@ class Guild(Hashable):
         HTTPException
             Creating the channel failed.
         InvalidArgument
-            The permission overwrite information is not in proper form.
+            The argument is not in proper form.
 
         Examples
         --------
@@ -1484,6 +1494,24 @@ class Guild(Hashable):
 
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
+
+        if default_reaction_emoji is not MISSING:
+            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+                default_reaction_emoji = default_reaction_emoji._to_partial()
+            elif isinstance(default_reaction_emoji, int):
+                default_reaction_emoji = PartialEmoji(
+                    name=None, id=default_reaction_emoji
+                )
+            elif isinstance(default_reaction_emoji, str):
+                default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            else:
+                raise InvalidArgument(
+                    "default_reaction_emoji must be of type: Emoji | int | str"
+                )
+
+            options["default_reaction_emoji"] = (
+                default_reaction_emoji._to_forum_reaction_payload()
+            )
 
         data = await self._create_channel(
             name,
@@ -2801,8 +2829,7 @@ class Guild(Hashable):
         mentionable: bool = ...,
         icon: bytes | None = MISSING,
         unicode_emoji: str | None = MISSING,
-    ) -> Role:
-        ...
+    ) -> Role: ...
 
     @overload
     async def create_role(
@@ -2816,8 +2843,7 @@ class Guild(Hashable):
         mentionable: bool = ...,
         icon: bytes | None = ...,
         unicode_emoji: str | None = ...,
-    ) -> Role:
-        ...
+    ) -> Role: ...
 
     async def create_role(
         self,
@@ -2908,7 +2934,7 @@ class Guild(Hashable):
             if icon is None:
                 fields["icon"] = None
             else:
-                fields["icon"] = _bytes_to_base64_data(icon)
+                fields["icon"] = utils._bytes_to_base64_data(icon)
                 fields["unicode_emoji"] = None
 
         if unicode_emoji is not MISSING:
@@ -3440,12 +3466,10 @@ class Guild(Hashable):
         description: str | None = ...,
         welcome_channels: list[WelcomeScreenChannel] | None = ...,
         enabled: bool | None = ...,
-    ) -> WelcomeScreen:
-        ...
+    ) -> WelcomeScreen: ...
 
     @overload
-    async def edit_welcome_screen(self) -> None:
-        ...
+    async def edit_welcome_screen(self) -> None: ...
 
     async def edit_welcome_screen(self, **options):
         """|coro|
@@ -3816,3 +3840,134 @@ class Guild(Hashable):
             self.id, payload, reason=reason
         )
         return AutoModRule(state=self._state, data=data)
+
+    async def onboarding(self):
+        """|coro|
+
+        Returns the :class:`Onboarding` flow for the guild.
+
+        .. versionadded:: 2.5
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The onboarding flow for the guild.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the onboarding flow failed somehow.
+        """
+        data = await self._state.http.get_onboarding(self.id)
+        return Onboarding(data=data, guild=self)
+
+    async def edit_onboarding(
+        self,
+        *,
+        prompts: list[OnboardingPrompt] | None = MISSING,
+        default_channels: list[Snowflake] | None = MISSING,
+        enabled: bool | None = MISSING,
+        mode: OnboardingMode | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> Onboarding:
+        """|coro|
+
+        A shorthand for :attr:`Onboarding.edit` without fetching the onboarding flow.
+
+        You must have the :attr:`~Permissions.manage_guild` and :attr:`~Permissions.manage_roles` permissions in the
+        guild to do this.
+
+        Parameters
+        ----------
+
+        prompts: Optional[List[:class:`OnboardingPrompt`]]
+            The new list of prompts for this flow.
+        default_channels: Optional[List[:class:`Snowflake`]]
+            The new default channels that users are opted into.
+        enabled: Optional[:class:`bool`]
+            Whether onboarding should be enabled. Setting this to ``True`` requires
+            the guild to have ``COMMUNITY`` in :attr:`~Guild.features` and at
+            least 7 ``default_channels``.
+        mode: Optional[:class:`OnboardingMode`]
+            The new onboarding mode.
+        reason: Optional[:class:`str`]
+            The reason that shows up on Audit log.
+
+        Returns
+        -------
+        :class:`Onboarding`
+            The updated onboarding flow.
+
+        Raises
+        ------
+
+        HTTPException
+            Editing the onboarding flow failed somehow.
+        Forbidden
+            You don't have permissions to edit the onboarding flow.
+        """
+
+        fields: dict[str, Any] = {}
+        if prompts is not MISSING:
+            fields["prompts"] = [prompt.to_dict() for prompt in prompts]
+
+        if default_channels is not MISSING:
+            fields["default_channel_ids"] = [channel.id for channel in default_channels]
+
+        if enabled is not MISSING:
+            fields["enabled"] = enabled
+
+        if mode is not MISSING:
+            fields["mode"] = mode.value
+
+        new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
+        return Onboarding(data=new, guild=self)
+
+    async def delete_auto_moderation_rule(
+        self,
+        id: int,
+        *,
+        reason: str | None = None,
+    ) -> None:
+        """
+        Deletes an auto moderation rule.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the auto moderation rule.
+        reason: Optional[:class:`str`]
+            The reason for deleting the rule. Shows up in the audit log.
+
+        Raises
+        ------
+        HTTPException
+            Deleting the auto moderation rule failed.
+        Forbidden
+            You do not have the Manage Guild permission.
+        """
+
+        await self._state.http.delete_auto_moderation_rule(self.id, id, reason=reason)
+
+    async def create_test_entitlement(self, sku: Snowflake) -> Entitlement:
+        """|coro|
+
+        Creates a test entitlement for the guild.
+
+        Parameters
+        ----------
+        sku: :class:`Snowflake`
+            The SKU to create a test entitlement for.
+
+        Returns
+        -------
+        :class:`Entitlement`
+            The created entitlement.
+        """
+        payload = {
+            "sku_id": sku.id,
+            "owner_id": self.id,
+            "owner_type": EntitlementOwnerType.guild.value,
+        }
+        data = await self._state.http.create_test_entitlement(self.id, payload)
+        return Entitlement(data=data, state=self._state)

@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from typing import Literal, Union
@@ -108,6 +109,7 @@ VideoQualityMode = Literal[1, 2]
 class VoiceChannel(_BaseGuildChannel):
     rtc_region: NotRequired[str | None]
     video_quality_mode: NotRequired[VideoQualityMode]
+    status: NotRequired[str | None]
     type: Literal[2]
     bitrate: int
     user_limit: int

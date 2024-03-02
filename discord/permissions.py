@@ -180,7 +180,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         permissions set to ``True``.
         """
-        return cls(0b11111111111111111111111111111111111111111)
+        return cls(0b1111111111111111111111111111111111111111111111111)
 
     @classmethod
     def all_channel(cls: type[P]) -> P:
@@ -250,7 +250,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         "Voice" permissions from the official Discord UI set to ``True``.
         """
-        return cls(0b00000011111100000000001100000000)
+        return cls(0b1000000001000000000000011111100000000001100000000)
 
     @classmethod
     def stage(cls: type[P]) -> P:
@@ -618,6 +618,14 @@ class Permissions(BaseFlags):
         """
         return 1 << 46
 
+    @flag_value
+    def set_voice_channel_status(self) -> int:
+        """:class:`bool`: Returns ``True`` if a member can set voice channel status.
+
+        .. versionadded:: 2.5
+        """
+        return 1 << 48
+
 
 PO = TypeVar("PO", bound="PermissionOverwrite")
 
@@ -736,6 +744,7 @@ class PermissionOverwrite:
         start_embedded_activities: bool | None
         moderate_members: bool | None
         send_voice_messages: bool | None
+        set_voice_channel_status: bool | None
 
     def __init__(self, **kwargs: bool | None):
         self._values: dict[str, bool | None] = {}

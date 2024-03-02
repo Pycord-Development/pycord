@@ -621,6 +621,7 @@ def handle_message_parameters(
     embed: Embed | None = MISSING,
     embeds: list[Embed] = MISSING,
     view: View | None = MISSING,
+    applied_tags: list[Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
@@ -653,6 +654,9 @@ def handle_message_parameters(
 
     flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
     payload["flags"] = flags.value
+
+    if applied_tags is not MISSING:
+        payload["applied_tags"] = applied_tags
 
     if allowed_mentions:
         if previous_allowed_mentions is not None:
@@ -1566,10 +1570,10 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[True],
         delete_after: float = None,
-    ) -> WebhookMessage:
-        ...
+    ) -> WebhookMessage: ...
 
     @overload
     async def send(
@@ -1588,10 +1592,10 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     async def send(
         self,
@@ -1609,6 +1613,7 @@ class Webhook(BaseWebhook):
         view: View = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: bool = False,
         delete_after: float = None,
     ) -> WebhookMessage | None:
@@ -1680,6 +1685,10 @@ class Webhook(BaseWebhook):
             The name of the thread to create. Only works for forum channels.
 
             .. versionadded:: 2.0
+        applied_tags: List[:class:`Snowflake`]
+            A list of tags to apply to the message. Only works for threads.
+
+            .. versionadded:: 2.5
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
@@ -1704,7 +1713,8 @@ class Webhook(BaseWebhook):
         InvalidArgument
             Either there was no token associated with this webhook, ``ephemeral`` was passed
             with the improper webhook type, there was no state attached with this webhook when
-            giving it a view, or you specified both ``thread_name`` and ``thread``.
+            giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``
+            was passed with neither ``thread_name`` nor ``thread`` specified.
         """
 
         if self.token is None:
@@ -1720,6 +1730,9 @@ class Webhook(BaseWebhook):
 
         if thread and thread_name:
             raise InvalidArgument("You cannot specify both a thread and thread_name")
+
+        if applied_tags and not (thread or thread_name):
+            raise InvalidArgument("You cannot specify applied_tags without a thread")
 
         application_webhook = self.type is WebhookType.application
         if ephemeral and not application_webhook:
@@ -1749,6 +1762,7 @@ class Webhook(BaseWebhook):
             embeds=embeds,
             ephemeral=ephemeral,
             view=view,
+            applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
         )
@@ -1839,7 +1853,7 @@ class Webhook(BaseWebhook):
             thread_id=thread_id,
         )
         msg = self._create_message(data)
-        if isinstance(msg.channel, PartialMessageable):
+        if thread_id and isinstance(msg.channel, PartialMessageable):
             msg._thread_id = thread_id
 
         return msg

@@ -36,6 +36,7 @@ from .file import File
 from .flags import MessageFlags
 from .member import Member
 from .message import Attachment, Message
+from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
 from .user import User
@@ -147,8 +148,11 @@ class Interaction:
         "token",
         "version",
         "custom_id",
+        "entitlements",
         "_channel_data",
         "_message_data",
+        "_guild_data",
+        "_guild",
         "_permissions",
         "_app_permissions",
         "_state",
@@ -181,12 +185,20 @@ class Interaction:
             self.data.get("custom_id") if self.data is not None else None
         )
         self._app_permissions: int = int(data.get("app_permissions", 0))
+        self.entitlements: list[Entitlement] = [
+            Entitlement(data=e, state=self._state) for e in data.get("entitlements", [])
+        ]
 
         self.message: Message | None = None
         self.channel = None
 
         self.user: User | Member | None = None
         self._permissions: int = 0
+
+        self._guild: Guild | None = None
+        self._guild_data = data.get("guild")
+        if self.guild is None and self._guild_data:
+            self._guild = Guild(data=self._guild_data, state=self)
 
         # TODO: there's a potential data loss here
         if self.guild_id:
@@ -246,6 +258,8 @@ class Interaction:
     @property
     def guild(self) -> Guild | None:
         """The guild the interaction was sent from."""
+        if self._guild:
+            return self._guild
         return self._state and self._state._get_guild(self.guild_id)
 
     def is_command(self) -> bool:
@@ -1174,6 +1188,37 @@ class InteractionResponse:
         )
         self._responded = True
         self._parent._state.store_modal(modal, self._parent.user.id)
+        return self._parent
+
+    async def premium_required(self) -> Interaction:
+        """|coro|
+        Responds to this interaction by sending a premium required message.
+
+        Raises
+        ------
+        HTTPException
+            Sending the message failed.
+        InteractionResponded
+            This interaction has already been responded to before.
+        """
+        if self._responded:
+            raise InteractionResponded(self._parent)
+
+        parent = self._parent
+
+        adapter = async_context.get()
+        http = parent._state.http
+        await self._locked_response(
+            adapter.create_interaction_response(
+                parent.id,
+                parent.token,
+                session=parent._session,
+                proxy=http.proxy,
+                proxy_auth=http.proxy_auth,
+                type=InteractionResponseType.premium_required.value,
+            )
+        )
+        self._responded = True
         return self._parent
 
     async def _locked_response(self, coro: Coroutine[Any]):

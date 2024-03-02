@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import array
@@ -172,12 +173,12 @@ class CachedSlotProperty(Generic[T, T_co]):
         self.__doc__ = getattr(function, "__doc__")
 
     @overload
-    def __get__(self, instance: None, owner: type[T]) -> CachedSlotProperty[T, T_co]:
-        ...
+    def __get__(
+        self, instance: None, owner: type[T]
+    ) -> CachedSlotProperty[T, T_co]: ...
 
     @overload
-    def __get__(self, instance: T, owner: type[T]) -> T_co:
-        ...
+    def __get__(self, instance: T, owner: type[T]) -> T_co: ...
 
     def __get__(self, instance: T | None, owner: type[T]) -> Any:
         if instance is None:
@@ -251,18 +252,15 @@ def delay_task(delay: float, func: Coroutine):
 
 
 @overload
-def parse_time(timestamp: None) -> None:
-    ...
+def parse_time(timestamp: None) -> None: ...
 
 
 @overload
-def parse_time(timestamp: str) -> datetime.datetime:
-    ...
+def parse_time(timestamp: str) -> datetime.datetime: ...
 
 
 @overload
-def parse_time(timestamp: str | None) -> datetime.datetime | None:
-    ...
+def parse_time(timestamp: str | None) -> datetime.datetime | None: ...
 
 
 def parse_time(timestamp: str | None) -> datetime.datetime | None:
@@ -791,8 +789,7 @@ class SnowflakeList(array.array):
 
     if TYPE_CHECKING:
 
-        def __init__(self, data: Iterable[int], *, is_sorted: bool = False):
-            ...
+        def __init__(self, data: Iterable[int], *, is_sorted: bool = False): ...
 
     def __new__(cls, data: Iterable[int], *, is_sorted: bool = False):
         return array.array.__new__(cls, "Q", data if is_sorted else sorted(data))  # type: ignore
@@ -1093,13 +1090,11 @@ async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[li
 
 
 @overload
-def as_chunks(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
-    ...
+def as_chunks(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]: ...
 
 
 @overload
-def as_chunks(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
-    ...
+def as_chunks(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]: ...
 
 
 def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
