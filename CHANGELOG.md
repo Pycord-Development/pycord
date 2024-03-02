@@ -97,7 +97,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2368](https://github.com/Pycord-Development/pycord/pull/2368))
 - Added `Message.enforce_nonce`.
   ([#2370](https://github.com/Pycord-Development/pycord/pull/2370))
--  Added audit log support for voice channel status.
+- Added audit log support for voice channel status.
   ([#2373](https://github.com/Pycord-Development/pycord/pull/2373))
 
 ### Changed
