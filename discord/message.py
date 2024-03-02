@@ -640,8 +640,6 @@ class Message(Hashable):
     nonce: Optional[Union[:class:`str`, :class:`int`]]
         The value used by the discord guild and the client to verify that the message is successfully sent.
         This is not stored long term within Discord's servers and is only used ephemerally.
-
-        .. versionadded:: 2.5
     embeds: List[:class:`Embed`]
         A list of embeds the message has.
     channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
