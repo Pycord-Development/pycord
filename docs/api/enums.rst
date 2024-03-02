@@ -1592,6 +1592,34 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.5
 
+    .. attribute:: voice_channel_status_update
+
+        A voice channel status was updated.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`VoiceChannel` or :class:`Object` with the ID of the voice
+        channel which was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.status`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: voice_channel_status_delete
+
+        A voice channel status was deleted.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`VoiceChannel` or :class:`Object` with the ID of the voice
+        channel which was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.status`
+
+        .. versionadded:: 2.5
+
 
 .. class:: AuditLogActionCategory
 
