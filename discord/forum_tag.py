@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-
+from .mixins import Hashable
 from . import utils
 from .utils import MISSING, SnowflakeList, snowflake_time
 
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from .types.emoji import Emoji , PartialEmoji
 
 
-class ForumTag:
+class ForumTag(Hashable):
 
     """
     An object that represents a tag that is able to be applied to a thread in a FORUM channel.
@@ -49,7 +49,7 @@ class ForumTag:
         self._update(data)
 
     def __repr__(self) -> str:
-        return f"<ForumTag id={self.id} name={self.name!r}>"
+        return f"<ForumTag id={self.id} name={self.name!r} emoji={self.emoji!r} moderated={self.moderated}>"
 
     def _update(self, data: dict):
         self.id : int = int(data["id"])
