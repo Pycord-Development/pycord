@@ -10,7 +10,7 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
-## [2.5.0] - 2024-03-03
+## [2.5.0] - 2024-03-02
 
 ### Added
 
