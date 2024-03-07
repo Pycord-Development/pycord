@@ -958,7 +958,7 @@ class Member(discord.abc.Messageable, _UserTag):
             await self._state.http.edit_my_voice_state(self.guild.id, payload)
 
     async def move_to(
-        self, channel: VocalGuildChannel, *, reason: str | None = None
+        self, channel: VocalGuildChannel | None, *, reason: str | None = None
     ) -> None:
         """|coro|
 
