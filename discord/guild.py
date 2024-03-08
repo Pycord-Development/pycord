@@ -539,7 +539,7 @@ class Guild(Hashable):
         )
 
         self.owner_id: int | None = utils._get_as_snowflake(guild, "owner_id")
-        self.afk_channel: VocalGuildChannel | None = self.get_channel(
+        self.afk_channel: VoiceChannel | None = self.get_channel(
             utils._get_as_snowflake(guild, "afk_channel_id")
         )  # type: ignore
 
@@ -3422,7 +3422,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        channel: Optional[:class:`VoiceChannel`]
+        channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
             Channel the client wants to join. Use ``None`` to disconnect.
         self_mute: :class:`bool`
             Indicates if the client should be self-muted.

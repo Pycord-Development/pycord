@@ -596,7 +596,7 @@ class AutoModActionExecutionEvent:
         The member that triggered the action, if cached.
     channel_id: Optional[:class:`int`]
         The ID of the channel in which the member's content was posted.
-    channel: Optional[Union[:class:`TextChannel`, :class:`Thread`, :class:`VoiceChannel`]]
+    channel: Optional[Union[:class:`TextChannel`, :class:`Thread`, :class:`VoiceChannel`, :class:`StageChannel`]]
         The channel in which the member's content was posted, if cached.
     message_id: Optional[:class:`int`]
         The ID of the message that triggered the action. This is only available if the
