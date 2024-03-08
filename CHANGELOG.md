@@ -12,8 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual behavior.
-  ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))
+- Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual
+  behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))
 
 ### Changed
 
