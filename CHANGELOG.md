@@ -13,7 +13,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Changed
 
 - Changed the type of `Guild.bitrate_limit` to `int`.
-- ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
+  ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
 
 ## [2.5.0] - 2024-03-02
 
