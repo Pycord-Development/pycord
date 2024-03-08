@@ -830,7 +830,9 @@ class Guild(Hashable):
             if "VIP_REGIONS" in self.features
             else 96e3
         )
-        return int(max(vip_guild, self._PREMIUM_GUILD_LIMITS[self.premium_tier].bitrate))
+        return int(
+            max(vip_guild, self._PREMIUM_GUILD_LIMITS[self.premium_tier].bitrate)
+        )
 
     @property
     def filesize_limit(self) -> int:
