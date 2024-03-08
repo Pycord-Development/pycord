@@ -13,7 +13,6 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Fixed
 
 - Fixed the type-hinting of `Member.move_to` to reflect actual behavior.
--
 
 ## [2.5.0] - 2024-03-02
 
