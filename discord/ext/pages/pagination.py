@@ -29,8 +29,8 @@ from typing import List
 import discord
 from discord.ext.bridge import BridgeContext
 from discord.ext.commands import Context
-from discord.user import User
 from discord.member import Member
+from discord.user import User
 
 __all__ = (
     "PaginatorButton",
