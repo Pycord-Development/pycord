@@ -24,13 +24,13 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import argparse
+import importlib.metadata
 import platform
 import sys
 from pathlib import Path
 from typing import Tuple
 
 import aiohttp
-import importlib.metadata
 
 import discord
 
