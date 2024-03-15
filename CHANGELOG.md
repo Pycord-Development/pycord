@@ -10,6 +10,11 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Added
+
+- Added `user` argument to `Paginator.edit`.
+  ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
+
 ### Fixed
 
 - Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual
