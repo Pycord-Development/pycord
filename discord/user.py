@@ -422,7 +422,7 @@ class ClientUser(BaseUser):
 
     # TODO: Username might not be able to edit anymore.
     async def edit(
-        self, *, username: str = MISSING, avatar: bytes = MISSING
+        self, *, username: str = MISSING, avatar: bytes = MISSING, banner: bytes = MISSING
     ) -> ClientUser:
         """|coro|
 
@@ -430,12 +430,12 @@ class ClientUser(BaseUser):
 
         .. note::
 
-            To upload an avatar, a :term:`py:bytes-like object` must be passed in that
+            To upload an avatar or banner, a :term:`py:bytes-like object` must be passed in that
             represents the image being uploaded. If this is done through a file
             then the file must be opened via ``open('some_filename', 'rb')`` and
             the :term:`py:bytes-like object` is given through the use of ``fp.read()``.
 
-            The only image formats supported for uploading is JPEG and PNG.
+            The only image formats supported for uploading is JPEG and PNG and GIF.
 
         .. versionchanged:: 2.0
             The edit is no longer in-place, instead the newly edited client user is returned.
@@ -447,6 +447,9 @@ class ClientUser(BaseUser):
         avatar: :class:`bytes`
             A :term:`py:bytes-like object` representing the image to upload.
             Could be ``None`` to denote no avatar.
+        banner: :class:`bytes`
+            A :term:`py:bytes-like object` representing the image to upload.
+            Could be ``None`` to denote no banner.
 
         Returns
         -------
@@ -458,7 +461,7 @@ class ClientUser(BaseUser):
         HTTPException
             Editing your profile failed.
         InvalidArgument
-            Wrong image format passed for ``avatar``.
+            Wrong image format passed for ``avatar`` or ``banner``.
         """
         payload: dict[str, Any] = {}
         if username is not MISSING:
@@ -468,6 +471,11 @@ class ClientUser(BaseUser):
             payload["avatar"] = None
         elif avatar is not MISSING:
             payload["avatar"] = _bytes_to_base64_data(avatar)
+
+        if banner is None:
+            payload["banner"] = None
+        elif banner is not MISSING:
+            payload["banner"] = _bytes_to_base64_data(banner)
 
         data: UserPayload = await self._state.http.edit_profile(payload)
         return ClientUser(state=self._state, data=data)
