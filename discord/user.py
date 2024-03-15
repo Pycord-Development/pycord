@@ -422,7 +422,11 @@ class ClientUser(BaseUser):
 
     # TODO: Username might not be able to edit anymore.
     async def edit(
-        self, *, username: str = MISSING, avatar: bytes = MISSING, banner: bytes = MISSING
+        self,
+        *,
+        username: str = MISSING,
+        avatar: bytes = MISSING,
+        banner: bytes = MISSING,
     ) -> ClientUser:
         """|coro|
 
