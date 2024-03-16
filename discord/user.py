@@ -443,6 +443,9 @@ class ClientUser(BaseUser):
 
         .. versionchanged:: 2.0
             The edit is no longer in-place, instead the newly edited client user is returned.
+            
+        .. versionchanges:: 2.6
+            The ``banner`` keyword-only parameter was added.
 
         Parameters
         ----------
