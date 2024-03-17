@@ -11,6 +11,7 @@ possible (see our [Version Guarantees] for more info).
 These changes are available on the `master` branch, but have not yet been released.
 
 ### Added
+
 - Added `banner` parameter to `ClientUser.edit`.
   ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))
 
