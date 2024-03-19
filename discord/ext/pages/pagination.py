@@ -29,6 +29,8 @@ from typing import List
 import discord
 from discord.ext.bridge import BridgeContext
 from discord.ext.commands import Context
+from discord.member import Member
+from discord.user import User
 
 __all__ = (
     "PaginatorButton",
@@ -1035,6 +1037,7 @@ class Paginator(discord.ui.View):
         suppress: bool | None = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         delete_after: float | None = None,
+        user: User | Member | None = None,
     ) -> discord.Message | None:
         """Edits an existing message to replace it with the paginator contents.
 
@@ -1060,6 +1063,8 @@ class Paginator(discord.ui.View):
             are used instead.
         delete_after: Optional[:class:`float`]
             If set, deletes the paginator after the specified time.
+        user: Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]
+            If set, changes the user that this paginator belongs to.
 
         Returns
         -------
@@ -1079,7 +1084,7 @@ class Paginator(discord.ui.View):
         if page_content.custom_view:
             self.update_custom_view(page_content.custom_view)
 
-        self.user = message.author
+        self.user = user or self.user
 
         try:
             self.message = await message.edit(

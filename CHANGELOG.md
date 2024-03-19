@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `banner` parameter to `ClientUser.edit`.
   ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))
+- Added `user` argument to `Paginator.edit`.
+  ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 
 ### Fixed
 
@@ -22,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed a deprecation warning from being displayed when running `python -m discord -v`
   by replacing the deprecated module.
   ([#2392](https://github.com/Pycord-Development/pycord/pull/2392))
+- Fixed `Paginator.edit` to no longer set user to the bot.
+  ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 
 ### Changed
 
