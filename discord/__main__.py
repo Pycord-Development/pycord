@@ -24,13 +24,13 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import argparse
+import importlib.metadata
 import platform
 import sys
 from pathlib import Path
 from typing import Tuple
 
 import aiohttp
-import pkg_resources
 
 import discord
 
@@ -47,9 +47,9 @@ def show_version() -> None:
         "- py-cord v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(version_info)
     )
     if version_info.releaselevel != "final":
-        pkg = pkg_resources.get_distribution("py-cord")
-        if pkg:
-            entries.append(f"    - py-cord pkg_resources: v{pkg.version}")
+        version = importlib.metadata.version("py-cord")
+        if version:
+            entries.append(f"    - py-cord importlib.metadata: v{version}")
 
     entries.append(f"- aiohttp v{aiohttp.__version__}")
     uname = platform.uname()
