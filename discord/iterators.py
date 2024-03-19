@@ -852,7 +852,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
     def __init__(
         self,
         event: ScheduledEvent,
-        limit: int,
+        limit: int | None,
         with_member: bool = False,
         before: datetime.datetime | int = None,
         after: datetime.datetime | int = None,

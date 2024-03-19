@@ -482,7 +482,7 @@ class ScheduledEvent(Hashable):
     def subscribers(
         self,
         *,
-        limit: int = 100,
+        limit: int | None = 100,
         as_member: bool = False,
         before: Snowflake | datetime.datetime | None = None,
         after: Snowflake | datetime.datetime | None = None,
