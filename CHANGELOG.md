@@ -10,6 +10,28 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Added
+
+- Added `banner` parameter to `ClientUser.edit`.
+  ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))
+- Added `user` argument to `Paginator.edit`.
+  ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
+
+### Fixed
+
+- Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual
+  behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))
+- Fixed a deprecation warning from being displayed when running `python -m discord -v`
+  by replacing the deprecated module.
+  ([#2392](https://github.com/Pycord-Development/pycord/pull/2392))
+- Fixed `Paginator.edit` to no longer set user to the bot.
+  ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
+
+### Changed
+
+- Changed the type of `Guild.bitrate_limit` to `int`.
+  ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
+
 ## [2.5.0] - 2024-03-02
 
 ### Added

@@ -539,7 +539,7 @@ class Guild(Hashable):
         )
 
         self.owner_id: int | None = utils._get_as_snowflake(guild, "owner_id")
-        self.afk_channel: VocalGuildChannel | None = self.get_channel(
+        self.afk_channel: VoiceChannel | None = self.get_channel(
             utils._get_as_snowflake(guild, "afk_channel_id")
         )  # type: ignore
 
@@ -823,14 +823,16 @@ class Guild(Hashable):
         )
 
     @property
-    def bitrate_limit(self) -> float:
+    def bitrate_limit(self) -> int:
         """The maximum bitrate for voice channels this guild can have."""
         vip_guild = (
             self._PREMIUM_GUILD_LIMITS[1].bitrate
             if "VIP_REGIONS" in self.features
             else 96e3
         )
-        return max(vip_guild, self._PREMIUM_GUILD_LIMITS[self.premium_tier].bitrate)
+        return int(
+            max(vip_guild, self._PREMIUM_GUILD_LIMITS[self.premium_tier].bitrate)
+        )
 
     @property
     def filesize_limit(self) -> int:
@@ -3420,7 +3422,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        channel: Optional[:class:`VoiceChannel`]
+        channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
             Channel the client wants to join. Use ``None`` to disconnect.
         self_mute: :class:`bool`
             Indicates if the client should be self-muted.

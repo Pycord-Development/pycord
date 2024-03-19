@@ -830,6 +830,11 @@ class Intents(BaseFlags):
 
         - :attr:`VoiceChannel.members`
         - :attr:`VoiceChannel.voice_states`
+        - :attr:`StageChannel.members`
+        - :attr:`StageChannel.speakers`
+        - :attr:`StageChannel.listeners`
+        - :attr:`StageChannel.moderators`
+        - :attr:`StageChannel.voice_states`
         - :attr:`Member.voice`
 
         .. note::

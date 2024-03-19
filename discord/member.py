@@ -769,7 +769,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         roles: List[:class:`Role`]
             The member's new list of roles. This *replaces* the roles.
-        voice_channel: Optional[:class:`VoiceChannel`]
+        voice_channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
             The voice channel to move the member to.
             Pass ``None`` to kick them from voice.
         reason: Optional[:class:`str`]
@@ -958,7 +958,7 @@ class Member(discord.abc.Messageable, _UserTag):
             await self._state.http.edit_my_voice_state(self.guild.id, payload)
 
     async def move_to(
-        self, channel: VocalGuildChannel, *, reason: str | None = None
+        self, channel: VocalGuildChannel | None, *, reason: str | None = None
     ) -> None:
         """|coro|
 
@@ -974,7 +974,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Parameters
         ----------
-        channel: Optional[:class:`VoiceChannel`]
+        channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
             The new voice channel to move the member to.
             Pass ``None`` to kick them from voice.
         reason: Optional[:class:`str`]
