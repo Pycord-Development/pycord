@@ -847,6 +847,7 @@ class Message(Hashable):
             self.interaction = MessageInteraction(data=data["interaction"], state=state)
         except KeyError:
             self.interaction = None
+        # TODO: deprecate and replace with interaction_metadata
 
         self.thread: Thread | None
         try:

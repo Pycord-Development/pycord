@@ -1020,6 +1020,22 @@ class EntitlementOwnerType(Enum):
     user = 2
 
 
+class IntegrationType(Enum):
+    """The application's integration type"""
+
+    guild_install = 1
+    user_install = 2
+
+
+class InteractionContextType(Enum):
+    """The interaction's context type"""
+
+    guild = 0
+    bot_dm = 1
+    private_channel = 2
+
+
+
 T = TypeVar("T")
 
 

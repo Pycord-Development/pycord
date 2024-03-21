@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
-from .enums import InteractionResponseType, InteractionType, try_enum
+from .enums import InteractionResponseType, InteractionContextType, InteractionType, try_enum
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
 from .flags import MessageFlags
@@ -131,7 +131,12 @@ class Interaction:
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
         The custom ID for the interaction.
+    authorizing_integration_owners: Any
+        TODO
+    context: Optional[:class:`InteractionContextType`]
+        The context in which this command was executed.
     """
+    # TODO: authorizing_integration_owners
 
     __slots__: tuple[str, ...] = (
         "id",
@@ -149,6 +154,7 @@ class Interaction:
         "version",
         "custom_id",
         "entitlements",
+        "context",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -188,6 +194,7 @@ class Interaction:
         self.entitlements: list[Entitlement] = [
             Entitlement(data=e, state=self._state) for e in data.get("entitlements", [])
         ]
+        self.context: InteractionContextType | None = try_enum(InteractionContextType, data["context"]) if "context" in data else None
 
         self.message: Message | None = None
         self.channel = None
