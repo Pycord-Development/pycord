@@ -1020,6 +1020,12 @@ class EntitlementOwnerType(Enum):
     user = 2
 
 
+class PollLayoutType(Enum):
+    """The poll's layout type. Only one exists for now"""
+
+    default = 1
+
+
 T = TypeVar("T")
 
 
