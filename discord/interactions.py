@@ -34,13 +34,13 @@ from .enums import InteractionResponseType, InteractionType, try_enum
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
 from .flags import MessageFlags
+from .guild import Guild
 from .member import Member
 from .message import Attachment, Message
 from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
 from .user import User
-from .guild import Guild
 from .webhook.async_ import (
     Webhook,
     WebhookMessage,
