@@ -89,6 +89,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
+    from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -97,7 +98,6 @@ if TYPE_CHECKING:
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
     from .ui.view import View
     from .user import ClientUser
-    from .poll import Poll
 
     PartialMessageableChannel = Union[
         TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable
@@ -1604,7 +1604,7 @@ class Messageable:
             components = view.to_components()
         else:
             components = None
-        
+
         if poll:
             poll = poll.to_dict()
 
