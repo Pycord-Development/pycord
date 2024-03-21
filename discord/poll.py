@@ -25,26 +25,24 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Mapping, TypeVar
+from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .enums import PollLayoutType
 from .iterators import AsyncIterator
 
-__all__ = (
-
-)
+__all__ = ()
 
 
 if TYPE_CHECKING:
-    from .user import User
     from .emoji import Emoji
     from .partial_emoji import PartialEmoji
     from .types.poll import Poll as PollPayload
-    from .types.poll import PollMedia as PollMediaPayload
     from .types.poll import PollAnswer as PollAnswerPayload
-    from .types.poll import PollResults as PollResultsPayload
     from .types.poll import PollAnswerCount as PollAnswerCountPayload
+    from .types.poll import PollMedia as PollMediaPayload
+    from .types.poll import PollResults as PollResultsPayload
+    from .user import User
 
 
 class PollMedia:
@@ -149,10 +147,7 @@ class PollAnswer:
         return f"<Pollmedia text={self.text!r} emoji={self.emoji!r}>"
 
     def users(
-        self,
-        *,
-        limit: int | None = None,
-        after: Snowflake | None = None
+        self, *, limit: int | None = None, after: Snowflake | None = None
     ) -> AsyncIterator:
         """Returns an :class:`AsyncIterator` representing the users that have voted with this answer.
 
@@ -231,11 +226,7 @@ class PollAnswerCount:
         self.me = data.get("me_voted")
 
     def to_dict(self) -> PollAnswerPayload:
-        return {
-            "answer_id": self.id,
-            "count": self.count,
-            "me_voted": self.me
-        }
+        return {"answer_id": self.id, "count": self.count, "me_voted": self.me}
 
     def __repr__(self) -> str:
         return f"<PollAnswerCount is_finalized={self.is_finalized!r}>"
@@ -261,7 +252,9 @@ class PollResults:
 
     def __init__(self, data: PollResultsPayload):
         self.is_finalized = data.get("is_finalized")
-        self.answer_counts = [PollAnswerCount.from_dict(a) for a in data.get("answer_counts", [])]
+        self.answer_counts = [
+            PollAnswerCount.from_dict(a) for a in data.get("answer_counts", [])
+        ]
 
     def to_dict(self) -> PollAnswerPayload:
         return {
@@ -307,14 +300,14 @@ class Poll:
     )
 
     def __init__(
-            self,
-            *,
-            question: str,
-            answers: List[PollAnswer],
-            expiry: datetime.datetime,
-            allow_multiselect: bool,
-            layout_type: PollLayoutType = PollLayoutType.default,
-        ):
+        self,
+        *,
+        question: str,
+        answers: List[PollAnswer],
+        expiry: datetime.datetime,
+        allow_multiselect: bool,
+        layout_type: PollLayoutType = PollLayoutType.default,
+    ):
         self._media = PollMedia(question)
         self.question: str = question
         self.answers: List[PollAnswer] = answers
@@ -344,7 +337,7 @@ class Poll:
             allow_multiselect=data.get("allow_multiselect"),
             layout_type=data.get("allow_multiselect"),
         )
-        if (results := data.get("results", [])):
+        if results := data.get("results", []):
             poll.results = [PollResults.from_dict(r) for r in results]
         return poll
 

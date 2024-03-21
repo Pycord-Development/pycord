@@ -36,18 +36,22 @@ class PollMedia(TypedDict):
     text: str
     emoji: NotRequired[Emoji]
 
+
 class PollAnswer(TypedDict):
     answer_id: int
     poll_media: PollMedia
+
 
 class PollResults(TypedDict):
     is_finalized: bool
     answer_counts: list[PollAnswerCount]
 
+
 class PollAnswerCount(TypedDict):
     id: int
     count: int
     me_voted: bool
+
 
 class Poll(TypedDict):
     question: PollMedia
