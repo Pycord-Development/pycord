@@ -55,4 +55,4 @@ class Poll(TypedDict):
     expiry: str
     allow_multiselect: bool
     layout_type: PollLayoutType
-    results: PollResults
+    results: NotRequired[PollResults]
