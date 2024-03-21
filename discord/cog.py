@@ -390,7 +390,7 @@ class Cog(metaclass=CogMeta):
             The name of the event being listened to. If not provided, it
             defaults to the function's name.
         once: :class:`bool`
-            If this listener should only be called once after the cog is loaded.
+            If this listener should only be called once after each cog load.
             Defaults to false.
 
         Raises
