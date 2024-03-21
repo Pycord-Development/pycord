@@ -919,7 +919,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
             before=before,
             after=after,
         )
-        if data:
+        if data and self.limit:
             self.limit -= self.retrieve
 
         for element in reversed(data):
