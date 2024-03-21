@@ -108,13 +108,13 @@ class PollAnswer:
 
     Attributes
     ----------
-    id: :class:`int`
-        The answer's ID. It currently starts at ``1`` for the first answer, then goes up sequentially.
-        It may not be reliable to depend on this.
     text: :class:`str`
         The answer's text.
     emoji: Optional[:class:`Emoji`]
         The answer's emoji.
+    id: :class:`int`
+        The answer's ID. It currently starts at ``1`` for the first answer, then goes up sequentially.
+        It may not be reliable to depend on this.
     """
 
     __slots__ = (
@@ -124,24 +124,27 @@ class PollAnswer:
         "emoji",
     )
 
-    def __init__(self, id: int, media: PollMedia):
-        self.id = id
-        self._media = media
+    def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
+        self.id = None
         self.text: str = media.text
         self.emoji: Emoji | PartialEmoji | None = media.emoji
+        self._media = PollMedia(text, emoji)
 
     def to_dict(self) -> PollAnswerPayload:
         return {
-            "id": self.id,
+            "answer_id": self.id,
             "poll_media": self._media.to_dict(),
         }
 
     @classmethod
     def from_dict(cls, data: PollAnswerPayload) -> PollAnswer:
-        return cls(
-            data["answer_id"],
-            PollMedia.from_dict(data["poll_media"]),
+        media = PollMedia.from_dict(data["poll_media"])
+        answer = cls(
+            media.text,
+            media.emoji,
         )
+        answer.id = data["answer_id"]
+        return answer
 
     def __repr__(self) -> str:
         return f"<Pollmedia text={self.text!r} emoji={self.emoji!r}>"
@@ -303,14 +306,14 @@ class Poll:
         self,
         *,
         question: str,
-        answers: List[PollAnswer],
+        answers: list[PollAnswer],
         expiry: datetime.datetime,
         allow_multiselect: bool,
         layout_type: PollLayoutType = PollLayoutType.default,
     ):
         self._media = PollMedia(question)
         self.question: str = question
-        self.answers: List[PollAnswer] = answers
+        self.answers: list[PollAnswer] = answers
         self.expiry: datetime.datetime = expiry
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
