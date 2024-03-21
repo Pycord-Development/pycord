@@ -40,6 +40,7 @@ from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
 from .user import User
+from .guild import Guild
 from .webhook.async_ import (
     Webhook,
     WebhookMessage,
@@ -69,7 +70,6 @@ if TYPE_CHECKING:
     from .client import Client
     from .commands import OptionChoice
     from .embeds import Embed
-    from .guild import Guild
     from .mentions import AllowedMentions
     from .state import ConnectionState
     from .threads import Thread
