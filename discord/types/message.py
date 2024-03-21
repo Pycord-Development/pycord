@@ -32,11 +32,11 @@ from .components import Component
 from .embed import Embed
 from .emoji import PartialEmoji
 from .member import Member, UserWithMember
+from .poll import Poll
 from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
 from .threads import Thread
 from .user import User
-from .poll import Poll
 
 if TYPE_CHECKING:
     from .interactions import MessageInteraction
