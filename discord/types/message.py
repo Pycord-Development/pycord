@@ -36,6 +36,7 @@ from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
 from .threads import Thread
 from .user import User
+from .poll import Poll
 
 if TYPE_CHECKING:
     from .interactions import MessageInteraction
@@ -136,6 +137,7 @@ class Message(TypedDict):
     embeds: list[Embed]
     pinned: bool
     type: MessageType
+    poll: Poll
 
 
 AllowedMentionType = Literal["roles", "users", "everyone"]

@@ -71,6 +71,7 @@ if TYPE_CHECKING:
         message,
         monetization,
         onboarding,
+        poll,
         role,
         scheduled_events,
         sticker,
@@ -471,6 +472,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
+        poll: poll.Poll | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         payload = {}
@@ -508,6 +510,9 @@ class HTTPClient:
         if flags:
             payload["flags"] = flags
 
+        if poll:
+            payload["poll"] = poll
+
         return self.request(r, json=payload)
 
     def send_typing(self, channel_id: Snowflake) -> Response[None]:
@@ -531,6 +536,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
+        poll: poll.Poll | None = None,
     ) -> Response[message.Message]:
         form = []
 
@@ -555,6 +561,8 @@ class HTTPClient:
             payload["sticker_ids"] = stickers
         if flags:
             payload["flags"] = flags
+        if poll:
+            payload["poll"] = poll
 
         attachments = []
         form.append({"name": "payload_json"})
@@ -594,6 +602,7 @@ class HTTPClient:
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
         flags: int | None = None,
+        poll: poll.Poll | None = None,
     ) -> Response[message.Message]:
         r = Route("POST", "/channels/{channel_id}/messages", channel_id=channel_id)
         return self.send_multipart_helper(
@@ -610,6 +619,7 @@ class HTTPClient:
             stickers=stickers,
             components=components,
             flags=flags,
+            poll=poll,
         )
 
     def edit_multipart_helper(
