@@ -21,13 +21,13 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual
   behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))
-- Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
-  ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
 - Fixed a deprecation warning from being displayed when running `python -m discord -v`
   by replacing the deprecated module.
   ([#2392](https://github.com/Pycord-Development/pycord/pull/2392))
 - Fixed `Paginator.edit` to no longer set user to the bot.
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
+- Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
+  ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
 
 ### Changed
 
