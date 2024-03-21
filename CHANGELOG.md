@@ -30,6 +30,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2402](https://github.com/Pycord-Development/pycord/pull/2402))
 - Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
   ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
+- Fixed `ScheduledEvent.subscribers` behaviour with `limit=None`.
+  ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
 
 ### Changed
 
