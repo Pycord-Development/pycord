@@ -379,7 +379,9 @@ class Cog(metaclass=CogMeta):
         )
 
     @classmethod
-    def listener(cls, name: str = MISSING, once: bool = False) -> Callable[[FuncT], FuncT]:
+    def listener(
+        cls, name: str = MISSING, once: bool = False
+    ) -> Callable[[FuncT], FuncT]:
         """A decorator that marks a function as a listener.
 
         This is the cog equivalent of :meth:`.Bot.listen`.
