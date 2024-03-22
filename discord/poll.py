@@ -275,8 +275,8 @@ class Poll:
         The poll's question data. Question text can be up to 300 characters.
     answers: List[:class:`PollAnswer`]
         A list of the poll's answers. A maximum of 10 answers can be set.
-    duration: :class:`int`
-        The time in seconds until this poll expires.
+    duration: Optional[:class:`int`]
+        The number of hours until this poll expires. Users must provide this when creating a poll, but Discord returns :attr:`expiry` instead.
     allow_multiselect: :class:`bool`
         Whether multiple answers can be selected.
     layout_type: :class:`PollLayoutType`
@@ -296,11 +296,19 @@ class Poll:
     ):
         self.question = question
         self.answers: list[PollAnswer] = answers
-        self.duration: int = duration
+        self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
         self.results = []
+        self._expiry = None
         self._message = None
+
+    @utils.cached_property
+    def expiry(self) -> datetime.datetime | None:
+        """An aware datetime object that specifies the date and time in UTC when the poll will end."""
+        if self._expiry is not None:
+            return datetime.datetime.fromisoformat(self._expiry)
+        return None
 
     def to_dict(self) -> PollPayload:
         dict_ = {
@@ -312,6 +320,8 @@ class Poll:
         }
         if self.results:
             dict_["results"] = [r.to_dict() for r in self.results]
+        if self._expiry:
+            dict_["expiry"] = self._expiry
         return dict_
 
     @classmethod
@@ -327,6 +337,8 @@ class Poll:
         )
         if results := data.get("results", []):
             poll.results = [PollResults.from_dict(r) for r in results]
+        if expiry := data.get("expiry"):
+            poll._expiry = expiry
         poll._message = message
         return poll
 
