@@ -333,7 +333,7 @@ class Poll:
         return dict_
 
     @classmethod
-    def from_dict(cls, data: PollPayload, guild: Guild) -> PollMedia:
+    def from_dict(cls, data: PollPayload) -> PollMedia:
         poll = cls(
             question=data["question"]["text"],
             answers=[PollAnswer.from_dict(a) for a in data.get("answers", [])],
