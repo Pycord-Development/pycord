@@ -63,13 +63,6 @@ class PollMedia:
         The answer's emoji.
     """
 
-    # note that AutoModActionType.timeout is only valid for trigger type 1?
-
-    __slots__ = (
-        "text",
-        "emoji",
-    )
-
     def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
         self.text: str = text
         self.emoji: Emoji | PartialEmoji | None = emoji
@@ -119,11 +112,6 @@ class PollAnswer:
     media: :class:`PollMedia`
         The relevant media for this answer.
     """
-
-    __slots__ = (
-        "media",
-        "id",
-    )
 
     def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
         self.id = None
@@ -226,12 +214,6 @@ class PollAnswerCount:
         If the current user voted this answer. This is always ``False`` for bots.
     """
 
-    __slots__ = (
-        "id",
-        "count",
-        "me",
-    )
-
     def __init__(self, data: PollAnswerCountPayload):
         self.id = data["id"]
         self.count: int = data.get("count", 0)
@@ -256,11 +238,6 @@ class PollResults:
     answer_counts: List[:class:`PollAnswerCount`]
         A list of counts for each answer. If an answer isn't included, it has no votes.
     """
-
-    __slots__ = (
-        "is_finalized",
-        "answer_counts",
-    )
 
     def __init__(self, data: PollResultsPayload):
         self.is_finalized = data.get("is_finalized")
@@ -298,17 +275,6 @@ class Poll:
     results: List[:class:`PollResults`]
         The results from this poll recieved from Discord.
     """
-
-    # note that AutoModActionType.timeout is only valid for trigger type 1?
-
-    __slots__ = (
-        "question",
-        "answers",
-        "duration ",
-        "allow_multiselect",
-        "layout_type",
-        "results",
-    )
 
     def __init__(
         self,
