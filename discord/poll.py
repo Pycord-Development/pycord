@@ -318,7 +318,7 @@ class Poll:
         return poll
 
     def __repr__(self) -> str:
-        return f"<Poll question={self.question!r}"
+        return f"<Poll question={self.question!r}>"
 
     def get_answer(self, id) -> PollAnswer | None:
         return utils.get(self.answers, id=id)
