@@ -53,10 +53,10 @@ from .guild import Guild
 from .member import Member
 from .mixins import Hashable
 from .partial_emoji import PartialEmoji
+from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
-from .poll import Poll
 from .utils import MISSING, escape_mentions
 
 if TYPE_CHECKING:
