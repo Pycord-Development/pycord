@@ -72,11 +72,16 @@ class PollMedia:
             "text": self.text,
         }
         if self.emoji:
-            dict_["emoji"] = {
-                "id": str(self.emoji.id) if self.emoji.id else None,
-                "name": self.emoji.name,
-                "animated": self.emoji.animated,
-            }
+            if isinstance(self.emoji, str):
+                dict_["emoji"] = {
+                    "name": self.emoji.name,
+                }
+            else:
+                dict_["emoji"] = {
+                    "id": self.emoji.id and str(self.emoji.id),
+                    "name": self.emoji.name,
+                    "animated": self.emoji.animated,
+                }
 
         return dict_
 
