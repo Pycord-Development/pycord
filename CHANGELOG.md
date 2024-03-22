@@ -35,6 +35,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Changed the type of `Guild.bitrate_limit` to `int`.
   ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
+- HTTP requests that fail with a 503 status are now re-tried.
+  ([#2395](https://github.com/Pycord-Development/pycord/pull/2395))
 
 ## [2.5.0] - 2024-03-02
 
