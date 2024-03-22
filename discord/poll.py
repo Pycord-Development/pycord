@@ -48,6 +48,8 @@ if TYPE_CHECKING:
     from .types.poll import PollMedia as PollMediaPayload
     from .types.poll import PollResults as PollResultsPayload
     from .user import User
+    from .guild import Guild
+    from .abc import Snowflake
 
 
 class PollMedia:
@@ -92,7 +94,7 @@ class PollMedia:
         if "name" in _emoji:
             emoji = PartialEmoji.from_dict(_emoji)
             if emoji.id:
-                emoji = get(guild.emojis, id=emoji.id) or emoji
+                emoji = utils.get(guild.emojis, id=emoji.id) or emoji
         else:
             emoji = None
         return cls(
