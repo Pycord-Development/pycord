@@ -30,7 +30,13 @@ from . import utils
 from .enums import PollLayoutType
 from .iterators import AsyncIterator
 
-__all__ = ()
+__all__ = (
+    "PollMedia",
+    "PollAnswer",
+    "PollAnswerCount",
+    "PollResults",
+    "Poll",
+)
 
 
 if TYPE_CHECKING:
