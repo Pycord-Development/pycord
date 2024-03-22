@@ -42,7 +42,7 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .emoji import Emoji
-    from .guild import Guild 
+    from .guild import Guild
     from .message import Message, PartialMessage
     from .partial_emoji import PartialEmoji
     from .types.poll import Poll as PollPayload
@@ -90,7 +90,9 @@ class PollMedia:
         return dict_
 
     @classmethod
-    def from_dict(cls, data: PollMediaPayload, message: Message | PartialMessage | None = None) -> PollMedia:
+    def from_dict(
+        cls, data: PollMediaPayload, message: Message | PartialMessage | None = None
+    ) -> PollMedia:
 
         _emoji: dict[str, Any] = data.get("emoji") or {}
         if "name" in _emoji:
@@ -315,7 +317,9 @@ class Poll:
         return dict_
 
     @classmethod
-    def from_dict(cls, data: PollPayload, message: Message | PartialMessage | None = None) -> Poll:
+    def from_dict(
+        cls, data: PollPayload, message: Message | PartialMessage | None = None
+    ) -> Poll:
         poll = cls(
             question=PollMedia.from_dict(data["question"], message),
             answers=[PollAnswer.from_dict(a) for a in data.get("answers", [])],
