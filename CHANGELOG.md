@@ -28,9 +28,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 - Fixed `NameError` in some instances of `Interaction`.
   ([#2402](https://github.com/Pycord-Development/pycord/pull/2402))
-- Fixed `PartialMessage/able` IDs sometimes being `str` rather than `int`.
-  ([#2406](https://github.com/Pycord-Development/pycord/pull/2406))
-- Fixed Views sent in `ForumChannel.create_thread` not recieving interactions.
+- Fixed interactions being ignored due to `PartialMessage(able).id` being of type `str`.
   ([#2406](https://github.com/Pycord-Development/pycord/pull/2406))
 
 ### Changed
