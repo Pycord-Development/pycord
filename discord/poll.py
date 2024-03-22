@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, Any
 from . import utils
 from .enums import PollLayoutType
 from .iterators import AsyncIterator
+import datetime
 
 __all__ = (
     "PollMedia",
