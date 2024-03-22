@@ -857,7 +857,7 @@ class Message(Hashable):
         self.poll: Poll | None
         try:
             self.poll = Poll.from_dict(data.get("poll"))
-        except KeyError:
+        except:
             self.poll = None
 
         self.thread: Thread | None
