@@ -786,7 +786,7 @@ class RawAuditLogEntryEvent(_RawReprMixin):
 class RawMessagePollVoteEvent(_RawReprMixin):
     """Represents the payload for a :func:`on_message_poll_vote` event.
 
-        .. versionadded:: 2.6
+    .. versionadded:: 2.6
 
     Attributes
     ----------
