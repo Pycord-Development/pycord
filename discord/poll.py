@@ -24,12 +24,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import datetime
 from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .enums import PollLayoutType
 from .iterators import AsyncIterator
-import datetime
 
 __all__ = (
     "PollMedia",
