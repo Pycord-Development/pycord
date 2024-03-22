@@ -73,6 +73,7 @@ if TYPE_CHECKING:
     from .mentions import AllowedMentions
     from .state import ConnectionState
     from .threads import Thread
+    from .poll import Poll
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionData
     from .types.interactions import MessageInteraction as MessageInteractionPayload
@@ -803,6 +804,7 @@ class InteractionResponse:
         allowed_mentions: AllowedMentions = None,
         file: File = None,
         files: list[File] = None,
+        poll: Poll = None,
         delete_after: float = None,
     ) -> Interaction:
         """|coro|
@@ -837,6 +839,11 @@ class InteractionResponse:
             The file to upload.
         files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
+        poll: :class:`Poll`
+            A poll. Cannot be sent with ``content``, ``embeds`` or ``files``.
+            Messages sent with a poll currently cannot be edited.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -880,6 +887,9 @@ class InteractionResponse:
 
         if view is not None:
             payload["components"] = view.to_components()
+
+        if poll is not None:
+            payload["poll"] = poll.to_dict()
 
         state = self._parent._state
 

@@ -1522,7 +1522,7 @@ class Messageable:
 
             .. versionadded:: 2.4
         poll: :class:`Poll`
-            A poll! Cannot be sent with ``content``, ``embeds`` or ``files``.
+            A poll. Cannot be sent with ``content``, ``embeds`` or ``files``.
             Messages sent with a poll currently cannot be edited.
 
             .. versionadded:: 2.6
