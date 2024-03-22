@@ -71,9 +71,9 @@ if TYPE_CHECKING:
     from .commands import OptionChoice
     from .embeds import Embed
     from .mentions import AllowedMentions
+    from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
-    from .poll import Poll
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionData
     from .types.interactions import MessageInteraction as MessageInteractionPayload
