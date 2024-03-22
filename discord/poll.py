@@ -284,8 +284,8 @@ class Poll:
         The poll's question data.
     answers: List[:class:`PollAnswer`]
         A list of the poll's answers.
-    expiry: :class:`datetime.datetime`
-        The timestamp that the poll ends at.
+    duration: :class:`int`
+        The time in seconds until this poll expires.
     allow_multiselect: :class:`bool`
         Whether multiple answers can be selected.
     layout_type: :class:`PollLayoutType`
@@ -299,7 +299,7 @@ class Poll:
     __slots__ = (
         "question",
         "answers",
-        "expiry",
+        "duration ",
         "allow_multiselect",
         "layout_type",
         "results",
@@ -310,13 +310,13 @@ class Poll:
         *,
         question: str,
         answers: list[PollAnswer],
-        expiry: datetime.datetime,
+        duration: int,
         allow_multiselect: bool,
         layout_type: PollLayoutType = PollLayoutType.default,
     ):
         self.question = PollMedia(question)
         self.answers: list[PollAnswer] = answers
-        self.expiry: datetime.datetime = expiry
+        self.duration: int = duration
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
         self.results = []
@@ -325,7 +325,7 @@ class Poll:
         dict_ = {
             "question": self.question.to_dict(),
             "answers": [a.to_dict() for a in self.answers],
-            "expiry": self.expiry.strftime(),
+            "duration": self.duration,
             "allow_multiselect": self.allow_multiselect,
             "layout_type": self.layout_type.value,
         }
@@ -338,9 +338,9 @@ class Poll:
         poll = cls(
             question=data["question"]["text"],
             answers=[PollAnswer.from_dict(a) for a in data.get("answers", [])],
-            expiry=utils.parse_time(data.get("expiry")),
+            duration=data.get("duration"),
             allow_multiselect=data.get("allow_multiselect"),
-            layout_type=data.get("allow_multiselect"),
+            layout_type=data.get("layout_type"),
         )
         if results := data.get("results", []):
             poll.results = [PollResults.from_dict(r) for r in results]
