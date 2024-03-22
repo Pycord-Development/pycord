@@ -286,13 +286,13 @@ class Poll:
     def __init__(
         self,
         *,
-        question: str,
+        question: PollMedia,
         answers: list[PollAnswer],
         duration: int,
         allow_multiselect: bool,
         layout_type: PollLayoutType = PollLayoutType.default,
     ):
-        self.question = PollMedia(question)
+        self.question = question
         self.answers: list[PollAnswer] = answers
         self.duration: int = duration
         self.allow_multiselect: bool = allow_multiselect
@@ -314,7 +314,7 @@ class Poll:
     @classmethod
     def from_dict(cls, data: PollPayload) -> PollMedia:
         poll = cls(
-            question=data["question"]["text"],
+            question=data["question"],
             answers=[PollAnswer.from_dict(a) for a in data.get("answers", [])],
             duration=data.get("duration"),
             allow_multiselect=data.get("allow_multiselect"),
