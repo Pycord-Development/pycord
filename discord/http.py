@@ -3013,6 +3013,13 @@ class HTTPClient:
             reason=reason,
         )
 
+    # Polls
+
+    def expire_poll(self, channel_id: Snowflake, message_id: Snowflake) -> Response[message.Message]:
+        return self.request(
+            Route("POST", "/channels/{channel_id}/poll/{message_id}/expire")
+        )
+
     # Misc
 
     def application_info(self) -> Response[appinfo.AppInfo]:
