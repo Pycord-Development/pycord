@@ -825,6 +825,32 @@ class ConnectionState:
                 if reaction:
                     self.dispatch("reaction_clear_emoji", reaction)
 
+    def parse_message_poll_vote_add(self, data) -> None:
+        raw = RawMessagePollVoteEvent(data, True)
+        guild = self._get_guild(raw.guild_id)
+        if guild:
+            user = guild.get_member(raw.user_id)
+        else:
+            user = self.get_user(raw.user_id)
+        self.dispatch("raw_poll_vote_add", raw)
+
+        message = self._get_message(raw.message_id)
+        if message is not None and user is not None:
+            self.dispatch("poll_vote_add", message, user, message.poll.get_answer(raw.answer_id) or raw.answer_id)
+
+    def parse_message_poll_vote_remove(self, data) -> None:
+        raw = RawMessagePollVoteEvent(data, False)
+        guild = self._get_guild(raw.guild_id)
+        if guild:
+            user = guild.get_member(raw.user_id)
+        else:
+            user = self.get_user(raw.user_id)
+        self.dispatch("raw_poll_vote_remove", raw)
+
+        message = self._get_message(raw.message_id)
+        if message is not None and user is not None:
+            self.dispatch("poll_vote_remove", message, user, message.poll.get_answer(raw.answer_id) or raw.answer_id)
+
     def parse_interaction_create(self, data) -> None:
         interaction = Interaction(data=data, state=self)
         if data["type"] == 3:  # interaction component

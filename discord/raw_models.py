@@ -47,6 +47,7 @@ if TYPE_CHECKING:
         IntegrationDeleteEvent,
         MemberRemoveEvent,
         MessageDeleteEvent,
+        MessagePollVoteEvent,
         MessageUpdateEvent,
         ReactionActionEvent,
         ReactionClearEmojiEvent,
@@ -780,3 +781,39 @@ class RawAuditLogEntryEvent(_RawReprMixin):
         self.extra = data.get("options")
         self.changes = data.get("changes")
         self.data: AuditLogEntryEvent = data
+
+
+class RawMessagePollVoteEvent(_RawReprMixin):
+    """Represents the payload for a :func:`on_message_poll_vote` event.
+
+        .. versionadded:: 2.6
+
+    Attributes
+    ----------
+    user_id: :class:`int`:
+        The user that added or removed their vote
+    message_id: :class:`int`
+        The message ID of the poll that recieved the vote.
+    channel_id: :class:`int`
+        The channel ID where the vote was updated.
+    guild_id: Optional[:class:`int`]
+        The guild ID where the vote was updated, if applicable.
+    added: :class:`bool`
+        Whether this vote was added or removed.
+    data: :class:`dict`
+        The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway#message-poll-vote-add>`
+    """
+
+    __slots__ = ("user_id", "message_id", "channel_id", "guild_id", "data", "added")
+
+    def __init__(self, data: MessagePollVoteEvent, added: bool) -> None:
+        self.user_id: int = int(data["user_id"])
+        self.channel_id: int = int(data["channel_id"])
+        self.message_id: int = int(data["message_id"])
+        self.data: MessagePollVoteEvent = data
+        self.added: bool = added
+
+        try:
+            self.guild_id: int | None = int(data["guild_id"])
+        except KeyError:
+            self.guild_id: int | None = None
