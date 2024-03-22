@@ -795,7 +795,6 @@ class Message(Hashable):
             Attachment(data=a, state=self._state) for a in data["attachments"]
         ]
         self.embeds: list[Embed] = [Embed.from_dict(a) for a in data["embeds"]]
-        self.poll: Poll = Poll.from_dict(data.get("poll"))
         self.application: MessageApplicationPayload | None = data.get("application")
         self.activity: MessageActivityPayload | None = data.get("activity")
         self.channel: MessageableChannel = channel
@@ -854,6 +853,12 @@ class Message(Hashable):
             self.interaction = MessageInteraction(data=data["interaction"], state=state)
         except KeyError:
             self.interaction = None
+
+        self.poll: Poll | None
+        try:
+            self.poll = Poll.from_dict(data.get("poll"))
+        except KeyError:
+            self.poll = None
 
         self.thread: Thread | None
         try:
