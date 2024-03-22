@@ -66,10 +66,9 @@ class PollMedia:
         The answer's emoji.
     """
 
-    def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
+    def __init__(self, text: str, emoji: Emoji | PartialEmoji | str | None = None):
         self.text: str = text
-        self.emoji: Emoji | PartialEmoji | None = emoji
-        self._message = None
+        self.emoji: Emoji | PartialEmoji | str | None = emoji
 
     def to_dict(self) -> PollMediaPayload:
         dict_ = {
@@ -78,13 +77,12 @@ class PollMedia:
         if self.emoji:
             if isinstance(self.emoji, str):
                 dict_["emoji"] = {
-                    "name": self.emoji.name,
+                    "name": self.emoji,
                 }
             else:
                 dict_["emoji"] = {
                     "id": self.emoji.id and str(self.emoji.id),
-                    "name": self.emoji.name,
-                    "animated": self.emoji.animated,
+                    "name": self.emoji.name
                 }
 
         return dict_
@@ -95,12 +93,12 @@ class PollMedia:
     ) -> PollMedia:
 
         _emoji: dict[str, Any] = data.get("emoji") or {}
-        if "name" in _emoji:
+        if isinstance(_emoji, dict) and _emoji.get("name"):
             emoji = PartialEmoji.from_dict(_emoji)
-            if emoji.id and self._message:
-                emoji = self._message._state.get_emoji(emoji.id) or emoji
+            if emoji.id and message:
+                emoji = message._state.get_emoji(emoji.id) or emoji
         else:
-            emoji = None
+            emoji = _emoji or None
         return cls(
             data["text"],
             emoji,
@@ -124,7 +122,7 @@ class PollAnswer:
         The relevant media for this answer.
     """
 
-    def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
+    def __init__(self, text: str, emoji: Emoji | PartialEmoji | str | None = None):
         self.id = None
         self.media = PollMedia(text, emoji)
 
@@ -333,7 +331,7 @@ class Poll:
         return poll
 
     def __repr__(self) -> str:
-        return f"<Poll question={self.question!r}>"
+        return f"<Poll question={self.question!r} duration={self.duration!r} allow_multiselect={self.allow_multiselect!r}>"
 
     def get_answer(self, id) -> PollAnswer | None:
         return utils.get(self.answers, id=id)
