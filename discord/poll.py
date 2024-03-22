@@ -108,17 +108,15 @@ class PollAnswer:
 
     Attributes
     ----------
-    text: :class:`str`
-        The answer's text.
-    emoji: Optional[:class:`Emoji`]
-        The answer's emoji.
     id: :class:`int`
         The answer's ID. It currently starts at ``1`` for the first answer, then goes up sequentially.
         It may not be reliable to depend on this.
+    media: :class:`PollMedia`
+        The relevant media for this answer.
     """
 
     __slots__ = (
-        "_media",
+        "media",
         "id",
         "text",
         "emoji",
@@ -126,14 +124,22 @@ class PollAnswer:
 
     def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
         self.id = None
-        self.text: str = media.text
-        self.emoji: Emoji | PartialEmoji | None = media.emoji
-        self._media = PollMedia(text, emoji)
+        self.media = PollMedia(text, emoji)
+
+    @property
+    def text(self) -> str:
+        """The answer's text. Shortcut for ``PollAnswer.media.text``."""
+        return self.media.text
+
+    @property
+    def emoji(self) -> Emoji | PartialEmoji | None:
+        """The answer's emoji. Shortcut for ``PollAnswer.media.emoji``."""
+        return self.media.emoji
 
     def to_dict(self) -> PollAnswerPayload:
         return {
             "answer_id": self.id,
-            "poll_media": self._media.to_dict(),
+            "poll_media": self.media.to_dict(),
         }
 
     @classmethod
@@ -147,7 +153,7 @@ class PollAnswer:
         return answer
 
     def __repr__(self) -> str:
-        return f"<Pollmedia text={self.text!r} emoji={self.emoji!r}>"
+        return f"<Pollmedia id={self.id!r} media={self.media!r}>"
 
     def users(
         self, *, limit: int | None = None, after: Snowflake | None = None
@@ -228,11 +234,11 @@ class PollAnswerCount:
         self.count: int = data.get("count", 0)
         self.me = data.get("me_voted")
 
-    def to_dict(self) -> PollAnswerPayload:
+    def to_dict(self) -> PollAnswerCountPayload:
         return {"answer_id": self.id, "count": self.count, "me_voted": self.me}
 
     def __repr__(self) -> str:
-        return f"<PollAnswerCount is_finalized={self.is_finalized!r}>"
+        return f"<PollAnswerCount id={self.id!r} count={self.count!r} me={self.me!r}>"
 
 
 class PollResults:
@@ -259,7 +265,7 @@ class PollResults:
             PollAnswerCount.from_dict(a) for a in data.get("answer_counts", [])
         ]
 
-    def to_dict(self) -> PollAnswerPayload:
+    def to_dict(self) -> PollResultsPayload:
         return {
             "is_finalized": self.is_finalized,
             "answer_counts": [a.to_dict() for a in self.answer_counts],
@@ -276,8 +282,8 @@ class Poll:
 
     Attributes
     ----------
-    question: :class:`str`
-        The poll's question text.
+    question: :class:`PollMedia`
+        The poll's question data.
     answers: List[:class:`PollAnswer`]
         A list of the poll's answers.
     expiry: :class:`datetime.datetime`
@@ -293,7 +299,6 @@ class Poll:
     # note that AutoModActionType.timeout is only valid for trigger type 1?
 
     __slots__ = (
-        "_media",
         "question",
         "answers",
         "expiry",
@@ -311,8 +316,7 @@ class Poll:
         allow_multiselect: bool,
         layout_type: PollLayoutType = PollLayoutType.default,
     ):
-        self._media = PollMedia(question)
-        self.question: str = question
+        self.question = PollMedia(question)
         self.answers: list[PollAnswer] = answers
         self.expiry: datetime.datetime = expiry
         self.allow_multiselect: bool = allow_multiselect
@@ -321,7 +325,7 @@ class Poll:
 
     def to_dict(self) -> PollPayload:
         dict_ = {
-            "question": self._media.to_dict(),
+            "question": self.question.to_dict(),
             "answers": [a.to_dict() for a in self.answers],
             "expiry": self.expiry.strftime(),
             "allow_multiselect": self.allow_multiselect,
