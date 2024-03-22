@@ -836,7 +836,12 @@ class ConnectionState:
 
         message = self._get_message(raw.message_id)
         if message is not None and user is not None:
-            self.dispatch("poll_vote_add", message, user, message.poll.get_answer(raw.answer_id) or raw.answer_id)
+            self.dispatch(
+                "poll_vote_add",
+                message,
+                user,
+                message.poll.get_answer(raw.answer_id) or raw.answer_id,
+            )
 
     def parse_message_poll_vote_remove(self, data) -> None:
         raw = RawMessagePollVoteEvent(data, False)
@@ -849,7 +854,12 @@ class ConnectionState:
 
         message = self._get_message(raw.message_id)
         if message is not None and user is not None:
-            self.dispatch("poll_vote_remove", message, user, message.poll.get_answer(raw.answer_id) or raw.answer_id)
+            self.dispatch(
+                "poll_vote_remove",
+                message,
+                user,
+                message.poll.get_answer(raw.answer_id) or raw.answer_id,
+            )
 
     def parse_interaction_create(self, data) -> None:
         interaction = Interaction(data=data, state=self)
