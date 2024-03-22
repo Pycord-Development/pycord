@@ -1021,7 +1021,7 @@ class EntitlementOwnerType(Enum):
 
 
 class PollLayoutType(Enum):
-    """The poll's layout type. Only one exists for now"""
+    """The poll's layout type."""
 
     default = 1
 
