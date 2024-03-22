@@ -118,8 +118,6 @@ class PollAnswer:
     __slots__ = (
         "media",
         "id",
-        "text",
-        "emoji",
     )
 
     def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
