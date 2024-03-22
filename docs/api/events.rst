@@ -920,7 +920,7 @@ Polls
     This requires :attr:`Intents.reactions` to be enabled.
 
     :param message: The message the poll belongs to.
-    :type reaction: :class:`Message`
+    :type message: :class:`Message`
     :param user: The user who added the vote.
     :type user: Union[:class:`Member`, :class:`User`]
     :param answer: The answer that was voted.
@@ -945,7 +945,7 @@ Polls
     This requires :attr:`Intents.reactions` to be enabled.
 
     :param message: The message the poll belongs to.
-    :type reaction: :class:`Message`
+    :type message: :class:`Message`
     :param user: The user who removed the vote.
     :type user: Union[:class:`Member`, :class:`User`]
     :param answer: The answer that was voted.
