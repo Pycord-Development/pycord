@@ -56,7 +56,8 @@ class PollAnswerCount(TypedDict):
 class Poll(TypedDict):
     question: PollMedia
     answers: list[PollAnswer]
-    duration: int
+    duration: NotRequired[int]
+    expiry: NotRequired[str]
     allow_multiselect: bool
     layout_type: PollLayoutType
     results: NotRequired[PollResults]
