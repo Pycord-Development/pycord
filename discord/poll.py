@@ -268,9 +268,9 @@ class Poll:
     Attributes
     ----------
     question: :class:`PollMedia`
-        The poll's question data.
+        The poll's question data. Question text can be up to 300 characters.
     answers: List[:class:`PollAnswer`]
-        A list of the poll's answers.
+        A list of the poll's answers. A maximum of 10 answers can be set. 
     duration: :class:`int`
         The time in seconds until this poll expires.
     allow_multiselect: :class:`bool`
