@@ -28,6 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 - Fixed `NameError` in some instances of `Interaction`.
   ([#2402](https://github.com/Pycord-Development/pycord/pull/2402))
+- Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
+  ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
 
 ### Changed
 
