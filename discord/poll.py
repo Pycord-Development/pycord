@@ -42,7 +42,8 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .emoji import Emoji
-    from .guild import Guild
+    from .guild import Guild 
+    from .message import Message, PartialMessage
     from .partial_emoji import PartialEmoji
     from .types.poll import Poll as PollPayload
     from .types.poll import PollAnswer as PollAnswerPayload
@@ -68,6 +69,7 @@ class PollMedia:
     def __init__(self, text: str, emoji: Emoji | PartialEmoji | None = None):
         self.text: str = text
         self.emoji: Emoji | PartialEmoji | None = emoji
+        self._message = None
 
     def to_dict(self) -> PollMediaPayload:
         dict_ = {
@@ -88,13 +90,13 @@ class PollMedia:
         return dict_
 
     @classmethod
-    def from_dict(cls, data: PollMediaPayload, guild: Guild) -> PollMedia:
+    def from_dict(cls, data: PollMediaPayload, message: Message | PartialMessage | None = None) -> PollMedia:
 
         _emoji: dict[str, Any] = data.get("emoji") or {}
         if "name" in _emoji:
             emoji = PartialEmoji.from_dict(_emoji)
-            if emoji.id:
-                emoji = utils.get(guild.emojis, id=emoji.id) or emoji
+            if emoji.id and self._message:
+                emoji = self._message._state.get_emoji(emoji.id) or emoji
         else:
             emoji = None
         return cls(
@@ -298,6 +300,7 @@ class Poll:
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
         self.results = []
+        self._message = None
 
     def to_dict(self) -> PollPayload:
         dict_ = {
@@ -312,9 +315,9 @@ class Poll:
         return dict_
 
     @classmethod
-    def from_dict(cls, data: PollPayload) -> PollMedia:
+    def from_dict(cls, data: PollPayload, message: Message | PartialMessage | None = None) -> Poll:
         poll = cls(
-            question=data["question"],
+            question=PollMedia.from_dict(data["question"], message),
             answers=[PollAnswer.from_dict(a) for a in data.get("answers", [])],
             duration=data.get("duration"),
             allow_multiselect=data.get("allow_multiselect"),
@@ -322,6 +325,7 @@ class Poll:
         )
         if results := data.get("results", []):
             poll.results = [PollResults.from_dict(r) for r in results]
+        poll._message = message
         return poll
 
     def __repr__(self) -> str:
