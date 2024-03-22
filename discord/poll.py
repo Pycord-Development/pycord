@@ -40,7 +40,9 @@ __all__ = (
 
 
 if TYPE_CHECKING:
+    from .abc import Snowflake
     from .emoji import Emoji
+    from .guild import Guild
     from .partial_emoji import PartialEmoji
     from .types.poll import Poll as PollPayload
     from .types.poll import PollAnswer as PollAnswerPayload
@@ -48,8 +50,6 @@ if TYPE_CHECKING:
     from .types.poll import PollMedia as PollMediaPayload
     from .types.poll import PollResults as PollResultsPayload
     from .user import User
-    from .guild import Guild
-    from .abc import Snowflake
 
 
 class PollMedia:
