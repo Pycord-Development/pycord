@@ -237,6 +237,61 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
                         await self.users.put(User(state=self.state, data=element))
 
 
+class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
+    def __init__(self, message, answer, limit=100, after=None):
+        self.message = message
+        self.limit = limit
+        self.after = after
+        state = message._state
+        self.getter = state.http.get_reaction_users
+        self.state = state
+        self.answer = answer
+        self.guild = message.guild
+        self.channel_id = message.channel.id
+        self.users = asyncio.Queue()
+
+    async def next(self) -> User | Member:
+        if self.users.empty():
+            await self.fill_users()
+
+        try:
+            return self.users.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    async def fill_users(self):
+        # this is a hack because >circular imports<
+        from .user import User
+
+        if self.limit > 0:
+            retrieve = min(self.limit, 100)
+
+            after = self.after.id if self.after else None
+            data: list[PartialUserPayload] = await self.getter(
+                self.channel_id,
+                self.message.id,
+                self.emoji,
+                retrieve,
+                after=after,
+                type=self.type,
+            )
+
+            if data:
+                self.limit -= retrieve
+                self.after = Object(id=int(data[-1]["id"]))
+
+            for element in reversed(data):
+                if self.guild is None or isinstance(self.guild, Object):
+                    await self.users.put(User(state=self.state, data=element))
+                else:
+                    member_id = int(element["id"])
+                    member = self.guild.get_member(member_id)
+                    if member is not None:
+                        await self.users.put(member)
+                    else:
+                        await self.users.put(User(state=self.state, data=element))
+
+
 class HistoryIterator(_AsyncIterator["Message"]):
     """Iterator for receiving a channel's message history.
 
