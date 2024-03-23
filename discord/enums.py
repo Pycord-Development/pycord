@@ -1035,7 +1035,6 @@ class InteractionContextType(Enum):
     private_channel = 2
 
 
-
 T = TypeVar("T")
 
 

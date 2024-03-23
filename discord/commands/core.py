@@ -47,7 +47,13 @@ from typing import (
 
 from ..channel import _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
-from ..enums import IntegrationType, InteractionContextType, MessageType, SlashCommandOptionType, try_enum
+from ..enums import (
+    IntegrationType,
+    InteractionContextType,
+    MessageType,
+    SlashCommandOptionType,
+    try_enum,
+)
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
@@ -232,27 +238,31 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         integration_types = getattr(
             func, "__integration_types__", kwargs.get("integration_types", None)
         )
-        contexts = getattr(
-            func, "__contexts__", kwargs.get("contexts", None)
-        )
-        guild_only = getattr(
-            func, "__guild_only__", kwargs.get("guild_only", MISSING)
-        )
+        contexts = getattr(func, "__contexts__", kwargs.get("contexts", None))
+        guild_only = getattr(func, "__guild_only__", kwargs.get("guild_only", MISSING))
         if guild_only is not MISSING:
             warn_deprecated("guild_only", "contexts", "2.6")
         if contexts and guild_only:
-            raise InvalidArgument("cannot pass both 'contexts' and 'guild_only' to ApplicationCommand")
-        if self.guild_ids and ((contexts is not None) or guild_only or integration_types):
-            raise InvalidArgument("the 'contexts' and 'integration_types' parameters are not available for guild commands")
+            raise InvalidArgument(
+                "cannot pass both 'contexts' and 'guild_only' to ApplicationCommand"
+            )
+        if self.guild_ids and (
+            (contexts is not None) or guild_only or integration_types
+        ):
+            raise InvalidArgument(
+                "the 'contexts' and 'integration_types' parameters are not available for guild commands"
+            )
 
         self.contexts: set[InteractionContextType] = contexts or {
-            InteractionContextType.guild, 
-            InteractionContextType.bot_dm, 
+            InteractionContextType.guild,
+            InteractionContextType.bot_dm,
             InteractionContextType.private_channel,
         }
         if guild_only:
             self.guild_only: bool | None = guild_only
-        self.integration_types: set[IntegrationType] = integration_types or {IntegrationType.guild_install}
+        self.integration_types: set[IntegrationType] = integration_types or {
+            IntegrationType.guild_install
+        }
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
@@ -308,7 +318,11 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if value:
             self.contexts = {InteractionContextType.guild}
         else:
-            self.contexts = {InteractionContextType.guild, InteractionContextType.bot_dm, InteractionContextType.private_channel}
+            self.contexts = {
+                InteractionContextType.guild,
+                InteractionContextType.bot_dm,
+                InteractionContextType.private_channel,
+            }
 
     def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
@@ -667,7 +681,7 @@ class SlashCommand(ApplicationCommand):
         Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
-        
+
         .. deprecated:: 2.6
             Use the ``contexts`` parameter instead.
     nsfw: :class:`bool`
@@ -1225,7 +1239,9 @@ class SlashCommandGroup(ApplicationCommand):
         self.id = None
 
         # Permissions
-        self.default_member_permissions: Permissions | None = kwargs.get("default_member_permissions", None)
+        self.default_member_permissions: Permissions | None = kwargs.get(
+            "default_member_permissions", None
+        )
         self.nsfw: bool | None = kwargs.get("nsfw", None)
 
         integration_types = kwargs.get("integration_types", None)
@@ -1234,18 +1250,26 @@ class SlashCommandGroup(ApplicationCommand):
         if guild_only is not MISSING:
             warn_deprecated("guild_only", "contexts", "2.6")
         if contexts and guild_only:
-            raise InvalidArgument("cannot pass both 'contexts' and 'guild_only' to ApplicationCommand")
-        if self.guild_ids and ((contexts is not None) or guild_only or integration_types):
-            raise InvalidArgument("the 'contexts' and 'integration_types' parameters are not available for guild commands")
+            raise InvalidArgument(
+                "cannot pass both 'contexts' and 'guild_only' to ApplicationCommand"
+            )
+        if self.guild_ids and (
+            (contexts is not None) or guild_only or integration_types
+        ):
+            raise InvalidArgument(
+                "the 'contexts' and 'integration_types' parameters are not available for guild commands"
+            )
 
         self.contexts: set[InteractionContextType] = contexts or {
-            InteractionContextType.guild, 
-            InteractionContextType.bot_dm, 
+            InteractionContextType.guild,
+            InteractionContextType.bot_dm,
             InteractionContextType.private_channel,
         }
         if guild_only:
             self.guild_only: bool | None = guild_only
-        self.integration_types: set[IntegrationType] = integration_types or {IntegrationType.guild_install}
+        self.integration_types: set[IntegrationType] = integration_types or {
+            IntegrationType.guild_install
+        }
 
         self.name_localizations: dict[str, str] = kwargs.get(
             "name_localizations", MISSING
@@ -1296,7 +1320,11 @@ class SlashCommandGroup(ApplicationCommand):
         if value:
             self.contexts = {InteractionContextType.guild}
         else:
-            self.contexts = {InteractionContextType.guild, InteractionContextType.bot_dm, InteractionContextType.private_channel}
+            self.contexts = {
+                InteractionContextType.guild,
+                InteractionContextType.bot_dm,
+                InteractionContextType.private_channel,
+            }
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -1557,7 +1585,7 @@ class ContextMenuCommand(ApplicationCommand):
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
-        
+
         .. deprecated:: 2.6
             Use the ``contexts`` parameter instead.
     nsfw: :class:`bool`
