@@ -143,7 +143,9 @@ class PollAnswer:
         """The poll's answer count data, if recieved from Discord."""
         if not (self._poll and self.id):
             return None
-        return self._poll.results and utils.get(self._poll.results.answer_counts, id=self.id)
+        return self._poll.results and utils.get(
+            self._poll.results.answer_counts, id=self.id
+        )
 
     def to_dict(self) -> PollAnswerPayload:
         return {
