@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .enums import PollLayoutType
-from .iterators import AsyncIterator
+from .iterators import VoteIterator
 
 __all__ = (
     "PollMedia",
@@ -124,8 +124,9 @@ class PollAnswer:
     """
 
     def __init__(self, text: str, emoji: Emoji | PartialEmoji | str | None = None):
-        self.id = None
         self.media = PollMedia(text, emoji)
+        self.id = None
+        self._poll = None
 
     @property
     def text(self) -> str:
@@ -137,6 +138,13 @@ class PollAnswer:
         """The answer's emoji. Shortcut for ``PollAnswer.media.emoji``."""
         return self.media.emoji
 
+    @property
+    def count(self) -> PollAnswerCount | None:
+        """The poll's answer count data, if recieved from Discord."""
+        if not (self._poll and self.id):
+            return None
+        return self._poll.results and utils.get(self._poll.results.answer_counts, id=self.id)
+
     def to_dict(self) -> PollAnswerPayload:
         return {
             "answer_id": self.id,
@@ -144,13 +152,14 @@ class PollAnswer:
         }
 
     @classmethod
-    def from_dict(cls, data: PollAnswerPayload) -> PollAnswer:
+    def from_dict(cls, data: PollAnswerPayload, poll=None) -> PollAnswer:
         media = PollMedia.from_dict(data["poll_media"])
         answer = cls(
             media.text,
             media.emoji,
         )
         answer.id = data["answer_id"]
+        answer._poll = poll
         return answer
 
     def __repr__(self) -> str:
@@ -158,8 +167,9 @@ class PollAnswer:
 
     def users(
         self, *, limit: int | None = None, after: Snowflake | None = None
-    ) -> AsyncIterator:
+    ) -> VoteIterator:
         """Returns an :class:`AsyncIterator` representing the users that have voted with this answer.
+        Does not work if the user created this answer object.
 
         The ``after`` parameter must represent a member
         and meet the :class:`abc.Snowflake` abc.
@@ -202,10 +212,13 @@ class PollAnswer:
             await channel.send(f'{winner} has won the raffle.')
         """
 
-        if limit is None:
-            limit = self.count
+        if not self._poll or not self._poll._message:
+            raise ValueError("Users can only be fetched from an existing message poll.")
 
-        return AsyncIterator(...)  # TODO
+        if limit is None:
+            limit = self.count or 100
+
+        return VoteIterator(self._poll._message, self, limit, after)  # TODO
 
 
 class PollAnswerCount:
@@ -341,6 +354,8 @@ class Poll:
         if expiry := data.get("expiry"):
             poll._expiry = expiry
         poll._message = message
+        for a in poll.answers:
+            a._poll = poll
         return poll
 
     def __repr__(self) -> str:
