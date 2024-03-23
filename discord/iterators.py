@@ -919,8 +919,14 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
             before=before,
             after=after,
         )
-        if data:
-            self.limit -= self.retrieve
+
+        data_length = len(data)
+        if data_length < self.retrieve:
+            self.limit = 0
+        elif data_length > 0:
+            if self.limit:
+                self.limit -= self.retrieve
+            self.after = Object(id=int(data[-1]["user_id"]))
 
         for element in reversed(data):
             if "member" in element:
