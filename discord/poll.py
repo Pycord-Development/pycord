@@ -139,13 +139,16 @@ class PollAnswer:
         return self.media.emoji
 
     @property
-    def count(self) -> PollAnswerCount | None:
-        """The poll's answer count data, if recieved from Discord."""
+    def count(self) -> int | None:
+        """The poll's answer count, if recieved from Discord."""
         if not (self._poll and self.id):
             return None
-        return self._poll.results and utils.get(
+        _count = self._poll.results and utils.get(
             self._poll.results.answer_counts, id=self.id
         )
+        if _count:
+            return _count.count
+        return None
 
     def to_dict(self) -> PollAnswerPayload:
         return {
@@ -297,7 +300,7 @@ class Poll:
         Whether multiple answers can be selected.
     layout_type: :class:`PollLayoutType`
         The poll's layout type. Only one exists at the moment.
-    results: List[:class:`PollResults`]
+    results: :class:`PollResults`
         The results from this poll recieved from Discord.
     """
 
@@ -315,7 +318,7 @@ class Poll:
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
-        self.results = []
+        self.results = None
         self._expiry = None
         self._message = None
 
@@ -351,8 +354,8 @@ class Poll:
             allow_multiselect=data.get("allow_multiselect"),
             layout_type=data.get("layout_type"),
         )
-        if results := data.get("results", []):
-            poll.results = [PollResults.from_dict(r) for r in results]
+        if results := data.get("results"):
+            poll.results = PollResults.from_dict(results)
         if expiry := data.get("expiry"):
             poll._expiry = expiry
         poll._message = message
