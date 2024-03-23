@@ -218,7 +218,7 @@ class PollAnswer:
             raise ValueError("Users can only be fetched from an existing message poll.")
 
         if limit is None:
-            limit = self.count or 100
+            limit = self.count # or 100, debug?
 
         return VoteIterator(self._poll._message, self, limit, after)  # TODO
 

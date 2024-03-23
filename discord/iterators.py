@@ -243,7 +243,7 @@ class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
         self.limit = limit
         self.after = after
         state = message._state
-        self.getter = state.http.get_reaction_users
+        self.getter = state.http.get_answer_voters
         self.state = state
         self.answer = answer
         self.guild = message.guild
@@ -270,10 +270,9 @@ class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
             data: list[PartialUserPayload] = await self.getter(
                 self.channel_id,
                 self.message.id,
-                self.emoji,
+                self.answer.id,
                 retrieve,
                 after=after,
-                type=self.type,
             )
 
             if data:
