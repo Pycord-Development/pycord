@@ -3022,6 +3022,29 @@ class HTTPClient:
             Route("POST", "/channels/{channel_id}/poll/{message_id}/expire")
         )
 
+    def get_answer_voters(
+        self,
+        channel_id: Snowflake,
+        message_id: Snowflake,
+        answer_id: int,
+        limit: int,
+        after: Snowflake | None = None,
+    ) -> Response[list[user.User]]:
+        r = Route(
+            "GET",
+            "/channels/{channel_id}/polls/{message_id}/answers/{answer_id}",
+            channel_id=channel_id,
+            message_id=message_id,
+            answer_id=answer_id,
+        )
+
+        params: dict[str, Any] = {
+            "limit": limit,
+        }
+        if after:
+            params["after"] = after
+        return self.request(r, params=params)
+
     # Misc
 
     def application_info(self) -> Response[appinfo.AppInfo]:
