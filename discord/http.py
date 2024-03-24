@@ -3019,9 +3019,12 @@ class HTTPClient:
         self, channel_id: Snowflake, message_id: Snowflake
     ) -> Response[message.Message]:
         return self.request(
-            Route("POST", "/channels/{channel_id}/polls/{message_id}/expire",
-            channel_id=channel_id,
-            message_id=message_id,)
+            Route(
+                "POST",
+                "/channels/{channel_id}/polls/{message_id}/expire",
+                channel_id=channel_id,
+                message_id=message_id,
+            )
         )
 
     def get_answer_voters(
