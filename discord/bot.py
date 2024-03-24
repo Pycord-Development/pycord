@@ -48,7 +48,7 @@ from .commands import (
     UserCommand,
     command,
 )
-from .enums import InteractionType, InteractionContextType, IntegrationType
+from .enums import IntegrationType, InteractionContextType, InteractionType
 from .errors import CheckFailure, DiscordException
 from .interactions import Interaction
 from .shard import AutoShardedClient
@@ -127,7 +127,10 @@ class ApplicationCommandMixin(ABC):
             command.guild_ids = self._bot.debug_guilds
         if self._bot.default_command_contexts and command.contexts is None:
             command.contexts = self._bot.default_command_contexts
-        if self._bot.default_command_integration_types and command.integration_types is None:
+        if (
+            self._bot.default_command_integration_types
+            and command.integration_types is None
+        ):
             command.integration_types = self._bot.default_command_integration_types
 
         for cmd in self.pending_application_commands:
@@ -1161,14 +1164,24 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         self.auto_sync_commands = options.get("auto_sync_commands", True)
 
         self.debug_guilds = options.pop("debug_guilds", None)
-        self.default_command_contexts = set(options.pop("default_command_contexts", {
-            InteractionContextType.guild,
-            InteractionContextType.bot_dm,
-            InteractionContextType.private_channel,
-        }))
-        self.default_command_integration_types = set(options.pop("default_command_integration_types", {
-            IntegrationType.guild_install,
-        }))
+        self.default_command_contexts = set(
+            options.pop(
+                "default_command_contexts",
+                {
+                    InteractionContextType.guild,
+                    InteractionContextType.bot_dm,
+                    InteractionContextType.private_channel,
+                },
+            )
+        )
+        self.default_command_integration_types = set(
+            options.pop(
+                "default_command_integration_types",
+                {
+                    IntegrationType.guild_install,
+                },
+            )
+        )
 
         if self.owner_id and self.owner_ids:
             raise TypeError("Both owner_id and owner_ids are set.")
