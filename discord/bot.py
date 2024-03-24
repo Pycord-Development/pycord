@@ -278,7 +278,6 @@ class ApplicationCommandMixin(ABC):
             else:
                 as_dict = cmd.to_dict()
                 to_check = {
-                    "dm_permission": None,
                     "nsfw": None,
                     "default_member_permissions": None,
                     "name": None,
@@ -294,6 +293,8 @@ class ApplicationCommandMixin(ABC):
                         "name_localizations",
                         "description_localizations",
                     ],
+                    "contexts": None,
+                    "integration_types": None,
                 }
                 for check, value in to_check.items():
                     if type(to_check[check]) == list:
