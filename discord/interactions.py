@@ -1549,12 +1549,13 @@ class AuthorizingIntegrationOwners:
 
     def __init__(self, data: dict[str, Any], state: ConnectionState):
         self._state = state
+        # keys are Application Integration Types as strings
         self.user_id = (
             int(uid)
-            if (uid := data.get("user_id", MISSING)) is not MISSING
+            if (uid := data.get("1", MISSING)) is not MISSING
             else MISSING
         )
-        if (guild_id := data.get("guild_id", MISSING)) == "0":
+        if (guild_id := data.get("0", MISSING)) == "0":
             self.guild_id = None
         else:
             self.guild_id = int(guild_id) if guild_id is not MISSING else MISSING
