@@ -50,7 +50,6 @@ from .errors import InvalidArgument
 from .file import File
 from .flags import AttachmentFlags, MessageFlags
 from .guild import Guild
-from .interactions import InteractionMetadata
 from .member import Member
 from .mixins import Hashable
 from .partial_emoji import PartialEmoji
@@ -850,7 +849,7 @@ class Message(Hashable):
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
 
-        from .interactions import MessageInteraction
+        from .interactions import MessageInteraction, InteractionMetadata
 
         self.interaction: MessageInteraction | None
         try:
