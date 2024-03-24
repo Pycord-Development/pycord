@@ -1025,8 +1025,8 @@ class EntitlementOwnerType(Enum):
 class IntegrationType(Enum):
     """The application's integration type"""
 
-    guild_install = 1
-    user_install = 2
+    guild_install = 0
+    user_install = 1
 
 
 class InteractionContextType(Enum):
