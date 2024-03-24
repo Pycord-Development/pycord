@@ -74,11 +74,11 @@ if TYPE_CHECKING:
     from ..guild import Guild
     from ..http import Response
     from ..mentions import AllowedMentions
+    from ..poll import Poll
     from ..state import ConnectionState
     from ..types.message import Message as MessagePayload
     from ..types.webhook import Webhook as WebhookPayload
     from ..ui.view import View
-    from ..poll import Poll
 
 MISSING = utils.MISSING
 
