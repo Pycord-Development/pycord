@@ -225,6 +225,16 @@ class Interaction(TypedDict):
     context: InteractionContextType
 
 
+class InteractionMetadata(TypedDict):
+    id: Snowflake
+    type: InteractionType
+    user_id: Snowflake
+    authorizing_integration_owners: AuthorizingIntegrationOwners
+    original_response_message_id: NotRequired[Snowflake]
+    interacted_message_id: NotRequired[Snowflake]
+    triggering_interaction_metadata: NotRequired[InteractionMetadata]
+
+
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
     tts: bool
     content: str

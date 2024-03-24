@@ -80,6 +80,7 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionData
+    from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
     from .ui.view import View
@@ -103,7 +104,7 @@ class Interaction:
     """Represents a Discord interaction.
 
     An interaction happens when a user does an action that needs to
-    be notified. Current examples are slash commands and components.
+    be notified. Current examples are application commands, components, and modals.
 
     .. versionadded:: 2.0
 
@@ -1412,6 +1413,10 @@ class MessageInteraction:
 
     .. versionadded:: 2.0
 
+    .. deprecated:: 2.6
+
+        See :class:`InteractionMetadata`.
+
     .. note::
         Responses to message components do not include this property.
 
@@ -1438,6 +1443,91 @@ class MessageInteraction:
         self.type: InteractionType = data["type"]
         self.name: str = data["name"]
         self.user: User = self._state.store_user(data["user"])
+
+
+class InteractionMetadata:
+    """Represents metadata about an interaction.
+
+    This is sent on the message object when the message is related to an interaction
+
+    .. versionadded:: 2.6
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The interaction's ID.
+    type: :class:`InteractionType`
+        The interaction type.
+    user_id: :class:`int`
+        The ID of the user that sent the interaction.
+    authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
+        The authorizing user or server for the installation(s) relevant to the interaction.
+    original_response_message_id: Optional[:class:`int`]
+        The ID of the original response message. Only present on interaction follow-up messages.
+    interacted_message_id: Optional[:class:`int`]
+        The ID of the message that triggered the interaction. Only present on interactions of type
+        :attr:`InteractionType.component`.
+    triggering_interaction_metadata: Optional[:class:`InteractionMetadata`]
+        The metadata of the interaction that opened the model. Only present on interactions of type
+        :attr:`InteractionType.modal_submit`.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "id",
+        "type",
+        "user_id",
+        "authorizing_integration_owners",
+        "original_response_message_id",
+        "interacted_message_id",
+        "triggering_interaction_metadata",
+        "_state",
+        "_cs_user",
+        "_cs_original_response_message",
+        "_cs_interacted_message",
+    )
+
+    def __init__(self, *, data: InteractionMetadataPayload, state: ConnectionState):
+        self._state = state
+        self.id: int = int(data["id"])
+        self.type: InteractionType = try_enum(InteractionType, data["type"])
+        self.user_id: int = int(data["user_id"])
+        self.authorizing_integration_owners: AuthorizingIntegrationOwners = AuthorizingIntegrationOwners(
+            data["authorizing_integration_owners"], state
+        )
+        self.original_response_message_id: int | None = utils._get_as_snowflake(
+            data, "original_response_message_id"
+        )
+        self.interacted_message_id: int | None = utils._get_as_snowflake(data, "interacted_message_id")
+        self.triggering_interaction_metadata: InteractionMetadata | None = None
+        if tim := data.get("triggering_interaction_metadata"):
+            self.triggering_interaction_metadata = InteractionMetadata(
+                data=tim, state=state
+            )
+
+    def __repr__(self):
+        return f"<InteractionMetadata id={self.id} type={self.type!r} user_id={self.user_id}>"
+
+    @utils.cached_slot_property("_cs_user")
+    def user(self) -> User | None:
+        """Optional[:class:`User`]: The user that sent the interaction.
+        Returns ``None`` if the user is not in cache."""
+        return self._state.get_user(self.user_id)
+
+    @utils.cached_slot_property("_cs_original_response_message")
+    def original_response_message(self) -> Message | None:
+        """Optional[:class:`Message`]: The original response message.
+        Returns ``None`` if the message is not in cache, or if :attr:`original_response_message_id` is ``None``."""
+        if not self.original_response_message_id:
+            return None
+        return self._state._get_message(self.original_response_message_id)
+
+    @utils.cached_slot_property("_cs_interacted_message")
+    def interacted_message(self) -> Message | None:
+        """Optional[:class:`Message`]: The message that triggered the interaction.
+        Returns ``None`` if the message is not in cache, or if :attr:`interacted_message_id` is ``None``."""
+        if not self.interacted_message_id:
+            return None
+        return self._state._get_message(self.interacted_message_id)
 
 
 class AuthorizingIntegrationOwners:

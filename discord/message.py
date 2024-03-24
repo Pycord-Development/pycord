@@ -50,6 +50,7 @@ from .errors import InvalidArgument
 from .file import File
 from .flags import AttachmentFlags, MessageFlags
 from .guild import Guild
+from .interactions import InteractionMetadata
 from .member import Member
 from .mixins import Hashable
 from .partial_emoji import PartialEmoji
@@ -722,6 +723,14 @@ class Message(Hashable):
         The guild that the message belongs to, if applicable.
     interaction: Optional[:class:`MessageInteraction`]
         The interaction associated with the message, if applicable.
+
+        .. deprecated:: 2.6
+
+            Use :attr:`interaction_metadata` instead.
+    interaction_metadata: Optional[:class:`InteractionMetadata`]
+        The interaction metadata associated with the message, if applicable.
+
+        .. versionadded:: 2.6
     thread: Optional[:class:`Thread`]
         The thread created from this message, if applicable.
 
@@ -760,6 +769,7 @@ class Message(Hashable):
         "components",
         "guild",
         "interaction",
+        "interaction_metadata",
         "thread",
     )
 
@@ -847,7 +857,10 @@ class Message(Hashable):
             self.interaction = MessageInteraction(data=data["interaction"], state=state)
         except KeyError:
             self.interaction = None
-        # TODO: deprecate and replace with interaction_metadata
+        try:
+            self.interaction_metadata = InteractionMetadata(data=data["interaction_metadata"], state=state)
+        except KeyError:
+            self.interaction_metadata = None
 
         self.thread: Thread | None
         try:
