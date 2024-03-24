@@ -74,6 +74,8 @@ __all__ = (
     "SKUType",
     "EntitlementType",
     "EntitlementOwnerType",
+    "IntegrationType",
+    "InteractionContextType",
 )
 
 

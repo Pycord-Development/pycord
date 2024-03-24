@@ -57,6 +57,8 @@ __all__ = (
     "InteractionMessage",
     "InteractionResponse",
     "MessageInteraction",
+    "InteractionMetadata",
+    "AuthorizingIntegrationOwners",
 )
 
 if TYPE_CHECKING:
