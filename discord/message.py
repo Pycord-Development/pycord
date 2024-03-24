@@ -67,6 +67,7 @@ if TYPE_CHECKING:
     )
     from .channel import TextChannel
     from .components import Component
+    from .interactions import MessageInteraction
     from .mentions import AllowedMentions
     from .role import Role
     from .state import ConnectionState
@@ -767,7 +768,7 @@ class Message(Hashable):
         "stickers",
         "components",
         "guild",
-        "interaction",
+        "_interaction",
         "interaction_metadata",
         "thread",
     )
@@ -851,11 +852,11 @@ class Message(Hashable):
 
         from .interactions import InteractionMetadata, MessageInteraction
 
-        self.interaction: MessageInteraction | None
+        self._interaction: MessageInteraction | None
         try:
-            self.interaction = MessageInteraction(data=data["interaction"], state=state)
+            self._interaction = MessageInteraction(data=data["interaction"], state=state)
         except KeyError:
-            self.interaction = None
+            self._interaction = None
         try:
             self.interaction_metadata = InteractionMetadata(
                 data=data["interaction_metadata"], state=state
@@ -1053,6 +1054,16 @@ class Message(Hashable):
     ) -> None:
         self.guild = new_guild
         self.channel = new_channel
+
+    @property
+    def interaction(self) -> MessageInteraction | None:
+        utils.warn_deprecated(
+            "interaction",
+            "interaction_metadata",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        return self._interaction
 
     @utils.cached_slot_property("_cs_raw_mentions")
     def raw_mentions(self) -> list[int]:

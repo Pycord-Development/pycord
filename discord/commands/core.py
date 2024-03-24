@@ -309,12 +309,22 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
 
     @property
     def guild_only(self) -> bool:
-        warn_deprecated("guild_only", "contexts", "2.6")
+        warn_deprecated(
+            "guild_only",
+            "contexts",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
         return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
-        warn_deprecated("guild_only", "contexts", "2.6")
+        warn_deprecated(
+            "guild_only",
+            "contexts",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
         if value:
             self.contexts = {InteractionContextType.guild}
         else:
@@ -707,9 +717,9 @@ class SlashCommand(ApplicationCommand):
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    integration_types: set[:class:`IntegrationType`]
+    integration_types: Set[:class:`IntegrationType`]
         The installation contexts where this command is available. Cannot be set if this is a guild command.
-    contexts: set[:class:`InteractionContextType`]
+    contexts: Set[:class:`InteractionContextType`]
         The interaction contexts where this command is available. Cannot be set if this is a guild command.
     """
 
@@ -1179,9 +1189,9 @@ class SlashCommandGroup(ApplicationCommand):
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    integration_types: set[:class:`IntegrationType`]
+    integration_types: Set[:class:`IntegrationType`]
         The installation contexts where this command is available. Cannot be set if this is a guild command.
-    contexts: set[:class:`InteractionContextType`]
+    contexts: Set[:class:`InteractionContextType`]
         The interaction contexts where this command is available. Cannot be set if this is a guild command.
     """
 
@@ -1608,9 +1618,9 @@ class ContextMenuCommand(ApplicationCommand):
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
-    integration_types: set[:class:`IntegrationType`]
+    integration_types: Set[:class:`IntegrationType`]
         The installation contexts where this command is available. Cannot be set if this is a guild command.
-    contexts: set[:class:`InteractionContextType`]
+    contexts: Set[:class:`InteractionContextType`]
         The interaction contexts where this command is available. Cannot be set if this is a guild command.
     """
 
