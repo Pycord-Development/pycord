@@ -205,7 +205,9 @@ class Interaction:
         self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
             AuthorizingIntegrationOwners(
                 data=data["authorizing_integration_owners"], state=self._state
-            ) if "authorizing_integration_owners" in data else AuthorizingIntegrationOwners(data={}, state=self._state)
+            )
+            if "authorizing_integration_owners" in data
+            else AuthorizingIntegrationOwners(data={}, state=self._state)
         )
         self.context: InteractionContextType | None = (
             try_enum(InteractionContextType, data["context"])
