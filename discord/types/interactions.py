@@ -221,6 +221,8 @@ class Interaction(TypedDict):
     token: str
     version: int
     entitlements: list[Entitlement]
+    authorizing_integration_owners: AuthorizingIntegrationOwners
+    context: InteractionContextType
 
 
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
@@ -253,3 +255,10 @@ class EditApplicationCommand(TypedDict):
     type: NotRequired[ApplicationCommandType]
     name: str
     default_permission: bool
+
+
+InteractionContextType = Literal[0, 1, 2]
+ApplicationIntegrationType = Literal[0, 1]
+_StringApplicationIntegrationType = Literal["0", "1"]
+
+AuthorizingIntegrationOwners = dict[_StringApplicationIntegrationType, Snowflake]

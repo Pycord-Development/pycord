@@ -136,13 +136,11 @@ class Interaction:
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
         The custom ID for the interaction.
-    authorizing_integration_owners: Any
-        TODO
+    authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
+        Contains the entities that authorized this interaction.
     context: Optional[:class:`InteractionContextType`]
         The context in which this command was executed.
     """
-
-    # TODO: authorizing_integration_owners
 
     __slots__: tuple[str, ...] = (
         "id",
@@ -161,6 +159,7 @@ class Interaction:
         "custom_id",
         "entitlements",
         "context",
+        "authorizing_integration_owners",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -200,6 +199,9 @@ class Interaction:
         self.entitlements: list[Entitlement] = [
             Entitlement(data=e, state=self._state) for e in data.get("entitlements", [])
         ]
+        self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
+            AuthorizingIntegrationOwners(data=data.get("authorizing_integration_owners"), state=self._state)
+        )
         self.context: InteractionContextType | None = (
             try_enum(InteractionContextType, data["context"])
             if "context" in data
@@ -1436,3 +1438,56 @@ class MessageInteraction:
         self.type: InteractionType = data["type"]
         self.name: str = data["name"]
         self.user: User = self._state.store_user(data["user"])
+
+
+class AuthorizingIntegrationOwners:
+    """Contains details on the authorizing user or server for the installation(s) relevant to the interaction.
+
+    Attributes
+    ----------
+    user_id: :class:`int` | :class:`MISSING`
+        The ID of the user that authorized the integration.
+    guild_id: :class:`int` | None | :class:`MISSING`
+        The ID of the guild that authorized the integration.
+        This will be ``None`` if the integration was triggered
+        from the user in the bot's DMs.
+    """
+
+    __slots__ = ("user_id", "guild_id", "_state", "_cs_user", "_cs_guild")
+
+    def __init__(self, data: dict[str, Any], state: ConnectionState):
+        self._state = state
+        self.user_id = int(uid) if (uid := data.get("user_id", MISSING)) is not MISSING else MISSING
+        if (guild_id := data.get("guild_id", MISSING)) == "0":
+            self.guild_id = None
+        else:
+            self.guild_id = int(guild_id) if guild_id is not MISSING else MISSING
+
+    def __repr__(self):
+        return f"<AuthorizingIntegrationOwners user_id={self.user_id} guild_id={self.guild_id}>"
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, AuthorizingIntegrationOwners)
+            and self.user_id == other.user_id
+            and self.guild_id == other.guild_id
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    @utils.cached_slot_property("_cs_user")
+    def user(self) -> User | None:
+        """Optional[:class:`User`]: The user that authorized the integration.
+        Returns ``None`` if the user is not in cache, or if :attr:`user_id` is :class:`MISSING`."""
+        if not self.user_id:
+            return None
+        return self._state.get_user(self.user_id)
+
+    @utils.cached_slot_property("_cs_guild")
+    def guild(self) -> Guild | None:
+        """Optional[:class:`Guild`]: The guild that authorized the integration.
+        Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is :class:`MISSING` or ``None``."""
+        if not self.guild_id:
+            return None
+        return self._state._get_guild(self.guild_id)
