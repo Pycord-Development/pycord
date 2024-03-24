@@ -17,13 +17,17 @@ async def greet(ctx: discord.ApplicationContext, user: discord.User):
 
 @bot.slash_command(
     # This command can be used by guild members, but also by users anywhere if they install it
-    integration_types={discord.IntegrationType.guild_install, discord.IntegrationType.user_install},
+    integration_types={
+        discord.IntegrationType.guild_install,
+        discord.IntegrationType.user_install,
+    },
 )
 async def say_hello(ctx: discord.ApplicationContext):
     await ctx.respond(f"Hello!")
 
+
 """
-If a bot is not installed to a guild, and a user uses a command there, 
+If a bot is not installed to a guild, and a user uses a command there,
 the response will allways be ephemeral if the guild has more than 25 members.
 
 This is a Discord limitation, and is subject to change.
