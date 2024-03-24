@@ -78,6 +78,7 @@ if TYPE_CHECKING:
     from ..types.message import Message as MessagePayload
     from ..types.webhook import Webhook as WebhookPayload
     from ..ui.view import View
+    from ..poll import Poll
 
 MISSING = utils.MISSING
 
@@ -1568,6 +1569,7 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
@@ -1590,6 +1592,7 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
@@ -1611,6 +1614,7 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
@@ -1692,6 +1696,11 @@ class Webhook(BaseWebhook):
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
+        poll: :class:`Poll`
+            A poll. Cannot be sent with ``content``, ``embeds`` or ``files``.
+            Messages sent with a poll currently cannot be edited.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
