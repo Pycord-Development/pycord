@@ -39,6 +39,7 @@ from .enums import (
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
 from .flags import MessageFlags
+from .guild import Guild
 from .member import Member
 from .message import Attachment, Message
 from .monetization import Entitlement
@@ -76,7 +77,6 @@ if TYPE_CHECKING:
     from .client import Client
     from .commands import OptionChoice
     from .embeds import Embed
-    from .guild import Guild
     from .mentions import AllowedMentions
     from .state import ConnectionState
     from .threads import Thread
@@ -1558,9 +1558,7 @@ class AuthorizingIntegrationOwners:
         self._state = state
         # keys are Application Integration Types as strings
         self.user_id = (
-            int(uid)
-            if (uid := data.get("1", MISSING)) is not MISSING
-            else MISSING
+            int(uid) if (uid := data.get("1", MISSING)) is not MISSING else MISSING
         )
         if (guild_id := data.get("0", MISSING)) == "0":
             self.guild_id = None
