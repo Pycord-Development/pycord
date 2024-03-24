@@ -48,7 +48,7 @@ from .commands import (
     UserCommand,
     command,
 )
-from .enums import InteractionType
+from .enums import InteractionType, InteractionContextType, IntegrationType
 from .errors import CheckFailure, DiscordException
 from .interactions import Interaction
 from .shard import AutoShardedClient
@@ -125,6 +125,10 @@ class ApplicationCommandMixin(ABC):
 
         if self._bot.debug_guilds and command.guild_ids is None:
             command.guild_ids = self._bot.debug_guilds
+        if self._bot.default_command_contexts and command.contexts is None:
+            command.contexts = self._bot.default_command_contexts
+        if self._bot.default_command_integration_types and command.integration_types is None:
+            command.integration_types = self._bot.default_command_integration_types
 
         for cmd in self.pending_application_commands:
             if cmd == command:
@@ -1157,6 +1161,14 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         self.auto_sync_commands = options.get("auto_sync_commands", True)
 
         self.debug_guilds = options.pop("debug_guilds", None)
+        self.default_command_contexts = set(options.pop("default_command_contexts", {
+            InteractionContextType.guild,
+            InteractionContextType.bot_dm,
+            InteractionContextType.private_channel,
+        }))
+        self.default_command_integration_types = set(options.pop("default_command_integration_types", {
+            IntegrationType.guild_install,
+        }))
 
         if self.owner_id and self.owner_ids:
             raise TypeError("Both owner_id and owner_ids are set.")
@@ -1447,6 +1459,17 @@ class Bot(BotBase, Client):
         :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
 
         .. versionadded:: 2.0
+    default_command_contexts: Set[:class:`InteractionContextType`]
+        The default context types that the bot will use for commands.
+        Defaults to a set containing :attr:`InteractionContextType.guild`, :attr:`InteractionContextType.bot_dm`, and
+        :attr:`InteractionContextType.private_channel`.
+
+        .. versionadded:: 2.6
+    default_command_integration_types: Set[:class:`IntegrationType`]
+        The default integration types that the bot will use for commands.
+        Defaults to a set containing :attr:`IntegrationType.guild_install`.
+
+        .. versionadded:: 2.6
     """
 
     @property
