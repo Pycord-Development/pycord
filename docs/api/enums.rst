@@ -2402,3 +2402,38 @@ of :class:`enum.Enum`.
     .. attribute:: user
 
         Entitlement is owned by a user.
+
+
+.. class:: IntegrationType
+
+    The integration type for an application.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: guild_install
+
+        The integration is added to a guild.
+
+    .. attribute:: user_install
+
+        The integration is added to a user account.
+
+
+
+.. class:: InteractionContextType
+
+    The context an interaction occurs in.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: guild
+
+        The interaction is in a guild.
+
+    .. attribute:: bot_dm
+
+        The interaction is in the bot's own DM channel.
+
+    .. attribute:: private_channel
+
+        The interaction is in a private DM or group DM channel.
