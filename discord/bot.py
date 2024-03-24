@@ -1164,8 +1164,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         self.auto_sync_commands = options.get("auto_sync_commands", True)
 
         self.debug_guilds = options.pop("debug_guilds", None)
-        self.default_command_contexts = set(
-            options.pop(
+        self.default_command_contexts = options.pop(
                 "default_command_contexts",
                 {
                     InteractionContextType.guild,
@@ -1173,15 +1172,14 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
                     InteractionContextType.private_channel,
                 },
             )
-        )
-        self.default_command_integration_types = set(
-            options.pop(
+
+        self.default_command_integration_types = options.pop(
                 "default_command_integration_types",
                 {
                     IntegrationType.guild_install,
                 },
             )
-        )
+
 
         if self.owner_id and self.owner_ids:
             raise TypeError("Both owner_id and owner_ids are set.")
@@ -1192,6 +1190,20 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
             raise TypeError(
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
             )
+        if not isinstance(
+                self.default_command_contexts, collections.abc.Collection
+        ):
+            raise TypeError(
+                f"default_command_contexts must be a collection not {self.default_command_contexts.__class__!r}"
+            )
+        if not isinstance(
+                self.default_command_integration_types, collections.abc.Collection
+        ):
+            raise TypeError(
+                f"default_command_integration_types must be a collection not {self.default_command_integration_types.__class__!r}"
+            )
+        self.default_command_contexts = set(self.default_command_contexts)
+        self.default_command_integration_types = set(self.default_command_integration_types)
 
         self._checks = []
         self._check_once = []
@@ -1472,13 +1484,13 @@ class Bot(BotBase, Client):
         :attr:`.process_application_commands` if the command is not found. Defaults to ``True``.
 
         .. versionadded:: 2.0
-    default_command_contexts: Set[:class:`InteractionContextType`]
+    default_command_contexts: Collection[:class:`InteractionContextType`]
         The default context types that the bot will use for commands.
         Defaults to a set containing :attr:`InteractionContextType.guild`, :attr:`InteractionContextType.bot_dm`, and
         :attr:`InteractionContextType.private_channel`.
 
         .. versionadded:: 2.6
-    default_command_integration_types: Set[:class:`IntegrationType`]
+    default_command_integration_types: Collection[:class:`IntegrationType`]]
         The default integration types that the bot will use for commands.
         Defaults to a set containing :attr:`IntegrationType.guild_install`.
 
