@@ -693,7 +693,7 @@ class SlashCommand(ApplicationCommand):
         Whether the command should only be usable inside a guild.
 
         .. deprecated:: 2.6
-            Use the ``contexts`` parameter instead.
+            Use the :attr:`contexts` parameter instead.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
         Apps intending to be listed in the App Directory cannot have NSFW commands.
@@ -1170,7 +1170,7 @@ class SlashCommandGroup(ApplicationCommand):
         Whether the command should only be usable inside a guild.
 
         .. deprecated:: 2.6
-            Use the ``contexts`` parameter instead.
+            Use the :attr:`contexts` parameter instead.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
         Apps intending to be listed in the App Directory cannot have NSFW commands.
