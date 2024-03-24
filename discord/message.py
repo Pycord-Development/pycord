@@ -849,7 +849,7 @@ class Message(Hashable):
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
 
-        from .interactions import MessageInteraction, InteractionMetadata
+        from .interactions import InteractionMetadata, MessageInteraction
 
         self.interaction: MessageInteraction | None
         try:
