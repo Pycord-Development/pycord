@@ -253,16 +253,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 "the 'contexts' and 'integration_types' parameters are not available for guild commands"
             )
 
-        self.contexts: set[InteractionContextType] = contexts or {
-            InteractionContextType.guild,
-            InteractionContextType.bot_dm,
-            InteractionContextType.private_channel,
-        }
+        self.contexts: set[InteractionContextType] | None = contexts
         if guild_only:
             self.guild_only: bool | None = guild_only
-        self.integration_types: set[IntegrationType] = integration_types or {
-            IntegrationType.guild_install
-        }
+        self.integration_types: set[IntegrationType] | None = integration_types
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
