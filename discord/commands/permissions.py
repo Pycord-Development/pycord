@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from typing import Callable
 
+from ..enums import InteractionContextType
 from ..permissions import Permissions
 from .core import ApplicationCommand
 
@@ -98,9 +99,9 @@ def guild_only() -> Callable:
 
     def inner(command: Callable):
         if isinstance(command, ApplicationCommand):
-            command.guild_only = True
+            command.contexts = {InteractionContextType.guild}
         else:
-            command.__guild_only__ = True
+            command.__contexts__ = {InteractionContextType.guild}
 
         return command
 
