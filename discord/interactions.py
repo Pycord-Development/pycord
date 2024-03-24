@@ -201,7 +201,9 @@ class Interaction:
             Entitlement(data=e, state=self._state) for e in data.get("entitlements", [])
         ]
         self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
-            AuthorizingIntegrationOwners(data=data.get("authorizing_integration_owners"), state=self._state)
+            AuthorizingIntegrationOwners(
+                data=data.get("authorizing_integration_owners"), state=self._state
+            )
         )
         self.context: InteractionContextType | None = (
             try_enum(InteractionContextType, data["context"])
@@ -1547,7 +1549,11 @@ class AuthorizingIntegrationOwners:
 
     def __init__(self, data: dict[str, Any], state: ConnectionState):
         self._state = state
-        self.user_id = int(uid) if (uid := data.get("user_id", MISSING)) is not MISSING else MISSING
+        self.user_id = (
+            int(uid)
+            if (uid := data.get("user_id", MISSING)) is not MISSING
+            else MISSING
+        )
         if (guild_id := data.get("guild_id", MISSING)) == "0":
             self.guild_id = None
         else:
@@ -1569,7 +1575,8 @@ class AuthorizingIntegrationOwners:
     @utils.cached_slot_property("_cs_user")
     def user(self) -> User | None:
         """Optional[:class:`User`]: The user that authorized the integration.
-        Returns ``None`` if the user is not in cache, or if :attr:`user_id` is :class:`MISSING`."""
+        Returns ``None`` if the user is not in cache, or if :attr:`user_id` is :class:`MISSING`.
+        """
         if not self.user_id:
             return None
         return self._state.get_user(self.user_id)
@@ -1577,7 +1584,8 @@ class AuthorizingIntegrationOwners:
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: The guild that authorized the integration.
-        Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is :class:`MISSING` or ``None``."""
+        Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is :class:`MISSING` or ``None``.
+        """
         if not self.guild_id:
             return None
         return self._state._get_guild(self.guild_id)
