@@ -854,7 +854,9 @@ class Message(Hashable):
 
         self._interaction: MessageInteraction | None
         try:
-            self._interaction = MessageInteraction(data=data["interaction"], state=state)
+            self._interaction = MessageInteraction(
+                data=data["interaction"], state=state
+            )
         except KeyError:
             self._interaction = None
         try:
