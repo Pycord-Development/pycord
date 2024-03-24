@@ -1556,9 +1556,7 @@ class AuthorizingIntegrationOwners:
         self._state = state
         # keys are Application Integration Types as strings
         self.user_id = (
-            int(uid)
-            if (uid := data.get("1", MISSING)) is not MISSING
-            else MISSING
+            int(uid) if (uid := data.get("1", MISSING)) is not MISSING else MISSING
         )
         if (guild_id := data.get("0", MISSING)) == "0":
             self.guild_id = None
