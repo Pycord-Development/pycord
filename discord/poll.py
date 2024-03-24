@@ -151,10 +151,12 @@ class PollAnswer:
         return None
 
     def to_dict(self) -> PollAnswerPayload:
-        return {
-            "answer_id": self.id,
+        dict_ = {
             "poll_media": self.media.to_dict(),
         }
+        if self.id:
+            dict_["answer_id"] = self.id,
+        return dict_
 
     @classmethod
     def from_dict(cls, data: PollAnswerPayload, poll=None) -> PollAnswer:
