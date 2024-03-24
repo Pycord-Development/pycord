@@ -241,7 +241,12 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         contexts = getattr(func, "__contexts__", kwargs.get("contexts", None))
         guild_only = getattr(func, "__guild_only__", kwargs.get("guild_only", MISSING))
         if guild_only is not MISSING:
-            warn_deprecated("guild_only", "contexts", "2.6")
+            warn_deprecated(
+                "guild_only",
+                "contexts",
+                "2.6",
+                reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+            )
         if contexts and guild_only:
             raise InvalidArgument(
                 "cannot pass both 'contexts' and 'guild_only' to ApplicationCommand"
@@ -253,9 +258,9 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 "the 'contexts' and 'integration_types' parameters are not available for guild commands"
             )
 
-        self.contexts: set[InteractionContextType] | None = contexts
         if guild_only:
-            self.guild_only: bool | None = guild_only
+            contexts = {InteractionContextType.guild}
+        self.contexts: set[InteractionContextType] | None = contexts
         self.integration_types: set[IntegrationType] | None = integration_types
 
     def __repr__(self) -> str:
