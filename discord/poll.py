@@ -154,7 +154,7 @@ class PollAnswer:
         dict_ = {
             "poll_media": self.media.to_dict(),
         }
-        if self.id:
+        if self.id is not None:
             dict_["answer_id"] = (self.id,)
         return dict_
 
