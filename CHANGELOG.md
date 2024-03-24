@@ -17,7 +17,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `user` argument to `Paginator.edit`.
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 - Added support for user-installable applications.
-  ((#2409)[https://github.com/Pycord-Development/pycord/pull/2409])
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
 
 ### Fixed
 
