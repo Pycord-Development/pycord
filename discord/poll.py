@@ -222,7 +222,9 @@ class PollAnswer:
         """
 
         if not self._poll or not self._poll._message:
-            raise RuntimeError("Users can only be fetched from an existing message poll.")
+            raise RuntimeError(
+                "Users can only be fetched from an existing message poll."
+            )
 
         if limit is None:
             limit = self.count  # or 100, debug?
@@ -396,8 +398,6 @@ class Poll:
         """
 
         if not self._message:
-            raise RuntimeError(
-                'You can only end a poll recieved from a message.'
-            )
+            raise RuntimeError("You can only end a poll recieved from a message.")
 
         return await self._message.expire_poll()
