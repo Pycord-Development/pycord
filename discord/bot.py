@@ -1165,21 +1165,20 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         self.debug_guilds = options.pop("debug_guilds", None)
         self.default_command_contexts = options.pop(
-                "default_command_contexts",
-                {
-                    InteractionContextType.guild,
-                    InteractionContextType.bot_dm,
-                    InteractionContextType.private_channel,
-                },
-            )
+            "default_command_contexts",
+            {
+                InteractionContextType.guild,
+                InteractionContextType.bot_dm,
+                InteractionContextType.private_channel,
+            },
+        )
 
         self.default_command_integration_types = options.pop(
-                "default_command_integration_types",
-                {
-                    IntegrationType.guild_install,
-                },
-            )
-
+            "default_command_integration_types",
+            {
+                IntegrationType.guild_install,
+            },
+        )
 
         if self.owner_id and self.owner_ids:
             raise TypeError("Both owner_id and owner_ids are set.")
@@ -1190,20 +1189,20 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
             raise TypeError(
                 f"owner_ids must be a collection not {self.owner_ids.__class__!r}"
             )
-        if not isinstance(
-                self.default_command_contexts, collections.abc.Collection
-        ):
+        if not isinstance(self.default_command_contexts, collections.abc.Collection):
             raise TypeError(
                 f"default_command_contexts must be a collection not {self.default_command_contexts.__class__!r}"
             )
         if not isinstance(
-                self.default_command_integration_types, collections.abc.Collection
+            self.default_command_integration_types, collections.abc.Collection
         ):
             raise TypeError(
                 f"default_command_integration_types must be a collection not {self.default_command_integration_types.__class__!r}"
             )
         self.default_command_contexts = set(self.default_command_contexts)
-        self.default_command_integration_types = set(self.default_command_integration_types)
+        self.default_command_integration_types = set(
+            self.default_command_integration_types
+        )
 
         self._checks = []
         self._check_once = []
