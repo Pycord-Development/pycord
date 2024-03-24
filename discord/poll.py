@@ -155,7 +155,7 @@ class PollAnswer:
             "poll_media": self.media.to_dict(),
         }
         if self.id:
-            dict_["answer_id"] = self.id,
+            dict_["answer_id"] = (self.id,)
         return dict_
 
     @classmethod
