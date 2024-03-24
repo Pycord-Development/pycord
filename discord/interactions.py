@@ -1493,13 +1493,15 @@ class InteractionMetadata:
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
         self.user_id: int = int(data["user_id"])
-        self.authorizing_integration_owners: AuthorizingIntegrationOwners = AuthorizingIntegrationOwners(
-            data["authorizing_integration_owners"], state
+        self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
+            AuthorizingIntegrationOwners(data["authorizing_integration_owners"], state)
         )
         self.original_response_message_id: int | None = utils._get_as_snowflake(
             data, "original_response_message_id"
         )
-        self.interacted_message_id: int | None = utils._get_as_snowflake(data, "interacted_message_id")
+        self.interacted_message_id: int | None = utils._get_as_snowflake(
+            data, "interacted_message_id"
+        )
         self.triggering_interaction_metadata: InteractionMetadata | None = None
         if tim := data.get("triggering_interaction_metadata"):
             self.triggering_interaction_metadata = InteractionMetadata(
@@ -1512,13 +1514,15 @@ class InteractionMetadata:
     @utils.cached_slot_property("_cs_user")
     def user(self) -> User | None:
         """Optional[:class:`User`]: The user that sent the interaction.
-        Returns ``None`` if the user is not in cache."""
+        Returns ``None`` if the user is not in cache.
+        """
         return self._state.get_user(self.user_id)
 
     @utils.cached_slot_property("_cs_original_response_message")
     def original_response_message(self) -> Message | None:
         """Optional[:class:`Message`]: The original response message.
-        Returns ``None`` if the message is not in cache, or if :attr:`original_response_message_id` is ``None``."""
+        Returns ``None`` if the message is not in cache, or if :attr:`original_response_message_id` is ``None``.
+        """
         if not self.original_response_message_id:
             return None
         return self._state._get_message(self.original_response_message_id)
@@ -1526,7 +1530,8 @@ class InteractionMetadata:
     @utils.cached_slot_property("_cs_interacted_message")
     def interacted_message(self) -> Message | None:
         """Optional[:class:`Message`]: The message that triggered the interaction.
-        Returns ``None`` if the message is not in cache, or if :attr:`interacted_message_id` is ``None``."""
+        Returns ``None`` if the message is not in cache, or if :attr:`interacted_message_id` is ``None``.
+        """
         if not self.interacted_message_id:
             return None
         return self._state._get_message(self.interacted_message_id)

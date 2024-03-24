@@ -858,7 +858,9 @@ class Message(Hashable):
         except KeyError:
             self.interaction = None
         try:
-            self.interaction_metadata = InteractionMetadata(data=data["interaction_metadata"], state=state)
+            self.interaction_metadata = InteractionMetadata(
+                data=data["interaction_metadata"], state=state
+            )
         except KeyError:
             self.interaction_metadata = None
 
