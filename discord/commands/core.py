@@ -1347,7 +1347,7 @@ class SlashCommandGroup(ApplicationCommand):
                 self.default_member_permissions.value
             )
 
-        if not self.guild_ids:
+        if not self.guild_ids and self.parent is None:
             as_dict["integration_types"] = [it.value for it in self.integration_types]
             as_dict["contexts"] = [ctx.value for ctx in self.contexts]
 
