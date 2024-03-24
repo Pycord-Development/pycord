@@ -16,6 +16,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))
 - Added `user` argument to `Paginator.edit`.
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
+- Added support for user-installable applications.
+  ((#2409)[https://github.com/Pycord-Development/pycord/pull/2409])
 
 ### Fixed
 
@@ -32,6 +34,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
 - Fixed `ScheduledEvent.subscribers` behavior with `limit=None`.
   ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
+- Fixed an issue with `Interaction` that would cause bots to crash if a guild was not cached.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
 
 ### Changed
 
@@ -39,6 +43,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
 - HTTP requests that fail with a 503 status are now re-tried.
   ([#2395](https://github.com/Pycord-Development/pycord/pull/2395))
+- `ApplicationCommand.guild_only` is now deprecated in favor of `ApplicationCommand.contexts`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
+- `Message.interaction` is now deprecated in favor of `Message.interaction_metadata`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
 
 ## [2.5.0] - 2024-03-02
 
