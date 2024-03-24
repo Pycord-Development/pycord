@@ -202,6 +202,8 @@ class PollAnswer:
         ------
         HTTPException
             Getting the voters for the answer failed.
+        RuntimeError
+            This poll wasn't recieved from a message.
 
         Examples
         --------
@@ -220,7 +222,7 @@ class PollAnswer:
         """
 
         if not self._poll or not self._poll._message:
-            raise ValueError("Users can only be fetched from an existing message poll.")
+            raise RuntimeError("Users can only be fetched from an existing message poll.")
 
         if limit is None:
             limit = self.count  # or 100, debug?
@@ -370,3 +372,32 @@ class Poll:
 
     def get_answer(self, id) -> PollAnswer | None:
         return utils.get(self.answers, id=id)
+
+    async def expire(self) -> Message:
+        """
+        Immediately ends this poll, if attached to a message. Only doable by the poll's owner.
+        Shortcut to :attr:`Message.expire_poll()`
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        :class:`Message`
+            The updated message.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to end this poll.
+        HTTPException
+            Ending this poll failed.
+        RuntimeError
+            This poll wasn't recieved from a message.
+        """
+
+        if not self._message:
+            raise RuntimeError(
+                'You can only end a poll recieved from a message.'
+            )
+
+        return await self._message.expire_poll()
