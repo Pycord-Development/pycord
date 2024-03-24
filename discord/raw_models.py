@@ -78,6 +78,7 @@ __all__ = (
     "RawThreadMembersUpdateEvent",
     "RawAuditLogEntryEvent",
     "RawVoiceChannelStatusUpdateEvent",
+    "RawMessagePollVoteEvent"
 )
 
 
