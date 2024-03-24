@@ -26,11 +26,19 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2392](https://github.com/Pycord-Development/pycord/pull/2392))
 - Fixed `Paginator.edit` to no longer set user to the bot.
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
+- Fixed `NameError` in some instances of `Interaction`.
+  ([#2402](https://github.com/Pycord-Development/pycord/pull/2402))
+- Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
+  ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
+- Fixed `ScheduledEvent.subscribers` behavior with `limit=None`.
+  ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
 
 ### Changed
 
 - Changed the type of `Guild.bitrate_limit` to `int`.
   ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
+- HTTP requests that fail with a 503 status are now re-tried.
+  ([#2395](https://github.com/Pycord-Development/pycord/pull/2395))
 
 ## [2.5.0] - 2024-03-02
 

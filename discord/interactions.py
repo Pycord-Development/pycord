@@ -39,6 +39,7 @@ from .enums import (
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
 from .flags import MessageFlags
+from .guild import Guild
 from .member import Member
 from .message import Attachment, Message
 from .monetization import Entitlement
@@ -74,7 +75,6 @@ if TYPE_CHECKING:
     from .client import Client
     from .commands import OptionChoice
     from .embeds import Embed
-    from .guild import Guild
     from .mentions import AllowedMentions
     from .state import ConnectionState
     from .threads import Thread

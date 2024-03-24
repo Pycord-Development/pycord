@@ -482,11 +482,11 @@ class ScheduledEvent(Hashable):
     def subscribers(
         self,
         *,
-        limit: int = 100,
+        limit: int | None = 100,
         as_member: bool = False,
         before: Snowflake | datetime.datetime | None = None,
         after: Snowflake | datetime.datetime | None = None,
-    ) -> AsyncIterator:
+    ) -> ScheduledEventSubscribersIterator:
         """Returns an :class:`AsyncIterator` representing the users or members subscribed to the event.
 
         The ``after`` and ``before`` parameters must represent member
