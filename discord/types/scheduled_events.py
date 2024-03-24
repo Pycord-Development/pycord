@@ -60,5 +60,6 @@ class ScheduledEventEntityMetadata(TypedDict):
 
 class ScheduledEventSubscriber(TypedDict):
     guild_scheduled_event_id: Snowflake
+    user_id: Snowflake
     user: User
     member: Member | None
