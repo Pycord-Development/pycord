@@ -717,9 +717,9 @@ class SlashCommand(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Cannot be set if this is a guild command.
+        The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Cannot be set if this is a guild command.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Cannot be set if this is a guild command.
+        The location where this command can be used. Cannot be set if this is a guild command.
     """
 
     type = 1
@@ -1189,9 +1189,9 @@ class SlashCommandGroup(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The installation contexts where this command is available. Cannot be set if this is a guild command.
+        The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Cannot be set if this is a guild command.
     contexts: Set[:class:`InteractionContextType`]
-        The interaction contexts where this command is available. Cannot be set if this is a guild command.
+        The location where this command can be used. Cannot be set if this is a guild command.
     """
 
     __initial_commands__: list[SlashCommand | SlashCommandGroup]

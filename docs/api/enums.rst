@@ -2422,7 +2422,7 @@ of :class:`enum.Enum`.
 
 .. class:: InteractionContextType
 
-    The context an interaction occurs in.
+    The context where an interaction occurs.
 
     .. versionadded:: 2.6
 
@@ -2432,7 +2432,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: bot_dm
 
-        The interaction is in the bot's own DM channel.
+        The interaction is in the bot's own DM channel with the user.
 
     .. attribute:: private_channel
 

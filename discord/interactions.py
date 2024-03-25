@@ -140,7 +140,7 @@ class Interaction:
     custom_id: Optional[:class:`str`]
         The custom ID for the interaction.
     authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
-        Contains the entities that authorized this interaction.
+        Contains the entities (users or guilds) that authorized this interaction.
     context: Optional[:class:`InteractionContextType`]
         The context in which this command was executed.
     """
