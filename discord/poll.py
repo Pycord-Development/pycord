@@ -140,7 +140,7 @@ class PollAnswer:
 
     @property
     def count(self) -> int | None:
-        """The poll's answer count, if recieved from Discord."""
+        """This answer's vote count, if recieved from Discord."""
         if not (self._poll and self.id):
             return None
         _count = self._poll.results and utils.get(
@@ -176,7 +176,7 @@ class PollAnswer:
         self, *, limit: int | None = None, after: Snowflake | None = None
     ) -> VoteIterator:
         """Returns an :class:`AsyncIterator` representing the users that have voted with this answer.
-        Does not work if the user created this answer object.
+        Only works if this poll was recieved from Discord.
 
         The ``after`` parameter must represent a member
         and meet the :class:`abc.Snowflake` abc.
@@ -331,9 +331,7 @@ class Poll:
     @utils.cached_property
     def expiry(self) -> datetime.datetime | None:
         """An aware datetime object that specifies the date and time in UTC when the poll will end."""
-        if self._expiry is not None:
-            return datetime.datetime.fromisoformat(self._expiry)
-        return None
+        return utils.parse_time(self._expiry)
 
     def to_dict(self) -> PollPayload:
         dict_ = {
@@ -362,8 +360,7 @@ class Poll:
         )
         if results := data.get("results"):
             poll.results = PollResults.from_dict(results)
-        if expiry := data.get("expiry"):
-            poll._expiry = expiry
+        poll._expiry = data.get("expiry")
         poll._message = message
         for a in poll.answers:
             a._poll = poll
