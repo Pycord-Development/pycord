@@ -43,8 +43,6 @@ from typing import (
     Union,
 )
 
-import discord
-
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry

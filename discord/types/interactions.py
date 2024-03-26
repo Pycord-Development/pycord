@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Dict, Literal, Union
 
 from ..permissions import Permissions
 from .channel import ChannelType
@@ -221,6 +221,18 @@ class Interaction(TypedDict):
     token: str
     version: int
     entitlements: list[Entitlement]
+    authorizing_integration_owners: AuthorizingIntegrationOwners
+    context: InteractionContextType
+
+
+class InteractionMetadata(TypedDict):
+    id: Snowflake
+    type: InteractionType
+    user_id: Snowflake
+    authorizing_integration_owners: AuthorizingIntegrationOwners
+    original_response_message_id: NotRequired[Snowflake]
+    interacted_message_id: NotRequired[Snowflake]
+    triggering_interaction_metadata: NotRequired[InteractionMetadata]
 
 
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
@@ -253,3 +265,10 @@ class EditApplicationCommand(TypedDict):
     type: NotRequired[ApplicationCommandType]
     name: str
     default_permission: bool
+
+
+InteractionContextType = Literal[0, 1, 2]
+ApplicationIntegrationType = Literal[0, 1]
+_StringApplicationIntegrationType = Literal["0", "1"]
+
+AuthorizingIntegrationOwners = Dict[_StringApplicationIntegrationType, Snowflake]
