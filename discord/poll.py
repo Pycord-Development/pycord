@@ -44,14 +44,12 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .emoji import Emoji
-    from .guild import Guild
     from .message import Message, PartialMessage
     from .types.poll import Poll as PollPayload
     from .types.poll import PollAnswer as PollAnswerPayload
     from .types.poll import PollAnswerCount as PollAnswerCountPayload
     from .types.poll import PollMedia as PollMediaPayload
     from .types.poll import PollResults as PollResultsPayload
-    from .user import User
 
 
 class PollMedia:
@@ -159,8 +157,8 @@ class PollAnswer:
         return dict_
 
     @classmethod
-    def from_dict(cls, data: PollAnswerPayload, poll=None) -> PollAnswer:
-        media = PollMedia.from_dict(data["poll_media"])
+    def from_dict(cls, data: PollAnswerPayload, poll=None, message: Message | PartialMessage | None = None) -> PollAnswer:
+        media = PollMedia.from_dict(data["poll_media"], message=message)
         answer = cls(
             media.text,
             media.emoji,
@@ -352,8 +350,8 @@ class Poll:
         cls, data: PollPayload, message: Message | PartialMessage | None = None
     ) -> Poll:
         poll = cls(
-            question=PollMedia.from_dict(data["question"], message),
-            answers=[PollAnswer.from_dict(a) for a in data.get("answers", [])],
+            question=PollMedia.from_dict(data["question"], message=message),
+            answers=[PollAnswer.from_dict(a, message=message) for a in data.get("answers", [])],
             duration=data.get("duration"),
             allow_multiselect=data.get("allow_multiselect"),
             layout_type=try_enum(PollLayoutType, data.get("layout_type", 1)),
