@@ -157,7 +157,12 @@ class PollAnswer:
         return dict_
 
     @classmethod
-    def from_dict(cls, data: PollAnswerPayload, poll=None, message: Message | PartialMessage | None = None) -> PollAnswer:
+    def from_dict(
+        cls,
+        data: PollAnswerPayload,
+        poll=None,
+        message: Message | PartialMessage | None = None,
+    ) -> PollAnswer:
         media = PollMedia.from_dict(data["poll_media"], message=message)
         answer = cls(
             media.text,
@@ -351,7 +356,10 @@ class Poll:
     ) -> Poll:
         poll = cls(
             question=PollMedia.from_dict(data["question"], message=message),
-            answers=[PollAnswer.from_dict(a, message=message) for a in data.get("answers", [])],
+            answers=[
+                PollAnswer.from_dict(a, message=message)
+                for a in data.get("answers", [])
+            ],
             duration=data.get("duration"),
             allow_multiselect=data.get("allow_multiselect"),
             layout_type=try_enum(PollLayoutType, data.get("layout_type", 1)),
