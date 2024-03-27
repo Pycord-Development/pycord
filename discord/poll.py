@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING, Any
 from . import utils
 from .enums import PollLayoutType, try_enum
 from .iterators import VoteIterator
+from .partial_emoji import PartialEmoji
 
 __all__ = (
     "PollMedia",
@@ -45,7 +46,6 @@ if TYPE_CHECKING:
     from .emoji import Emoji
     from .guild import Guild
     from .message import Message, PartialMessage
-    from .partial_emoji import PartialEmoji
     from .types.poll import Poll as PollPayload
     from .types.poll import PollAnswer as PollAnswerPayload
     from .types.poll import PollAnswerCount as PollAnswerCountPayload
