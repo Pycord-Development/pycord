@@ -257,7 +257,7 @@ class PollAnswerCount:
         self.me = data.get("me_voted")
 
     def to_dict(self) -> PollAnswerCountPayload:
-        return {"answer_id": self.id, "count": self.count, "me_voted": self.me}
+        return {"id": self.id, "count": self.count, "me_voted": self.me}
 
     def __repr__(self) -> str:
         return f"<PollAnswerCount id={self.id!r} count={self.count!r} me={self.me!r}>"
