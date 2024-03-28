@@ -53,6 +53,7 @@ from .guild import Guild
 from .member import Member
 from .mixins import Hashable
 from .partial_emoji import PartialEmoji
+from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
@@ -726,6 +727,10 @@ class Message(Hashable):
         The thread created from this message, if applicable.
 
         .. versionadded:: 2.0
+    poll: Optional[:class:`Poll`]
+        The poll associated with this message, if applicable.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -761,6 +766,7 @@ class Message(Hashable):
         "guild",
         "interaction",
         "thread",
+        "poll",
     )
 
     if TYPE_CHECKING:
@@ -847,6 +853,12 @@ class Message(Hashable):
             self.interaction = MessageInteraction(data=data["interaction"], state=state)
         except KeyError:
             self.interaction = None
+
+        self.poll: Poll | None
+        try:
+            self.poll = Poll.from_dict(data.get("poll"), message=self)
+        except KeyError:
+            self.poll = None
 
         self.thread: Thread | None
         try:
@@ -1816,6 +1828,34 @@ class Message(Hashable):
 
         return await self.channel.send(content, reference=self, **kwargs)
 
+    async def expire_poll(self) -> Message:
+        """|coro|
+
+        Immediately ends the poll associated with this message. Only doable by the poll's owner.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        :class:`Message`
+            The updated message.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to end this poll.
+        HTTPException
+            Ending this poll failed.
+        """
+
+        data = await self._state.http.expire_poll(
+            self.channel.id,
+            self.id,
+        )
+        message = Message(state=self._state, channel=self.channel, data=data)
+
+        return message
+
     def to_reference(self, *, fail_if_not_exists: bool = True) -> MessageReference:
         """Creates a :class:`~discord.MessageReference` from the current message.
 
@@ -2087,3 +2127,31 @@ class PartialMessage(Hashable):
                 view.message = msg
                 self._state.store_view(view, self.id)
             return msg
+
+    async def expire_poll(self) -> Message:
+        """|coro|
+
+        Immediately ends the poll associated with this message. Only doable by the poll's owner.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        :class:`Message`
+            The updated message.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to end this poll.
+        HTTPException
+            Ending this poll failed.
+        """
+
+        data = await self._state.http.expire_poll(
+            self.channel.id,
+            self.id,
+        )
+        message = self._state.create_message(channel=self.channel, data=data)
+
+        return message
