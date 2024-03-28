@@ -365,7 +365,7 @@ class Poll:
             layout_type=try_enum(PollLayoutType, data.get("layout_type", 1)),
         )
         if results := data.get("results"):
-            poll.results = PollResults.from_dict(results)
+            poll.results = PollResults(results)
         poll._expiry = data.get("expiry")
         poll._message = message
         for a in poll.answers:
