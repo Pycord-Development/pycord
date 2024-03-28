@@ -799,6 +799,8 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         The channel ID where the vote was updated.
     guild_id: Optional[:class:`int`]
         The guild ID where the vote was updated, if applicable.
+    answer_id: :class:`int`
+        The answer ID of the vote that was updated.
     added: :class:`bool`
         Whether this vote was added or removed.
     data: :class:`dict`
@@ -811,6 +813,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         self.user_id: int = int(data["user_id"])
         self.channel_id: int = int(data["channel_id"])
         self.message_id: int = int(data["message_id"])
+        self.answer_id: int = int(data["answer_id"])
         self.data: MessagePollVoteEvent = data
         self.added: bool = added
 
