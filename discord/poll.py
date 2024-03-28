@@ -146,7 +146,7 @@ class PollAnswer:
         )
         if _count:
             return _count.count
-        return None
+        return 0  # If an answer isn't in answer_counts, it has 0 votes.
 
     def to_dict(self) -> PollAnswerPayload:
         dict_ = {
