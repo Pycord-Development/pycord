@@ -278,9 +278,7 @@ class PollResults:
 
     def __init__(self, data: PollResultsPayload):
         self.is_finalized = data.get("is_finalized")
-        self.answer_counts = [
-            PollAnswerCount(a) for a in data.get("answer_counts", [])
-        ]
+        self.answer_counts = [PollAnswerCount(a) for a in data.get("answer_counts", [])]
 
     def to_dict(self) -> PollResultsPayload:
         return {
