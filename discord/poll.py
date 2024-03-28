@@ -287,7 +287,18 @@ class PollResults:
         }
 
     def __repr__(self) -> str:
-        return f"<PollResults is_finalized={self.is_finalized!r}>"
+        return f"<PollResults is_finalized={self.is_finalized!r} total_votes={self.total_votes()!r}>"
+
+    def total_votes(self) -> int:
+        """
+        Get the total number of votes across all answers. This may not be precise if :attr:`is_finalized` is ``False``.
+
+        Returns
+        -------
+        :class:`int`
+            The total number of votes on this poll.
+        """
+        return sum([a.count for a in self.answer_counts])
 
 
 class Poll:
