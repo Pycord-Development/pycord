@@ -198,7 +198,7 @@ class Interaction:
         self._guild: Guild | None = None
         self._guild_data = data.get("guild")
         if self.guild is None and self._guild_data:
-            self._guild = Guild(data=self._guild_data, state=self)
+            self._guild = Guild(data=self._guild_data, state=self._state)
 
         # TODO: there's a potential data loss here
         if self.guild_id:
