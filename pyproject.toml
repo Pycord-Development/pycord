@@ -1,0 +1,105 @@
+[build-system]
+requires = [
+    "setuptools>=62.6,<70",
+    "setuptools-scm>=6.2,<8",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py-cord"
+authors = [
+    {name = "Pycord Development"}
+]
+description = "A Python wrapper for the Discord API"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "Typing :: Typed",
+]
+dynamic = ["version", "dependencies", "optional-dependencies"]
+
+[project.urls]
+Homepage = "https://pycord.dev"
+Changelog = "https://docs.pycord.dev/en/master/changelog.html"
+Source = "https://github.com/Pycord-Development/pycord"
+Documentation = "https://docs.pycord.dev"
+Tracker = "https://github.com/Pycord-Development/pycord/issues"
+Funding = "https://patreon.com/pycord"
+
+[tool.setuptools]
+packages = [
+    "discord",
+    "discord.types",
+    "discord.sinks",
+    "discord.ui",
+    "discord.webhook",
+    "discord.commands",
+    "discord.ext.commands",
+    "discord.ext.tasks",
+    "discord.ext.pages",
+    "discord.ext.bridge",
+]
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements/_.txt"}
+
+[tool.setuptools.dynamic.optional-dependencies]
+docs = {file = "requirements/docs.txt"}
+speed = {file = "requirements/speed.txt"}
+voice = {file = "requirements/voice.txt"}
+
+[tool.setuptools_scm]
+
+[tool.black]
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+namespace_packages = true
+install_types = true
+strict = true
+show_error_codes = true
+#allow_untyped_decorators = true
+#allow_untyped_calls = true
+ignore_errors = true
+
+[tool.pylint.main]
+extension-pkg-whitelist = [
+    "pydantic",
+    "ujson"
+]
+py-version = 3.8
+
+[tool.pylint.messages_control]
+enable = [
+    "bad-indentation",
+    "line-too-long"
+]
+disable = [
+    "protected-access",
+    "fixme"
+]
+
+[tool.pylint.format]
+indent-string = '    '
+max-line-length = 120
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
