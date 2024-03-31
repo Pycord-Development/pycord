@@ -792,7 +792,7 @@ class ConnectionState:
             else:
                 raw.member = None
         else:
-                raw.member = None
+            raw.member = None
 
         self.dispatch("raw_reaction_remove", raw)
 
