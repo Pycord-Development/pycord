@@ -46,6 +46,7 @@ __all__ = (
     "MinimalHelpCommand",
 )
 
+
 # help -> shows info of bot on top/bottom and lists subcommands
 # help command -> shows detailed info of command
 # help command <subcommand chain> -> same as above
@@ -138,14 +139,14 @@ class Paginator:
             The line was too big for the current :attr:`max_size`.
         """
         max_page_size = (
-            self.max_size - self._prefix_len - self._suffix_len - 2 * self._linesep_len
+                self.max_size - self._prefix_len - self._suffix_len - 2 * self._linesep_len
         )
         if len(line) > max_page_size:
             raise RuntimeError(f"Line exceeds maximum page size {max_page_size}")
 
         if (
-            self._count + len(line) + self._linesep_len
-            > self.max_size - self._suffix_len
+                self._count + len(line) + self._linesep_len
+                > self.max_size - self._suffix_len
         ):
             self.close_page()
 
@@ -407,9 +408,9 @@ class HelpCommand:
         command_name = self._command_impl.name
         ctx = self.context
         if (
-            ctx is None
-            or ctx.command is None
-            or ctx.command.qualified_name != command_name
+                ctx is None
+                or ctx.command is None
+                or ctx.command.qualified_name != command_name
         ):
             return command_name
         return ctx.invoked_with
@@ -995,10 +996,14 @@ class DefaultHelpCommand(HelpCommand):
         max_size = max_size or self.get_max_size(commands)
 
         get_width = discord.utils._string_width
-        for command in commands:
-            name = command.name
-            width = max_size - (get_width(name) - len(name))
-            entry = f'{self.indent * " "}{name:<{width}} {command.short_doc}'
+
+        last_name = ""
+        for command_name, command in [(command.name, command) for command in commands]:
+            if last_name == command_name:
+                continue
+            last_name = command_name
+            width = max_size - (get_width(command_name) - len(command_name))
+            entry = f'{self.indent * " "}{command_name:<{width}} {command.short_doc}'
             self.paginator.add_line(self.shorten_text(entry))
 
     async def send_pages(self):

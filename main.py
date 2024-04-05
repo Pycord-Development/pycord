@@ -17,10 +17,6 @@ class MyCog(commands.Cog):
     async def bridge_command(self, ctx):
         await ctx.respond("Hi")
 
-    @bridge.bridge_command()
-    async def test(self, ctx):
-        await ctx.respond("Hi")
-
 
 bot = bridge.Bot()
 bot.add_cog(MyCog())
