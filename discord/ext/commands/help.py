@@ -995,10 +995,13 @@ class DefaultHelpCommand(HelpCommand):
         max_size = max_size or self.get_max_size(commands)
 
         get_width = discord.utils._string_width
-        for command in commands:
-            name = command.name
-            width = max_size - (get_width(name) - len(name))
-            entry = f'{self.indent * " "}{name:<{width}} {command.short_doc}'
+        last_name = ""
+        for command_name, command in [(command.name, command) for command in commands]:
+            if last_name == command_name:
+                continue
+            last_name = command_name
+            width = max_size - (get_width(command_name) - len(command_name))
+            entry = f'{self.indent * " "}{command_name:<{width}} {command.short_doc}'
             self.paginator.add_line(self.shorten_text(entry))
 
     async def send_pages(self):
