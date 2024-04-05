@@ -34,6 +34,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
 - Fixed invalid data being passed to `Interaction._guild` in certain cases.
   ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
+- Fixed duplication in bridge command help.
+  ([#2415](https://github.com/Pycord-Development/pycord/pull/2415))
 
 ### Changed
 
