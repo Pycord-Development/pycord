@@ -629,6 +629,7 @@ class BridgeOption(Option, Converter):
         except ValueError as exc:
             raise BadArgument() from exc
 
+
 def bridge_option(name, input_type=None, **kwargs):
     """A decorator that can be used instead of typehinting :class:`.BridgeOption`.
 
@@ -643,11 +644,16 @@ def bridge_option(name, input_type=None, **kwargs):
 
     def decorator(func):
         resolved_name = kwargs.pop("parameter_name", None) or name
-        itype = kwargs.pop("type", None) or input_type or func.__annotations__.get(resolved_name, str)
+        itype = (
+            kwargs.pop("type", None)
+            or input_type
+            or func.__annotations__.get(resolved_name, str)
+        )
         func.__annotations__[resolved_name] = BridgeOption(itype, name=name, **kwargs)
         return func
 
     return decorator
+
 
 discord.commands.options.Option = BridgeOption
 discord.Option = BridgeOption
