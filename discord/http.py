@@ -1636,6 +1636,17 @@ class HTTPClient:
         r = Route("GET", "/guilds/{guild_id}/members", guild_id=guild_id)
         return self.request(r, params=params)
 
+    def search_members(
+        self, guild_id: Snowflake, limit: int, query: str
+    ) -> Response[list[member.MemberWithUser]]:
+        params: dict[str, Any] = {
+            "query": query,
+            "limit": limit,
+        }
+
+        r = Route("GET", "/guilds/{guild_id}/members/search", guild_id=guild_id)
+        return self.request(r, params=params)
+
     def get_member(
         self, guild_id: Snowflake, member_id: Snowflake
     ) -> Response[member.MemberWithUser]:
