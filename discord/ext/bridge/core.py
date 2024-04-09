@@ -40,7 +40,7 @@ from discord import (
     SlashCommandOptionType,
 )
 
-from ...utils import MISSING, find, get
+from ...utils import MISSING, find, get, warn_deprecated
 from ..commands import BadArgument
 from ..commands import Bot as ExtBot
 from ..commands import (
@@ -63,6 +63,7 @@ __all__ = (
     "BridgeCommandGroup",
     "bridge_command",
     "bridge_group",
+    "bridge_option",
     "BridgeExtCommand",
     "BridgeSlashCommand",
     "BridgeExtGroup",
@@ -627,3 +628,38 @@ class BridgeOption(Option, Converter):
             return converted
         except ValueError as exc:
             raise BadArgument() from exc
+
+
+def bridge_option(name, input_type=None, **kwargs):
+    """A decorator that can be used instead of typehinting :class:`.BridgeOption`.
+
+    .. versionadded:: 2.6
+
+    Attributes
+    ----------
+    parameter_name: :class:`str`
+        The name of the target parameter this option is mapped to.
+        This allows you to have a separate UI ``name`` and parameter name.
+    """
+
+    def decorator(func):
+        resolved_name = kwargs.pop("parameter_name", None) or name
+        itype = (
+            kwargs.pop("type", None)
+            or input_type
+            or func.__annotations__.get(resolved_name, str)
+        )
+        func.__annotations__[resolved_name] = BridgeOption(itype, name=name, **kwargs)
+        return func
+
+    return decorator
+
+
+discord.commands.options.Option = BridgeOption
+discord.Option = BridgeOption
+warn_deprecated(
+    "Option",
+    "BridgeOption",
+    "2.5",
+    reference="https://github.com/Pycord-Development/pycord/pull/2417",
+)
