@@ -395,7 +395,7 @@ class OptionChoice:
         return as_dict
 
 
-def option(name, type=None, **kwargs):
+def option(name, input_type=None, **kwargs):
     """A decorator that can be used instead of typehinting :class:`.Option`.
 
     .. versionadded:: 2.0
@@ -409,11 +409,9 @@ def option(name, type=None, **kwargs):
 
     def decorator(func):
         nonlocal type
-        type = type or func.__annotations__.get(name, str)
-        if parameter := kwargs.get("parameter_name"):
-            func.__annotations__[parameter] = Option(type, name=name, **kwargs)
-        else:
-            func.__annotations__[name] = Option(type, **kwargs)
+        resolved_name = kwargs.pop("parameter_name") or name
+        type = kwargs.pop("type") or input_type or func.__annotations__.get(resolved_name, str)
+        func.__annotations__[resolved_name] = Option(type, name=name, **kwargs)
         return func
 
     return decorator
