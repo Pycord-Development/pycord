@@ -997,8 +997,12 @@ class DefaultHelpCommand(HelpCommand):
         get_width = discord.utils._string_width
         last_name = ""  # check name duplicates
         last_parent = ""  # make sure those duplicates are under the same parent
-        for command_name, command_parent, command in [(command.name, command.parent, command) for command in commands]:  # unpack parameters of command for each of the commands
-            if last_name == command_name and command_parent == last_parent:  # check if the last command is the same group and name
+        for command_name, command_parent, command in [
+            (command.name, command.parent, command) for command in commands
+        ]:  # unpack parameters of command for each of the commands
+            if (
+                last_name == command_name and command_parent == last_parent
+            ):  # check if the last command is the same group and name
                 continue
             last_name = command_name
             last_parent = command_parent
