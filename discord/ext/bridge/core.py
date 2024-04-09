@@ -641,10 +641,9 @@ def bridge_option(name, input_type=None, **kwargs):
     """
 
     def decorator(func):
-        nonlocal type
         resolved_name = kwargs.pop("parameter_name") or name
-        type = kwargs.pop("type") or input_type or func.__annotations__.get(resolved_name, str)
-        func.__annotations__[resolved_name] = BridgeOption(type, name=name, **kwargs)
+        itype = kwargs.pop("type") or input_type or func.__annotations__.get(resolved_name, str)
+        func.__annotations__[resolved_name] = BridgeOption(itype, name=name, **kwargs)
         return func
 
     return decorator
