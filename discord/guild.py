@@ -2027,9 +2027,7 @@ class Guild(Hashable):
 
         return MemberIterator(self, limit=limit, after=after)
 
-    def search_members(
-        self, query: str, *, limit: int | None = 1000
-    ) -> MemberIterator:
+    def search_members(self, query: str, *, limit: int | None = 1000) -> MemberIterator:
         """Retrieves an :class:`.AsyncIterator` that enables searching for guild members whose usernames or nicknames start with the query string. Unlike :meth:`fetch_members`, this does not require :meth:`Intents.members`.
 
         .. note::

@@ -656,7 +656,9 @@ class MemberIterator(_AsyncIterator["Member"]):
         self.query = query
 
         self.state = self.guild._state
-        self.get_members = self.state.http.search_members if query else self.state.http.get_members
+        self.get_members = (
+            self.state.http.search_members if query else self.state.http.get_members
+        )
         self.members = asyncio.Queue()
 
     async def next(self) -> Member:
@@ -688,7 +690,7 @@ class MemberIterator(_AsyncIterator["Member"]):
 
         if len(data) < 1000:
             self.limit = 0  # terminate loop
-        
+
         if not self.query:
             self.after = Object(id=int(data[-1]["user"]["id"]))
 
