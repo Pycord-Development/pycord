@@ -661,5 +661,5 @@ warn_deprecated(
     "Option",
     "BridgeOption",
     "2.5",
-    reference="https://github.com/Pycord-Development/pycord/pull/2410",
+    reference="https://github.com/Pycord-Development/pycord/pull/2417",
 )
