@@ -2041,7 +2041,7 @@ class Guild(Hashable):
         Parameters
         ----------
         query: :class:`str`
-            Searches for usernames and nicknames that start with this string.
+            Searches for usernames and nicknames that start with this string, case-insensitive.
         limit: Optional[:class:`int`]
             The maximum number of members to retrieve. Defaults to 1000.
             Pass ``None`` to fetch all members matching the query. Note that this is potentially slow.
