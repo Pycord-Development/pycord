@@ -995,11 +995,13 @@ class DefaultHelpCommand(HelpCommand):
         max_size = max_size or self.get_max_size(commands)
 
         get_width = discord.utils._string_width
-        last_name = ""
-        for command_name, command in [(command.name, command) for command in commands]:
-            if last_name == command_name:
+        last_name = ""  # check name duplicates
+        last_parent = ""  # make sure those duplicates are under the same parent
+        for command_name, command_parent, command in [(command.name, command.parent, command) for command in commands]:  # unpack parameters of command for each of the commands
+            if last_name == command_name and command_parent == last_parent:  # check if the last command is the same group and name
                 continue
             last_name = command_name
+            last_parent = command_parent
             width = max_size - (get_width(command_name) - len(command_name))
             entry = f'{self.indent * " "}{command_name:<{width}} {command.short_doc}'
             self.paginator.add_line(self.shorten_text(entry))
