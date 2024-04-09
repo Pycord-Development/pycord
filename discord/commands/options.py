@@ -408,8 +408,8 @@ def option(name, input_type=None, **kwargs):
     """
 
     def decorator(func):
-        resolved_name = kwargs.pop("parameter_name") or name
-        itype = kwargs.pop("type") or input_type or func.__annotations__.get(resolved_name, str)
+        resolved_name = kwargs.pop("parameter_name", None) or name
+        itype = kwargs.pop("type", None) or input_type or func.__annotations__.get(resolved_name, str)
         func.__annotations__[resolved_name] = Option(itype, name=name, **kwargs)
         return func
 
