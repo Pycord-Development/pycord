@@ -1067,6 +1067,16 @@ class Message(Hashable):
         )
         return self._interaction
 
+    @interaction.setter
+    def interaction(self, value: MessageInteraction | None) -> None:
+        utils.warn_deprecated(
+            "interaction",
+            "interaction_metadata",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        self._interaction = value
+
     @utils.cached_slot_property("_cs_raw_mentions")
     def raw_mentions(self) -> list[int]:
         """A property that returns an array of user IDs matched with
