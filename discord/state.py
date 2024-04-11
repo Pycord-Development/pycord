@@ -64,7 +64,7 @@ from .message import Message
 from .monetization import Entitlement
 from .object import Object
 from .partial_emoji import PartialEmoji
-from .poll import PollAnswerCount
+from .poll import PollAnswerCount, Poll
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent
@@ -82,7 +82,7 @@ if TYPE_CHECKING:
     from .guild import GuildChannel, VocalGuildChannel
     from .http import HTTPClient
     from .message import MessageableChannel
-    from .poll import Poll
+    from .types.poll import Poll as PollPayload
     from .types.activity import Activity as ActivityPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
@@ -444,6 +444,13 @@ class ConnectionState:
     def polls(self) -> list[Poll]:
         return list(self._polls.values())
 
+    def store_raw_poll(self, poll: PollPayload, raw):
+        channel = self.get_channel(raw.channel_id) or PartialMessageable(state=self, id=raw.channel_id)
+        message = channel.get_partial_message(raw.message_id)
+        p = Poll.from_dict(poll, message)
+        self._polls[message.id] = p
+        return p
+
     def store_poll(self, poll: Poll, message_id: int):
         self._polls[message_id] = poll
 
@@ -701,6 +708,8 @@ class ConnectionState:
         if self._messages is not None:
             self._messages.append(message)
         # we ensure that the channel is either a TextChannel, VoiceChannel, StageChannel, or Thread
+        # if message.poll:
+        #     self.dispatch("poll_create", message.poll)
         if channel and channel.__class__ in (
             TextChannel,
             VoiceChannel,
@@ -747,6 +756,11 @@ class ConnectionState:
             older_message.author = message.author
             self.dispatch("message_edit", older_message, message)
         else:
+            if poll_data := data.get("poll"):
+                old = self.get_poll(raw.message_id)
+                poll = self.store_raw_poll(poll_data, raw)
+                if old and not old.results.is_finalized and poll.results.is_finalized:
+                    pass  # Dispatch event on poll end? No separate event so far, but we will get new poll intents
             self.dispatch("raw_message_edit", raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
