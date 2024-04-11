@@ -64,6 +64,7 @@ from .message import Message
 from .monetization import Entitlement
 from .object import Object
 from .partial_emoji import PartialEmoji
+from .poll import PollAnswerCount
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent
@@ -81,6 +82,7 @@ if TYPE_CHECKING:
     from .guild import GuildChannel, VocalGuildChannel
     from .http import HTTPClient
     from .message import MessageableChannel
+    from .poll import Poll
     from .types.activity import Activity as ActivityPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
@@ -278,6 +280,7 @@ class ConnectionState:
         self._emojis: dict[int, Emoji] = {}
         self._stickers: dict[int, GuildSticker] = {}
         self._guilds: dict[int, Guild] = {}
+        self._polls: dict[int, Guild] = {}
         if views:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)
@@ -436,6 +439,16 @@ class ConnectionState:
     def get_sticker(self, sticker_id: int | None) -> GuildSticker | None:
         # the keys of self._stickers are ints
         return self._stickers.get(sticker_id)  # type: ignore
+
+    @property
+    def polls(self) -> list[Poll]:
+        return list(self._polls.values())
+
+    def store_poll(self, poll: Poll, message_id: int):
+        self._polls[message_id] = poll
+
+    def get_poll(self, message_id):
+        return self._polls.get(message_id)
 
     @property
     def private_channels(self) -> list[PrivateChannel]:
@@ -835,10 +848,24 @@ class ConnectionState:
         self.dispatch("raw_poll_vote_add", raw)
 
         message = self._get_message(raw.message_id)
+        poll = self.get_poll(raw.message_id)
+        # if message was cached, poll has already updated
         if message is not None and user is not None:
             answer = message.poll.get_answer(raw.answer_id)
             if answer is not None:
                 self.dispatch("poll_vote_add", message, user, answer)
+        elif not message and poll:
+            answer = poll.get_answer(raw.answer_id)
+            counts = poll.results._answer_counts
+            if answer is not None:
+                if answer.id in counts:
+                    counts[answer.id].count += 1
+                else:
+                    counts[answer.id] = PollAnswerCount({
+                        "id": answer.id,
+                        "count": 1,
+                        "me_voted": False
+                    })
 
     def parse_message_poll_vote_remove(self, data) -> None:
         raw = RawMessagePollVoteEvent(data, False)
@@ -850,10 +877,20 @@ class ConnectionState:
         self.dispatch("raw_poll_vote_remove", raw)
 
         message = self._get_message(raw.message_id)
+        poll = self.get_poll(raw.message_id)
+        # if message was cached, poll has already updated
         if message is not None and user is not None:
             answer = message.poll.get_answer(raw.answer_id)
             if answer is not None:
                 self.dispatch("poll_vote_remove", message, user, answer)
+        elif not message and poll:
+            answer = poll.get_answer(raw.answer_id)
+            counts = poll.results._answer_counts
+            if answer is not None:
+                if answer.id in counts:
+                    counts[answer.id].count -= 1
+                    if counts[answer.id] < 1:
+                        counts.pop(answer.id)
 
     def parse_interaction_create(self, data) -> None:
         interaction = Interaction(data=data, state=self)

@@ -81,6 +81,7 @@ if TYPE_CHECKING:
     from .types.message import MessageApplication as MessageApplicationPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import Reaction as ReactionPayload
+    from .types.poll import Poll as PollPayload
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
     from .ui.view import View
@@ -854,9 +855,10 @@ class Message(Hashable):
         except KeyError:
             self.interaction = None
 
-        self.poll: Poll | None
+        self._poll: Poll | None
         try:
-            self.poll = Poll.from_dict(data["poll"], message=self)
+            self._poll = Poll.from_dict(data["poll"], message=self)
+            self._state.store_poll(self._poll, self.id)
         except KeyError:
             self.poll = None
 
@@ -994,6 +996,10 @@ class Message(Hashable):
 
     def _handle_nonce(self, value: str | int) -> None:
         self.nonce = value
+
+    def _handle_poll(self, value: PollPayload) -> None:
+        self._poll = Poll.from_dict(value)
+        self._state.store_poll(self._poll, self.id)
 
     def _handle_author(self, author: UserPayload) -> None:
         self.author = self._state.store_user(author)
@@ -1149,6 +1155,10 @@ class Message(Hashable):
         """Returns a URL that allows the client to jump to this message."""
         guild_id = getattr(self.guild, "id", "@me")
         return f"https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}"
+
+    @property
+    def poll(self) -> Poll | None:
+        return self._state._polls.get(self.id)
 
     def is_system(self) -> bool:
         """Whether the message is a system message.

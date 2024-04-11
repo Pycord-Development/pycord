@@ -339,6 +339,14 @@ class Client:
         return self._connection.stickers
 
     @property
+    def stickers(self) -> list[GuildSticker]:
+        """The polls that the connected client has.
+
+        .. versionadded:: 2.6
+        """
+        return self._connection.polls
+
+    @property
     def cached_messages(self) -> Sequence[Message]:
         """Read-only list of messages the connected client has cached.
 

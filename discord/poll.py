@@ -173,7 +173,7 @@ class PollAnswer:
         return answer
 
     def __repr__(self) -> str:
-        return f"<Pollmedia id={self.id!r} media={self.media!r}>"
+        return f"<PollAnswer id={self.id!r} text={self.text!r} emoji={self.emoji!r}>"
 
     def users(
         self, *, limit: int | None = None, after: Snowflake | None = None
@@ -278,7 +278,7 @@ class PollResults:
 
     def __init__(self, data: PollResultsPayload):
         self.is_finalized = data.get("is_finalized")
-        self.answer_counts = [PollAnswerCount(a) for a in data.get("answer_counts", [])]
+        self._answer_counts = {a['id']: PollAnswerCount(a) for a in data.get("answer_counts", [])}
 
     def to_dict(self) -> PollResultsPayload:
         return {
@@ -288,6 +288,10 @@ class PollResults:
 
     def __repr__(self) -> str:
         return f"<PollResults is_finalized={self.is_finalized!r} total_votes={self.total_votes()!r}>"
+    
+    @property
+    def answer_counts(self) -> List[PollAnswerCount]:
+        return list(self._answer_counts.values())
 
     def total_votes(self) -> int:
         """
