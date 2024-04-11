@@ -860,7 +860,7 @@ class Message(Hashable):
             self._poll = Poll.from_dict(data["poll"], message=self)
             self._state.store_poll(self._poll, self.id)
         except KeyError:
-            self.poll = None
+            self._poll = None
 
         self.thread: Thread | None
         try:
