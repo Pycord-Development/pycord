@@ -70,6 +70,7 @@ if TYPE_CHECKING:
     from .channel import DMChannel
     from .member import Member
     from .message import Message
+    from .poll import Poll
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -339,7 +340,7 @@ class Client:
         return self._connection.stickers
 
     @property
-    def stickers(self) -> list[GuildSticker]:
+    def polls(self) -> list[Poll]:
         """The polls that the connected client has.
 
         .. versionadded:: 2.6
