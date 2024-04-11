@@ -337,7 +337,7 @@ class Poll:
         allow_multiselect: bool | None = False,
         layout_type: PollLayoutType | None = PollLayoutType.default,
     ):
-        self.question = question if isinstance(question, PollMedia) else PollMedia(str)
+        self.question = question if isinstance(question, PollMedia) else PollMedia(question)
         self.answers: list[PollAnswer] = answers or []
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
