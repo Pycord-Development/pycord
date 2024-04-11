@@ -1637,7 +1637,10 @@ class HTTPClient:
         return self.request(r, params=params)
 
     def search_members(
-        self, guild_id: Snowflake, query: str, limit: int, 
+        self,
+        guild_id: Snowflake,
+        query: str,
+        limit: int,
     ) -> Response[list[member.MemberWithUser]]:
         params: dict[str, Any] = {
             "query": query,
