@@ -2027,8 +2027,8 @@ class Guild(Hashable):
 
         return MemberIterator(self, limit=limit, after=after)
 
-    def search_members(self, query: str, *, limit: int | None = 1000) -> MemberIterator:
-        """Retrieves an :class:`.AsyncIterator` that enables searching for guild members whose usernames or nicknames start with the query string. Unlike :meth:`fetch_members`, this does not require :meth:`Intents.members`.
+    async def search_members(self, query: str, *, limit: int = 1000) -> list[Member]:
+        """Search for guild members whose usernames or nicknames start with the query string. Unlike :meth:`fetch_members`, this does not require :meth:`Intents.members`.
 
         .. note::
 
@@ -2041,34 +2041,21 @@ class Guild(Hashable):
         query: :class:`str`
             Searches for usernames and nicknames that start with this string, case-insensitive.
         limit: Optional[:class:`int`]
-            The maximum number of members to retrieve. Defaults to 1000.
-            Pass ``None`` to fetch all members matching the query. Note that this is potentially slow.
+            The maximum number of members to retrieve, up to 1000.
 
-        Yields
-        ------
-        :class:`.Member`
-            The member with the member data parsed.
+        Returns
+        -------
+        List[:class:`Member`]
+            The list of members that have matched the query.
 
         Raises
         ------
         HTTPException
             Getting the members failed.
-
-        Examples
-        --------
-
-        Usage ::
-
-            async for member in guild.search_members(query="Bob"):
-                print(member.name)
-
-        Flattening into a list ::
-
-            members = await guild.search_members(query="Lala").flatten()
-            # members is now a list of Member...
         """
 
-        return MemberIterator(self, limit=limit, query=query)
+        data = await self._state.http.search_members(self.id, query, limit)
+        return [Member(data=m, guild=self, state=self._state) for m in data]
 
     async def fetch_member(self, member_id: int, /) -> Member:
         """|coro|
