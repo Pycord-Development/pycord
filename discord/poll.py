@@ -292,7 +292,7 @@ class PollResults:
         return f"<PollResults is_finalized={self.is_finalized!r} total_votes={self.total_votes()!r}>"
 
     @property
-    def answer_counts(self) -> List[PollAnswerCount]:
+    def answer_counts(self) -> list[PollAnswerCount]:
         return list(self._answer_counts.values())
 
     def total_votes(self) -> int:
