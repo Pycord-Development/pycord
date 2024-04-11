@@ -3354,7 +3354,7 @@ class Guild(Hashable):
 
             .. versionadded:: 1.4
         limit: Optional[:class:`int`]
-            The maximum number of members to send back. If no query is passed, pass ``None`` to return all members. 
+            The maximum number of members to send back. If no query is passed, pass ``None`` to return all members.
             If you specify a ``query`` or ``user_ids``, this must be between 1 and 100. Defaults to 5.
         presences: Optional[:class:`bool`]
             Whether to request for presences to be provided. This defaults
@@ -3386,7 +3386,9 @@ class Guild(Hashable):
 
         if not limit or limit > 100 or limit < 1:
             if query or user_ids:
-                raise ValueError("limit must be between 1 and 100 when using query or user_ids")
+                raise ValueError(
+                    "limit must be between 1 and 100 when using query or user_ids"
+                )
             if not limit:
                 query = ""
                 limit = 0
