@@ -363,6 +363,8 @@ class Poll:
     def from_dict(
         cls, data: PollPayload, message: Message | PartialMessage | None = None
     ) -> Poll:
+        if not data:
+            return None
         poll = cls(
             question=PollMedia.from_dict(data["question"], message=message),
             answers=[
