@@ -381,8 +381,7 @@ class Poll:
             allow_multiselect=data.get("allow_multiselect"),
             layout_type=try_enum(PollLayoutType, data.get("layout_type", 1)),
         )
-        if results := data.get("results"):
-            poll.results = PollResults(results)
+        poll.results = PollResults(data.get("results") or {})
         poll._expiry = data.get("expiry")
         poll._message = message
         for a in poll.answers:
