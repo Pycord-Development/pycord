@@ -859,11 +859,11 @@ class ConnectionState:
                 else:
                     counts[answer.id] = PollAnswerCount(
                         {"id": answer.id, "count": 1, "me_voted": False}
+                    )
         if message is not None and user is not None:
             answer = message.poll.get_answer(raw.answer_id)
             if answer is not None:
                 self.dispatch("poll_vote_add", message, user, answer)
-                    )
 
     def parse_message_poll_vote_remove(self, data) -> None:
         raw = RawMessagePollVoteEvent(data, False)
