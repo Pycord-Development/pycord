@@ -64,7 +64,7 @@ from .message import Message
 from .monetization import Entitlement
 from .object import Object
 from .partial_emoji import PartialEmoji
-from .poll import PollAnswerCount, Poll
+from .poll import Poll, PollAnswerCount
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent
@@ -82,12 +82,12 @@ if TYPE_CHECKING:
     from .guild import GuildChannel, VocalGuildChannel
     from .http import HTTPClient
     from .message import MessageableChannel
-    from .types.poll import Poll as PollPayload
     from .types.activity import Activity as ActivityPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
+    from .types.poll import Poll as PollPayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
     from .voice_client import VoiceProtocol
@@ -445,7 +445,9 @@ class ConnectionState:
         return list(self._polls.values())
 
     def store_raw_poll(self, poll: PollPayload, raw):
-        channel = self.get_channel(raw.channel_id) or PartialMessageable(state=self, id=raw.channel_id)
+        channel = self.get_channel(raw.channel_id) or PartialMessageable(
+            state=self, id=raw.channel_id
+        )
         message = channel.get_partial_message(raw.message_id)
         p = Poll.from_dict(poll, message)
         self._polls[message.id] = p
