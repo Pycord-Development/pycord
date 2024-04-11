@@ -767,7 +767,7 @@ class Message(Hashable):
         "guild",
         "interaction",
         "thread",
-        "poll",
+        "_poll",
     )
 
     if TYPE_CHECKING:
