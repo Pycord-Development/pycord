@@ -314,14 +314,14 @@ class Poll:
 
     Attributes
     ----------
-    question: :class:`PollMedia`
-        The poll's question data. Question text can be up to 300 characters.
+    question: Union[:class:`PollMedia`, :class:`str`]
+        The poll's question media, or a ``str`` representing the question text. Question text can be up to 300 characters.
     answers: List[:class:`PollAnswer`]
         A list of the poll's answers. A maximum of 10 answers can be set.
     duration: Optional[:class:`int`]
-        The number of hours until this poll expires. Users must provide this when creating a poll, but Discord returns :attr:`expiry` instead.
+        The number of hours until this poll expires. Users must specify this when creating a poll, but existing polls return :attr:`expiry` instead. Defaults to 24.
     allow_multiselect: :class:`bool`
-        Whether multiple answers can be selected.
+        Whether multiple answers can be selected. Defaults to ``False``.
     layout_type: :class:`PollLayoutType`
         The poll's layout type. Only one exists at the moment.
     results: :class:`PollResults`
@@ -330,15 +330,15 @@ class Poll:
 
     def __init__(
         self,
+        question: PollMedia | str,
         *,
-        question: PollMedia,
-        answers: list[PollAnswer],
-        duration: int,
-        allow_multiselect: bool,
-        layout_type: PollLayoutType = PollLayoutType.default,
+        answers: list[PollAnswer] | None = None,
+        duration: int | None = 24,
+        allow_multiselect: bool | None = False,
+        layout_type: PollLayoutType | None = PollLayoutType.default,
     ):
-        self.question = question
-        self.answers: list[PollAnswer] = answers
+        self.question = question if isinstance(question, PollMedia) else PollMedia(str)
+        self.answers: list[PollAnswer] = answers or []
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
         self.layout_type: PollLayoutType = layout_type
@@ -393,6 +393,60 @@ class Poll:
 
     def get_answer(self, id) -> PollAnswer | None:
         return utils.get(self.answers, id=id)
+
+    def add_answer(self, text: str, *, emoji: Emoji | PartialEmoji | str | None = None) -> Poll:
+        """Add an answer to this poll.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        Attributes
+        ----------
+        text: :class:`str`
+            The answer text.
+        emoji: Optional[:class:`Emoji`]
+            The answer's emoji.
+
+        Raises
+        ------
+        ValueError
+            The poll already has 10 answers.
+        RuntimeError
+            You cannot add an answer to an existing poll.
+        """
+        if len(self.answers) >= 10:
+            raise ValueError("Polls may only have up to 10 answers.")
+        if self.expiry or self._message:
+            raise RuntimeError("You cannot add answers to an existing poll.")
+        
+        self.answers.append(PollAnswer(text, emoji))
+        return self
+
+    def remove_answer(self, id: int) -> Poll:
+        """Remove an answer from this poll.
+
+        This function returns the class instance to allow for fluent-style
+        chaining.
+
+        Attributes
+        ----------
+        id: :class:`int`
+            The answer ID you wish to remove.
+
+        Raises
+        ------
+        ValueError
+            The poll already has 10 answers.
+        RuntimeError
+            You cannot add an answer to an existing poll.
+        """
+        if self.expiry or self._message:
+            raise RuntimeError("You cannot remove answers from an existing poll.")
+        if not (answer := self.get_answer(id)):
+            raise ValueError(f"Answer {id} does not exist.")
+        
+        self.answers.remove(answer)
+        return self
 
     async def expire(self) -> Message:
         """
