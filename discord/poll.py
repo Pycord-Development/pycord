@@ -426,32 +426,6 @@ class Poll:
         self.answers.append(PollAnswer(text, emoji))
         return self
 
-    def remove_answer(self, id: int) -> Poll:
-        """Remove an answer from this poll.
-
-        This function returns the class instance to allow for fluent-style
-        chaining.
-
-        Attributes
-        ----------
-        id: :class:`int`
-            The answer ID you wish to remove.
-
-        Raises
-        ------
-        ValueError
-            The poll already has 10 answers.
-        RuntimeError
-            You cannot add an answer to an existing poll.
-        """
-        if self.expiry or self._message:
-            raise RuntimeError("You cannot remove answers from an existing poll.")
-        if not (answer := self.get_answer(id)):
-            raise ValueError(f"Answer {id} does not exist.")
-
-        self.answers.remove(answer)
-        return self
-
     async def expire(self) -> Message:
         """
         Immediately ends this poll, if attached to a message. Only doable by the poll's owner.
