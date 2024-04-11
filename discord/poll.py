@@ -394,7 +394,9 @@ class Poll:
     def get_answer(self, id) -> PollAnswer | None:
         return utils.get(self.answers, id=id)
 
-    def add_answer(self, text: str, *, emoji: Emoji | PartialEmoji | str | None = None) -> Poll:
+    def add_answer(
+        self, text: str, *, emoji: Emoji | PartialEmoji | str | None = None
+    ) -> Poll:
         """Add an answer to this poll.
 
         This function returns the class instance to allow for fluent-style
@@ -418,7 +420,7 @@ class Poll:
             raise ValueError("Polls may only have up to 10 answers.")
         if self.expiry or self._message:
             raise RuntimeError("You cannot add answers to an existing poll.")
-        
+
         self.answers.append(PollAnswer(text, emoji))
         return self
 
@@ -444,7 +446,7 @@ class Poll:
             raise RuntimeError("You cannot remove answers from an existing poll.")
         if not (answer := self.get_answer(id)):
             raise ValueError(f"Answer {id} does not exist.")
-        
+
         self.answers.remove(answer)
         return self
 
