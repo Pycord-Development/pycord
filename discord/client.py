@@ -1019,7 +1019,7 @@ class Client:
         """
         return self._connection.get_sticker(id)
 
-    def get_poll(self, id: int, /) -> Emoji | None:
+    def get_poll(self, id: int, /) -> Poll | None:
         """Returns a poll attached to the given message ID.
 
         Parameters
