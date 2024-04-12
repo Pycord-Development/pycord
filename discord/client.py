@@ -1019,6 +1019,21 @@ class Client:
         """
         return self._connection.get_sticker(id)
 
+    def get_poll(self, id: int, /) -> Emoji | None:
+        """Returns a poll attached to the given message ID.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The message ID of the poll to search for.
+
+        Returns
+        -------
+        Optional[:class:`.Poll`]
+            The poll or ``None`` if not found.
+        """
+        return self._connection.get_poll(id)
+
     def get_all_channels(self) -> Generator[GuildChannel, None, None]:
         """A generator that retrieves every :class:`.abc.GuildChannel` the client can 'access'.
 
