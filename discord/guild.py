@@ -3395,7 +3395,7 @@ class Guild(Hashable):
 
         if query is None:
             if user_ids is None:
-                raise ValueError("Must pass query, user_ids, or set limit to None")
+                raise ValueError("Must pass query or user_ids, or set limit to None")
 
         if user_ids is not None and query is not None:
             raise ValueError("Cannot pass both query and user_ids")
