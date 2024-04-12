@@ -18,6 +18,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 - Added `bridge_option` decorator. Required for `bridge.Bot` in 2.7.
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- Added `Guild.search_members`.
+  ([#2418](https://github.com/Pycord-Development/pycord/pull/2418))
 
 ### Fixed
 
