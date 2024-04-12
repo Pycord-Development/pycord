@@ -12,8 +12,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added `member` to the `raw_reaction_remove` event.
-  ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
 - Added `banner` parameter to `ClientUser.edit`.
   ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))
 - Added `user` argument to `Paginator.edit`.
@@ -22,6 +20,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
 - Added `Guild.search_members`.
   ([#2418](https://github.com/Pycord-Development/pycord/pull/2418))
+- Added `member` data to the `raw_reaction_remove` event.
+  ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
 
 ### Fixed
 
