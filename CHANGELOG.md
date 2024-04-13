@@ -20,7 +20,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
 - Added `Guild.search_members`.
   ([#2418](https://github.com/Pycord-Development/pycord/pull/2418))
-- Added bulk banning up to 200 users through `Guild.ban`
+- Added bulk banning up to 200 users through `Guild.ban`.
   ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
 
 ### Fixed
