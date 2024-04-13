@@ -3073,7 +3073,7 @@ class Guild(Hashable):
 
     async def ban(
         self,
-        user: Snowflake,
+        *users: Snowflake,
         *,
         delete_message_seconds: int | None = None,
         delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
@@ -3081,17 +3081,17 @@ class Guild(Hashable):
     ) -> None:
         """|coro|
 
-        Bans a user from the guild.
+        Bans users from the guild.
 
-        The user must meet the :class:`abc.Snowflake` abc.
+        The users must meet the :class:`abc.Snowflake` abc.
 
         You must have the :attr:`~Permissions.ban_members` permission to
         do this.
 
         Parameters
         ----------
-        user: :class:`abc.Snowflake`
-            The user to ban from their guild.
+        \*users: :class:`abc.Snowflake`
+            An argument list of users to ban from the guild, up to 200.
         delete_message_seconds: Optional[:class:`int`]
             The number of seconds worth of messages to delete from
             the user in the guild. The minimum is 0 and the maximum
@@ -3100,14 +3100,32 @@ class Guild(Hashable):
             ***Deprecated parameter***, same as ``delete_message_seconds`` but
             is used for days instead.
         reason: Optional[:class:`str`]
-            The reason the user got banned.
+            The reason the users got banned.
+
+        Returns
+        -------
+        Optional[List[List[:class:`Snowflake`], List[:class:`Snowflake`]]]
+            If banning a single member, returns nothing. Otherwise, returns two lists; 
 
         Raises
         ------
+        ValueError
+            You tried to ban more than 200 users.
         Forbidden
             You do not have the proper permissions to ban.
         HTTPException
-            Banning failed.
+            No users were banned.
+
+        Example Usage: ::
+
+            # Ban a single member
+            await guild.ban(member, reason="Spam")
+
+            # Ban multiple members
+            successes, failures = await guild.ban(member1, member2, member3, ..., reason="Raid")
+
+            # Ban a list of members
+            successes, failures = await guild.ban(*members, reason="Hacked")
         """
         if delete_message_seconds and delete_message_days:
             raise TypeError(
@@ -3120,10 +3138,21 @@ class Guild(Hashable):
             raise TypeError(
                 "delete_message_seconds must be between 0 and 604800 seconds."
             )
+        
+        if len(users) == 1:
+            await self._state.http.ban(
+                users[0].id, self.id, delete_message_seconds, delete_message_days, reason=reason
+            )
+        elif len(users) > 200:
+            raise ValueError("You may only bulk ban up to 200 members.")
+        else:
+            data = await self._state.http.bulk_ban(
+                [u.id for u in users], self.id, delete_message_seconds, delete_message_days, reason=reason
+            )
+            banned = [u for u in users if u.id in data["banned_users"]]
+            failed = [u for u in users if u.id in data["failed_users"]]
+            return banned, failed
 
-        await self._state.http.ban(
-            user.id, self.id, delete_message_seconds, delete_message_days, reason=reason
-        )
 
     async def unban(self, user: Snowflake, *, reason: str | None = None) -> None:
         """|coro|
