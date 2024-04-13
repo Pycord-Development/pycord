@@ -3156,8 +3156,8 @@ class Guild(Hashable):
                 delete_message_days,
                 reason=reason,
             )
-            banned = [u for u in users if u.id in data["banned_users"]]
-            failed = [u for u in users if u.id in data["failed_users"]]
+            banned = [u for u in users if str(u.id) in data["banned_users"]]
+            failed = [u for u in users if str(u.id) in data["failed_users"]]
             return banned, failed
 
     async def unban(self, user: Snowflake, *, reason: str | None = None) -> None:
