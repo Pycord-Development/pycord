@@ -3077,15 +3077,26 @@ class Guild(Hashable):
         delete_message_seconds: int | None = None,
         delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
-    ) -> None:
+    ) -> list[list[Snowflake], list[Snowflake]] | None:
         r"""|coro|
 
-        Bans users from the guild.
+        Bans user(s) from the guild.
 
-        The users must meet the :class:`abc.Snowflake` abc.
+        The user(s) must meet the :class:`abc.Snowflake` abc.
 
         You must have the :attr:`~Permissions.ban_members` permission to
         do this.
+
+        Example Usage: ::
+
+            # Ban a single user
+            await guild.ban(user, reason="Spam")
+
+            # Ban multiple users
+            successes, failures = await guild.ban(user1, user2, user3, ..., reason="Raid")
+
+            # Ban a list of users
+            successes, failures = await guild.ban(*users)
 
         Parameters
         ----------
@@ -3114,17 +3125,6 @@ class Guild(Hashable):
             You do not have the proper permissions to ban.
         HTTPException
             No users were banned.
-
-        Example Usage: ::
-
-            # Ban a single member
-            await guild.ban(member, reason="Spam")
-
-            # Ban multiple members
-            successes, failures = await guild.ban(member1, member2, member3, ..., reason="Raid")
-
-            # Ban a list of members
-            successes, failures = await guild.ban(*members, reason="Hacked")
         """
         if delete_message_seconds and delete_message_days:
             raise TypeError(
@@ -3147,7 +3147,7 @@ class Guild(Hashable):
                 reason=reason,
             )
         elif len(users) > 200:
-            raise ValueError("You may only bulk ban up to 200 members.")
+            raise ValueError("The number of users to be banned must be between 1 and 200.")
         else:
             data = await self._state.http.bulk_ban(
                 [u.id for u in users],
