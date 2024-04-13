@@ -917,7 +917,7 @@ Polls
     if the message is not found in the internal message cache, then this
     event will not be called. Consider using :func:`on_raw_poll_vote_add` instead.
 
-    This requires :attr:`Intents.reactions` to be enabled.
+    This requires :attr:`Intents.polls` to be enabled.
 
     :param message: The message the poll belongs to.
     :type message: :class:`Message`
@@ -931,7 +931,7 @@ Polls
     Called when a poll is voted on. Unlike :func:`on_poll_vote_add`, this is
     called regardless of the state of the internal message cache.
 
-    This requires :attr:`Intents.reactions` to be enabled.
+    This requires :attr:`Intents.polls` to be enabled.
 
     :param payload: The raw event payload data.
     :type payload: :class:`RawMessagePollVoteEvent`
@@ -942,7 +942,7 @@ Polls
     if the message is not found in the internal message cache, then this
     event will not be called. Consider using :func:`on_raw_poll_vote_remove` instead.
 
-    This requires :attr:`Intents.reactions` to be enabled.
+    This requires :attr:`Intents.polls` to be enabled.
 
     :param message: The message the poll belongs to.
     :type message: :class:`Message`
@@ -956,7 +956,7 @@ Polls
     Called when a poll vote is removed. Unlike :func:`on_poll_vote_remove`, this is
     called regardless of the state of the internal message cache.
 
-    This requires :attr:`Intents.reactions` to be enabled.
+    This requires :attr:`Intents.polls` to be enabled.
 
     :param payload: The raw event payload data.
     :type payload: :class:`RawMessagePollVoteEvent`
