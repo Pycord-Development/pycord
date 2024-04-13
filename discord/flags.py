@@ -1155,7 +1155,7 @@ class Intents(BaseFlags):
         - :attr:`Message.polls` (both guild and DM messages)
         - :attr:`Client.polls` (both guild and DM messages)
         """
-        return None  # (1 << 10) | (1 << 13)
+        return (1 << 24) | (1 << 25)
 
     @flag_value
     def guild_polls(self):
@@ -1175,7 +1175,7 @@ class Intents(BaseFlags):
         - :attr:`Message.poll` (only for guild messages)
         - :attr:`Client.polls` (only for guild polls)
         """
-        return None  # 1 << 10
+        return 1 << 24
 
     @flag_value
     def dm_polls(self):
@@ -1195,7 +1195,7 @@ class Intents(BaseFlags):
         - :attr:`Message.poll` (only for DM messages)
         - :attr:`Client.polls` (only for DM polls)
         """
-        return None  # 1 << 13
+        return 1 << 25
 
 
 @fill_with_flags()
