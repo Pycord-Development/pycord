@@ -940,7 +940,7 @@ class HTTPClient:
         reason: str | None = None,
     ) -> Response[guild.GuildBulkBan]:
         r = Route(
-            "PUT",
+            "POST",
             "/guilds/{guild_id}/bulk-ban",
             guild_id=guild_id,
         )
