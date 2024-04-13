@@ -3114,8 +3114,8 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[List[List[:class:`Snowflake`], List[:class:`Snowflake`]]]
-            If banning a single member, returns nothing. Otherwise, returns two lists;
+        Optional[List[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]]
+            If banning a single member, returns nothing. Otherwise, returns two lists: the first contains members that were successfully banned, while the second is members that could not be banned.
 
         Raises
         ------
