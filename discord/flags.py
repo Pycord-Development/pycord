@@ -917,6 +917,7 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for guilds)
         - :meth:`Client.get_message` (only for guilds)
+        - :meth:`Client.get_poll`
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -931,6 +932,8 @@ class Intents(BaseFlags):
         - :attr:`Message.embeds`
         - :attr:`Message.attachments`
         - :attr:`Message.components`
+        - :attr:`Message.poll`
+        - :attr:`Client.polls`
 
         For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
         """
@@ -1152,8 +1155,8 @@ class Intents(BaseFlags):
 
         This also corresponds to the following attributes and classes in terms of cache:
 
-        - :attr:`Message.polls` (both guild and DM messages)
-        - :attr:`Client.polls` (both guild and DM messages)
+        - :attr:`PollAnswer.count` (both guild and DM polls)
+        - :attr:`PollResults.answer_counts` (both guild and DM polls)
         """
         return (1 << 24) | (1 << 25)
 
@@ -1172,8 +1175,8 @@ class Intents(BaseFlags):
 
         This also corresponds to the following attributes and classes in terms of cache:
 
-        - :attr:`Message.poll` (only for guild messages)
-        - :attr:`Client.polls` (only for guild polls)
+        - :attr:`PollAnswer.count` (only for guild polls)
+        - :attr:`PollResults.answer_counts` (only for guild polls)
         """
         return 1 << 24
 
@@ -1192,8 +1195,8 @@ class Intents(BaseFlags):
 
         This also corresponds to the following attributes and classes in terms of cache:
 
-        - :attr:`Message.poll` (only for DM messages)
-        - :attr:`Client.polls` (only for DM polls)
+        - :attr:`PollAnswer.count` (only for DM polls)
+        - :attr:`PollResults.answer_counts` (only for DM polls)
         """
         return 1 << 25
 
