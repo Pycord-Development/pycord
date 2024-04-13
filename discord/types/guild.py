@@ -186,6 +186,7 @@ class RolePositionUpdate(TypedDict, total=False):
 class GuildMFAModify(TypedDict):
     level: Literal[0, 1]
 
+
 class GuildBulkBan(TypedDict):
     banned_users: list[Snowflake]
     failed_users: list[Snowflake]

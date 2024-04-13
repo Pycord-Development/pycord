@@ -3079,7 +3079,7 @@ class Guild(Hashable):
         delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
     ) -> None:
-        """|coro|
+        r"""|coro|
 
         Bans users from the guild.
 
@@ -3105,7 +3105,7 @@ class Guild(Hashable):
         Returns
         -------
         Optional[List[List[:class:`Snowflake`], List[:class:`Snowflake`]]]
-            If banning a single member, returns nothing. Otherwise, returns two lists; 
+            If banning a single member, returns nothing. Otherwise, returns two lists;
 
         Raises
         ------
@@ -3138,7 +3138,7 @@ class Guild(Hashable):
             raise TypeError(
                 "delete_message_seconds must be between 0 and 604800 seconds."
             )
-        
+
         if len(users) == 1:
             await self._state.http.ban(
                 users[0].id, self.id, delete_message_seconds, delete_message_days, reason=reason
