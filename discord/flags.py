@@ -1137,6 +1137,66 @@ class Intents(BaseFlags):
         """
         return 1 << 21
 
+    @alias_flag_value
+    def polls(self):
+        """:class:`bool`: Whether guild and direct message poll related events are enabled.
+
+        This is a shortcut to set or get both :attr:`guild_polls` and :attr:`dm_polls`.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (both guilds and DMs)
+        - :func:`on_poll_vote_remove` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_add` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_remove` (both guilds and DMs)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`Message.polls` (both guild and DM messages)
+        - :attr:`Client.polls` (both guild and DM messages)
+        """
+        return None # (1 << 10) | (1 << 13)
+
+    @flag_value
+    def guild_polls(self):
+        """:class:`bool`: Whether guild poll related events are enabled.
+
+        See also :attr:`dm_polls` for DMs or :attr:`polls` for both.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (only for guilds)
+        - :func:`on_poll_vote_remove` (only for guilds)
+        - :func:`on_raw_poll_vote_add` (only for guilds)
+        - :func:`on_raw_poll_vote_remove` (only for guilds)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`Message.poll` (only for guild messages)
+        - :attr:`Client.polls` (only for guild polls)
+        """
+        return None # 1 << 10
+
+    @flag_value
+    def dm_polls(self):
+        """:class:`bool`: Whether direct message poll related events are enabled.
+
+        See also :attr:`guild_polls` for guilds or :attr:`polls` for both.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (only for DMs)
+        - :func:`on_poll_vote_remove` (only for DMs)
+        - :func:`on_raw_poll_vote_add` (only for DMs)
+        - :func:`on_raw_poll_vote_remove` (only for DMs)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`Message.poll` (only for DM messages)
+        - :attr:`Client.polls` (only for DM polls)
+        """
+        return None # 1 << 13
+
 
 @fill_with_flags()
 class MemberCacheFlags(BaseFlags):
