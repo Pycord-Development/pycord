@@ -3147,7 +3147,9 @@ class Guild(Hashable):
                 reason=reason,
             )
         elif len(users) > 200:
-            raise ValueError("The number of users to be banned must be between 1 and 200.")
+            raise ValueError(
+                "The number of users to be banned must be between 1 and 200."
+            )
         else:
             data = await self._state.http.bulk_ban(
                 [u.id for u in users],
