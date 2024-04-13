@@ -936,6 +936,7 @@ class HTTPClient:
         user_ids: list[Snowflake],
         guild_id: Snowflake,
         delete_message_seconds: int = None,
+        delete_message_days: int = None,
         reason: str | None = None,
     ) -> Response[guild.GuildBulkBan]:
         r = Route(

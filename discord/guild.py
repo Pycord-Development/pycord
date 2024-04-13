@@ -3074,7 +3074,6 @@ class Guild(Hashable):
     async def ban(
         self,
         *users: Snowflake,
-        *,
         delete_message_seconds: int | None = None,
         delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
