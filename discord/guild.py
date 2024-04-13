@@ -3140,18 +3140,25 @@ class Guild(Hashable):
 
         if len(users) == 1:
             await self._state.http.ban(
-                users[0].id, self.id, delete_message_seconds, delete_message_days, reason=reason
+                users[0].id,
+                self.id,
+                delete_message_seconds,
+                delete_message_days,
+                reason=reason,
             )
         elif len(users) > 200:
             raise ValueError("You may only bulk ban up to 200 members.")
         else:
             data = await self._state.http.bulk_ban(
-                [u.id for u in users], self.id, delete_message_seconds, delete_message_days, reason=reason
+                [u.id for u in users],
+                self.id,
+                delete_message_seconds,
+                delete_message_days,
+                reason=reason,
             )
             banned = [u for u in users if u.id in data["banned_users"]]
             failed = [u for u in users if u.id in data["failed_users"]]
             return banned, failed
-
 
     async def unban(self, user: Snowflake, *, reason: str | None = None) -> None:
         """|coro|
