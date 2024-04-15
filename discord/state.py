@@ -783,6 +783,17 @@ class ConnectionState:
         emoji_id = utils._get_as_snowflake(emoji, "id")
         emoji = PartialEmoji.with_state(self, id=emoji_id, name=emoji["name"])
         raw = RawReactionActionEvent(data, emoji, "REACTION_REMOVE")
+
+        member_data = data.get("member")
+        if member_data:
+            guild = self._get_guild(raw.guild_id)
+            if guild is not None:
+                raw.member = Member(data=member_data, guild=guild, state=self)
+            else:
+                raw.member = None
+        else:
+            raw.member = None
+
         self.dispatch("raw_reaction_remove", raw)
 
         message = self._get_message(raw.message_id)
