@@ -2027,6 +2027,36 @@ class Guild(Hashable):
 
         return MemberIterator(self, limit=limit, after=after)
 
+    async def search_members(self, query: str, *, limit: int = 1000) -> list[Member]:
+        """Search for guild members whose usernames or nicknames start with the query string. Unlike :meth:`fetch_members`, this does not require :meth:`Intents.members`.
+
+        .. note::
+
+            This method is an API call. For general usage, consider filtering :attr:`members` instead.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        query: :class:`str`
+            Searches for usernames and nicknames that start with this string, case-insensitive.
+        limit: :class:`int`
+            The maximum number of members to retrieve, up to 1000.
+
+        Returns
+        -------
+        List[:class:`Member`]
+            The list of members that have matched the query.
+
+        Raises
+        ------
+        HTTPException
+            Getting the members failed.
+        """
+
+        data = await self._state.http.search_members(self.id, query, limit)
+        return [Member(data=m, guild=self, state=self._state) for m in data]
+
     async def fetch_member(self, member_id: int, /) -> Member:
         """|coro|
 
