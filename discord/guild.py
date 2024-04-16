@@ -3392,7 +3392,7 @@ class Guild(Hashable):
 
             .. versionadded:: 1.6
 
-        cache: Optional[:class:`bool`]
+        cache: :class:`bool`
             Whether to cache the members internally. This makes operations
             such as :meth:`get_member` work for those that matched. Defaults to ``True``.
 
