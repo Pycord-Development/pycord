@@ -917,7 +917,7 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for guilds)
         - :meth:`Client.get_message` (only for guilds)
-        - :meth:`Client.get_poll`
+        - :meth:`Client.get_poll` (only for guilds)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -933,7 +933,6 @@ class Intents(BaseFlags):
         - :attr:`Message.attachments`
         - :attr:`Message.components`
         - :attr:`Message.poll`
-        - :attr:`Client.polls`
 
         For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
         """
