@@ -857,7 +857,7 @@ class Message(Hashable):
 
         self._poll: Poll | None
         try:
-            self._poll = Poll.from_dict(data["poll"], message=self)
+            self._poll = Poll.from_dict(data["poll"], self)
             self._state.store_poll(self._poll, self.id)
         except KeyError:
             self._poll = None
@@ -998,7 +998,7 @@ class Message(Hashable):
         self.nonce = value
 
     def _handle_poll(self, value: PollPayload) -> None:
-        self._poll = Poll.from_dict(value)
+        self._poll = Poll.from_dict(value, self)
         self._state.store_poll(self._poll, self.id)
 
     def _handle_author(self, author: UserPayload) -> None:
@@ -1838,7 +1838,7 @@ class Message(Hashable):
 
         return await self.channel.send(content, reference=self, **kwargs)
 
-    async def expire_poll(self) -> Message:
+    async def end_poll(self) -> Message:
         """|coro|
 
         Immediately ends the poll associated with this message. Only doable by the poll's owner.
@@ -2138,7 +2138,7 @@ class PartialMessage(Hashable):
                 self._state.store_view(view, self.id)
             return msg
 
-    async def expire_poll(self) -> Message:
+    async def end_poll(self) -> Message:
         """|coro|
 
         Immediately ends the poll associated with this message. Only doable by the poll's owner.

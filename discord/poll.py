@@ -60,8 +60,8 @@ class PollMedia:
     Attributes
     ----------
     text: :class:`str`
-        The question/answer text.
-    emoji: Optional[:class:`Emoji`]
+        The question/answer text. May be up to 300 characters for questions, and 55 characters for answers.
+    emoji: Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]
         The answer's emoji.
     """
 
@@ -79,9 +79,12 @@ class PollMedia:
                     "name": self.emoji,
                 }
             else:
-                dict_["emoji"] = {
-                    "id": self.emoji.id and str(self.emoji.id),
-                    "name": self.emoji.name,
+                if self.emoji.id:
+                    dict_["emoji"] = {
+                        "id": str(self.emoji.id),
+                    }
+                else:dict["emoji"] = {
+                    "name": self.emoji.name
                 }
 
         return dict_
@@ -308,7 +311,7 @@ class PollResults:
 
 
 class Poll:
-    """Represents a Poll. Polls are sent in regular messages, but note they cannot be sent with any other content or embeds.
+    """Represents a Poll. Polls are sent in regular messages, and You must have :attr:`~discord.Permissions.send_polls` to send them.
 
     .. versionadded:: 2.6
 
@@ -322,10 +325,10 @@ class Poll:
         The number of hours until this poll expires. Users must specify this when creating a poll, but existing polls return :attr:`expiry` instead. Defaults to 24.
     allow_multiselect: :class:`bool`
         Whether multiple answers can be selected. Defaults to ``False``.
-    layout_type: :class:`PollLayoutType`
+    layout_type: Optional[:class:`PollLayoutType`]
         The poll's layout type. Only one exists at the moment.
-    results: :class:`PollResults`
-        The results from this poll recieved from Discord.
+    results: Optional[:class:`PollResults`]
+        The results of this poll recieved from Discord. If ``None``, this should be considered "unknown" rather than "no" results.
     """
 
     def __init__(
@@ -335,7 +338,7 @@ class Poll:
         answers: list[PollAnswer] | None = None,
         duration: int | None = 24,
         allow_multiselect: bool | None = False,
-        layout_type: PollLayoutType | None = PollLayoutType.default,
+        layout_type: PollLayoutType | None = None,
     ):
         self.question = (
             question if isinstance(question, PollMedia) else PollMedia(question)
@@ -343,7 +346,7 @@ class Poll:
         self.answers: list[PollAnswer] = answers or []
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
-        self.layout_type: PollLayoutType = layout_type
+        self.layout_type: PollLayoutType | None = layout_type
         self.results = None
         self._expiry = None
         self._message = None
@@ -383,7 +386,11 @@ class Poll:
             allow_multiselect=data.get("allow_multiselect"),
             layout_type=try_enum(PollLayoutType, data.get("layout_type", 1)),
         )
-        poll.results = PollResults(data.get("results") or {})
+        if (results := data.get("results")) is not None:
+            poll.results = PollResults(results)
+        elif message and message.poll:
+            # results is nullable, so grab old results if necessary.
+            poll.results = message.poll.results
         poll._expiry = data.get("expiry")
         poll._message = message
         for a in poll.answers:
@@ -407,29 +414,31 @@ class Poll:
         Attributes
         ----------
         text: :class:`str`
-            The answer text.
-        emoji: Optional[:class:`Emoji`]
+            The answer text. Maximum 55 characters.
+        emoji: Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]
             The answer's emoji.
 
         Raises
         ------
         ValueError
-            The poll already has 10 answers.
+            The poll already has 10 answers or ``text`` exceeds the character length.
         RuntimeError
             You cannot add an answer to an existing poll.
         """
         if len(self.answers) >= 10:
             raise ValueError("Polls may only have up to 10 answers.")
+        if len(text) > 55:
+            raise ValueError("text length must be between 1 and 55 characters.")
         if self.expiry or self._message:
             raise RuntimeError("You cannot add answers to an existing poll.")
 
         self.answers.append(PollAnswer(text, emoji))
         return self
 
-    async def expire(self) -> Message:
+    async def end(self) -> Message:
         """
         Immediately ends this poll, if attached to a message. Only doable by the poll's owner.
-        Shortcut to :attr:`Message.expire_poll()`
+        Shortcut to :attr:`Message.end_poll()`
 
         .. versionadded:: 2.6
 
@@ -451,4 +460,4 @@ class Poll:
         if not self._message:
             raise RuntimeError("You can only end a poll recieved from a message.")
 
-        return await self._message.expire_poll()
+        return await self._message.end_poll()

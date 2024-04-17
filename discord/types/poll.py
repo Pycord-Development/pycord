@@ -59,5 +59,5 @@ class Poll(TypedDict):
     duration: NotRequired[int]
     expiry: NotRequired[str]
     allow_multiselect: bool
-    layout_type: PollLayoutType
+    layout_type: NotRequired[PollLayoutType]
     results: NotRequired[PollResults]
