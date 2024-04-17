@@ -759,10 +759,7 @@ class ConnectionState:
             self.dispatch("message_edit", older_message, message)
         else:
             if poll_data := data.get("poll"):
-                old = self.get_poll(raw.message_id)
-                poll = self.store_raw_poll(poll_data, raw)
-                if old and not old.results.is_finalized and poll.results.is_finalized:
-                    pass  # Dispatch event on poll end? No separate event so far, but we will get new poll intents
+                self.store_raw_poll(poll_data, raw)
             self.dispatch("raw_message_edit", raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
@@ -866,7 +863,7 @@ class ConnectionState:
         message = self._get_message(raw.message_id)
         poll = self.get_poll(raw.message_id)
         # if message was cached, poll has already updated but votes haven't
-        if poll:
+        if poll and poll.results:
             answer = poll.get_answer(raw.answer_id)
             counts = poll.results._answer_counts
             if answer is not None:
@@ -893,7 +890,7 @@ class ConnectionState:
         message = self._get_message(raw.message_id)
         poll = self.get_poll(raw.message_id)
         # if message was cached, poll has already updated but votes haven't
-        if poll:
+        if poll and poll.results:
             answer = poll.get_answer(raw.answer_id)
             counts = poll.results._answer_counts
             if answer is not None:
