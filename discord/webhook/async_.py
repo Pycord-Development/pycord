@@ -1700,8 +1700,7 @@ class Webhook(BaseWebhook):
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
         poll: :class:`Poll`
-            A poll. Cannot be sent with ``content``, ``embeds`` or ``files``.
-            Messages sent with a poll currently cannot be edited.
+            The poll to send.
 
             .. versionadded:: 2.6
 

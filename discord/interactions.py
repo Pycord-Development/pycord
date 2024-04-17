@@ -840,8 +840,7 @@ class InteractionResponse:
         files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
         poll: :class:`Poll`
-            A poll. Cannot be sent with ``content``, ``embeds`` or ``files``.
-            Messages sent with a poll currently cannot be edited.
+            The poll to send.
 
             .. versionadded:: 2.6
 
