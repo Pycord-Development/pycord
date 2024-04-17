@@ -399,7 +399,7 @@ class Poll:
         return poll
 
     def __repr__(self) -> str:
-        return f"<Poll question={self.question!r} total_answers={len(self.answers)} expiry={(self.expiry)!r} allow_multiselect={self.allow_multiselect!r}>"
+        return f"<Poll question={self.question!r} total_answers={len(self.answers)} expiry={(self._expiry)!r} allow_multiselect={self.allow_multiselect!r}>"
 
     def has_ended(self) -> bool:
         """
