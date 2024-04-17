@@ -860,7 +860,7 @@ class ConnectionState:
             user = self.get_user(raw.user_id)
         self.dispatch("raw_poll_vote_add", raw)
 
-        message = self._get_message(raw.message_id)
+        self._get_message(raw.message_id)
         poll = self.get_poll(raw.message_id)
         # if message was cached, poll has already updated but votes haven't
         if poll and poll.results:
@@ -887,7 +887,7 @@ class ConnectionState:
             user = self.get_user(raw.user_id)
         self.dispatch("raw_poll_vote_remove", raw)
 
-        message = self._get_message(raw.message_id)
+        self._get_message(raw.message_id)
         poll = self.get_poll(raw.message_id)
         # if message was cached, poll has already updated but votes haven't
         if poll and poll.results:
