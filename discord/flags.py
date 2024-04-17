@@ -885,6 +885,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages`
         - :meth:`Client.get_message`
+        - :attr:`Client.polls`
+        - :meth:`Client.get_poll`
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -917,6 +919,7 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for guilds)
         - :meth:`Client.get_message` (only for guilds)
+        - :attr:`Client.polls` (only for guilds)
         - :meth:`Client.get_poll` (only for guilds)
 
         Note that due to an implicit relationship this also corresponds to the following events:
@@ -957,6 +960,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for DMs)
         - :meth:`Client.get_message` (only for DMs)
+        - :attr:`Client.polls` (only for DMs)
+        - :meth:`Client.get_poll` (only for DMs)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -1081,6 +1086,7 @@ class Intents(BaseFlags):
         - :attr:`Message.embeds`
         - :attr:`Message.attachments`
         - :attr:`Message.components`
+        - :attr:`Message.poll`
 
         These attributes will still be available for messages received from interactions,
         the bot's own messages, messages the bot was mentioned in, and DMs.
