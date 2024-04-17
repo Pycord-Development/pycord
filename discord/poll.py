@@ -324,7 +324,7 @@ class Poll:
         The number of hours until this poll expires. Users must specify this when creating a poll, but existing polls return :attr:`expiry` instead. Defaults to 24.
     allow_multiselect: :class:`bool`
         Whether multiple answers can be selected. Defaults to ``False``.
-    layout_type: Optional[:class:`PollLayoutType`]
+    layout_type: :class:`PollLayoutType`
         The poll's layout type. Only one exists at the moment.
     results: Optional[:class:`PollResults`]
         The results of this poll recieved from Discord. If ``None``, this should be considered "unknown" rather than "no" results.
@@ -337,7 +337,7 @@ class Poll:
         answers: list[PollAnswer] | None = None,
         duration: int | None = 24,
         allow_multiselect: bool | None = False,
-        layout_type: PollLayoutType | None = None,
+        layout_type: PollLayoutType | None = PollLayoutType.default,
     ):
         self.question = (
             question if isinstance(question, PollMedia) else PollMedia(question)
@@ -345,7 +345,7 @@ class Poll:
         self.answers: list[PollAnswer] = answers or []
         self.duration: int | None = duration
         self.allow_multiselect: bool = allow_multiselect
-        self.layout_type: PollLayoutType | None = layout_type
+        self.layout_type: PollLayoutType = layout_type
         self.results = None
         self._expiry = None
         self._message = None
