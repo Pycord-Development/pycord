@@ -877,6 +877,7 @@ Messages
 
     - The message's embeds were suppressed or unsuppressed.
     - A call message has received an update to its participants or ending time.
+    - A poll has ended and the results have been finalized.
 
     This requires :attr:`Intents.messages` to be enabled.
 
@@ -911,16 +912,16 @@ Messages
 
 Polls
 ~~~~~~~~~
-.. function:: on_poll_vote_add(message, user, answer)
+.. function:: on_poll_vote_add(poll, user, answer)
 
     Called when a poll is voted on. If multiple answers were selected, this fires multiple times.
-    if the message is not found in the internal message cache, then this
+    if the poll was not found in the internal poll cache, then this
     event will not be called. Consider using :func:`on_raw_poll_vote_add` instead.
 
     This requires :attr:`Intents.polls` to be enabled.
 
-    :param message: The message the poll belongs to.
-    :type message: :class:`Message`
+    :param poll: The poll that was voted on.
+    :type poll: :class:`Poll`
     :param user: The user who added the vote.
     :type user: Union[:class:`Member`, :class:`User`]
     :param answer: The answer that was voted.
@@ -929,7 +930,7 @@ Polls
 .. function:: on_raw_poll_vote_add(payload)
 
     Called when a poll is voted on. Unlike :func:`on_poll_vote_add`, this is
-    called regardless of the state of the internal message cache.
+    called regardless of the state of the internal poll cache.
 
     This requires :attr:`Intents.polls` to be enabled.
 
@@ -939,13 +940,13 @@ Polls
 .. function:: on_poll_vote_remove(message, user, answer)
 
     Called when a poll vote is removed. If multiple answers were removed, this fires multiple times.
-    if the message is not found in the internal message cache, then this
+    if the poll is not found in the internal poll cache, then this
     event will not be called. Consider using :func:`on_raw_poll_vote_remove` instead.
 
     This requires :attr:`Intents.polls` to be enabled.
 
-    :param message: The message the poll belongs to.
-    :type message: :class:`Message`
+    :param poll: The poll that the vote was removed from.
+    :type poll: :class:`Poll`
     :param user: The user who removed the vote.
     :type user: Union[:class:`Member`, :class:`User`]
     :param answer: The answer that was voted.

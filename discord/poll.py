@@ -130,12 +130,12 @@ class PollAnswer:
 
     @property
     def text(self) -> str:
-        """The answer's text. Shortcut for ``PollAnswer.media.text``."""
+        """The answer's text. Shortcut for :attr:`PollAnswer.media.text`."""
         return self.media.text
 
     @property
     def emoji(self) -> Emoji | PartialEmoji | None:
-        """The answer's emoji. Shortcut for ``PollAnswer.media.emoji``."""
+        """The answer's emoji. Shortcut for :attr:`PollAnswer.media.emoji`."""
         return self.media.emoji
 
     @property
@@ -143,6 +143,8 @@ class PollAnswer:
         """This answer's vote count, if recieved from Discord."""
         if not (self._poll and self.id):
             return None
+        if self._poll.results is None:
+            return None  # Unknown vote count.
         _count = self._poll.results and utils.get(
             self._poll.results.answer_counts, id=self.id
         )
@@ -273,7 +275,7 @@ class PollResults:
     Attributes
     ----------
     is_finalized: :class:`bool`
-        Whether the answer counts have been precicely tallied.
+        Whether the poll has ended and all answer counts have been precicely tallied.
     answer_counts: List[:class:`PollAnswerCount`]
         A list of counts for each answer. If an answer isn't included, it has no votes.
     """
@@ -397,9 +399,35 @@ class Poll:
         return poll
 
     def __repr__(self) -> str:
-        return f"<Poll question={self.question!r} duration={self.duration!r} allow_multiselect={self.allow_multiselect!r}>"
+        return f"<Poll question={self.question!r} total_answers={len(self.answers)} expiry={(self.expiry)!r} allow_multiselect={self.allow_multiselect!r}>"
+
+    def has_ended(self) -> bool:
+        """
+        Checks if this poll has completely ended. Shortcut for :attr:`Poll.results.is_finalized`, if available.
+
+        Returns
+        -------
+        Optional[:class:`bool`]
+            Returns a boolean if :attr:`results` is available, otherwise ``None``.
+        """
+        if not self.results:
+            return None
+        return self.results.is_finalized
 
     def get_answer(self, id) -> PollAnswer | None:
+        """
+        Get a poll answer by ID.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID to search for.
+
+        Returns
+        -------
+        Optional[:class:`.PollAnswer`]
+            The returned answer or ``None`` if not found.
+        """
         return utils.get(self.answers, id=id)
 
     def add_answer(
