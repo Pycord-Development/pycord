@@ -130,12 +130,12 @@ class PollAnswer:
 
     @property
     def text(self) -> str:
-        """The answer's text. Shortcut for :attr:`PollAnswer.media.text`."""
+        """The answer's text. Shortcut for :attr:`PollMedia.text`."""
         return self.media.text
 
     @property
     def emoji(self) -> Emoji | PartialEmoji | None:
-        """The answer's emoji. Shortcut for :attr:`PollAnswer.media.emoji`."""
+        """The answer's emoji. Shortcut for :attr:`PollMedia.emoji`."""
         return self.media.emoji
 
     @property
@@ -320,9 +320,9 @@ class Poll:
     ----------
     question: Union[:class:`PollMedia`, :class:`str`]
         The poll's question media, or a ``str`` representing the question text. Question text can be up to 300 characters.
-    answers: List[:class:`PollAnswer`]
+    answers: Optional[List[:class:`PollAnswer`]]
         A list of the poll's answers. A maximum of 10 answers can be set.
-    duration: Optional[:class:`int`]
+    duration: :class:`int`
         The number of hours until this poll expires. Users must specify this when creating a poll, but existing polls return :attr:`expiry` instead. Defaults to 24.
     allow_multiselect: :class:`bool`
         Whether multiple answers can be selected. Defaults to ``False``.
@@ -403,7 +403,7 @@ class Poll:
 
     def has_ended(self) -> bool:
         """
-        Checks if this poll has completely ended. Shortcut for :attr:`Poll.results.is_finalized`, if available.
+        Checks if this poll has completely ended. Shortcut for :attr:`PollResults.is_finalized`, if available.
 
         Returns
         -------
