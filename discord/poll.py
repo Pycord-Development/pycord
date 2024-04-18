@@ -179,7 +179,7 @@ class PollAnswer:
     def __repr__(self) -> str:
         return f"<PollAnswer id={self.id!r} text={self.text!r} emoji={self.emoji!r}>"
 
-    def users(
+    def voters(
         self, *, limit: int | None = None, after: Snowflake | None = None
     ) -> VoteIterator:
         """Returns an :class:`AsyncIterator` representing the users that have voted with this answer.
@@ -195,7 +195,7 @@ class PollAnswer:
             If not provided, returns all the users who
             voted with this answer.
         after: Optional[:class:`abc.Snowflake`]
-            For pagination, reactions are sorted by member.
+            For pagination, answers are sorted by member.
 
         Yields
         ------
@@ -234,9 +234,9 @@ class PollAnswer:
             )
 
         if limit is None:
-            limit = self.count  # or 100, debug?
+            limit = self.count or 100  # Ambiguous
 
-        return VoteIterator(self._poll._message, self, limit, after)  # TODO
+        return VoteIterator(self._poll._message, self, limit, after)
 
 
 class PollAnswerCount:
