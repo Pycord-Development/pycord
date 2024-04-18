@@ -401,7 +401,7 @@ class Poll:
     def __repr__(self) -> str:
         return f"<Poll question={self.question!r} total_answers={len(self.answers)} expiry={(self._expiry)!r} allow_multiselect={self.allow_multiselect!r}>"
 
-    def has_ended(self) -> bool:
+    def has_ended(self) -> bool | None:
         """
         Checks if this poll has completely ended. Shortcut for :attr:`PollResults.is_finalized`, if available.
 
@@ -413,6 +413,19 @@ class Poll:
         if not self.results:
             return None
         return self.results.is_finalized
+
+    def total_votes(self) -> int | None:
+        """
+        Shortcut for :meth:`PollResults.total_votes` This may not be precise if :attr:`is_finalized` is ``False``.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The total number of votes on this poll if :attr:`results` is available, otherwise ``None``.
+        """
+        if not self.results:
+            return None
+        return self.results.total_votes()
 
     def get_answer(self, id) -> PollAnswer | None:
         """
