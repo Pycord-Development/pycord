@@ -1992,6 +1992,10 @@ class PartialMessage(Hashable):
         """The partial message's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
+    @property
+    def poll(self) -> Poll | None:
+        return self._state._polls.get(self.id)
+
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
         """The guild that the partial message belongs to, if applicable."""
