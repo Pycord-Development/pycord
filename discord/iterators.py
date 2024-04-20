@@ -267,14 +267,14 @@ class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
             retrieve = min(self.limit, 100)
 
             after = self.after.id if self.after else None
-            req: list[PartialUserPayload] = await self.getter(
+            req = await self.getter(
                 self.channel_id,
                 self.message.id,
                 self.answer.id,
                 retrieve,
                 after=after,
             )
-            data = req.get("users", [])
+            data: list[PartialUserPayload] = req.get('users', [])
 
             if data:
                 self.limit -= retrieve
