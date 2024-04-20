@@ -274,7 +274,7 @@ class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
                 retrieve,
                 after=after,
             )
-            data: list[PartialUserPayload] = req.get('users', [])
+            data: list[PartialUserPayload] = req.get("users", [])
 
             if data:
                 self.limit -= retrieve
