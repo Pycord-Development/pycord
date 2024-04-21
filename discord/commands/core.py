@@ -1695,8 +1695,9 @@ class ContextMenuCommand(ApplicationCommand):
             "type": self.type,
         }
 
-        if self.guild_only is not None:
-            as_dict["dm_permission"] = not self.guild_only
+        if not self.guild_ids:
+            as_dict["integration_types"] = [it.value for it in self.integration_types]
+            as_dict["contexts"] = [ctx.value for ctx in self.contexts]
 
         if self.nsfw is not None:
             as_dict["nsfw"] = self.nsfw
