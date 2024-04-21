@@ -55,6 +55,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
 - `Option` may be used instead of `BridgeOption` until 2.7.
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- `Guild.query_members` now accepts `limit=None` to retrieve all members.
+  ([#2419](https://github.com/Pycord-Development/pycord/pull/2419))
 - `ApplicationCommand.guild_only` is now deprecated in favor of
   `ApplicationCommand.contexts`.
   ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
