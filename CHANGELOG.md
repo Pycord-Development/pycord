@@ -58,6 +58,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - `Guild.query_members` now accepts `limit=None` to retrieve all members.
   ([#2419](https://github.com/Pycord-Development/pycord/pull/2419))
 
+### Removed
+
+- Removed the `delete_message_days` parameter from ban methods. Please use
+  `delete_message_seconds` instead.
+  ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
+
 ## [2.5.0] - 2024-03-02
 
 ### Added
