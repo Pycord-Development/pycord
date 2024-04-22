@@ -3116,7 +3116,7 @@ class Guild(Hashable):
             user.id, self.id, delete_message_seconds, reason=reason
         )
 
-    async def ban(
+    async def bulk_ban(
         self,
         *users: Snowflake,
         delete_message_seconds: int | None = None,
