@@ -3121,7 +3121,7 @@ class Guild(Hashable):
         *users: Snowflake,
         delete_message_seconds: int | None = None,
         reason: str | None = None,
-    ) -> list[list[Snowflake], list[Snowflake]] | None:
+    ) -> list[list[Snowflake], list[Snowflake]]:
         r"""|coro|
 
         Bulk ban users from the guild.
