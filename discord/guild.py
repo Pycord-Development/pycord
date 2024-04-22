@@ -32,7 +32,6 @@ from typing import (
     Any,
     ClassVar,
     List,
-    Literal,
     NamedTuple,
     Optional,
     Sequence,
@@ -3172,7 +3171,7 @@ class Guild(Hashable):
             raise TypeError(
                 "delete_message_seconds must be between 0 and 604800 seconds."
             )
-            
+
         if len(users) > 200 or len(users) < 1:
             raise ValueError(
                 "The number of users to be banned must be between 1 and 200."
