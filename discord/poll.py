@@ -482,7 +482,6 @@ class Poll:
         Immediately ends this poll, if attached to a message. Only doable by the poll's owner.
         Shortcut to :meth:`Message.end_poll`
 
-
         .. versionadded:: 2.6
 
         Returns
