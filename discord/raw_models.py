@@ -794,7 +794,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
     user_id: :class:`int`:
         The user that added or removed their vote
     message_id: :class:`int`
-        The message ID of the poll that recieved the vote.
+        The message ID of the poll that received the vote.
     channel_id: :class:`int`
         The channel ID where the vote was updated.
     guild_id: Optional[:class:`int`]

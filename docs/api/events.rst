@@ -914,13 +914,13 @@ Polls
 ~~~~~~~~~
 .. function:: on_poll_vote_add(poll, user, answer)
 
-    Called when a poll is voted on. If multiple answers were selected, this fires multiple times.
+    Called when a vote is cast on a poll. If multiple answers were selected, this fires multiple times.
     if the poll was not found in the internal poll cache, then this
     event will not be called. Consider using :func:`on_raw_poll_vote_add` instead.
 
     This requires :attr:`Intents.polls` to be enabled.
 
-    :param poll: The poll that was voted on.
+    :param poll: The current state of the poll.
     :type poll: :class:`Poll`
     :param user: The user who added the vote.
     :type user: Union[:class:`Member`, :class:`User`]
@@ -929,7 +929,7 @@ Polls
 
 .. function:: on_raw_poll_vote_add(payload)
 
-    Called when a poll is voted on. Unlike :func:`on_poll_vote_add`, this is
+    Called when a vote is cast on a poll. Unlike :func:`on_poll_vote_add`, this is
     called regardless of the state of the internal poll cache.
 
     This requires :attr:`Intents.polls` to be enabled.
@@ -939,13 +939,13 @@ Polls
 
 .. function:: on_poll_vote_remove(message, user, answer)
 
-    Called when a poll vote is removed. If multiple answers were removed, this fires multiple times.
+    Called when a vote is removed from a poll. If multiple answers were removed, this fires multiple times.
     if the poll is not found in the internal poll cache, then this
     event will not be called. Consider using :func:`on_raw_poll_vote_remove` instead.
 
     This requires :attr:`Intents.polls` to be enabled.
 
-    :param poll: The poll that the vote was removed from.
+    :param poll: The current state of the poll.
     :type poll: :class:`Poll`
     :param user: The user who removed the vote.
     :type user: Union[:class:`Member`, :class:`User`]
@@ -954,7 +954,7 @@ Polls
 
 .. function:: on_raw_poll_vote_remove(payload)
 
-    Called when a poll vote is removed. Unlike :func:`on_poll_vote_remove`, this is
+    Called when a vote is removed from a poll. Unlike :func:`on_poll_vote_remove`, this is
     called regardless of the state of the internal message cache.
 
     This requires :attr:`Intents.polls` to be enabled.

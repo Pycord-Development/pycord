@@ -60,7 +60,8 @@ class PollMedia:
     Attributes
     ----------
     text: :class:`str`
-        The question/answer text. May be up to 300 characters for questions, and 55 characters for answers.
+        The question/answer text. May have up to 300 characters for questions and 55 characters for answers.
+
     emoji: Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]
         The answer's emoji.
     """
@@ -275,7 +276,8 @@ class PollResults:
     Attributes
     ----------
     is_finalized: :class:`bool`
-        Whether the poll has ended and all answer counts have been precicely tallied.
+        Whether the poll has ended and all answer counts have been precisely tallied.
+
     answer_counts: List[:class:`PollAnswerCount`]
         A list of counts for each answer. If an answer isn't included, it has no votes.
     """
@@ -478,7 +480,8 @@ class Poll:
     async def end(self) -> Message:
         """
         Immediately ends this poll, if attached to a message. Only doable by the poll's owner.
-        Shortcut to :attr:`Message.end_poll()`
+        Shortcut to :meth:`Message.end_poll`
+
 
         .. versionadded:: 2.6
 
