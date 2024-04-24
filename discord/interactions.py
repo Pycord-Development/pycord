@@ -1512,7 +1512,9 @@ class InteractionMetadata:
             )
 
     def __repr__(self):
-        return f"<InteractionMetadata id={self.id} type={self.type!r} user={self.user!r}>"
+        return (
+            f"<InteractionMetadata id={self.id} type={self.type!r} user={self.user!r}>"
+        )
 
     @utils.cached_slot_property("_cs_original_response_message")
     def original_response_message(self) -> Message | None:
