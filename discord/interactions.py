@@ -1464,8 +1464,8 @@ class InteractionMetadata:
         The interaction's ID.
     type: :class:`InteractionType`
         The interaction type.
-    user_id: :class:`int`
-        The ID of the user that sent the interaction.
+    user: :class:`User`
+        The user that sent the interaction.
     authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
         The authorizing user or server for the installation(s) relevant to the interaction.
     original_response_message_id: Optional[:class:`int`]
@@ -1481,13 +1481,12 @@ class InteractionMetadata:
     __slots__: tuple[str, ...] = (
         "id",
         "type",
-        "user_id",
+        "user",
         "authorizing_integration_owners",
         "original_response_message_id",
         "interacted_message_id",
         "triggering_interaction_metadata",
         "_state",
-        "_cs_user",
         "_cs_original_response_message",
         "_cs_interacted_message",
     )
@@ -1496,7 +1495,7 @@ class InteractionMetadata:
         self._state = state
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
-        self.user_id: int = int(data["user_id"])
+        self.user: User = User(state=state, data=data["user"])
         self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
             AuthorizingIntegrationOwners(data["authorizing_integration_owners"], state)
         )
@@ -1513,14 +1512,7 @@ class InteractionMetadata:
             )
 
     def __repr__(self):
-        return f"<InteractionMetadata id={self.id} type={self.type!r} user_id={self.user_id}>"
-
-    @utils.cached_slot_property("_cs_user")
-    def user(self) -> User | None:
-        """Optional[:class:`User`]: The user that sent the interaction.
-        Returns ``None`` if the user is not in cache.
-        """
-        return self._state.get_user(self.user_id)
+        return f"<InteractionMetadata id={self.id} type={self.type!r} user={self.user!r}>"
 
     @utils.cached_slot_property("_cs_original_response_message")
     def original_response_message(self) -> Message | None:
