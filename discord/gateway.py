@@ -607,7 +607,7 @@ class DiscordWebSocket:
                 aiohttp.WSMsgType.CLOSED,
                 aiohttp.WSMsgType.CLOSING,
                 aiohttp.WSMsgType.CLOSE,
-                aiohttp.WSMsgType.ERROR
+                aiohttp.WSMsgType.ERROR,
             ):
                 _log.debug("Received %s", msg)
                 raise WebSocketClosure
