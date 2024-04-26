@@ -4070,3 +4070,59 @@ class Guild(Hashable):
         }
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)
+
+    async def fetch_entitlements(
+        self,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        exclude_ended: bool = False,
+    ) -> list[Entitlement]:
+        """|coro|
+
+        Fetches this guild's entitlements.
+
+        This is identical to :meth:`Client.fetch_entitlements` with the ``guild`` parameter.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        skus: list[:class:`.abc.Snowflake`] | None
+            Limit the fetched entitlements to entitlements that are for these SKUs.
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieves guilds before this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieve guilds after this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        limit: Optional[:class:`int`]
+            The number of entitlements to retrieve.
+            If ``None``, it retrieves every entitlement. Note, however,
+            that this may make it a slow operation.
+            Defaults to ``100``.
+        exclude_ended: :class:`bool` | None
+            If ``True``, limits the fetched entitlements to those that have not ended.
+
+        Returns
+        -------
+        List[:class:`.Entitlement`]
+            The application's entitlements.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Retrieving the entitlements failed.
+        """
+        return EntitlementIterator(
+            self._state,
+            skus=[sku.id for sku in skus],
+            before=before,
+            after=after,
+            limit=limit,
+            guild=self.id,
+            exclude_ended=exclude_ended,
+        )
