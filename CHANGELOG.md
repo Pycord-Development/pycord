@@ -22,6 +22,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2418](https://github.com/Pycord-Development/pycord/pull/2418))
 - Added `member` data to the `raw_reaction_remove` event.
   ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
+- Added support for one-time purchases for Discord monetization.
+  ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
 
 ### Fixed
 
@@ -42,6 +44,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
 - Fixed option typehints being ignored when using `parameter_name`.
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- Fixed `Entitlement.delete` not passing all needed parameters to its HTTP method.
+  ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
 
 ### Changed
 
