@@ -1003,6 +1003,8 @@ class ReactionType(Enum):
 class SKUType(Enum):
     """The SKU type"""
 
+    durable = 2
+    consumable = 3
     subscription = 5
     subscription_group = 6
 
