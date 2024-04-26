@@ -1850,20 +1850,10 @@ class MessageCommand(ContextMenuCommand):
         for i, v in _data.items():
             v["id"] = int(i)
             message = v
-        channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
-        if channel is None:
-            author_id = int(message["author"]["id"])
-            self_or_system_message: bool = ctx.bot.user.id == author_id or try_enum(
-                MessageType, message["type"]
-            ) not in (
-                MessageType.default,
-                MessageType.reply,
-                MessageType.application_command,
-                MessageType.thread_starter_message,
-            )
-            user_id = ctx.author.id if self_or_system_message else author_id
-            data = await ctx.interaction._state.http.start_private_message(user_id)
-            channel = ctx.interaction._state.add_dm_channel(data)
+        channel = ctx.interaction.channel
+        if channel.id != int(message["channel_id"]):
+            # we got weird stuff going on, make up a channel
+            channel = PartialMessageable(state=ctx.interaction._state, id=int(message["channel_id"]))
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
 
