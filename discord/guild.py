@@ -3134,10 +3134,10 @@ class Guild(Hashable):
         Example Usage: ::
 
             # Ban multiple users
-            successes, failures = await guild.ban(user1, user2, user3, ..., reason="Raid")
+            successes, failures = await guild.bulk_ban(user1, user2, user3, ..., reason="Raid")
 
             # Ban a list of users
-            successes, failures = await guild.ban(*users)
+            successes, failures = await guild.bulk_ban(*users)
 
         Parameters
         ----------
