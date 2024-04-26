@@ -4078,7 +4078,7 @@ class Guild(Hashable):
         after: SnowflakeTime | None = None,
         limit: int | None = 100,
         exclude_ended: bool = False,
-    ) -> list[Entitlement]:
+    ) -> EntitlementIterator:
         """|coro|
 
         Fetches this guild's entitlements.
@@ -4119,10 +4119,10 @@ class Guild(Hashable):
         """
         return EntitlementIterator(
             self._state,
-            skus=[sku.id for sku in skus],
+            sku_ids=[sku.id for sku in skus],
             before=before,
             after=after,
             limit=limit,
-            guild=self.id,
+            guild_id=self.id,
             exclude_ended=exclude_ended,
         )
