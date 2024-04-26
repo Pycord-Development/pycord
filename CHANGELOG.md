@@ -44,7 +44,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
 - Fixed option typehints being ignored when using `parameter_name`.
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
-- Fixed `Entitlement.delete` not passing all needed parameters to its HTTP method.
+- Fixed `Entitlement.delete` not passing all the needed parameters to its HTTP method.
   ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
 
 ### Changed
