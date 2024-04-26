@@ -49,7 +49,7 @@ from .gateway import *
 from .guild import Guild
 from .http import HTTPClient
 from .invite import Invite
-from .iterators import GuildIterator, EntitlementIterator
+from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
 from .monetization import SKU, Entitlement
 from .object import Object
@@ -2040,7 +2040,7 @@ class Client:
             Added new parameters
 
         Parameters
-        -----------
+        ----------
         user: :class:`.abc.Snowflake` | None
             Limit the fetched entitlements to entitlements owned by this user.
         skus: list[:class:`.abc.Snowflake`] | None
@@ -2069,17 +2069,17 @@ class Client:
             The application's entitlements.
 
         Raises
-        -------
+        ------
         :exc:`HTTPException`
             Retrieving the entitlements failed.
         """
         return EntitlementIterator(
-            self, 
-            user_id=user.id, 
-            skus=[sku.id for sku in skus], 
-            before=before, 
-            after=after, 
-            limit=limit, 
-            guild=guild.id, 
+            self,
+            user_id=user.id,
+            skus=[sku.id for sku in skus],
+            before=before,
+            after=after,
+            limit=limit,
+            guild=guild.id,
             exclude_ended=exclude_ended,
         )
