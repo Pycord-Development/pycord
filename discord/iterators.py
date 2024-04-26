@@ -940,7 +940,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
 class EntitlementIterator(_AsyncIterator["Entitlement"]):
     def __init__(
         self,
-        bot,
+        state,
         user_id: int | None = None,
         sku_ids: list[int] | None = None,
         before: datetime.datetime | Object | None = None,
@@ -949,7 +949,6 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         guild_id: int | None = None,
         exclude_ended: bool | None = None,
     ):
-        self.bot = bot
         self.user_id = user_id
         self.sku_ids = sku_ids
         if isinstance(before, datetime.datetime):
@@ -962,8 +961,8 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.guild_id = guild_id
         self.exclude_ended = exclude_ended
 
-        self.state = self.bot._connection
-        self.get_entitlements = self.bot.http.list_entitlements
+        self.state = state
+        self.get_entitlements = state.http.list_entitlements
         self.entitlements = asyncio.Queue()
 
     async def next(self) -> BanEntry:
@@ -990,7 +989,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data = await self.get_entitlements(
-            self.bot.application_id,
+            self.state.application_id,
             before=before,
             after=after,
             limit=self.retrieve,
