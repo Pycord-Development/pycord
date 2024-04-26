@@ -2369,6 +2369,14 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.5
 
+    .. attribute:: durable
+
+        Represents a durable one-time purchase.
+
+    .. attribute:: consumable
+
+        Represents a consumable one-time purchase.
+
     .. attribute:: subscription
 
         Represents a recurring subscription.
@@ -2383,6 +2391,34 @@ of :class:`enum.Enum`.
     Represents an entitlement's type.
 
     .. versionadded:: 2.5
+
+    .. attribute:: purchase
+
+        Entitlement was purchased by the user.
+
+    .. attribute:: premium_subscription
+
+        Entitlement is for a Discord Nitro subscription.
+
+    .. attribute:: developer_gift
+
+        Entitlement was gifted by the developer.
+
+    .. attribute:: test_mode_purchase
+
+        Entitlement was purchased by a developer in the application's test mode.
+
+    .. attribute:: free_purchase
+
+        Entitlement was granted when the SKU was free.
+
+    .. attribute:: user_gift
+
+        Entitlement was gifted by another user.
+
+    .. attribute:: premium_purchase
+
+        Entitlement was claimed by a user for free as a Nitro subscriber.
 
     .. attribute:: app_subscription
 
