@@ -20,6 +20,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
 - Added `Guild.search_members`.
   ([#2418](https://github.com/Pycord-Development/pycord/pull/2418))
+- Added bulk banning up to 200 users through `Guild.bulk_ban`.
+  ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
 - Added `member` data to the `raw_reaction_remove` event.
   ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
 
@@ -55,6 +57,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
 - `Guild.query_members` now accepts `limit=None` to retrieve all members.
   ([#2419](https://github.com/Pycord-Development/pycord/pull/2419))
+
+### Removed
+
+- Removed the `delete_message_days` parameter from ban methods. Please use
+  `delete_message_seconds` instead.
+  ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
 
 ## [2.5.0] - 2024-03-02
 
