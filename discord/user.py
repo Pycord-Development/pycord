@@ -32,12 +32,14 @@ import discord.abc
 from .asset import Asset
 from .colour import Colour
 from .flags import PublicUserFlags
+from .iterators import EntitlementIterator
 from .monetization import Entitlement
 from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 
 if TYPE_CHECKING:
     from datetime import datetime
 
+    from .abc import SnowflakeTime
     from .channel import DMChannel
     from .guild import Guild
     from .message import Message
