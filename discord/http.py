@@ -907,7 +907,6 @@ class HTTPClient:
         user_id: Snowflake,
         guild_id: Snowflake,
         delete_message_seconds: int = None,
-        delete_message_days: int = None,
         reason: str | None = None,
     ) -> Response[None]:
         r = Route(
@@ -920,16 +919,28 @@ class HTTPClient:
 
         if delete_message_seconds:
             params["delete_message_seconds"] = delete_message_seconds
-        elif delete_message_days:
-            warn_deprecated(
-                "delete_message_days",
-                "delete_message_seconds",
-                "2.2",
-                reference="https://github.com/discord/discord-api-docs/pull/5219",
-            )
-            params["delete_message_days"] = delete_message_days
 
         return self.request(r, params=params, reason=reason)
+
+    def bulk_ban(
+        self,
+        user_ids: list[Snowflake],
+        guild_id: Snowflake,
+        delete_message_seconds: int = None,
+        reason: str | None = None,
+    ) -> Response[guild.GuildBulkBan]:
+        r = Route(
+            "POST",
+            "/guilds/{guild_id}/bulk-ban",
+            guild_id=guild_id,
+        )
+        payload = {
+            "user_ids": user_ids,
+        }
+        if delete_message_seconds:
+            payload["delete_message_seconds"] = delete_message_seconds
+
+        return self.request(r, json=payload, reason=reason)
 
     def unban(
         self, user_id: Snowflake, guild_id: Snowflake, *, reason: str | None = None
