@@ -1853,7 +1853,9 @@ class MessageCommand(ContextMenuCommand):
         channel = ctx.interaction.channel
         if channel.id != int(message["channel_id"]):
             # we got weird stuff going on, make up a channel
-            channel = PartialMessageable(state=ctx.interaction._state, id=int(message["channel_id"]))
+            channel = PartialMessageable(
+                state=ctx.interaction._state, id=int(message["channel_id"])
+            )
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
 
