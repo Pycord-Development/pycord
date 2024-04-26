@@ -123,7 +123,7 @@ class Entitlement(Hashable):
     guild_id: Union[:class:`int`, :class:`MISSING`]
         The ID of the guild that owns this entitlement.
     consumed: :class:`bool`
-        Whether or not this entitlement has been consumed. 
+        Whether or not this entitlement has been consumed.
         This will always be ``False`` for entitlements that are not
         of type :attr:`EntitlementType.consumable`.
     """
@@ -197,4 +197,6 @@ class Entitlement(Hashable):
         HTTPException
             Deleting the entitlement failed.
         """
-        await self._state.http.delete_test_entitlement(self._state.application_id, self.id)
+        await self._state.http.delete_test_entitlement(
+            self._state.application_id, self.id
+        )

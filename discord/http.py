@@ -2960,7 +2960,7 @@ class HTTPClient:
             params["guild_id"] = guild_id
         if exclude_ended is not None:
             params["exclude_ended"] = exclude_ended
-            
+
         r = Route(
             "GET",
             "/applications/{application_id}/entitlements",
