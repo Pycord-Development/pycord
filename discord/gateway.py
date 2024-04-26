@@ -603,13 +603,11 @@ class DiscordWebSocket:
                 await self.received_message(msg.data)
             elif msg.type is aiohttp.WSMsgType.BINARY:
                 await self.received_message(msg.data)
-            elif msg.type is aiohttp.WSMsgType.ERROR:
-                _log.debug("Received %s", msg)
-                raise msg.data
             elif msg.type in (
                 aiohttp.WSMsgType.CLOSED,
                 aiohttp.WSMsgType.CLOSING,
                 aiohttp.WSMsgType.CLOSE,
+                aiohttp.WSMsgType.ERROR,
             ):
                 _log.debug("Received %s", msg)
                 raise WebSocketClosure
