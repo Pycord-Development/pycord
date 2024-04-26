@@ -39,7 +39,7 @@ from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from .abc import SnowflakeTime
+    from .abc import Snowflake, SnowflakeTime
     from .channel import DMChannel
     from .guild import Guild
     from .message import Message
