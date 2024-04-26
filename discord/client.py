@@ -49,7 +49,7 @@ from .gateway import *
 from .guild import Guild
 from .http import HTTPClient
 from .invite import Invite
-from .iterators import GuildIterator
+from .iterators import GuildIterator, EntitlementIterator
 from .mentions import AllowedMentions
 from .monetization import SKU, Entitlement
 from .object import Object
@@ -2019,17 +2019,67 @@ class Client:
         data = await self._connection.http.list_skus(self.application_id)
         return [SKU(data=s) for s in data]
 
-    async def fetch_entitlements(self) -> list[Entitlement]:
+    async def fetch_entitlements(
+        self,
+        user: Snowflake | None = None,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        guild: Snowflake | None = None,
+        exclude_ended: bool = False,
+    ) -> list[Entitlement]:
         """|coro|
 
         Fetches the bot's entitlements.
 
         .. versionadded:: 2.5
 
+        .. versionchanged:: 2.6
+
+            Added new parameters
+
+        Parameters
+        -----------
+        user: :class:`.abc.Snowflake` | None
+            Limit the fetched entitlements to entitlements owned by this user.
+        skus: list[:class:`.abc.Snowflake`] | None
+            Limit the fetched entitlements to entitlements that are for these SKUs.
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieves guilds before this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieve guilds after this date or object.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        limit: Optional[:class:`int`]
+            The number of entitlements to retrieve.
+            If ``None``, it retrieves every entitlement. Note, however,
+            that this may make it a slow operation.
+            Defaults to ``100``.
+        guild: :class:`.abc.Snowflake` | None
+            Limit the fetched entitlements to entitlements owned by this guild.
+        exclude_ended: :class:`bool` | None
+            If ``True``, limits the fetched entitlements to those that have not ended.
+
         Returns
         -------
         List[:class:`.Entitlement`]
-            The bot's entitlements.
+            The application's entitlements.
+
+        Raises
+        -------
+        :exc:`HTTPException`
+            Retrieving the entitlements failed.
         """
-        data = await self._connection.http.list_entitlements(self.application_id)
-        return [Entitlement(data=e, state=self._connection) for e in data]
+        return EntitlementIterator(
+            self, 
+            user_id=user.id, 
+            skus=[sku.id for sku in skus], 
+            before=before, 
+            after=after, 
+            limit=limit, 
+            guild=guild.id, 
+            exclude_ended=exclude_ended,
+        )
