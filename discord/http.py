@@ -2990,7 +2990,7 @@ class HTTPClient:
             application_id=application_id,
             entitlement_id=entitlement_id,
         )
-        return self.request(r, json=payload)
+        return self.request(r)
 
     def create_test_entitlement(
         self,
