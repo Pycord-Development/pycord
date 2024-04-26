@@ -51,6 +51,7 @@ __all__ = (
     "GuildIterator",
     "MemberIterator",
     "ScheduledEventSubscribersIterator",
+    "EntitlementIterator",
 )
 
 if TYPE_CHECKING:
@@ -58,7 +59,6 @@ if TYPE_CHECKING:
     from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message
-    from .monetization import Entitlement
     from .scheduled_events import ScheduledEvent
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
@@ -940,33 +940,30 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
 class EntitlementIterator(_AsyncIterator["Entitlement"]):
     def __init__(
         self,
-        state,
+        bot,
         user_id: int | None = None,
         sku_ids: list[int] | None = None,
-        before: datetime.datetime | int | None = None,
-        after: datetime.datetime | int | None = None,
+        before: datetime.datetime | Object | None = None,
+        after: datetime.datetime | Object | None = None,
         limit: int | None = None,
         guild_id: int | None = None,
         exclude_ended: bool | None = None,
     ):
+        self.bot = bot
         self.user_id = user_id
         self.sku_ids = sku_ids
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
-        elif isinstance(before, int):
-            before = Object(before)
         if isinstance(after, datetime.datetime):
             after = Object(id=time_snowflake(after, high=True))
-        elif isinstance(after, int):
-            after = Object(after)
         self.before = before
         self.after = after
         self.limit = limit
         self.guild_id = guild_id
         self.exclude_ended = exclude_ended
 
-        self.state = state
-        self.get_bans = self.state.http.list_entitlements
+        self.state = self.bot._connection
+        self.get_entitlements = self.bot.http.list_entitlements
         self.entitlements = asyncio.Queue()
 
     async def next(self) -> BanEntry:
@@ -987,7 +984,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.retrieve = r
         return r > 0
 
-    async def fill_bans(self):
+    async def fill_entitlements(self):
         if not self._get_retrieve():
             return
         before = self.before.id if self.before else None
@@ -998,6 +995,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             limit=self.retrieve,
             user_id=self.user_id,
             guild_id=self.guild_id,
+            sku_ids=self.sku_ids,
             exclude_ended=self.exclude_ended,
         )
         if not data:
