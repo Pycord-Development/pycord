@@ -44,7 +44,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
 - Fixed option typehints being ignored when using `parameter_name`.
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
-- Fixed the type-hinting of `Guild.bulk_ban` to provide relevant examples. ([#2440](https://github.com/Pycord-Development/pycord/pull/2440))
 
 ### Changed
 
