@@ -2420,7 +2420,7 @@ of :class:`enum.Enum`.
 
         Entitlement was claimed by a user for free as a Nitro subscriber.
 
-    .. attribute:: app_subscription
+    .. attribute:: application_subscription
 
         Entitlement was purchased as an app subscription.
 
