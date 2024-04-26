@@ -2074,7 +2074,7 @@ class Client:
             Retrieving the entitlements failed.
         """
         return EntitlementIterator(
-            self,
+            self._connection,
             user_id=user.id,
             skus=[sku.id for sku in skus],
             before=before,
