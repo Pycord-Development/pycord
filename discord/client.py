@@ -2028,7 +2028,7 @@ class Client:
         limit: int | None = 100,
         guild: Snowflake | None = None,
         exclude_ended: bool = False,
-    ) -> list[Entitlement]:
+    ) -> EntitlementIterator:
         """|coro|
 
         Fetches the bot's entitlements.
@@ -2076,10 +2076,10 @@ class Client:
         return EntitlementIterator(
             self._connection,
             user_id=user.id,
-            skus=[sku.id for sku in skus],
+            sku_ids=[sku.id for sku in skus],
             before=before,
             after=after,
             limit=limit,
-            guild=guild.id,
+            guild_id=guild.id,
             exclude_ended=exclude_ended,
         )
