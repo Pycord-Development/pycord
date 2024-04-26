@@ -990,6 +990,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data = await self.get_entitlements(
+            self.bot.application_id,
             before=before,
             after=after,
             limit=self.retrieve,
