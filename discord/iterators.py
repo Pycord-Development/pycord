@@ -40,6 +40,7 @@ from typing import (
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
+from .monetization import Entitlement
 from .object import Object
 from .utils import maybe_coroutine, snowflake_time, time_snowflake
 
@@ -57,6 +58,7 @@ if TYPE_CHECKING:
     from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message
+    from .monetization import Entitlement
     from .scheduled_events import ScheduledEvent
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
@@ -933,3 +935,81 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
                 await self.subscribers.put(self.member_from_payload(element))
             else:
                 await self.subscribers.put(self.user_from_payload(element))
+
+
+class EntitlementIterator(_AsyncIterator["Entitlement"]):
+    def __init__(
+        self, 
+        state, 
+        user_id: int | None = None, 
+        sku_ids: list[int] | None = None, 
+        before: datetime.datetime | int | None = None,
+        after: datetime.datetime | int | None = None,
+        limit: int | None = None,
+        guild_id: int | None = None,
+        exclude_ended: bool | None = None,
+    ):
+        self.user_id = user_id
+        self.sku_ids = sku_ids
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=False))
+        elif isinstance(before, int):
+            before = Object(before)
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+        elif isinstance(after, int):
+            after = Object(after)
+        self.before = before
+        self.after = after
+        self.limit = limit
+        self.guild_id = guild_id
+        self.exclude_ended = exclude_ended
+        
+        self.state = state
+        self.get_bans = self.state.http.list_entitlements
+        self.entitlements = asyncio.Queue()
+
+    async def next(self) -> BanEntry:
+        if self.entitlements.empty():
+            await self.fill_entitlements()
+
+        try:
+            return self.entitlements.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self):
+        l = self.limit
+        if l is None or l > 100:
+            r = 100
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
+
+    async def fill_bans(self):
+        if not self._get_retrieve():
+            return
+        before = self.before.id if self.before else None
+        after = self.after.id if self.after else None
+        data = await self.get_entitlements(
+            before=before, 
+            after=after, 
+            limit=self.retrieve, 
+            user_id=self.user_id,
+            guild_id=self.guild_id, 
+            exclude_ended=self.exclude_ended,
+        )
+        if not data:
+            # no data, terminate
+            return
+        if self.limit:
+            self.limit -= self.retrieve
+
+        if len(data) < 100:
+            self.limit = 0  # terminate loop
+
+        self.after = Object(id=int(data[-1]["id"]))
+
+        for element in reversed(data):
+            await self.entitlements.put(Entitlement(data=element, state=self.state))
