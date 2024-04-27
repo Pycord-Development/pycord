@@ -32,7 +32,6 @@ from typing import (
     Any,
     ClassVar,
     List,
-    Literal,
     NamedTuple,
     Optional,
     Sequence,
@@ -3076,7 +3075,6 @@ class Guild(Hashable):
         user: Snowflake,
         *,
         delete_message_seconds: int | None = None,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
     ) -> None:
         """|coro|
@@ -3096,9 +3094,6 @@ class Guild(Hashable):
             The number of seconds worth of messages to delete from
             the user in the guild. The minimum is 0 and the maximum
             is 604800 (i.e. 7 days). The default is 0.
-        delete_message_days: Optional[:class:`int`]
-            ***Deprecated parameter***, same as ``delete_message_seconds`` but
-            is used for days instead.
         reason: Optional[:class:`str`]
             The reason the user got banned.
 
@@ -3109,10 +3104,6 @@ class Guild(Hashable):
         HTTPException
             Banning failed.
         """
-        if delete_message_seconds and delete_message_days:
-            raise TypeError(
-                "delete_message_seconds and delete_message_days are mutually exclusive."
-            )
 
         if delete_message_seconds is not None and not (
             0 <= delete_message_seconds <= 604800
@@ -3122,8 +3113,79 @@ class Guild(Hashable):
             )
 
         await self._state.http.ban(
-            user.id, self.id, delete_message_seconds, delete_message_days, reason=reason
+            user.id, self.id, delete_message_seconds, reason=reason
         )
+
+    async def bulk_ban(
+        self,
+        *users: Snowflake,
+        delete_message_seconds: int | None = None,
+        reason: str | None = None,
+    ) -> list[list[Snowflake], list[Snowflake]]:
+        r"""|coro|
+
+        Bulk ban users from the guild.
+
+        The users must meet the :class:`abc.Snowflake` abc.
+
+        You must have the :attr:`~Permissions.ban_members` permission to
+        do this.
+
+        Example Usage: ::
+
+            # Ban multiple users
+            successes, failures = await guild.bulk_ban(user1, user2, user3, ..., reason="Raid")
+
+            # Ban a list of users
+            successes, failures = await guild.bulk_ban(*users)
+
+        Parameters
+        ----------
+        \*users: :class:`abc.Snowflake`
+            An argument list of users to ban from the guild, up to 200.
+        delete_message_seconds: Optional[:class:`int`]
+            The number of seconds worth of messages to delete from
+            the user in the guild. The minimum is 0 and the maximum
+            is 604800 (i.e. 7 days). The default is 0.
+        reason: Optional[:class:`str`]
+            The reason the users were banned.
+
+        Returns
+        -------
+        List[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
+            Returns two lists: the first contains members that were successfully banned, while the second is members that could not be banned.
+
+        Raises
+        ------
+        ValueError
+            You tried to ban more than 200 users.
+        Forbidden
+            You do not have the proper permissions to ban.
+        HTTPException
+            No users were banned.
+        """
+
+        if delete_message_seconds is not None and not (
+            0 <= delete_message_seconds <= 604800
+        ):
+            raise TypeError(
+                "delete_message_seconds must be between 0 and 604800 seconds."
+            )
+
+        if len(users) > 200 or len(users) < 1:
+            raise ValueError(
+                "The number of users to be banned must be between 1 and 200."
+            )
+
+        data = await self._state.http.bulk_ban(
+            [u.id for u in users],
+            self.id,
+            delete_message_seconds,
+            reason=reason,
+        )
+        banned = [u for u in users if str(u.id) in data["banned_users"]]
+        failed = [u for u in users if str(u.id) in data["failed_users"]]
+        return banned, failed
 
     async def unban(self, user: Snowflake, *, reason: str | None = None) -> None:
         """|coro|

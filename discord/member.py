@@ -30,7 +30,7 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import TYPE_CHECKING, Any, Literal, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 import discord.abc
 
@@ -684,7 +684,6 @@ class Member(discord.abc.Messageable, _UserTag):
         self,
         *,
         delete_message_seconds: int | None = None,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
     ) -> None:
         """|coro|
@@ -695,7 +694,6 @@ class Member(discord.abc.Messageable, _UserTag):
             self,
             reason=reason,
             delete_message_seconds=delete_message_seconds,
-            delete_message_days=delete_message_days,
         )
 
     async def unban(self, *, reason: str | None = None) -> None:
