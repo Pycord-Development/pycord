@@ -45,7 +45,7 @@ from typing import (
     Union,
 )
 
-from ..channel import _threaded_guild_channel_factory
+from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
 from ..enums import (
     IntegrationType,
