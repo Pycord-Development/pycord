@@ -687,7 +687,7 @@ In order to customise the flag syntax we also have a few options that can be pas
         topic: Optional[str]
         nsfw: Optional[bool]
         slowmode: Optional[int]
-    
+
     # Hello there --bold True
     class Greeting(commands.FlagConverter):
         text: str = commands.flag(positional=True)
