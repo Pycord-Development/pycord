@@ -29,7 +29,16 @@ import inspect
 import re
 import sys
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Iterator, Literal, Optional, Pattern, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Iterator,
+    Literal,
+    Optional,
+    Pattern,
+    TypeVar,
+    Union,
+)
 
 from discord.utils import MISSING, MissingField, maybe_coroutine, resolve_annotation
 
@@ -172,7 +181,7 @@ def get_flags(
     flags: dict[str, Flag] = {}
     cache: dict[str, Any] = {}
     names: set[str] = set()
-    positional: Optional[Flag] = None
+    positional: Flag | None = None
     for name, annotation in annotations.items():
         flag = namespace.pop(name, MISSING)
         if isinstance(flag, Flag):
@@ -186,7 +195,9 @@ def get_flags(
 
         if flag.positional:
             if positional is not None:
-                raise TypeError(f"{flag.name!r} positional flag conflicts with {positional.name!r} flag.")
+                raise TypeError(
+                    f"{flag.name!r} positional flag conflicts with {positional.name!r} flag."
+                )
 
             positional = flag
 
@@ -291,7 +302,7 @@ class FlagsMeta(type):
         __commands_flag_case_insensitive__: bool
         __commands_flag_delimiter__: str
         __commands_flag_prefix__: str
-        __commands_flag_positional__: Optional[Flag]
+        __commands_flag_positional__: Flag | None
 
     def __new__(
         cls: type[type],
@@ -352,7 +363,7 @@ class FlagsMeta(type):
         delimiter = attrs.setdefault("__commands_flag_delimiter__", ":")
         prefix = attrs.setdefault("__commands_flag_prefix__", "")
 
-        positional_flag: Optional[Flag] = None
+        positional_flag: Flag | None = None
         for flag_name, flag in get_flags(attrs, global_ns, local_ns).items():
             flags[flag_name] = flag
             if flag.positional:
@@ -574,7 +585,11 @@ class FlagConverter(metaclass=FlagsMeta):
                 last_position = len(argument)
 
             if value:
-                name = positional_flag.name.casefold() if case_insensitive else positional_flag.name
+                name = (
+                    positional_flag.name.casefold()
+                    if case_insensitive
+                    else positional_flag.name
+                )
                 result[name] = [value]
 
         for match in cls.__commands_flag_regex__.finditer(argument):
