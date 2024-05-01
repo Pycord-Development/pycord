@@ -131,6 +131,8 @@ class Interaction:
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
         The custom ID for the interaction.
+    original_payload: :class:`InteractionPayload`
+        The original payload that was received from Discord.
     """
 
     __slots__: tuple[str, ...] = (
@@ -149,6 +151,7 @@ class Interaction:
         "version",
         "custom_id",
         "entitlements",
+        "original_payload",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -168,6 +171,7 @@ class Interaction:
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
+        self.original_payload: InteractionPayload = data
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
