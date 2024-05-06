@@ -2039,7 +2039,7 @@ class PartialMessage(Hashable):
             raise InvalidArgument("Cannot pass both embed and embeds parameters.")
 
         if embed is not MISSING:
-            fields["embeds"] = [embed.to_dict()]
+            fields["embeds"] = [] if embed is None else [embed.to_dict()]
 
         if embeds is not MISSING:
             fields["embeds"] = [embed.to_dict() for embed in embeds]
