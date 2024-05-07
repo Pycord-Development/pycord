@@ -44,6 +44,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
 - Fixed option typehints being ignored when using `parameter_name`.
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- Fixed parameter `embed=None` causing `AttributeError` on `PartialMessage.edit`.
+  ([#2446](https://github.com/Pycord-Development/pycord/pull/2446))
 
 ### Changed
 
