@@ -28,9 +28,9 @@ from typing import List
 
 import discord
 from discord.errors import DiscordException
-from discord.file import File
 from discord.ext.bridge import BridgeContext
 from discord.ext.commands import Context
+from discord.file import File
 from discord.member import Member
 from discord.user import User
 
@@ -123,9 +123,7 @@ class PaginatorButton(discord.ui.Button):
                 new_page += 1
         elif self.button_type == "last":
             new_page = self.paginator.page_count
-        await self.paginator.goto_page(
-            page_number=new_page, interaction=interaction
-        )
+        await self.paginator.goto_page(page_number=new_page, interaction=interaction)
 
 
 class Page:
@@ -659,9 +657,7 @@ class Paginator(discord.ui.View):
         else:
             await self.message.edit(view=self)
 
-    def _goto_page(
-        self, page_number: int = 0
-    ) -> tuple[Page, list[File] | None]:
+    def _goto_page(self, page_number: int = 0) -> tuple[Page, list[File] | None]:
         self.current_page = page_number
         self.update_buttons()
 
