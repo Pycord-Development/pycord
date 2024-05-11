@@ -655,11 +655,25 @@ def bridge_option(name, input_type=None, **kwargs):
     return decorator
 
 
-discord.commands.options.Option = BridgeOption
-discord.Option = BridgeOption
-warn_deprecated(
-    "Option",
-    "BridgeOption",
-    "2.5",
-    reference="https://github.com/Pycord-Development/pycord/pull/2417",
-)
+# TODO: Fix this, it doesn't work if discord.Option is imported before discord.ext.bridge
+
+
+# TODO: 2.7: Remove this
+class BridgeOptionDeprecated(BridgeOption):
+    @staticmethod
+    def _warn():
+        warn_deprecated(
+            "Option",
+            "BridgeOption",
+            "2.5",
+            "2.7",
+            reference="https://github.com/Pycord-Development/pycord/pull/2417",
+        )
+
+    def __init__(self, *args, **kwargs):
+        self._warn()
+        super().__init__(*args, **kwargs)
+
+
+discord.commands.options.Option = BridgeOptionDeprecated
+discord.Option = BridgeOptionDeprecated
