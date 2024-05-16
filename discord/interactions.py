@@ -1190,9 +1190,15 @@ class InteractionResponse:
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
+    @utils.deprecated("a button with type ButtonType.premium", "2.6")
     async def premium_required(self) -> Interaction:
         """|coro|
+        
         Responds to this interaction by sending a premium required message.
+
+        .. deprecated:: 2.6
+
+            A button with type :attr:`ButtonType.premium` should be used instead. 
 
         Raises
         ------
