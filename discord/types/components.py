@@ -33,7 +33,7 @@ from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
 ComponentType = Literal[1, 2, 3, 4]
-ButtonStyle = Literal[1, 2, 3, 4, 5]
+ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 
 
