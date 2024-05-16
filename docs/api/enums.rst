@@ -518,6 +518,9 @@ of :class:`enum.Enum`.
     .. attribute:: link
 
         Represents a link button.
+    .. attribute:: premium
+
+        Represents a premium button.
 
     .. attribute:: blurple
 
