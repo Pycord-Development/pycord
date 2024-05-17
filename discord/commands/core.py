@@ -1245,7 +1245,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         return as_dict
 
-    def add_command(self, command: SlashCommand) -> None:
+    def add_command(self, command: SlashCommand | SlashCommandGroup) -> None:
         if command.cog is None and self.cog is not None:
             command.cog = self.cog
 

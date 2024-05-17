@@ -43,8 +43,6 @@ from typing import (
     Union,
 )
 
-import discord
-
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
@@ -150,7 +148,7 @@ async def logging_coroutine(
     coroutine: Coroutine[Any, Any, T], *, info: str
 ) -> T | None:
     try:
-        await coroutine
+        return await coroutine
     except Exception:
         _log.exception("Exception occurred during %s", info)
 
@@ -531,9 +529,9 @@ class ConnectionState:
     async def query_members(
         self,
         guild: Guild,
-        query: str,
+        query: str | None,
         limit: int,
-        user_ids: list[int],
+        user_ids: list[int] | None,
         cache: bool,
         presences: bool,
     ):
