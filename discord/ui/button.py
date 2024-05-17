@@ -248,7 +248,7 @@ class Button(Item[V]):
             custom_id=button.custom_id,
             url=button.url,
             emoji=button.emoji,
-            sku_id=button.sku_id
+            sku_id=button.sku_id,
             row=None,
         )
 
