@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
 - Added `member` data to the `raw_reaction_remove` event.
   ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
+- Added `stacklevel` param to `utils.warn_deprecated` and `utils.deprecated`.
+  ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
 
 ### Fixed
 
@@ -46,6 +48,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2415](https://github.com/Pycord-Development/pycord/pull/2415))
 - Fixed option typehints being ignored when using `parameter_name`.
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- Fixed parameter `embed=None` causing `AttributeError` on `PartialMessage.edit`.
+  ([#2446](https://github.com/Pycord-Development/pycord/pull/2446))
+- Fixed paginator to revert state if a page update callback fails.
+  ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 
 ### Changed
 
