@@ -173,4 +173,4 @@ class Entitlement(Hashable):
         HTTPException
             Deleting the entitlement failed.
         """
-        await self._state.http.delete_test_entitlement(self.application_id, self.id)
+        await self._state.http.delete_test_entitlement(self.id)
