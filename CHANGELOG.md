@@ -51,7 +51,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed paginator to revert state if a page update callback fails.
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 - Fixed the incorrect type of `RawMemberRemoveEvent.user`.
-  ([#2456](https://github.com/Pycord-Development/pycord/pull/2456))
+  ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
 
 ### Changed
 
