@@ -146,9 +146,9 @@ _log = logging.getLogger(__name__)
 
 async def logging_coroutine(
     coroutine: Coroutine[Any, Any, T], *, info: str
-) -> T | None:
+) -> None:
     try:
-        return await coroutine
+        await coroutine
     except Exception:
         _log.exception("Exception occurred during %s", info)
 
