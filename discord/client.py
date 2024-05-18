@@ -1990,7 +1990,7 @@ class Client:
 
         Parameters
         ----------
-        *role_connection_metadata: List[:class:`ApplicationRoleConnectionMetadata`]
+        *role_connection_metadata: :class:`ApplicationRoleConnectionMetadata`
             The new metadata records to send to Discord.
 
         Returns

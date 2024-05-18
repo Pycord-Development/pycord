@@ -278,7 +278,7 @@ class CogMeta(type):
 
         return new_cls
 
-    def __init__(cls, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args)
 
     @classmethod
