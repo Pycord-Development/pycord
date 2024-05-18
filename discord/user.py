@@ -43,8 +43,8 @@ if TYPE_CHECKING:
     from .message import Message
     from .state import ConnectionState
     from .types.channel import DMChannel as DMChannelPayload
-    from .types.user import User as UserPayload
     from .types.user import PartialUser as PartialUserPayload
+    from .types.user import User as UserPayload
 
 
 __all__ = (
@@ -90,7 +90,9 @@ class BaseUser(_UserTag):
         _avatar_decoration: dict | None
         _public_flags: int
 
-    def __init__(self, *, state: ConnectionState, data: UserPayload | PartialUserPayload) -> None:
+    def __init__(
+        self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
+    ) -> None:
         self._state = state
         self._update(data)
 
