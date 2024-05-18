@@ -144,9 +144,7 @@ class ChunkRequest:
 _log = logging.getLogger(__name__)
 
 
-async def logging_coroutine(
-    coroutine: Coroutine[Any, Any, T], *, info: str
-) -> None:
+async def logging_coroutine(coroutine: Coroutine[Any, Any, T], *, info: str) -> None:
     try:
         await coroutine
     except Exception:
