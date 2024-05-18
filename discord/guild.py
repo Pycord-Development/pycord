@@ -648,7 +648,7 @@ class Guild(Hashable):
 
     @property
     def voice_client(self) -> VoiceClient | None:
-        """Returns the :class:`VoiceProtocol` associated with this guild, if any."""
+        """Returns the :class:`VoiceClient` associated with this guild, if any."""
         return self._state._get_voice_client(self.id)
 
     @property
