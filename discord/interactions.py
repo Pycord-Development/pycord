@@ -196,9 +196,6 @@ class Interaction:
         self._permissions: int = 0
 
         self._guild: Guild | None = None
-        self._guild_data = data.get("guild")
-        if self.guild is None and self._guild_data:
-            self._guild = Guild(data=self._guild_data, state=self._state)
 
         # TODO: there's a potential data loss here
         if self.guild_id:
@@ -1221,7 +1218,7 @@ class InteractionResponse:
         self._responded = True
         return self._parent
 
-    async def _locked_response(self, coro: Coroutine[Any]):
+    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> None:
         """|coro|
 
         Wraps a response and makes sure that it's locked while executing.

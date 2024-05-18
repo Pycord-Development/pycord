@@ -86,7 +86,7 @@ if TYPE_CHECKING:
     from .types.message import Message as MessagePayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
-    from .voice_client import VoiceProtocol
+    from .voice_client import VoiceClient
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
@@ -279,7 +279,7 @@ class ConnectionState:
         if views:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)
-        self._voice_clients: dict[int, VoiceProtocol] = {}
+        self._voice_clients: dict[int, VoiceClient] = {}
 
         # LRU of max size 128
         self._private_channels: OrderedDict[int, PrivateChannel] = OrderedDict()
@@ -332,14 +332,14 @@ class ConnectionState:
         return ret
 
     @property
-    def voice_clients(self) -> list[VoiceProtocol]:
+    def voice_clients(self) -> list[VoiceClient]:
         return list(self._voice_clients.values())
 
-    def _get_voice_client(self, guild_id: int | None) -> VoiceProtocol | None:
+    def _get_voice_client(self, guild_id: int | None) -> VoiceClient | None:
         # the keys of self._voice_clients are ints
         return self._voice_clients.get(guild_id)  # type: ignore
 
-    def _add_voice_client(self, guild_id: int, voice: VoiceProtocol) -> None:
+    def _add_voice_client(self, guild_id: int, voice: VoiceClient) -> None:
         self._voice_clients[guild_id] = voice
 
     def _remove_voice_client(self, guild_id: int) -> None:

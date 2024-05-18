@@ -309,7 +309,7 @@ class AuditLogChanges:
                 "$add_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.before, self.after, entry, elem["new_value"], attr
+                    self.before, self.after, entry, elem["new_value"], attr   # type: ignore
                 )
                 continue
             elif attr in [
@@ -318,7 +318,7 @@ class AuditLogChanges:
                 "$remove_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.after, self.before, entry, elem["new_value"], attr
+                    self.after, self.before, entry, elem["new_value"], attr   # type: ignore
                 )
                 continue
 

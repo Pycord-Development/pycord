@@ -328,7 +328,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if not self._buckets.valid:
             return False
 
-        bucket = self._buckets.get_bucket(ctx)
+        bucket = self._buckets.get_bucket(ctx)  # type: ignore
         current = utcnow().timestamp()
         return bucket.get_tokens(current) == 0
 
@@ -363,7 +363,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             If this is ``0.0`` then the command isn't on cooldown.
         """
         if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore
             current = utcnow().timestamp()
             return bucket.get_retry_after(current)
 
