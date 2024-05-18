@@ -126,12 +126,19 @@ class VoiceState:
     )
 
     def __init__(
-        self, *, data: VoiceStatePayload | GuildVoiceStatePayload, channel: VocalGuildChannel | None = None
+        self,
+        *,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None = None,
     ):
         self.session_id: str = data.get("session_id")
         self._update(data, channel)
 
-    def _update(self, data: VoiceStatePayload | GuildVoiceStatePayload, channel: VocalGuildChannel | None):
+    def _update(
+        self,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None,
+    ):
         self.self_mute: bool = data.get("self_mute", False)
         self.self_deaf: bool = data.get("self_deaf", False)
         self.self_stream: bool = data.get("self_stream", False)
