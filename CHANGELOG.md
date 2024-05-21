@@ -52,6 +52,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2446](https://github.com/Pycord-Development/pycord/pull/2446))
 - Fixed paginator to revert state if a page update callback fails.
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
+- Fixed missing `application_id` in `Entitlement.delete`.
+  ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
 
 ### Changed
 
