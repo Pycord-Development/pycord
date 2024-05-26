@@ -33,8 +33,8 @@ of :class:`enum.Enum`.
 
         .. note::
 
-            Any integer between -2⁵³ and 2⁵³. 
-            
+            Any integer between -2⁵³ and 2⁵³.
+
             IDs, such as 881224361015672863, are often too for this input type.
 
     .. attribute:: boolean
@@ -58,8 +58,8 @@ of :class:`enum.Enum`.
 
         .. note::
 
-            Any floating-point number between -2⁵³ and 2⁵³. 
-            
+            Any floating-point number between -2⁵³ and 2⁵³.
+
             IDs, such as 881224361015672863, are often too for this input type.
 
     .. attribute:: attachment
