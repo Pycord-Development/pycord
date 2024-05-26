@@ -305,7 +305,6 @@ class PollResults:
         """
         Get the total number of votes across all answers. This may not be accurate if :attr:`is_finalized` is ``False``.
 
-
         Returns
         -------
         :class:`int`
@@ -316,7 +315,6 @@ class PollResults:
 
 class Poll:
     """Represents a Poll. Polls are sent in regular messages, and you must have :attr:`~discord.Permissions.send_polls` to send them.
-
 
     .. versionadded:: 2.6
 
@@ -500,7 +498,6 @@ class Poll:
         """
         Immediately ends this poll, if attached to a message. Only doable by the poll's owner.
         Shortcut to :meth:`Message.end_poll`
-
 
         Returns
         -------
