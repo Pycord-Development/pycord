@@ -303,7 +303,8 @@ class PollResults:
 
     def total_votes(self) -> int:
         """
-        Get the total number of votes across all answers. This may not be precise if :attr:`is_finalized` is ``False``.
+        Get the total number of votes across all answers. This may not be accurate if :attr:`is_finalized` is ``False``.
+
 
         Returns
         -------
@@ -314,7 +315,8 @@ class PollResults:
 
 
 class Poll:
-    """Represents a Poll. Polls are sent in regular messages, and You must have :attr:`~discord.Permissions.send_polls` to send them.
+    """Represents a Poll. Polls are sent in regular messages, and you must have :attr:`~discord.Permissions.send_polls` to send them.
+
 
     .. versionadded:: 2.6
 
@@ -453,7 +455,8 @@ class Poll:
         This function returns the class instance to allow for fluent-style
         chaining.
 
-        Attributes
+        Parameters
+
         ----------
         text: :class:`str`
             The answer text. Maximum 55 characters.
@@ -482,7 +485,6 @@ class Poll:
         Immediately ends this poll, if attached to a message. Only doable by the poll's owner.
         Shortcut to :meth:`Message.end_poll`
 
-        .. versionadded:: 2.6
 
         Returns
         -------

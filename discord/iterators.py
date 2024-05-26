@@ -260,7 +260,7 @@ class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
             raise NoMoreItems()
 
     async def fill_users(self):
-        # this is a hack because >circular imports<
+        # import here to prevent circular imports
         from .user import User
 
         if self.limit > 0:
