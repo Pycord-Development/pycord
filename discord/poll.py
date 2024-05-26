@@ -482,7 +482,7 @@ class Poll:
             )
             poll.add_answer(text="Green", emoji="💚")
             poll.add_answer(text="Blue", emoji="💙")
-        
+
         Chaining style ::
 
             poll = Poll("What's your favourite colour?").add_answer("Green").add_answer("Blue")

@@ -1205,6 +1205,7 @@ class Intents(BaseFlags):
         """
         return (1 << 24) | (1 << 25)
 
+
 @fill_with_flags()
 class MemberCacheFlags(BaseFlags):
     """Controls the library's cache policy when it comes to members.
