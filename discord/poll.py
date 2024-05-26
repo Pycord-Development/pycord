@@ -485,7 +485,6 @@ class Poll:
         Chaining style ::
 
             poll = Poll("What's your favorite color?").add_answer("Red", emoji="❤").add_answer("Green").add_answer("Blue")
-
         """
         if len(self.answers) >= 10:
             raise ValueError("Polls may only have up to 10 answers.")
