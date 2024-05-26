@@ -473,7 +473,8 @@ class Poll:
         Regular usage ::
 
             poll = Poll(
-                question=PollMedia("What's your favourite colour?"),
+                question=PollMedia("What's your favorite color?"),
+
                 answers=[PollAnswer("Red", "❤")]
                 duration=24,
                 allow_multiselect=False
