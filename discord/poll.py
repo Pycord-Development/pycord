@@ -474,6 +474,7 @@ class Poll:
 
             poll = Poll(
                 question=PollMedia("What's your favourite colour?"),
+                answers=[PollAnswer("Red", "❤")]
                 duration=24,
                 allow_multiselect=False
             )
@@ -482,7 +483,7 @@ class Poll:
 
         Chaining style ::
 
-            poll = Poll("What's your favourite colour?").add_answer("Green").add_answer("Blue")
+            poll = Poll("What's your favourite colour?").add_answer("Red", emoji="❤").add_answer("Green").add_answer("Blue")
         """
         if len(self.answers) >= 10:
             raise ValueError("Polls may only have up to 10 answers.")
