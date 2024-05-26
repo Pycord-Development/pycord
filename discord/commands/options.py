@@ -41,7 +41,7 @@ from ..channel import (
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
-from ..utils import MISSING
+from ..utils import MISSING, basic_autocomplete
 
 if TYPE_CHECKING:
     from ..ext.commands import Converter
@@ -196,6 +196,8 @@ class Option:
         if input_type_is_class and issubclass(input_type, (Enum, DiscordEnum)):
             if description is None:
                 description = inspect.getdoc(input_type)
+                if description and len(description) > 100:
+                    description = description[:97] + "..."
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
             if all(isinstance(elem.value, value_class) for elem in enum_choices):
@@ -250,10 +252,19 @@ class Option:
             kwargs.pop("required", True) if "default" not in kwargs else False
         )
         self.default = kwargs.pop("default", None)
-        self.choices: list[OptionChoice] = enum_choices or [
-            o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", [])
-        ]
+
+        self.autocomplete = kwargs.pop("autocomplete", None)
+        if len(enum_choices) > 25:
+            self.choices: list[OptionChoice] = []
+            for e in enum_choices:
+                e.value = str(e.value)
+            self.autocomplete = basic_autocomplete(enum_choices)
+            self.input_type = SlashCommandOptionType.string
+        else:
+            self.choices: list[OptionChoice] = enum_choices or [
+                o if isinstance(o, OptionChoice) else OptionChoice(o)
+                for o in kwargs.pop("choices", [])
+            ]
 
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
@@ -322,8 +333,6 @@ class Option:
                 )
             if self.max_length < 1 or self.max_length > 6000:
                 raise AttributeError("max_length must between 1 and 6000 (inclusive)")
-
-        self.autocomplete = kwargs.pop("autocomplete", None)
 
         self.name_localizations = kwargs.pop("name_localizations", MISSING)
         self.description_localizations = kwargs.pop(
