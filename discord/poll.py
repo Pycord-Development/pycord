@@ -455,8 +455,7 @@ class Poll:
         This function returns the class instance to allow for fluent-style
         chaining.
 
-        Attributes
-
+        Parameters
         ----------
         text: :class:`str`
             The answer text. Maximum 55 characters.
