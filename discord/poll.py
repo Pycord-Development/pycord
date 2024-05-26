@@ -469,6 +469,23 @@ class Poll:
             The poll already has 10 answers or ``text`` exceeds the character length.
         RuntimeError
             You cannot add an answer to an existing poll.
+
+        Examples
+        --------
+
+        Regular usage ::
+
+            poll = Poll(
+                question=PollMedia("What's your favourite colour?"),
+                duration=24,
+                allow_multiselect=False
+            )
+            poll.add_answer(text="Green", emoji="💚")
+            poll.add_answer(text="Blue", emoji="💙")
+        
+        Chaining style ::
+
+            poll = Poll("What's your favourite colour?").add_answer("Green").add_answer("Blue")
         """
         if len(self.answers) >= 10:
             raise ValueError("Polls may only have up to 10 answers.")

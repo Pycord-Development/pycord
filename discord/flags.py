@@ -1145,26 +1145,6 @@ class Intents(BaseFlags):
         """
         return 1 << 21
 
-    @alias_flag_value
-    def polls(self):
-        """:class:`bool`: Whether poll-related events in guilds and direct messages are enabled.
-
-        This is a shortcut to set or get both :attr:`guild_polls` and :attr:`dm_polls`.
-
-        This corresponds to the following events:
-
-        - :func:`on_poll_vote_add` (both guilds and DMs)
-        - :func:`on_poll_vote_remove` (both guilds and DMs)
-        - :func:`on_raw_poll_vote_add` (both guilds and DMs)
-        - :func:`on_raw_poll_vote_remove` (both guilds and DMs)
-
-        This also corresponds to the following attributes and classes in terms of cache:
-
-        - :attr:`PollAnswer.count` (both guild and DM polls)
-        - :attr:`PollResults.answer_counts` (both guild and DM polls)
-        """
-        return (1 << 24) | (1 << 25)
-
     @flag_value
     def guild_polls(self):
         """:class:`bool`: Whether poll-related events in guilds are enabled.
@@ -1205,6 +1185,25 @@ class Intents(BaseFlags):
         """
         return 1 << 25
 
+    @alias_flag_value
+    def polls(self):
+        """:class:`bool`: Whether poll-related events in guilds and direct messages are enabled.
+
+        This is a shortcut to set or get both :attr:`guild_polls` and :attr:`dm_polls`.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (both guilds and DMs)
+        - :func:`on_poll_vote_remove` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_add` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_remove` (both guilds and DMs)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`PollAnswer.count` (both guild and DM polls)
+        - :attr:`PollResults.answer_counts` (both guild and DM polls)
+        """
+        return (1 << 24) | (1 << 25)
 
 @fill_with_flags()
 class MemberCacheFlags(BaseFlags):
