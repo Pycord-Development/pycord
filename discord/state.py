@@ -896,8 +896,6 @@ class ConnectionState:
             if answer is not None:
                 if answer.id in counts:
                     counts[answer.id].count -= 1
-                    if counts[answer.id].count < 1:
-                        counts.pop(answer.id)
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
             if answer is not None:
