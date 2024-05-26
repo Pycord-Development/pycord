@@ -455,7 +455,7 @@ class Poll:
         This function returns the class instance to allow for fluent-style
         chaining.
 
-        Parameters
+        Attributes
 
         ----------
         text: :class:`str`
