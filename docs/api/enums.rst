@@ -30,6 +30,13 @@ of :class:`enum.Enum`.
     .. attribute:: integer
 
         An integer.
+
+        .. note::
+
+            Any integer between -2⁵³ and 2⁵³. 
+            
+            IDs, such as 881224361015672863, are often too for this input type.
+
     .. attribute:: boolean
 
         A boolean.
@@ -47,7 +54,13 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating number.
+        A floating-point number.
+
+        .. note::
+
+            Any floating-point number between -2⁵³ and 2⁵³. 
+            
+            IDs, such as 881224361015672863, are often too for this input type.
 
     .. attribute:: attachment
 
