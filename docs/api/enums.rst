@@ -33,7 +33,7 @@ of :class:`enum.Enum`.
 
         .. note::
 
-            IDs, such as 881224361015672863, are often too for this input type.
+            IDs, such as 881224361015672863, are often too big for this input type.
 
     .. attribute:: boolean
 
