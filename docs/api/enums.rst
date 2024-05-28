@@ -29,11 +29,9 @@ of :class:`enum.Enum`.
         A string.
     .. attribute:: integer
 
-        An integer.
+        An integer between -2⁵³ and 2⁵³.
 
         .. note::
-
-            Any integer between -2⁵³ and 2⁵³.
 
             IDs, such as 881224361015672863, are often too for this input type.
 
@@ -54,11 +52,9 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating-point number.
+        A floating-point number between -2⁵³ and 2⁵³.
 
         .. note::
-
-            Any floating-point number between -2⁵³ and 2⁵³.
 
             IDs, such as 881224361015672863, are often too for this input type.
 
