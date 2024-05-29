@@ -235,9 +235,7 @@ class Button(Item[V]):
         elif isinstance(value, int):
             self._underlying.sku_id = value
         else:
-            raise TypeError(
-                f"expected int or None, received {value.__class__} instead"
-            )
+            raise TypeError(f"expected int or None, received {value.__class__} instead")
 
     @classmethod
     def from_component(cls: type[B], button: ButtonComponent) -> B:
@@ -288,10 +286,10 @@ def button(
 
     .. note::
 
-        Premium buttons as well as buttons with a URL cannot 
-        be created with this function. Consider creating a 
-        :class:`Button` manually instead. This is because buttons 
-        with a URL do not have a callback associated with them 
+        Premium buttons as well as buttons with a URL cannot
+        be created with this function. Consider creating a
+        :class:`Button` manually instead. This is because buttons
+        with a URL do not have a callback associated with them
         since Discord does not do any processing with it.
 
     Parameters
