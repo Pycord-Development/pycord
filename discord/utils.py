@@ -296,6 +296,7 @@ def warn_deprecated(
     since: str | None = None,
     removed: str | None = None,
     reference: str | None = None,
+    stacklevel: int = 3,
 ) -> None:
     """Warn about a deprecated function, with the ability to specify details about the deprecation. Emits a
     DeprecationWarning.
@@ -315,6 +316,8 @@ def warn_deprecated(
     reference: Optional[:class:`str`]
         A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
         issue/PR.
+    stacklevel: :class:`int`
+        The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     """
     warnings.simplefilter("always", DeprecationWarning)  # turn off filter
     message = f"{name} is deprecated"
@@ -328,7 +331,7 @@ def warn_deprecated(
     if reference:
         message += f" See {reference} for more information."
 
-    warnings.warn(message, stacklevel=3, category=DeprecationWarning)
+    warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
     warnings.simplefilter("default", DeprecationWarning)  # reset filter
 
 
@@ -337,6 +340,7 @@ def deprecated(
     since: str | None = None,
     removed: str | None = None,
     reference: str | None = None,
+    stacklevel: int = 3,
     *,
     use_qualname: bool = True,
 ) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
@@ -356,6 +360,8 @@ def deprecated(
     reference: Optional[:class:`str`]
         A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
         issue/PR.
+    stacklevel: :class:`int`
+        The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     use_qualname: :class:`bool`
         Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of
         the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__
