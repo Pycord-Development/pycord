@@ -52,8 +52,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 - Fixed missing `application_id` in `Entitlement.delete`.
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
-- Fixed `AttributeError` in `register_commands` when a `discord.Option` was constructed
-  with its `input_type` set to `None`
+- Fixed `AttributeError` due to `discord.Option` being initialised
+  with `input_type` set to `None`.
   ([#2464](https://github.com/Pycord-Development/pycord/pull/2464))
 
 ### Changed
