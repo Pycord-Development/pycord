@@ -115,6 +115,7 @@ class Option:
     input_type: Union[Type[:class:`str`], Type[:class:`bool`], Type[:class:`int`], Type[:class:`float`], Type[:class:`.abc.GuildChannel`], Type[:class:`Thread`], Type[:class:`Member`], Type[:class:`User`], Type[:class:`Attachment`], Type[:class:`Role`], Type[:class:`.abc.Mentionable`], :class:`SlashCommandOptionType`, Type[:class:`.ext.commands.Converter`], Type[:class:`enums.Enum`], Type[:class:`Enum`]]
         The type of input that is expected for this option. This can be a :class:`SlashCommandOptionType`,
         an associated class, a channel type, a :class:`Converter`, a converter class or an :class:`enum.Enum`.
+        If a :class:`enum.Enum` is used and it has up to 25 values, :attr:`choices` will be automatically filled. If the :class:`enum.Enum` has more than 25 values, :attr:`autocomplete` will be implemented with :func:`discord.utils.basic_autocomplete` instead.
     name: :class:`str`
         The name of this option visible in the UI.
         Inherits from the variable name if not provided as a parameter.
