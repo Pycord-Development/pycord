@@ -242,14 +242,14 @@ class Attachment(Hashable):
                     setattr(self, attr, value)
 
     @property
-    def expires_at(self) -> datetime.datetime:
+    def expires_at(self) -> datetime.datetime | None:
         """This attachment URL's expiry time in UTC."""
         if not self._ex:
             return None
         return datetime.datetime.utcfromtimestamp(int(self._ex, 16))
 
     @property
-    def issued_at(self) -> datetime.datetime:
+    def issued_at(self) -> datetime.datetime | None:
         """The attachment URL's issue time in UTC."""
         if not self._is:
             return None

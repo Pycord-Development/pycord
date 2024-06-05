@@ -61,4 +61,4 @@ class PromptOption(TypedDict):
     emoji_name: NotRequired[str]
     emoji_animated: NotRequired[bool]
     title: str
-    description: NotRequired[str]
+    description: str | None

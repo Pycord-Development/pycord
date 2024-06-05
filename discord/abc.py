@@ -116,7 +116,7 @@ async def _single_delete_strategy(
 
 
 async def _purge_messages_helper(
-    channel: TextChannel | Thread | VoiceChannel,
+    channel: TextChannel | StageChannel | Thread | VoiceChannel,
     *,
     limit: int | None = 100,
     check: Callable[[Message], bool] = MISSING,
@@ -1346,7 +1346,7 @@ class Messageable:
         file: File = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
         enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
@@ -1367,7 +1367,7 @@ class Messageable:
         files: list[File] = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
         enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
@@ -1388,7 +1388,7 @@ class Messageable:
         file: File = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
         enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
@@ -1409,7 +1409,7 @@ class Messageable:
         files: list[File] = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
         enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
@@ -1471,7 +1471,7 @@ class Messageable:
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
-        nonce: :class:`int`
+        nonce: Union[:class:`str`, :class:`int`]
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
         enforce_nonce: Optional[:class:`bool`]
