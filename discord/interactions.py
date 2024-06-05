@@ -1221,7 +1221,7 @@ class InteractionResponse:
         self._responded = True
         return self._parent
 
-    async def _locked_response(self, coro: Coroutine[Any]):
+    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> None:
         """|coro|
 
         Wraps a response and makes sure that it's locked while executing.

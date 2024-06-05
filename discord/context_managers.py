@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 __all__ = ("Typing",)
 
 
-def _typing_done_callback(fut: asyncio.Future) -> None:
+def _typing_done_callback(fut: asyncio.Task) -> None:
     # just retrieve any exception and call it a day
     try:
         fut.exception()

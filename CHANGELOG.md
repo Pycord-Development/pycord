@@ -52,6 +52,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 - Fixed missing `application_id` in `Entitlement.delete`.
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
+- Fixed many inaccurate type hints throughout the library.
+  ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
 
 ### Changed
 

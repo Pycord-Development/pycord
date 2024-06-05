@@ -76,6 +76,7 @@ if TYPE_CHECKING:
     from ..mentions import AllowedMentions
     from ..state import ConnectionState
     from ..types.message import Message as MessagePayload
+    from ..types.webhook import FollowerWebhook as FollowerWebhookPayload
     from ..types.webhook import Webhook as WebhookPayload
     from ..ui.view import View
 
@@ -401,7 +402,7 @@ class AsyncWebhookAdapter:
         payload: dict[str, Any] | None = None,
         multipart: list[dict[str, Any]] | None = None,
         files: list[File] | None = None,
-    ) -> Response[Message]:
+    ) -> Response[WebhookMessage]:
         params = {}
 
         if thread_id:
@@ -460,7 +461,7 @@ class AsyncWebhookAdapter:
         session: aiohttp.ClientSession,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
-    ) -> Response[WebhookPayload]:
+    ) -> Response[WebhookPayload | FollowerWebhookPayload]:
         route = Route("GET", "/webhooks/{webhook_id}", webhook_id=webhook_id)
         return self.request(
             route, session=session, proxy=proxy, proxy_auth=proxy_auth, auth_token=token
@@ -474,7 +475,7 @@ class AsyncWebhookAdapter:
         session: aiohttp.ClientSession,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
-    ) -> Response[WebhookPayload]:
+    ) -> Response[WebhookPayload | FollowerWebhookPayload]:
         route = Route(
             "GET",
             "/webhooks/{webhook_id}/{webhook_token}",
@@ -985,7 +986,7 @@ class BaseWebhook(Hashable):
 
     def __init__(
         self,
-        data: WebhookPayload,
+        data: WebhookPayload | FollowerWebhookPayload,
         token: str | None = None,
         state: ConnectionState | None = None,
     ):
@@ -995,7 +996,7 @@ class BaseWebhook(Hashable):
         )
         self._update(data)
 
-    def _update(self, data: WebhookPayload):
+    def _update(self, data: WebhookPayload | FollowerWebhookPayload):
         self.id = int(data["id"])
         self.type = try_enum(WebhookType, int(data["type"]))
         self.channel_id = utils._get_as_snowflake(data, "channel_id")
@@ -1154,7 +1155,7 @@ class Webhook(BaseWebhook):
 
     def __init__(
         self,
-        data: WebhookPayload,
+        data: WebhookPayload | FollowerWebhookPayload,
         session: aiohttp.ClientSession,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
