@@ -55,6 +55,9 @@ class Reaction(TypedDict):
     me: bool
     emoji: PartialEmoji
     burst: bool
+    me_burst: bool
+    burst_colors: list[str]
+    count_details: ReactionCountDetails
 
 
 class ReactionCountDetails(TypedDict):
@@ -66,6 +69,7 @@ class Attachment(TypedDict):
     height: NotRequired[int | None]
     width: NotRequired[int | None]
     content_type: NotRequired[str]
+    description: NotRequired[str]
     spoiler: NotRequired[bool]
     id: Snowflake
     filename: str

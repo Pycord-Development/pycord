@@ -193,7 +193,7 @@ def _transform_type(
 
 def _transform_actions(
     entry: AuditLogEntry, data: list[AutoModActionPayload] | None
-) -> AutoModAction | None:
+) -> list[AutoModAction] | None:
     if data is None:
         return None
     else:
@@ -201,8 +201,8 @@ def _transform_actions(
 
 
 def _transform_trigger_metadata(
-    entry: AuditLogEntry, data: list[AutoModActionPayload] | None
-) -> AutoModAction | None:
+    entry: AuditLogEntry, data: AutoModTriggerMetadataPayload | None
+) -> AutoModTriggerMetadata | None:
     if data is None:
         return None
     else:
@@ -309,7 +309,7 @@ class AuditLogChanges:
                 "$add_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.before, self.after, entry, elem["new_value"], attr
+                    self.before, self.after, entry, elem["new_value"], attr  # type: ignore
                 )
                 continue
             elif attr in [
@@ -318,7 +318,7 @@ class AuditLogChanges:
                 "$remove_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.after, self.before, entry, elem["new_value"], attr
+                    self.after, self.before, entry, elem["new_value"], attr  # type: ignore
                 )
                 continue
 

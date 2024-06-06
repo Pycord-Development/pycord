@@ -30,7 +30,6 @@ from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
-from .types.user import User
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -58,6 +57,7 @@ if TYPE_CHECKING:
         TypingEvent,
         VoiceChannelStatusUpdateEvent,
     )
+    from .user import User
 
 
 __all__ = (
