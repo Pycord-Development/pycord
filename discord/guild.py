@@ -107,7 +107,7 @@ if TYPE_CHECKING:
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
-    from .voice_client import VoiceProtocol
+    from .voice_client import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -647,8 +647,8 @@ class Guild(Hashable):
         return self.get_member(self_id)  # type: ignore
 
     @property
-    def voice_client(self) -> VoiceProtocol | None:
-        """Returns the :class:`VoiceProtocol` associated with this guild, if any."""
+    def voice_client(self) -> VoiceClient | None:
+        """Returns the :class:`VoiceClient` associated with this guild, if any."""
         return self._state._get_voice_client(self.id)
 
     @property
@@ -3121,7 +3121,7 @@ class Guild(Hashable):
         *users: Snowflake,
         delete_message_seconds: int | None = None,
         reason: str | None = None,
-    ) -> list[list[Snowflake], list[Snowflake]]:
+    ) -> tuple[list[Snowflake], list[Snowflake]]:
         r"""|coro|
 
         Bulk ban users from the guild.
@@ -3152,7 +3152,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        List[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
+        Tuple[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
             Returns two lists: the first contains members that were successfully banned, while the second is members that could not be banned.
 
         Raises
