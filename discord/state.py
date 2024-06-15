@@ -706,8 +706,6 @@ class ConnectionState:
         if self._messages is not None:
             self._messages.append(message)
         # we ensure that the channel is either a TextChannel, VoiceChannel, StageChannel, or Thread
-        # if message.poll:
-        #     self.dispatch("poll_create", message.poll)
         if channel and channel.__class__ in (
             TextChannel,
             VoiceChannel,
