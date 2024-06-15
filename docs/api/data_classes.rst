@@ -93,6 +93,34 @@ Embed
 .. autoclass:: EmbedProvider
     :members:
 
+Poll
+~~~~~
+
+.. attributetable:: Poll
+
+.. autoclass:: Poll
+    :members:
+
+.. attributetable:: PollMedia
+
+.. autoclass:: PollMedia
+    :members:
+
+.. attributetable:: PollAnswer
+
+.. autoclass:: PollAnswer
+    :members:
+
+.. attributetable:: PollAnswerCount
+
+.. autoclass:: PollAnswerCount
+    :members:
+
+.. attributetable:: PollResults
+
+.. autoclass:: PollResults
+    :members:
+
 
 
 Flags

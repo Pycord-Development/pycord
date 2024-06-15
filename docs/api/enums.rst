@@ -2402,3 +2402,14 @@ of :class:`enum.Enum`.
     .. attribute:: user
 
         Entitlement is owned by a user.
+
+
+.. class:: PollLayoutType
+
+    Represents a poll's layout type.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: default
+
+        Represents the default layout.
