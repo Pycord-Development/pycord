@@ -85,7 +85,7 @@ class PollMedia:
                         "id": str(self.emoji.id),
                     }
                 else:
-                    dict["emoji"] = {"name": self.emoji.name}
+                    dict_["emoji"] = {"name": self.emoji.name}
 
         return dict_
 
