@@ -626,6 +626,14 @@ class Permissions(BaseFlags):
         """
         return 1 << 48
 
+    @flag_value
+    def send_polls(self) -> int:
+        """:class:`bool`: Returns ``True`` if a member can send polls.
+
+        .. versionadded:: 2.6
+        """
+        return 1 << 49
+
 
 PO = TypeVar("PO", bound="PermissionOverwrite")
 
@@ -745,6 +753,7 @@ class PermissionOverwrite:
         moderate_members: bool | None
         send_voice_messages: bool | None
         set_voice_channel_status: bool | None
+        send_polls: bool | None
 
     def __init__(self, **kwargs: bool | None):
         self._values: dict[str, bool | None] = {}

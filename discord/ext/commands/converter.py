@@ -1166,7 +1166,7 @@ async def _actual_conversion(
 
 
 async def run_converters(
-    ctx: Context, converter, argument: str, param: inspect.Parameter
+    ctx: Context, converter, argument: str | None, param: inspect.Parameter
 ):
     """|coro|
 
@@ -1182,7 +1182,7 @@ async def run_converters(
         The invocation context to run the converters under.
     converter: Any
         The converter to run, this corresponds to the annotation in the function.
-    argument: :class:`str`
+    argument: Optional[:class:`str`]
         The argument to convert to.
     param: :class:`inspect.Parameter`
         The parameter being converted. This is mainly for error reporting.

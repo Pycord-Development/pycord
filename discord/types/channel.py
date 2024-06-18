@@ -32,7 +32,7 @@ from ..enums import SortOrder
 from ..flags import ChannelFlags
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
-from .user import PartialUser
+from .user import User
 
 OverwriteType = Literal[0, 1]
 
@@ -159,7 +159,7 @@ class DMChannel(TypedDict):
     id: Snowflake
     type: Literal[1]
     last_message_id: Snowflake | None
-    recipients: list[PartialUser]
+    recipients: list[User]
 
 
 class GroupDMChannel(_BaseChannel):
