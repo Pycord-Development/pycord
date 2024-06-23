@@ -56,6 +56,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
 - Fixed many inaccurate type hints throughout the library.
   ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
+- Fixed `AttributeError` due to `discord.Option` being initialised with `input_type` set
+  to `None`. ([#2464](https://github.com/Pycord-Development/pycord/pull/2464))
 
 ### Changed
 
