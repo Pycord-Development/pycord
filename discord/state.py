@@ -1848,7 +1848,6 @@ class ConnectionState:
 
     def parse_voice_channel_effect_send(self, data) -> None:
         json = __import__("json")
-        print(json.dumps(data, indent=4))
         if sound_id := int(data.get("sound_id", 0)):
             sound = self._get_sound(sound_id)
             if sound is None:
