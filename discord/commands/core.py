@@ -717,7 +717,9 @@ class SlashCommand(ApplicationCommand):
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
     integration_types: Set[:class:`IntegrationType`]
-        The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Cannot be set if this is a guild command.
+        The type of installation this command should be available to. For instance, if set to
+        :attr:`IntegrationType.user_install`, the command will only be available to users with
+        the application installed on their account. Unapplicable for guild commands.
     contexts: Set[:class:`InteractionContextType`]
         The location where this command can be used. Cannot be set if this is a guild command.
     """

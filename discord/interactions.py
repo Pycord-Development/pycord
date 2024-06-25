@@ -142,8 +142,12 @@ class Interaction:
         The custom ID for the interaction.
     authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
         Contains the entities (users or guilds) that authorized this interaction.
+
+        .. versionadded:: 2.6
     context: Optional[:class:`InteractionContextType`]
         The context in which this command was executed.
+
+        .. versionadded:: 2.6
     """
 
     __slots__: tuple[str, ...] = (
@@ -1547,6 +1551,8 @@ class InteractionMetadata:
 class AuthorizingIntegrationOwners:
     """Contains details on the authorizing user or server for the installation(s) relevant to the interaction.
 
+    .. versionadded:: 2.6
+
     Attributes
     ----------
     user_id: :class:`int` | None
@@ -1594,6 +1600,6 @@ class AuthorizingIntegrationOwners:
         """Optional[:class:`Guild`]: The guild that authorized the integration.
         Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is ``0`` or ``None``.
         """
-        if not self.guild_id or self.guild_id == 0:
+        if not self.guild_id:
             return None
         return self._state._get_guild(self.guild_id)
