@@ -26,12 +26,8 @@ async def say_hello(ctx: discord.ApplicationContext):
     await ctx.respond("Hello!")
 
 
-"""
-If a bot is not installed to a guild and the guild has more than 25 members,
-the response will always be ephemeral.
-
-This is a Discord limitation and is subject to change.
-"""
+# If a bot is not installed to a guild and the channel has the `USE_EXTERNAL_APPS`
+# permission disabled, the response will always be ephemeral.
 
 
 bot.run("TOKEN")
