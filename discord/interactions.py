@@ -78,6 +78,7 @@ if TYPE_CHECKING:
     from .commands import OptionChoice
     from .embeds import Embed
     from .mentions import AllowedMentions
+    from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
@@ -829,6 +830,7 @@ class InteractionResponse:
         allowed_mentions: AllowedMentions = None,
         file: File = None,
         files: list[File] = None,
+        poll: Poll = None,
         delete_after: float = None,
     ) -> Interaction:
         """|coro|
@@ -863,6 +865,10 @@ class InteractionResponse:
             The file to upload.
         files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -906,6 +912,9 @@ class InteractionResponse:
 
         if view is not None:
             payload["components"] = view.to_components()
+
+        if poll is not None:
+            payload["poll"] = poll.to_dict()
 
         state = self._parent._state
 

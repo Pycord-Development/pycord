@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
 - Added `member` data to the `raw_reaction_remove` event.
   ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
+- Added `Poll` and all related features.
+  ([#2408](https://github.com/Pycord-Development/pycord/pull/2408))
 - Added `stacklevel` param to `utils.warn_deprecated` and `utils.deprecated`.
   ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
 - Added support for user-installable applications.
@@ -56,6 +58,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
 - Fixed many inaccurate type hints throughout the library.
   ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
+- Fixed `AttributeError` due to `discord.Option` being initialised with `input_type` set
+  to `None`. ([#2464](https://github.com/Pycord-Development/pycord/pull/2464))
 
 ### Changed
 

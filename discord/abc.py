@@ -89,6 +89,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
+    from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -1351,6 +1352,7 @@ class Messageable:
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
@@ -1371,6 +1373,7 @@ class Messageable:
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
@@ -1391,6 +1394,7 @@ class Messageable:
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
@@ -1411,6 +1415,7 @@ class Messageable:
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
     ) -> Message: ...
@@ -1432,6 +1437,7 @@ class Messageable:
         reference=None,
         mention_author=None,
         view=None,
+        poll=None,
         suppress=None,
         silent=None,
     ):
@@ -1515,6 +1521,10 @@ class Messageable:
             Whether to suppress push and desktop notifications for the message.
 
             .. versionadded:: 2.4
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -1594,6 +1604,9 @@ class Messageable:
         else:
             components = None
 
+        if poll:
+            poll = poll.to_dict()
+
         if file is not None and files is not None:
             raise InvalidArgument("cannot pass both file and files parameter to send()")
 
@@ -1616,6 +1629,7 @@ class Messageable:
                     stickers=stickers,
                     components=components,
                     flags=flags,
+                    poll=poll,
                 )
             finally:
                 file.close()
@@ -1643,6 +1657,7 @@ class Messageable:
                     stickers=stickers,
                     components=components,
                     flags=flags,
+                    poll=poll,
                 )
             finally:
                 for f in files:
@@ -1661,6 +1676,7 @@ class Messageable:
                 stickers=stickers,
                 components=components,
                 flags=flags,
+                poll=poll,
             )
 
         ret = state.create_message(channel=channel, data=data)

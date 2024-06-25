@@ -53,6 +53,7 @@ from .guild import Guild
 from .member import Member
 from .mixins import Hashable
 from .partial_emoji import PartialEmoji
+from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
@@ -81,6 +82,7 @@ if TYPE_CHECKING:
     from .types.message import MessageApplication as MessageApplicationPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import Reaction as ReactionPayload
+    from .types.poll import Poll as PollPayload
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
     from .ui.view import View
@@ -735,6 +737,10 @@ class Message(Hashable):
         The thread created from this message, if applicable.
 
         .. versionadded:: 2.0
+    poll: Optional[:class:`Poll`]
+        The poll associated with this message, if applicable.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -771,6 +777,7 @@ class Message(Hashable):
         "_interaction",
         "interaction_metadata",
         "thread",
+        "_poll",
     )
 
     if TYPE_CHECKING:
@@ -865,6 +872,13 @@ class Message(Hashable):
             )
         except KeyError:
             self.interaction_metadata = None
+
+        self._poll: Poll | None
+        try:
+            self._poll = Poll.from_dict(data["poll"], self)
+            self._state.store_poll(self._poll, self.id)
+        except KeyError:
+            self._poll = None
 
         self.thread: Thread | None
         try:
@@ -1000,6 +1014,10 @@ class Message(Hashable):
 
     def _handle_nonce(self, value: str | int) -> None:
         self.nonce = value
+
+    def _handle_poll(self, value: PollPayload) -> None:
+        self._poll = Poll.from_dict(value, self)
+        self._state.store_poll(self._poll, self.id)
 
     def _handle_author(self, author: UserPayload) -> None:
         self.author = self._state.store_user(author)
@@ -1175,6 +1193,10 @@ class Message(Hashable):
         """Returns a URL that allows the client to jump to this message."""
         guild_id = getattr(self.guild, "id", "@me")
         return f"https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}"
+
+    @property
+    def poll(self) -> Poll | None:
+        return self._state._polls.get(self.id)
 
     def is_system(self) -> bool:
         """Whether the message is a system message.
@@ -1854,6 +1876,34 @@ class Message(Hashable):
 
         return await self.channel.send(content, reference=self, **kwargs)
 
+    async def end_poll(self) -> Message:
+        """|coro|
+
+        Immediately ends the poll associated with this message. Only doable by the poll's owner.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        :class:`Message`
+            The updated message.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to end this poll.
+        HTTPException
+            Ending this poll failed.
+        """
+
+        data = await self._state.http.expire_poll(
+            self.channel.id,
+            self.id,
+        )
+        message = Message(state=self._state, channel=self.channel, data=data)
+
+        return message
+
     def to_reference(self, *, fail_if_not_exists: bool = True) -> MessageReference:
         """Creates a :class:`~discord.MessageReference` from the current message.
 
@@ -1979,6 +2029,10 @@ class PartialMessage(Hashable):
     def created_at(self) -> datetime.datetime:
         """The partial message's creation time in UTC."""
         return utils.snowflake_time(self.id)
+
+    @property
+    def poll(self) -> Poll | None:
+        return self._state._polls.get(self.id)
 
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
@@ -2125,3 +2179,31 @@ class PartialMessage(Hashable):
                 view.message = msg
                 self._state.store_view(view, self.id)
             return msg
+
+    async def end_poll(self) -> Message:
+        """|coro|
+
+        Immediately ends the poll associated with this message. Only doable by the poll's owner.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        :class:`Message`
+            The updated message.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to end this poll.
+        HTTPException
+            Ending this poll failed.
+        """
+
+        data = await self._state.http.expire_poll(
+            self.channel.id,
+            self.id,
+        )
+        message = self._state.create_message(channel=self.channel, data=data)
+
+        return message

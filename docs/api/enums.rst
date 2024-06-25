@@ -2404,6 +2404,17 @@ of :class:`enum.Enum`.
         Entitlement is owned by a user.
 
 
+.. class:: PollLayoutType
+
+    Represents a poll's layout type.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: default
+
+        Represents the default layout.
+
+
 .. class:: IntegrationType
 
     The integration type for an application.
@@ -2417,7 +2428,6 @@ of :class:`enum.Enum`.
     .. attribute:: user_install
 
         The integration is added to a user account.
-
 
 
 .. class:: InteractionContextType

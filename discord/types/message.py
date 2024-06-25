@@ -32,6 +32,7 @@ from .components import Component
 from .embed import Embed
 from .emoji import PartialEmoji
 from .member import Member, UserWithMember
+from .poll import Poll
 from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
 from .threads import Thread
@@ -141,6 +142,7 @@ class Message(TypedDict):
     embeds: list[Embed]
     pinned: bool
     type: MessageType
+    poll: Poll
 
 
 AllowedMentionType = Literal["roles", "users", "everyone"]
