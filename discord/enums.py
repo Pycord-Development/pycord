@@ -1021,7 +1021,7 @@ class EntitlementOwnerType(Enum):
     guild = 1
     user = 2
 
-    
+
 class IntegrationType(Enum):
     """The application's integration type"""
 
@@ -1036,7 +1036,7 @@ class InteractionContextType(Enum):
     bot_dm = 1
     private_channel = 2
 
-    
+
 class PollLayoutType(Enum):
     """The poll's layout type."""
 
