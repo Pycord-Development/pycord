@@ -1549,11 +1549,11 @@ class AuthorizingIntegrationOwners:
 
     Attributes
     ----------
-    user_id: :class:`int` | :class:`MISSING`
+    user_id: :class:`int` | None
         The ID of the user that authorized the integration.
-    guild_id: :class:`int` | None | :class:`MISSING`
+    guild_id: :class:`int` | None
         The ID of the guild that authorized the integration.
-        This will be ``None`` if the integration was triggered
+        This will be ``0`` if the integration was triggered
         from the user in the bot's DMs.
     """
 
@@ -1563,12 +1563,9 @@ class AuthorizingIntegrationOwners:
         self._state = state
         # keys are Application Integration Types as strings
         self.user_id = (
-            int(uid) if (uid := data.get("1", MISSING)) is not MISSING else MISSING
+            int(uid) if (uid := data.get("1")) is not None else None
         )
-        if (guild_id := data.get("0", MISSING)) == "0":
-            self.guild_id = None
-        else:
-            self.guild_id = int(guild_id) if guild_id is not MISSING else MISSING
+        self.guild_id = int(guild_id) if (guild_id := data.get("0", None) is not None else None
 
     def __repr__(self):
         return f"<AuthorizingIntegrationOwners user_id={self.user_id} guild_id={self.guild_id}>"
@@ -1586,7 +1583,7 @@ class AuthorizingIntegrationOwners:
     @utils.cached_slot_property("_cs_user")
     def user(self) -> User | None:
         """Optional[:class:`User`]: The user that authorized the integration.
-        Returns ``None`` if the user is not in cache, or if :attr:`user_id` is :class:`MISSING`.
+        Returns ``None`` if the user is not in cache, or if :attr:`user_id` is ``None``.
         """
         if not self.user_id:
             return None
@@ -1595,8 +1592,8 @@ class AuthorizingIntegrationOwners:
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: The guild that authorized the integration.
-        Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is :class:`MISSING` or ``None``.
+        Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is ``0`` or ``None``.
         """
-        if not self.guild_id:
+        if not self.guild_id or self.guild_id == 0:
             return None
         return self._state._get_guild(self.guild_id)
