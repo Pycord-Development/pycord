@@ -1571,7 +1571,7 @@ class AuthorizingIntegrationOwners:
         self.user_id = (
             int(uid) if (uid := data.get("1")) is not None else None
         )
-        self.guild_id = int(guild_id) if (guild_id := data.get("0", None) is not None else None
+        self.guild_id = int(guild_id) if (guild_id := data.get("0", None)) is not None else None
 
     def __repr__(self):
         return f"<AuthorizingIntegrationOwners user_id={self.user_id} guild_id={self.guild_id}>"
