@@ -627,7 +627,7 @@ class Permissions(BaseFlags):
         return 1 << 48
 
     @flag_value
-    def use_external_apps(self) -> int
+    def use_external_apps(self) -> int:
         """:class:`bool`: Returns ``True`` if a member's user-installed apps can show public responses.
         Users will still be able to use user-installed apps, but responses will be ephemeral.
         
@@ -756,6 +756,8 @@ class PermissionOverwrite:
         moderate_members: bool | None
         send_voice_messages: bool | None
         set_voice_channel_status: bool | None
+        use_external_apps: bool | None
+        
 
     def __init__(self, **kwargs: bool | None):
         self._values: dict[str, bool | None] = {}
