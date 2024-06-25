@@ -68,6 +68,7 @@ if TYPE_CHECKING:
     )
     from .channel import TextChannel
     from .components import Component
+    from .interactions import MessageInteraction
     from .mentions import AllowedMentions
     from .role import Role
     from .state import ConnectionState
@@ -724,6 +725,14 @@ class Message(Hashable):
         The guild that the message belongs to, if applicable.
     interaction: Optional[:class:`MessageInteraction`]
         The interaction associated with the message, if applicable.
+
+        .. deprecated:: 2.6
+
+            Use :attr:`interaction_metadata` instead.
+    interaction_metadata: Optional[:class:`InteractionMetadata`]
+        The interaction metadata associated with the message, if applicable.
+
+        .. versionadded:: 2.6
     thread: Optional[:class:`Thread`]
         The thread created from this message, if applicable.
 
@@ -765,7 +774,8 @@ class Message(Hashable):
         "stickers",
         "components",
         "guild",
-        "interaction",
+        "_interaction",
+        "interaction_metadata",
         "thread",
         "_poll",
     )
@@ -847,13 +857,21 @@ class Message(Hashable):
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
 
-        from .interactions import MessageInteraction
+        from .interactions import InteractionMetadata, MessageInteraction
 
-        self.interaction: MessageInteraction | None
+        self._interaction: MessageInteraction | None
         try:
-            self.interaction = MessageInteraction(data=data["interaction"], state=state)
+            self._interaction = MessageInteraction(
+                data=data["interaction"], state=state
+            )
         except KeyError:
-            self.interaction = None
+            self._interaction = None
+        try:
+            self.interaction_metadata = InteractionMetadata(
+                data=data["interaction_metadata"], state=state
+            )
+        except KeyError:
+            self.interaction_metadata = None
 
         self._poll: Poll | None
         try:
@@ -1056,6 +1074,26 @@ class Message(Hashable):
     ) -> None:
         self.guild = new_guild
         self.channel = new_channel
+
+    @property
+    def interaction(self) -> MessageInteraction | None:
+        utils.warn_deprecated(
+            "interaction",
+            "interaction_metadata",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        return self._interaction
+
+    @interaction.setter
+    def interaction(self, value: MessageInteraction | None) -> None:
+        utils.warn_deprecated(
+            "interaction",
+            "interaction_metadata",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        self._interaction = value
 
     @utils.cached_slot_property("_cs_raw_mentions")
     def raw_mentions(self) -> list[int]:
