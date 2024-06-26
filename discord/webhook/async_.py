@@ -74,6 +74,7 @@ if TYPE_CHECKING:
     from ..guild import Guild
     from ..http import Response
     from ..mentions import AllowedMentions
+    from ..poll import Poll
     from ..state import ConnectionState
     from ..types.message import Message as MessagePayload
     from ..types.webhook import FollowerWebhook as FollowerWebhookPayload
@@ -622,6 +623,7 @@ def handle_message_parameters(
     embed: Embed | None = MISSING,
     embeds: list[Embed] = MISSING,
     view: View | None = MISSING,
+    poll: Poll | None = MISSING,
     applied_tags: list[Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
@@ -647,6 +649,8 @@ def handle_message_parameters(
 
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
+    if poll is not MISSING:
+        payload["poll"] = poll.to_dict()
     payload["tts"] = tts
     if avatar_url:
         payload["avatar_url"] = str(avatar_url)
@@ -1569,6 +1573,7 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
@@ -1591,6 +1596,7 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
@@ -1612,6 +1618,7 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
@@ -1693,6 +1700,10 @@ class Webhook(BaseWebhook):
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -1752,6 +1763,9 @@ class Webhook(BaseWebhook):
             if ephemeral is True and view.timeout is None:
                 view.timeout = 15 * 60.0
 
+        if poll is None:
+            poll = MISSING
+
         params = handle_message_parameters(
             content=content,
             username=username,
@@ -1763,6 +1777,7 @@ class Webhook(BaseWebhook):
             embeds=embeds,
             ephemeral=ephemeral,
             view=view,
+            poll=poll,
             applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,

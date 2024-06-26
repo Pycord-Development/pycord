@@ -74,6 +74,8 @@ __all__ = (
     "SKUType",
     "EntitlementType",
     "EntitlementOwnerType",
+    "IntegrationType",
+    "InteractionContextType",
 )
 
 
@@ -1028,6 +1030,27 @@ class EntitlementOwnerType(Enum):
 
     guild = 1
     user = 2
+
+
+class IntegrationType(Enum):
+    """The application's integration type"""
+
+    guild_install = 0
+    user_install = 1
+
+
+class InteractionContextType(Enum):
+    """The interaction's context type"""
+
+    guild = 0
+    bot_dm = 1
+    private_channel = 2
+
+
+class PollLayoutType(Enum):
+    """The poll's layout type."""
+
+    default = 1
 
 
 T = TypeVar("T")
