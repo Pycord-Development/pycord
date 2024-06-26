@@ -28,6 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2408](https://github.com/Pycord-Development/pycord/pull/2408))
 - Added `stacklevel` param to `utils.warn_deprecated` and `utils.deprecated`.
   ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
+- Added support for user-installable applications.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
 
 ### Fixed
 
@@ -71,6 +73,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
 - `Guild.query_members` now accepts `limit=None` to retrieve all members.
   ([#2419](https://github.com/Pycord-Development/pycord/pull/2419))
+- `ApplicationCommand.guild_only` is now deprecated in favor of
+  `ApplicationCommand.contexts`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
+- `Message.interaction` is now deprecated in favor of `Message.interaction_metadata`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
 
 ### Removed
 

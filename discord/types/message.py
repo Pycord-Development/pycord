@@ -39,7 +39,7 @@ from .threads import Thread
 from .user import User
 
 if TYPE_CHECKING:
-    from .interactions import MessageInteraction
+    from .interactions import InteractionMetadata, MessageInteraction
 
 from .._typed_dict import NotRequired, TypedDict
 
@@ -125,6 +125,7 @@ class Message(TypedDict):
     sticker_items: NotRequired[list[StickerItem]]
     referenced_message: NotRequired[Message | None]
     interaction: NotRequired[MessageInteraction]
+    interaction_metadata: NotRequired[InteractionMetadata]
     components: NotRequired[list[Component]]
     thread: NotRequired[Thread | None]
     id: Snowflake
