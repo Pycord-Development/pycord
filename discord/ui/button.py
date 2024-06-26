@@ -286,9 +286,9 @@ def button(
 
     .. note::
 
-        Premium and link buttons cannot be created with this decorator. Consider 
-        creating a :class:`Button` object manually instead. These types of 
-        buttons do not have a callback associated since Discord doesn't handle 
+        Premium and link buttons cannot be created with this decorator. Consider
+        creating a :class:`Button` object manually instead. These types of
+        buttons do not have a callback associated since Discord doesn't handle
         them when clicked.
 
     Parameters
