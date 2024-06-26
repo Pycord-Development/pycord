@@ -1339,7 +1339,7 @@ class ForumChannel(_TextChannel):
                     f.close()
 
         ret = Thread(guild=self.guild, state=self._state, data=data)
-        msg = ret.get_partial_message(data["last_message_id"])
+        msg = ret.get_partial_message(int(data["last_message_id"]))
         if view:
             state.store_view(view, msg.id)
 
@@ -3189,7 +3189,7 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
     ):
         self._state: ConnectionState = state
         self._channel: Object = Object(id=id)
-        self.id: int = int(id)
+        self.id: int = id
         self.type: ChannelType | None = type
 
     async def _get_channel(self) -> Object:

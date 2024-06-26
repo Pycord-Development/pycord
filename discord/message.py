@@ -1923,7 +1923,7 @@ class PartialMessage(Hashable):
 
         self.channel: PartialMessageableChannel = channel
         self._state: ConnectionState = channel._state
-        self.id: int = int(id)
+        self.id: int = id
 
     def _update(self, data) -> None:
         # This is used for duck typing purposes.
