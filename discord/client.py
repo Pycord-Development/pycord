@@ -2071,21 +2071,21 @@ class Client:
             Limit the fetched entitlements to entitlements that are for these SKUs.
         before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
             Retrieves guilds before this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
             If the datetime is naive, it is assumed to be local time.
         after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
             Retrieve guilds after this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
             If the datetime is naive, it is assumed to be local time.
         limit: Optional[:class:`int`]
             The number of entitlements to retrieve.
-            If ``None``, it retrieves every entitlement. Note, however,
-            that this may make it a slow operation.
+            If ``None``, retrieves every entitlement, which may be slow.
             Defaults to ``100``.
         guild: :class:`.abc.Snowflake` | None
             Limit the fetched entitlements to entitlements owned by this guild.
-        exclude_ended: :class:`bool` | None
-            If ``True``, limits the fetched entitlements to those that have not ended.
+        exclude_ended: :class:`bool`
+            Whether to limit the fetched entitlements to those that have not ended.
+            Defaults to ``False``.
 
         Returns
         -------

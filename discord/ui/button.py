@@ -286,11 +286,10 @@ def button(
 
     .. note::
 
-        Premium buttons as well as buttons with a URL cannot
-        be created with this function. Consider creating a
-        :class:`Button` manually instead. This is because buttons
-        with a URL do not have a callback associated with them
-        since Discord does not do any processing with it.
+        Premium and link buttons cannot be created with this decorator. Consider 
+        creating a :class:`Button` object manually instead. These types of 
+        buttons do not have a callback associated since Discord doesn't handle 
+        them when clicked.
 
     Parameters
     ----------

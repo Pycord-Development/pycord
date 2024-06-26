@@ -669,11 +669,11 @@ class User(BaseUser, discord.abc.Messageable):
             If the datetime is naive, it is assumed to be local time.
         limit: Optional[:class:`int`]
             The number of entitlements to retrieve.
-            If ``None``, it retrieves every entitlement. Note, however,
-            that this may make it a slow operation.
+            If ``None``, retrieves every entitlement, which may be slow.
             Defaults to ``100``.
-        exclude_ended: :class:`bool` | None
-            If ``True``, limits the fetched entitlements to those that have not ended.
+        exclude_ended: :class:`bool`
+            Whether to limit the fetched entitlements to those that have not ended.
+            Defaults to ``False``.
 
         Returns
         -------
