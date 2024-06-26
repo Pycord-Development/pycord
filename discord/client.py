@@ -2083,3 +2083,11 @@ class Client:
             guild_id=guild.id,
             exclude_ended=exclude_ended,
         )
+
+    @property
+    def store_url(self) -> str:
+        """:class:`str`: The URL that leads to the application's store page for monetization.
+        
+        .. versionadded:: 2.6
+        """
+        return f"https://discord.com/application-directory/{self.application_id}/store"

@@ -96,6 +96,11 @@ class SKU(Hashable):
     def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and other.id == self.id
 
+    @property
+    def url(self) -> str:
+        """:class:`str`: Returns the URL for the SKU."""
+        return f"https://discord.com/application-directory/{self.application_id}/store/{self.id}"
+
 
 class Entitlement(Hashable):
     """Represents a Discord entitlement.
