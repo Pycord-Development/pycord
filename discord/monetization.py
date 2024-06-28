@@ -188,6 +188,7 @@ class Entitlement(Hashable):
         """
         if self.type is not EntitlementType.consumable:
             raise TypeError("Cannot consume non-consumable entitlement")
+
         await self._state.http.consume_entitlement(self._state.application_id, self.id)
         self.consumed = True
 
