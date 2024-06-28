@@ -966,6 +966,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
     async def fill_subs(self):
         if not self._get_retrieve():
             return
+
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data = await self.get_subscribers(
@@ -1006,10 +1007,12 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
     ):
         self.user_id = user_id
         self.sku_ids = sku_ids
+
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
         if isinstance(after, datetime.datetime):
             after = Object(id=time_snowflake(after, high=True))
+
         self.before = before
         self.after = after
         self.limit = limit
@@ -1041,6 +1044,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
     async def fill_entitlements(self):
         if not self._get_retrieve():
             return
+
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data = await self.get_entitlements(
@@ -1053,9 +1057,11 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             sku_ids=self.sku_ids,
             exclude_ended=self.exclude_ended,
         )
+
         if not data:
             # no data, terminate
             return
+
         if self.limit:
             self.limit -= self.retrieve
 
