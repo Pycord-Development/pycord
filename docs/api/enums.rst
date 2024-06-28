@@ -2374,11 +2374,13 @@ of :class:`enum.Enum`.
 
     .. attribute:: durable
 
-        Represents a durable one-time purchase.
+       A one-time purchase that is permanent and is not subject to either renewal
+       or consumption, such as lifetime access to an app's premium features.
 
     .. attribute:: consumable
 
-        Represents a consumable one-time purchase.
+       A one-time, non-renewable purchase that provides access, such as a temporary
+       power-up or boost in a game.
 
     .. attribute:: subscription
 
