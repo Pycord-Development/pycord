@@ -2059,10 +2059,6 @@ class Client:
 
         .. versionadded:: 2.5
 
-        .. versionchanged:: 2.6
-
-            Added new parameters
-
         Parameters
         ----------
         user: :class:`.abc.Snowflake` | None

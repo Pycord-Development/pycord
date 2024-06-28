@@ -661,11 +661,11 @@ class User(BaseUser, discord.abc.Messageable):
             Limit the fetched entitlements to entitlements that are for these SKUs.
         before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
             Retrieves guilds before this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
             If the datetime is naive, it is assumed to be local time.
         after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
             Retrieve guilds after this date or object.
-            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
             If the datetime is naive, it is assumed to be local time.
         limit: Optional[:class:`int`]
             The number of entitlements to retrieve.
