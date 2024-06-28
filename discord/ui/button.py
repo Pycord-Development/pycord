@@ -225,7 +225,7 @@ class Button(Item[V]):
 
     @property
     def sku_id(self) -> int | None:
-        """:class:`int` The ID of the SKU this button refers to."""
+        """The ID of the SKU this button refers to."""
         return self._underlying.sku_id
 
     @sku_id.setter
