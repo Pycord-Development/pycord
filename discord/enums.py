@@ -724,6 +724,7 @@ class ButtonStyle(Enum):
     success = 3
     danger = 4
     link = 5
+    premium = 6
 
     # Aliases
     blurple = 1
@@ -1005,6 +1006,8 @@ class ReactionType(Enum):
 class SKUType(Enum):
     """The SKU type"""
 
+    durable = 2
+    consumable = 3
     subscription = 5
     subscription_group = 6
 
@@ -1012,6 +1015,13 @@ class SKUType(Enum):
 class EntitlementType(Enum):
     """The entitlement type"""
 
+    purchase = 1
+    premium_subscription = 2
+    developer_gift = 3
+    test_mode_purchase = 4
+    free_purchase = 5
+    user_gift = 6
+    premium_purchase = 7
     application_subscription = 8
 
 
