@@ -40,7 +40,7 @@ from discord import (
     SlashCommandOptionType,
 )
 
-from ...utils import MISSING, find, get
+from ...utils import MISSING, find, get, warn_deprecated
 from ..commands import BadArgument
 from ..commands import Bot as ExtBot
 from ..commands import (
@@ -63,6 +63,7 @@ __all__ = (
     "BridgeCommandGroup",
     "bridge_command",
     "bridge_group",
+    "bridge_option",
     "BridgeExtCommand",
     "BridgeSlashCommand",
     "BridgeExtGroup",
@@ -94,6 +95,28 @@ class BridgeExtCommand(Command):
 
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
+
+        # TODO: v2.7: Remove backwards support for Option in bridge commands.
+        for name, option in self.params.items():
+            if isinstance(option.annotation, Option) and not isinstance(
+                option.annotation, BridgeOption
+            ):
+                # Warn not to do this
+                warn_deprecated(
+                    "Using Option for bridge commands",
+                    "BridgeOption",
+                    "2.5",
+                    "2.7",
+                    reference="https://github.com/Pycord-Development/pycord/pull/2417",
+                    stacklevel=6,
+                )
+                # Override the convert method of the parameter's annotated Option.
+                # We can use the convert method from BridgeOption, and bind "self"
+                # using a manual invocation of the descriptor protocol.
+                # Definitely not a good approach, but gets the job done until removal.
+                self.params[name].annotation.convert = BridgeOption.convert.__get__(
+                    self.params[name].annotation
+                )
 
     async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
         await super().dispatch_error(ctx, error)
@@ -627,3 +650,28 @@ class BridgeOption(Option, Converter):
             return converted
         except ValueError as exc:
             raise BadArgument() from exc
+
+
+def bridge_option(name, input_type=None, **kwargs):
+    """A decorator that can be used instead of typehinting :class:`.BridgeOption`.
+
+    .. versionadded:: 2.6
+
+    Attributes
+    ----------
+    parameter_name: :class:`str`
+        The name of the target parameter this option is mapped to.
+        This allows you to have a separate UI ``name`` and parameter name.
+    """
+
+    def decorator(func):
+        resolved_name = kwargs.pop("parameter_name", None) or name
+        itype = (
+            kwargs.pop("type", None)
+            or input_type
+            or func.__annotations__.get(resolved_name, str)
+        )
+        func.__annotations__[resolved_name] = BridgeOption(itype, name=name, **kwargs)
+        return func
+
+    return decorator

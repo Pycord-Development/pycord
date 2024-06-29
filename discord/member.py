@@ -30,7 +30,7 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import TYPE_CHECKING, Any, Literal, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 import discord.abc
 
@@ -62,6 +62,7 @@ if TYPE_CHECKING:
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
+    from .types.voice import GuildVoiceState as GuildVoiceStatePayload
     from .types.voice import VoiceState as VoiceStatePayload
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -125,12 +126,19 @@ class VoiceState:
     )
 
     def __init__(
-        self, *, data: VoiceStatePayload, channel: VocalGuildChannel | None = None
+        self,
+        *,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None = None,
     ):
         self.session_id: str = data.get("session_id")
         self._update(data, channel)
 
-    def _update(self, data: VoiceStatePayload, channel: VocalGuildChannel | None):
+    def _update(
+        self,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None,
+    ):
         self.self_mute: bool = data.get("self_mute", False)
         self.self_deaf: bool = data.get("self_deaf", False)
         self.self_stream: bool = data.get("self_stream", False)
@@ -684,7 +692,6 @@ class Member(discord.abc.Messageable, _UserTag):
         self,
         *,
         delete_message_seconds: int | None = None,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
     ) -> None:
         """|coro|
@@ -695,7 +702,6 @@ class Member(discord.abc.Messageable, _UserTag):
             self,
             reason=reason,
             delete_message_seconds=delete_message_seconds,
-            delete_message_days=delete_message_days,
         )
 
     async def unban(self, *, reason: str | None = None) -> None:

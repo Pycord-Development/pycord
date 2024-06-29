@@ -1218,7 +1218,7 @@ class ForumChannel(_TextChannel):
             A list of stickers to upload. Must be a maximum of 3.
         delete_message_after: :class:`int`
             The time to wait before deleting the thread.
-        nonce: :class:`int`
+        nonce: Union[:class:`str`, :class:`int`]
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
         allowed_mentions: :class:`~discord.AllowedMentions`

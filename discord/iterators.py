@@ -40,6 +40,7 @@ from typing import (
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
+from .monetization import Entitlement
 from .object import Object
 from .utils import maybe_coroutine, snowflake_time, time_snowflake
 
@@ -50,6 +51,7 @@ __all__ = (
     "GuildIterator",
     "MemberIterator",
     "ScheduledEventSubscribersIterator",
+    "EntitlementIterator",
 )
 
 if TYPE_CHECKING:
@@ -220,6 +222,61 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
                 after=after,
                 type=self.type,
             )
+
+            if data:
+                self.limit -= retrieve
+                self.after = Object(id=int(data[-1]["id"]))
+
+            for element in reversed(data):
+                if self.guild is None or isinstance(self.guild, Object):
+                    await self.users.put(User(state=self.state, data=element))
+                else:
+                    member_id = int(element["id"])
+                    member = self.guild.get_member(member_id)
+                    if member is not None:
+                        await self.users.put(member)
+                    else:
+                        await self.users.put(User(state=self.state, data=element))
+
+
+class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
+    def __init__(self, message, answer, limit=100, after=None):
+        self.message = message
+        self.limit = limit
+        self.after = after
+        state = message._state
+        self.getter = state.http.get_answer_voters
+        self.state = state
+        self.answer = answer
+        self.guild = message.guild
+        self.channel_id = message.channel.id
+        self.users = asyncio.Queue()
+
+    async def next(self) -> User | Member:
+        if self.users.empty():
+            await self.fill_users()
+
+        try:
+            return self.users.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    async def fill_users(self):
+        # import here to prevent circular imports
+        from .user import User
+
+        if self.limit > 0:
+            retrieve = min(self.limit, 100)
+
+            after = self.after.id if self.after else None
+            req = await self.getter(
+                self.channel_id,
+                self.message.id,
+                self.answer.id,
+                retrieve,
+                after=after,
+            )
+            data: list[PartialUserPayload] = req.get("users", [])
 
             if data:
                 self.limit -= retrieve
@@ -852,10 +909,10 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
     def __init__(
         self,
         event: ScheduledEvent,
-        limit: int,
+        limit: int | None,
         with_member: bool = False,
-        before: datetime.datetime | int = None,
-        after: datetime.datetime | int = None,
+        before: datetime.datetime | int | None = None,
+        after: datetime.datetime | int | None = None,
     ):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
@@ -909,6 +966,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
     async def fill_subs(self):
         if not self._get_retrieve():
             return
+
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data = await self.get_subscribers(
@@ -919,11 +977,98 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
             before=before,
             after=after,
         )
-        if data:
-            self.limit -= self.retrieve
+
+        data_length = len(data)
+        if data_length < self.retrieve:
+            self.limit = 0
+        elif data_length > 0:
+            if self.limit:
+                self.limit -= self.retrieve
+            self.after = Object(id=int(data[-1]["user_id"]))
 
         for element in reversed(data):
             if "member" in element:
                 await self.subscribers.put(self.member_from_payload(element))
             else:
                 await self.subscribers.put(self.user_from_payload(element))
+
+
+class EntitlementIterator(_AsyncIterator["Entitlement"]):
+    def __init__(
+        self,
+        state,
+        user_id: int | None = None,
+        sku_ids: list[int] | None = None,
+        before: datetime.datetime | Object | None = None,
+        after: datetime.datetime | Object | None = None,
+        limit: int | None = None,
+        guild_id: int | None = None,
+        exclude_ended: bool | None = None,
+    ):
+        self.user_id = user_id
+        self.sku_ids = sku_ids
+
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=False))
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+
+        self.before = before
+        self.after = after
+        self.limit = limit
+        self.guild_id = guild_id
+        self.exclude_ended = exclude_ended
+
+        self.state = state
+        self.get_entitlements = state.http.list_entitlements
+        self.entitlements = asyncio.Queue()
+
+    async def next(self) -> BanEntry:
+        if self.entitlements.empty():
+            await self.fill_entitlements()
+
+        try:
+            return self.entitlements.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self):
+        l = self.limit
+        if l is None or l > 100:
+            r = 100
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
+
+    async def fill_entitlements(self):
+        if not self._get_retrieve():
+            return
+
+        before = self.before.id if self.before else None
+        after = self.after.id if self.after else None
+        data = await self.get_entitlements(
+            self.state.application_id,
+            before=before,
+            after=after,
+            limit=self.retrieve,
+            user_id=self.user_id,
+            guild_id=self.guild_id,
+            sku_ids=self.sku_ids,
+            exclude_ended=self.exclude_ended,
+        )
+
+        if not data:
+            # no data, terminate
+            return
+
+        if self.limit:
+            self.limit -= self.retrieve
+
+        if len(data) < 100:
+            self.limit = 0  # terminate loop
+
+        self.after = Object(id=int(data[-1]["id"]))
+
+        for element in reversed(data):
+            await self.entitlements.put(Entitlement(data=element, state=self.state))

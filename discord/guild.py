@@ -32,7 +32,6 @@ from typing import (
     Any,
     ClassVar,
     List,
-    Literal,
     NamedTuple,
     Optional,
     Sequence,
@@ -108,7 +107,7 @@ if TYPE_CHECKING:
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
-    from .voice_client import VoiceProtocol
+    from .voice_client import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -648,8 +647,8 @@ class Guild(Hashable):
         return self.get_member(self_id)  # type: ignore
 
     @property
-    def voice_client(self) -> VoiceProtocol | None:
-        """Returns the :class:`VoiceProtocol` associated with this guild, if any."""
+    def voice_client(self) -> VoiceClient | None:
+        """Returns the :class:`VoiceClient` associated with this guild, if any."""
         return self._state._get_voice_client(self.id)
 
     @property
@@ -2027,6 +2026,36 @@ class Guild(Hashable):
 
         return MemberIterator(self, limit=limit, after=after)
 
+    async def search_members(self, query: str, *, limit: int = 1000) -> list[Member]:
+        """Search for guild members whose usernames or nicknames start with the query string. Unlike :meth:`fetch_members`, this does not require :meth:`Intents.members`.
+
+        .. note::
+
+            This method is an API call. For general usage, consider filtering :attr:`members` instead.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        query: :class:`str`
+            Searches for usernames and nicknames that start with this string, case-insensitive.
+        limit: :class:`int`
+            The maximum number of members to retrieve, up to 1000.
+
+        Returns
+        -------
+        List[:class:`Member`]
+            The list of members that have matched the query.
+
+        Raises
+        ------
+        HTTPException
+            Getting the members failed.
+        """
+
+        data = await self._state.http.search_members(self.id, query, limit)
+        return [Member(data=m, guild=self, state=self._state) for m in data]
+
     async def fetch_member(self, member_id: int, /) -> Member:
         """|coro|
 
@@ -3046,7 +3075,6 @@ class Guild(Hashable):
         user: Snowflake,
         *,
         delete_message_seconds: int | None = None,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
     ) -> None:
         """|coro|
@@ -3066,9 +3094,6 @@ class Guild(Hashable):
             The number of seconds worth of messages to delete from
             the user in the guild. The minimum is 0 and the maximum
             is 604800 (i.e. 7 days). The default is 0.
-        delete_message_days: Optional[:class:`int`]
-            ***Deprecated parameter***, same as ``delete_message_seconds`` but
-            is used for days instead.
         reason: Optional[:class:`str`]
             The reason the user got banned.
 
@@ -3079,10 +3104,6 @@ class Guild(Hashable):
         HTTPException
             Banning failed.
         """
-        if delete_message_seconds and delete_message_days:
-            raise TypeError(
-                "delete_message_seconds and delete_message_days are mutually exclusive."
-            )
 
         if delete_message_seconds is not None and not (
             0 <= delete_message_seconds <= 604800
@@ -3092,8 +3113,79 @@ class Guild(Hashable):
             )
 
         await self._state.http.ban(
-            user.id, self.id, delete_message_seconds, delete_message_days, reason=reason
+            user.id, self.id, delete_message_seconds, reason=reason
         )
+
+    async def bulk_ban(
+        self,
+        *users: Snowflake,
+        delete_message_seconds: int | None = None,
+        reason: str | None = None,
+    ) -> tuple[list[Snowflake], list[Snowflake]]:
+        r"""|coro|
+
+        Bulk ban users from the guild.
+
+        The users must meet the :class:`abc.Snowflake` abc.
+
+        You must have the :attr:`~Permissions.ban_members` permission to
+        do this.
+
+        Example Usage: ::
+
+            # Ban multiple users
+            successes, failures = await guild.bulk_ban(user1, user2, user3, ..., reason="Raid")
+
+            # Ban a list of users
+            successes, failures = await guild.bulk_ban(*users)
+
+        Parameters
+        ----------
+        \*users: :class:`abc.Snowflake`
+            An argument list of users to ban from the guild, up to 200.
+        delete_message_seconds: Optional[:class:`int`]
+            The number of seconds worth of messages to delete from
+            the user in the guild. The minimum is 0 and the maximum
+            is 604800 (i.e. 7 days). The default is 0.
+        reason: Optional[:class:`str`]
+            The reason the users were banned.
+
+        Returns
+        -------
+        Tuple[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
+            Returns two lists: the first contains members that were successfully banned, while the second is members that could not be banned.
+
+        Raises
+        ------
+        ValueError
+            You tried to ban more than 200 users.
+        Forbidden
+            You do not have the proper permissions to ban.
+        HTTPException
+            No users were banned.
+        """
+
+        if delete_message_seconds is not None and not (
+            0 <= delete_message_seconds <= 604800
+        ):
+            raise TypeError(
+                "delete_message_seconds must be between 0 and 604800 seconds."
+            )
+
+        if len(users) > 200 or len(users) < 1:
+            raise ValueError(
+                "The number of users to be banned must be between 1 and 200."
+            )
+
+        data = await self._state.http.bulk_ban(
+            [u.id for u in users],
+            self.id,
+            delete_message_seconds,
+            reason=reason,
+        )
+        banned = [u for u in users if str(u.id) in data["banned_users"]]
+        failed = [u for u in users if str(u.id) in data["failed_users"]]
+        return banned, failed
 
     async def unban(self, user: Snowflake, *, reason: str | None = None) -> None:
         """|coro|
@@ -3331,7 +3423,7 @@ class Guild(Hashable):
         self,
         query: str | None = None,
         *,
-        limit: int = 5,
+        limit: int | None = 5,
         user_ids: list[int] | None = None,
         presences: bool = False,
         cache: bool = True,
@@ -3349,10 +3441,14 @@ class Guild(Hashable):
         ----------
         query: Optional[:class:`str`]
             The string that the username's start with.
-        limit: :class:`int`
-            The maximum number of members to send back. This must be
-            a number between 5 and 100.
-        presences: :class:`bool`
+        user_ids: Optional[List[:class:`int`]]
+            List of user IDs to search for. If the user ID is not in the guild then it won't be returned.
+
+            .. versionadded:: 1.4
+        limit: Optional[:class:`int`]
+            The maximum number of members to send back. If no query is passed, passing ``None`` returns all members.
+            If a ``query`` or ``user_ids`` is passed, must be between 1 and 100. Defaults to 5.
+        presences: Optional[:class:`bool`]
             Whether to request for presences to be provided. This defaults
             to ``False``.
 
@@ -3360,11 +3456,7 @@ class Guild(Hashable):
 
         cache: :class:`bool`
             Whether to cache the members internally. This makes operations
-            such as :meth:`get_member` work for those that matched.
-        user_ids: Optional[List[:class:`int`]]
-            List of user IDs to search for. If the user ID is not in the guild then it won't be returned.
-
-            .. versionadded:: 1.4
+            such as :meth:`get_member` work for those that matched. Defaults to ``True``.
 
         Returns
         -------
@@ -3384,12 +3476,18 @@ class Guild(Hashable):
         if presences and not self._state._intents.presences:
             raise ClientException("Intents.presences must be enabled to use this.")
 
-        if query is None:
-            if query == "":
-                raise ValueError("Cannot pass empty query string.")
+        if not limit or limit > 100 or limit < 1:
+            if query or user_ids:
+                raise ValueError(
+                    "limit must be between 1 and 100 when using query or user_ids"
+                )
+            if not limit:
+                query = ""
+                limit = 0
 
+        if query is None:
             if user_ids is None:
-                raise ValueError("Must pass either query or user_ids")
+                raise ValueError("Must pass query or user_ids, or set limit to None")
 
         if user_ids is not None and query is not None:
             raise ValueError("Cannot pass both query and user_ids")
@@ -3397,7 +3495,6 @@ class Guild(Hashable):
         if user_ids is not None and not user_ids:
             raise ValueError("user_ids must contain at least 1 value")
 
-        limit = min(100, limit or 5)
         return await self._state.query_members(
             self,
             query=query,
@@ -3973,3 +4070,59 @@ class Guild(Hashable):
         }
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)
+
+    async def fetch_entitlements(
+        self,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        exclude_ended: bool = False,
+    ) -> EntitlementIterator:
+        """|coro|
+
+        Fetches this guild's entitlements.
+
+        This is identical to :meth:`Client.fetch_entitlements` with the ``guild`` parameter.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        skus: list[:class:`.abc.Snowflake`] | None
+            Limit the fetched entitlements to entitlements that are for these SKUs.
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieves guilds before this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieve guilds after this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        limit: Optional[:class:`int`]
+            The number of entitlements to retrieve.
+            If ``None``, retrieves every entitlement, which may be slow.
+            Defaults to ``100``.
+        exclude_ended: :class:`bool`
+            Whether to limit the fetched entitlements to those that have not ended.
+            Defaults to ``False``.
+
+        Returns
+        -------
+        List[:class:`.Entitlement`]
+            The application's entitlements.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Retrieving the entitlements failed.
+        """
+        return EntitlementIterator(
+            self._state,
+            sku_ids=[sku.id for sku in skus],
+            before=before,
+            after=after,
+            limit=limit,
+            guild_id=self.id,
+            exclude_ended=exclude_ended,
+        )

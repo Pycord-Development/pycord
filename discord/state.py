@@ -43,8 +43,6 @@ from typing import (
     Union,
 )
 
-import discord
-
 from . import utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
@@ -64,6 +62,7 @@ from .message import Message
 from .monetization import Entitlement
 from .object import Object
 from .partial_emoji import PartialEmoji
+from .poll import Poll, PollAnswerCount
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent
@@ -86,9 +85,10 @@ if TYPE_CHECKING:
     from .types.emoji import Emoji as EmojiPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
+    from .types.poll import Poll as PollPayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
-    from .voice_client import VoiceProtocol
+    from .voice_client import VoiceClient
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
@@ -146,9 +146,7 @@ class ChunkRequest:
 _log = logging.getLogger(__name__)
 
 
-async def logging_coroutine(
-    coroutine: Coroutine[Any, Any, T], *, info: str
-) -> T | None:
+async def logging_coroutine(coroutine: Coroutine[Any, Any, T], *, info: str) -> None:
     try:
         await coroutine
     except Exception:
@@ -278,10 +276,11 @@ class ConnectionState:
         self._emojis: dict[int, Emoji] = {}
         self._stickers: dict[int, GuildSticker] = {}
         self._guilds: dict[int, Guild] = {}
+        self._polls: dict[int, Guild] = {}
         if views:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)
-        self._voice_clients: dict[int, VoiceProtocol] = {}
+        self._voice_clients: dict[int, VoiceClient] = {}
 
         # LRU of max size 128
         self._private_channels: OrderedDict[int, PrivateChannel] = OrderedDict()
@@ -334,14 +333,14 @@ class ConnectionState:
         return ret
 
     @property
-    def voice_clients(self) -> list[VoiceProtocol]:
+    def voice_clients(self) -> list[VoiceClient]:
         return list(self._voice_clients.values())
 
-    def _get_voice_client(self, guild_id: int | None) -> VoiceProtocol | None:
+    def _get_voice_client(self, guild_id: int | None) -> VoiceClient | None:
         # the keys of self._voice_clients are ints
         return self._voice_clients.get(guild_id)  # type: ignore
 
-    def _add_voice_client(self, guild_id: int, voice: VoiceProtocol) -> None:
+    def _add_voice_client(self, guild_id: int, voice: VoiceClient) -> None:
         self._voice_clients[guild_id] = voice
 
     def _remove_voice_client(self, guild_id: int) -> None:
@@ -438,6 +437,25 @@ class ConnectionState:
         return self._stickers.get(sticker_id)  # type: ignore
 
     @property
+    def polls(self) -> list[Poll]:
+        return list(self._polls.values())
+
+    def store_raw_poll(self, poll: PollPayload, raw):
+        channel = self.get_channel(raw.channel_id) or PartialMessageable(
+            state=self, id=raw.channel_id
+        )
+        message = channel.get_partial_message(raw.message_id)
+        p = Poll.from_dict(poll, message)
+        self._polls[message.id] = p
+        return p
+
+    def store_poll(self, poll: Poll, message_id: int):
+        self._polls[message_id] = poll
+
+    def get_poll(self, message_id):
+        return self._polls.get(message_id)
+
+    @property
     def private_channels(self) -> list[PrivateChannel]:
         return list(self._private_channels.values())
 
@@ -531,9 +549,9 @@ class ConnectionState:
     async def query_members(
         self,
         guild: Guild,
-        query: str,
+        query: str | None,
         limit: int,
-        user_ids: list[int],
+        user_ids: list[int] | None,
         cache: bool,
         presences: bool,
     ):
@@ -734,6 +752,8 @@ class ConnectionState:
             older_message.author = message.author
             self.dispatch("message_edit", older_message, message)
         else:
+            if poll_data := data.get("poll"):
+                self.store_raw_poll(poll_data, raw)
             self.dispatch("raw_message_edit", raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
@@ -783,6 +803,17 @@ class ConnectionState:
         emoji_id = utils._get_as_snowflake(emoji, "id")
         emoji = PartialEmoji.with_state(self, id=emoji_id, name=emoji["name"])
         raw = RawReactionActionEvent(data, emoji, "REACTION_REMOVE")
+
+        member_data = data.get("member")
+        if member_data:
+            guild = self._get_guild(raw.guild_id)
+            if guild is not None:
+                raw.member = Member(data=member_data, guild=guild, state=self)
+            else:
+                raw.member = None
+        else:
+            raw.member = None
+
         self.dispatch("raw_reaction_remove", raw)
 
         message = self._get_message(raw.message_id)
@@ -813,6 +844,56 @@ class ConnectionState:
             else:
                 if reaction:
                     self.dispatch("reaction_clear_emoji", reaction)
+
+    def parse_message_poll_vote_add(self, data) -> None:
+        raw = RawMessagePollVoteEvent(data, True)
+        guild = self._get_guild(raw.guild_id)
+        if guild:
+            user = guild.get_member(raw.user_id)
+        else:
+            user = self.get_user(raw.user_id)
+        self.dispatch("raw_poll_vote_add", raw)
+
+        self._get_message(raw.message_id)
+        poll = self.get_poll(raw.message_id)
+        # if message was cached, poll has already updated but votes haven't
+        if poll and poll.results:
+            answer = poll.get_answer(raw.answer_id)
+            counts = poll.results._answer_counts
+            if answer is not None:
+                if answer.id in counts:
+                    counts[answer.id].count += 1
+                else:
+                    counts[answer.id] = PollAnswerCount(
+                        {"id": answer.id, "count": 1, "me_voted": False}
+                    )
+        if poll is not None and user is not None:
+            answer = poll.get_answer(raw.answer_id)
+            if answer is not None:
+                self.dispatch("poll_vote_add", poll, user, answer)
+
+    def parse_message_poll_vote_remove(self, data) -> None:
+        raw = RawMessagePollVoteEvent(data, False)
+        guild = self._get_guild(raw.guild_id)
+        if guild:
+            user = guild.get_member(raw.user_id)
+        else:
+            user = self.get_user(raw.user_id)
+        self.dispatch("raw_poll_vote_remove", raw)
+
+        self._get_message(raw.message_id)
+        poll = self.get_poll(raw.message_id)
+        # if message was cached, poll has already updated but votes haven't
+        if poll and poll.results:
+            answer = poll.get_answer(raw.answer_id)
+            counts = poll.results._answer_counts
+            if answer is not None:
+                if answer.id in counts:
+                    counts[answer.id].count -= 1
+        if poll is not None and user is not None:
+            answer = poll.get_answer(raw.answer_id)
+            if answer is not None:
+                self.dispatch("poll_vote_remove", poll, user, answer)
 
     def parse_interaction_create(self, data) -> None:
         interaction = Interaction(data=data, state=self)

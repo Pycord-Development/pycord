@@ -16,6 +16,22 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))
 - Added `user` argument to `Paginator.edit`.
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
+- Added `bridge_option` decorator. Required for `bridge.Bot` in 2.7.
+  ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- Added `Guild.search_members`.
+  ([#2418](https://github.com/Pycord-Development/pycord/pull/2418))
+- Added bulk banning up to 200 users through `Guild.bulk_ban`.
+  ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
+- Added `member` data to the `raw_reaction_remove` event.
+  ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
+- Added `Poll` and all related features.
+  ([#2408](https://github.com/Pycord-Development/pycord/pull/2408))
+- Added `stacklevel` param to `utils.warn_deprecated` and `utils.deprecated`.
+  ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
+- Added support for user-installable applications.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
+- Added support for one-time purchases for Discord monetization.
+  ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
 
 ### Fixed
 
@@ -30,11 +46,48 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2402](https://github.com/Pycord-Development/pycord/pull/2402))
 - Fixed interactions being ignored due to `PartialMessage(able).id` being of type `str`.
   ([#2406](https://github.com/Pycord-Development/pycord/pull/2406))
+- Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
+  ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
+- Fixed `ScheduledEvent.subscribers` behavior with `limit=None`.
+  ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
+- Fixed invalid data being passed to `Interaction._guild` in certain cases.
+  ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
+- Fixed option typehints being ignored when using `parameter_name`.
+  ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- Fixed parameter `embed=None` causing `AttributeError` on `PartialMessage.edit`.
+  ([#2446](https://github.com/Pycord-Development/pycord/pull/2446))
+- Fixed paginator to revert state if a page update callback fails.
+  ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
+- Fixed missing `application_id` in `Entitlement.delete`.
+  ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
+- Fixed many inaccurate type hints throughout the library.
+  ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
+- Fixed `AttributeError` due to `discord.Option` being initialised with `input_type` set
+  to `None`. ([#2464](https://github.com/Pycord-Development/pycord/pull/2464))
 
 ### Changed
 
 - Changed the type of `Guild.bitrate_limit` to `int`.
   ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
+- HTTP requests that fail with a 503 status are now re-tried.
+  ([#2395](https://github.com/Pycord-Development/pycord/pull/2395))
+- `option` decorator now accepts `input_type`.
+  ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- `Option` may be used instead of `BridgeOption` until 2.7.
+  ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
+- `Guild.query_members` now accepts `limit=None` to retrieve all members.
+  ([#2419](https://github.com/Pycord-Development/pycord/pull/2419))
+- `ApplicationCommand.guild_only` is now deprecated in favor of
+  `ApplicationCommand.contexts`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
+- `Message.interaction` is now deprecated in favor of `Message.interaction_metadata`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
+
+### Removed
+
+- Removed the `delete_message_days` parameter from ban methods. Please use
+  `delete_message_seconds` instead.
+  ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
 
 ## [2.5.0] - 2024-03-02
 
