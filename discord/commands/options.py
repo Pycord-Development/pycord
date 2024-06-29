@@ -86,6 +86,7 @@ CHANNEL_TYPE_MAP = {
     DMChannel: ChannelType.private,
 }
 
+_log = logging.getLogger(__name__)
 
 class ThreadOption:
     """Represents a class that can be passed as the ``input_type`` for an :class:`Option` class.
@@ -121,7 +122,7 @@ class Option:
         Inherits from the variable name if not provided as a parameter.
     description: Optional[:class:`str`]
         The description of this option.
-        Must be 100 characters or fewer.
+        Must be 100 characters or fewer. If :attr:`input_type` is a :class:`enum.Enum` and :attr:`description` is not specified, :attr:`input_type`'s docstring will be used.
     choices: Optional[List[Union[:class:`Any`, :class:`OptionChoice`]]]
         The list of available choices for this option.
         Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair).
@@ -199,6 +200,11 @@ class Option:
                 description = inspect.cleandoc(input_type.__doc__)
                 if description and len(description) > 100:
                     description = description[:97] + "..."
+                    _log.warning(
+                        "Option %s's description was truncated due to Enum %s's docstring exceeding 100 characters.",
+                        self.name,
+                        input_type
+                    )
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
             if all(isinstance(elem.value, value_class) for elem in enum_choices):
