@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
+import logging
 from enum import Enum
 from typing import TYPE_CHECKING, Literal, Optional, Type, Union
 
@@ -87,7 +88,6 @@ CHANNEL_TYPE_MAP = {
 }
 
 _log = logging.getLogger(__name__)
-
 
 class ThreadOption:
     """Represents a class that can be passed as the ``input_type`` for an :class:`Option` class.
@@ -204,7 +204,7 @@ class Option:
                     _log.warning(
                         "Option %s's description was truncated due to Enum %s's docstring exceeding 100 characters.",
                         self.name,
-                        input_type,
+                        input_type
                     )
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
