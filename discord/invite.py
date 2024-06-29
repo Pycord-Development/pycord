@@ -49,6 +49,7 @@ if TYPE_CHECKING:
     from .types.invite import GatewayInvite as GatewayInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
+    from .types.invite import VanityInvite as VanityInvitePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .user import User
 
@@ -353,7 +354,7 @@ class Invite(Hashable):
         self,
         *,
         state: ConnectionState,
-        data: InvitePayload,
+        data: InvitePayload | VanityInvitePayload,
         guild: PartialInviteGuild | Guild | None = None,
         channel: PartialInviteChannel | GuildChannel | None = None,
     ):

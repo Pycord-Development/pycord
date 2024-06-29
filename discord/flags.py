@@ -885,6 +885,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages`
         - :meth:`Client.get_message`
+        - :attr:`Client.polls`
+        - :meth:`Client.get_poll`
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -917,6 +919,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for guilds)
         - :meth:`Client.get_message` (only for guilds)
+        - :attr:`Client.polls` (only for guilds)
+        - :meth:`Client.get_poll` (only for guilds)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -931,6 +935,7 @@ class Intents(BaseFlags):
         - :attr:`Message.embeds`
         - :attr:`Message.attachments`
         - :attr:`Message.components`
+        - :attr:`Message.poll`
 
         For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
         """
@@ -955,6 +960,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for DMs)
         - :meth:`Client.get_message` (only for DMs)
+        - :attr:`Client.polls` (only for DMs)
+        - :meth:`Client.get_poll` (only for DMs)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -1079,6 +1086,7 @@ class Intents(BaseFlags):
         - :attr:`Message.embeds`
         - :attr:`Message.attachments`
         - :attr:`Message.components`
+        - :attr:`Message.poll`
 
         These attributes will still be available for messages received from interactions,
         the bot's own messages, messages the bot was mentioned in, and DMs.
@@ -1136,6 +1144,66 @@ class Intents(BaseFlags):
         - :func:`on_auto_moderation_action_execution`
         """
         return 1 << 21
+
+    @flag_value
+    def guild_polls(self):
+        """:class:`bool`: Whether poll-related events in guilds are enabled.
+
+        See also :attr:`dm_polls` for DMs or :attr:`polls` for both.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (only for guilds)
+        - :func:`on_poll_vote_remove` (only for guilds)
+        - :func:`on_raw_poll_vote_add` (only for guilds)
+        - :func:`on_raw_poll_vote_remove` (only for guilds)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`PollAnswer.count` (only for guild polls)
+        - :attr:`PollResults.answer_counts` (only for guild polls)
+        """
+        return 1 << 24
+
+    @flag_value
+    def dm_polls(self):
+        """:class:`bool`: Whether poll-related events in direct messages are enabled.
+
+        See also :attr:`guild_polls` for guilds or :attr:`polls` for both.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (only for DMs)
+        - :func:`on_poll_vote_remove` (only for DMs)
+        - :func:`on_raw_poll_vote_add` (only for DMs)
+        - :func:`on_raw_poll_vote_remove` (only for DMs)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`PollAnswer.count` (only for DM polls)
+        - :attr:`PollResults.answer_counts` (only for DM polls)
+        """
+        return 1 << 25
+
+    @alias_flag_value
+    def polls(self):
+        """:class:`bool`: Whether poll-related events in guilds and direct messages are enabled.
+
+        This is a shortcut to set or get both :attr:`guild_polls` and :attr:`dm_polls`.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (both guilds and DMs)
+        - :func:`on_poll_vote_remove` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_add` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_remove` (both guilds and DMs)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`PollAnswer.count` (both guild and DM polls)
+        - :attr:`PollResults.answer_counts` (both guild and DM polls)
+        """
+        return (1 << 24) | (1 << 25)
 
 
 @fill_with_flags()

@@ -107,7 +107,7 @@ if TYPE_CHECKING:
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
-    from .voice_client import VoiceProtocol
+    from .voice_client import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -647,8 +647,8 @@ class Guild(Hashable):
         return self.get_member(self_id)  # type: ignore
 
     @property
-    def voice_client(self) -> VoiceProtocol | None:
-        """Returns the :class:`VoiceProtocol` associated with this guild, if any."""
+    def voice_client(self) -> VoiceClient | None:
+        """Returns the :class:`VoiceClient` associated with this guild, if any."""
         return self._state._get_voice_client(self.id)
 
     @property
@@ -3121,7 +3121,7 @@ class Guild(Hashable):
         *users: Snowflake,
         delete_message_seconds: int | None = None,
         reason: str | None = None,
-    ) -> list[list[Snowflake], list[Snowflake]]:
+    ) -> tuple[list[Snowflake], list[Snowflake]]:
         r"""|coro|
 
         Bulk ban users from the guild.
@@ -3152,7 +3152,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        List[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
+        Tuple[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
             Returns two lists: the first contains members that were successfully banned, while the second is members that could not be banned.
 
         Raises
@@ -4070,3 +4070,59 @@ class Guild(Hashable):
         }
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)
+
+    async def fetch_entitlements(
+        self,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        exclude_ended: bool = False,
+    ) -> EntitlementIterator:
+        """|coro|
+
+        Fetches this guild's entitlements.
+
+        This is identical to :meth:`Client.fetch_entitlements` with the ``guild`` parameter.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        skus: list[:class:`.abc.Snowflake`] | None
+            Limit the fetched entitlements to entitlements that are for these SKUs.
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieves guilds before this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieve guilds after this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        limit: Optional[:class:`int`]
+            The number of entitlements to retrieve.
+            If ``None``, retrieves every entitlement, which may be slow.
+            Defaults to ``100``.
+        exclude_ended: :class:`bool`
+            Whether to limit the fetched entitlements to those that have not ended.
+            Defaults to ``False``.
+
+        Returns
+        -------
+        List[:class:`.Entitlement`]
+            The application's entitlements.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Retrieving the entitlements failed.
+        """
+        return EntitlementIterator(
+            self._state,
+            sku_ids=[sku.id for sku in skus],
+            before=before,
+            after=after,
+            limit=limit,
+            guild_id=self.id,
+            exclude_ended=exclude_ended,
+        )

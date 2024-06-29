@@ -340,6 +340,9 @@ class Option:
             "description_localizations", MISSING
         )
 
+        if input_type is None:
+            raise TypeError("input_type cannot be NoneType.")
+
     def to_dict(self) -> dict:
         as_dict = {
             "name": self.name,
