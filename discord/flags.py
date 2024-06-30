@@ -1724,5 +1724,5 @@ class RoleFlags(BaseFlags):
 
     @flag_value
     def in_prompt(self):
-        """:class:`bool`: Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`s"""
+        """:class:`bool`: Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`"""
         return 1 << 0
