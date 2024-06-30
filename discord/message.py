@@ -620,9 +620,9 @@ class MessageCall:
 
     @property
     def ended_at(self) -> datetime.datetime | None:
-        """An aware timestamp of when the call ended.
-        """
+        """An aware timestamp of when the call ended."""
         return self._ended_timestamp
+
 
 def flatten_handlers(cls):
     prefix = len("_handle_")
