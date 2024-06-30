@@ -26,6 +26,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
 - Added `stacklevel` param to `utils.warn_deprecated` and `utils.deprecated`.
   ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
+- Added `Attachment.title`.
+  ([#2486](https://github.com/Pycord-Development/pycord/pull/2486))
 
 ### Fixed
 
