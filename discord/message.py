@@ -99,6 +99,7 @@ __all__ = (
     "Message",
     "PartialMessage",
     "MessageReference",
+    "MessageCall",
     "DeletedReferencedMessage",
 )
 
