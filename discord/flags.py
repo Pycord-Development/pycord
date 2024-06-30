@@ -1690,28 +1690,41 @@ class SKUFlags(BaseFlags):
 @fill_with_flags()
 class RoleFlags(BaseFlags):
     r"""Wraps up the Discord Role flags.
-    See :class:`SystemChannelFlags`.
+
     .. container:: operations
+
         .. describe:: x == y
-            Checks if two flags are equal.
+
+            Checks if two RoleFlags are equal.
         .. describe:: x != y
-            Checks if two flags are not equal.
+
+            Checks if two RoleFlags are not equal.
         .. describe:: x + y
+
             Adds two flags together. Equivalent to ``x | y``.
         .. describe:: x - y
+
             Subtracts two flags from each other.
         .. describe:: x | y
+
             Returns the union of two flags. Equivalent to ``x + y``.
         .. describe:: x & y
+
             Returns the intersection of two flags.
         .. describe:: ~x
+
             Returns the inverse of a flag.
         .. describe:: hash(x)
-               Return the flag's hash.
+
+            Return the flag's hash.
         .. describe:: iter(x)
-               Returns an iterator of ``(name, value)`` pairs. This allows it
-               to be, for example, constructed as a dict or a list of pairs.
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
     .. versionadded:: 2.6
+
     Attributes
     -----------
     value: :class:`int`
