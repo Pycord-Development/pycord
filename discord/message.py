@@ -81,8 +81,8 @@ if TYPE_CHECKING:
     from .types.message import Message as MessagePayload
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
-    from .types.message import MessageReference as MessageReferencePayload
     from .types.message import MessageCall as MessageCallPayload
+    from .types.message import MessageReference as MessageReferencePayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
     from .types.snowflake import SnowflakeList
@@ -618,10 +618,11 @@ class MessageCall:
     def participants(self) -> list[User | Object]:
         """A list of :class:`User` that participated in this call.
 
-        If a user is not found in the client's cache, 
+        If a user is not found in the client's cache,
         then it will be returned as an :class:`Object`
         """
         return [self._state.get_user(int(i)) or Object(i) for i in self._participants]
+
 
 def flatten_handlers(cls):
     prefix = len("_handle_")
