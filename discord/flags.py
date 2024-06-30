@@ -1695,10 +1695,10 @@ class MemberFlags(BaseFlags):
 
         .. describe:: x == y
 
-            Checks if two SKUFlags are equal.
+            Checks if two MemberFlags are equal.
         .. describe:: x != y
 
-            Checks if two SKUFlags are not equal.
+            Checks if two MemberFlags are not equal.
         .. describe:: x + y
 
             Adds two flags together. Equivalent to ``x | y``.
