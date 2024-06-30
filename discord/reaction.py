@@ -111,7 +111,7 @@ class Reaction:
         self.me: bool = data.get("me")
         self.burst: bool = data.get("burst")
         self.me_burst: bool = data.get("me_burst")
-        self._burst_colours: list[Colour] = data.get("burst_colors", [])
+        self._burst_colours: list[str] = data.get("burst_colors", [])
 
     @property
     def burst_colours(self) -> list[Colour]:

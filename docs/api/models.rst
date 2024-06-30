@@ -353,6 +353,16 @@ Interactions
 .. autoclass:: MessageInteraction()
     :members:
 
+.. attributetable:: InteractionMetadata
+
+.. autoclass:: InteractionMetadata()
+    :members:
+
+.. attributetable:: AuthorizingIntegrationOwners
+
+.. autoclass:: AuthorizingIntegrationOwners()
+    :members:
+
 .. attributetable:: Component
 
 .. autoclass:: Component()
