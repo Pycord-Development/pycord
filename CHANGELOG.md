@@ -34,6 +34,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
 - Added `Attachment.title`.
   ([#2486](https://github.com/Pycord-Development/pycord/pull/2486))
+- Added `MemberFlags`. ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
+- Added `bypass_verification` parameter to `Member.edit`.
+  ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
 
 ### Fixed
 
