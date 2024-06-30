@@ -32,8 +32,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
 - Added support for one-time purchases for Discord monetization.
   ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
-- Added `MemberFlags`. 
-  ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
+- Added `MemberFlags`. ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
 - Added `bypass_verification` parameter to `Member.edit`.
   ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
 
