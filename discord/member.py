@@ -39,6 +39,7 @@ from .activity import ActivityTypes, create_activity
 from .asset import Asset
 from .colour import Colour
 from .enums import Status, try_enum
+from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
@@ -269,6 +270,10 @@ class Member(discord.abc.Messageable, _UserTag):
         An aware datetime object that specifies the date and time in UTC when the member will be removed from timeout.
 
         .. versionadded:: 2.0
+    flags: :class:`MemberFlags`
+        Extra attributes of the member.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -284,6 +289,7 @@ class Member(discord.abc.Messageable, _UserTag):
         "_state",
         "_avatar",
         "communication_disabled_until",
+        "flags",
     )
 
     if TYPE_CHECKING:
@@ -325,6 +331,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.communication_disabled_until: datetime.datetime | None = utils.parse_time(
             data.get("communication_disabled_until")
         )
+        self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
 
     def __str__(self) -> str:
         return str(self._user)
@@ -400,6 +407,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._state = member._state
         self._avatar = member._avatar
         self.communication_disabled_until = member.communication_disabled_until
+        self.flags = member.flags
 
         # Reference will not be copied unless necessary by PRESENCE_UPDATE
         # See below
@@ -429,6 +437,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.communication_disabled_until = utils.parse_time(
             data.get("communication_disabled_until")
         )
+        self.flags = MemberFlags._from_value(data.get("flags", 0))
 
     def _presence_update(
         self, data: PartialPresenceUpdate, user: UserPayload
@@ -729,6 +738,7 @@ class Member(discord.abc.Messageable, _UserTag):
         voice_channel: VocalGuildChannel | None = MISSING,
         reason: str | None = None,
         communication_disabled_until: datetime.datetime | None = MISSING,
+        bypasses_verification: bool | None = MISSING
     ) -> Member | None:
         """|coro|
 
@@ -751,6 +761,11 @@ class Member(discord.abc.Messageable, _UserTag):
         +------------------------------+--------------------------------------+
         | communication_disabled_until | :attr:`Permissions.moderate_members` |
         +------------------------------+--------------------------------------+
+
+        :attr:`flags` may be edited under three scenarios:
+        - Client has :attr:`manage_guild`
+        - Client has :attr:`manage_roles`
+        - Client has ALL THREE of :attr:`moderate_members`, :attr:`kick_members`, and :attr:`ban_members`
 
         All parameters are optional.
 
@@ -785,6 +800,10 @@ class Member(discord.abc.Messageable, _UserTag):
             from timeout.
 
             .. versionadded:: 2.0
+        bypass_verification: Optional[:class:`bool`]
+            Indicates if the member should bypass the guild's verification requirements.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -848,6 +867,11 @@ class Member(discord.abc.Messageable, _UserTag):
                 )
             else:
                 payload["communication_disabled_until"] = communication_disabled_until
+        
+        if bypass_verification is not MISSING:
+            flags = MemberFlags._from_value(self.flags.value)
+            flags.bypasses_verification = bypass_verification
+            payload["flags"] = flags.value
 
         if payload:
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
