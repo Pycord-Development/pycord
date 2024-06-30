@@ -155,6 +155,11 @@ class Attachment(Hashable):
         The attachment's width, in pixels. Only applicable to images and videos.
     filename: :class:`str`
         The attachment's filename.
+    title: Optional[:class:`str`]
+        The attachment's title. This is equal to the original :attr:`filename` (without an extension)
+        if special characters were filtered from it.
+
+        .. versionadded:: 2.6
     url: :class:`str`
         The attachment URL. If the message this attachment was attached
         to is deleted, then this will 404.
@@ -193,12 +198,6 @@ class Attachment(Hashable):
         The unique signature of this attachment's instance.
 
         .. versionadded:: 2.5
-
-    title: Optional[:class:`str`]
-        The attachment's title. This is equal to the original :attr:`filename` (without an extension)
-        if special characters were filtered from it.
-
-        .. versionadded:: 2.6
     """
 
     __slots__ = (
