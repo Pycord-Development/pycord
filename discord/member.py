@@ -738,7 +738,7 @@ class Member(discord.abc.Messageable, _UserTag):
         voice_channel: VocalGuildChannel | None = MISSING,
         reason: str | None = None,
         communication_disabled_until: datetime.datetime | None = MISSING,
-        bypasses_verification: bool | None = MISSING
+        bypass_verification: bool | None = MISSING
     ) -> Member | None:
         """|coro|
 
@@ -762,7 +762,7 @@ class Member(discord.abc.Messageable, _UserTag):
         | communication_disabled_until | :attr:`Permissions.moderate_members` |
         +------------------------------+--------------------------------------+
 
-        :attr:`flags` may be edited under three scenarios:
+        :attr:`bypass_verification` may be edited under three scenarios:
         - Client has :attr:`manage_guild`
         - Client has :attr:`manage_roles`
         - Client has ALL THREE of :attr:`moderate_members`, :attr:`kick_members`, and :attr:`ban_members`
