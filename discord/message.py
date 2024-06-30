@@ -195,7 +195,8 @@ class Attachment(Hashable):
         .. versionadded:: 2.5
 
     title: Optional[:class:`str`]
-        The attachment's title. This is equal to the original :attr:`filename` (without its extension) if special characters were filtered from it.
+        The attachment's title. This is equal to the original :attr:`filename` (without an extension)
+        if special characters were filtered from it.
 
         .. versionadded:: 2.6
     """
