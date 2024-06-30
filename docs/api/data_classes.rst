@@ -166,6 +166,11 @@ Flags
 .. autoclass:: SKUFlags()
     :members:
 
+.. attributetable:: RoleFlags
+
+.. autoclass:: RoleFlags()
+    :members:
+
 Colour
 ------
 
