@@ -1750,7 +1750,7 @@ class MemberFlags(BaseFlags):
 
         .. note::
 
-            This can be edited with :func:`~discord.Member.edit` to change if a member can bypass requirements.
+            This can be edited through :func:`~discord.Member.edit`.
         """
         return 1 << 2
 
