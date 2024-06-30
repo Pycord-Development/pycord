@@ -1339,7 +1339,7 @@ class ForumChannel(_TextChannel):
                     f.close()
 
         ret = Thread(guild=self.guild, state=self._state, data=data)
-        msg = ret.get_partial_message(data["last_message_id"])
+        msg = ret.get_partial_message(int(data["last_message_id"]))
         if view:
             state.store_view(view, msg.id)
 
