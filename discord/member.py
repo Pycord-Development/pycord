@@ -738,7 +738,7 @@ class Member(discord.abc.Messageable, _UserTag):
         voice_channel: VocalGuildChannel | None = MISSING,
         reason: str | None = None,
         communication_disabled_until: datetime.datetime | None = MISSING,
-        bypass_verification: bool | None = MISSING
+        bypass_verification: bool | None = MISSING,
     ) -> Member | None:
         """|coro|
 
@@ -867,7 +867,7 @@ class Member(discord.abc.Messageable, _UserTag):
                 )
             else:
                 payload["communication_disabled_until"] = communication_disabled_until
-        
+
         if bypass_verification is not MISSING:
             flags = MemberFlags._from_value(self.flags.value)
             flags.bypasses_verification = bypass_verification
