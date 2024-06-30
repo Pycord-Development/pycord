@@ -190,6 +190,11 @@ class Attachment(Hashable):
         The unique signature of this attachment's instance.
 
         .. versionadded:: 2.5
+
+    title: Optional[:class:`str`]
+        The attachment's title. This is equal to the original :attr:`filename` if special characters were filtered from it.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -210,6 +215,7 @@ class Attachment(Hashable):
         "_ex",
         "_is",
         "hm",
+        "title",
     )
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
@@ -218,6 +224,7 @@ class Attachment(Hashable):
         self.height: int | None = data.get("height")
         self.width: int | None = data.get("width")
         self.filename: str = data["filename"]
+        self.title: str | None = data.get("title")
         self.url: str = data.get("url")
         self.proxy_url: str = data.get("proxy_url")
         self._http = state.http
