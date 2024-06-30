@@ -600,17 +600,12 @@ class MessageCall:
     """Represents information about a call in a private channel.
 
     .. versionadded:: 2.6
-
-    Attributes
-    ----------
-    ended_timestamp: Optional[:class:`datetime.datetime`]
-        An aware timestamp of when the call ended.
     """
 
     def __init__(self, state: ConnectionState, data: MessageCallPayload):
         self._state: ConnectionState = state
         self._participants: SnowflakeList = data.get("participants", [])
-        self.ended_timestamp: datetime.datetime | None = utils.parse_time(
+        self._ended_timestamp: datetime.datetime | None = utils.parse_time(
             data["ended_timestamp"]
         )
 
@@ -623,6 +618,11 @@ class MessageCall:
         """
         return [self._state.get_user(int(i)) or Object(i) for i in self._participants]
 
+    @property
+    def ended_at(self) -> datetime.datetime | None:
+        """An aware timestamp of when the call ended.
+        """
+        return self._ended_timestamp
 
 def flatten_handlers(cls):
     prefix = len("_handle_")
