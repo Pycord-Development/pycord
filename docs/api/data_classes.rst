@@ -49,6 +49,11 @@ Message
 .. autoclass:: MessageReference
     :members:
 
+.. attributetable:: MessageCall
+
+.. autoclass:: MessageCall
+    :members:
+
 .. attributetable:: PartialMessage
 
 .. autoclass:: PartialMessage
