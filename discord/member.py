@@ -761,11 +761,18 @@ class Member(discord.abc.Messageable, _UserTag):
         +------------------------------+--------------------------------------+
         | communication_disabled_until | :attr:`Permissions.moderate_members` |
         +------------------------------+--------------------------------------+
+        | bypass_verification          | See note below                       |
+        +------------------------------+--------------------------------------+
 
-        :attr:`bypass_verification` may be edited under three scenarios:
-        - Client has :attr:`manage_guild`
-        - Client has :attr:`manage_roles`
-        - Client has ALL THREE of :attr:`moderate_members`, :attr:`kick_members`, and :attr:`ban_members`
+        .. note::
+
+            `bypass_verification` may be edited under three scenarios:
+
+            - Client has :attr:`Permissions.manage_guild`
+
+            - Client has :attr:`Permissions.manage_roles`
+
+            - Client has ALL THREE of :attr:`Permissions.moderate_members`, :attr:`Permissions.kick_members`, and :attr:`Permissions.ban_members`
 
         All parameters are optional.
 
