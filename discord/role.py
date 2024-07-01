@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 from .asset import Asset
 from .colour import Colour
 from .errors import InvalidArgument
+from .flags import RoleFlags
 from .mixins import Hashable
 from .permissions import Permissions
 from .utils import MISSING, _bytes_to_base64_data, _get_as_snowflake, snowflake_time
@@ -177,6 +178,11 @@ class Role(Hashable):
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
 
         .. versionadded:: 2.0
+
+    flags: :class:`RoleFlags`
+        Extra attributes of the role.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -193,6 +199,7 @@ class Role(Hashable):
         "unicode_emoji",
         "_icon",
         "_state",
+        "flags",
     )
 
     def __init__(self, *, guild: Guild, state: ConnectionState, data: RolePayload):
@@ -253,6 +260,7 @@ class Role(Hashable):
         self.mentionable: bool = data.get("mentionable", False)
         self._icon: str | None = data.get("icon")
         self.unicode_emoji: str | None = data.get("unicode_emoji")
+        self.flags: RoleFlags = RoleFlags._from_value(data.get("flags", 0))
         self.tags: RoleTags | None
 
         try:
