@@ -40,6 +40,7 @@ __all__ = (
     "ChannelFlags",
     "SKUFlags",
     "RoleFlags",
+    "MemberFlags",
 )
 
 FV = TypeVar("FV", bound="flag_value")
