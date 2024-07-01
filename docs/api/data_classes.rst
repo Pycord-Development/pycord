@@ -171,6 +171,11 @@ Flags
 .. autoclass:: SKUFlags()
     :members:
 
+.. attributetable:: MemberFlags
+
+.. autoclass:: MemberFlags()
+    :members:
+
 Colour
 ------
 
