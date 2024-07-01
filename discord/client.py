@@ -2051,7 +2051,7 @@ class Client:
         after: SnowflakeTime | None = None,
         limit: int | None = 100,
         guild: Snowflake | None = None,
-        exclude_ended: bool = False,
+        exclude_ended: bool | None = None,
     ) -> EntitlementIterator:
         """|coro|
 
