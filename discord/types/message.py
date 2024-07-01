@@ -154,3 +154,8 @@ class AllowedMentions(TypedDict):
     roles: SnowflakeList
     users: SnowflakeList
     replied_user: bool
+
+
+class MessageCall(TypedDict):
+    participants: SnowflakeList
+    ended_timestamp: NotRequired[str]

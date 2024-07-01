@@ -38,6 +38,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `bypass_verification` parameter to `Member.edit`.
   ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
 - Added `RoleFlags`. ([#2487](https://github.com/Pycord-Development/pycord/pull/2487))
+- Added `MessageCall` information.
+  ([#2488](https://github.com/Pycord-Development/pycord/pull/2488))
 
 ### Fixed
 

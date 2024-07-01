@@ -52,6 +52,7 @@ from .flags import AttachmentFlags, MessageFlags
 from .guild import Guild
 from .member import Member
 from .mixins import Hashable
+from .object import Object
 from .partial_emoji import PartialEmoji
 from .poll import Poll
 from .reaction import Reaction
@@ -80,9 +81,11 @@ if TYPE_CHECKING:
     from .types.message import Message as MessagePayload
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
+    from .types.message import MessageCall as MessageCallPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
+    from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
     from .ui.view import View
@@ -96,6 +99,7 @@ __all__ = (
     "Message",
     "PartialMessage",
     "MessageReference",
+    "MessageCall",
     "DeletedReferencedMessage",
 )
 
@@ -600,6 +604,34 @@ class MessageReference:
     to_message_reference_dict = to_dict
 
 
+class MessageCall:
+    """Represents information about a call in a private channel.
+
+    .. versionadded:: 2.6
+    """
+
+    def __init__(self, state: ConnectionState, data: MessageCallPayload):
+        self._state: ConnectionState = state
+        self._participants: SnowflakeList = data.get("participants", [])
+        self._ended_timestamp: datetime.datetime | None = utils.parse_time(
+            data["ended_timestamp"]
+        )
+
+    @property
+    def participants(self) -> list[User | Object]:
+        """A list of :class:`User` that participated in this call.
+
+        If a user is not found in the client's cache,
+        then it will be returned as an :class:`Object`.
+        """
+        return [self._state.get_user(int(i)) or Object(i) for i in self._participants]
+
+    @property
+    def ended_at(self) -> datetime.datetime | None:
+        """An aware timestamp of when the call ended."""
+        return self._ended_timestamp
+
+
 def flatten_handlers(cls):
     prefix = len("_handle_")
     handlers = [
@@ -748,6 +780,10 @@ class Message(Hashable):
         The poll associated with this message, if applicable.
 
         .. versionadded:: 2.6
+    call: Optional[:class:`MessageCall`]
+        The call information associated with this message, if applicable.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -785,6 +821,7 @@ class Message(Hashable):
         "interaction_metadata",
         "thread",
         "_poll",
+        "call",
     )
 
     if TYPE_CHECKING:
@@ -894,6 +931,12 @@ class Message(Hashable):
             )
         except KeyError:
             self.thread = None
+
+        self.call: MessageCall | None
+        try:
+            self.call = MessageCall(state=self._state, data=data["call"])
+        except KeyError:
+            self.call = None
 
         for handler in ("author", "member", "mentions", "mention_roles"):
             try:
