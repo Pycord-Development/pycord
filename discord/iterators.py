@@ -1055,7 +1055,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             user_id=self.user_id,
             guild_id=self.guild_id,
             sku_ids=self.sku_ids,
-            exclude_ended=self.exclude_ended,
+            exclude_ended=int(self.exclude_ended),
         )
 
         if not data:
