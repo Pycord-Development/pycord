@@ -108,7 +108,7 @@ class ApplicationCommandMixin(ABC):
         return list(self._application_commands.values())
 
     def add_application_command(self, command: ApplicationCommand) -> None:
-        """Adds a :class:`.ApplicationCommand` into the internal list of commands.
+        """Adds an :class:`.ApplicationCommand` into the internal list of commands.
 
         This is usually not called, instead the :meth:`command` or
         other shortcut decorators are used instead.
@@ -143,7 +143,7 @@ class ApplicationCommandMixin(ABC):
     def remove_application_command(
         self, command: ApplicationCommand
     ) -> ApplicationCommand | None:
-        """Remove a :class:`.ApplicationCommand` from the internal list
+        """Remove an :class:`.ApplicationCommand` from the internal list
         of commands.
 
         .. versionadded:: 2.0
@@ -156,16 +156,15 @@ class ApplicationCommandMixin(ABC):
         Returns
         -------
         Optional[:class:`.ApplicationCommand`]
-            The command that was removed. If the name is not valid then
+            The command that was removed. If the command has not been added,
             ``None`` is returned instead.
         """
-        if command.id is None:
-            try:
-                index = self._pending_application_commands.index(command)
-            except ValueError:
-                return None
-            return self._pending_application_commands.pop(index)
-        return self._application_commands.pop(command.id, None)
+        if command.id:
+            self._application_commands.pop(command.id, None)
+
+        if command in self._pending_application_commands:
+            self._pending_application_commands.remove(command)
+            return command
 
     @property
     def get_command(self):
@@ -185,7 +184,7 @@ class ApplicationCommandMixin(ABC):
         guild_ids: list[int] | None = None,
         type: type[ApplicationCommand] = ApplicationCommand,
     ) -> ApplicationCommand | None:
-        """Get a :class:`.ApplicationCommand` from the internal list
+        """Get an :class:`.ApplicationCommand` from the internal list
         of commands.
 
         .. versionadded:: 2.0
