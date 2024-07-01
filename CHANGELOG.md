@@ -60,6 +60,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
 - Fixed `AttributeError` due to `discord.Option` being initialised with `input_type` set
   to `None`. ([#2464](https://github.com/Pycord-Development/pycord/pull/2464))
+- Fixed `remove_application_command` causing issues while reloading extensions.
+  ([#2480](https://github.com/Pycord-Development/pycord/pull/2480))
 
 ### Changed
 
