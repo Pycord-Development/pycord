@@ -2051,7 +2051,7 @@ class Client:
         after: SnowflakeTime | None = None,
         limit: int | None = 100,
         guild: Snowflake | None = None,
-        exclude_ended: bool | None = None,
+        exclude_ended: bool | None = None,  # TODO this is only a temporary workarount, as yarl does not support bool
     ) -> EntitlementIterator:
         """|coro|
 
