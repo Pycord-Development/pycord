@@ -622,7 +622,7 @@ class MessageCall:
         """A list of :class:`User` that participated in this call.
 
         If a user is not found in the client's cache,
-        then it will be returned as an :class:`Object`
+        then it will be returned as an :class:`Object`.
         """
         return [self._state.get_user(int(i)) or Object(i) for i in self._participants]
 
