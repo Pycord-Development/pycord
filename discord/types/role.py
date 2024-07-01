@@ -39,6 +39,7 @@ class Role(TypedDict):
     permissions: str
     managed: bool
     mentionable: bool
+    flags: int
 
 
 class RoleTags(TypedDict, total=False):

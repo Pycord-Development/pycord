@@ -2957,11 +2957,48 @@ class HTTPClient:
     def list_entitlements(
         self,
         application_id: Snowflake,
+        *,
+        user_id: Snowflake | None = None,
+        sku_ids: list[Snowflake] | None = None,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
+        limit: int | None = None,
+        guild_id: Snowflake | None = None,
+        exclude_ended: bool | None = None,
     ) -> Response[list[monetization.Entitlement]]:
+        params: dict[str, Any] = {}
+        if user_id is not None:
+            params["user_id"] = user_id
+        if sku_ids is not None:
+            params["sku_ids"] = ",".join(sku_ids)
+        if before is not None:
+            params["before"] = before
+        if after is not None:
+            params["after"] = after
+        if limit is not None:
+            params["limit"] = limit
+        if guild_id is not None:
+            params["guild_id"] = guild_id
+        if exclude_ended is not None:
+            params["exclude_ended"] = exclude_ended
+
         r = Route(
             "GET",
             "/applications/{application_id}/entitlements",
             application_id=application_id,
+        )
+        return self.request(r, params=params)
+
+    def consume_entitlement(
+        self,
+        application_id: Snowflake,
+        entitlement_id: Snowflake,
+    ) -> Response[None]:
+        r = Route(
+            "POST",
+            "/applications/{application_id}/entitlements/{entitlement_id}/consume",
+            application_id=application_id,
+            entitlement_id=entitlement_id,
         )
         return self.request(r)
 

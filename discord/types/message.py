@@ -80,6 +80,7 @@ class Attachment(TypedDict):
     duration_secs: NotRequired[float]
     waveform: NotRequired[str]
     flags: NotRequired[int]
+    title: NotRequired[str]
 
 
 MessageActivityType = Literal[1, 2, 3, 5]
@@ -153,3 +154,8 @@ class AllowedMentions(TypedDict):
     roles: SnowflakeList
     users: SnowflakeList
     replied_user: bool
+
+
+class MessageCall(TypedDict):
+    participants: SnowflakeList
+    ended_timestamp: NotRequired[str]

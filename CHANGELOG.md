@@ -30,6 +30,16 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
 - Added support for user-installable applications.
   ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
+- Added support for one-time purchases for Discord monetization.
+  ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
+- Added `Attachment.title`.
+  ([#2486](https://github.com/Pycord-Development/pycord/pull/2486))
+- Added `MemberFlags`. ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
+- Added `bypass_verification` parameter to `Member.edit`.
+  ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
+- Added `RoleFlags`. ([#2487](https://github.com/Pycord-Development/pycord/pull/2487))
+- Added `MessageCall` information.
+  ([#2488](https://github.com/Pycord-Development/pycord/pull/2488))
 
 ### Fixed
 
@@ -42,6 +52,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 - Fixed `NameError` in some instances of `Interaction`.
   ([#2402](https://github.com/Pycord-Development/pycord/pull/2402))
+- Fixed interactions being ignored due to `PartialMessage.id` being of type `str`.
+  ([#2406](https://github.com/Pycord-Development/pycord/pull/2406))
 - Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
   ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
 - Fixed `ScheduledEvent.subscribers` behavior with `limit=None`.
@@ -56,6 +68,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 - Fixed missing `application_id` in `Entitlement.delete`.
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
+- Fixed issues with enums as `Option` types with long descriptions or too many values
+  ([#2463](https://github.com/Pycord-Development/pycord/pull/2463))
 - Fixed many inaccurate type hints throughout the library.
   ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
 - Fixed `AttributeError` due to `discord.Option` being initialised with `input_type` set
