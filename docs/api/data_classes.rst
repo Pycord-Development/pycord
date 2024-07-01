@@ -176,6 +176,11 @@ Flags
 .. autoclass:: MemberFlags()
     :members:
 
+.. attributetable:: RoleFlags
+
+.. autoclass:: RoleFlags()
+    :members:
+
 Colour
 ------
 

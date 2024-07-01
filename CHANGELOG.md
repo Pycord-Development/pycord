@@ -37,6 +37,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `MemberFlags`. ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
 - Added `bypass_verification` parameter to `Member.edit`.
   ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
+- Added `RoleFlags`. ([#2487](https://github.com/Pycord-Development/pycord/pull/2487))
 - Added `MessageCall` information.
   ([#2488](https://github.com/Pycord-Development/pycord/pull/2488))
 
@@ -67,6 +68,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 - Fixed missing `application_id` in `Entitlement.delete`.
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
+- Fixed issues with enums as `Option` types with long descriptions or too many values
+  ([#2463](https://github.com/Pycord-Development/pycord/pull/2463))
 - Fixed many inaccurate type hints throughout the library.
   ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
 - Fixed `AttributeError` due to `discord.Option` being initialised with `input_type` set
