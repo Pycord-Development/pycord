@@ -2085,7 +2085,7 @@ class Client:
 
         Returns
         -------
-        List[:class:`.Entitlement`]
+        :class:`.EntitlementIterator`
             The application's entitlements.
 
         Raises
@@ -2095,12 +2095,12 @@ class Client:
         """
         return EntitlementIterator(
             self._connection,
-            user_id=user.id,
-            sku_ids=[sku.id for sku in skus],
+            user_id=user.id if user else None,
+            sku_ids=[sku.id for sku in skus] if skus else None,
             before=before,
             after=after,
             limit=limit,
-            guild_id=guild.id,
+            guild_id=guild.id if guild else None,
             exclude_ended=exclude_ended,
         )
 
