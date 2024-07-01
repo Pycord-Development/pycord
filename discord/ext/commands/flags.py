@@ -83,7 +83,8 @@ class Flag:
         The maximum number of arguments the flag can accept.
         A negative value indicates an unlimited amount of arguments.
     positional: :class:`bool`
-        Whether the flag is positional or not. There can only be one positional flag.
+        Whether the flag is positional.
+        A :class:`FlagConverter` can only handle one positional flag.
     override: :class:`bool`
         Whether multiple given values overrides the previous value.
     """

@@ -656,7 +656,7 @@ This tells the parser that the ``members`` attribute is mapped to a flag named `
 the default value is an empty list. For greater customisability, the default can either be a value or a callable
 that takes the :class:`~ext.commands.Context` as a sole parameter. This callable can either be a function or a coroutine.
 
-Flags can also have one of its flags be marked as positional. This means that the flag does not require a corresponding
+Flags can also be positional. This means that the flag does not require a corresponding
 value to be passed in by the user. This is useful for flags that are either optional or have a default value.
 For example, in the following code:
 
@@ -667,7 +667,7 @@ For example, in the following code:
         reason: str = commands.flag(default='no reason')
         days: int = commands.flag(default=1)
 
-The ``members`` flag is marked as positional, meaning that the user can invoke the command without specifying the flag
+The ``members`` flag is marked as positional, meaning that the user can invoke the command without explicitly specifying the flag.
 
 In order to customise the flag syntax we also have a few options that can be passed to the class parameter list:
 
