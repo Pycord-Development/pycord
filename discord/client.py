@@ -2055,7 +2055,7 @@ class Client:
     ) -> EntitlementIterator:
         """Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements.
 
-        .. versionadded:: 2.5
+        .. versionadded:: 2.6
 
         Parameters
         ----------

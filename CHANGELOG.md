@@ -29,7 +29,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `stacklevel` param to `utils.warn_deprecated` and `utils.deprecated`.
   ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
 - Added support for user-installable applications.
-  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
 - Added support for one-time purchases for Discord monetization.
   ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
 - Added `Attachment.title`.
@@ -93,7 +93,10 @@ These changes are available on the `master` branch, but have not yet been releas
   `ApplicationCommand.contexts`.
   ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
 - `Message.interaction` is now deprecated in favor of `Message.interaction_metadata`.
-  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409)
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
+- Replaced `client.fetch_entitlements` with `client.entitlements`, which returns an
+  `EntitlementIterator`.
+  ([#2490](https://github.com/Pycord-Development/pycord/pull/2490))
 
 ### Removed
 
