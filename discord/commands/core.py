@@ -519,7 +519,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         called. This makes it a useful function to set up database
         connections or any type of set up required.
 
-        This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
+        This pre-invoke hook takes a sole parameter, an :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
 
         Parameters
@@ -544,7 +544,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
 
-        This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
+        This post-invoke hook takes a sole parameter, an :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
 
         Parameters
