@@ -639,7 +639,7 @@ class User(BaseUser, discord.abc.Messageable):
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)
 
-    async def fetch_entitlements(
+    def entitlements(
         self,
         skus: list[Snowflake] | None = None,
         before: SnowflakeTime | None = None,
@@ -647,11 +647,9 @@ class User(BaseUser, discord.abc.Messageable):
         limit: int | None = 100,
         exclude_ended: bool = False,
     ) -> EntitlementIterator:
-        """|coro|
+        """Returns an :class:`.AsyncIterator` that enables fetching the user's entitlements.
 
-        Fetches this user's entitlements.
-
-        This is identical to :meth:`Client.fetch_entitlements` with the ``user`` parameter.
+        This is identical to :meth:`Client.entitlements` with the ``user`` parameter.
 
         .. versionadded:: 2.6
 
@@ -675,9 +673,9 @@ class User(BaseUser, discord.abc.Messageable):
             Whether to limit the fetched entitlements to those that have not ended.
             Defaults to ``False``.
 
-        Returns
-        -------
-        List[:class:`.Entitlement`]
+        Yields
+        ------
+        :class:`.Entitlement`
             The application's entitlements.
 
         Raises
@@ -687,7 +685,7 @@ class User(BaseUser, discord.abc.Messageable):
         """
         return EntitlementIterator(
             self._state,
-            sku_ids=[sku.id for sku in skus],
+            sku_ids=[sku.id for sku in skus] if skus else None,
             before=before,
             after=after,
             limit=limit,
