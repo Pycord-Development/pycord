@@ -117,7 +117,7 @@ class Button(Item[V]):
             )
 
         self._provided_custom_id = custom_id is not None
-        if url is None and custom_id is None:
+        if url is None and custom_id is None and sku_id is None:
             custom_id = os.urandom(16).hex()
 
         if url is not None:

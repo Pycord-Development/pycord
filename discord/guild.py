@@ -68,7 +68,12 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, BanIterator, MemberIterator
+from .iterators import (
+    AuditLogIterator,
+    BanIterator,
+    EntitlementIterator,
+    MemberIterator,
+)
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
@@ -4071,7 +4076,7 @@ class Guild(Hashable):
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)
 
-    async def fetch_entitlements(
+    def entitlements(
         self,
         skus: list[Snowflake] | None = None,
         before: SnowflakeTime | None = None,
@@ -4079,11 +4084,9 @@ class Guild(Hashable):
         limit: int | None = 100,
         exclude_ended: bool = False,
     ) -> EntitlementIterator:
-        """|coro|
+        """Returns an :class:`.AsyncIterator` that enables fetching the guild's entitlements.
 
-        Fetches this guild's entitlements.
-
-        This is identical to :meth:`Client.fetch_entitlements` with the ``guild`` parameter.
+        This is identical to :meth:`Client.entitlements` with the ``guild`` parameter.
 
         .. versionadded:: 2.6
 
@@ -4107,9 +4110,9 @@ class Guild(Hashable):
             Whether to limit the fetched entitlements to those that have not ended.
             Defaults to ``False``.
 
-        Returns
-        -------
-        List[:class:`.Entitlement`]
+        Yields
+        ------
+        :class:`.Entitlement`
             The application's entitlements.
 
         Raises
@@ -4119,7 +4122,7 @@ class Guild(Hashable):
         """
         return EntitlementIterator(
             self._state,
-            sku_ids=[sku.id for sku in skus],
+            sku_ids=[sku.id for sku in skus] if skus else None,
             before=before,
             after=after,
             limit=limit,

@@ -2043,7 +2043,7 @@ class Client:
         data = await self._connection.http.list_skus(self.application_id)
         return [SKU(data=s) for s in data]
 
-    async def fetch_entitlements(
+    def entitlements(
         self,
         user: Snowflake | None = None,
         skus: list[Snowflake] | None = None,
@@ -2053,11 +2053,9 @@ class Client:
         guild: Snowflake | None = None,
         exclude_ended: bool = False,
     ) -> EntitlementIterator:
-        """|coro|
+        """Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements.
 
-        Fetches the bot's entitlements.
-
-        .. versionadded:: 2.5
+        .. versionadded:: 2.6
 
         Parameters
         ----------
@@ -2083,24 +2081,38 @@ class Client:
             Whether to limit the fetched entitlements to those that have not ended.
             Defaults to ``False``.
 
-        Returns
-        -------
-        List[:class:`.Entitlement`]
+        Yields
+        ------
+        :class:`.Entitlement`
             The application's entitlements.
 
         Raises
         ------
         :exc:`HTTPException`
             Retrieving the entitlements failed.
+
+        Examples
+        --------
+
+        Usage ::
+
+            async for entitlement in client.entitlements():
+                print(entitlement.user_id)
+
+        Flattening into a list ::
+
+            entitlements = await user.entitlements().flatten()
+
+        All parameters are optional.
         """
         return EntitlementIterator(
             self._connection,
-            user_id=user.id,
-            sku_ids=[sku.id for sku in skus],
+            user_id=user.id if user else None,
+            sku_ids=[sku.id for sku in skus] if skus else None,
             before=before,
             after=after,
             limit=limit,
-            guild_id=guild.id,
+            guild_id=guild.id if guild else None,
             exclude_ended=exclude_ended,
         )
 
