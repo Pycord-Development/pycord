@@ -94,7 +94,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
 - `Message.interaction` is now deprecated in favor of `Message.interaction_metadata`.
   ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
-- Replaced `client.fetch_entitlements` with `client.entitlements`, which returns an
+- Replaced `Client.fetch_entitlements` with `Client.entitlements`, which returns an
   `EntitlementIterator`.
   ([#2490](https://github.com/Pycord-Development/pycord/pull/2490))
 
