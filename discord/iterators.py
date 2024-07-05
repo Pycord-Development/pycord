@@ -496,7 +496,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         self._state = guild._state
         self.entries = asyncio.Queue()
 
-    async def _retrieve_auditlogs(self, retrieve):
+    async def _retrieve_entries(self, retrieve):
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data: AuditLogPayload = await self.request(
@@ -528,19 +528,15 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
             raise NoMoreItems()
 
     def _get_retrieve(self):
-        l = self.limit
-        if l is None or l > 100:
-            r = 100
-        else:
-            r = l
-        self.retrieve = r
-        return r > 0
+        limit = self.limit or 100
+        self.retrieve = min(limit, 100)
+        return self.retrieve > 0
 
     async def _fill(self):
         from .user import User
 
         if self._get_retrieve():
-            users, data = await self._retrieve_auditlogs(self.retrieve)
+            users, data = await self._retrieve_entries(self.retrieve)
             if len(data) < 100:
                 self.limit = 0  # terminate the infinite loop
 
