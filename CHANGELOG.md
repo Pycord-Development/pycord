@@ -105,6 +105,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Removed the `delete_message_days` parameter from ban methods. Please use
   `delete_message_seconds` instead.
   ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
+- Removed the `oldest_first` parameter from `Guild.audit_logs` in favor of
+  the `before` and `after` parameters.
+  ([#2371](https://github.com/Pycord-Development/pycord/pull/2371))
 
 ## [2.5.0] - 2024-03-02
 
