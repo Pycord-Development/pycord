@@ -476,7 +476,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         limit=None,
         before=None,
         after=None,
-        oldest_first=None,
         user_id=None,
         action_type=None,
     ):
@@ -485,7 +484,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         if isinstance(after, datetime.datetime):
             after = Object(id=time_snowflake(after, high=True))
 
-        self.reverse = after is not None if oldest_first is None else oldest_first
         self.guild = guild
         self.loop = guild._state.loop
         self.request = guild._state.http.get_audit_logs
@@ -496,51 +494,28 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         self.after = after or OLDEST_OBJECT
         self._users = {}
         self._state = guild._state
-
-        self._filter = None  # entry dict -> bool
-
         self.entries = asyncio.Queue()
 
-        if self.reverse:
-            self._strategy = self._after_strategy
-            if self.before:
-                self._filter = lambda m: int(m["id"]) < self.before.id
-        else:
-            self._strategy = self._before_strategy
-            if self.after and self.after != OLDEST_OBJECT:
-                self._filter = lambda m: int(m["id"]) > self.after.id
-
-    async def _before_strategy(self, retrieve):
+    async def _retrieve_entries(self, retrieve):
         before = self.before.id if self.before else None
-        data: AuditLogPayload = await self.request(
-            self.guild.id,
-            limit=retrieve,
-            user_id=self.user_id,
-            action_type=self.action_type,
-            before=before,
-        )
-
-        entries = data.get("audit_log_entries", [])
-        if len(data) and entries:
-            if self.limit is not None:
-                self.limit -= retrieve
-            self.before = Object(id=int(entries[-1]["id"]))
-        return data.get("users", []), entries
-
-    async def _after_strategy(self, retrieve):
         after = self.after.id if self.after else None
         data: AuditLogPayload = await self.request(
             self.guild.id,
             limit=retrieve,
             user_id=self.user_id,
             action_type=self.action_type,
+            before=before,
             after=after,
         )
+
         entries = data.get("audit_log_entries", [])
         if len(data) and entries:
             if self.limit is not None:
                 self.limit -= retrieve
-            self.after = Object(id=int(entries[0]["id"]))
+            if self.before or not self.after:
+                self.before = Object(id=int(entries[-1]["id"]))
+            if self.after or not self.before:
+                self.after = Object(id=int(entries[0]["id"]))
         return data.get("users", []), entries
 
     async def next(self) -> AuditLogEntry:
@@ -553,36 +528,23 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
             raise NoMoreItems()
 
     def _get_retrieve(self):
-        l = self.limit
-        if l is None or l > 100:
-            r = 100
-        else:
-            r = l
-        self.retrieve = r
-        return r > 0
+        limit = self.limit or 100
+        self.retrieve = min(limit, 100)
+        return self.retrieve > 0
 
     async def _fill(self):
         from .user import User
 
         if self._get_retrieve():
-            users, data = await self._strategy(self.retrieve)
+            users, data = await self._retrieve_entries(self.retrieve)
             if len(data) < 100:
                 self.limit = 0  # terminate the infinite loop
-
-            if self.reverse:
-                data = reversed(data)
-            if self._filter:
-                data = filter(self._filter, data)
 
             for user in users:
                 u = User(data=user, state=self._state)
                 self._users[u.id] = u
 
             for element in data:
-                # TODO: remove this if statement later
-                if element["action_type"] is None:
-                    continue
-
                 await self.entries.put(
                     AuditLogEntry(data=element, users=self._users, guild=self.guild)
                 )
