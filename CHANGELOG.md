@@ -76,6 +76,8 @@ These changes are available on the `master` branch, but have not yet been releas
   to `None`. ([#2464](https://github.com/Pycord-Development/pycord/pull/2464))
 - Fixed `remove_application_command` causing issues while reloading extensions.
   ([#2480](https://github.com/Pycord-Development/pycord/pull/2480))
+- Fixed outdated logic for filtering and sorting audit log entries.
+  ([#2371](https://github.com/Pycord-Development/pycord/pull/2371))
 
 ### Changed
 
