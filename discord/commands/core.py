@@ -1425,9 +1425,7 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         if self.parent is not None:
-            raise Exception(
-                "A subcommand group cannot be added to a subcommand group"
-            )
+            raise Exception("A subcommand group cannot be added to a subcommand group")
 
         sub_command_group = SlashCommandGroup(
             name, description, guild_ids, parent=self, **kwargs
