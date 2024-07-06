@@ -234,6 +234,8 @@ class Button(Component):
         The label of the button, if any.
     emoji: Optional[:class:`PartialEmoji`]
         The emoji of the button, if available.
+    sku_id: Optional[:class:`int`]
+        The ID of the SKU this button refers to.
     """
 
     __slots__: tuple[str, ...] = (
@@ -243,6 +245,7 @@ class Button(Component):
         "disabled",
         "label",
         "emoji",
+        "sku_id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -259,6 +262,7 @@ class Button(Component):
             self.emoji = PartialEmoji.from_dict(data["emoji"])
         except KeyError:
             self.emoji = None
+        self.sku_id: str | None = data.get("sku_id")
 
     def to_dict(self) -> ButtonComponentPayload:
         payload = {
@@ -275,6 +279,9 @@ class Button(Component):
 
         if self.emoji:
             payload["emoji"] = self.emoji.to_dict()
+
+        if self.sku_id:
+            payload["sku_id"] = self.sku_id
 
         return payload  # type: ignore
 

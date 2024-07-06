@@ -288,7 +288,7 @@ class Thread(Messageable, Hashable):
 
     @property
     def members(self) -> list[ThreadMember]:
-        """A list of thread members in this thread.
+        """A list of thread members in this thread, including the bot if it is a member of this thread.
 
         This requires :attr:`Intents.members` to be properly filled. Most of the time however,
         this data is not provided by the gateway and a call to :meth:`fetch_members` is

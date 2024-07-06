@@ -29,7 +29,12 @@ of :class:`enum.Enum`.
         A string.
     .. attribute:: integer
 
-        An integer.
+        An integer between -2⁵³ and 2⁵³.
+
+        .. note::
+
+            IDs, such as 881224361015672863, are often too big for this input type.
+
     .. attribute:: boolean
 
         A boolean.
@@ -47,7 +52,11 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating number.
+        A floating-point number between -2⁵³ and 2⁵³.
+
+        .. note::
+
+            IDs, such as 881224361015672863, are often too big for this input type.
 
     .. attribute:: attachment
 
@@ -518,6 +527,9 @@ of :class:`enum.Enum`.
     .. attribute:: link
 
         Represents a link button.
+    .. attribute:: premium
+
+        Represents a premium button.
 
     .. attribute:: blurple
 
@@ -1592,6 +1604,34 @@ of :class:`enum.Enum`.
 
         .. versionadded:: 2.5
 
+    .. attribute:: voice_channel_status_update
+
+        A voice channel status was updated.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`VoiceChannel` or :class:`Object` with the ID of the voice
+        channel which was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.status`
+
+        .. versionadded:: 2.5
+
+    .. attribute:: voice_channel_status_delete
+
+        A voice channel status was deleted.
+
+        When this is the action, the type of :attr:`~AuditLogEntry.target` is
+        the :class:`VoiceChannel` or :class:`Object` with the ID of the voice
+        channel which was updated.
+
+        Possible attributes for :class:`AuditLogDiff`:
+
+        - :attr:`~AuditLogDiff.status`
+
+        .. versionadded:: 2.5
+
 
 .. class:: AuditLogActionCategory
 
@@ -2293,6 +2333,34 @@ of :class:`enum.Enum`.
 
         Represents the slurs keyword preset rule.
 
+.. class:: PromptType
+
+    Represents how each prompt's options are displayed.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: multiple_choice
+
+        The options will appear in a grid form, showing the name and description.
+
+    .. attribute:: dropdown
+
+        The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt.
+
+.. class:: OnboardingMode
+
+    Represents the current mode of the guild's onboarding flow.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: default
+
+        Only default channels are counted towards the Onboarding requirements.
+
+    .. attribute:: advanced
+
+        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+
 .. class:: ReactionType
 
     Represents a Reaction's type.
@@ -2306,3 +2374,126 @@ of :class:`enum.Enum`.
     .. attribute:: burst
 
         Represents a super reaction.
+
+.. class:: SKUType
+
+    Represents an SKU's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: durable
+
+       A one-time purchase that is permanent and is not subject to either renewal
+       or consumption, such as lifetime access to an app's premium features.
+
+    .. attribute:: consumable
+
+       A one-time, non-renewable purchase that provides access, such as a temporary
+       power-up or boost in a game.
+
+    .. attribute:: subscription
+
+        Represents a recurring subscription.
+
+    .. attribute:: subscription_group
+
+        A system-generated group for each subscription SKU created. These types of SKUs are currently unused.
+
+
+.. class:: EntitlementType
+
+    Represents an entitlement's type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: purchase
+
+        Entitlement was purchased by the user.
+
+    .. attribute:: premium_subscription
+
+        Entitlement is for a Discord Nitro subscription.
+
+    .. attribute:: developer_gift
+
+        Entitlement was gifted by the developer.
+
+    .. attribute:: test_mode_purchase
+
+        Entitlement was purchased by a developer in the application's test mode.
+
+    .. attribute:: free_purchase
+
+        Entitlement was granted when the SKU was free.
+
+    .. attribute:: user_gift
+
+        Entitlement was gifted by another user.
+
+    .. attribute:: premium_purchase
+
+        Entitlement was claimed by a user for free as a Nitro subscriber.
+
+    .. attribute:: application_subscription
+
+        Entitlement was purchased as an app subscription.
+
+
+.. class:: EntitlementOwnerType
+
+    Represents an entitlement's ownership type.
+
+    .. versionadded:: 2.5
+
+    .. attribute:: guild
+
+        Entitlement is owned by a guild.
+
+    .. attribute:: user
+
+        Entitlement is owned by a user.
+
+
+.. class:: PollLayoutType
+
+    Represents a poll's layout type.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: default
+
+        Represents the default layout.
+
+
+.. class:: IntegrationType
+
+    The integration type for an application.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: guild_install
+
+        The integration is added to a guild.
+
+    .. attribute:: user_install
+
+        The integration is added to a user account.
+
+
+.. class:: InteractionContextType
+
+    The context where an interaction occurs.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: guild
+
+        The interaction is in a guild.
+
+    .. attribute:: bot_dm
+
+        The interaction is in the bot's own DM channel with the user.
+
+    .. attribute:: private_channel
+
+        The interaction is in a private DM or group DM channel.

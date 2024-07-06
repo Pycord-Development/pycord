@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Union
+from typing import TYPE_CHECKING, Dict, Literal, Union
 
 from ..permissions import Permissions
 from .channel import ChannelType
@@ -33,6 +33,7 @@ from .components import Component, ComponentType
 from .embed import Embed
 from .member import Member
 from .message import Attachment
+from .monetization import Entitlement
 from .role import Role
 from .snowflake import Snowflake
 from .user import User
@@ -47,35 +48,45 @@ ApplicationCommandType = Literal[1, 2, 3]
 
 
 class ApplicationCommand(TypedDict):
-    options: NotRequired[list[ApplicationCommandOption]]
-    type: NotRequired[ApplicationCommandType]
-    name_localized: NotRequired[str]
-    name_localizations: NotRequired[dict[str, str]]
-    description_localized: NotRequired[str]
-    description_localizations: NotRequired[dict[str, str]]
     id: Snowflake
+    type: NotRequired[ApplicationCommandType]
     application_id: Snowflake
+    guild_id: NotRequired[Snowflake]
     name: str
+    name_localizations: NotRequired[dict[str, str] | None]
     description: str
+    description_localizations: NotRequired[dict[str, str] | None]
+    options: NotRequired[list[ApplicationCommandOption]]
+    default_member_permissions: str | None
+    dm_permission: NotRequired[bool]
+    default_permission: NotRequired[bool | None]
+    nsfw: NotRequired[bool]
+    version: Snowflake
 
 
 ApplicationCommandOptionType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
 
 class ApplicationCommandOption(TypedDict):
-    choices: NotRequired[list[ApplicationCommandOptionChoice]]
-    options: NotRequired[list[ApplicationCommandOption]]
-    name_localizations: NotRequired[dict[str, str]]
-    description_localizations: NotRequired[dict[str, str]]
     type: ApplicationCommandOptionType
     name: str
+    name_localizations: NotRequired[dict[str, str] | None]
     description: str
+    description_localizations: NotRequired[dict[str, str] | None]
     required: bool
+    options: NotRequired[list[ApplicationCommandOption]]
+    choices: NotRequired[list[ApplicationCommandOptionChoice]]
+    channel_types: NotRequired[list[ChannelType]]
+    min_value: NotRequired[int | float]
+    max_value: NotRequired[int | float]
+    min_length: NotRequired[int]
+    max_length: NotRequired[int]
+    autocomplete: NotRequired[bool]
 
 
 class ApplicationCommandOptionChoice(TypedDict):
-    name_localizations: NotRequired[dict[str, str]]
     name: str
+    name_localizations: NotRequired[dict[str, str] | None]
     value: str | int
 
 
@@ -101,7 +112,7 @@ class GuildApplicationCommandPermissions(PartialGuildApplicationCommandPermissio
     guild_id: Snowflake
 
 
-InteractionType = Literal[1, 2, 3]
+InteractionType = Literal[1, 2, 3, 4, 5]
 
 
 class _ApplicationCommandInteractionDataOption(TypedDict):
@@ -209,6 +220,19 @@ class Interaction(TypedDict):
     type: InteractionType
     token: str
     version: int
+    entitlements: list[Entitlement]
+    authorizing_integration_owners: AuthorizingIntegrationOwners
+    context: InteractionContextType
+
+
+class InteractionMetadata(TypedDict):
+    id: Snowflake
+    type: InteractionType
+    user_id: Snowflake
+    authorizing_integration_owners: AuthorizingIntegrationOwners
+    original_response_message_id: NotRequired[Snowflake]
+    interacted_message_id: NotRequired[Snowflake]
+    triggering_interaction_metadata: NotRequired[InteractionMetadata]
 
 
 class InteractionApplicationCommandCallbackData(TypedDict, total=False):
@@ -220,7 +244,7 @@ class InteractionApplicationCommandCallbackData(TypedDict, total=False):
     components: list[Component]
 
 
-InteractionResponseType = Literal[1, 4, 5, 6, 7]
+InteractionResponseType = Literal[1, 4, 5, 6, 7, 8, 9, 10]
 
 
 class InteractionResponse(TypedDict):
@@ -241,3 +265,10 @@ class EditApplicationCommand(TypedDict):
     type: NotRequired[ApplicationCommandType]
     name: str
     default_permission: bool
+
+
+InteractionContextType = Literal[0, 1, 2]
+ApplicationIntegrationType = Literal[0, 1]
+_StringApplicationIntegrationType = Literal["0", "1"]
+
+AuthorizingIntegrationOwners = Dict[_StringApplicationIntegrationType, Snowflake]

@@ -30,7 +30,7 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import TYPE_CHECKING, Any, Literal, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 import discord.abc
 
@@ -39,6 +39,7 @@ from .activity import ActivityTypes, create_activity
 from .asset import Asset
 from .colour import Colour
 from .enums import Status, try_enum
+from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
@@ -62,6 +63,7 @@ if TYPE_CHECKING:
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
+    from .types.voice import GuildVoiceState as GuildVoiceStatePayload
     from .types.voice import VoiceState as VoiceStatePayload
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -125,12 +127,19 @@ class VoiceState:
     )
 
     def __init__(
-        self, *, data: VoiceStatePayload, channel: VocalGuildChannel | None = None
+        self,
+        *,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None = None,
     ):
         self.session_id: str = data.get("session_id")
         self._update(data, channel)
 
-    def _update(self, data: VoiceStatePayload, channel: VocalGuildChannel | None):
+    def _update(
+        self,
+        data: VoiceStatePayload | GuildVoiceStatePayload,
+        channel: VocalGuildChannel | None,
+    ):
         self.self_mute: bool = data.get("self_mute", False)
         self.self_deaf: bool = data.get("self_deaf", False)
         self.self_stream: bool = data.get("self_stream", False)
@@ -261,6 +270,10 @@ class Member(discord.abc.Messageable, _UserTag):
         An aware datetime object that specifies the date and time in UTC when the member will be removed from timeout.
 
         .. versionadded:: 2.0
+    flags: :class:`MemberFlags`
+        Extra attributes of the member.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -276,6 +289,7 @@ class Member(discord.abc.Messageable, _UserTag):
         "_state",
         "_avatar",
         "communication_disabled_until",
+        "flags",
     )
 
     if TYPE_CHECKING:
@@ -317,6 +331,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.communication_disabled_until: datetime.datetime | None = utils.parse_time(
             data.get("communication_disabled_until")
         )
+        self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
 
     def __str__(self) -> str:
         return str(self._user)
@@ -392,6 +407,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self._state = member._state
         self._avatar = member._avatar
         self.communication_disabled_until = member.communication_disabled_until
+        self.flags = member.flags
 
         # Reference will not be copied unless necessary by PRESENCE_UPDATE
         # See below
@@ -421,6 +437,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.communication_disabled_until = utils.parse_time(
             data.get("communication_disabled_until")
         )
+        self.flags = MemberFlags._from_value(data.get("flags", 0))
 
     def _presence_update(
         self, data: PartialPresenceUpdate, user: UserPayload
@@ -684,7 +701,6 @@ class Member(discord.abc.Messageable, _UserTag):
         self,
         *,
         delete_message_seconds: int | None = None,
-        delete_message_days: Literal[0, 1, 2, 3, 4, 5, 6, 7] | None = None,
         reason: str | None = None,
     ) -> None:
         """|coro|
@@ -695,7 +711,6 @@ class Member(discord.abc.Messageable, _UserTag):
             self,
             reason=reason,
             delete_message_seconds=delete_message_seconds,
-            delete_message_days=delete_message_days,
         )
 
     async def unban(self, *, reason: str | None = None) -> None:
@@ -723,6 +738,7 @@ class Member(discord.abc.Messageable, _UserTag):
         voice_channel: VocalGuildChannel | None = MISSING,
         reason: str | None = None,
         communication_disabled_until: datetime.datetime | None = MISSING,
+        bypass_verification: bool | None = MISSING,
     ) -> Member | None:
         """|coro|
 
@@ -745,6 +761,18 @@ class Member(discord.abc.Messageable, _UserTag):
         +------------------------------+--------------------------------------+
         | communication_disabled_until | :attr:`Permissions.moderate_members` |
         +------------------------------+--------------------------------------+
+        | bypass_verification          | See note below                       |
+        +------------------------------+--------------------------------------+
+
+        .. note::
+
+            `bypass_verification` may be edited under three scenarios:
+
+            - Client has :attr:`Permissions.manage_guild`
+
+            - Client has :attr:`Permissions.manage_roles`
+
+            - Client has ALL THREE of :attr:`Permissions.moderate_members`, :attr:`Permissions.kick_members`, and :attr:`Permissions.ban_members`
 
         All parameters are optional.
 
@@ -769,7 +797,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         roles: List[:class:`Role`]
             The member's new list of roles. This *replaces* the roles.
-        voice_channel: Optional[:class:`VoiceChannel`]
+        voice_channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
             The voice channel to move the member to.
             Pass ``None`` to kick them from voice.
         reason: Optional[:class:`str`]
@@ -779,6 +807,10 @@ class Member(discord.abc.Messageable, _UserTag):
             from timeout.
 
             .. versionadded:: 2.0
+        bypass_verification: Optional[:class:`bool`]
+            Indicates if the member should bypass the guild's verification requirements.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -824,9 +856,9 @@ class Member(discord.abc.Messageable, _UserTag):
                 await http.edit_my_voice_state(guild_id, voice_state_payload)
             else:
                 if not suppress:
-                    voice_state_payload[
-                        "request_to_speak_timestamp"
-                    ] = datetime.datetime.utcnow().isoformat()
+                    voice_state_payload["request_to_speak_timestamp"] = (
+                        datetime.datetime.utcnow().isoformat()
+                    )
                 await http.edit_voice_state(guild_id, self.id, voice_state_payload)
 
         if voice_channel is not MISSING:
@@ -837,11 +869,16 @@ class Member(discord.abc.Messageable, _UserTag):
 
         if communication_disabled_until is not MISSING:
             if communication_disabled_until is not None:
-                payload[
-                    "communication_disabled_until"
-                ] = communication_disabled_until.isoformat()
+                payload["communication_disabled_until"] = (
+                    communication_disabled_until.isoformat()
+                )
             else:
                 payload["communication_disabled_until"] = communication_disabled_until
+
+        if bypass_verification is not MISSING:
+            flags = MemberFlags._from_value(self.flags.value)
+            flags.bypasses_verification = bypass_verification
+            payload["flags"] = flags.value
 
         if payload:
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
@@ -958,7 +995,7 @@ class Member(discord.abc.Messageable, _UserTag):
             await self._state.http.edit_my_voice_state(self.guild.id, payload)
 
     async def move_to(
-        self, channel: VocalGuildChannel, *, reason: str | None = None
+        self, channel: VocalGuildChannel | None, *, reason: str | None = None
     ) -> None:
         """|coro|
 
@@ -974,7 +1011,7 @@ class Member(discord.abc.Messageable, _UserTag):
 
         Parameters
         ----------
-        channel: Optional[:class:`VoiceChannel`]
+        channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
             The new voice channel to move the member to.
             Pass ``None`` to kick them from voice.
         reason: Optional[:class:`str`]

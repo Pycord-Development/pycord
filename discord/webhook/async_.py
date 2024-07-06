@@ -74,8 +74,10 @@ if TYPE_CHECKING:
     from ..guild import Guild
     from ..http import Response
     from ..mentions import AllowedMentions
+    from ..poll import Poll
     from ..state import ConnectionState
     from ..types.message import Message as MessagePayload
+    from ..types.webhook import FollowerWebhook as FollowerWebhookPayload
     from ..types.webhook import Webhook as WebhookPayload
     from ..ui.view import View
 
@@ -401,7 +403,7 @@ class AsyncWebhookAdapter:
         payload: dict[str, Any] | None = None,
         multipart: list[dict[str, Any]] | None = None,
         files: list[File] | None = None,
-    ) -> Response[Message]:
+    ) -> Response[WebhookMessage]:
         params = {}
 
         if thread_id:
@@ -460,7 +462,7 @@ class AsyncWebhookAdapter:
         session: aiohttp.ClientSession,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
-    ) -> Response[WebhookPayload]:
+    ) -> Response[WebhookPayload | FollowerWebhookPayload]:
         route = Route("GET", "/webhooks/{webhook_id}", webhook_id=webhook_id)
         return self.request(
             route, session=session, proxy=proxy, proxy_auth=proxy_auth, auth_token=token
@@ -474,7 +476,7 @@ class AsyncWebhookAdapter:
         session: aiohttp.ClientSession,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
-    ) -> Response[WebhookPayload]:
+    ) -> Response[WebhookPayload | FollowerWebhookPayload]:
         route = Route(
             "GET",
             "/webhooks/{webhook_id}/{webhook_token}",
@@ -621,6 +623,8 @@ def handle_message_parameters(
     embed: Embed | None = MISSING,
     embeds: list[Embed] = MISSING,
     view: View | None = MISSING,
+    poll: Poll | None = MISSING,
+    applied_tags: list[Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
@@ -645,6 +649,8 @@ def handle_message_parameters(
 
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
+    if poll is not MISSING:
+        payload["poll"] = poll.to_dict()
     payload["tts"] = tts
     if avatar_url:
         payload["avatar_url"] = str(avatar_url)
@@ -653,6 +659,9 @@ def handle_message_parameters(
 
     flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
     payload["flags"] = flags.value
+
+    if applied_tags is not MISSING:
+        payload["applied_tags"] = applied_tags
 
     if allowed_mentions:
         if previous_allowed_mentions is not None:
@@ -981,7 +990,7 @@ class BaseWebhook(Hashable):
 
     def __init__(
         self,
-        data: WebhookPayload,
+        data: WebhookPayload | FollowerWebhookPayload,
         token: str | None = None,
         state: ConnectionState | None = None,
     ):
@@ -991,7 +1000,7 @@ class BaseWebhook(Hashable):
         )
         self._update(data)
 
-    def _update(self, data: WebhookPayload):
+    def _update(self, data: WebhookPayload | FollowerWebhookPayload):
         self.id = int(data["id"])
         self.type = try_enum(WebhookType, int(data["type"]))
         self.channel_id = utils._get_as_snowflake(data, "channel_id")
@@ -1150,7 +1159,7 @@ class Webhook(BaseWebhook):
 
     def __init__(
         self,
-        data: WebhookPayload,
+        data: WebhookPayload | FollowerWebhookPayload,
         session: aiohttp.ClientSession,
         proxy: str | None = None,
         proxy_auth: aiohttp.BasicAuth | None = None,
@@ -1564,12 +1573,13 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[True],
         delete_after: float = None,
-    ) -> WebhookMessage:
-        ...
+    ) -> WebhookMessage: ...
 
     @overload
     async def send(
@@ -1586,12 +1596,13 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     async def send(
         self,
@@ -1607,8 +1618,10 @@ class Webhook(BaseWebhook):
         embeds: list[Embed] = MISSING,
         allowed_mentions: AllowedMentions = MISSING,
         view: View = MISSING,
+        poll: Poll = MISSING,
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
+        applied_tags: list[Snowflake] = MISSING,
         wait: bool = False,
         delete_after: float = None,
     ) -> WebhookMessage | None:
@@ -1680,9 +1693,17 @@ class Webhook(BaseWebhook):
             The name of the thread to create. Only works for forum channels.
 
             .. versionadded:: 2.0
+        applied_tags: List[:class:`Snowflake`]
+            A list of tags to apply to the message. Only works for threads.
+
+            .. versionadded:: 2.5
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -1704,7 +1725,8 @@ class Webhook(BaseWebhook):
         InvalidArgument
             Either there was no token associated with this webhook, ``ephemeral`` was passed
             with the improper webhook type, there was no state attached with this webhook when
-            giving it a view, or you specified both ``thread_name`` and ``thread``.
+            giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``
+            was passed with neither ``thread_name`` nor ``thread`` specified.
         """
 
         if self.token is None:
@@ -1720,6 +1742,9 @@ class Webhook(BaseWebhook):
 
         if thread and thread_name:
             raise InvalidArgument("You cannot specify both a thread and thread_name")
+
+        if applied_tags and not (thread or thread_name):
+            raise InvalidArgument("You cannot specify applied_tags without a thread")
 
         application_webhook = self.type is WebhookType.application
         if ephemeral and not application_webhook:
@@ -1738,6 +1763,9 @@ class Webhook(BaseWebhook):
             if ephemeral is True and view.timeout is None:
                 view.timeout = 15 * 60.0
 
+        if poll is None:
+            poll = MISSING
+
         params = handle_message_parameters(
             content=content,
             username=username,
@@ -1749,6 +1777,8 @@ class Webhook(BaseWebhook):
             embeds=embeds,
             ephemeral=ephemeral,
             view=view,
+            poll=poll,
+            applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
         )
@@ -1839,7 +1869,7 @@ class Webhook(BaseWebhook):
             thread_id=thread_id,
         )
         msg = self._create_message(data)
-        if isinstance(msg.channel, PartialMessageable):
+        if thread_id and isinstance(msg.channel, PartialMessageable):
             msg._thread_id = thread_id
 
         return msg
