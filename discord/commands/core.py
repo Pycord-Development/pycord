@@ -1304,7 +1304,7 @@ class SlashCommandGroup(ApplicationCommand):
 
         if self.parent is not None:
             raise Exception(
-                "A slash command group can only have one level of subcommand groups"
+                "A subcommand group cannot be added to a subcommand group"
             )
 
         sub_command_group = SlashCommandGroup(
