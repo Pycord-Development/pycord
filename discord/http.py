@@ -1628,16 +1628,6 @@ class HTTPClient:
             Route("GET", "/guilds/{guild_id}/vanity-url", guild_id=guild_id)
         )
 
-    def change_vanity_code(
-        self, guild_id: Snowflake, code: str, *, reason: str | None = None
-    ) -> Response[None]:
-        payload: dict[str, Any] = {"code": code}
-        return self.request(
-            Route("PATCH", "/guilds/{guild_id}/vanity-url", guild_id=guild_id),
-            json=payload,
-            reason=reason,
-        )
-
     def get_all_guild_channels(
         self, guild_id: Snowflake
     ) -> Response[list[guild.GuildChannel]]:

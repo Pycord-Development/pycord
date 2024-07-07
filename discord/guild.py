@@ -1654,7 +1654,6 @@ class Guild(Hashable):
         default_notifications: NotificationLevel = MISSING,
         verification_level: VerificationLevel = MISSING,
         explicit_content_filter: ContentFilter = MISSING,
-        vanity_code: str = MISSING,
         system_channel: TextChannel | None = MISSING,
         system_channel_flags: SystemChannelFlags = MISSING,
         preferred_locale: str = MISSING,
@@ -1720,8 +1719,6 @@ class Guild(Hashable):
             The new default notification level for the guild.
         explicit_content_filter: :class:`ContentFilter`
             The new explicit content filter for the guild.
-        vanity_code: :class:`str`
-            The new vanity code for the guild.
         system_channel: Optional[:class:`TextChannel`]
             The new channel that is used for the system channel. Could be ``None`` for no system channel.
         system_channel_flags: :class:`SystemChannelFlags`
@@ -1763,9 +1760,6 @@ class Guild(Hashable):
         """
 
         http = self._state.http
-
-        if vanity_code is not MISSING:
-            await http.change_vanity_code(self.id, vanity_code, reason=reason)
 
         fields: dict[str, Any] = {}
         if name is not MISSING:
