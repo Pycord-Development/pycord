@@ -511,7 +511,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         )
 
         entries = data.get("audit_log_entries", [])
-        print(self.limit, self.retrieve, self.before, self.after)
         # if ONLY after is passed and NOT before, Discord reverses the sort to oldest first.
         if len(data) and entries:
             if self.limit is not None:
