@@ -8,6 +8,8 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
+## [2.6.0] - 2024-07-xx
+
 These changes are available on the `master` branch, but have not yet been released.
 
 ### Added
