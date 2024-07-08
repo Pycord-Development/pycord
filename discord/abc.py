@@ -89,6 +89,7 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
+    from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import Channel as ChannelPayload
@@ -115,7 +116,7 @@ async def _single_delete_strategy(
 
 
 async def _purge_messages_helper(
-    channel: TextChannel | Thread | VoiceChannel,
+    channel: TextChannel | StageChannel | Thread | VoiceChannel,
     *,
     limit: int | None = 100,
     check: Callable[[Message], bool] = MISSING,
@@ -341,8 +342,7 @@ class GuildChannel:
 
         def __init__(
             self, *, state: ConnectionState, guild: Guild, data: dict[str, Any]
-        ):
-            ...
+        ): ...
 
     def __str__(self) -> str:
         return self.name
@@ -526,9 +526,9 @@ class GuildChannel:
                     "default_reaction_emoji must be of type: Emoji | int | str"
                 )
 
-            options[
-                "default_reaction_emoji"
-            ] = default_reaction_emoji._to_forum_reaction_payload()
+            options["default_reaction_emoji"] = (
+                default_reaction_emoji._to_forum_reaction_payload()
+            )
 
         if options:
             return await self._state.http.edit_channel(
@@ -853,8 +853,7 @@ class GuildChannel:
         *,
         overwrite: PermissionOverwrite | None = ...,
         reason: str | None = ...,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
     async def set_permissions(
@@ -863,8 +862,7 @@ class GuildChannel:
         *,
         reason: str | None = ...,
         **permissions: bool,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     async def set_permissions(
         self, target, *, overwrite=MISSING, reason=None, **permissions
@@ -1033,8 +1031,7 @@ class GuildChannel:
         category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str | None = MISSING,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
     async def move(
@@ -1045,8 +1042,7 @@ class GuildChannel:
         category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
     async def move(
@@ -1057,8 +1053,7 @@ class GuildChannel:
         category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
     async def move(
@@ -1069,8 +1064,7 @@ class GuildChannel:
         category: Snowflake | None = MISSING,
         sync_permissions: bool = MISSING,
         reason: str = MISSING,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     async def move(self, **kwargs) -> None:
         """|coro|
@@ -1352,15 +1346,16 @@ class Messageable:
         file: File = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
-    ) -> Message:
-        ...
+    ) -> Message: ...
 
     @overload
     async def send(
@@ -1372,15 +1367,16 @@ class Messageable:
         files: list[File] = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
-    ) -> Message:
-        ...
+    ) -> Message: ...
 
     @overload
     async def send(
@@ -1392,15 +1388,16 @@ class Messageable:
         file: File = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
-    ) -> Message:
-        ...
+    ) -> Message: ...
 
     @overload
     async def send(
@@ -1412,15 +1409,16 @@ class Messageable:
         files: list[File] = ...,
         stickers: Sequence[GuildSticker | StickerItem] = ...,
         delete_after: float = ...,
-        nonce: str | int = ...,
+        nonce: int | str = ...,
+        enforce_nonce: bool = ...,
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
         view: View = ...,
+        poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
-    ) -> Message:
-        ...
+    ) -> Message: ...
 
     async def send(
         self,
@@ -1434,10 +1432,12 @@ class Messageable:
         stickers=None,
         delete_after=None,
         nonce=None,
+        enforce_nonce=None,
         allowed_mentions=None,
         reference=None,
         mention_author=None,
         view=None,
+        poll=None,
         suppress=None,
         silent=None,
     ):
@@ -1471,9 +1471,13 @@ class Messageable:
             The file to upload.
         files: List[:class:`~discord.File`]
             A list of files to upload. Must be a maximum of 10.
-        nonce: :class:`int`
+        nonce: Union[:class:`str`, :class:`int`]
             The nonce to use for sending this message. If the message was successfully sent,
             then the message will have a nonce with this value.
+        enforce_nonce: Optional[:class:`bool`]
+            Whether :attr:`nonce` is enforced to be validated.
+
+            .. versionadded:: 2.5
         delete_after: :class:`float`
             If provided, the number of seconds to wait in the background
             before deleting the message we just sent. If the deletion fails,
@@ -1517,6 +1521,10 @@ class Messageable:
             Whether to suppress push and desktop notifications for the message.
 
             .. versionadded:: 2.4
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -1596,6 +1604,9 @@ class Messageable:
         else:
             components = None
 
+        if poll:
+            poll = poll.to_dict()
+
         if file is not None and files is not None:
             raise InvalidArgument("cannot pass both file and files parameter to send()")
 
@@ -1613,10 +1624,12 @@ class Messageable:
                     embed=embed,
                     embeds=embeds,
                     nonce=nonce,
+                    enforce_nonce=enforce_nonce,
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
                     flags=flags,
+                    poll=poll,
                 )
             finally:
                 file.close()
@@ -1638,11 +1651,13 @@ class Messageable:
                     embed=embed,
                     embeds=embeds,
                     nonce=nonce,
+                    enforce_nonce=enforce_nonce,
                     allowed_mentions=allowed_mentions,
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
                     flags=flags,
+                    poll=poll,
                 )
             finally:
                 for f in files:
@@ -1655,11 +1670,13 @@ class Messageable:
                 embed=embed,
                 embeds=embeds,
                 nonce=nonce,
+                enforce_nonce=enforce_nonce,
                 allowed_mentions=allowed_mentions,
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
                 flags=flags,
+                poll=poll,
             )
 
         ret = state.create_message(channel=channel, data=data)

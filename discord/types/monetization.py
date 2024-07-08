@@ -23,45 +23,40 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TypedDict
+from __future__ import annotations
 
-from .snowflake import SnowflakeList
-from .user import User
+from typing import Literal
 
+from .._typed_dict import NotRequired, TypedDict
+from .snowflake import Snowflake
 
-class Nickname(TypedDict):
-    nick: str
-
-
-class PartialMember(TypedDict):
-    roles: SnowflakeList
-    joined_at: str
-    deaf: bool
-    mute: bool
+SKUType = Literal[5, 6]
+EntitlementType = Literal[8]
+OwnerType = Literal[1, 2]
 
 
-class Member(PartialMember, total=False):
-    avatar: str
-    user: User
-    nick: str
-    premium_since: str
-    pending: bool
-    permissions: str
-    communication_disabled_until: str
+class SKU(TypedDict):
+    id: Snowflake
+    type: SKUType
+    application_id: Snowflake
+    name: str
+    slug: str
     flags: int
 
 
-class _OptionalMemberWithUser(PartialMember, total=False):
-    avatar: str
-    nick: str
-    premium_since: str
-    pending: bool
-    permissions: str
+class Entitlement(TypedDict):
+    id: Snowflake
+    sku_id: Snowflake
+    application_id: Snowflake
+    user_id: NotRequired[Snowflake]
+    type: EntitlementType
+    deleted: bool
+    starts_at: NotRequired[str]
+    ends_at: NotRequired[str]
+    guild_id: NotRequired[Snowflake]
 
 
-class MemberWithUser(_OptionalMemberWithUser):
-    user: User
-
-
-class UserWithMember(User, total=False):
-    member: _OptionalMemberWithUser
+class CreateTestEntitlementPayload(TypedDict):
+    sku_id: Snowflake
+    owner_id: Snowflake
+    owner_type: OwnerType

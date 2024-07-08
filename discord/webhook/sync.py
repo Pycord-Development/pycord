@@ -940,8 +940,7 @@ class SyncWebhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         wait: Literal[True],
-    ) -> SyncWebhookMessage:
-        ...
+    ) -> SyncWebhookMessage: ...
 
     @overload
     def send(
@@ -960,8 +959,7 @@ class SyncWebhook(BaseWebhook):
         thread_name: str | None = None,
         wait: Literal[False] = ...,
         suppress: bool = MISSING,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     def send(
         self,
@@ -1147,7 +1145,7 @@ class SyncWebhook(BaseWebhook):
             thread_id=thread_id,
         )
         msg = self._create_message(data)
-        if isinstance(msg.channel, PartialMessageable):
+        if thread_id and isinstance(msg.channel, PartialMessageable):
             msg._thread_id = thread_id
 
         return msg

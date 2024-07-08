@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from .._typed_dict import NotRequired, TypedDict
@@ -130,6 +131,12 @@ class MemberRemoveEvent(TypedDict):
     user: User
 
 
+class VoiceChannelStatusUpdateEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    status: NotRequired[str]
+
+
 class ThreadMembersUpdateEvent(TypedDict):
     id: Snowflake
     guild_id: Snowflake
@@ -147,3 +154,11 @@ class AuditLogEntryEvent(TypedDict):
     changes: NotRequired[list[dict]]
     reason: NotRequired[str]
     options: NotRequired[dict]
+
+
+class MessagePollVoteEvent(TypedDict):
+    user_id: Snowflake
+    guild_id: NotRequired[Snowflake]
+    channel_id: Snowflake
+    message_id: Snowflake
+    answer_id: int

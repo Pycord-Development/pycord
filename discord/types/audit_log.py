@@ -112,6 +112,7 @@ class _AuditLogChange_Str(TypedDict):
         "deny",
         "permissions",
         "tags",
+        "status",
     ]
     new_value: str
     old_value: str
@@ -270,6 +271,8 @@ class AuditEntryInfo(TypedDict):
     application_id: Snowflake
     auto_moderation_rule_name: str
     auto_moderation_rule_trigger_type: str
+    # TODO: add integration_type
+    status: str
 
 
 class AuditLogEntry(TypedDict):

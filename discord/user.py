@@ -32,16 +32,20 @@ import discord.abc
 from .asset import Asset
 from .colour import Colour
 from .flags import PublicUserFlags
+from .iterators import EntitlementIterator
+from .monetization import Entitlement
 from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 
 if TYPE_CHECKING:
     from datetime import datetime
 
+    from .abc import Snowflake, SnowflakeTime
     from .channel import DMChannel
     from .guild import Guild
     from .message import Message
     from .state import ConnectionState
     from .types.channel import DMChannel as DMChannelPayload
+    from .types.user import PartialUser as PartialUserPayload
     from .types.user import User as UserPayload
 
 
@@ -70,6 +74,7 @@ class BaseUser(_UserTag):
         "bot",
         "system",
         "_public_flags",
+        "_avatar_decoration",
         "_state",
     )
 
@@ -84,9 +89,12 @@ class BaseUser(_UserTag):
         _avatar: str | None
         _banner: str | None
         _accent_colour: int | None
+        _avatar_decoration: dict | None
         _public_flags: int
 
-    def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
+    def __init__(
+        self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
+    ) -> None:
         self._state = state
         self._update(data)
 
@@ -134,6 +142,7 @@ class BaseUser(_UserTag):
         self._avatar = data["avatar"]
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
+        self._avatar_decoration = data.get("avatar_decoration_data", None)
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
@@ -149,6 +158,7 @@ class BaseUser(_UserTag):
         self._avatar = user._avatar
         self._banner = user._banner
         self._accent_colour = user._accent_colour
+        self._avatar_decoration = user._avatar_decoration
         self.bot = user.bot
         self._state = user._state
         self._public_flags = user._public_flags
@@ -220,6 +230,18 @@ class BaseUser(_UserTag):
         if self._banner is None:
             return None
         return Asset._from_user_banner(self._state, self.id, self._banner)
+
+    @property
+    def avatar_decoration(self) -> Asset | None:
+        """Returns the user's avatar decoration, if available.
+
+        .. versionadded:: 2.5
+        """
+        if self._avatar_decoration is None:
+            return None
+        return Asset._from_avatar_decoration(
+            self._state, self.id, self._avatar_decoration.get("asset")
+        )
 
     @property
     def accent_colour(self) -> Colour | None:
@@ -405,7 +427,11 @@ class ClientUser(BaseUser):
 
     # TODO: Username might not be able to edit anymore.
     async def edit(
-        self, *, username: str = MISSING, avatar: bytes = MISSING
+        self,
+        *,
+        username: str = MISSING,
+        avatar: bytes = MISSING,
+        banner: bytes = MISSING,
     ) -> ClientUser:
         """|coro|
 
@@ -413,15 +439,18 @@ class ClientUser(BaseUser):
 
         .. note::
 
-            To upload an avatar, a :term:`py:bytes-like object` must be passed in that
+            To upload an avatar or banner, a :term:`py:bytes-like object` must be passed in that
             represents the image being uploaded. If this is done through a file
             then the file must be opened via ``open('some_filename', 'rb')`` and
             the :term:`py:bytes-like object` is given through the use of ``fp.read()``.
 
-            The only image formats supported for uploading is JPEG and PNG.
+            The only image formats supported for uploading are JPEG, PNG, and GIF.
 
         .. versionchanged:: 2.0
             The edit is no longer in-place, instead the newly edited client user is returned.
+
+        .. versionchanged:: 2.6
+            The ``banner`` keyword-only parameter was added.
 
         Parameters
         ----------
@@ -430,6 +459,9 @@ class ClientUser(BaseUser):
         avatar: :class:`bytes`
             A :term:`py:bytes-like object` representing the image to upload.
             Could be ``None`` to denote no avatar.
+        banner: :class:`bytes`
+            A :term:`py:bytes-like object` representing the image to upload.
+            Could be ``None`` to denote no banner.
 
         Returns
         -------
@@ -441,7 +473,7 @@ class ClientUser(BaseUser):
         HTTPException
             Editing your profile failed.
         InvalidArgument
-            Wrong image format passed for ``avatar``.
+            Wrong image format passed for ``avatar`` or ``banner``.
         """
         payload: dict[str, Any] = {}
         if username is not MISSING:
@@ -451,6 +483,11 @@ class ClientUser(BaseUser):
             payload["avatar"] = None
         elif avatar is not MISSING:
             payload["avatar"] = _bytes_to_base64_data(avatar)
+
+        if banner is None:
+            payload["banner"] = None
+        elif banner is not MISSING:
+            payload["banner"] = _bytes_to_base64_data(banner)
 
         data: UserPayload = await self._state.http.edit_profile(payload)
         return ClientUser(state=self._state, data=data)
@@ -578,3 +615,80 @@ class User(BaseUser, discord.abc.Messageable):
         state = self._state
         data: DMChannelPayload = await state.http.start_private_message(self.id)
         return state.add_dm_channel(data)
+
+    async def create_test_entitlement(self, sku: discord.abc.Snowflake) -> Entitlement:
+        """|coro|
+
+        Creates a test entitlement for the user.
+
+        Parameters
+        ----------
+        sku: :class:`Snowflake`
+            The SKU to create a test entitlement for.
+
+        Returns
+        -------
+        :class:`Entitlement`
+            The created entitlement.
+        """
+        payload = {
+            "sku_id": sku.id,
+            "owner_id": self.id,
+            "owner_type": 2,
+        }
+        data = await self._state.http.create_test_entitlement(self.id, payload)
+        return Entitlement(data=data, state=self._state)
+
+    def entitlements(
+        self,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        exclude_ended: bool = False,
+    ) -> EntitlementIterator:
+        """Returns an :class:`.AsyncIterator` that enables fetching the user's entitlements.
+
+        This is identical to :meth:`Client.entitlements` with the ``user`` parameter.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        skus: list[:class:`.abc.Snowflake`] | None
+            Limit the fetched entitlements to entitlements that are for these SKUs.
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieves guilds before this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieve guilds after this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        limit: Optional[:class:`int`]
+            The number of entitlements to retrieve.
+            If ``None``, retrieves every entitlement, which may be slow.
+            Defaults to ``100``.
+        exclude_ended: :class:`bool`
+            Whether to limit the fetched entitlements to those that have not ended.
+            Defaults to ``False``.
+
+        Yields
+        ------
+        :class:`.Entitlement`
+            The application's entitlements.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Retrieving the entitlements failed.
+        """
+        return EntitlementIterator(
+            self._state,
+            sku_ids=[sku.id for sku in skus] if skus else None,
+            before=before,
+            after=after,
+            limit=limit,
+            user_id=self.id,
+            exclude_ended=exclude_ended,
+        )

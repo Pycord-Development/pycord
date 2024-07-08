@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import inspect
+import logging
 from enum import Enum
 from typing import TYPE_CHECKING, Literal, Optional, Type, Union
 
@@ -41,7 +42,7 @@ from ..channel import (
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
-from ..utils import MISSING
+from ..utils import MISSING, basic_autocomplete
 
 if TYPE_CHECKING:
     from ..ext.commands import Converter
@@ -86,6 +87,8 @@ CHANNEL_TYPE_MAP = {
     DMChannel: ChannelType.private,
 }
 
+_log = logging.getLogger(__name__)
+
 
 class ThreadOption:
     """Represents a class that can be passed as the ``input_type`` for an :class:`Option` class.
@@ -115,12 +118,13 @@ class Option:
     input_type: Union[Type[:class:`str`], Type[:class:`bool`], Type[:class:`int`], Type[:class:`float`], Type[:class:`.abc.GuildChannel`], Type[:class:`Thread`], Type[:class:`Member`], Type[:class:`User`], Type[:class:`Attachment`], Type[:class:`Role`], Type[:class:`.abc.Mentionable`], :class:`SlashCommandOptionType`, Type[:class:`.ext.commands.Converter`], Type[:class:`enums.Enum`], Type[:class:`Enum`]]
         The type of input that is expected for this option. This can be a :class:`SlashCommandOptionType`,
         an associated class, a channel type, a :class:`Converter`, a converter class or an :class:`enum.Enum`.
+        If a :class:`enum.Enum` is used and it has up to 25 values, :attr:`choices` will be automatically filled. If the :class:`enum.Enum` has more than 25 values, :attr:`autocomplete` will be implemented with :func:`discord.utils.basic_autocomplete` instead.
     name: :class:`str`
         The name of this option visible in the UI.
         Inherits from the variable name if not provided as a parameter.
     description: Optional[:class:`str`]
         The description of this option.
-        Must be 100 characters or fewer.
+        Must be 100 characters or fewer. If :attr:`input_type` is a :class:`enum.Enum` and :attr:`description` is not specified, :attr:`input_type`'s docstring will be used.
     choices: Optional[List[Union[:class:`Any`, :class:`OptionChoice`]]]
         The list of available choices for this option.
         Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair).
@@ -141,10 +145,11 @@ class Option:
     max_length: Optional[:class:`int`]
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
-    autocomplete: Optional[:class:`Any`]
-        The autocomplete handler for the option. Accepts an iterable of :class:`str` or :class:`OptionChoice`, a callable (sync or async)
-        that takes a single argument of :class:`AutocompleteContext`, or a coroutine.
-        Must resolve to an iterable of :class:`str` or :class:`OptionChoice`.
+    autocomplete: Optional[Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]]
+        The autocomplete handler for the option. Accepts a callable (sync or async)
+        that takes a single argument of :class:`AutocompleteContext`.
+        The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
+        Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
 
         .. note::
 
@@ -194,7 +199,14 @@ class Option:
         input_type_is_class = isinstance(input_type, type)
         if input_type_is_class and issubclass(input_type, (Enum, DiscordEnum)):
             if description is None:
-                description = inspect.getdoc(input_type)
+                description = inspect.cleandoc(input_type.__doc__)
+                if description and len(description) > 100:
+                    description = description[:97] + "..."
+                    _log.warning(
+                        "Option %s's description was truncated due to Enum %s's docstring exceeding 100 characters.",
+                        self.name,
+                        input_type,
+                    )
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
             if all(isinstance(elem.value, value_class) for elem in enum_choices):
@@ -249,10 +261,19 @@ class Option:
             kwargs.pop("required", True) if "default" not in kwargs else False
         )
         self.default = kwargs.pop("default", None)
-        self.choices: list[OptionChoice] = enum_choices or [
-            o if isinstance(o, OptionChoice) else OptionChoice(o)
-            for o in kwargs.pop("choices", [])
-        ]
+
+        self.autocomplete = kwargs.pop("autocomplete", None)
+        if len(enum_choices) > 25:
+            self.choices: list[OptionChoice] = []
+            for e in enum_choices:
+                e.value = str(e.value)
+            self.autocomplete = basic_autocomplete(enum_choices)
+            self.input_type = SlashCommandOptionType.string
+        else:
+            self.choices: list[OptionChoice] = enum_choices or [
+                o if isinstance(o, OptionChoice) else OptionChoice(o)
+                for o in kwargs.pop("choices", [])
+            ]
 
         if self.input_type == SlashCommandOptionType.integer:
             minmax_types = (int, type(None))
@@ -322,12 +343,13 @@ class Option:
             if self.max_length < 1 or self.max_length > 6000:
                 raise AttributeError("max_length must between 1 and 6000 (inclusive)")
 
-        self.autocomplete = kwargs.pop("autocomplete", None)
-
         self.name_localizations = kwargs.pop("name_localizations", MISSING)
         self.description_localizations = kwargs.pop(
             "description_localizations", MISSING
         )
+
+        if input_type is None:
+            raise TypeError("input_type cannot be NoneType.")
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -394,7 +416,7 @@ class OptionChoice:
         return as_dict
 
 
-def option(name, type=None, **kwargs):
+def option(name, input_type=None, **kwargs):
     """A decorator that can be used instead of typehinting :class:`.Option`.
 
     .. versionadded:: 2.0
@@ -407,12 +429,13 @@ def option(name, type=None, **kwargs):
     """
 
     def decorator(func):
-        nonlocal type
-        type = type or func.__annotations__.get(name, str)
-        if parameter := kwargs.get("parameter_name"):
-            func.__annotations__[parameter] = Option(type, name=name, **kwargs)
-        else:
-            func.__annotations__[name] = Option(type, **kwargs)
+        resolved_name = kwargs.pop("parameter_name", None) or name
+        itype = (
+            kwargs.pop("type", None)
+            or input_type
+            or func.__annotations__.get(resolved_name, str)
+        )
+        func.__annotations__[resolved_name] = Option(itype, name=name, **kwargs)
         return func
 
     return decorator

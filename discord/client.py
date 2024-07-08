@@ -49,8 +49,9 @@ from .gateway import *
 from .guild import Guild
 from .http import HTTPClient
 from .invite import Invite
-from .iterators import GuildIterator
+from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
+from .monetization import SKU, Entitlement
 from .object import Object
 from .stage_instance import StageInstance
 from .state import ConnectionState
@@ -69,6 +70,7 @@ if TYPE_CHECKING:
     from .channel import DMChannel
     from .member import Member
     from .message import Message
+    from .poll import Poll
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -217,9 +219,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[
-            str, list[tuple[asyncio.Future, Callable[..., bool]]]
-        ] = {}
+        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
+            {}
+        )
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
@@ -336,6 +338,14 @@ class Client:
         .. versionadded:: 2.0
         """
         return self._connection.stickers
+
+    @property
+    def polls(self) -> list[Poll]:
+        """The polls that the connected client has.
+
+        .. versionadded:: 2.6
+        """
+        return self._connection.polls
 
     @property
     def cached_messages(self) -> Sequence[Message]:
@@ -1008,6 +1018,21 @@ class Client:
             The sticker or ``None`` if not found.
         """
         return self._connection.get_sticker(id)
+
+    def get_poll(self, id: int, /) -> Poll | None:
+        """Returns a poll attached to the given message ID.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The message ID of the poll to search for.
+
+        Returns
+        -------
+        Optional[:class:`.Poll`]
+            The poll or ``None`` if not found.
+        """
+        return self._connection.get_poll(id)
 
     def get_all_channels(self) -> Generator[GuildChannel, None, None]:
         """A generator that retrieves every :class:`.abc.GuildChannel` the client can 'access'.
@@ -2002,3 +2027,99 @@ class Client:
             self.application_id, payload
         )
         return [ApplicationRoleConnectionMetadata.from_dict(r) for r in data]
+
+    async def fetch_skus(self) -> list[SKU]:
+        """|coro|
+
+        Fetches the bot's SKUs.
+
+        .. versionadded:: 2.5
+
+        Returns
+        -------
+        List[:class:`.SKU`]
+            The bot's SKUs.
+        """
+        data = await self._connection.http.list_skus(self.application_id)
+        return [SKU(data=s) for s in data]
+
+    def entitlements(
+        self,
+        user: Snowflake | None = None,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        guild: Snowflake | None = None,
+        exclude_ended: bool = False,
+    ) -> EntitlementIterator:
+        """Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        user: :class:`.abc.Snowflake` | None
+            Limit the fetched entitlements to entitlements owned by this user.
+        skus: list[:class:`.abc.Snowflake`] | None
+            Limit the fetched entitlements to entitlements that are for these SKUs.
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieves guilds before this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieve guilds after this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        limit: Optional[:class:`int`]
+            The number of entitlements to retrieve.
+            If ``None``, retrieves every entitlement, which may be slow.
+            Defaults to ``100``.
+        guild: :class:`.abc.Snowflake` | None
+            Limit the fetched entitlements to entitlements owned by this guild.
+        exclude_ended: :class:`bool`
+            Whether to limit the fetched entitlements to those that have not ended.
+            Defaults to ``False``.
+
+        Yields
+        ------
+        :class:`.Entitlement`
+            The application's entitlements.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Retrieving the entitlements failed.
+
+        Examples
+        --------
+
+        Usage ::
+
+            async for entitlement in client.entitlements():
+                print(entitlement.user_id)
+
+        Flattening into a list ::
+
+            entitlements = await user.entitlements().flatten()
+
+        All parameters are optional.
+        """
+        return EntitlementIterator(
+            self._connection,
+            user_id=user.id if user else None,
+            sku_ids=[sku.id for sku in skus] if skus else None,
+            before=before,
+            after=after,
+            limit=limit,
+            guild_id=guild.id if guild else None,
+            exclude_ended=exclude_ended,
+        )
+
+    @property
+    def store_url(self) -> str:
+        """:class:`str`: The URL that leads to the application's store page for monetization.
+
+        .. versionadded:: 2.6
+        """
+        return f"https://discord.com/application-directory/{self.application_id}/store"
