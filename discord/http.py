@@ -1628,16 +1628,6 @@ class HTTPClient:
             Route("GET", "/guilds/{guild_id}/vanity-url", guild_id=guild_id)
         )
 
-    def change_vanity_code(
-        self, guild_id: Snowflake, code: str, *, reason: str | None = None
-    ) -> Response[None]:
-        payload: dict[str, Any] = {"code": code}
-        return self.request(
-            Route("PATCH", "/guilds/{guild_id}/vanity-url", guild_id=guild_id),
-            json=payload,
-            reason=reason,
-        )
-
     def get_all_guild_channels(
         self, guild_id: Snowflake
     ) -> Response[list[guild.GuildChannel]]:
@@ -1956,9 +1946,9 @@ class HTTPClient:
         action_type: AuditLogAction | None = None,
     ) -> Response[audit_log.AuditLog]:
         params: dict[str, Any] = {"limit": limit}
-        if before:
+        if before is not None:
             params["before"] = before
-        if after:
+        if after is not None:
             params["after"] = after
         if user_id:
             params["user_id"] = user_id

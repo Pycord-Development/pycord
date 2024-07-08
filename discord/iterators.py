@@ -491,12 +491,14 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         self.before = before
         self.user_id = user_id
         self.action_type = action_type
-        self.after = after or OLDEST_OBJECT
+        self.after = after
         self._users = {}
         self._state = guild._state
         self.entries = asyncio.Queue()
 
     async def _retrieve_entries(self, retrieve):
+        if not self._get_retrieve():
+            return
         before = self.before.id if self.before else None
         after = self.after.id if self.after else None
         data: AuditLogPayload = await self.request(
@@ -509,13 +511,14 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         )
 
         entries = data.get("audit_log_entries", [])
+        # if ONLY after is passed and NOT before, Discord reverses the sort to oldest first.
         if len(data) and entries:
             if self.limit is not None:
                 self.limit -= retrieve
             if self.before or not self.after:
                 self.before = Object(id=int(entries[-1]["id"]))
-            if self.after or not self.before:
-                self.after = Object(id=int(entries[0]["id"]))
+            if self.after and not self.before:
+                self.after = Object(id=int(entries[-1]["id"]))
         return data.get("users", []), entries
 
     async def next(self) -> AuditLogEntry:
@@ -528,9 +531,13 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
             raise NoMoreItems()
 
     def _get_retrieve(self):
-        limit = self.limit or 100
-        self.retrieve = min(limit, 100)
-        return self.retrieve > 0
+        l = self.limit
+        if l is None or l > 100:
+            r = 100
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
 
     async def _fill(self):
         from .user import User
