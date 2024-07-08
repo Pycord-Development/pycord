@@ -78,6 +78,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2480](https://github.com/Pycord-Development/pycord/pull/2480))
 - Fixed outdated logic for filtering and sorting audit log entries.
   ([#2371](https://github.com/Pycord-Development/pycord/pull/2371))
+- Further fixed logic when fetching audit logs.
+  ([#2492](https://github.com/Pycord-Development/pycord/pull/2492))
 
 ### Changed
 
