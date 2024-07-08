@@ -1946,9 +1946,9 @@ class HTTPClient:
         action_type: AuditLogAction | None = None,
     ) -> Response[audit_log.AuditLog]:
         params: dict[str, Any] = {"limit": limit}
-        if before:
+        if before is not None:
             params["before"] = before
-        if after:
+        if after is not None:
             params["after"] = after
         if user_id:
             params["user_id"] = user_id
