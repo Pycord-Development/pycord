@@ -519,8 +519,6 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
                 self.before = Object(id=int(entries[-1]["id"]))
             if self.after and not self.before:
                 self.after = Object(id=int(entries[-1]["id"]))
-            elif self.after or not self.before:
-                self.after = Object(id=int(entries[0]["id"]))
         return data.get("users", []), entries
 
     async def next(self) -> AuditLogEntry:
