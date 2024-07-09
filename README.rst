@@ -25,7 +25,7 @@ Key Features
 - Modern Pythonic API using ``async`` and ``await``.
 - Proper rate limit handling.
 - Optimised for both speed and memory usage.
-- Full Application Command Support
+- Full application API support.
 
 Installing
 ----------
