@@ -377,6 +377,7 @@ def deprecated(
                 since=since,
                 removed=removed,
                 reference=reference,
+                stacklevel=stacklevel
             )
             return func(*args, **kwargs)
 
