@@ -10,6 +10,11 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Changed
+
+- Renamed `cover` property of `ScheduledEvent` and `cover` attribute of `ScheduledEvent.edit` to `image`.
+  ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
+
 ## [2.6.0] - 2024-07-09
 
 ### Added
