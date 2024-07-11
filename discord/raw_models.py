@@ -327,7 +327,17 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         .. versionadded:: 2.5
     """
 
-    __slots__ = ("message_id", "channel_id", "guild_id", "emoji", "burst", "data")
+    __slots__ = (
+        "message_id",
+        "channel_id",
+        "guild_id",
+        "emoji",
+        "burst",
+        "data",
+        "burst_colours",
+        "burst_colors",
+        "type"
+    )
 
     def __init__(self, data: ReactionClearEmojiEvent, emoji: PartialEmoji) -> None:
         self.emoji: PartialEmoji = emoji
