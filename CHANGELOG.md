@@ -12,7 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Renamed `cover` property of `ScheduledEvent` and `cover` argument of `ScheduledEvent.edit` to `image`.
+- Renamed `cover` property of `ScheduledEvent` and `cover` argument of
+  `ScheduledEvent.edit` to `image`.
   ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
 
 ## [2.6.0] - 2024-07-09

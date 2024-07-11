@@ -35,12 +35,11 @@ from .enums import (
     ScheduledEventStatus,
     try_enum,
 )
-from .errors import ValidationError
+from .errors import InvalidArgument, ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
 from .utils import warn_deprecated
-from .errors import InvalidArgument
 
 __all__ = (
     "ScheduledEvent",
@@ -362,7 +361,9 @@ class ScheduledEvent(Hashable):
         if cover is not MISSING:
             warn_deprecated("cover", "image", "2.7")
             if image is not MISSING:
-                raise InvalidArgument("cannot pass both `image` and `cover` to `ScheduledEvent.edit`")
+                raise InvalidArgument(
+                    "cannot pass both `image` and `cover` to `ScheduledEvent.edit`"
+                )
             else:
                 image = cover
 
