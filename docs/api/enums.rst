@@ -1413,6 +1413,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
@@ -1433,6 +1434,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
@@ -1453,6 +1455,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
