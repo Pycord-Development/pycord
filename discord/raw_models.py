@@ -336,7 +336,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         "data",
         "burst_colours",
         "burst_colors",
-        "type"
+        "type",
     )
 
     def __init__(self, data: ReactionClearEmojiEvent, emoji: PartialEmoji) -> None:
@@ -817,7 +817,15 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         The raw data sent by the `gateway <https://discord.com/developers/docs/topics/gateway#message-poll-vote-add>`
     """
 
-    __slots__ = ("user_id", "message_id", "answer_id", "channel_id", "guild_id", "data", "added")
+    __slots__ = (
+        "user_id",
+        "message_id",
+        "answer_id",
+        "channel_id",
+        "guild_id",
+        "data",
+        "added",
+    )
 
     def __init__(self, data: MessagePollVoteEvent, added: bool) -> None:
         self.user_id: int = int(data["user_id"])
