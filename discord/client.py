@@ -328,7 +328,11 @@ class Client:
 
     @property
     def emojis(self) -> list[Emoji]:
-        """The emojis that the connected client has."""
+        """The guild emojis that the connected client has.
+
+        .. note::
+
+            This does not include application emojis; use :func:`fetch_emojis` instead."""
         return self._connection.emojis
 
     @property
@@ -2123,3 +2127,105 @@ class Client:
         .. versionadded:: 2.6
         """
         return f"https://discord.com/application-directory/{self.application_id}/store"
+
+    async def fetch_emojis(self) -> list[Emoji]:
+        r"""|coro|
+
+        Retrieves all custom :class:`Emoji`\s from the application.
+
+        Raises
+        ---------
+        HTTPException
+            An error occurred fetching the emojis.
+
+        Returns
+        --------
+        List[:class:`Emoji`]
+            The retrieved emojis.
+        """
+        data = await self._state.http.get_all_application_emojis(self.application_id)
+        return [Emoji(guild=None, state=self._state, data=d) for d in data]
+
+    async def fetch_emoji(self, emoji_id: int, /) -> Emoji:
+        """|coro|
+
+        Retrieves a custom :class:`Emoji` from the application.
+
+        Parameters
+        ----------
+        emoji_id: :class:`int`
+            The emoji's ID.
+
+        Returns
+        -------
+        :class:`Emoji`
+            The retrieved emoji.
+
+        Raises
+        ------
+        NotFound
+            The emoji requested could not be found.
+        HTTPException
+            An error occurred fetching the emoji.
+        """
+        data = await self._state.http.get_application_emoji(self.application_id, emoji_id)
+        return Emoji(guild=None, state=self._state, data=data)
+
+    async def create_emoji(
+        self,
+        *,
+        name: str,
+        image: bytes,
+    ) -> Emoji:
+        r"""|coro|
+
+        Creates a custom :class:`Emoji` for the application.
+
+        There is currently a limit of 2000 emojis per application.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The emoji name. Must be at least 2 characters.
+        image: :class:`bytes`
+            The :term:`py:bytes-like object` representing the image data to use.
+            Only JPG, PNG and GIF images are supported.
+
+        Raises
+        -------
+        Forbidden
+            You are not allowed to create emojis.
+        HTTPException
+            An error occurred creating an emoji.
+
+        Returns
+        --------
+        :class:`Emoji`
+            The created emoji.
+        """
+
+        img = utils._bytes_to_base64_data(image)
+        data = await self._state.http.create_application_emoji(
+            self.application_id, name, img
+        )
+        return self._state.store_emoji(None, data)
+
+    async def delete_emoji(
+        self, emoji: Snowflake, *, reason: str | None = None
+    ) -> None:
+        """|coro|
+
+        Deletes the custom :class:`Emoji` from the application.
+
+        Parameters
+        ----------
+        emoji: :class:`abc.Snowflake`
+            The emoji you are deleting.
+
+        Raises
+        ------
+        HTTPException
+            An error occurred deleting the emoji.
+        """
+
+        await self._state.http.delete_application_emoji(self.application_id, emoji.id)
