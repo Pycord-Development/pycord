@@ -49,7 +49,7 @@ from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
-from .emoji import Emoji
+from .emoji import Emoji, GuildEmoji, AppEmoji
 from .enums import ChannelType, InteractionType, ScheduledEventStatus, Status, try_enum
 from .flags import ApplicationFlags, Intents, MemberCacheFlags
 from .guild import Guild
@@ -251,6 +251,8 @@ class ConnectionState:
             self.store_user = self.create_user  # type: ignore
             self.deref_user = self.deref_user_no_intents  # type: ignore
 
+        self.cache_app_emojis: bool = options.get("cache_app_emojis", False)
+
         self.parsers = parsers = {}
         for attr, func in inspect.getmembers(self):
             if attr.startswith("parse_"):
@@ -374,10 +376,16 @@ class ConnectionState:
         # the keys of self._users are ints
         return self._users.get(id)  # type: ignore
 
-    def store_emoji(self, guild: Guild, data: EmojiPayload) -> Emoji:
+    def store_emoji(self, guild: Guild, data: EmojiPayload) -> GuildEmoji:
         # the id will be present here
         emoji_id = int(data["id"])  # type: ignore
-        self._emojis[emoji_id] = emoji = Emoji(guild=guild, state=self, data=data)
+        self._emojis[emoji_id] = emoji = GuildEmoji(guild=guild, state=self, data=data)
+        return emoji
+
+    def store_app_emoji(self, application_id: int, data: EmojiPayload) -> AppEmoji:
+        # the id will be present here
+        emoji_id = int(data["id"])  # type: ignore
+        self._emojis[emoji_id] = emoji = AppEmoji(application_id=application_id, state=self, data=data)
         return emoji
 
     def store_sticker(self, guild: Guild, data: GuildStickerPayload) -> GuildSticker:
@@ -413,7 +421,7 @@ class ConnectionState:
         self._guilds.pop(guild.id, None)
 
         for emoji in guild.emojis:
-            self._emojis.pop(emoji.id, None)
+            self._remove_emoji(emoji)
 
         for sticker in guild.stickers:
             self._stickers.pop(sticker.id, None)
@@ -421,16 +429,19 @@ class ConnectionState:
         del guild
 
     @property
-    def emojis(self) -> list[Emoji]:
+    def emojis(self) -> list[GuildEmoji | AppEmoji]:
         return list(self._emojis.values())
 
     @property
     def stickers(self) -> list[GuildSticker]:
         return list(self._stickers.values())
 
-    def get_emoji(self, emoji_id: int | None) -> Emoji | None:
+    def get_emoji(self, emoji_id: int | None) -> GuildEmoji | AppEmoji | None:
         # the keys of self._emojis are ints
         return self._emojis.get(emoji_id)  # type: ignore
+
+    def _remove_emoji(self, emoji: GuildEmoji | AppEmoji) -> None:
+        self._emojis.pop(emoji.id, None)
 
     def get_sticker(self, sticker_id: int | None) -> GuildSticker | None:
         # the keys of self._stickers are ints
@@ -2085,6 +2096,11 @@ class AutoShardedConnectionState(ConnectionState):
                     self.dispatch("guild_join", guild)
 
             self.dispatch("shard_ready", shard_id)
+        
+        if self.cache_app_emojis and self.application_id:
+            data = await self.http.get_all_application_emojis(self.application_id)
+            for e in data.get("items", []):
+                self.store_app_emoji(self.application_id, e)
 
         # remove the state
         try:

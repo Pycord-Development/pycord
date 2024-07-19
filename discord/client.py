@@ -41,7 +41,7 @@ from .appinfo import AppInfo, PartialAppInfo
 from .application_role_connection import ApplicationRoleConnectionMetadata
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
-from .emoji import Emoji
+from .emoji import Emoji, AppEmoji
 from .enums import ChannelType, Status
 from .errors import *
 from .flags import ApplicationFlags, Intents
@@ -199,6 +199,16 @@ class Client:
         To enable these events, this must be set to ``True``. Defaults to ``False``.
 
         .. versionadded:: 2.0
+    cache_app_emojis: :class:`bool`
+        Whether to automatically fetch and cache the application's emojis on startup and when fetching. Defaults to ``False``.
+
+        .. warning::
+
+            There are no events related to application emojis - if any are created/deleted on the 
+            Developer Dashboard while the client is running, the cache will not be updated until you manually
+            run :func:`fetch_emojis`.
+
+        .. versionadded:: 2.7
 
     Attributes
     -----------
@@ -327,12 +337,12 @@ class Client:
         return self._connection.guilds
 
     @property
-    def emojis(self) -> list[Emoji]:
-        """The guild emojis that the connected client has.
+    def emojis(self) -> list[Emoji | AppEmoji]:
+        """The emojis that the connected client has.
 
         .. note::
 
-            This does not include application emojis; use :func:`fetch_emojis` instead.
+            This only includes the application's emojis if :attr:`~Client.cache_app_emojis` is ``True``.
         """
         return self._connection.emojis
 
@@ -2141,11 +2151,14 @@ class Client:
 
         Returns
         --------
-        List[:class:`Emoji`]
+        List[:class:`AppEmoji`]
             The retrieved emojis.
         """
         data = await self._state.http.get_all_application_emojis(self.application_id)
-        return [Emoji(guild=None, state=self._state, data=d) for d in data]
+        if self._state.cache_app_emojis:
+            return [self._state.store_app_emoji(self.application_id, d) for d in data["items"]]
+        else:
+            return [AppEmoji(application_id=self.application_id, state=self._state, data=d) for d in data["items"]]
 
     async def fetch_emoji(self, emoji_id: int, /) -> Emoji:
         """|coro|
@@ -2211,7 +2224,7 @@ class Client:
         data = await self._state.http.create_application_emoji(
             self.application_id, name, img
         )
-        return self._state.store_emoji(None, data)
+        return self._state.store_app_emoji(self.application_id, data)
 
     async def delete_emoji(
         self, emoji: Snowflake, *, reason: str | None = None
@@ -2232,3 +2245,5 @@ class Client:
         """
 
         await self._state.http.delete_application_emoji(self.application_id, emoji.id)
+        if self._state.cache_app_emojis and self._state.get_emoji(emoji.id):
+            self._state.remove_emoji(emoji)
