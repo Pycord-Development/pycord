@@ -10,6 +10,14 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Changed
+
+- Renamed `cover` property of `ScheduledEvent` and `cover` argument of
+  `ScheduledEvent.edit` to `image`.
+  ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
+
+## [2.6.0] - 2024-07-09
+
 ### Added
 
 - Added `banner` parameter to `ClientUser.edit`.
@@ -68,7 +76,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 - Fixed missing `application_id` in `Entitlement.delete`.
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
-- Fixed issues with enums as `Option` types with long descriptions or too many values
+- Fixed issues with enums as `Option` types with long descriptions or too many values.
   ([#2463](https://github.com/Pycord-Development/pycord/pull/2463))
 - Fixed many inaccurate type hints throughout the library.
   ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
@@ -78,6 +86,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2480](https://github.com/Pycord-Development/pycord/pull/2480))
 - Fixed outdated logic for filtering and sorting audit log entries.
   ([#2371](https://github.com/Pycord-Development/pycord/pull/2371))
+- Further fixed logic when fetching audit logs.
+  ([#2492](https://github.com/Pycord-Development/pycord/pull/2492))
 
 ### Changed
 
@@ -99,6 +109,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Replaced `Client.fetch_entitlements` with `Client.entitlements`, which returns an
   `EntitlementIterator`.
   ([#2490](https://github.com/Pycord-Development/pycord/pull/2490))
+- Changed the error message that appears when attempting to add a subcommand group to a
+  subcommand group. ([#2275](https://github.com/Pycord-Development/pycord/pull/2275))
 
 ### Removed
 
@@ -109,7 +121,7 @@ These changes are available on the `master` branch, but have not yet been releas
   and `after` parameters.
   ([#2371](https://github.com/Pycord-Development/pycord/pull/2371))
 - Removed the `vanity_code` parameter from `Guild.edit`.
-  ([#2480](https://github.com/Pycord-Development/pycord/pull/2480))
+  ([#2491](https://github.com/Pycord-Development/pycord/pull/2491))
 
 ## [2.5.0] - 2024-03-02
 
@@ -881,7 +893,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...2.6.0
 [2.5.0]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...v2.5.0
 [2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0

@@ -140,6 +140,10 @@ class Interaction:
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
         The custom ID for the interaction.
+    entitlements: list[:class:`Entitlement`]
+        Entitlements that apply to the invoking user, showing access to premium SKUs.
+
+        .. versionadded:: 2.5
     authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
         Contains the entities (users or guilds) that authorized this interaction.
 

@@ -153,12 +153,12 @@ def _transform_avatar(entry: AuditLogEntry, data: str | None) -> Asset | None:
     return Asset._from_avatar(entry._state, entry._target_id, data)  # type: ignore
 
 
-def _transform_scheduled_event_cover(
+def _transform_scheduled_event_image(
     entry: AuditLogEntry, data: str | None
 ) -> Asset | None:
     if data is None:
         return None
-    return Asset._from_scheduled_event_cover(entry._state, entry._target_id, data)
+    return Asset._from_scheduled_event_image(entry._state, entry._target_id, data)
 
 
 def _guild_hash_transformer(
@@ -274,7 +274,7 @@ class AuditLogChanges:
             _enum_transformer(enums.ScheduledEventLocationType),
         ),
         "command_id": ("command_id", _transform_snowflake),
-        "image_hash": ("cover", _transform_scheduled_event_cover),
+        "image_hash": ("image", _transform_scheduled_event_image),
         "trigger_type": (None, _enum_transformer(enums.AutoModTriggerType)),
         "event_type": (None, _enum_transformer(enums.AutoModEventType)),
         "actions": (None, _transform_actions),

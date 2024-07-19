@@ -1425,8 +1425,7 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         if self.parent is not None:
-            # TODO: Improve this error message
-            raise Exception("a subgroup cannot have a subgroup")
+            raise Exception("A subcommand group cannot be added to a subcommand group")
 
         sub_command_group = SlashCommandGroup(
             name, description, guild_ids, parent=self, **kwargs
@@ -1731,7 +1730,17 @@ class UserCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+
+        .. deprecated:: 2.6
+            Use the ``contexts`` parameter instead.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1740,6 +1749,16 @@ class UserCommand(ContextMenuCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+    name_localizations: Dict[:class:`str`, :class:`str`]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The installation contexts where this command is available. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The interaction contexts where this command is available. Unapplicable for guild commands.
     """
 
     type = 2
@@ -1830,7 +1849,17 @@ class MessageCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+
+        .. deprecated:: 2.6
+            Use the ``contexts`` parameter instead.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1839,6 +1868,16 @@ class MessageCommand(ContextMenuCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+    name_localizations: Dict[:class:`str`, :class:`str`]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The installation contexts where this command is available. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The interaction contexts where this command is available. Unapplicable for guild commands.
     """
 
     type = 3

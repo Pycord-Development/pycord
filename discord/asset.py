@@ -277,7 +277,7 @@ class Asset(AssetMixin):
         )
 
     @classmethod
-    def _from_scheduled_event_cover(
+    def _from_scheduled_event_image(
         cls, state, event_id: int, cover_hash: str
     ) -> Asset:
         return cls(
