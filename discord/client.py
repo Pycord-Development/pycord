@@ -332,7 +332,8 @@ class Client:
 
         .. note::
 
-            This does not include application emojis; use :func:`fetch_emojis` instead."""
+            This does not include application emojis; use :func:`fetch_emojis` instead.
+        """
         return self._connection.emojis
 
     @property
@@ -2168,7 +2169,9 @@ class Client:
         HTTPException
             An error occurred fetching the emoji.
         """
-        data = await self._state.http.get_application_emoji(self.application_id, emoji_id)
+        data = await self._state.http.get_application_emoji(
+            self.application_id, emoji_id
+        )
         return Emoji(guild=None, state=self._state, data=data)
 
     async def create_emoji(

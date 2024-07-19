@@ -1878,9 +1878,15 @@ class HTTPClient:
         )
         return self.request(r, json=payload, reason=reason)
 
-    def get_all_application_emojis(self, application_id: Snowflake) -> Response[list[emoji.Emoji]]:
+    def get_all_application_emojis(
+        self, application_id: Snowflake
+    ) -> Response[list[emoji.Emoji]]:
         return self.request(
-            Route("GET", "/applications/{application_id}/emojis", application_id=application_id)
+            Route(
+                "GET",
+                "/applications/{application_id}/emojis",
+                application_id=application_id,
+            )
         )
 
     def get_application_emoji(
@@ -1906,7 +1912,11 @@ class HTTPClient:
             "image": image,
         }
 
-        r = Route("POST", "/applications/{application_id}/emojis", application_id=application_id)
+        r = Route(
+            "POST",
+            "/applications/{application_id}/emojis",
+            application_id=application_id,
+        )
         return self.request(r, json=payload)
 
     def delete_application_emoji(
