@@ -41,7 +41,7 @@ from .appinfo import AppInfo, PartialAppInfo
 from .application_role_connection import ApplicationRoleConnectionMetadata
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
-from .emoji import Emoji, AppEmoji
+from .emoji import AppEmoji, Emoji
 from .enums import ChannelType, Status
 from .errors import *
 from .flags import ApplicationFlags, Intents
@@ -204,7 +204,7 @@ class Client:
 
         .. warning::
 
-            There are no events related to application emojis - if any are created/deleted on the 
+            There are no events related to application emojis - if any are created/deleted on the
             Developer Dashboard while the client is running, the cache will not be updated until you manually
             run :func:`fetch_emojis`.
 
@@ -2156,9 +2156,15 @@ class Client:
         """
         data = await self._state.http.get_all_application_emojis(self.application_id)
         if self._state.cache_app_emojis:
-            return [self._state.store_app_emoji(self.application_id, d) for d in data["items"]]
+            return [
+                self._state.store_app_emoji(self.application_id, d)
+                for d in data["items"]
+            ]
         else:
-            return [AppEmoji(application_id=self.application_id, state=self._state, data=d) for d in data["items"]]
+            return [
+                AppEmoji(application_id=self.application_id, state=self._state, data=d)
+                for d in data["items"]
+            ]
 
     async def fetch_emoji(self, emoji_id: int, /) -> Emoji:
         """|coro|

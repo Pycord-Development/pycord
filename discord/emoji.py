@@ -32,7 +32,11 @@ from .partial_emoji import PartialEmoji, _EmojiTag
 from .user import User
 from .utils import MISSING, SnowflakeList, snowflake_time
 
-__all__ = ("Emoji", "GuildEmoji", "AppEmoji",)
+__all__ = (
+    "Emoji",
+    "GuildEmoji",
+    "AppEmoji",
+)
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -92,8 +96,7 @@ class BaseEmoji(_EmojiTag, AssetMixin):
 
     def __repr__(self) -> str:
         return (
-            "<BaseEmoji"
-            f" id={self.id} name={self.name!r} animated={self.animated}>"
+            "<BaseEmoji" f" id={self.id} name={self.name!r} animated={self.animated}>"
         )
 
     def __eq__(self, other: Any) -> bool:
@@ -112,6 +115,7 @@ class BaseEmoji(_EmojiTag, AssetMixin):
         """Returns the URL of the emoji."""
         fmt = "gif" if self.animated else "png"
         return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
+
 
 class GuildEmoji(BaseEmoji):
     """Represents a custom emoji in a guild.
@@ -277,7 +281,9 @@ class GuildEmoji(BaseEmoji):
         )
         return GuildEmoji(guild=self.guild, data=data, state=self._state)
 
+
 Emoji = GuildEmoji
+
 
 class AppEmoji(BaseEmoji):
     """Represents a custom emoji from an application.
@@ -330,15 +336,14 @@ class AppEmoji(BaseEmoji):
         The user that created the emoji.
     """
 
-    def __init__(self, *, application_id: int, state: ConnectionState, data: EmojiPayload):
+    def __init__(
+        self, *, application_id: int, state: ConnectionState, data: EmojiPayload
+    ):
         self.application_id: int = application_id
         super().__init__(state, data)
 
     def __repr__(self) -> str:
-        return (
-            "<AppEmoji"
-            f" id={self.id} name={self.name!r} animated={self.animated}>"
-        )
+        return "<AppEmoji" f" id={self.id} name={self.name!r} animated={self.animated}>"
 
     @property
     def guild(self) -> Guild:
@@ -347,13 +352,11 @@ class AppEmoji(BaseEmoji):
 
     @property
     def roles(self) -> list[Role]:
-        """A :class:`list` of roles that is allowed to use this emoji. This is always empty for :class:`AppEmoji`.
-        """
+        """A :class:`list` of roles that is allowed to use this emoji. This is always empty for :class:`AppEmoji`."""
         return []
 
     def is_usable(self) -> bool:
-        """Whether the bot can use this emoji.
-        """
+        """Whether the bot can use this emoji."""
         return self.application_id == self._state.application_id
 
     async def delete(self, *, reason: str | None = None) -> None:
@@ -371,9 +374,7 @@ class AppEmoji(BaseEmoji):
             An error occurred deleting the emoji.
         """
 
-        await self._state.http.delete_application_emoji(
-            self.application_id, self.id
-        )
+        await self._state.http.delete_application_emoji(self.application_id, self.id)
         if self._state.cache_app_emojis and self._state.get_emoji(self.id):
             self._state._remove_emoji(self)
 
@@ -416,4 +417,6 @@ class AppEmoji(BaseEmoji):
         if self._state.cache_app_emojis:
             return self._state.store_app_emoji(self.application_id, data)
         else:
-            return AppEmoji(application_id=self.application_id, data=data, state=self._state)
+            return AppEmoji(
+                application_id=self.application_id, data=data, state=self._state
+            )

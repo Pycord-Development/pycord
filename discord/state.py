@@ -49,7 +49,7 @@ from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
-from .emoji import Emoji, GuildEmoji, AppEmoji
+from .emoji import AppEmoji, Emoji, GuildEmoji
 from .enums import ChannelType, InteractionType, ScheduledEventStatus, Status, try_enum
 from .flags import ApplicationFlags, Intents, MemberCacheFlags
 from .guild import Guild
@@ -385,7 +385,9 @@ class ConnectionState:
     def store_app_emoji(self, application_id: int, data: EmojiPayload) -> AppEmoji:
         # the id will be present here
         emoji_id = int(data["id"])  # type: ignore
-        self._emojis[emoji_id] = emoji = AppEmoji(application_id=application_id, state=self, data=data)
+        self._emojis[emoji_id] = emoji = AppEmoji(
+            application_id=application_id, state=self, data=data
+        )
         return emoji
 
     def store_sticker(self, guild: Guild, data: GuildStickerPayload) -> GuildSticker:
@@ -2096,7 +2098,7 @@ class AutoShardedConnectionState(ConnectionState):
                     self.dispatch("guild_join", guild)
 
             self.dispatch("shard_ready", shard_id)
-        
+
         if self.cache_app_emojis and self.application_id:
             data = await self.http.get_all_application_emojis(self.application_id)
             for e in data.get("items", []):
