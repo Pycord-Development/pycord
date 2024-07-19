@@ -359,7 +359,7 @@ class AppEmoji(BaseEmoji):
         """Whether the bot can use this emoji."""
         return self.application_id == self._state.application_id
 
-    async def delete(self, *, reason: str | None = None) -> None:
+    async def delete(self) -> None:
         """|coro|
 
         Deletes the application emoji.
@@ -414,9 +414,4 @@ class AppEmoji(BaseEmoji):
         data = await self._state.http.edit_application_emoji(
             self.application_id, self.id, payload=payload
         )
-        if self._state.cache_app_emojis:
-            return self._state.store_app_emoji(self.application_id, data)
-        else:
-            return AppEmoji(
-                application_id=self.application_id, data=data, state=self._state
-            )
+        return self._state.maybe_store_app_emoji(self.application_id, data)

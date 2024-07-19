@@ -41,7 +41,7 @@ from .appinfo import AppInfo, PartialAppInfo
 from .application_role_connection import ApplicationRoleConnectionMetadata
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
-from .emoji import AppEmoji, Emoji
+from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, Status
 from .errors import *
 from .flags import ApplicationFlags, Intents
@@ -337,7 +337,7 @@ class Client:
         return self._connection.guilds
 
     @property
-    def emojis(self) -> list[Emoji | AppEmoji]:
+    def emojis(self) -> list[GuildEmoji | AppEmoji]:
         """The emojis that the connected client has.
 
         .. note::
@@ -1002,7 +1002,7 @@ class Client:
         """
         return self._connection.get_user(id)
 
-    def get_emoji(self, id: int, /) -> Emoji | None:
+    def get_emoji(self, id: int, /) -> GuildEmoji | AppEmoji | None:
         """Returns an emoji with the given ID.
 
         Parameters
@@ -1012,7 +1012,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.Emoji`]
+        Optional[:class:`.GuildEmoji` | :class:`.AppEmoji`]
             The custom emoji or ``None`` if not found.
         """
         return self._connection.get_emoji(id)
@@ -2139,10 +2139,10 @@ class Client:
         """
         return f"https://discord.com/application-directory/{self.application_id}/store"
 
-    async def fetch_emojis(self) -> list[Emoji]:
+    async def fetch_emojis(self) -> list[AppEmoji]:
         r"""|coro|
 
-        Retrieves all custom :class:`Emoji`\s from the application.
+        Retrieves all custom :class:`AppEmoji`\s from the application.
 
         Raises
         ---------
@@ -2155,21 +2155,15 @@ class Client:
             The retrieved emojis.
         """
         data = await self._state.http.get_all_application_emojis(self.application_id)
-        if self._state.cache_app_emojis:
-            return [
-                self._state.store_app_emoji(self.application_id, d)
-                for d in data["items"]
-            ]
-        else:
-            return [
-                AppEmoji(application_id=self.application_id, state=self._state, data=d)
-                for d in data["items"]
-            ]
+        return [
+            self._state.maybe_store_app_emoji(self.application_id, d)
+            for d in data["items"]
+        ]
 
-    async def fetch_emoji(self, emoji_id: int, /) -> Emoji:
+    async def fetch_emoji(self, emoji_id: int, /) -> AppEmoji:
         """|coro|
 
-        Retrieves a custom :class:`Emoji` from the application.
+        Retrieves a custom :class:`AppEmoji` from the application.
 
         Parameters
         ----------
@@ -2178,7 +2172,7 @@ class Client:
 
         Returns
         -------
-        :class:`Emoji`
+        :class:`AppEmoji`
             The retrieved emoji.
 
         Raises
@@ -2191,17 +2185,17 @@ class Client:
         data = await self._state.http.get_application_emoji(
             self.application_id, emoji_id
         )
-        return Emoji(guild=None, state=self._state, data=data)
+        return self._state.maybe_store_app_emoji(self.application_id, data)
 
     async def create_emoji(
         self,
         *,
         name: str,
         image: bytes,
-    ) -> Emoji:
+    ) -> AppEmoji:
         r"""|coro|
 
-        Creates a custom :class:`Emoji` for the application.
+        Creates a custom :class:`AppEmoji` for the application.
 
         There is currently a limit of 2000 emojis per application.
 
@@ -2222,7 +2216,7 @@ class Client:
 
         Returns
         --------
-        :class:`Emoji`
+        :class:`AppEmoji`
             The created emoji.
         """
 
@@ -2230,14 +2224,14 @@ class Client:
         data = await self._state.http.create_application_emoji(
             self.application_id, name, img
         )
-        return self._state.store_app_emoji(self.application_id, data)
+        return self._state.maybe_store_app_emoji(self.application_id, data)
 
     async def delete_emoji(
         self, emoji: Snowflake, *, reason: str | None = None
     ) -> None:
         """|coro|
 
-        Deletes the custom :class:`Emoji` from the application.
+        Deletes the custom :class:`AppEmoji` from the application.
 
         Parameters
         ----------
