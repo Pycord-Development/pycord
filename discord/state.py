@@ -382,11 +382,11 @@ class ConnectionState:
         self._emojis[emoji_id] = emoji = GuildEmoji(guild=guild, state=self, data=data)
         return emoji
 
-    def maybe_store_app_emoji(self, application_id: int, data: EmojiPayload) -> AppEmoji:
+    def maybe_store_app_emoji(
+        self, application_id: int, data: EmojiPayload
+    ) -> AppEmoji:
         # the id will be present here
-        emoji = AppEmoji(
-            application_id=application_id, state=self, data=data
-        )
+        emoji = AppEmoji(application_id=application_id, state=self, data=data)
         if self.cache_app_emojis:
             emoji_id = int(data["id"])  # type: ignore
             self._emojis[emoji_id] = emoji
