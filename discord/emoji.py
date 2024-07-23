@@ -169,7 +169,7 @@ class GuildEmoji(BaseEmoji):
 
     def __init__(self, *, guild: Guild, state: ConnectionState, data: EmojiPayload):
         self.guild_id: int = guild.id
-        super().__init__(state, data)
+        super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
         return (
@@ -340,7 +340,7 @@ class AppEmoji(BaseEmoji):
         self, *, application_id: int, state: ConnectionState, data: EmojiPayload
     ):
         self.application_id: int = application_id
-        super().__init__(state, data)
+        super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
         return "<AppEmoji" f" id={self.id} name={self.name!r} animated={self.animated}>"
