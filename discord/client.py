@@ -2244,7 +2244,7 @@ class Client:
         return self._connection.maybe_store_app_emoji(self.application_id, data)
 
     async def delete_emoji(
-        self, emoji: Snowflake, *, reason: str | None = None
+        self, emoji: Snowflake
     ) -> None:
         """|coro|
 
