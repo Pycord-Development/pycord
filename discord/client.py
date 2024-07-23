@@ -2154,7 +2154,9 @@ class Client:
         List[:class:`AppEmoji`]
             The retrieved emojis.
         """
-        data = await self._connection.http.get_all_application_emojis(self.application_id)
+        data = await self._connection.http.get_all_application_emojis(
+            self.application_id
+        )
         return [
             self._connection.maybe_store_app_emoji(self.application_id, d)
             for d in data["items"]
@@ -2244,6 +2246,8 @@ class Client:
             An error occurred deleting the emoji.
         """
 
-        await self._connection.http.delete_application_emoji(self.application_id, emoji.id)
+        await self._connection.http.delete_application_emoji(
+            self.application_id, emoji.id
+        )
         if self._connection.cache_app_emojis and self._connection.get_emoji(emoji.id):
             self._connection.remove_emoji(emoji)
