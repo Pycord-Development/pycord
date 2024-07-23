@@ -342,9 +342,24 @@ class Client:
 
         .. note::
 
-            This only includes the application's emojis if :attr:`~Client.cache_app_emojis` is ``True``.
+            This only includes the application's emojis if `cache_app_emojis` is ``True``.
         """
         return self._connection.emojis
+
+    @property
+    def guild_emojis(self) -> list[GuildEmoji]:
+        """The :class:`~discord.GuildEmoji` that the connected client has."""
+        return [e for e in self.emojis if isinstance(e, GuildEmoji)]
+
+    @property
+    def app_emojis(self) -> list[AppEmoji]:
+        """The :class:`~discord.AppEmoji` that the connected client has.
+
+        .. note::
+
+            This is only available if `cache_app_emojis` is ``True``.
+        """
+        return [e for e in self.emojis if isinstance(e, AppEmoji)]
 
     @property
     def stickers(self) -> list[GuildSticker]:
