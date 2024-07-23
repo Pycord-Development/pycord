@@ -2154,9 +2154,9 @@ class Client:
         List[:class:`AppEmoji`]
             The retrieved emojis.
         """
-        data = await self._state.http.get_all_application_emojis(self.application_id)
+        data = await self._connection.http.get_all_application_emojis(self.application_id)
         return [
-            self._state.maybe_store_app_emoji(self.application_id, d)
+            self._connection.maybe_store_app_emoji(self.application_id, d)
             for d in data["items"]
         ]
 
@@ -2182,10 +2182,10 @@ class Client:
         HTTPException
             An error occurred fetching the emoji.
         """
-        data = await self._state.http.get_application_emoji(
+        data = await self._connection.http.get_application_emoji(
             self.application_id, emoji_id
         )
-        return self._state.maybe_store_app_emoji(self.application_id, data)
+        return self._connection.maybe_store_app_emoji(self.application_id, data)
 
     async def create_emoji(
         self,
@@ -2221,10 +2221,10 @@ class Client:
         """
 
         img = utils._bytes_to_base64_data(image)
-        data = await self._state.http.create_application_emoji(
+        data = await self._connection.http.create_application_emoji(
             self.application_id, name, img
         )
-        return self._state.maybe_store_app_emoji(self.application_id, data)
+        return self._connection.maybe_store_app_emoji(self.application_id, data)
 
     async def delete_emoji(
         self, emoji: Snowflake, *, reason: str | None = None
@@ -2244,6 +2244,6 @@ class Client:
             An error occurred deleting the emoji.
         """
 
-        await self._state.http.delete_application_emoji(self.application_id, emoji.id)
-        if self._state.cache_app_emojis and self._state.get_emoji(emoji.id):
-            self._state.remove_emoji(emoji)
+        await self._connection.http.delete_application_emoji(self.application_id, emoji.id)
+        if self._connection.cache_app_emojis and self._connection.get_emoji(emoji.id):
+            self._connection.remove_emoji(emoji)
