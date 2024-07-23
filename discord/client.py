@@ -2243,9 +2243,7 @@ class Client:
         )
         return self._connection.maybe_store_app_emoji(self.application_id, data)
 
-    async def delete_emoji(
-        self, emoji: Snowflake
-    ) -> None:
+    async def delete_emoji(self, emoji: Snowflake) -> None:
         """|coro|
 
         Deletes the custom :class:`AppEmoji` from the application.
