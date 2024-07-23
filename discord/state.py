@@ -643,6 +643,11 @@ class ConnectionState:
             except AttributeError:
                 pass  # already been deleted somehow
 
+        if self.cache_app_emojis and self.application_id:
+            data = await self.http.get_all_application_emojis(self.application_id)
+            for e in data.get("items", []):
+                self.maybe_store_app_emoji(self.application_id, e)
+
         except asyncio.CancelledError:
             pass
         else:
