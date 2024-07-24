@@ -36,7 +36,7 @@ class InputText:
         The maximum number of characters that can be entered.
         Must be between 1 and 4000.
     required: Optional[:class:`bool`]
-        Whether the input text field is required or not. Defaults to `True`.
+        Whether the input text field is required or not. Defaults to ``True``.
     value: Optional[:class:`str`]
         Pre-fills the input text field with this value.
         Must be 4000 characters or fewer.
@@ -151,7 +151,7 @@ class InputText:
 
     @property
     def min_length(self) -> int | None:
-        """The minimum number of characters that must be entered. Defaults to `0`."""
+        """The minimum number of characters that must be entered. Defaults to 0."""
         return self._underlying.min_length
 
     @min_length.setter
@@ -177,7 +177,7 @@ class InputText:
 
     @property
     def required(self) -> bool | None:
-        """Whether the input text field is required or not. Defaults to `True`."""
+        """Whether the input text field is required or not. Defaults to ``True``."""
         return self._underlying.required
 
     @required.setter
