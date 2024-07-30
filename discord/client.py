@@ -38,7 +38,6 @@ from typing import (
     Coroutine,
     Generator,
     Sequence,
-    Set,
     TypeVar,
 )
 
@@ -266,7 +265,7 @@ class Client:
             _log.warning("PyNaCl is not installed, voice will NOT be supported")
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
-        self._tasks: set[asyncio.Task] = set()
+        self._tasks = set()
 
     async def __aenter__(self) -> Client:
         loop = asyncio.get_running_loop()
