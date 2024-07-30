@@ -31,7 +31,16 @@ import signal
 import sys
 import traceback
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, Set, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Sequence,
+    Set,
+    TypeVar,
+)
 
 import aiohttp
 
@@ -257,7 +266,7 @@ class Client:
             _log.warning("PyNaCl is not installed, voice will NOT be supported")
 
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
-        self._tasks: Set[asyncio.Task] = set()
+        self._tasks: set[asyncio.Task] = set()
 
     async def __aenter__(self) -> Client:
         loop = asyncio.get_running_loop()
