@@ -660,7 +660,7 @@ def bridge_option(name, input_type=None, **kwargs):
     Attributes
     ----------
     parameter_name: :class:`str`
-        The name of the target parameter this option is mapped to.
+        The name of the target function parameter this option is mapped to.
         This allows you to have a separate UI ``name`` and parameter name.
     """
 
