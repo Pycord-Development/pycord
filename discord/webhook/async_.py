@@ -704,7 +704,6 @@ def handle_message_parameters(
         multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
         payload = None
         multipart += multipart_files
-        print(multipart)
 
     return ExecuteWebhookParameters(payload=payload, multipart=multipart, files=files)
 
