@@ -8,4 +8,4 @@ coverage~=7.6
 pre-commit==3.5.0
 codespell==2.3.0
 bandit==1.7.9
-flake8==7.1.0
+flake8==7.1.1
