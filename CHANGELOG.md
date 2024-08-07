@@ -20,7 +20,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed missing `__slots__` attributes in `RawReactionClearEmojiEvent` and
   `RawMessagePollVoteEvent` classes.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
-- Fixed `default_sort_order` variable type being `int` instead of typehinted `SortOrder`
+- Fixed the type of the `default_sort_order` attribute, changing it from `int` to `SortOrder`.
   enum in `ForumChannel` class.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 
