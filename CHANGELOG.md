@@ -10,6 +10,20 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Fixed
+
+- Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
+  `@utils.deprecated`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the typehint in `ConnectionState._polls` to reflect actual behavior, changing it
+  from `Guild` to `Poll`.
+  ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed missing `__slots__` attributes in `RawReactionClearEmojiEvent` and
+  `RawMessagePollVoteEvent` classes.
+  ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the type of the `default_sort_order` attribute, changing it from `int` to
+  `SortOrder`. enum in `ForumChannel` class.
+  ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+
 ### Changed
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
