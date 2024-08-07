@@ -12,8 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed missed `stacklevel` parameter in `warn_deprecated` function call inside
-  `deprecated` decorator in utils.
+- Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
+  `@utils.deprecated`.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed typehint in `ConnectionState._polls` incorrectly specified as `Guild` instead of
   `Poll`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
