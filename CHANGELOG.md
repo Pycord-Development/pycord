@@ -15,8 +15,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
   `@utils.deprecated`.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
-- Fixed typehint in `ConnectionState._polls` incorrectly specified as `Guild` instead of
-  `Poll`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the typehint in `ConnectionState._polls` to reflect actual behavior, changing it from `Guild` to `Poll`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed missing `__slots__` attributes in `RawReactionClearEmojiEvent` and
   `RawMessagePollVoteEvent` classes.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
