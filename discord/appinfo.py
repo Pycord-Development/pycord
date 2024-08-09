@@ -140,6 +140,7 @@ class AppInfo:
         "redirect_uris",
         "interactions.endpoint_url",
         "role_connections_verification_url",
+        "install_params",
         "tags",
         "custom_install_url",
     )
