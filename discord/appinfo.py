@@ -35,9 +35,9 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .state import ConnectionState
     from .types.appinfo import AppInfo as AppInfoPayload
+    from .types.appinfo import AppInstallParams as AppInstallParamsPayload
     from .types.appinfo import PartialAppInfo as PartialAppInfoPayload
     from .types.appinfo import Team as TeamPayload
-    from .types.appinfo import AppInstallParams as AppInstallParamsPayload
     from .user import User
 
 __all__ = (
@@ -114,40 +114,40 @@ class AppInfo:
         The application's privacy policy URL, if set.
 
         .. versionadded:: 2.0
-    
+
     approximate_guild_count: Optional[:class:`int`]
         The approximate count of guilds to which the app has been added, if any.
 
         .. versionadded:: 2.7
-    
+
     approximate_user_install_count: Optional[:class:`int`]
         The approximate count of users who have installed the application, if any.
 
         .. versionadded:: 2.7
-    
+
     redirect_uris: Optional[List[:class:`str`]]
         The list of redirect URIs for the application, if set.
 
         .. versionadded:: 2.7
-    
+
     interactions_endpoint_url: Optional[`str`]
         The interactions endpoint URL for the application, if set.
 
         .. versionadded:: 2.7
-    
+
     role_connections_verification_url: Optional[`str`]
         The role connection verification URL for the application, if set.
 
         .. versionadded:: 2.7
-    
+
     install_params: Optional[List[`AppInstallParams`]]
         The settings for the application's default in-app authorization link, if set.
 
         .. versionadded:: 2.7
-    
+
     tags: Optional[`str`]
-        The list of tags describing the content and functionality of the app, if set. 
-        
+        The list of tags describing the content and functionality of the app, if set.
+
         Maximium of 5 tags.
 
         .. versionadded:: 2.7
@@ -215,16 +215,23 @@ class AppInfo:
         self.terms_of_service_url: str | None = data.get("terms_of_service_url")
         self.privacy_policy_url: str | None = data.get("privacy_policy_url")
         self.approximate_guild_count: int | None = data.get("approximate_guild_count")
-        self.approximate_user_install_count: int | None = data.get("approximate_user_install_count")
+        self.approximate_user_install_count: int | None = data.get(
+            "approximate_user_install_count"
+        )
         self.redirect_uris: list[str] | None = data.get("redirect_uris")
-        self.interactions_endpoint_url: str | None = data.get("interactions_endpoint_url")
-        self.role_connections_verification_url: str | None = data.get("role_connections_verification_url")
+        self.interactions_endpoint_url: str | None = data.get(
+            "interactions_endpoint_url"
+        )
+        self.role_connections_verification_url: str | None = data.get(
+            "role_connections_verification_url"
+        )
 
         install_params = data.get("install_params")
-        self.install_params: AppInstallParams | None = AppInstallParams(install_params) if install_params else None
+        self.install_params: AppInstallParams | None = (
+            AppInstallParams(install_params) if install_params else None
+        )
         self.tags: str | None = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
-
 
     def __repr__(self) -> str:
         return (
@@ -336,8 +343,8 @@ class AppInstallParams:
         The permissions to request for the bot role in the guild.
     """
 
-    __slots__ = ('scopes', 'permissions')
+    __slots__ = ("scopes", "permissions")
 
     def __init__(self, data: AppInstallParamsPayload) -> None:
-        self.scopes: list[str] = data.get('scopes', [])
-        self.permissions: Permissions = Permissions(int(data['permissions']))
+        self.scopes: list[str] = data.get("scopes", [])
+        self.permissions: Permissions = Permissions(int(data["permissions"]))
