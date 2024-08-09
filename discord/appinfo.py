@@ -218,7 +218,7 @@ class AppInfo:
         self.approximate_user_install_count: int | None = data.get(
             "approximate_user_install_count"
         )
-        self.redirect_uris: list[str] | None = data.get("redirect_uris")
+        self.redirect_uris: list[str] | None = data.get("redirect_uris", [])
         self.interactions_endpoint_url: str | None = data.get(
             "interactions_endpoint_url"
         )
@@ -230,7 +230,7 @@ class AppInfo:
         self.install_params: AppInstallParams | None = (
             AppInstallParams(install_params) if install_params else None
         )
-        self.tags: str | None = data.get("tags", [])
+        self.tags: list[str] | None = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
 
     def __repr__(self) -> str:
