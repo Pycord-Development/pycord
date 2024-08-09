@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING
 
 from . import utils
 from .asset import Asset
+from .permissions import Permissions
 
 if TYPE_CHECKING:
     from .guild import Guild
@@ -36,6 +37,7 @@ if TYPE_CHECKING:
     from .types.appinfo import AppInfo as AppInfoPayload
     from .types.appinfo import PartialAppInfo as PartialAppInfoPayload
     from .types.appinfo import Team as TeamPayload
+    from .types.appinfo import AppInstallParams as AppInstallParamsPayload
     from .user import User
 
 __all__ = (
@@ -75,6 +77,8 @@ class AppInfo:
         this field will be the summary field for the store page of its primary SKU.
 
         .. versionadded:: 1.3
+
+        .. deprecated:: 2.7
 
     verify_key: :class:`str`
         The hex encoded key for verification in interactions and the
@@ -131,6 +135,13 @@ class AppInfo:
         "_cover_image",
         "terms_of_service_url",
         "privacy_policy_url",
+        "approximate_guild_count",
+        "approximate_user_install_count",
+        "redirect_uris",
+        "interactions.endpoint_url",
+        "role_connections_verification_url",
+        "tags",
+        "custom_install_url",
     )
 
     def __init__(self, state: ConnectionState, data: AppInfoPayload):
@@ -161,6 +172,17 @@ class AppInfo:
         self._cover_image: str | None = data.get("cover_image")
         self.terms_of_service_url: str | None = data.get("terms_of_service_url")
         self.privacy_policy_url: str | None = data.get("privacy_policy_url")
+        self.approximate_guild_count: int | None = data.get("approximate_guild_count")
+        self.approximate_user_install_count: int | None = data.get("approximate_user_install_count")
+        self.redirect_uris: list[str] | None = data.get("redirect_uris")
+        self.interactions_endpoint_url: str | None = data.get("interactions_endpoint_url")
+        self.role_connections_verification_url: str | None = data.get("role_connections_verification_url")
+
+        install_params = data.get("install_params")
+        self.install_params: AppInstallParams | None = AppInstallParams(install_params) if install_params else None
+        self.tags: str | None = data.get("tags", [])
+        self.custom_install_url: str | None = data.get("custom_install_url")
+
 
     def __repr__(self) -> str:
         return (
@@ -257,3 +279,23 @@ class PartialAppInfo:
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="app")
+
+
+class AppInstallParams:
+    """Represents the settings for the custom authorization URL of an application.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    scopes: List[:class:`str`]
+        The list of OAuth2 scopes for adding the application to a guild.
+    permissions: :class:`Permissions`
+        The permissions to request for the bot role in the guild.
+    """
+
+    __slots__ = ('scopes', 'permissions')
+
+    def __init__(self, data: AppInstallParamsPayload) -> None:
+        self.scopes: list[str] = data.get('scopes', [])
+        self.permissions: Permissions = Permissions(int(data['permissions']))
