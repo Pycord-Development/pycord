@@ -114,6 +114,47 @@ class AppInfo:
         The application's privacy policy URL, if set.
 
         .. versionadded:: 2.0
+    
+    approximate_guild_count: Optional[:class:`int`]
+        The approximate count of guilds to which the app has been added, if any.
+
+        .. versionadded:: 2.7
+    
+    approximate_user_install_count: Optional[:class:`int`]
+        The approximate count of users who have installed the application, if any.
+
+        .. versionadded:: 2.7
+    
+    redirect_uris: Optional[List[:class:`str`]]
+        The list of redirect URIs for the application, if set.
+
+        .. versionadded:: 2.7
+    
+    interactions_endpoint_url: Optional[`str`]
+        The interactions endpoint URL for the application, if set.
+
+        .. versionadded:: 2.7
+    
+    role_connections_verification_url: Optional[`str`]
+        The role connection verification URL for the application, if set.
+
+        .. versionadded:: 2.7
+    
+    install_params: Optional[List[`AppInstallParams`]]
+        The settings for the application's default in-app authorization link, if set.
+
+        .. versionadded:: 2.7
+    
+    tags: Optional[`str`]
+        The list of tags describing the content and functionality of the app, if set. 
+        
+        Maximium of 5 tags.
+
+        .. versionadded:: 2.7
+    custom_install_url: Optional[`str`]
+        The default custom authorization URL for the application, if set.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -138,7 +179,7 @@ class AppInfo:
         "approximate_guild_count",
         "approximate_user_install_count",
         "redirect_uris",
-        "interactions.endpoint_url",
+        "interactions_endpoint_url",
         "role_connections_verification_url",
         "install_params",
         "tags",
