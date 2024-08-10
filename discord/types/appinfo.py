@@ -62,5 +62,5 @@ class PartialAppInfo(BaseAppInfo):
 
 
 class AppInstallParams(TypedDict):
-    scopes: List[str]
+    scopes: list[str]
     permissions: str
