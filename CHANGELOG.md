@@ -10,6 +10,14 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Changed
+
+- Renamed `cover` property of `ScheduledEvent` and `cover` argument of
+  `ScheduledEvent.edit` to `image`.
+  ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
+
+## [2.6.0] - 2024-07-09
+
 ### Added
 
 - Added `banner` parameter to `ClientUser.edit`.
@@ -24,8 +32,22 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
 - Added `member` data to the `raw_reaction_remove` event.
   ([#2412](https://github.com/Pycord-Development/pycord/pull/2412))
+- Added `Poll` and all related features.
+  ([#2408](https://github.com/Pycord-Development/pycord/pull/2408))
 - Added `stacklevel` param to `utils.warn_deprecated` and `utils.deprecated`.
   ([#2450](https://github.com/Pycord-Development/pycord/pull/2450))
+- Added support for user-installable applications.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
+- Added support for one-time purchases for Discord monetization.
+  ([#2438](https://github.com/Pycord-Development/pycord/pull/2438))
+- Added `Attachment.title`.
+  ([#2486](https://github.com/Pycord-Development/pycord/pull/2486))
+- Added `MemberFlags`. ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
+- Added `bypass_verification` parameter to `Member.edit`.
+  ([#2489](https://github.com/Pycord-Development/pycord/pull/2489))
+- Added `RoleFlags`. ([#2487](https://github.com/Pycord-Development/pycord/pull/2487))
+- Added `MessageCall` information.
+  ([#2488](https://github.com/Pycord-Development/pycord/pull/2488))
 
 ### Fixed
 
@@ -38,6 +60,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2390](https://github.com/Pycord-Development/pycord/pull/2390))
 - Fixed `NameError` in some instances of `Interaction`.
   ([#2402](https://github.com/Pycord-Development/pycord/pull/2402))
+- Fixed interactions being ignored due to `PartialMessage.id` being of type `str`.
+  ([#2406](https://github.com/Pycord-Development/pycord/pull/2406))
 - Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
   ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
 - Fixed `ScheduledEvent.subscribers` behavior with `limit=None`.
@@ -54,6 +78,18 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2448](https://github.com/Pycord-Development/pycord/pull/2448))
 - Fixed missing `application_id` in `Entitlement.delete`.
   ([#2458](https://github.com/Pycord-Development/pycord/pull/2458))
+- Fixed issues with enums as `Option` types with long descriptions or too many values.
+  ([#2463](https://github.com/Pycord-Development/pycord/pull/2463))
+- Fixed many inaccurate type hints throughout the library.
+  ([#2457](https://github.com/Pycord-Development/pycord/pull/2457))
+- Fixed `AttributeError` due to `discord.Option` being initialised with `input_type` set
+  to `None`. ([#2464](https://github.com/Pycord-Development/pycord/pull/2464))
+- Fixed `remove_application_command` causing issues while reloading extensions.
+  ([#2480](https://github.com/Pycord-Development/pycord/pull/2480))
+- Fixed outdated logic for filtering and sorting audit log entries.
+  ([#2371](https://github.com/Pycord-Development/pycord/pull/2371))
+- Further fixed logic when fetching audit logs.
+  ([#2492](https://github.com/Pycord-Development/pycord/pull/2492))
 
 ### Changed
 
@@ -67,12 +103,27 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2417](https://github.com/Pycord-Development/pycord/pull/2417))
 - `Guild.query_members` now accepts `limit=None` to retrieve all members.
   ([#2419](https://github.com/Pycord-Development/pycord/pull/2419))
+- `ApplicationCommand.guild_only` is now deprecated in favor of
+  `ApplicationCommand.contexts`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
+- `Message.interaction` is now deprecated in favor of `Message.interaction_metadata`.
+  ([#2409](https://github.com/Pycord-Development/pycord/pull/2409))
+- Replaced `Client.fetch_entitlements` with `Client.entitlements`, which returns an
+  `EntitlementIterator`.
+  ([#2490](https://github.com/Pycord-Development/pycord/pull/2490))
+- Changed the error message that appears when attempting to add a subcommand group to a
+  subcommand group. ([#2275](https://github.com/Pycord-Development/pycord/pull/2275))
 
 ### Removed
 
 - Removed the `delete_message_days` parameter from ban methods. Please use
   `delete_message_seconds` instead.
   ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))
+- Removed the `oldest_first` parameter from `Guild.audit_logs` in favor of the `before`
+  and `after` parameters.
+  ([#2371](https://github.com/Pycord-Development/pycord/pull/2371))
+- Removed the `vanity_code` parameter from `Guild.edit`.
+  ([#2491](https://github.com/Pycord-Development/pycord/pull/2491))
 
 ## [2.5.0] - 2024-03-02
 
@@ -844,7 +895,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...2.6.0
 [2.5.0]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...v2.5.0
 [2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0

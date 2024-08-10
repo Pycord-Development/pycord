@@ -35,10 +35,11 @@ from .enums import (
     ScheduledEventStatus,
     try_enum,
 )
-from .errors import ValidationError
+from .errors import InvalidArgument, ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
+from .utils import warn_deprecated
 
 __all__ = (
     "ScheduledEvent",
@@ -180,7 +181,7 @@ class ScheduledEvent(Hashable):
         "location",
         "guild",
         "_state",
-        "_cover",
+        "_image",
         "subscriber_count",
     )
 
@@ -198,7 +199,7 @@ class ScheduledEvent(Hashable):
         self.guild: Guild = guild
         self.name: str = data.get("name")
         self.description: str | None = data.get("description", None)
-        self._cover: str | None = data.get("image", None)
+        self._image: str | None = data.get("image", None)
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(
             data.get("scheduled_start_time")
         )
@@ -254,13 +255,24 @@ class ScheduledEvent(Hashable):
 
     @property
     def cover(self) -> Asset | None:
+        """
+        Returns the scheduled event cover image asset, if available.
+
+        .. deprecated:: 2.7
+                Use the :attr:`image` property instead.
+        """
+        warn_deprecated("cover", "image", "2.7")
+        return self.image
+
+    @property
+    def image(self) -> Asset | None:
         """Returns the scheduled event cover image asset, if available."""
-        if self._cover is None:
+        if self._image is None:
             return None
-        return Asset._from_scheduled_event_cover(
+        return Asset._from_scheduled_event_image(
             self._state,
             self.id,
-            self._cover,
+            self._image,
         )
 
     async def edit(
@@ -276,6 +288,7 @@ class ScheduledEvent(Hashable):
         start_time: datetime.datetime = MISSING,
         end_time: datetime.datetime = MISSING,
         cover: bytes | None = MISSING,
+        image: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
     ) -> ScheduledEvent | None:
         """|coro|
@@ -310,8 +323,13 @@ class ScheduledEvent(Hashable):
             so there is no need to change this parameter.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
+        image: Optional[:class:`bytes`]
+            The cover image of the scheduled event.
         cover: Optional[:class:`bytes`]
             The cover image of the scheduled event.
+
+            .. deprecated:: 2.7
+                Use the `image` argument instead.
 
         Returns
         -------
@@ -341,8 +359,19 @@ class ScheduledEvent(Hashable):
             payload["privacy_level"] = int(privacy_level)
 
         if cover is not MISSING:
-            if cover is not None:
-                payload["image"] = utils._bytes_to_base64_data(cover)
+            warn_deprecated("cover", "image", "2.7")
+            if image is not MISSING:
+                raise InvalidArgument(
+                    "cannot pass both `image` and `cover` to `ScheduledEvent.edit`"
+                )
+            else:
+                image = cover
+
+        if image is not MISSING:
+            if image is None:
+                payload["image"] = None
+            else:
+                payload["image"] = utils._bytes_to_base64_data(image)
 
         if location is not MISSING:
             if not isinstance(

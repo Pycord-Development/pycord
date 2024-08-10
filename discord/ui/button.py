@@ -67,6 +67,8 @@ class Button(Item[V]):
         The label of the button, if any. Maximum of 80 chars.
     emoji: Optional[Union[:class:`.PartialEmoji`, :class:`.Emoji`, :class:`str`]]
         The emoji of the button, if available.
+    sku_id: Optional[Union[:class:`int`]]
+        The ID of the SKU this button refers to.
     row: Optional[:class:`int`]
         The relative row this button belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
@@ -81,6 +83,7 @@ class Button(Item[V]):
         "disabled",
         "label",
         "emoji",
+        "sku_id",
         "row",
     )
 
@@ -93,6 +96,7 @@ class Button(Item[V]):
         custom_id: str | None = None,
         url: str | None = None,
         emoji: str | Emoji | PartialEmoji | None = None,
+        sku_id: int | None = None,
         row: int | None = None,
     ):
         super().__init__()
@@ -102,6 +106,10 @@ class Button(Item[V]):
             raise ValueError("custom_id must be 100 characters or fewer")
         if custom_id is not None and url is not None:
             raise TypeError("cannot mix both url and custom_id with Button")
+        if sku_id is not None and url is not None:
+            raise TypeError("cannot mix both url and sku_id with Button")
+        if custom_id is not None and sku_id is not None:
+            raise TypeError("cannot mix both sku_id and custom_id with Button")
 
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
@@ -109,11 +117,13 @@ class Button(Item[V]):
             )
 
         self._provided_custom_id = custom_id is not None
-        if url is None and custom_id is None:
+        if url is None and custom_id is None and sku_id is None:
             custom_id = os.urandom(16).hex()
 
         if url is not None:
             style = ButtonStyle.link
+        if sku_id is not None:
+            style = ButtonStyle.premium
 
         if emoji is not None:
             if isinstance(emoji, str):
@@ -134,6 +144,7 @@ class Button(Item[V]):
             label=label,
             style=style,
             emoji=emoji,
+            sku_id=sku_id,
         )
         self.row = row
 
@@ -212,6 +223,20 @@ class Button(Item[V]):
                 f" {value.__class__} instead"
             )
 
+    @property
+    def sku_id(self) -> int | None:
+        """The ID of the SKU this button refers to."""
+        return self._underlying.sku_id
+
+    @sku_id.setter
+    def sku_id(self, value: int | None):  # type: ignore
+        if value is None:
+            self._underlying.sku_id = None
+        elif isinstance(value, int):
+            self._underlying.sku_id = value
+        else:
+            raise TypeError(f"expected int or None, received {value.__class__} instead")
+
     @classmethod
     def from_component(cls: type[B], button: ButtonComponent) -> B:
         return cls(
@@ -221,6 +246,7 @@ class Button(Item[V]):
             custom_id=button.custom_id,
             url=button.url,
             emoji=button.emoji,
+            sku_id=button.sku_id,
             row=None,
         )
 
@@ -260,11 +286,10 @@ def button(
 
     .. note::
 
-        Buttons with a URL cannot be created with this function.
-        Consider creating a :class:`Button` manually instead.
-        This is because buttons with a URL do not have a callback
-        associated with them since Discord does not do any processing
-        with it.
+        Premium and link buttons cannot be created with this decorator. Consider
+        creating a :class:`Button` object manually instead. These types of
+        buttons do not have a callback associated since Discord doesn't handle
+        them when clicked.
 
     Parameters
     ----------

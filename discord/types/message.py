@@ -32,13 +32,14 @@ from .components import Component
 from .embed import Embed
 from .emoji import PartialEmoji
 from .member import Member, UserWithMember
+from .poll import Poll
 from .snowflake import Snowflake, SnowflakeList
 from .sticker import StickerItem
 from .threads import Thread
 from .user import User
 
 if TYPE_CHECKING:
-    from .interactions import MessageInteraction
+    from .interactions import InteractionMetadata, MessageInteraction
 
 from .._typed_dict import NotRequired, TypedDict
 
@@ -55,6 +56,9 @@ class Reaction(TypedDict):
     me: bool
     emoji: PartialEmoji
     burst: bool
+    me_burst: bool
+    burst_colors: list[str]
+    count_details: ReactionCountDetails
 
 
 class ReactionCountDetails(TypedDict):
@@ -66,6 +70,7 @@ class Attachment(TypedDict):
     height: NotRequired[int | None]
     width: NotRequired[int | None]
     content_type: NotRequired[str]
+    description: NotRequired[str]
     spoiler: NotRequired[bool]
     id: Snowflake
     filename: str
@@ -75,6 +80,7 @@ class Attachment(TypedDict):
     duration_secs: NotRequired[float]
     waveform: NotRequired[str]
     flags: NotRequired[int]
+    title: NotRequired[str]
 
 
 MessageActivityType = Literal[1, 2, 3, 5]
@@ -120,6 +126,7 @@ class Message(TypedDict):
     sticker_items: NotRequired[list[StickerItem]]
     referenced_message: NotRequired[Message | None]
     interaction: NotRequired[MessageInteraction]
+    interaction_metadata: NotRequired[InteractionMetadata]
     components: NotRequired[list[Component]]
     thread: NotRequired[Thread | None]
     id: Snowflake
@@ -136,6 +143,7 @@ class Message(TypedDict):
     embeds: list[Embed]
     pinned: bool
     type: MessageType
+    poll: Poll
 
 
 AllowedMentionType = Literal["roles", "users", "everyone"]
@@ -146,3 +154,8 @@ class AllowedMentions(TypedDict):
     roles: SnowflakeList
     users: SnowflakeList
     replied_user: bool
+
+
+class MessageCall(TypedDict):
+    participants: SnowflakeList
+    ended_timestamp: NotRequired[str]

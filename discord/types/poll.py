@@ -28,37 +28,36 @@ from typing import Literal, TypedDict
 
 from .._typed_dict import NotRequired
 from .emoji import Emoji
-from .snowflake import Snowflake, SnowflakeList
 
-PromptType = Literal[0, 1]
-OnboardingMode = Literal[0, 1]
+PollLayoutType = Literal[1]
 
 
-class Onboarding(TypedDict):
-    guild_id: Snowflake
-    prompts: list[OnboardingPrompt]
-    default_channel_ids: SnowflakeList
-    enabled: bool
-    mode: OnboardingMode
-
-
-class OnboardingPrompt(TypedDict):
-    id: Snowflake
-    type: PromptType
-    options: list[PromptOption]
-    title: str
-    single_select: bool
-    required: bool
-    in_onboarding: bool
-
-
-class PromptOption(TypedDict):
-    id: Snowflake
-    channel_ids: SnowflakeList
-    role_ids: SnowflakeList
+class PollMedia(TypedDict):
+    text: str
     emoji: NotRequired[Emoji]
-    emoji_id: NotRequired[Snowflake]
-    emoji_name: NotRequired[str]
-    emoji_animated: NotRequired[bool]
-    title: str
-    description: str | None
+
+
+class PollAnswer(TypedDict):
+    answer_id: int
+    poll_media: PollMedia
+
+
+class PollResults(TypedDict):
+    is_finalized: bool
+    answer_counts: list[PollAnswerCount]
+
+
+class PollAnswerCount(TypedDict):
+    id: int
+    count: int
+    me_voted: bool
+
+
+class Poll(TypedDict):
+    question: PollMedia
+    answers: list[PollAnswer]
+    duration: NotRequired[int]
+    expiry: NotRequired[str]
+    allow_multiselect: bool
+    layout_type: NotRequired[PollLayoutType]
+    results: NotRequired[PollResults]

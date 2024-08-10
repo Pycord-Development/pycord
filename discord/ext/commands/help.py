@@ -90,7 +90,13 @@ class Paginator:
             .. versionadded:: 1.7
     """
 
-    def __init__(self, prefix="```", suffix="```", max_size=2000, linesep="\n"):
+    def __init__(
+        self,
+        prefix: str | None = "```",
+        suffix: str | None = "```",
+        max_size: int = 2000,
+        linesep: str = "\n",
+    ):
         self.prefix = prefix
         self.suffix = suffix
         self.max_size = max_size

@@ -49,6 +49,11 @@ Message
 .. autoclass:: MessageReference
     :members:
 
+.. attributetable:: MessageCall
+
+.. autoclass:: MessageCall
+    :members:
+
 .. attributetable:: PartialMessage
 
 .. autoclass:: PartialMessage
@@ -91,6 +96,34 @@ Embed
 .. attributetable:: EmbedProvider
 
 .. autoclass:: EmbedProvider
+    :members:
+
+Poll
+~~~~~
+
+.. attributetable:: Poll
+
+.. autoclass:: Poll
+    :members:
+
+.. attributetable:: PollMedia
+
+.. autoclass:: PollMedia
+    :members:
+
+.. attributetable:: PollAnswer
+
+.. autoclass:: PollAnswer
+    :members:
+
+.. attributetable:: PollAnswerCount
+
+.. autoclass:: PollAnswerCount
+    :members:
+
+.. attributetable:: PollResults
+
+.. autoclass:: PollResults
     :members:
 
 
@@ -136,6 +169,16 @@ Flags
 .. attributetable:: SKUFlags
 
 .. autoclass:: SKUFlags()
+    :members:
+
+.. attributetable:: MemberFlags
+
+.. autoclass:: MemberFlags()
+    :members:
+
+.. attributetable:: RoleFlags
+
+.. autoclass:: RoleFlags()
     :members:
 
 Colour

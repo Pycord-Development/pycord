@@ -30,7 +30,12 @@ from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
-from .enums import InteractionResponseType, InteractionType, try_enum
+from .enums import (
+    InteractionContextType,
+    InteractionResponseType,
+    InteractionType,
+    try_enum,
+)
 from .errors import ClientException, InteractionResponded, InvalidArgument
 from .file import File
 from .flags import MessageFlags
@@ -53,6 +58,8 @@ __all__ = (
     "InteractionMessage",
     "InteractionResponse",
     "MessageInteraction",
+    "InteractionMetadata",
+    "AuthorizingIntegrationOwners",
 )
 
 if TYPE_CHECKING:
@@ -71,10 +78,12 @@ if TYPE_CHECKING:
     from .commands import OptionChoice
     from .embeds import Embed
     from .mentions import AllowedMentions
+    from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionData
+    from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
     from .ui.view import View
@@ -98,7 +107,7 @@ class Interaction:
     """Represents a Discord interaction.
 
     An interaction happens when a user does an action that needs to
-    be notified. Current examples are slash commands and components.
+    be notified. Current examples are application commands, components, and modals.
 
     .. versionadded:: 2.0
 
@@ -131,6 +140,18 @@ class Interaction:
         The guilds preferred locale, if invoked in a guild.
     custom_id: Optional[:class:`str`]
         The custom ID for the interaction.
+    entitlements: list[:class:`Entitlement`]
+        Entitlements that apply to the invoking user, showing access to premium SKUs.
+
+        .. versionadded:: 2.5
+    authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
+        Contains the entities (users or guilds) that authorized this interaction.
+
+        .. versionadded:: 2.6
+    context: Optional[:class:`InteractionContextType`]
+        The context in which this command was executed.
+
+        .. versionadded:: 2.6
     """
 
     __slots__: tuple[str, ...] = (
@@ -149,6 +170,8 @@ class Interaction:
         "version",
         "custom_id",
         "entitlements",
+        "context",
+        "authorizing_integration_owners",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -188,6 +211,18 @@ class Interaction:
         self.entitlements: list[Entitlement] = [
             Entitlement(data=e, state=self._state) for e in data.get("entitlements", [])
         ]
+        self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
+            AuthorizingIntegrationOwners(
+                data=data["authorizing_integration_owners"], state=self._state
+            )
+            if "authorizing_integration_owners" in data
+            else AuthorizingIntegrationOwners(data={}, state=self._state)
+        )
+        self.context: InteractionContextType | None = (
+            try_enum(InteractionContextType, data["context"])
+            if "context" in data
+            else None
+        )
 
         self.message: Message | None = None
         self.channel = None
@@ -803,6 +838,7 @@ class InteractionResponse:
         allowed_mentions: AllowedMentions = None,
         file: File = None,
         files: list[File] = None,
+        poll: Poll = None,
         delete_after: float = None,
     ) -> Interaction:
         """|coro|
@@ -837,6 +873,10 @@ class InteractionResponse:
             The file to upload.
         files: List[:class:`File`]
             A list of files to upload. Must be a maximum of 10.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -880,6 +920,9 @@ class InteractionResponse:
 
         if view is not None:
             payload["components"] = view.to_components()
+
+        if poll is not None:
+            payload["poll"] = poll.to_dict()
 
         state = self._parent._state
 
@@ -1190,9 +1233,15 @@ class InteractionResponse:
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
+    @utils.deprecated("a button with type ButtonType.premium", "2.6")
     async def premium_required(self) -> Interaction:
         """|coro|
+
         Responds to this interaction by sending a premium required message.
+
+        .. deprecated:: 2.6
+
+            A button with type :attr:`ButtonType.premium` should be used instead.
 
         Raises
         ------
@@ -1221,7 +1270,7 @@ class InteractionResponse:
         self._responded = True
         return self._parent
 
-    async def _locked_response(self, coro: Coroutine[Any]):
+    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> None:
         """|coro|
 
         Wraps a response and makes sure that it's locked while executing.
@@ -1393,6 +1442,10 @@ class MessageInteraction:
 
     .. versionadded:: 2.0
 
+    .. deprecated:: 2.6
+
+        See :class:`InteractionMetadata`.
+
     .. note::
         Responses to message components do not include this property.
 
@@ -1419,3 +1472,144 @@ class MessageInteraction:
         self.type: InteractionType = data["type"]
         self.name: str = data["name"]
         self.user: User = self._state.store_user(data["user"])
+
+
+class InteractionMetadata:
+    """Represents metadata about an interaction.
+
+    This is sent on the message object when the message is related to an interaction
+
+    .. versionadded:: 2.6
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The interaction's ID.
+    type: :class:`InteractionType`
+        The interaction type.
+    user: :class:`User`
+        The user that sent the interaction.
+    authorizing_integration_owners: :class:`AuthorizingIntegrationOwners`
+        The authorizing user or server for the installation(s) relevant to the interaction.
+    original_response_message_id: Optional[:class:`int`]
+        The ID of the original response message. Only present on interaction follow-up messages.
+    interacted_message_id: Optional[:class:`int`]
+        The ID of the message that triggered the interaction. Only present on interactions of type
+        :attr:`InteractionType.component`.
+    triggering_interaction_metadata: Optional[:class:`InteractionMetadata`]
+        The metadata of the interaction that opened the model. Only present on interactions of type
+        :attr:`InteractionType.modal_submit`.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "id",
+        "type",
+        "user",
+        "authorizing_integration_owners",
+        "original_response_message_id",
+        "interacted_message_id",
+        "triggering_interaction_metadata",
+        "_state",
+        "_cs_original_response_message",
+        "_cs_interacted_message",
+    )
+
+    def __init__(self, *, data: InteractionMetadataPayload, state: ConnectionState):
+        self._state = state
+        self.id: int = int(data["id"])
+        self.type: InteractionType = try_enum(InteractionType, data["type"])
+        self.user: User = User(state=state, data=data["user"])
+        self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
+            AuthorizingIntegrationOwners(data["authorizing_integration_owners"], state)
+        )
+        self.original_response_message_id: int | None = utils._get_as_snowflake(
+            data, "original_response_message_id"
+        )
+        self.interacted_message_id: int | None = utils._get_as_snowflake(
+            data, "interacted_message_id"
+        )
+        self.triggering_interaction_metadata: InteractionMetadata | None = None
+        if tim := data.get("triggering_interaction_metadata"):
+            self.triggering_interaction_metadata = InteractionMetadata(
+                data=tim, state=state
+            )
+
+    def __repr__(self):
+        return (
+            f"<InteractionMetadata id={self.id} type={self.type!r} user={self.user!r}>"
+        )
+
+    @utils.cached_slot_property("_cs_original_response_message")
+    def original_response_message(self) -> Message | None:
+        """Optional[:class:`Message`]: The original response message.
+        Returns ``None`` if the message is not in cache, or if :attr:`original_response_message_id` is ``None``.
+        """
+        if not self.original_response_message_id:
+            return None
+        return self._state._get_message(self.original_response_message_id)
+
+    @utils.cached_slot_property("_cs_interacted_message")
+    def interacted_message(self) -> Message | None:
+        """Optional[:class:`Message`]: The message that triggered the interaction.
+        Returns ``None`` if the message is not in cache, or if :attr:`interacted_message_id` is ``None``.
+        """
+        if not self.interacted_message_id:
+            return None
+        return self._state._get_message(self.interacted_message_id)
+
+
+class AuthorizingIntegrationOwners:
+    """Contains details on the authorizing user or server for the installation(s) relevant to the interaction.
+
+    .. versionadded:: 2.6
+
+    Attributes
+    ----------
+    user_id: :class:`int` | None
+        The ID of the user that authorized the integration.
+    guild_id: :class:`int` | None
+        The ID of the guild that authorized the integration.
+        This will be ``0`` if the integration was triggered
+        from the user in the bot's DMs.
+    """
+
+    __slots__ = ("user_id", "guild_id", "_state", "_cs_user", "_cs_guild")
+
+    def __init__(self, data: dict[str, Any], state: ConnectionState):
+        self._state = state
+        # keys are Application Integration Types as strings
+        self.user_id = int(uid) if (uid := data.get("1")) is not None else None
+        self.guild_id = (
+            int(guild_id) if (guild_id := data.get("0", None)) is not None else None
+        )
+
+    def __repr__(self):
+        return f"<AuthorizingIntegrationOwners user_id={self.user_id} guild_id={self.guild_id}>"
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, AuthorizingIntegrationOwners)
+            and self.user_id == other.user_id
+            and self.guild_id == other.guild_id
+        )
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    @utils.cached_slot_property("_cs_user")
+    def user(self) -> User | None:
+        """Optional[:class:`User`]: The user that authorized the integration.
+        Returns ``None`` if the user is not in cache, or if :attr:`user_id` is ``None``.
+        """
+        if not self.user_id:
+            return None
+        return self._state.get_user(self.user_id)
+
+    @utils.cached_slot_property("_cs_guild")
+    def guild(self) -> Guild | None:
+        """Optional[:class:`Guild`]: The guild that authorized the integration.
+        Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is ``0`` or ``None``.
+        """
+        if not self.guild_id:
+            return None
+        return self._state._get_guild(self.guild_id)

@@ -37,7 +37,7 @@ if TYPE_CHECKING:
     import discord
     from .. import Bot
     from ..state import ConnectionState
-    from ..voice_client import VoiceProtocol
+    from ..voice_client import VoiceClient
 
     from .core import ApplicationCommand, Option
     from ..interactions import InteractionChannel
@@ -211,7 +211,7 @@ class ApplicationContext(discord.abc.Messageable):
     author: Member | User = user
 
     @property
-    def voice_client(self) -> VoiceProtocol | None:
+    def voice_client(self) -> VoiceClient | None:
         """Returns the voice client associated with this context's command.
         Shorthand for :attr:`Interaction.guild.voice_client<~discord.Guild.voice_client>`, if applicable.
         """
