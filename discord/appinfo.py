@@ -131,29 +131,29 @@ class AppInfo:
 
         .. versionadded:: 2.7
 
-    interactions_endpoint_url: Optional[`str`]
+    interactions_endpoint_url: Optional[:class:`str`]
         The interactions endpoint URL for the application, if set.
 
         .. versionadded:: 2.7
 
-    role_connections_verification_url: Optional[`str`]
+    role_connections_verification_url: Optional[:class:`str`]
         The role connection verification URL for the application, if set.
 
         .. versionadded:: 2.7
 
-    install_params: Optional[List[`AppInstallParams`]]
+    install_params: Optional[List[:class:`AppInstallParams`]]
         The settings for the application's default in-app authorization link, if set.
 
         .. versionadded:: 2.7
 
-    tags: Optional[`str`]
+    tags: Optional[:class:`str`]
         The list of tags describing the content and functionality of the app, if set.
 
         Maximium of 5 tags.
 
         .. versionadded:: 2.7
 
-    custom_install_url: Optional[`str`]
+    custom_install_url: Optional[:class:`str`]
         The default custom authorization URL for the application, if set.
 
         .. versionadded:: 2.7
