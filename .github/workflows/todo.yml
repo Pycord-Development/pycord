@@ -13,3 +13,4 @@ jobs:
           SHA: ${{ github.sha }}
           REF: ${{ github.ref }}
           COMMENT_ON_ISSUES: true
+          EXCLUDE_PATTERN: "\\.(doctree|doctrees|pickle)$"

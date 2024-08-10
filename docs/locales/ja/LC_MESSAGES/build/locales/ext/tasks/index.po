@@ -1,0 +1,283 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "discord.ext.tasks"
+msgstr "discord.ext.tasks"
+
+msgid "One of the most common operations when making a bot is having a loop run in the background at a specified interval. This pattern is very common but has a lot of things you need to look out for:"
+msgstr "One of the most common operations when making a bot is having a loop run in the background at a specified interval. This pattern is very common but has a lot of things you need to look out for:"
+
+msgid "How do I handle :exc:`asyncio.CancelledError`?"
+msgstr "How do I handle :exc:`asyncio.CancelledError`?"
+
+msgid "What do I do if the internet goes out?"
+msgstr "What do I do if the internet goes out?"
+
+msgid "What is the maximum number of seconds I can sleep anyway?"
+msgstr "What is the maximum number of seconds I can sleep anyway?"
+
+msgid "The goal of this Pycord extension is to abstract all these worries away from you."
+msgstr "The goal of this Pycord extension is to abstract all these worries away from you."
+
+msgid "Recipes"
+msgstr "Recipes"
+
+msgid "A simple background task in a :class:`~discord.ext.commands.Cog`:"
+msgstr "A simple background task in a :class:`~discord.ext.commands.Cog`:"
+
+msgid "Adding an exception to handle during reconnect:"
+msgstr "Adding an exception to handle during reconnect:"
+
+msgid "Looping a certain amount of times before exiting:"
+msgstr "Looping a certain amount of times before exiting:"
+
+msgid "Waiting until the bot is ready before the loop starts:"
+msgstr "Waiting until the bot is ready before the loop starts:"
+
+msgid "Doing something during cancellation:"
+msgstr "Doing something during cancellation:"
+
+msgid "API Reference"
+msgstr "API Reference"
+
+msgid "A background task helper that abstracts the loop and reconnection logic for you."
+msgstr "A background task helper that abstracts the loop and reconnection logic for you."
+
+msgid "The main interface to create this is through :func:`loop`."
+msgstr "The main interface to create this is through :func:`loop`."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "A decorator that register a coroutine to be called after the loop finished running."
+msgstr "A decorator that register a coroutine to be called after the loop finished running."
+
+msgid "The coroutine must take no arguments (except ``self`` in a class context)."
+msgstr "The coroutine must take no arguments (except ``self`` in a class context)."
+
+msgid "This coroutine is called even during cancellation. If it is desirable to tell apart whether something was cancelled or not, check to see whether :meth:`is_being_cancelled` is ``True`` or not."
+msgstr "This coroutine is called even during cancellation. If it is desirable to tell apart whether something was cancelled or not, check to see whether :meth:`is_being_cancelled` is ``True`` or not."
+
+msgid "The coroutine to register after the loop finishes."
+msgstr "The coroutine to register after the loop finishes."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "The function was not a coroutine."
+msgstr "The function was not a coroutine."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid ":py:class:`~typing.TypeVar`\\(``FT``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])"
+msgstr ":py:class:`~typing.TypeVar`\\(``FT``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])"
+
+msgid "A decorator that registers a coroutine to be called before the loop starts running."
+msgstr "A decorator that registers a coroutine to be called before the loop starts running."
+
+msgid "This is useful if you want to wait for some bot state before the loop starts, such as :meth:`discord.Client.wait_until_ready`."
+msgstr "This is useful if you want to wait for some bot state before the loop starts, such as :meth:`discord.Client.wait_until_ready`."
+
+msgid "The coroutine to register before the loop runs."
+msgstr "The coroutine to register before the loop runs."
+
+msgid "A decorator that registers a coroutine to be called if the task encounters an unhandled exception."
+msgstr "A decorator that registers a coroutine to be called if the task encounters an unhandled exception."
+
+msgid "The coroutine must take only one argument the exception raised (except ``self`` in a class context)."
+msgstr "The coroutine must take only one argument the exception raised (except ``self`` in a class context)."
+
+msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
+msgstr "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
+
+msgid "The coroutine to register in the event of an unhandled exception."
+msgstr "The coroutine to register in the event of an unhandled exception."
+
+msgid ":py:class:`~typing.TypeVar`\\(``ET``, bound= :py:data:`~typing.Callable`\\[\\[:py:data:`~typing.Any`, :py:class:`BaseException`], :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])"
+msgstr ":py:class:`~typing.TypeVar`\\(``ET``, bound= :py:data:`~typing.Callable`\\[\\[:py:data:`~typing.Any`, :py:class:`BaseException`], :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])"
+
+msgid "Read-only value for the number of seconds between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+msgstr "Read-only value for the number of seconds between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+
+msgid "Read-only value for the number of minutes between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+msgstr "Read-only value for the number of minutes between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+
+msgid "Read-only value for the number of hours between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+msgstr "Read-only value for the number of hours between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+
+msgid "Read-only list for the exact times this loop runs at. ``None`` if relative times were passed instead."
+msgstr "Read-only list for the exact times this loop runs at. ``None`` if relative times were passed instead."
+
+msgid "The current iteration of the loop."
+msgstr "The current iteration of the loop."
+
+msgid "When the next iteration of the loop will occur."
+msgstr "When the next iteration of the loop will occur."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Calls the internal callback that the task holds."
+msgstr "Calls the internal callback that the task holds."
+
+msgid "The arguments to use."
+msgstr "The arguments to use."
+
+msgid "The keyword arguments to use."
+msgstr "The keyword arguments to use."
+
+msgid ":py:data:`~typing.Any`"
+msgstr ":py:data:`~typing.Any`"
+
+msgid "Starts the internal task in the event loop."
+msgstr "Starts the internal task in the event loop."
+
+msgid "A task has already been launched and is running."
+msgstr "A task has already been launched and is running."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "The task that has been created."
+msgstr "The task that has been created."
+
+msgid ":class:`asyncio.Task`"
+msgstr ":class:`asyncio.Task`"
+
+msgid "Gracefully stops the task from running."
+msgstr "Gracefully stops the task from running."
+
+msgid "Unlike :meth:`cancel`\\, this allows the task to finish its current iteration before gracefully exiting. :rtype: :py:obj:`None`"
+msgstr "Unlike :meth:`cancel`\\, this allows the task to finish its current iteration before gracefully exiting. :rtype: :py:obj:`None`"
+
+msgid "If the internal function raises an error that can be handled before finishing then it will retry until it succeeds."
+msgstr "If the internal function raises an error that can be handled before finishing then it will retry until it succeeds."
+
+msgid "If this is undesirable, either remove the error handling before stopping via :meth:`clear_exception_types` or use :meth:`cancel` instead."
+msgstr "If this is undesirable, either remove the error handling before stopping via :meth:`clear_exception_types` or use :meth:`cancel` instead."
+
+msgid "Cancels the internal task, if it is running."
+msgstr "Cancels the internal task, if it is running."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "A convenience method to restart the internal task."
+msgstr "A convenience method to restart the internal task."
+
+msgid "Due to the way this function works, the task is not returned like :meth:`start`."
+msgstr "Due to the way this function works, the task is not returned like :meth:`start`."
+
+msgid "Adds exception types to be handled during the reconnect logic."
+msgstr "Adds exception types to be handled during the reconnect logic."
+
+msgid "By default, the exception types handled are those handled by :meth:`discord.Client.connect`\\, which includes a lot of internet disconnection errors."
+msgstr "By default, the exception types handled are those handled by :meth:`discord.Client.connect`\\, which includes a lot of internet disconnection errors."
+
+msgid "This function is useful if you're interacting with a 3rd party library that raises its own set of exceptions."
+msgstr "This function is useful if you're interacting with a 3rd party library that raises its own set of exceptions."
+
+msgid "An argument list of exception classes to handle."
+msgstr "An argument list of exception classes to handle."
+
+msgid "An exception passed is either not a class or not inherited from :class:`BaseException`."
+msgstr "An exception passed is either not a class or not inherited from :class:`BaseException`."
+
+msgid "Removes all exception types that are handled. :rtype: :py:obj:`None`"
+msgstr "Removes all exception types that are handled. :rtype: :py:obj:`None`"
+
+msgid "This operation obviously cannot be undone!"
+msgstr "This operation obviously cannot be undone!"
+
+msgid "Removes exception types from being handled during the reconnect logic."
+msgstr "Removes exception types from being handled during the reconnect logic."
+
+msgid "Whether all exceptions were successfully removed."
+msgstr "Whether all exceptions were successfully removed."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "Fetches the internal task or ``None`` if there isn't one running."
+msgstr "Fetches the internal task or ``None`` if there isn't one running."
+
+msgid ":py:data:`~typing.Optional`\\[:py:class:`~_asyncio.Task`\\[:py:obj:`None`]]"
+msgstr ":py:data:`~typing.Optional`\\[:py:class:`~_asyncio.Task`\\[:py:obj:`None`]]"
+
+msgid "Whether the task is being cancelled."
+msgstr "Whether the task is being cancelled."
+
+msgid ":py:class:`bool`"
+msgstr ":py:class:`bool`"
+
+msgid "Whether the internal task has failed. :rtype: :py:class:`bool`"
+msgstr "Whether the internal task has failed. :rtype: :py:class:`bool`"
+
+msgid "Check if the task is currently running. :rtype: :py:class:`bool`"
+msgstr "Check if the task is currently running. :rtype: :py:class:`bool`"
+
+msgid "Changes the interval for the sleep time."
+msgstr "Changes the interval for the sleep time."
+
+msgid "The number of seconds between every iteration."
+msgstr "The number of seconds between every iteration."
+
+msgid "The number of minutes between every iteration."
+msgstr "The number of minutes between every iteration."
+
+msgid "The number of hours between every iteration."
+msgstr "The number of hours between every iteration."
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. This cannot be used in conjunction with the relative time parameters.  .. versionadded:: 2.0  .. note::      Duplicate times will be ignored, and only run once."
+msgstr "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. This cannot be used in conjunction with the relative time parameters.  .. versionadded:: 2.0  .. note::      Duplicate times will be ignored, and only run once."
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. This cannot be used in conjunction with the relative time parameters."
+msgstr "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. This cannot be used in conjunction with the relative time parameters."
+
+msgid "Duplicate times will be ignored, and only run once."
+msgstr "Duplicate times will be ignored, and only run once."
+
+msgid "An invalid value was given."
+msgstr "An invalid value was given."
+
+msgid "An invalid value for the ``time`` parameter was passed, or the     ``time`` parameter was passed in conjunction with relative time parameters."
+msgstr "An invalid value for the ``time`` parameter was passed, or the     ``time`` parameter was passed in conjunction with relative time parameters."
+
+msgid "A decorator that schedules a task in the background for you with optional reconnect logic. The decorator returns a :class:`Loop`."
+msgstr "A decorator that schedules a task in the background for you with optional reconnect logic. The decorator returns a :class:`Loop`."
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. Timezones are supported. If no timezone is given for the times, it is assumed to represent UTC time.  This cannot be used in conjunction with the relative time parameters.  .. note::      Duplicate times will be ignored, and only run once.  .. versionadded:: 2.0"
+msgstr "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. Timezones are supported. If no timezone is given for the times, it is assumed to represent UTC time.  This cannot be used in conjunction with the relative time parameters.  .. note::      Duplicate times will be ignored, and only run once.  .. versionadded:: 2.0"
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. Timezones are supported. If no timezone is given for the times, it is assumed to represent UTC time."
+msgstr "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. Timezones are supported. If no timezone is given for the times, it is assumed to represent UTC time."
+
+msgid "This cannot be used in conjunction with the relative time parameters."
+msgstr "This cannot be used in conjunction with the relative time parameters."
+
+msgid "The number of loops to do, ``None`` if it should be an infinite loop."
+msgstr "The number of loops to do, ``None`` if it should be an infinite loop."
+
+msgid "Whether to handle errors and restart the task using an exponential back-off algorithm similar to the one used in :meth:`discord.Client.connect`."
+msgstr "Whether to handle errors and restart the task using an exponential back-off algorithm similar to the one used in :meth:`discord.Client.connect`."
+
+msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
+msgstr "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
+
+msgid "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."
+msgstr "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."
+
+msgid ":py:data:`~typing.Callable`\\[\\[:py:class:`~typing.TypeVar`\\(``LF``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])], :py:class:`~discord.ext.tasks.Loop`\\[:py:class:`~typing.TypeVar`\\(``LF``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])]]"
+msgstr ":py:data:`~typing.Callable`\\[\\[:py:class:`~typing.TypeVar`\\(``LF``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])], :py:class:`~discord.ext.tasks.Loop`\\[:py:class:`~typing.TypeVar`\\(``LF``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Awaitable`\\[:py:data:`~typing.Any`]])]]"
+

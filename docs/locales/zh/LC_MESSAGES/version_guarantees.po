@@ -1,0 +1,58 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Version Guarantees"
+msgstr "版本保证"
+
+msgid "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
+msgstr "书库遵循`语义版本化原则 <https://semver.org/>`_ ，这意味着每次有不兼容的 API 更改时，主要版本都会更新。 然而，由于Discord方面缺乏保障，加上Python相当活跃的性质，很难看出什么可以被视为是一种突破性的变化，什么是什么是没有的。"
+
+msgid "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
+msgstr "首先要牢记的是，破裂的更改只适用于**公开记载的函数和类**。 如果它没有列在文档中，那么它不是公共API的一部分，因此必然会改变。 这包括以下划线开头的属性或没有文件记录的下划线的函数。"
+
+msgid "The examples below are non-exhaustive."
+msgstr "以下例子并非详尽无遗。"
+
+msgid "Examples of Breaking Changes"
+msgstr "打破更改的例子"
+
+msgid "Changing the default parameter value to something else."
+msgstr "更改默认参数值为其他值。"
+
+msgid "Renaming a function without an alias to an old function."
+msgstr "将一个没有别名的函数重命名为旧函数。"
+
+msgid "Adding or removing parameters to an event."
+msgstr "添加或删除参数到一个事件。"
+
+msgid "Examples of Non-Breaking Changes"
+msgstr "不打破更改的例子"
+
+msgid "Adding or removing private underscored attributes."
+msgstr "添加或删除私有强调属性。"
+
+msgid "Adding an element into the ``__slots__`` of a data class."
+msgstr "Adding an element into the ``__slots__`` of a data class."
+
+msgid "Changing the behaviour of a function to fix a bug."
+msgstr "更改函数的行为以修复漏洞。"
+
+msgid "Changes in the documentation."
+msgstr "5. 文件的更改。"
+
+msgid "Modifying the internal HTTP handling."
+msgstr "修改内部HTTP处理程序。"
+
+msgid "Upgrading the dependencies to a new version, major or otherwise."
+msgstr "升级依赖关系到一个新版本，主要或其他版本。"
+

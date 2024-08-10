@@ -4,3 +4,9 @@
 /discord/ext/testing/ @Pycord-Development/maintain-tests
 /discord/ext/bridge/ @Pycord-Development/maintain-ext-bridge
 /.github/ @Pycord-Development/project-leads
+/docs/locales/ @Pycord-Dvelopment/maintain-translations
+/docs/build/locales/ @Pycord-Dvelopment/maintain-translations
+/.github/workflows/docs-localization-download.yml @Pycord-Dvelopment/maintain-translations
+/.github/workflows/docs-localization-upload.yml @Pycord-Dvelopment/maintain-translations
+/crowdin.yml @Pycord-Dvelopment/maintain-translations
+/requirements/_locale.txt @Pycord-Dvelopment/maintain-translations
