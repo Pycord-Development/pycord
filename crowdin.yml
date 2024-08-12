@@ -8,7 +8,7 @@ commit_message: "docs: Update translations"
 export_languages: ["de", "ja", "fr", "it", "hi", "ko", "pt-BR", "es-ES", "zh-CN"]
 
 bundles:
-  - 1
+  - 4
 
 files:
   [
