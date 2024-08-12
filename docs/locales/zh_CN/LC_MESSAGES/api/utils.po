@@ -417,7 +417,7 @@ msgid "Autocomplete cannot be used for options that have specified choices."
 msgstr "Autocomplete cannot be used for options that have specified choices."
 
 msgid "Example"
-msgstr "Example"
+msgstr "示例"
 
 msgid "A helper function that collects an iterator into chunks of a given size."
 msgstr "A helper function that collects an iterator into chunks of a given size."

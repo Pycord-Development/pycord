@@ -273,7 +273,7 @@ msgid ":meth:`Reaction.users`"
 msgstr ":meth:`Reaction.users`"
 
 msgid "Event Changes"
-msgstr "Event Changes"
+msgstr "事件更改"
 
 msgid ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
 msgstr ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
@@ -342,7 +342,7 @@ msgid ":attr:`ext.commands.Command.help` can now be ``None``."
 msgstr ":attr:`ext.commands.Command.help` can now be ``None``."
 
 msgid "Miscellaneous Changes"
-msgstr "Miscellaneous Changes"
+msgstr "其它更改"
 
 msgid "The following were removed:"
 msgstr "The following were removed:"

@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Commands"
-msgstr "Commands"
+msgstr "Comandos"
 
 msgid "One of the most appealing aspects of the command extension is how easy it is to define commands and how you can arbitrarily nest groups and commands to have a rich sub-command system."
 msgstr "One of the most appealing aspects of the command extension is how easy it is to define commands and how you can arbitrarily nest groups and commands to have a rich sub-command system."
@@ -45,7 +45,7 @@ msgid "Any parameter that is accepted by the :class:`.Command` constructor can b
 msgstr "Any parameter that is accepted by the :class:`.Command` constructor can be passed into the decorator. For example, to change the name to something other than the function would be as simple as doing this:"
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parâmetros"
 
 msgid "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."
 msgstr "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."
@@ -54,7 +54,7 @@ msgid "Certain parameter types do different things in the user side and most for
 msgstr "Certain parameter types do different things in the user side and most forms of parameter types are supported."
 
 msgid "Positional"
-msgstr "Positional"
+msgstr "Posicional"
 
 msgid "The most basic form of parameter passing is the positional parameter. This is where we pass a parameter as-is:"
 msgstr "The most basic form of parameter passing is the positional parameter. This is where we pass a parameter as-is:"
@@ -111,7 +111,7 @@ msgid "By default, the keyword-only arguments are stripped of white space to mak
 msgstr "By default, the keyword-only arguments are stripped of white space to make it easier to work with. This behaviour can be toggled by the :attr:`.Command.rest_is_raw` argument in the decorator."
 
 msgid "Invocation Context"
-msgstr "Invocation Context"
+msgstr "Contexto da Chamada"
 
 msgid "As seen earlier, every command must take at least a single parameter, called the :class:`~ext.commands.Context`."
 msgstr "As seen earlier, every command must take at least a single parameter, called the :class:`~ext.commands.Context`."
@@ -135,7 +135,7 @@ msgid "The context implements the :class:`abc.Messageable` interface, so anythin
 msgstr "The context implements the :class:`abc.Messageable` interface, so anything you can do on a :class:`abc.Messageable` you can do on the :class:`~ext.commands.Context`."
 
 msgid "Converters"
-msgstr "Converters"
+msgstr "Conversores"
 
 msgid "Adding bot arguments with function parameters is only the first step in defining your bot's command interface. To actually make use of the arguments, we usually want to convert the data into a target type. We call these :ref:`ext_commands_api_converters`."
 msgstr "Adding bot arguments with function parameters is only the first step in defining your bot's command interface. To actually make use of the arguments, we usually want to convert the data into a target type. We call these :ref:`ext_commands_api_converters`."
@@ -153,7 +153,7 @@ msgid "A custom class that inherits from :class:`~ext.commands.Converter`."
 msgstr "A custom class that inherits from :class:`~ext.commands.Converter`."
 
 msgid "Basic Converters"
-msgstr "Basic Converters"
+msgstr "Conversores Básicos"
 
 msgid "At its core, a basic converter is a callable that takes in an argument and turns it into something else."
 msgstr "At its core, a basic converter is a callable that takes in an argument and turns it into something else."

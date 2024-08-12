@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Setting Up Logging"
-msgstr "Setting Up Logging"
+msgstr "Logging einrichten"
 
 msgid "*Pycord* logs errors and debug information via the :mod:`logging` python module. It is strongly recommended that the logging module is configured, as no errors or warnings will be output if it is not set up. Configuration of the ``logging`` module can be as simple as::"
-msgstr "*Pycord* logs errors and debug information via the :mod:`logging` python module. It is strongly recommended that the logging module is configured, as no errors or warnings will be output if it is not set up. Configuration of the ``logging`` module can be as simple as::"
+msgstr "*Pycord* protokolliert Fehler und Debug-Informationen über das :mod:`logging` Python-Modul. Es wird dringend empfohlen, dass das Logging-Modul konfiguriert ist, da keine Fehler oder Warnungen ausgegeben werden, wenn es nicht eingerichtet ist. Konfiguration des ``Logging`` Moduls kann so einfach sein als::"
 
 msgid "Placed at the start of the application. This will output the logs from discord as well as other libraries that use the ``logging`` module directly to the console."
 msgstr "Placed at the start of the application. This will output the logs from discord as well as other libraries that use the ``logging`` module directly to the console."
@@ -30,5 +30,5 @@ msgid "This is recommended, especially at verbose levels such as ``INFO`` and ``
 msgstr "This is recommended, especially at verbose levels such as ``INFO`` and ``DEBUG``, as there are a lot of events logged and it would clog the stdout of your program."
 
 msgid "For more information, check the documentation and tutorial of the :mod:`logging` module."
-msgstr "For more information, check the documentation and tutorial of the :mod:`logging` module."
+msgstr "Weitere Informationen finden Sie in der Dokumentation und Anleitung des :mod:`logging` Moduls."
 

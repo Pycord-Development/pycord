@@ -111,7 +111,7 @@ msgid "The event's data."
 msgstr "The event's data."
 
 msgid "Bans"
-msgstr "Bans"
+msgstr "封锁"
 
 msgid "Called when user gets banned from a :class:`Guild`."
 msgstr "Called when user gets banned from a :class:`Guild`."
@@ -135,7 +135,7 @@ msgid "The user that got unbanned."
 msgstr "The user that got unbanned."
 
 msgid "Channels"
-msgstr "Channels"
+msgstr "频道"
 
 msgid "Called whenever a private group DM is updated. e.g. changed name or topic."
 msgstr "Called whenever a private group DM is updated. e.g. changed name or topic."
@@ -474,7 +474,7 @@ msgid "The interaction data."
 msgstr "The interaction data."
 
 msgid "Invites"
-msgstr "Invites"
+msgstr "邀请"
 
 msgid "Called when an :class:`Invite` is created. You must have the :attr:`~Permissions.manage_channels` permission to receive this."
 msgstr "Called when an :class:`Invite` is created. You must have the :attr:`~Permissions.manage_channels` permission to receive this."
@@ -528,10 +528,10 @@ msgid "This is called when one or more of the following things change:"
 msgstr "This is called when one or more of the following things change:"
 
 msgid "nickname"
-msgstr "nickname"
+msgstr "昵称"
 
 msgid "roles"
-msgstr "roles"
+msgstr "身份组"
 
 msgid "pending"
 msgstr "pending"
@@ -552,10 +552,10 @@ msgid "Called when a :class:`Member` updates their presence."
 msgstr "Called when a :class:`Member` updates their presence."
 
 msgid "status"
-msgstr "status"
+msgstr "状态"
 
 msgid "activity"
-msgstr "activity"
+msgstr "活动"
 
 msgid "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
 msgstr "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
@@ -594,10 +594,10 @@ msgid "Called when a :class:`User` updates their profile."
 msgstr "Called when a :class:`User` updates their profile."
 
 msgid "avatar"
-msgstr "avatar"
+msgstr "头像"
 
 msgid "username"
-msgstr "username"
+msgstr "用户名"
 
 msgid "discriminator"
 msgstr "discriminator"
@@ -612,7 +612,7 @@ msgid "The updated user's updated info."
 msgstr "The updated user's updated info."
 
 msgid "Messages"
-msgstr "Messages"
+msgstr "消息"
 
 msgid "Called when a :class:`Message` is created and sent."
 msgstr "Called when a :class:`Message` is created and sent."
@@ -702,7 +702,7 @@ msgid "Since the data payload can be partial, care must be taken when accessing 
 msgstr "Since the data payload can be partial, care must be taken when accessing stuff in the dictionary. One example of a common case of partial data is when the ``'content'`` key is inaccessible. This denotes an \"embed\" only edit, which is an edit in which only the embeds are updated by the Discord embed server."
 
 msgid "Polls"
-msgstr "Polls"
+msgstr "投票"
 
 msgid "Called when a vote is cast on a poll. If multiple answers were selected, this fires multiple times. if the poll was not found in the internal poll cache, then this event will not be called. Consider using :func:`on_raw_poll_vote_add` instead."
 msgstr "Called when a vote is cast on a poll. If multiple answers were selected, this fires multiple times. if the poll was not found in the internal poll cache, then this event will not be called. Consider using :func:`on_raw_poll_vote_add` instead."
@@ -732,7 +732,7 @@ msgid "Called when a vote is removed from a poll. Unlike :func:`on_poll_vote_rem
 msgstr "Called when a vote is removed from a poll. Unlike :func:`on_poll_vote_remove`, this is called regardless of the state of the internal message cache."
 
 msgid "Reactions"
-msgstr "Reactions"
+msgstr "反应"
 
 msgid "Called when a message has a reaction added to it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_add` instead."
 msgstr "Called when a message has a reaction added to it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_add` instead."
@@ -867,7 +867,7 @@ msgid "The stage instance after the update."
 msgstr "The stage instance after the update."
 
 msgid "Threads"
-msgstr "Threads"
+msgstr "帖子"
 
 msgid "Called whenever a thread is joined."
 msgstr "Called whenever a thread is joined."

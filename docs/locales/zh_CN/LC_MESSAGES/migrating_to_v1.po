@@ -810,7 +810,7 @@ msgid ":meth:`Guild.audit_logs`"
 msgstr ":meth:`Guild.audit_logs`"
 
 msgid "Event Changes"
-msgstr "Event Changes"
+msgstr "事件更改"
 
 msgid "A lot of events have gone through some changes."
 msgstr "A lot of events have gone through some changes."
