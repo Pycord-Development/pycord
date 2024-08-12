@@ -16,6 +16,10 @@ These changes are available on the `master` branch, but have not yet been releas
   `ScheduledEvent.edit` to `image`.
   ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
 
+### Added
+
+- Added `AppInfo` attributes. ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+
 ## [2.6.0] - 2024-07-09
 
 ### Added
