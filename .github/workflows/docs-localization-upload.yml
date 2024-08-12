@@ -11,7 +11,9 @@ jobs:
     permissions: write-all
     name: "Localisize Docs"
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, '!crowdin upload') || github.event_name == 'workflow_dispatch'
+    if:
+      contains(github.event.head_commit.message, '!crowdin upload') || github.event_name
+      == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
       - name: "Install Python"
@@ -32,7 +34,8 @@ jobs:
         working-directory: ./docs
       - name: "Build locales"
         run:
-          sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l hi -l ko -l pt -l es -l zh
+          sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l
+          hi -l ko -l pt_BR -l es -l zh_CN
         working-directory: ./docs
       - name: "Crowdin"
         uses: crowdin/github-action@v2

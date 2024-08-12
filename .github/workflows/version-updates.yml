@@ -8,7 +8,9 @@ permissions:
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'crowdin-bot' || github.actor == 'Crowdin Bot' }}
+    if:
+      ${{ github.actor == 'dependabot[bot]' || github.actor == 'crowdin-bot' ||
+      github.actor == 'Crowdin Bot' }}
     steps:
       - run: gh pr review --approve "$PR_URL"
         env:
