@@ -3,7 +3,7 @@
 /tests/ @Pycord-Development/maintain-tests
 /discord/ext/testing/ @Pycord-Development/maintain-tests
 /discord/ext/bridge/ @Pycord-Development/maintain-ext-bridge
-/.github/ @Pycord-Development/maintainers, @Lulalaby
+/.github/ @Pycord-Development/maintainers @Lulalaby
 /docs/locales/ @Pycord-Development/maintain-translations
 /docs/build/locales/ @Pycord-Development/maintain-translations
 /.github/workflows/docs-localization-download.yml @Pycord-Development/maintain-translations
