@@ -1,0 +1,985 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Event Reference"
+msgstr "Event Reference"
+
+msgid "This section outlines the different types of events listened by :class:`Client`."
+msgstr "This section outlines the different types of events listened by :class:`Client`."
+
+msgid "There are 3 ways to register an event, the first way is through the use of :meth:`Client.event`. The second way is through subclassing :class:`Client` and overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`. For example:"
+msgstr "There are 3 ways to register an event, the first way is through the use of :meth:`Client.event`. The second way is through subclassing :class:`Client` and overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`. For example:"
+
+msgid "If an event handler raises an exception, :func:`on_error` will be called to handle it, which defaults to print a traceback and ignoring the exception."
+msgstr "If an event handler raises an exception, :func:`on_error` will be called to handle it, which defaults to print a traceback and ignoring the exception."
+
+msgid "All the events must be a |coroutine_link|_. If they aren't, then you might get unexpected errors. In order to turn a function into a coroutine they must be ``async def`` functions."
+msgstr "All the events must be a |coroutine_link|_. If they aren't, then you might get unexpected errors. In order to turn a function into a coroutine they must be ``async def`` functions."
+
+msgid "Application Commands"
+msgstr "Application Commands"
+
+msgid "Called when an application command is received."
+msgstr "Called when an application command is received."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "The ApplicationContext associated to the command being received."
+msgstr "The ApplicationContext associated to the command being received."
+
+msgid "Called when an application command is completed, after any checks have finished."
+msgstr "Called when an application command is completed, after any checks have finished."
+
+msgid "The ApplicationContext associated to the command that was completed."
+msgstr "The ApplicationContext associated to the command that was completed."
+
+msgid "Called when an application command has an error."
+msgstr "Called when an application command has an error."
+
+msgid "The ApplicationContext associated to the command that has an error."
+msgstr "The ApplicationContext associated to the command that has an error."
+
+msgid "The DiscordException associated to the error."
+msgstr "The DiscordException associated to the error."
+
+msgid "Called when an application command was not found in the bot's internal cache."
+msgstr "Called when an application command was not found in the bot's internal cache."
+
+msgid "The interaction associated to the unknown command."
+msgstr "The interaction associated to the unknown command."
+
+msgid "Audit Logs"
+msgstr "Audit Logs"
+
+msgid "Called when an audit log entry is created."
+msgstr "Called when an audit log entry is created."
+
+msgid "The bot must have :attr:`~Permissions.view_audit_log` to receive this, and :attr:`Intents.moderation` must be enabled."
+msgstr "The bot must have :attr:`~Permissions.view_audit_log` to receive this, and :attr:`Intents.moderation` must be enabled."
+
+msgid "The audit log entry that was created."
+msgstr "The audit log entry that was created."
+
+msgid "Called when an audit log entry is created. Unlike :func:`on_audit_log_entry`, this is called regardless of the state of the internal user cache."
+msgstr "Called when an audit log entry is created. Unlike :func:`on_audit_log_entry`, this is called regardless of the state of the internal user cache."
+
+msgid "The raw event payload data."
+msgstr "The raw event payload data."
+
+msgid "AutoMod"
+msgstr "AutoMod"
+
+msgid "Called when an auto moderation rule is created."
+msgstr "Called when an auto moderation rule is created."
+
+msgid "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_configuration` must be enabled."
+msgstr "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_configuration` must be enabled."
+
+msgid "The newly created rule."
+msgstr "The newly created rule."
+
+msgid "Called when an auto moderation rule is updated."
+msgstr "Called when an auto moderation rule is updated."
+
+msgid "The updated rule."
+msgstr "The updated rule."
+
+msgid "Called when an auto moderation rule is deleted."
+msgstr "Called when an auto moderation rule is deleted."
+
+msgid "The deleted rule."
+msgstr "The deleted rule."
+
+msgid "Called when an auto moderation action is executed."
+msgstr "Called when an auto moderation action is executed."
+
+msgid "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_execution` must be enabled."
+msgstr "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_execution` must be enabled."
+
+msgid "The event's data."
+msgstr "The event's data."
+
+msgid "Bans"
+msgstr "Bans"
+
+msgid "Called when user gets banned from a :class:`Guild`."
+msgstr "Called when user gets banned from a :class:`Guild`."
+
+msgid "This requires :attr:`Intents.moderation` to be enabled."
+msgstr "This requires :attr:`Intents.moderation` to be enabled."
+
+msgid "The guild the user got banned from."
+msgstr "The guild the user got banned from."
+
+msgid "The user that got banned. Can be either :class:`User` or :class:`Member` depending if the user was in the guild or not at the time of removal."
+msgstr "The user that got banned. Can be either :class:`User` or :class:`Member` depending if the user was in the guild or not at the time of removal."
+
+msgid "Called when a :class:`User` gets unbanned from a :class:`Guild`."
+msgstr "Called when a :class:`User` gets unbanned from a :class:`Guild`."
+
+msgid "The guild the user got unbanned from."
+msgstr "The guild the user got unbanned from."
+
+msgid "The user that got unbanned."
+msgstr "The user that got unbanned."
+
+msgid "Channels"
+msgstr "Channels"
+
+msgid "Called whenever a private group DM is updated. e.g. changed name or topic."
+msgstr "Called whenever a private group DM is updated. e.g. changed name or topic."
+
+msgid "This requires :attr:`Intents.messages` to be enabled."
+msgstr "This requires :attr:`Intents.messages` to be enabled."
+
+msgid "The updated group channel's old info."
+msgstr "The updated group channel's old info."
+
+msgid "The updated group channel's new info."
+msgstr "The updated group channel's new info."
+
+msgid "Called whenever a message is pinned or unpinned from a private channel."
+msgstr "Called whenever a message is pinned or unpinned from a private channel."
+
+msgid "The private channel that had its pins updated."
+msgstr "The private channel that had its pins updated."
+
+msgid "The latest message that was pinned as an aware datetime in UTC. Could be ``None``."
+msgstr "The latest message that was pinned as an aware datetime in UTC. Could be ``None``."
+
+msgid "Called whenever a guild channel is updated. e.g. changed name, topic, permissions."
+msgstr "Called whenever a guild channel is updated. e.g. changed name, topic, permissions."
+
+msgid "This requires :attr:`Intents.guilds` to be enabled."
+msgstr "This requires :attr:`Intents.guilds` to be enabled."
+
+msgid "The updated guild channel's old info."
+msgstr "The updated guild channel's old info."
+
+msgid "The updated guild channel's new info."
+msgstr "The updated guild channel's new info."
+
+msgid "Called whenever a message is pinned or unpinned from a guild channel."
+msgstr "Called whenever a message is pinned or unpinned from a guild channel."
+
+msgid "The guild channel that had its pins updated."
+msgstr "The guild channel that had its pins updated."
+
+msgid "Called whenever a guild channel is deleted or created."
+msgstr "Called whenever a guild channel is deleted or created."
+
+msgid "Note that you can get the guild from :attr:`~abc.GuildChannel.guild`."
+msgstr "Note that you can get the guild from :attr:`~abc.GuildChannel.guild`."
+
+msgid "The guild channel that got created or deleted."
+msgstr "The guild channel that got created or deleted."
+
+msgid "Connection"
+msgstr "Connection"
+
+msgid "Usually when an event raises an uncaught exception, a traceback is printed to stderr and the exception is ignored. If you want to change this behaviour and handle the exception for whatever reason yourself, this event can be overridden. Which, when done, will suppress the default action of printing the traceback."
+msgstr "Usually when an event raises an uncaught exception, a traceback is printed to stderr and the exception is ignored. If you want to change this behaviour and handle the exception for whatever reason yourself, this event can be overridden. Which, when done, will suppress the default action of printing the traceback."
+
+msgid "The information of the exception raised and the exception itself can be retrieved with a standard call to :func:`sys.exc_info`."
+msgstr "The information of the exception raised and the exception itself can be retrieved with a standard call to :func:`sys.exc_info`."
+
+msgid "If you want exception to propagate out of the :class:`Client` class you can define an ``on_error`` handler consisting of a single empty :ref:`raise statement <py:raise>`. Exceptions raised by ``on_error`` will not be handled in any way by :class:`Client`."
+msgstr "If you want exception to propagate out of the :class:`Client` class you can define an ``on_error`` handler consisting of a single empty :ref:`raise statement <py:raise>`. Exceptions raised by ``on_error`` will not be handled in any way by :class:`Client`."
+
+msgid "``on_error`` will only be dispatched to :meth:`Client.event`."
+msgstr "``on_error`` will only be dispatched to :meth:`Client.event`."
+
+msgid "It will not be received by :meth:`Client.wait_for`, or, if used, :ref:`ext_commands_api_bot` listeners such as :meth:`~ext.commands.Bot.listen` or :meth:`~ext.commands.Cog.listener`."
+msgstr "It will not be received by :meth:`Client.wait_for`, or, if used, :ref:`ext_commands_api_bot` listeners such as :meth:`~ext.commands.Bot.listen` or :meth:`~ext.commands.Cog.listener`."
+
+msgid "The name of the event that raised the exception."
+msgstr "The name of the event that raised the exception."
+
+msgid "The positional arguments for the event that raised the exception."
+msgstr "The positional arguments for the event that raised the exception."
+
+msgid "The keyword arguments for the event that raised the exception."
+msgstr "The keyword arguments for the event that raised the exception."
+
+msgid "Called when the client has successfully connected to Discord. This is not the same as the client being fully prepared, see :func:`on_ready` for that."
+msgstr "Called when the client has successfully connected to Discord. This is not the same as the client being fully prepared, see :func:`on_ready` for that."
+
+msgid "The warnings on :func:`on_ready` also apply."
+msgstr "The warnings on :func:`on_ready` also apply."
+
+msgid "Overriding this event will not call :meth:`Bot.sync_commands`. As a result, :class:`ApplicationCommand` will not be registered."
+msgstr "Overriding this event will not call :meth:`Bot.sync_commands`. As a result, :class:`ApplicationCommand` will not be registered."
+
+msgid "Similar to :func:`on_connect` except used by :class:`AutoShardedClient` to denote when a particular shard ID has connected to Discord."
+msgstr "Similar to :func:`on_connect` except used by :class:`AutoShardedClient` to denote when a particular shard ID has connected to Discord."
+
+msgid "The shard ID that has connected."
+msgstr "The shard ID that has connected."
+
+msgid "Called when the client has disconnected from Discord, or a connection attempt to Discord has failed. This could happen either through the internet being disconnected, explicit calls to close, or Discord terminating the connection one way or the other."
+msgstr "Called when the client has disconnected from Discord, or a connection attempt to Discord has failed. This could happen either through the internet being disconnected, explicit calls to close, or Discord terminating the connection one way or the other."
+
+msgid "This function can be called many times without a corresponding :func:`on_connect` call."
+msgstr "This function can be called many times without a corresponding :func:`on_connect` call."
+
+msgid "Similar to :func:`on_disconnect` except used by :class:`AutoShardedClient` to denote when a particular shard ID has disconnected from Discord."
+msgstr "Similar to :func:`on_disconnect` except used by :class:`AutoShardedClient` to denote when a particular shard ID has disconnected from Discord."
+
+msgid "The shard ID that has disconnected."
+msgstr "The shard ID that has disconnected."
+
+msgid "Called when the client is done preparing the data received from Discord. Usually after login is successful and the :attr:`Client.guilds` and co. are filled up."
+msgstr "Called when the client is done preparing the data received from Discord. Usually after login is successful and the :attr:`Client.guilds` and co. are filled up."
+
+msgid "This function is not guaranteed to be the first event called. Likewise, this function is **not** guaranteed to only be called once. This library implements reconnection logic and thus will end up calling this event whenever a RESUME request fails."
+msgstr "This function is not guaranteed to be the first event called. Likewise, this function is **not** guaranteed to only be called once. This library implements reconnection logic and thus will end up calling this event whenever a RESUME request fails."
+
+msgid "Similar to :func:`on_ready` except used by :class:`AutoShardedClient` to denote when a particular shard ID has become ready."
+msgstr "Similar to :func:`on_ready` except used by :class:`AutoShardedClient` to denote when a particular shard ID has become ready."
+
+msgid "The shard ID that is ready."
+msgstr "The shard ID that is ready."
+
+msgid "Called when the client has resumed a session."
+msgstr "Called when the client has resumed a session."
+
+msgid "Similar to :func:`on_resumed` except used by :class:`AutoShardedClient` to denote when a particular shard ID has resumed a session."
+msgstr "Similar to :func:`on_resumed` except used by :class:`AutoShardedClient` to denote when a particular shard ID has resumed a session."
+
+msgid "The shard ID that has resumed."
+msgstr "The shard ID that has resumed."
+
+msgid "Called whenever a WebSocket event is received from the WebSocket."
+msgstr "Called whenever a WebSocket event is received from the WebSocket."
+
+msgid "This is mainly useful for logging how many events you are receiving from the Discord gateway."
+msgstr "This is mainly useful for logging how many events you are receiving from the Discord gateway."
+
+msgid "The event type from Discord that is received, e.g. ``'READY'``."
+msgstr "The event type from Discord that is received, e.g. ``'READY'``."
+
+msgid "Called whenever a message is completely received from the WebSocket, before it's processed and parsed. This event is always dispatched when a complete message is received and the passed data is not parsed in any way."
+msgstr "Called whenever a message is completely received from the WebSocket, before it's processed and parsed. This event is always dispatched when a complete message is received and the passed data is not parsed in any way."
+
+msgid "This is only really useful for grabbing the WebSocket stream and debugging purposes."
+msgstr "This is only really useful for grabbing the WebSocket stream and debugging purposes."
+
+msgid "This requires setting the ``enable_debug_events`` setting in the :class:`Client`."
+msgstr "This requires setting the ``enable_debug_events`` setting in the :class:`Client`."
+
+msgid "This is only for the messages received from the client WebSocket. The voice WebSocket will not trigger this event."
+msgstr "This is only for the messages received from the client WebSocket. The voice WebSocket will not trigger this event."
+
+msgid "The message passed in from the WebSocket library."
+msgstr "The message passed in from the WebSocket library."
+
+msgid "Called whenever a send operation is done on the WebSocket before the message is sent. The passed parameter is the message that is being sent to the WebSocket."
+msgstr "Called whenever a send operation is done on the WebSocket before the message is sent. The passed parameter is the message that is being sent to the WebSocket."
+
+msgid "This is only for the messages sent from the client WebSocket. The voice WebSocket will not trigger this event."
+msgstr "This is only for the messages sent from the client WebSocket. The voice WebSocket will not trigger this event."
+
+msgid "The message that is about to be passed on to the WebSocket library. It can be :class:`bytes` to denote a binary message or :class:`str` to denote a regular text message."
+msgstr "The message that is about to be passed on to the WebSocket library. It can be :class:`bytes` to denote a binary message or :class:`str` to denote a regular text message."
+
+msgid "Entitlements"
+msgstr "Entitlements"
+
+msgid "Called when a user subscribes to an SKU."
+msgstr "Called when a user subscribes to an SKU."
+
+msgid "The entitlement that was created as a result of the subscription."
+msgstr "The entitlement that was created as a result of the subscription."
+
+msgid "Called when a user's subscription to an Entitlement is renewed for the next billing period."
+msgstr "Called when a user's subscription to an Entitlement is renewed for the next billing period."
+
+msgid "The entitlement that was updated."
+msgstr "The entitlement that was updated."
+
+msgid "Called when a user's entitlement is deleted."
+msgstr "Called when a user's entitlement is deleted."
+
+msgid "Entitlements are usually only deleted when Discord issues a refund for a subscription, or manually removes an entitlement from a user."
+msgstr "Entitlements are usually only deleted when Discord issues a refund for a subscription, or manually removes an entitlement from a user."
+
+msgid "This is not called when a user's subscription is cancelled."
+msgstr "This is not called when a user's subscription is cancelled."
+
+msgid "The entitlement that was deleted."
+msgstr "The entitlement that was deleted."
+
+msgid "Guilds"
+msgstr "Guilds"
+
+msgid "Called when a :class:`Guild` is either created by the :class:`Client` or when the :class:`Client` joins a guild."
+msgstr "Called when a :class:`Guild` is either created by the :class:`Client` or when the :class:`Client` joins a guild."
+
+msgid "The guild that was joined."
+msgstr "The guild that was joined."
+
+msgid "Called when a :class:`Guild` is removed from the :class:`Client`."
+msgstr "Called when a :class:`Guild` is removed from the :class:`Client`."
+
+msgid "This happens through, but not limited to, these circumstances:"
+msgstr "This happens through, but not limited to, these circumstances:"
+
+msgid "The client got banned."
+msgstr "The client got banned."
+
+msgid "The client got kicked."
+msgstr "The client got kicked."
+
+msgid "The client left the guild."
+msgstr "The client left the guild."
+
+msgid "The client or the guild owner deleted the guild."
+msgstr "The client or the guild owner deleted the guild."
+
+msgid "In order for this event to be invoked then the :class:`Client` must have been part of the guild to begin with. (i.e. it is part of :attr:`Client.guilds`)"
+msgstr "In order for this event to be invoked then the :class:`Client` must have been part of the guild to begin with. (i.e. it is part of :attr:`Client.guilds`)"
+
+msgid "The guild that got removed."
+msgstr "The guild that got removed."
+
+msgid "Called when a :class:`Guild` is updated, for example:"
+msgstr "Called when a :class:`Guild` is updated, for example:"
+
+msgid "Changed name"
+msgstr "Changed name"
+
+msgid "Changed AFK channel"
+msgstr "Changed AFK channel"
+
+msgid "Changed AFK timeout"
+msgstr "Changed AFK timeout"
+
+msgid "etc."
+msgstr "etc."
+
+msgid "The guild prior to being updated."
+msgstr "The guild prior to being updated."
+
+msgid "The guild after being updated."
+msgstr "The guild after being updated."
+
+msgid "Called when a :class:`Guild` creates or deletes a :class:`Role`."
+msgstr "Called when a :class:`Guild` creates or deletes a :class:`Role`."
+
+msgid "To get the guild it belongs to, use :attr:`Role.guild`."
+msgstr "To get the guild it belongs to, use :attr:`Role.guild`."
+
+msgid "The role that was created or deleted."
+msgstr "The role that was created or deleted."
+
+msgid "Called when a :class:`Role` is changed guild-wide."
+msgstr "Called when a :class:`Role` is changed guild-wide."
+
+msgid "The updated role's old info."
+msgstr "The updated role's old info."
+
+msgid "The updated role's updated info."
+msgstr "The updated role's updated info."
+
+msgid "Called when a :class:`Guild` adds or removes an :class:`Emoji`."
+msgstr "Called when a :class:`Guild` adds or removes an :class:`Emoji`."
+
+msgid "This requires :attr:`Intents.emojis_and_stickers` to be enabled."
+msgstr "This requires :attr:`Intents.emojis_and_stickers` to be enabled."
+
+msgid "The guild who got their emojis updated."
+msgstr "The guild who got their emojis updated."
+
+msgid "A list of emojis before the update."
+msgstr "A list of emojis before the update."
+
+msgid "A list of emojis after the update."
+msgstr "A list of emojis after the update."
+
+msgid "Called when a :class:`Guild` adds or removes a sticker."
+msgstr "Called when a :class:`Guild` adds or removes a sticker."
+
+msgid "The guild who got their stickers updated."
+msgstr "The guild who got their stickers updated."
+
+msgid "A list of stickers before the update."
+msgstr "A list of stickers before the update."
+
+msgid "A list of stickers after the update."
+msgstr "A list of stickers after the update."
+
+msgid "Called when a guild becomes available or unavailable. The guild must have existed in the :attr:`Client.guilds` cache."
+msgstr "Called when a guild becomes available or unavailable. The guild must have existed in the :attr:`Client.guilds` cache."
+
+msgid "The guild that has changed availability."
+msgstr "The guild that has changed availability."
+
+msgid "Called whenever a webhook is created, modified, or removed from a guild channel."
+msgstr "Called whenever a webhook is created, modified, or removed from a guild channel."
+
+msgid "This requires :attr:`Intents.webhooks` to be enabled."
+msgstr "This requires :attr:`Intents.webhooks` to be enabled."
+
+msgid "The channel that had its webhooks updated."
+msgstr "The channel that had its webhooks updated."
+
+msgid "Integrations"
+msgstr "Integrations"
+
+msgid "Called whenever an integration is created, modified, or removed from a guild."
+msgstr "Called whenever an integration is created, modified, or removed from a guild."
+
+msgid "This requires :attr:`Intents.integrations` to be enabled."
+msgstr "This requires :attr:`Intents.integrations` to be enabled."
+
+msgid "The guild that had its integrations updated."
+msgstr "The guild that had its integrations updated."
+
+msgid "Called when an integration is created."
+msgstr "Called when an integration is created."
+
+msgid "The integration that was created."
+msgstr "The integration that was created."
+
+msgid "Called when an integration is updated."
+msgstr "Called when an integration is updated."
+
+msgid "Called when an integration is deleted."
+msgstr "Called when an integration is deleted."
+
+msgid "Interactions"
+msgstr "Interactions"
+
+msgid "Called when an interaction happened."
+msgstr "Called when an interaction happened."
+
+msgid "This currently happens due to application command invocations or components being used."
+msgstr "This currently happens due to application command invocations or components being used."
+
+msgid "This is a low level function that is not generally meant to be used. If you are working with components, consider using the callbacks associated with the :class:`~discord.ui.View` instead as it provides a nicer user experience."
+msgstr "This is a low level function that is not generally meant to be used. If you are working with components, consider using the callbacks associated with the :class:`~discord.ui.View` instead as it provides a nicer user experience."
+
+msgid "The interaction data."
+msgstr "The interaction data."
+
+msgid "Invites"
+msgstr "Invites"
+
+msgid "Called when an :class:`Invite` is created. You must have the :attr:`~Permissions.manage_channels` permission to receive this."
+msgstr "Called when an :class:`Invite` is created. You must have the :attr:`~Permissions.manage_channels` permission to receive this."
+
+msgid "There is a rare possibility that the :attr:`Invite.guild` and :attr:`Invite.channel` attributes will be of :class:`Object` rather than the respective models."
+msgstr "There is a rare possibility that the :attr:`Invite.guild` and :attr:`Invite.channel` attributes will be of :class:`Object` rather than the respective models."
+
+msgid "This requires :attr:`Intents.invites` to be enabled."
+msgstr "This requires :attr:`Intents.invites` to be enabled."
+
+msgid "The invite that was created."
+msgstr "The invite that was created."
+
+msgid "Called when an :class:`Invite` is deleted. You must have the :attr:`~Permissions.manage_channels` permission to receive this."
+msgstr "Called when an :class:`Invite` is deleted. You must have the :attr:`~Permissions.manage_channels` permission to receive this."
+
+msgid "Outside of those two attributes, the only other attribute guaranteed to be filled by the Discord gateway for this event is :attr:`Invite.code`."
+msgstr "Outside of those two attributes, the only other attribute guaranteed to be filled by the Discord gateway for this event is :attr:`Invite.code`."
+
+msgid "The invite that was deleted."
+msgstr "The invite that was deleted."
+
+msgid "Members/Users"
+msgstr "Members/Users"
+
+msgid "Called when a :class:`Member` joins a :class:`Guild`."
+msgstr "Called when a :class:`Member` joins a :class:`Guild`."
+
+msgid "This requires :attr:`Intents.members` to be enabled."
+msgstr "This requires :attr:`Intents.members` to be enabled."
+
+msgid "The member who joined."
+msgstr "The member who joined."
+
+msgid "Called when a :class:`Member` leaves a :class:`Guild`."
+msgstr "Called when a :class:`Member` leaves a :class:`Guild`."
+
+msgid "If the guild or member could not be found in the internal cache, this event will not be called. Alternatively, :func:`on_raw_member_remove` is called regardless of the internal cache."
+msgstr "If the guild or member could not be found in the internal cache, this event will not be called. Alternatively, :func:`on_raw_member_remove` is called regardless of the internal cache."
+
+msgid "The member who left."
+msgstr "The member who left."
+
+msgid "Called when a :class:`Member` leaves a :class:`Guild`. Unlike :func:`on_member_remove`, this is called regardless of the state of the internal member cache."
+msgstr "Called when a :class:`Member` leaves a :class:`Guild`. Unlike :func:`on_member_remove`, this is called regardless of the state of the internal member cache."
+
+msgid "Called when a :class:`Member` updates their profile."
+msgstr "Called when a :class:`Member` updates their profile."
+
+msgid "This is called when one or more of the following things change:"
+msgstr "This is called when one or more of the following things change:"
+
+msgid "nickname"
+msgstr "nickname"
+
+msgid "roles"
+msgstr "roles"
+
+msgid "pending"
+msgstr "pending"
+
+msgid "communication_disabled_until"
+msgstr "communication_disabled_until"
+
+msgid "timed_out"
+msgstr "timed_out"
+
+msgid "The updated member's old info."
+msgstr "The updated member's old info."
+
+msgid "The updated member's updated info."
+msgstr "The updated member's updated info."
+
+msgid "Called when a :class:`Member` updates their presence."
+msgstr "Called when a :class:`Member` updates their presence."
+
+msgid "status"
+msgstr "status"
+
+msgid "activity"
+msgstr "activity"
+
+msgid "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
+msgstr "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
+
+msgid "Called when a :class:`Member` changes their :class:`VoiceState`."
+msgstr "Called when a :class:`Member` changes their :class:`VoiceState`."
+
+msgid "The following, but not limited to, examples illustrate when this event is called:"
+msgstr "The following, but not limited to, examples illustrate when this event is called:"
+
+msgid "A member joins a voice or stage channel."
+msgstr "A member joins a voice or stage channel."
+
+msgid "A member leaves a voice or stage channel."
+msgstr "A member leaves a voice or stage channel."
+
+msgid "A member is muted or deafened by their own accord."
+msgstr "A member is muted or deafened by their own accord."
+
+msgid "A member is muted or deafened by a guild administrator."
+msgstr "A member is muted or deafened by a guild administrator."
+
+msgid "This requires :attr:`Intents.voice_states` to be enabled."
+msgstr "This requires :attr:`Intents.voice_states` to be enabled."
+
+msgid "The member whose voice states changed."
+msgstr "The member whose voice states changed."
+
+msgid "The voice state prior to the changes."
+msgstr "The voice state prior to the changes."
+
+msgid "The voice state after the changes."
+msgstr "The voice state after the changes."
+
+msgid "Called when a :class:`User` updates their profile."
+msgstr "Called when a :class:`User` updates their profile."
+
+msgid "avatar"
+msgstr "avatar"
+
+msgid "username"
+msgstr "username"
+
+msgid "discriminator"
+msgstr "discriminator"
+
+msgid "global_name"
+msgstr "global_name"
+
+msgid "The updated user's old info."
+msgstr "The updated user's old info."
+
+msgid "The updated user's updated info."
+msgstr "The updated user's updated info."
+
+msgid "Messages"
+msgstr "Messages"
+
+msgid "Called when a :class:`Message` is created and sent."
+msgstr "Called when a :class:`Message` is created and sent."
+
+msgid "Your bot's own messages and private messages are sent through this event. This can lead cases of 'recursion' depending on how your bot was programmed. If you want the bot to not reply to itself, consider checking the user IDs. Note that :class:`~ext.commands.Bot` does not have this problem."
+msgstr "Your bot's own messages and private messages are sent through this event. This can lead cases of 'recursion' depending on how your bot was programmed. If you want the bot to not reply to itself, consider checking the user IDs. Note that :class:`~ext.commands.Bot` does not have this problem."
+
+msgid "The current message."
+msgstr "The current message."
+
+msgid "Called when a message is deleted. If the message is not found in the internal message cache, then this event will not be called. Messages might not be in cache if the message is too old or the client is participating in high traffic guilds."
+msgstr "Called when a message is deleted. If the message is not found in the internal message cache, then this event will not be called. Messages might not be in cache if the message is too old or the client is participating in high traffic guilds."
+
+msgid "If this occurs increase the :class:`max_messages <Client>` parameter or use the :func:`on_raw_message_delete` event instead."
+msgstr "If this occurs increase the :class:`max_messages <Client>` parameter or use the :func:`on_raw_message_delete` event instead."
+
+msgid "The deleted message."
+msgstr "The deleted message."
+
+msgid "Called when messages are bulk deleted. If none of the messages deleted are found in the internal message cache, then this event will not be called. If individual messages were not found in the internal message cache, this event will still be called, but the messages not found will not be included in the messages list. Messages might not be in cache if the message is too old or the client is participating in high traffic guilds."
+msgstr "Called when messages are bulk deleted. If none of the messages deleted are found in the internal message cache, then this event will not be called. If individual messages were not found in the internal message cache, this event will still be called, but the messages not found will not be included in the messages list. Messages might not be in cache if the message is too old or the client is participating in high traffic guilds."
+
+msgid "If this occurs increase the :class:`max_messages <Client>` parameter or use the :func:`on_raw_bulk_message_delete` event instead."
+msgstr "If this occurs increase the :class:`max_messages <Client>` parameter or use the :func:`on_raw_bulk_message_delete` event instead."
+
+msgid "The messages that have been deleted."
+msgstr "The messages that have been deleted."
+
+msgid "Called when a message is deleted. Unlike :func:`on_message_delete`, this is called regardless of the message being in the internal message cache or not."
+msgstr "Called when a message is deleted. Unlike :func:`on_message_delete`, this is called regardless of the message being in the internal message cache or not."
+
+msgid "If the message is found in the message cache, it can be accessed via :attr:`RawMessageDeleteEvent.cached_message`"
+msgstr "If the message is found in the message cache, it can be accessed via :attr:`RawMessageDeleteEvent.cached_message`"
+
+msgid "Called when a bulk delete is triggered. Unlike :func:`on_bulk_message_delete`, this is called regardless of the messages being in the internal message cache or not."
+msgstr "Called when a bulk delete is triggered. Unlike :func:`on_bulk_message_delete`, this is called regardless of the messages being in the internal message cache or not."
+
+msgid "If the messages are found in the message cache, they can be accessed via :attr:`RawBulkMessageDeleteEvent.cached_messages`"
+msgstr "If the messages are found in the message cache, they can be accessed via :attr:`RawBulkMessageDeleteEvent.cached_messages`"
+
+msgid "Called when a :class:`Message` receives an update event. If the message is not found in the internal message cache, then these events will not be called. Messages might not be in cache if the message is too old or the client is participating in high traffic guilds."
+msgstr "Called when a :class:`Message` receives an update event. If the message is not found in the internal message cache, then these events will not be called. Messages might not be in cache if the message is too old or the client is participating in high traffic guilds."
+
+msgid "If this occurs increase the :class:`max_messages <Client>` parameter or use the :func:`on_raw_message_edit` event instead."
+msgstr "If this occurs increase the :class:`max_messages <Client>` parameter or use the :func:`on_raw_message_edit` event instead."
+
+msgid "The following non-exhaustive cases trigger this event:"
+msgstr "The following non-exhaustive cases trigger this event:"
+
+msgid "A message has been pinned or unpinned."
+msgstr "A message has been pinned or unpinned."
+
+msgid "The message content has been changed."
+msgstr "The message content has been changed."
+
+msgid "The message has received an embed."
+msgstr "The message has received an embed."
+
+msgid "For performance reasons, the embed server does not do this in a \"consistent\" manner."
+msgstr "For performance reasons, the embed server does not do this in a \"consistent\" manner."
+
+msgid "The message's embeds were suppressed or unsuppressed."
+msgstr "The message's embeds were suppressed or unsuppressed."
+
+msgid "A call message has received an update to its participants or ending time."
+msgstr "A call message has received an update to its participants or ending time."
+
+msgid "A poll has ended and the results have been finalized."
+msgstr "A poll has ended and the results have been finalized."
+
+msgid "The previous version of the message."
+msgstr "The previous version of the message."
+
+msgid "The current version of the message."
+msgstr "The current version of the message."
+
+msgid "Called when a message is edited. Unlike :func:`on_message_edit`, this is called regardless of the state of the internal message cache."
+msgstr "Called when a message is edited. Unlike :func:`on_message_edit`, this is called regardless of the state of the internal message cache."
+
+msgid "If the message is found in the message cache, it can be accessed via :attr:`RawMessageUpdateEvent.cached_message`. The cached message represents the message before it has been edited. For example, if the content of a message is modified and triggers the :func:`on_raw_message_edit` coroutine, the :attr:`RawMessageUpdateEvent.cached_message` will return a :class:`Message` object that represents the message before the content was modified."
+msgstr "If the message is found in the message cache, it can be accessed via :attr:`RawMessageUpdateEvent.cached_message`. The cached message represents the message before it has been edited. For example, if the content of a message is modified and triggers the :func:`on_raw_message_edit` coroutine, the :attr:`RawMessageUpdateEvent.cached_message` will return a :class:`Message` object that represents the message before the content was modified."
+
+msgid "Due to the inherently raw nature of this event, the data parameter coincides with the raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway#message-update>`_."
+msgstr "Due to the inherently raw nature of this event, the data parameter coincides with the raw data given by the `gateway <https://discord.com/developers/docs/topics/gateway#message-update>`_."
+
+msgid "Since the data payload can be partial, care must be taken when accessing stuff in the dictionary. One example of a common case of partial data is when the ``'content'`` key is inaccessible. This denotes an \"embed\" only edit, which is an edit in which only the embeds are updated by the Discord embed server."
+msgstr "Since the data payload can be partial, care must be taken when accessing stuff in the dictionary. One example of a common case of partial data is when the ``'content'`` key is inaccessible. This denotes an \"embed\" only edit, which is an edit in which only the embeds are updated by the Discord embed server."
+
+msgid "Polls"
+msgstr "Polls"
+
+msgid "Called when a vote is cast on a poll. If multiple answers were selected, this fires multiple times. if the poll was not found in the internal poll cache, then this event will not be called. Consider using :func:`on_raw_poll_vote_add` instead."
+msgstr "Called when a vote is cast on a poll. If multiple answers were selected, this fires multiple times. if the poll was not found in the internal poll cache, then this event will not be called. Consider using :func:`on_raw_poll_vote_add` instead."
+
+msgid "This requires :attr:`Intents.polls` to be enabled."
+msgstr "This requires :attr:`Intents.polls` to be enabled."
+
+msgid "The current state of the poll."
+msgstr "The current state of the poll."
+
+msgid "The user who added the vote."
+msgstr "The user who added the vote."
+
+msgid "The answer that was voted."
+msgstr "The answer that was voted."
+
+msgid "Called when a vote is cast on a poll. Unlike :func:`on_poll_vote_add`, this is called regardless of the state of the internal poll cache."
+msgstr "Called when a vote is cast on a poll. Unlike :func:`on_poll_vote_add`, this is called regardless of the state of the internal poll cache."
+
+msgid "Called when a vote is removed from a poll. If multiple answers were removed, this fires multiple times. if the poll is not found in the internal poll cache, then this event will not be called. Consider using :func:`on_raw_poll_vote_remove` instead."
+msgstr "Called when a vote is removed from a poll. If multiple answers were removed, this fires multiple times. if the poll is not found in the internal poll cache, then this event will not be called. Consider using :func:`on_raw_poll_vote_remove` instead."
+
+msgid "The user who removed the vote."
+msgstr "The user who removed the vote."
+
+msgid "Called when a vote is removed from a poll. Unlike :func:`on_poll_vote_remove`, this is called regardless of the state of the internal message cache."
+msgstr "Called when a vote is removed from a poll. Unlike :func:`on_poll_vote_remove`, this is called regardless of the state of the internal message cache."
+
+msgid "Reactions"
+msgstr "Reactions"
+
+msgid "Called when a message has a reaction added to it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_add` instead."
+msgstr "Called when a message has a reaction added to it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_add` instead."
+
+msgid "To get the :class:`Message` being reacted, access it via :attr:`Reaction.message`."
+msgstr "To get the :class:`Message` being reacted, access it via :attr:`Reaction.message`."
+
+msgid "This requires :attr:`Intents.reactions` to be enabled."
+msgstr "This requires :attr:`Intents.reactions` to be enabled."
+
+msgid "This doesn't require :attr:`Intents.members` within a guild context, but due to Discord not providing updated user information in a direct message it's required for direct messages to receive this event. Consider using :func:`on_raw_reaction_add` if you need this and do not otherwise want to enable the members intent."
+msgstr "This doesn't require :attr:`Intents.members` within a guild context, but due to Discord not providing updated user information in a direct message it's required for direct messages to receive this event. Consider using :func:`on_raw_reaction_add` if you need this and do not otherwise want to enable the members intent."
+
+msgid "The current state of the reaction."
+msgstr "The current state of the reaction."
+
+msgid "The user who added the reaction."
+msgstr "The user who added the reaction."
+
+msgid "Called when a message has a reaction added. Unlike :func:`on_reaction_add`, this is called regardless of the state of the internal message cache."
+msgstr "Called when a message has a reaction added. Unlike :func:`on_reaction_add`, this is called regardless of the state of the internal message cache."
+
+msgid "Called when a message has a reaction removed from it. Similar to on_message_edit, if the message is not found in the internal message cache, then this event will not be called."
+msgstr "Called when a message has a reaction removed from it. Similar to on_message_edit, if the message is not found in the internal message cache, then this event will not be called."
+
+msgid "To get the message being reacted, access it via :attr:`Reaction.message`."
+msgstr "To get the message being reacted, access it via :attr:`Reaction.message`."
+
+msgid "This requires both :attr:`Intents.reactions` and :attr:`Intents.members` to be enabled."
+msgstr "This requires both :attr:`Intents.reactions` and :attr:`Intents.members` to be enabled."
+
+msgid "Consider using :func:`on_raw_reaction_remove` if you need this and do not want to enable the members intent."
+msgstr "Consider using :func:`on_raw_reaction_remove` if you need this and do not want to enable the members intent."
+
+msgid "Called when a message has a reaction removed. Unlike :func:`on_reaction_remove`, this is called regardless of the state of the internal message cache."
+msgstr "Called when a message has a reaction removed. Unlike :func:`on_reaction_remove`, this is called regardless of the state of the internal message cache."
+
+msgid "Called when a message has all its reactions removed from it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_clear` instead."
+msgstr "Called when a message has all its reactions removed from it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_clear` instead."
+
+msgid "The message that had its reactions cleared."
+msgstr "The message that had its reactions cleared."
+
+msgid "The reactions that were removed."
+msgstr "The reactions that were removed."
+
+msgid "Called when a message has all its reactions removed. Unlike :func:`on_reaction_clear`, this is called regardless of the state of the internal message cache."
+msgstr "Called when a message has all its reactions removed. Unlike :func:`on_reaction_clear`, this is called regardless of the state of the internal message cache."
+
+msgid "Called when a message has a specific reaction removed from it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_clear_emoji` instead."
+msgstr "Called when a message has a specific reaction removed from it. Similar to :func:`on_message_edit`, if the message is not found in the internal message cache, then this event will not be called. Consider using :func:`on_raw_reaction_clear_emoji` instead."
+
+msgid "The reaction that got cleared."
+msgstr "The reaction that got cleared."
+
+msgid "Called when a message has a specific reaction removed from it. Unlike :func:`on_reaction_clear_emoji` this is called regardless of the state of the internal message cache."
+msgstr "Called when a message has a specific reaction removed from it. Unlike :func:`on_reaction_clear_emoji` this is called regardless of the state of the internal message cache."
+
+msgid "Scheduled Events"
+msgstr "Scheduled Events"
+
+msgid "Called when an :class:`ScheduledEvent` is created."
+msgstr "Called when an :class:`ScheduledEvent` is created."
+
+msgid "This requires :attr:`Intents.scheduled_events` to be enabled."
+msgstr "This requires :attr:`Intents.scheduled_events` to be enabled."
+
+msgid "The newly created scheduled event."
+msgstr "The newly created scheduled event."
+
+msgid "Called when a scheduled event is updated."
+msgstr "Called when a scheduled event is updated."
+
+msgid "The old scheduled event."
+msgstr "The old scheduled event."
+
+msgid "The updated scheduled event."
+msgstr "The updated scheduled event."
+
+msgid "Called when a scheduled event is deleted."
+msgstr "Called when a scheduled event is deleted."
+
+msgid "The deleted scheduled event."
+msgstr "The deleted scheduled event."
+
+msgid "Called when a user subscribes to an event. If the member or event is not found in the internal cache, then this event will not be called. Consider using :func:`on_raw_scheduled_event_user_add` instead."
+msgstr "Called when a user subscribes to an event. If the member or event is not found in the internal cache, then this event will not be called. Consider using :func:`on_raw_scheduled_event_user_add` instead."
+
+msgid "The scheduled event subscribed to."
+msgstr "The scheduled event subscribed to."
+
+msgid "The member who subscribed."
+msgstr "The member who subscribed."
+
+msgid "Called when a user subscribes to an event. Unlike :meth:`on_scheduled_event_user_add`, this will be called regardless of the state of the internal cache."
+msgstr "Called when a user subscribes to an event. Unlike :meth:`on_scheduled_event_user_add`, this will be called regardless of the state of the internal cache."
+
+msgid "Called when a user unsubscribes to an event. If the member or event is not found in the internal cache, then this event will not be called. Consider using :func:`on_raw_scheduled_event_user_remove` instead."
+msgstr "Called when a user unsubscribes to an event. If the member or event is not found in the internal cache, then this event will not be called. Consider using :func:`on_raw_scheduled_event_user_remove` instead."
+
+msgid "The scheduled event unsubscribed from."
+msgstr "The scheduled event unsubscribed from."
+
+msgid "The member who unsubscribed."
+msgstr "The member who unsubscribed."
+
+msgid "Called when a user unsubscribes to an event. Unlike :meth:`on_scheduled_event_user_remove`, this will be called regardless of the state of the internal cache."
+msgstr "Called when a user unsubscribes to an event. Unlike :meth:`on_scheduled_event_user_remove`, this will be called regardless of the state of the internal cache."
+
+msgid "Stage Instances"
+msgstr "Stage Instances"
+
+msgid "Called when a :class:`StageInstance` is created or deleted for a :class:`StageChannel`."
+msgstr "Called when a :class:`StageInstance` is created or deleted for a :class:`StageChannel`."
+
+msgid "The stage instance that was created or deleted."
+msgstr "The stage instance that was created or deleted."
+
+msgid "Called when a :class:`StageInstance` is updated."
+msgstr "Called when a :class:`StageInstance` is updated."
+
+msgid "The topic is changed."
+msgstr "The topic is changed."
+
+msgid "The privacy level is changed."
+msgstr "The privacy level is changed."
+
+msgid "The stage instance before the update."
+msgstr "The stage instance before the update."
+
+msgid "The stage instance after the update."
+msgstr "The stage instance after the update."
+
+msgid "Threads"
+msgstr "Threads"
+
+msgid "Called whenever a thread is joined."
+msgstr "Called whenever a thread is joined."
+
+msgid "Note that you can get the guild from :attr:`Thread.guild`."
+msgstr "Note that you can get the guild from :attr:`Thread.guild`."
+
+msgid "The thread that got joined."
+msgstr "The thread that got joined."
+
+msgid "Called whenever a thread is created."
+msgstr "Called whenever a thread is created."
+
+msgid "The thread that got created."
+msgstr "The thread that got created."
+
+msgid "Called whenever a thread is removed. This is different from a thread being deleted."
+msgstr "Called whenever a thread is removed. This is different from a thread being deleted."
+
+msgid "Due to technical limitations, this event might not be called as soon as one expects. Since the library tracks thread membership locally, the API only sends updated thread membership status upon being synced by joining a thread."
+msgstr "Due to technical limitations, this event might not be called as soon as one expects. Since the library tracks thread membership locally, the API only sends updated thread membership status upon being synced by joining a thread."
+
+msgid "The thread that got removed."
+msgstr "The thread that got removed."
+
+msgid "Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`"
+msgstr "Called whenever a thread is deleted.  If the deleted thread isn't found in internal cache then this will not be called. Archived threads are not in the cache. Consider using :func:`on_raw_thread_delete`"
+
+msgid "The thread that got deleted."
+msgstr "The thread that got deleted."
+
+msgid "Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this is called regardless of the state of the internal cache."
+msgstr "Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this is called regardless of the state of the internal cache."
+
+msgid "Called when a :class:`ThreadMember` leaves or joins a :class:`Thread`."
+msgstr "Called when a :class:`ThreadMember` leaves or joins a :class:`Thread`."
+
+msgid "You can get the thread a member belongs in by accessing :attr:`ThreadMember.thread`."
+msgstr "You can get the thread a member belongs in by accessing :attr:`ThreadMember.thread`."
+
+msgid "The member who joined or left."
+msgstr "The member who joined or left."
+
+msgid "Called when a :class:`ThreadMember` leaves a :class:`Thread`. Unlike :func:`on_thread_member_remove` this is called regardless of the member being in the thread's internal cache of members or not."
+msgstr "Called when a :class:`ThreadMember` leaves a :class:`Thread`. Unlike :func:`on_thread_member_remove` this is called regardless of the member being in the thread's internal cache of members or not."
+
+msgid "Called whenever a thread is updated."
+msgstr "Called whenever a thread is updated."
+
+msgid "If the thread could not be found in the internal cache, this event will not be called. Threads will not be in the cache if they are archived. Alternatively, :func:`on_raw_thread_update` is called regardless of the internal cache."
+msgstr "If the thread could not be found in the internal cache, this event will not be called. Threads will not be in the cache if they are archived. Alternatively, :func:`on_raw_thread_update` is called regardless of the internal cache."
+
+msgid "The updated thread's old info."
+msgstr "The updated thread's old info."
+
+msgid "The updated thread's new info."
+msgstr "The updated thread's new info."
+
+msgid "Unlike :func:`on_thread_update` this is called regardless of if the thread is in the internal thread cache or not."
+msgstr "Unlike :func:`on_thread_update` this is called regardless of if the thread is in the internal thread cache or not."
+
+msgid "Typing"
+msgstr "Typing"
+
+msgid "Called when someone begins typing a message."
+msgstr "Called when someone begins typing a message."
+
+msgid "The ``channel`` parameter can be a :class:`abc.Messageable` instance. Which could either be :class:`TextChannel`, :class:`GroupChannel`, or :class:`DMChannel`."
+msgstr "The ``channel`` parameter can be a :class:`abc.Messageable` instance. Which could either be :class:`TextChannel`, :class:`GroupChannel`, or :class:`DMChannel`."
+
+msgid "If the ``channel`` is a :class:`TextChannel` then the ``user`` parameter is a :class:`Member`, otherwise it is a :class:`User`."
+msgstr "If the ``channel`` is a :class:`TextChannel` then the ``user`` parameter is a :class:`Member`, otherwise it is a :class:`User`."
+
+msgid "This requires :attr:`Intents.typing` to be enabled."
+msgstr "This requires :attr:`Intents.typing` to be enabled."
+
+msgid "The location where the typing originated from."
+msgstr "The location where the typing originated from."
+
+msgid "The user that started typing."
+msgstr "The user that started typing."
+
+msgid "When the typing started as an aware datetime in UTC."
+msgstr "When the typing started as an aware datetime in UTC."
+
+msgid "Called when someone begins typing a message. Unlike :func:`on_typing`, this is called regardless if the user can be found in the bot's cache or not."
+msgstr "Called when someone begins typing a message. Unlike :func:`on_typing`, this is called regardless if the user can be found in the bot's cache or not."
+
+msgid "If the typing event is occurring in a guild, the member that started typing can be accessed via :attr:`RawTypingEvent.member`"
+msgstr "If the typing event is occurring in a guild, the member that started typing can be accessed via :attr:`RawTypingEvent.member`"
+
+msgid "The raw typing payload."
+msgstr "The raw typing payload."
+
+msgid "Voice Channel Status Update"
+msgstr "Voice Channel Status Update"
+
+msgid "Called when someone updates a voice channel status."
+msgstr "Called when someone updates a voice channel status."
+
+msgid "The channel where the voice channel status update originated from."
+msgstr "The channel where the voice channel status update originated from."
+
+msgid "The old voice channel status."
+msgstr "The old voice channel status."
+
+msgid "The new voice channel status."
+msgstr "The new voice channel status."
+
+msgid "Called when someone updates a voice channels status."
+msgstr "Called when someone updates a voice channels status."
+
+msgid "The raw voice channel status update payload."
+msgstr "The raw voice channel status update payload."
+
