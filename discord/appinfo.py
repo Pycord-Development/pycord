@@ -73,13 +73,6 @@ class AppInfo:
         grant flow to join.
     rpc_origins: Optional[List[:class:`str`]]
         A list of RPC origin URLs, if RPC is enabled.
-    summary: :class:`str`
-        If this application is a game sold on Discord,
-        this field will be the summary field for the store page of its primary SKU.
-
-        .. versionadded:: 1.3
-
-        .. deprecated:: 2.7
 
     verify_key: :class:`str`
         The hex encoded key for verification in interactions and the
@@ -169,7 +162,7 @@ class AppInfo:
         "bot_require_code_grant",
         "owner",
         "_icon",
-        "summary",
+        "_summary",
         "verify_key",
         "team",
         "guild_id",
@@ -204,7 +197,7 @@ class AppInfo:
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
 
-        self.summary: str = data["summary"]
+        self._summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
 
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
@@ -267,6 +260,23 @@ class AppInfo:
         .. versionadded:: 1.3
         """
         return self._state._get_guild(self.guild_id)
+    
+    @property
+    def summary(self) -> str | None:
+        """summary: :class:`str`
+        If this application is a game sold on Discord,
+        this field will be the summary field for the store page of its primary SKU.
+
+        It currently returns an empty string.
+
+        .. versionadded:: 1.3
+
+        .. deprecated:: 2.7"""
+        utils.warn_deprecated(
+            "summary", 
+            reference="https://discord.com/developers/docs/resources/application#application-object-application-structure"
+        );
+        return self._summary;
 
 
 class PartialAppInfo:
