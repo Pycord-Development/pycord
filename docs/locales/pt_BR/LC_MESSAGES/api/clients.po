@@ -18,7 +18,7 @@ msgid "Bots"
 msgstr "Bots"
 
 msgid "Represents a discord bot."
-msgstr "Represents a discord bot."
+msgstr "Representa um bot do discord."
 
 msgid "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
 msgstr "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."

@@ -444,64 +444,64 @@ msgid "Specifies the region a voice server belongs to."
 msgstr "Specifies the region a voice server belongs to."
 
 msgid "The Amsterdam region."
-msgstr "The Amsterdam region."
+msgstr "阿姆斯特丹地区。"
 
 msgid "The Brazil region."
-msgstr "The Brazil region."
+msgstr "巴西地区。"
 
 msgid "The Dubai region."
-msgstr "The Dubai region."
+msgstr "迪拜地区。"
 
 msgid "The EU Central region."
-msgstr "The EU Central region."
+msgstr "欧洲中部地区。"
 
 msgid "The EU West region."
-msgstr "The EU West region."
+msgstr "欧洲中部地区。"
 
 msgid "The Europe region."
-msgstr "The Europe region."
+msgstr "欧洲地区。"
 
 msgid "The Frankfurt region."
-msgstr "The Frankfurt region."
+msgstr "法兰克福地区。"
 
 msgid "The Hong Kong region."
-msgstr "The Hong Kong region."
+msgstr "香港地区。"
 
 msgid "The India region."
-msgstr "The India region."
+msgstr "印度地区。"
 
 msgid "The Japan region."
-msgstr "The Japan region."
+msgstr "日本地区。"
 
 msgid "The London region."
-msgstr "The London region."
+msgstr "伦敦地区。"
 
 msgid "The Russia region."
-msgstr "The Russia region."
+msgstr "俄罗斯地区。"
 
 msgid "The Singapore region."
-msgstr "The Singapore region."
+msgstr "新加坡地区。"
 
 msgid "The South Africa region."
-msgstr "The South Africa region."
+msgstr "南非地区。"
 
 msgid "The South Korea region."
-msgstr "The South Korea region."
+msgstr "韩国地区。"
 
 msgid "The Sydney region."
-msgstr "The Sydney region."
+msgstr "悉尼地区。"
 
 msgid "The US Central region."
-msgstr "The US Central region."
+msgstr "美国中部地区。"
 
 msgid "The US East region."
-msgstr "The US East region."
+msgstr "美国东部地区。"
 
 msgid "The US South region."
-msgstr "The US South region."
+msgstr "美国南部地区。"
 
 msgid "The US West region."
-msgstr "The US West region."
+msgstr "美国西部地区。"
 
 msgid "The Amsterdam region for VIP guilds."
 msgstr "The Amsterdam region for VIP guilds."
@@ -1686,10 +1686,10 @@ msgid "Represents a Reaction's type."
 msgstr "Represents a Reaction's type."
 
 msgid "Represents a normal reaction."
-msgstr "Represents a normal reaction."
+msgstr "表示正常反应。"
 
 msgid "Represents a super reaction."
-msgstr "Represents a super reaction."
+msgstr "表示超级反应。"
 
 msgid "Represents an SKU's type."
 msgstr "Represents an SKU's type."

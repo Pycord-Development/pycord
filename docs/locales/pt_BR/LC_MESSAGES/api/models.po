@@ -12,154 +12,154 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Discord Models"
-msgstr "Discord Models"
+msgstr "Modelos do Discord"
 
 msgid "Models are classes that are received from Discord and are not meant to be created by the user of the library."
-msgstr "Models are classes that are received from Discord and are not meant to be created by the user of the library."
+msgstr "Modelos são classes recebidas do Discord e não devem ser criadas pelo usuário da biblioteca."
 
 msgid "The classes listed below are **not intended to be created by users** and are also **read-only**."
-msgstr "The classes listed below are **not intended to be created by users** and are also **read-only**."
+msgstr "As classes listadas abaixo **não devem ser criadas por usuários** e também são **somente para leitura**."
 
 msgid "For example, this means that you should not make your own :class:`User` instances nor should you modify the :class:`User` instance yourself."
-msgstr "For example, this means that you should not make your own :class:`User` instances nor should you modify the :class:`User` instance yourself."
+msgstr "Por exemplo, isso significa que você não deve criar suas próprias instâncias :class:`User` nem deve modificar a instância :class:`User` você mesmo(a)."
 
 msgid "If you want to get one of these model classes instances they'd have to be through the cache, and a common way of doing so is through the :func:`utils.find` function or attributes of model classes that you receive from the events specified in the :ref:`discord-api-events`."
-msgstr "If you want to get one of these model classes instances they'd have to be through the cache, and a common way of doing so is through the :func:`utils.find` function or attributes of model classes that you receive from the events specified in the :ref:`discord-api-events`."
+msgstr "Se você quiser obter uma dessas instâncias de classes de modelo, elas terão que ser obtidas por meio do cache, e uma maneira comum de fazer isso é através da função :func:`utils.find` ou dos atributos das classes de modelo que você recebe dos eventos especificados em :ref:`discord-api-events`."
 
 msgid "Nearly all classes here have :ref:`py:slots` defined which means that it is impossible to have dynamic attributes to the data classes."
-msgstr "Nearly all classes here have :ref:`py:slots` defined which means that it is impossible to have dynamic attributes to the data classes."
+msgstr "Quase todas as classes aqui têm :ref:`py:slots` definidos, o que torna impossível ter atributos dinâmicos para as classes de dados."
 
 msgid "Represents a CDN asset on Discord."
-msgstr "Represents a CDN asset on Discord."
+msgstr "Representa um ativo CDN no Discord."
 
 msgid "Returns the URL of the CDN asset."
-msgstr "Returns the URL of the CDN asset."
+msgstr "Retorna o URL do ativo CDN."
 
 msgid "Returns the length of the CDN asset's URL."
-msgstr "Returns the length of the CDN asset's URL."
+msgstr "Retorna o comprimento do URL do ativo CDN."
 
 msgid "Checks if the asset is equal to another asset."
-msgstr "Checks if the asset is equal to another asset."
+msgstr "Verifica se o ativo é igual a outro ativo."
 
 msgid "Checks if the asset is not equal to another asset."
-msgstr "Checks if the asset is not equal to another asset."
+msgstr "Verifica se o ativo não é igual a outro ativo."
 
 msgid "Returns the hash of the asset."
-msgstr "Returns the hash of the asset."
+msgstr "Retorna o hash do ativo."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parâmetros"
 
 msgid "Returns the underlying URL of the asset."
-msgstr "Returns the underlying URL of the asset."
+msgstr "Retorna o URL subjacente do ativo."
 
 msgid "Returns the identifying key of the asset."
-msgstr "Returns the identifying key of the asset."
+msgstr "Retorna a chave identificadora do ativo."
 
 msgid "Returns whether the asset is animated."
-msgstr "Returns whether the asset is animated."
+msgstr "Retorna se o ativo é animado ou não."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Tipo de retorno"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "Returns a new asset with the passed components replaced."
-msgstr "Returns a new asset with the passed components replaced."
+msgstr "Retorna um novo ativo com os componentes passados substituídos."
 
 msgid "The new size of the asset."
-msgstr "The new size of the asset."
+msgstr "O novo tamanho do ativo."
 
 msgid "The new format to change it to. Must be either 'webp', 'jpeg', 'jpg', 'png', or 'gif' if it's animated."
-msgstr "The new format to change it to. Must be either 'webp', 'jpeg', 'jpg', 'png', or 'gif' if it's animated."
+msgstr "O novo formato para alterar. Deve ser 'webp', 'jpeg', 'jpg', 'png' ou 'gif' se for animado."
 
 msgid "The new format to change it to if the asset isn't animated. Must be either 'webp', 'jpeg', 'jpg', or 'png'."
-msgstr "The new format to change it to if the asset isn't animated. Must be either 'webp', 'jpeg', 'jpg', or 'png'."
+msgstr "O novo formato para alterá-lo se o ativo não for animado. Deve ser 'webp', 'jpeg', 'jpg', ou 'png'."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retorna"
 
 msgid "The newly updated asset."
-msgstr "The newly updated asset."
+msgstr "O ativo recém-atualizado."
 
 msgid ":class:`Asset`"
 msgstr ":class:`Asset`"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Gera"
 
 msgid "An invalid size or format was passed."
-msgstr "An invalid size or format was passed."
+msgstr "Um tamanho ou formato inválido foi inserido."
 
 msgid "Returns a new asset with the specified size."
-msgstr "Returns a new asset with the specified size."
+msgstr "Retorna um novo ativo com o tamanho especificado."
 
 msgid "The new updated asset."
-msgstr "The new updated asset."
+msgstr "O novo ativo atualizado."
 
 msgid "The asset had an invalid size."
-msgstr "The asset had an invalid size."
+msgstr "O ativo tinha um tamanho inválido."
 
 msgid "Returns a new asset with the specified format."
-msgstr "Returns a new asset with the specified format."
+msgstr "Retorna um novo ativo com o formato especificado."
 
 msgid "The new format of the asset."
-msgstr "The new format of the asset."
+msgstr "O novo formato do ativo."
 
 msgid "The asset has an invalid format."
-msgstr "The asset has an invalid format."
+msgstr "O conteúdo tem um formato inválido."
 
 msgid "Returns a new asset with the specified static format."
-msgstr "Returns a new asset with the specified static format."
+msgstr "Retorna um novo ativo com o formato estático especificado."
 
 msgid "This only changes the format if the underlying asset is not animated. Otherwise, the asset is not changed."
-msgstr "This only changes the format if the underlying asset is not animated. Otherwise, the asset is not changed."
+msgstr "Isso só muda o formato se o ativo subjacente não estiver animado. Caso contrário, o arquivo não será alterado."
 
 msgid "The new static format of the asset."
-msgstr "The new static format of the asset."
+msgstr "O novo formato estático do ativo."
 
 msgid "The asset had an invalid format."
-msgstr "The asset had an invalid format."
+msgstr "O ativo tem um formato inválido."
 
 msgid "|coro|"
 msgstr "|coro|"
 
 msgid "Retrieves the content of this asset as a :class:`bytes` object."
-msgstr "Retrieves the content of this asset as a :class:`bytes` object."
+msgstr "Recupera o conteúdo deste ativo como um objeto :class:`bytes`."
 
 msgid "The content of the asset."
-msgstr "The content of the asset."
+msgstr "O conteúdo do ativo."
 
 msgid ":class:`bytes`"
 msgstr ":class:`bytes`"
 
 msgid "There was no internal connection state."
-msgstr "There was no internal connection state."
+msgstr "Não houve nenhum estado interno de conexão."
 
 msgid "Downloading the asset failed."
-msgstr "Downloading the asset failed."
+msgstr "Falha ao baixar o ativo."
 
 msgid "The asset was deleted."
-msgstr "The asset was deleted."
+msgstr "O ativo foi excluído."
 
 msgid "Saves this asset into a file-like object."
-msgstr "Saves this asset into a file-like object."
+msgstr "Salva este ativo em um objeto semelhante a um arquivo."
 
 msgid "The file-like object to save this attachment to or the filename to use. If a filename is passed then a file is created with that filename and used instead."
-msgstr "The file-like object to save this attachment to or the filename to use. If a filename is passed then a file is created with that filename and used instead."
+msgstr "O objeto tipo arquivo para salvar este anexo ou o nome do arquivo a ser usado. Se um nome de arquivo for passado, um arquivo será criado com esse nome de arquivo e usado em vez dele."
 
 msgid "Whether to seek to the beginning of the file after saving is successfully done."
-msgstr "Whether to seek to the beginning of the file after saving is successfully done."
+msgstr "Se você deve procurar no início do arquivo após salvar é feito com sucesso."
 
 msgid "The number of bytes written."
-msgstr "The number of bytes written."
+msgstr "O número de bytes escritos."
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
 
 msgid "Represents a Spotify listening activity from Discord. This is a special case of :class:`Activity` that makes it easier to work with the Spotify integration."
-msgstr "Represents a Spotify listening activity from Discord. This is a special case of :class:`Activity` that makes it easier to work with the Spotify integration."
+msgstr "Representa uma atividade de escuta do Spotify do Discord. Este é um caso especial de :class:`Activity` que torna mais fácil trabalhar com a integração do Spotify."
 
 msgid "Checks if two activities are equal."
 msgstr "Checks if two activities are equal."

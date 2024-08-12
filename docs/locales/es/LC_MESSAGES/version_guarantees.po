@@ -27,13 +27,13 @@ msgid "Examples of Breaking Changes"
 msgstr "Examples of Breaking Changes"
 
 msgid "Changing the default parameter value to something else."
-msgstr "Changing the default parameter value to something else."
+msgstr "Cambiar el valor por defecto del parámetro a otra cosa."
 
 msgid "Renaming a function without an alias to an old function."
 msgstr "Renaming a function without an alias to an old function."
 
 msgid "Adding or removing parameters to an event."
-msgstr "Adding or removing parameters to an event."
+msgstr "Añadir o remover parámetros a un evento."
 
 msgid "Examples of Non-Breaking Changes"
 msgstr "Examples of Non-Breaking Changes"
@@ -48,7 +48,7 @@ msgid "Changing the behaviour of a function to fix a bug."
 msgstr "Changing the behaviour of a function to fix a bug."
 
 msgid "Changes in the documentation."
-msgstr "Changes in the documentation."
+msgstr "Cambios en la documentación."
 
 msgid "Modifying the internal HTTP handling."
 msgstr "Modifying the internal HTTP handling."

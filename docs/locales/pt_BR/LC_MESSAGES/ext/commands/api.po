@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "API Reference"
-msgstr "API Reference"
+msgstr "Referência de API"
 
 msgid "The following section outlines the API of Pycord's prefixed command extension module."
-msgstr "The following section outlines the API of Pycord's prefixed command extension module."
+msgstr "A seção a seguir descreve a API do módulo de extensão de comando pré-fixo do Pycord."
 
 msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
 msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
@@ -27,10 +27,10 @@ msgid "Bot"
 msgstr "Bot"
 
 msgid "Represents a discord bot."
-msgstr "Represents a discord bot."
+msgstr "Representa um bot do discord."
 
 msgid "This class is a subclass of :class:`discord.Bot` and as a result anything that you can do with a :class:`discord.Bot` you can do with this bot."
-msgstr "This class is a subclass of :class:`discord.Bot` and as a result anything that you can do with a :class:`discord.Bot` you can do with this bot."
+msgstr "Essa classe é uma subclasse de :class:`discord. Bot` e como resultado, qualquer coisa que você possa fazer com um :class:`discord.Bot` você pode fazer com esse bot."
 
 msgid "This class also subclasses :class:`.GroupMixin` to provide the functionality to manage commands."
 msgstr "This class also subclasses :class:`.GroupMixin` to provide the functionality to manage commands."
@@ -54,7 +54,7 @@ msgid "Whether the commands should be case-insensitive. Defaults to ``False``. T
 msgstr "Whether the commands should be case-insensitive. Defaults to ``False``. This attribute does not carry over to groups. You must set it to every group if you require group commands to be case-insensitive as well."
 
 msgid "type"
-msgstr "type"
+msgstr "tipo"
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"
@@ -69,7 +69,7 @@ msgid "Whether to strip whitespace characters after encountering the command pre
 msgstr "Whether to strip whitespace characters after encountering the command prefix. This allows for ``!   hello`` and ``!hello`` to both work if the ``command_prefix`` is set to ``!``. Defaults to ``False``."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parâmetros"
 
 msgid "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required. This post-invoke hook takes a sole parameter, a :class:`.Context`."
 msgstr "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required. This post-invoke hook takes a sole parameter, a :class:`.Context`."
@@ -3123,7 +3123,7 @@ msgid "*Typing* indicator will go away after 10 seconds, or after a message is s
 msgstr "*Typing* indicator will go away after 10 seconds, or after a message is sent."
 
 msgid "Converters"
-msgstr "Converters"
+msgstr "Conversores"
 
 msgid "The base class of custom converters that require the :class:`.Context` to be passed to be useful."
 msgstr "The base class of custom converters that require the :class:`.Context` to be passed to be useful."

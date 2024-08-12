@@ -15,7 +15,7 @@ msgid "Cogs"
 msgstr "Cogs"
 
 msgid "The base class that all cogs must inherit from."
-msgstr "The base class that all cogs must inherit from."
+msgstr "La classe de base dont tous les cogs doivent hériter."
 
 msgid "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
 msgstr "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."

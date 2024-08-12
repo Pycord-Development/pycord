@@ -777,7 +777,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.E
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.EntitlementIterator\\``"
 
 msgid "Messages"
-msgstr "Messages"
+msgstr "消息"
 
 msgid "Represents an attachment from Discord."
 msgstr "Represents an attachment from Discord."
@@ -3510,7 +3510,7 @@ msgid ":attr:`Permissions.deafen_members`"
 msgstr ":attr:`Permissions.deafen_members`"
 
 msgid "roles"
-msgstr "roles"
+msgstr "身份组"
 
 msgid ":attr:`Permissions.manage_roles`"
 msgstr ":attr:`Permissions.manage_roles`"
@@ -4032,7 +4032,7 @@ msgid "The total number of unique role and user mentions allowed."
 msgstr "The total number of unique role and user mentions allowed."
 
 msgid "Invites"
-msgstr "Invites"
+msgstr "邀请"
 
 msgid "Represents a \"partial\" invite guild."
 msgstr "Represents a \"partial\" invite guild."
@@ -4662,7 +4662,7 @@ msgid "Edits the welcome screen."
 msgstr "Edits the welcome screen."
 
 msgid "Example"
-msgstr "Example"
+msgstr "示例"
 
 msgid "Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above."
 msgstr "Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above."
@@ -5073,7 +5073,7 @@ msgid "Returns the member's display name."
 msgstr "Returns the member's display name."
 
 msgid "Threads"
-msgstr "Threads"
+msgstr "帖子"
 
 msgid "Represents a Discord thread."
 msgstr "Represents a Discord thread."
@@ -6771,7 +6771,7 @@ msgid "If this isn't a custom emoji then an empty string is returned"
 msgstr "If this isn't a custom emoji then an empty string is returned"
 
 msgid "Channels"
-msgstr "Channels"
+msgstr "频道"
 
 msgid "Represents a Discord text channel."
 msgstr "Represents a Discord text channel."

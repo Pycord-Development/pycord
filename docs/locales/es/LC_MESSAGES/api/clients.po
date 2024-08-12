@@ -12,91 +12,91 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Client Objects"
-msgstr "Client Objects"
+msgstr "Objetos del cliente"
 
 msgid "Bots"
 msgstr "Bots"
 
 msgid "Represents a discord bot."
-msgstr "Represents a discord bot."
+msgstr "Representa un bot de discord."
 
 msgid "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
-msgstr "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
+msgstr "Esta clase es una subclase de :class:`discord.Client` y como consecuencia, todo lo que puedas hacer con un :class:`discord.Client`, también lo puedes hacer con este bot."
 
 msgid "This class also subclasses ``ApplicationCommandMixin`` to provide the functionality to manage commands."
-msgstr "This class also subclasses ``ApplicationCommandMixin`` to provide the functionality to manage commands."
+msgstr "Esta clase también tiene una subclase ``ApplicationCommandMixin`` para proporcionar la funcionalidad necesaria para administrar comandos."
 
 msgid "The content prefixed into the default help message."
-msgstr "The content prefixed into the default help message."
+msgstr "El contenido prefijado en el mensaje de ayuda por defecto."
 
 msgid "type"
-msgstr "type"
+msgstr "tipo"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The user ID that owns the bot. If this is not set and is then queried via :meth:`.is_owner` then it is fetched automatically using :meth:`~.Bot.application_info`."
-msgstr "The user ID that owns the bot. If this is not set and is then queried via :meth:`.is_owner` then it is fetched automatically using :meth:`~.Bot.application_info`."
+msgstr "El ID de usuario del dueño del bot. Si no está establecido y se hace una consulta mediante :meth:`.is_owner`, lo busca automáticamente usando :meth:`~.Bot.application_info`."
 
 msgid "Optional[:class:`int`]"
 msgstr "Optional[:class:`int`]"
 
 msgid "The user IDs that owns the bot. This is similar to :attr:`owner_id`. If this is not set and the application is team based, then it is fetched automatically using :meth:`~.Bot.application_info`. For performance reasons it is recommended to use a :class:`set` for the collection. You cannot set both ``owner_id`` and ``owner_ids``."
-msgstr "The user IDs that owns the bot. This is similar to :attr:`owner_id`. If this is not set and the application is team based, then it is fetched automatically using :meth:`~.Bot.application_info`. For performance reasons it is recommended to use a :class:`set` for the collection. You cannot set both ``owner_id`` and ``owner_ids``."
+msgstr "El ID de usuario del dueño del bot. Esto es similar a :attr:`owner_id`. Si no está establecido y la aplicación está en un equipo, lo busca automáticamente usando :meth:`~.Bot.application_info`. Por razones de rendimiento, se recomienda usar un :class:`set` para la colección. No puedes establecer ``owner_id`` y ``owner_ids`` al mismo tiempo."
 
 msgid "Optional[Collection[:class:`int`]]"
 msgstr "Optional[Collection[:class:`int`]]"
 
 msgid "Guild IDs of guilds to use for testing commands. The bot will not create any global commands if debug guild IDs are passed."
-msgstr "Guild IDs of guilds to use for testing commands. The bot will not create any global commands if debug guild IDs are passed."
+msgstr "El ID de uno de los gremios para el uso de comandos de prueba. El bot no creará ningún comando global si se pasan gremios de depuración."
 
 msgid "Optional[List[:class:`int`]]"
 msgstr "Optional[List[:class:`int`]]"
 
 msgid "Whether to automatically sync slash commands. This will call :meth:`~.Bot.sync_commands` in :func:`discord.on_connect`, and in :attr:`.process_application_commands` if the command is not found. Defaults to ``True``."
-msgstr "Whether to automatically sync slash commands. This will call :meth:`~.Bot.sync_commands` in :func:`discord.on_connect`, and in :attr:`.process_application_commands` if the command is not found. Defaults to ``True``."
+msgstr "Si hay que sincronizar automáticamente los comandos slash. Esto llamará :meth:`~.Bot.sync_commands` en :func:`discord.on_connect`, y :attr:`.process_application_commands` si el comando no se encuentra. El valor por defecto es ``True``."
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"
 
 msgid "The default context types that the bot will use for commands. Defaults to a set containing :attr:`InteractionContextType.guild`, :attr:`InteractionContextType.bot_dm`, and :attr:`InteractionContextType.private_channel`."
-msgstr "The default context types that the bot will use for commands. Defaults to a set containing :attr:`InteractionContextType.guild`, :attr:`InteractionContextType.bot_dm`, and :attr:`InteractionContextType.private_channel`."
+msgstr "El contexto de tipos por defecto que el bot usará para los comandos. El valor por defecto es un set que contiene :attr:`InteractionContextType.guild`, :attr:`InteractionContextType.bot_dm` y :attr:`InteractionContextType.private_channel`."
 
 msgid "Collection[:class:`InteractionContextType`]"
 msgstr "Collection[:class:`InteractionContextType`]"
 
 msgid "The default integration types that the bot will use for commands. Defaults to a set containing :attr:`IntegrationType.guild_install`."
-msgstr "The default integration types that the bot will use for commands. Defaults to a set containing :attr:`IntegrationType.guild_install`."
+msgstr "La integración de tipos por defecto que el bot usará para los comandos. El valor por defecto es un set que contiene :attr:`IntegrationType.guild_install`."
 
 msgid "Collection[:class:`IntegrationType`]]"
 msgstr "Collection[:class:`IntegrationType`]]"
 
 msgid "An alias for :meth:`application_command`."
-msgstr "An alias for :meth:`application_command`."
+msgstr "Un alias para :meth:`application_command`."
 
 msgid "This decorator is overridden by :class:`discord.ext.commands.Bot`."
-msgstr "This decorator is overridden by :class:`discord.ext.commands.Bot`."
+msgstr "Este decorador es sobreescrito por :class:`discord.ext.commands.Bot`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retorna"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
-msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
+msgstr "Un decorador que convierte el método en una :class:`.ApplicationCommand`, la añade al bot y la retorna."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Tipo de retorno"
 
 msgid "Callable[..., :class:`ApplicationCommand`]"
 msgstr "Callable[..., :class:`ApplicationCommand`]"
 
 msgid "A decorator that registers an event to listen to."
-msgstr "A decorator that registers an event to listen to."
+msgstr "Un decorador que registra un evento a escuchar."
 
 msgid "You can find more info about the events on the :ref:`documentation below <discord-api-events>`."
-msgstr "You can find more info about the events on the :ref:`documentation below <discord-api-events>`."
+msgstr "Puedes encontrar más información sobre los eventos en la :ref:`documentación de abajo <discord-api-events>`."
 
 msgid "The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised."
-msgstr "The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised."
+msgstr "Los eventos deben ser una :ref:`corrutina <coroutine>`, si no, se lanza un :exc:`TypeError`."
 
 msgid "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
 msgstr "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."

@@ -102,7 +102,7 @@ msgid "You must fetch the channel directly and then call the appropriate method.
 msgstr "You must fetch the channel directly and then call the appropriate method. Example: ::"
 
 msgid "How do I send a DM?"
-msgstr "How do I send a DM?"
+msgstr "如何发送私信？"
 
 msgid "Get the :class:`User` or :class:`Member` object and call :meth:`abc.Messageable.send`. For example: ::"
 msgstr "Get the :class:`User` or :class:`Member` object and call :meth:`abc.Messageable.send`. For example: ::"
