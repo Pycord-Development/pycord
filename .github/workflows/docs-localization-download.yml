@@ -27,7 +27,9 @@ jobs:
           sphinx-build -b gettext . ./build/locales
         working-directory: ./docs
       - name: "Build locales"
-        run:  sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l hi -l ko -l pt_BR -l es -l zh_CN 
+        run:
+          sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l
+          hi -l ko -l pt_BR -l es -l zh_CN
         working-directory: ./docs
       - name: "Crowdin"
         uses: crowdin/github-action@v2
@@ -39,7 +41,9 @@ jobs:
           localization_branch_name: l10n_master
           create_pull_request: true
           pull_request_title: "docs: Update localizations from Crowdin"
-          pull_request_body: "Crowdin download was triggered due to completely translated file or project. Starting sync. CC @Lulalaby"
+          pull_request_body:
+            "Crowdin download was triggered due to completely translated file or
+            project. Starting sync. CC @Lulalaby"
           pull_request_base_branch_name: "master"
           pull_request_reviewers: "Lulalaby"
           config: "crowdin.yml"
