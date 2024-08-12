@@ -482,7 +482,7 @@ linkcheck_ignore = [
 ]
 
 modindex_common_prefix = ["discord."]
-suppress_warnings = ['ref.duplicate']
+suppress_warnings = ["ref.duplicate"]
 myst_enable_extensions = [
     "amsmath",
     "attrs_inline",

@@ -103,7 +103,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
-    from .onboarding import OnboardingPrompt, OnboardingMode
+    from .onboarding import OnboardingMode, OnboardingPrompt
     from .permissions import Permissions
     from .state import ConnectionState
     from .template import Template
