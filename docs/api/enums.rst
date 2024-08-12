@@ -907,7 +907,7 @@ of :class:`enum.Enum`.
         When this is the action, the type of :attr:`~AuditLogEntry.extra` is
         either a :class:`Role` or :class:`Member`. If the object is not found
         then it is a :class:`Object` with an ID being filled, a name, and a
-        ``type`` attribute set to either ``'role'`` or ``'member'`` to help
+        ``type`` attribute set to either ``role`` or ``member`` to help
         dictate what type of ID it is.
 
         Possible attributes for :class:`AuditLogDiff`:
@@ -2362,7 +2362,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: advanced
 
-        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+        Both default channels and questions (``OnboardingPrompt``) will count towards the Onboarding requirements.
 
 .. class:: ReactionType
 

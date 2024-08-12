@@ -92,6 +92,7 @@ extensions = [
 
 always_document_param_types = True
 toc_object_entries_show_parents = "hide"
+autosectionlabel_prefix_document = True
 
 ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
