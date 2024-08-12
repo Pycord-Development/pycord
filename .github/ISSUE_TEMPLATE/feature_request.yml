@@ -1,6 +1,6 @@
 name: Feature Request
 description: Suggest a feature for this library
-labels: feature request
+labels: ["feature request"]
 body:
   - type: input
     attributes:

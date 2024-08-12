@@ -30,7 +30,7 @@ Key Features
 Installing
 ----------
 
-**Python 3.8 or higher is required**
+**Python 3.9 or higher is required**
 
 To install the library without full voice support, run the following command:
 
