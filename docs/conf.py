@@ -70,6 +70,8 @@ sys.path.append(os.path.abspath("extensions"))
 extensions = [
     # "builder",
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.autosummary",
     "sphinx.ext.extlinks",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
@@ -85,6 +87,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinxext.opengraph",
     "sphinx_autodoc_typehints",
+    "sphinx_intl",
 ]
 
 always_document_param_types = True
@@ -99,8 +102,8 @@ autodoc_typehints = "none"
 # napoleon_attr_annotations = False
 
 extlinks = {
-    "issue": ("https://github.com/Pycord-Development/pycord/issues/%s", "GH-"),
-    "dpy-issue": ("https://github.com/Rapptz/discord.py/issues/%s", "GH-"),
+    "issue": ("https://github.com/Pycord-Development/pycord/issues/%s", "GH-%s"),
+    "dpy-issue": ("https://github.com/Rapptz/discord.py/issues/%s", "GH-%s"),
 }
 
 # Links used for cross-referencing stuff in other documentation
@@ -164,6 +167,8 @@ html_title = f"{project} v{version} Documentation"
 language = "en"
 
 gettext_compact = False
+gettext_uuid = True
+locale_dirs = ["locales/"]  # Added locale directory
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -173,7 +178,7 @@ gettext_compact = False
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build", "node_modules"]
+exclude_patterns = ["_build", "node_modules", "build", "locales"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -204,6 +209,7 @@ pygments_style = "friendly"
 nitpick_ignore_files = [
     "migrating_to_v1",
     "whats_new",
+    "old_changelog",
 ]
 
 # -- Options for HTML output ----------------------------------------------
@@ -372,7 +378,7 @@ html_js_files = ["js/custom.js"]
 # Sphinx supports the following languages:
 #   'da', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'ja'
 #   'nl', 'no', 'pt', 'ro', 'ru', 'sv', 'tr'
-# html_search_language = 'en'
+html_search_language = "en"
 
 # A dictionary with options for the search language support, empty by default.
 # Now only 'ja' uses this config value
@@ -380,7 +386,7 @@ html_js_files = ["js/custom.js"]
 
 # The name of a javascript file (relative to the configuration directory) that
 # implements a search results scorer. If empty, the default will be used.
-html_search_scorer = "_static/js/scorer.js"
+# html_search_scorer = "_static/js/scorer.js"
 
 # html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 
@@ -473,3 +479,23 @@ linkcheck_ignore = [
     r"https://support(?:-dev)?.discord.com/hc/en-us/articles/.*",
     r"https://dis.gd/contact",
 ]
+
+modindex_common_prefix = ["discord."]
+# suppress_warnings = ['autosectionlabel.*']
+myst_enable_extensions = [
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist",
+]
+myst_links_external_new_tab = True

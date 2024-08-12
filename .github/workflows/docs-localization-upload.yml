@@ -1,0 +1,48 @@
+name: Multilingual Docs Upload
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  localizse:
+    permissions: write-all
+    name: "Localisize Docs"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Install Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: "requirements/_locale.txt"
+      - name: "Install Dependencies"
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements/_locale.txt
+          pip install .[speed,voice,docs]
+      - name: "Get locales"
+        run: |
+          make html
+          sphinx-build  -b gettext . ./build/locales
+        working-directory: ./docs
+      - name: "Build locales"
+        run:
+          sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l
+          hi -l ko -l pt -l es -l zh
+        working-directory: ./docs
+      - name: "Crowdin"
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          localization_branch_name: l10n_master
+          create_pull_request: false
+          config: "crowdin.yml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}

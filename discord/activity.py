@@ -160,7 +160,7 @@ class Activity(BaseActivity):
     type: :class:`ActivityType`
         The type of activity currently being done.
     state: Optional[:class:`str`]
-        The user's current state. For example, "In Game".
+        The user's current party status or text used for a custom status.
     details: Optional[:class:`str`]
         The detail of the user's current activity.
     timestamps: Dict[:class:`str`, :class:`int`]
@@ -229,7 +229,6 @@ class Activity(BaseActivity):
         self.assets: ActivityAssets = kwargs.pop("assets", {})
         self.party: ActivityParty = kwargs.pop("party", {})
         self.application_id: int | None = _get_as_snowflake(kwargs, "application_id")
-        self.name: str | None = kwargs.pop("name", None)
         self.url: str | None = kwargs.pop("url", None)
         self.flags: int = kwargs.pop("flags", 0)
         self.sync_id: str | None = kwargs.pop("sync_id", None)
@@ -242,6 +241,9 @@ class Activity(BaseActivity):
             if isinstance(activity_type, ActivityType)
             else try_enum(ActivityType, activity_type)
         )
+        self.name: str | None = kwargs.pop(
+            "name", "Custom Status" if self.type == ActivityType.custom else None
+        )
 
         emoji = kwargs.pop("emoji", None)
         self.emoji: PartialEmoji | None = (
@@ -252,6 +254,7 @@ class Activity(BaseActivity):
         attrs = (
             ("type", self.type),
             ("name", self.name),
+            ("state", self.state),
             ("url", self.url),
             ("details", self.details),
             ("application_id", self.application_id),
@@ -432,9 +435,6 @@ class Game(BaseActivity):
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Game) and other.name == self.name
 
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
-
     def __hash__(self) -> int:
         return hash(self.name)
 
@@ -541,9 +541,6 @@ class Streaming(BaseActivity):
             and other.name == self.name
             and other.url == self.url
         )
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash(self.name)
@@ -653,9 +650,6 @@ class Spotify:
             and other._sync_id == self._sync_id
             and other.start == self.start
         )
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash(self._session_id)
@@ -769,6 +763,8 @@ class CustomActivity(BaseActivity):
         The custom activity's name.
     emoji: Optional[:class:`PartialEmoji`]
         The emoji to pass to the activity, if any.
+    state: Optional[:class:`str`]
+        The text used for the custom activity.
     """
 
     __slots__ = ("name", "emoji", "state")
@@ -778,7 +774,7 @@ class CustomActivity(BaseActivity):
     ):
         super().__init__(**extra)
         self.name: str | None = name
-        self.state: str | None = extra.pop("state", None)
+        self.state: str | None = extra.pop("state", name)
         if self.name == "Custom Status":
             self.name = self.state
 
@@ -829,9 +825,6 @@ class CustomActivity(BaseActivity):
             and other.emoji == self.emoji
         )
 
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
-
     def __hash__(self) -> int:
         return hash((self.name, str(self.emoji)))
 
@@ -850,13 +843,11 @@ ActivityTypes = Union[Activity, Game, CustomActivity, Streaming, Spotify]
 
 
 @overload
-def create_activity(data: ActivityPayload) -> ActivityTypes:
-    ...
+def create_activity(data: ActivityPayload) -> ActivityTypes: ...
 
 
 @overload
-def create_activity(data: None) -> None:
-    ...
+def create_activity(data: None) -> None: ...
 
 
 def create_activity(data: ActivityPayload | None) -> ActivityTypes | None:

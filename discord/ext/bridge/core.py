@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import inspect
@@ -39,7 +40,7 @@ from discord import (
     SlashCommandOptionType,
 )
 
-from ...utils import MISSING, find, get
+from ...utils import MISSING, find, get, warn_deprecated
 from ..commands import BadArgument
 from ..commands import Bot as ExtBot
 from ..commands import (
@@ -62,10 +63,12 @@ __all__ = (
     "BridgeCommandGroup",
     "bridge_command",
     "bridge_group",
+    "bridge_option",
     "BridgeExtCommand",
     "BridgeSlashCommand",
     "BridgeExtGroup",
     "BridgeSlashGroup",
+    "BridgeOption",
     "map_to",
     "guild_only",
     "has_permissions",
@@ -92,6 +95,28 @@ class BridgeExtCommand(Command):
 
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
+
+        # TODO: v2.7: Remove backwards support for Option in bridge commands.
+        for name, option in self.params.items():
+            if isinstance(option.annotation, Option) and not isinstance(
+                option.annotation, BridgeOption
+            ):
+                # Warn not to do this
+                warn_deprecated(
+                    "Using Option for bridge commands",
+                    "BridgeOption",
+                    "2.5",
+                    "2.7",
+                    reference="https://github.com/Pycord-Development/pycord/pull/2417",
+                    stacklevel=6,
+                )
+                # Override the convert method of the parameter's annotated Option.
+                # We can use the convert method from BridgeOption, and bind "self"
+                # using a manual invocation of the descriptor protocol.
+                # Definitely not a good approach, but gets the job done until removal.
+                self.params[name].annotation.convert = BridgeOption.convert.__get__(
+                    self.params[name].annotation
+                )
 
     async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
         await super().dispatch_error(ctx, error)
@@ -523,7 +548,7 @@ def is_nsfw():
     return predicate
 
 
-def has_permissions(**perms: dict[str, bool]):
+def has_permissions(**perms: bool):
     r"""Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a
     :func:`~ext.commands.check` that locks the command to be run by people with certain
     permissions inside guilds, and also registers the command as locked behind said permissions.
@@ -591,6 +616,10 @@ BRIDGE_CONVERTER_MAPPING = {
 
 
 class BridgeOption(Option, Converter):
+    """A subclass of :class:`discord.Option` which represents a selectable slash
+    command option and a prefixed command argument for bridge commands.
+    """
+
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
@@ -623,5 +652,26 @@ class BridgeOption(Option, Converter):
             raise BadArgument() from exc
 
 
-discord.commands.options.Option = BridgeOption
-discord.Option = BridgeOption
+def bridge_option(name, input_type=None, **kwargs):
+    """A decorator that can be used instead of typehinting :class:`.BridgeOption`.
+
+    .. versionadded:: 2.6
+
+    Attributes
+    ----------
+    parameter_name: :class:`str`
+        The name of the target function parameter this option is mapped to.
+        This allows you to have a separate UI ``name`` and parameter name.
+    """
+
+    def decorator(func):
+        resolved_name = kwargs.pop("parameter_name", None) or name
+        itype = (
+            kwargs.pop("type", None)
+            or input_type
+            or func.__annotations__.get(resolved_name, str)
+        )
+        func.__annotations__[resolved_name] = BridgeOption(itype, name=name, **kwargs)
+        return func
+
+    return decorator

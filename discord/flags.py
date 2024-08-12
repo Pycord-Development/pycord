@@ -32,11 +32,15 @@ from .enums import UserFlags
 __all__ = (
     "SystemChannelFlags",
     "MessageFlags",
+    "AttachmentFlags",
     "PublicUserFlags",
     "Intents",
     "MemberCacheFlags",
     "ApplicationFlags",
     "ChannelFlags",
+    "SKUFlags",
+    "RoleFlags",
+    "MemberFlags",
 )
 
 FV = TypeVar("FV", bound="flag_value")
@@ -49,12 +53,10 @@ class flag_value:
         self.__doc__ = func.__doc__
 
     @overload
-    def __get__(self: FV, instance: None, owner: type[BF]) -> FV:
-        ...
+    def __get__(self: FV, instance: None, owner: type[BF]) -> FV: ...
 
     @overload
-    def __get__(self, instance: BF, owner: type[BF]) -> bool:
-        ...
+    def __get__(self, instance: BF, owner: type[BF]) -> bool: ...
 
     def __get__(self, instance: BF | None, owner: type[BF]) -> Any:
         if instance is None:
@@ -115,9 +117,6 @@ class BaseFlags:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, self.__class__) and self.value == other.value
-
-    def __ne__(self, other: Any) -> bool:
-        return not self.__eq__(other)
 
     def __hash__(self) -> int:
         return hash(self.value)
@@ -639,8 +638,8 @@ class Intents(BaseFlags):
     @classmethod
     def all(cls: type[Intents]) -> Intents:
         """A factory method that creates a :class:`Intents` with everything enabled."""
-        bits = max(cls.VALID_FLAGS.values()).bit_length()
-        value = (1 << bits) - 1
+        value = sum({1 << (flag.bit_length() - 1) for flag in cls.VALID_FLAGS.values()})
+
         self = cls.__new__(cls)
         self.value = value
         return self
@@ -833,6 +832,11 @@ class Intents(BaseFlags):
 
         - :attr:`VoiceChannel.members`
         - :attr:`VoiceChannel.voice_states`
+        - :attr:`StageChannel.members`
+        - :attr:`StageChannel.speakers`
+        - :attr:`StageChannel.listeners`
+        - :attr:`StageChannel.moderators`
+        - :attr:`StageChannel.voice_states`
         - :attr:`Member.voice`
 
         .. note::
@@ -883,6 +887,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages`
         - :meth:`Client.get_message`
+        - :attr:`Client.polls`
+        - :meth:`Client.get_poll`
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -915,6 +921,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for guilds)
         - :meth:`Client.get_message` (only for guilds)
+        - :attr:`Client.polls` (only for guilds)
+        - :meth:`Client.get_poll` (only for guilds)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -929,6 +937,7 @@ class Intents(BaseFlags):
         - :attr:`Message.embeds`
         - :attr:`Message.attachments`
         - :attr:`Message.components`
+        - :attr:`Message.poll`
 
         For more information go to the :ref:`message content intent documentation <need_message_content_intent>`.
         """
@@ -953,6 +962,8 @@ class Intents(BaseFlags):
         - :class:`Message`
         - :attr:`Client.cached_messages` (only for DMs)
         - :meth:`Client.get_message` (only for DMs)
+        - :attr:`Client.polls` (only for DMs)
+        - :meth:`Client.get_poll` (only for DMs)
 
         Note that due to an implicit relationship this also corresponds to the following events:
 
@@ -1077,6 +1088,7 @@ class Intents(BaseFlags):
         - :attr:`Message.embeds`
         - :attr:`Message.attachments`
         - :attr:`Message.components`
+        - :attr:`Message.poll`
 
         These attributes will still be available for messages received from interactions,
         the bot's own messages, messages the bot was mentioned in, and DMs.
@@ -1134,6 +1146,66 @@ class Intents(BaseFlags):
         - :func:`on_auto_moderation_action_execution`
         """
         return 1 << 21
+
+    @flag_value
+    def guild_polls(self):
+        """:class:`bool`: Whether poll-related events in guilds are enabled.
+
+        See also :attr:`dm_polls` for DMs or :attr:`polls` for both.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (only for guilds)
+        - :func:`on_poll_vote_remove` (only for guilds)
+        - :func:`on_raw_poll_vote_add` (only for guilds)
+        - :func:`on_raw_poll_vote_remove` (only for guilds)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`PollAnswer.count` (only for guild polls)
+        - :attr:`PollResults.answer_counts` (only for guild polls)
+        """
+        return 1 << 24
+
+    @flag_value
+    def dm_polls(self):
+        """:class:`bool`: Whether poll-related events in direct messages are enabled.
+
+        See also :attr:`guild_polls` for guilds or :attr:`polls` for both.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (only for DMs)
+        - :func:`on_poll_vote_remove` (only for DMs)
+        - :func:`on_raw_poll_vote_add` (only for DMs)
+        - :func:`on_raw_poll_vote_remove` (only for DMs)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`PollAnswer.count` (only for DM polls)
+        - :attr:`PollResults.answer_counts` (only for DM polls)
+        """
+        return 1 << 25
+
+    @alias_flag_value
+    def polls(self):
+        """:class:`bool`: Whether poll-related events in guilds and direct messages are enabled.
+
+        This is a shortcut to set or get both :attr:`guild_polls` and :attr:`dm_polls`.
+
+        This corresponds to the following events:
+
+        - :func:`on_poll_vote_add` (both guilds and DMs)
+        - :func:`on_poll_vote_remove` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_add` (both guilds and DMs)
+        - :func:`on_raw_poll_vote_remove` (both guilds and DMs)
+
+        This also corresponds to the following attributes and classes in terms of cache:
+
+        - :attr:`PollAnswer.count` (both guild and DM polls)
+        - :attr:`PollResults.answer_counts` (both guild and DM polls)
+        """
+        return (1 << 24) | (1 << 25)
 
 
 @fill_with_flags()
@@ -1488,3 +1560,256 @@ class ChannelFlags(BaseFlags):
         .. versionadded:: 2.2
         """
         return 1 << 4
+
+
+@fill_with_flags()
+class AttachmentFlags(BaseFlags):
+    r"""Wraps up the Discord Attachment flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two flags are equal.
+        .. describe:: x != y
+
+            Checks if two flags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def is_clip(self):
+        """:class:`bool`: Returns ``True`` if the attachment is a clip."""
+        return 1 << 0
+
+    @flag_value
+    def is_thumbnail(self):
+        """:class:`bool`: Returns ``True`` if the attachment is a thumbnail."""
+        return 1 << 1
+
+    @flag_value
+    def is_remix(self):
+        """:class:`bool`: Returns ``True`` if the attachment has been remixed."""
+        return 1 << 2
+
+
+@fill_with_flags()
+class SKUFlags(BaseFlags):
+    r"""Wraps up the Discord SKU flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two SKUFlags are equal.
+        .. describe:: x != y
+
+            Checks if two SKUFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.5
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def available(self):
+        """:class:`bool`: Returns ``True`` if the SKU is available for purchase."""
+        return 1 << 2
+
+    @flag_value
+    def guild_subscription(self):
+        """:class:`bool`: Returns ``True`` if the SKU is a guild subscription."""
+        return 1 << 7
+
+    @flag_value
+    def user_subscription(self):
+        """:class:`bool`: Returns ``True`` if the SKU is a user subscription."""
+        return 1 << 8
+
+
+@fill_with_flags()
+class MemberFlags(BaseFlags):
+    r"""Wraps up the Discord Member flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two MemberFlags are equal.
+        .. describe:: x != y
+
+            Checks if two MemberFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.6
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. You should query flags via the properties
+        rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def did_rejoin(self):
+        """:class:`bool`: Returns ``True`` if the member left and rejoined the guild."""
+        return 1 << 0
+
+    @flag_value
+    def completed_onboarding(self):
+        """:class:`bool`: Returns ``True`` if the member has completed onboarding."""
+        return 1 << 1
+
+    @flag_value
+    def bypasses_verification(self):
+        """:class:`bool`: Returns ``True`` if the member is exempt from verification requirements.
+
+        .. note::
+
+            This can be edited through :func:`~discord.Member.edit`.
+        """
+        return 1 << 2
+
+    @flag_value
+    def started_onboarding(self):
+        """:class:`bool`: Returns ``True`` if the member has started onboarding."""
+        return 1 << 3
+
+
+@fill_with_flags()
+class RoleFlags(BaseFlags):
+    r"""Wraps up the Discord Role flags.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two RoleFlags are equal.
+        .. describe:: x != y
+
+            Checks if two RoleFlags are not equal.
+        .. describe:: x + y
+
+            Adds two flags together. Equivalent to ``x | y``.
+        .. describe:: x - y
+
+            Subtracts two flags from each other.
+        .. describe:: x | y
+
+            Returns the union of two flags. Equivalent to ``x + y``.
+        .. describe:: x & y
+
+            Returns the intersection of two flags.
+        .. describe:: ~x
+
+            Returns the inverse of a flag.
+        .. describe:: hash(x)
+
+            Return the flag's hash.
+        .. describe:: iter(x)
+
+            Returns an iterator of ``(name, value)`` pairs. This allows it
+            to be, for example, constructed as a dict or a list of pairs.
+            Note that aliases are not shown.
+
+    .. versionadded:: 2.6
+
+    Attributes
+    -----------
+    value: :class:`int`
+        The raw value. This value is a bit array field of a 53-bit integer
+        representing the currently available flags. You should query
+        flags via the properties rather than using this raw value.
+    """
+
+    __slots__ = ()
+
+    @flag_value
+    def in_prompt(self):
+        """:class:`bool`: Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`."""
+        return 1 << 0

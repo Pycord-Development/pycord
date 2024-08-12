@@ -39,6 +39,7 @@ from typing import (
     Union,
     overload,
 )
+from urllib.parse import parse_qs, urlparse
 
 from . import utils
 from .components import _component_factory
@@ -47,11 +48,13 @@ from .emoji import Emoji
 from .enums import ChannelType, MessageType, try_enum
 from .errors import InvalidArgument
 from .file import File
-from .flags import MessageFlags
+from .flags import AttachmentFlags, MessageFlags
 from .guild import Guild
 from .member import Member
 from .mixins import Hashable
+from .object import Object
 from .partial_emoji import PartialEmoji
+from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
@@ -66,6 +69,7 @@ if TYPE_CHECKING:
     )
     from .channel import TextChannel
     from .components import Component
+    from .interactions import MessageInteraction
     from .mentions import AllowedMentions
     from .role import Role
     from .state import ConnectionState
@@ -77,8 +81,11 @@ if TYPE_CHECKING:
     from .types.message import Message as MessagePayload
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
+    from .types.message import MessageCall as MessageCallPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import Reaction as ReactionPayload
+    from .types.poll import Poll as PollPayload
+    from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
     from .ui.view import View
@@ -92,6 +99,7 @@ __all__ = (
     "Message",
     "PartialMessage",
     "MessageReference",
+    "MessageCall",
     "DeletedReferencedMessage",
 )
 
@@ -151,6 +159,11 @@ class Attachment(Hashable):
         The attachment's width, in pixels. Only applicable to images and videos.
     filename: :class:`str`
         The attachment's filename.
+    title: Optional[:class:`str`]
+        The attachment's title. This is equal to the original :attr:`filename` (without an extension)
+        if special characters were filtered from it.
+
+        .. versionadded:: 2.6
     url: :class:`str`
         The attachment URL. If the message this attachment was attached
         to is deleted, then this will 404.
@@ -179,6 +192,16 @@ class Attachment(Hashable):
         The base64 encoded bytearray representing a sampled waveform (currently for voice messages).
 
         .. versionadded:: 2.5
+
+    flags: :class:`AttachmentFlags`
+        Extra attributes of the attachment.
+
+        .. versionadded:: 2.5
+
+    hm: :class:`str`
+        The unique signature of this attachment's instance.
+
+        .. versionadded:: 2.5
     """
 
     __slots__ = (
@@ -195,6 +218,11 @@ class Attachment(Hashable):
         "description",
         "duration_secs",
         "waveform",
+        "flags",
+        "_ex",
+        "_is",
+        "hm",
+        "title",
     )
 
     def __init__(self, *, data: AttachmentPayload, state: ConnectionState):
@@ -203,6 +231,7 @@ class Attachment(Hashable):
         self.height: int | None = data.get("height")
         self.width: int | None = data.get("width")
         self.filename: str = data["filename"]
+        self.title: str | None = data.get("title")
         self.url: str = data.get("url")
         self.proxy_url: str = data.get("proxy_url")
         self._http = state.http
@@ -211,6 +240,32 @@ class Attachment(Hashable):
         self.description: str | None = data.get("description")
         self.duration_secs: float | None = data.get("duration_secs")
         self.waveform: str | None = data.get("waveform")
+        self.flags: AttachmentFlags = AttachmentFlags._from_value(data.get("flags", 0))
+        self._ex: str | None = None
+        self._is: str | None = None
+        self.hm: str | None = None
+
+        query = urlparse(self.url).query
+        extras = ["_ex", "_is", "hm"]
+        if query_params := parse_qs(query):
+            for attr in extras:
+                value = "".join(query_params.get(attr.replace("_", ""), []))
+                if value:
+                    setattr(self, attr, value)
+
+    @property
+    def expires_at(self) -> datetime.datetime | None:
+        """This attachment URL's expiry time in UTC."""
+        if not self._ex:
+            return None
+        return datetime.datetime.utcfromtimestamp(int(self._ex, 16))
+
+    @property
+    def issued_at(self) -> datetime.datetime | None:
+        """The attachment URL's issue time in UTC."""
+        if not self._is:
+            return None
+        return datetime.datetime.utcfromtimestamp(int(self._is, 16))
 
     def is_spoiler(self) -> bool:
         """Whether this attachment contains a spoiler."""
@@ -549,6 +604,34 @@ class MessageReference:
     to_message_reference_dict = to_dict
 
 
+class MessageCall:
+    """Represents information about a call in a private channel.
+
+    .. versionadded:: 2.6
+    """
+
+    def __init__(self, state: ConnectionState, data: MessageCallPayload):
+        self._state: ConnectionState = state
+        self._participants: SnowflakeList = data.get("participants", [])
+        self._ended_timestamp: datetime.datetime | None = utils.parse_time(
+            data["ended_timestamp"]
+        )
+
+    @property
+    def participants(self) -> list[User | Object]:
+        """A list of :class:`User` that participated in this call.
+
+        If a user is not found in the client's cache,
+        then it will be returned as an :class:`Object`.
+        """
+        return [self._state.get_user(int(i)) or Object(i) for i in self._participants]
+
+    @property
+    def ended_at(self) -> datetime.datetime | None:
+        """An aware timestamp of when the call ended."""
+        return self._ended_timestamp
+
+
 def flatten_handlers(cls):
     prefix = len("_handle_")
     handlers = [
@@ -681,10 +764,26 @@ class Message(Hashable):
         The guild that the message belongs to, if applicable.
     interaction: Optional[:class:`MessageInteraction`]
         The interaction associated with the message, if applicable.
+
+        .. deprecated:: 2.6
+
+            Use :attr:`interaction_metadata` instead.
+    interaction_metadata: Optional[:class:`InteractionMetadata`]
+        The interaction metadata associated with the message, if applicable.
+
+        .. versionadded:: 2.6
     thread: Optional[:class:`Thread`]
         The thread created from this message, if applicable.
 
         .. versionadded:: 2.0
+    poll: Optional[:class:`Poll`]
+        The poll associated with this message, if applicable.
+
+        .. versionadded:: 2.6
+    call: Optional[:class:`MessageCall`]
+        The call information associated with this message, if applicable.
+
+        .. versionadded:: 2.6
     """
 
     __slots__ = (
@@ -718,8 +817,11 @@ class Message(Hashable):
         "stickers",
         "components",
         "guild",
-        "interaction",
+        "_interaction",
+        "interaction_metadata",
         "thread",
+        "_poll",
+        "call",
     )
 
     if TYPE_CHECKING:
@@ -799,13 +901,28 @@ class Message(Hashable):
                     # the channel will be the correct type here
                     ref.resolved = self.__class__(channel=chan, data=resolved, state=state)  # type: ignore
 
-        from .interactions import MessageInteraction
+        from .interactions import InteractionMetadata, MessageInteraction
 
-        self.interaction: MessageInteraction | None
+        self._interaction: MessageInteraction | None
         try:
-            self.interaction = MessageInteraction(data=data["interaction"], state=state)
+            self._interaction = MessageInteraction(
+                data=data["interaction"], state=state
+            )
         except KeyError:
-            self.interaction = None
+            self._interaction = None
+        try:
+            self.interaction_metadata = InteractionMetadata(
+                data=data["interaction_metadata"], state=state
+            )
+        except KeyError:
+            self.interaction_metadata = None
+
+        self._poll: Poll | None
+        try:
+            self._poll = Poll.from_dict(data["poll"], self)
+            self._state.store_poll(self._poll, self.id)
+        except KeyError:
+            self._poll = None
 
         self.thread: Thread | None
         try:
@@ -814,6 +931,12 @@ class Message(Hashable):
             )
         except KeyError:
             self.thread = None
+
+        self.call: MessageCall | None
+        try:
+            self.call = MessageCall(state=self._state, data=data["call"])
+        except KeyError:
+            self.call = None
 
         for handler in ("author", "member", "mentions", "mention_roles"):
             try:
@@ -942,6 +1065,10 @@ class Message(Hashable):
     def _handle_nonce(self, value: str | int) -> None:
         self.nonce = value
 
+    def _handle_poll(self, value: PollPayload) -> None:
+        self._poll = Poll.from_dict(value, self)
+        self._state.store_poll(self._poll, self.id)
+
     def _handle_author(self, author: UserPayload) -> None:
         self.author = self._state.store_user(author)
         if isinstance(self.guild, Guild):
@@ -997,6 +1124,26 @@ class Message(Hashable):
     ) -> None:
         self.guild = new_guild
         self.channel = new_channel
+
+    @property
+    def interaction(self) -> MessageInteraction | None:
+        utils.warn_deprecated(
+            "interaction",
+            "interaction_metadata",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        return self._interaction
+
+    @interaction.setter
+    def interaction(self, value: MessageInteraction | None) -> None:
+        utils.warn_deprecated(
+            "interaction",
+            "interaction_metadata",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        self._interaction = value
 
     @utils.cached_slot_property("_cs_raw_mentions")
     def raw_mentions(self) -> list[int]:
@@ -1096,6 +1243,10 @@ class Message(Hashable):
         """Returns a URL that allows the client to jump to this message."""
         guild_id = getattr(self.guild, "id", "@me")
         return f"https://discord.com/channels/{guild_id}/{self.channel.id}/{self.id}"
+
+    @property
+    def poll(self) -> Poll | None:
+        return self._state._polls.get(self.id)
 
     def is_system(self) -> bool:
         """Whether the message is a system message.
@@ -1328,8 +1479,7 @@ class Message(Hashable):
         delete_after: float | None = ...,
         allowed_mentions: AllowedMentions | None = ...,
         view: View | None = ...,
-    ) -> Message:
-        ...
+    ) -> Message: ...
 
     async def edit(
         self,
@@ -1689,7 +1839,11 @@ class Message(Hashable):
         await self._state.http.clear_reactions(self.channel.id, self.id)
 
     async def create_thread(
-        self, *, name: str, auto_archive_duration: ThreadArchiveDuration = MISSING
+        self,
+        *,
+        name: str,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        slowmode_delay: int = MISSING,
     ) -> Thread:
         """|coro|
 
@@ -1706,9 +1860,12 @@ class Message(Hashable):
         ----------
         name: :class:`str`
             The name of the thread.
-        auto_archive_duration: :class:`int`
+        auto_archive_duration:  Optional[:class:`int`]
             The duration in minutes before a thread is automatically archived for inactivity.
             If not provided, the channel's default auto archive duration is used.
+        slowmode_delay: Optional[:class:`int`]
+            Specifies the slowmode rate limit for user in this thread, in seconds.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
 
         Returns
         -------
@@ -1737,6 +1894,7 @@ class Message(Hashable):
             name=name,
             auto_archive_duration=auto_archive_duration
             or default_auto_archive_duration,
+            rate_limit_per_user=slowmode_delay or 0,
         )
 
         self.thread = Thread(guild=self.guild, state=self._state, data=data)
@@ -1767,6 +1925,34 @@ class Message(Hashable):
         """
 
         return await self.channel.send(content, reference=self, **kwargs)
+
+    async def end_poll(self) -> Message:
+        """|coro|
+
+        Immediately ends the poll associated with this message. Only doable by the poll's owner.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        :class:`Message`
+            The updated message.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to end this poll.
+        HTTPException
+            Ending this poll failed.
+        """
+
+        data = await self._state.http.expire_poll(
+            self.channel.id,
+            self.id,
+        )
+        message = Message(state=self._state, channel=self.channel, data=data)
+
+        return message
 
     def to_reference(self, *, fail_if_not_exists: bool = True) -> MessageReference:
         """Creates a :class:`~discord.MessageReference` from the current message.
@@ -1894,6 +2080,10 @@ class PartialMessage(Hashable):
         """The partial message's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
+    @property
+    def poll(self) -> Poll | None:
+        return self._state._polls.get(self.id)
+
     @utils.cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
         """The guild that the partial message belongs to, if applicable."""
@@ -1991,7 +2181,7 @@ class PartialMessage(Hashable):
             raise InvalidArgument("Cannot pass both embed and embeds parameters.")
 
         if embed is not MISSING:
-            fields["embeds"] = [embed.to_dict()]
+            fields["embeds"] = [] if embed is None else [embed.to_dict()]
 
         if embeds is not MISSING:
             fields["embeds"] = [embed.to_dict() for embed in embeds]
@@ -2039,3 +2229,31 @@ class PartialMessage(Hashable):
                 view.message = msg
                 self._state.store_view(view, self.id)
             return msg
+
+    async def end_poll(self) -> Message:
+        """|coro|
+
+        Immediately ends the poll associated with this message. Only doable by the poll's owner.
+
+        .. versionadded:: 2.6
+
+        Returns
+        -------
+        :class:`Message`
+            The updated message.
+
+        Raises
+        ------
+        Forbidden
+            You do not have permissions to end this poll.
+        HTTPException
+            Ending this poll failed.
+        """
+
+        data = await self._state.http.expire_poll(
+            self.channel.id,
+            self.id,
+        )
+        message = self._state.create_message(channel=self.channel, data=data)
+
+        return message

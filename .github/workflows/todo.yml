@@ -4,12 +4,13 @@ jobs:
   todo:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run tdg-github-action
-        uses: ribtoks/tdg-github-action@v0.4.7-beta
+        uses: ribtoks/tdg-github-action@v0.4.11-beta
         with:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           SHA: ${{ github.sha }}
           REF: ${{ github.ref }}
           COMMENT_ON_ISSUES: true
+          EXCLUDE_PATTERN: "\\.(doctree|doctrees|pickle)$"

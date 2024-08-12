@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools>=62.6,<66",
+    "setuptools>=62.6,<70",
     "setuptools-scm>=6.2,<8",
 ]
 build-backend = "setuptools.build_meta"
@@ -12,7 +12,7 @@ authors = [
 ]
 description = "A Python wrapper for the Discord API"
 readme = "README.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = {text = "MIT"}
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -20,10 +20,10 @@ classifiers = [
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Internet",
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -65,7 +65,7 @@ voice = {file = "requirements/voice.txt"}
 [tool.setuptools_scm]
 
 [tool.black]
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py39', 'py310', 'py311', 'py312']
 
 [tool.isort]
 profile = "black"
@@ -84,7 +84,7 @@ extension-pkg-whitelist = [
     "pydantic",
     "ujson"
 ]
-py-version = 3.8
+py-version = 3.9
 
 [tool.pylint.messages_control]
 enable = [

@@ -98,6 +98,22 @@ Messages
     .. automethod:: users
         :async-for:
 
+.. autoclass:: ReactionCountDetails()
+    :members:
+
+Monetization
+------------
+
+.. attributetable:: SKU
+
+.. autoclass:: SKU()
+    :members:
+
+.. attributetable:: Entitlement
+
+.. autoclass:: Entitlement()
+    :members:
+
 Guild
 -----
 
@@ -224,6 +240,24 @@ Welcome Screen
 .. autoclass:: WelcomeScreenChannel()
     :members:
 
+Onboarding
+~~~~~~~~~~~~~~
+
+.. attributetable:: Onboarding
+
+.. autoclass:: Onboarding()
+    :members:
+
+.. attributetable:: OnboardingPrompt
+
+.. autoclass:: OnboardingPrompt()
+    :members:
+
+.. attributetable:: PromptOption
+
+.. autoclass:: PromptOption()
+    :members:
+
 Integration
 ~~~~~~~~~~~
 
@@ -317,6 +351,16 @@ Interactions
 .. attributetable:: MessageInteraction
 
 .. autoclass:: MessageInteraction()
+    :members:
+
+.. attributetable:: InteractionMetadata
+
+.. autoclass:: InteractionMetadata()
+    :members:
+
+.. attributetable:: AuthorizingIntegrationOwners
+
+.. autoclass:: AuthorizingIntegrationOwners()
     :members:
 
 .. attributetable:: Component
@@ -520,6 +564,11 @@ Events
 .. attributetable:: RawAuditLogEntryEvent
 
 .. autoclass:: RawAuditLogEntryEvent()
+    :members:
+
+.. attributetable:: RawVoiceChannelStatusUpdateEvent
+
+.. autoclass:: RawVoiceChannelStatusUpdateEvent()
     :members:
 
 

@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from typing import Literal
@@ -184,3 +185,8 @@ class RolePositionUpdate(TypedDict, total=False):
 
 class GuildMFAModify(TypedDict):
     level: Literal[0, 1]
+
+
+class GuildBulkBan(TypedDict):
+    banned_users: list[Snowflake]
+    failed_users: list[Snowflake]

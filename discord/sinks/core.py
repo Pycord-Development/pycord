@@ -22,6 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
+from __future__ import annotations
+
 import io
 import os
 import struct
@@ -201,7 +204,7 @@ class Sink(Filters):
             filters = default_filters
         self.filters = filters
         Filters.__init__(self, **self.filters)
-        self.vc: VoiceClient = None
+        self.vc: VoiceClient | None = None
         self.audio_data = {}
 
     def init(self, vc):  # called under listen

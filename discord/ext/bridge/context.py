@@ -22,10 +22,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, overload
+from typing import TYPE_CHECKING, Any, Union, overload
 
 from discord.commands import ApplicationContext
 from discord.interactions import Interaction, InteractionMessage
@@ -38,7 +39,7 @@ if TYPE_CHECKING:
     from .core import BridgeExtCommand, BridgeSlashCommand
 
 
-__all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext")
+__all__ = ("BridgeContext", "BridgeExtContext", "BridgeApplicationContext", "Context")
 
 
 class BridgeContext(ABC):
@@ -66,22 +67,20 @@ class BridgeContext(ABC):
     """
 
     @abstractmethod
-    async def _respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
-        ...
+    async def _respond(
+        self, *args, **kwargs
+    ) -> Interaction | WebhookMessage | Message: ...
 
     @abstractmethod
-    async def _defer(self, *args, **kwargs) -> None:
-        ...
+    async def _defer(self, *args, **kwargs) -> None: ...
 
     @abstractmethod
-    async def _edit(self, *args, **kwargs) -> InteractionMessage | Message:
-        ...
+    async def _edit(self, *args, **kwargs) -> InteractionMessage | Message: ...
 
     @overload
     async def invoke(
         self, command: BridgeSlashCommand | BridgeExtCommand, *args, **kwargs
-    ) -> None:
-        ...
+    ) -> None: ...
 
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage | Message:
         """|coro|
@@ -195,3 +194,10 @@ class BridgeExtContext(BridgeContext, Context):
         """
         if self._original_response_message:
             await self._original_response_message.delete(delay=delay, reason=reason)
+
+
+Context = Union[BridgeExtContext, BridgeApplicationContext]
+"""
+A Union class for either :class:`BridgeExtContext` or :class:`BridgeApplicationContext`.
+Can be used as a type hint for Context for bridge commands.
+"""

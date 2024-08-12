@@ -157,12 +157,10 @@ class WelcomeScreen:
         welcome_channels: list[WelcomeScreenChannel] | None = ...,
         enabled: bool | None = ...,
         reason: str | None = ...,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
-    async def edit(self) -> None:
-        ...
+    async def edit(self) -> None: ...
 
     async def edit(self, **options):
         """|coro|

@@ -516,5 +516,19 @@ this goal, it must make use of a couple of data classes that aid in this goal.
 
         :type: :class:`int`
 
+    .. attribute:: status
+
+        The voice channel status of a :class:`VoiceChannel`.
+
+        See also :attr:`VoiceChannel.status`.
+
+        :type: :class:`str`
+
+   .. attribute:: image
+
+      The cover image of a :class:`ScheduledEvent`.
+
+      :type: :class:`str`
+
 .. this is currently missing the following keys: reason and application_id
    I'm not sure how to about porting these

@@ -30,6 +30,7 @@ import datetime
 import functools
 import inspect
 import re
+import sys
 import types
 from collections import OrderedDict
 from enum import Enum
@@ -44,14 +45,21 @@ from typing import (
     Union,
 )
 
-from ..channel import _threaded_guild_channel_factory
+from ..channel import PartialMessageable, _threaded_guild_channel_factory
 from ..enums import Enum as DiscordEnum
-from ..enums import MessageType, SlashCommandOptionType, try_enum
+from ..enums import (
+    IntegrationType,
+    InteractionContextType,
+    MessageType,
+    SlashCommandOptionType,
+    try_enum,
+)
 from ..errors import (
     ApplicationCommandError,
     ApplicationCommandInvokeError,
     CheckFailure,
     ClientException,
+    InvalidArgument,
     ValidationError,
 )
 from ..member import Member
@@ -60,9 +68,14 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow
+from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_deprecated
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
+
+if sys.version_info >= (3, 11):
+    from typing import Annotated, get_args, get_origin
+else:
+    from typing_extensions import Annotated, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -84,6 +97,7 @@ if TYPE_CHECKING:
 
     from .. import Permissions
     from ..cog import Cog
+    from ..ext.commands.cooldowns import CooldownMapping, MaxConcurrency
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -219,24 +233,44 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "__default_member_permissions__",
             kwargs.get("default_member_permissions", None),
         )
-        self.guild_only: bool | None = getattr(
-            func, "__guild_only__", kwargs.get("guild_only", None)
-        )
         self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", None))
+
+        integration_types = getattr(
+            func, "__integration_types__", kwargs.get("integration_types", None)
+        )
+        contexts = getattr(func, "__contexts__", kwargs.get("contexts", None))
+        guild_only = getattr(func, "__guild_only__", kwargs.get("guild_only", MISSING))
+        if guild_only is not MISSING:
+            warn_deprecated(
+                "guild_only",
+                "contexts",
+                "2.6",
+                reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+            )
+        if contexts and guild_only:
+            raise InvalidArgument(
+                "cannot pass both 'contexts' and 'guild_only' to ApplicationCommand"
+            )
+        if self.guild_ids and (
+            (contexts is not None) or guild_only or integration_types
+        ):
+            raise InvalidArgument(
+                "the 'contexts' and 'integration_types' parameters are not available for guild commands"
+            )
+
+        if guild_only:
+            contexts = {InteractionContextType.guild}
+        self.contexts: set[InteractionContextType] | None = contexts
+        self.integration_types: set[IntegrationType] | None = integration_types
 
     def __repr__(self) -> str:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     def __eq__(self, other) -> bool:
-        if (
-            getattr(self, "id", None) is not None
-            and getattr(other, "id", None) is not None
-        ):
-            check = self.id == other.id
-        else:
-            check = self.name == other.name and self.guild_ids == other.guild_ids
         return (
-            isinstance(other, self.__class__) and self.parent == other.parent and check
+            isinstance(other, self.__class__)
+            and self.qualified_name == other.qualified_name
+            and self.guild_ids == other.guild_ids
         )
 
     async def __call__(self, ctx, *args, **kwargs):
@@ -272,6 +306,33 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         unwrap = unwrap_function(function)
         self.module = unwrap.__module__
 
+    @property
+    def guild_only(self) -> bool:
+        warn_deprecated(
+            "guild_only",
+            "contexts",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+
+    @guild_only.setter
+    def guild_only(self, value: bool) -> None:
+        warn_deprecated(
+            "guild_only",
+            "contexts",
+            "2.6",
+            reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
+        )
+        if value:
+            self.contexts = {InteractionContextType.guild}
+        else:
+            self.contexts = {
+                InteractionContextType.guild,
+                InteractionContextType.bot_dm,
+                InteractionContextType.private_channel,
+            }
+
     def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
             current = datetime.datetime.now().timestamp()
@@ -294,18 +355,17 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 f"The check functions for the command {self.name} failed"
             )
 
-        if hasattr(self, "_max_concurrency"):
-            if self._max_concurrency is not None:
-                # For this application, context can be duck-typed as a Message
-                await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
+        if self._max_concurrency is not None:
+            # For this application, context can be duck-typed as a Message
+            await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
 
-            try:
-                self._prepare_cooldowns(ctx)
-                await self.call_before_hooks(ctx)
-            except:
-                if self._max_concurrency is not None:
-                    await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
-                raise
+        try:
+            self._prepare_cooldowns(ctx)
+            await self.call_before_hooks(ctx)
+        except:
+            if self._max_concurrency is not None:
+                await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
+            raise
 
     def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
         """Checks whether the command is currently on cooldown.
@@ -327,7 +387,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if not self._buckets.valid:
             return False
 
-        bucket = self._buckets.get_bucket(ctx)
+        bucket = self._buckets.get_bucket(ctx)  # type: ignore
         current = utcnow().timestamp()
         return bucket.get_tokens(current) == 0
 
@@ -362,7 +422,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             If this is ``0.0`` then the command isn't on cooldown.
         """
         if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)
+            bucket = self._buckets.get_bucket(ctx)  # type: ignore
             current = utcnow().timestamp()
             return bucket.get_retry_after(current)
 
@@ -459,7 +519,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         called. This makes it a useful function to set up database
         connections or any type of set up required.
 
-        This pre-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
+        This pre-invoke hook takes a sole parameter, an :class:`.ApplicationContext`.
         See :meth:`.Bot.before_invoke` for more info.
 
         Parameters
@@ -484,7 +544,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         called. This makes it a useful function to clean-up database
         connections or any type of clean up required.
 
-        This post-invoke hook takes a sole parameter, a :class:`.ApplicationContext`.
+        This post-invoke hook takes a sole parameter, an :class:`.ApplicationContext`.
         See :meth:`.Bot.after_invoke` for more info.
 
         Parameters
@@ -630,6 +690,9 @@ class SlashCommand(ApplicationCommand):
         Returns a string that allows you to mention the slash command.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+
+        .. deprecated:: 2.6
+            Use the :attr:`contexts` parameter instead.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
         Apps intending to be listed in the App Directory cannot have NSFW commands.
@@ -653,7 +716,14 @@ class SlashCommand(ApplicationCommand):
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The type of installation this command should be available to. For instance, if set to
+        :attr:`IntegrationType.user_install`, the command will only be available to users with
+        the application installed on their account. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The location where this command can be used. Cannot be set if this is a guild command.
     """
+
     type = 1
 
     def __new__(cls, *args, **kwargs) -> SlashCommand:
@@ -687,7 +757,9 @@ class SlashCommand(ApplicationCommand):
 
         self.attached_to_group: bool = False
 
-        self.options: list[Option] = kwargs.get("options", [])
+        self._options_kwargs = kwargs.get("options", [])
+        self.options: list[Option] = []
+        self._validate_parameters()
 
         try:
             checks = func.__commands_checks__
@@ -702,10 +774,10 @@ class SlashCommand(ApplicationCommand):
 
     def _validate_parameters(self):
         params = self._get_signature_parameters()
-        if kwop := self.options:
-            self.options: list[Option] = self._match_option_param_names(params, kwop)
+        if kwop := self._options_kwargs:
+            self.options = self._match_option_param_names(params, kwop)
         else:
-            self.options: list[Option] = self._parse_options(params)
+            self.options = self._parse_options(params)
 
     def _check_required_params(self, params):
         params = iter(params.items())
@@ -725,12 +797,29 @@ class SlashCommand(ApplicationCommand):
     def _parse_options(self, params, *, check_params: bool = True) -> list[Option]:
         if check_params:
             params = self._check_required_params(params)
+        else:
+            params = iter(params.items())
 
         final_options = []
         for p_name, p_obj in params:
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
+
+            if self._is_typing_annotated(option):
+                type_hint = get_args(option)[0]
+                metadata = option.__metadata__
+                # If multiple Options in metadata, the first will be used.
+                option_gen = (elem for elem in metadata if isinstance(elem, Option))
+                option = next(option_gen, Option())
+                # Handle Optional
+                if self._is_typing_optional(type_hint):
+                    option.input_type = SlashCommandOptionType.from_datatype(
+                        get_args(type_hint)[0]
+                    )
+                    option.default = None
+                else:
+                    option.input_type = SlashCommandOptionType.from_datatype(type_hint)
 
             if self._is_typing_union(option):
                 if self._is_typing_optional(option):
@@ -740,23 +829,21 @@ class SlashCommand(ApplicationCommand):
 
             if not isinstance(option, Option):
                 if isinstance(p_obj.default, Option):
-                    p_obj.default.input_type = SlashCommandOptionType.from_datatype(
-                        option
-                    )
+                    if p_obj.default.input_type is None:
+                        p_obj.default.input_type = SlashCommandOptionType.from_datatype(
+                            option
+                        )
                     option = p_obj.default
                 else:
                     option = Option(option)
 
             if option.default is None and not p_obj.default == inspect.Parameter.empty:
-                if isinstance(p_obj.default, type) and issubclass(
+                if isinstance(p_obj.default, Option):
+                    pass
+                elif isinstance(p_obj.default, type) and issubclass(
                     p_obj.default, (DiscordEnum, Enum)
                 ):
                     option = Option(p_obj.default)
-                elif (
-                    isinstance(p_obj.default, Option)
-                    and not (default := p_obj.default.default) is None
-                ):
-                    option.default = default
                 else:
                     option.default = p_obj.default
                     option.required = False
@@ -773,6 +860,7 @@ class SlashCommand(ApplicationCommand):
         return final_options
 
     def _match_option_param_names(self, params, options):
+        options = list(options)
         params = self._check_required_params(params)
 
         check_annotations: list[Callable[[Option, type], bool]] = [
@@ -820,14 +908,25 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
 
+    def _is_typing_annotated(self, annotation):
+        return get_origin(annotation) is Annotated
+
     @property
     def cog(self):
-        return getattr(self, "_cog", MISSING)
+        return getattr(self, "_cog", None)
 
     @cog.setter
-    def cog(self, val):
-        self._cog = val
-        self._validate_parameters()
+    def cog(self, value):
+        old_cog = self.cog
+        self._cog = value
+
+        if (
+            old_cog is None
+            and value is not None
+            or value is None
+            and old_cog is not None
+        ):
+            self._validate_parameters()
 
     @property
     def is_subcommand(self) -> bool:
@@ -850,16 +949,17 @@ class SlashCommand(ApplicationCommand):
         if self.is_subcommand:
             as_dict["type"] = SlashCommandOptionType.sub_command.value
 
-        if self.guild_only is not None:
-            as_dict["dm_permission"] = not self.guild_only
-
         if self.nsfw is not None:
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
+
+        if not self.guild_ids and not self.is_subcommand:
+            as_dict["integration_types"] = [it.value for it in self.integration_types]
+            as_dict["contexts"] = [ctx.value for ctx in self.contexts]
 
         return as_dict
 
@@ -1069,6 +1169,9 @@ class SlashCommandGroup(ApplicationCommand):
         isn't one.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+
+        .. deprecated:: 2.6
+            Use the :attr:`contexts` parameter instead.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
         Apps intending to be listed in the App Directory cannot have NSFW commands.
@@ -1087,7 +1190,14 @@ class SlashCommandGroup(ApplicationCommand):
     description_localizations: Dict[:class:`str`, :class:`str`]
         The description localizations for this command. The values of this should be ``"locale": "description"``.
         See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The type of installation this command should be available to. For instance, if set to
+        :attr:`IntegrationType.user_install`, the command will only be available to users with
+        the application installed on their account. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The location where this command can be used. Unapplicable for guild commands.
     """
+
     __initial_commands__: list[SlashCommand | SlashCommandGroup]
     type = 1
 
@@ -1119,6 +1229,8 @@ class SlashCommandGroup(ApplicationCommand):
         description: str | None = None,
         guild_ids: list[int] | None = None,
         parent: SlashCommandGroup | None = None,
+        cooldown: CooldownMapping | None = None,
+        max_concurrency: MaxConcurrency | None = None,
         **kwargs,
     ) -> None:
         self.name = str(name)
@@ -1126,9 +1238,9 @@ class SlashCommandGroup(ApplicationCommand):
         validate_chat_input_name(self.name)
         validate_chat_input_description(self.description)
         self.input_type = SlashCommandOptionType.sub_command_group
-        self.subcommands: list[
-            SlashCommand | SlashCommandGroup
-        ] = self.__initial_commands__
+        self.subcommands: list[SlashCommand | SlashCommandGroup] = (
+            self.__initial_commands__
+        )
         self.guild_ids = guild_ids
         self.parent = parent
         self.attached_to_group: bool = False
@@ -1136,15 +1248,36 @@ class SlashCommandGroup(ApplicationCommand):
 
         self._before_invoke = None
         self._after_invoke = None
-        self.cog = MISSING
+        self.cog = None
         self.id = None
 
         # Permissions
         self.default_member_permissions: Permissions | None = kwargs.get(
             "default_member_permissions", None
         )
-        self.guild_only: bool | None = kwargs.get("guild_only", None)
         self.nsfw: bool | None = kwargs.get("nsfw", None)
+
+        integration_types = kwargs.get("integration_types", None)
+        contexts = kwargs.get("contexts", None)
+        guild_only = kwargs.get("guild_only", MISSING)
+        if guild_only is not MISSING:
+            warn_deprecated("guild_only", "contexts", "2.6")
+        if contexts and guild_only:
+            raise InvalidArgument(
+                "cannot pass both 'contexts' and 'guild_only' to ApplicationCommand"
+            )
+        if self.guild_ids and (
+            (contexts is not None) or guild_only or integration_types
+        ):
+            raise InvalidArgument(
+                "the 'contexts' and 'integration_types' parameters are not available for guild commands"
+            )
+
+        # These are set to None and their defaults are then set when added to the bot
+        self.contexts: set[InteractionContextType] | None = contexts
+        if guild_only:
+            self.guild_only: bool | None = guild_only
+        self.integration_types: set[IntegrationType] | None = integration_types
 
         self.name_localizations: dict[str, str] = kwargs.get(
             "name_localizations", MISSING
@@ -1153,9 +1286,53 @@ class SlashCommandGroup(ApplicationCommand):
             "description_localizations", MISSING
         )
 
+        # similar to ApplicationCommand
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
+
+        # no need to getattr, since slash cmds groups cant be created using a decorator
+
+        if cooldown is None:
+            buckets = CooldownMapping(cooldown, BucketType.default)
+        elif isinstance(cooldown, CooldownMapping):
+            buckets = cooldown
+        else:
+            raise TypeError(
+                "Cooldown must be a an instance of CooldownMapping or None."
+            )
+
+        self._buckets: CooldownMapping = buckets
+
+        # no need to getattr, since slash cmds groups cant be created using a decorator
+
+        if max_concurrency is not None and not isinstance(
+            max_concurrency, MaxConcurrency
+        ):
+            raise TypeError(
+                "max_concurrency must be an instance of MaxConcurrency or None"
+            )
+
+        self._max_concurrency: MaxConcurrency | None = max_concurrency
+
     @property
     def module(self) -> str | None:
         return self.__module__
+
+    @property
+    def guild_only(self) -> bool:
+        warn_deprecated("guild_only", "contexts", "2.6")
+        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+
+    @guild_only.setter
+    def guild_only(self, value: bool) -> None:
+        warn_deprecated("guild_only", "contexts", "2.6")
+        if value:
+            self.contexts = {InteractionContextType.guild}
+        else:
+            self.contexts = {
+                InteractionContextType.guild,
+                InteractionContextType.bot_dm,
+                InteractionContextType.private_channel,
+            }
 
     def to_dict(self) -> dict:
         as_dict = {
@@ -1171,24 +1348,22 @@ class SlashCommandGroup(ApplicationCommand):
         if self.parent is not None:
             as_dict["type"] = self.input_type.value
 
-        if self.guild_only is not None:
-            as_dict["dm_permission"] = not self.guild_only
-
         if self.nsfw is not None:
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
+
+        if not self.guild_ids and self.parent is None:
+            as_dict["integration_types"] = [it.value for it in self.integration_types]
+            as_dict["contexts"] = [ctx.value for ctx in self.contexts]
 
         return as_dict
 
-    def add_command(self, command: SlashCommand) -> None:
-        # check if subcommand has no cog set
-        # also check if cog is MISSING because it
-        # might not have been set by the cog yet
-        if command.cog is MISSING and self.cog is not MISSING:
+    def add_command(self, command: SlashCommand | SlashCommandGroup) -> None:
+        if command.cog is None and self.cog is not None:
             command.cog = self.cog
 
         self.subcommands.append(command)
@@ -1250,8 +1425,7 @@ class SlashCommandGroup(ApplicationCommand):
         """
 
         if self.parent is not None:
-            # TODO: Improve this error message
-            raise Exception("a subgroup cannot have a subgroup")
+            raise Exception("A subcommand group cannot be added to a subcommand group")
 
         sub_command_group = SlashCommandGroup(
             name, description, guild_ids, parent=self, **kwargs
@@ -1317,7 +1491,29 @@ class SlashCommandGroup(ApplicationCommand):
         ctx.interaction.data = option
         await command.invoke_autocomplete_callback(ctx)
 
-    def walk_commands(self) -> Generator[SlashCommand | SlashCommandGroup, None, None]:
+    async def call_before_hooks(self, ctx: ApplicationContext) -> None:
+        # only call local hooks
+        cog = self.cog
+        if self._before_invoke is not None:
+            # should be cog if @commands.before_invoke is used
+            instance = getattr(self._before_invoke, "__self__", cog)
+            # __self__ only exists for methods, not functions
+            # however, if @command.before_invoke is used, it will be a function
+            if instance:
+                await self._before_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._before_invoke(ctx)  # type: ignore
+
+    async def call_after_hooks(self, ctx: ApplicationContext) -> None:
+        cog = self.cog
+        if self._after_invoke is not None:
+            instance = getattr(self._after_invoke, "__self__", cog)
+            if instance:
+                await self._after_invoke(instance, ctx)  # type: ignore
+            else:
+                await self._after_invoke(ctx)  # type: ignore
+
+    def walk_commands(self) -> Generator[SlashCommand | SlashCommandGroup]:
         """An iterator that recursively walks through all slash commands and groups in this group.
 
         Yields
@@ -1367,7 +1563,7 @@ class SlashCommandGroup(ApplicationCommand):
         if kwargs:
             kw = kwargs.copy()
             kw.update(self.__original_kwargs__)
-            copy = self.__class__(self.callback, **kw)
+            copy = self.__class__(**kw)
             return self._ensure_assignment_on_copy(copy)
         else:
             return self.copy()
@@ -1396,6 +1592,9 @@ class ContextMenuCommand(ApplicationCommand):
         The ids of the guilds where this command will be registered.
     guild_only: :class:`bool`
         Whether the command should only be usable inside a guild.
+
+        .. deprecated:: 2.6
+            Use the ``contexts`` parameter instead.
     nsfw: :class:`bool`
         Whether the command should be restricted to 18+ channels and users.
         Apps intending to be listed in the App Directory cannot have NSFW commands.
@@ -1416,6 +1615,10 @@ class ContextMenuCommand(ApplicationCommand):
     name_localizations: Dict[:class:`str`, :class:`str`]
         The name localizations for this command. The values of this should be ``"locale": "name"``. See
         `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The installation contexts where this command is available. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The interaction contexts where this command is available. Unapplicable for guild commands.
     """
 
     def __new__(cls, *args, **kwargs) -> ContextMenuCommand:
@@ -1495,16 +1698,17 @@ class ContextMenuCommand(ApplicationCommand):
             "type": self.type,
         }
 
-        if self.guild_only is not None:
-            as_dict["dm_permission"] = not self.guild_only
+        if not self.guild_ids:
+            as_dict["integration_types"] = [it.value for it in self.integration_types]
+            as_dict["contexts"] = [ctx.value for ctx in self.contexts]
 
         if self.nsfw is not None:
             as_dict["nsfw"] = self.nsfw
 
         if self.default_member_permissions is not None:
-            as_dict[
-                "default_member_permissions"
-            ] = self.default_member_permissions.value
+            as_dict["default_member_permissions"] = (
+                self.default_member_permissions.value
+            )
 
         if self.name_localizations:
             as_dict["name_localizations"] = self.name_localizations
@@ -1526,7 +1730,17 @@ class UserCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+
+        .. deprecated:: 2.6
+            Use the ``contexts`` parameter instead.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1535,7 +1749,18 @@ class UserCommand(ContextMenuCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+    name_localizations: Dict[:class:`str`, :class:`str`]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The installation contexts where this command is available. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The interaction contexts where this command is available. Unapplicable for guild commands.
     """
+
     type = 2
 
     def __new__(cls, *args, **kwargs) -> UserCommand:
@@ -1624,7 +1849,17 @@ class MessageCommand(ContextMenuCommand):
         The coroutine that is executed when the command is called.
     guild_ids: Optional[List[:class:`int`]]
         The ids of the guilds where this command will be registered.
-    cog: Optional[:class:`.Cog`]
+    guild_only: :class:`bool`
+        Whether the command should only be usable inside a guild.
+
+        .. deprecated:: 2.6
+            Use the ``contexts`` parameter instead.
+    nsfw: :class:`bool`
+        Whether the command should be restricted to 18+ channels and users.
+        Apps intending to be listed in the App Directory cannot have NSFW commands.
+    default_member_permissions: :class:`~discord.Permissions`
+        The default permissions a member needs to be able to run the command.
+    cog: Optional[:class:`Cog`]
         The cog that this command belongs to. ``None`` if there isn't one.
     checks: List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]
         A list of predicates that verifies if the command could be executed
@@ -1633,7 +1868,18 @@ class MessageCommand(ContextMenuCommand):
         :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then
         :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error`
         event.
+    cooldown: Optional[:class:`~discord.ext.commands.Cooldown`]
+        The cooldown applied when the command is invoked. ``None`` if the command
+        doesn't have a cooldown.
+    name_localizations: Dict[:class:`str`, :class:`str`]
+        The name localizations for this command. The values of this should be ``"locale": "name"``. See
+        `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales.
+    integration_types: Set[:class:`IntegrationType`]
+        The installation contexts where this command is available. Unapplicable for guild commands.
+    contexts: Set[:class:`InteractionContextType`]
+        The interaction contexts where this command is available. Unapplicable for guild commands.
     """
+
     type = 3
 
     def __new__(cls, *args, **kwargs) -> MessageCommand:
@@ -1647,20 +1893,12 @@ class MessageCommand(ContextMenuCommand):
         for i, v in _data.items():
             v["id"] = int(i)
             message = v
-        channel = ctx.interaction._state.get_channel(int(message["channel_id"]))
-        if channel is None:
-            author_id = int(message["author"]["id"])
-            self_or_system_message: bool = ctx.bot.user.id == author_id or try_enum(
-                MessageType, message["type"]
-            ) not in (
-                MessageType.default,
-                MessageType.reply,
-                MessageType.application_command,
-                MessageType.thread_starter_message,
+        channel = ctx.interaction.channel
+        if channel.id != int(message["channel_id"]):
+            # we got weird stuff going on, make up a channel
+            channel = PartialMessageable(
+                state=ctx.interaction._state, id=int(message["channel_id"])
             )
-            user_id = ctx.author.id if self_or_system_message else author_id
-            data = await ctx.interaction._state.http.start_private_message(user_id)
-            channel = ctx.interaction._state.add_dm_channel(data)
 
         target = Message(state=ctx.interaction._state, channel=channel, data=message)
 

@@ -1,0 +1,190 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Cogs"
+msgstr "Cogs"
+
+msgid "The base class that all cogs must inherit from."
+msgstr "The base class that all cogs must inherit from."
+
+msgid "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
+msgstr "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
+
+msgid "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
+msgstr "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
+msgstr "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
+
+msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog."
+msgstr "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog."
+
+msgid "This does not include subcommands."
+msgstr "This does not include subcommands."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid "List[:class:`.ApplicationCommand`]"
+msgstr "List[:class:`.ApplicationCommand`]"
+
+msgid "Returns the cog's specified name, not the class name."
+msgstr "Returns the cog's specified name, not the class name."
+
+msgid "Returns the cog's description, typically the cleaned docstring."
+msgstr "Returns the cog's description, typically the cleaned docstring."
+
+msgid "An iterator that recursively walks through this cog's commands and subcommands."
+msgstr "An iterator that recursively walks through this cog's commands and subcommands."
+
+msgid "Yields"
+msgstr "Yields"
+
+msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
+msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
+
+msgid ":py:class:`~typing.Generator`\\[:py:class:`~discord.commands.core.ApplicationCommand`, :py:obj:`None`, :py:obj:`None`]"
+msgstr ":py:class:`~typing.Generator`\\[:py:class:`~discord.commands.core.ApplicationCommand`, :py:obj:`None`, :py:obj:`None`]"
+
+msgid "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."
+msgstr "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."
+
+msgid "The listeners defined in this cog."
+msgstr "The listeners defined in this cog."
+
+msgid "List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]"
+msgstr "List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]"
+
+msgid "A decorator that marks a function as a listener."
+msgstr "A decorator that marks a function as a listener."
+
+msgid "This is the cog equivalent of :meth:`.Bot.listen`."
+msgstr "This is the cog equivalent of :meth:`.Bot.listen`."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "The name of the event being listened to. If not provided, it defaults to the function's name."
+msgstr "The name of the event being listened to. If not provided, it defaults to the function's name."
+
+msgid "If this listener should only be called once after each cog load. Defaults to false."
+msgstr "If this listener should only be called once after each cog load. Defaults to false."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "The function is not a coroutine function or a string was not passed as     the name."
+msgstr "The function is not a coroutine function or a string was not passed as     the name."
+
+msgid ":py:data:`~typing.Callable`\\[\\[:py:class:`~typing.TypeVar`\\(``FuncT``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:data:`~typing.Any`])], :py:class:`~typing.TypeVar`\\(``FuncT``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:data:`~typing.Any`])]"
+msgstr ":py:data:`~typing.Callable`\\[\\[:py:class:`~typing.TypeVar`\\(``FuncT``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:data:`~typing.Any`])], :py:class:`~typing.TypeVar`\\(``FuncT``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:data:`~typing.Any`])]"
+
+msgid "Checks whether the cog has an error handler. :rtype: :py:class:`bool`"
+msgstr "Checks whether the cog has an error handler. :rtype: :py:class:`bool`"
+
+msgid "A special method that is called when the cog gets removed."
+msgstr "A special method that is called when the cog gets removed."
+
+msgid "This function **cannot** be a coroutine. It must be a regular function."
+msgstr "This function **cannot** be a coroutine. It must be a regular function."
+
+msgid "Subclasses must replace this if they want special unloading behaviour."
+msgstr "Subclasses must replace this if they want special unloading behaviour."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "A special method that registers as a :meth:`.Bot.check_once` check."
+msgstr "A special method that registers as a :meth:`.Bot.check_once` check."
+
+msgid "This function **can** be a coroutine and must take a sole parameter, ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`."
+msgstr "This function **can** be a coroutine and must take a sole parameter, ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`."
+
+msgid "The invocation context."
+msgstr "The invocation context."
+
+msgid ":py:class:`bool`"
+msgstr ":py:class:`bool`"
+
+msgid "A special method that registers as a :meth:`.Bot.check` check."
+msgstr "A special method that registers as a :meth:`.Bot.check` check."
+
+msgid "A special method that registers as a :func:`~discord.ext.commands.check` for every command and subcommand in this cog."
+msgstr "A special method that registers as a :func:`~discord.ext.commands.check` for every command and subcommand in this cog."
+
+msgid "A special method that is called whenever an error is dispatched inside this cog."
+msgstr "A special method that is called whenever an error is dispatched inside this cog."
+
+msgid "This is similar to :func:`.on_command_error` except only applying to the commands inside this cog."
+msgstr "This is similar to :func:`.on_command_error` except only applying to the commands inside this cog."
+
+msgid "This **must** be a coroutine."
+msgstr "This **must** be a coroutine."
+
+msgid "The invocation context where the error happened."
+msgstr "The invocation context where the error happened."
+
+msgid "The error that happened."
+msgstr "The error that happened."
+
+msgid "A special method that acts as a cog local pre-invoke hook."
+msgstr "A special method that acts as a cog local pre-invoke hook."
+
+msgid "This is similar to :meth:`.ApplicationCommand.before_invoke`."
+msgstr "This is similar to :meth:`.ApplicationCommand.before_invoke`."
+
+msgid "A special method that acts as a cog local post-invoke hook."
+msgstr "A special method that acts as a cog local post-invoke hook."
+
+msgid "This is similar to :meth:`.ApplicationCommand.after_invoke`."
+msgstr "This is similar to :meth:`.ApplicationCommand.after_invoke`."
+
+msgid "A metaclass for defining a cog."
+msgstr "A metaclass for defining a cog."
+
+msgid "Note that you should probably not use this directly. It is exposed purely for documentation purposes along with making custom metaclasses to intermix with other metaclasses such as the :class:`abc.ABCMeta` metaclass."
+msgstr "Note that you should probably not use this directly. It is exposed purely for documentation purposes along with making custom metaclasses to intermix with other metaclasses such as the :class:`abc.ABCMeta` metaclass."
+
+msgid "For example, to create an abstract cog mixin class, the following would be done."
+msgstr "For example, to create an abstract cog mixin class, the following would be done."
+
+msgid "When passing an attribute of a metaclass that is documented below, note that you must pass it as a keyword-only argument to the class creation like the following example:"
+msgstr "When passing an attribute of a metaclass that is documented below, note that you must pass it as a keyword-only argument to the class creation like the following example:"
+
+msgid "The cog name. By default, it is the name of the class with no modification."
+msgstr "The cog name. By default, it is the name of the class with no modification."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The cog description. By default, it is the cleaned docstring of the class."
+msgstr "The cog description. By default, it is the cleaned docstring of the class."
+
+msgid "A list of attributes to apply to every command inside this cog. The dictionary is passed into the :class:`Command` options at ``__init__``. If you specify attributes inside the command attribute in the class, it will override the one specified inside this attribute. For example:"
+msgstr "A list of attributes to apply to every command inside this cog. The dictionary is passed into the :class:`Command` options at ``__init__``. If you specify attributes inside the command attribute in the class, it will override the one specified inside this attribute. For example:"
+
+msgid ":class:`dict`"
+msgstr ":class:`dict`"
+
+msgid "A shortcut to :attr:`.command_attrs`, what ``guild_ids`` should all application commands have in the cog. You can override this by setting ``guild_ids`` per command."
+msgstr "A shortcut to :attr:`.command_attrs`, what ``guild_ids`` should all application commands have in the cog. You can override this by setting ``guild_ids`` per command."
+
+msgid "Optional[List[:class:`int`]]"
+msgstr "Optional[List[:class:`int`]]"
+

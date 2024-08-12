@@ -410,6 +410,42 @@ Connection
                     WebSocket library. It can be :class:`bytes` to denote a binary
                     message or :class:`str` to denote a regular text message.
 
+Entitlements
+------------
+.. function:: on_entitlement_create(entitlement)
+
+    Called when a user subscribes to an SKU.
+
+    .. versionadded:: 2.5
+
+    :param entitlement: The entitlement that was created as a result of the subscription.
+    :type entitlement: :class:`Entitlement`
+
+.. function:: on_entitlement_update(entitlement)
+
+    Called when a user's subscription to an Entitlement is renewed for the next billing period.
+
+    .. versionadded:: 2.5
+
+    :param entitlement: The entitlement that was updated.
+    :type entitlement: :class:`Entitlement`
+
+.. function:: on_entitlement_delete(entitlement)
+
+    Called when a user's entitlement is deleted.
+
+    Entitlements are usually only deleted when Discord issues a refund for a subscription,
+    or manually removes an entitlement from a user.
+
+    .. note::
+
+        This is not called when a user's subscription is cancelled.
+
+    .. versionadded:: 2.5
+
+    :param entitlement: The entitlement that was deleted.
+    :type entitlement: :class:`Entitlement`
+
 Guilds
 ------
 .. function:: on_guild_join(guild)
@@ -841,6 +877,7 @@ Messages
 
     - The message's embeds were suppressed or unsuppressed.
     - A call message has received an update to its participants or ending time.
+    - A poll has ended and the results have been finalized.
 
     This requires :attr:`Intents.messages` to be enabled.
 
@@ -872,6 +909,58 @@ Messages
 
     :param payload: The raw event payload data.
     :type payload: :class:`RawMessageUpdateEvent`
+
+Polls
+~~~~~~~~~
+.. function:: on_poll_vote_add(poll, user, answer)
+
+    Called when a vote is cast on a poll. If multiple answers were selected, this fires multiple times.
+    if the poll was not found in the internal poll cache, then this
+    event will not be called. Consider using :func:`on_raw_poll_vote_add` instead.
+
+    This requires :attr:`Intents.polls` to be enabled.
+
+    :param poll: The current state of the poll.
+    :type poll: :class:`Poll`
+    :param user: The user who added the vote.
+    :type user: Union[:class:`Member`, :class:`User`]
+    :param answer: The answer that was voted.
+    :type answer: :class:`PollAnswer`
+
+.. function:: on_raw_poll_vote_add(payload)
+
+    Called when a vote is cast on a poll. Unlike :func:`on_poll_vote_add`, this is
+    called regardless of the state of the internal poll cache.
+
+    This requires :attr:`Intents.polls` to be enabled.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawMessagePollVoteEvent`
+
+.. function:: on_poll_vote_remove(message, user, answer)
+
+    Called when a vote is removed from a poll. If multiple answers were removed, this fires multiple times.
+    if the poll is not found in the internal poll cache, then this
+    event will not be called. Consider using :func:`on_raw_poll_vote_remove` instead.
+
+    This requires :attr:`Intents.polls` to be enabled.
+
+    :param poll: The current state of the poll.
+    :type poll: :class:`Poll`
+    :param user: The user who removed the vote.
+    :type user: Union[:class:`Member`, :class:`User`]
+    :param answer: The answer that was voted.
+    :type answer: :class:`PollAnswer`
+
+.. function:: on_raw_poll_vote_remove(payload)
+
+    Called when a vote is removed from a poll. Unlike :func:`on_poll_vote_remove`, this is
+    called regardless of the state of the internal message cache.
+
+    This requires :attr:`Intents.polls` to be enabled.
+
+    :param payload: The raw event payload data.
+    :type payload: :class:`RawMessagePollVoteEvent`
 
 Reactions
 ~~~~~~~~~
@@ -1263,3 +1352,28 @@ Typing
 
     :param payload: The raw typing payload.
     :type payload: :class:`RawTypingEvent`
+
+
+Voice Channel Status Update
+---------------------------
+.. function:: on_voice_channel_status_update(channel, before, after)
+
+    Called when someone updates a voice channel status.
+
+    .. versionadded:: 2.5
+
+    :param channel: The channel where the voice channel status update originated from.
+    :type channel: :class:`abc.GuildChannel`
+    :param before: The old voice channel status.
+    :type before: Optional[:class:`str`]
+    :param after: The new voice channel status.
+    :type after: Optional[:class:`str`]
+
+.. function:: on_raw_voice_channel_status_update(payload)
+
+    Called when someone updates a voice channels status.
+
+    .. versionadded:: 2.5
+
+    :param payload: The raw voice channel status update payload.
+    :type payload: :class:`RawVoiceChannelStatusUpdateEvent`

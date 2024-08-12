@@ -46,7 +46,7 @@ import socket
 import struct
 import threading
 import time
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any, Callable, Literal, overload
 
 from . import opus, utils
 from .backoff import ExponentialBackoff
@@ -532,14 +532,14 @@ class VoiceClient(VoiceProtocol):
             if self.socket:
                 self.socket.close()
 
-    async def move_to(self, channel: abc.Snowflake) -> None:
+    async def move_to(self, channel: abc.Connectable) -> None:
         """|coro|
 
         Moves you to a different voice channel.
 
         Parameters
         ----------
-        channel: :class:`abc.Snowflake`
+        channel: :class:`abc.Connectable`
             The channel to move to. Must be a voice channel.
         """
         await self.channel.guild.change_voice_state(channel=channel)
@@ -623,9 +623,31 @@ class VoiceClient(VoiceProtocol):
             user_id
         ]
 
+    @overload
     def play(
-        self, source: AudioSource, *, after: Callable[[Exception | None], Any] = None
-    ) -> None:
+        self,
+        source: AudioSource,
+        *,
+        after: Callable[[Exception | None], Any] | None = None,
+        wait_finish: Literal[False] = False,
+    ) -> None: ...
+
+    @overload
+    def play(
+        self,
+        source: AudioSource,
+        *,
+        after: Callable[[Exception | None], Any] | None = None,
+        wait_finish: Literal[True],
+    ) -> asyncio.Future: ...
+
+    def play(
+        self,
+        source: AudioSource,
+        *,
+        after: Callable[[Exception | None], Any] | None = None,
+        wait_finish: bool = False,
+    ) -> None | asyncio.Future:
         """Plays an :class:`AudioSource`.
 
         The finalizer, ``after`` is called after the source has been exhausted
@@ -643,6 +665,14 @@ class VoiceClient(VoiceProtocol):
             The finalizer that is called after the stream is exhausted.
             This function must have a single parameter, ``error``, that
             denotes an optional exception that was raised during playing.
+        wait_finish: bool
+            If True, an awaitable will be returned, which can be used to wait for
+            audio to stop playing. This awaitable will return an exception if raised,
+            or None when no exception is raised.
+
+            If False, None is returned and the function does not block.
+
+            .. versionadded:: v2.5
 
         Raises
         ------
@@ -668,8 +698,22 @@ class VoiceClient(VoiceProtocol):
         if not self.encoder and not source.is_opus():
             self.encoder = opus.Encoder()
 
+        future = None
+        if wait_finish:
+            future = asyncio.Future()
+            after_callback = after
+
+            def _after(exc: Exception | None):
+                if callable(after_callback):
+                    after_callback(exc)
+
+                future.set_result(exc)
+
+            after = _after
+
         self._player = AudioPlayer(source, self, after=after)
         self._player.start()
+        return future
 
     def unpack_audio(self, data):
         """Takes an audio packet received from Discord and decodes it into pcm audio data.

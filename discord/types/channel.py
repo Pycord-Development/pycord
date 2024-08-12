@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from typing import Literal, Union
@@ -31,7 +32,7 @@ from ..enums import SortOrder
 from ..flags import ChannelFlags
 from .snowflake import Snowflake
 from .threads import ThreadArchiveDuration, ThreadMember, ThreadMetadata
-from .user import PartialUser
+from .user import User
 
 OverwriteType = Literal[0, 1]
 
@@ -107,6 +108,7 @@ VideoQualityMode = Literal[1, 2]
 class VoiceChannel(_BaseGuildChannel):
     rtc_region: NotRequired[str | None]
     video_quality_mode: NotRequired[VideoQualityMode]
+    status: NotRequired[str | None]
     type: Literal[2]
     bitrate: int
     user_limit: int
@@ -157,7 +159,7 @@ class DMChannel(TypedDict):
     id: Snowflake
     type: Literal[1]
     last_message_id: Snowflake | None
-    recipients: list[PartialUser]
+    recipients: list[User]
 
 
 class GroupDMChannel(_BaseChannel):

@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -227,7 +228,7 @@ class FFmpegAudio(AudioSource):
             # arbitrarily large read size
             data = source.read(8192)
             if not data:
-                self._process.terminate()
+                self._stdin.close()
                 return
             try:
                 self._stdin.write(data)
