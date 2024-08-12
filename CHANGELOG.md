@@ -20,6 +20,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - ⚠️ **This Version Removes Support For Python 3.8** ⚠️
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
 
+### Added
+
+- Added `Guild.fetch_role` method.
+  ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
+
 ## [2.6.0] - 2024-07-09
 
 ### Added
