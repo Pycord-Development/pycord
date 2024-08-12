@@ -32,7 +32,7 @@ jobs:
         working-directory: ./docs
       - name: "Build locales"
         run:
-          sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l hi -l ko -l pt -l es -l zh
+          sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l hi -l ko -l pt_BR -l es -l zh
         working-directory: ./docs
       - name: "Crowdin"
         uses: crowdin/github-action@v2
