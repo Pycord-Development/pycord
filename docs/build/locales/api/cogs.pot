@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2024-08-12 14:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,15 +60,14 @@ msgstr ""
 #: ../../api/cogs.rst:0
 #: c4db6bbac90e467593f54b1cab05f4fb
 #: a548999373424e22a1eef592535cb0e9
-#: 02f91797081c4686b377632253e0b5e5
-#: b1f07d6afbc5495c98821a53434155c4
-#: 41c2e67be31840479c7bd7524bf37371
-#: 1d27fdc01fc44d37a3e2e0bf0d0f1990
-#: 3f83461a1f2d44f0b72685cf58fffe1f
-#: 441313363d2a4630b03c2bcbc851beda
-#: 0e39507babe04898b1f7b7440eff496a
-#: 2918950aa3b6453ea6932e0881120dc8
-#: 262dd38c91184e99879dec752b001b36
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
 msgid "Return type"
 msgstr ""
 
@@ -102,11 +101,6 @@ msgstr ""
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 msgstr ""
 
-#: ../../../discord/cog.py:docstring of discord.cog.Cog.walk_commands:6
-#: 89e6b9bfed6f4e92976dc9e8fbaf389f
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ""
-
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.get_listeners:1
 #: 483845d65d544491a23375ed5d92e183
 msgid "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."
@@ -134,13 +128,13 @@ msgstr ""
 
 #: ../../api/cogs.rst:0
 #: bd530b05086c4698967d87151c86bf4d
-#: 8fcb1668c38545e9a11691d5843d4292
-#: f85b6fa40d864c8e9d04c51898aea65e
-#: 5c87f05fd02343e6aabe8ec19c096201
-#: 570238345b3a4c1b85575862e150b7bd
-#: 7d2fb538c343497d8107a81eaec32040
-#: 7362325cfdff402b81009123ae597dec
-#: b11220c5ddf94bfba58d3d256f685a60
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
 msgid "Parameters"
 msgstr ""
 
@@ -194,9 +188,9 @@ msgstr ""
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:16
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_unload:9
 #: bae3ff62cd7046098fd26a064a87ab95
-#: 1b2841a3e2c047ae8098fd2c42231609
-#: a195a9ea110f4f26aa030bcc626e0593
-#: 0cc47ac622584e3e96de04395e53193a
+#: bae3ff62cd7046098fd26a064a87ab95
+#: bae3ff62cd7046098fd26a064a87ab95
+#: bae3ff62cd7046098fd26a064a87ab95
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
@@ -209,8 +203,8 @@ msgstr ""
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:4
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:4
 #: 74a72b4805f9400f99581374cdd6e25d
-#: 7f5f3dee2feb45ee82dcd9a5ee87d4b3
-#: 5a923f8cba4545c2af109c263100dcdb
+#: 74a72b4805f9400f99581374cdd6e25d
+#: 74a72b4805f9400f99581374cdd6e25d
 msgid "This function **can** be a coroutine and must take a sole parameter, ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`."
 msgstr ""
 
@@ -220,10 +214,10 @@ msgstr ""
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_before_invoke:8
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:8
 #: 21d75be906eb43a4839ac7c2ac76eb49
-#: a7a1869271a34860adb5b6cd238ed3a6
-#: d990bf3f32a04d2e8d0013db96cf4893
-#: 7c82e86dd4ff496fb6fa8f58eca7f69c
-#: ad0ee8e5b9e442be9e7e0a68b346f862
+#: 21d75be906eb43a4839ac7c2ac76eb49
+#: 21d75be906eb43a4839ac7c2ac76eb49
+#: 21d75be906eb43a4839ac7c2ac76eb49
+#: 21d75be906eb43a4839ac7c2ac76eb49
 msgid "The invocation context."
 msgstr ""
 
@@ -231,8 +225,8 @@ msgstr ""
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:11
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:11
 #: bc04772b95eb445880b68aa35b50195a
-#: d2c667f93954474cb728a27feb47d68b
-#: b96ad52b990d49c1b90438d33ad46ea5
+#: bc04772b95eb445880b68aa35b50195a
+#: bc04772b95eb445880b68aa35b50195a
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
@@ -260,8 +254,8 @@ msgstr ""
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_before_invoke:5
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:7
 #: 2e2fb136a8f54e59a37867e585a665fa
-#: 6f70276a6bbd47e18f25e5f9895edb68
-#: fb131b7b531746c99b5051ec3cb6495e
+#: 2e2fb136a8f54e59a37867e585a665fa
+#: 2e2fb136a8f54e59a37867e585a665fa
 msgid "This **must** be a coroutine."
 msgstr ""
 
@@ -322,16 +316,16 @@ msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.CogMeta:0
 #: 89b6db804e56474fb08d5a060b7ed69d
-#: f2a7000c311348c8a5f844dabffd8bd9
-#: e0cbc45438ec4d3b8ec361af0b454cfc
-#: f537005ce3194aa6a2205b3ac3e53683
+#: 89b6db804e56474fb08d5a060b7ed69d
+#: 89b6db804e56474fb08d5a060b7ed69d
+#: 89b6db804e56474fb08d5a060b7ed69d
 msgid "type"
 msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.CogMeta:37
 #: ../../../discord/cog.py:docstring of discord.cog.CogMeta:45
 #: 459eaf51b3d74a869ea18e53f787fcea
-#: 817146cb6cfe412b910cc766c12f7e4f
+#: 459eaf51b3d74a869ea18e53f787fcea
 msgid ":class:`str`"
 msgstr ""
 

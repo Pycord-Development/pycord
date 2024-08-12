@@ -12,31 +12,31 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "迁移到 v2.0"
+msgstr "Migrating to v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "v2.0 引入了新的 Discord 功能并废弃了一些旧功能。"
+msgstr "v2.0 introduced new Discord features and deprecated some old ones."
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
 msgstr "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
 
 msgid "Python Version Change"
-msgstr "Python 版本更改"
+msgstr "Python Version Change"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
-msgstr "为了使发展更加容易，也为了让我们的依赖性升级以便能够使用3。 或更高版本的库不得不取消对 Python 版本的支持。 这基本上意味着**对 Python 3.7 及以下版本的支持已经被放弃**。"
+msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
 
 msgid "Major Model Changes"
-msgstr "主要模型更改"
+msgstr "Major Model Changes"
 
 msgid "Below are major changes that have happened in v2.0:"
-msgstr "下面是v2.0发生的重大变化："
+msgstr "Below are major changes that have happened in v2.0:"
 
 msgid "Dropped User Accounts Support"
-msgstr "丢弃用户帐户支持"
+msgstr "Dropped User Accounts Support"
 
 msgid "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
-msgstr "v2.0 之前支持用户帐户。这违背了图书馆和不和服务的精神，并且已被删除。 因此，这些只适用于它们的特征将被删除："
+msgstr "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
 
 msgid "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
 msgstr "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
@@ -45,13 +45,13 @@ msgid "``afk`` argument of :meth:`Client.change_presence`"
 msgstr "``afk`` argument of :meth:`Client.change_presence`"
 
 msgid "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
-msgstr "类 ``Profile`` 、 ``Relationship`` 、 ``Call``"
+msgstr "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
 
 msgid "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``"
 msgstr "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``"
 
 msgid "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
-msgstr "``GroupChannel.add_receivents``，``remove_receivents``，``edit`` (NOTE：``GroupChannel`` 本身仍然存在)"
+msgstr "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
 
 msgid "``Guild.ack``"
 msgstr "``Guild.ack``"
@@ -63,22 +63,22 @@ msgid "``Client.fetch_user_profile``"
 msgstr "``Client.fetch_user_profile``"
 
 msgid "``Message.call`` and ``ack``"
-msgstr "``Message.call`` 和 ``ack``"
+msgstr "``Message.call`` and ``ack``"
 
 msgid "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
-msgstr "``ClientUser.email``、``premium``、``premium_type``、``get_relationship``、``relationships``、``friends``、``blocked``、``create_group``、``edit_settings``"
+msgstr "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
 
 msgid "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
-msgstr "``ClientUser.edit`` 的参数: ``password`` , ``new_password`` , ``email``"
+msgstr "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
 
 msgid "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
-msgstr "``User.relationship`` 、 ``mutual_friends`` 、 ``is_friend`` 、 ``is_blocked`` 、 ``unblock`` 、 ``remove_friend`` 、 ``send_friend_request`` 、 ``profile``"
+msgstr "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
 
 msgid "Events: ``on_relationship_add`` and ``on_relationship_update``"
-msgstr "事件: ``on_relationship_add`` 和 ``on_relationship_update``"
+msgstr "Events: ``on_relationship_add`` and ``on_relationship_update``"
 
 msgid "Timezone-aware Time"
-msgstr "时区意识时间"
+msgstr "Timezone-aware Time"
 
 msgid "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."
 msgstr "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."
@@ -87,7 +87,7 @@ msgid "Note that newly-added :meth:`utils.utcnow()` can be used as an alias of `
 msgstr "Note that newly-added :meth:`utils.utcnow()` can be used as an alias of ``datetime.datetime.now(datetime.timezone.utc)``."
 
 msgid "Asset Changes"
-msgstr "资产更改"
+msgstr "Asset Changes"
 
 msgid "Asset-related attributes that previously returned hash strings (e.g. :attr:`User.avatar`) now returns :class:`Asset`. :attr:`Asset.key` returns the hash from now on."
 msgstr "Asset-related attributes that previously returned hash strings (e.g. :attr:`User.avatar`) now returns :class:`Asset`. :attr:`Asset.key` returns the hash from now on."
@@ -99,7 +99,7 @@ msgid ":attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :met
 msgstr ":attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :meth:`Emoji.save` and :meth:`Emoji.read` are added to save or read emojis."
 
 msgid "``Emoji.url_as`` and ``PartialEmoji.url_as`` are removed."
-msgstr "``Emoji.url_as`` 和 ``PartialEmoji.url_as`` 已被删除。"
+msgstr "``Emoji.url_as`` and ``PartialEmoji.url_as`` are removed."
 
 msgid "Some :class:`AuditLogDiff` attributes now return :class:`Asset` instead of :class:`str`: :attr:`AuditLogDiff.splash`, :attr:`AuditLogDiff.icon`, :attr:`AuditLogDiff.avatar`"
 msgstr "Some :class:`AuditLogDiff` attributes now return :class:`Asset` instead of :class:`str`: :attr:`AuditLogDiff.splash`, :attr:`AuditLogDiff.icon`, :attr:`AuditLogDiff.avatar`"
@@ -108,10 +108,10 @@ msgid ":attr:`User.avatar` returns ``None`` if the avatar is not set and is inst
 msgstr ":attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior."
 
 msgid "Before"
-msgstr "前"
+msgstr "Before"
 
 msgid "After"
-msgstr "之后"
+msgstr "After"
 
 msgid "``str(user.avatar_url)``"
 msgstr "``str(user.avatar_url)``"
@@ -120,25 +120,25 @@ msgid "``user.display_avatar.url``"
 msgstr "``user.display_avatar.url``"
 
 msgid "``str(user.avatar_url_as(size=128))``"
-msgstr "``str(user.avatar_url_as(size=128)`` ``"
+msgstr "``str(user.avatar_url_as(size=128))``"
 
 msgid "``user.display_avatar.with_size(128).url``"
 msgstr "``user.display_avatar.with_size(128).url``"
 
 msgid "``str(user.avatar_url_as(size=128, static_format=\"png\"))``"
-msgstr "``str(user.avatar_url_as(size=128, static_form=\"png\")`` ``"
+msgstr "``str(user.avatar_url_as(size=128, static_format=\"png\"))``"
 
 msgid "``user.display_avatar.replace(size=128, static_format=\"png\").url``"
-msgstr "``user.display_avatar.replace(size=128, static_form=\"png\").url``"
+msgstr "``user.display_avatar.replace(size=128, static_format=\"png\").url``"
 
 msgid "``user.display_avatar.with_size(128).with_static_format(\"png\").url``"
-msgstr "``user.display_avatar.with_size(128).with_static_format (\"png\").url``"
+msgstr "``user.display_avatar.with_size(128).with_static_format(\"png\").url``"
 
 msgid "``await user.avatar_url.read()``"
-msgstr "``request user.avatar_url.read()``"
+msgstr "``await user.avatar_url.read()``"
 
 msgid "``await user.display_avatar.read()``"
-msgstr "``request user.display_avatar.read()``"
+msgstr "``await user.display_avatar.read()``"
 
 msgid "``str(emoji.url)``"
 msgstr "``str(emoji.url)``"
@@ -147,16 +147,16 @@ msgid "``emoji.url``"
 msgstr "``emoji.url``"
 
 msgid "``str(emoji.url_as(size=32))``"
-msgstr "``str(emoji.url_as(size=32)``"
+msgstr "``str(emoji.url_as(size=32))``"
 
 msgid "``emoji.with_size(32).url``"
 msgstr "``emoji.with_size(32).url``"
 
 msgid "``str(url_as(size=128, static_format=\"png\"))``"
-msgstr "``str(url_as(size=128, static_form=\"png\")`` 方法."
+msgstr "``str(url_as(size=128, static_format=\"png\"))``"
 
 msgid "``emoji.replace(size=128, static_format=\"png\").url``"
-msgstr "``emoji.replace(size=128, static_form=\"png\").url``"
+msgstr "``emoji.replace(size=128, static_format=\"png\").url``"
 
 msgid "``str(sticker.image_url)``"
 msgstr "``str(sticker.image_url)``"
@@ -171,25 +171,25 @@ msgid "``partialemoji.url``"
 msgstr "``partialemoji.url``"
 
 msgid "Webhook Changes"
-msgstr "Webhook 更改"
+msgstr "Webhook Changes"
 
 msgid ":class:`Webhook` and :class:`WebhookMessage` are now always asynchronous. For synchronous use (``requests``), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`."
 msgstr ":class:`Webhook` and :class:`WebhookMessage` are now always asynchronous. For synchronous use (``requests``), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`."
 
 msgid "``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary."
-msgstr "``WebhookAdapter`` 、 ``AsyncWebhookAdapter`` 和 ``RequestsWebhookAdapter`` 被删除，因为它们是不必要的。"
+msgstr "``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary."
 
 msgid "``adapter`` arguments of :meth:`Webhook.partial` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``."
 msgstr "``adapter`` arguments of :meth:`Webhook.partial` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``."
 
 msgid "Intents Changes"
-msgstr "帐篷变化"
+msgstr "Intents Changes"
 
 msgid ":attr:`Intents.message_content` is now a privileged intent. Disabling it causes :attr:`Message.content`, :attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message.attachments` to be empty (an empty string or an empty array), directly causing :class:`ext.commands.Command` s to not run. See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information."
 msgstr ":attr:`Intents.message_content` is now a privileged intent. Disabling it causes :attr:`Message.content`, :attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message.attachments` to be empty (an empty string or an empty array), directly causing :class:`ext.commands.Command` s to not run. See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information."
 
 msgid "Threads Introduced"
-msgstr "引入线程"
+msgstr "Threads Introduced"
 
 msgid "The following methods and attributes can return :class:`Thread` objects:"
 msgstr "The following methods and attributes can return :class:`Thread` objects:"
@@ -213,10 +213,10 @@ msgid ":meth:`Client.get_channel`"
 msgstr ":meth:`Client.get_channel`"
 
 msgid "Permission Changes"
-msgstr "权限更改"
+msgstr "Permission Changes"
 
 msgid "``permissions_in`` has been removed in favor of checking the permissions of the channel for said user."
-msgstr "``permissions_in`` 已被移除，用于检查指定用户的频道权限。"
+msgstr "``permissions_in`` has been removed in favor of checking the permissions of the channel for said user."
 
 msgid "``User.permissions_in``"
 msgstr "``User.permissions_in``"
@@ -228,16 +228,16 @@ msgid "``Member.permissions_in``"
 msgstr "``Member.permissions_in``"
 
 msgid "Edit Method Behavior Change"
-msgstr "编辑方法行为"
+msgstr "Edit Method Behavior Change"
 
 msgid "``edit`` methods of most classes no longer update the cache in-place, and instead returns the modified object."
-msgstr "大多数类的 ``edit`` 方法不再更新缓存，而是返回修改过的对象。"
+msgstr "``edit`` methods of most classes no longer update the cache in-place, and instead returns the modified object."
 
 msgid "Positional-Keyword Argument Split"
-msgstr "定位关键字参数拆分"
+msgstr "Positional-Keyword Argument Split"
 
 msgid "The following are now positional only:"
-msgstr "以下只是位置："
+msgstr "The following are now positional only:"
 
 msgid ":meth:`abc.GuildChannel.permissions_for`"
 msgstr ":meth:`abc.GuildChannel.permissions_for`"
@@ -264,7 +264,7 @@ msgid ":meth:`PartialMessageable.get_partial_message`"
 msgstr ":meth:`PartialMessageable.get_partial_message`"
 
 msgid "The following are now keyword only:"
-msgstr "以下只是关键词："
+msgstr "The following are now keyword only:"
 
 msgid ":func:`utils.oauth_url`"
 msgstr ":func:`utils.oauth_url`"
@@ -273,28 +273,28 @@ msgid ":meth:`Reaction.users`"
 msgstr ":meth:`Reaction.users`"
 
 msgid "Event Changes"
-msgstr "事件更改"
+msgstr "Event Changes"
 
 msgid ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
 msgstr ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
 
 msgid "``on_private_channel_create/delete`` will no longer be dispatched due to Discord changes."
-msgstr "由于Discord更改，``on_private_channel_create/delete`` 将不再发送。"
+msgstr "``on_private_channel_create/delete`` will no longer be dispatched due to Discord changes."
 
 msgid ":func:`on_socket_raw_receive` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to :class:`str`. Previously, when received a multi-part zlib-compressed binary message, :func:`on_socket_raw_receive` was dispatched on all messages with the compressed, encoded :class:`bytes`."
 msgstr ":func:`on_socket_raw_receive` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to :class:`str`. Previously, when received a multi-part zlib-compressed binary message, :func:`on_socket_raw_receive` was dispatched on all messages with the compressed, encoded :class:`bytes`."
 
 msgid "Message.type For Replies"
-msgstr "输入回复信息"
+msgstr "Message.type For Replies"
 
 msgid ":attr:`Message.type` now returns :attr:`MessageType.reply` for replies, instead of :attr:`MessageType.default`."
 msgstr ":attr:`Message.type` now returns :attr:`MessageType.reply` for replies, instead of :attr:`MessageType.default`."
 
 msgid "Sticker Changes"
-msgstr "貼圖更改"
+msgstr "Sticker Changes"
 
 msgid "``Sticker.preview_image`` was removed as Discord no longer provides the data."
-msgstr "``Sticker.preview_image`` 已被删除，因为Discord不再提供数据。"
+msgstr "``Sticker.preview_image`` was removed as Discord no longer provides the data."
 
 msgid "``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker)."
 msgstr "``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker)."
@@ -309,10 +309,10 @@ msgid "Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is rem
 msgstr "Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is removed from the parent class :class:`Sticker` and moved to :attr:`StandardSticker.tags`."
 
 msgid "Type Changes"
-msgstr "类型更改"
+msgstr "Type Changes"
 
 msgid "Many method arguments now reject ``None`` or return ``None``."
-msgstr "许多方法参数现在拒绝了 ``None`` 或返回 ``None`` 。"
+msgstr "Many method arguments now reject ``None`` or return ``None``."
 
 msgid ":attr:`DMChannel.recipient` is now optional, and will return ``None`` in many cases."
 msgstr ":attr:`DMChannel.recipient` is now optional, and will return ``None`` in many cases."
@@ -342,10 +342,10 @@ msgid ":attr:`ext.commands.Command.help` can now be ``None``."
 msgstr ":attr:`ext.commands.Command.help` can now be ``None``."
 
 msgid "Miscellaneous Changes"
-msgstr "杂项更改"
+msgstr "Miscellaneous Changes"
 
 msgid "The following were removed:"
-msgstr "以下内容已被删除："
+msgstr "The following were removed:"
 
 msgid "``Client.request_offline_members``"
 msgstr "``Client.request_offline_members``"
@@ -372,7 +372,7 @@ msgid "``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extre
 msgstr "``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and replaced with :attr:`VerificationLevel.highest`."
 
 msgid "The following were renamed:"
-msgstr "以下被重命名："
+msgstr "The following were renamed:"
 
 msgid ":attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the newer color."
 msgstr ":attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the newer color."
