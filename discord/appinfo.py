@@ -260,7 +260,7 @@ class AppInfo:
         .. versionadded:: 1.3
         """
         return self._state._get_guild(self.guild_id)
-    
+
     @property
     def summary(self) -> str | None:
         """summary: :class:`str`
@@ -270,13 +270,13 @@ class AppInfo:
         It currently returns an empty string.
 
         .. versionadded:: 1.3
-
-        .. deprecated:: 2.7"""
+        .. deprecated:: 2.7
+        """
         utils.warn_deprecated(
-            "summary", 
-            reference="https://discord.com/developers/docs/resources/application#application-object-application-structure"
-        );
-        return self._summary;
+            "summary",
+            reference="https://discord.com/developers/docs/resources/application#application-object-application-structure",
+        )
+        return self._summary
 
 
 class PartialAppInfo:
