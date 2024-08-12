@@ -103,6 +103,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .onboarding import OnboardingPrompt, OnboardingMode
     from .permissions import Permissions
     from .state import ConnectionState
     from .template import Template
@@ -173,8 +174,6 @@ class Guild(Hashable):
         The channel that denotes the AFK channel. ``None`` if it doesn't exist.
     id: :class:`int`
         The guild's ID.
-    invites_disabled: :class:`bool`
-        Indicates if the guild invites are disabled.
     owner_id: :class:`int`
         The guild owner's ID. Use :attr:`Guild.owner` instead.
     unavailable: :class:`bool`
