@@ -12,46 +12,46 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "Migrazione a v2.0"
+msgstr "Migrating to v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "v2.0 ha introdotto nuove funzionalità di Discord e deprecato alcune vecchie."
+msgstr "v2.0 introduced new Discord features and deprecated some old ones."
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
-msgstr "Parte della riprogettazione comporta la creazione di comandi e componenti delle applicazioni. Queste modifiche includono una nuova classe :class:`Bot`, :class:`ui. iew`, e una nuova classe :class:`ApplicationContext`. Se sei interessato a crearli, controlla la nostra `guida <guide> :resource:."
+msgstr "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
 
 msgid "Python Version Change"
-msgstr "Modifica Versione Python"
+msgstr "Python Version Change"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
-msgstr "Al fine di rendere lo sviluppo più facile e anche per consentire le nostre dipendenze di aggiornare per consentire l'uso di 3. o superiore, la libreria ha dovuto rimuovere il supporto per le versioni Python inferiori a 3. , il che significa essenzialmente che **il supporto per Python 3.7 e inferiore è stato abbandonato**."
+msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
 
 msgid "Major Model Changes"
-msgstr "Variazioni Principali Del Modello"
+msgstr "Major Model Changes"
 
 msgid "Below are major changes that have happened in v2.0:"
-msgstr "Di seguito sono riportati i grandi cambiamenti che sono accaduti in v2.0:"
+msgstr "Below are major changes that have happened in v2.0:"
 
 msgid "Dropped User Accounts Support"
-msgstr "Supporto Account Utente Eliminato"
+msgstr "Dropped User Accounts Support"
 
 msgid "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
-msgstr "Prima di v2.0, gli account utente sono stati supportati. Questo è stato contro lo spirito della libreria e la discordia ToS ed è stato rimosso. Pertanto, queste caratteristiche che erano applicabili solo a loro sono state rimosse:"
+msgstr "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
 
 msgid "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
-msgstr "``bot`` argomento di :meth:`Client.start` e :meth:`Client.run`"
+msgstr "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
 
 msgid "``afk`` argument of :meth:`Client.change_presence`"
-msgstr "``afk`` argomento di :meth:`Client.change_presence`"
+msgstr "``afk`` argument of :meth:`Client.change_presence`"
 
 msgid "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
-msgstr "Classi ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
+msgstr "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
 
 msgid "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``"
 msgstr "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``"
 
 msgid "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
-msgstr "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTA: ``GroupChannel`` rimane ancora)"
+msgstr "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
 
 msgid "``Guild.ack``"
 msgstr "``Guild.ack``"
@@ -63,55 +63,55 @@ msgid "``Client.fetch_user_profile``"
 msgstr "``Client.fetch_user_profile``"
 
 msgid "``Message.call`` and ``ack``"
-msgstr "``Message.call`` e ``ack``"
+msgstr "``Message.call`` and ``ack``"
 
 msgid "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
-msgstr "``ClientUser.email``, ```premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
+msgstr "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
 
 msgid "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
-msgstr "Argomenti di ``ClientUser.edit``: ``password``, ``new_password``, ``email`, ``casa``"
+msgstr "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
 
 msgid "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
-msgstr "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ```profile``"
+msgstr "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
 
 msgid "Events: ``on_relationship_add`` and ``on_relationship_update``"
-msgstr "Eventi: ``on_relationship_add`` e ``on_relationship_update``"
+msgstr "Events: ``on_relationship_add`` and ``on_relationship_update``"
 
 msgid "Timezone-aware Time"
-msgstr "Tempo Timezone-aware"
+msgstr "Timezone-aware Time"
 
 msgid "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."
-msgstr "``utcnow`` diventa ``now(datetime.timezone.utc)``. Se stai costruendo tu stesso :class:`datetime.datetime``, passa ``tzinfo=datetime.timezone.utc``."
+msgstr "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."
 
 msgid "Note that newly-added :meth:`utils.utcnow()` can be used as an alias of ``datetime.datetime.now(datetime.timezone.utc)``."
-msgstr "Nota che il nuovo :meth:`utils.utcnow()` può essere usato come alias di ``datetime.datetime.now(datetime.timezone.utc)``."
+msgstr "Note that newly-added :meth:`utils.utcnow()` can be used as an alias of ``datetime.datetime.now(datetime.timezone.utc)``."
 
 msgid "Asset Changes"
-msgstr "Modifiche Asset"
+msgstr "Asset Changes"
 
 msgid "Asset-related attributes that previously returned hash strings (e.g. :attr:`User.avatar`) now returns :class:`Asset`. :attr:`Asset.key` returns the hash from now on."
-msgstr "Attributi relativi all'asset che hanno precedentemente restituito stringhe di hash (ad esempio :attr:`User.avatar`) ora restituisce :class:`Asset`. :attr:`Asset.key` restituisce l'hash da ora in poi."
+msgstr "Asset-related attributes that previously returned hash strings (e.g. :attr:`User.avatar`) now returns :class:`Asset`. :attr:`Asset.key` returns the hash from now on."
 
 msgid "``Class.x_url`` and ``Class.x_url_as`` are removed. :meth:`Asset.replace` or :meth:`Asset.with_x` methods can be used to get specific asset sizes or types."
-msgstr "``Class.x_url`` e ``Class.x_url_as`` sono rimossi. :meth:`Asset.replace` o :meth:`Asset.with_x` metodi possono essere utilizzati per ottenere specifiche dimensioni o tipi di asset."
+msgstr "``Class.x_url`` and ``Class.x_url_as`` are removed. :meth:`Asset.replace` or :meth:`Asset.with_x` methods can be used to get specific asset sizes or types."
 
 msgid ":attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :meth:`Emoji.save` and :meth:`Emoji.read` are added to save or read emojis."
-msgstr ":attr:`Emoji.url` e :attr:`PartialEmoji.url` sono ora :class:`str`. :meth:`Emoji.save` e :meth:`Emoji.read` sono aggiunti per salvare o leggere le emoji."
+msgstr ":attr:`Emoji.url` and :attr:`PartialEmoji.url` are now :class:`str`. :meth:`Emoji.save` and :meth:`Emoji.read` are added to save or read emojis."
 
 msgid "``Emoji.url_as`` and ``PartialEmoji.url_as`` are removed."
-msgstr "``Emoji.url_as`` e ``PartialEmoji.url_as`` sono rimossi."
+msgstr "``Emoji.url_as`` and ``PartialEmoji.url_as`` are removed."
 
 msgid "Some :class:`AuditLogDiff` attributes now return :class:`Asset` instead of :class:`str`: :attr:`AuditLogDiff.splash`, :attr:`AuditLogDiff.icon`, :attr:`AuditLogDiff.avatar`"
-msgstr "Alcuni attributi :class:`AuditLogDiff` ora restituiscono :class:`Asset` invece di :class:`str`: :attr:`AuditLogDiff.splash`, :attr:`AuditLogDiff.icon`, :attr:`AuditLogDiff.avatar`"
+msgstr "Some :class:`AuditLogDiff` attributes now return :class:`Asset` instead of :class:`str`: :attr:`AuditLogDiff.splash`, :attr:`AuditLogDiff.icon`, :attr:`AuditLogDiff.avatar`"
 
 msgid ":attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior."
-msgstr ":attr:`User.avatar` restituisce ``None`` se l'avatar non è impostato ed è invece l'avatar predefinito; usa :attr:`User.display_avatar` per il comportamento pre-2.0."
+msgstr ":attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior."
 
 msgid "Before"
-msgstr "Prima"
+msgstr "Before"
 
 msgid "After"
-msgstr "Dopo"
+msgstr "After"
 
 msgid "``str(user.avatar_url)``"
 msgstr "``str(user.avatar_url)``"
@@ -171,28 +171,28 @@ msgid "``partialemoji.url``"
 msgstr "``partialemoji.url``"
 
 msgid "Webhook Changes"
-msgstr "Modifiche Webhook"
+msgstr "Webhook Changes"
 
 msgid ":class:`Webhook` and :class:`WebhookMessage` are now always asynchronous. For synchronous use (``requests``), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`."
-msgstr ":class:`Webhook` e :class:`WebhookMessage` sono ora sempre asincroni. Per uso sincrono (``requests``), usa :class:`SyncWebhook` e :class:`SyncWebhookMessage`."
+msgstr ":class:`Webhook` and :class:`WebhookMessage` are now always asynchronous. For synchronous use (``requests``), use :class:`SyncWebhook` and :class:`SyncWebhookMessage`."
 
 msgid "``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary."
-msgstr "``WebhookAdapter``, ``AsyncWebhookAdapter``, e ``RequestsWebhookAdapter`` sono rimossi, poiché non sono necessari."
+msgstr "``WebhookAdapter``, ``AsyncWebhookAdapter``, and ``RequestsWebhookAdapter`` are removed, since they are unnecessary."
 
 msgid "``adapter`` arguments of :meth:`Webhook.partial` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``."
-msgstr "``adapter`` argomenti di :meth:`Webhook.partial` e :meth:`Webhook.from_url` sono rimossi. Le sessioni sono ora passate direttamente a ``partial`` / ``from_url```."
+msgstr "``adapter`` arguments of :meth:`Webhook.partial` and :meth:`Webhook.from_url` are removed. Sessions are now passed directly to ``partial`` / ``from_url``."
 
 msgid "Intents Changes"
-msgstr "Modifiche Intenti"
+msgstr "Intents Changes"
 
 msgid ":attr:`Intents.message_content` is now a privileged intent. Disabling it causes :attr:`Message.content`, :attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message.attachments` to be empty (an empty string or an empty array), directly causing :class:`ext.commands.Command` s to not run. See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information."
-msgstr ":attr:`Intents.message_content` è ora un intento privilegiato. Disabilitarlo causa :attr:`Message.content`, :attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message. ttachments` per essere vuoto (una stringa vuota o un array vuoto), causando direttamente :class:`ext. ommands.Command` s to not run. See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information."
+msgstr ":attr:`Intents.message_content` is now a privileged intent. Disabling it causes :attr:`Message.content`, :attr:`Message.embeds`, :attr:`Message.components`, and :attr:`Message.attachments` to be empty (an empty string or an empty array), directly causing :class:`ext.commands.Command` s to not run. See `here <https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ>`_ for more information."
 
 msgid "Threads Introduced"
-msgstr "Discussioni Introdotte"
+msgstr "Threads Introduced"
 
 msgid "The following methods and attributes can return :class:`Thread` objects:"
-msgstr "I seguenti metodi e attributi possono restituire oggetti :class:`Thread`:"
+msgstr "The following methods and attributes can return :class:`Thread` objects:"
 
 msgid ":attr:`Message.channel`"
 msgstr ":attr:`Message.channel`"
@@ -207,16 +207,16 @@ msgid ":attr:`ext.commands.ChannelNotReadable.argument`"
 msgstr ":attr:`ext.commands.ChannelNotReadable.argument`"
 
 msgid ":class:`ext.commands.NSFWChannelRequired`'s ``channel`` argument"
-msgstr ":class:`ext.commands.NSFWChannelRequired`'s ``channel`` argomento"
+msgstr ":class:`ext.commands.NSFWChannelRequired`'s ``channel`` argument"
 
 msgid ":meth:`Client.get_channel`"
 msgstr ":meth:`Client.get_channel`"
 
 msgid "Permission Changes"
-msgstr "Modifiche Dei Permessi"
+msgstr "Permission Changes"
 
 msgid "``permissions_in`` has been removed in favor of checking the permissions of the channel for said user."
-msgstr "``permissions_in`` è stato rimosso a favore del controllo dei permessi del canale per detto utente."
+msgstr "``permissions_in`` has been removed in favor of checking the permissions of the channel for said user."
 
 msgid "``User.permissions_in``"
 msgstr "``User.permissions_in``"
@@ -228,16 +228,16 @@ msgid "``Member.permissions_in``"
 msgstr "``Member.permissions_in``"
 
 msgid "Edit Method Behavior Change"
-msgstr "Modifica Metodo Comportamento Modifica"
+msgstr "Edit Method Behavior Change"
 
 msgid "``edit`` methods of most classes no longer update the cache in-place, and instead returns the modified object."
-msgstr "``edit`` i metodi della maggior parte delle classi non aggiornano più la cache sul posto, e invece restituisce l'oggetto modificato."
+msgstr "``edit`` methods of most classes no longer update the cache in-place, and instead returns the modified object."
 
 msgid "Positional-Keyword Argument Split"
-msgstr "Positional-Keyword Argomento Divisione"
+msgstr "Positional-Keyword Argument Split"
 
 msgid "The following are now positional only:"
-msgstr "I seguenti sono ora solo posizioni:"
+msgstr "The following are now positional only:"
 
 msgid ":meth:`abc.GuildChannel.permissions_for`"
 msgstr ":meth:`abc.GuildChannel.permissions_for`"
@@ -264,7 +264,7 @@ msgid ":meth:`PartialMessageable.get_partial_message`"
 msgstr ":meth:`PartialMessageable.get_partial_message`"
 
 msgid "The following are now keyword only:"
-msgstr "Ora sono solo parole chiave:"
+msgstr "The following are now keyword only:"
 
 msgid ":func:`utils.oauth_url`"
 msgstr ":func:`utils.oauth_url`"
@@ -273,79 +273,79 @@ msgid ":meth:`Reaction.users`"
 msgstr ":meth:`Reaction.users`"
 
 msgid "Event Changes"
-msgstr "Modifiche Evento"
+msgstr "Event Changes"
 
 msgid ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
-msgstr ":func:`on_presence_update` sostituisce `on_member_update` per aggiornamenti a :attr:`Member.status` e :attr:`Member.activities`."
+msgstr ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
 
 msgid "``on_private_channel_create/delete`` will no longer be dispatched due to Discord changes."
-msgstr "``on_private_channel_create/delete`` non sarà più spedito a causa delle modifiche di Discord."
+msgstr "``on_private_channel_create/delete`` will no longer be dispatched due to Discord changes."
 
 msgid ":func:`on_socket_raw_receive` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to :class:`str`. Previously, when received a multi-part zlib-compressed binary message, :func:`on_socket_raw_receive` was dispatched on all messages with the compressed, encoded :class:`bytes`."
-msgstr ":func:`on_socket_raw_receive` non è più spedito per dati incompleti, e il valore passato è sempre decompresso e decodificato in :class:`str`. In precedenza, quando ricevette un messaggio binario zlib-compresso, :func:`on_socket_raw_receive` è stato inviato su tutti i messaggi con il compresso codificato :class:`bytes`."
+msgstr ":func:`on_socket_raw_receive` is no longer dispatched for incomplete data, and the value passed is always decompressed and decoded to :class:`str`. Previously, when received a multi-part zlib-compressed binary message, :func:`on_socket_raw_receive` was dispatched on all messages with the compressed, encoded :class:`bytes`."
 
 msgid "Message.type For Replies"
-msgstr "Message.Type Per Le Risposte"
+msgstr "Message.type For Replies"
 
 msgid ":attr:`Message.type` now returns :attr:`MessageType.reply` for replies, instead of :attr:`MessageType.default`."
-msgstr ":attr:`Message.type` restituisce ora :attr:`MessageType.reply` per le risposte, invece di :attr:`MessageType.default`."
+msgstr ":attr:`Message.type` now returns :attr:`MessageType.reply` for replies, instead of :attr:`MessageType.default`."
 
 msgid "Sticker Changes"
-msgstr "Modifiche Adesivo"
+msgstr "Sticker Changes"
 
 msgid "``Sticker.preview_image`` was removed as Discord no longer provides the data."
-msgstr "``Sticker.preview_image`` è stato rimosso poiché Discord non fornisce più i dati."
+msgstr "``Sticker.preview_image`` was removed as Discord no longer provides the data."
 
 msgid "``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker)."
-msgstr "``StickerType```, un enum di formati di adesivi, è rinominato in :class:`StickerFormatType`. Il vecchio nome è usato per un nuovo enum con scopi diversi (controllare se l'adesivo è un adesivo di gilda o un adesivo di Nitro)."
+msgstr "``StickerType``, an enum of sticker formats, is renamed to :class:`StickerFormatType`. Old name is used for a new enum with different purpose (checking if the sticker is guild sticker or Nitro sticker)."
 
 msgid ":attr:`Message.stickers` is now List[:class:`StickerItem`] instead of List[:class:`Sticker`]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method."
-msgstr ":attr:`Message.stickers` è ora List[:class:`StickerItem`] invece di List[:class:`Sticker`]. Mentre :class:`StickerItem` supporta alcune operazioni dei precedenti ``Sticker``, ``description`` e ``pack_id`` gli attributi non esistono. :class:`Sticker` può essere recuperato tramite il metodo :meth:`StickerItem.fetch`."
+msgstr ":attr:`Message.stickers` is now List[:class:`StickerItem`] instead of List[:class:`Sticker`]. While :class:`StickerItem` supports some operations of previous ``Sticker``, ``description`` and ``pack_id`` attributes do not exist. :class:`Sticker` can be fetched via :meth:`StickerItem.fetch` method."
 
 msgid "``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via :attr:`Sticker.url`, just like new :class:`Emoji`."
-msgstr "``Sticker.image`` è rimosso. :class:`Sticker` può ancora essere recuperato tramite :meth:`Sticker.read` o :meth:`Sticker. ave` e il suo URL possono essere accessibili tramite :attr:`Sticker.url`, proprio come il nuovo :class:`Emoji`."
+msgstr "``Sticker.image`` is removed. :class:`Sticker` can still be fetched via :meth:`Sticker.read` or :meth:`Sticker.save` and its URL can be accessed via :attr:`Sticker.url`, just like new :class:`Emoji`."
 
 msgid "Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is removed from the parent class :class:`Sticker` and moved to :attr:`StandardSticker.tags`."
-msgstr "A causa dell'introduzione di :class:`GuildSticker`, ``Sticker.tags`` viene rimosso dalla classe padre :class:`Sticker` e spostato in :attr:`StandardSticker.tags`."
+msgstr "Due to the introduction of :class:`GuildSticker`, ``Sticker.tags`` is removed from the parent class :class:`Sticker` and moved to :attr:`StandardSticker.tags`."
 
 msgid "Type Changes"
-msgstr "Tipo Modifiche"
+msgstr "Type Changes"
 
 msgid "Many method arguments now reject ``None`` or return ``None``."
-msgstr "Molti argomenti del metodo ora rifiutano ``None`` o restituiscono ``None``."
+msgstr "Many method arguments now reject ``None`` or return ``None``."
 
 msgid ":attr:`DMChannel.recipient` is now optional, and will return ``None`` in many cases."
-msgstr ":attr:`DMChannel.recipient` è ora opzionale, e restituirà ``None`` in molti casi."
+msgstr ":attr:`DMChannel.recipient` is now optional, and will return ``None`` in many cases."
 
 msgid ":attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar."
-msgstr ":attr:`User.avatar` restituisce ``None`` se l'avatar non è impostato ed è invece l'avatar predefinito."
+msgstr ":attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar."
 
 msgid ":attr:`Guild.create_text_channel`'s ``topic`` argument no longer accepts ``None``."
-msgstr ":attr:`Guild.create_text_channel`'s ``topic`` l'argomento non accetta più ``None``."
+msgstr ":attr:`Guild.create_text_channel`'s ``topic`` argument no longer accepts ``None``."
 
 msgid ":attr:`Guild.vanity_invite` can now return ``None``."
-msgstr ":attr:`Guild.vanity_invite` può ora restituire ``None``."
+msgstr ":attr:`Guild.vanity_invite` can now return ``None``."
 
 msgid ":attr:`Template.edit`'s ``name`` argument no longer accepts ``None``."
-msgstr ":attr:`Template.edit`'s ``name`` l'argomento non accetta più ``None``."
+msgstr ":attr:`Template.edit`'s ``name`` argument no longer accepts ``None``."
 
 msgid ":attr:`Member.edit`'s ``roles`` argument no longer accepts ``None``."
-msgstr ":attr:`Member.edit`'s ``roles`` argomento non accetta più ``None``."
+msgstr ":attr:`Member.edit`'s ``roles`` argument no longer accepts ``None``."
 
 msgid ":attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s ``name`` arguments no longer accept ``None``."
-msgstr ":attr:`Bot.add_listener` e :attr:`Bot.remove_listener`'s ``name`` argomenti non accettano più ``None``."
+msgstr ":attr:`Bot.add_listener` and :attr:`Bot.remove_listener`'s ``name`` arguments no longer accept ``None``."
 
 msgid "The following :class:`.ext.commands.Context` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``."
-msgstr "I seguenti attributi :class:`.ext.commands.Context` possono ora essere ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``."
+msgstr "The following :class:`.ext.commands.Context` attributes can now be ``None``: ``prefix``, ``command``, ``invoked_with``, ``invoked_subcommand``."
 
 msgid ":attr:`ext.commands.Command.help` can now be ``None``."
-msgstr ":attr:`ext.commands.Command.help` può ora essere ``None``."
+msgstr ":attr:`ext.commands.Command.help` can now be ``None``."
 
 msgid "Miscellaneous Changes"
-msgstr "Modifiche Varie"
+msgstr "Miscellaneous Changes"
 
 msgid "The following were removed:"
-msgstr "Sono stati rimossi i seguenti:"
+msgstr "The following were removed:"
 
 msgid "``Client.request_offline_members``"
 msgstr "``Client.request_offline_members``"
@@ -360,25 +360,25 @@ msgid "``MemberCacheFlags.online``"
 msgstr "``MemberCacheFlags.online``"
 
 msgid "``guild_subscriptions`` argument of :class:`Client`"
-msgstr "``guild_subscriptions`` argomento di :class:`Client`"
+msgstr "``guild_subscriptions`` argument of :class:`Client`"
 
 msgid "``fetch_offline_members`` argument of :class:`Client`"
-msgstr "``fetch_offline_members`` argomento di :class:`Client`"
+msgstr "``fetch_offline_members`` argument of :class:`Client`"
 
 msgid "``HelpCommand.clean_prefix`` moved to :attr:`ext.commands.Context.clean_prefix`"
-msgstr "``HelpCommand.clean_prefix`` spostato in :attr:`ext.commands.Context.clean_prefix`"
+msgstr "``HelpCommand.clean_prefix`` moved to :attr:`ext.commands.Context.clean_prefix`"
 
 msgid "``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and replaced with :attr:`VerificationLevel.highest`."
-msgstr "``VerificationLevel.table_flip`` (alias ``high``) è stato rimosso. ``extreme``, ``very_high```, e ``double_table_flip`` gli attributi sono stati rimossi e sostituiti con :attr:`VerificationLevel.highest`."
+msgstr "``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and replaced with :attr:`VerificationLevel.highest`."
 
 msgid "The following were renamed:"
-msgstr "Vengono rinominati i seguenti:"
+msgstr "The following were renamed:"
 
 msgid ":attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the newer color."
-msgstr ":attr:`Colour.blurple` è rinominato in :attr:`Colour.og_blurple`, e :attr:`Colour.blurple` ora restituisce il colore più nuovo."
+msgstr ":attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the newer color."
 
 msgid "``missing_perms`` arguments and attributes of :class:`ext.commands.MissingPermissions` and :class:`ext.commands.BotMissingPermissions` are renamed to ``missing_permissions``."
-msgstr "``missing_perms`` argomenti e attributi di :class:`ext.commands.MissingPermissions` e :class:`ext.commands.BotMissingPermissions` sono rinominati in ``missing_permissions``."
+msgstr "``missing_perms`` arguments and attributes of :class:`ext.commands.MissingPermissions` and :class:`ext.commands.BotMissingPermissions` are renamed to ``missing_permissions``."
 
 msgid "The following were changed in behavior:"
 msgstr "The following were changed in behavior:"

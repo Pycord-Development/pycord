@@ -362,9 +362,6 @@ msgstr "Yields"
 msgid ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
 msgstr ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
 
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.SlashCommand\\` \\| \\:py\\:class\\:\\`\\~discord.commands.core.SlashCommandGroup\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.SlashCommand\\` \\| \\:py\\:class\\:\\`\\~discord.commands.core.SlashCommandGroup\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-
 msgid "Creates a copy of this command group."
 msgstr "Creates a copy of this command group."
 

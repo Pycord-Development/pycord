@@ -12,47 +12,47 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Version Guarantees"
-msgstr "バージョン保証"
+msgstr "Version Guarantees"
 
 msgid "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
-msgstr "ライブラリは `semantic versioning principal <https://semver.org/>`_ に従います。これは互換性のないAPI変更が発生するたびにメジャーバージョンが更新されることを意味します。 しかし、Discord側の保証がないため、Pythonのかなりダイナミックな性質とともに変更を破ることになると、何が壊れた変化とみなされるか、何がそうでないのかを判断するのは難しいことです。"
+msgstr "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
 
 msgid "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
-msgstr "最初に注意すべきことは、壊れた変更は**公開されている関数とクラス**にのみ適用されることです。 ここでドキュメントに記載されていない場合は、それはパブリック API の一部ではなく、変更されることになります。 これには、文書化されていないアンダースコアまたはアンダースコアがない関数で始まる属性が含まれます。"
+msgstr "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
 
 msgid "The examples below are non-exhaustive."
-msgstr "以下の例は網羅的ではありません。"
+msgstr "The examples below are non-exhaustive."
 
 msgid "Examples of Breaking Changes"
-msgstr "破損変更の例"
+msgstr "Examples of Breaking Changes"
 
 msgid "Changing the default parameter value to something else."
-msgstr "デフォルトのパラメータ値を別のものに変更します。"
+msgstr "Changing the default parameter value to something else."
 
 msgid "Renaming a function without an alias to an old function."
-msgstr "古い関数へのエイリアスなしで関数の名前を変更します。"
+msgstr "Renaming a function without an alias to an old function."
 
 msgid "Adding or removing parameters to an event."
-msgstr "イベントにパラメータを追加または削除します。"
+msgstr "Adding or removing parameters to an event."
 
 msgid "Examples of Non-Breaking Changes"
-msgstr "非破壊的変更の例"
+msgstr "Examples of Non-Breaking Changes"
 
 msgid "Adding or removing private underscored attributes."
-msgstr "アンダースコアの非公開属性の追加または削除。"
+msgstr "Adding or removing private underscored attributes."
 
 msgid "Adding an element into the ``__slots__`` of a data class."
-msgstr "データクラスの「__slots__」に要素を追加します。"
+msgstr "Adding an element into the ``__slots__`` of a data class."
 
 msgid "Changing the behaviour of a function to fix a bug."
-msgstr "バグを修正する関数の動作を変更します。"
+msgstr "Changing the behaviour of a function to fix a bug."
 
 msgid "Changes in the documentation."
-msgstr "ドキュメントの変更"
+msgstr "Changes in the documentation."
 
 msgid "Modifying the internal HTTP handling."
-msgstr "内部 HTTP 処理を変更します。"
+msgstr "Modifying the internal HTTP handling."
 
 msgid "Upgrading the dependencies to a new version, major or otherwise."
-msgstr "依存関係を新しいバージョン、メジャーまたはそうでないにアップグレードします。"
+msgstr "Upgrading the dependencies to a new version, major or otherwise."
 

@@ -776,9 +776,6 @@ msgstr "A generator that retrieves every :class:`.abc.GuildChannel` the client c
 msgid "This is equivalent to: ::"
 msgstr "This is equivalent to: ::"
 
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-
 msgid "Just because you receive a :class:`.abc.GuildChannel` does not mean that you can communicate in said channel. :meth:`.abc.GuildChannel.permissions_for` should be used for that."
 msgstr "Just because you receive a :class:`.abc.GuildChannel` does not mean that you can communicate in said channel. :meth:`.abc.GuildChannel.permissions_for` should be used for that."
 
@@ -790,9 +787,6 @@ msgstr "Returns a generator with every :class:`.Member` the client can see."
 
 msgid ":class:`.Member` -- A member the client can see."
 msgstr ":class:`.Member` -- A member the client can see."
-
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "Get an :class:`.ApplicationCommand` from the internal list of commands."
 msgstr "Get an :class:`.ApplicationCommand` from the internal list of commands."
@@ -1511,11 +1505,8 @@ msgstr "An iterator that recursively walks through all application commands and 
 msgid ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
 msgstr ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
 
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-
-msgid "An iterator that recursively walks through all commands and subcommands. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr "An iterator that recursively walks through all commands and subcommands. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgid "An iterator that recursively walks through all commands and subcommands."
+msgstr "An iterator that recursively walks through all commands and subcommands."
 
 msgid "Duplicates due to aliases are no longer returned"
 msgstr "Duplicates due to aliases are no longer returned"
@@ -1936,9 +1927,6 @@ msgstr "An iterator that recursively walks through this cog's commands and subco
 
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
-
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "A :class:`list` of commands that are defined inside this cog.  .. note::      This does not include subcommands."
 msgstr "A :class:`list` of commands that are defined inside this cog.  .. note::      This does not include subcommands."

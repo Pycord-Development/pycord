@@ -12,70 +12,70 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Enumerations"
-msgstr "Aufzählungen"
+msgstr "Enumerations"
 
 msgid "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
-msgstr "Die API bietet einige Aufzählungen für bestimmte Arten von Zeichenketten, um zu verhindern, dass die API strings strings eingegeben werden, falls sich die Zeichenketten in der Zukunft ändern."
+msgstr "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
 
 msgid "All enumerations are subclasses of an internal class which mimics the behaviour of :class:`enum.Enum`."
-msgstr "Alle Aufzählungen sind Unterklassen einer internen Klasse, die das Verhalten von :class:`enum.Enum` nachahmt."
+msgstr "All enumerations are subclasses of an internal class which mimics the behaviour of :class:`enum.Enum`."
 
 msgid "Specifies the input type of an option."
-msgstr "Gibt den Eingabetyp einer Option an."
+msgstr "Specifies the input type of an option."
 
 msgid "A slash subcommand."
-msgstr "Ein Schrägstrich Unterbefehl."
+msgstr "A slash subcommand."
 
 msgid "A slash command group."
-msgstr "Eine Schrägstrich Befehlsgruppe."
+msgstr "A slash command group."
 
 msgid "A string."
-msgstr "Ein String."
+msgstr "A string."
 
 msgid "An integer between -2⁵³ and 2⁵³."
-msgstr "Eine Ganzzahl zwischen -253 und 253."
+msgstr "An integer between -2⁵³ and 2⁵³."
 
 msgid "IDs, such as 881224361015672863, are often too big for this input type."
-msgstr "IDs, wie 881224361015672863, sind oft zu groß für diesen Eingabetyp."
+msgstr "IDs, such as 881224361015672863, are often too big for this input type."
 
 msgid "A boolean."
 msgstr "A boolean."
 
 msgid "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
-msgstr "Ein Benutzer aus dem aktuellen Kanal. Dies wird in eine Instanz von :class:`.User` in privaten Kanälen umgewandelt, ansonsten :class:`.Member`"
+msgstr "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
 
 msgid "A channel from the current guild."
-msgstr "Ein Kanal aus der aktuellen Gilde."
+msgstr "A channel from the current guild."
 
 msgid "A role from the current guild."
-msgstr "Eine Rolle aus der aktuellen Gilde."
+msgstr "A role from the current guild."
 
 msgid "A mentionable (user or role)."
-msgstr "Eine erwähnbare (Benutzer oder Rolle)."
+msgstr "A mentionable (user or role)."
 
 msgid "A floating-point number between -2⁵³ and 2⁵³."
-msgstr "Eine Fließkommazahl zwischen -253 und 253."
+msgstr "A floating-point number between -2⁵³ and 2⁵³."
 
 msgid "An attachment."
-msgstr "Ein Anhang."
+msgstr "An attachment."
 
 msgid "Specifies the type of channel."
-msgstr "Gibt den Kanaltyp an."
+msgstr "Specifies the type of channel."
 
 msgid "A text channel."
-msgstr "Ein Text-Kanal."
+msgstr "A text channel."
 
 msgid "A voice channel."
-msgstr "Ein Sprachkanal."
+msgstr "A voice channel."
 
 msgid "A private text channel. Also called a direct message."
-msgstr "Ein privater Text-Kanal. Auch Direktnachricht genannt."
+msgstr "A private text channel. Also called a direct message."
 
 msgid "A private group text channel."
-msgstr "Ein privater Gruppen-Text-Kanal."
+msgstr "A private group text channel."
 
 msgid "A category channel."
-msgstr "Ein Kategorie-Kanal."
+msgstr "A category channel."
 
 msgid "A guild news channel."
 msgstr "A guild news channel."

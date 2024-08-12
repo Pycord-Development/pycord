@@ -12,19 +12,19 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Frequently Asked Questions"
-msgstr "Häufig gestellte Fragen"
+msgstr "Frequently Asked Questions"
 
 msgid "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
 msgstr "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
 
 msgid "Coroutines"
-msgstr "Coroutinen"
+msgstr "Coroutines"
 
 msgid "Questions regarding coroutines and asyncio belong here."
-msgstr "Fragen zu Koroutinen und asyncio gehören hier her."
+msgstr "Questions regarding coroutines and asyncio belong here."
 
 msgid "What is a coroutine?"
-msgstr "Was ist eine Koroutine?"
+msgstr "What is a coroutine?"
 
 msgid "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
 msgstr "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
@@ -33,13 +33,13 @@ msgid "**If you forget to await a coroutine then the coroutine will not run. Nev
 msgstr "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
 
 msgid "Where can I use ``await``\\?"
-msgstr "Wo kann ich ``await`` verwenden?"
+msgstr "Where can I use ``await``\\?"
 
 msgid "You can only use ``await`` inside ``async def`` functions and nowhere else."
-msgstr "Du kannst nur ``await`` in ``async def`` Funktionen und nirgendwo anders verwenden."
+msgstr "You can only use ``await`` inside ``async def`` functions and nowhere else."
 
 msgid "What does \"blocking\" mean?"
-msgstr "Was bedeuted \"blocking\"?"
+msgstr "What does \"blocking\" mean?"
 
 msgid "In asynchronous programming a blocking call is essentially all the parts of the function that are not ``await``. Do not despair however, because not all forms of blocking are bad! Using blocking calls is inevitable, but you must work to make sure that you don't excessively block functions. Remember, if you block for too long then your bot will freeze since it has not stopped the function's execution at that point to do other things."
 msgstr "In asynchronous programming a blocking call is essentially all the parts of the function that are not ``await``. Do not despair however, because not all forms of blocking are bad! Using blocking calls is inevitable, but you must work to make sure that you don't excessively block functions. Remember, if you block for too long then your bot will freeze since it has not stopped the function's execution at that point to do other things."
