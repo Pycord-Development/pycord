@@ -41,13 +41,12 @@ jobs:
           localization_branch_name: l10n_master
           create_pull_request: true
           pull_request_title: "New Crowdin Translations"
-          pull_request_body:
-            "New Crowdin translations by [Crowdin GH
-            Action](https://github.com/crowdin/github-action)"
+          pull_request_body: "docs: Update localoizations from Crowdin"
           pull_request_base_branch_name: "master"
           pull_request_reviewers: "Lulalaby"
           config: "crowdin.yml"
           base_path: "."
+          commit_message: "docs: Update localoizations from Crowdin"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
