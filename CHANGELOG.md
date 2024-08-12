@@ -12,7 +12,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ⚠️ **This Version Removes Support For Python 3.8** ⚠️
 
-### Changed
+### Changed <a id="changelog-changed-unreleased"></a>
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
   `ScheduledEvent.edit` to `image`.
@@ -20,14 +20,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - ⚠️ **This Version Removes Support For Python 3.8** ⚠️
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
 
-### Added
+### Added <a id="changelog-added-unreleased"></a>
 
 - Added `Guild.fetch_role` method.
   ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
 
 ## [2.6.0] - 2024-07-09
 
-### Added
+### Added <a id="changelog-added-2.6.0"></a>
 
 - Added `banner` parameter to `ClientUser.edit`.
   ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))
@@ -58,7 +58,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `MessageCall` information.
   ([#2488](https://github.com/Pycord-Development/pycord/pull/2488))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.6.0"></a>
 
 - Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual
   behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))
@@ -98,7 +98,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Further fixed logic when fetching audit logs.
   ([#2492](https://github.com/Pycord-Development/pycord/pull/2492))
 
-### Changed
+### Changed <a id="changelog-changed-2.6.0"></a>
 
 - Changed the type of `Guild.bitrate_limit` to `int`.
   ([#2387](https://github.com/Pycord-Development/pycord/pull/2387))
@@ -121,7 +121,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Changed the error message that appears when attempting to add a subcommand group to a
   subcommand group. ([#2275](https://github.com/Pycord-Development/pycord/pull/2275))
 
-### Removed
+### Removed <a id="changelog-removed-2.6.0"></a>
 
 - Removed the `delete_message_days` parameter from ban methods. Please use
   `delete_message_seconds` instead.
@@ -134,7 +134,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.5.0] - 2024-03-02
 
-### Added
+### Added <a id="changelog-added-2.5.0"></a>
 
 - Added method to start bot via async context manager.
   ([#1801](https://github.com/Pycord-Development/pycord/pull/1801))
@@ -224,7 +224,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added audit log support for voice channel status.
   ([#2373](https://github.com/Pycord-Development/pycord/pull/2373))
 
-### Changed
+### Changed <a id="changelog-changed-2.5.0"></a>
 
 - Changed default for all `name_localizations` and `description_localizations`
   attributes from being `None` to being `MISSING`.
@@ -259,14 +259,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - `BridgeOption` must now be used for arguments in bridge commands.
   ([#2252](https://github.com/Pycord-Development/pycord/pull/2252))
 
-### Removed
+### Removed <a id="changelog-removed-2.5.0"></a>
 
 - Removed `Client.once` in favour of `once` argument in `Client.listen`.
   ([#1957](https://github.com/Pycord-Development/pycord/pull/1957))
 - Removed `Embed.Empty` in favour of `None`, and `EmbedProxy` in favour of individual
   classes. ([#2063](https://github.com/Pycord-Development/pycord/pull/2063))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.5.0"></a>
 
 - Fixed `AttributeError` caused by
   [#1957](https://github.com/Pycord-Development/pycord/pull/1957) when using listeners
@@ -376,13 +376,13 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.4.1] - 2023-03-20
 
-### Changed
+### Changed <a id="changelog-changed-2.4.1"></a>
 
 - Updated the values of the `Color.embed_background()` classmethod to correspond with
   new theme colors in the app.
   ([#1931](https://github.com/Pycord-Development/pycord/pull/1931))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.4.1"></a>
 
 - Fixed the type-hinting of `SlashCommandGroup.walk_commands()` to reflect actual
   behavior. ([#1838](https://github.com/Pycord-Development/pycord/pull/1838))
@@ -395,7 +395,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.4.0] - 2023-02-10
 
-### Added
+### Added <a id="changelog-added-2.4.0"></a>
 
 - Added new AutoMod trigger metadata properties `regex_patterns`, `allow_list`, and
   `mention_total_limit`; and added the `mention_spam` trigger type.
@@ -422,7 +422,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Improved support for setting channel types & added new channel types for
   `discord.Option`. ([#1883](https://github.com/Pycord-Development/pycord/pull/1883))
 
-### Changed
+### Changed <a id="changelog-changed-2.4.0"></a>
 
 - Changed `EmbeddedActivity` values to update accordingly with the new activities.
   ([#1859](https://github.com/Pycord-Development/pycord/pull/1859))
@@ -432,7 +432,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - The `version_info.release_level` attribute has been reverted to its previous name,
   `releaselevel`. ([#1920](https://github.com/Pycord-Development/pycord/pull/1920))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.4.0"></a>
 
 - Fixed bugs in `Page.update_files` where file objects stored in memory were causing an
   `AttributeError`, and `io.BytesIO` files didn't send properly more than once.
@@ -445,12 +445,14 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.3.3] - 2023-02-10
 
+### Fixed <a id="changelog-fixed-2.3.3"></a>
+
 - Fixed an unhandled `KeyError` exception when receiving GIF stickers, causing crashes.
   ([#1915](https://github.com/Pycord-Development/pycord/pull/1915))
 
 ## [2.3.2] - 2022-12-03
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.3.2"></a>
 
 - Fixed another `AttributeError` relating to the new `bridge_commands` attribute on
   `ext.bridge.Bot`. ([#1815](https://github.com/Pycord-Development/pycord/pull/1815))
@@ -461,14 +463,14 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.3.1] - 2022-11-27
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.3.1"></a>
 
 - Fixed `AttributeError` relating to the new `bridge_commands` attribute on
   `ext.bridge.Bot`. ([#1802](https://github.com/Pycord-Development/pycord/pull/1802))
 
 ## [2.3.0] - 2022-11-23
 
-### Added
+### Added <a id="changelog-added-2.3.0"></a>
 
 - New brief Attribute to BridgeSlashCommand.
   ([#1676](https://github.com/Pycord-Development/pycord/pull/1676))
@@ -489,7 +491,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Updated `Guild.features` to include new and previously missing features.
   ([#1788](https://github.com/Pycord-Development/pycord/pull/1788))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.3.0"></a>
 
 - Fix bridge.has_permissions.
   ([#1695](https://github.com/Pycord-Development/pycord/pull/1695))
@@ -499,7 +501,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1719](https://github.com/Pycord-Development/pycord/pull/1719) &
   [#1723](https://github.com/Pycord-Development/pycord/pull/1723))
 
-### Changed
+### Changed <a id="changelog-changed-2.3.0"></a>
 
 - `get_application_command()` type kwarg now defaults to `ApplicationCommand`, so all
   command types can be retrieved by default.
@@ -508,14 +510,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 -
 
-### Removed
+### Removed <a id="changelog-removed-2.3.0"></a>
 
 - Removed the guild feature `PRIVATE_THREADS` due to paywall limitation removal.
   ([#1789](https://github.com/Pycord-Development/pycord/pull/1789))
 
 ## [2.2.2] - 2022-10-05
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.2.2"></a>
 
 - Fixed `parent` attribute of second-level subcommands being set to the base level
   command instead of the direct parent.
@@ -523,12 +525,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.2.1] - 2022-10-05
 
-### Added
+### Added <a id="changelog-added-2.2.1"></a>
 
 - New `SlashCommand.qualified_id` attribute.
   ([#1672](https://github.com/Pycord-Development/pycord/pull/1672))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.2.1"></a>
 
 - Fixed a `TypeError` in `ban()` methods related to the new `delete_message_seconds`
   parameter. ([#1666](https://github.com/Pycord-Development/pycord/pull/1666))
@@ -539,7 +541,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.2.0] - 2022-10-02
 
-### Added
+### Added <a id="changelog-added-2.2.0"></a>
 
 - New Guild Feature `INVITES_DISABLED`.
   ([#1613](https://github.com/Pycord-Development/pycord/pull/1613))
@@ -561,7 +563,7 @@ These changes are available on the `master` branch, but have not yet been releas
   for `Interaction` objects.
   ([#1609](https://github.com/Pycord-Development/pycord/pull/1609))
 
-### Deprecated
+### Deprecated <a id="changelog-deprecated-2.2.0"></a>
 
 - The `delete_message_days` parameter in ban methods is now deprecated. Please use
   `delete_message_seconds` instead.
@@ -571,7 +573,7 @@ These changes are available on the `master` branch, but have not yet been releas
   `edit_original_response` & `delete_original_response` methods instead.
   ([#1609](https://github.com/Pycord-Development/pycord/pull/1609))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.2.0"></a>
 
 - Various fixes to ext.bridge groups.
   ([#1633](https://github.com/Pycord-Development/pycord/pull/1633) &
@@ -585,14 +587,14 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.1.3] - 2022-09-06
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.1.3"></a>
 
 - Fix TypeError in `process_application_commands`.
   ([#1622](https://github.com/Pycord-Development/pycord/pull/1622))
 
 ## [2.1.2] - 2022-09-06
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.1.2"></a>
 
 - Fix subcommands having MISSING cog attribute.
   ([#1594](https://github.com/Pycord-Development/pycord/pull/1594) &
@@ -600,14 +602,14 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.1.1] - 2022-08-25
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.1.1"></a>
 
 - Bridge command detection in cogs.
   ([#1592](https://github.com/Pycord-Development/pycord/pull/1592))
 
 ## [2.1.0] - 2022-08-25
 
-### Added
+### Added <a id="changelog-added-2.1.0"></a>
 
 - Support for add, sub, union, intersect, and inverse operations on classes inheriting
   from `BaseFlags`. ([#1486](https://github.com/Pycord-Development/pycord/pull/1486))
@@ -638,7 +640,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Support for `InteractionMessage` via the `message` property of `View`.
   ([#1492](https://github.com/Pycord-Development/pycord/pull/1492))
 
-### Changed
+### Changed <a id="changelog-changed-2.1.0"></a>
 
 - Use `slash_variant` and `ext_variant` attributes instead of
   `get_application_command()` and `get_ext_command()` methods on `BridgeCommand`.
@@ -648,7 +650,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - `commands.has_permissions()` check now returns `True` in DM channels.
   ([#1577](https://github.com/Pycord-Development/pycord/pull/1577))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.1.0"></a>
 
 - Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`.
   ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))
@@ -694,21 +696,21 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix required parameters validation error.
   ([#1589](https://github.com/Pycord-Development/pycord/pull/1589))
 
-### Security
+### Security <a id="changelog-security-2.1.0"></a>
 
 - Improved fix for application-based bots without the bot scope
   ([#1584](https://github.com/Pycord-Development/pycord/pull/1584))
 
 ## [2.0.1] - 2022-08-16
 
-### Security
+### Security <a id="changelog-security-2.0.1"></a>
 
 - Fix for application-based bots without the bot scope
   ([#1568](https://github.com/Pycord-Development/pycord/pull/1568))
 
 ## [2.0.0] - 2022-07-08
 
-### Added
+### Added <a id="changelog-added-2.0.0"></a>
 
 - New `news` property on `TextChannel`.
   ([#1370](https://github.com/Pycord-Development/pycord/pull/1370))
@@ -740,7 +742,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Native timeout support for `Modal`.
   ([#1434](https://github.com/Pycord-Development/pycord/pull/1434))
 
-### Changed
+### Changed <a id="changelog-changed-2.0.0"></a>
 
 - Updated to new sticker limit for premium guilds.
   ([#1420](https://github.com/Pycord-Development/pycord/pull/1420))
@@ -749,12 +751,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - Updated deprecated IDENTIFY packet connection properties.
   ([#1430](https://github.com/Pycord-Development/pycord/pull/1430))
 
-### Removed
+### Removed <a id="changelog-removed-2.0.0"></a>
 
 - `Guild.region` attribute (Deprecated on API, VoiceChannel.rtc_region should be used
   instead). ([#1429](https://github.com/Pycord-Development/pycord/pull/1429))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.0.0"></a>
 
 - Change `guild_only` to `dm_permission` in application command `to_dict` method.
   ([#1368](https://github.com/Pycord-Development/pycord/pull/1368))
@@ -797,7 +799,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.0.0-rc.1] - 2022-05-17
 
-### Added
+### Added <a id="changelog-added-2.0.0-rc.1"></a>
 
 - A `delete_after` kwarg to `Paginator.send`.
   ([#1245](https://github.com/Pycord-Development/pycord/pull/1245))
@@ -847,7 +849,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Support event covers for audit logs.
   ([#1355](https://github.com/Pycord-Development/pycord/pull/1355))
 
-### Changed
+### Changed <a id="changelog-changed-2.0.0-rc.1"></a>
 
 - Removed implicit defer call in `View`.
   ([#1260](https://github.com/Pycord-Development/pycord/pull/1260))
@@ -860,7 +862,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Renamed `delete_exiting` to `delete_existing` (typo).
   ([#1336](https://github.com/Pycord-Development/pycord/pull/1336))
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.0.0-rc.1"></a>
 
 - Fix `PartialMessage.edit()` setting `view` as `None` when `view` kwarg is not passed.
   ([#1256](https://github.com/Pycord-Development/pycord/pull/1256))
@@ -897,7 +899,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ## [2.0.0-beta.7] - 2022-04-09
 
-### Fixed
+### Fixed <a id="changelog-fixed-2.0.0-beta.7"></a>
 
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
