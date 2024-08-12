@@ -1,0 +1,22 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "discord.ext.bridge"
+msgstr "discord.ext.bridge"
+
+msgid "This module allows using one command callback in order to make both a prefix command and a slash command. This page includes the API reference/documentation for the module, but only contains a short example. For a more detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_."
+msgstr "This module allows using one command callback in order to make both a prefix command and a slash command. This page includes the API reference/documentation for the module, but only contains a short example. For a more detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_."
+
+msgid "Example usage:"
+msgstr "Example usage:"
+

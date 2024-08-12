@@ -1,0 +1,1576 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Client Objects"
+msgstr "Client Objects"
+
+msgid "Bots"
+msgstr "Bots"
+
+msgid "Represents a discord bot."
+msgstr "Represents a discord bot."
+
+msgid "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
+msgstr "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
+
+msgid "This class also subclasses ``ApplicationCommandMixin`` to provide the functionality to manage commands."
+msgstr "This class also subclasses ``ApplicationCommandMixin`` to provide the functionality to manage commands."
+
+msgid "The content prefixed into the default help message."
+msgstr "The content prefixed into the default help message."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The user ID that owns the bot. If this is not set and is then queried via :meth:`.is_owner` then it is fetched automatically using :meth:`~.Bot.application_info`."
+msgstr "The user ID that owns the bot. If this is not set and is then queried via :meth:`.is_owner` then it is fetched automatically using :meth:`~.Bot.application_info`."
+
+msgid "Optional[:class:`int`]"
+msgstr "Optional[:class:`int`]"
+
+msgid "The user IDs that owns the bot. This is similar to :attr:`owner_id`. If this is not set and the application is team based, then it is fetched automatically using :meth:`~.Bot.application_info`. For performance reasons it is recommended to use a :class:`set` for the collection. You cannot set both ``owner_id`` and ``owner_ids``."
+msgstr "The user IDs that owns the bot. This is similar to :attr:`owner_id`. If this is not set and the application is team based, then it is fetched automatically using :meth:`~.Bot.application_info`. For performance reasons it is recommended to use a :class:`set` for the collection. You cannot set both ``owner_id`` and ``owner_ids``."
+
+msgid "Optional[Collection[:class:`int`]]"
+msgstr "Optional[Collection[:class:`int`]]"
+
+msgid "Guild IDs of guilds to use for testing commands. The bot will not create any global commands if debug guild IDs are passed."
+msgstr "Guild IDs of guilds to use for testing commands. The bot will not create any global commands if debug guild IDs are passed."
+
+msgid "Optional[List[:class:`int`]]"
+msgstr "Optional[List[:class:`int`]]"
+
+msgid "Whether to automatically sync slash commands. This will call :meth:`~.Bot.sync_commands` in :func:`discord.on_connect`, and in :attr:`.process_application_commands` if the command is not found. Defaults to ``True``."
+msgstr "Whether to automatically sync slash commands. This will call :meth:`~.Bot.sync_commands` in :func:`discord.on_connect`, and in :attr:`.process_application_commands` if the command is not found. Defaults to ``True``."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "The default context types that the bot will use for commands. Defaults to a set containing :attr:`InteractionContextType.guild`, :attr:`InteractionContextType.bot_dm`, and :attr:`InteractionContextType.private_channel`."
+msgstr "The default context types that the bot will use for commands. Defaults to a set containing :attr:`InteractionContextType.guild`, :attr:`InteractionContextType.bot_dm`, and :attr:`InteractionContextType.private_channel`."
+
+msgid "Collection[:class:`InteractionContextType`]"
+msgstr "Collection[:class:`InteractionContextType`]"
+
+msgid "The default integration types that the bot will use for commands. Defaults to a set containing :attr:`IntegrationType.guild_install`."
+msgstr "The default integration types that the bot will use for commands. Defaults to a set containing :attr:`IntegrationType.guild_install`."
+
+msgid "Collection[:class:`IntegrationType`]]"
+msgstr "Collection[:class:`IntegrationType`]]"
+
+msgid "An alias for :meth:`application_command`."
+msgstr "An alias for :meth:`application_command`."
+
+msgid "This decorator is overridden by :class:`discord.ext.commands.Bot`."
+msgstr "This decorator is overridden by :class:`discord.ext.commands.Bot`."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
+msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid "Callable[..., :class:`ApplicationCommand`]"
+msgstr "Callable[..., :class:`ApplicationCommand`]"
+
+msgid "A decorator that registers an event to listen to."
+msgstr "A decorator that registers an event to listen to."
+
+msgid "You can find more info about the events on the :ref:`documentation below <discord-api-events>`."
+msgstr "You can find more info about the events on the :ref:`documentation below <discord-api-events>`."
+
+msgid "The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised."
+msgstr "The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised."
+
+msgid "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
+msgstr "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "The coroutine passed is not actually a coroutine."
+msgstr "The coroutine passed is not actually a coroutine."
+
+msgid "Example"
+msgstr "Example"
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid ":py:class:`~typing.TypeVar`\\(``Coro``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Coroutine`\\[:py:data:`~typing.Any`, :py:data:`~typing.Any`, :py:data:`~typing.Any`]])"
+msgstr ":py:class:`~typing.TypeVar`\\(``Coro``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Coroutine`\\[:py:data:`~typing.Any`, :py:data:`~typing.Any`, :py:data:`~typing.Any`]])"
+
+msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.MessageCommand`."
+msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.MessageCommand`."
+
+msgid "A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot, then returns it."
+msgstr "A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot, then returns it."
+
+msgid "Callable[..., :class:`MessageCommand`]"
+msgstr "Callable[..., :class:`MessageCommand`]"
+
+msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.SlashCommand`."
+msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.SlashCommand`."
+
+msgid "A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot, then returns it."
+msgstr "A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot, then returns it."
+
+msgid "Callable[..., :class:`SlashCommand`]"
+msgstr "Callable[..., :class:`SlashCommand`]"
+
+msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.UserCommand`."
+msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.UserCommand`."
+
+msgid "A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot, then returns it."
+msgstr "A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot, then returns it."
+
+msgid "Callable[..., :class:`UserCommand`]"
+msgstr "Callable[..., :class:`UserCommand`]"
+
+msgid "A decorator that registers another function as an external event listener. Basically this allows you to listen to multiple events from different places e.g. such as :func:`.on_ready`"
+msgstr "A decorator that registers another function as an external event listener. Basically this allows you to listen to multiple events from different places e.g. such as :func:`.on_ready`"
+
+msgid "The functions being listened to must be a :ref:`coroutine <coroutine>`."
+msgstr "The functions being listened to must be a :ref:`coroutine <coroutine>`."
+
+msgid "The function being listened to is not a coroutine."
+msgstr "The function being listened to is not a coroutine."
+
+msgid "The ``name`` (event name) does not start with 'on_'"
+msgstr "The ``name`` (event name) does not start with 'on_'"
+
+msgid "Would print one and two in an unspecified order."
+msgstr "Would print one and two in an unspecified order."
+
+msgid ":py:data:`~typing.Callable`\\[\\[:py:class:`~typing.TypeVar`\\(``Coro``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Coroutine`\\[:py:data:`~typing.Any`, :py:data:`~typing.Any`, :py:data:`~typing.Any`]])], :py:class:`~typing.TypeVar`\\(``Coro``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Coroutine`\\[:py:data:`~typing.Any`, :py:data:`~typing.Any`, :py:data:`~typing.Any`]])]"
+msgstr ":py:data:`~typing.Callable`\\[\\[:py:class:`~typing.TypeVar`\\(``Coro``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Coroutine`\\[:py:data:`~typing.Any`, :py:data:`~typing.Any`, :py:data:`~typing.Any`]])], :py:class:`~typing.TypeVar`\\(``Coro``, bound= :py:data:`~typing.Callable`\\[:py:data:`...<Ellipsis>`, :py:class:`~typing.Coroutine`\\[:py:data:`~typing.Any`, :py:data:`~typing.Any`, :py:data:`~typing.Any`]])]"
+
+msgid "The activity being used upon logging in."
+msgstr "The activity being used upon logging in."
+
+msgid "Optional[:class:`.BaseActivity`]"
+msgstr "Optional[:class:`.BaseActivity`]"
+
+msgid "Adds an :class:`.ApplicationCommand` into the internal list of commands."
+msgstr "Adds an :class:`.ApplicationCommand` into the internal list of commands."
+
+msgid "This is usually not called, instead the :meth:`command` or other shortcut decorators are used instead."
+msgstr "This is usually not called, instead the :meth:`command` or other shortcut decorators are used instead."
+
+msgid "The command to add."
+msgstr "The command to add."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and :meth:`.check_once`."
+msgstr "Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and :meth:`.check_once`."
+
+msgid "The function that was used as a global check."
+msgstr "The function that was used as a global check."
+
+msgid "If the function should only be called once per :meth:`.Bot.invoke` call."
+msgstr "If the function should only be called once per :meth:`.Bot.invoke` call."
+
+msgid "Adds a \"cog\" to the bot."
+msgstr "Adds a \"cog\" to the bot."
+
+msgid "A cog is a class that has its own event listeners and commands."
+msgstr "A cog is a class that has its own event listeners and commands."
+
+msgid ":exc:`.ClientException` is raised when a cog with the same name is already loaded."
+msgstr ":exc:`.ClientException` is raised when a cog with the same name is already loaded."
+
+msgid "The cog to register to the bot."
+msgstr "The cog to register to the bot."
+
+msgid "If a previously loaded cog with the same name should be ejected instead of raising an error.  .. versionadded:: 2.0"
+msgstr "If a previously loaded cog with the same name should be ejected instead of raising an error.  .. versionadded:: 2.0"
+
+msgid "If a previously loaded cog with the same name should be ejected instead of raising an error."
+msgstr "If a previously loaded cog with the same name should be ejected instead of raising an error."
+
+msgid "The cog does not inherit from :class:`.Cog`."
+msgstr "The cog does not inherit from :class:`.Cog`."
+
+msgid "An error happened during loading."
+msgstr "An error happened during loading."
+
+msgid "A cog with the same name is already loaded."
+msgstr "A cog with the same name is already loaded."
+
+msgid "The non decorator alternative to :meth:`.listen`."
+msgstr "The non decorator alternative to :meth:`.listen`."
+
+msgid "The function to call."
+msgstr "The function to call."
+
+msgid "The name of the event to listen for. Defaults to ``func.__name__``."
+msgstr "The name of the event to listen for. Defaults to ``func.__name__``."
+
+msgid "The ``func`` parameter is not a coroutine function."
+msgstr "The ``func`` parameter is not a coroutine function."
+
+msgid "Registers a :class:`~discord.ui.View` for persistent listening."
+msgstr "Registers a :class:`~discord.ui.View` for persistent listening."
+
+msgid "This method should be used for when a view is comprised of components that last longer than the lifecycle of the program."
+msgstr "This method should be used for when a view is comprised of components that last longer than the lifecycle of the program."
+
+msgid "The view to register for dispatching."
+msgstr "The view to register for dispatching."
+
+msgid "The message ID that the view is attached to. This is currently used to refresh the view's state during message update events. If not given then message update events are not propagated for the view."
+msgstr "The message ID that the view is attached to. This is currently used to refresh the view's state during message update events. If not given then message update events are not propagated for the view."
+
+msgid "A view was not passed."
+msgstr "A view was not passed."
+
+msgid "The view is not persistent. A persistent view has no timeout     and all their components have an explicitly provided ``custom_id``."
+msgstr "The view is not persistent. A persistent view has no timeout     and all their components have an explicitly provided ``custom_id``."
+
+msgid "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required. This post-invoke hook takes a sole parameter, a :class:`.Context`."
+msgstr "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required. This post-invoke hook takes a sole parameter, a :class:`.Context`."
+
+msgid "Similar to :meth:`~.Bot.before_invoke`\\, this is not called unless checks and argument parsing procedures succeed. This hook is, however, **always** called regardless of the internal command callback raising an error (i.e. :exc:`.CommandInvokeError`\\). This makes it ideal for clean-up scenarios."
+msgstr "Similar to :meth:`~.Bot.before_invoke`\\, this is not called unless checks and argument parsing procedures succeed. This hook is, however, **always** called regardless of the internal command callback raising an error (i.e. :exc:`.CommandInvokeError`\\). This makes it ideal for clean-up scenarios."
+
+msgid "The coroutine to register as the post-invoke hook."
+msgstr "The coroutine to register as the post-invoke hook."
+
+msgid "The allowed mention configuration."
+msgstr "The allowed mention configuration."
+
+msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`~.Bot.add_application_command`."
+msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`~.Bot.add_application_command`."
+
+msgid "The client's application flags."
+msgstr "The client's application flags."
+
+msgid "The client's application ID."
+msgstr "The client's application ID."
+
+msgid "If this is not passed via ``__init__`` then this is retrieved through the gateway when an event contains the data. Usually after :func:`~discord.on_connect` is called."
+msgstr "If this is not passed via ``__init__`` then this is retrieved through the gateway when an event contains the data. Usually after :func:`~discord.on_connect` is called."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Retrieves the bot's application information."
+msgstr "Retrieves the bot's application information."
+
+msgid "The bot's application information."
+msgstr "The bot's application information."
+
+msgid ":class:`.AppInfo`"
+msgstr ":class:`.AppInfo`"
+
+msgid "Retrieving the information failed somehow."
+msgstr "Retrieving the information failed somehow."
+
+msgid "A hook that is called before IDENTIFYing a session. This is useful if you wish to have more control over the synchronization of multiple IDENTIFYing clients."
+msgstr "A hook that is called before IDENTIFYing a session. This is useful if you wish to have more control over the synchronization of multiple IDENTIFYing clients."
+
+msgid "The default implementation sleeps for 5 seconds."
+msgstr "The default implementation sleeps for 5 seconds."
+
+msgid "The shard ID that requested being IDENTIFY'd"
+msgstr "The shard ID that requested being IDENTIFY'd"
+
+msgid "Whether this IDENTIFY is the first initial IDENTIFY."
+msgstr "Whether this IDENTIFY is the first initial IDENTIFY."
+
+msgid "A decorator that registers a coroutine as a pre-invoke hook. A pre-invoke hook is called directly before the command is called. This makes it a useful function to set up database connections or any type of set up required. This pre-invoke hook takes a sole parameter, a :class:`.Context`."
+msgstr "A decorator that registers a coroutine as a pre-invoke hook. A pre-invoke hook is called directly before the command is called. This makes it a useful function to set up database connections or any type of set up required. This pre-invoke hook takes a sole parameter, a :class:`.Context`."
+
+msgid "The :meth:`~.Bot.before_invoke` and :meth:`~.Bot.after_invoke` hooks are only called if all checks and argument parsing procedures pass without error. If any check or argument parsing procedures fail then the hooks are not called."
+msgstr "The :meth:`~.Bot.before_invoke` and :meth:`~.Bot.after_invoke` hooks are only called if all checks and argument parsing procedures pass without error. If any check or argument parsing procedures fail then the hooks are not called."
+
+msgid "The coroutine to register as the pre-invoke hook."
+msgstr "The coroutine to register as the pre-invoke hook."
+
+msgid "Read-only list of messages the connected client has cached."
+msgstr "Read-only list of messages the connected client has cached."
+
+msgid "Changes the client's presence."
+msgstr "Changes the client's presence."
+
+msgid "The activity being done. ``None`` if no currently active activity is done."
+msgstr "The activity being done. ``None`` if no currently active activity is done."
+
+msgid "Indicates what status to change to. If ``None``, then :attr:`.Status.online` is used."
+msgstr "Indicates what status to change to. If ``None``, then :attr:`.Status.online` is used."
+
+msgid "If the ``activity`` parameter is not the proper type."
+msgstr "If the ``activity`` parameter is not the proper type."
+
+msgid "Removed the ``afk`` keyword-only parameter."
+msgstr "Removed the ``afk`` keyword-only parameter."
+
+msgid "A decorator that adds a global check to the bot. A global check is similar to a :func:`.check` that is applied on a per-command basis except it is run before any command checks have been verified and applies to every command the bot has."
+msgstr "A decorator that adds a global check to the bot. A global check is similar to a :func:`.check` that is applied on a per-command basis except it is run before any command checks have been verified and applies to every command the bot has."
+
+msgid "This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from :exc:`.ApplicationCommandError`."
+msgstr "This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from :exc:`.ApplicationCommandError`."
+
+msgid "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
+msgstr "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
+
+msgid "When using this function the :class:`.Context` sent to a group subcommand may only parse the parent command and not the subcommands due to it being invoked once per :meth:`.Bot.invoke` call."
+msgstr "When using this function the :class:`.Context` sent to a group subcommand may only parse the parent command and not the subcommands due to it being invoked once per :meth:`.Bot.invoke` call."
+
+msgid "Clears the internal state of the bot."
+msgstr "Clears the internal state of the bot."
+
+msgid "After this, the bot can be considered \"re-opened\", i.e. :meth:`is_closed` and :meth:`is_ready` both return ``False`` along with the bot's internal cache cleared."
+msgstr "After this, the bot can be considered \"re-opened\", i.e. :meth:`is_closed` and :meth:`is_ready` both return ``False`` along with the bot's internal cache cleared."
+
+msgid "Closes the connection to Discord."
+msgstr "Closes the connection to Discord."
+
+msgid "A read-only mapping of cog name to cog."
+msgstr "A read-only mapping of cog name to cog."
+
+msgid "Creates a WebSocket connection and lets the WebSocket listen to messages from Discord. This is a loop that runs the entire event system and miscellaneous aspects of the library. Control is not resumed until the WebSocket connection is terminated."
+msgstr "Creates a WebSocket connection and lets the WebSocket listen to messages from Discord. This is a loop that runs the entire event system and miscellaneous aspects of the library. Control is not resumed until the WebSocket connection is terminated."
+
+msgid "If we should attempt reconnecting, either due to internet failure or a specific failure on Discord's part. Certain disconnects that lead to bad state will not be handled (such as invalid sharding payloads or bad tokens)."
+msgstr "If we should attempt reconnecting, either due to internet failure or a specific failure on Discord's part. Certain disconnects that lead to bad state will not be handled (such as invalid sharding payloads or bad tokens)."
+
+msgid "The gateway to connect to Discord is not found. Usually if this     is thrown then there is a Discord API outage."
+msgstr "The gateway to connect to Discord is not found. Usually if this     is thrown then there is a Discord API outage."
+
+msgid "The WebSocket connection has been terminated."
+msgstr "The WebSocket connection has been terminated."
+
+msgid "Creates a :class:`.DMChannel` with this user."
+msgstr "Creates a :class:`.DMChannel` with this user."
+
+msgid "This should be rarely called, as this is done transparently for most people."
+msgstr "This should be rarely called, as this is done transparently for most people."
+
+msgid "The user to create a DM with."
+msgstr "The user to create a DM with."
+
+msgid "The channel that was created."
+msgstr "The channel that was created."
+
+msgid ":class:`.DMChannel`"
+msgstr ":class:`.DMChannel`"
+
+msgid "A shortcut method that creates a slash command group with no subcommands and adds it to the internal command list via :meth:`add_application_command`."
+msgstr "A shortcut method that creates a slash command group with no subcommands and adds it to the internal command list via :meth:`add_application_command`."
+
+msgid "The name of the group to create."
+msgstr "The name of the group to create."
+
+msgid "The description of the group to create."
+msgstr "The description of the group to create."
+
+msgid "A list of the IDs of each guild this group should be added to, making it a guild command. This will be a global command if ``None`` is passed."
+msgstr "A list of the IDs of each guild this group should be added to, making it a guild command. This will be a global command if ``None`` is passed."
+
+msgid "Any additional keyword arguments to pass to :class:`.SlashCommandGroup`."
+msgstr "Any additional keyword arguments to pass to :class:`.SlashCommandGroup`."
+
+msgid "The slash command group that was created."
+msgstr "The slash command group that was created."
+
+msgid "Creates a :class:`.Guild`."
+msgstr "Creates a :class:`.Guild`."
+
+msgid "Bot accounts in more than 10 guilds are not allowed to create guilds."
+msgstr "Bot accounts in more than 10 guilds are not allowed to create guilds."
+
+msgid "The name of the guild."
+msgstr "The name of the guild."
+
+msgid "The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit` for more details on what is expected."
+msgstr "The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit` for more details on what is expected."
+
+msgid "The code for a template to create the guild with.  .. versionadded:: 1.4"
+msgstr "The code for a template to create the guild with.  .. versionadded:: 1.4"
+
+msgid "The code for a template to create the guild with."
+msgstr "The code for a template to create the guild with."
+
+msgid "The guild created. This is not the same guild that is added to cache."
+msgstr "The guild created. This is not the same guild that is added to cache."
+
+msgid ":class:`.Guild`"
+msgstr ":class:`.Guild`"
+
+msgid "Guild creation failed."
+msgstr "Guild creation failed."
+
+msgid "Invalid icon image format given. Must be PNG or JPG."
+msgstr "Invalid icon image format given. Must be PNG or JPG."
+
+msgid "Revokes an :class:`.Invite`, URL, or ID to an invite."
+msgstr "Revokes an :class:`.Invite`, URL, or ID to an invite."
+
+msgid "You must have the :attr:`~.Permissions.manage_channels` permission in the associated guild to do this."
+msgstr "You must have the :attr:`~.Permissions.manage_channels` permission in the associated guild to do this."
+
+msgid "The invite to revoke."
+msgstr "The invite to revoke."
+
+msgid "You do not have permissions to revoke invites."
+msgstr "You do not have permissions to revoke invites."
+
+msgid "The invite is invalid or expired."
+msgstr "The invite is invalid or expired."
+
+msgid "Revoking the invite failed."
+msgstr "Revoking the invite failed."
+
+msgid "The emojis that the connected client has."
+msgstr "The emojis that the connected client has."
+
+msgid "Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements."
+msgstr "Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements."
+
+msgid "Limit the fetched entitlements to entitlements owned by this user."
+msgstr "Limit the fetched entitlements to entitlements owned by this user."
+
+msgid "Limit the fetched entitlements to entitlements that are for these SKUs."
+msgstr "Limit the fetched entitlements to entitlements that are for these SKUs."
+
+msgid "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "Retrieve guilds after this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve guilds after this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "The number of entitlements to retrieve. If ``None``, retrieves every entitlement, which may be slow. Defaults to ``100``."
+msgstr "The number of entitlements to retrieve. If ``None``, retrieves every entitlement, which may be slow. Defaults to ``100``."
+
+msgid "Limit the fetched entitlements to entitlements owned by this guild."
+msgstr "Limit the fetched entitlements to entitlements owned by this guild."
+
+msgid "Whether to limit the fetched entitlements to those that have not ended. Defaults to ``False``."
+msgstr "Whether to limit the fetched entitlements to those that have not ended. Defaults to ``False``."
+
+msgid "Yields"
+msgstr "Yields"
+
+msgid ":class:`.Entitlement` -- The application's entitlements."
+msgstr ":class:`.Entitlement` -- The application's entitlements."
+
+msgid "Retrieving the entitlements failed."
+msgstr "Retrieving the entitlements failed."
+
+msgid ":py:class:`~discord.iterators.EntitlementIterator`"
+msgstr ":py:class:`~discord.iterators.EntitlementIterator`"
+
+msgid "Examples"
+msgstr "Examples"
+
+msgid "Usage ::"
+msgstr "Usage ::"
+
+msgid "Flattening into a list ::"
+msgstr "Flattening into a list ::"
+
+msgid "All parameters are optional."
+msgstr "All parameters are optional."
+
+msgid "A read-only mapping of extension name to extension."
+msgstr "A read-only mapping of extension name to extension."
+
+msgid "|coro| Retrieves a :class:`.PartialAppInfo` from an application ID."
+msgstr "|coro| Retrieves a :class:`.PartialAppInfo` from an application ID."
+
+msgid "The application ID to retrieve information from."
+msgstr "The application ID to retrieve information from."
+
+msgid "The application information."
+msgstr "The application information."
+
+msgid ":class:`.PartialAppInfo`"
+msgstr ":class:`.PartialAppInfo`"
+
+msgid "An application with this ID does not exist."
+msgstr "An application with this ID does not exist."
+
+msgid "Retrieving the application failed."
+msgstr "Retrieving the application failed."
+
+msgid "Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or :class:`.Thread` with the specified ID."
+msgstr "Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or :class:`.Thread` with the specified ID."
+
+msgid "This method is an API call. For general usage, consider :meth:`get_channel` instead."
+msgstr "This method is an API call. For general usage, consider :meth:`get_channel` instead."
+
+msgid "The channel from the ID."
+msgstr "The channel from the ID."
+
+msgid "Union[:class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, :class:`.Thread`]"
+msgstr "Union[:class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, :class:`.Thread`]"
+
+msgid "An unknown channel type was received from Discord."
+msgstr "An unknown channel type was received from Discord."
+
+msgid "Retrieving the channel failed."
+msgstr "Retrieving the channel failed."
+
+msgid "Invalid Channel ID."
+msgstr "Invalid Channel ID."
+
+msgid "You do not have permission to fetch this channel."
+msgstr "You do not have permission to fetch this channel."
+
+msgid "Retrieves a :class:`.Guild` from an ID."
+msgstr "Retrieves a :class:`.Guild` from an ID."
+
+msgid "Using this, you will **not** receive :attr:`.Guild.channels`, :attr:`.Guild.members`, :attr:`.Member.activity` and :attr:`.Member.voice` per :class:`.Member`."
+msgstr "Using this, you will **not** receive :attr:`.Guild.channels`, :attr:`.Guild.members`, :attr:`.Member.activity` and :attr:`.Member.voice` per :class:`.Member`."
+
+msgid "This method is an API call. For general usage, consider :meth:`get_guild` instead."
+msgstr "This method is an API call. For general usage, consider :meth:`get_guild` instead."
+
+msgid "The guild's ID to fetch from."
+msgstr "The guild's ID to fetch from."
+
+msgid "Whether to include count information in the guild. This fills the :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count` fields.  .. versionadded:: 2.0"
+msgstr "Whether to include count information in the guild. This fills the :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count` fields.  .. versionadded:: 2.0"
+
+msgid "Whether to include count information in the guild. This fills the :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count` fields."
+msgstr "Whether to include count information in the guild. This fills the :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count` fields."
+
+msgid "The guild from the ID."
+msgstr "The guild from the ID."
+
+msgid "You do not have access to the guild."
+msgstr "You do not have access to the guild."
+
+msgid "Getting the guild failed."
+msgstr "Getting the guild failed."
+
+msgid "Retrieves an :class:`.AsyncIterator` that enables receiving your guilds."
+msgstr "Retrieves an :class:`.AsyncIterator` that enables receiving your guilds."
+
+msgid "Using this, you will only receive :attr:`.Guild.owner`, :attr:`.Guild.icon`, :attr:`.Guild.id`, and :attr:`.Guild.name` per :class:`.Guild`."
+msgstr "Using this, you will only receive :attr:`.Guild.owner`, :attr:`.Guild.icon`, :attr:`.Guild.id`, and :attr:`.Guild.name` per :class:`.Guild`."
+
+msgid "This method is an API call. For general usage, consider :attr:`guilds` instead."
+msgstr "This method is an API call. For general usage, consider :attr:`guilds` instead."
+
+msgid "The number of guilds to retrieve. If ``None``, it retrieves every guild you have access to. Note, however, that this would make it a slow operation. Defaults to ``100``."
+msgstr "The number of guilds to retrieve. If ``None``, it retrieves every guild you have access to. Note, however, that this would make it a slow operation. Defaults to ``100``."
+
+msgid "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "Retrieve guilds after this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve guilds after this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid ":class:`.Guild` -- The guild with the guild data parsed."
+msgstr ":class:`.Guild` -- The guild with the guild data parsed."
+
+msgid "Getting the guilds failed."
+msgstr "Getting the guilds failed."
+
+msgid ":py:class:`~discord.iterators.GuildIterator`"
+msgstr ":py:class:`~discord.iterators.GuildIterator`"
+
+msgid "Gets an :class:`.Invite` from a discord.gg URL or ID."
+msgstr "Gets an :class:`.Invite` from a discord.gg URL or ID."
+
+msgid "If the invite is for a guild you have not joined, the guild and channel attributes of the returned :class:`.Invite` will be :class:`.PartialInviteGuild` and :class:`.PartialInviteChannel` respectively."
+msgstr "If the invite is for a guild you have not joined, the guild and channel attributes of the returned :class:`.Invite` will be :class:`.PartialInviteGuild` and :class:`.PartialInviteChannel` respectively."
+
+msgid "The Discord invite ID or URL (must be a discord.gg URL)."
+msgstr "The Discord invite ID or URL (must be a discord.gg URL)."
+
+msgid "Whether to include count information in the invite. This fills the :attr:`.Invite.approximate_member_count` and :attr:`.Invite.approximate_presence_count` fields."
+msgstr "Whether to include count information in the invite. This fills the :attr:`.Invite.approximate_member_count` and :attr:`.Invite.approximate_presence_count` fields."
+
+msgid "Whether to include the expiration date of the invite. This fills the :attr:`.Invite.expires_at` field.  .. versionadded:: 2.0"
+msgstr "Whether to include the expiration date of the invite. This fills the :attr:`.Invite.expires_at` field.  .. versionadded:: 2.0"
+
+msgid "Whether to include the expiration date of the invite. This fills the :attr:`.Invite.expires_at` field."
+msgstr "Whether to include the expiration date of the invite. This fills the :attr:`.Invite.expires_at` field."
+
+msgid "The ID of the scheduled event to be associated with the event.  See :meth:`Invite.set_scheduled_event` for more info on event invite linking.  .. versionadded:: 2.0"
+msgstr "The ID of the scheduled event to be associated with the event.  See :meth:`Invite.set_scheduled_event` for more info on event invite linking.  .. versionadded:: 2.0"
+
+msgid "The ID of the scheduled event to be associated with the event."
+msgstr "The ID of the scheduled event to be associated with the event."
+
+msgid "See :meth:`Invite.set_scheduled_event` for more info on event invite linking."
+msgstr "See :meth:`Invite.set_scheduled_event` for more info on event invite linking."
+
+msgid "The invite from the URL/ID."
+msgstr "The invite from the URL/ID."
+
+msgid ":class:`.Invite`"
+msgstr ":class:`.Invite`"
+
+msgid "The invite has expired or is invalid."
+msgstr "The invite has expired or is invalid."
+
+msgid "Getting the invite failed."
+msgstr "Getting the invite failed."
+
+msgid "Retrieves all available premium sticker packs."
+msgstr "Retrieves all available premium sticker packs."
+
+msgid "All available premium sticker packs."
+msgstr "All available premium sticker packs."
+
+msgid "List[:class:`.StickerPack`]"
+msgstr "List[:class:`.StickerPack`]"
+
+msgid "Retrieving the sticker packs failed."
+msgstr "Retrieving the sticker packs failed."
+
+msgid "Fetches the bot's role connection metadata records."
+msgstr "Fetches the bot's role connection metadata records."
+
+msgid "The bot's role connection metadata records."
+msgstr "The bot's role connection metadata records."
+
+msgid "List[:class:`.ApplicationRoleConnectionMetadata`]"
+msgstr "List[:class:`.ApplicationRoleConnectionMetadata`]"
+
+msgid "Fetches the bot's SKUs."
+msgstr "Fetches the bot's SKUs."
+
+msgid "The bot's SKUs."
+msgstr "The bot's SKUs."
+
+msgid "List[:class:`.SKU`]"
+msgstr "List[:class:`.SKU`]"
+
+msgid "Gets a :class:`.StageInstance` for a stage channel id."
+msgstr "Gets a :class:`.StageInstance` for a stage channel id."
+
+msgid "The stage channel ID."
+msgstr "The stage channel ID."
+
+msgid "The stage instance from the stage channel ID."
+msgstr "The stage instance from the stage channel ID."
+
+msgid ":class:`.StageInstance`"
+msgstr ":class:`.StageInstance`"
+
+msgid "The stage instance or channel could not be found."
+msgstr "The stage instance or channel could not be found."
+
+msgid "Getting the stage instance failed."
+msgstr "Getting the stage instance failed."
+
+msgid "Retrieves a :class:`.Sticker` with the specified ID."
+msgstr "Retrieves a :class:`.Sticker` with the specified ID."
+
+msgid "The sticker you requested."
+msgstr "The sticker you requested."
+
+msgid "Union[:class:`.StandardSticker`, :class:`.GuildSticker`]"
+msgstr "Union[:class:`.StandardSticker`, :class:`.GuildSticker`]"
+
+msgid "Retrieving the sticker failed."
+msgstr "Retrieving the sticker failed."
+
+msgid "Invalid sticker ID."
+msgstr "Invalid sticker ID."
+
+msgid "Gets a :class:`.Template` from a discord.new URL or code."
+msgstr "Gets a :class:`.Template` from a discord.new URL or code."
+
+msgid "The Discord Template Code or URL (must be a discord.new URL)."
+msgstr "The Discord Template Code or URL (must be a discord.new URL)."
+
+msgid "The template from the URL/code."
+msgstr "The template from the URL/code."
+
+msgid ":class:`.Template`"
+msgstr ":class:`.Template`"
+
+msgid "The template is invalid."
+msgstr "The template is invalid."
+
+msgid "Getting the template failed."
+msgstr "Getting the template failed."
+
+msgid "Retrieves a :class:`~discord.User` based on their ID. You do not have to share any guilds with the user to get this information, however many operations do require that you do."
+msgstr "Retrieves a :class:`~discord.User` based on their ID. You do not have to share any guilds with the user to get this information, however many operations do require that you do."
+
+msgid "This method is an API call. If you have :attr:`discord.Intents.members` and member cache enabled, consider :meth:`get_user` instead."
+msgstr "This method is an API call. If you have :attr:`discord.Intents.members` and member cache enabled, consider :meth:`get_user` instead."
+
+msgid "The user's ID to fetch from."
+msgstr "The user's ID to fetch from."
+
+msgid "The user you requested."
+msgstr "The user you requested."
+
+msgid ":class:`~discord.User`"
+msgstr ":class:`~discord.User`"
+
+msgid "A user with this ID does not exist."
+msgstr "A user with this ID does not exist."
+
+msgid "Fetching the user failed."
+msgstr "Fetching the user failed."
+
+msgid "Retrieves a :class:`.Webhook` with the specified ID."
+msgstr "Retrieves a :class:`.Webhook` with the specified ID."
+
+msgid "The webhook you requested."
+msgstr "The webhook you requested."
+
+msgid ":class:`.Webhook`"
+msgstr ":class:`.Webhook`"
+
+msgid "Retrieving the webhook failed."
+msgstr "Retrieving the webhook failed."
+
+msgid "Invalid webhook ID."
+msgstr "Invalid webhook ID."
+
+msgid "You do not have permission to fetch this webhook."
+msgstr "You do not have permission to fetch this webhook."
+
+msgid "Gets a :class:`.Widget` from a guild ID."
+msgstr "Gets a :class:`.Widget` from a guild ID."
+
+msgid "The guild must have the widget enabled to get this information."
+msgstr "The guild must have the widget enabled to get this information."
+
+msgid "The ID of the guild."
+msgstr "The ID of the guild."
+
+msgid "The guild's widget."
+msgstr "The guild's widget."
+
+msgid ":class:`.Widget`"
+msgstr ":class:`.Widget`"
+
+msgid "The widget for this guild is disabled."
+msgstr "The widget for this guild is disabled."
+
+msgid "Retrieving the widget failed."
+msgstr "Retrieving the widget failed."
+
+msgid "A generator that retrieves every :class:`.abc.GuildChannel` the client can 'access'."
+msgstr "A generator that retrieves every :class:`.abc.GuildChannel` the client can 'access'."
+
+msgid "This is equivalent to: ::"
+msgstr "This is equivalent to: ::"
+
+msgid ":py:class:`~typing.Generator`\\[:py:class:`~discord.abc.GuildChannel`, :py:obj:`None`, :py:obj:`None`]"
+msgstr ":py:class:`~typing.Generator`\\[:py:class:`~discord.abc.GuildChannel`, :py:obj:`None`, :py:obj:`None`]"
+
+msgid "Just because you receive a :class:`.abc.GuildChannel` does not mean that you can communicate in said channel. :meth:`.abc.GuildChannel.permissions_for` should be used for that."
+msgstr "Just because you receive a :class:`.abc.GuildChannel` does not mean that you can communicate in said channel. :meth:`.abc.GuildChannel.permissions_for` should be used for that."
+
+msgid ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
+msgstr ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
+
+msgid "Returns a generator with every :class:`.Member` the client can see."
+msgstr "Returns a generator with every :class:`.Member` the client can see."
+
+msgid ":class:`.Member` -- A member the client can see."
+msgstr ":class:`.Member` -- A member the client can see."
+
+msgid ":py:class:`~typing.Generator`\\[:py:class:`~discord.member.Member`, :py:obj:`None`, :py:obj:`None`]"
+msgstr ":py:class:`~typing.Generator`\\[:py:class:`~discord.member.Member`, :py:obj:`None`, :py:obj:`None`]"
+
+msgid "Get an :class:`.ApplicationCommand` from the internal list of commands."
+msgstr "Get an :class:`.ApplicationCommand` from the internal list of commands."
+
+msgid "The qualified name of the command to get."
+msgstr "The qualified name of the command to get."
+
+msgid "The guild ids associated to the command to get."
+msgstr "The guild ids associated to the command to get."
+
+msgid "The type of the command to get. Defaults to :class:`.ApplicationCommand`."
+msgstr "The type of the command to get. Defaults to :class:`.ApplicationCommand`."
+
+msgid "The command that was requested. If not found, returns ``None``."
+msgstr "The command that was requested. If not found, returns ``None``."
+
+msgid "Optional[:class:`.ApplicationCommand`]"
+msgstr "Optional[:class:`.ApplicationCommand`]"
+
+msgid "Returns the invocation context from the interaction."
+msgstr "Returns the invocation context from the interaction."
+
+msgid "This is a more low-level counter-part for :meth:`.process_application_commands` to allow users more fine-grained control over the processing."
+msgstr "This is a more low-level counter-part for :meth:`.process_application_commands` to allow users more fine-grained control over the processing."
+
+msgid "The interaction to get the invocation context from."
+msgstr "The interaction to get the invocation context from."
+
+msgid "The factory class that will be used to create the context. By default, this is :class:`.ApplicationContext`. Should a custom class be provided, it must be similar enough to :class:`.ApplicationContext`\\'s interface."
+msgstr "The factory class that will be used to create the context. By default, this is :class:`.ApplicationContext`. Should a custom class be provided, it must be similar enough to :class:`.ApplicationContext`\\'s interface."
+
+msgid "The invocation context. The type of this can change via the ``cls`` parameter."
+msgstr "The invocation context. The type of this can change via the ``cls`` parameter."
+
+msgid ":class:`.ApplicationContext`"
+msgstr ":class:`.ApplicationContext`"
+
+msgid "Returns the autocomplete context from the interaction."
+msgstr "Returns the autocomplete context from the interaction."
+
+msgid "The factory class that will be used to create the context. By default, this is :class:`.AutocompleteContext`. Should a custom class be provided, it must be similar enough to :class:`.AutocompleteContext`\\'s interface."
+msgstr "The factory class that will be used to create the context. By default, this is :class:`.AutocompleteContext`. Should a custom class be provided, it must be similar enough to :class:`.AutocompleteContext`\\'s interface."
+
+msgid "The autocomplete context. The type of this can change via the ``cls`` parameter."
+msgstr "The autocomplete context. The type of this can change via the ``cls`` parameter."
+
+msgid ":class:`.AutocompleteContext`"
+msgstr ":class:`.AutocompleteContext`"
+
+msgid "Returns a channel or thread with the given ID."
+msgstr "Returns a channel or thread with the given ID."
+
+msgid "The ID to search for."
+msgstr "The ID to search for."
+
+msgid "The returned channel or ``None`` if not found."
+msgstr "The returned channel or ``None`` if not found."
+
+msgid "Optional[Union[:class:`.abc.GuildChannel`, :class:`.Thread`, :class:`.abc.PrivateChannel`]]"
+msgstr "Optional[Union[:class:`.abc.GuildChannel`, :class:`.Thread`, :class:`.abc.PrivateChannel`]]"
+
+msgid "Gets the cog instance requested."
+msgstr "Gets the cog instance requested."
+
+msgid "If the cog is not found, ``None`` is returned instead."
+msgstr "If the cog is not found, ``None`` is returned instead."
+
+msgid "The name of the cog you are requesting. This is equivalent to the name passed via keyword argument in class creation or the class name if unspecified."
+msgstr "The name of the cog you are requesting. This is equivalent to the name passed via keyword argument in class creation or the class name if unspecified."
+
+msgid "The cog that was requested. If not found, returns ``None``."
+msgstr "The cog that was requested. If not found, returns ``None``."
+
+msgid "Optional[:class:`Cog`]"
+msgstr "Optional[:class:`Cog`]"
+
+msgid "Shortcut for :meth:`.get_application_command`."
+msgstr "Shortcut for :meth:`.get_application_command`."
+
+msgid "Overridden in :class:`ext.commands.Bot`."
+msgstr "Overridden in :class:`ext.commands.Bot`."
+
+msgid "Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return guild commands that are desynced from said guild, else it will return global commands."
+msgstr "Gets the list of commands that are desynced from discord. If ``guild_id`` is specified, it will only return guild commands that are desynced from said guild, else it will return global commands."
+
+msgid "This function is meant to be used internally, and should only be used if you want to override the default command registration behavior."
+msgstr "This function is meant to be used internally, and should only be used if you want to override the default command registration behavior."
+
+msgid "The guild id to get the desynced commands for, else global commands if unspecified."
+msgstr "The guild id to get the desynced commands for, else global commands if unspecified."
+
+msgid "If you already fetched the commands, you can pass them here to be used. Not recommended for typical usage."
+msgstr "If you already fetched the commands, you can pass them here to be used. Not recommended for typical usage."
+
+msgid "A list of the desynced commands. Each will come with at least the ``cmd`` and ``action`` keys, which respectively contain the command and the action to perform. Other keys may also be present depending on the action, including ``id``."
+msgstr "A list of the desynced commands. Each will come with at least the ``cmd`` and ``action`` keys, which respectively contain the command and the action to perform. Other keys may also be present depending on the action, including ``id``."
+
+msgid "List[Dict[:class:`str`, Any]]"
+msgstr "List[Dict[:class:`str`, Any]]"
+
+msgid "Returns an emoji with the given ID."
+msgstr "Returns an emoji with the given ID."
+
+msgid "The custom emoji or ``None`` if not found."
+msgstr "The custom emoji or ``None`` if not found."
+
+msgid "Optional[:class:`.Emoji`]"
+msgstr "Optional[:class:`.Emoji`]"
+
+msgid "Returns a guild with the given ID."
+msgstr "Returns a guild with the given ID."
+
+msgid "The guild or ``None`` if not found."
+msgstr "The guild or ``None`` if not found."
+
+msgid "Optional[:class:`.Guild`]"
+msgstr "Optional[:class:`.Guild`]"
+
+msgid "Returns a message the given ID."
+msgstr "Returns a message the given ID."
+
+msgid "This is useful if you have a message_id but don't want to do an API call to access the message."
+msgstr "This is useful if you have a message_id but don't want to do an API call to access the message."
+
+msgid "The returned message or ``None`` if not found."
+msgstr "The returned message or ``None`` if not found."
+
+msgid "Optional[:class:`.Message`]"
+msgstr "Optional[:class:`.Message`]"
+
+msgid "Looks up a user in the user cache or fetches if not found."
+msgstr "Looks up a user in the user cache or fetches if not found."
+
+msgid "The user or ``None`` if not found."
+msgstr "The user or ``None`` if not found."
+
+msgid "Optional[:class:`~discord.User`]"
+msgstr "Optional[:class:`~discord.User`]"
+
+msgid "Returns a partial messageable with the given channel ID."
+msgstr "Returns a partial messageable with the given channel ID."
+
+msgid "This is useful if you have a channel_id but don't want to do an API call to send messages to it."
+msgstr "This is useful if you have a channel_id but don't want to do an API call to send messages to it."
+
+msgid "The channel ID to create a partial messageable for."
+msgstr "The channel ID to create a partial messageable for."
+
+msgid "The underlying channel type for the partial messageable."
+msgstr "The underlying channel type for the partial messageable."
+
+msgid "The partial messageable"
+msgstr "The partial messageable"
+
+msgid ":class:`.PartialMessageable`"
+msgstr ":class:`.PartialMessageable`"
+
+msgid "Returns a poll attached to the given message ID."
+msgstr "Returns a poll attached to the given message ID."
+
+msgid "The message ID of the poll to search for."
+msgstr "The message ID of the poll to search for."
+
+msgid "The poll or ``None`` if not found."
+msgstr "The poll or ``None`` if not found."
+
+msgid "Optional[:class:`.Poll`]"
+msgstr "Optional[:class:`.Poll`]"
+
+msgid "Returns a stage instance with the given stage channel ID."
+msgstr "Returns a stage instance with the given stage channel ID."
+
+msgid "The stage instance or ``None`` if not found."
+msgstr "The stage instance or ``None`` if not found."
+
+msgid "Optional[:class:`.StageInstance`]"
+msgstr "Optional[:class:`.StageInstance`]"
+
+msgid "Returns a guild sticker with the given ID."
+msgstr "Returns a guild sticker with the given ID."
+
+msgid "To retrieve standard stickers, use :meth:`.fetch_sticker`. or :meth:`.fetch_premium_sticker_packs`."
+msgstr "To retrieve standard stickers, use :meth:`.fetch_sticker`. or :meth:`.fetch_premium_sticker_packs`."
+
+msgid "The sticker or ``None`` if not found."
+msgstr "The sticker or ``None`` if not found."
+
+msgid "Optional[:class:`.GuildSticker`]"
+msgstr "Optional[:class:`.GuildSticker`]"
+
+msgid "Returns a user with the given ID."
+msgstr "Returns a user with the given ID."
+
+msgid "A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup` and adds it to the internal command list via :meth:`add_application_command`."
+msgstr "A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup` and adds it to the internal command list via :meth:`add_application_command`."
+
+msgid "The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed."
+msgstr "The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed."
+
+msgid "The guilds that the connected client is a member of."
+msgstr "The guilds that the connected client is a member of."
+
+msgid "The intents configured for this connection."
+msgstr "The intents configured for this connection."
+
+msgid "Invokes the application command given under the invocation context and handles all the internal event dispatch mechanisms."
+msgstr "Invokes the application command given under the invocation context and handles all the internal event dispatch mechanisms."
+
+msgid "The invocation context to invoke."
+msgstr "The invocation context to invoke."
+
+msgid "Indicates if the WebSocket connection is closed."
+msgstr "Indicates if the WebSocket connection is closed."
+
+msgid ":py:class:`bool`"
+msgstr ":py:class:`bool`"
+
+msgid "Checks if a :class:`~discord.User` or :class:`~discord.Member` is the owner of this bot."
+msgstr "Checks if a :class:`~discord.User` or :class:`~discord.Member` is the owner of this bot."
+
+msgid "If an :attr:`owner_id` is not set, it is fetched automatically through the use of :meth:`~.Bot.application_info`."
+msgstr "If an :attr:`owner_id` is not set, it is fetched automatically through the use of :meth:`~.Bot.application_info`."
+
+msgid "The function also checks if the application is team-owned if :attr:`owner_ids` is not set."
+msgstr "The function also checks if the application is team-owned if :attr:`owner_ids` is not set."
+
+msgid "The user to check for."
+msgstr "The user to check for."
+
+msgid "Whether the user is the owner."
+msgstr "Whether the user is the owner."
+
+msgid "Specifies if the client's internal cache is ready for use."
+msgstr "Specifies if the client's internal cache is ready for use."
+
+msgid "Whether the WebSocket is currently rate limited."
+msgstr "Whether the WebSocket is currently rate limited."
+
+msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :py:class:`bool`"
+msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :py:class:`bool`"
+
+msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+
+msgid "This could be referred to as the Discord WebSocket protocol latency."
+msgstr "This could be referred to as the Discord WebSocket protocol latency."
+
+msgid "Loads an extension."
+msgstr "Loads an extension."
+
+msgid "An extension is a python module that contains commands, cogs, or listeners."
+msgstr "An extension is a python module that contains commands, cogs, or listeners."
+
+msgid "An extension must have a global function, ``setup`` defined as the entry point on what to do when the extension is loaded. This entry point must have a single argument, the ``bot``."
+msgstr "An extension must have a global function, ``setup`` defined as the entry point on what to do when the extension is loaded. This entry point must have a single argument, the ``bot``."
+
+msgid "The extension passed can either be the direct name of a file within the current working directory or a folder that contains multiple extensions."
+msgstr "The extension passed can either be the direct name of a file within the current working directory or a folder that contains multiple extensions."
+
+msgid "The extension or folder name to load. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+msgstr "The extension or folder name to load. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+
+msgid "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+msgstr "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+
+msgid "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+msgstr "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+
+msgid "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``.  .. versionadded:: 2.0"
+
+msgid "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``."
+msgstr "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``."
+
+msgid "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``.  .. versionadded:: 2.0"
+
+msgid "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``."
+msgstr "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``."
+
+msgid "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing a list of loaded extensions or nothing due to an encountered exception."
+msgstr "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing a list of loaded extensions or nothing due to an encountered exception."
+
+msgid "Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]"
+msgstr "Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, :class:`bool`]], List[:class:`str`]]]"
+
+msgid "The extension could not be imported.     This is also raised if the name of the extension could not     be resolved using the provided ``package`` parameter."
+msgstr "The extension could not be imported.     This is also raised if the name of the extension could not     be resolved using the provided ``package`` parameter."
+
+msgid "The extension is already loaded."
+msgstr "The extension is already loaded."
+
+msgid "The extension does not have a setup function."
+msgstr "The extension does not have a setup function."
+
+msgid "The extension or its setup function had an execution error."
+msgstr "The extension or its setup function had an execution error."
+
+msgid "Loads multiple extensions at once."
+msgstr "Loads multiple extensions at once."
+
+msgid "This method simplifies the process of loading multiple extensions by handling the looping of ``load_extension``."
+msgstr "This method simplifies the process of loading multiple extensions by handling the looping of ``load_extension``."
+
+msgid "The extension or folder names to load. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+msgstr "The extension or folder names to load. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+
+msgid "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing names of loaded extensions or nothing due to an encountered exception."
+msgstr "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing names of loaded extensions or nothing due to an encountered exception."
+
+msgid "A given extension could not be imported.     This is also raised if the name of the extension could not     be resolved using the provided ``package`` parameter."
+msgstr "A given extension could not be imported.     This is also raised if the name of the extension could not     be resolved using the provided ``package`` parameter."
+
+msgid "A given extension is already loaded."
+msgstr "A given extension is already loaded."
+
+msgid "A given extension does not have a setup function."
+msgstr "A given extension does not have a setup function."
+
+msgid "A given extension or its setup function had an execution error."
+msgstr "A given extension or its setup function had an execution error."
+
+msgid "Logs in the client with the specified credentials."
+msgstr "Logs in the client with the specified credentials."
+
+msgid "The authentication token. Do not prefix this token with anything as the library will do it for you."
+msgstr "The authentication token. Do not prefix this token with anything as the library will do it for you."
+
+msgid "The token was in invalid type."
+msgstr "The token was in invalid type."
+
+msgid "The wrong credentials are passed."
+msgstr "The wrong credentials are passed."
+
+msgid "An unknown HTTP related error occurred,     usually when it isn't 200 or the known incorrect credentials     passing status code."
+msgstr "An unknown HTTP related error occurred,     usually when it isn't 200 or the known incorrect credentials     passing status code."
+
+msgid "The default command error handler provided by the bot."
+msgstr "The default command error handler provided by the bot."
+
+msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
+msgstr "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
+
+msgid "This only fires if you do not specify any listeners for command error."
+msgstr "This only fires if you do not specify any listeners for command error."
+
+msgid "The default error handler provided by the client."
+msgstr "The default error handler provided by the client."
+
+msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
+msgstr "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
+
+msgid "A sequence of persistent views added to the client."
+msgstr "A sequence of persistent views added to the client."
+
+msgid "The polls that the connected client has."
+msgstr "The polls that the connected client has."
+
+msgid "The private channels that the connected client is participating on."
+msgstr "The private channels that the connected client is participating on."
+
+msgid "This returns only up to 128 most recent private channels due to an internal working on how Discord deals with private channels."
+msgstr "This returns only up to 128 most recent private channels due to an internal working on how Discord deals with private channels."
+
+msgid "This function processes the commands that have been registered to the bot and other groups. Without this coroutine, none of the commands will be triggered."
+msgstr "This function processes the commands that have been registered to the bot and other groups. Without this coroutine, none of the commands will be triggered."
+
+msgid "By default, this coroutine is called inside the :func:`.on_interaction` event. If you choose to override the :func:`.on_interaction` event, then you should invoke this coroutine as well."
+msgstr "By default, this coroutine is called inside the :func:`.on_interaction` event. If you choose to override the :func:`.on_interaction` event, then you should invoke this coroutine as well."
+
+msgid "This function finds a registered command matching the interaction id from application commands and invokes it. If no matching command was found, it replies to the interaction with a default message."
+msgstr "This function finds a registered command matching the interaction id from application commands and invokes it. If no matching command was found, it replies to the interaction with a default message."
+
+msgid "The interaction to process"
+msgstr "The interaction to process"
+
+msgid "Whether to automatically sync and unregister the command if it is not found in the internal cache. This will invoke the :meth:`~.Bot.sync_commands` method on the context of the command, either globally or per-guild, based on the type of the command, respectively. Defaults to :attr:`.Bot.auto_sync_commands`."
+msgstr "Whether to automatically sync and unregister the command if it is not found in the internal cache. This will invoke the :meth:`~.Bot.sync_commands` method on the context of the command, either globally or per-guild, based on the type of the command, respectively. Defaults to :attr:`.Bot.auto_sync_commands`."
+
+msgid "Registers a command. If the command has ``guild_ids`` set, or if the ``guild_ids`` parameter is passed, the command will be registered as a guild command for those guilds."
+msgstr "Registers a command. If the command has ``guild_ids`` set, or if the ``guild_ids`` parameter is passed, the command will be registered as a guild command for those guilds."
+
+msgid "The command to register."
+msgstr "The command to register."
+
+msgid "Whether to force the command to be registered. If this is set to False, the command will only be registered if it seems to already be registered and up to date with our internal cache. Defaults to True."
+msgstr "Whether to force the command to be registered. If this is set to False, the command will only be registered if it seems to already be registered and up to date with our internal cache. Defaults to True."
+
+msgid "A list of guild ids to register the command for. If this is not set, the command's :attr:`ApplicationCommand.guild_ids` attribute will be used."
+msgstr "A list of guild ids to register the command for. If this is not set, the command's :attr:`ApplicationCommand.guild_ids` attribute will be used."
+
+msgid "The command that was registered"
+msgstr "The command that was registered"
+
+msgid ":class:`~.ApplicationCommand`"
+msgstr ":class:`~.ApplicationCommand`"
+
+msgid "Register a list of commands."
+msgstr "Register a list of commands."
+
+msgid "A list of commands to register. If this is not set (``None``), then all commands will be registered."
+msgstr "A list of commands to register. If this is not set (``None``), then all commands will be registered."
+
+msgid "If this is set, the commands will be registered as a guild command for the respective guild. If it is not set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute."
+msgstr "If this is set, the commands will be registered as a guild command for the respective guild. If it is not set, the commands will be registered according to their :attr:`ApplicationCommand.guild_ids` attribute."
+
+msgid "The method to use when registering the commands. If this is set to \"individual\", then each command will be registered individually. If this is set to \"bulk\", then all commands will be registered in bulk. If this is set to \"auto\", then the method will be determined automatically. Defaults to \"bulk\"."
+msgstr "The method to use when registering the commands. If this is set to \"individual\", then each command will be registered individually. If this is set to \"bulk\", then all commands will be registered in bulk. If this is set to \"auto\", then the method will be determined automatically. Defaults to \"bulk\"."
+
+msgid "Registers the commands regardless of the state of the command on Discord. This uses one less API call, but can result in hitting rate limits more often. Defaults to False."
+msgstr "Registers the commands regardless of the state of the command on Discord. This uses one less API call, but can result in hitting rate limits more often. Defaults to False."
+
+msgid "Whether to delete existing commands that are not in the list of commands to register. Defaults to True."
+msgstr "Whether to delete existing commands that are not in the list of commands to register. Defaults to True."
+
+msgid ":py:class:`list`\\[:py:class:`~discord.types.interactions.ApplicationCommand`]"
+msgstr ":py:class:`list`\\[:py:class:`~discord.types.interactions.ApplicationCommand`]"
+
+msgid "Atomically reloads an extension."
+msgstr "Atomically reloads an extension."
+
+msgid "This replaces the extension with the same extension, only refreshed. This is equivalent to a :meth:`unload_extension` followed by a :meth:`load_extension` except done in an atomic way. That is, if an operation fails mid-reload then the bot will roll back to the prior working state."
+msgstr "This replaces the extension with the same extension, only refreshed. This is equivalent to a :meth:`unload_extension` followed by a :meth:`load_extension` except done in an atomic way. That is, if an operation fails mid-reload then the bot will roll back to the prior working state."
+
+msgid "The extension name to reload. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+msgstr "The extension name to reload. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+
+msgid "The package name to resolve relative imports with. This is required when reloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+msgstr "The package name to resolve relative imports with. This is required when reloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+
+msgid "The package name to resolve relative imports with. This is required when reloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+msgstr "The package name to resolve relative imports with. This is required when reloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+
+msgid "The extension was not loaded."
+msgstr "The extension was not loaded."
+
+msgid "The extension setup function had an execution error."
+msgstr "The extension setup function had an execution error."
+
+msgid "Remove an :class:`.ApplicationCommand` from the internal list of commands."
+msgstr "Remove an :class:`.ApplicationCommand` from the internal list of commands."
+
+msgid "The command to remove."
+msgstr "The command to remove."
+
+msgid "The command that was removed. If the command has not been added, ``None`` is returned instead."
+msgstr "The command that was removed. If the command has not been added, ``None`` is returned instead."
+
+msgid "Removes a global check from the bot. This function is idempotent and will not raise an exception if the function is not in the global checks."
+msgstr "Removes a global check from the bot. This function is idempotent and will not raise an exception if the function is not in the global checks."
+
+msgid "The function to remove from the global checks."
+msgstr "The function to remove from the global checks."
+
+msgid "If the function was added with ``call_once=True`` in the :meth:`.Bot.add_check` call or using :meth:`.check_once`."
+msgstr "If the function was added with ``call_once=True`` in the :meth:`.Bot.add_check` call or using :meth:`.check_once`."
+
+msgid "Removes a cog from the bot and returns it."
+msgstr "Removes a cog from the bot and returns it."
+
+msgid "All registered commands and event listeners that the cog has registered will be removed as well."
+msgstr "All registered commands and event listeners that the cog has registered will be removed as well."
+
+msgid "If no cog is found then this method has no effect."
+msgstr "If no cog is found then this method has no effect."
+
+msgid "The name of the cog to remove."
+msgstr "The name of the cog to remove."
+
+msgid "The cog that was removed. ``None`` if not found."
+msgstr "The cog that was removed. ``None`` if not found."
+
+msgid "Optional[:class:`.Cog`]"
+msgstr "Optional[:class:`.Cog`]"
+
+msgid "Removes a listener from the pool of listeners."
+msgstr "Removes a listener from the pool of listeners."
+
+msgid "The function that was used as a listener to remove."
+msgstr "The function that was used as a listener to remove."
+
+msgid "The name of the event we want to remove. Defaults to ``func.__name__``."
+msgstr "The name of the event we want to remove. Defaults to ``func.__name__``."
+
+msgid "A blocking call that abstracts away the event loop initialisation from you."
+msgstr "A blocking call that abstracts away the event loop initialisation from you."
+
+msgid "If you want more control over the event loop then this function should not be used. Use :meth:`start` coroutine or :meth:`connect` + :meth:`login`."
+msgstr "If you want more control over the event loop then this function should not be used. Use :meth:`start` coroutine or :meth:`connect` + :meth:`login`."
+
+msgid "Roughly Equivalent to: ::"
+msgstr "Roughly Equivalent to: ::"
+
+msgid "This function must be the last function to call due to the fact that it is blocking. That means that registration of events or anything being called after this function call will not execute until it returns."
+msgstr "This function must be the last function to call due to the fact that it is blocking. That means that registration of events or anything being called after this function call will not execute until it returns."
+
+msgid "A shorthand coroutine for :meth:`login` + :meth:`connect`."
+msgstr "A shorthand coroutine for :meth:`login` + :meth:`connect`."
+
+msgid "An unexpected keyword argument was received."
+msgstr "An unexpected keyword argument was received."
+
+msgid "The status being used upon logging on to Discord."
+msgstr "The status being used upon logging on to Discord."
+
+msgid "The stickers that the connected client has."
+msgstr "The stickers that the connected client has."
+
+msgid "The URL that leads to the application's store page for monetization."
+msgstr "The URL that leads to the application's store page for monetization."
+
+msgid "Registers all commands that have been added through :meth:`.add_application_command`. This method cleans up all commands over the API and should sync them with the internal cache of commands. It attempts to register the commands in the most efficient way possible, unless ``force`` is set to ``True``, in which case it will always register all commands."
+msgstr "Registers all commands that have been added through :meth:`.add_application_command`. This method cleans up all commands over the API and should sync them with the internal cache of commands. It attempts to register the commands in the most efficient way possible, unless ``force`` is set to ``True``, in which case it will always register all commands."
+
+msgid "By default, this coroutine is called inside the :func:`.on_connect` event. If you choose to override the :func:`.on_connect` event, then you should invoke this coroutine as well such as the following:"
+msgstr "By default, this coroutine is called inside the :func:`.on_connect` event. If you choose to override the :func:`.on_connect` event, then you should invoke this coroutine as well such as the following:"
+
+msgid "If you remove all guild commands from a particular guild, the library may not be able to detect and update the commands accordingly, as it would have to individually check for each guild. To force the library to unregister a guild's commands, call this function with ``commands=[]`` and ``guild_ids=[guild_id]``."
+msgstr "If you remove all guild commands from a particular guild, the library may not be able to detect and update the commands accordingly, as it would have to individually check for each guild. To force the library to unregister a guild's commands, call this function with ``commands=[]`` and ``guild_ids=[guild_id]``."
+
+msgid "A list of commands to register. If this is not set (None), then all commands will be registered."
+msgstr "A list of commands to register. If this is not set (None), then all commands will be registered."
+
+msgid "A list of guild ids to register the commands for. If this is not set, the commands' :attr:`~.ApplicationCommand.guild_ids` attribute will be used."
+msgstr "A list of guild ids to register the commands for. If this is not set, the commands' :attr:`~.ApplicationCommand.guild_ids` attribute will be used."
+
+msgid "Whether to register guild commands. Defaults to True."
+msgstr "Whether to register guild commands. Defaults to True."
+
+msgid "A list of guilds ids to check for commands to unregister, since the bot would otherwise have to check all guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids` attribute, instead it adds the guild ids to a list of guilds to sync commands for. If ``register_guild_commands`` is set to False, then this parameter is ignored."
+msgstr "A list of guilds ids to check for commands to unregister, since the bot would otherwise have to check all guilds. Unlike ``guild_ids``, this does not alter the commands' :attr:`~.ApplicationCommand.guild_ids` attribute, instead it adds the guild ids to a list of guilds to sync commands for. If ``register_guild_commands`` is set to False, then this parameter is ignored."
+
+msgid "Unloads an extension."
+msgstr "Unloads an extension."
+
+msgid "When the extension is unloaded, all commands, listeners, and cogs are removed from the bot and the module is un-imported."
+msgstr "When the extension is unloaded, all commands, listeners, and cogs are removed from the bot and the module is un-imported."
+
+msgid "The extension can provide an optional global function, ``teardown``, to do miscellaneous clean-up if necessary. This function takes a single parameter, the ``bot``, similar to ``setup`` from :meth:`~.Bot.load_extension`."
+msgstr "The extension can provide an optional global function, ``teardown``, to do miscellaneous clean-up if necessary. This function takes a single parameter, the ``bot``, similar to ``setup`` from :meth:`~.Bot.load_extension`."
+
+msgid "The extension name to unload. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+msgstr "The extension name to unload. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
+
+msgid "The package name to resolve relative imports with. This is required when unloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+msgstr "The package name to resolve relative imports with. This is required when unloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+
+msgid "The package name to resolve relative imports with. This is required when unloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+msgstr "The package name to resolve relative imports with. This is required when unloading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+
+msgid "The name of the extension could not     be resolved using the provided ``package`` parameter."
+msgstr "The name of the extension could not     be resolved using the provided ``package`` parameter."
+
+msgid "Updates the bot's role connection metadata records."
+msgstr "Updates the bot's role connection metadata records."
+
+msgid "The new metadata records to send to Discord."
+msgstr "The new metadata records to send to Discord."
+
+msgid "The updated role connection metadata records."
+msgstr "The updated role connection metadata records."
+
+msgid "Represents the connected client. ``None`` if not logged in."
+msgstr "Represents the connected client. ``None`` if not logged in."
+
+msgid "Returns a list of all the users the bot can see."
+msgstr "Returns a list of all the users the bot can see."
+
+msgid "Represents a list of voice connections."
+msgstr "Represents a list of voice connections."
+
+msgid "These are usually :class:`.VoiceClient` instances."
+msgstr "These are usually :class:`.VoiceClient` instances."
+
+msgid "Waits for a WebSocket event to be dispatched."
+msgstr "Waits for a WebSocket event to be dispatched."
+
+msgid "This could be used to wait for a user to reply to a message, or to react to a message, or to edit a message in a self-contained way."
+msgstr "This could be used to wait for a user to reply to a message, or to react to a message, or to edit a message in a self-contained way."
+
+msgid "The ``timeout`` parameter is passed onto :func:`asyncio.wait_for`. By default, it does not timeout. Note that this does propagate the :exc:`asyncio.TimeoutError` for you in case of timeout and is provided for ease of use."
+msgstr "The ``timeout`` parameter is passed onto :func:`asyncio.wait_for`. By default, it does not timeout. Note that this does propagate the :exc:`asyncio.TimeoutError` for you in case of timeout and is provided for ease of use."
+
+msgid "In case the event returns multiple arguments, a :class:`tuple` containing those arguments is returned instead. Please check the :ref:`documentation <discord-api-events>` for a list of events and their parameters."
+msgstr "In case the event returns multiple arguments, a :class:`tuple` containing those arguments is returned instead. Please check the :ref:`documentation <discord-api-events>` for a list of events and their parameters."
+
+msgid "This function returns the **first event that meets the requirements**."
+msgstr "This function returns the **first event that meets the requirements**."
+
+msgid "The event name, similar to the :ref:`event reference <discord-api-events>`, but without the ``on_`` prefix, to wait for."
+msgstr "The event name, similar to the :ref:`event reference <discord-api-events>`, but without the ``on_`` prefix, to wait for."
+
+msgid "A predicate to check what to wait for. The arguments must meet the parameters of the event being waited for."
+msgstr "A predicate to check what to wait for. The arguments must meet the parameters of the event being waited for."
+
+msgid "The number of seconds to wait before timing out and raising :exc:`asyncio.TimeoutError`."
+msgstr "The number of seconds to wait before timing out and raising :exc:`asyncio.TimeoutError`."
+
+msgid "Returns no arguments, a single argument, or a :class:`tuple` of multiple arguments that mirrors the parameters passed in the :ref:`event reference <discord-api-events>`."
+msgstr "Returns no arguments, a single argument, or a :class:`tuple` of multiple arguments that mirrors the parameters passed in the :ref:`event reference <discord-api-events>`."
+
+msgid "Raised if a timeout is provided and reached."
+msgstr "Raised if a timeout is provided and reached."
+
+msgid "Waiting for a user reply: ::"
+msgstr "Waiting for a user reply: ::"
+
+msgid "Waiting for a thumbs up reaction from the message author: ::"
+msgstr "Waiting for a thumbs up reaction from the message author: ::"
+
+msgid "Waits until the client's internal cache is all ready."
+msgstr "Waits until the client's internal cache is all ready."
+
+msgid "An iterator that recursively walks through all application commands and subcommands."
+msgstr "An iterator that recursively walks through all application commands and subcommands."
+
+msgid ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
+msgstr ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
+
+msgid ":py:class:`~typing.Generator`\\[:py:class:`~discord.commands.core.ApplicationCommand`, :py:obj:`None`, :py:obj:`None`]"
+msgstr ":py:class:`~typing.Generator`\\[:py:class:`~discord.commands.core.ApplicationCommand`, :py:obj:`None`, :py:obj:`None`]"
+
+msgid "This is similar to :class:`.Bot` except that it is inherited from :class:`discord.AutoShardedClient` instead."
+msgstr "This is similar to :class:`.Bot` except that it is inherited from :class:`discord.AutoShardedClient` instead."
+
+msgid "Clients"
+msgstr "Clients"
+
+msgid "Represents a client connection that connects to Discord. This class is used to interact with the Discord WebSocket and API."
+msgstr "Represents a client connection that connects to Discord. This class is used to interact with the Discord WebSocket and API."
+
+msgid "A number of options can be passed to the :class:`Client`."
+msgstr "A number of options can be passed to the :class:`Client`."
+
+msgid "The maximum number of messages to store in the internal message cache. This defaults to ``1000``. Passing in ``None`` disables the message cache.  .. versionchanged:: 1.3     Allow disabling the message cache and change the default size to ``1000``."
+msgstr "The maximum number of messages to store in the internal message cache. This defaults to ``1000``. Passing in ``None`` disables the message cache.  .. versionchanged:: 1.3     Allow disabling the message cache and change the default size to ``1000``."
+
+msgid "The maximum number of messages to store in the internal message cache. This defaults to ``1000``. Passing in ``None`` disables the message cache."
+msgstr "The maximum number of messages to store in the internal message cache. This defaults to ``1000``. Passing in ``None`` disables the message cache."
+
+msgid "Allow disabling the message cache and change the default size to ``1000``."
+msgstr "Allow disabling the message cache and change the default size to ``1000``."
+
+msgid "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.get_event_loop()`."
+msgstr "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.get_event_loop()`."
+
+msgid "The connector to use for connection pooling."
+msgstr "The connector to use for connection pooling."
+
+msgid "Proxy URL."
+msgstr "Proxy URL."
+
+msgid "An object that represents proxy HTTP Basic Authorization."
+msgstr "An object that represents proxy HTTP Basic Authorization."
+
+msgid "Integer starting at ``0`` and less than :attr:`.shard_count`."
+msgstr "Integer starting at ``0`` and less than :attr:`.shard_count`."
+
+msgid "The total number of shards."
+msgstr "The total number of shards."
+
+msgid "The intents that you want to enable for the session. This is a way of disabling and enabling certain gateway events from triggering and being sent. If not given, defaults to a regularly constructed :class:`Intents` class.  .. versionadded:: 1.5"
+msgstr "The intents that you want to enable for the session. This is a way of disabling and enabling certain gateway events from triggering and being sent. If not given, defaults to a regularly constructed :class:`Intents` class.  .. versionadded:: 1.5"
+
+msgid "The intents that you want to enable for the session. This is a way of disabling and enabling certain gateway events from triggering and being sent. If not given, defaults to a regularly constructed :class:`Intents` class."
+msgstr "The intents that you want to enable for the session. This is a way of disabling and enabling certain gateway events from triggering and being sent. If not given, defaults to a regularly constructed :class:`Intents` class."
+
+msgid "Allows for finer control over how the library caches members. If not given, defaults to cache as much as possible with the currently selected intents.  .. versionadded:: 1.5"
+msgstr "Allows for finer control over how the library caches members. If not given, defaults to cache as much as possible with the currently selected intents.  .. versionadded:: 1.5"
+
+msgid "Allows for finer control over how the library caches members. If not given, defaults to cache as much as possible with the currently selected intents."
+msgstr "Allows for finer control over how the library caches members. If not given, defaults to cache as much as possible with the currently selected intents."
+
+msgid "Indicates if :func:`.on_ready` should be delayed to chunk all guilds at start-up if necessary. This operation is incredibly slow for large amounts of guilds. The default is ``True`` if :attr:`Intents.members` is ``True``.  .. versionadded:: 1.5"
+msgstr "Indicates if :func:`.on_ready` should be delayed to chunk all guilds at start-up if necessary. This operation is incredibly slow for large amounts of guilds. The default is ``True`` if :attr:`Intents.members` is ``True``.  .. versionadded:: 1.5"
+
+msgid "Indicates if :func:`.on_ready` should be delayed to chunk all guilds at start-up if necessary. This operation is incredibly slow for large amounts of guilds. The default is ``True`` if :attr:`Intents.members` is ``True``."
+msgstr "Indicates if :func:`.on_ready` should be delayed to chunk all guilds at start-up if necessary. This operation is incredibly slow for large amounts of guilds. The default is ``True`` if :attr:`Intents.members` is ``True``."
+
+msgid "A status to start your presence with upon logging on to Discord."
+msgstr "A status to start your presence with upon logging on to Discord."
+
+msgid "An activity to start your presence with upon logging on to Discord."
+msgstr "An activity to start your presence with upon logging on to Discord."
+
+msgid "Control how the client handles mentions by default on every message sent.  .. versionadded:: 1.4"
+msgstr "Control how the client handles mentions by default on every message sent.  .. versionadded:: 1.4"
+
+msgid "Control how the client handles mentions by default on every message sent."
+msgstr "Control how the client handles mentions by default on every message sent."
+
+msgid "The maximum numbers of seconds before timing out and restarting the WebSocket in the case of not receiving a HEARTBEAT_ACK. Useful if processing the initial packets take too long to the point of disconnecting you. The default timeout is 60 seconds."
+msgstr "The maximum numbers of seconds before timing out and restarting the WebSocket in the case of not receiving a HEARTBEAT_ACK. Useful if processing the initial packets take too long to the point of disconnecting you. The default timeout is 60 seconds."
+
+msgid "The maximum number of seconds to wait for the GUILD_CREATE stream to end before preparing the member cache and firing READY. The default timeout is 2 seconds.  .. versionadded:: 1.4"
+msgstr "The maximum number of seconds to wait for the GUILD_CREATE stream to end before preparing the member cache and firing READY. The default timeout is 2 seconds.  .. versionadded:: 1.4"
+
+msgid "The maximum number of seconds to wait for the GUILD_CREATE stream to end before preparing the member cache and firing READY. The default timeout is 2 seconds."
+msgstr "The maximum number of seconds to wait for the GUILD_CREATE stream to end before preparing the member cache and firing READY. The default timeout is 2 seconds."
+
+msgid "Whether to assume the system clock is unsynced. This applies to the ratelimit handling code. If this is set to ``True``, the default, then the library uses the time to reset a rate limit bucket given by Discord. If this is ``False`` then your system clock is used to calculate how long to sleep for. If this is set to ``False`` it is recommended to sync your system clock to Google's NTP server.  .. versionadded:: 1.3"
+msgstr "Whether to assume the system clock is unsynced. This applies to the ratelimit handling code. If this is set to ``True``, the default, then the library uses the time to reset a rate limit bucket given by Discord. If this is ``False`` then your system clock is used to calculate how long to sleep for. If this is set to ``False`` it is recommended to sync your system clock to Google's NTP server.  .. versionadded:: 1.3"
+
+msgid "Whether to assume the system clock is unsynced. This applies to the ratelimit handling code. If this is set to ``True``, the default, then the library uses the time to reset a rate limit bucket given by Discord. If this is ``False`` then your system clock is used to calculate how long to sleep for. If this is set to ``False`` it is recommended to sync your system clock to Google's NTP server."
+msgstr "Whether to assume the system clock is unsynced. This applies to the ratelimit handling code. If this is set to ``True``, the default, then the library uses the time to reset a rate limit bucket given by Discord. If this is ``False`` then your system clock is used to calculate how long to sleep for. If this is set to ``False`` it is recommended to sync your system clock to Google's NTP server."
+
+msgid "Whether to enable events that are useful only for debugging gateway related information.  Right now this involves :func:`on_socket_raw_receive` and :func:`on_socket_raw_send`. If this is ``False`` then those events will not be dispatched (due to performance considerations). To enable these events, this must be set to ``True``. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr "Whether to enable events that are useful only for debugging gateway related information.  Right now this involves :func:`on_socket_raw_receive` and :func:`on_socket_raw_send`. If this is ``False`` then those events will not be dispatched (due to performance considerations). To enable these events, this must be set to ``True``. Defaults to ``False``.  .. versionadded:: 2.0"
+
+msgid "Whether to enable events that are useful only for debugging gateway related information."
+msgstr "Whether to enable events that are useful only for debugging gateway related information."
+
+msgid "Right now this involves :func:`on_socket_raw_receive` and :func:`on_socket_raw_send`. If this is ``False`` then those events will not be dispatched (due to performance considerations). To enable these events, this must be set to ``True``. Defaults to ``False``."
+msgstr "Right now this involves :func:`on_socket_raw_receive` and :func:`on_socket_raw_send`. If this is ``False`` then those events will not be dispatched (due to performance considerations). To enable these events, this must be set to ``True``. Defaults to ``False``."
+
+msgid "The WebSocket gateway the client is currently connected to. Could be ``None``."
+msgstr "The WebSocket gateway the client is currently connected to. Could be ``None``."
+
+msgid "The event loop that the client uses for asynchronous operations."
+msgstr "The event loop that the client uses for asynchronous operations."
+
+msgid ":class:`asyncio.AbstractEventLoop`"
+msgstr ":class:`asyncio.AbstractEventLoop`"
+
+msgid "A client similar to :class:`Client` except it handles the complications of sharding for the user into a more manageable and transparent single process bot."
+msgstr "A client similar to :class:`Client` except it handles the complications of sharding for the user into a more manageable and transparent single process bot."
+
+msgid "When using this client, you will be able to use it as-if it was a regular :class:`Client` with a single shard when implementation wise internally it is split up into multiple shards. This allows you to not have to deal with IPC or other complicated infrastructure."
+msgstr "When using this client, you will be able to use it as-if it was a regular :class:`Client` with a single shard when implementation wise internally it is split up into multiple shards. This allows you to not have to deal with IPC or other complicated infrastructure."
+
+msgid "It is recommended to use this client only if you have surpassed at least 1000 guilds."
+msgstr "It is recommended to use this client only if you have surpassed at least 1000 guilds."
+
+msgid "If no :attr:`.shard_count` is provided, then the library will use the Bot Gateway endpoint call to figure out how many shards to use."
+msgstr "If no :attr:`.shard_count` is provided, then the library will use the Bot Gateway endpoint call to figure out how many shards to use."
+
+msgid "If a ``shard_ids`` parameter is given, then those shard IDs will be used to launch the internal shards. Note that :attr:`.shard_count` must be provided if this is used. By default, when omitted, the client will launch shards from 0 to ``shard_count - 1``."
+msgstr "If a ``shard_ids`` parameter is given, then those shard IDs will be used to launch the internal shards. Note that :attr:`.shard_count` must be provided if this is used. By default, when omitted, the client will launch shards from 0 to ``shard_count - 1``."
+
+msgid "An optional list of shard_ids to launch the shards with."
+msgstr "An optional list of shard_ids to launch the shards with."
+
+msgid "This operates similarly to :meth:`Client.latency` except it uses the average latency of every shard's latency. To get a list of shard latency, check the :attr:`latencies` property. Returns ``nan`` if there are no shards ready."
+msgstr "This operates similarly to :meth:`Client.latency` except it uses the average latency of every shard's latency. To get a list of shard latency, check the :attr:`latencies` property. Returns ``nan`` if there are no shards ready."
+
+msgid "A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+msgstr "A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+
+msgid "This returns a list of tuples with elements ``(shard_id, latency)``."
+msgstr "This returns a list of tuples with elements ``(shard_id, latency)``."
+
+msgid "Gets the shard information at a given shard ID or ``None`` if not found."
+msgstr "Gets the shard information at a given shard ID or ``None`` if not found."
+
+msgid ":py:data:`~typing.Optional`\\[:py:class:`~discord.shard.ShardInfo`]"
+msgstr ":py:data:`~typing.Optional`\\[:py:class:`~discord.shard.ShardInfo`]"
+
+msgid "Returns a mapping of shard IDs to their respective info object."
+msgstr "Returns a mapping of shard IDs to their respective info object."
+
+msgid "Example: ::"
+msgstr "Example: ::"
+
+msgid "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
+msgstr "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
+
+msgid "The shard_id to change the presence to. If not specified or ``None``, then it will change the presence of every shard the bot can see."
+msgstr "The shard_id to change the presence to. If not specified or ``None``, then it will change the presence of every shard the bot can see."
+
+msgid "If the ``activity`` parameter is not of proper type."
+msgstr "If the ``activity`` parameter is not of proper type."
+
+msgid "Whether the websocket is currently rate limited."
+msgstr "Whether the websocket is currently rate limited."
+
+msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
+msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
+
+msgid "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :py:class:`bool`"
+msgstr "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :py:class:`bool`"
+

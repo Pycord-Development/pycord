@@ -1,0 +1,238 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "A Primer to Gateway Intents"
+msgstr "A Primer to Gateway Intents"
+
+msgid "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
+msgstr "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
+
+msgid "These intents are passed to the constructor of :class:`Client` or its subclasses (:class:`AutoShardedClient`, :class:`~.AutoShardedBot`, :class:`~.Bot`) with the ``intents`` argument."
+msgstr "These intents are passed to the constructor of :class:`Client` or its subclasses (:class:`AutoShardedClient`, :class:`~.AutoShardedBot`, :class:`~.Bot`) with the ``intents`` argument."
+
+msgid "If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members`, :attr:`Intents.presences`, and :attr:`Intents.message_content`."
+msgstr "If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members`, :attr:`Intents.presences`, and :attr:`Intents.message_content`."
+
+msgid "What intents are needed?"
+msgstr "What intents are needed?"
+
+msgid "The intents that are necessary for your bot can only be dictated by yourself. Each attribute in the :class:`Intents` class documents what :ref:`events <discord-api-events>` it corresponds to and what kind of cache it enables."
+msgstr "The intents that are necessary for your bot can only be dictated by yourself. Each attribute in the :class:`Intents` class documents what :ref:`events <discord-api-events>` it corresponds to and what kind of cache it enables."
+
+msgid "For example, if you want a bot that functions without spammy events like presences or typing then we could do the following:"
+msgstr "For example, if you want a bot that functions without spammy events like presences or typing then we could do the following:"
+
+msgid "Note that this doesn't enable :attr:`Intents.members` or :attr:`Intents.message_content` since they are privileged intents."
+msgstr "Note that this doesn't enable :attr:`Intents.members` or :attr:`Intents.message_content` since they are privileged intents."
+
+msgid "Another example showing a bot that only deals with messages and guild information:"
+msgstr "Another example showing a bot that only deals with messages and guild information:"
+
+msgid "Privileged Intents"
+msgstr "Privileged Intents"
+
+msgid "With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**."
+msgstr "With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**."
+
+msgid "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
+msgstr "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
+
+msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+msgstr "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+
+msgid "Navigate to the `application page <https://discord.com/developers/applications>`_."
+msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_."
+
+msgid "Click on the bot you want to enable privileged intents for."
+msgstr "Click on the bot you want to enable privileged intents for."
+
+msgid "Navigate to the bot tab on the left side of the screen."
+msgstr "Navigate to the bot tab on the left side of the screen."
+
+msgid "The bot tab in the application page."
+msgstr "The bot tab in the application page."
+
+msgid "Scroll down to the \"Privileged Gateway Intents\" section and enable the ones you want."
+msgstr "Scroll down to the \"Privileged Gateway Intents\" section and enable the ones you want."
+
+msgid "The privileged gateway intents selector."
+msgstr "The privileged gateway intents selector."
+
+msgid "Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_."
+msgstr "Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_."
+
+msgid "Even if you enable intents through the developer portal, you still have to enable the intents through code as well."
+msgstr "Even if you enable intents through the developer portal, you still have to enable the intents through code as well."
+
+msgid "Do I need privileged intents?"
+msgstr "Do I need privileged intents?"
+
+msgid "This is a quick checklist to see if you need specific privileged intents."
+msgstr "This is a quick checklist to see if you need specific privileged intents."
+
+msgid "Presence Intent"
+msgstr "Presence Intent"
+
+msgid "Whether you use :attr:`Member.status` at all to track member statuses."
+msgstr "Whether you use :attr:`Member.status` at all to track member statuses."
+
+msgid "Whether you use :attr:`Member.activity` or :attr:`Member.activities` to check member's activities."
+msgstr "Whether you use :attr:`Member.activity` or :attr:`Member.activities` to check member's activities."
+
+msgid "Member Intent"
+msgstr "Member Intent"
+
+msgid "Whether you track member joins or member leaves, corresponds to :func:`on_member_join` and :func:`on_member_remove` events."
+msgstr "Whether you track member joins or member leaves, corresponds to :func:`on_member_join` and :func:`on_member_remove` events."
+
+msgid "Whether you want to track member updates such as nickname or role changes."
+msgstr "Whether you want to track member updates such as nickname or role changes."
+
+msgid "Whether you want to track user updates such as usernames, avatars, discriminators, etc."
+msgstr "Whether you want to track user updates such as usernames, avatars, discriminators, etc."
+
+msgid "Whether you want to request the guild member list through :meth:`Guild.chunk` or :meth:`Guild.fetch_members`."
+msgstr "Whether you want to request the guild member list through :meth:`Guild.chunk` or :meth:`Guild.fetch_members`."
+
+msgid "Whether you want high accuracy member cache under :attr:`Guild.members`."
+msgstr "Whether you want high accuracy member cache under :attr:`Guild.members`."
+
+msgid "Message Content Intent"
+msgstr "Message Content Intent"
+
+msgid "Whether you have a message based command system using ext.commands"
+msgstr "Whether you have a message based command system using ext.commands"
+
+msgid "Whether you use the :func:`on_message` event for anything using message content, such as auto-moderation."
+msgstr "Whether you use the :func:`on_message` event for anything using message content, such as auto-moderation."
+
+msgid "Whether you use message content in :func:`on_message_edit`, :func:`on_message_delete`, :func:`on_raw_message_edit`, :func:`on_raw_message_delete`."
+msgstr "Whether you use message content in :func:`on_message_edit`, :func:`on_message_delete`, :func:`on_raw_message_edit`, :func:`on_raw_message_delete`."
+
+msgid "The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages."
+msgstr "The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages."
+
+msgid "Member Cache"
+msgstr "Member Cache"
+
+msgid "Along with intents, Discord now further restricts the ability to cache members and expects bot authors to cache as little as is necessary. However, to properly maintain a cache the :attr:`Intents.members` intent is required in order to track the members who left and properly evict them."
+msgstr "Along with intents, Discord now further restricts the ability to cache members and expects bot authors to cache as little as is necessary. However, to properly maintain a cache the :attr:`Intents.members` intent is required in order to track the members who left and properly evict them."
+
+msgid "To aid with member cache where we don't need members to be cached, the library now has a :class:`MemberCacheFlags` flag to control the member cache. The documentation page for the class goes over the specific policies that are possible."
+msgstr "To aid with member cache where we don't need members to be cached, the library now has a :class:`MemberCacheFlags` flag to control the member cache. The documentation page for the class goes over the specific policies that are possible."
+
+msgid "It should be noted that certain things do not need a member cache since Discord will provide full member information if possible. For example:"
+msgstr "It should be noted that certain things do not need a member cache since Discord will provide full member information if possible. For example:"
+
+msgid ":func:`on_message` will have :attr:`Message.author` be a member even if cache is disabled."
+msgstr ":func:`on_message` will have :attr:`Message.author` be a member even if cache is disabled."
+
+msgid ":func:`on_voice_state_update` will have the ``member`` parameter be a member even if cache is disabled."
+msgstr ":func:`on_voice_state_update` will have the ``member`` parameter be a member even if cache is disabled."
+
+msgid ":func:`on_reaction_add` will have the ``user`` parameter be a member when in a guild even if cache is disabled."
+msgstr ":func:`on_reaction_add` will have the ``user`` parameter be a member when in a guild even if cache is disabled."
+
+msgid ":func:`on_raw_reaction_add` will have :attr:`RawReactionActionEvent.member` be a member when in a guild even if cache is disabled."
+msgstr ":func:`on_raw_reaction_add` will have :attr:`RawReactionActionEvent.member` be a member when in a guild even if cache is disabled."
+
+msgid "The reaction add events do not contain additional information when in direct messages. This is a Discord limitation."
+msgstr "The reaction add events do not contain additional information when in direct messages. This is a Discord limitation."
+
+msgid "The reaction removal events do not have member information. This is a Discord limitation."
+msgstr "The reaction removal events do not have member information. This is a Discord limitation."
+
+msgid "Other events that take a :class:`Member` will require the use of the member cache. If absolute accuracy over the member cache is desirable, then it is advisable to have the :attr:`Intents.members` intent enabled."
+msgstr "Other events that take a :class:`Member` will require the use of the member cache. If absolute accuracy over the member cache is desirable, then it is advisable to have the :attr:`Intents.members` intent enabled."
+
+msgid "Retrieving Members"
+msgstr "Retrieving Members"
+
+msgid "If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:"
+msgstr "If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:"
+
+msgid ":meth:`Guild.query_members`"
+msgstr ":meth:`Guild.query_members`"
+
+msgid "Used to query members by a prefix matching nickname or username."
+msgstr "Used to query members by a prefix matching nickname or username."
+
+msgid "This can also be used to query members by their user ID."
+msgstr "This can also be used to query members by their user ID."
+
+msgid "This uses the gateway and not the HTTP."
+msgstr "This uses the gateway and not the HTTP."
+
+msgid ":meth:`Guild.chunk`"
+msgstr ":meth:`Guild.chunk`"
+
+msgid "This can be used to fetch the entire member list through the gateway."
+msgstr "This can be used to fetch the entire member list through the gateway."
+
+msgid ":meth:`Guild.fetch_member`"
+msgstr ":meth:`Guild.fetch_member`"
+
+msgid "Used to fetch a member by ID through the HTTP API."
+msgstr "Used to fetch a member by ID through the HTTP API."
+
+msgid ":meth:`Guild.fetch_members`"
+msgstr ":meth:`Guild.fetch_members`"
+
+msgid "used to fetch a large number of members through the HTTP API."
+msgstr "used to fetch a large number of members through the HTTP API."
+
+msgid "It should be noted that the gateway has a strict rate limit of 120 requests per 60 seconds."
+msgstr "It should be noted that the gateway has a strict rate limit of 120 requests per 60 seconds."
+
+msgid "Troubleshooting"
+msgstr "Troubleshooting"
+
+msgid "Some common issues relating to the mandatory intent change."
+msgstr "Some common issues relating to the mandatory intent change."
+
+msgid "Where'd my members go?"
+msgstr "Where'd my members go?"
+
+msgid "Due to an :ref:`API change <intents_member_cache>` Discord is now forcing developers who want member caching to explicitly opt-in to it. This is a Discord mandated change and there is no way to bypass it. In order to get members back you have to explicitly enable the :ref:`members privileged intent <privileged_intents>` and change the :attr:`Intents.members` attribute to true."
+msgstr "Due to an :ref:`API change <intents_member_cache>` Discord is now forcing developers who want member caching to explicitly opt-in to it. This is a Discord mandated change and there is no way to bypass it. In order to get members back you have to explicitly enable the :ref:`members privileged intent <privileged_intents>` and change the :attr:`Intents.members` attribute to true."
+
+msgid "For example:"
+msgstr "For example:"
+
+msgid "Why does ``on_ready`` take so long to fire?"
+msgstr "Why does ``on_ready`` take so long to fire?"
+
+msgid "As part of the API change regarding intents, Discord also changed how members are loaded in the beginning. Originally the library could request 75 guilds at once and only request members from guilds that have the :attr:`Guild.large` attribute set to ``True``. With the new intent changes, Discord mandates that we can only send 1 guild per request. This causes a 75x slowdown which is further compounded by the fact that *all* guilds, not just large guilds are being requested."
+msgstr "As part of the API change regarding intents, Discord also changed how members are loaded in the beginning. Originally the library could request 75 guilds at once and only request members from guilds that have the :attr:`Guild.large` attribute set to ``True``. With the new intent changes, Discord mandates that we can only send 1 guild per request. This causes a 75x slowdown which is further compounded by the fact that *all* guilds, not just large guilds are being requested."
+
+msgid "There are a few solutions to fix this."
+msgstr "There are a few solutions to fix this."
+
+msgid "The first solution is to request the privileged presences intent along with the privileged members intent and enable both of them. This allows the initial member list to contain online members just like the old gateway. Note that we're still limited to 1 guild per request but the number of guilds we request is significantly reduced."
+msgstr "The first solution is to request the privileged presences intent along with the privileged members intent and enable both of them. This allows the initial member list to contain online members just like the old gateway. Note that we're still limited to 1 guild per request but the number of guilds we request is significantly reduced."
+
+msgid "The second solution is to disable member chunking by setting ``chunk_guilds_at_startup`` to ``False`` when constructing a client. Then, when chunking for a guild is necessary you can use the various techniques to :ref:`retrieve members <retrieving_members>`."
+msgstr "The second solution is to disable member chunking by setting ``chunk_guilds_at_startup`` to ``False`` when constructing a client. Then, when chunking for a guild is necessary you can use the various techniques to :ref:`retrieve members <retrieving_members>`."
+
+msgid "To illustrate the slowdown caused by the API change, take a bot who is in 840 guilds and 95 of these guilds are \"large\" (over 250 members)."
+msgstr "To illustrate the slowdown caused by the API change, take a bot who is in 840 guilds and 95 of these guilds are \"large\" (over 250 members)."
+
+msgid "Under the original system this would result in 2 requests to fetch the member list (75 guilds, 20 guilds) roughly taking 60 seconds. With :attr:`Intents.members` but not :attr:`Intents.presences` this requires 840 requests, with a rate limit of 120 requests per 60 seconds means that due to waiting for the rate limit it totals to around 7 minutes of waiting for the rate limit to fetch all the members. With both :attr:`Intents.members` and :attr:`Intents.presences` we mostly get the old behaviour so we're only required to request for the 95 guilds that are large, this is slightly less than our rate limit so it's close to the original timing to fetch the member list."
+msgstr "Under the original system this would result in 2 requests to fetch the member list (75 guilds, 20 guilds) roughly taking 60 seconds. With :attr:`Intents.members` but not :attr:`Intents.presences` this requires 840 requests, with a rate limit of 120 requests per 60 seconds means that due to waiting for the rate limit it totals to around 7 minutes of waiting for the rate limit to fetch all the members. With both :attr:`Intents.members` and :attr:`Intents.presences` we mostly get the old behaviour so we're only required to request for the 95 guilds that are large, this is slightly less than our rate limit so it's close to the original timing to fetch the member list."
+
+msgid "Unfortunately due to this change being required from Discord there is nothing that the library can do to mitigate this."
+msgstr "Unfortunately due to this change being required from Discord there is nothing that the library can do to mitigate this."
+
+msgid "If you truly dislike the direction Discord is going with their API, you can contact them via `support <https://dis.gd/contact>`_."
+msgstr "If you truly dislike the direction Discord is going with their API, you can contact them via `support <https://dis.gd/contact>`_."
+

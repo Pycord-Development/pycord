@@ -1,0 +1,19 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "discord.ext.commands"
+msgstr "discord.ext.commands"
+
+msgid "``Pycord`` offers a lower level aspect on interacting with Discord. Often times, the library is used for the creation of bots. However this task can be daunting and confusing to get correctly the first time. Many times there comes a repetition in creating a bot command framework that is extensible, flexible, and powerful. For this reason, ``Pycord`` comes with an extension library that handles this for you."
+msgstr "``Pycord`` offers a lower level aspect on interacting with Discord. Often times, the library is used for the creation of bots. However this task can be daunting and confusing to get correctly the first time. Many times there comes a repetition in creating a bot command framework that is extensible, flexible, and powerful. For this reason, ``Pycord`` comes with an extension library that handles this for you."
+

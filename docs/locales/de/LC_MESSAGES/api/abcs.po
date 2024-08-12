@@ -1,0 +1,685 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Abstract Base Classes"
+msgstr "Abstrakte Basisklassen"
+
+msgid "An :term:`abstract base class` (also known as an ``abc``) is a class that models can inherit to get their behaviour. **Abstract base classes should not be instantiated**. They are mainly there for usage with :func:`isinstance` and :func:`issubclass`\\."
+msgstr "Eine :term:`abstract base class` (auch bekannt als ``abc``) ist eine Klasse, die Modelle erben können, um ihr Verhalten zu erlangen. **Abstrakte Basisklassen sollten nicht instanziiert werden**. Sie sind hauptsächlich für die Verwendung mit :func:`isinstance` und :func:`issubclass`\\."
+
+msgid "This library has a module related to abstract base classes, in which all the ABCs are subclasses of :class:`typing.Protocol`."
+msgstr "Diese Bibliothek hat ein Modul für abstrakte Basisklassen, in dem alle ABCs Unterklassen von :class:`typing.Protocol` sind."
+
+msgid "An ABC that details the common operations on a Discord model."
+msgstr "Ein ABC, der die gängigen Operationen nach einem Discord-Modell ausführt."
+
+msgid "Almost all :ref:`Discord models <discord_api_models>` meet this abstract base class."
+msgstr "Fast alle :ref:`Discord Models <discord_api_models>` erfüllen diese abstrakte Basisklasse."
+
+msgid "If you want to create a snowflake on your own, consider using :class:`.Object`."
+msgstr "Wenn du selbst eine `snowflake` erstellen möchtest, überlege die Verwendung von :class:`. Object`."
+
+msgid "The model's unique ID."
+msgstr "Die einzigartige ID des Modells."
+
+msgid "type"
+msgstr "typ"
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "An ABC that details the common operations on a Discord user."
+msgstr "Ein ABC, der die gängigen Operationen nach einem Discord-Modell ausführt."
+
+msgid "The following implement this ABC:"
+msgstr "Folgende Implementierung dieser ABC:"
+
+msgid ":class:`~discord.User`"
+msgstr ":class:`~discord.User`"
+
+msgid ":class:`~discord.ClientUser`"
+msgstr ":class:`~discord.ClientUser`"
+
+msgid ":class:`~discord.Member`"
+msgstr ":class:`~discord.Member`"
+
+msgid "This ABC must also implement :class:`~discord.abc.Snowflake`."
+msgstr "Diese ABC muss auch :class:`~discord.abc.Snowflake` implementieren."
+
+msgid "The user's username."
+msgstr "Der Nutzername des Nutzers."
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The user's discriminator."
+msgstr "Diskriminator des Benutzers."
+
+msgid "If the user has migrated to the new username system, this will always be \"0\"."
+msgstr "Wenn der Benutzer auf das neue Benutzernamens-System migriert ist, wird dies immer \"0\" sein."
+
+msgid "The user's global name."
+msgstr "Der globale Name des Benutzers."
+
+msgid "The avatar asset the user has."
+msgstr "Das Avatar Asset über das der Benutzer verfügt."
+
+msgid ":class:`~discord.Asset`"
+msgstr ":class:`~discord.Asset`"
+
+msgid "If the user is a bot account."
+msgstr "Wenn der Benutzer ein Bot-Konto ist."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "Returns the user's display name."
+msgstr "Gibt den Anzeigenamen des Benutzers zurück."
+
+msgid "Returns a string that allows you to mention the given user."
+msgstr "Gibt eine Zeichenkette zurück, mit der Sie den angegebenen Benutzer erwähnen können."
+
+msgid "An ABC that details the common operations on a private Discord channel."
+msgstr "Ein ABC, das die gängigen Operationen auf einem privaten Discord Kanal ausführt."
+
+msgid ":class:`~discord.DMChannel`"
+msgstr ":class:`~discord.DMChannel`"
+
+msgid ":class:`~discord.GroupChannel`"
+msgstr ":class:`~discord.GroupChannel`"
+
+msgid "The user presenting yourself."
+msgstr "Der Benutzer, der sich selbst repräsentiert."
+
+msgid "An ABC that details the common operations on a Discord guild channel."
+msgstr "Eine ABC, die die üblichen Operationen auf einem Discord Server Channel detailliert beschreibt."
+
+msgid ":class:`~discord.TextChannel`"
+msgstr ":class:`~discord.TextChannel`"
+
+msgid ":class:`~discord.VoiceChannel`"
+msgstr ":class:`~discord.VoiceChannel`"
+
+msgid ":class:`~discord.CategoryChannel`"
+msgstr ":class:`~discord.CategoryChannel`"
+
+msgid ":class:`~discord.StageChannel`"
+msgstr ":class:`~discord.StageChannel`"
+
+msgid ":class:`~discord.ForumChannel`"
+msgstr ":class:`~discord.ForumChannel`"
+
+msgid "The channel name."
+msgstr "Der Name des Kanals."
+
+msgid "The guild the channel belongs to."
+msgstr "Die Gilde, zu der der Kanal gehört."
+
+msgid ":class:`~discord.Guild`"
+msgstr ":class:`~discord.Guild`"
+
+msgid "The position in the channel list. This is a number that starts at 0. e.g. the top channel is position 0."
+msgstr "Die Position in der Kanalliste. Beginnt bei 0 z.B. der obere Kanal ist Position 0."
+
+msgid "Returns a list of roles that have been overridden from their default values in the :attr:`~discord.Guild.roles` attribute."
+msgstr "Gibt eine Liste von Rollen zurück, die von ihren Standardwerten im Attribut :attr:`~discord.Guild.roles` überschrieben wurden."
+
+msgid "The string that allows you to mention the channel."
+msgstr "Die Zeichenkette, mit der du den Kanal erwähnen kannst."
+
+msgid "Returns a URL that allows the client to jump to the channel."
+msgstr "Gibt eine URL zurück, die es dem Client erlaubt, in den Kanal zu springen."
+
+msgid "Returns the channel's creation time in UTC."
+msgstr "Gibt die Erstellungszeit des Kanals im UTC Format zurück."
+
+msgid "Returns the channel-specific overwrites for a member or a role."
+msgstr "Gibt die kanalspezifischen Überschreibungen eines Mitglieds oder einer Rolle zurück."
+
+msgid "Parameters"
+msgstr "Parameter"
+
+msgid "The role or user denoting whose overwrite to get."
+msgstr "Die Rolle oder der Benutzer, deren Überschreibung erhalten bleiben soll."
+
+msgid "Returns"
+msgstr "Gibt zurück"
+
+msgid "The permission overwrites for this object."
+msgstr "Die Berechtigung überschreibt dieses Objekt."
+
+msgid "Return type"
+msgstr "Rückgabetyp"
+
+msgid ":class:`~discord.PermissionOverwrite`"
+msgstr ":class:`~discord.PermissionOverwrite`"
+
+msgid "Returns all of the channel's overwrites."
+msgstr "Gibt alle Überschreibungen des Kanals zurück."
+
+msgid "This is returned as a dictionary where the key contains the target which can be either a :class:`~discord.Role` or a :class:`~discord.Member` and the value is the overwrite as a :class:`~discord.PermissionOverwrite`."
+msgstr "Dies wird als Dictionary zurückgegeben, in dem der Schlüssel das Ziel enthält, das entweder :class:`~discord.Role` oder :class:`~discord.Member` and the value is the overwrite as a :class:`~discord.PermissionOverwrite` sein kann."
+
+msgid "The channel's permission overwrites."
+msgstr "Die Berechtigung des Kanals wird überschrieben."
+
+msgid "Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], :class:`~discord.PermissionOverwrite`]"
+msgstr "Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], :class:`~discord.PermissionOverwrite`]"
+
+msgid "The category this channel belongs to."
+msgstr "Die Kategorie, zu der dieser Channel gehört."
+
+msgid "If there is no category then this is ``None``."
+msgstr "Wenn es keine Kategorie gibt, dann ist das ``None``."
+
+msgid "Whether the permissions for this channel are synced with the category it belongs to."
+msgstr "Whether the permissions for this channel are synced with the category it belongs to."
+
+msgid "If there is no category then this is ``False``."
+msgstr "If there is no category then this is ``False``."
+
+msgid "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
+msgstr "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
+
+msgid "This function takes into consideration the following cases:"
+msgstr "This function takes into consideration the following cases:"
+
+msgid "Guild owner"
+msgstr "Gilden Besitzer"
+
+msgid "Guild roles"
+msgstr "Gilden Rollen"
+
+msgid "Channel overrides"
+msgstr "Channel overrides"
+
+msgid "Member overrides"
+msgstr "Member overrides"
+
+msgid "If a :class:`~discord.Role` is passed, then it checks the permissions someone with that role would have, which is essentially:"
+msgstr "If a :class:`~discord.Role` is passed, then it checks the permissions someone with that role would have, which is essentially:"
+
+msgid "The default role permissions"
+msgstr "Die Standardrollenberechtigung"
+
+msgid "The permissions of the role used as a parameter"
+msgstr "The permissions of the role used as a parameter"
+
+msgid "The default role permission overwrites"
+msgstr "The default role permission overwrites"
+
+msgid "The permission overwrites of the role used as a parameter"
+msgstr "The permission overwrites of the role used as a parameter"
+
+msgid "The object passed in can now be a role object."
+msgstr "The object passed in can now be a role object."
+
+msgid "The object to resolve permissions for. This could be either a member or a role. If it's a role then member overwrites are not computed."
+msgstr "The object to resolve permissions for. This could be either a member or a role. If it's a role then member overwrites are not computed."
+
+msgid "The resolved permissions for the member or role."
+msgstr "The resolved permissions for the member or role."
+
+msgid ":class:`~discord.Permissions`"
+msgstr ":class:`~discord.Permissions`"
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Deletes the channel."
+msgstr "Deletes the channel."
+
+msgid "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
+msgstr "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
+
+msgid "The reason for deleting this channel. Shows up on the audit log."
+msgstr "The reason for deleting this channel. Shows up on the audit log."
+
+msgid "Raises"
+msgstr "Raises"
+
+msgid "You do not have proper permissions to delete the channel."
+msgstr "You do not have proper permissions to delete the channel."
+
+msgid "The channel was not found or was already deleted."
+msgstr "The channel was not found or was already deleted."
+
+msgid "Deleting the channel failed."
+msgstr "Deleting the channel failed."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+
+msgid "Sets the channel specific permission overwrites for a target in the channel."
+msgstr "Sets the channel specific permission overwrites for a target in the channel."
+
+msgid "The ``target`` parameter should either be a :class:`~discord.Member` or a :class:`~discord.Role` that belongs to guild."
+msgstr "The ``target`` parameter should either be a :class:`~discord.Member` or a :class:`~discord.Role` that belongs to guild."
+
+msgid "The ``overwrite`` parameter, if given, must either be ``None`` or :class:`~discord.PermissionOverwrite`. For convenience, you can pass in keyword arguments denoting :class:`~discord.Permissions` attributes. If this is done, then you cannot mix the keyword arguments with the ``overwrite`` parameter."
+msgstr "The ``overwrite`` parameter, if given, must either be ``None`` or :class:`~discord.PermissionOverwrite`. For convenience, you can pass in keyword arguments denoting :class:`~discord.Permissions` attributes. If this is done, then you cannot mix the keyword arguments with the ``overwrite`` parameter."
+
+msgid "If the ``overwrite`` parameter is ``None``, then the permission overwrites are deleted."
+msgstr "If the ``overwrite`` parameter is ``None``, then the permission overwrites are deleted."
+
+msgid "You must have the :attr:`~discord.Permissions.manage_roles` permission to use this."
+msgstr "You must have the :attr:`~discord.Permissions.manage_roles` permission to use this."
+
+msgid "This method *replaces* the old overwrites with the ones given."
+msgstr "This method *replaces* the old overwrites with the ones given."
+
+msgid "Examples"
+msgstr "Beispiele"
+
+msgid "Setting allow and deny: ::"
+msgstr "Setting allow and deny: ::"
+
+msgid "Deleting overwrites ::"
+msgstr "Deleting overwrites ::"
+
+msgid "Using :class:`~discord.PermissionOverwrite` ::"
+msgstr "Using :class:`~discord.PermissionOverwrite` ::"
+
+msgid "The member or role to overwrite permissions for."
+msgstr "Das Mitglied oder die Rolle, für die Berechtigungen überschrieben werden sollen."
+
+msgid "The permissions to allow and deny to the target, or ``None`` to delete the overwrite."
+msgstr "The permissions to allow and deny to the target, or ``None`` to delete the overwrite."
+
+msgid "A keyword argument list of permissions to set for ease of use. Cannot be mixed with ``overwrite``."
+msgstr "A keyword argument list of permissions to set for ease of use. Cannot be mixed with ``overwrite``."
+
+msgid "The reason for doing this action. Shows up on the audit log."
+msgstr "The reason for doing this action. Shows up on the audit log."
+
+msgid "You do not have permissions to edit channel specific permissions."
+msgstr "Du hast keine Berechtigungen, um kanalspezifische Berechtigungen zu bearbeiten."
+
+msgid "Editing channel specific permissions failed."
+msgstr "Bearbeitung der kanalspezifischen Berechtigungen ist fehlgeschlagen."
+
+msgid "The role or member being edited is not part of the guild."
+msgstr "Die Rolle oder das Mitglied, das bearbeitet wird, ist nicht Teil des Servers."
+
+msgid "The overwrite parameter invalid or the target type was not     :class:`~discord.Role` or :class:`~discord.Member`."
+msgstr "The overwrite parameter invalid or the target type was not     :class:`~discord.Role` or :class:`~discord.Member`."
+
+msgid "Clones this channel. This creates a channel with the same properties as this channel."
+msgstr "Clones this channel. This creates a channel with the same properties as this channel."
+
+msgid "You must have the :attr:`~discord.Permissions.manage_channels` permission to do this."
+msgstr "You must have the :attr:`~discord.Permissions.manage_channels` permission to do this."
+
+msgid "The name of the new channel. If not provided, defaults to this channel name."
+msgstr "The name of the new channel. If not provided, defaults to this channel name."
+
+msgid "The reason for cloning this channel. Shows up on the audit log."
+msgstr "The reason for cloning this channel. Shows up on the audit log."
+
+msgid "The channel that was created."
+msgstr "Der Channel, welcher erstellt wurde."
+
+msgid ":class:`.abc.GuildChannel`"
+msgstr ":class:`.abc.GuildChannel`"
+
+msgid "You do not have the proper permissions to create this channel."
+msgstr "Du hast nicht die nötigen Berechtigungen, um diesen Kanal zu erstellen."
+
+msgid "Creating the channel failed."
+msgstr "Erstellung des Kanals ist fehlgeschlagen."
+
+msgid "A rich interface to help move a channel relative to other channels."
+msgstr "Eine umfangreiche Schnittstelle, die dabei hilft, einen Kanal relativ zu anderen Kanälen zu verschieben."
+
+msgid "If exact position movement is required, ``edit`` should be used instead."
+msgstr "Wenn eine exakte Positionsbewegung erforderlich ist, sollte stattdessen ``edit`` verwendet werden."
+
+msgid "Voice channels will always be sorted below text channels. This is a Discord limitation."
+msgstr "Sprachkanäle werden immer unter Textkanäle sortiert. Dies ist eine Einschränkung von Discord selbst."
+
+msgid "Whether to move the channel to the beginning of the channel list (or category if given). This is mutually exclusive with ``end``, ``before``, and ``after``."
+msgstr "Gibt an, ob der Kanal an den Anfang der Kanalliste (oder an die Kategorie, falls gegeben) verschoben werden soll. Dies schließt sich mit ``end``, ``before`` und ``after`` gegenseitig aus."
+
+msgid "Whether to move the channel to the end of the channel list (or category if given). This is mutually exclusive with ``beginning``, ``before``, and ``after``."
+msgstr "Gibt an, ob der Kanal an das Ende der Kanalliste (oder an die Kategorie, wenn gegeben) verschoben werden soll. Dies schließt sich gegenseitig mit ``beginning``, ``before`` und ``after`` aus."
+
+msgid "The channel that should be before our current channel. This is mutually exclusive with ``beginning``, ``end``, and ``after``."
+msgstr "Der Kanal, der vor unserem aktuellen Kanal liegen soll. Dies schließt sich mit ``beginning``, ``end``, und ``after`` gegenseitig aus."
+
+msgid "The channel that should be after our current channel. This is mutually exclusive with ``beginning``, ``end``, and ``before``."
+msgstr "Der Kanal, der nach unserem aktuellen Kanal liegen soll. Dies schließt sich gegenseitig mit ``beginning``, ``end``, und ``after`` aus."
+
+msgid "The number of channels to offset the move by. For example, an offset of ``2`` with ``beginning=True`` would move it 2 after the beginning. A positive number moves it below while a negative number moves it above. Note that this number is relative and computed after the ``beginning``, ``end``, ``before``, and ``after`` parameters."
+msgstr "Die Anzahl der Kanäle, um die der Zug versetzt werden soll. Zum Beispiel würde ein Offset von ``2`` mit ``beginning=True`` ihn 2 nach dem Anfang verschieben. Eine positive Zahl verschiebt sie nach unten, während sich eine negative Zahl nach oben bewegt. Beachten Sie, dass diese Zahl relativ ist und nach den Parametern ``Anfangs``, ``Ende``, ``before`` und ``after`` berechnet wird."
+
+msgid "The category to move this channel under. If ``None`` is given then it moves it out of the category. This parameter is ignored if moving a category channel."
+msgstr "Die Kategorie, unter die dieser Kanal verschoben wird. Wenn ``None`` gegeben wird, bewegt er ihn aus der Kategorie. Dieser Parameter wird ignoriert, wenn ein Kategorie-Kanal verschoben wird."
+
+msgid "Whether to sync the permissions with the category (if given)."
+msgstr "Gibt an, ob die Berechtigungen mit der Kategorie synchronisiert werden sollen (falls vorhanden)."
+
+msgid "The reason for the move."
+msgstr "Der Grund für den Umzug des Kanals."
+
+msgid "An invalid position was given or a bad mix of arguments was passed."
+msgstr "Eine ungültige Position wurde angegeben oder eine nicht ausführbare Mischung von Argumenten wurde übergeben."
+
+msgid "You do not have permissions to move the channel."
+msgstr "Du hast nicht die nötigen Berechtigungen, um den Kanal zu verschieben."
+
+msgid "Moving the channel failed."
+msgstr "Verschiebung des Kanals fehlgeschlagen."
+
+msgid "Creates an instant invite from a text or voice channel."
+msgstr "Erstellt eine Soforteinladung von einem Text oder Sprachkanal."
+
+msgid "You must have the :attr:`~discord.Permissions.create_instant_invite` permission to do this."
+msgstr "Sie müssen die :attr:`~discord.Permissions.create_instant_invite` Berechtigung haben, um dies tun zu können."
+
+msgid "How long the invite should last in seconds. If it's 0 then the invite doesn't expire. Defaults to ``0``."
+msgstr "Wie lange soll die Einladung zum Ablaufen Brauchen? Wenn die zahl, 0 ist, wird die Einladung nicht ablaufen. Standard ist ``0``."
+
+msgid "How many uses the invite could be used for. If it's 0 then there are unlimited uses. Defaults to ``0``."
+msgstr "Wie viele Verwendungen User können durch diese Einladung beitreten? Wenn die Zahl 0 ist, sind die Verwendungen unbegrenzt. Standardmäßig ``0``."
+
+msgid "Denotes that the invite grants temporary membership (i.e. they get kicked after they disconnect). Defaults to ``False``."
+msgstr "Gibt an, dass die Einladung eine vorübergehende Mitgliedschaft gewährt (d. h. sie werden gekickt, nachdem sie die Verbindung getrennt haben). Der Standardwert ist „False“."
+
+msgid "Indicates if a unique invite URL should be created. Defaults to True. If this is set to ``False`` then it will return a previously created invite."
+msgstr "Gibt an, ob ein einzigartiger Einladungslink erstellt werden soll. Standardmäßig auf True. Wenn dies auf ``False`` gesetzt ist, wird es eine kürzlich erstellte Einladung zurückgeben."
+
+msgid "The reason for creating this invite. Shows up on the audit log."
+msgstr "Der Grund für die Erstellung dieser Einladung. Wird im Audit-Log angezeigt."
+
+msgid "The type of target for the voice channel invite, if any.  .. versionadded:: 2.0"
+msgstr "Der Typ des Ziels für die Sprachkanaleinladung, falls vorhanden.  … Version hinzugefügt: : 2.0"
+
+msgid "The type of target for the voice channel invite, if any."
+msgstr "Der Typ des Ziels für die Sprachkanaleinladung, falls vorhanden."
+
+msgid "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel.  .. versionadded:: 2.0"
+msgstr "Der Benutzer, dessen Stream für diese Einladung angezeigt werden soll. Erforderlich, wenn „target_type“ „TargetType.stream“ ist. Der Benutzer muss im Kanal streamen.   Version hinzugefügt: : 2.0"
+
+msgid "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel."
+msgstr "Der Benutzer, dessen Stream für diese Einladung angezeigt werden soll, erforderlich, wenn „target_type“ „TargetType.stream“ ist. Der Benutzer muss im Kanal streamen."
+
+msgid "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`.  .. versionadded:: 2.0"
+msgstr "Die Id der eingebetteten Anwendung für die Einladung, erforderlich, wenn „target_type“ „TargetType.embedded_application“ ist.   Version hinzugefügt: : 2.0"
+
+msgid "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`."
+msgstr "Die ID der eingebetteten Anwendung für die Einladung, erforderlich, wenn „target_type“ „TargetType.embedded_application“ ist."
+
+msgid "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`  See :meth:`.Invite.set_scheduled_event` for more info on event invite linking.  .. versionadded:: 2.0"
+msgstr "Das geplante Ereignisobjekt, das mit dem Ereignis verknüpft werden soll. Verknüpfung zu :meth:`.Invite.set_scheduled_event` Weitere Informationen zur Verknüpfung von Veranstaltungseinladungen finden Sie unter :meth:`.Invite.set_scheduled_event`.  .. Version hinzugefügt:: 2.0"
+
+msgid "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`"
+msgstr "Das geplante Ereignisobjekt, das mit dem Ereignis verknüpft werden soll. Verknüpfung zu :meth:`.Invite.set_scheduled_event`"
+
+msgid "See :meth:`.Invite.set_scheduled_event` for more info on event invite linking."
+msgstr "Weitere Informationen zur Verknüpfung von Veranstaltungseinladungen finden Sie unter :meth:`.Invite.set_scheduled_event`."
+
+msgid "The invite that was created."
+msgstr "Die Einladung wurde erfolgreich erstellt."
+
+msgid ":class:`~discord.Invite`"
+msgstr ":class:`~discord.Invite`"
+
+msgid "Invite creation failed."
+msgstr "Erstellen der Einladung ist Fehlgeschlagen."
+
+msgid "The channel that was passed is a category or an invalid channel."
+msgstr "Der übergebene Kanal ist eine Kategorie oder ein ungültiger Kanal."
+
+msgid "Returns a list of all active instant invites from this channel."
+msgstr "Gibt eine Liste aller aktiven Soforteinladungen von diesem Kanal zurück."
+
+msgid "You must have :attr:`~discord.Permissions.manage_channels` to get this information."
+msgstr "Sie müssen über :attr:`~discord.Permissions.manage_channels` verfügen, um diese Informationen zu erhalten."
+
+msgid "The list of invites that are currently active."
+msgstr "Liste der Einladungen, die derzeit aktiv sind."
+
+msgid "List[:class:`~discord.Invite`]"
+msgstr "Liste[:class:`~discord.Invite`]"
+
+msgid "You do not have proper permissions to get the information."
+msgstr "Sie verfügen nicht über die erforderlichen Berechtigungen, um die Informationen abzurufen."
+
+msgid "An error occurred while fetching the information."
+msgstr "An error occurred while fetching the information."
+
+msgid "An ABC that details the common operations on a model that can send messages."
+msgstr "An ABC that details the common operations on a model that can send messages."
+
+msgid ":class:`~discord.ext.commands.Context`"
+msgstr ":class:`~discord.ext.commands.Context`"
+
+msgid ":class:`~discord.Thread`"
+msgstr ":class:`~discord.Thread`"
+
+msgid ":class:`~discord.ApplicationContext`"
+msgstr ":class:`~discord.ApplicationContext`"
+
+msgid "Returns an :class:`~discord.AsyncIterator` that enables receiving the destination's message history."
+msgstr "Returns an :class:`~discord.AsyncIterator` that enables receiving the destination's message history."
+
+msgid "You must have :attr:`~discord.Permissions.read_message_history` permissions to use this."
+msgstr "Du musst :attr:`~discord.Permissions.read_message_history` Berechtigungen haben, um dies verwenden zu können."
+
+msgid "The number of messages to retrieve. If ``None``, retrieves every message in the channel. Note, however, that this would make it a slow operation."
+msgstr "The number of messages to retrieve. If ``None``, retrieves every message in the channel. Note, however, that this would make it a slow operation."
+
+msgid "Retrieve messages before this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve messages before this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "Retrieve messages after this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve messages after this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "Retrieve messages around this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time. When using this argument, the maximum limit is 101. Note that if the limit is an even number, then this will return at most limit + 1 messages."
+msgstr "Retrieve messages around this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time. When using this argument, the maximum limit is 101. Note that if the limit is an even number, then this will return at most limit + 1 messages."
+
+msgid "If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if ``after`` is specified, otherwise ``False``."
+msgstr "If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if ``after`` is specified, otherwise ``False``."
+
+msgid "Yields"
+msgstr "Yields"
+
+msgid ":class:`~discord.Message` -- The message with the message data parsed."
+msgstr ":class:`~discord.Message` -- The message with the message data parsed."
+
+msgid "You do not have permissions to get channel message history."
+msgstr "You do not have permissions to get channel message history."
+
+msgid "The request to get message history failed."
+msgstr "Die Anfrage, den Nachrichtenverlauf zu bekommen, ist fehlgeschlagen."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.HistoryIterator\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.HistoryIterator\\``"
+
+msgid "Usage ::"
+msgstr "Nutzung ::"
+
+msgid "Flattening into a list: ::"
+msgstr "Flattening into a list: ::"
+
+msgid "All parameters are optional."
+msgstr "Alle Parameter sind optional."
+
+msgid "Returns a context manager that allows you to type for an indefinite period of time."
+msgstr "Returns a context manager that allows you to type for an indefinite period of time."
+
+msgid "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgstr "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+
+msgid "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
+msgstr "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
+
+msgid "Example Usage: ::"
+msgstr "Example Usage: ::"
+
+msgid "Sends a message to the destination with the content given."
+msgstr "Sends a message to the destination with the content given."
+
+msgid "The content must be a type that can convert to a string through ``str(content)``. If the content is set to ``None`` (the default), then the ``embed`` parameter must be provided."
+msgstr "The content must be a type that can convert to a string through ``str(content)``. If the content is set to ``None`` (the default), then the ``embed`` parameter must be provided."
+
+msgid "To upload a single file, the ``file`` parameter should be used with a single :class:`~discord.File` object. To upload multiple files, the ``files`` parameter should be used with a :class:`list` of :class:`~discord.File` objects. **Specifying both parameters will lead to an exception**."
+msgstr "To upload a single file, the ``file`` parameter should be used with a single :class:`~discord.File` object. To upload multiple files, the ``files`` parameter should be used with a :class:`list` of :class:`~discord.File` objects. **Specifying both parameters will lead to an exception**."
+
+msgid "To upload a single embed, the ``embed`` parameter should be used with a single :class:`~discord.Embed` object. To upload multiple embeds, the ``embeds`` parameter should be used with a :class:`list` of :class:`~discord.Embed` objects. **Specifying both parameters will lead to an exception**."
+msgstr "To upload a single embed, the ``embed`` parameter should be used with a single :class:`~discord.Embed` object. To upload multiple embeds, the ``embeds`` parameter should be used with a :class:`list` of :class:`~discord.Embed` objects. **Specifying both parameters will lead to an exception**."
+
+msgid "The content of the message to send."
+msgstr "The content of the message to send."
+
+msgid "Indicates if the message should be sent using text-to-speech."
+msgstr "Indicates if the message should be sent using text-to-speech."
+
+msgid "The rich embed for the content."
+msgstr "The rich embed for the content."
+
+msgid "The file to upload."
+msgstr "The file to upload."
+
+msgid "A list of files to upload. Must be a maximum of 10."
+msgstr "A list of files to upload. Must be a maximum of 10."
+
+msgid "The nonce to use for sending this message. If the message was successfully sent, then the message will have a nonce with this value."
+msgstr "The nonce to use for sending this message. If the message was successfully sent, then the message will have a nonce with this value."
+
+msgid "Whether :attr:`nonce` is enforced to be validated.  .. versionadded:: 2.5"
+msgstr "Whether :attr:`nonce` is enforced to be validated.  .. versionadded:: 2.5"
+
+msgid "Whether :attr:`nonce` is enforced to be validated."
+msgstr "Whether :attr:`nonce` is enforced to be validated."
+
+msgid "If provided, the number of seconds to wait in the background before deleting the message we just sent. If the deletion fails, then it is silently ignored."
+msgstr "If provided, the number of seconds to wait in the background before deleting the message we just sent. If the deletion fails, then it is silently ignored."
+
+msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead.  .. versionadded:: 1.4"
+msgstr "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead.  .. versionadded:: 1.4"
+
+msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
+msgstr "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
+
+msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+msgstr "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+
+msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgstr "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+
+msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
+msgstr "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
+
+msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``."
+msgstr "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``."
+
+msgid "A Discord UI View to add to the message."
+msgstr "A Discord UI View to add to the message."
+
+msgid "A list of embeds to upload. Must be a maximum of 10.  .. versionadded:: 2.0"
+msgstr "A list of embeds to upload. Must be a maximum of 10.  .. versionadded:: 2.0"
+
+msgid "A list of embeds to upload. Must be a maximum of 10."
+msgstr "A list of embeds to upload. Must be a maximum of 10."
+
+msgid "A list of stickers to upload. Must be a maximum of 3.  .. versionadded:: 2.0"
+msgstr "A list of stickers to upload. Must be a maximum of 3.  .. versionadded:: 2.0"
+
+msgid "A list of stickers to upload. Must be a maximum of 3."
+msgstr "A list of stickers to upload. Must be a maximum of 3."
+
+msgid "Whether to suppress embeds for the message."
+msgstr "Whether to suppress embeds for the message."
+
+msgid "Whether to suppress push and desktop notifications for the message.  .. versionadded:: 2.4"
+msgstr "Whether to suppress push and desktop notifications for the message.  .. versionadded:: 2.4"
+
+msgid "Whether to suppress push and desktop notifications for the message."
+msgstr "Whether to suppress push and desktop notifications for the message."
+
+msgid "The poll to send.  .. versionadded:: 2.6"
+msgstr "The poll to send.  .. versionadded:: 2.6"
+
+msgid "The poll to send."
+msgstr "The poll to send."
+
+msgid "The message that was sent."
+msgstr "The message that was sent."
+
+msgid ":class:`~discord.Message`"
+msgstr ":class:`~discord.Message`"
+
+msgid "Sending the message failed."
+msgstr "Sending the message failed."
+
+msgid "You do not have the proper permissions to send the message."
+msgstr "You do not have the proper permissions to send the message."
+
+msgid "The ``files`` list is not of the appropriate size,     you specified both ``file`` and ``files``,     or you specified both ``embed`` and ``embeds``,     or the ``reference`` object is not a :class:`~discord.Message`,     :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`."
+msgstr "The ``files`` list is not of the appropriate size,     you specified both ``file`` and ``files``,     or you specified both ``embed`` and ``embeds``,     or the ``reference`` object is not a :class:`~discord.Message`,     :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`."
+
+msgid "Triggers a *typing* indicator to the destination."
+msgstr "Triggers a *typing* indicator to the destination."
+
+msgid "*Typing* indicator will go away after 10 seconds, or after a message is sent."
+msgstr "*Typing* indicator will go away after 10 seconds, or after a message is sent."
+
+msgid "Retrieves a single :class:`~discord.Message` from the destination."
+msgstr "Retrieves a single :class:`~discord.Message` from the destination."
+
+msgid "The message ID to look for."
+msgstr "The message ID to look for."
+
+msgid "The message asked for."
+msgstr "The message asked for."
+
+msgid "The specified message was not found."
+msgstr "The specified message was not found."
+
+msgid "You do not have the permissions required to get a message."
+msgstr "You do not have the permissions required to get a message."
+
+msgid "Retrieving the message failed."
+msgstr "Retrieving the message failed."
+
+msgid "Retrieves all messages that are currently pinned in the channel."
+msgstr "Retrieves all messages that are currently pinned in the channel."
+
+msgid "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
+msgstr "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
+
+msgid "The messages that are currently pinned."
+msgstr "The messages that are currently pinned."
+
+msgid "List[:class:`~discord.Message`]"
+msgstr "List[:class:`~discord.Message`]"
+
+msgid "Retrieving the pinned messages failed."
+msgstr "Retrieving the pinned messages failed."
+
+msgid "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
+msgstr "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
+
+msgid "Indicates whether you have the permissions to send the object(s)."
+msgstr "Indicates whether you have the permissions to send the object(s)."
+
+msgid "An invalid type has been passed."
+msgstr "An invalid type has been passed."
+
+msgid "An ABC that details the common operations on a channel that can connect to a voice server."
+msgstr "An ABC that details the common operations on a channel that can connect to a voice server."
+
+msgid "This ABC is not decorated with :func:`typing.runtime_checkable`, so will fail :func:`isinstance`/:func:`issubclass` checks."
+msgstr "This ABC is not decorated with :func:`typing.runtime_checkable`, so will fail :func:`isinstance`/:func:`issubclass` checks."
+

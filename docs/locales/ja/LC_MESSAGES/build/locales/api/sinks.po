@@ -1,0 +1,106 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Sinks"
+msgstr "Sinks"
+
+msgid "Core"
+msgstr "Core"
+
+msgid "Filters for :class:`~.Sink`"
+msgstr "Filters for :class:`~.Sink`"
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "Container of all Filters."
+msgstr "Container of all Filters."
+
+msgid "A sink \"stores\" recorded audio data."
+msgstr "A sink \"stores\" recorded audio data."
+
+msgid "Can be subclassed for extra customizablilty."
+msgstr "Can be subclassed for extra customizablilty."
+
+msgid "It is recommended you use the officially provided sink classes, such as :class:`~discord.sinks.WaveSink`."
+msgstr "It is recommended you use the officially provided sink classes, such as :class:`~discord.sinks.WaveSink`."
+
+msgid "just replace the following like so: ::"
+msgstr "just replace the following like so: ::"
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "An invalid encoding type was specified."
+msgstr "An invalid encoding type was specified."
+
+msgid "Audio may only be formatted after recording is finished."
+msgstr "Audio may only be formatted after recording is finished."
+
+msgid "Gets all audio files."
+msgstr "Gets all audio files."
+
+msgid "Gets the audio file(s) of one specific user."
+msgstr "Gets the audio file(s) of one specific user."
+
+msgid "Handles data that's been completely decrypted and decoded and is ready to be saved to file."
+msgstr "Handles data that's been completely decrypted and decoded and is ready to be saved to file."
+
+msgid "Writes audio data."
+msgstr "Writes audio data."
+
+msgid "The AudioData is already finished writing."
+msgstr "The AudioData is already finished writing."
+
+msgid "Finishes and cleans up the audio data."
+msgstr "Finishes and cleans up the audio data."
+
+msgid "Called when audio data is formatted."
+msgstr "Called when audio data is formatted."
+
+msgid "The AudioData is still writing."
+msgstr "The AudioData is still writing."
+
+msgid "Handles raw data from Discord so that it can be decrypted and decoded to be used."
+msgstr "Handles raw data from Discord so that it can be decrypted and decoded to be used."
+
+msgid "Sink Classes"
+msgstr "Sink Classes"
+
+msgid "A special sink for .wav(wave) files."
+msgstr "A special sink for .wav(wave) files."
+
+msgid "Formats the recorded audio."
+msgstr "Formats the recorded audio."
+
+msgid "Formatting the audio failed."
+msgstr "Formatting the audio failed."
+
+msgid "A special sink for .mp3 files."
+msgstr "A special sink for .mp3 files."
+
+msgid "A special sink for .mp4 files."
+msgstr "A special sink for .mp4 files."
+
+msgid "A special sink for .m4a files."
+msgstr "A special sink for .m4a files."
+
+msgid "A special sink for .mkv files."
+msgstr "A special sink for .mkv files."
+
+msgid "A special sink for .mka files."
+msgstr "A special sink for .mka files."
+
+msgid "A special sink for .ogg files."
+msgstr "A special sink for .ogg files."
+
