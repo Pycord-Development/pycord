@@ -63,7 +63,7 @@ msgid "The class to construct with. By default, this is :class:`.SlashCommand`. 
 msgstr "La clase con la que inicializar el comando. Por defecto esto es :class:`.SlashCommand`. Normalmente esto no se cambia."
 
 msgid "Keyword arguments to pass into the construction of the class denoted by ``cls``."
-msgstr "Argumentos de nombre llave que pasar al inicializador de la clase proporcionada en el parámetro ``cls``."
+msgstr "Argumentos de palabras clave que pasar al inicializador de la clase proporcionada en el parámetro ``cls``."
 
 msgid "Returns"
 msgstr "Devuelve"
@@ -75,205 +75,205 @@ msgid "Callable[..., :class:`.ApplicationCommand`]"
 msgstr "Callable[..., :class:`.ApplicationCommand`]"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Errores"
 
 msgid "If the function is not a coroutine or is already a command."
-msgstr "If the function is not a coroutine or is already a command."
+msgstr "Si la función no es una corrutina o ya es un comando."
 
 msgid "An alias for :meth:`application_command`."
-msgstr "Un alias para :meth:`application_command`."
+msgstr "Un alias de :meth:`application_command`."
 
 msgid "This decorator is overridden by :func:`ext.commands.command`."
-msgstr "This decorator is overridden by :func:`ext.commands.command`."
+msgstr "Este decorador es sobreescrito por :func:`ext.commands.command`."
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`."
-msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`."
+msgstr "Un decorador que convierte el método proporcionado en un objeto :class:`.ApplicationCommand`."
 
 msgid "Decorator for slash commands that invokes :func:`application_command`."
-msgstr "Decorator for slash commands that invokes :func:`application_command`."
+msgstr "Decorador de comandos de barra que invoca :func:`application_command`."
 
 msgid "A decorator that converts the provided method into a :class:`.SlashCommand`."
-msgstr "A decorator that converts the provided method into a :class:`.SlashCommand`."
+msgstr "Un decorador que convierte el método proporcionado en un objeto :class:`.SlashCommand`."
 
 msgid "Callable[..., :class:`.SlashCommand`]"
 msgstr "Callable[..., :class:`.SlashCommand`]"
 
 msgid "Decorator for user commands that invokes :func:`application_command`."
-msgstr "Decorator for user commands that invokes :func:`application_command`."
+msgstr "Decorador para comandos de usuarios que invoca :func:`application_command`."
 
 msgid "A decorator that converts the provided method into a :class:`.UserCommand`."
-msgstr "A decorator that converts the provided method into a :class:`.UserCommand`."
+msgstr "Un decorador que convierte el método proporcionado en un objeto :class:`.UserCommand`."
 
 msgid "Callable[..., :class:`.UserCommand`]"
 msgstr "Callable[..., :class:`.UserCommand`]"
 
 msgid "Decorator for message commands that invokes :func:`application_command`."
-msgstr "Decorator for message commands that invokes :func:`application_command`."
+msgstr "Decorador de comandos de mensajes que invoca :func:`application_command`."
 
 msgid "A decorator that converts the provided method into a :class:`.MessageCommand`."
-msgstr "A decorator that converts the provided method into a :class:`.MessageCommand`."
+msgstr "Un decorador que convierte el método proporcionado en un objeto :class:`.MessageCommand`."
 
 msgid "Callable[..., :class:`.MessageCommand`]"
 msgstr "Callable[..., :class:`.MessageCommand`]"
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Objetos"
 
 msgid "Checks whether the command is currently on cooldown."
-msgstr "Checks whether the command is currently on cooldown."
+msgstr "Comprueba si el comando actualmente está en el tiempo de enfriamiento."
 
 msgid "This uses the current time instead of the interaction time."
-msgstr "This uses the current time instead of the interaction time."
+msgstr "Esto utiliza el tiempo actual en vez del tiempo de creación de la interacción."
 
 msgid "The invocation context to use when checking the command's cooldown status."
-msgstr "The invocation context to use when checking the command's cooldown status."
+msgstr "El contexto de invocación que usar para comprobar el estado de enfriamiento del comando."
 
 msgid "A boolean indicating if the command is on cooldown."
-msgstr "A boolean indicating if the command is on cooldown."
+msgstr "Un booleano el cual indica si el comando está en enfriamiento o no."
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"
 
 msgid "Resets the cooldown on this command."
-msgstr "Resets the cooldown on this command."
+msgstr "Restablece el tiempo de enfriamiento de este comando."
 
 msgid "The invocation context to reset the cooldown under."
-msgstr "The invocation context to reset the cooldown under."
+msgstr "El contexto de invocación del cual restablecer el tiempo de enfriamiento."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 
 msgid "Retrieves the amount of seconds before this command can be tried again."
-msgstr "Retrieves the amount of seconds before this command can be tried again."
+msgstr "Obtiene la cantidad de segundos los cuales esperar antes de poder reutilizar el comando."
 
 msgid "The invocation context to retrieve the cooldown from."
-msgstr "The invocation context to retrieve the cooldown from."
+msgstr "El contexto de invocación del cual obtener el tiempo de enfriamiento."
 
 msgid "The amount of time left on this command's cooldown in seconds. If this is ``0.0`` then the command isn't on cooldown."
-msgstr "The amount of time left on this command's cooldown in seconds. If this is ``0.0`` then the command isn't on cooldown."
+msgstr "La cantidad de segundos de enfriamiento restantes del comando. Si esto es ``0.0`` el comando no está en enfriamiento."
 
 msgid ":class:`float`"
 msgstr ":class:`float`"
 
 msgid "A decorator that registers a coroutine as a local error handler."
-msgstr "A decorator that registers a coroutine as a local error handler."
+msgstr "Un decorador que registra una corrutina como un gestor de errores local."
 
 msgid "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."
-msgstr "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."
+msgstr "Un gestor de errores local es como el evento :func:`.on_command_error`, pero limitado a un solo comando. Sin embargo, este mismo es invocado después."
 
 msgid "The coroutine to register as the local error handler."
-msgstr "The coroutine to register as the local error handler."
+msgstr "La corrutina a registrar como gestor de errores local."
 
 msgid "The coroutine passed is not actually a coroutine."
-msgstr "The coroutine passed is not actually a coroutine."
+msgstr "La corrutina proporcionada no era verdaderamente una corrutina."
 
 msgid "Checks whether the command has an error handler registered."
-msgstr "Checks whether the command has an error handler registered."
+msgstr "Comprueba si el comando tiene un gestor de errores registrado."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "A decorator that registers a coroutine as a pre-invoke hook. A pre-invoke hook is called directly before the command is called. This makes it a useful function to set up database connections or any type of set up required."
-msgstr "A decorator that registers a coroutine as a pre-invoke hook. A pre-invoke hook is called directly before the command is called. This makes it a useful function to set up database connections or any type of set up required."
+msgstr "Un decorador que registra una corrutina como el \"pre-invocador\". Un \"pre-invocador\" es invocado antes que el comando. Esto es una función útil para, por ejemplo, configurar conexiones a una base de datos, o cualquier tipo de configuración requerida."
 
 msgid "This pre-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.before_invoke` for more info."
-msgstr "This pre-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.before_invoke` for more info."
+msgstr "El \"pre-invocador\" toma un único argumento, un objeto :class:`.ApplicationContext`. Véase también :meth:`.Bot.before_invoke` para más información."
 
 msgid "The coroutine to register as the pre-invoke hook."
-msgstr "The coroutine to register as the pre-invoke hook."
+msgstr "La corrutina a registrar como \"pre-invocador\"."
 
 msgid "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required."
-msgstr "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required."
+msgstr "Un decorador que registra una corrutina como un \"post-invocador\". Un \"post-invocador\" es invocado después del comando. Esto es una función útil para, por ejemplo, limpiar conexiones a una base de datos, o cualquier tipo de limpieza requerida."
 
 msgid "This post-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.after_invoke` for more info."
-msgstr "This post-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.after_invoke` for more info."
+msgstr "El \"post-invocador\" toma un único argumento, un objeto :class:`.ApplicationContext`. Véase también :meth:`.Bot.after_invoke` para más información."
 
 msgid "The coroutine to register as the post-invoke hook."
-msgstr "The coroutine to register as the post-invoke hook."
+msgstr "La corrutina a registrar como \"post-invocador\"."
 
 msgid "Retrieves the fully qualified parent command name."
-msgstr "Retrieves the fully qualified parent command name."
+msgstr "Obtiene el nombre completo del comando padre."
 
 msgid "This the base command name required to execute it. For example, in ``/one two three`` the parent name would be ``one two``."
-msgstr "This the base command name required to execute it. For example, in ``/one two three`` the parent name would be ``one two``."
+msgstr "Este es el nombre del comando base requerido para ejecutarlo. Por ejemplo, en ``/uno dos tres`` el nombre del comando padre sería ``uno dos``."
 
 msgid "Retrieves the fully qualified command name."
-msgstr "Retrieves the fully qualified command name."
+msgstr "Obtiene el nombre completo del comando."
 
 msgid "This is the full parent name with the command name as well. For example, in ``/one two three`` the qualified name would be ``one two three``."
-msgstr "This is the full parent name with the command name as well. For example, in ``/one two three`` the qualified name would be ``one two three``."
+msgstr "Este es el nombre del comando padre junto al nombre del comando. Por ejemplo, en ``/uno dos tres`` el nombre completo sería ``uno dos tres``."
 
 msgid "Retrieves the fully qualified command ID."
-msgstr "Retrieves the fully qualified command ID."
+msgstr "Obtiene la ID completa del comando."
 
 msgid "This is the root parent ID. For example, in ``/one two three`` the qualified ID would return ``one.id``."
-msgstr "This is the root parent ID. For example, in ``/one two three`` the qualified ID would return ``one.id``."
+msgstr "Esta es la ID del padre base. Por ejemplo, en ``/uno dos tres`` la ID completa sería ``uno.id``."
 
 msgid "A class that implements the protocol for a slash command."
-msgstr "A class that implements the protocol for a slash command."
+msgstr "Una clase que implementa el protocolo para un comando de barra."
 
 msgid "These are not created manually, instead they are created via the decorator or functional interface."
-msgstr "These are not created manually, instead they are created via the decorator or functional interface."
+msgstr "Estos no son creados manualmente sino por el decorador o interfaz funcional."
 
 msgid "The name of the command."
-msgstr "The name of the command."
+msgstr "El nombre del comando."
 
 msgid "type"
-msgstr "type"
+msgstr "tipo"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The coroutine that is executed when the command is called."
-msgstr "The coroutine that is executed when the command is called."
+msgstr "La corrutina que es ejecutada cuando se invoca el comando."
 
 msgid ":ref:`coroutine <coroutine>`"
-msgstr ":ref:`coroutine <coroutine>`"
+msgstr ":ref:`corrutina <coroutine>`"
 
 msgid "The description for the command."
-msgstr "The description for the command."
+msgstr "La descripción del comando."
 
 msgid "Optional[:class:`str`]"
 msgstr "Optional[:class:`str`]"
 
 msgid "The ids of the guilds where this command will be registered."
-msgstr "The ids of the guilds where this command will be registered."
+msgstr "Las IDs de los servidores en los cuales se registrará este comando."
 
 msgid "Optional[List[:class:`int`]]"
 msgstr "Optional[List[:class:`int`]]"
 
 msgid "The parameters for this command."
-msgstr "The parameters for this command."
+msgstr "Los parámetros de este comando."
 
 msgid "List[:class:`Option`]"
 msgstr "List[:class:`Option`]"
 
 msgid "The parent group that this command belongs to. ``None`` if there isn't one."
-msgstr "The parent group that this command belongs to. ``None`` if there isn't one."
+msgstr "El grupo al cual este comando pertenece. ``None`` si ninguno."
 
 msgid "Optional[:class:`SlashCommandGroup`]"
 msgstr "Optional[:class:`SlashCommandGroup`]"
 
 msgid "Returns a string that allows you to mention the slash command."
-msgstr "Returns a string that allows you to mention the slash command."
+msgstr "Retorna una cadena que permite mencionar este comando de barra."
 
 msgid "Whether the command should only be usable inside a guild."
-msgstr "Whether the command should only be usable inside a guild."
+msgstr "Si el comando solo puede ser utilizado en un servidor."
 
 msgid "Use the :attr:`contexts` parameter instead."
-msgstr "Use the :attr:`contexts` parameter instead."
+msgstr "Utiliza el parámetro :attr:`contexts` en vez."
 
 msgid "Whether the command should be restricted to 18+ channels and users. Apps intending to be listed in the App Directory cannot have NSFW commands."
-msgstr "Whether the command should be restricted to 18+ channels and users. Apps intending to be listed in the App Directory cannot have NSFW commands."
+msgstr "Si el comando debe restringirse a canales y usuarios +18. Las aplicaciones que pretendan aparecer en el Directorio de Apps no pueden tener comandos con restricción de edad."
 
 msgid "The default permissions a member needs to be able to run the command."
-msgstr "The default permissions a member needs to be able to run the command."
+msgstr "Los permisos por defecto que un miembro necesita para poder ejecutar el comando."
 
 msgid ":class:`~discord.Permissions`"
 msgstr ":class:`~discord.Permissions`"
 
 msgid "The cog that this command belongs to. ``None`` if there isn't one."
-msgstr "The cog that this command belongs to. ``None`` if there isn't one."
+msgstr "El módulo al cual este comando pertenece. ``None`` si ninguno."
 
 msgid "Optional[:class:`Cog`]"
 msgstr "Optional[:class:`Cog`]"
