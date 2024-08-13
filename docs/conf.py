@@ -119,6 +119,7 @@ rst_prolog = """
 .. |maybecoro| replace:: This function *could be a* |coroutine_link|_.
 .. |coroutine_link| replace:: *coroutine*
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
+.. |gateway| replace:: `gateway <https://discord.com/developers/docs/topics/gateway-events>`_
 """
 
 # Add any paths that contain templates here, relative to this directory.
