@@ -64,6 +64,7 @@ jobs:
     needs: [download]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Invoke checks workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
