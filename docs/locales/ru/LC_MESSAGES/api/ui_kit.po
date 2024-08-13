@@ -30,7 +30,7 @@ msgid "Premium and link buttons cannot be created with this decorator. Consider 
 msgstr "Premium and link buttons cannot be created with this decorator. Consider creating a :class:`Button` object manually instead. These types of buttons do not have a callback associated since Discord doesn't handle them when clicked."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "The label of the button, if any."
 msgstr "The label of the button, if any."
@@ -111,7 +111,7 @@ msgid "A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.
 msgstr "A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`."
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Объекты"
 
 msgid "Represents a UI view."
 msgstr "Represents a UI view."
@@ -171,7 +171,7 @@ msgid "The timeout of the converted view."
 msgstr "The timeout of the converted view."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The converted view. This always returns a :class:`View` and not one of its subclasses."
 msgstr "The converted view. This always returns a :class:`View` and not one of its subclasses."
@@ -186,7 +186,7 @@ msgid "The item to add to the view."
 msgstr "The item to add to the view."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "An :class:`Item` was not passed."
 msgstr "An :class:`Item` was not passed."

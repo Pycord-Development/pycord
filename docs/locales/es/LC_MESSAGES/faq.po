@@ -30,7 +30,7 @@ msgid "A |coroutine_link|_ is a function that must be invoked with ``await`` or 
 msgstr "Una |coroutine_link|_ es una función que debe ser llamada con ``await`` o ```yield from``. Cuando Python se encuentra con un ``await``, se detiene la ejecución de la función en ese punto y se trabaja en otras cosas hasta que regresa a ese punto y termina su trabajo. Esto le permite a tu programa hacer múltiples cosas al mismo tiempo sin usar hilos o multiprocesamiento complicado."
 
 msgid "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
-msgstr "**Si te olvidas de utilizar await en una corutina, entonces ésta no funcionará. Nunca olvides utilizar await en una corutina.**"
+msgstr "**Si te olvidas de utilizar await en una corrutina, entonces ésta no funcionará. Nunca olvides utilizar await en una corutina.**"
 
 msgid "Where can I use ``await``\\?"
 msgstr "¿Dónde puedo usar ``await``\\?"

@@ -48,7 +48,7 @@ msgid "Returns the hash of the asset."
 msgstr "Returns the hash of the asset."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "Returns the underlying URL of the asset."
 msgstr "Returns the underlying URL of the asset."
@@ -78,7 +78,7 @@ msgid "The new format to change it to if the asset isn't animated. Must be eithe
 msgstr "The new format to change it to if the asset isn't animated. Must be either 'webp', 'jpeg', 'jpg', or 'png'."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The newly updated asset."
 msgstr "The newly updated asset."
@@ -87,7 +87,7 @@ msgid ":class:`Asset`"
 msgstr ":class:`Asset`"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "An invalid size or format was passed."
 msgstr "An invalid size or format was passed."

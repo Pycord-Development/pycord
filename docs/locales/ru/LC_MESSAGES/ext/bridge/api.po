@@ -33,7 +33,7 @@ msgid "This class is a subclass of :class:`.ext.commands.Bot` and as a result an
 msgstr "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
 msgstr "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
@@ -42,7 +42,7 @@ msgid "A shortcut decorator that invokes :func:`bridge_command` and adds it to t
 msgstr "A shortcut decorator that invokes :func:`bridge_command` and adds it to the internal command list via :meth:`~.Bot.add_bridge_command`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 msgstr "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
@@ -159,7 +159,7 @@ msgid "The coroutine to register as the local error handler."
 msgstr "The coroutine to register as the local error handler."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
