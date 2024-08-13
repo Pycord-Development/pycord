@@ -63,7 +63,7 @@ msgid "If you're having trouble with something, these resources might help."
 msgstr "Si presentas problemas con algo, estos recursos podrían ayudarte."
 
 msgid "Try the :doc:`faq` first, it's got answers to all common questions."
-msgstr "Prueba revisar :doc:`faq` primero, contiene respuestas a preguntas comunes."
+msgstr "Prueba a revisar las :doc:`faq` primero, contiene respuestas a preguntas comunes."
 
 msgid "Ask us and hang out with us in our :resource:`Discord <discord>` server."
 msgstr "Pregúntanos y pasa el rato con nosotros en nuestro servidor de :resource:`Discord <discord>`."

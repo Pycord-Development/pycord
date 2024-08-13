@@ -27,7 +27,7 @@ msgid "Bot"
 msgstr "Bot"
 
 msgid "Represents a discord bot, with support for cross-compatibility between command types."
-msgstr "Represents a discord bot, with support for cross-compatibility between command types."
+msgstr "Representa un bot de discord, con soporte de compatibilidad cruzada entre los tipos de comandos."
 
 msgid "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
 msgstr "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
@@ -222,7 +222,7 @@ msgid "Yields"
 msgstr "Genera"
 
 msgid ":class:`.BridgeCommand` -- A bridge command of this bridge group."
-msgstr ":class:`.BridgeCommand` -- A bridge command of this bridge group."
+msgstr ":class:`.BridgeCommand` -- Un comando puente de este grupo puente."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Iterator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.bridge.core.BridgeCommand\\`\\]`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Iterator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.bridge.core.BridgeCommand\\`\\]`"
