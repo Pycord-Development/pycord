@@ -72,7 +72,7 @@ msgid "Extra information that this entry has that might be useful. For most acti
 msgstr "Extra information that this entry has that might be useful. For most actions, this is ``None``. However, in some cases it contains extra information. See :class:`AuditLogAction` for which actions have this field filled out."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "Returns the entry's creation time in UTC."
 msgstr "Returns the entry's creation time in UTC."

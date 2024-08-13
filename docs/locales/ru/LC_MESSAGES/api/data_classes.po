@@ -54,7 +54,7 @@ msgid ":class:`int`"
 msgstr ":class:`int`"
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "Returns the snowflake's creation time in UTC."
 msgstr "Returns the snowflake's creation time in UTC."
@@ -879,7 +879,7 @@ msgid "Whether replying to the referenced message should raise :class:`HTTPExcep
 msgstr "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A reference to the message."
 msgstr "A reference to the message."
@@ -966,7 +966,7 @@ msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr "The reason for deleting the message. Shows up on the audit log."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "You do not have proper permissions to delete the message."
 msgstr "You do not have proper permissions to delete the message."
