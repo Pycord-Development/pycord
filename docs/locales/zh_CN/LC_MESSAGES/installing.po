@@ -12,40 +12,40 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Installing Pycord"
-msgstr "Installing Pycord"
+msgstr "安装Pycord"
 
 msgid "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
-msgstr "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
+msgstr "这是Pycord的文挡，一个Python库，用于帮助创建、利用Discord API的库。"
 
 msgid "Prerequisites"
-msgstr "Prerequisites"
+msgstr "前置条件"
 
 msgid "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
-msgstr "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
+msgstr "Pycord可以使用Python3.8或以上的版本。不支持较早的Python版本。并不支持Python2.7或更低的Python。并不支持Python3.7或更低的版本。"
 
 msgid "Installing"
-msgstr "Installing"
+msgstr "安装"
 
 msgid "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
-msgstr "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
+msgstr "对于即将到来的版本的新功能，你将需要安装一个预发布版本直到一个稳定版本的发布。::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
-msgstr "For Windows users, this command should be used to install the pre-release: ::"
+msgstr "对于Windows用户，使用这个命令安装预发布版本：::"
 
 msgid "You can get the library directly from PyPI: ::"
-msgstr "You can get the library directly from PyPI: ::"
+msgstr "你可以透过PyPI获取本库：::"
 
 msgid "If you are using Windows, then the following should be used instead: ::"
-msgstr "If you are using Windows, then the following should be used instead: ::"
+msgstr "如果你正在使用Windows，则应该遵照下方的指示进行操作：::"
 
 msgid "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
-msgstr "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
+msgstr "如果要安装额外的加速包体，你应该使用``py-cord[speed]``而不是``py-cord``，例如："
 
 msgid "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
-msgstr "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
+msgstr "如果要获取语音支援，你应该使用``py-cord[voice]``而不是``py-cord``，例如：::"
 
 msgid "On Linux environments, installing voice requires getting the following dependencies:"
-msgstr "On Linux environments, installing voice requires getting the following dependencies:"
+msgstr "在Linux环境下，安装语音支援包体需要以下依赖："
 
 msgid "`libffi <https://github.com/libffi/libffi>`_"
 msgstr "`libffi <https://github.com/libffi/libffi>`_"
@@ -57,44 +57,44 @@ msgid "`python3-dev <https://packages.debian.org/python3-dev>`_"
 msgstr "`python3-dev <https://packages.debian.org/python3-dev>`_"
 
 msgid "For a Debian-based system, the following command will get these dependencies:"
-msgstr "For a Debian-based system, the following command will get these dependencies:"
+msgstr "对于基于Debian的系统，以下指令将获取获得这些依赖："
 
 msgid "Remember to check your permissions!"
-msgstr "Remember to check your permissions!"
+msgstr "请记住检查您的权限！"
 
 msgid "Virtual Environments"
-msgstr "Virtual Environments"
+msgstr "虚拟环境"
 
 msgid "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
-msgstr "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
+msgstr "有时你想让库不要安装污染系统或使用不同于安装在系统上的库的版本。 您可能也没有权限在全系统安装库。 为此目的，截至Python 3.3的标准库含有一个称为“虚拟环境”的概念，以帮助维持这些单独的版本。"
 
 msgid "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
-msgstr "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
+msgstr "更多更深的交学可以在 :doc:`py:tutorual/venv` 内找到。"
 
 msgid "However, for the quick and dirty:"
-msgstr "However, for the quick and dirty:"
+msgstr "然而，就快速和简短而言："
 
 msgid "Go to your project's working directory:"
-msgstr "Go to your project's working directory:"
+msgstr "前往您项目的工作目录："
 
 msgid "Activate the virtual environment:"
-msgstr "Activate the virtual environment:"
+msgstr "激活虚拟环境："
 
 msgid "On Windows you activate it with:"
-msgstr "On Windows you activate it with:"
+msgstr "在Windows系统上激活它："
 
 msgid "Use pip like usual:"
-msgstr "Use pip like usual:"
+msgstr "跟往常一样的使用pip："
 
 msgid "Congratulations. You now have a virtual environment all set up."
-msgstr "Congratulations. You now have a virtual environment all set up."
+msgstr "恭喜您。你现在已经设置完成了一个虚拟环境。"
 
 msgid "Basic Concepts"
-msgstr "Basic Concepts"
+msgstr "基础概念"
 
 msgid "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
-msgstr "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
+msgstr "Pycord围绕着 :ref:`event <discord-api-events>`的概念。event是一个让你可以去监听并且回应的东西。举个例子来说，当一个讯息创建，你将会收到一个event是关于这个讯息的并且可以用于回应。"
 
 msgid "A quick example to showcase how events work:"
-msgstr "A quick example to showcase how events work:"
+msgstr "一个显示event如何工作的简单示例："
 

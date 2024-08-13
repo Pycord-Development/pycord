@@ -12,104 +12,104 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Extensions"
-msgstr "Extensions"
+msgstr "Расширения"
 
 msgid "Meta"
 msgstr "Meta"
 
 msgid "Welcome to Pycord"
-msgstr "Welcome to Pycord"
+msgstr "Добро пожаловать в Pycord"
 
 msgid "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
-msgstr "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
+msgstr "Pycord - современный, легкий в использовании, многофункциональный и асинхронный API-враппер для Discord."
 
 msgid "**Features:**"
-msgstr "**Features:**"
+msgstr "**Возможности:**"
 
 msgid "Modern Pythonic API using ``async``\\/``await`` syntax"
-msgstr "Modern Pythonic API using ``async``\\/``await`` syntax"
+msgstr "Современный Pythonic API, использующий синтаксис ``async``\\/``await``"
 
 msgid "Sane rate limit handling that prevents 429s"
-msgstr "Sane rate limit handling that prevents 429s"
+msgstr "Разумная обработка ограничений скорости, предотвращающая 429s"
 
 msgid "Command extension to aid with bot creation"
-msgstr "Command extension to aid with bot creation"
+msgstr "Расширения с командами для помощи в создании ботов"
 
 msgid "Easy to use with an object oriented design"
-msgstr "Easy to use with an object oriented design"
+msgstr "Легкий в использовании с объектно-ориентированным дизайном"
 
 msgid "Optimised for both speed and memory"
-msgstr "Optimised for both speed and memory"
+msgstr "Оптимизирован как для скорости, так и для памяти"
 
 msgid "Getting started"
-msgstr "Getting started"
+msgstr "Начало работы"
 
 msgid "Is this your first time using the library? This is the place to get started!"
-msgstr "Is this your first time using the library? This is the place to get started!"
+msgstr "Первый раз пользуетесь библиотекой? Это место, чтобы начать!"
 
 msgid "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
-msgstr "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
+msgstr "**Первые шаги:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
 
 msgid "**Working with Discord:** :doc:`discord` | :doc:`intents`"
-msgstr "**Working with Discord:** :doc:`discord` | :doc:`intents`"
+msgstr "**Работа с Discord:** :doc:`discord` | :doc:`intents`"
 
 msgid "**Examples:** Many examples are available in the :resource:`repository <examples>`."
-msgstr "**Examples:** Many examples are available in the :resource:`repository <examples>`."
+msgstr "**Примеры:** Множество примеров доступно в :resource:`repository <examples>`."
 
 msgid "Getting help"
-msgstr "Getting help"
+msgstr "Получение помощи"
 
 msgid "If you're having trouble with something, these resources might help."
-msgstr "If you're having trouble with something, these resources might help."
+msgstr "Если у вас что-то не получается, эти ресурсы могут вам помочь."
 
 msgid "Try the :doc:`faq` first, it's got answers to all common questions."
-msgstr "Try the :doc:`faq` first, it's got answers to all common questions."
+msgstr "Попробуйте сначала :doc:`faq`, там есть ответы на все распространенные вопросы."
 
 msgid "Ask us and hang out with us in our :resource:`Discord <discord>` server."
-msgstr "Ask us and hang out with us in our :resource:`Discord <discord>` server."
+msgstr "Спрашивайте и общайтесь с нами на нашем сервере :resource:`Discord <discord>`."
 
 msgid "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
-msgstr "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
+msgstr "Если вы ищете что-то конкретное, попробуйте использовать :ref:`index <genindex>` или :ref:`searching <search>`."
 
 msgid "Report bugs in the :resource:`issue tracker <issues>`."
-msgstr "Report bugs in the :resource:`issue tracker <issues>`."
+msgstr "Сообщайте об ошибках в :resource:`issue tracker <issues>`."
 
 msgid "Manuals"
-msgstr "Manuals"
+msgstr "Руководства"
 
 msgid "These pages go into great detail about everything the API can do."
-msgstr "These pages go into great detail about everything the API can do."
+msgstr "На этих страницах подробно описаны все возможности API."
 
 msgid "Core API"
 msgstr "Core API"
 
 msgid "These extensions help you during development when it comes to common tasks."
-msgstr "These extensions help you during development when it comes to common tasks."
+msgstr "Эти расширения помогут вам в процессе разработки, когда речь идет об обычных задачах."
 
 msgid ":doc:`ext/commands/index` - Bot commands framework"
-msgstr ":doc:`ext/commands/index` - Bot commands framework"
+msgstr ":doc:`ext/commands/index` - Система команд для ботов"
 
 msgid ":doc:`ext/tasks/index` - asyncio.Task helpers"
-msgstr ":doc:`ext/tasks/index` - asyncio.Task helpers"
+msgstr ":doc:`ext/tasks/index` - Помощники asyncio.Task"
 
 msgid ":doc:`ext/pages/index` - A pagination extension module"
-msgstr ":doc:`ext/pages/index` - A pagination extension module"
+msgstr ":doc:`ext/pages/index` - Модуль пагинации"
 
 msgid ":doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands"
-msgstr ":doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands"
+msgstr ":doc:`ext/bridge/index` - Модуль, соединяющий слеш-команды и команды с префиксом"
 
 msgid "If you're looking for something related to the project itself, it's here."
-msgstr "If you're looking for something related to the project itself, it's here."
+msgstr "Если вы ищете что-то, связанное с самим проектом, то это здесь."
 
 msgid ":doc:`changelog` - The changelog for the library."
-msgstr ":doc:`changelog` - The changelog for the library."
+msgstr ":doc:`changelog` - Журнал изменений библиотеки."
 
 msgid ":doc:`version_guarantees` - The version guarantees for the library."
-msgstr ":doc:`version_guarantees` - The version guarantees for the library."
+msgstr ":doc:`version_guarantees`- Гарантии версии библиотеки."
 
 msgid ":doc:`migrating_to_v1` - How to migrate from v0.x to v1.x."
-msgstr ":doc:`migrating_to_v1` - How to migrate from v0.x to v1.x."
+msgstr ":doc:`migrating_to_v1` - Как мигрировать с версии 0.x на версию 1.x."
 
 msgid ":doc:`migrating_to_v2` - How to migrate from v1.x to v2.x."
-msgstr ":doc:`migrating_to_v2` - How to migrate from v1.x to v2.x."
+msgstr ":doc:`migrating_to_v2` - Как мигрировать с версии 1.x на версию 2.x."
 

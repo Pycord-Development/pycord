@@ -12,16 +12,16 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Application Commands"
-msgstr "Application Commands"
+msgstr "アプリケーションコマンド"
 
 msgid "Command Permission Decorators"
 msgstr "Command Permission Decorators"
 
 msgid "A decorator that limits the usage of an application command to members with certain permissions."
-msgstr "A decorator that limits the usage of an application command to members with certain permissions."
+msgstr "特定の権限を持つメンバーにアプリケーションコマンドの使用を制限するデコレーター"
 
 msgid "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
-msgstr "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
+msgstr "渡された権限は、 :class:`.discord.Permissions` で示されるプロパティとまったく同じでなければなりません"
 
 msgid "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
 msgstr "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."

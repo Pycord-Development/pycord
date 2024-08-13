@@ -15,7 +15,7 @@ msgid "Table of Contents"
 msgstr "Table of Contents"
 
 msgid "API Reference"
-msgstr "API Reference"
+msgstr "Référence de l'API"
 
 msgid "The following section outlines the API of Pycord."
 msgstr "The following section outlines the API of Pycord."

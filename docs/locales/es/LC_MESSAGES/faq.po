@@ -12,79 +12,79 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Frequently Asked Questions"
-msgstr "Frequently Asked Questions"
+msgstr "Preguntas Frecuentes"
 
 msgid "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
-msgstr "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
+msgstr "Esta es una lista de preguntas frecuentes sobre el uso de ``Pycord`` y sus módulos de extensión. Siéntete libre de sugerir una nueva pregunta o envía una a través de una pull request."
 
 msgid "Coroutines"
-msgstr "Coroutines"
+msgstr "Corutinas"
 
 msgid "Questions regarding coroutines and asyncio belong here."
-msgstr "Questions regarding coroutines and asyncio belong here."
+msgstr "Las preguntas sobre corutinas y asyncio pertenecen aquí."
 
 msgid "What is a coroutine?"
-msgstr "What is a coroutine?"
+msgstr "¿Qué es una corutina?"
 
 msgid "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
-msgstr "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
+msgstr "Una |coroutine_link|_ es una función que debe ser llamada con ``await`` o ```yield from``. Cuando Python se encuentra con un ``await``, se detiene la ejecución de la función en ese punto y se trabaja en otras cosas hasta que regresa a ese punto y termina su trabajo. Esto le permite a tu programa hacer múltiples cosas al mismo tiempo sin usar hilos o multiprocesamiento complicado."
 
 msgid "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
-msgstr "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
+msgstr "**Si te olvidas de utilizar await en una corutina, entonces ésta no funcionará. Nunca olvides utilizar await en una corutina.**"
 
 msgid "Where can I use ``await``\\?"
-msgstr "Where can I use ``await``\\?"
+msgstr "¿Dónde puedo usar ``await``\\?"
 
 msgid "You can only use ``await`` inside ``async def`` functions and nowhere else."
-msgstr "You can only use ``await`` inside ``async def`` functions and nowhere else."
+msgstr "Solo puedes utilizar ``await`` dentro de funciones ``async def`` y en ningún otro lugar."
 
 msgid "What does \"blocking\" mean?"
-msgstr "What does \"blocking\" mean?"
+msgstr "¿Qué significa \"bloquear\"?"
 
 msgid "In asynchronous programming a blocking call is essentially all the parts of the function that are not ``await``. Do not despair however, because not all forms of blocking are bad! Using blocking calls is inevitable, but you must work to make sure that you don't excessively block functions. Remember, if you block for too long then your bot will freeze since it has not stopped the function's execution at that point to do other things."
-msgstr "In asynchronous programming a blocking call is essentially all the parts of the function that are not ``await``. Do not despair however, because not all forms of blocking are bad! Using blocking calls is inevitable, but you must work to make sure that you don't excessively block functions. Remember, if you block for too long then your bot will freeze since it has not stopped the function's execution at that point to do other things."
+msgstr "En la programación asíncrona una llamada de bloqueo es esencialmente todas las partes de la función que no son ``await``. Sin embargo, no desesperes, porque no todas las formas de bloqueo son malas! Usar llamadas de bloqueo es inevitable, pero debes trabajar en asegurarte de no bloquear excesivamente las funciones. Recuerda, si bloqueas durante demasiado tiempo, tu bot se congelará ya que no ha detenido la ejecución de la función en ese momento para hacer otras cosas."
 
 msgid "If logging is enabled, this library will attempt to warn you that blocking is occurring with the message: ``Heartbeat blocked for more than N seconds.`` See :ref:`logging_setup` for details on enabling logging."
-msgstr "If logging is enabled, this library will attempt to warn you that blocking is occurring with the message: ``Heartbeat blocked for more than N seconds.`` See :ref:`logging_setup` for details on enabling logging."
+msgstr "Si activas el logging, la librería intentará advertirte de que un bloqueo está ocurriendo con el mensaje: ``Heartbeat blocked for more than N seconds.`` Puedes ver :ref:`logging_setup` para detalles sobre como activar el logging."
 
 msgid "A common source of blocking for too long is something like :func:`time.sleep`. Don't do that. Use :func:`asyncio.sleep` instead. Similar to this example: ::"
-msgstr "A common source of blocking for too long is something like :func:`time.sleep`. Don't do that. Use :func:`asyncio.sleep` instead. Similar to this example: ::"
+msgstr "Una fuente común de bloqueo durante demasiado tiempo es algo como :func:`time.sleep`. No hagas eso. Utiliza :func:`asyncio.sleep` en su lugar. Similar a este ejemplo: ::"
 
 msgid "Another common source of blocking for too long is using HTTP requests with the famous module :doc:`requests <req:index>`. While :doc:`requests <req:index>` is an amazing module for non-asynchronous programming, it is not a good choice for :mod:`asyncio` because certain requests can block the event loop too long. Instead, use the :doc:`aiohttp <aio:index>` library which is installed on the side with this library."
-msgstr "Another common source of blocking for too long is using HTTP requests with the famous module :doc:`requests <req:index>`. While :doc:`requests <req:index>` is an amazing module for non-asynchronous programming, it is not a good choice for :mod:`asyncio` because certain requests can block the event loop too long. Instead, use the :doc:`aiohttp <aio:index>` library which is installed on the side with this library."
+msgstr "Otra fuente común de bloqueo durante demasiado tiempo es realizar peticiones HTTP con el famoso módulo :doc:`requests <req:index>`. Mientras que :doc:`requests <req:index>` es un asombroso módulo para la programación no asincrónica. no es una buena opción para :mod:`asyncio` porque ciertas peticiones pueden bloquear el loop de eventos por demasiado tiempo. En su lugar, utiliza el módulo :doc:`aiohttp <aio:index>` el cual viene instalado de lado con esta librería."
 
 msgid "Consider the following example: ::"
-msgstr "Consider the following example: ::"
+msgstr "Consideremos el siguiente ejemplo: ::"
 
 msgid "General"
 msgstr "General"
 
 msgid "General questions regarding library usage belong here."
-msgstr "General questions regarding library usage belong here."
+msgstr "Las preguntas generales sobre la librería pertenecen aquí."
 
 msgid "Where can I find usage examples?"
-msgstr "Where can I find usage examples?"
+msgstr "¿Dónde puedo encontrar ejemplos de uso?"
 
 msgid "Example code can be found in the `examples folder <https://github.com/Pycord-Development/pycord/tree/master/examples>`_ in the repository."
-msgstr "Example code can be found in the `examples folder <https://github.com/Pycord-Development/pycord/tree/master/examples>`_ in the repository."
+msgstr "Puedes encontrar ejemplos de código en la `carpeta de ejemplos <https://github.com/Pycord-Development/pycord/tree/master/examples>`_ en el repositorio."
 
 msgid "How do I set the \"Playing\" status?"
-msgstr "How do I set the \"Playing\" status?"
+msgstr "¿Cómo establezco el estado \"Jugando\"?"
 
 msgid "The ``activity`` keyword argument may be passed in the :class:`Client` constructor or :meth:`Client.change_presence`, given an :class:`Activity` object."
-msgstr "The ``activity`` keyword argument may be passed in the :class:`Client` constructor or :meth:`Client.change_presence`, given an :class:`Activity` object."
+msgstr "El argumento de palabra clave ``activity`` puede ser pasado en el constructor :class:`Client` o :meth:`Client.change_presence`, dado un objeto :class:`Activity`."
 
 msgid "The constructor may be used for static activities, while :meth:`Client.change_presence` may be used to update the activity at runtime."
-msgstr "The constructor may be used for static activities, while :meth:`Client.change_presence` may be used to update the activity at runtime."
+msgstr "El constructor puede ser usado para actividades estáticas, mientras que :meth:`Client.change_presence` puede ser usado para actualizar la actividad en tiempo de ejecución."
 
 msgid "It is highly discouraged to use :meth:`Client.change_presence` or API calls in :func:`on_ready` as this event may be called many times while running, not just once."
-msgstr "It is highly discouraged to use :meth:`Client.change_presence` or API calls in :func:`on_ready` as this event may be called many times while running, not just once."
+msgstr "No es para nada recomendable usar :meth:`Cliente.change_presence` o llamadas de API en :func:`on_ready` ya que este evento puede ser llamado muchas veces en tiempo de ejecución, no solo una vez."
 
 msgid "There is a high chance of disconnecting if presences are changed right after connecting."
-msgstr "There is a high chance of disconnecting if presences are changed right after connecting."
+msgstr "Existe una gran probabilidad de desconexión si las presencias son cambiadas justo después de conectarse."
 
 msgid "The status type (playing, listening, streaming, watching) can be set using the :class:`ActivityType` enum. For memory optimisation purposes, some activities are offered in slimmed-down versions:"
-msgstr "The status type (playing, listening, streaming, watching) can be set using the :class:`ActivityType` enum. For memory optimisation purposes, some activities are offered in slimmed-down versions:"
+msgstr "El tipo de estado (jugando, escuchando, streaming, viendo) puede ser establecido usando el enum :class:`ActivityType`. Por motivos de optimización de memoria, algunas actividades son ofrecidas en versiones reducidas:"
 
 msgid ":class:`Game`"
 msgstr ":class:`Game`"
@@ -93,58 +93,58 @@ msgid ":class:`Streaming`"
 msgstr ":class:`Streaming`"
 
 msgid "Putting both of these pieces of info together, you get the following: ::"
-msgstr "Putting both of these pieces of info together, you get the following: ::"
+msgstr "Al juntar estas dos piezas de información, obtenemos lo siguiente: ::"
 
 msgid "How do I send a message to a specific channel?"
-msgstr "How do I send a message to a specific channel?"
+msgstr "¿Cómo puedo enviar un mensaje a un canal en específico?"
 
 msgid "You must fetch the channel directly and then call the appropriate method. Example: ::"
-msgstr "You must fetch the channel directly and then call the appropriate method. Example: ::"
+msgstr "Debemos obtener el canal directamente y luego llamar al método apropiado. Ejemplo: ::"
 
 msgid "How do I send a DM?"
-msgstr "How do I send a DM?"
+msgstr "¿Cómo envío un mensaje directo?"
 
 msgid "Get the :class:`User` or :class:`Member` object and call :meth:`abc.Messageable.send`. For example: ::"
-msgstr "Get the :class:`User` or :class:`Member` object and call :meth:`abc.Messageable.send`. For example: ::"
+msgstr "Obtén una instancia de :class:`User` o :class:`Member` y llama al método :meth:`abc.Messageable.send`. Por ejemplo: ::"
 
 msgid "If you are responding to an event, such as :func:`on_message`, you already have the :class:`User` object via :attr:`Message.author`: ::"
-msgstr "If you are responding to an event, such as :func:`on_message`, you already have the :class:`User` object via :attr:`Message.author`: ::"
+msgstr "Si estás respondiendo a un evento, como :func:`on_message`, ya posees el objeto :class:`User` a través de :attr:`Message.author`: ::"
 
 msgid "How do I get the ID of a sent message?"
-msgstr "How do I get the ID of a sent message?"
+msgstr "¿Cómo obtengo el ID de un mensaje enviado?"
 
 msgid ":meth:`abc.Messageable.send` returns the :class:`Message` that was sent. The ID of a message can be accessed via :attr:`Message.id`: ::"
-msgstr ":meth:`abc.Messageable.send` returns the :class:`Message` that was sent. The ID of a message can be accessed via :attr:`Message.id`: ::"
+msgstr ":meth:`abc.Messageable.send` retorna el :class:`Message` que fue enviado. Puedes acceder al ID del mensaje a través de :attr:`Message.id`: ::"
 
 msgid "How do I upload an image?"
-msgstr "How do I upload an image?"
+msgstr "¿Cómo puedo subir una imagen?"
 
 msgid "To upload something to Discord you have to use the :class:`File` object."
-msgstr "To upload something to Discord you have to use the :class:`File` object."
+msgstr "Para subir algo a Discord, tienes que utilizar una instancia de :class:`File`."
 
 msgid "A :class:`File` accepts two parameters, the file-like object (or file path) and the filename to pass to Discord when uploading."
-msgstr "A :class:`File` accepts two parameters, the file-like object (or file path) and the filename to pass to Discord when uploading."
+msgstr "La clase :class:`File` acepta dos parámetros, un objeto tipo archivo (o la ruta de este) y el nombre del archivo a pasar a Discord al momento de subirlo."
 
 msgid "If you want to upload an image it's as simple as: ::"
-msgstr "If you want to upload an image it's as simple as: ::"
+msgstr "Si quieres subir una imagen, es tan simple como: ::"
 
 msgid "If you have a file-like object you can do as follows: ::"
-msgstr "If you have a file-like object you can do as follows: ::"
+msgstr "Si tienes un objeto tipo archivo, puedes hacer lo siguiente: ::"
 
 msgid "To upload multiple files, you can use the ``files`` keyword argument instead of ``file``\\: ::"
-msgstr "To upload multiple files, you can use the ``files`` keyword argument instead of ``file``\\: ::"
+msgstr "Para subir varios archivos, puedes utilizar el argumento de palabra clave ```files`` en lugar de ``file``\\: ::"
 
 msgid "If you want to upload something from a URL, you will have to use an HTTP request using :doc:`aiohttp <aio:index>` and then pass an :class:`io.BytesIO` instance to :class:`File` like so:"
-msgstr "If you want to upload something from a URL, you will have to use an HTTP request using :doc:`aiohttp <aio:index>` and then pass an :class:`io.BytesIO` instance to :class:`File` like so:"
+msgstr "Si quiere subir algo desde una URL, tendrás que realizar una petición HTTP utilizando :doc:`aiohttp <aio:index>` y luego pasar una instancia de :class:`io.BytesIO` a la clase :class:`File`. Tal que así:"
 
 msgid "How can I add a reaction to a message?"
-msgstr "How can I add a reaction to a message?"
+msgstr "¿Cómo puedo añadir una reacción a un mensaje?"
 
 msgid "You use the :meth:`Message.add_reaction` method."
-msgstr "You use the :meth:`Message.add_reaction` method."
+msgstr "Utiliza el método :meth:`Message.add_reaction`."
 
 msgid "If you want to use unicode emoji, you must pass a valid unicode code point in a string. In your code, you can write this in a few different ways:"
-msgstr "If you want to use unicode emoji, you must pass a valid unicode code point in a string. In your code, you can write this in a few different ways:"
+msgstr "Si quieres usar emojis unicode, debes pasar un unicode válido en una cadena. En tu código, puedes escribir esto de varias maneras diferentes:"
 
 msgid "``'👍'``"
 msgstr "``'👍'``"
@@ -156,7 +156,7 @@ msgid "``'\\N{THUMBS UP SIGN}'``"
 msgstr "``'\\N{THUMBS UP SIGN}'``"
 
 msgid "Quick example: ::"
-msgstr "Quick example: ::"
+msgstr "Ejemplo rápido: ::"
 
 msgid "In case you want to use emoji that come from a message, you already get their code points in the content without needing to do anything special. You **cannot** send ``':thumbsup:'`` style shorthands."
 msgstr "In case you want to use emoji that come from a message, you already get their code points in the content without needing to do anything special. You **cannot** send ``':thumbsup:'`` style shorthands."
