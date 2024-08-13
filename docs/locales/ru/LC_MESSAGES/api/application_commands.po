@@ -27,7 +27,7 @@ msgid "These permissions can be updated by server administrators per-guild. As s
 msgstr "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "An argument list of permissions to check for."
 msgstr "An argument list of permissions to check for."
@@ -66,7 +66,7 @@ msgid "Keyword arguments to pass into the construction of the class denoted by `
 msgstr "Keyword arguments to pass into the construction of the class denoted by ``cls``."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
@@ -75,7 +75,7 @@ msgid "Callable[..., :class:`.ApplicationCommand`]"
 msgstr "Callable[..., :class:`.ApplicationCommand`]"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "If the function is not a coroutine or is already a command."
 msgstr "If the function is not a coroutine or is already a command."
@@ -117,7 +117,7 @@ msgid "Callable[..., :class:`.MessageCommand`]"
 msgstr "Callable[..., :class:`.MessageCommand`]"
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Объекты"
 
 msgid "Checks whether the command is currently on cooldown."
 msgstr "Checks whether the command is currently on cooldown."

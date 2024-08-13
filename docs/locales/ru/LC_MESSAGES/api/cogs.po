@@ -24,7 +24,7 @@ msgid "When inheriting from this class, the options shown in :class:`CogMeta` ar
 msgstr "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
 msgstr "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
@@ -72,7 +72,7 @@ msgid "This is the cog equivalent of :meth:`.Bot.listen`."
 msgstr "This is the cog equivalent of :meth:`.Bot.listen`."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "The name of the event being listened to. If not provided, it defaults to the function's name."
 msgstr "The name of the event being listened to. If not provided, it defaults to the function's name."
@@ -81,7 +81,7 @@ msgid "If this listener should only be called once after each cog load. Defaults
 msgstr "If this listener should only be called once after each cog load. Defaults to false."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "The function is not a coroutine function or a string was not passed as     the name."
 msgstr "The function is not a coroutine function or a string was not passed as     the name."
