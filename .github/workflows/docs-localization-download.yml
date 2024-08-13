@@ -4,10 +4,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  localizse:
+  download:
     permissions: write-all
-    name: "Localisize Docs"
+    name: "Download localizations from Crowdin"
     runs-on: ubuntu-latest
+    outputs:
+      pr_ref: pull/${{ steps.crowdin.outputs.pull_request_number }}/head
     steps:
       - uses: actions/checkout@v4
       - name: "Install Python"
@@ -32,6 +34,7 @@ jobs:
           hi -l ko -l pt_BR -l es -l zh_CN -l ru -l en
         working-directory: ./docs
       - name: "Crowdin"
+        id: crowdin
         uses: crowdin/github-action@v2
         with:
           upload_sources: false
@@ -53,31 +56,44 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+  pr:
+    permissions: write-all
+    name: "Trigger PR workflows manually"
+    needs: [download]
+    runs-on: ubuntu-latest
+    steps:
       - name: Invoke checks workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: check.yml
+          ref: ${{ needs.download.outputs.pr_ref }}
       - name: Invoke codeql workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: codeql-analysis.yml
+          ref: ${{ needs.download.outputs.pr_ref }}
       - name: Invoke lint workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: lint.yml
+          ref: ${{ needs.download.outputs.pr_ref }}
       - name: Invoke pr workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: pr.yml
+          ref: ${{ needs.download.outputs.pr_ref }}
       - name: Invoke test workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: test.yml
+          ref: ${{ needs.download.outputs.pr_ref }}
       - name: Invoke todo workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: todo.yml
+          ref: ${{ needs.download.outputs.pr_ref }}
       - name: Invoke version updates workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: version-updates.yml
+          ref: ${{ needs.download.outputs.pr_ref }}

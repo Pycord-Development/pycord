@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  localizse:
+  upload:
     permissions: write-all
-    name: "Localisize Docs"
+    name: "Upload localization base to Crowdin"
     runs-on: ubuntu-latest
     if:
       contains(github.event.head_commit.message, '!crowdin upload') || github.event_name
