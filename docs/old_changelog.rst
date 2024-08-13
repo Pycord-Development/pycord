@@ -57,6 +57,8 @@ v2.0.0
 v1.7.3
 ------
 
+.. _old_changelog:v1.7.3-bug-fixes: 
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -67,6 +69,8 @@ Bug Fixes
 
 v1.7.2
 -------
+
+.. _old_changelog:v1.7.2-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -79,6 +83,8 @@ Bug Fixes
 
 v1.7.1
 -------
+
+.. _old_changelog:v1.7.1-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -95,6 +101,8 @@ Work after this will be spent on v2.0. As a result, **this is the last version t
 Likewise, **this is the last version to support user bots**.
 
 Development of v2.0 will have breaking changes and support for newer API features.
+
+.. old_changelog:v1.7.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -139,6 +147,8 @@ New Features
 - |commands| Allow ``None`` to be passed to :attr:`HelpCommand.verify_checks <ext.commands.HelpCommand.verify_checks>` to only verify in a guild context (:dpy-issue:`2008`, :dpy-issue:`6446`)
 - |commands| Allow relative paths when loading extensions via a ``package`` keyword argument (:dpy-issue:`2465`, :dpy-issue:`6445`)
 
+.. old_changelog:v1.7.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -161,6 +171,8 @@ Bug Fixes
 - |commands| Properly handle positional-only parameters in bot command signatures (:dpy-issue:`6431`)
 - |commands| Group signatures now properly show up in :attr:`Command.signature <ext.commands.Command.signature>` (:dpy-issue:`6529`, :dpy-issue:`6530`)
 
+.. old_changelog:v1.7.0-miscellaneous:
+
 Miscellaneous
 ~~~~~~~~~~~~~
 
@@ -174,6 +186,8 @@ v1.6.0
 ------
 
 This version comes with support for replies and stickers.
+
+.. old_changelog:v1.6.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -211,6 +225,7 @@ New Features
 - |commands| Add support for ``description`` keyword argument in :class:`commands.Cog <ext.commands.Cog>` (:dpy-issue:`6028`)
 - |tasks| Add support for calling the wrapped coroutine as a function via ``__call__``.
 
+.. old_changelog:v1.6.0-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -227,6 +242,8 @@ Bug Fixes
 - Fix uninitialised :attr:`CustomActivity.created_at` (:dpy-issue:`6095`)
 - |commands| Errors during cog unload no longer stops module cleanup (:dpy-issue:`6113`)
 - |commands| Properly cleanup lingering commands when a conflicting alias is found when adding commands (:dpy-issue:`6217`)
+
+.. old_changelog:v1.6.0-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -245,6 +262,8 @@ Miscellaneous
 v1.5.1
 -------
 
+.. _old_changelog:v1.5.1-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -256,6 +275,8 @@ Bug Fixes
 - Fix the bot disconnecting from voice when moving them to another channel (:dpy-issue:`5904`)
 - Fix attribute errors when chunking times out sometimes during delayed on_ready dispatching.
 - Ensure that the bot's own member is not evicted from the cache (:dpy-issue:`5949`)
+
+.. _old_changelog:v1.5.1-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -272,11 +293,15 @@ v1.5.0
 
 This version came with forced breaking changes that Discord is requiring all bots to go through on October 7th. It is highly recommended to read the documentation on intents, :ref:`intents_primer`.
 
+.. _old_changelog:v1.5.0-api-changes:
+
 API Changes
 ~~~~~~~~~~~
 
 - Members and presences will no longer be retrieved due to an API change. See :ref:`privileged_intents` for more info.
 - As a consequence, fetching offline members is disabled if the members intent is not enabled.
+
+.. _old_changelog:v1.5.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -298,6 +323,8 @@ New Features
 - Add alias for :attr:`PublicUserFlags.verified_bot_developer` under :attr:`PublicUserFlags.early_verified_bot_developer` (:dpy-issue:`5849`)
 - |commands| Add support for ``require_var_positional`` for :class:`Command` (:dpy-issue:`5793`)
 
+.. _old_changelog:v1.5.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -312,6 +339,8 @@ Bug Fixes
 - |commands| Fix commands not being properly ejected during errors in a cog injection (:dpy-issue:`5804`)
 - |commands| Fix cooldown timing ignoring edited timestamps.
 - |tasks| Fix tasks extending the next iteration on handled exceptions (:dpy-issue:`5762`, :dpy-issue:`5763`)
+
+.. _old_changelog:v1.5.0-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -332,6 +361,8 @@ v1.4.2
 
 This is a maintenance release with backports from :ref:`vp1p5p0`.
 
+.. _old_changelog:v1.4.2-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -347,6 +378,8 @@ Bug Fixes
 - |commands| Fix cooldown timing ignoring edited timestamps.
 - |tasks| Fix tasks extending the next iteration on handled exceptions (:dpy-issue:`5762`, :dpy-issue:`5763`)
 
+.. _old_changelog:v1.4.2-miscellaneous:
+
 Miscellaneous
 ~~~~~~~~~~~~~
 
@@ -357,6 +390,8 @@ Miscellaneous
 
 v1.4.1
 ------
+
+.. old_changelog:v1.4.1-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -371,6 +406,8 @@ v1.4.0
 ------
 
 Another version with a long development time. Features like Intents are slated to be released in a v1.5 release. Thank you for your patience!
+
+.. old_changelog:v1.4.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -428,6 +465,7 @@ New Features
 - |tasks| Add :meth:`Loop.is_running <.ext.tasks.Loop.is_running>` method to the task objects (:dpy-issue:`2540`)
 - |tasks| Allow usage of custom error handlers similar to the command extensions to tasks using :meth:`Loop.error <.ext.tasks.Loop.error>` decorator (:dpy-issue:`2621`)
 
+.. old_changelog:v1.4.0-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -456,6 +494,7 @@ Bug Fixes
 - |tasks| Task objects are no longer stored globally so two class instances can now start two separate tasks (:dpy-issue:`2294`)
 - |tasks| Allow cancelling the loop within :meth:`before_loop <.ext.tasks.Loop.before_loop>` (:dpy-issue:`4082`)
 
+.. old_changelog:v1.4.0-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -480,6 +519,8 @@ Miscellaneous
 v1.3.4
 ------
 
+.. old_changelog:v1.3.4-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -489,6 +530,8 @@ Bug Fixes
 
 v1.3.3
 ------
+
+.. old_changelog:v1.3.3-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -504,6 +547,8 @@ v1.3.2
 ------
 
 Another minor bug fix release.
+
+.. old_changelog:v1.3.2-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -523,11 +568,15 @@ v1.3.1
 
 Minor bug fix release.
 
+.. old_changelog:v1.3.1-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
 - Fix fetching invites in guilds that the user is not in.
 - Fix the channel returned from :meth:`Client.fetch_channel` raising when sending messages. (:dpy-issue:`2531`)
+
+.. old_changelog:v1.3.1-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -541,6 +590,8 @@ v1.3.0
 ------
 
 This version comes with a lot of bug fixes and new features. It's been in development for a lot longer than was anticipated!
+
+.. old_changelog:v1.3.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -608,6 +659,8 @@ New Features
 - |tasks| :meth:`Loop.add_exception_type <.ext.tasks.Loop.add_exception_type>` now allows multiple exceptions to be set. (:dpy-issue:`2333`)
 - |tasks| Add :attr:`Loop.next_iteration <.ext.tasks.Loop.next_iteration>` property. (:dpy-issue:`2305`)
 
+.. old_changelog:v1.3.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -631,6 +684,9 @@ Bug Fixes
 - |commands| :meth:`Command.can_run <.ext.commands.Command.can_run>` now checks whether a command is disabled.
 - |commands| :attr:`HelpCommand.clean_prefix <.ext.commands.HelpCommand.clean_prefix>` now takes into consideration nickname mentions. (:dpy-issue:`2489`)
 - |commands| :meth:`Context.send_help <.ext.commands.Context.send_help>` now properly propagates to the :meth:`HelpCommand.on_help_command_error <.ext.commands.HelpCommand.on_help_command_error>` handler.
+
+
+.. old_changelog:v1.3.0-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -659,6 +715,8 @@ Miscellaneous
 v1.2.5
 ------
 
+.. old_changelog:v1.2.5-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -668,6 +726,8 @@ Bug Fixes
 
 v1.2.4
 ------
+
+.. old_changelog:v1.2.4-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -684,6 +744,8 @@ Bug Fixes
 v1.2.3
 ------
 
+.. old_changelog:v1.2.3-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -698,6 +760,8 @@ Bug Fixes
 v1.2.2
 ------
 
+.. old_changelog:v1.2.2-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -707,6 +771,8 @@ Bug Fixes
 
 v1.2.1
 ------
+
+.. old_changelog:v1.2.1-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -720,6 +786,8 @@ v1.2.0
 ------
 
 This update mainly brings performance improvements and various nitro boosting attributes (referred to in the API as "premium guilds").
+
+.. old_changelog:v1.2.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -744,6 +812,8 @@ New Features
 - |tasks| Add :meth:`Loop.failed <.ext.tasks.Loop.failed>` to query if a task had failed somehow.
 - |tasks| Add :meth:`Loop.change_interval <.ext.tasks.Loop.change_interval>` to change the sleep interval at runtime (:dpy-issue:`2158`, :dpy-issue:`2162`)
 
+.. old_changelog:v1.2.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -751,6 +821,8 @@ Bug Fixes
 - |commands| Fix :attr:`.Command.invoked_subcommand` being invalid in many cases.
 - |tasks| Reset iteration count when the loop terminates and is restarted.
 - |tasks| The decorator interface now works as expected when stacking (:dpy-issue:`2154`)
+
+.. old_changelog:v1.2.0-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -774,10 +846,14 @@ Miscellaneous
 v1.1.1
 ------
 
+.. old_changelog:v1.1.1-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
 - Webhooks do not overwrite data on retrying their HTTP requests (:dpy-issue:`2140`)
+
+.. old_changelog:v1.1.1-miscellaneous:
 
 Miscellaneous
 ~~~~~~~~~~~~~
@@ -788,6 +864,8 @@ Miscellaneous
 
 v1.1.0
 ------
+
+.. old_changelog:v1.1.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -815,6 +893,7 @@ New Features
 - Allow passing ``cls`` in the :func:`~.commands.group` decorator (:dpy-issue:`2061`)
 - Add :attr:`.Command.parents` to fetch the parents of a command (:dpy-issue:`2104`)
 
+.. old_changelog:v1.1.0-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -825,6 +904,8 @@ Bug Fixes
 - Fix :exc:`UnboundLocalError` when :class:`RequestsWebhookAdapter` raises an error.
 - Fix bug where updating your own user did not update your member instances.
 - Tighten constraints of ``__eq__`` in :class:`Spotify` objects (:dpy-issue:`2113`, :dpy-issue:`2117`)
+
+.. old_changelog:v1.1.0-bug-fixes-ext-commands:
 
 ``discord.ext.commands``
 ++++++++++++++++++++++++
@@ -837,6 +918,8 @@ Bug Fixes
 - Fix race condition with help commands (:dpy-issue:`2123`)
 - Fix cog descriptions not showing in :class:`~.commands.MinimalHelpCommand` (:dpy-issue:`2139`)
 
+.. old_changelog:v1.1.0-miscellaneous:
+
 Miscellaneous
 ~~~~~~~~~~~~~
 
@@ -844,6 +927,8 @@ Miscellaneous
 - Make the output of ``python -m discord --version`` a bit more useful.
 - The loop cleanup facility has been rewritten again.
 - The signal handling in :meth:`Client.run` has been removed.
+
+.. _old_changelog-v1.1.0-miscellaneous-ext-commands:
 
 ``discord.ext.commands``
 ++++++++++++++++++++++++
@@ -855,6 +940,8 @@ Miscellaneous
 
 v1.0.1
 ------
+
+.. old_changelog:v1.0.1-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -875,6 +962,8 @@ see :ref:`the migrating page <migrating_1_0>`.
 v0.16.6
 -------
 
+.. old_changelog:v0.16.6-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -891,6 +980,8 @@ v0.16.1
 
 This release is just a bug fix release with some better rate limit implementation.
 
+.. old_changelog:v0.16.1-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -905,11 +996,15 @@ Bug Fixes
 v0.16.0
 -------
 
+.. old_changelog:v0.16.0-new-features:
+
 New Features
 ~~~~~~~~~~~~
 
 - Add :attr:`Channel.overwrites` to get all the permission overwrites of a channel.
 - Add :attr:`Server.features` to get information about partnered servers.
+
+.. old_changelog:v0.16.0-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -937,6 +1032,8 @@ v0.15.1
 v0.15.0
 -------
 
+.. old_changelog:v0.15.0-new-features:
+
 New Features
 ~~~~~~~~~~~~
 
@@ -959,6 +1056,8 @@ For the command extension, the following changed:
 v0.14.3
 -------
 
+.. old_changelog:v0.14.3-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -970,11 +1069,15 @@ Bug Fixes
 v0.14.2
 -------
 
+.. old_changelog:v0.14.2-new-features:
+
 New Features
 ~~~~~~~~~~~~
 
 - :meth:`Client.wait_for_reaction` now returns a namedtuple with ``reaction`` and ``user`` attributes.
     - This is for better support in the case that ``None`` is returned since tuple unpacking can lead to issues.
+
+.. old_changelog:v0.14.2-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
@@ -985,6 +1088,8 @@ Bug Fixes
 
 v0.14.1
 -------
+
+.. old_changelog:v0.14.1-bug-fixes:
 
 Bug fixes
 ~~~~~~~~~
@@ -998,6 +1103,8 @@ v0.14.0
 -------
 
 This update adds new API features and a couple of bug fixes.
+
+.. old_changelog:v0.14.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -1013,6 +1120,8 @@ New Features
     - :attr:`Message.reactions` to get reactions from a message.
     - :meth:`Client.wait_for_reaction` to wait for a reaction from a user.
 
+.. old_changelog:v0.14.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -1025,6 +1134,8 @@ v0.13.0
 -------
 
 This is a backwards compatible update with new features.
+
+.. old_changelog:v0.13.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -1049,6 +1160,8 @@ New Features
 
     - This is the only method that allows changing your status to invisible or do not disturb.
 
+.. old_changelog:v0.13.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -1061,6 +1174,8 @@ v0.12.0
 -------
 
 This is a bug fix update that also comes with new features.
+
+.. old_changelog:v0.12.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -1101,6 +1216,8 @@ For the command extension, the following are new:
 - Add coroutine support for ``Bot.command_prefix``.
 - Add a method to reset command cooldown.
 
+.. old_changelog:v0.12.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -1117,10 +1234,14 @@ v0.11.0
 
 This is a minor bug fix update that comes with a gateway update (v5 -> v6).
 
+.. old_changelog:v0.11.0-breaking-changes:
+
 Breaking Changes
 ~~~~~~~~~~~~~~~~
 
 - ``Permissions.change_nicknames`` has been renamed to :attr:`Permissions.change_nickname` to match the UI.
+
+.. old_changelog:v0.11.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -1145,6 +1266,8 @@ For the command extension, the following are new:
 - Command cooldown system with the ``cooldown`` decorator.
 - ``UserInputError`` exception for the hierarchy for user input related errors.
 
+.. old_changelog:v0.11.0-bug-fixes:
+
 Bug Fixes
 ~~~~~~~~~
 
@@ -1167,6 +1290,8 @@ v0.10.0
 -------
 
 For breaking changes, see `0.10.0 migration <https://discordpy.readthedocs.io/en/stable/migrating_to_async.html#migrating-to-async>`_. The breaking changes listed there will not be enumerated below. Since this version is rather a big departure from v0.9.2, this change log will be non-exhaustive.
+
+.. old_changelog:v0.10.0-new-features:
 
 New Features
 ~~~~~~~~~~~~
@@ -1201,6 +1326,8 @@ New Features
 - If you are being rate limited, the library will now handle it for you.
 - Add :func:`on_member_ban` and :func:`on_member_unban` events that trigger when a member is banned/unbanned.
 
+.. old_changelog:v0.10.0-bug-fixes:
+
 Performance Improvements
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1210,6 +1337,8 @@ Performance Improvements
 - Compressed READY is now on by default. This means if you're on a lot of servers (or maybe even a few) you would
   receive performance improvements by having to download and process less data.
 - While minor, change regex from ``\d+`` to ``[0-9]+`` to avoid unnecessary unicode character lookups.
+
+.. old_changelog:v0.10.0-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
