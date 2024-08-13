@@ -12,7 +12,10 @@ jobs:
       pr_ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
       - name: "Install Python"
         uses: actions/setup-python@v5
         with:
@@ -71,7 +74,13 @@ jobs:
     needs: [download]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Refresh Pull
+        run: |
+          git fetch --all
+          git reset --hard origin/master
+          git pull
       - name: "Convert Outputs"
         id: convert_outputs
         run: |
