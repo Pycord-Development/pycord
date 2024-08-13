@@ -71,6 +71,8 @@ v1.7.2
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix ``fail_if_not_exists`` causing certain message references to not be usable within :meth:`abc.Messageable.send` and :meth:`Message.reply` (:dpy-issue:`6726`)
 - Fix :meth:`Guild.chunk` hanging when the user left the guild. (:dpy-issue:`6730`)
 - Fix loop sleeping after final iteration rather than before (:dpy-issue:`6744`)
@@ -82,6 +84,8 @@ v1.7.1
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - |commands| Fix :meth:`Cog.has_error_handler <ext.commands.Cog.has_error_handler>` not working as intended.
 
@@ -98,6 +102,8 @@ Development of v2.0 will have breaking changes and support for newer API feature
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add support for stage channels via :class:`StageChannel` (:dpy-issue:`6602`, :dpy-issue:`6608`)
 - Add support for :attr:`MessageReference.fail_if_not_exists` (:dpy-issue:`6484`)
@@ -142,6 +148,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix mentions not working if ``mention_author`` is passed in :meth:`abc.Messageable.send` without :attr:`Client.allowed_mentions` set (:dpy-issue:`6192`, :dpy-issue:`6458`)
 - Fix user created instances of :class:`CustomActivity` triggering an error (:dpy-issue:`4049`)
     - Note that currently, bot users still cannot set a custom activity due to a Discord limitation.
@@ -164,6 +172,8 @@ Bug Fixes
 Miscellaneous
 ~~~~~~~~~~~~~
 
+:noindex:
+
 - User endpoints and all userbot related functionality has been deprecated and will be removed in the next major version of the library.
 - :class:`Permission` class methods were updated to match the UI of the Discord client (:dpy-issue:`6476`)
 - ``_`` and ``-`` characters are now stripped when making a new cog using the ``discord`` package (:dpy-issue:`6313`)
@@ -177,6 +187,8 @@ This version comes with support for replies and stickers.
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - An entirely redesigned documentation. This was the cumulation of multiple months of effort.
     - There's now a dark theme, feel free to navigate to the cog on the screen to change your setting, though this should be automatic.
@@ -215,6 +227,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Raise :exc:`DiscordServerError` when reaching 503s repeatedly (:dpy-issue:`6044`)
 - Fix :exc:`AttributeError` when :meth:`Client.fetch_template` is called (:dpy-issue:`5986`)
 - Fix errors when playing audio and moving to another channel (:dpy-issue:`5953`)
@@ -230,6 +244,8 @@ Bug Fixes
 
 Miscellaneous
 ~~~~~~~~~~~~~
+
+:noindex:
 
 - ``ffmpeg`` spawned processes no longer open a window in Windows (:dpy-issue:`6038`)
 - Update dependencies to allow the library to work on Python 3.9+ without requiring build tools. (:dpy-issue:`5984`, :dpy-issue:`5970`)
@@ -248,6 +264,8 @@ v1.5.1
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix :func:`utils.escape_markdown` not escaping quotes properly (:dpy-issue:`5897`)
 - Fix :class:`Message` not being hashable (:dpy-issue:`5901`, :dpy-issue:`5866`)
 - Fix moving channels to the end of the channel list (:dpy-issue:`5923`)
@@ -259,6 +277,8 @@ Bug Fixes
 
 Miscellaneous
 ~~~~~~~~~~~~~
+
+:noindex:
 
 - Members are now loaded during ``GUILD_MEMBER_UPDATE`` events if :attr:`MemberCacheFlags.joined` is set. (:dpy-issue:`5930`)
 - |commands| :class:`MemberConverter <ext.commands.MemberConverter>` now properly lazily fetches members if not available from cache.
@@ -275,11 +295,15 @@ This version came with forced breaking changes that Discord is requiring all bot
 API Changes
 ~~~~~~~~~~~
 
+:noindex:
+
 - Members and presences will no longer be retrieved due to an API change. See :ref:`privileged_intents` for more info.
 - As a consequence, fetching offline members is disabled if the members intent is not enabled.
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Support for gateway intents, passed via ``intents`` in :class:`Client` using :class:`Intents`.
 - Add :attr:`VoiceRegion.south_korea` (:dpy-issue:`5233`)
@@ -301,6 +325,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix issue with :meth:`Guild.by_category` not showing certain channels.
 - Fix :attr:`abc.GuildChannel.permissions_synced` always being ``False`` (:dpy-issue:`5772`)
 - Fix handling of cloudflare bans on webhook related requests (:dpy-issue:`5221`)
@@ -315,6 +341,8 @@ Bug Fixes
 
 Miscellaneous
 ~~~~~~~~~~~~~
+
+:noindex:
 
 - Webhook requests are now logged (:dpy-issue:`5798`)
 - Remove caching layer from :attr:`AutoShardedClient.shards`. This was causing issues if queried before launching shards.
@@ -335,6 +363,8 @@ This is a maintenance release with backports from :ref:`vp1p5p0`.
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix issue with :meth:`Guild.by_category` not showing certain channels.
 - Fix :attr:`abc.GuildChannel.permissions_synced` always being ``False`` (:dpy-issue:`5772`)
 - Fix handling of cloudflare bans on webhook related requests (:dpy-issue:`5221`)
@@ -350,6 +380,8 @@ Bug Fixes
 Miscellaneous
 ~~~~~~~~~~~~~
 
+:noindex:
+
 - Remove caching layer from :attr:`AutoShardedClient.shards`. This was causing issues if queried before launching shards.
 - |tasks| Lazily fetch the event loop to prevent surprises when changing event loop policy (:dpy-issue:`5808`)
 
@@ -360,6 +392,8 @@ v1.4.1
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Properly terminate the connection when :meth:`Client.close` is called (:dpy-issue:`5207`)
 - Fix error being raised when clearing embed author or image when it was already cleared (:dpy-issue:`5210`, :dpy-issue:`5212`)
@@ -374,6 +408,8 @@ Another version with a long development time. Features like Intents are slated t
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add support for :class:`AllowedMentions` to have more control over what gets mentioned.
     - This can be set globally through :attr:`Client.allowed_mentions`
@@ -432,6 +468,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix issue with :attr:`PartialEmoji.url` reads leading to a failure (:dpy-issue:`4015`, :dpy-issue:`4016`)
 - Allow :meth:`abc.Messageable.history` to take a limit of ``1`` even if ``around`` is passed (:dpy-issue:`4019`)
 - Fix :attr:`Guild.member_count` not updating in certain cases when a member has left the guild (:dpy-issue:`4021`)
@@ -460,6 +498,8 @@ Bug Fixes
 Miscellaneous
 ~~~~~~~~~~~~~
 
+:noindex:
+
 - The :attr:`Member.roles` cache introduced in v1.3 was reverted due to issues caused (:dpy-issue:`4087`, :dpy-issue:`4157`)
 - :class:`Webhook` objects are now comparable and hashable (:dpy-issue:`4182`)
 - Some more API requests got a ``reason`` parameter for audit logs (:dpy-issue:`5086`)
@@ -483,6 +523,8 @@ v1.3.4
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix an issue with channel overwrites causing multiple issues including crashes (:dpy-issue:`5109`)
 
 .. _vp1p3p3:
@@ -492,6 +534,8 @@ v1.3.3
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Change default WS close to 4000 instead of 1000.
     - The previous close code caused sessions to be invalidated at a higher frequency than desired.
@@ -507,6 +551,8 @@ Another minor bug fix release.
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Higher the wait time during the ``GUILD_CREATE`` stream before ``on_ready`` is fired for :class:`AutoShardedClient`.
 - :func:`on_voice_state_update` now uses the inner ``member`` payload which should make it more reliable.
@@ -526,11 +572,15 @@ Minor bug fix release.
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix fetching invites in guilds that the user is not in.
 - Fix the channel returned from :meth:`Client.fetch_channel` raising when sending messages. (:dpy-issue:`2531`)
 
 Miscellaneous
 ~~~~~~~~~~~~~
+
+:noindex:
 
 - Fix compatibility warnings when using the Python 3.9 alpha.
 - Change the unknown event logging from WARNING to DEBUG to reduce noise.
@@ -544,6 +594,8 @@ This version comes with a lot of bug fixes and new features. It's been in develo
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add :meth:`Guild.fetch_members` to fetch members from the HTTP API. (:dpy-issue:`2204`)
 - Add :meth:`Guild.fetch_roles` to fetch roles from the HTTP API. (:dpy-issue:`2208`)
@@ -611,6 +663,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix issue with permission resolution sometimes failing for guilds with no owner.
 - Tokens are now stripped upon use. (:dpy-issue:`2135`)
 - Passing in a ``name`` is no longer required for :meth:`Emoji.edit`. (:dpy-issue:`2368`)
@@ -634,6 +688,8 @@ Bug Fixes
 
 Miscellaneous
 ~~~~~~~~~~~~~
+
+:noindex:
 
 - The library now fully supports Python 3.8 without warnings.
 - Bump the dependency of ``websockets`` to 8.0 for those who can use it. (:dpy-issue:`2453`)
@@ -662,6 +718,8 @@ v1.2.5
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix a bug that caused crashes due to missing ``animated`` field in Emoji structures in reactions.
 
 .. _vp1p2p4:
@@ -671,6 +729,8 @@ v1.2.4
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Fix a regression when :attr:`Message.channel` would be ``None``.
 - Fix a regression where :attr:`Message.edited_at` would not update during edits.
@@ -687,6 +747,8 @@ v1.2.3
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix an AttributeError when accessing :attr:`Member.premium_since` in :func:`on_member_update`. (:dpy-issue:`2213`)
 - Handle :exc:`asyncio.CancelledError` in :meth:`abc.Messageable.typing` context manager. (:dpy-issue:`2218`)
 - Raise the max encoder bitrate to 512kbps to account for nitro boosting. (:dpy-issue:`2232`)
@@ -701,6 +763,8 @@ v1.2.2
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Audit log related attribute access have been fixed to not error out when they shouldn't have.
 
 .. _vp1p2p1:
@@ -710,6 +774,8 @@ v1.2.1
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - :attr:`User.avatar_url` and related attributes no longer raise an error.
 - More compatibility shims with the ``enum.Enum`` code.
@@ -723,6 +789,8 @@ This update mainly brings performance improvements and various nitro boosting at
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add :attr:`Guild.premium_tier` to query the guild's current nitro boost level.
 - Add :attr:`Guild.emoji_limit`, :attr:`Guild.bitrate_limit`, :attr:`Guild.filesize_limit` to query the new limits of a guild when taking into consideration boosting.
@@ -747,6 +815,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix internal error when using :meth:`Guild.prune_members`.
 - |commands| Fix :attr:`.Command.invoked_subcommand` being invalid in many cases.
 - |tasks| Reset iteration count when the loop terminates and is restarted.
@@ -754,6 +824,8 @@ Bug Fixes
 
 Miscellaneous
 ~~~~~~~~~~~~~
+
+:noindex:
 
 - Improve performance of all Enum related code significantly.
     - This was done by replacing the ``enum.Enum`` code with an API compatible one.
@@ -777,10 +849,14 @@ v1.1.1
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Webhooks do not overwrite data on retrying their HTTP requests (:dpy-issue:`2140`)
 
 Miscellaneous
 ~~~~~~~~~~~~~
+
+:noindex:
 
 - Add back signal handling to :meth:`Client.run` due to issues some users had with proper cleanup.
 
@@ -791,6 +867,8 @@ v1.1.0
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - **There is a new extension dedicated to making background tasks easier.**
     - You can check the documentation here: :ref:`ext_tasks_api`.
@@ -808,6 +886,8 @@ New Features
 ``discord.ext.commands``
 ++++++++++++++++++++++++
 
+:noindex:
+
 - Add new :func:`~.commands.dm_only` check.
 - Support callable converters in :data:`~.commands.Greedy`
 - Add new :class:`~.commands.MessageConverter`.
@@ -819,6 +899,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix :exc:`AttributeError` when using ``__repr__`` on :class:`Widget`.
 - Fix issue with :attr:`abc.GuildChannel.overwrites` returning ``None`` for keys.
 - Remove incorrect legacy NSFW checks in e.g. :meth:`TextChannel.is_nsfw`.
@@ -828,6 +910,8 @@ Bug Fixes
 
 ``discord.ext.commands``
 ++++++++++++++++++++++++
+
+:noindex:
 
 - Fix lambda converters in a non-module context (e.g. ``eval``).
 - Use message creation time for reference time when computing cooldowns.
@@ -840,6 +924,8 @@ Bug Fixes
 Miscellaneous
 ~~~~~~~~~~~~~
 
+:noindex:
+
 - Improve the performance of internal enum creation in the library by about 5x.
 - Make the output of ``python -m discord --version`` a bit more useful.
 - The loop cleanup facility has been rewritten again.
@@ -847,6 +933,8 @@ Miscellaneous
 
 ``discord.ext.commands``
 ++++++++++++++++++++++++
+
+:noindex:
 
 - Custom exception classes are now used for all default checks in the library (:dpy-issue:`2101`)
 
@@ -858,6 +946,8 @@ v1.0.1
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Fix issue with speaking state being cast to ``int`` when it was invalid.
 - Fix some issues with loop cleanup that some users experienced on Linux machines.
@@ -878,6 +968,8 @@ v0.16.6
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix issue with :meth:`Client.create_server` that made it stop working.
 - Fix main thread being blocked upon calling ``StreamPlayer.stop``.
 - Handle HEARTBEAT_ACK and resume gracefully when it occurs.
@@ -894,6 +986,8 @@ This release is just a bug fix release with some better rate limit implementatio
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Servers are now properly chunked for user bots.
 - The CDN URL is now used instead of the API URL for assets.
 - Rate limit implementation now tries to use header information if possible.
@@ -908,11 +1002,15 @@ v0.16.0
 New Features
 ~~~~~~~~~~~~
 
+:noindex:
+
 - Add :attr:`Channel.overwrites` to get all the permission overwrites of a channel.
 - Add :attr:`Server.features` to get information about partnered servers.
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Timeout when waiting for offline members while triggering :func:`on_ready`.
 
@@ -940,6 +1038,8 @@ v0.15.0
 New Features
 ~~~~~~~~~~~~
 
+:noindex:
+
 - Rich Embeds for messages are now supported.
 
     - To do so, create your own :class:`Embed` and pass the instance to the ``embed`` keyword argument to :meth:`Client.send_message` or :meth:`Client.edit_message`.
@@ -962,6 +1062,8 @@ v0.14.3
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix crash when dealing with MESSAGE_REACTION_REMOVE
 - Fix incorrect buckets for reactions.
 
@@ -973,11 +1075,15 @@ v0.14.2
 New Features
 ~~~~~~~~~~~~
 
+:noindex:
+
 - :meth:`Client.wait_for_reaction` now returns a namedtuple with ``reaction`` and ``user`` attributes.
     - This is for better support in the case that ``None`` is returned since tuple unpacking can lead to issues.
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Fix bug that disallowed ``None`` to be passed for ``emoji`` parameter in :meth:`Client.wait_for_reaction`.
 
@@ -988,6 +1094,8 @@ v0.14.1
 
 Bug fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Fix bug with `Reaction` not being visible at import.
     - This was also breaking the documentation.
@@ -1001,6 +1109,8 @@ This update adds new API features and a couple of bug fixes.
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add support for Manage Webhooks permission under :attr:`Permissions.manage_webhooks`
 - Add support for ``around`` argument in 3.5+ :meth:`Client.logs_from`.
@@ -1016,6 +1126,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix bug with Paginator still allowing lines that are too long.
 - Fix the :attr:`Permissions.manage_emojis` bit being incorrect.
 
@@ -1028,6 +1140,8 @@ This is a backwards compatible update with new features.
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add the ability to manage emojis.
 
@@ -1052,6 +1166,8 @@ New Features
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Paginator pages do not exceed their max_size anymore (:dpy-issue:`340`)
 - Do Not Disturb users no longer show up offline due to the new :class:`Status` changes.
 
@@ -1064,6 +1180,8 @@ This is a bug fix update that also comes with new features.
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add custom emoji support.
 
@@ -1104,6 +1222,8 @@ For the command extension, the following are new:
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - Fix bug that caused the library to not work with the latest ``websockets`` library.
 - Fix bug that leaked keep alive threads (:dpy-issue:`309`)
 - Fix bug that disallowed :class:`ServerRegion` from being used in :meth:`Client.edit_server`.
@@ -1120,10 +1240,14 @@ This is a minor bug fix update that comes with a gateway update (v5 -> v6).
 Breaking Changes
 ~~~~~~~~~~~~~~~~
 
+:noindex:
+
 - ``Permissions.change_nicknames`` has been renamed to :attr:`Permissions.change_nickname` to match the UI.
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
 
 - Add the ability to prune members via :meth:`Client.prune_members`.
 - Switch the websocket gateway version to v6 from v5. This allows the library to work with group DMs and 1-on-1 calls.
@@ -1148,6 +1272,8 @@ For the command extension, the following are new:
 Bug Fixes
 ~~~~~~~~~
 
+:noindex:
+
 - :attr:`Client.email` is now saved when using a token for user accounts.
 - Fix issue when removing roles out of order.
 - Fix bug where discriminators would not update.
@@ -1170,6 +1296,9 @@ For breaking changes, see `0.10.0 migration <https://discordpy.readthedocs.io/en
 
 New Features
 ~~~~~~~~~~~~
+
+:noindex:
+
 
 - The library is now fully ``asyncio`` compatible, allowing you to write non-blocking code a lot more easily.
 - The library now fully handles 429s and unconditionally retries on 502s.
@@ -1204,6 +1333,8 @@ New Features
 Performance Improvements
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+:noindex:
+
 - All data classes now use ``__slots__`` which greatly reduce the memory usage of things kept in cache.
 - Due to the usage of ``asyncio``, the CPU usage of the library has gone down significantly.
 - A lot of the internal cache lists were changed into dictionaries to change the ``O(n)`` lookup into ``O(1)``.
@@ -1213,6 +1344,8 @@ Performance Improvements
 
 Bug Fixes
 ~~~~~~~~~
+
+:noindex:
 
 - Fix bug where guilds being updated did not edit the items in cache.
 - Fix bug where ``member.roles`` were empty upon joining instead of having the ``@everyone`` role.
