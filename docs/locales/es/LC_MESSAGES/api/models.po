@@ -5994,7 +5994,7 @@ msgid "You must have the :attr:`~discord.Permissions.manage_roles` permission to
 msgstr "Debes tener permisos de Gestionar Roles (:attr:`~discord.Permissions.manage_roles`) para poder utilizar esto."
 
 msgid "This method *replaces* the old overwrites with the ones given."
-msgstr "Este metido *reemplaza* las sobrescrituras antiguas con las proporcionadas."
+msgstr "Este método *reemplaza* las sobrescrituras antiguas con las proporcionadas."
 
 msgid "Setting allow and deny: ::"
 msgstr "Estableciendo permitidos y denegados: ::"

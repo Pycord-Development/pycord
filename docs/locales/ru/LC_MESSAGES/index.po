@@ -15,7 +15,7 @@ msgid "Extensions"
 msgstr "Расширения"
 
 msgid "Meta"
-msgstr "Meta"
+msgstr "Мета"
 
 msgid "Welcome to Pycord"
 msgstr "Добро пожаловать в Pycord"
@@ -81,7 +81,7 @@ msgid "These pages go into great detail about everything the API can do."
 msgstr "На этих страницах подробно описаны все возможности API."
 
 msgid "Core API"
-msgstr "Core API"
+msgstr "Основное API"
 
 msgid "These extensions help you during development when it comes to common tasks."
 msgstr "Эти расширения помогут вам в процессе разработки, когда речь идет об обычных задачах."

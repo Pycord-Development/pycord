@@ -12,64 +12,64 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Application Commands"
-msgstr "Application Commands"
+msgstr "Comandos de Aplicación"
 
 msgid "Command Permission Decorators"
-msgstr "Command Permission Decorators"
+msgstr "Decoradores de Permisos de Comandos"
 
 msgid "A decorator that limits the usage of an application command to members with certain permissions."
-msgstr "A decorator that limits the usage of an application command to members with certain permissions."
+msgstr "Un decorador que limita el uso de un comando de aplicación a los miembros con ciertos permisos."
 
 msgid "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
-msgstr "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
+msgstr "Los permisos proporcionados han de ser los mismos que las propiedades mostradas en :class:`.discord.Permissions`."
 
 msgid "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
-msgstr "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
+msgstr "Estos permisos pueden ser actualizados por los administradores de cada servidor. Por ende, esto solo establece los \"predeterminados\", tal como el nombre dice. Si aun así quieres asegurarte de que un usuario **siempre** tiene los permisos especificados, deberías utilizar un comprobador interno como :func:`~.ext.commands.has_permissions`."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parámetros"
 
 msgid "An argument list of permissions to check for."
-msgstr "An argument list of permissions to check for."
+msgstr "Una lista de argumentos que representan los permisos que comprobar."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Tipo del valor devuelto"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 
 msgid "Example"
-msgstr "Example"
+msgstr "Ejemplo"
 
 msgid "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
-msgstr "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
+msgstr "Un decorador que limita el uso de un comando de aplicación a contextos de servidores. El comando no podrá ser usado en canales privados."
 
 msgid "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
-msgstr "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
+msgstr "Un decorador que limita el uso de un comando de aplicación a usuarios y canales +18. En servidores, el comando solo estará disponible en canales con restricción de edad. En MDs, los usuarios deberán haber aceptado el uso de comandos con restricción de edad en los ajustes de privacidad."
 
 msgid "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
-msgstr "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
+msgstr "Ten en cuenta que las aplicaciones que quieras aparecer en el Directorio de Apps no pueden tener comandos con restricción de edad."
 
 msgid "Commands"
-msgstr "Commands"
+msgstr "Comandos"
 
 msgid "Shortcut Decorators"
-msgstr "Shortcut Decorators"
+msgstr "Decoradores \"Atajo\""
 
 msgid "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
-msgstr "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
+msgstr "Un decorador que transforma una función en un comando de aplicación de tipo :class:`.ApplicationCommand`. Más específicamente, cualquier tipo de :class:`.SlashCommand`, :class:`.UserCommand` o :class:`.MessageCommand`. La objeto al que será convertido depende del parámetro ``cls``. Por defecto, el atributo ``description`` proviene de la cadena de documentación de la función, y es limpiado gracias a ``inspect.cleandoc``. Si el tipo de la cadena de documentación es ``bytes``, entonces es decodificado a :class:`str` usando la codificación utf-8. El atribute ``name`` también se predetermina al nombre de la función sin cambios."
 
 msgid "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
-msgstr "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
+msgstr "La clase con la que inicializar el comando. Por defecto esto es :class:`.SlashCommand`. Normalmente esto no se cambia."
 
 msgid "Keyword arguments to pass into the construction of the class denoted by ``cls``."
-msgstr "Keyword arguments to pass into the construction of the class denoted by ``cls``."
+msgstr "Argumentos de nombre llave que pasar al inicializador de la clase proporcionada en el parámetro ``cls``."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Devuelve"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
-msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
+msgstr "Un decorador que convierte el método proporcionado a un objeto de tipo :class:`.ApplicationCommand`, o cualquiera de sus subclases."
 
 msgid "Callable[..., :class:`.ApplicationCommand`]"
 msgstr "Callable[..., :class:`.ApplicationCommand`]"

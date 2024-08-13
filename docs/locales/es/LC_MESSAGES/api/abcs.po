@@ -15,7 +15,7 @@ msgid "Abstract Base Classes"
 msgstr "Clases Bases Abstractas (ABC)"
 
 msgid "An :term:`abstract base class` (also known as an ``abc``) is a class that models can inherit to get their behaviour. **Abstract base classes should not be instantiated**. They are mainly there for usage with :func:`isinstance` and :func:`issubclass`\\."
-msgstr "Una :term:`abstract base class` (también conocidas como Clases Bases Abstractas) es un tipo de clase de la que otros objetos heredan para tener sus funcionalidades. **Las clases base abstractas no deben ser inicializadas**. Su principal causa de uso es para utilizar comprobaciones :func:`isinstance` e :func:`issubclass`\\."
+msgstr "Una :term:`abstract base class` (también conocidas como Clases Bases Abstractas) es un tipo de clase la cual otros objetos utilizan heredar sus funcionalidades. **Las clases base abstractas no deben ser inicializadas**. Su principal causa de uso es para utilizar comprobaciones :func:`isinstance` e :func:`issubclass`\\."
 
 msgid "This library has a module related to abstract base classes, in which all the ABCs are subclasses of :class:`typing.Protocol`."
 msgstr "La librería tiene un módulo centrado en las clases bases abstractas, en la que todas son heredadas de :class:`typing.Protocol`."
@@ -30,7 +30,7 @@ msgid "If you want to create a snowflake on your own, consider using :class:`.Ob
 msgstr "Si quieres crear un snowflake por tu cuenta, es preferible que uses :class:`.Object`."
 
 msgid "The model's unique ID."
-msgstr "La ID única del modelo."
+msgstr "El ID único del modelo."
 
 msgid "type"
 msgstr "type"
@@ -54,7 +54,7 @@ msgid ":class:`~discord.Member`"
 msgstr ":class:`~discord.Member`"
 
 msgid "This ABC must also implement :class:`~discord.abc.Snowflake`."
-msgstr "Esta CBA debe implementar :class:`~discord.abc.Snowflake`."
+msgstr "Esta CBA también debe implementar :class:`~discord.abc.Snowflake`."
 
 msgid "The user's username."
 msgstr "El nombre de usuario del usuario."
@@ -66,7 +66,7 @@ msgid "The user's discriminator."
 msgstr "El discriminador del usuario."
 
 msgid "If the user has migrated to the new username system, this will always be \"0\"."
-msgstr "Si el usuario ha migrado al nuevo sistema de nombre de usuario, esto siempre será \"0\"."
+msgstr "Si el usuario ha migrado al nuevo sistema de nombre de usuario, este siempre será \"0\"."
 
 msgid "The user's global name."
 msgstr "El nombre global del usuario."
@@ -276,7 +276,7 @@ msgid "You must have the :attr:`~discord.Permissions.manage_roles` permission to
 msgstr "Debes tener permisos de Gestionar Roles (:attr:`~discord.Permissions.manage_roles`) para poder utilizar esto."
 
 msgid "This method *replaces* the old overwrites with the ones given."
-msgstr "Este metido *reemplaza* las sobrescrituras antiguas con las proporcionadas."
+msgstr "Este método *reemplaza* las sobrescrituras antiguas con las proporcionadas."
 
 msgid "Examples"
 msgstr "Ejemplos"
@@ -657,29 +657,29 @@ msgid "Retrieves all messages that are currently pinned in the channel."
 msgstr "Obtiene todos los mensajes que están fijados en el canal."
 
 msgid "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
-msgstr "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
+msgstr "Por una limitación con la API de Discord, los objetos :class:`.Message` retornados por este método no contienen información completa de :attr:`.Message.reactions`."
 
 msgid "The messages that are currently pinned."
-msgstr "The messages that are currently pinned."
+msgstr "Los mensajes que están fijados."
 
 msgid "List[:class:`~discord.Message`]"
 msgstr "List[:class:`~discord.Message`]"
 
 msgid "Retrieving the pinned messages failed."
-msgstr "Retrieving the pinned messages failed."
+msgstr "Algo falló mientras se obtenían los mensajes fijados."
 
 msgid "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
-msgstr "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
+msgstr "Retorna un booleano (:class:`bool`) el cual indica si tienes permisos de enviar el/los objeto/s."
 
 msgid "Indicates whether you have the permissions to send the object(s)."
-msgstr "Indicates whether you have the permissions to send the object(s)."
+msgstr "Indica si tienes permisos de enviar el/los objeto/s."
 
 msgid "An invalid type has been passed."
-msgstr "An invalid type has been passed."
+msgstr "Un objeto de tipo no válido se ha proporcionado."
 
 msgid "An ABC that details the common operations on a channel that can connect to a voice server."
-msgstr "An ABC that details the common operations on a channel that can connect to a voice server."
+msgstr "Una CBA que detalla las operaciones más comunes en un canal al que se puede conectar."
 
 msgid "This ABC is not decorated with :func:`typing.runtime_checkable`, so will fail :func:`isinstance`/:func:`issubclass` checks."
-msgstr "This ABC is not decorated with :func:`typing.runtime_checkable`, so will fail :func:`isinstance`/:func:`issubclass` checks."
+msgstr "Esta CBA no fue decorada con :func:`typing.runtime_checkable` por lo que fallará las comprobaciones :func:`ininstance` e :func:`issubclass`."
 

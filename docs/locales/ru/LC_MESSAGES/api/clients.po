@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Client Objects"
-msgstr "Client Objects"
+msgstr "Объекты клиента"
 
 msgid "Bots"
 msgstr "Bots"
@@ -1545,7 +1545,7 @@ msgid "Returns a mapping of shard IDs to their respective info object."
 msgstr "Returns a mapping of shard IDs to their respective info object."
 
 msgid "Example: ::"
-msgstr "Example: ::"
+msgstr "Пример: ::"
 
 msgid "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
 msgstr "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
