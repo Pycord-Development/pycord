@@ -12,46 +12,46 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "Migrating to v2.0"
+msgstr "Migrieren zu v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "v2.0 introduced new Discord features and deprecated some old ones."
+msgstr "v2.0 führte neue Discord-Funktionen ein und verwarf einige alte."
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
-msgstr "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
+msgstr "Ein Teil der Neugestaltung umfasst die Erstellung von Anwendungsbefehlen und -komponenten. Zu diesen Änderungen gehören eine neue :class:`Bot`-Klasse, :class:`ui.View` und eine neue :class:`ApplicationContext`-Klasse. Wenn Sie daran interessiert sind, sie zu erstellen, schauen Sie sich bitte unseren :resource:`guide <guide>` an."
 
 msgid "Python Version Change"
-msgstr "Python Version Change"
+msgstr "Änderung der Python-Version"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
-msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
+msgstr "Um die Entwicklung zu vereinfachen und auch ein Upgrade unserer Abhängigkeiten zu ermöglichen, um die Verwendung von 3.8 oder höher zu ermöglichen, musste die Bibliothek die Unterstützung für Python-Versionen vor 3.7 entfernen, was im Wesentlichen bedeutet, dass die Unterstützung für Python 3.7 und niedriger fallen gelassen wurde.**."
 
 msgid "Major Model Changes"
-msgstr "Major Model Changes"
+msgstr "Wichtige Modelländerungen"
 
 msgid "Below are major changes that have happened in v2.0:"
-msgstr "Below are major changes that have happened in v2.0:"
+msgstr "Im Folgenden sind die wichtigsten Änderungen aufgeführt, die in Version 2.0 vorgenommen wurden:"
 
 msgid "Dropped User Accounts Support"
-msgstr "Dropped User Accounts Support"
+msgstr "Unterstützung für gelöschte Benutzerkonten"
 
 msgid "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
-msgstr "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
+msgstr "Vor v2.0 wurden Benutzerkonten unterstützt. Dies verstieß gegen den Geist der Bibliotheks- und Discord-Nutzungsbedingungen und wurde entfernt. Daher werden diese Funktionen entfernt, die nur für sie galten:"
 
 msgid "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
-msgstr "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
+msgstr "„bot“-Argument von :meth:`Client.start` und :meth:`Client.run`"
 
 msgid "``afk`` argument of :meth:`Client.change_presence`"
-msgstr "``afk`` argument of :meth:`Client.change_presence`"
+msgstr "„afk“-Argument von :meth:`Client.change_presence`"
 
 msgid "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
-msgstr "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
+msgstr "Klassen ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
 
 msgid "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``"
 msgstr "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``"
 
 msgid "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
-msgstr "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
+msgstr "„GroupChannel.add_recipients“, „remove_recipients“, „edit“ (HINWEIS: „GroupChannel“ selbst bleibt weiterhin bestehen)"
 
 msgid "``Guild.ack``"
 msgstr "``Guild.ack``"
@@ -69,16 +69,16 @@ msgid "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``
 msgstr "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
 
 msgid "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
-msgstr "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
+msgstr "Argumente von ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
 
 msgid "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
 msgstr "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
 
 msgid "Events: ``on_relationship_add`` and ``on_relationship_update``"
-msgstr "Events: ``on_relationship_add`` and ``on_relationship_update``"
+msgstr "Ereignisse: „on_relationship_add“ und „on_relationship_update“"
 
 msgid "Timezone-aware Time"
-msgstr "Timezone-aware Time"
+msgstr "Zeitzonenbezogene Zeit"
 
 msgid "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."
 msgstr "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."

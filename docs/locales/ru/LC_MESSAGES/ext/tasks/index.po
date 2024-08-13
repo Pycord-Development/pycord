@@ -147,7 +147,7 @@ msgid "A task has already been launched and is running."
 msgstr "A task has already been launched and is running."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The task that has been created."
 msgstr "The task that has been created."

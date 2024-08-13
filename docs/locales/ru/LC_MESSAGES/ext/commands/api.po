@@ -114,7 +114,7 @@ msgid "A shortcut decorator that invokes :func:`.command` and adds it to the int
 msgstr "A shortcut decorator that invokes :func:`.command` and adds it to the internal command list via :meth:`~.GroupMixin.add_command`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 msgstr "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
@@ -3579,7 +3579,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 
 msgid "Exceptions"
-msgstr "Exceptions"
+msgstr "Исключения"
 
 msgid "The base exception type for all command related errors."
 msgstr "The base exception type for all command related errors."
@@ -3948,7 +3948,7 @@ msgid "Whether the name that conflicts is an alias of the command we try to add.
 msgstr "Whether the name that conflicts is an alias of the command we try to add."
 
 msgid "Exception Hierarchy"
-msgstr "Exception Hierarchy"
+msgstr "Иерархия исключений"
 
 msgid ":exc:`~.DiscordException`"
 msgstr ":exc:`~.DiscordException`"

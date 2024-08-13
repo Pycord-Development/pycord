@@ -246,7 +246,7 @@ msgid "The reason for deleting this channel. Shows up on the audit log."
 msgstr "La razón por la que se elimina el canal. Se muestra en el registro de auditoría."
 
 msgid "Raises"
-msgstr "Errores generados"
+msgstr "Errores"
 
 msgid "You do not have proper permissions to delete the channel."
 msgstr "No tienes los permisos necesarios para poder eliminar el canal."
