@@ -1719,7 +1719,7 @@ msgid "For pagination, answers are sorted by member."
 msgstr "For pagination, answers are sorted by member."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Genera"
 
 msgid "Union[:class:`User`, :class:`Member`] -- The member (if retrievable) or the user that has voted with this answer. The case where it can be a :class:`Member` is in a guild message context. Sometimes it can be a :class:`User` if the member has left the guild."
 msgstr "Union[:class:`User`, :class:`Member`] -- The member (if retrievable) or the user that has voted with this answer. The case where it can be a :class:`Member` is in a guild message context. Sometimes it can be a :class:`User` if the member has left the guild."

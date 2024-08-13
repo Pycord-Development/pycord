@@ -360,7 +360,7 @@ msgid "If set to ``True``, return messages in oldest->newest order. Defaults to 
 msgstr "If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if ``after`` is specified, otherwise ``False``."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Genera"
 
 msgid ":class:`~discord.Message` -- The message with the message data parsed."
 msgstr ":class:`~discord.Message` -- The message with the message data parsed."
@@ -4674,7 +4674,7 @@ msgid "Edits the welcome screen."
 msgstr "Edits the welcome screen."
 
 msgid "Example"
-msgstr "Example"
+msgstr "Ejemplo"
 
 msgid "Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above."
 msgstr "Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above."

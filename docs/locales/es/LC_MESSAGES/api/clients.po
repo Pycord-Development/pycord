@@ -468,7 +468,7 @@ msgid "Whether to limit the fetched entitlements to those that have not ended. D
 msgstr "Whether to limit the fetched entitlements to those that have not ended. Defaults to ``False``."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Genera"
 
 msgid ":class:`.Entitlement` -- The application's entitlements."
 msgstr ":class:`.Entitlement` -- The application's entitlements."

@@ -57,7 +57,7 @@ msgid "**Examples:** Many examples are available in the :resource:`repository <e
 msgstr "**Ejemplos:** Muchos ejemplos se encuentran en nuestro :resource:`repositorio <examples>`."
 
 msgid "Getting help"
-msgstr "Obteniendo ayuda"
+msgstr "Obtener ayuda"
 
 msgid "If you're having trouble with something, these resources might help."
 msgstr "Si presentas problemas con algo, estos recursos podrían ayudarte."
@@ -69,7 +69,7 @@ msgid "Ask us and hang out with us in our :resource:`Discord <discord>` server."
 msgstr "Pregúntanos y pasa el rato con nosotros en nuestro servidor de :resource:`Discord <discord>`."
 
 msgid "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
-msgstr "Si estás buscando algo en específico, prueba el :ref:`índice <genindex>` o :ref:`buscando <search>`."
+msgstr "Si estás buscando algo en específico, prueba el :ref:`índice <genindex>` o el :ref:`buscador <search>`."
 
 msgid "Report bugs in the :resource:`issue tracker <issues>`."
 msgstr "Reporta bugs en nuestro :resource:`issue tracker <issues>`."
