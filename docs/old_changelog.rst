@@ -57,7 +57,7 @@ v2.0.0
 v1.7.3
 ------
 
-.. _old_changelog:v1.7.3-bug-fixes: 
+.. _old_changelog:v1.7.3-bug-fixes:
 
 Bug Fixes
 ~~~~~~~~~
