@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v1.0"
-msgstr "Migrating to v1.0"
+msgstr "Миграция на v1.0"
 
 msgid "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
 msgstr "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
@@ -42,7 +42,7 @@ msgid "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has
 msgstr "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
 
 msgid "Quick example: ::"
-msgstr "Quick example: ::"
+msgstr "Быстрый пример: ::"
 
 msgid "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
 msgstr "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."

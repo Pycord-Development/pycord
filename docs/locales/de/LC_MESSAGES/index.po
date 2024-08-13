@@ -21,7 +21,7 @@ msgid "Welcome to Pycord"
 msgstr "Willkommen bei Pycord"
 
 msgid "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
-msgstr "Pycord ist ein moderner, einfach zu bedienender und funktionsreicher und async-bereiter API Wrapper für Discord."
+msgstr "Pycord ist ein moderner, einfach zu bedienender, funktionsreicher und asynchroner API-Wrapper für Discord."
 
 msgid "**Features:**"
 msgstr "**Eigenschaften:**"
@@ -30,7 +30,7 @@ msgid "Modern Pythonic API using ``async``\\/``await`` syntax"
 msgstr "Moderne Pythonische API mit ``async``\\/``await`` Syntax"
 
 msgid "Sane rate limit handling that prevents 429s"
-msgstr "Sane Rate Limit-Handhabung, die 429s verhindert"
+msgstr "Vernünftige Rate Limit-Handhabung, die 429s verhindert"
 
 msgid "Command extension to aid with bot creation"
 msgstr "Befehlsverlängerung zur Unterstützung bei der Bot-Erstellung"
@@ -45,7 +45,7 @@ msgid "Getting started"
 msgstr "Erste Schritte"
 
 msgid "Is this your first time using the library? This is the place to get started!"
-msgstr "Ist dies dein erstes Mal mit der Bibliothek? Dies ist der Ort, an dem du loslegen kannst!"
+msgstr "Nutzen Sie die Bibliothek zum ersten Mal? Dies ist der Ort, an dem Sie loslegen können!"
 
 msgid "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
 msgstr "**Erste Schritte:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
@@ -54,7 +54,7 @@ msgid "**Working with Discord:** :doc:`discord` | :doc:`intents`"
 msgstr "**Arbeiten mit Discord:** :doc:`discord` | :doc:`intents`"
 
 msgid "**Examples:** Many examples are available in the :resource:`repository <examples>`."
-msgstr "**Beispiele:** Viele Beispiele sind im :resource:`repository <examples>` verfügbar."
+msgstr "**Beispiele:** Viele Beispiele sind in der :resource:`repository <examples>` verfügbar."
 
 msgid "Getting help"
 msgstr "Hilfe erhalten"
@@ -63,7 +63,7 @@ msgid "If you're having trouble with something, these resources might help."
 msgstr "Wenn Sie Probleme mit etwas haben, könnten diese Ressourcen helfen."
 
 msgid "Try the :doc:`faq` first, it's got answers to all common questions."
-msgstr "Probiere zuerst die :doc:`faq` aus, sie hat Antworten auf alle gängigen Fragen."
+msgstr "Probieren Sie zuerst die :doc:`faq` aus, sie hat Antworten auf alle gängigen Fragen."
 
 msgid "Ask us and hang out with us in our :resource:`Discord <discord>` server."
 msgstr "Fragen Sie uns und bleiben Sie bei uns in unserem :resource:`Discord <discord>` Server."

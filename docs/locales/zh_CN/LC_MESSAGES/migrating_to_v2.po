@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "Migrating to v2.0"
+msgstr "迁移到 v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "v2.0 introduced new Discord features and deprecated some old ones."
+msgstr "v2.0 引入了新的 Discord 功能并废弃了一些旧功能。"
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
 msgstr "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
