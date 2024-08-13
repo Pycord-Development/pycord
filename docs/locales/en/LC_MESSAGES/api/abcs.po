@@ -1,0 +1,1245 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../api/abcs.rst:4 eba096c79e094bb18465d6e9ff3678cf
+msgid "Abstract Base Classes"
+msgstr ""
+
+#: ../../api/abcs.rst:6 ecffa9e27b0648238c9edfe6aa200df6
+msgid ""
+"An :term:`abstract base class` (also known as an ``abc``) is a class that"
+" models can inherit to get their behaviour. **Abstract base classes "
+"should not be instantiated**. They are mainly there for usage with "
+":func:`isinstance` and :func:`issubclass`\\."
+msgstr ""
+
+#: ../../api/abcs.rst:10 bb28999fade743b6a174c2255757b009
+msgid ""
+"This library has a module related to abstract base classes, in which all "
+"the ABCs are subclasses of :class:`typing.Protocol`."
+msgstr ""
+
+#: 4741c9654bd94685b8e9999b040bceb8 discord.abc.Snowflake:1 of
+msgid "An ABC that details the common operations on a Discord model."
+msgstr ""
+
+#: 47bea6eba12a4be891c27a511774e540 discord.abc.Snowflake:3 of
+msgid ""
+"Almost all :ref:`Discord models <discord_api_models>` meet this abstract "
+"base class."
+msgstr ""
+
+#: 68f54081d0324c8f9a60a03121228419 discord.abc.Snowflake:6 of
+msgid ""
+"If you want to create a snowflake on your own, consider using "
+":class:`.Object`."
+msgstr ""
+
+#: b48d28bcb8944448a302ec1728849ca1 discord.abc.Snowflake:11 of
+msgid "The model's unique ID."
+msgstr ""
+
+#: 066672777afe48e7b6b41fad1a12de64 0c86631d2d114c45bf1c165d105fb12e
+#: 0ee679abcb1c4b25b364befb02132adb 16478c3543f84403bbfebe2cf3bdef50
+#: 1bafe7fad7964f38b1650c05822ee835 b5cc4d4d66184893b35a75a892c300f0
+#: d28c40e6890642de932360bf411ac494 d8eede98a7ca45ea915927dc318de4d7
+#: discord.abc.GuildChannel discord.abc.PrivateChannel discord.abc.Snowflake
+#: discord.abc.User f6df80c3f3ae47f7be4d5ada55e8d6dd
+#: f85ce9cfcafa43e8b2b80a84c7b8cc6c of
+msgid "type"
+msgstr ""
+
+#: 5fae1913d1234d4da3cd77b627a1f629 7d2cfbf10de24809b10f59e074b942c1
+#: discord.abc.GuildChannel:30 discord.abc.Snowflake:13 of
+msgid ":class:`int`"
+msgstr ""
+
+#: discord.abc.User:1 f476d58c613c4534abc37bc55a8f9d56 of
+msgid "An ABC that details the common operations on a Discord user."
+msgstr ""
+
+#: 19e8ddb2cda941c3a30ca8850cb2ede7 7ab357637db845ee9b87d385a8042b16
+#: 8befbe76d57647a3852a44b494c4ab44 aba0180fb52b4fa5a21ed6608a3565a3
+#: discord.abc.Connectable:4 discord.abc.GuildChannel:3
+#: discord.abc.Messageable:3 discord.abc.PrivateChannel:3 discord.abc.User:3
+#: fb6cfafebb154551983f5af556cf1207 of
+msgid "The following implement this ABC:"
+msgstr ""
+
+#: 1d9d8cc193684ade90b957be4d0ba02b 868d75a8b3c540dfaeff9ef186445cae
+#: discord.abc.Messageable:10 discord.abc.User:5 of
+msgid ":class:`~discord.User`"
+msgstr ""
+
+#: 206eb8b27cea4ecb9819a39a3e676154 discord.abc.PrivateChannel:14
+#: discord.abc.User:6 f4d5f92d7c904e11abae69a42643ceb9 of
+msgid ":class:`~discord.ClientUser`"
+msgstr ""
+
+#: 3ac169cb9ed249fa97d87f2dda08a310 c347cd4097e847ffbe940543abd9a768
+#: discord.abc.Messageable:11 discord.abc.User:7 of
+msgid ":class:`~discord.Member`"
+msgstr ""
+
+#: 55dafc24f36c42108379ba9621534719 8fc2b8cbc76642b594d6aed520962c34
+#: c3f82876a05b42f6b9f142abd42d440c discord.abc.GuildChannel:11
+#: discord.abc.PrivateChannel:8 discord.abc.User:9 of
+msgid "This ABC must also implement :class:`~discord.abc.Snowflake`."
+msgstr ""
+
+#: 320a5745d7ef4dc3bddc68db57041ebc discord.abc.User:13 of
+msgid "The user's username."
+msgstr ""
+
+#: 3b698b51590948fa87fc4141683b8fb0 9d83050e55374544aac91208fd9717c2
+#: b9a9b156f455466c8b320984644c257e discord.abc.GuildChannel:17
+#: discord.abc.User:15 discord.abc.User:25 discord.abc.User:33
+#: e9af1898d3c64b1f96af932c9b217551 of
+msgid ":class:`str`"
+msgstr ""
+
+#: discord.abc.User:19 e78c45aef3ca431fbf8f309c887fc29f of
+msgid "The user's discriminator."
+msgstr ""
+
+#: 73dd772201aa4748b316068b05957002 discord.abc.User:23 of
+msgid ""
+"If the user has migrated to the new username system, this will always be "
+"\"0\"."
+msgstr ""
+
+#: 62a458c9df53441eb015ac21dbe34fa6 discord.abc.User:29 of
+msgid "The user's global name."
+msgstr ""
+
+#: discord.abc.User:37 f6f47d554883461dad161445c30916cf of
+msgid "The avatar asset the user has."
+msgstr ""
+
+#: 9c5bd5888cf448da93b8a0153a44b233 discord.abc.User:39 of
+msgid ":class:`~discord.Asset`"
+msgstr ""
+
+#: 881d7e60a8f54fbc984f3e9e4b366b02 discord.abc.User:43 of
+msgid "If the user is a bot account."
+msgstr ""
+
+#: 07229964898b4b1e9cefda4c38d26e2b 6803ab70e67446aba9dc35de91a33f48
+#: discord.abc.Messageable.can_send:4 discord.abc.User:45 of
+msgid ":class:`bool`"
+msgstr ""
+
+#: bef028b1be27469588e3b8c6d6ff28a9 discord.abc.User.display_name:1 of
+msgid "Returns the user's display name."
+msgstr ""
+
+#: discord.abc.User.mention:1 f4d6145bdb3f46f0b5b8abe16d25f8cd of
+msgid "Returns a string that allows you to mention the given user."
+msgstr ""
+
+#: 9695a64a7cd84cca8c68f3f8a6e63b4b discord.abc.PrivateChannel:1 of
+msgid "An ABC that details the common operations on a private Discord channel."
+msgstr ""
+
+#: discord.abc.Messageable:8 discord.abc.PrivateChannel:5
+#: eb3f6696e98746a4b3bb06a7c593f16f f4e761a32f2b4fa293005967bb5b8876 of
+msgid ":class:`~discord.DMChannel`"
+msgstr ""
+
+#: 08b37c00170d4c158d05b2eac6301dc8 96b1ff47f3f74315b1a978afd462a4ab
+#: discord.abc.Messageable:9 discord.abc.PrivateChannel:6 of
+msgid ":class:`~discord.GroupChannel`"
+msgstr ""
+
+#: 522ecffdca534152a4deb8b05e5f346d discord.abc.PrivateChannel:12 of
+msgid "The user presenting yourself."
+msgstr ""
+
+#: 492a04d7e12c4af4b00be2a3ea5fd3fe discord.abc.GuildChannel:1 of
+msgid "An ABC that details the common operations on a Discord guild channel."
+msgstr ""
+
+#: 5a75adff819f43ae87cfb42e1805b4a4 c8804dd897f849f48691c36fc620a3ec
+#: discord.abc.GuildChannel:5 discord.abc.Messageable:5 of
+msgid ":class:`~discord.TextChannel`"
+msgstr ""
+
+#: 2ef9d2cfbbc042adaafadf244b6a5b53 a8e12520fc6a4be1bdbb3a81c26f9ee8
+#: c091a21e09614c85820c51243cc2bbd6 discord.abc.Connectable:6
+#: discord.abc.GuildChannel:6 discord.abc.Messageable:6 of
+msgid ":class:`~discord.VoiceChannel`"
+msgstr ""
+
+#: 5da78147f5344fbaad7a4001cc44040d discord.abc.GuildChannel:7 of
+msgid ":class:`~discord.CategoryChannel`"
+msgstr ""
+
+#: 488b0b469a564d86816765265e3b68ee 5b3700ea3b1849e6a06cf2af4caf90c3
+#: a982e135d8264dd3b151c14dd9a7cba1 discord.abc.Connectable:7
+#: discord.abc.GuildChannel:8 discord.abc.Messageable:7 of
+msgid ":class:`~discord.StageChannel`"
+msgstr ""
+
+#: 16d6633c0f3542a1a41e7948325fa027 discord.abc.GuildChannel:9 of
+msgid ":class:`~discord.ForumChannel`"
+msgstr ""
+
+#: 4448a57c2a004e7d90cb0fdcad86f569 discord.abc.GuildChannel:15 of
+msgid "The channel name."
+msgstr ""
+
+#: 55cf37366ce440999ab4cd6f6581a820 discord.abc.GuildChannel:21 of
+msgid "The guild the channel belongs to."
+msgstr ""
+
+#: discord.abc.GuildChannel:23 e12d19edd0734c218616a4df98ce6504 of
+msgid ":class:`~discord.Guild`"
+msgstr ""
+
+#: ad6bcb47ccfc49a2b921875096d086fc discord.abc.GuildChannel:27 of
+msgid ""
+"The position in the channel list. This is a number that starts at 0. e.g."
+" the top channel is position 0."
+msgstr ""
+
+#: 92a7be071e894a5082eb58bd4de4c891 discord.abc.GuildChannel.changed_roles:1 of
+msgid ""
+"Returns a list of roles that have been overridden from their default "
+"values in the :attr:`~discord.Guild.roles` attribute."
+msgstr ""
+
+#: 4d559a5b43c34293b208f473e162cd40 discord.abc.GuildChannel.mention:1 of
+msgid "The string that allows you to mention the channel."
+msgstr ""
+
+#: 40aba981504d4f568bee500d593152a9 discord.abc.GuildChannel.jump_url:1 of
+msgid "Returns a URL that allows the client to jump to the channel."
+msgstr ""
+
+#: 3b4fdc22e96e4ac39a90773db776db85 discord.abc.GuildChannel.created_at:1 of
+msgid "Returns the channel's creation time in UTC."
+msgstr ""
+
+#: a709d1fb206e462c96fcfb98f7b1fabb discord.abc.GuildChannel.overwrites_for:1
+#: of
+msgid "Returns the channel-specific overwrites for a member or a role."
+msgstr ""
+
+#: ../../api/abcs.rst 3b20d94d071448afb0cbcba6c02e4d62
+#: 5e160138a0124ebfb2463589a38c520a 60a67e189f30413bb931557ae0d677e5
+#: 66c20e4761ee48f487e2336799758e70 697615a7dc374833a2a4dc54e612d578
+#: a397ed5dee4e403b968a341016bfaff6 ce1db15f4b774f6eb4047d5e0dc10eb7
+#: d0147bebe9a04d399c13c8a22b7256aa d939dcebd14648b9b876851182b079a2
+#: discord.abc.Messageable.history f599952a5df34d498f5b7113811451b4 of
+msgid "Parameters"
+msgstr ""
+
+#: 7b5be37d473945f980d080501395944e discord.abc.GuildChannel.overwrites_for:4
+#: of
+msgid "The role or user denoting whose overwrite to get."
+msgstr ""
+
+#: ../../api/abcs.rst 0becae8c7a3343bfa74ee70d0bcf63fa
+#: 1d2679ae9f514304bd3579ef87f81507 2c633fc68b5748e1adfc9ec3aff4f8ed
+#: 65b08451ad3a43d093e03f3f5e7a55c6 66f37f1f6ffc4532b5e7767864a5222b
+#: 8101933b7aca44b491e77ce2b88e718e 8e507fe851d946d5a39bf30a61c1b560
+#: 9a9cab84cf46487ab80637c624490b36 c1807c81320a4c4a9eea27db6d535110
+#: ef49855ea26e49d18e9c5f14cd4d5a2b
+msgid "Returns"
+msgstr ""
+
+#: cbf2b10aa86a450aae949d4afbb72b83 discord.abc.GuildChannel.overwrites_for:8
+#: of
+msgid "The permission overwrites for this object."
+msgstr ""
+
+#: ../../api/abcs.rst 0c2690be6dc44bd99487721b1c473943
+#: 11a136a4062b498a8539ad8c06771df5 1da797b8dd684105852b0c651b5b1369
+#: 37f01e30f738487bbe95997ed7571b62 41f62d98c7404eabaebc4820fa6da3e6
+#: 6012b511381143e9ab71be1e7d0e2ec6 64aa35176668433594fbf6d7bb7a9b57
+#: 65da9d2f771749c6870d5bc0e175f919 6623b7471154462a8a89a38165cebaac
+#: 7bcc922e527d44179d22772f6c16984f ae7e9663432d4aa99ce5152a8849b58b
+#: bfd321f562164c8592b70e22b870cb1b d748e7f595124a2caf29f95f0c884c4e
+#: discord.abc.Messageable.history f458fbadecb448e38f1f3085d9edc8a6 of
+msgid "Return type"
+msgstr ""
+
+#: discord.abc.GuildChannel.overwrites_for:9 e5ea510d86c149fcb18fa591625d5d07
+#: of
+msgid ":class:`~discord.PermissionOverwrite`"
+msgstr ""
+
+#: 90ad1cb5997e40b69c61f7457281e1de discord.abc.GuildChannel.overwrites:1 of
+msgid "Returns all of the channel's overwrites."
+msgstr ""
+
+#: 2bf4c5fafdf6429b84330957fb24ab01 discord.abc.GuildChannel.overwrites:3 of
+msgid ""
+"This is returned as a dictionary where the key contains the target which "
+"can be either a :class:`~discord.Role` or a :class:`~discord.Member` and "
+"the value is the overwrite as a :class:`~discord.PermissionOverwrite`."
+msgstr ""
+
+#: discord.abc.GuildChannel.overwrites:7 f15eda417e19494ea604c6f5770c6a45 of
+msgid "The channel's permission overwrites."
+msgstr ""
+
+#: 55f132c1266245bcb389221b13679775 discord.abc.GuildChannel.overwrites:8 of
+msgid ""
+"Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], "
+":class:`~discord.PermissionOverwrite`]"
+msgstr ""
+
+#: 1db80abbda8a4911a7711ae56f513ab8 discord.abc.GuildChannel.category:1 of
+msgid "The category this channel belongs to."
+msgstr ""
+
+#: 5bbfc6c0820a44b3a0dd8f1df312d334 discord.abc.GuildChannel.category:3 of
+msgid "If there is no category then this is ``None``."
+msgstr ""
+
+#: discord.abc.GuildChannel.permissions_synced:1
+#: eeffa71045734b85965aeb971081f6a3 of
+msgid ""
+"Whether the permissions for this channel are synced with the category it "
+"belongs to."
+msgstr ""
+
+#: 1171e47cfc5a4f0791d740508bc37158
+#: discord.abc.GuildChannel.permissions_synced:4 of
+msgid "If there is no category then this is ``False``."
+msgstr ""
+
+#: 4fecc3795fa142dbb33ae3ca2d91327f discord.abc.GuildChannel.permissions_for:1
+#: of
+msgid ""
+"Handles permission resolution for the :class:`~discord.Member` or "
+":class:`~discord.Role`."
+msgstr ""
+
+#: cd4470a1d45d429a999e7b9f6ec55f49 discord.abc.GuildChannel.permissions_for:4
+#: of
+msgid "This function takes into consideration the following cases:"
+msgstr ""
+
+#: 1de0c73c6d9143b9956741d16b697ecd discord.abc.GuildChannel.permissions_for:6
+#: of
+msgid "Guild owner"
+msgstr ""
+
+#: c9503941e19b4afa99e57615839294ca discord.abc.GuildChannel.permissions_for:7
+#: of
+msgid "Guild roles"
+msgstr ""
+
+#: 750911e7b8c44983a5c47f0ac5a700a5 discord.abc.GuildChannel.permissions_for:8
+#: of
+msgid "Channel overrides"
+msgstr ""
+
+#: 528c11379a8d438ebb0b2de3e7891832 discord.abc.GuildChannel.permissions_for:9
+#: of
+msgid "Member overrides"
+msgstr ""
+
+#: discord.abc.GuildChannel.permissions_for:11 fc56ba9a38b84c8a875576b8cd474972
+#: of
+msgid ""
+"If a :class:`~discord.Role` is passed, then it checks the permissions "
+"someone with that role would have, which is essentially:"
+msgstr ""
+
+#: 38d1440864c84ffe9afa2a0b241b6135 discord.abc.GuildChannel.permissions_for:14
+#: of
+msgid "The default role permissions"
+msgstr ""
+
+#: b5684951350d41eb8b164a4b8ebd41d9 discord.abc.GuildChannel.permissions_for:15
+#: of
+msgid "The permissions of the role used as a parameter"
+msgstr ""
+
+#: b406f8eb396844c091af41fa29263d3d discord.abc.GuildChannel.permissions_for:16
+#: of
+msgid "The default role permission overwrites"
+msgstr ""
+
+#: 6dfa8f8d44de4c9286669355380503ec discord.abc.GuildChannel.permissions_for:17
+#: of
+msgid "The permission overwrites of the role used as a parameter"
+msgstr ""
+
+#: 8f5ce4ed137b4992bbba7cf650c6a546 discord.abc.GuildChannel.permissions_for:19
+#: of
+msgid "The object passed in can now be a role object."
+msgstr ""
+
+#: 538dd64346cf4fcabbbb3e054d8ae27e discord.abc.GuildChannel.permissions_for:23
+#: of
+msgid ""
+"The object to resolve permissions for. This could be either a member or a"
+" role. If it's a role then member overwrites are not computed."
+msgstr ""
+
+#: 2743b663c2604ac99153b71658dd7955 discord.abc.GuildChannel.permissions_for:28
+#: of
+msgid "The resolved permissions for the member or role."
+msgstr ""
+
+#: d160215e8fd0483b803e4feb607722fe discord.abc.GuildChannel.permissions_for:29
+#: of
+msgid ":class:`~discord.Permissions`"
+msgstr ""
+
+#: 00f7634217064d6295a6924fadd26f6d 0c2bd17b81764ad9b602a4bcf46e7adb
+#: 53afb5db720048589629b816ddb03782 5516007d80a04f27b710e8e89440c211
+#: 68a664b278c7485c8e45e152218a4c8e 76535a41a98d42889332c5da6b2421a5
+#: 9321611b3f474e18a58779e48164f1d1 c2c158e15aff478c90ebe68ed8119565
+#: db09d175309e4f788bdd7945b1d9f0c6 discord.abc.GuildChannel.clone:1
+#: discord.abc.GuildChannel.create_invite:1 discord.abc.GuildChannel.delete:1
+#: discord.abc.GuildChannel.invites:1 discord.abc.GuildChannel.move:1
+#: discord.abc.GuildChannel.set_permissions:1
+#: discord.abc.Messageable.fetch_message:1 discord.abc.Messageable.pins:1
+#: discord.abc.Messageable.send:1 discord.abc.Messageable.trigger_typing:1
+#: fc11191cacf3443f913a5bd69d919a77 of
+msgid "|coro|"
+msgstr ""
+
+#: 8d7099b6e32a4784bfd22162bb7f12a4 discord.abc.GuildChannel.delete:3 of
+msgid "Deletes the channel."
+msgstr ""
+
+#: 9283174a29fe4cd3a999cbe16e91c338 discord.abc.GuildChannel.delete:5 of
+msgid ""
+"You must have :attr:`~discord.Permissions.manage_channels` permission to "
+"use this."
+msgstr ""
+
+#: c0a16afcdf024c34870bd9610e6ec5a7 discord.abc.GuildChannel.delete:8 of
+msgid "The reason for deleting this channel. Shows up on the audit log."
+msgstr ""
+
+#: ../../api/abcs.rst 0e8239ac7ddc4e048eb60772728e419d
+#: 31de3a885a3e42c387e130575ac07bf7 5448d7297cf24ec3b2d30012a69f357a
+#: 72d120a0412a4abc8b158e77726150f2 989d13fe26cf462bafcec9e32b983161
+#: bc1f6f8dfabf4e2bbd3ad10f31bd169c c41fe790e3f04807b5d5eea4918ecbda
+#: c4357f7a3367410786087828206f5204 c5942183ac1b422d874ef5456324b188
+#: cb61738138474c3093f076891a253869 discord.abc.Messageable.history
+#: f18991acfb0a458899f3d2977c2c26ef of
+msgid "Raises"
+msgstr ""
+
+#: a49551604bb2441d8e393e9f3af5e9da discord.abc.GuildChannel.delete:12 of
+msgid "You do not have proper permissions to delete the channel."
+msgstr ""
+
+#: 63d9b0eca3194eed86f22730f97e7150 discord.abc.GuildChannel.delete:13 of
+msgid "The channel was not found or was already deleted."
+msgstr ""
+
+#: 9cd0a14d775240ffb2a793071bf27195 discord.abc.GuildChannel.delete:14 of
+msgid "Deleting the channel failed."
+msgstr ""
+
+#: 1556d0b7324e43e59611bd803079f548 2aadba38a10941c69fa83833c49a1a92
+#: 9208896e58034a57b97105d1329b9793 discord.abc.GuildChannel.delete:16
+#: discord.abc.GuildChannel.move:51 discord.abc.Messageable.trigger_typing:8 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: b8f02982c07e44c5bbb8db8be80671cd discord.abc.GuildChannel.set_permissions:3
+#: of
+msgid ""
+"Sets the channel specific permission overwrites for a target in the "
+"channel."
+msgstr ""
+
+#: 7dcca40512ec450194ea16cf8c9a7a4b discord.abc.GuildChannel.set_permissions:6
+#: of
+msgid ""
+"The ``target`` parameter should either be a :class:`~discord.Member` or a"
+" :class:`~discord.Role` that belongs to guild."
+msgstr ""
+
+#: 871aaa962e9b4e968d2de6add1cee24c discord.abc.GuildChannel.set_permissions:9
+#: of
+msgid ""
+"The ``overwrite`` parameter, if given, must either be ``None`` or "
+":class:`~discord.PermissionOverwrite`. For convenience, you can pass in "
+"keyword arguments denoting :class:`~discord.Permissions` attributes. If "
+"this is done, then you cannot mix the keyword arguments with the "
+"``overwrite`` parameter."
+msgstr ""
+
+#: c620b3a1289d4243818bf61b2723c7b6 discord.abc.GuildChannel.set_permissions:15
+#: of
+msgid ""
+"If the ``overwrite`` parameter is ``None``, then the permission "
+"overwrites are deleted."
+msgstr ""
+
+#: 36fce7cdc7e14f338aade9cbe9b4867a discord.abc.GuildChannel.set_permissions:18
+#: of
+msgid ""
+"You must have the :attr:`~discord.Permissions.manage_roles` permission to"
+" use this."
+msgstr ""
+
+#: 6fc26ef2306144f6959be12618f1cd4b discord.abc.GuildChannel.set_permissions:22
+#: of
+msgid "This method *replaces* the old overwrites with the ones given."
+msgstr ""
+
+#: 1c3537f7b30748c58ac9d43193c9f927 b3123c1220764f4a8b84f628beded5d3
+#: discord.abc.GuildChannel.set_permissions:25
+#: discord.abc.Messageable.history:39 of
+msgid "Examples"
+msgstr ""
+
+#: 7c968c31b8d04886bfe002b8e3bdae48 discord.abc.GuildChannel.set_permissions:26
+#: of
+msgid "Setting allow and deny: ::"
+msgstr ""
+
+#: discord.abc.GuildChannel.set_permissions:31 fb8414d061584b7588c4e86d1e578aca
+#: of
+msgid "Deleting overwrites ::"
+msgstr ""
+
+#: 3defedc1bafe4560bc9af54a32898c5d discord.abc.GuildChannel.set_permissions:35
+#: of
+msgid "Using :class:`~discord.PermissionOverwrite` ::"
+msgstr ""
+
+#: 485de860e7344ec187d3a688a62de855 discord.abc.GuildChannel.set_permissions:43
+#: of
+msgid "The member or role to overwrite permissions for."
+msgstr ""
+
+#: 8c40fdfce8134dc59ff5c6679a00d902 discord.abc.GuildChannel.set_permissions:46
+#: of
+msgid ""
+"The permissions to allow and deny to the target, or ``None`` to delete "
+"the overwrite."
+msgstr ""
+
+#: discord.abc.GuildChannel.set_permissions:50 e7f7d10378184b0aaa47718a1e093c10
+#: of
+msgid ""
+"A keyword argument list of permissions to set for ease of use. Cannot be "
+"mixed with ``overwrite``."
+msgstr ""
+
+#: 939f5bb4041f4e0b9fcdf458e14897dc discord.abc.GuildChannel.set_permissions:53
+#: of
+msgid "The reason for doing this action. Shows up on the audit log."
+msgstr ""
+
+#: discord.abc.GuildChannel.set_permissions:56 f63a735d3a4d4034b9438307d367dc88
+#: of
+msgid "You do not have permissions to edit channel specific permissions."
+msgstr ""
+
+#: 6c0304de1eeb4b0e81657a73cb4e95a8 discord.abc.GuildChannel.set_permissions:57
+#: of
+msgid "Editing channel specific permissions failed."
+msgstr ""
+
+#: 494eb950335d4e05a041da8532184f22 discord.abc.GuildChannel.set_permissions:58
+#: of
+msgid "The role or member being edited is not part of the guild."
+msgstr ""
+
+#: 5778c3b54842442fac40cd6ba0c908d4 discord.abc.GuildChannel.set_permissions:59
+#: of
+msgid ""
+"The overwrite parameter invalid or the target type was not     "
+":class:`~discord.Role` or :class:`~discord.Member`."
+msgstr ""
+
+#: b4e299b0812040b6839744affa65da33 discord.abc.GuildChannel.clone:3 of
+msgid ""
+"Clones this channel. This creates a channel with the same properties as "
+"this channel."
+msgstr ""
+
+#: 2f18c9d119994ab8a883fcf5443ea905 c779e7a36d1843dcbe3974bd0e3a4bdf
+#: discord.abc.GuildChannel.clone:6 discord.abc.GuildChannel.move:7 of
+msgid ""
+"You must have the :attr:`~discord.Permissions.manage_channels` permission"
+" to do this."
+msgstr ""
+
+#: 360c43d24fa74755bda0102e63a76cff discord.abc.GuildChannel.clone:12 of
+msgid ""
+"The name of the new channel. If not provided, defaults to this channel "
+"name."
+msgstr ""
+
+#: b2f146eeab2f4f11807d42190f8a89cc discord.abc.GuildChannel.clone:16 of
+msgid "The reason for cloning this channel. Shows up on the audit log."
+msgstr ""
+
+#: d367046630b7470d9c8d06bb32180838 discord.abc.GuildChannel.clone:19 of
+msgid "The channel that was created."
+msgstr ""
+
+#: de39b87932bf438db36166200b73139d discord.abc.GuildChannel.clone:20 of
+msgid ":class:`.abc.GuildChannel`"
+msgstr ""
+
+#: cb28f80aab9c490187e2c98c048c7820 discord.abc.GuildChannel.clone:22 of
+msgid "You do not have the proper permissions to create this channel."
+msgstr ""
+
+#: 250258f74b3c4ed08624a53468130d36 discord.abc.GuildChannel.clone:23 of
+msgid "Creating the channel failed."
+msgstr ""
+
+#: 4773012fadba4dbcb8942054ed8c5ad9 discord.abc.GuildChannel.move:3 of
+msgid "A rich interface to help move a channel relative to other channels."
+msgstr ""
+
+#: 9c635d863bd24468856063b882cad9c4 discord.abc.GuildChannel.move:5 of
+msgid "If exact position movement is required, ``edit`` should be used instead."
+msgstr ""
+
+#: discord.abc.GuildChannel.move:12 e2c4c9ea9a9648518842d72f4c9c8dff of
+msgid ""
+"Voice channels will always be sorted below text channels. This is a "
+"Discord limitation."
+msgstr ""
+
+#: b882cc51a7ad474681af109780a81703 discord.abc.GuildChannel.move:17 of
+msgid ""
+"Whether to move the channel to the beginning of the channel list (or "
+"category if given). This is mutually exclusive with ``end``, ``before``, "
+"and ``after``."
+msgstr ""
+
+#: discord.abc.GuildChannel.move:21 f53f0ae69f4e4c8493fb10007349ad2c of
+msgid ""
+"Whether to move the channel to the end of the channel list (or category "
+"if given). This is mutually exclusive with ``beginning``, ``before``, and"
+" ``after``."
+msgstr ""
+
+#: bb849b4f9a6840e1b6342329b8447c97 discord.abc.GuildChannel.move:25 of
+msgid ""
+"The channel that should be before our current channel. This is mutually "
+"exclusive with ``beginning``, ``end``, and ``after``."
+msgstr ""
+
+#: discord.abc.GuildChannel.move:28 f166889e839547cfaef7ac191f9ebb72 of
+msgid ""
+"The channel that should be after our current channel. This is mutually "
+"exclusive with ``beginning``, ``end``, and ``before``."
+msgstr ""
+
+#: 3cb8ec6f605a4b6d8760ec5acaf9e5fe discord.abc.GuildChannel.move:31 of
+msgid ""
+"The number of channels to offset the move by. For example, an offset of "
+"``2`` with ``beginning=True`` would move it 2 after the beginning. A "
+"positive number moves it below while a negative number moves it above. "
+"Note that this number is relative and computed after the ``beginning``, "
+"``end``, ``before``, and ``after`` parameters."
+msgstr ""
+
+#: 985bb6762b4846608c9fdee1eb2d3130 discord.abc.GuildChannel.move:38 of
+msgid ""
+"The category to move this channel under. If ``None`` is given then it "
+"moves it out of the category. This parameter is ignored if moving a "
+"category channel."
+msgstr ""
+
+#: discord.abc.GuildChannel.move:42 e4f1bd9df7254ee79c53f425e8660c97 of
+msgid "Whether to sync the permissions with the category (if given)."
+msgstr ""
+
+#: acd13dc38b3a4b30bd06f2d26ef753ff discord.abc.GuildChannel.move:44 of
+msgid "The reason for the move."
+msgstr ""
+
+#: aa669646fb7f4579ab583200bde6fa6d discord.abc.GuildChannel.move:47 of
+msgid "An invalid position was given or a bad mix of arguments was passed."
+msgstr ""
+
+#: 15f0f73fe34443ed9e6d76844242705f discord.abc.GuildChannel.move:48 of
+msgid "You do not have permissions to move the channel."
+msgstr ""
+
+#: a0847e6cc4554dd98733b963fc276acf discord.abc.GuildChannel.move:49 of
+msgid "Moving the channel failed."
+msgstr ""
+
+#: discord.abc.GuildChannel.create_invite:3 f02edcc48c864d91a36b513454558dd6 of
+msgid "Creates an instant invite from a text or voice channel."
+msgstr ""
+
+#: 34adcc82842045da90a6cfd749c610ea discord.abc.GuildChannel.create_invite:5 of
+msgid ""
+"You must have the :attr:`~discord.Permissions.create_instant_invite` "
+"permission to do this."
+msgstr ""
+
+#: 4eb6418694f1494283948d66ac960704 discord.abc.GuildChannel.create_invite:9 of
+msgid ""
+"How long the invite should last in seconds. If it's 0 then the invite "
+"doesn't expire. Defaults to ``0``."
+msgstr ""
+
+#: 07a8460c4fe9448bb3db83bcb6d018d3 discord.abc.GuildChannel.create_invite:13
+#: of
+msgid ""
+"How many uses the invite could be used for. If it's 0 then there are "
+"unlimited uses. Defaults to ``0``."
+msgstr ""
+
+#: 11951229c921453caee1f5675104dcba discord.abc.GuildChannel.create_invite:17
+#: of
+msgid ""
+"Denotes that the invite grants temporary membership (i.e. they get kicked"
+" after they disconnect). Defaults to ``False``."
+msgstr ""
+
+#: a86de9b685ad42ffa90d9ea0270d6cfd discord.abc.GuildChannel.create_invite:21
+#: of
+msgid ""
+"Indicates if a unique invite URL should be created. Defaults to True. If "
+"this is set to ``False`` then it will return a previously created invite."
+msgstr ""
+
+#: 171e94fa826649ab8ad94306ea899c77 discord.abc.GuildChannel.create_invite:26
+#: of
+msgid "The reason for creating this invite. Shows up on the audit log."
+msgstr ""
+
+#: 12fd38ebd4204bf78f629058406087af discord.abc.GuildChannel.create_invite:29
+#: of
+msgid ""
+"The type of target for the voice channel invite, if any.  .. "
+"versionadded:: 2.0"
+msgstr ""
+
+#: 15724914e5a945fabdaef1bc755d3124 discord.abc.GuildChannel.create_invite:29
+#: of
+msgid "The type of target for the voice channel invite, if any."
+msgstr ""
+
+#: discord.abc.GuildChannel.create_invite:34 fa0b61268b8141998a559ae6c1c0c5f9
+#: of
+msgid ""
+"The user whose stream to display for this invite, required if "
+"`target_type` is `TargetType.stream`. The user must be streaming in the "
+"channel.  .. versionadded:: 2.0"
+msgstr ""
+
+#: dc382d48216649049091b622ec2e8f87 discord.abc.GuildChannel.create_invite:34
+#: of
+msgid ""
+"The user whose stream to display for this invite, required if "
+"`target_type` is `TargetType.stream`. The user must be streaming in the "
+"channel."
+msgstr ""
+
+#: 1b1964c4a03941e3b7bce3f9c4f06ca3 discord.abc.GuildChannel.create_invite:40
+#: of
+msgid ""
+"The id of the embedded application for the invite, required if "
+"`target_type` is `TargetType.embedded_application`.  .. versionadded:: "
+"2.0"
+msgstr ""
+
+#: 6ba3482efdb746bca8e28039741a9af2 discord.abc.GuildChannel.create_invite:40
+#: of
+msgid ""
+"The id of the embedded application for the invite, required if "
+"`target_type` is `TargetType.embedded_application`."
+msgstr ""
+
+#: 521736117c4242fba055232291762b15 discord.abc.GuildChannel.create_invite:46
+#: of
+msgid ""
+"The scheduled event object to link to the event. Shortcut to "
+":meth:`.Invite.set_scheduled_event`  See "
+":meth:`.Invite.set_scheduled_event` for more info on event invite "
+"linking.  .. versionadded:: 2.0"
+msgstr ""
+
+#: b50d9e6892874d2aa4af1bdee1c3770a discord.abc.GuildChannel.create_invite:46
+#: of
+msgid ""
+"The scheduled event object to link to the event. Shortcut to "
+":meth:`.Invite.set_scheduled_event`"
+msgstr ""
+
+#: d7f1b2d7092744cb91950605410cae8e discord.abc.GuildChannel.create_invite:49
+#: of
+msgid ""
+"See :meth:`.Invite.set_scheduled_event` for more info on event invite "
+"linking."
+msgstr ""
+
+#: c1591d1610d248bd8ea0edea53adc715 discord.abc.GuildChannel.create_invite:55
+#: of
+msgid "The invite that was created."
+msgstr ""
+
+#: discord.abc.GuildChannel.create_invite:56 fb13c77b9ff04c5e974244df057a8dd4
+#: of
+msgid ":class:`~discord.Invite`"
+msgstr ""
+
+#: 281a37e3d83f4183b84745a5b3b39845 discord.abc.GuildChannel.create_invite:58
+#: of
+msgid "Invite creation failed."
+msgstr ""
+
+#: 0a2a328e0e6442da8b9d78b0bda608f3 discord.abc.GuildChannel.create_invite:59
+#: of
+msgid "The channel that was passed is a category or an invalid channel."
+msgstr ""
+
+#: 3cdf4ff1dff745a9ae74cb84b01e3d21 discord.abc.GuildChannel.invites:3 of
+msgid "Returns a list of all active instant invites from this channel."
+msgstr ""
+
+#: 871cbc7f5c6549e39dc2d06a60160091 discord.abc.GuildChannel.invites:5 of
+msgid ""
+"You must have :attr:`~discord.Permissions.manage_channels` to get this "
+"information."
+msgstr ""
+
+#: 16959e08182541d5868181d88d2d5db9 discord.abc.GuildChannel.invites:7 of
+msgid "The list of invites that are currently active."
+msgstr ""
+
+#: a19e94cde12044ef92a1a1fb63ab75e2 discord.abc.GuildChannel.invites:8 of
+msgid "List[:class:`~discord.Invite`]"
+msgstr ""
+
+#: c7dcbacf8a4f4680867ff28e5816f535 discord.abc.GuildChannel.invites:10 of
+msgid "You do not have proper permissions to get the information."
+msgstr ""
+
+#: 4be34f522adc4c8896cd32447b209027 discord.abc.GuildChannel.invites:11 of
+msgid "An error occurred while fetching the information."
+msgstr ""
+
+#: dc4c7ad0c8ad4feca3d041e12eb7d777 discord.abc.Messageable:1 of
+msgid ""
+"An ABC that details the common operations on a model that can send "
+"messages."
+msgstr ""
+
+#: discord.abc.Messageable:12 f001d854c2194b5f851170ae75cb56c6 of
+msgid ":class:`~discord.ext.commands.Context`"
+msgstr ""
+
+#: d4a798d4e25a4aff902d032b4d6d0f37 discord.abc.Messageable:13 of
+msgid ":class:`~discord.Thread`"
+msgstr ""
+
+#: b4dda8ab4def475190eb4024614c47fe discord.abc.Messageable:14 of
+msgid ":class:`~discord.ApplicationContext`"
+msgstr ""
+
+#: 8d2e215bc6854b1e8881b8e7b0be7886 discord.abc.Messageable.history:1 of
+msgid ""
+"Returns an :class:`~discord.AsyncIterator` that enables receiving the "
+"destination's message history."
+msgstr ""
+
+#: db7fe24b56174ba88b9125364a39bcef discord.abc.Messageable.history:3 of
+msgid ""
+"You must have :attr:`~discord.Permissions.read_message_history` "
+"permissions to use this."
+msgstr ""
+
+#: 3be41d26fe6c4db691d0f996edd896cd discord.abc.Messageable.history:6 of
+msgid ""
+"The number of messages to retrieve. If ``None``, retrieves every message "
+"in the channel. Note, however, that this would make it a slow operation."
+msgstr ""
+
+#: discord.abc.Messageable.history:11 e0043231e9594810ad87d803a3aff895 of
+msgid ""
+"Retrieve messages before this date or message. If a datetime is provided,"
+" it is recommended to use a UTC aware datetime. If the datetime is naive,"
+" it is assumed to be local time."
+msgstr ""
+
+#: discord.abc.Messageable.history:16 ff0bf9e08202470aa16b177a95f3b0b4 of
+msgid ""
+"Retrieve messages after this date or message. If a datetime is provided, "
+"it is recommended to use a UTC aware datetime. If the datetime is naive, "
+"it is assumed to be local time."
+msgstr ""
+
+#: 092c37264fd94af1837bac3590cc8eac discord.abc.Messageable.history:21 of
+msgid ""
+"Retrieve messages around this date or message. If a datetime is provided,"
+" it is recommended to use a UTC aware datetime. If the datetime is naive,"
+" it is assumed to be local time. When using this argument, the maximum "
+"limit is 101. Note that if the limit is an even number, then this will "
+"return at most limit + 1 messages."
+msgstr ""
+
+#: 4165af23ce0140a68f19a493053730ba discord.abc.Messageable.history:28 of
+msgid ""
+"If set to ``True``, return messages in oldest->newest order. Defaults to "
+"``True`` if ``after`` is specified, otherwise ``False``."
+msgstr ""
+
+#: 330775df4db2489d90277342ad6022c7 discord.abc.Messageable.history of
+msgid "Yields"
+msgstr ""
+
+#: discord.abc.Messageable.history:32 e35f0d17cb834683a8458b8c6e4114fc of
+msgid ":class:`~discord.Message` -- The message with the message data parsed."
+msgstr ""
+
+#: 8349b412e06c40b48b2c0f6e024d4f2d discord.abc.Messageable.history:34 of
+msgid "You do not have permissions to get channel message history."
+msgstr ""
+
+#: af34c7e456e0477fbca5300f91c8e3e2 discord.abc.Messageable.history:35 of
+msgid "The request to get message history failed."
+msgstr ""
+
+#: 7ca3e15ee8da46e69208f4ceab5d85f5 discord.abc.Messageable.history:36 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.HistoryIterator\\``"
+msgstr ""
+
+#: cc41fde924a646b2a66d6e1950f15cde discord.abc.Messageable.history:40 of
+msgid "Usage ::"
+msgstr ""
+
+#: 8fe09bfbadaa4e0d9f16f3d6de860f92 discord.abc.Messageable.history:47 of
+msgid "Flattening into a list: ::"
+msgstr ""
+
+#: 62bb3065f7c048abb84b05680ea83ed7 discord.abc.Messageable.history:52 of
+msgid "All parameters are optional."
+msgstr ""
+
+#: 9d11f981eddd4528981b271e6724cdbe discord.abc.Messageable.typing:1 of
+msgid ""
+"Returns a context manager that allows you to type for an indefinite "
+"period of time."
+msgstr ""
+
+#: 1ce571c393ad4909a237f0df41acf5ac discord.abc.Messageable.typing:3 of
+msgid ""
+"This is useful for denoting long computations in your bot. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgstr ""
+
+#: 6d2c4668d8fc4cfda30eccbf8458acbf discord.abc.Messageable.typing:9 of
+msgid ""
+"This is both a regular context manager and an async context manager. This"
+" means that both ``with`` and ``async with`` work with this."
+msgstr ""
+
+#: 05520cdec2f14434a84fe4504e8ae4e3 discord.abc.Messageable.typing:12 of
+msgid "Example Usage: ::"
+msgstr ""
+
+#: 2d718f3d7f8a4088acdd3329b88a90e8 discord.abc.Messageable.send:3 of
+msgid "Sends a message to the destination with the content given."
+msgstr ""
+
+#: 873ac6c9a5b544c691bcf227c6664151 discord.abc.Messageable.send:5 of
+msgid ""
+"The content must be a type that can convert to a string through "
+"``str(content)``. If the content is set to ``None`` (the default), then "
+"the ``embed`` parameter must be provided."
+msgstr ""
+
+#: 4a6a164da91543aabab378380a1a18dd discord.abc.Messageable.send:9 of
+msgid ""
+"To upload a single file, the ``file`` parameter should be used with a "
+"single :class:`~discord.File` object. To upload multiple files, the "
+"``files`` parameter should be used with a :class:`list` of "
+":class:`~discord.File` objects. **Specifying both parameters will lead to"
+" an exception**."
+msgstr ""
+
+#: 71df7005611241afb3db54461fcbe060 discord.abc.Messageable.send:14 of
+msgid ""
+"To upload a single embed, the ``embed`` parameter should be used with a "
+"single :class:`~discord.Embed` object. To upload multiple embeds, the "
+"``embeds`` parameter should be used with a :class:`list` of "
+":class:`~discord.Embed` objects. **Specifying both parameters will lead "
+"to an exception**."
+msgstr ""
+
+#: b9ee3ce694294708b4db54d1df7bd691 discord.abc.Messageable.send:20 of
+msgid "The content of the message to send."
+msgstr ""
+
+#: a00789ca06e84d5fa7a73478180f1ef2 discord.abc.Messageable.send:23 of
+msgid "Indicates if the message should be sent using text-to-speech."
+msgstr ""
+
+#: 906186ab0b7e4bd79159b563a30e5968 discord.abc.Messageable.send:26 of
+msgid "The rich embed for the content."
+msgstr ""
+
+#: discord.abc.Messageable.send:29 fe4e6add04cc42c1bb5d44e2fa610082 of
+msgid "The file to upload."
+msgstr ""
+
+#: a3c6608e1d1942a4b1be5b61abda01bd discord.abc.Messageable.send:32 of
+msgid "A list of files to upload. Must be a maximum of 10."
+msgstr ""
+
+#: 11b9fd65f5ca4474a330776ef3c6de1a discord.abc.Messageable.send:35 of
+msgid ""
+"The nonce to use for sending this message. If the message was "
+"successfully sent, then the message will have a nonce with this value."
+msgstr ""
+
+#: 0face4ee444e42a3b407aac7ea0318a4 discord.abc.Messageable.send:39 of
+msgid "Whether :attr:`nonce` is enforced to be validated.  .. versionadded:: 2.5"
+msgstr ""
+
+#: ba5de4a08a864d7984364e85ac5c6fa9 discord.abc.Messageable.send:39 of
+msgid "Whether :attr:`nonce` is enforced to be validated."
+msgstr ""
+
+#: 7239324fe23047feaa25e23a03b6521b discord.abc.Messageable.send:44 of
+msgid ""
+"If provided, the number of seconds to wait in the background before "
+"deleting the message we just sent. If the deletion fails, then it is "
+"silently ignored."
+msgstr ""
+
+#: 2c8173bcb34847058431ea4859c49300 discord.abc.Messageable.send:49 of
+msgid ""
+"Controls the mentions being processed in this message. If this is passed,"
+" then the object is merged with :attr:`~discord.Client.allowed_mentions`."
+" The merging behaviour only overrides attributes that have been "
+"explicitly passed to the object, otherwise it uses the attributes set in "
+":attr:`~discord.Client.allowed_mentions`. If no object is passed at all "
+"then the defaults given by :attr:`~discord.Client.allowed_mentions` are "
+"used instead.  .. versionadded:: 1.4"
+msgstr ""
+
+#: a0a579827fe147f6a86010948fcf7967 discord.abc.Messageable.send:49 of
+msgid ""
+"Controls the mentions being processed in this message. If this is passed,"
+" then the object is merged with :attr:`~discord.Client.allowed_mentions`."
+" The merging behaviour only overrides attributes that have been "
+"explicitly passed to the object, otherwise it uses the attributes set in "
+":attr:`~discord.Client.allowed_mentions`. If no object is passed at all "
+"then the defaults given by :attr:`~discord.Client.allowed_mentions` are "
+"used instead."
+msgstr ""
+
+#: 9309ccd20be043ffa5aee6e61d6082ff discord.abc.Messageable.send:59 of
+msgid ""
+"A reference to the :class:`~discord.Message` to which you are replying, "
+"this can be created using :meth:`~discord.Message.to_reference` or passed"
+" directly as a :class:`~discord.Message`. You can control whether this "
+"mentions the author of the referenced message using the "
+":attr:`~discord.AllowedMentions.replied_user` attribute of "
+"``allowed_mentions`` or by setting ``mention_author``.  .. versionadded::"
+" 1.6"
+msgstr ""
+
+#: b4916e6a8e914fe9b0f1786b0a5b52df discord.abc.Messageable.send:59 of
+msgid ""
+"A reference to the :class:`~discord.Message` to which you are replying, "
+"this can be created using :meth:`~discord.Message.to_reference` or passed"
+" directly as a :class:`~discord.Message`. You can control whether this "
+"mentions the author of the referenced message using the "
+":attr:`~discord.AllowedMentions.replied_user` attribute of "
+"``allowed_mentions`` or by setting ``mention_author``."
+msgstr ""
+
+#: 26f39c2265e84ac1853fb843b86d9989 discord.abc.Messageable.send:68 of
+msgid ""
+"If set, overrides the :attr:`~discord.AllowedMentions.replied_user` "
+"attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
+msgstr ""
+
+#: 401e6af57ea8422c89021bc656d1b595 discord.abc.Messageable.send:68 of
+msgid ""
+"If set, overrides the :attr:`~discord.AllowedMentions.replied_user` "
+"attribute of ``allowed_mentions``."
+msgstr ""
+
+#: 10915d3a739946e3a99a0a739b1588de discord.abc.Messageable.send:73 of
+msgid "A Discord UI View to add to the message."
+msgstr ""
+
+#: 8c86dff03f9a4a3fb7f2dcc83c7c6ad4 discord.abc.Messageable.send:76 of
+msgid ""
+"A list of embeds to upload. Must be a maximum of 10.  .. versionadded:: "
+"2.0"
+msgstr ""
+
+#: 3910a221735f4f569868b11b1d1a8c98 discord.abc.Messageable.send:76 of
+msgid "A list of embeds to upload. Must be a maximum of 10."
+msgstr ""
+
+#: 8235aade03164b52932298971f0f5907 discord.abc.Messageable.send:81 of
+msgid ""
+"A list of stickers to upload. Must be a maximum of 3.  .. versionadded:: "
+"2.0"
+msgstr ""
+
+#: 963c1db27b8240dd92f403d36e2a18ba discord.abc.Messageable.send:81 of
+msgid "A list of stickers to upload. Must be a maximum of 3."
+msgstr ""
+
+#: discord.abc.Messageable.send:86 f555e2676dea4bbc8de31ebb2fc36278 of
+msgid "Whether to suppress embeds for the message."
+msgstr ""
+
+#: a8ffcca916894215a919fa2c72d7c55d discord.abc.Messageable.send:89 of
+msgid ""
+"Whether to suppress push and desktop notifications for the message.  .. "
+"versionadded:: 2.4"
+msgstr ""
+
+#: 4648ba0d48fc42beb889718460aeeb32 discord.abc.Messageable.send:89 of
+msgid "Whether to suppress push and desktop notifications for the message."
+msgstr ""
+
+#: discord.abc.Messageable.send:94 fd5dcbe211744affb08358b1a28785bb of
+msgid "The poll to send.  .. versionadded:: 2.6"
+msgstr ""
+
+#: dc470e02b06b4622a2c6fd26976e2906 discord.abc.Messageable.send:94 of
+msgid "The poll to send."
+msgstr ""
+
+#: 59ad41ca439e4131bf64421a1ae40eef discord.abc.Messageable.send:99 of
+msgid "The message that was sent."
+msgstr ""
+
+#: 999c449e088140378a9aca3429066337 b2c842a4fe6f435fafe3c2b2a1e47515
+#: discord.abc.Messageable.fetch_message:10 discord.abc.Messageable.send:100 of
+msgid ":class:`~discord.Message`"
+msgstr ""
+
+#: 8b714ce1774145368992ec4a36dbc6b5 discord.abc.Messageable.send:102 of
+msgid "Sending the message failed."
+msgstr ""
+
+#: 00e3027c97ff4cba80129df3ba41816f discord.abc.Messageable.send:103 of
+msgid "You do not have the proper permissions to send the message."
+msgstr ""
+
+#: 5083bf05922c4f949f5e1a47bef0c2f4 discord.abc.Messageable.send:104 of
+msgid ""
+"The ``files`` list is not of the appropriate size,     you specified both"
+" ``file`` and ``files``,     or you specified both ``embed`` and "
+"``embeds``,     or the ``reference`` object is not a "
+":class:`~discord.Message`,     :class:`~discord.MessageReference` or "
+":class:`~discord.PartialMessage`."
+msgstr ""
+
+#: d5c9d9a021c946059bda8a05bbe44016 discord.abc.Messageable.trigger_typing:3 of
+msgid "Triggers a *typing* indicator to the destination."
+msgstr ""
+
+#: discord.abc.Messageable.trigger_typing:5 e2b3446f4c904abd9daf0ea1995bbac1 of
+msgid ""
+"*Typing* indicator will go away after 10 seconds, or after a message is "
+"sent."
+msgstr ""
+
+#: 70f06690476641b4908fe5c58523a0ec discord.abc.Messageable.fetch_message:3 of
+msgid "Retrieves a single :class:`~discord.Message` from the destination."
+msgstr ""
+
+#: 47f6cd2a5bd6410a98561b8d764e594e discord.abc.Messageable.fetch_message:6 of
+msgid "The message ID to look for."
+msgstr ""
+
+#: 335e57a361304f68b36db3f717e341b7 discord.abc.Messageable.fetch_message:9 of
+msgid "The message asked for."
+msgstr ""
+
+#: d2feef3e4cfb47b9afc4c248ad2d1891 discord.abc.Messageable.fetch_message:12 of
+msgid "The specified message was not found."
+msgstr ""
+
+#: 4da989d152b844d4aff41f6835dda941 discord.abc.Messageable.fetch_message:13 of
+msgid "You do not have the permissions required to get a message."
+msgstr ""
+
+#: bd18b40e6eb143dc97a468a9f8ca190a discord.abc.Messageable.fetch_message:14 of
+msgid "Retrieving the message failed."
+msgstr ""
+
+#: 4bbececd17ce4733aa89e7a128cc27cb discord.abc.Messageable.pins:3 of
+msgid "Retrieves all messages that are currently pinned in the channel."
+msgstr ""
+
+#: 19f6cad4e0a748608bac294104790fb3 discord.abc.Messageable.pins:7 of
+msgid ""
+"Due to a limitation with the Discord API, the :class:`.Message` objects "
+"returned by this method do not contain complete "
+":attr:`.Message.reactions` data."
+msgstr ""
+
+#: 08f13fe21c66434ba1000150fb780040 discord.abc.Messageable.pins:11 of
+msgid "The messages that are currently pinned."
+msgstr ""
+
+#: discord.abc.Messageable.pins:12 e2d50204039c4ebbb8cb5794d26a930b of
+msgid "List[:class:`~discord.Message`]"
+msgstr ""
+
+#: 4cfb764c52fa4d2da0b34a29ae460acb discord.abc.Messageable.pins:14 of
+msgid "Retrieving the pinned messages failed."
+msgstr ""
+
+#: 97efca508c8545a0a10cee9651abdf07 discord.abc.Messageable.can_send:1 of
+msgid ""
+"Returns a :class:`bool` indicating whether you have the permissions to "
+"send the object(s)."
+msgstr ""
+
+#: 676c249107d744bea35ba99071b98e52 discord.abc.Messageable.can_send:3 of
+msgid "Indicates whether you have the permissions to send the object(s)."
+msgstr ""
+
+#: 73bfb2a074b84597bbe6ae500e1f8501 discord.abc.Messageable.can_send:6 of
+msgid "An invalid type has been passed."
+msgstr ""
+
+#: 207660df821e48deaf1a2c5b1759f812 discord.abc.Connectable:1 of
+msgid ""
+"An ABC that details the common operations on a channel that can connect "
+"to a voice server."
+msgstr ""
+
+#: 53703426ebb74318920660391f075491 discord.abc.Connectable:11 of
+msgid ""
+"This ABC is not decorated with :func:`typing.runtime_checkable`, so will "
+"fail :func:`isinstance`/:func:`issubclass` checks."
+msgstr ""
+

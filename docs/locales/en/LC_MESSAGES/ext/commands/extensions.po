@@ -1,0 +1,115 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../ext/commands/extensions.rst:6 11a3dae9fe1c4db2baffa8e52bb87925
+msgid "Extensions"
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:8 3fc6d3b82099427188caf088434f07d8
+msgid ""
+"There comes a time in the bot development when you want to extend the bot"
+" functionality at run-time and quickly unload and reload code (also "
+"called hot-reloading). The command framework comes with this ability "
+"built-in, with a concept called **extensions**."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:11 bff72545dea84615898459176c227829
+msgid "Primer"
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:13 a5c7cefb93c340738086ceb82d719d19
+msgid ""
+"An extension at its core is a python file with an entry point called "
+"``setup``. This setup must be a plain Python function (not a coroutine). "
+"It takes a single parameter -- the :class:`~.commands.Bot` that loads the"
+" extension."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:15 b37c970baeb94c608f23fae4c5d6d128
+msgid "An example extension looks like this:"
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:17 5cd7440657e24c0fb0725a2812f35088
+msgid "hello.py"
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:30 30f94a1e54d9426fad010da9c908c02e
+msgid ""
+"In this example we define a simple command, and when the extension is "
+"loaded this command is added to the bot. Now the final step to this is "
+"loading the extension, which we do by calling "
+":meth:`.Bot.load_extension`. To load this extension we call "
+"``bot.load_extension('hello')``."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:32 1795f2297a5041ac844add5bfcc88d3f
+msgid "Cogs"
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:35 7c01406819564f4ca4a2656c49cb2f0f
+msgid ""
+"Extensions are usually used in conjunction with cogs. To read more about "
+"them, check out the documentation, :ref:`ext_commands_cogs`."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:39 98dd5e13250045039e1a563db8bfea2f
+msgid ""
+"Extension paths are ultimately similar to the import mechanism. What this"
+" means is that if there is a folder, then it must be dot-qualified. For "
+"example to load an extension in ``plugins/hello.py`` then we use the "
+"string ``plugins.hello``."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:42 489bef81f93f4304b279bdd12bfc9338
+msgid "Reloading"
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:44 650562a4f9b2420788d14c656036f668
+msgid ""
+"When you make a change to the extension and want to reload the "
+"references, the library comes with a function to do this for you, "
+":meth:`.Bot.reload_extension`."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:50 e9fb9d0f34b842d1a12b88b29236c81b
+msgid ""
+"Once the extension reloads, any changes that we did will be applied. This"
+" is useful if we want to add or remove functionality without restarting "
+"our bot. If an error occurred during the reloading process, the bot will "
+"pretend as if the reload never happened."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:53 bd94882163b141b38360855852e799d3
+msgid "Cleaning Up"
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:55 bb55f99d145d43c6b21bc41ff14e7f14
+msgid ""
+"Although rare, sometimes an extension needs to clean-up or know when it's"
+" being unloaded. For cases like these, there is another entry point named"
+" ``teardown`` which is similar to ``setup`` except called when the "
+"extension is unloaded."
+msgstr ""
+
+#: ../../ext/commands/extensions.rst:57 7d0766fd4f7542b09453f795836c0ad3
+msgid "basic_ext.py"
+msgstr ""
+

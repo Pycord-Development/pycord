@@ -1,0 +1,41 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../api/index.rst:16
+msgid "Table of Contents"
+msgstr ""
+
+#: ../../api/index.rst:4 8992526d88c64b82a566631cc042bf6b
+msgid "API Reference"
+msgstr ""
+
+#: ../../api/index.rst:6 262a2f48a4e843069ef5e14e69074c5c
+msgid "The following section outlines the API of Pycord."
+msgstr ""
+
+#: ../../api/index.rst:10 b91b68d91ae540459d4bd07dd3c8177f
+msgid ""
+"This module uses the Python logging module to log diagnostic and errors "
+"in an output independent way.  If the logging module is not configured, "
+"these logs will not be output anywhere.  See :ref:`logging_setup` for "
+"more information on how to set up and use the logging module with Pycord."
+msgstr ""
+

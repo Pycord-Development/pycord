@@ -1,0 +1,540 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../ext/tasks/index.rst:4 59da74174e4c4214b076a3810bb95fe7
+msgid "discord.ext.tasks"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:8 3ac09d081ea348e789447c5199809ff0
+msgid ""
+"One of the most common operations when making a bot is having a loop run "
+"in the background at a specified interval. This pattern is very common "
+"but has a lot of things you need to look out for:"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:10 8db3c338d0cb4abfb5af02b5480fa3a1
+msgid "How do I handle :exc:`asyncio.CancelledError`?"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:11 436e65611b4a47c4996463b1bd23c9e5
+msgid "What do I do if the internet goes out?"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:12 3e307085fe7c497c92cedd058ea8917f
+msgid "What is the maximum number of seconds I can sleep anyway?"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:14 555b5e79b7f74c039e7bf6b0dc625f26
+msgid ""
+"The goal of this Pycord extension is to abstract all these worries away "
+"from you."
+msgstr ""
+
+#: ../../ext/tasks/index.rst:17 e46a6ded9da3444a8831a4322b89eec3
+msgid "Recipes"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:19 d1eb26160af441c3ad80b0ddacfb1db5
+msgid "A simple background task in a :class:`~discord.ext.commands.Cog`:"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:38 a7a08f1d572b44eda5576c51da81582f
+msgid "Adding an exception to handle during reconnect:"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:61 16a5fd6c73024a8aa67e2197954b283c
+msgid "Looping a certain amount of times before exiting:"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:77 5ec06169ced54b6690469d8b3aacb90c
+msgid "Waiting until the bot is ready before the loop starts:"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:102 4d5885d1008d4e288360ef1cc770187f
+msgid "Doing something during cancellation:"
+msgstr ""
+
+#: ../../ext/tasks/index.rst:136 784d60950fd842b88251fa1b9ad96b6b
+msgid "API Reference"
+msgstr ""
+
+#: 0d9e3d92282d42b39abe6bda09a6c1a5 discord.ext.tasks.Loop:1 of
+msgid ""
+"A background task helper that abstracts the loop and reconnection logic "
+"for you."
+msgstr ""
+
+#: 94f3800cced04f77866012b145727c45 discord.ext.tasks.Loop:3 of
+msgid "The main interface to create this is through :func:`loop`."
+msgstr ""
+
+#: ../../ext/tasks/index.rst 0430760556bc454eb496f803a14cbe47
+#: 224eb1ea4d464d899b6db853b26a2846 4652ba98dd17419892fcd50a56a420d0
+#: 6c4c3d6ae0cf4dd3bf9a90b9939d1d43 6f12894246604c7eab1521c1bd45ca57
+#: 761a207eac3447b899de047d9e5ebf7b 7b563966d82a4f03b7d409731c7032b5
+#: 91965bac6d654b3e8109e274bdc46bfd bef7bd65f8fd40808f7c4a269ed9d7c9
+#: cabe2bc452c248be884063fac80d1ad0 eda2eba72cd74d40a81fb96a622558f1
+msgid "Parameters"
+msgstr ""
+
+#: 8cf7f115e3e94e6491cfb5cdff90f8d1 discord.ext.tasks.Loop.after_loop:1 of
+msgid ""
+"A decorator that register a coroutine to be called after the loop "
+"finished running."
+msgstr ""
+
+#: ac000acd3f5743c1a5679fd61466b379 d4f8de6e87f64f9bbc7b4f305e1986cf
+#: discord.ext.tasks.Loop.after_loop:3 discord.ext.tasks.Loop.before_loop:6 of
+msgid "The coroutine must take no arguments (except ``self`` in a class context)."
+msgstr ""
+
+#: 8cb871d1f5da49e79441d574f90ac13c discord.ext.tasks.Loop.after_loop:7 of
+msgid ""
+"This coroutine is called even during cancellation. If it is desirable to "
+"tell apart whether something was cancelled or not, check to see whether "
+":meth:`is_being_cancelled` is ``True`` or not."
+msgstr ""
+
+#: 73c64e4f2eeb4b0eaa468253fe8ab317 discord.ext.tasks.Loop.after_loop:12 of
+msgid "The coroutine to register after the loop finishes."
+msgstr ""
+
+#: ../../ext/tasks/index.rst 27b88dc7486040678f313ebaed311309
+#: 4f0346fd2f594d87bc6a71fc5f3aaf36 88dd06b54a304b18aaafa8828477df67
+#: 95e660541beb4b44a8764bd93c54a94e a6b9eae8aff44f3ca7bd392a1f0ef0a0
+#: e37d85d7fd3a46cfb5ba0faec8cc2057 eb4160d3b1904ad7b6fb4a90b73082a8
+msgid "Raises"
+msgstr ""
+
+#: 34a7b1d07fa947eca3999296e8c0e55a 369596d73e694c09aa9e9476267a53bd
+#: a665cd72f12f444e93e63d177913e3a4 discord.ext.tasks.Loop.after_loop:15
+#: discord.ext.tasks.Loop.before_loop:12 discord.ext.tasks.Loop.error:14 of
+msgid "The function was not a coroutine."
+msgstr ""
+
+#: ../../ext/tasks/index.rst 07d97a21eac140af8f4d536dcb062e2e
+#: 0da50f3c0c5e4d7bb6fb2b2b8a3138a3 33d39f515aa24c48a28b1f3c05edef44
+#: 3f67b80a7be749d6b9e06e40040ba69e 54b3c2d1fd1b471b83c462abaeeedee8
+#: 6b16812b4e8d43a48dfc08003424686b 7d90def94e9b4721b355b5c6568e8e6f
+#: 8de254edf5c84d599fb5c37d26253ec0 a2407e90429149a79db1b5ee278a1dc9
+#: bf5eae97450b4e40bd2157395afa650e c236bd9da41742fa9c9399bd38e4aa90
+#: df4b78673a4946d18d2e5d56973c31a1 ffc3e9102ad84c3c9424d446574b2b0c
+msgid "Return type"
+msgstr ""
+
+#: 2576cec782cf4d21bc6d4cd68fb2044e 809ce216769e456b858d7830388f6963
+#: discord.ext.tasks.Loop.after_loop:17 discord.ext.tasks.Loop.before_loop:14
+#: of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+" \\\\\\(\\`\\`FT\\`\\`\\, bound\\= "
+"\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, "
+"\\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
+msgstr ""
+
+#: 29ffc9a0452f4bb7b0c6d26b12bad850 discord.ext.tasks.Loop.before_loop:1 of
+msgid ""
+"A decorator that registers a coroutine to be called before the loop "
+"starts running."
+msgstr ""
+
+#: 27da0e08409c41898200b30e74fb4894 discord.ext.tasks.Loop.before_loop:3 of
+msgid ""
+"This is useful if you want to wait for some bot state before the loop "
+"starts, such as :meth:`discord.Client.wait_until_ready`."
+msgstr ""
+
+#: b0c7be8d4ce84d3baa6bcd24027bee2b discord.ext.tasks.Loop.before_loop:9 of
+msgid "The coroutine to register before the loop runs."
+msgstr ""
+
+#: afec46798b8b440ba38c4fd62fa80fd4 discord.ext.tasks.Loop.error:1 of
+msgid ""
+"A decorator that registers a coroutine to be called if the task "
+"encounters an unhandled exception."
+msgstr ""
+
+#: c93726b33b2343148524f006e53e436b discord.ext.tasks.Loop.error:3 of
+msgid ""
+"The coroutine must take only one argument the exception raised (except "
+"``self`` in a class context)."
+msgstr ""
+
+#: 7a8a6183c0dd4264a404dd9e7330321c discord.ext.tasks.Loop.error:5 of
+msgid ""
+"By default, this prints to :data:`sys.stderr` however it could be "
+"overridden to have a different implementation."
+msgstr ""
+
+#: a60614b72b074d8fb36796b2656d2ae9 discord.ext.tasks.Loop.error:11 of
+msgid "The coroutine to register in the event of an unhandled exception."
+msgstr ""
+
+#: db7c90536e494551a78eae3eb557d085 discord.ext.tasks.Loop.error:16 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+" \\\\\\(\\`\\`ET\\`\\`\\, bound\\= "
+"\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:class\\:\\`BaseException\\`\\]\\, "
+"\\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
+msgstr ""
+
+#: 5e6767c4d5274c98af777dc1798705a9 discord.ext.tasks.Loop.seconds:1 of
+msgid ""
+"Read-only value for the number of seconds between each iteration. "
+"``None`` if an explicit ``time`` value was passed instead."
+msgstr ""
+
+#: cb3c8e59e3ae41ff90f25ab50b2291d2 discord.ext.tasks.Loop.minutes:1 of
+msgid ""
+"Read-only value for the number of minutes between each iteration. "
+"``None`` if an explicit ``time`` value was passed instead."
+msgstr ""
+
+#: 4ec44806924247d389a4222760d17398 discord.ext.tasks.Loop.hours:1 of
+msgid ""
+"Read-only value for the number of hours between each iteration. ``None`` "
+"if an explicit ``time`` value was passed instead."
+msgstr ""
+
+#: a4a728fad7b744f1b572a3c1b2d900f2 discord.ext.tasks.Loop.time:1 of
+msgid ""
+"Read-only list for the exact times this loop runs at. ``None`` if "
+"relative times were passed instead."
+msgstr ""
+
+#: 46a26f5c4f654551917d4052c697d446 discord.ext.tasks.Loop.current_loop:1 of
+msgid "The current iteration of the loop."
+msgstr ""
+
+#: 67cc28bb7d7f41fd98f5537ff865fd59 discord.ext.tasks.Loop.next_iteration:1 of
+msgid "When the next iteration of the loop will occur."
+msgstr ""
+
+#: a9bf7898d326412dad82fa5a15f28684 discord.ext.tasks.Loop.__call__:1 of
+msgid "|coro|"
+msgstr ""
+
+#: c3c46c7036f341b1b90e0abea8f5f616 discord.ext.tasks.Loop.__call__:3 of
+msgid "Calls the internal callback that the task holds."
+msgstr ""
+
+#: 0eea72ae5aa84c54b46185aa5c361739 376b8508bb68448e9350e524f6d32325
+#: discord.ext.tasks.Loop.__call__:8 discord.ext.tasks.Loop.restart:9
+#: discord.ext.tasks.Loop.start:4 f99f14954e59457eaabda6d178089525 of
+msgid "The arguments to use."
+msgstr ""
+
+#: 185f83c525344b5fb287ea076b7886c5 1906741e1b214e448dd86dbd7128b436
+#: 1da985900f1b4aed8d9b0c3917920ca7 discord.ext.tasks.Loop.__call__:10
+#: discord.ext.tasks.Loop.restart:11 discord.ext.tasks.Loop.start:6 of
+msgid "The keyword arguments to use."
+msgstr ""
+
+#: 13e340d01db24b0eaf05daf96be094de discord.ext.tasks.Loop.__call__:12 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
+msgstr ""
+
+#: 921266d2dbea49ed8cf049cea79b9eec discord.ext.tasks.Loop.start:1 of
+msgid "Starts the internal task in the event loop."
+msgstr ""
+
+#: 619644ebbe9a4476af9a5564d1028373 discord.ext.tasks.Loop.start:8 of
+msgid "A task has already been launched and is running."
+msgstr ""
+
+#: ../../ext/tasks/index.rst cf40520758d644df9ddec49a8aa57320
+#: f20f33b463e44af88836838ef51a6e54
+msgid "Returns"
+msgstr ""
+
+#: 2de78bd7b1a447518ddece14601b9e87 discord.ext.tasks.Loop.start:10 of
+msgid "The task that has been created."
+msgstr ""
+
+#: discord.ext.tasks.Loop.start:11 e309e5aef21247378016668a451c034d of
+msgid ":class:`asyncio.Task`"
+msgstr ""
+
+#: b0ed2c9ed3794b04aa76ffa817151a2d discord.ext.tasks.Loop.stop:1 of
+msgid "Gracefully stops the task from running."
+msgstr ""
+
+#: 728c248aab564a90a3260107d51aba61 discord.ext.tasks.Loop.stop:3 of
+msgid ""
+"Unlike :meth:`cancel`\\, this allows the task to finish its current "
+"iteration before gracefully exiting. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: 455bbbc49062472e84be47a8520c7a7e discord.ext.tasks.Loop.stop:10 of
+msgid ""
+"If the internal function raises an error that can be handled before "
+"finishing then it will retry until it succeeds."
+msgstr ""
+
+#: 3adfd1fe09014389a8d77c57bc6a9a33 discord.ext.tasks.Loop.stop:14 of
+msgid ""
+"If this is undesirable, either remove the error handling before stopping "
+"via :meth:`clear_exception_types` or use :meth:`cancel` instead."
+msgstr ""
+
+#: 3a18cece246a4010a6ab25de921042cc discord.ext.tasks.Loop.cancel:1 of
+msgid "Cancels the internal task, if it is running."
+msgstr ""
+
+#: 2efbe31b3fd64b6eacee66fb02b272aa 5871f9579cb5482a9eb81da12f4cdd26
+#: a83424395d0f4d8d8ebfd708aebfb3b9 cc431f5256bc4e699afe36a16bb35452
+#: discord.ext.tasks.Loop.add_exception_type:16 discord.ext.tasks.Loop.cancel:4
+#: discord.ext.tasks.Loop.change_interval:29 discord.ext.tasks.Loop.restart:13
+#: of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: a7de1ec471ef4af788957432e6df3502 discord.ext.tasks.Loop.restart:1 of
+msgid "A convenience method to restart the internal task."
+msgstr ""
+
+#: discord.ext.tasks.Loop.restart:5 f8b7b414464243bb80406dcbb475f87b of
+msgid ""
+"Due to the way this function works, the task is not returned like "
+":meth:`start`."
+msgstr ""
+
+#: 327d247dc3704dcca9f385d5d879e03c discord.ext.tasks.Loop.add_exception_type:1
+#: of
+msgid "Adds exception types to be handled during the reconnect logic."
+msgstr ""
+
+#: d0ccc7fae84244f58ab340407c73bbf1 discord.ext.tasks.Loop.add_exception_type:3
+#: of
+msgid ""
+"By default, the exception types handled are those handled by "
+":meth:`discord.Client.connect`\\, which includes a lot of internet "
+"disconnection errors."
+msgstr ""
+
+#: 979bf5b73dcf4870a3d33b8e994c371d discord.ext.tasks.Loop.add_exception_type:7
+#: of
+msgid ""
+"This function is useful if you're interacting with a 3rd party library "
+"that raises its own set of exceptions."
+msgstr ""
+
+#: 162db15291784b0fa4b3654019ca5aa4 d46fb346a0d249eebdb303ea7b661ab3
+#: discord.ext.tasks.Loop.add_exception_type:11
+#: discord.ext.tasks.Loop.remove_exception_type:4 of
+msgid "An argument list of exception classes to handle."
+msgstr ""
+
+#: 5fb93a77f12e4138a319bd0fa837a848
+#: discord.ext.tasks.Loop.add_exception_type:14 of
+msgid ""
+"An exception passed is either not a class or not inherited from "
+":class:`BaseException`."
+msgstr ""
+
+#: 9567edfad8a444f6a38c8cd8ad6697dd
+#: discord.ext.tasks.Loop.clear_exception_types:1 of
+msgid ""
+"Removes all exception types that are handled. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: 714a51591f9143eab9a0a994136f1368
+#: discord.ext.tasks.Loop.clear_exception_types:7 of
+msgid "This operation obviously cannot be undone!"
+msgstr ""
+
+#: discord.ext.tasks.Loop.remove_exception_type:1
+#: f0710a79660c4be0a5d577ed8a840729 of
+msgid "Removes exception types from being handled during the reconnect logic."
+msgstr ""
+
+#: 4ca4d3d9ff2346e2a6b79c8ed24ef34c
+#: discord.ext.tasks.Loop.remove_exception_type:7 of
+msgid "Whether all exceptions were successfully removed."
+msgstr ""
+
+#: afcf8b92eb0a4e10990054ad284c53d7
+#: discord.ext.tasks.Loop.remove_exception_type:8 of
+msgid ":class:`bool`"
+msgstr ""
+
+#: discord.ext.tasks.Loop.get_task:1 e1d9e16237bb4547af60a9877b90b088 of
+msgid "Fetches the internal task or ``None`` if there isn't one running."
+msgstr ""
+
+#: 260dd2e1b8ad4da5a5a7f29ab8f540ef discord.ext.tasks.Loop.get_task:4 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~\\_asyncio.Task\\`\\\\"
+" \\\\\\[\\:py\\:obj\\:\\`None\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: 9f7395681a764732af43ed770788b329 discord.ext.tasks.Loop.is_being_cancelled:1
+#: of
+msgid "Whether the task is being cancelled."
+msgstr ""
+
+#: ca525c4cd84243e7a6954afd8c4177ca discord.ext.tasks.Loop.is_being_cancelled:4
+#: of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: b07983af01e44e859cff333049533f23 discord.ext.tasks.Loop.failed:1 of
+msgid ""
+"Whether the internal task has failed. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: afea19295c07476b9c661c3c4877faa0 discord.ext.tasks.Loop.is_running:1 of
+msgid ""
+"Check if the task is currently running. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: 83530989bb114f24b7e77d873f86ceff discord.ext.tasks.Loop.change_interval:1 of
+msgid "Changes the interval for the sleep time."
+msgstr ""
+
+#: 9d539eda63744ec18b6422108e8dcc3f c79687228d5f4b14a5b5cf8eedf1d2f2
+#: discord.ext.tasks.Loop.change_interval:6 discord.ext.tasks.loop:5 of
+msgid "The number of seconds between every iteration."
+msgstr ""
+
+#: 643036f81e8548148226f98ad662f662 discord.ext.tasks.Loop.change_interval:9
+#: discord.ext.tasks.loop:8 faab724401534ba891a54abd1063b632 of
+msgid "The number of minutes between every iteration."
+msgstr ""
+
+#: 25e739b47679456d9706cd47304e9978 6e09adb27be8418588dfd743e748f717
+#: discord.ext.tasks.Loop.change_interval:12 discord.ext.tasks.loop:11 of
+msgid "The number of hours between every iteration."
+msgstr ""
+
+#: 5c6fb443b2604b33af94b201f8b258d8 discord.ext.tasks.Loop.change_interval:15
+#: of
+msgid ""
+"The exact times to run this loop at. Either a non-empty list or a single "
+"value of :class:`datetime.time` should be passed. This cannot be used in "
+"conjunction with the relative time parameters.  .. versionadded:: 2.0  .."
+" note::      Duplicate times will be ignored, and only run once."
+msgstr ""
+
+#: 6224d70d5fda4bd78858977a37bf9607 discord.ext.tasks.Loop.change_interval:15
+#: of
+msgid ""
+"The exact times to run this loop at. Either a non-empty list or a single "
+"value of :class:`datetime.time` should be passed. This cannot be used in "
+"conjunction with the relative time parameters."
+msgstr ""
+
+#: 318ff42090a54ee6ba110b06461a5d2e b3b725baac894dc4aec2325b26106b6f
+#: discord.ext.tasks.Loop.change_interval:23 discord.ext.tasks.loop:22 of
+msgid "Duplicate times will be ignored, and only run once."
+msgstr ""
+
+#: b9bff9f275424b10b9b4b4a745dc7f96 d34550bdeb504b4ba94cd33934a387ac
+#: discord.ext.tasks.Loop.change_interval:26 discord.ext.tasks.loop:40 of
+msgid "An invalid value was given."
+msgstr ""
+
+#: 622a6c84602644b581053d78b1619f3a discord.ext.tasks.Loop.change_interval:27
+#: of
+msgid ""
+"An invalid value for the ``time`` parameter was passed, or the     "
+"``time`` parameter was passed in conjunction with relative time "
+"parameters."
+msgstr ""
+
+#: d1cde6f36bb94fa8a109a7406e99305c discord.ext.tasks.loop:1 of
+msgid ""
+"A decorator that schedules a task in the background for you with optional"
+" reconnect logic. The decorator returns a :class:`Loop`."
+msgstr ""
+
+#: 2730a5b0e80a4bb78a3110623b108393 discord.ext.tasks.loop:14 of
+msgid ""
+"The exact times to run this loop at. Either a non-empty list or a single "
+"value of :class:`datetime.time` should be passed. Timezones are "
+"supported. If no timezone is given for the times, it is assumed to "
+"represent UTC time.  This cannot be used in conjunction with the relative"
+" time parameters.  .. note::      Duplicate times will be ignored, and "
+"only run once.  .. versionadded:: 2.0"
+msgstr ""
+
+#: 4957f25f5de04866a15143387272931f discord.ext.tasks.loop:14 of
+msgid ""
+"The exact times to run this loop at. Either a non-empty list or a single "
+"value of :class:`datetime.time` should be passed. Timezones are "
+"supported. If no timezone is given for the times, it is assumed to "
+"represent UTC time."
+msgstr ""
+
+#: discord.ext.tasks.loop:18 e4cdfd5e2c074237adb1bc9479a240c4 of
+msgid "This cannot be used in conjunction with the relative time parameters."
+msgstr ""
+
+#: c959854a17704c0c9357e7e7922da117 discord.ext.tasks.loop:27 of
+msgid "The number of loops to do, ``None`` if it should be an infinite loop."
+msgstr ""
+
+#: 3adeed780b7b4670b41253cc6354e85a discord.ext.tasks.loop:31 of
+msgid ""
+"Whether to handle errors and restart the task using an exponential back-"
+"off algorithm similar to the one used in :meth:`discord.Client.connect`."
+msgstr ""
+
+#: 7e644a647eaa4981aad624c207683f5a discord.ext.tasks.loop:36 of
+msgid ""
+"The loop to use to register the task, if not given defaults to "
+":func:`asyncio.get_event_loop`."
+msgstr ""
+
+#: 1b6f0ce5942646378838dbe0ab4fe0a0 discord.ext.tasks.loop:41 of
+msgid ""
+"The function was not a coroutine, an invalid value for the ``time`` "
+"parameter was passed,     or ``time`` parameter was passed in conjunction"
+" with relative time parameters."
+msgstr ""
+
+#: 3dd1e6ebb48849edb09bcd60b72c860c discord.ext.tasks.loop:43 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\"
+" \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
+"\\\\\\(\\`\\`LF\\`\\`\\, bound\\= "
+"\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, "
+"\\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\, "
+"\\:py\\:class\\:\\`\\~discord.ext.tasks.Loop\\`\\\\ "
+"\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
+"\\\\\\(\\`\\`LF\\`\\`\\, bound\\= "
+"\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, "
+"\\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\]`"
+msgstr ""
+
