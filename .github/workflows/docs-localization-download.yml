@@ -53,3 +53,31 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+      - name: Invoke checks workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: check.yml
+      - name: Invoke codeql workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: codeql-analysis.yml
+      - name: Invoke lint workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: lint.yml
+      - name: Invoke pr workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: pr.yml
+      - name: Invoke test workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: test.yml
+      - name: Invoke todo workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: todo.yml
+      - name: Invoke version updates workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: version-updates.yml
