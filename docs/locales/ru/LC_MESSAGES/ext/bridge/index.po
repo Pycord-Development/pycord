@@ -15,8 +15,8 @@ msgid "discord.ext.bridge"
 msgstr "discord.ext.bridge"
 
 msgid "This module allows using one command callback in order to make both a prefix command and a slash command. This page includes the API reference/documentation for the module, but only contains a short example. For a more detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_."
-msgstr "This module allows using one command callback in order to make both a prefix command and a slash command. This page includes the API reference/documentation for the module, but only contains a short example. For a more detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_."
+msgstr "Этот модуль позволяет использовать один обратный вызов команды для создания как префиксной, так и слэш-команды. Эта страница включает в себя справку/документацию по API для модуля, но содержит только короткий пример. Более подробное руководство по использованию этого модуля можно найти в нашем руководстве по `discord.ext.bridge <https://guide.pycord.dev/extensions/bridge>`_."
 
 msgid "Example usage:"
-msgstr "Example usage:"
+msgstr "Пример использования:"
 

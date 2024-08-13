@@ -87,7 +87,7 @@ msgid "The default value to return if the object is not found, instead of raisin
 msgstr "The default value to return if the object is not found, instead of raising an error."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The object found or the default value."
 msgstr "The object found or the default value."

@@ -15,5 +15,5 @@ msgid "discord.ext.commands"
 msgstr "discord.ext.commands"
 
 msgid "``Pycord`` offers a lower level aspect on interacting with Discord. Often times, the library is used for the creation of bots. However this task can be daunting and confusing to get correctly the first time. Many times there comes a repetition in creating a bot command framework that is extensible, flexible, and powerful. For this reason, ``Pycord`` comes with an extension library that handles this for you."
-msgstr "``Pycord`` offers a lower level aspect on interacting with Discord. Often times, the library is used for the creation of bots. However this task can be daunting and confusing to get correctly the first time. Many times there comes a repetition in creating a bot command framework that is extensible, flexible, and powerful. For this reason, ``Pycord`` comes with an extension library that handles this for you."
+msgstr "``Pycord`` предлагает более низкий уровень взаимодействия с Discord. Часто библиотека используется для создания ботов. Однако с первого раза эта задача может оказаться сложной и запутанной. Много раз приходится повторяться в создании расширяемого, гибкого и мощного фреймворка для команд бота. По этой причине ``Pycord`` поставляется с библиотекой расширений, которая делает это за вас."
 
