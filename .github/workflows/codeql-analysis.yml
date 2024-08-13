@@ -12,8 +12,9 @@
 name: "CodeQL"
 
 on:
-  push: null
-  pull_request: null
+  push:
+  pull_request:
+  workflow_dispatch:
   schedule:
     - cron: "26 6 * * 6"
 
