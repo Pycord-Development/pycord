@@ -228,7 +228,7 @@ msgid "The interaction to use when editing the message. If not provided, the mes
 msgstr "The interaction to use when editing the message. If not provided, the message will be edited using the paginator's stored :attr:`message` attribute instead."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The message associated with the paginator."
 msgstr "The message associated with the paginator."

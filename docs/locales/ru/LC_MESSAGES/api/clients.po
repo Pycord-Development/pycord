@@ -78,7 +78,7 @@ msgid "This decorator is overridden by :class:`discord.ext.commands.Bot`."
 msgstr "This decorator is overridden by :class:`discord.ext.commands.Bot`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."

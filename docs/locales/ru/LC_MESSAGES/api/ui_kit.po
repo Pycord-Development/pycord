@@ -171,7 +171,7 @@ msgid "The timeout of the converted view."
 msgstr "The timeout of the converted view."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The converted view. This always returns a :class:`View` and not one of its subclasses."
 msgstr "The converted view. This always returns a :class:`View` and not one of its subclasses."

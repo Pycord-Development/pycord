@@ -24,7 +24,7 @@ msgid "When inheriting from this class, the options shown in :class:`CogMeta` ar
 msgstr "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
 msgstr "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
