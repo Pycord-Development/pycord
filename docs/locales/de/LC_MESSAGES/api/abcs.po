@@ -183,13 +183,13 @@ msgid "If there is no category then this is ``None``."
 msgstr "Wenn es keine Kategorie gibt, dann ist das ``None``."
 
 msgid "Whether the permissions for this channel are synced with the category it belongs to."
-msgstr "Whether the permissions for this channel are synced with the category it belongs to."
+msgstr "Ob die Berechtigungen für diesen Kanal mit der Kategorie synchronisiert werden, zu der er gehört."
 
 msgid "If there is no category then this is ``False``."
-msgstr "If there is no category then this is ``False``."
+msgstr "Wenn es keine Kategorie gibt, dann ist dies ``False``."
 
 msgid "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
-msgstr "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
+msgstr "Behandelt die Berechtigungsauflösung für :class:`~discord.Member` oder :class:`~discord.Role`."
 
 msgid "This function takes into consideration the following cases:"
 msgstr "This function takes into consideration the following cases:"

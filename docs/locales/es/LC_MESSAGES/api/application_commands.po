@@ -357,7 +357,7 @@ msgid "An iterator that recursively walks through all slash commands and groups 
 msgstr "An iterator that recursively walks through all slash commands and groups in this group."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Genera"
 
 msgid ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
 msgstr ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."

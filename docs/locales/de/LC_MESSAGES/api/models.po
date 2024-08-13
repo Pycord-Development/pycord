@@ -5262,7 +5262,7 @@ msgid "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e
 msgstr "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e. :meth:`.TextChannel.is_nsfw` is ``True``."
 
 msgid "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
-msgstr "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
+msgstr "Behandelt die Berechtigungsauflösung für :class:`~discord.Member` oder :class:`~discord.Role`."
 
 msgid "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
 msgstr "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
@@ -5973,10 +5973,10 @@ msgid "The object passed in can now be a role object."
 msgstr "The object passed in can now be a role object."
 
 msgid "Whether the permissions for this channel are synced with the category it belongs to."
-msgstr "Whether the permissions for this channel are synced with the category it belongs to."
+msgstr "Ob die Berechtigungen für diesen Kanal mit der Kategorie synchronisiert werden, zu der er gehört."
 
 msgid "If there is no category then this is ``False``."
-msgstr "If there is no category then this is ``False``."
+msgstr "Wenn es keine Kategorie gibt, dann ist dies ``False``."
 
 msgid "Sets the channel specific permission overwrites for a target in the channel."
 msgstr "Sets the channel specific permission overwrites for a target in the channel."
