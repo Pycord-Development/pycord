@@ -12,86 +12,86 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Quickstart"
-msgstr "Quickstart"
+msgstr "Быстрый старт"
 
 msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
-msgstr "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
+msgstr "Эта страница дает краткое введение в библиотеку. Предполагается, что Вы уже установили библиотеку. Если нет, следуйте :ref:`installing`."
 
 msgid "A Minimal Bot"
-msgstr "A Minimal Bot"
+msgstr "Минимальный бот"
 
 msgid "Let's make a bot that responds to a specific message and walk you through it."
-msgstr "Let's make a bot that responds to a specific message and walk you through it."
+msgstr "Давайте создадим бота, который отвечает на конкретное сообщение и рассмотрим его на примере."
 
 msgid "It looks something like this:"
-msgstr "It looks something like this:"
+msgstr "Это выглядит примерно так:"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
-msgstr "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
+msgstr "Поскольку в этом примере используется содержимое сообщения, для него требуется привилегированное Intent :attr:`Intents.message_content`."
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
-msgstr "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
+msgstr "Давайте назовем этот файл ``example_bot.py``. Убедитесь, что Вы не назвали его ``discord.py``, так как это будет конфликтовать с библиотекой."
 
 msgid "There's a lot going on here, so let's walk you through it step by step:"
-msgstr "There's a lot going on here, so let's walk you through it step by step:"
+msgstr "Здесь много тем для обсуждения, поэтому давайте разберемся с этим шаг за шагом:"
 
 msgid "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
-msgstr "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
+msgstr "Первая строка просто импортирует библиотеку, если в этом случае возникает `ModuleNotFoundError` или `ImportError`, тогда перейдите в :ref:`installing` для правильной установки."
 
 msgid "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
-msgstr "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
+msgstr "Далее мы создаем экземпляр :class:`Client`. Этот клиент является нашим соединением с Discord."
 
 msgid "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
-msgstr "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
+msgstr "Затем мы используем декоратор :meth:`Client.event` для регистрации события. Эта библиотека имеет много событий. Поскольку эта библиотека асинхронна, мы делаем вещи в стиле \"обратного вызова\"."
 
 msgid "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."
-msgstr "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."
+msgstr "Обратный вызов - это, функция, которая вызывается, когда что-то происходит. В нашем случае событие :func:`on_ready` вызывается, когда бот завершает авторизацию и настройку, а событие :func:`on_message` вызывается, когда бот получает сообщение."
 
 msgid "Since the :func:`on_message` event triggers for *every* message received, we have to make sure that we ignore messages from ourselves. We do this by checking if the :attr:`Message.author` is the same as the :attr:`Client.user`."
-msgstr "Since the :func:`on_message` event triggers for *every* message received, we have to make sure that we ignore messages from ourselves. We do this by checking if the :attr:`Message.author` is the same as the :attr:`Client.user`."
+msgstr "Поскольку :func:`on_message` событие вызывается для *каждого* полученного сообщения, мы должны убедиться что мы игнорируем сообщения от нас же самих. Для этого мы проверяем, совпадает ли :attr:`Message.author` с :attr:`Client.user`."
 
 msgid "Afterwards, we check if the :class:`Message.content` starts with ``'$hello'``. If it does, then we send a message in the channel it was used in with ``'Hello!'``. This is a basic way of handling commands, which can be later automated with the :doc:`./ext/commands/index` framework."
-msgstr "Afterwards, we check if the :class:`Message.content` starts with ``'$hello'``. If it does, then we send a message in the channel it was used in with ``'Hello!'``. This is a basic way of handling commands, which can be later automated with the :doc:`./ext/commands/index` framework."
+msgstr "После этого мы проверяем начинается ли :class:`Message.content` с ``'$hello'``. Если это так, то мы отправим сообщение в канале, в котором было отправлено сообщение ``'Hello!'``. Это простой способ обработки команд, который впоследствии может быть автоматизирован с помощью фреймворка :doc:`./ext/commands/index`."
 
 msgid "Finally, we run the bot with our login token. If you need help getting your token or creating a bot, look in the :ref:`discord-intro` section."
-msgstr "Finally, we run the bot with our login token. If you need help getting your token or creating a bot, look in the :ref:`discord-intro` section."
+msgstr "Наконец, мы запускаем бота с нашим токеном авторизации. Если Вам нужна помощь в получении токена авторизации или создании бота, посмотрите :ref:`discord-intro`."
 
 msgid "Now that we've made a bot, we have to *run* the bot. Luckily, this is simple since this is just a Python script, we can run it directly."
-msgstr "Now that we've made a bot, we have to *run* the bot. Luckily, this is simple since this is just a Python script, we can run it directly."
+msgstr "Теперь, когда мы создали бота, мы должны *запустить* бота. К счастью, это просто, так как это всего лишь скрипт на Python, мы можем запустить его напрямую."
 
 msgid "On Windows:"
-msgstr "On Windows:"
+msgstr "На Windows:"
 
 msgid "On other systems:"
-msgstr "On other systems:"
+msgstr "На других системах:"
 
 msgid "Now you can try playing around with your basic bot."
-msgstr "Now you can try playing around with your basic bot."
+msgstr "Теперь Вы можете поэкспериментировать с простым ботом."
 
 msgid "A Minimal Bot with Slash Commands"
-msgstr "A Minimal Bot with Slash Commands"
+msgstr "Минимальный бот с слэш-командами"
 
 msgid "As a continuation, let's create a bot that registers a simple slash command!"
-msgstr "As a continuation, let's create a bot that registers a simple slash command!"
+msgstr "В качестве продолжения, давайте создадим бота, который регистрирует простую слэш-команду!"
 
 msgid "Let's look at the differences compared to the previous example, step-by-step:"
-msgstr "Let's look at the differences compared to the previous example, step-by-step:"
+msgstr "Давайте посмотрим на различия по сравнению с предыдущим примером, шаг за шагом:"
 
 msgid "The first line remains unchanged."
-msgstr "The first line remains unchanged."
+msgstr "Первая строка остается неизменной."
 
 msgid "Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports slash command creation and other features, while inheriting all the features of :class:`.Client`."
-msgstr "Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports slash command creation and other features, while inheriting all the features of :class:`.Client`."
+msgstr "Далее мы создаем экземпляр :class:`.Bot`. Это отличается от :class:`.Client`, так как поддерживает создание слэш-команд и другие возможности, наследуя все возможности :class:`.Client`."
 
 msgid "We then use the :meth:`.Bot.slash_command` decorator to register a new slash command. The ``guild_ids`` attribute contains a list of guilds where this command will be active. If you omit it, the command will be globally available, and may take up to an hour to register."
-msgstr "We then use the :meth:`.Bot.slash_command` decorator to register a new slash command. The ``guild_ids`` attribute contains a list of guilds where this command will be active. If you omit it, the command will be globally available, and may take up to an hour to register."
+msgstr "Затем мы используем :meth:`.Bot.slash_command` декоратор для регистрации новой слэш-команды. Атрибут ``guild_ids`` содержит список гильдий, в которых эта команда будет активна. Если вы его не укажите, команда будет доступна глобально и может занять до часа для регистрации."
 
 msgid "Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that all slash commands must have some form of response, otherwise they will fail."
-msgstr "Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that all slash commands must have some form of response, otherwise they will fail."
+msgstr "После этого мы отвечаем на слэш-команду в текстовом виде. Пожалуйста, обратите внимание, что все слэш-команды должны иметь хоть какой-то ответ, в противном случае они не сработают."
 
 msgid "Finally, we, once again, run the bot with our login token."
-msgstr "Finally, we, once again, run the bot with our login token."
+msgstr "Наконец, мы снова запустим бота с токеном авторизации."
 
 msgid "Congratulations! Now you have created your first slash command!"
-msgstr "Congratulations! Now you have created your first slash command!"
+msgstr "Поздравляем! Вы создали свою первую слэш-команду!"
 

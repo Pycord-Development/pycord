@@ -15,34 +15,34 @@ msgid "Migrating to v2.0"
 msgstr "Migration vers la v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "v2.0 introduced new Discord features and deprecated some old ones."
+msgstr "v2.0 a introduit de nouvelles fonctionnalités Discord et a marqué certaines anciennes fonctionnalités comme obsolètes."
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
-msgstr "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
+msgstr "Une partie de la refonte implique la création de commandes d'application et de composants. Ces changements incluent une nouvelle classe :class:`Bot`, :class:`ui.View`, et une nouvelle classe :class:`ApplicationContext`. Si vous êtes intéressé par leur création, veuillez consulter notre :resource:`guide <guide>`."
 
 msgid "Python Version Change"
-msgstr "Python Version Change"
+msgstr "Changement de version de Python"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
-msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
+msgstr "Afin de faciliter le développement et de permettre à nos dépendances de se mettre à jour pour supporter Python 3.8 ou une version supérieure, la bibliothèque a dû retirer le support des versions de Python inférieures à 3.7, ce qui signifie essentiellement que **le support pour Python 3.7 et les versions antérieures a été abandonné**."
 
 msgid "Major Model Changes"
-msgstr "Major Model Changes"
+msgstr "Changements majeurs du modèle"
 
 msgid "Below are major changes that have happened in v2.0:"
-msgstr "Below are major changes that have happened in v2.0:"
+msgstr "Ci-dessous sont les changements majeurs qui se sont produits dans la v2.0 :"
 
 msgid "Dropped User Accounts Support"
-msgstr "Dropped User Accounts Support"
+msgstr "Suppression du support des comptes utilisateurs"
 
 msgid "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
-msgstr "Before v2.0, user accounts were supported. This has been against the spirit of the library and discord ToS and has been removed. Thus, these features that were only applicable to them are removed:"
+msgstr "Avant la version 2.0, les comptes utilisateurs étaient pris en charge. Cela allait à l'encontre de l'esprit de la bibliothèque et des conditions d'utilisation de Discord, et a été supprimé. Ainsi, les fonctionnalités qui leur étaient exclusivement réservées ont été supprimées :"
 
 msgid "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
-msgstr "``bot`` argument of :meth:`Client.start` and :meth:`Client.run`"
+msgstr "L'argument ``bot`` de :meth:`Client.start` et :meth:`Client.run`"
 
 msgid "``afk`` argument of :meth:`Client.change_presence`"
-msgstr "``afk`` argument of :meth:`Client.change_presence`"
+msgstr "L'argument ``afk`` de :meth:`Client.change_presence`"
 
 msgid "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
 msgstr "Classes ``Profile``, ``Relationship``, ``Call Message``, ``Group Call``"
@@ -51,7 +51,7 @@ msgid "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentF
 msgstr "``RelationshipType``, ``HypeSquadHouse``, ``PremiumType``, ``UserContentFilter``, ``FriendFlags``, ``Theme``"
 
 msgid "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
-msgstr "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE: ``GroupChannel`` itself still remains)"
+msgstr "``GroupChannel.add_recipients``, ``remove_recipients``, ``edit`` (NOTE : ``GroupChannel`` lui-même reste toujours)"
 
 msgid "``Guild.ack``"
 msgstr "``Guild.ack``"
@@ -63,25 +63,25 @@ msgid "``Client.fetch_user_profile``"
 msgstr "``Client.fetch_user_profile``"
 
 msgid "``Message.call`` and ``ack``"
-msgstr "``Message.call`` and ``ack``"
+msgstr "``Message.call`` et ``ack``"
 
 msgid "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
 msgstr "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
 
 msgid "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
-msgstr "Arguments of ``ClientUser.edit``: ``password``, ``new_password``, ``email``, ``house``"
+msgstr "Arguments de ``ClientUser.edit`` : ``password``, ``new_password``, ``email``, ``house``"
 
 msgid "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
-msgstr "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
+msgstr "``User.relationship``, ``mutual_friends``, ``is_friend``, ``is_blocked``, ``block``, ``Unblock``, ``remove_friend``, ``send_friend_request``, ``profile``"
 
 msgid "Events: ``on_relationship_add`` and ``on_relationship_update``"
-msgstr "Events: ``on_relationship_add`` and ``on_relationship_update``"
+msgstr "Événements : ``on_relationship_add`` et ``on_relationship_update``"
 
 msgid "Timezone-aware Time"
-msgstr "Timezone-aware Time"
+msgstr "Temps conscient du fuseau horaire"
 
 msgid "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."
-msgstr "``utcnow`` becomes ``now(datetime.timezone.utc)``. If you are constructing :class:`datetime.datetime`` yourself, pass ``tzinfo=datetime.timezone.utc``."
+msgstr "``utcnow`` devient ``now(datetime.timezone.utc)``. Si vous construisez vous-même un objet :class:`datetime.datetime`, passez ``tzinfo=datetime.timezone.utc``."
 
 msgid "Note that newly-added :meth:`utils.utcnow()` can be used as an alias of ``datetime.datetime.now(datetime.timezone.utc)``."
 msgstr "Note that newly-added :meth:`utils.utcnow()` can be used as an alias of ``datetime.datetime.now(datetime.timezone.utc)``."

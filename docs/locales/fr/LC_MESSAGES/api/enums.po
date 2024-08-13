@@ -308,14 +308,14 @@ msgstr "Represents Discord pinging to see if the interaction response server is 
 msgid "Represents a slash command interaction."
 msgstr "Represents a slash command interaction."
 
-msgid "Represents a component based interaction, i.e. using the Discord Bot UI Kit."
-msgstr "Represents a component based interaction, i.e. using the Discord Bot UI Kit."
+msgid "Represents a component-based interaction, i.e. using the Discord Bot UI Kit."
+msgstr "Represents a component-based interaction, i.e. using the Discord Bot UI Kit."
 
 msgid "Represents a autocomplete interaction for slash commands."
 msgstr "Represents a autocomplete interaction for slash commands."
 
-msgid "Represents a modal based interaction."
-msgstr "Represents a modal based interaction."
+msgid "Represents a modal-based interaction."
+msgstr "Represents a modal-based interaction."
 
 msgid "Specifies the response type for the interaction."
 msgstr "Specifies the response type for the interaction."

@@ -1545,7 +1545,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.bot.Bot\\` \\| \\:py\\:class\\:\\`\\~discord.ext.commands.bot.AutoShardedBot\\`\\, \\:py\\:class\\:\\`\\~discord.message.Message\\`\\]\\, \\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`str\\`\\]\\]`"
 
 msgid "Event Reference"
-msgstr "Event Reference"
+msgstr "Übersicht der Events"
 
 msgid "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the command extension module."
 msgstr "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the command extension module."

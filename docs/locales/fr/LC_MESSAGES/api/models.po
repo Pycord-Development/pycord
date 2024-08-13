@@ -60,7 +60,7 @@ msgid "Returns whether the asset is animated."
 msgstr "Returns whether the asset is animated."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de retour"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
@@ -78,7 +78,7 @@ msgid "The new format to change it to if the asset isn't animated. Must be eithe
 msgstr "The new format to change it to if the asset isn't animated. Must be either 'webp', 'jpeg', 'jpg', or 'png'."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "The newly updated asset."
 msgstr "The newly updated asset."
@@ -2753,6 +2753,21 @@ msgstr "All roles in the guild."
 msgid "Retrieving the roles failed."
 msgstr "Retrieving the roles failed."
 
+msgid "Retrieves a :class:`Role` that the guild has."
+msgstr "Retrieves a :class:`Role` that the guild has."
+
+msgid "This method is an API call. For general usage, consider using :attr:`get_role` instead."
+msgstr "This method is an API call. For general usage, consider using :attr:`get_role` instead."
+
+msgid "The role in the guild with the specified ID."
+msgstr "The role in the guild with the specified ID."
+
+msgid ":class:`Role`"
+msgstr ":class:`Role`"
+
+msgid "Retrieving the role failed."
+msgstr "Retrieving the role failed."
+
 msgid "Creates a :class:`Role` for the guild."
 msgstr "Creates a :class:`Role` for the guild."
 
@@ -2791,9 +2806,6 @@ msgstr "The role's unicode emoji. If this argument is passed, ``icon`` is set to
 
 msgid "The newly created role."
 msgstr "The newly created role."
-
-msgid ":class:`Role`"
-msgstr ":class:`Role`"
 
 msgid "You do not have permissions to create the role."
 msgstr "You do not have permissions to create the role."

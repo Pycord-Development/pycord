@@ -33,7 +33,7 @@ msgid "An argument list of permissions to check for."
 msgstr "An argument list of permissions to check for."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de retour"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
@@ -66,7 +66,7 @@ msgid "Keyword arguments to pass into the construction of the class denoted by `
 msgstr "Keyword arguments to pass into the construction of the class denoted by ``cls``."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
@@ -537,10 +537,10 @@ msgid "The command that is going to be called."
 msgstr "The command that is going to be called."
 
 msgid "The arguments to use."
-msgstr "The arguments to use."
+msgstr "Les arguments à utiliser."
 
 msgid "The keyword arguments to use."
-msgstr "The keyword arguments to use."
+msgstr "Les arguments de mot-clé à utiliser."
 
 msgid "The command argument to invoke is missing."
 msgstr "The command argument to invoke is missing."

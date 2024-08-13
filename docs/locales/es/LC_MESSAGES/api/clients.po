@@ -99,46 +99,46 @@ msgid "The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeErro
 msgstr "Los eventos deben ser una :ref:`corrutina <coroutine>`, si no, se lanza un :exc:`TypeError`."
 
 msgid "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
-msgstr "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
+msgstr "Esto reemplaza cualquier manejador por defecto. Se recomienda que los desarrolladores usen :py:meth:`~discord.Client.listen` para añadir manejadores adicionales en lugar de :py:meth:`~discord.Client.event` a no ser que quiera reemplazar el método por defecto."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Lanza"
 
 msgid "The coroutine passed is not actually a coroutine."
-msgstr "The coroutine passed is not actually a coroutine."
+msgstr "La corrutina pasada no es realmente una corrutina."
 
 msgid "Example"
-msgstr "Example"
+msgstr "Ejemplo"
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parámetros"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`Coro\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`Coro\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
 
 msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.MessageCommand`."
-msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.MessageCommand`."
+msgstr "Un acceso directo a un decorador que invoca :func:`command` y la añade a la lista de comandos internos a través de :meth:`add_application_command`. Este acceso directo está hecho específicamente para :class:`.MessageCommand`."
 
 msgid "A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot, then returns it."
-msgstr "A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot, then returns it."
+msgstr "Un decorador que convierte el método proporcionado en una :class:`.MessageCommand`, la añade al bot y la retorna."
 
 msgid "Callable[..., :class:`MessageCommand`]"
 msgstr "Callable[..., :class:`MessageCommand`]"
 
 msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.SlashCommand`."
-msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.SlashCommand`."
+msgstr "Un acceso directo a un decorador que invoca :func:`command` y la añade a la lista de comandos internos a través de :meth:`add_application_command`. Este acceso directo está hecho específicamente para :class:`.SlashCommand`."
 
 msgid "A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot, then returns it."
-msgstr "A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot, then returns it."
+msgstr "Un decorador que convierte el método proporcionado en un :class:`.SlashCommand`, la añade al bot y la retorna."
 
 msgid "Callable[..., :class:`SlashCommand`]"
 msgstr "Callable[..., :class:`SlashCommand`]"
 
 msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.UserCommand`."
-msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.UserCommand`."
+msgstr "Un acceso directo a un decorador que invoca :func:`command` y la añade a la lista de comandos internos a través de :meth:`add_application_command`. Este acceso directo está hecho específicamente para :class:`.UserCommand`."
 
 msgid "A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot, then returns it."
-msgstr "A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot, then returns it."
+msgstr "Un decorador que convierte el método proporcionado en un :class:`.UserCommand`, la añade al bot y la retorna."
 
 msgid "Callable[..., :class:`UserCommand`]"
 msgstr "Callable[..., :class:`UserCommand`]"
@@ -174,13 +174,13 @@ msgid "This is usually not called, instead the :meth:`command` or other shortcut
 msgstr "This is usually not called, instead the :meth:`command` or other shortcut decorators are used instead."
 
 msgid "The command to add."
-msgstr "The command to add."
+msgstr "El comando a añadir."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 
 msgid "Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and :meth:`.check_once`."
-msgstr "Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and :meth:`.check_once`."
+msgstr "Añade una comprobación global al bot. Esta es la interfaz no-decoradora de :meth:`.check` y :meth:`.check_once`."
 
 msgid "The function that was used as a global check."
 msgstr "The function that was used as a global check."
@@ -1545,22 +1545,22 @@ msgid "Returns a mapping of shard IDs to their respective info object."
 msgstr "Returns a mapping of shard IDs to their respective info object."
 
 msgid "Example: ::"
-msgstr "Example: ::"
+msgstr "Ejemplo: ::"
 
 msgid "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
-msgstr "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
+msgstr "Indica a que estado cambiar. Si se establece en ``None``, se usará :attr:`Status.online`."
 
 msgid "The shard_id to change the presence to. If not specified or ``None``, then it will change the presence of every shard the bot can see."
-msgstr "The shard_id to change the presence to. If not specified or ``None``, then it will change the presence of every shard the bot can see."
+msgstr "El shard_id a la que se cambiará la presencia. Si no se especifica o se establece en ``None``, se cambiará la presencia de cada shard que el bot pueda ver."
 
 msgid "If the ``activity`` parameter is not of proper type."
-msgstr "If the ``activity`` parameter is not of proper type."
+msgstr "Si el parámetro ``activity`` no es del tipo correcto."
 
 msgid "Whether the websocket is currently rate limited."
-msgstr "Whether the websocket is currently rate limited."
+msgstr "Si la velocidad del websocket está actualmente limitada."
 
 msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
-msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
+msgstr "Esto puede ser útil para saber si deberías consultar los miembros usando HTTP o a través del gateway."
 
 msgid "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"

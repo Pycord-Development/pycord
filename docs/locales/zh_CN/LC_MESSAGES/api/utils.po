@@ -12,22 +12,22 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Utility Functions"
-msgstr "Utility Functions"
+msgstr "工具函数"
 
 msgid "A helper to return the first element found in the sequence that meets the predicate. For example: ::"
-msgstr "A helper to return the first element found in the sequence that meets the predicate. For example: ::"
+msgstr "返回在满足条件的序列中找到的第一个元素的助手。例如："
 
 msgid "would find the first :class:`~discord.Member` whose name is 'Mighty' and return it. If an entry is not found, then ``None`` is returned."
-msgstr "would find the first :class:`~discord.Member` whose name is 'Mighty' and return it. If an entry is not found, then ``None`` is returned."
+msgstr "将会寻找第一个 :class:`~discord.Member` 名字为 'Mighty'并回传。如果找不到相关条目，则会回传``None``。"
 
 msgid "This is different from :func:`py:filter` due to the fact it stops the moment it finds a valid entry."
-msgstr "This is different from :func:`py:filter` due to the fact it stops the moment it finds a valid entry."
+msgstr "这个跟 :func:`py:filter` 不一样，因为他一找到有效的条目后就会停止了。"
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "参数"
 
 msgid "A function that returns a boolean-like result."
-msgstr "A function that returns a boolean-like result."
+msgstr "一个返回结果为布尔型态的函式。"
 
 msgid "The iterable to search through."
 msgstr "The iterable to search through."

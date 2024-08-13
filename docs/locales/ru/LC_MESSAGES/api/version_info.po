@@ -12,17 +12,17 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Version Related Info"
-msgstr "Version Related Info"
+msgstr "Информация о версии"
 
 msgid "There are two main ways to query version information about the library. For guarantees, check :ref:`version_guarantees`."
-msgstr "There are two main ways to query version information about the library. For guarantees, check :ref:`version_guarantees`."
+msgstr "Есть два основных способа получить информацию о версии библиотеки. Для получения гарантий обратитесь к :ref:`version_guarantees`."
 
 msgid "A named tuple that is similar to :obj:`py:sys.version_info`."
-msgstr "A named tuple that is similar to :obj:`py:sys.version_info`."
+msgstr "Именованный кортеж, аналогичный :obj:`py:sys.version_info`."
 
 msgid "Just like :obj:`py:sys.version_info` the valid values for ``releaselevel`` are 'alpha', 'beta', 'candidate' and 'final'."
-msgstr "Just like :obj:`py:sys.version_info` the valid values for ``releaselevel`` are 'alpha', 'beta', 'candidate' and 'final'."
+msgstr "Как и в случае с :obj:`py:sys.version_info`, допустимыми значениями для ``releaselevel`` являются 'alpha', 'beta', 'candidate' и 'final'."
 
 msgid "A string representation of the version. e.g. ``'1.0.0rc1'``. This is based off of :pep:`440`."
-msgstr "A string representation of the version. e.g. ``'1.0.0rc1'``. This is based off of :pep:`440`."
+msgstr "Строковое представление версии. Например, ``1.0.0rc1``. Это основано на :pep:`440`."
 

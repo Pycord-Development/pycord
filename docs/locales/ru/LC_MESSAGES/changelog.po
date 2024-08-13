@@ -12,19 +12,19 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Changelog"
-msgstr "Changelog"
+msgstr "Список изменений"
 
 msgid "All notable changes to this project will be documented in this file."
-msgstr "All notable changes to this project will be documented in this file."
+msgstr "Все заметные изменения этого проекта будут задокументированы в этом файле."
 
 msgid "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when possible (see our [Version Guarantees] for more info)."
-msgstr "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when possible (see our [Version Guarantees] for more info)."
+msgstr "Формат основан на [Keep the Changelog](https://keepachangelog.com/en/1.0.0/), и этот проект придерживается [Semantic Versioning](https://semver.org/spec/v2.0.0.html) по возможности (подробнее см. в [Version Guarantees])."
 
 msgid "[Unreleased]"
 msgstr "[Unreleased]"
 
 msgid "These changes are available on the `master` branch, but have not yet been released."
-msgstr "These changes are available on the `master` branch, but have not yet been released."
+msgstr "Эти изменения доступны в ветке `master`, но еще не были выпущены."
 
 msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
 msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
@@ -38,11 +38,14 @@ msgstr "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `Sc
 msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
 msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
 
-msgid "[2.6.0] - 2024-07-09"
-msgstr "[2.6.0] - 2024-07-09"
-
 msgid "Added"
 msgstr "Added"
+
+msgid "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
+msgstr "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
+
+msgid "[2.6.0] - 2024-07-09"
+msgstr "[2.6.0] - 2024-07-09"
 
 msgid "Added `banner` parameter to `ClientUser.edit`. ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))"
 msgstr "Added `banner` parameter to `ClientUser.edit`. ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))"
