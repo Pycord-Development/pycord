@@ -64,7 +64,7 @@ jobs:
           PR_ID="${{ steps.crowdin.outputs.pull_request_number }}"
           echo "pr_ref=$(echo -n "$PR_REF" | base64)" >> $GITHUB_OUTPUT
           echo "pr_id=$(echo -n "$PR_ID" | base64)" >> $GITHUB_OUTPUT
-          
+
   pr:
     permissions: write-all
     name: "Trigger PR workflows manually"
