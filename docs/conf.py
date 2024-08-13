@@ -18,7 +18,7 @@ from importlib.metadata import version as get_version
 old_changelog = os.path.join(os.path.dirname(__file__), "..", "CHANGELOG.md")
 new_changelog = os.path.join(os.path.dirname(__file__), "changelog.md")
 
-with open(old_changelog) as f:
+with open(old_changelog, encoding="utf-8") as f:
     changelog_lines = f.readlines()
 
 # Inject relative documentation links
@@ -39,12 +39,12 @@ A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
 
 # Only write if it's changed to avoid recompiling the docs
 def write_new():
-    with open(new_changelog, "w") as fw:
+    with open(new_changelog, "w", encoding="utf-8") as fw:
         fw.write(CHANGELOG_TEXT)
 
 
 try:
-    c_file = open(new_changelog)
+    c_file = open(new_changelog, encoding="utf-8")
 except FileNotFoundError:
     write_new()
 else:
@@ -313,8 +313,8 @@ html_theme_options = {
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
 
-# The name of an image file (relative to this directory) to place at the top
-# of the sidebar.
+# The name of an image file (relative to this directory) to place at the top of
+# the sidebar.
 html_logo = "./images/pycord_logo.png"
 
 # The name of an image file (within the static path) to use as favicon of the
