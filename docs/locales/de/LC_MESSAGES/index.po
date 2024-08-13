@@ -69,19 +69,19 @@ msgid "Ask us and hang out with us in our :resource:`Discord <discord>` server."
 msgstr "Fragen Sie uns und bleiben Sie bei uns in unserem :resource:`Discord <discord>` Server."
 
 msgid "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
-msgstr "Wenn Sie etwas Konkretes suchen, probieren Sie den :ref:`Index <genindex>` oder :ref:`Suche <search>`."
+msgstr "Wenn Sie etwas Konkretes suchen, probieren Sie den :ref:`index <genindex>` oder :ref:`searching <search>`."
 
 msgid "Report bugs in the :resource:`issue tracker <issues>`."
-msgstr "Melde Fehler im :resource:`Issue-Tracker <issues>`."
+msgstr "Melde Fehler im :resource:`issue tracker <issues>`."
 
 msgid "Manuals"
 msgstr "Anleitungen"
 
 msgid "These pages go into great detail about everything the API can do."
-msgstr "Diese Seiten gehen sehr detailliert auf alles, was die API tun kann."
+msgstr "Diese Seiten gehen sehr detailliert darauf ein, was die API kann."
 
 msgid "Core API"
-msgstr "Core API"
+msgstr "Kern API"
 
 msgid "These extensions help you during development when it comes to common tasks."
 msgstr "Diese Erweiterungen helfen Ihnen bei der Entwicklung, wenn es um allgemeine Aufgaben geht."
@@ -90,7 +90,7 @@ msgid ":doc:`ext/commands/index` - Bot commands framework"
 msgstr ":doc:`ext/commands/index` - Bot Befehle Framework"
 
 msgid ":doc:`ext/tasks/index` - asyncio.Task helpers"
-msgstr ":doc:`ext/tasks/index` - asyncio.Task-Helfer"
+msgstr ":doc:`ext/tasks/index` - asyncio.Task Helfer"
 
 msgid ":doc:`ext/pages/index` - A pagination extension module"
 msgstr ":doc:`ext/pages/index` - Ein Modul zur Seitenerweiterung"

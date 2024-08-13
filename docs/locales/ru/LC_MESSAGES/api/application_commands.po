@@ -66,7 +66,7 @@ msgid "Keyword arguments to pass into the construction of the class denoted by `
 msgstr "Keyword arguments to pass into the construction of the class denoted by ``cls``."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
@@ -117,7 +117,7 @@ msgid "Callable[..., :class:`.MessageCommand`]"
 msgstr "Callable[..., :class:`.MessageCommand`]"
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Объекты"
 
 msgid "Checks whether the command is currently on cooldown."
 msgstr "Checks whether the command is currently on cooldown."

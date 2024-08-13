@@ -114,7 +114,7 @@ msgid "A shortcut decorator that invokes :func:`.command` and adds it to the int
 msgstr "A shortcut decorator that invokes :func:`.command` and adds it to the internal command list via :meth:`~.GroupMixin.add_command`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 msgstr "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
@@ -3579,7 +3579,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 
 msgid "Exceptions"
-msgstr "Exceptions"
+msgstr "Исключения"
 
 msgid "The base exception type for all command related errors."
 msgstr "The base exception type for all command related errors."
@@ -3588,7 +3588,7 @@ msgid "This inherits from :exc:`discord.DiscordException`."
 msgstr "This inherits from :exc:`discord.DiscordException`."
 
 msgid "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
-msgstr "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
+msgstr "Это исключение и унаследованные от него исключения обрабатываются особым образом, поскольку они перехватываются и передаются в специальное событие из :class:`.Bot`\\, :func:`.on_command_error`."
 
 msgid "Exception raised when a Converter class raises non-CommandError."
 msgstr "Exception raised when a Converter class raises non-CommandError."
@@ -3603,7 +3603,7 @@ msgid ":class:`discord.ext.commands.Converter`"
 msgstr ":class:`discord.ext.commands.Converter`"
 
 msgid "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
-msgstr "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
+msgstr "Первоначальное исключение, которое было поднято. Вы также можете получить его через атрибут ``__cause__``."
 
 msgid ":exc:`Exception`"
 msgstr ":exc:`Exception`"
@@ -3690,7 +3690,7 @@ msgid "Exception raised when an operation does not work in private message conte
 msgstr "Exception raised when an operation does not work in private message contexts."
 
 msgid "Exception raised when the predicates in :attr:`.Command.checks` have failed."
-msgstr "Exception raised when the predicates in :attr:`.Command.checks` have failed."
+msgstr "Исключение поднимается, если предикаты в :attr:`.Command.checks` не сработали."
 
 msgid "This inherits from :exc:`CommandError`"
 msgstr "This inherits from :exc:`CommandError`"
@@ -3723,7 +3723,7 @@ msgid "Exception raised when the command being invoked is disabled."
 msgstr "Exception raised when the command being invoked is disabled."
 
 msgid "Exception raised when the command being invoked raised an exception."
-msgstr "Exception raised when the command being invoked raised an exception."
+msgstr "Исключение, возникающее, когда вызываемая команда вызывает исключение."
 
 msgid "Exception raised when the command was passed too many arguments and its :attr:`.Command.ignore_extra` attribute was not set to ``True``."
 msgstr "Exception raised when the command was passed too many arguments and its :attr:`.Command.ignore_extra` attribute was not set to ``True``."
@@ -3948,7 +3948,7 @@ msgid "Whether the name that conflicts is an alias of the command we try to add.
 msgstr "Whether the name that conflicts is an alias of the command we try to add."
 
 msgid "Exception Hierarchy"
-msgstr "Exception Hierarchy"
+msgstr "Иерархия исключений"
 
 msgid ":exc:`~.DiscordException`"
 msgstr ":exc:`~.DiscordException`"
