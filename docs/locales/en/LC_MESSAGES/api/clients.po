@@ -1,0 +1,3193 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-12 14:51+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../api/clients.rst:4 723ac37bda644d2181cb3df9c4c833f9
+msgid "Client Objects"
+msgstr ""
+
+#: ../../api/clients.rst:7 f5a4ed36d6a84272acf23c5afab0c592
+msgid "Bots"
+msgstr ""
+
+#: 8400a3a76ec1437498368512f2bcd8e6 discord.bot.Bot:1 of
+msgid "Represents a discord bot."
+msgstr ""
+
+#: 5c56ee85934b4790b06f26caec909ed9 discord.bot.Bot:3 of
+msgid ""
+"This class is a subclass of :class:`discord.Client` and as a result "
+"anything that you can do with a :class:`discord.Client` you can do with "
+"this bot."
+msgstr ""
+
+#: 241bd5c3a34e4392b8a6581c2767d0a3 discord.bot.Bot:7 of
+msgid ""
+"This class also subclasses ``ApplicationCommandMixin`` to provide the "
+"functionality to manage commands."
+msgstr ""
+
+#: 76747a81bf1d4154946509eeddff1408 discord.bot.Bot:14 of
+msgid "The content prefixed into the default help message."
+msgstr ""
+
+#: 306f1e629eb74fb8897156f57deef766 4b9ecfa5eb284deeb0548250176a4191
+#: 560eb5d041474f8b93073a52bae970da 5b8e12be2e2244f2b1f628987c52633e
+#: 5f2243a92d4c43f28cb1a2e4daf1c0c6 7d1a0d003e9a4f24bc90817b46fa956b
+#: 82dc8e078ca8440b98e99a943f7ad1ee discord.Bot.store_url
+#: discord.Client.store_url discord.bot.Bot discord.client.Client
+#: discord.shard.AutoShardedClient fda9202ed81f4662b3410aefa9fee419 of
+msgid "type"
+msgstr ""
+
+#: 4ba364e8ffa94975b363bbe62943da28 ba970c9790144df49b7b45acd8f64d8f
+#: discord.Bot.store_url:5 discord.Client.store_url:5 discord.bot.Bot:16 of
+msgid ":class:`str`"
+msgstr ""
+
+#: discord.bot.Bot:20 f0a6d897b9a74825856b3ed0d0bdf075 of
+msgid ""
+"The user ID that owns the bot. If this is not set and is then queried via"
+" :meth:`.is_owner` then it is fetched automatically using "
+":meth:`~.Bot.application_info`."
+msgstr ""
+
+#: 28670aa78ebf4c3895e10886d6316c0e discord.bot.Bot:24 of
+msgid "Optional[:class:`int`]"
+msgstr ""
+
+#: dc016a35e8654b73b6546b2366030431 discord.bot.Bot:28 of
+msgid ""
+"The user IDs that owns the bot. This is similar to :attr:`owner_id`. If "
+"this is not set and the application is team based, then it is fetched "
+"automatically using :meth:`~.Bot.application_info`. For performance "
+"reasons it is recommended to use a :class:`set` for the collection. You "
+"cannot set both ``owner_id`` and ``owner_ids``."
+msgstr ""
+
+#: 7a7751b24b674cfeb944b5d46e42d6d6 discord.bot.Bot:36 of
+msgid "Optional[Collection[:class:`int`]]"
+msgstr ""
+
+#: 45a36a811f6a45e184e6cc9343cf8dc3 discord.bot.Bot:40 of
+msgid ""
+"Guild IDs of guilds to use for testing commands. The bot will not create "
+"any global commands if debug guild IDs are passed."
+msgstr ""
+
+#: 78e894745191469fb6df43ad5513b831 8634aab7c85847109ab9f0cddc8753e7
+#: discord.bot.Bot:45 discord.shard.AutoShardedClient:25 of
+msgid "Optional[List[:class:`int`]]"
+msgstr ""
+
+#: c0b305ec45b44c44834fc2584f057881 discord.bot.Bot:49 of
+msgid ""
+"Whether to automatically sync slash commands. This will call "
+":meth:`~.Bot.sync_commands` in :func:`discord.on_connect`, and in "
+":attr:`.process_application_commands` if the command is not found. "
+"Defaults to ``True``."
+msgstr ""
+
+#: 374d768efc3849968fe9c8d012de6b22 b45762ac677e4ede8a83b12bd8bcedc0
+#: discord.bot.Bot:54 discord.bot.BotBase.is_owner:18 of
+msgid ":class:`bool`"
+msgstr ""
+
+#: c00ff4be197447e3964bbc0d13cb246b discord.bot.Bot:58 of
+msgid ""
+"The default context types that the bot will use for commands. Defaults to"
+" a set containing :attr:`InteractionContextType.guild`, "
+":attr:`InteractionContextType.bot_dm`, and "
+":attr:`InteractionContextType.private_channel`."
+msgstr ""
+
+#: 1851a493f6f14c01ac9393ca67e53686 discord.bot.Bot:64 of
+msgid "Collection[:class:`InteractionContextType`]"
+msgstr ""
+
+#: 55913631ea9743b8a11dd7c19978ef24 discord.bot.Bot:68 of
+msgid ""
+"The default integration types that the bot will use for commands. "
+"Defaults to a set containing :attr:`IntegrationType.guild_install`."
+msgstr ""
+
+#: 0f9f34c953de411c945a851f32bc0ec7 discord.bot.Bot:73 of
+msgid "Collection[:class:`IntegrationType`]]"
+msgstr ""
+
+#: discord.bot.ApplicationCommandMixin.command:1
+#: ede0ee8579c24e949538216bce9a910e of
+msgid "An alias for :meth:`application_command`."
+msgstr ""
+
+#: abc8f0b084cd401aacc2646108465bdc
+#: discord.bot.ApplicationCommandMixin.command:5 of
+msgid "This decorator is overridden by :class:`discord.ext.commands.Bot`."
+msgstr ""
+
+#: ../../api/clients.rst 29c266428c724030856e400f0321170c
+#: 3157343eb8dc43c38f49f7485b6f3d24 383b7b70518e4373a487cda57b5af7e9
+#: 3cb58a3abe1b42c1819b2852310d653a 50b3f627d64d43968598406f8a54b014
+#: 54efaf79f48a481191c6c2ef7a886625 59323c4d26924524b3f0a37f55605994
+#: 76dd9328c31b4a4f950ccd0e3951a95b 7a83a9a6026f4952ac18057feeedb044
+#: 894ca1b95aa546fa989ebc8cdeba861f 8dcb3fd905cc4640a1d94643105dd392
+#: 96723fb434f94be5a857bec15ed52438 aa170a708a2748799b64e1d6e92be480
+#: ab586c5a25de46ad95f31d7932fa193a ad2dc10d548c40968eb973127142a32b
+#: b147c7c183114833a614aa7b243e3b87 c846f5d2939f47388cb6d8ca7e75a1a5
+#: c938d82420ef4100a294a971ae9ed880 cd605e7e5962488ab3e2441535990042
+#: cd623e270a47436b8f61ff60505e83cf d26b63e1b0dd4241989d229e204c2df0
+#: discord.client.Client.wait_for e0f6f617681043f796f22dae5afb1682
+#: e6969df24be54c1da77efc157913d736 e93403a910dc4626bba9fb32741c8826
+#: e9d1b7d02e6341219d94f03c85af5364 fd85f38bdfd648178e90d9d7b75e359b of
+msgid "Returns"
+msgstr ""
+
+#: 1dac05e697c7439aacc0f377b675f758 3ac657fe5790429d993c8722d4db5e8d
+#: discord.bot.ApplicationCommandMixin.application_command:6
+#: discord.bot.ApplicationCommandMixin.command:9 of
+msgid ""
+"A decorator that converts the provided method into an "
+":class:`.ApplicationCommand`, adds it to the bot, then returns it."
+msgstr ""
+
+#: ../../api/clients.rst 00df3d9a2f42415fb50effb3dcc752e2
+#: 026a834fb831418abc59198052da3f3d 065b24140ad64f89bb8aebb7cbaaab81
+#: 169835626ad247a4bcc302daabf74f2b 1964b28d4c46484697f52e43a3640e3d
+#: 1e47d1137dd948f7a4766ae5501226cd 211c294473a74b80966d5142f36889f0
+#: 27ce0d1faae44f67b52ec5fe02ef48d2 30cedd7bc2524dcd8393358dc4220ba0
+#: 3f756d9875684a0ebe2664b9ca14132a 47506201077a4cf2a2d31c3225e7f066
+#: 49511cb9a7ad486a880ef83bf2b1b2e5 554f6802f4174ca49a08c4f404762728
+#: 5572b6fc69b947b6b4a38b5a3a0919fd 5dc7f8a955dc46239ce157d05489e188
+#: 606afb97d6624f858e67593ee96461ba 655d0d4943ab4822aa21d4e4a750d74b
+#: 6587a9a35be04d6ebd805391f1cfaeae 661ae464da8e493ebd3265ad9d14cc99
+#: 679603f71c3842ceb9ab9301877e0a68 6a5cda973d654ea292590a860372879c
+#: 709dc58325c146ad8a210ad694c05c1d 755dcc201bf14875a0f66b9268ab8006
+#: 802bd62917a4494ba82f62bcf514d251 804ec08a0674477f81206af58d000d7a
+#: 80db389f7eb84893ab0b237312ef5b00 87d6c1142b8d4e4f84dbc4462fa8af12
+#: 8df350c04c424a6ba39097fe0b5f8a9c 94fb92d7017746558cdd49a5591ea65f
+#: 9ea4f8399da44aaea81fb23e3636094a a135a1aad44744079848b59aa8959a9b
+#: ab9ba099fcf94cbb9bb79464abb21fa8 aff4a87e8ab24e42a5821a9016ae8c94
+#: b5a22ed2f79040b2a8deb95f91416849 b7ac4b96f8d2402ba0daae8c56c55910
+#: c08ffb6b169b4e5d9ea796330e158ba4 c776ad51021d4b88a50e1e87662bf4a5
+#: c813b855074d4004962e777b87bdb92b d01fd2e5a7ce4d7c8e3c738e2769c0b3
+#: d13af68c11444be193cc57060b9a1dd7 d70f77a306c44a01b87030581102cfb4
+#: discord.client.Client.entitlements discord.client.Client.fetch_guilds
+#: discord.client.Client.wait_for ec487369222e4fca9c3158f3caec9ae7
+#: ecaa6e582e60430db9758f5ad91318c7 fef47654c88e403dad85dc4284b5a5ab
+#: ff2fb46d9b514c9db7c97625b6860b5f of
+msgid "Return type"
+msgstr ""
+
+#: 345ed55a66c44c4983a66090789aecc8 474ab42ae6e948239450d90239bdcbf9
+#: discord.bot.ApplicationCommandMixin.application_command:8
+#: discord.bot.ApplicationCommandMixin.command:11 of
+msgid "Callable[..., :class:`ApplicationCommand`]"
+msgstr ""
+
+#: 35cfe3da5dfe44d2995bf87aeb1a214e 441663afc2e74b37a0ddd0c6805b8773
+#: discord.client.Client.event:1 of
+msgid "A decorator that registers an event to listen to."
+msgstr ""
+
+#: 7d5f8e58c1464f75826c12241640cae5 c6dc5e087bec4eac9b921c9a20528fad
+#: discord.client.Client.event:3 of
+msgid ""
+"You can find more info about the events on the :ref:`documentation below "
+"<discord-api-events>`."
+msgstr ""
+
+#: 58aa1c39e6954e56ba22f92148d0d097 b90fa4213ca24bf38c3510fa7c307036
+#: discord.client.Client.event:5 of
+msgid ""
+"The events must be a :ref:`coroutine <coroutine>`, if not, "
+":exc:`TypeError` is raised."
+msgstr ""
+
+#: c1c2cb3ef1b0421ab29258750cf15303 discord.client.Client.event:9
+#: e29528c36b9b4f09937e3c217970dacc of
+msgid ""
+"This replaces any default handlers. Developers are encouraged to use "
+":py:meth:`~discord.Client.listen` for adding additional handlers instead "
+"of :py:meth:`~discord.Client.event` unless default method replacement is "
+"intended."
+msgstr ""
+
+#: ../../api/clients.rst 00e6bd39c7fa4184844b6f7e7afcc5ef
+#: 0a5f7aa535f24ca794e3c8734d4caf5f 2666501d112943b8b6641e0ee36d76ed
+#: 2bb0d55c9f1e4b3489bd47b620ca3883 378fed9230884b5e9680753fe70c3989
+#: 3888f66b0d7d4eb7bfc805f9807a41d7 4727e7dbff374a62b8a56c79dc66082d
+#: 51511a34fb6745aab1ca324ba180e340 5333ac2171494bb08f73a1fad01039bf
+#: 5dedee9ffe954a98b442886bf9d3ad82 5fe56a006d574708abe19ebbaf839261
+#: 6ab72d7126304941a2843cd3f79e15bc 6c9daf6bb4464e6cbc2c184b3ccea998
+#: 6dcc2de71d1343bc93b3f0bca6661072 853e4bafa2c8478789b84f073f328614
+#: 923b691c5eda4326a0fe4609ae128330 93af98486bf7445e9912df5e0da0b0ea
+#: 9dddf4f4551d4eb09d25088e95eed7b5 ad56de6ed3ee40d4b537dfd9f8bcc2c4
+#: b4b22e18c1bf40269e3dcfbaec8aae03 b897a699a6ae41eb83dee4e67d3b0f4a
+#: be57f62d640d498db3acc576e8c69090 cab1be0a9d7a4ab18612dc4bdf535020
+#: d365fec41ab64fd19b3077f49a1088a4 discord.client.Client.entitlements
+#: discord.client.Client.fetch_guilds discord.client.Client.wait_for
+#: e4def2a95d484a9584fa73e8d26c4d1b e83bdfd3d60a4138a597146189b7446c
+#: efa73facdf57418f9086572e7be0917d f7d3143efeea400d85cc0fcf45b1e15b of
+msgid "Raises"
+msgstr ""
+
+#: a11c6d8215d44d1b970f9f4eec435480 abc0b29447334a61ab35f241b27c1a3b
+#: baba393bb0ae49f19ceb10505a6118f6 dac8224ddbd144bc80991d9f8509ae1b
+#: discord.bot.BotBase.after_invoke:19 discord.bot.BotBase.before_invoke:18
+#: discord.client.Client.event:13 of
+msgid "The coroutine passed is not actually a coroutine."
+msgstr ""
+
+#: 24b2a7241cb049de8a09e3130bf59982 2d6af0e10e374eb2848aaf6af07794ca
+#: 40c782af18fa4b6d95ff04ed328711de 4b54c577282844ab83de80cfe4c6af2e
+#: 833994483f0d48bcb79e761846317133 8afe70b1dc3e415bbcb3587ae113f646
+#: ba886c1958ae47468695dc36cd20fa30 discord.bot.BotBase.check:12
+#: discord.bot.BotBase.check_once:18 discord.client.Client.add_listener:15
+#: discord.client.Client.change_presence:16 discord.client.Client.event:16
+#: discord.client.Client.listen:11 of
+msgid "Example"
+msgstr ""
+
+#: ../../api/clients.rst 029cc544048741f8a32c92d8ea711013
+#: 080b97188f5a44679891cfb716d50114 0a0a385dda714190bf496404866e2af0
+#: 17352eb8d90a471c86796deec5f40361 197545f9c6ed4c5da3e235134e4fe25a
+#: 1995e834bfa04ce98aa43f02bd2745a4 1c0e015c47964f358c1c5adc8047b7c2
+#: 27e559c2588446bfb64518202432bf28 3200a85e4002416db55ed3790af21f4e
+#: 340efc183485425687d5238c1b4e8ee3 3a0cbb5f03924ae4b02a402fe8156523
+#: 3c6cba4ba69e43249df187fcaeb5f207 53782ddd4eb34037ad076fa1e2cdfa2e
+#: 566abd84b14f427a9dbe20726cd99445 61bdd2138a7145e49fcfbb06c5819cdc
+#: 76ebe78f49d5406b8bcff947b1188cda 8bf1ef24b9714c1c8e0436865b442e9a
+#: 944756aa81e34907af880c9ea3ddd943 99d7d45c973e4cab836405c222bbdf74
+#: 9fd02f2306464787b89f67ed08c49f2a a03bb4ec204c4867b740eb2c4bc3d398
+#: a32d372fc9f34a179efb70f960db2fcd b09e7584c7924b8c878f3b38d8698fbe
+#: b9c75f273aa84490bb67b9aacb293eb7 c0bb632d73734973a0c9803a773856c4
+#: cab4484c55b54eacba7c50e15f403e73 cc185377777045ed8cae6a6f8d16080f
+#: d374bb7d88ff4ad88004319adbe16e45 d569963daf604dc0929b2cc260f6e425
+#: da55697a42454226914e63e848802002 db76e6d208474bfc84b77836563a197a
+#: discord.client.Client.entitlements discord.client.Client.fetch_guilds
+#: discord.client.Client.wait_for f706cf333c1a47f1a2976aa784a20ba9
+#: f95bc5d223ff4f8ead1fe5ba86b4fd3a ff5108bb0b184c7082382a51ee4ba248 of
+msgid "Parameters"
+msgstr ""
+
+#: 92a9bc95fa124cc2a6481b3544402054 a4d2aa79666649ca85e4e8832e7231b4
+#: discord.client.Client.event:25 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+" \\\\\\(\\`\\`Coro\\`\\`\\, bound\\= "
+"\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, "
+"\\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
+msgstr ""
+
+#: 368652e3c875428c9e7ed908c22e2bbb
+#: discord.bot.ApplicationCommandMixin.message_command:1 of
+msgid ""
+"A shortcut decorator that invokes :func:`command` and adds it to the "
+"internal command list via :meth:`add_application_command`. This shortcut "
+"is made specifically for :class:`.MessageCommand`."
+msgstr ""
+
+#: 230957d3b00d465ba1057bb8dde0375d
+#: discord.bot.ApplicationCommandMixin.message_command:7 of
+msgid ""
+"A decorator that converts the provided method into a "
+":class:`.MessageCommand`, adds it to the bot, then returns it."
+msgstr ""
+
+#: 446d89e18a984c0899a05c5dae9c9d25
+#: discord.bot.ApplicationCommandMixin.message_command:9 of
+msgid "Callable[..., :class:`MessageCommand`]"
+msgstr ""
+
+#: a72b3011a0c2494e95b73c91ef1bc5d8
+#: discord.bot.ApplicationCommandMixin.slash_command:1 of
+msgid ""
+"A shortcut decorator that invokes :func:`command` and adds it to the "
+"internal command list via :meth:`add_application_command`. This shortcut "
+"is made specifically for :class:`.SlashCommand`."
+msgstr ""
+
+#: discord.bot.ApplicationCommandMixin.slash_command:7
+#: fa51a00b24dc4eb8b85cb16e577cd0cb of
+msgid ""
+"A decorator that converts the provided method into a "
+":class:`.SlashCommand`, adds it to the bot, then returns it."
+msgstr ""
+
+#: 8cb4f64fc9b842e99f656c4edc427b1c
+#: discord.bot.ApplicationCommandMixin.slash_command:9 of
+msgid "Callable[..., :class:`SlashCommand`]"
+msgstr ""
+
+#: d09c64206574417eaa7824f3ba7b7070
+#: discord.bot.ApplicationCommandMixin.user_command:1 of
+msgid ""
+"A shortcut decorator that invokes :func:`command` and adds it to the "
+"internal command list via :meth:`add_application_command`. This shortcut "
+"is made specifically for :class:`.UserCommand`."
+msgstr ""
+
+#: 2a5a5484ad2640a090cb56f82cfed16f
+#: discord.bot.ApplicationCommandMixin.user_command:7 of
+msgid ""
+"A decorator that converts the provided method into a "
+":class:`.UserCommand`, adds it to the bot, then returns it."
+msgstr ""
+
+#: 47980633a0e74e72af51935d418cd0e5
+#: discord.bot.ApplicationCommandMixin.user_command:9 of
+msgid "Callable[..., :class:`UserCommand`]"
+msgstr ""
+
+#: 9048c5a633c04c42af7a06b523435b08 b990261ea99f4f60a22b8c2f020d9aeb
+#: discord.client.Client.listen:1 of
+msgid ""
+"A decorator that registers another function as an external event "
+"listener. Basically this allows you to listen to multiple events from "
+"different places e.g. such as :func:`.on_ready`"
+msgstr ""
+
+#: 28112742cc894834a4199c50514e92b9 5c8494eb3a3847a28ea86a13f622b0ca
+#: discord.client.Client.listen:5 of
+msgid "The functions being listened to must be a :ref:`coroutine <coroutine>`."
+msgstr ""
+
+#: 62d1c8d54d9e4c5f8dd4f61219b254f1 7d847ee8a4554a5da695f22ce3d5313c
+#: discord.client.Client.listen:7 of
+msgid "The function being listened to is not a coroutine."
+msgstr ""
+
+#: 05065b5c67e1401295e5b37bd9a647ce 0b4f57fc36b548dc991b0b9d9359c3db
+#: 176d61be271e4a91a68e8a2183190329 discord.client.Client.add_listener:11
+#: discord.client.Client.listen:8 eefde4a89ebe4183b4d58c68754a33a3 of
+msgid "The ``name`` (event name) does not start with 'on_'"
+msgstr ""
+
+#: 467abba7c2824825bf9ac0b065144559 discord.client.Client.listen:29
+#: f2f041a61e2c4d96ae51fe3d10cfbc89 of
+msgid "Would print one and two in an unspecified order."
+msgstr ""
+
+#: 1ad893ae6d404e859a724d1384c3e12a d3c9f02c02b647ffab3f8609f92bef67
+#: discord.client.Client.listen:35 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\"
+" \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
+"\\\\\\(\\`\\`Coro\\`\\`\\, bound\\= "
+"\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, "
+"\\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\, "
+"\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`Coro\\`\\`\\, "
+"bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, "
+"\\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ "
+"\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]`"
+msgstr ""
+
+#: 6fab55fc960c41ab9946f4589469eba9 discord.Bot.activity:1
+#: discord.Client.activity:1 e0fb8761f68647b98e67aaf36915f6df of
+msgid "The activity being used upon logging in."
+msgstr ""
+
+#: 07fab2799a934430abec2938a4bcf215 a411bbe5b00c45c7a62f7f721f3d5fdd
+#: discord.Bot.activity:3 discord.Client.activity:3 of
+msgid "Optional[:class:`.BaseActivity`]"
+msgstr ""
+
+#: 1c8bb7dda2c643708eff19f7c8e760ba
+#: discord.bot.ApplicationCommandMixin.add_application_command:1 of
+msgid "Adds an :class:`.ApplicationCommand` into the internal list of commands."
+msgstr ""
+
+#: 96cc010f3bdb49578bdc4e547b0bc6cc
+#: discord.bot.ApplicationCommandMixin.add_application_command:3 of
+msgid ""
+"This is usually not called, instead the :meth:`command` or other shortcut"
+" decorators are used instead."
+msgstr ""
+
+#: bafc9036dfbf4fae92be90bb73f90d70
+#: discord.bot.ApplicationCommandMixin.add_application_command:9 of
+msgid "The command to add."
+msgstr ""
+
+#: 020ff49101bb40e38da9f516406c9bb9 1916ebc54d4d4a9f979821f8449a61a4
+#: 396fefe4d32b423d959c3f887cbca407 410ed683533f4e69b309b898a2e56c7d
+#: 4e36c2c3e0ae4be2ba520d3da81da7b8 88c3ad85bb944f3da68503ca6321c03e
+#: aeaa8913e17b4c6094e865bc4eb2758f af1fa242a1ce4af9a40dba844bc2afb3
+#: c811a0a6a91d4b8c98daa60d8f8c78b9
+#: discord.bot.ApplicationCommandMixin.add_application_command:12
+#: discord.bot.ApplicationCommandMixin.invoke_application_command:10
+#: discord.bot.ApplicationCommandMixin.process_application_commands:26
+#: discord.bot.ApplicationCommandMixin.sync_commands:55
+#: discord.bot.BotBase.add_check:10
+#: discord.bot.BotBase.on_application_command_error:14
+#: discord.bot.BotBase.remove_check:12 discord.client.Client.add_listener:12
+#: discord.client.Client.add_view:20
+#: discord.client.Client.before_identify_hook:18 discord.client.Client.clear:8
+#: discord.client.Client.close:6 discord.client.Client.connect:18
+#: discord.client.Client.delete_invite:16 discord.client.Client.login:14
+#: discord.client.Client.on_error:15 discord.client.Client.remove_listener:10
+#: discord.client.Client.run:28 discord.client.Client.start:11
+#: discord.client.Client.wait_until_ready:6 discord.cog.CogMixin.add_cog:24
+#: discord.cog.CogMixin.reload_extension:26
+#: discord.cog.CogMixin.unload_extension:27
+#: discord.shard.AutoShardedClient.change_presence:28
+#: discord.shard.AutoShardedClient.close:6
+#: discord.shard.AutoShardedClient.connect:18 e593feebb1924681b8862ef74835f00c
+#: f1b8003468d840da8d87720db56a2d49 f96cd92a798a4613a4949f67c608e4ba of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: 4676b197eaa64f3c8557578155cb0212 discord.bot.BotBase.add_check:1 of
+msgid ""
+"Adds a global check to the bot. This is the non-decorator interface to "
+":meth:`.check` and :meth:`.check_once`."
+msgstr ""
+
+#: 1c565c3a3b6e4e609c1d3fef171ba6aa discord.bot.BotBase.add_check:5 of
+msgid "The function that was used as a global check."
+msgstr ""
+
+#: 383356d72dc04d609b99e2a0d22194d5 discord.bot.BotBase.add_check:7 of
+msgid "If the function should only be called once per :meth:`.Bot.invoke` call."
+msgstr ""
+
+#: 469c368d1b3e4018a39712ff4c210d82 discord.cog.CogMixin.add_cog:1 of
+msgid "Adds a \"cog\" to the bot."
+msgstr ""
+
+#: 01d697723a104b94a08803b7def2ef43 discord.cog.CogMixin.add_cog:3 of
+msgid "A cog is a class that has its own event listeners and commands."
+msgstr ""
+
+#: 058f78a5848240a4a363d75624ed841a discord.cog.CogMixin.add_cog:7 of
+msgid ""
+":exc:`.ClientException` is raised when a cog with the same name is "
+"already loaded."
+msgstr ""
+
+#: 694b2692377043a5b06d75034db6aa97 discord.cog.CogMixin.add_cog:11 of
+msgid "The cog to register to the bot."
+msgstr ""
+
+#: cdf4075cfc104eb0970e8eb045d4b797 discord.cog.CogMixin.add_cog:14 of
+msgid ""
+"If a previously loaded cog with the same name should be ejected instead "
+"of raising an error.  .. versionadded:: 2.0"
+msgstr ""
+
+#: a8747915f97546c7a620d5cf9b8de8b4 discord.cog.CogMixin.add_cog:14 of
+msgid ""
+"If a previously loaded cog with the same name should be ejected instead "
+"of raising an error."
+msgstr ""
+
+#: 4cbbee08205341f39663cc6867ed645b discord.cog.CogMixin.add_cog:20 of
+msgid "The cog does not inherit from :class:`.Cog`."
+msgstr ""
+
+#: c646093fb86146849becfbcaad49ea63 discord.cog.CogMixin.add_cog:21 of
+msgid "An error happened during loading."
+msgstr ""
+
+#: 841c388e38ef4bf5bce9805ddc53a54b discord.cog.CogMixin.add_cog:22 of
+msgid "A cog with the same name is already loaded."
+msgstr ""
+
+#: 4b214f203e12429ba249629d5b435fb9 88e689f9afc241369d6babb194fc1a03
+#: discord.client.Client.add_listener:1 of
+msgid "The non decorator alternative to :meth:`.listen`."
+msgstr ""
+
+#: 9bdb658ed327483d848cf491f8b3bbb8 a0730900749a47e2bdda31ad8ba3f0dc
+#: discord.client.Client.add_listener:4 of
+msgid "The function to call."
+msgstr ""
+
+#: a4fcf86c7d864ec6867029102373ac9d c7ea41591aab47898209118e9d6aada0
+#: discord.client.Client.add_listener:7 of
+msgid "The name of the event to listen for. Defaults to ``func.__name__``."
+msgstr ""
+
+#: a2f5ee9251644bfd97d947e158ad4764 ba943995cd6f4f42838a634814e22ca1
+#: discord.client.Client.add_listener:10 of
+msgid "The ``func`` parameter is not a coroutine function."
+msgstr ""
+
+#: 5bfee65c9551403997926307bfac288b 8fdde2412a434bc889eb2470635efba6
+#: discord.client.Client.add_view:1 of
+msgid "Registers a :class:`~discord.ui.View` for persistent listening."
+msgstr ""
+
+#: 184b080c1ff64b3c92c2733aa9df8c75 a51b4f92d6494f518fa69f07e378bc51
+#: discord.client.Client.add_view:3 of
+msgid ""
+"This method should be used for when a view is comprised of components "
+"that last longer than the lifecycle of the program."
+msgstr ""
+
+#: 00b0dfac3aad46efa3411ccc01fbdf2f a403d4bd52ef4a1a8ab3a5f9c7f787f0
+#: discord.client.Client.add_view:9 of
+msgid "The view to register for dispatching."
+msgstr ""
+
+#: 0516f38c619c48ae8fb7173ca478d0ef 46830f4ca2de4aa788ccf77849200801
+#: discord.client.Client.add_view:12 of
+msgid ""
+"The message ID that the view is attached to. This is currently used to "
+"refresh the view's state during message update events. If not given then "
+"message update events are not propagated for the view."
+msgstr ""
+
+#: 4c66a1b617434ebea41a052d24391a33 ab74c62568f741c08aa18e7010c55481
+#: discord.client.Client.add_view:17 of
+msgid "A view was not passed."
+msgstr ""
+
+#: 375d822827c74905bc6957583aa1a261 648db641fb244b8a97a98f317abbd5e4
+#: discord.client.Client.add_view:18 of
+msgid ""
+"The view is not persistent. A persistent view has no timeout     and all "
+"their components have an explicitly provided ``custom_id``."
+msgstr ""
+
+#: 65f44d7ffe264126a3533d77b1464e65 discord.bot.BotBase.after_invoke:1 of
+msgid ""
+"A decorator that registers a coroutine as a post-invoke hook. A post-"
+"invoke hook is called directly after the command is called. This makes it"
+" a useful function to clean-up database connections or any type of clean "
+"up required. This post-invoke hook takes a sole parameter, a "
+":class:`.Context`."
+msgstr ""
+
+#: 4781d1ab818644d08703f1bed8ce105c discord.bot.BotBase.after_invoke:9 of
+msgid ""
+"Similar to :meth:`~.Bot.before_invoke`\\, this is not called unless "
+"checks and argument parsing procedures succeed. This hook is, however, "
+"**always** called regardless of the internal command callback raising an "
+"error (i.e. :exc:`.CommandInvokeError`\\). This makes it ideal for clean-"
+"up scenarios."
+msgstr ""
+
+#: 93110892f84044658ef3957825682406 discord.bot.BotBase.after_invoke:16 of
+msgid "The coroutine to register as the post-invoke hook."
+msgstr ""
+
+#: 2b6755c1d276469ab419792ac6020ccf d3a62f27dcc644f29fae06b98d24599f
+#: discord.Bot.allowed_mentions:1 discord.Client.allowed_mentions:1 of
+msgid "The allowed mention configuration."
+msgstr ""
+
+#: 3a6bb0789c0c46faa50beb35215a0bb9
+#: discord.bot.ApplicationCommandMixin.application_command:1 of
+msgid ""
+"A shortcut decorator that invokes :func:`command` and adds it to the "
+"internal command list via :meth:`~.Bot.add_application_command`."
+msgstr ""
+
+#: 8b07e863b4da42b087185fe66a4e4782 dfae6e3bc62e49a09c2ee43781c23646
+#: discord.Bot.application_flags:1 discord.Client.application_flags:1 of
+msgid "The client's application flags."
+msgstr ""
+
+#: 7b81e6817aa3453dadfa039d5908f380 ae7d062cf9c948289a20102ae95031b7
+#: discord.Bot.application_id:1 discord.Client.application_id:1
+#: discord.client.Client:27 of
+msgid "The client's application ID."
+msgstr ""
+
+#: 21ef281dd8344c15a68e36bf70c236bd 7d1d35144ab143c89844f2eeda5ca458
+#: discord.Bot.application_id:3 discord.Client.application_id:3 of
+msgid ""
+"If this is not passed via ``__init__`` then this is retrieved through the"
+" gateway when an event contains the data. Usually after "
+":func:`~discord.on_connect` is called."
+msgstr ""
+
+#: 3796d6049f614d1a81a2102b543cdc5f 409b33c5bd944e0f83d05534e795141a
+#: 41081b0ab799472fa6aa72c01266cc77 5b0142abd63a4172ba647e87dbb900bb
+#: 6bc3c19c9696465ca3f9cb5f44d223ad 75a3908583e246ddaee8b2ab99d5b21e
+#: 7c618e26033b4d08a8e0f007cb393a95 8686465f1a3d4950be5a71debbfd3d52
+#: 8952c3a11462457c9c94503c0a1e46ce 9023f922e3924c4dae0ada2a128df325
+#: 9e27094ebf5a426bb1e75e62e5daa1c4 a0ccfe1ca31e44379b769024cd71c09d
+#: a7ce19c3920f40ab91a7d270dfff2d0e b7be03d2394446469f0739f4abb91781
+#: beba0dc76f904c399cbc6333f2245f8a bfcc3ff6e8824dab8f98475203a002f1
+#: cd4b7ea72a3442768f7f021733e96924 cf33128256c04cc8962a75390c1ef183
+#: d132c2ca5f21423d8bb2a18353e56149 d319b5d28ca048509d872555d49cb491
+#: d393bc2fe41b44338c0bcde410e9c1eb d9eb2e4a9e234e37b248d23a246f8522
+#: discord.bot.ApplicationCommandMixin.get_application_context:1
+#: discord.bot.ApplicationCommandMixin.get_autocomplete_context:1
+#: discord.bot.ApplicationCommandMixin.get_desynced_commands:1
+#: discord.bot.ApplicationCommandMixin.invoke_application_command:1
+#: discord.bot.ApplicationCommandMixin.process_application_commands:1
+#: discord.bot.ApplicationCommandMixin.register_command:1
+#: discord.bot.ApplicationCommandMixin.register_commands:1
+#: discord.bot.ApplicationCommandMixin.sync_commands:1
+#: discord.bot.BotBase.is_owner:1
+#: discord.bot.BotBase.on_application_command_error:1
+#: discord.client.Client.application_info:1
+#: discord.client.Client.before_identify_hook:1
+#: discord.client.Client.change_presence:1 discord.client.Client.close:1
+#: discord.client.Client.connect:1 discord.client.Client.create_dm:1
+#: discord.client.Client.create_guild:1 discord.client.Client.delete_invite:1
+#: discord.client.Client.fetch_channel:1 discord.client.Client.fetch_guild:1
+#: discord.client.Client.fetch_invite:1
+#: discord.client.Client.fetch_premium_sticker_packs:1
+#: discord.client.Client.fetch_role_connection_metadata_records:1
+#: discord.client.Client.fetch_skus:1
+#: discord.client.Client.fetch_stage_instance:1
+#: discord.client.Client.fetch_sticker:1 discord.client.Client.fetch_template:1
+#: discord.client.Client.fetch_user:1 discord.client.Client.fetch_webhook:1
+#: discord.client.Client.fetch_widget:1
+#: discord.client.Client.get_or_fetch_user:1 discord.client.Client.login:1
+#: discord.client.Client.on_error:1 discord.client.Client.start:1
+#: discord.client.Client.update_role_connection_metadata_records:1
+#: discord.client.Client.wait_for:1 discord.client.Client.wait_until_ready:1
+#: discord.shard.AutoShardedClient.change_presence:1
+#: discord.shard.AutoShardedClient.close:1
+#: discord.shard.AutoShardedClient.connect:1 e907813498d04ca58b7d80979f4f9b91
+#: of
+msgid "|coro|"
+msgstr ""
+
+#: 47b37eeb523444a7aaecac9c8064ced9 5983dcd0486b4523ae227931a10b1302
+#: discord.client.Client.application_info:3 of
+msgid "Retrieves the bot's application information."
+msgstr ""
+
+#: 4bb7ac9a133a472bb6a3b9126cebda75 507ab57eb4464568979b8f115e241575
+#: discord.client.Client.application_info:5 of
+msgid "The bot's application information."
+msgstr ""
+
+#: 0101829855214ceca48fda193d62fa4a 0abb1cb53f1d41c38d3ba45f1d0d3a03
+#: discord.client.Client.application_info:6 of
+msgid ":class:`.AppInfo`"
+msgstr ""
+
+#: 3aa370c5983e445f88dd18e9eadbd873 60dcff8b7cff446797963d62c8f9728b
+#: discord.client.Client.application_info:8 of
+msgid "Retrieving the information failed somehow."
+msgstr ""
+
+#: 3e6d7812bab8419d863e5278f50532a6 70cb703484a24211b5f015b6c98489ed
+#: discord.client.Client.before_identify_hook:3 of
+msgid ""
+"A hook that is called before IDENTIFYing a session. This is useful if you"
+" wish to have more control over the synchronization of multiple "
+"IDENTIFYing clients."
+msgstr ""
+
+#: 345f1f0857334a8486719a08ce7b4812
+#: discord.client.Client.before_identify_hook:7
+#: e8ac04bf158e41c38b39991bab6fb822 of
+msgid "The default implementation sleeps for 5 seconds."
+msgstr ""
+
+#: 0b6319a9e67d414e87249e03d6d63397 8445119bcdba4f689bdc7ce8bc1d16ef
+#: discord.client.Client.before_identify_hook:12 of
+msgid "The shard ID that requested being IDENTIFY'd"
+msgstr ""
+
+#: 2301c3d3f9404ea495a8d7650bf54425 b5e6a835da3141a995d994af7efdd383
+#: discord.client.Client.before_identify_hook:15 of
+msgid "Whether this IDENTIFY is the first initial IDENTIFY."
+msgstr ""
+
+#: b720eb9a67e44dce8da52c580e698881 discord.bot.BotBase.before_invoke:1 of
+msgid ""
+"A decorator that registers a coroutine as a pre-invoke hook. A pre-invoke"
+" hook is called directly before the command is called. This makes it a "
+"useful function to set up database connections or any type of set up "
+"required. This pre-invoke hook takes a sole parameter, a "
+":class:`.Context`."
+msgstr ""
+
+#: 6c74a036308e4868b73dcbcf6c9c4f50 discord.bot.BotBase.before_invoke:9 of
+msgid ""
+"The :meth:`~.Bot.before_invoke` and :meth:`~.Bot.after_invoke` hooks are "
+"only called if all checks and argument parsing procedures pass without "
+"error. If any check or argument parsing procedures fail then the hooks "
+"are not called."
+msgstr ""
+
+#: discord.bot.BotBase.before_invoke:15 fad163555b174a4d8feb1bffef917e2a of
+msgid "The coroutine to register as the pre-invoke hook."
+msgstr ""
+
+#: 26517c7b15d54b3f8695eb62fbc85109 cba36eb2890e435fa097ddab61040300
+#: discord.Bot.cached_messages:1 discord.Client.cached_messages:1 of
+msgid "Read-only list of messages the connected client has cached."
+msgstr ""
+
+#: 6114d56696924f85a50ec7eab18cea6d d2e7ed1bee18473c8ed6a983e8028076
+#: discord.client.Client.change_presence:3
+#: discord.shard.AutoShardedClient.change_presence:3 of
+msgid "Changes the client's presence."
+msgstr ""
+
+#: 6c8a13b6a2374d07bde689acfab480b4 a5872f2048ac46379625289291357eca
+#: discord.client.Client.change_presence:6
+#: discord.shard.AutoShardedClient.change_presence:14 of
+msgid "The activity being done. ``None`` if no currently active activity is done."
+msgstr ""
+
+#: 3abff02da97142be826bc2c4e6ca6170 6b8aeda786a9403b9d499b77b41b85d7
+#: discord.client.Client.change_presence:9 of
+msgid ""
+"Indicates what status to change to. If ``None``, then "
+":attr:`.Status.online` is used."
+msgstr ""
+
+#: 135d8da50bfe441ba19fe730e3461b60 84986619916e40e88957ed778fedf574
+#: discord.client.Client.change_presence:13 of
+msgid "If the ``activity`` parameter is not the proper type."
+msgstr ""
+
+#: 39e909d604eb4a8c8eae94680b0f85d5 54b695951125498384300fe6b62bdf48
+#: discord.client.Client.change_presence:22
+#: discord.shard.AutoShardedClient.change_presence:10 of
+msgid "Removed the ``afk`` keyword-only parameter."
+msgstr ""
+
+#: discord.bot.BotBase.check:1 e46f439b7bf0448db055239476cd073e of
+msgid ""
+"A decorator that adds a global check to the bot. A global check is "
+"similar to a :func:`.check` that is applied on a per-command basis except"
+" it is run before any command checks have been verified and applies to "
+"every command the bot has."
+msgstr ""
+
+#: 142d9d49796c4a5db2c6a4d717820700 d1fddb994e6d4505b2c2a6138a60f1db
+#: discord.bot.BotBase.check:7 discord.bot.BotBase.check_once:13 of
+msgid ""
+"This function can either be a regular function or a coroutine. Similar to"
+" a command :func:`.check`, this takes a single parameter of type "
+":class:`.Context` and can only raise exceptions inherited from "
+":exc:`.ApplicationCommandError`."
+msgstr ""
+
+#: 2a09dda9c7114ea5a974ce9692e8315e discord.bot.BotBase.check_once:1 of
+msgid ""
+"A decorator that adds a \"call once\" global check to the bot. Unlike "
+"regular global checks, this one is called only once per "
+":meth:`.Bot.invoke` call. Regular global checks are called whenever a "
+"command is called or :meth:`.Command.can_run` is called. This type of "
+"check bypasses that and ensures that it's called only once, even inside "
+"the default help command."
+msgstr ""
+
+#: 0832766348084620af8c98ac13ee77ed discord.bot.BotBase.check_once:8 of
+msgid ""
+"When using this function the :class:`.Context` sent to a group subcommand"
+" may only parse the parent command and not the subcommands due to it "
+"being invoked once per :meth:`.Bot.invoke` call."
+msgstr ""
+
+#: 46113f3b59ba48888dae66daa428f6a2 664b2b67ec6147ed94b53e0140acb9ef
+#: discord.client.Client.clear:1 of
+msgid "Clears the internal state of the bot."
+msgstr ""
+
+#: a37bc673a1b54d709b8017883bfa408f b2e236d83dc34d8bb26a73a49b01369e
+#: discord.client.Client.clear:3 of
+msgid ""
+"After this, the bot can be considered \"re-opened\", i.e. "
+":meth:`is_closed` and :meth:`is_ready` both return ``False`` along with "
+"the bot's internal cache cleared."
+msgstr ""
+
+#: 67affa321575466d843d881e79ff9660 78ac357893eb41058d331fbd7e21f8bf
+#: discord.client.Client.close:3 discord.shard.AutoShardedClient.close:3 of
+msgid "Closes the connection to Discord."
+msgstr ""
+
+#: 66c2406b4f2349e896b65819340190d4 discord.Bot.cogs:1 of
+msgid "A read-only mapping of cog name to cog."
+msgstr ""
+
+#: 2e2b4b77bc7549c0a05965d9694ef840 9b1145547fdc4c8b85b1fdffccd05849
+#: discord.client.Client.connect:3 discord.shard.AutoShardedClient.connect:3 of
+msgid ""
+"Creates a WebSocket connection and lets the WebSocket listen to messages "
+"from Discord. This is a loop that runs the entire event system and "
+"miscellaneous aspects of the library. Control is not resumed until the "
+"WebSocket connection is terminated."
+msgstr ""
+
+#: 01fe01284ae748c8b1eddfddd1d73e21 6baf64d2338545519040319cd1847544
+#: discord.client.Client.connect:9 discord.shard.AutoShardedClient.connect:9 of
+msgid ""
+"If we should attempt reconnecting, either due to internet failure or a "
+"specific failure on Discord's part. Certain disconnects that lead to bad "
+"state will not be handled (such as invalid sharding payloads or bad "
+"tokens)."
+msgstr ""
+
+#: 4f24dc57384346d0856e8fdac0a91c7a discord.client.Client.connect:15
+#: discord.shard.AutoShardedClient.connect:15 e065be27c22342a28fae8bfee39dc5f6
+#: of
+msgid ""
+"The gateway to connect to Discord is not found. Usually if this     is "
+"thrown then there is a Discord API outage."
+msgstr ""
+
+#: 1656a53ca10c491688df2509c3c5ff71 c36b8e522ef8432ab9d32865a6f89cda
+#: discord.client.Client.connect:16 discord.shard.AutoShardedClient.connect:16
+#: of
+msgid "The WebSocket connection has been terminated."
+msgstr ""
+
+#: 4887cc26c4f94834bd314c9ad7887166 discord.client.Client.create_dm:3
+#: eaa633504af044fbbae0c5fff1734c12 of
+msgid "Creates a :class:`.DMChannel` with this user."
+msgstr ""
+
+#: 0be38552dc6d4508b568215162fbc247 11ed5a01e6a345a0acea5e61f04b1b7b
+#: discord.client.Client.create_dm:5 of
+msgid ""
+"This should be rarely called, as this is done transparently for most "
+"people."
+msgstr ""
+
+#: 3b1a1bf113d64c288b8703c0fdc99381 5a3111fd82194cd2885d84958fca1132
+#: discord.client.Client.create_dm:11 of
+msgid "The user to create a DM with."
+msgstr ""
+
+#: 3b137326256c433f88b79dd49a47e72f d6fa64d947654bf7becf7fad301f0fb9
+#: discord.client.Client.create_dm:14 of
+msgid "The channel that was created."
+msgstr ""
+
+#: 4ee54b2c76694caabfe0fde5d1cd1696 78267be3de4d4d789cc656e991f10e17
+#: discord.client.Client.create_dm:15 of
+msgid ":class:`.DMChannel`"
+msgstr ""
+
+#: a20efe6647144d72911f1a64c5ddacdc
+#: discord.bot.ApplicationCommandMixin.create_group:1 of
+msgid ""
+"A shortcut method that creates a slash command group with no subcommands "
+"and adds it to the internal command list via "
+":meth:`add_application_command`."
+msgstr ""
+
+#: 5c2158acc4a543b1b66b07320a0f767f
+#: discord.bot.ApplicationCommandMixin.create_group:7 of
+msgid "The name of the group to create."
+msgstr ""
+
+#: 69af3206fe804f5ea844fa3e65c9cb7c a58e962af7324b1b9e2e450d359efb44
+#: discord.bot.ApplicationCommandMixin.create_group:10
+#: discord.bot.ApplicationCommandMixin.group:10 of
+msgid "The description of the group to create."
+msgstr ""
+
+#: 017330dc607446c2a51ad9824d9b6642 1013a998dd0644bf8b8ed20ec4161d3f
+#: discord.bot.ApplicationCommandMixin.create_group:13
+#: discord.bot.ApplicationCommandMixin.group:13 of
+msgid ""
+"A list of the IDs of each guild this group should be added to, making it "
+"a guild command. This will be a global command if ``None`` is passed."
+msgstr ""
+
+#: 84480e59ac654759925cb9bf3400c84a
+#: discord.bot.ApplicationCommandMixin.create_group:17 of
+msgid "Any additional keyword arguments to pass to :class:`.SlashCommandGroup`."
+msgstr ""
+
+#: b8bf3f05b8b94e4fae6fc0fad6b15b09
+#: discord.bot.ApplicationCommandMixin.create_group:19
+#: discord.bot.ApplicationCommandMixin.group:17
+#: fffbb1f76152417080d7db49ca8e4c85 of
+msgid "The slash command group that was created."
+msgstr ""
+
+#: 3b97fc8c08714dc0bf7cbe2a88d0fcab 7f4f1601e15941c49368490691cf3ea6
+#: discord.client.Client.create_guild:3 of
+msgid "Creates a :class:`.Guild`."
+msgstr ""
+
+#: 1ac9ef86b0a64b3ab8e6552798c01c97 8524eb9f26414048b1952e19fc192260
+#: discord.client.Client.create_guild:5 of
+msgid "Bot accounts in more than 10 guilds are not allowed to create guilds."
+msgstr ""
+
+#: 4b2cb528eb144e2cba9fd35944489929 bfd43e9bd0f34e918327fc339e37937b
+#: discord.client.Client.create_guild:8 of
+msgid "The name of the guild."
+msgstr ""
+
+#: 62b9a65381f34c1bac438c5fd2c7ba6f a9d50329ac804b2697f42d86f92f69d1
+#: discord.client.Client.create_guild:11 of
+msgid ""
+"The :term:`py:bytes-like object` representing the icon. See "
+":meth:`.ClientUser.edit` for more details on what is expected."
+msgstr ""
+
+#: 0722a839383b4001aa95fb0d76912f04 ae0f886a88eb4404898545bc4dda335e
+#: discord.client.Client.create_guild:15 of
+msgid "The code for a template to create the guild with.  .. versionadded:: 1.4"
+msgstr ""
+
+#: 352fe566629842ad9d6ff7432397522e ac7b94c2d4aa41c4804843187d78a126
+#: discord.client.Client.create_guild:15 of
+msgid "The code for a template to create the guild with."
+msgstr ""
+
+#: 13d1e2ac49db416db0205889ed95c259 discord.client.Client.create_guild:20
+#: ef6b2cc2844948a6afac53df0c6c4c71 of
+msgid "The guild created. This is not the same guild that is added to cache."
+msgstr ""
+
+#: a4b211d860344b6bab78f4760535fb4d ac312b1700ba40e3ab5989b9c39cdc00
+#: d09eadf06e9343dd83a47871e2abc31f discord.client.Client.create_guild:22
+#: discord.client.Client.fetch_guild:26 of
+msgid ":class:`.Guild`"
+msgstr ""
+
+#: 6fa7e508b0cf4b958775cf91dac4ba35 7b2526fdc6744cc4856f38309c4dbc4a
+#: discord.client.Client.create_guild:24 of
+msgid "Guild creation failed."
+msgstr ""
+
+#: 2d01c286352d4eeba440b3662378cc26 6a0a9f3ed5d14cd1b00a6fef49d5debe
+#: discord.client.Client.create_guild:25 of
+msgid "Invalid icon image format given. Must be PNG or JPG."
+msgstr ""
+
+#: 10f6f332803e43be874d5efeaf273bd7 8689a2f7442c4748b0aeb3620d9cf09c
+#: discord.client.Client.delete_invite:3 of
+msgid "Revokes an :class:`.Invite`, URL, or ID to an invite."
+msgstr ""
+
+#: 2ecfe47925ea4c04b95937a66956301a 7e2f44aeac5741c9a5a08f2da76920ba
+#: discord.client.Client.delete_invite:5 of
+msgid ""
+"You must have the :attr:`~.Permissions.manage_channels` permission in the"
+" associated guild to do this."
+msgstr ""
+
+#: 94aa506a7985410497bded0263cb03f9 98207a40e1a94e19afe49b181675d48a
+#: discord.client.Client.delete_invite:9 of
+msgid "The invite to revoke."
+msgstr ""
+
+#: 5e90c550889a4b5d9c88e6d7d7dd19bf d5b48d7d2a60458e8a2839ed8faa7b5d
+#: discord.client.Client.delete_invite:12 of
+msgid "You do not have permissions to revoke invites."
+msgstr ""
+
+#: 34eee7d0a7914a7a9232644c1582c652 391ab3e72dfe4609ba4322872c6ccae2
+#: discord.client.Client.delete_invite:13 of
+msgid "The invite is invalid or expired."
+msgstr ""
+
+#: 770d782d0e98456da7aa346f121d5ae6 discord.client.Client.delete_invite:14
+#: e12571e8018b4226a23231a3d292f435 of
+msgid "Revoking the invite failed."
+msgstr ""
+
+#: 00169447c6a94a4b82f049cb27a56946 da199159cd414e03aa393a6e7fceb015
+#: discord.Bot.emojis:1 discord.Client.emojis:1 of
+msgid "The emojis that the connected client has."
+msgstr ""
+
+#: 78892bf021d04c6fba29337b575b8b71 7a582bcb64fe4e77b22294e3d86b3458
+#: discord.client.Client.entitlements:1 of
+msgid ""
+"Returns an :class:`.AsyncIterator` that enables fetching the "
+"application's entitlements."
+msgstr ""
+
+#: 523b5670abb24b5e88f9d7f04d5a0a9f 823cffd519a2414baf1d8eb638b8a867
+#: discord.client.Client.entitlements:6 of
+msgid "Limit the fetched entitlements to entitlements owned by this user."
+msgstr ""
+
+#: 47234f44f4bd4ceeb41bdc775a227c15 550d4974d8b243fcaf206b620c8a2a2f
+#: discord.client.Client.entitlements:9 of
+msgid "Limit the fetched entitlements to entitlements that are for these SKUs."
+msgstr ""
+
+#: 0326acb773754d438a4581ed32136b6d 66467d911b6945b5b419601784c046ee
+#: discord.client.Client.entitlements:12 of
+msgid ""
+"Retrieves guilds before this date or object. If a datetime is provided, "
+"it is recommended to use a UTC-aware datetime. If the datetime is naive, "
+"it is assumed to be local time."
+msgstr ""
+
+#: 830e0935ff744a0ea9a2a540a4a27ed3 a3655982943348cc9975a45469537b6c
+#: discord.client.Client.entitlements:17 of
+msgid ""
+"Retrieve guilds after this date or object. If a datetime is provided, it "
+"is recommended to use a UTC-aware datetime. If the datetime is naive, it "
+"is assumed to be local time."
+msgstr ""
+
+#: 98a71d0d914f4fe8b2324c24a917aa28 discord.client.Client.entitlements:22
+#: f84cf2f0b1844efc9fd51c33a704cf0e of
+msgid ""
+"The number of entitlements to retrieve. If ``None``, retrieves every "
+"entitlement, which may be slow. Defaults to ``100``."
+msgstr ""
+
+#: 2effddfbbd1e45178440ec2b43ef9195 c9ef4370de624686b6d2148b7bb52dbc
+#: discord.client.Client.entitlements:27 of
+msgid "Limit the fetched entitlements to entitlements owned by this guild."
+msgstr ""
+
+#: bb876989f633431e86644669cd8d5fa9 discord.client.Client.entitlements:30
+#: e475177db885429080f0ae2b78b72aea of
+msgid ""
+"Whether to limit the fetched entitlements to those that have not ended. "
+"Defaults to ``False``."
+msgstr ""
+
+#: bed18856144c4cbe822ac5211c71b28a c5985cf01b92479d9b571d3d9dc523a8
+#: discord.bot.ApplicationCommandMixin.walk_application_commands
+#: discord.client.Client.entitlements discord.client.Client.fetch_guilds
+#: discord.client.Client.get_all_channels discord.client.Client.get_all_members
+#: ee8fbed1e9c64e87a77e9b4d5b4de348 of
+msgid "Yields"
+msgstr ""
+
+#: bba8b3a4dfed4c12acdea2989e9b7777 discord.client.Client.entitlements:34
+#: fd477cb2f68542529b5f28246bd2cddc of
+msgid ":class:`.Entitlement` -- The application's entitlements."
+msgstr ""
+
+#: 2d3a2a0f88ba4346a292f010fcfac590 54a21db6d48b45ffa3147e2a18bcda3e
+#: discord.client.Client.entitlements:36 of
+msgid "Retrieving the entitlements failed."
+msgstr ""
+
+#: 862c6912d2294e34a06faddbf7ff0269 9ab70875d2f847f99751826f9b4fd448
+#: discord.client.Client.entitlements:37 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.EntitlementIterator\\``"
+msgstr ""
+
+#: 11648d97fb784d6b97497cf45bd7180f 7c8cb90e915a42688bb8e0ac08a56b44
+#: discord.client.Client.entitlements:40 discord.client.Client.fetch_guilds:35
+#: discord.client.Client.wait_for:42 f784f833af4f43caa6cf59467766ead4 of
+msgid "Examples"
+msgstr ""
+
+#: 4fcb97767a904beb9ef44f190efbd53a 6a66fb7c4171403a94a25a3808826652
+#: df4744ea792246c2a87e26f7a1105f81 discord.client.Client.entitlements:41
+#: discord.client.Client.fetch_guilds:36 of
+msgid "Usage ::"
+msgstr ""
+
+#: 0eae2453da7c4316a4e3c6d00c680cb1 3a17f85d5c5540cf8b980d8e82b60252
+#: 5b7cc08b85db4b84ae5e9195194d36ba discord.client.Client.entitlements:46
+#: discord.client.Client.fetch_guilds:41 of
+msgid "Flattening into a list ::"
+msgstr ""
+
+#: 48fa76c559f4449a95854d789559492f af1413448fd64215ad8a510b736adb91
+#: ce984edfb81a40f88475e5d768a64ec9 discord.client.Client.entitlements:50
+#: discord.client.Client.fetch_guilds:46 of
+msgid "All parameters are optional."
+msgstr ""
+
+#: 73e5dfcf598f4b738ff4cb986328a722 discord.Bot.extensions:1 of
+msgid "A read-only mapping of extension name to extension."
+msgstr ""
+
+#: aafc1168e05f45dfacd0f151bfd0bd27 c6993c8ace9a402dbd8a19399cff355a
+#: discord.client.Client.fetch_application:1 of
+msgid "|coro| Retrieves a :class:`.PartialAppInfo` from an application ID."
+msgstr ""
+
+#: cdfbd078a7e34b39bc30d2f5d3db7fef d7d033a39dcd4afebf9d0f3925cb0e6c
+#: discord.client.Client.fetch_application:5 of
+msgid "The application ID to retrieve information from."
+msgstr ""
+
+#: 330746db683542c0bf43295ce8a60ecb 3be37066300944489855782f111f4345
+#: discord.client.Client.fetch_application:8 of
+msgid "The application information."
+msgstr ""
+
+#: 7529d87e05374082bd884b1d1f4ce463 80da38d28f7a4058a9a443c380f15e07
+#: discord.client.Client.fetch_application:9 of
+msgid ":class:`.PartialAppInfo`"
+msgstr ""
+
+#: 496dda7098054bb98c52eea3c43b204e discord.client.Client.fetch_application:11
+#: fdfab0a8ac644e918e2b868f0b80ea8a of
+msgid "An application with this ID does not exist."
+msgstr ""
+
+#: 02d838d2b1364397a167d2f5c970bf0a 6f5bdf2b2be6487f8cd5cd5d7201e238
+#: discord.client.Client.fetch_application:12 of
+msgid "Retrieving the application failed."
+msgstr ""
+
+#: 6a10ca6084f846de8fe3fc9c5f78d62b 709c0c6eedd44918b90f6dffa9b47f23
+#: discord.client.Client.fetch_channel:3 of
+msgid ""
+"Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or "
+":class:`.Thread` with the specified ID."
+msgstr ""
+
+#: 16cdcc9d072042e48f37db5e1ed47d87 discord.client.Client.fetch_channel:7
+#: ffeb7dc3d9fe4482ab577068571db8bf of
+msgid ""
+"This method is an API call. For general usage, consider "
+":meth:`get_channel` instead."
+msgstr ""
+
+#: 937ee35401e047a9ab66ca84e1baf254 a9141c92c30443dab13cd3bfdfb3221b
+#: discord.client.Client.fetch_channel:11 of
+msgid "The channel from the ID."
+msgstr ""
+
+#: discord.client.Client.fetch_channel:12 e0c5c0a3312d4c5bbb8ef19d1e2f15e1
+#: fa37228bc5f741968a08a26bfccb5ca5 of
+msgid ""
+"Union[:class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, "
+":class:`.Thread`]"
+msgstr ""
+
+#: 220028234d2c4c72a8866cef69f6cedd a6c6384d2bd8410393e2acd36f1996a9
+#: discord.client.Client.fetch_channel:14 of
+msgid "An unknown channel type was received from Discord."
+msgstr ""
+
+#: 7b7c1cd63b90442e9e3e142aff758d8f b2dc27e2311a468fabfd697becfb68c3
+#: discord.client.Client.fetch_channel:15 of
+msgid "Retrieving the channel failed."
+msgstr ""
+
+#: 97eac6521e9a4e9dbc6cc6ecbfb97238 a254f2aa7f5441fca4eb306f79aa1b44
+#: discord.client.Client.fetch_channel:16 of
+msgid "Invalid Channel ID."
+msgstr ""
+
+#: 9d2a8c5a46854947a7a140aff9f4179f d4920f83bc284b55b50a4c8f62cd4180
+#: discord.client.Client.fetch_channel:17 of
+msgid "You do not have permission to fetch this channel."
+msgstr ""
+
+#: 5f3db26c62924650aecbb995c0df0be4 8e9f4f77bac844f5a9988587c611cb9d
+#: discord.client.Client.fetch_guild:3 of
+msgid "Retrieves a :class:`.Guild` from an ID."
+msgstr ""
+
+#: 38f598930b534b0380391fdb0e89e121 discord.client.Client.fetch_guild:7
+#: fc48643cd30442b68921bd961d8c4ee2 of
+msgid ""
+"Using this, you will **not** receive :attr:`.Guild.channels`, "
+":attr:`.Guild.members`, :attr:`.Member.activity` and "
+":attr:`.Member.voice` per :class:`.Member`."
+msgstr ""
+
+#: 232c4e056e1641d2b6f4f6aec6a485ec 84388c342305493e8a6f64446e49d160
+#: discord.client.Client.fetch_guild:12 of
+msgid ""
+"This method is an API call. For general usage, consider :meth:`get_guild`"
+" instead."
+msgstr ""
+
+#: 0edc6723fbc942dfba36ab15f4771dc3 685c61028d2d4cf580d2044aaee592a8
+#: discord.client.Client.fetch_guild:15 of
+msgid "The guild's ID to fetch from."
+msgstr ""
+
+#: 3c5f0d5b44a34c12b46639235faa7ad0 db45bb2c4d0a42d584ca6b8133983e77
+#: discord.client.Client.fetch_guild:18 of
+msgid ""
+"Whether to include count information in the guild. This fills the "
+":attr:`.Guild.approximate_member_count` and "
+":attr:`.Guild.approximate_presence_count` fields.  .. versionadded:: 2.0"
+msgstr ""
+
+#: 05dbc5f91edd4612b6383868c75a7ac2 a4245b805fa0424588c0d476c4087214
+#: discord.client.Client.fetch_guild:18 of
+msgid ""
+"Whether to include count information in the guild. This fills the "
+":attr:`.Guild.approximate_member_count` and "
+":attr:`.Guild.approximate_presence_count` fields."
+msgstr ""
+
+#: 13441326e09f4c41a4b70ace65d3685a 8627931b3a534dbe8c62a4be6ea82790
+#: discord.client.Client.fetch_guild:25 of
+msgid "The guild from the ID."
+msgstr ""
+
+#: 18b98d33672748fab571d1592086006c 7d2046b6b57942f7a30996be5edff639
+#: discord.client.Client.fetch_guild:28 of
+msgid "You do not have access to the guild."
+msgstr ""
+
+#: ab6c8c5386cc4638a941c7e10d2114f6 b5721e89196f4a1eb5342451dbaf3acb
+#: discord.client.Client.fetch_guild:29 of
+msgid "Getting the guild failed."
+msgstr ""
+
+#: 1747a97606b54d0aa85ee82fec200e5d 680b55c43a404490948ccf8c75056fe5
+#: discord.client.Client.fetch_guilds:1 of
+msgid "Retrieves an :class:`.AsyncIterator` that enables receiving your guilds."
+msgstr ""
+
+#: 479b75a91db14e1fbeb7fef18c5a04d7 6b41ff587fa34dd48f92f8b2adec9ab3
+#: discord.client.Client.fetch_guilds:5 of
+msgid ""
+"Using this, you will only receive :attr:`.Guild.owner`, "
+":attr:`.Guild.icon`, :attr:`.Guild.id`, and :attr:`.Guild.name` per "
+":class:`.Guild`."
+msgstr ""
+
+#: 7b2ca8d29ccd472dbfe3bb09ee67cd31 deb91710d7c24bc292aab5097f23b501
+#: discord.client.Client.fetch_guilds:10 of
+msgid ""
+"This method is an API call. For general usage, consider :attr:`guilds` "
+"instead."
+msgstr ""
+
+#: 105f6a38a2854a7089d696c2c01dc1e1 656fd5be7efa4693858ddc0bba11b5c9
+#: discord.client.Client.fetch_guilds:13 of
+msgid ""
+"The number of guilds to retrieve. If ``None``, it retrieves every guild "
+"you have access to. Note, however, that this would make it a slow "
+"operation. Defaults to ``100``."
+msgstr ""
+
+#: 2e80267839e44327b92ec76be0aaf427 88e83fb93ec742deb161d4d5e6ae864b
+#: discord.client.Client.fetch_guilds:19 of
+msgid ""
+"Retrieves guilds before this date or object. If a datetime is provided, "
+"it is recommended to use a UTC aware datetime. If the datetime is naive, "
+"it is assumed to be local time."
+msgstr ""
+
+#: dde1d08cc27a42afa6456baeab1c4824 discord.client.Client.fetch_guilds:24
+#: efa2f8d80de046819cc9326f5bbe892a of
+msgid ""
+"Retrieve guilds after this date or object. If a datetime is provided, it "
+"is recommended to use a UTC aware datetime. If the datetime is naive, it "
+"is assumed to be local time."
+msgstr ""
+
+#: d8cf0096c4ea46e0ae7da1145a0b557d discord.client.Client.fetch_guilds:29
+#: fc6f82145b034ece99cbf37f683ceff5 of
+msgid ":class:`.Guild` -- The guild with the guild data parsed."
+msgstr ""
+
+#: 2f4a72e1186a46d9aa54d22b75e640a3 5803c971ecee4e8385d297fa6b5f134c
+#: discord.client.Client.fetch_guilds:31 of
+msgid "Getting the guilds failed."
+msgstr ""
+
+#: discord.client.Client.fetch_guilds:32 f43bf45acca54549a46eb8b112d02268
+#: f8744a77885f4d189fc280ec89e87d2c of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.GuildIterator\\``"
+msgstr ""
+
+#: 8a4dcd58e0b2419aa0e9ecf1b6c7363e acc5f4a6a0f647dc9f8b5eaf7c539fdb
+#: discord.client.Client.fetch_invite:3 of
+msgid "Gets an :class:`.Invite` from a discord.gg URL or ID."
+msgstr ""
+
+#: 163cd0bf1a67459a89e9cdb0c6c757aa 2a76df09c33847cf85e73900aa59ec77
+#: discord.client.Client.fetch_invite:7 of
+msgid ""
+"If the invite is for a guild you have not joined, the guild and channel "
+"attributes of the returned :class:`.Invite` will be "
+":class:`.PartialInviteGuild` and :class:`.PartialInviteChannel` "
+"respectively."
+msgstr ""
+
+#: 116f686fb5054484a467357d6d0a399a 2c47a87fed924f02ba4dbce127a2d89d
+#: discord.client.Client.fetch_invite:12 of
+msgid "The Discord invite ID or URL (must be a discord.gg URL)."
+msgstr ""
+
+#: 21da813826c74acbb3eedef11175e8f1 cc56d716f1f6424aa05b7d2400368df0
+#: discord.client.Client.fetch_invite:15 of
+msgid ""
+"Whether to include count information in the invite. This fills the "
+":attr:`.Invite.approximate_member_count` and "
+":attr:`.Invite.approximate_presence_count` fields."
+msgstr ""
+
+#: 3df86f4db6f04bec94f6b943117534c9 6f6b0591a01a439e9c26b6ea317b4e85
+#: discord.client.Client.fetch_invite:20 of
+msgid ""
+"Whether to include the expiration date of the invite. This fills the "
+":attr:`.Invite.expires_at` field.  .. versionadded:: 2.0"
+msgstr ""
+
+#: 036021a78eea4be980334bcad40f1daa 9a1b3e4805b1414ba7f36b8206cc700b
+#: discord.client.Client.fetch_invite:20 of
+msgid ""
+"Whether to include the expiration date of the invite. This fills the "
+":attr:`.Invite.expires_at` field."
+msgstr ""
+
+#: 2cb15eb196524b68889c66edffb272a2 aa755c7bbfc644c8a99a4e7e80d1fc25
+#: discord.client.Client.fetch_invite:26 of
+msgid ""
+"The ID of the scheduled event to be associated with the event.  See "
+":meth:`Invite.set_scheduled_event` for more info on event invite linking."
+"  .. versionadded:: 2.0"
+msgstr ""
+
+#: 18b09b5aff7a4f39b50d78b9acb653fc 4ffbf97d7865451fa048a6f78af2662b
+#: discord.client.Client.fetch_invite:26 of
+msgid "The ID of the scheduled event to be associated with the event."
+msgstr ""
+
+#: 367a7984086b493ba86e0b98c9e489ec 5347b95856644909bb7dc80c9155b154
+#: discord.client.Client.fetch_invite:28 of
+msgid ""
+"See :meth:`Invite.set_scheduled_event` for more info on event invite "
+"linking."
+msgstr ""
+
+#: 1c9f38c89b6f4c17aede743f8c65d8aa 9ee1f4aced284d4282048fb76f04f940
+#: discord.client.Client.fetch_invite:34 of
+msgid "The invite from the URL/ID."
+msgstr ""
+
+#: 05420965d65349869d9a3fcceff2515e 33169fa919a54f519ff847e567556f48
+#: discord.client.Client.fetch_invite:35 of
+msgid ":class:`.Invite`"
+msgstr ""
+
+#: a22701bb7d2f44fca24ebafd0027a019 discord.client.Client.fetch_invite:37
+#: fe1ada1d25bf4ad7bc00b849f6fa88a9 of
+msgid "The invite has expired or is invalid."
+msgstr ""
+
+#: 7acc4ef8881841d48a95e7b714968280 a5f9c6c8318341df9f815544e2b2fc05
+#: discord.client.Client.fetch_invite:38 of
+msgid "Getting the invite failed."
+msgstr ""
+
+#: 1c2eae88e474467a8ef8fbe7cf172242 b369cce5013e4d698043f69c944f8a66
+#: discord.client.Client.fetch_premium_sticker_packs:3 of
+msgid "Retrieves all available premium sticker packs."
+msgstr ""
+
+#: 4f91c0955a5547a393f8bca43c79326f c3ebd2de351c47589c35c91351a05cc8
+#: discord.client.Client.fetch_premium_sticker_packs:7 of
+msgid "All available premium sticker packs."
+msgstr ""
+
+#: 81d61492868a497f850b5b880d44abe8
+#: discord.client.Client.fetch_premium_sticker_packs:8
+#: f2c67dc53c534b0aa88697406f41a753 of
+msgid "List[:class:`.StickerPack`]"
+msgstr ""
+
+#: baf041eef92145928978a65d22c41d49
+#: discord.client.Client.fetch_premium_sticker_packs:10
+#: ebdff23caff3417faec73021b95e7112 of
+msgid "Retrieving the sticker packs failed."
+msgstr ""
+
+#: 3f0dc3bdc3194ca39b848651a262fd94 9424f8645549490aad4b3df67690028b
+#: discord.client.Client.fetch_role_connection_metadata_records:3 of
+msgid "Fetches the bot's role connection metadata records."
+msgstr ""
+
+#: 99df7df48d45437faa412b04790f7587 a739439997df43e7b7db808923acb79d
+#: discord.client.Client.fetch_role_connection_metadata_records:7 of
+msgid "The bot's role connection metadata records."
+msgstr ""
+
+#: 888fcfea7fa34ba888f8c0857b965c37
+#: discord.client.Client.fetch_role_connection_metadata_records:8
+#: discord.client.Client.update_role_connection_metadata_records:12
+#: ee166a08201f4183bfad8ad88c5fb320 of
+msgid "List[:class:`.ApplicationRoleConnectionMetadata`]"
+msgstr ""
+
+#: 1a2b6478e8804ba4afc8c56c3c05edb8 68218a4bf26b4b38b1c806c7aa61f661
+#: discord.client.Client.fetch_skus:3 of
+msgid "Fetches the bot's SKUs."
+msgstr ""
+
+#: 06cf0595cc3f498c8e8f41b354e358d8 discord.client.Client.fetch_skus:7
+#: fb544d3f176e4037a777cec7dac26453 of
+msgid "The bot's SKUs."
+msgstr ""
+
+#: 043327feba3d4c899a4b9e27f3ae1372 b637e44776da4185981f78109a57a53a
+#: discord.client.Client.fetch_skus:8 of
+msgid "List[:class:`.SKU`]"
+msgstr ""
+
+#: 7a3e45f29a644f32b777d11a18579ede 88b901ccfaa14a67aadcb8840bdee24c
+#: discord.client.Client.fetch_stage_instance:3 of
+msgid "Gets a :class:`.StageInstance` for a stage channel id."
+msgstr ""
+
+#: 4e6dc6fe1ef94a269f031a4a1e4b99aa 69ca285e4a1b4e8797cec962961cc055
+#: discord.client.Client.fetch_stage_instance:8 of
+msgid "The stage channel ID."
+msgstr ""
+
+#: 7c7c97b654ed4a66a971dda8a270dcbf a15055de9ad647d4b7ef7e393ca47f72
+#: discord.client.Client.fetch_stage_instance:11 of
+msgid "The stage instance from the stage channel ID."
+msgstr ""
+
+#: 87fb14043d8046d19381949784b89592 8e0d484c75f44292bf2e50c355f77b5b
+#: discord.client.Client.fetch_stage_instance:12 of
+msgid ":class:`.StageInstance`"
+msgstr ""
+
+#: 3aee2cbf01044b3f8cc7af5dbe63cf79
+#: discord.client.Client.fetch_stage_instance:14
+#: e5a4d1d3aaf040398c8c0a5ac1e6dc2d of
+msgid "The stage instance or channel could not be found."
+msgstr ""
+
+#: 9be3c4f2f0164f2798360c5e220e7f50
+#: discord.client.Client.fetch_stage_instance:15
+#: fa0d9d4bc9ec41679170d58e5edf545e of
+msgid "Getting the stage instance failed."
+msgstr ""
+
+#: 584ac55387214bf0bc7655da6f2792e0 958332531bf34b229232649aaad19cef
+#: discord.client.Client.fetch_sticker:3 of
+msgid "Retrieves a :class:`.Sticker` with the specified ID."
+msgstr ""
+
+#: 1363c215bc8b48139f395e234a2fdcc7 a84b7eec831d41849ecdc43cee32ae28
+#: discord.client.Client.fetch_sticker:7 of
+msgid "The sticker you requested."
+msgstr ""
+
+#: b838a91ed61b4d37be246951b8564208 discord.client.Client.fetch_sticker:8
+#: ee98d910070249a2afbc06c51832ab92 of
+msgid "Union[:class:`.StandardSticker`, :class:`.GuildSticker`]"
+msgstr ""
+
+#: 50d8785227d54d73b68c6649c6fc793f a3bd0412032a451d944d5040250df9a4
+#: discord.client.Client.fetch_sticker:10 of
+msgid "Retrieving the sticker failed."
+msgstr ""
+
+#: a5926e5321024d8da72afc86559c5181 a914b8b74dff428b8217376bb44ee280
+#: discord.client.Client.fetch_sticker:11 of
+msgid "Invalid sticker ID."
+msgstr ""
+
+#: daba7a12d12e483dabb22f3082560e2d dbd91692e99f41089c24f3a1b016abe3
+#: discord.client.Client.fetch_template:3 of
+msgid "Gets a :class:`.Template` from a discord.new URL or code."
+msgstr ""
+
+#: 6c79dbef597949049308831126caf1cb 9cf7aeba3cf94ddfade1161921136fcd
+#: discord.client.Client.fetch_template:6 of
+msgid "The Discord Template Code or URL (must be a discord.new URL)."
+msgstr ""
+
+#: 20002ad14d4a4ebeb50f9d4b42e9bb59 2177ade0a9194b67b6fd15a61ae13825
+#: discord.client.Client.fetch_template:9 of
+msgid "The template from the URL/code."
+msgstr ""
+
+#: 25aa61a5f6704f76bd0e63fe07fd5344 discord.client.Client.fetch_template:10
+#: f8e660d6df844ff9b6e8ca42e45a6db4 of
+msgid ":class:`.Template`"
+msgstr ""
+
+#: 35c845de13e349a9bd817308bd8210bb bbb4e3d039e24824b2e96290ede33879
+#: discord.client.Client.fetch_template:12 of
+msgid "The template is invalid."
+msgstr ""
+
+#: 1e8fc158e4c74b9fa63f4cd6822c9190 de39096b310c4930ba085499cc501be9
+#: discord.client.Client.fetch_template:13 of
+msgid "Getting the template failed."
+msgstr ""
+
+#: 6afa0c679eaf409a8736e07f05fb7c6d discord.client.Client.fetch_user:3
+#: fc5e27dfd5df4f1083a2ce78905f137f of
+msgid ""
+"Retrieves a :class:`~discord.User` based on their ID. You do not have to "
+"share any guilds with the user to get this information, however many "
+"operations do require that you do."
+msgstr ""
+
+#: 80beb23cf53c40a194d929ae8c7a2876 88856ef0a1c34816a1b8126d28db55c8
+#: discord.client.Client.fetch_user:9 of
+msgid ""
+"This method is an API call. If you have :attr:`discord.Intents.members` "
+"and member cache enabled, consider :meth:`get_user` instead."
+msgstr ""
+
+#: 13ba7b35bdd343299351ad1b86086580 904c1ae5fcc14436b80548bb1f284c43
+#: discord.client.Client.fetch_user:13 of
+msgid "The user's ID to fetch from."
+msgstr ""
+
+#: 4b109491b8d94c648cd2b4a856262356 discord.client.Client.fetch_user:16
+#: f331d997dda74b7e9506f9f0858875f4 of
+msgid "The user you requested."
+msgstr ""
+
+#: 84fbf23886304607b5223e4f3e827432 c58aaed5b9274c23be1a82dd7b9c79c2
+#: discord.client.Client.fetch_user:17 of
+msgid ":class:`~discord.User`"
+msgstr ""
+
+#: 1f026a4e35c84df8b91a677e61429aad af069677ce5a4d60af85cdbbc1d89063
+#: discord.client.Client.fetch_user:19 of
+msgid "A user with this ID does not exist."
+msgstr ""
+
+#: a7894ada30514c09917ba342ff6307bf da95e6f09ace4020ba25d649433bd8e3
+#: discord.client.Client.fetch_user:20 of
+msgid "Fetching the user failed."
+msgstr ""
+
+#: 449315d17af4479895749d1fc700a3f7 7b5c3de0d5bc490583eed2148fe3adf2
+#: discord.client.Client.fetch_webhook:3 of
+msgid "Retrieves a :class:`.Webhook` with the specified ID."
+msgstr ""
+
+#: 3d3b2a928bae48ff9d0ced39413a96a9 79ce9e3cdd1f42a0bbdd9b54d0263d2c
+#: discord.client.Client.fetch_webhook:5 of
+msgid "The webhook you requested."
+msgstr ""
+
+#: 0f9acb4de476421b8b66cafaad9e8d13 c9bfd966d85e4f17a319e5b0e2f717cc
+#: discord.client.Client.fetch_webhook:6 of
+msgid ":class:`.Webhook`"
+msgstr ""
+
+#: 78c27258634f42bf842727095db62ee5 9383dddb8c9d4a9c96d2e2bde714702a
+#: discord.client.Client.fetch_webhook:8 of
+msgid "Retrieving the webhook failed."
+msgstr ""
+
+#: 1d2f993cc43b4a0985c6521221c59f63 6c4a19c3d6534ae4849f4b219aab45e7
+#: discord.client.Client.fetch_webhook:9 of
+msgid "Invalid webhook ID."
+msgstr ""
+
+#: 38afa3e69538483c9aa15498beaf378e dc3889164ad64b9b8a46fbe38f466076
+#: discord.client.Client.fetch_webhook:10 of
+msgid "You do not have permission to fetch this webhook."
+msgstr ""
+
+#: 8b4ef3067a554f3dbd79ec87d454e563 c548ce9c4b524c3da67dbf74b4cc39d5
+#: discord.client.Client.fetch_widget:3 of
+msgid "Gets a :class:`.Widget` from a guild ID."
+msgstr ""
+
+#: d5625d54302d4637bb3b2b87d4f31e8e discord.client.Client.fetch_widget:7
+#: f3c9ea1202d04fe98848e776cc633b43 of
+msgid "The guild must have the widget enabled to get this information."
+msgstr ""
+
+#: 81d3c19143e44cf2b6c178fc3d2fcc77 discord.client.Client.fetch_widget:10
+#: f7f87b3361a641b49965447a1dce4229 of
+msgid "The ID of the guild."
+msgstr ""
+
+#: 44fbd4d628244841a9214142b84ff39d discord.client.Client.fetch_widget:13
+#: e741791aa8f74923af5883745587ff8c of
+msgid "The guild's widget."
+msgstr ""
+
+#: d8bc6239ad544978978964d975b88cf8 discord.client.Client.fetch_widget:14
+#: e89b25c5d0d24a838d657f9ba08a43b5 of
+msgid ":class:`.Widget`"
+msgstr ""
+
+#: aca5c6cbb697464b90cc953011ed05bc discord.client.Client.fetch_widget:16
+#: e8fabc52771b436b8e0a6c27db844e38 of
+msgid "The widget for this guild is disabled."
+msgstr ""
+
+#: 2f27c3a6ee12429694a5b67441deb3bd 6c887b61d6214bbc89a3071595e17351
+#: discord.client.Client.fetch_widget:17 of
+msgid "Retrieving the widget failed."
+msgstr ""
+
+#: b886abcab97a46f3940f4064094180e2 discord.client.Client.get_all_channels:1
+#: f32d5942653b4aeea1d89478304ac5c4 of
+msgid ""
+"A generator that retrieves every :class:`.abc.GuildChannel` the client "
+"can 'access'."
+msgstr ""
+
+#: 5004a72d009b4ad48da460e3f0226d5e d5dfb16bdaa1458bb44264187f4ee38c
+#: discord.client.Client.get_all_channels:3
+#: discord.client.Client.get_all_members:3 of
+msgid "This is equivalent to: ::"
+msgstr ""
+
+#: 14df624bee0b4d23b1f9088155d3e882 discord.client.Client.get_all_channels:11
+#: of
+msgid ""
+"Just because you receive a :class:`.abc.GuildChannel` does not mean that "
+"you can communicate in said channel. "
+":meth:`.abc.GuildChannel.permissions_for` should be used for that."
+msgstr ""
+
+#: 5eab19fe94124dbcab31f439d0973160 discord.client.Client.get_all_channels:15
+#: of
+msgid ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
+msgstr ""
+
+#: 1e23815e30ed4e7fba2bd525936c0e85 discord.client.Client.get_all_members:1 of
+msgid "Returns a generator with every :class:`.Member` the client can see."
+msgstr ""
+
+#: 71e5351f43c7453b898f2b71db1af20e discord.client.Client.get_all_members:9 of
+msgid ":class:`.Member` -- A member the client can see."
+msgstr ""
+
+#: c0e500eca4654493bcbde640ebc18e15
+#: discord.bot.ApplicationCommandMixin.get_application_command:1 of
+msgid "Get an :class:`.ApplicationCommand` from the internal list of commands."
+msgstr ""
+
+#: 297eb50180c641ee936301a619fecf81
+#: discord.bot.ApplicationCommandMixin.get_application_command:7 of
+msgid "The qualified name of the command to get."
+msgstr ""
+
+#: 4e81f4e8177d4f1fabacd1113a61b684
+#: discord.bot.ApplicationCommandMixin.get_application_command:10 of
+msgid "The guild ids associated to the command to get."
+msgstr ""
+
+#: 7159cb9856244306be63c209b5f0df30
+#: discord.bot.ApplicationCommandMixin.get_application_command:13 of
+msgid "The type of the command to get. Defaults to :class:`.ApplicationCommand`."
+msgstr ""
+
+#: c868f574c5674690bd081cabc69cc745
+#: discord.bot.ApplicationCommandMixin.get_application_command:16 of
+msgid "The command that was requested. If not found, returns ``None``."
+msgstr ""
+
+#: c164f779fe0a43e6a2f6abf608af6f93
+#: discord.bot.ApplicationCommandMixin.get_application_command:17
+#: discord.bot.ApplicationCommandMixin.remove_application_command:12 of
+msgid "Optional[:class:`.ApplicationCommand`]"
+msgstr ""
+
+#: 998de8fc4fc54d12bbfd2d6293de1bee
+#: discord.bot.ApplicationCommandMixin.get_application_context:3 of
+msgid "Returns the invocation context from the interaction."
+msgstr ""
+
+#: 3614dd7b6e5d41d1b0d77e9c10a3f598
+#: discord.bot.ApplicationCommandMixin.get_application_context:5
+#: discord.bot.ApplicationCommandMixin.get_autocomplete_context:5 of
+msgid ""
+"This is a more low-level counter-part for "
+":meth:`.process_application_commands` to allow users more fine-grained "
+"control over the processing."
+msgstr ""
+
+#: 815d098582864c5aa45ebb68a53bc46b
+#: discord.bot.ApplicationCommandMixin.get_application_context:9
+#: discord.bot.ApplicationCommandMixin.get_autocomplete_context:9 of
+msgid "The interaction to get the invocation context from."
+msgstr ""
+
+#: discord.bot.ApplicationCommandMixin.get_application_context:12
+#: f445ef6ad23b46aa8c7b978919888cc2 of
+msgid ""
+"The factory class that will be used to create the context. By default, "
+"this is :class:`.ApplicationContext`. Should a custom class be provided, "
+"it must be similar enough to :class:`.ApplicationContext`\\'s interface."
+msgstr ""
+
+#: 01ec116738e84cb99e4b5d5ce4ffbfcf
+#: discord.bot.ApplicationCommandMixin.get_application_context:17 of
+msgid ""
+"The invocation context. The type of this can change via the ``cls`` "
+"parameter."
+msgstr ""
+
+#: c55b1028898244e59c76268416abbb49
+#: discord.bot.ApplicationCommandMixin.get_application_context:19 of
+msgid ":class:`.ApplicationContext`"
+msgstr ""
+
+#: 537bfa329bc545788890928e4531fa73
+#: discord.bot.ApplicationCommandMixin.get_autocomplete_context:3 of
+msgid "Returns the autocomplete context from the interaction."
+msgstr ""
+
+#: 11b0ecc315564b658e1d489d95e4e02a
+#: discord.bot.ApplicationCommandMixin.get_autocomplete_context:12 of
+msgid ""
+"The factory class that will be used to create the context. By default, "
+"this is :class:`.AutocompleteContext`. Should a custom class be provided,"
+" it must be similar enough to :class:`.AutocompleteContext`\\'s "
+"interface."
+msgstr ""
+
+#: 1bccad822ed94d7889a324aa82d0a214
+#: discord.bot.ApplicationCommandMixin.get_autocomplete_context:17 of
+msgid ""
+"The autocomplete context. The type of this can change via the ``cls`` "
+"parameter."
+msgstr ""
+
+#: 5f3b2f2fda724232a91fda448c11ca58
+#: discord.bot.ApplicationCommandMixin.get_autocomplete_context:19 of
+msgid ":class:`.AutocompleteContext`"
+msgstr ""
+
+#: cf283a472c614b6a97c06ca4bc4a33f0 discord.client.Client.get_channel:1 of
+msgid "Returns a channel or thread with the given ID."
+msgstr ""
+
+#: discord.client.Client.get_channel:4 discord.client.Client.get_emoji:4
+#: discord.client.Client.get_guild:4 discord.client.Client.get_message:7
+#: discord.client.Client.get_or_fetch_user:6
+#: discord.client.Client.get_stage_instance:6 discord.client.Client.get_user:4
+#: eddc2d6f8feb4541a1e35da5fb5fa865 of
+msgid "The ID to search for."
+msgstr ""
+
+#: d9a90139b5c84016a67669abf356d83b discord.client.Client.get_channel:7 of
+msgid "The returned channel or ``None`` if not found."
+msgstr ""
+
+#: de8a5b88032c47fa9f2e41bfa71842c3 discord.client.Client.get_channel:8 of
+msgid ""
+"Optional[Union[:class:`.abc.GuildChannel`, :class:`.Thread`, "
+":class:`.abc.PrivateChannel`]]"
+msgstr ""
+
+#: bec15e570fa04a15b83b7ca7e3389216 discord.cog.CogMixin.get_cog:1 of
+msgid "Gets the cog instance requested."
+msgstr ""
+
+#: 4ae249d6843649ce9819e165b69c78ff discord.cog.CogMixin.get_cog:3 of
+msgid "If the cog is not found, ``None`` is returned instead."
+msgstr ""
+
+#: b8d6f18d1d2c44babb0a2315fcf7c1b6 discord.cog.CogMixin.get_cog:6 of
+msgid ""
+"The name of the cog you are requesting. This is equivalent to the name "
+"passed via keyword argument in class creation or the class name if "
+"unspecified."
+msgstr ""
+
+#: 412532b7fda248be8233ebf2f47a3c87 discord.cog.CogMixin.get_cog:11 of
+msgid "The cog that was requested. If not found, returns ``None``."
+msgstr ""
+
+#: 691b6e2bdebc42878e0d4ca7bde4dfcb discord.cog.CogMixin.get_cog:12 of
+msgid "Optional[:class:`Cog`]"
+msgstr ""
+
+#: 64b888dc0e0641c0b11a8699ef47d0f7 discord.Bot.get_command:1 of
+msgid "Shortcut for :meth:`.get_application_command`."
+msgstr ""
+
+#: 090694ded9bb48498938dd4891b64207 discord.Bot.get_command:4 of
+msgid "Overridden in :class:`ext.commands.Bot`."
+msgstr ""
+
+#: b1df2b0021b249f6ba711704e20aaf2c
+#: discord.bot.ApplicationCommandMixin.get_desynced_commands:3 of
+msgid ""
+"Gets the list of commands that are desynced from discord. If ``guild_id``"
+" is specified, it will only return guild commands that are desynced from "
+"said guild, else it will return global commands."
+msgstr ""
+
+#: 4988c5769a7f45b093d66279aa435b31
+#: discord.bot.ApplicationCommandMixin.get_desynced_commands:7 of
+msgid ""
+"This function is meant to be used internally, and should only be used if "
+"you want to override the default command registration behavior."
+msgstr ""
+
+#: a42aa04f99bd45e2adf79377df0fddf9
+#: discord.bot.ApplicationCommandMixin.get_desynced_commands:13 of
+msgid ""
+"The guild id to get the desynced commands for, else global commands if "
+"unspecified."
+msgstr ""
+
+#: 004d26c269d948c5b29706eae2d3286e
+#: discord.bot.ApplicationCommandMixin.get_desynced_commands:16 of
+msgid ""
+"If you already fetched the commands, you can pass them here to be used. "
+"Not recommended for typical usage."
+msgstr ""
+
+#: b52ea92694dc43888920b021b5ea6887
+#: discord.bot.ApplicationCommandMixin.get_desynced_commands:19 of
+msgid ""
+"A list of the desynced commands. Each will come with at least the ``cmd``"
+" and ``action`` keys, which respectively contain the command and the "
+"action to perform. Other keys may also be present depending on the "
+"action, including ``id``."
+msgstr ""
+
+#: 433de8e824a84596ad4b85e75dddfb58
+#: discord.bot.ApplicationCommandMixin.get_desynced_commands:22 of
+msgid "List[Dict[:class:`str`, Any]]"
+msgstr ""
+
+#: 9525ca2de02e4964817f1a037363a3a2 discord.client.Client.get_emoji:1 of
+msgid "Returns an emoji with the given ID."
+msgstr ""
+
+#: 9c674dcf871343f694a42135680a1736 discord.client.Client.get_emoji:7 of
+msgid "The custom emoji or ``None`` if not found."
+msgstr ""
+
+#: 00d7fd8a5ae747b7a60a6c550b8c741d discord.client.Client.get_emoji:8 of
+msgid "Optional[:class:`.Emoji`]"
+msgstr ""
+
+#: c69d0ea814a84230941d413794f573c9 discord.client.Client.get_guild:1 of
+msgid "Returns a guild with the given ID."
+msgstr ""
+
+#: discord.client.Client.get_guild:7 e0ee40e0766047a2be7ce2f868ab810b of
+msgid "The guild or ``None`` if not found."
+msgstr ""
+
+#: 134847e462854ae78b1f4d67f66abf09 discord.client.Client.get_guild:8 of
+msgid "Optional[:class:`.Guild`]"
+msgstr ""
+
+#: 181ecf7ccc494ba8b6465d66a0ef5483 discord.client.Client.get_message:1 of
+msgid "Returns a message the given ID."
+msgstr ""
+
+#: 4844d10606e145829c103661a39a42a0 discord.client.Client.get_message:3 of
+msgid ""
+"This is useful if you have a message_id but don't want to do an API call "
+"to access the message."
+msgstr ""
+
+#: 876b35b70409440bbe9860921ed2bdde discord.client.Client.get_message:10 of
+msgid "The returned message or ``None`` if not found."
+msgstr ""
+
+#: 909a4ebed88b418eb3fc8ad783de4fc2 discord.client.Client.get_message:11 of
+msgid "Optional[:class:`.Message`]"
+msgstr ""
+
+#: discord.client.Client.get_or_fetch_user:3 ef34cecd55904074aadf36c69ae1a3fe
+#: of
+msgid "Looks up a user in the user cache or fetches if not found."
+msgstr ""
+
+#: 7a08fd22da7640b392c99f8c05c6c4e6 discord.client.Client.get_or_fetch_user:9
+#: discord.client.Client.get_user:7 of
+msgid "The user or ``None`` if not found."
+msgstr ""
+
+#: 759defbb355844809d78aa0b07143820 discord.client.Client.get_or_fetch_user:10
+#: discord.client.Client.get_user:8 of
+msgid "Optional[:class:`~discord.User`]"
+msgstr ""
+
+#: 044e87bce77b4fec8f6ad808a56bd064
+#: discord.client.Client.get_partial_messageable:1 of
+msgid "Returns a partial messageable with the given channel ID."
+msgstr ""
+
+#: discord.client.Client.get_partial_messageable:3
+#: f2ce805dc0414f5a9e5a8755ea1c9643 of
+msgid ""
+"This is useful if you have a channel_id but don't want to do an API call "
+"to send messages to it."
+msgstr ""
+
+#: c8479fc87aa246648dbeeb0dc0bd2523
+#: discord.client.Client.get_partial_messageable:9 of
+msgid "The channel ID to create a partial messageable for."
+msgstr ""
+
+#: 56b0308cd9eb42b28481f6a554cd5570
+#: discord.client.Client.get_partial_messageable:12 of
+msgid "The underlying channel type for the partial messageable."
+msgstr ""
+
+#: dcf7536cc4744aa9b4c7648d2327410f
+#: discord.client.Client.get_partial_messageable:15 of
+msgid "The partial messageable"
+msgstr ""
+
+#: daa543ad6df34e43a2d9864afb81d0d8
+#: discord.client.Client.get_partial_messageable:16 of
+msgid ":class:`.PartialMessageable`"
+msgstr ""
+
+#: discord.client.Client.get_poll:1 f33a04665ff84187a4db076f2d509d54 of
+msgid "Returns a poll attached to the given message ID."
+msgstr ""
+
+#: discord.client.Client.get_poll:4 fce34a83deb34fb09d2fb065f7e9aabc of
+msgid "The message ID of the poll to search for."
+msgstr ""
+
+#: 9e724f2a11ec44c4869443876f200c94 discord.client.Client.get_poll:7 of
+msgid "The poll or ``None`` if not found."
+msgstr ""
+
+#: c742fb9939e244578e66f27785b9e0b3 discord.client.Client.get_poll:8 of
+msgid "Optional[:class:`.Poll`]"
+msgstr ""
+
+#: 3d786cc212a44afea512d29b0e007d4e discord.client.Client.get_stage_instance:1
+#: of
+msgid "Returns a stage instance with the given stage channel ID."
+msgstr ""
+
+#: d433f0da2b6945b390f4785d5e45686d discord.client.Client.get_stage_instance:9
+#: of
+msgid "The stage instance or ``None`` if not found."
+msgstr ""
+
+#: 2c039b3d063d4d5daad23166bc2998bc discord.client.Client.get_stage_instance:10
+#: of
+msgid "Optional[:class:`.StageInstance`]"
+msgstr ""
+
+#: discord.client.Client.get_sticker:1 f10646f6188b45e79224058f73d2f2a8 of
+msgid "Returns a guild sticker with the given ID."
+msgstr ""
+
+#: c15a89f27028488cb7b2336b8063f854 discord.client.Client.get_sticker:7 of
+msgid ""
+"To retrieve standard stickers, use :meth:`.fetch_sticker`. or "
+":meth:`.fetch_premium_sticker_packs`."
+msgstr ""
+
+#: a8df3300fa7947d1885ff98542d67aeb discord.client.Client.get_sticker:10 of
+msgid "The sticker or ``None`` if not found."
+msgstr ""
+
+#: 6340a201b4ee40d08e8349272ea2eb4f discord.client.Client.get_sticker:11 of
+msgid "Optional[:class:`.GuildSticker`]"
+msgstr ""
+
+#: ad521edf83024b639b0931097a70fbc6 discord.client.Client.get_user:1 of
+msgid "Returns a user with the given ID."
+msgstr ""
+
+#: 3534240b400047cf99d43a0882749281 discord.bot.ApplicationCommandMixin.group:1
+#: of
+msgid ""
+"A shortcut decorator that initializes the provided subclass of "
+":class:`.SlashCommandGroup` and adds it to the internal command list via "
+":meth:`add_application_command`."
+msgstr ""
+
+#: 12eda575d2994bb9b8ec76bc781e2b9f discord.bot.ApplicationCommandMixin.group:7
+#: of
+msgid ""
+"The name of the group to create. This will resolve to the name of the "
+"decorated class if ``None`` is passed."
+msgstr ""
+
+#: 2f2a3e8f246c4f30b877af0e3e88001b discord.Bot.guilds:1
+#: discord.Client.guilds:1 of
+msgid "The guilds that the connected client is a member of."
+msgstr ""
+
+#: 21faa16203234f99a69b91b463601bd2 discord.Bot.intents:1
+#: discord.Client.intents:1 of
+msgid "The intents configured for this connection."
+msgstr ""
+
+#: 0fef6661f4904fc584c2c3c675c11684
+#: discord.bot.ApplicationCommandMixin.invoke_application_command:3 of
+msgid ""
+"Invokes the application command given under the invocation context and "
+"handles all the internal event dispatch mechanisms."
+msgstr ""
+
+#: 10f77b8bbb3042e09dc3daf5dd79b208
+#: discord.bot.ApplicationCommandMixin.invoke_application_command:7 of
+msgid "The invocation context to invoke."
+msgstr ""
+
+#: 1195a817f20744f69117a573c7f4c5d1 discord.client.Client.is_closed:1 of
+msgid "Indicates if the WebSocket connection is closed."
+msgstr ""
+
+#: 1044d7a76781488d8e388f935f5d4867 discord.client.Client.is_closed:4
+#: discord.client.Client.is_ready:4 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: 659c6943644c45f6b44ac33cc1d9896e discord.bot.BotBase.is_owner:3 of
+msgid ""
+"Checks if a :class:`~discord.User` or :class:`~discord.Member` is the "
+"owner of this bot."
+msgstr ""
+
+#: 3e69877b74ed48cab87f6fe3ec2f5bbd discord.bot.BotBase.is_owner:6 of
+msgid ""
+"If an :attr:`owner_id` is not set, it is fetched automatically through "
+"the use of :meth:`~.Bot.application_info`."
+msgstr ""
+
+#: 6872f8c9608949fab7ac89cb5072f36d discord.bot.BotBase.is_owner:9 of
+msgid ""
+"The function also checks if the application is team-owned if "
+":attr:`owner_ids` is not set."
+msgstr ""
+
+#: 784e3a78f66b4c67b2252bda0ab50130 discord.bot.BotBase.is_owner:14 of
+msgid "The user to check for."
+msgstr ""
+
+#: af103a9120b341d7ac2dc05f2fc6b7f0 discord.bot.BotBase.is_owner:17 of
+msgid "Whether the user is the owner."
+msgstr ""
+
+#: discord.client.Client.is_ready:1 e491ff5681a44d58918b01dea27ff898 of
+msgid "Specifies if the client's internal cache is ready for use."
+msgstr ""
+
+#: 1d19112534464592be462f4549362eed discord.client.Client.is_ws_ratelimited:1
+#: of
+msgid "Whether the WebSocket is currently rate limited."
+msgstr ""
+
+#: 62af1fa7dcf84492b242000ea4241503 discord.client.Client.is_ws_ratelimited:3
+#: of
+msgid ""
+"This can be useful to know when deciding whether you should query members"
+" using HTTP or via the gateway. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: c5ab6840e90349f19ce335c373c2303d discord.AutoShardedClient.latency:1
+#: discord.Bot.latency:1 discord.Client.latency:1 of
+msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+msgstr ""
+
+#: 421f8b497847440fbd6dbe4be0a01720 discord.Bot.latency:3
+#: discord.Client.latency:3 of
+msgid "This could be referred to as the Discord WebSocket protocol latency."
+msgstr ""
+
+#: 026aa7d6f31d4990a7b349b52d1e57ac discord.cog.CogMixin.load_extension:1 of
+msgid "Loads an extension."
+msgstr ""
+
+#: 443fb754e9e4450d9ba7b4c49645dd5d discord.cog.CogMixin.load_extension:3 of
+msgid ""
+"An extension is a python module that contains commands, cogs, or "
+"listeners."
+msgstr ""
+
+#: discord.cog.CogMixin.load_extension:6 eb4cd6b235244515b0c8d247f851230e of
+msgid ""
+"An extension must have a global function, ``setup`` defined as the entry "
+"point on what to do when the extension is loaded. This entry point must "
+"have a single argument, the ``bot``."
+msgstr ""
+
+#: discord.cog.CogMixin.load_extension:10 e954aa1ba2b04355a43ce15be4b3c1a6 of
+msgid ""
+"The extension passed can either be the direct name of a file within the "
+"current working directory or a folder that contains multiple extensions."
+msgstr ""
+
+#: b4709a5104a8400c9ac23f133549b6c6 discord.cog.CogMixin.load_extension:14 of
+msgid ""
+"The extension or folder name to load. It must be dot separated like "
+"regular Python imports if accessing a submodule. e.g. ``foo.test`` if you"
+" want to import ``foo/test.py``."
+msgstr ""
+
+#: 2fd13f9b72724c3a93c62cbf7ce3e595 discord.cog.CogMixin.load_extension:19
+#: discord.cog.CogMixin.load_extensions:12 of
+msgid ""
+"The package name to resolve relative imports with. This is required when "
+"loading an extension using a relative path, e.g ``.foo.test``. Defaults "
+"to ``None``.  .. versionadded:: 1.7"
+msgstr ""
+
+#: d98754a427e84ae682ce85cdb8557bec discord.cog.CogMixin.load_extension:19
+#: discord.cog.CogMixin.load_extensions:12 of
+msgid ""
+"The package name to resolve relative imports with. This is required when "
+"loading an extension using a relative path, e.g ``.foo.test``. Defaults "
+"to ``None``."
+msgstr ""
+
+#: 4872f607b11d4176b8657dc8de35a45e discord.cog.CogMixin.load_extension:27
+#: discord.cog.CogMixin.load_extensions:20 of
+msgid ""
+"If subdirectories under the given head directory should be recursively "
+"loaded. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr ""
+
+#: 235222cbb8c44095937e8b67a59eba52 discord.cog.CogMixin.load_extension:27
+#: discord.cog.CogMixin.load_extensions:20 of
+msgid ""
+"If subdirectories under the given head directory should be recursively "
+"loaded. Defaults to ``False``."
+msgstr ""
+
+#: discord.cog.CogMixin.load_extension:34
+#: discord.cog.CogMixin.load_extensions:27 e1406c82b3ec42d7ba4f1a9a7f0bc9d8 of
+msgid ""
+"If exceptions should be stored or raised. If set to ``True``, all "
+"exceptions encountered will be stored in a returned dictionary as a load "
+"status. If set to ``False``, if any exceptions are encountered they will "
+"be raised and the bot will be closed. If no exceptions are encountered, a"
+" list of loaded extension names will be returned. Defaults to ``False``."
+"  .. versionadded:: 2.0"
+msgstr ""
+
+#: 287d8e3cd45341309195aa3dd7ab8c94 discord.cog.CogMixin.load_extension:34
+#: discord.cog.CogMixin.load_extensions:27 of
+msgid ""
+"If exceptions should be stored or raised. If set to ``True``, all "
+"exceptions encountered will be stored in a returned dictionary as a load "
+"status. If set to ``False``, if any exceptions are encountered they will "
+"be raised and the bot will be closed. If no exceptions are encountered, a"
+" list of loaded extension names will be returned. Defaults to ``False``."
+msgstr ""
+
+#: 099c61d1269b47109fe9e3a1cc10e009 discord.cog.CogMixin.load_extension:45 of
+msgid ""
+"If the store parameter is set to ``True``, a dictionary will be returned "
+"that contains keys to represent the loaded extension names. The values "
+"bound to each key can either be an exception that occurred when loading "
+"that extension or a ``True`` boolean representing a successful load. If "
+"the store parameter is set to ``False``, either a list containing a list "
+"of loaded extensions or nothing due to an encountered exception."
+msgstr ""
+
+#: 83832163d58347d7a6e6af84f4c8e4fb discord.cog.CogMixin.load_extension:51
+#: discord.cog.CogMixin.load_extensions:44 of
+msgid ""
+"Optional[Union[Dict[:class:`str`, Union[:exc:`errors.ExtensionError`, "
+":class:`bool`]], List[:class:`str`]]]"
+msgstr ""
+
+#: 85002126743f4f13988ae3b6842068e6 discord.cog.CogMixin.load_extension:53
+#: discord.cog.CogMixin.reload_extension:22 of
+msgid ""
+"The extension could not be imported.     This is also raised if the name "
+"of the extension could not     be resolved using the provided ``package``"
+" parameter."
+msgstr ""
+
+#: a5a3724f3d244704959a79b59e34abc0 discord.cog.CogMixin.load_extension:54 of
+msgid "The extension is already loaded."
+msgstr ""
+
+#: 67911d91ed4a43efbe1e31b46fc74e6d discord.cog.CogMixin.load_extension:55
+#: discord.cog.CogMixin.reload_extension:23 of
+msgid "The extension does not have a setup function."
+msgstr ""
+
+#: 8f842e56308f4d1c88c47684ea45314f discord.cog.CogMixin.load_extension:56 of
+msgid "The extension or its setup function had an execution error."
+msgstr ""
+
+#: a760357f52544ed481412457c04c3803 discord.cog.CogMixin.load_extensions:1 of
+msgid "Loads multiple extensions at once."
+msgstr ""
+
+#: discord.cog.CogMixin.load_extensions:3 fdfb6f2448094adf9318c69174beeeea of
+msgid ""
+"This method simplifies the process of loading multiple extensions by "
+"handling the looping of ``load_extension``."
+msgstr ""
+
+#: discord.cog.CogMixin.load_extensions:7 f8a0970ba0114e93b9b61f4b6528e11c of
+msgid ""
+"The extension or folder names to load. It must be dot separated like "
+"regular Python imports if accessing a submodule. e.g. ``foo.test`` if you"
+" want to import ``foo/test.py``."
+msgstr ""
+
+#: b5fb058740df4f5697c3610201853111 discord.cog.CogMixin.load_extensions:38 of
+msgid ""
+"If the store parameter is set to ``True``, a dictionary will be returned "
+"that contains keys to represent the loaded extension names. The values "
+"bound to each key can either be an exception that occurred when loading "
+"that extension or a ``True`` boolean representing a successful load. If "
+"the store parameter is set to ``False``, either a list containing names "
+"of loaded extensions or nothing due to an encountered exception."
+msgstr ""
+
+#: bfa57369a86a4cda8d1bd669bb3f567b discord.cog.CogMixin.load_extensions:46 of
+msgid ""
+"A given extension could not be imported.     This is also raised if the "
+"name of the extension could not     be resolved using the provided "
+"``package`` parameter."
+msgstr ""
+
+#: c65a8880c6e24c0ba423274ba3ab9e74 discord.cog.CogMixin.load_extensions:47 of
+msgid "A given extension is already loaded."
+msgstr ""
+
+#: 066e528badfb4c9081642380ae4c0118 discord.cog.CogMixin.load_extensions:48 of
+msgid "A given extension does not have a setup function."
+msgstr ""
+
+#: cf251565d0a04577a80b44ef3a0c45ae discord.cog.CogMixin.load_extensions:49 of
+msgid "A given extension or its setup function had an execution error."
+msgstr ""
+
+#: 049a0834b6b047f99314936f2f1163ba discord.client.Client.login:3 of
+msgid "Logs in the client with the specified credentials."
+msgstr ""
+
+#: 37485eb978c94d0ab2f8e20f3c9d44f0 discord.client.Client.login:6 of
+msgid ""
+"The authentication token. Do not prefix this token with anything as the "
+"library will do it for you."
+msgstr ""
+
+#: 441a4bc07886491dbe40a2d51a9d6027 discord.client.Client.login:10 of
+msgid "The token was in invalid type."
+msgstr ""
+
+#: discord.client.Client.login:11 e47b353c4c374b69a0516a6c01b5f5db of
+msgid "The wrong credentials are passed."
+msgstr ""
+
+#: b7bea11ed3954e4d8bb8ceba44c2c5a3 discord.client.Client.login:12 of
+msgid ""
+"An unknown HTTP related error occurred,     usually when it isn't 200 or "
+"the known incorrect credentials     passing status code."
+msgstr ""
+
+#: 9bd06ccb118d45cfade916f4c2e9e09d
+#: discord.bot.BotBase.on_application_command_error:3 of
+msgid "The default command error handler provided by the bot."
+msgstr ""
+
+#: c577795c8bcb40caae05540580226588
+#: discord.bot.BotBase.on_application_command_error:5 of
+msgid ""
+"By default, this prints to :data:`sys.stderr` however it could be "
+"overridden to have a different implementation."
+msgstr ""
+
+#: 14d54c8c45da4b1ea8ea9a527ef62098
+#: discord.bot.BotBase.on_application_command_error:8 of
+msgid "This only fires if you do not specify any listeners for command error."
+msgstr ""
+
+#: 57179a6f7b13404b8d698521898a6d9c discord.client.Client.on_error:3 of
+msgid "The default error handler provided by the client."
+msgstr ""
+
+#: 58a09ed6103242578e6f09b9c61c0f17 discord.client.Client.on_error:5 of
+msgid ""
+"By default, this prints to :data:`sys.stderr` however it could be "
+"overridden to have a different implementation. Check "
+":func:`~discord.on_error` for more details."
+msgstr ""
+
+#: 0ddbaefb41734b77ad0d3ad0792c3d18 discord.Bot.persistent_views:1
+#: discord.Client.persistent_views:1 of
+msgid "A sequence of persistent views added to the client."
+msgstr ""
+
+#: 7052b64d58da473a956cb108172efa05 discord.Bot.polls:1 discord.Client.polls:1
+#: of
+msgid "The polls that the connected client has."
+msgstr ""
+
+#: c2acbbccabb944aeb2cfcdebcfaaa94c discord.Bot.private_channels:1
+#: discord.Client.private_channels:1 of
+msgid "The private channels that the connected client is participating on."
+msgstr ""
+
+#: c9cd8785f1e7403e86e3a939de337f91 discord.Bot.private_channels:5
+#: discord.Client.private_channels:5 of
+msgid ""
+"This returns only up to 128 most recent private channels due to an "
+"internal working on how Discord deals with private channels."
+msgstr ""
+
+#: 21363eab134d440382c795173dd057c0
+#: discord.bot.ApplicationCommandMixin.process_application_commands:3 of
+msgid ""
+"This function processes the commands that have been registered to the bot"
+" and other groups. Without this coroutine, none of the commands will be "
+"triggered."
+msgstr ""
+
+#: b02242879b784c65ac623cbda25aee83
+#: discord.bot.ApplicationCommandMixin.process_application_commands:7 of
+msgid ""
+"By default, this coroutine is called inside the :func:`.on_interaction` "
+"event. If you choose to override the :func:`.on_interaction` event, then "
+"you should invoke this coroutine as well."
+msgstr ""
+
+#: 5a7f80f98b7445e0bbe1ffbaf4f75a5c
+#: discord.bot.ApplicationCommandMixin.process_application_commands:11 of
+msgid ""
+"This function finds a registered command matching the interaction id from"
+" application commands and invokes it. If no matching command was found, "
+"it replies to the interaction with a default message."
+msgstr ""
+
+#: 5eba8aff592647dbb428a36b08475afc
+#: discord.bot.ApplicationCommandMixin.process_application_commands:18 of
+msgid "The interaction to process"
+msgstr ""
+
+#: 098da280f563492c8010c8ad52ae3b46
+#: discord.bot.ApplicationCommandMixin.process_application_commands:21 of
+msgid ""
+"Whether to automatically sync and unregister the command if it is not "
+"found in the internal cache. This will invoke the "
+":meth:`~.Bot.sync_commands` method on the context of the command, either "
+"globally or per-guild, based on the type of the command, respectively. "
+"Defaults to :attr:`.Bot.auto_sync_commands`."
+msgstr ""
+
+#: 6fb0bc75b4244e36896183264590e7f1
+#: discord.bot.ApplicationCommandMixin.register_command:3 of
+msgid ""
+"Registers a command. If the command has ``guild_ids`` set, or if the "
+"``guild_ids`` parameter is passed, the command will be registered as a "
+"guild command for those guilds."
+msgstr ""
+
+#: 4ea2920e2db64df6859efe1b1f524b48
+#: discord.bot.ApplicationCommandMixin.register_command:7 of
+msgid "The command to register."
+msgstr ""
+
+#: 8b8d635e6e8d4e7c8a3aed8d2b2113e4
+#: discord.bot.ApplicationCommandMixin.register_command:10 of
+msgid ""
+"Whether to force the command to be registered. If this is set to False, "
+"the command will only be registered if it seems to already be registered "
+"and up to date with our internal cache. Defaults to True."
+msgstr ""
+
+#: 4da5da38c13c4cce84fa4a5f1324b431
+#: discord.bot.ApplicationCommandMixin.register_command:14 of
+msgid ""
+"A list of guild ids to register the command for. If this is not set, the "
+"command's :attr:`ApplicationCommand.guild_ids` attribute will be used."
+msgstr ""
+
+#: 84a8824b3dbc412281a70609fb40e4db
+#: discord.bot.ApplicationCommandMixin.register_command:18 of
+msgid "The command that was registered"
+msgstr ""
+
+#: a32da6d17c784b489e12a5b06559a374
+#: discord.bot.ApplicationCommandMixin.register_command:19 of
+msgid ":class:`~.ApplicationCommand`"
+msgstr ""
+
+#: discord.bot.ApplicationCommandMixin.register_commands:3
+#: fbe13cfdf4c344ce8845196b3c9c308c of
+msgid "Register a list of commands."
+msgstr ""
+
+#: de60834094264c87b010a83d28ef3a31
+#: discord.bot.ApplicationCommandMixin.register_commands:8 of
+msgid ""
+"A list of commands to register. If this is not set (``None``), then all "
+"commands will be registered."
+msgstr ""
+
+#: discord.bot.ApplicationCommandMixin.register_commands:11
+#: f7d13a7b72ee45829b22b9d1d4115004 of
+msgid ""
+"If this is set, the commands will be registered as a guild command for "
+"the respective guild. If it is not set, the commands will be registered "
+"according to their :attr:`ApplicationCommand.guild_ids` attribute."
+msgstr ""
+
+#: 8033302734aa4ce0a6cb372c445cdb12
+#: discord.bot.ApplicationCommandMixin.register_commands:15
+#: discord.bot.ApplicationCommandMixin.sync_commands:30 of
+msgid ""
+"The method to use when registering the commands. If this is set to "
+"\"individual\", then each command will be registered individually. If "
+"this is set to \"bulk\", then all commands will be registered in bulk. If"
+" this is set to \"auto\", then the method will be determined "
+"automatically. Defaults to \"bulk\"."
+msgstr ""
+
+#: 8faca78fa87f4d3bb12fb70fd01d35e3
+#: discord.bot.ApplicationCommandMixin.register_commands:20
+#: discord.bot.ApplicationCommandMixin.sync_commands:35 of
+msgid ""
+"Registers the commands regardless of the state of the command on Discord."
+" This uses one less API call, but can result in hitting rate limits more "
+"often. Defaults to False."
+msgstr ""
+
+#: 7a51594d4dce42bc92a656b664696dce
+#: discord.bot.ApplicationCommandMixin.register_commands:24
+#: discord.bot.ApplicationCommandMixin.sync_commands:52 of
+msgid ""
+"Whether to delete existing commands that are not in the list of commands "
+"to register. Defaults to True."
+msgstr ""
+
+#: 954c934a3ae542bd8e48d65c6872c37f
+#: discord.bot.ApplicationCommandMixin.register_commands:27 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ "
+"\\\\\\[\\:py\\:class\\:\\`\\~discord.types.interactions.ApplicationCommand\\`\\]`"
+msgstr ""
+
+#: b99435e52b874c98861200f494f1266a discord.cog.CogMixin.reload_extension:1 of
+msgid "Atomically reloads an extension."
+msgstr ""
+
+#: discord.cog.CogMixin.reload_extension:3 eb3fc9d30ad248d59bc53b98fd0a8110 of
+msgid ""
+"This replaces the extension with the same extension, only refreshed. This"
+" is equivalent to a :meth:`unload_extension` followed by a "
+":meth:`load_extension` except done in an atomic way. That is, if an "
+"operation fails mid-reload then the bot will roll back to the prior "
+"working state."
+msgstr ""
+
+#: 11271e1cdfbf422bb9d35cef4a1a2622 discord.cog.CogMixin.reload_extension:9 of
+msgid ""
+"The extension name to reload. It must be dot separated like regular "
+"Python imports if accessing a submodule. e.g. ``foo.test`` if you want to"
+" import ``foo/test.py``."
+msgstr ""
+
+#: discord.cog.CogMixin.reload_extension:14 f0dc77f6bc6744e08e89bd30c7719544 of
+msgid ""
+"The package name to resolve relative imports with. This is required when "
+"reloading an extension using a relative path, e.g ``.foo.test``. Defaults"
+" to ``None``.  .. versionadded:: 1.7"
+msgstr ""
+
+#: c257e5f934bd4c41ab4bd9003112a5d5 discord.cog.CogMixin.reload_extension:14 of
+msgid ""
+"The package name to resolve relative imports with. This is required when "
+"reloading an extension using a relative path, e.g ``.foo.test``. Defaults"
+" to ``None``."
+msgstr ""
+
+#: 4cb97699dc1f4e5b9f7c75d398086528 b2947b8e3f1d42259d4d6afe1406758d
+#: discord.cog.CogMixin.reload_extension:21
+#: discord.cog.CogMixin.unload_extension:25 of
+msgid "The extension was not loaded."
+msgstr ""
+
+#: a2829fe98fe748338b65015d93fc299a discord.cog.CogMixin.reload_extension:24 of
+msgid "The extension setup function had an execution error."
+msgstr ""
+
+#: 94d9dca4e09f47bcbb41742185f8a778
+#: discord.bot.ApplicationCommandMixin.remove_application_command:1 of
+msgid "Remove an :class:`.ApplicationCommand` from the internal list of commands."
+msgstr ""
+
+#: a272e12723b0440e8cdd4b64dd581be0
+#: discord.bot.ApplicationCommandMixin.remove_application_command:7 of
+msgid "The command to remove."
+msgstr ""
+
+#: 5c3fa5ba0e24446ca0c5d451ab0d7ef3
+#: discord.bot.ApplicationCommandMixin.remove_application_command:10 of
+msgid ""
+"The command that was removed. If the command has not been added, ``None``"
+" is returned instead."
+msgstr ""
+
+#: 318002b550784a58a407ca8a6ea60975 discord.bot.BotBase.remove_check:1 of
+msgid ""
+"Removes a global check from the bot. This function is idempotent and will"
+" not raise an exception if the function is not in the global checks."
+msgstr ""
+
+#: ac0f014b030846a4886347653f09eae7 discord.bot.BotBase.remove_check:6 of
+msgid "The function to remove from the global checks."
+msgstr ""
+
+#: 5ccca55b893a4ce196b56ac7b4bf3fea discord.bot.BotBase.remove_check:8 of
+msgid ""
+"If the function was added with ``call_once=True`` in the "
+":meth:`.Bot.add_check` call or using :meth:`.check_once`."
+msgstr ""
+
+#: afc46aa053de44acac79848d8a4d48bd discord.cog.CogMixin.remove_cog:1 of
+msgid "Removes a cog from the bot and returns it."
+msgstr ""
+
+#: 8760d9d2494745fd8c2bbf789078f622 discord.cog.CogMixin.remove_cog:3 of
+msgid ""
+"All registered commands and event listeners that the cog has registered "
+"will be removed as well."
+msgstr ""
+
+#: a6da2cef0f344cbc97b69314e265bf25 discord.cog.CogMixin.remove_cog:6 of
+msgid "If no cog is found then this method has no effect."
+msgstr ""
+
+#: 206390d6458e4be89131c95feaa9c242 discord.cog.CogMixin.remove_cog:9 of
+msgid "The name of the cog to remove."
+msgstr ""
+
+#: 079d5ea3e3c547edb0104884b59c1d1d discord.cog.CogMixin.remove_cog:12 of
+msgid "The cog that was removed. ``None`` if not found."
+msgstr ""
+
+#: 10349ef7943d47cf9ee8c96d7a3e3f09 discord.cog.CogMixin.remove_cog:13 of
+msgid "Optional[:class:`.Cog`]"
+msgstr ""
+
+#: discord.client.Client.remove_listener:1 f402b73bece24cc49036238c228a2cf6 of
+msgid "Removes a listener from the pool of listeners."
+msgstr ""
+
+#: 0ae89918698b491f89b9233a129a1897 discord.client.Client.remove_listener:4 of
+msgid "The function that was used as a listener to remove."
+msgstr ""
+
+#: 515f9c536b89476fba576f7ce5614414 discord.client.Client.remove_listener:6 of
+msgid "The name of the event we want to remove. Defaults to ``func.__name__``."
+msgstr ""
+
+#: 571249fef8cd45c2981975498a4e7851 discord.client.Client.run:1 of
+msgid ""
+"A blocking call that abstracts away the event loop initialisation from "
+"you."
+msgstr ""
+
+#: 2106434fbe294fed9159326a73846c02 discord.client.Client.run:4 of
+msgid ""
+"If you want more control over the event loop then this function should "
+"not be used. Use :meth:`start` coroutine or :meth:`connect` + "
+":meth:`login`."
+msgstr ""
+
+#: bf32743d60dc4a47b2809974b262f96b discord.client.Client.run:8 of
+msgid "Roughly Equivalent to: ::"
+msgstr ""
+
+#: 5068dc186f7d4b5c98caaa8752b6b428 discord.client.Client.run:20 of
+msgid ""
+"This function must be the last function to call due to the fact that it "
+"is blocking. That means that registration of events or anything being "
+"called after this function call will not execute until it returns."
+msgstr ""
+
+#: 904fe45f358146e683fec60eee80c2e5 discord.client.Client.start:3 of
+msgid "A shorthand coroutine for :meth:`login` + :meth:`connect`."
+msgstr ""
+
+#: 02034fb9cb9c44b7810a0d146353bf07 discord.client.Client.start:5 of
+msgid "An unexpected keyword argument was received."
+msgstr ""
+
+#: ab9038811b594d4ea2ea96f42440f117 discord.Bot.status:1
+#: discord.Client.status:1 of
+msgid "The status being used upon logging on to Discord."
+msgstr ""
+
+#: b39bab7b652b4d4f98cf18b2b9db6484 discord.Bot.stickers:1
+#: discord.Client.stickers:1 of
+msgid "The stickers that the connected client has."
+msgstr ""
+
+#: 4a2351568c31486793eb53e153daa658 discord.Bot.store_url:1
+#: discord.Client.store_url:1 of
+msgid "The URL that leads to the application's store page for monetization."
+msgstr ""
+
+#: discord.bot.ApplicationCommandMixin.sync_commands:3
+#: e41ee7cfb81d4efbb82555468a565e3b of
+msgid ""
+"Registers all commands that have been added through "
+":meth:`.add_application_command`. This method cleans up all commands over"
+" the API and should sync them with the internal cache of commands. It "
+"attempts to register the commands in the most efficient way possible, "
+"unless ``force`` is set to ``True``, in which case it will always "
+"register all commands."
+msgstr ""
+
+#: af342759879c41d2b37da067dc43b3fb
+#: discord.bot.ApplicationCommandMixin.sync_commands:8 of
+msgid ""
+"By default, this coroutine is called inside the :func:`.on_connect` "
+"event. If you choose to override the :func:`.on_connect` event, then you "
+"should invoke this coroutine as well such as the following:"
+msgstr ""
+
+#: discord.bot.ApplicationCommandMixin.sync_commands:20
+#: ee42e6eda6db4919b8cbd51d9980a031 of
+msgid ""
+"If you remove all guild commands from a particular guild, the library may"
+" not be able to detect and update the commands accordingly, as it would "
+"have to individually check for each guild. To force the library to "
+"unregister a guild's commands, call this function with ``commands=[]`` "
+"and ``guild_ids=[guild_id]``."
+msgstr ""
+
+#: d9a16639758842dc8da3fb43f1016194
+#: discord.bot.ApplicationCommandMixin.sync_commands:27 of
+msgid ""
+"A list of commands to register. If this is not set (None), then all "
+"commands will be registered."
+msgstr ""
+
+#: 4e2c5bcbf6fa4e04bb1a21be03790c07
+#: discord.bot.ApplicationCommandMixin.sync_commands:39 of
+msgid ""
+"A list of guild ids to register the commands for. If this is not set, the"
+" commands' :attr:`~.ApplicationCommand.guild_ids` attribute will be used."
+msgstr ""
+
+#: c7ee914bd75d468a8a9831931c65076e
+#: discord.bot.ApplicationCommandMixin.sync_commands:43 of
+msgid "Whether to register guild commands. Defaults to True."
+msgstr ""
+
+#: 774275396f9e4845a5555975a19daa76
+#: discord.bot.ApplicationCommandMixin.sync_commands:46 of
+msgid ""
+"A list of guilds ids to check for commands to unregister, since the bot "
+"would otherwise have to check all guilds. Unlike ``guild_ids``, this does"
+" not alter the commands' :attr:`~.ApplicationCommand.guild_ids` "
+"attribute, instead it adds the guild ids to a list of guilds to sync "
+"commands for. If ``register_guild_commands`` is set to False, then this "
+"parameter is ignored."
+msgstr ""
+
+#: 911175a53ba24fc4a4c0ba2d0cf64aa2 discord.cog.CogMixin.unload_extension:1 of
+msgid "Unloads an extension."
+msgstr ""
+
+#: be8975adc11947f5a3b07d92c76bc7f5 discord.cog.CogMixin.unload_extension:3 of
+msgid ""
+"When the extension is unloaded, all commands, listeners, and cogs are "
+"removed from the bot and the module is un-imported."
+msgstr ""
+
+#: 7d49b0308c7541fb82f6fbecf79a8108 discord.cog.CogMixin.unload_extension:6 of
+msgid ""
+"The extension can provide an optional global function, ``teardown``, to "
+"do miscellaneous clean-up if necessary. This function takes a single "
+"parameter, the ``bot``, similar to ``setup`` from "
+":meth:`~.Bot.load_extension`."
+msgstr ""
+
+#: 86a50feef9e14adaba9477a06f226bf1 discord.cog.CogMixin.unload_extension:12 of
+msgid ""
+"The extension name to unload. It must be dot separated like regular "
+"Python imports if accessing a submodule. e.g. ``foo.test`` if you want to"
+" import ``foo/test.py``."
+msgstr ""
+
+#: c6b000d16a9943f4be19931fa26a7326 discord.cog.CogMixin.unload_extension:17 of
+msgid ""
+"The package name to resolve relative imports with. This is required when "
+"unloading an extension using a relative path, e.g ``.foo.test``. Defaults"
+" to ``None``.  .. versionadded:: 1.7"
+msgstr ""
+
+#: 323fe63c4de8498e9c77dbd7765d0be5 discord.cog.CogMixin.unload_extension:17 of
+msgid ""
+"The package name to resolve relative imports with. This is required when "
+"unloading an extension using a relative path, e.g ``.foo.test``. Defaults"
+" to ``None``."
+msgstr ""
+
+#: 017dba9563364359a4934fe0a812245f discord.cog.CogMixin.unload_extension:24 of
+msgid ""
+"The name of the extension could not     be resolved using the provided "
+"``package`` parameter."
+msgstr ""
+
+#: 6f4ba32dcd474a5bb21ddc0448b64cc8
+#: discord.client.Client.update_role_connection_metadata_records:3 of
+msgid "Updates the bot's role connection metadata records."
+msgstr ""
+
+#: discord.client.Client.update_role_connection_metadata_records:8
+#: f35e47ae72cb45fbbd43a5849db2f4ed of
+msgid "The new metadata records to send to Discord."
+msgstr ""
+
+#: 157edf86c4214bac9cc97778a341cb81
+#: discord.client.Client.update_role_connection_metadata_records:11 of
+msgid "The updated role connection metadata records."
+msgstr ""
+
+#: a88e758c5a764f1b9008d208a82a5baf discord.Bot.user:1 discord.Client.user:1 of
+msgid "Represents the connected client. ``None`` if not logged in."
+msgstr ""
+
+#: 6d3be79316ad4aed8e4440853891714e discord.Bot.users:1 discord.Client.users:1
+#: of
+msgid "Returns a list of all the users the bot can see."
+msgstr ""
+
+#: b67ba7a02b43409aaa2626f955f79fd2 discord.Bot.voice_clients:1
+#: discord.Client.voice_clients:1 of
+msgid "Represents a list of voice connections."
+msgstr ""
+
+#: 9075a14b38ea45a6b0a11e551ef621f2 discord.Bot.voice_clients:3
+#: discord.Client.voice_clients:3 of
+msgid "These are usually :class:`.VoiceClient` instances."
+msgstr ""
+
+#: 6487197b421c48bba8784b3fa1ff4ac9 discord.client.Client.wait_for:3 of
+msgid "Waits for a WebSocket event to be dispatched."
+msgstr ""
+
+#: 0b048b61ad98439db8940a4d2d8d3701 discord.client.Client.wait_for:5 of
+msgid ""
+"This could be used to wait for a user to reply to a message, or to react "
+"to a message, or to edit a message in a self-contained way."
+msgstr ""
+
+#: 689487a846eb47e093ba8e1d91517750 discord.client.Client.wait_for:9 of
+msgid ""
+"The ``timeout`` parameter is passed onto :func:`asyncio.wait_for`. By "
+"default, it does not timeout. Note that this does propagate the "
+":exc:`asyncio.TimeoutError` for you in case of timeout and is provided "
+"for ease of use."
+msgstr ""
+
+#: 0cef96bb40b84218860e67a2b01b3370 discord.client.Client.wait_for:14 of
+msgid ""
+"In case the event returns multiple arguments, a :class:`tuple` containing"
+" those arguments is returned instead. Please check the "
+":ref:`documentation <discord-api-events>` for a list of events and their "
+"parameters."
+msgstr ""
+
+#: discord.client.Client.wait_for:19 ee2bd0327d864fb28565cad59831a983 of
+msgid "This function returns the **first event that meets the requirements**."
+msgstr ""
+
+#: cd139f56acdc485595a3eb1113c5e0ff discord.client.Client.wait_for:22 of
+msgid ""
+"The event name, similar to the :ref:`event reference <discord-api-"
+"events>`, but without the ``on_`` prefix, to wait for."
+msgstr ""
+
+#: 41e9fd8669df481ba87c83815fb92f01 discord.client.Client.wait_for:26 of
+msgid ""
+"A predicate to check what to wait for. The arguments must meet the "
+"parameters of the event being waited for."
+msgstr ""
+
+#: b5ccde8f18c74e6e8939f7d64c2241f9 discord.client.Client.wait_for:30 of
+msgid ""
+"The number of seconds to wait before timing out and raising "
+":exc:`asyncio.TimeoutError`."
+msgstr ""
+
+#: discord.client.Client.wait_for:34 ea5b0123a5434897907777cc1da3e32b of
+msgid ""
+"Returns no arguments, a single argument, or a :class:`tuple` of multiple "
+"arguments that mirrors the parameters passed in the :ref:`event reference"
+" <discord-api-events>`."
+msgstr ""
+
+#: discord.client.Client.wait_for:39 fe1e49bf56f0410eb7b43d04fc145ddd of
+msgid "Raised if a timeout is provided and reached."
+msgstr ""
+
+#: discord.client.Client.wait_for:43 fbf53c322b9b4a2190fb5211f9148bfe of
+msgid "Waiting for a user reply: ::"
+msgstr ""
+
+#: 3f2b62ede5b54e9cadcfbb3edf7e3f81 discord.client.Client.wait_for:57 of
+msgid "Waiting for a thumbs up reaction from the message author: ::"
+msgstr ""
+
+#: 374ebcd380c14eaebda917973c9c27a6 discord.client.Client.wait_until_ready:3 of
+msgid "Waits until the client's internal cache is all ready."
+msgstr ""
+
+#: 27b08f7dc25947a086a2feceb0523df6
+#: discord.bot.ApplicationCommandMixin.walk_application_commands:1 of
+msgid ""
+"An iterator that recursively walks through all application commands and "
+"subcommands."
+msgstr ""
+
+#: 5492eec6b734488c9e67946a7180b89a
+#: discord.bot.ApplicationCommandMixin.walk_application_commands:3 of
+msgid ""
+":class:`.ApplicationCommand` -- An application command from the internal "
+"list of application commands."
+msgstr ""
+
+#: 61133e69adc34f46b680972b64aba970 discord.bot.AutoShardedBot:1 of
+msgid ""
+"This is similar to :class:`.Bot` except that it is inherited from "
+":class:`discord.AutoShardedClient` instead."
+msgstr ""
+
+#: ../../api/clients.rst:39 9483ed2b1c48482885c0ca1eb34130ec
+msgid "Clients"
+msgstr ""
+
+#: bf69e7a4021a45c8a77931f74ed76550 discord.client.Client:1 of
+msgid ""
+"Represents a client connection that connects to Discord. This class is "
+"used to interact with the Discord WebSocket and API."
+msgstr ""
+
+#: 5c069020781a42fe96c83e24a1f6c3c4 discord.client.Client:4 of
+msgid "A number of options can be passed to the :class:`Client`."
+msgstr ""
+
+#: a05ad8a60fa94a36be6482dc51364684 discord.client.Client:6 of
+msgid ""
+"The maximum number of messages to store in the internal message cache. "
+"This defaults to ``1000``. Passing in ``None`` disables the message "
+"cache.  .. versionchanged:: 1.3     Allow disabling the message cache and"
+" change the default size to ``1000``."
+msgstr ""
+
+#: c9df9a316415445bbda61e5dc12eea71 discord.client.Client:6 of
+msgid ""
+"The maximum number of messages to store in the internal message cache. "
+"This defaults to ``1000``. Passing in ``None`` disables the message "
+"cache."
+msgstr ""
+
+#: c3595a83fa414fa58ebb0c3fe72870c4 discord.client.Client:9 of
+msgid "Allow disabling the message cache and change the default size to ``1000``."
+msgstr ""
+
+#: 6c88dd4b014e4fd68019bf91e0e79449 discord.client.Client:13 of
+msgid ""
+"The :class:`asyncio.AbstractEventLoop` to use for asynchronous "
+"operations. Defaults to ``None``, in which case the default event loop is"
+" used via :func:`asyncio.get_event_loop()`."
+msgstr ""
+
+#: 21cc11771cf14b8482b82ed348a0bcc9 discord.client.Client:17 of
+msgid "The connector to use for connection pooling."
+msgstr ""
+
+#: 36e77ef20089453bad2c58061b76319e discord.client.Client:19 of
+msgid "Proxy URL."
+msgstr ""
+
+#: 2bca727e64604375afc0316e0da77488 discord.client.Client:21 of
+msgid "An object that represents proxy HTTP Basic Authorization."
+msgstr ""
+
+#: 22b22764dfe94753af363b0e2e855b53 discord.client.Client:23 of
+msgid "Integer starting at ``0`` and less than :attr:`.shard_count`."
+msgstr ""
+
+#: 2994835195fe455b9ba97aa0bf93c946 discord.client.Client:25 of
+msgid "The total number of shards."
+msgstr ""
+
+#: 0cbc330e9f874100a24ecdd7f73bf8bb discord.client.Client:29 of
+msgid ""
+"The intents that you want to enable for the session. This is a way of "
+"disabling and enabling certain gateway events from triggering and being "
+"sent. If not given, defaults to a regularly constructed :class:`Intents` "
+"class.  .. versionadded:: 1.5"
+msgstr ""
+
+#: discord.client.Client:29 f78cb44c1747402fa0d2daa48076c449 of
+msgid ""
+"The intents that you want to enable for the session. This is a way of "
+"disabling and enabling certain gateway events from triggering and being "
+"sent. If not given, defaults to a regularly constructed :class:`Intents` "
+"class."
+msgstr ""
+
+#: d1e04968f26046eb83cc40c32fffbce4 discord.client.Client:35 of
+msgid ""
+"Allows for finer control over how the library caches members. If not "
+"given, defaults to cache as much as possible with the currently selected "
+"intents.  .. versionadded:: 1.5"
+msgstr ""
+
+#: 1cf5a217e1c448509380cd0675ac2861 discord.client.Client:35 of
+msgid ""
+"Allows for finer control over how the library caches members. If not "
+"given, defaults to cache as much as possible with the currently selected "
+"intents."
+msgstr ""
+
+#: 839eb639389f4e90bcaf5390534f7254 discord.client.Client:41 of
+msgid ""
+"Indicates if :func:`.on_ready` should be delayed to chunk all guilds at "
+"start-up if necessary. This operation is incredibly slow for large "
+"amounts of guilds. The default is ``True`` if :attr:`Intents.members` is "
+"``True``.  .. versionadded:: 1.5"
+msgstr ""
+
+#: 4ac529aded574578a8be71ceea066b6d discord.client.Client:41 of
+msgid ""
+"Indicates if :func:`.on_ready` should be delayed to chunk all guilds at "
+"start-up if necessary. This operation is incredibly slow for large "
+"amounts of guilds. The default is ``True`` if :attr:`Intents.members` is "
+"``True``."
+msgstr ""
+
+#: discord.client.Client:48 ff86deee1e964eff876d58a0c1bf9af1 of
+msgid "A status to start your presence with upon logging on to Discord."
+msgstr ""
+
+#: 595862fc879e41dbbdea585be33d1345 discord.client.Client:50 of
+msgid "An activity to start your presence with upon logging on to Discord."
+msgstr ""
+
+#: discord.client.Client:52 faae2eb41a6849ea931db8d8e3b6fd1c of
+msgid ""
+"Control how the client handles mentions by default on every message sent."
+"  .. versionadded:: 1.4"
+msgstr ""
+
+#: 58dbe8273cff49848baf5100136b8653 discord.client.Client:52 of
+msgid "Control how the client handles mentions by default on every message sent."
+msgstr ""
+
+#: 9ed5eed0c42248ab820b06215b9b5a69 discord.client.Client:56 of
+msgid ""
+"The maximum numbers of seconds before timing out and restarting the "
+"WebSocket in the case of not receiving a HEARTBEAT_ACK. Useful if "
+"processing the initial packets take too long to the point of "
+"disconnecting you. The default timeout is 60 seconds."
+msgstr ""
+
+#: 69d65080cec044e7b6455edd4a0c6db6 discord.client.Client:61 of
+msgid ""
+"The maximum number of seconds to wait for the GUILD_CREATE stream to end "
+"before preparing the member cache and firing READY. The default timeout "
+"is 2 seconds.  .. versionadded:: 1.4"
+msgstr ""
+
+#: 061fbfc2e3974aefa0e85a933b169164 discord.client.Client:61 of
+msgid ""
+"The maximum number of seconds to wait for the GUILD_CREATE stream to end "
+"before preparing the member cache and firing READY. The default timeout "
+"is 2 seconds."
+msgstr ""
+
+#: b43e4d9978ea452bad0b3f920634f71a discord.client.Client:66 of
+msgid ""
+"Whether to assume the system clock is unsynced. This applies to the "
+"ratelimit handling code. If this is set to ``True``, the default, then "
+"the library uses the time to reset a rate limit bucket given by Discord. "
+"If this is ``False`` then your system clock is used to calculate how long"
+" to sleep for. If this is set to ``False`` it is recommended to sync your"
+" system clock to Google's NTP server.  .. versionadded:: 1.3"
+msgstr ""
+
+#: 8431257445754fb5ba6f8bd670885610 discord.client.Client:66 of
+msgid ""
+"Whether to assume the system clock is unsynced. This applies to the "
+"ratelimit handling code. If this is set to ``True``, the default, then "
+"the library uses the time to reset a rate limit bucket given by Discord. "
+"If this is ``False`` then your system clock is used to calculate how long"
+" to sleep for. If this is set to ``False`` it is recommended to sync your"
+" system clock to Google's NTP server."
+msgstr ""
+
+#: a151867e23f44624b83429102b15a98e discord.client.Client:74 of
+msgid ""
+"Whether to enable events that are useful only for debugging gateway "
+"related information.  Right now this involves "
+":func:`on_socket_raw_receive` and :func:`on_socket_raw_send`. If this is "
+"``False`` then those events will not be dispatched (due to performance "
+"considerations). To enable these events, this must be set to ``True``. "
+"Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr ""
+
+#: 70630f12d1544afaa766f261e18e28ac discord.client.Client:74 of
+msgid ""
+"Whether to enable events that are useful only for debugging gateway "
+"related information."
+msgstr ""
+
+#: 0914818f05e04728aa8d77f5b0d51043 discord.client.Client:76 of
+msgid ""
+"Right now this involves :func:`on_socket_raw_receive` and "
+":func:`on_socket_raw_send`. If this is ``False`` then those events will "
+"not be dispatched (due to performance considerations). To enable these "
+"events, this must be set to ``True``. Defaults to ``False``."
+msgstr ""
+
+#: c72989c35e494798868c418761624dc3 discord.client.Client:85 of
+msgid ""
+"The WebSocket gateway the client is currently connected to. Could be "
+"``None``."
+msgstr ""
+
+#: bfdaca2ce94b47c491227ce955d6ef14 discord.client.Client:89 of
+msgid "The event loop that the client uses for asynchronous operations."
+msgstr ""
+
+#: 49f2ebafe64e46af80bdc5670f75ec65 discord.client.Client:91 of
+msgid ":class:`asyncio.AbstractEventLoop`"
+msgstr ""
+
+#: 3cb35c3f35cd4b2ca42e62e2da4cb21d discord.shard.AutoShardedClient:1 of
+msgid ""
+"A client similar to :class:`Client` except it handles the complications "
+"of sharding for the user into a more manageable and transparent single "
+"process bot."
+msgstr ""
+
+#: b5375ea69da64b3caa024a700394b923 discord.shard.AutoShardedClient:5 of
+msgid ""
+"When using this client, you will be able to use it as-if it was a regular"
+" :class:`Client` with a single shard when implementation wise internally "
+"it is split up into multiple shards. This allows you to not have to deal "
+"with IPC or other complicated infrastructure."
+msgstr ""
+
+#: b23af5d33cea44b7a27c7209f321f2b5 discord.shard.AutoShardedClient:10 of
+msgid ""
+"It is recommended to use this client only if you have surpassed at least "
+"1000 guilds."
+msgstr ""
+
+#: d4eaadf814124f55ab556462d4fbb97a discord.shard.AutoShardedClient:13 of
+msgid ""
+"If no :attr:`.shard_count` is provided, then the library will use the Bot"
+" Gateway endpoint call to figure out how many shards to use."
+msgstr ""
+
+#: b8867ec06a244683a091e3779cb7d564 discord.shard.AutoShardedClient:16 of
+msgid ""
+"If a ``shard_ids`` parameter is given, then those shard IDs will be used "
+"to launch the internal shards. Note that :attr:`.shard_count` must be "
+"provided if this is used. By default, when omitted, the client will "
+"launch shards from 0 to ``shard_count - 1``."
+msgstr ""
+
+#: 154cb8641e7546fb9fa4fbaf26b840aa discord.shard.AutoShardedClient:23 of
+msgid "An optional list of shard_ids to launch the shards with."
+msgstr ""
+
+#: 45591084a7f244f081d9f18faeb96673 discord.AutoShardedClient.latency:3 of
+msgid ""
+"This operates similarly to :meth:`Client.latency` except it uses the "
+"average latency of every shard's latency. To get a list of shard latency,"
+" check the :attr:`latencies` property. Returns ``nan`` if there are no "
+"shards ready."
+msgstr ""
+
+#: 619ba050e1e849f6b4c984c0fe32b011 discord.AutoShardedClient.latencies:1 of
+msgid "A list of latencies between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+msgstr ""
+
+#: 97f9a62dd3ed4c80a81751723a8c7204 discord.AutoShardedClient.latencies:4 of
+msgid "This returns a list of tuples with elements ``(shard_id, latency)``."
+msgstr ""
+
+#: discord.shard.AutoShardedClient.get_shard:1 e94acc6e90f1417a98be41ad60b4db51
+#: of
+msgid "Gets the shard information at a given shard ID or ``None`` if not found."
+msgstr ""
+
+#: dee98d04bb7d49cc82b8b1641fe586b4 discord.shard.AutoShardedClient.get_shard:5
+#: of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.shard.ShardInfo\\`"
+" \\| \\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: 7d75d87d0698427b8f520c5d1481e427 discord.AutoShardedClient.shards:1 of
+msgid "Returns a mapping of shard IDs to their respective info object."
+msgstr ""
+
+#: discord.shard.AutoShardedClient.change_presence:5
+#: fe09ce2894fb435bb45e56115918a23c of
+msgid "Example: ::"
+msgstr ""
+
+#: 3804449bf2294064adf9b2e5b242eb29
+#: discord.shard.AutoShardedClient.change_presence:17 of
+msgid ""
+"Indicates what status to change to. If ``None``, then "
+":attr:`Status.online` is used."
+msgstr ""
+
+#: 3d9cee2a830946a296dafe6d7f539aa7
+#: discord.shard.AutoShardedClient.change_presence:21 of
+msgid ""
+"The shard_id to change the presence to. If not specified or ``None``, "
+"then it will change the presence of every shard the bot can see."
+msgstr ""
+
+#: cec772a3fc134fb7bb636f5854a3cf00
+#: discord.shard.AutoShardedClient.change_presence:26 of
+msgid "If the ``activity`` parameter is not of proper type."
+msgstr ""
+
+#: c11858bd0a2046e5ac236361b14e3083
+#: discord.shard.AutoShardedClient.is_ws_ratelimited:1 of
+msgid "Whether the websocket is currently rate limited."
+msgstr ""
+
+#: 771bda0c3a274e548f284047259f561a
+#: discord.shard.AutoShardedClient.is_ws_ratelimited:3 of
+msgid ""
+"This can be useful to know when deciding whether you should query members"
+" using HTTP or via the gateway."
+msgstr ""
+
+#: af9ce954ce2644af83ba1462c4d8d5a5
+#: discord.shard.AutoShardedClient.is_ws_ratelimited:6 of
+msgid ""
+"This implementation checks if any of the shards are rate limited. For "
+"more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. "
+":rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+

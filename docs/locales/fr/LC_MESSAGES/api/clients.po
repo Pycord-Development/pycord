@@ -78,13 +78,13 @@ msgid "This decorator is overridden by :class:`discord.ext.commands.Bot`."
 msgstr "This decorator is overridden by :class:`discord.ext.commands.Bot`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de retour"
 
 msgid "Callable[..., :class:`ApplicationCommand`]"
 msgstr "Callable[..., :class:`ApplicationCommand`]"
@@ -1128,7 +1128,7 @@ msgid "The default command error handler provided by the bot."
 msgstr "The default command error handler provided by the bot."
 
 msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
-msgstr "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
+msgstr "Par défaut, cela imprime dans :data:`sys.stderr`, mais cela peut être remplacé par une autre implémentation."
 
 msgid "This only fires if you do not specify any listeners for command error."
 msgstr "This only fires if you do not specify any listeners for command error."

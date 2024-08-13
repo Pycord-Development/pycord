@@ -38,11 +38,14 @@ msgstr "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `Sc
 msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
 msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
 
-msgid "[2.6.0] - 2024-07-09"
-msgstr "[2.6.0] - 2024-07-09"
-
 msgid "Added"
 msgstr "Added"
+
+msgid "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
+msgstr "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
+
+msgid "[2.6.0] - 2024-07-09"
+msgstr "[2.6.0] - 2024-07-09"
 
 msgid "Added `banner` parameter to `ClientUser.edit`. ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))"
 msgstr "Added `banner` parameter to `ClientUser.edit`. ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))"

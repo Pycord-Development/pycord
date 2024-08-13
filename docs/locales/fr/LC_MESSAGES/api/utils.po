@@ -33,7 +33,7 @@ msgid "The iterable to search through."
 msgstr "The iterable to search through."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de retour"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
@@ -87,7 +87,7 @@ msgid "The default value to return if the object is not found, instead of raisin
 msgstr "The default value to return if the object is not found, instead of raising an error."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "The object found or the default value."
 msgstr "The object found or the default value."

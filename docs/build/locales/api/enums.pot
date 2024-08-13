@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -515,7 +515,7 @@ msgstr ""
 
 #: ../../api/enums.rst:421
 #: 4057e136a5a34be2b63de5112cd66ada
-msgid "Represents a component based interaction, i.e. using the Discord Bot UI Kit."
+msgid "Represents a component-based interaction, i.e. using the Discord Bot UI Kit."
 msgstr ""
 
 #: ../../api/enums.rst:424
@@ -525,7 +525,7 @@ msgstr ""
 
 #: ../../api/enums.rst:427
 #: 7b9dd73bb4b443f287ef44bb27a1c8bc
-msgid "Represents a modal based interaction."
+msgid "Represents a modal-based interaction."
 msgstr ""
 
 #: ../../api/enums.rst:431

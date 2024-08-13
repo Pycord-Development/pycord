@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "A Primer to Gateway Intents"
-msgstr "A Primer to Gateway Intents"
+msgstr "网关意图入门"
 
 msgid "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
-msgstr "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
+msgstr "在版本号1.5中，引入了 :class:`Intents`。这对于在编写机器人程式码时有很大的改变。网关意图允许机器人去获取一些特定的事件。每个事件都被纪录在 :class:`Intents`文档的各个属性中。"
 
 msgid "These intents are passed to the constructor of :class:`Client` or its subclasses (:class:`AutoShardedClient`, :class:`~.AutoShardedBot`, :class:`~.Bot`) with the ``intents`` argument."
 msgstr "These intents are passed to the constructor of :class:`Client` or its subclasses (:class:`AutoShardedClient`, :class:`~.AutoShardedBot`, :class:`~.Bot`) with the ``intents`` argument."
@@ -48,7 +48,7 @@ msgid "A privileged intent is one that requires you to go to the developer porta
 msgstr "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
-msgstr "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+msgstr "请确保你已经登入了 `Discord网站<https://discord.com>`_。"
 
 msgid "Navigate to the `application page <https://discord.com/developers/applications>`_."
 msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_."

@@ -12,31 +12,31 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Frequently Asked Questions"
-msgstr "Frequently Asked Questions"
+msgstr "常问的问题"
 
 msgid "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
-msgstr "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
+msgstr "这是一个关于使用 ``Pycord`` 及其扩展模块的常见问题列表。 随时可以提出一个新问题或通过拉取请求提交一个问题。"
 
 msgid "Coroutines"
-msgstr "Coroutines"
+msgstr "协程"
 
 msgid "Questions regarding coroutines and asyncio belong here."
-msgstr "Questions regarding coroutines and asyncio belong here."
+msgstr "关于协程与asyncio的问题都在这里。"
 
 msgid "What is a coroutine?"
-msgstr "What is a coroutine?"
+msgstr "什么是协程？"
 
 msgid "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
-msgstr "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
+msgstr "一个 |cortine_link|_ 是一个必须使用 ``await`` 或 ``yield from`` 来调用的函数。 当Python 遇到一个 ``await`` 时，它会在那个时候停止函数的执行，并且在其他事情上工作，直到它回到那个时候并完成它的工作。 这允许您的程序同时执行多个事项，而不使用线程或复杂的多处理程序。"
 
 msgid "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
-msgstr "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
+msgstr "**如果你忘记await一个协程，则协程将不会执行。所以永远不要忘记await一个协程。**"
 
 msgid "Where can I use ``await``\\?"
-msgstr "Where can I use ``await``\\?"
+msgstr "我可以在哪里使用``await``\\?"
 
 msgid "You can only use ``await`` inside ``async def`` functions and nowhere else."
-msgstr "You can only use ``await`` inside ``async def`` functions and nowhere else."
+msgstr "你仅可以在``async def``函式内使用``await``，其他地方都不能使用。"
 
 msgid "What does \"blocking\" mean?"
 msgstr "What does \"blocking\" mean?"

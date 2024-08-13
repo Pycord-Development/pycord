@@ -93,8 +93,8 @@ msgid "Basic Concepts"
 msgstr "Basiskonzepte"
 
 msgid "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
-msgstr "Pycord dreht sich um das Konzept von :ref:`events <discord-api-events>`. Ein Ereignis ist etwas, auf das Sie hören und dann reagieren. Zum Beispiel, wenn eine Nachricht passiert, erhalten Sie ein Ereignis darüber, auf das Sie reagieren können."
+msgstr "Pycord dreht sich um das Konzept von :ref:`events <discord-api-events>`. Ein Event ist etwas, auf das Sie hören und dann reagieren. Zum Beispiel, wenn eine Nachricht passiert, erhalten Sie ein Event darüber, auf das Sie reagieren können."
 
 msgid "A quick example to showcase how events work:"
-msgstr "Ein schnelles Beispiel, um zu zeigen, wie Ereignisse funktionieren:"
+msgstr "Ein schnelles Beispiel, um zu zeigen, wie Events funktionieren:"
 

@@ -12,104 +12,104 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Extensions"
-msgstr "Extensions"
+msgstr "확장"
 
 msgid "Meta"
-msgstr "Meta"
+msgstr "메타"
 
 msgid "Welcome to Pycord"
-msgstr "Welcome to Pycord"
+msgstr "Pycord에 오신 것을 환영합니다"
 
 msgid "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
-msgstr "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
+msgstr "Pycord는 사용하기 쉽고, 기능이 풍부하고, 비동기를 지원하는 최신 Discord API 래퍼입니다."
 
 msgid "**Features:**"
-msgstr "**Features:**"
+msgstr "**특징:**"
 
 msgid "Modern Pythonic API using ``async``\\/``await`` syntax"
-msgstr "Modern Pythonic API using ``async``\\/``await`` syntax"
+msgstr "``async``\\/``await`` 구문 등 Python에 걸맞는 최신 API"
 
 msgid "Sane rate limit handling that prevents 429s"
-msgstr "Sane rate limit handling that prevents 429s"
+msgstr "429 오류를 방지하는 알맞은 속도 제한"
 
 msgid "Command extension to aid with bot creation"
-msgstr "Command extension to aid with bot creation"
+msgstr "봇 제작을 거들어 주는 명령어 확장"
 
 msgid "Easy to use with an object oriented design"
-msgstr "Easy to use with an object oriented design"
+msgstr "객체 지향 설계로 사용이 쉬움"
 
 msgid "Optimised for both speed and memory"
-msgstr "Optimised for both speed and memory"
+msgstr "속도와 메모리 둘 다 최적화됨"
 
 msgid "Getting started"
-msgstr "Getting started"
+msgstr "시작하기"
 
 msgid "Is this your first time using the library? This is the place to get started!"
-msgstr "Is this your first time using the library? This is the place to get started!"
+msgstr "이 라이브러리를 처음 써 보시나요? 여기서부터 시작해 보세요!"
 
 msgid "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
-msgstr "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
+msgstr "**첫걸음:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`가이드 <guide>`"
 
 msgid "**Working with Discord:** :doc:`discord` | :doc:`intents`"
-msgstr "**Working with Discord:** :doc:`discord` | :doc:`intents`"
+msgstr "**Discord 작업:** :doc:`discord` | :doc:`intents`"
 
 msgid "**Examples:** Many examples are available in the :resource:`repository <examples>`."
-msgstr "**Examples:** Many examples are available in the :resource:`repository <examples>`."
+msgstr "**예시:** :resource:`리포지토리 <examples>`에서 각종 예시들을 찾아보실 수 있습니다.."
 
 msgid "Getting help"
-msgstr "Getting help"
+msgstr "도움 받기"
 
 msgid "If you're having trouble with something, these resources might help."
-msgstr "If you're having trouble with something, these resources might help."
+msgstr "문제를 겪고 있다면 다음 자료들이 도움이 될 수 있습니다."
 
 msgid "Try the :doc:`faq` first, it's got answers to all common questions."
-msgstr "Try the :doc:`faq` first, it's got answers to all common questions."
+msgstr "우선 :doc:`faq` 문서를 읽어 보세요. 흔히 묻는 질문들에 대한 답이 전부 있습니다."
 
 msgid "Ask us and hang out with us in our :resource:`Discord <discord>` server."
-msgstr "Ask us and hang out with us in our :resource:`Discord <discord>` server."
+msgstr ":resource:`Discord <discord>` 서버에서 문의하거나, 함께 시간을 보내 보세요."
 
 msgid "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
-msgstr "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
+msgstr "특정한 무언가를 찾고 계시면, :ref:`색인 <genindex>`이나 :ref:`검색 페이지 <search>`를 살펴보세요."
 
 msgid "Report bugs in the :resource:`issue tracker <issues>`."
-msgstr "Report bugs in the :resource:`issue tracker <issues>`."
+msgstr ":resource:`이슈 트래커 <issues>`에 버그를 알려 주세요."
 
 msgid "Manuals"
-msgstr "Manuals"
+msgstr "매뉴얼"
 
 msgid "These pages go into great detail about everything the API can do."
-msgstr "These pages go into great detail about everything the API can do."
+msgstr "다음 페이지들에서는 API로 가능한 모든 것을 아주 상세하게 설명합니다."
 
 msgid "Core API"
-msgstr "Core API"
+msgstr "핵심 API"
 
 msgid "These extensions help you during development when it comes to common tasks."
-msgstr "These extensions help you during development when it comes to common tasks."
+msgstr "아래 확장들은 개발 중 자주 이뤄지는 작업들을 진행하는 데 도움을 줍니다."
 
 msgid ":doc:`ext/commands/index` - Bot commands framework"
-msgstr ":doc:`ext/commands/index` - Bot commands framework"
+msgstr ":doc:`ext/commands/index` - 봇 명령어 프레임워크"
 
 msgid ":doc:`ext/tasks/index` - asyncio.Task helpers"
-msgstr ":doc:`ext/tasks/index` - asyncio.Task helpers"
+msgstr ":doc:`ext/tasks/index` - asyncio.Task 보조 도구"
 
 msgid ":doc:`ext/pages/index` - A pagination extension module"
-msgstr ":doc:`ext/pages/index` - A pagination extension module"
+msgstr ":doc:`ext/pages/index` - 페이지네이션 확장 모듈"
 
 msgid ":doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands"
-msgstr ":doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands"
+msgstr ":doc:`ext/bridge/index` - 빗금 명령어와 채팅 명령어를 서로 잇는 모듈"
 
 msgid "If you're looking for something related to the project itself, it's here."
-msgstr "If you're looking for something related to the project itself, it's here."
+msgstr "여기에서 이 프로젝트에 대한 내용을 찾아보실 수 있습니다."
 
 msgid ":doc:`changelog` - The changelog for the library."
-msgstr ":doc:`changelog` - The changelog for the library."
+msgstr ":doc:`changelog` - 라이브러리 변경 기록"
 
 msgid ":doc:`version_guarantees` - The version guarantees for the library."
-msgstr ":doc:`version_guarantees` - The version guarantees for the library."
+msgstr ":doc:`version_guarantees` - 라이브러리의 버전에 대한 보증"
 
 msgid ":doc:`migrating_to_v1` - How to migrate from v0.x to v1.x."
-msgstr ":doc:`migrating_to_v1` - How to migrate from v0.x to v1.x."
+msgstr ":doc:`migrating_to_v1` - v0.x에서 v1.x으로 마이그레이션하는 방법"
 
 msgid ":doc:`migrating_to_v2` - How to migrate from v1.x to v2.x."
-msgstr ":doc:`migrating_to_v2` - How to migrate from v1.x to v2.x."
+msgstr ":doc:`migrating_to_v2` - v1.x에서 v2.x으로 마이그레이션하는 방법"
 

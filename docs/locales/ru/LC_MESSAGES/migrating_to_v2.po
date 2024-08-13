@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "Migrating to v2.0"
+msgstr "Миграция на v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
 msgstr "v2.0 introduced new Discord features and deprecated some old ones."
