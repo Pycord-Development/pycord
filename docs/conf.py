@@ -28,8 +28,8 @@ for i, line in enumerate(changelog_lines):
         break
 
 CHANGELOG_TEXT = (
-        "".join(changelog_lines)
-        + """
+    "".join(changelog_lines)
+    + """
 ## Older Versions
 
 A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
@@ -85,7 +85,7 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinxext.opengraph",
-    "sphinx_autodoc_typehints"
+    "sphinx_autodoc_typehints",
 ]
 
 always_document_param_types = True
