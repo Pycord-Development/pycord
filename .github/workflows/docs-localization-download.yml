@@ -102,6 +102,6 @@ jobs:
       - run: gh pr review --approve ${{ needs.download.outputs.pr_id }} -b "auto-approval for localization sync :3"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - run: gh pr merge --auto --squash ${{ needs.download.outputs.pr_id }}
+      - run: gh pr merge --auto -d --squash ${{ needs.download.outputs.pr_id }}
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
