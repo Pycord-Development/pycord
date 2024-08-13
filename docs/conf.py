@@ -28,8 +28,8 @@ for i, line in enumerate(changelog_lines):
         break
 
 CHANGELOG_TEXT = (
-    "".join(changelog_lines)
-    + """
+        "".join(changelog_lines)
+        + """
 ## Older Versions
 
 A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
@@ -51,7 +51,6 @@ else:
     if c_file.read() != CHANGELOG_TEXT:
         write_new()
     c_file.close()
-
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -86,12 +85,12 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinxext.opengraph",
-    "sphinx_autodoc_typehints",
-    "sphinx_intl",
+    "sphinx_autodoc_typehints"
 ]
 
 always_document_param_types = True
 toc_object_entries_show_parents = "hide"
+autosectionlabel_prefix_document = True
 
 ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
@@ -118,6 +117,9 @@ rst_prolog = """
 .. |maybecoro| replace:: This function *could be a* |coroutine_link|_.
 .. |coroutine_link| replace:: *coroutine*
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
+.. |gateway| replace:: |gateway_link|_
+.. |gateway_link| replace:: *gateway*
+.. _gateway_link: https://discord.com/developers/docs/topics/gateway-events
 """
 
 # Add any paths that contain templates here, relative to this directory.
@@ -397,13 +399,13 @@ htmlhelp_basename = "pycorddoc"
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
+    # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
+    # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
+    # 'preamble': '',
     # Latex figure (float) alignment
-    #'figure_align': 'htbp',
+    # 'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
