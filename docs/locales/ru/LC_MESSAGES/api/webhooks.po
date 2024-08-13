@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Webhook Support"
-msgstr "Webhook Support"
+msgstr "Поддержка вебхуков"
 
 msgid "Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class."
 msgstr "Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class."

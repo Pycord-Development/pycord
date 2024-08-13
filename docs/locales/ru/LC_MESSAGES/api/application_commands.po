@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Application Commands"
-msgstr "Application Commands"
+msgstr "Команды приложения"
 
 msgid "Command Permission Decorators"
 msgstr "Command Permission Decorators"

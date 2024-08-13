@@ -30,7 +30,7 @@ msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
 msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
 
 msgid "Changed"
-msgstr "Changed"
+msgstr "Изменено"
 
 msgid "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `ScheduledEvent.edit` to `image`. ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))"
 msgstr "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `ScheduledEvent.edit` to `image`. ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))"
@@ -39,7 +39,7 @@ msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](ht
 msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
 
 msgid "Added"
-msgstr "Added"
+msgstr "Добавлено"
 
 msgid "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
 msgstr "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
@@ -93,7 +93,7 @@ msgid "Added `MessageCall` information. ([#2488](https://github.com/Pycord-Devel
 msgstr "Added `MessageCall` information. ([#2488](https://github.com/Pycord-Development/pycord/pull/2488))"
 
 msgid "Fixed"
-msgstr "Fixed"
+msgstr "Исправлено"
 
 msgid "Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))"
 msgstr "Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))"
@@ -177,7 +177,7 @@ msgid "Changed the error message that appears when attempting to add a subcomman
 msgstr "Changed the error message that appears when attempting to add a subcommand group to a subcommand group. ([#2275](https://github.com/Pycord-Development/pycord/pull/2275))"
 
 msgid "Removed"
-msgstr "Removed"
+msgstr "Удалено"
 
 msgid "Removed the `delete_message_days` parameter from ban methods. Please use `delete_message_seconds` instead. ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))"
 msgstr "Removed the `delete_message_days` parameter from ban methods. Please use `delete_message_seconds` instead. ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))"
@@ -1104,8 +1104,8 @@ msgid "Fix py3.10 UnionType checks issue. ([#1240](https://github.com/Pycord-Dev
 msgstr "Fix py3.10 UnionType checks issue. ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))"
 
 msgid "Older Versions"
-msgstr "Older Versions"
+msgstr "Старые версии"
 
 msgid "A changelog for versions prior to v2.0 can be found [here](old_changelog.rst)."
-msgstr "A changelog for versions prior to v2.0 can be found [here](old_changelog.rst)."
+msgstr "Список изменений до версии v2.0 находится [здесь](old_changelog.rst)."
 
