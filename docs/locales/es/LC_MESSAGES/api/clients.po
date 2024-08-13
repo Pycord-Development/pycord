@@ -189,7 +189,7 @@ msgid "If the function should only be called once per :meth:`.Bot.invoke` call."
 msgstr "If the function should only be called once per :meth:`.Bot.invoke` call."
 
 msgid "Adds a \"cog\" to the bot."
-msgstr "Adds a \"cog\" to the bot."
+msgstr "Añade un \"cog\" al bot."
 
 msgid "A cog is a class that has its own event listeners and commands."
 msgstr "A cog is a class that has its own event listeners and commands."
@@ -219,10 +219,10 @@ msgid "The non decorator alternative to :meth:`.listen`."
 msgstr "The non decorator alternative to :meth:`.listen`."
 
 msgid "The function to call."
-msgstr "The function to call."
+msgstr "La función a llamar."
 
 msgid "The name of the event to listen for. Defaults to ``func.__name__``."
-msgstr "The name of the event to listen for. Defaults to ``func.__name__``."
+msgstr "El nombre del evento a escuchar. El valor por defecto es ``func.__name__``."
 
 msgid "The ``func`` parameter is not a coroutine function."
 msgstr "The ``func`` parameter is not a coroutine function."
@@ -573,7 +573,7 @@ msgid "This method is an API call. For general usage, consider :attr:`guilds` in
 msgstr "This method is an API call. For general usage, consider :attr:`guilds` instead."
 
 msgid "The number of guilds to retrieve. If ``None``, it retrieves every guild you have access to. Note, however, that this would make it a slow operation. Defaults to ``100``."
-msgstr "The number of guilds to retrieve. If ``None``, it retrieves every guild you have access to. Note, however, that this would make it a slow operation. Defaults to ``100``."
+msgstr "La cantidad de gremios a obtener. Si se proporciona ``None``, obtiene todos los servidores a los que tienes acceso. Ten en cuenta que esto lo haría una operación lenta``. El valor por defecto es ``100``."
 
 msgid "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
 msgstr "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
@@ -798,7 +798,7 @@ msgid "The guild ids associated to the command to get."
 msgstr "The guild ids associated to the command to get."
 
 msgid "The type of the command to get. Defaults to :class:`.ApplicationCommand`."
-msgstr "The type of the command to get. Defaults to :class:`.ApplicationCommand`."
+msgstr "El tipo del comando a obtener. El valor por defecto es :class:`.ApplicationCommand`."
 
 msgid "The command that was requested. If not found, returns ``None``."
 msgstr "The command that was requested. If not found, returns ``None``."
@@ -1050,22 +1050,22 @@ msgid "The extension or folder name to load. It must be dot separated like regul
 msgstr "The extension or folder name to load. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
 
 msgid "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
-msgstr "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+msgstr "El nombre del paquete con el que resolver importaciones relativas. Esto se requiere al cargar una extensión usando una ruta relativa, por ejemplo, ``.foo.test``. El valor por defecto es ``None``.  .. versionadded:: 1.7"
 
 msgid "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
-msgstr "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+msgstr "El nombre del paquete con el que resolver importaciones relativas. Esto se requiere al cargar una extensión usando una ruta relativa, por ejemplo, ``.foo.test``. El valor por defecto es ``None``."
 
 msgid "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``.  .. versionadded:: 2.0"
-msgstr "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr "Si los directorios bajo el directorio principal dado deberían ser cargados recursivamente. El valor por defecto es ``False``.  .. versionadded:: 2.0"
 
 msgid "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``."
-msgstr "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``."
+msgstr "Si los directorios bajo el directorio principal dado deberían ser cargados recursivamente. El valor por defecto es ``False``."
 
 msgid "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``.  .. versionadded:: 2.0"
-msgstr "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr "Si las excepciones deberián guardarse o lanzarse. Si se establece ``True``, todas las excepciones encontradas se guardaran en el diccionario retornado como estado cargador. Si se establece ``False``, cualquier excepcion que se encuentre será lanzada y el bot se cerrará. Si no se encuentra ninguna excepción, se retornará una lista con el nombre de extensiones cargadas. El valor por defecto es ``False``.  .. versionadded:: 2.0"
 
 msgid "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``."
-msgstr "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``."
+msgstr "Si las excepciones deberián guardarse o lanzarse. Si se establece ``True``, todas las excepciones encontradas se guardaran en el diccionario retornado como estado cargador. Si se establece ``False``, cualquier excepcion que se encuentre será lanzada y el bot se cerrará. Si no se encuentra ninguna excepción, se retornará una lista con el nombre de extensiones cargadas. El valor por defecto es ``False``."
 
 msgid "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing a list of loaded extensions or nothing due to an encountered exception."
 msgstr "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing a list of loaded extensions or nothing due to an encountered exception."

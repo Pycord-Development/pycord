@@ -33,28 +33,28 @@ msgid "Major Model Changes"
 msgstr "Wichtige Modelländerungen"
 
 msgid "Below are major model changes that have happened in v1.0"
-msgstr "Below are major model changes that have happened in v1.0"
+msgstr "Im Folgenden sind die wichtigsten Änderungen aufgeführt, die in Version 1.0 vorgenommen wurden"
 
 msgid "Snowflakes are int"
-msgstr "Snowflakes are int"
+msgstr "Snowflakes sind int"
 
 msgid "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
-msgstr "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
+msgstr "Vor v1.0 waren alle snowflakes (das ``id`` Attribut) strings. Dies wurde zu :class:`int` umgeändert."
 
 msgid "Quick example: ::"
-msgstr "Quick example: ::"
+msgstr "Schnelles Beispiel: ::"
 
 msgid "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
-msgstr "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
+msgstr "Diese Änderung ermöglicht weniger Fehler bei der Verwendung der Kopier-ID Funktion im offiziellen Client, da Sie diese nicht mehr in Anführungszeichen einpacken müssen und Optimierungsmöglichkeiten ermöglichen können, indem intern ETF anstelle von JSON verwenden werden kann."
 
 msgid "Server is now Guild"
-msgstr "Server is now Guild"
+msgstr "Server ist jetzt Guild"
 
 msgid "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
-msgstr "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
+msgstr "Die offizielle API-Dokumentation nennt das \"Server\"-Konzept stattdessen eine \"Guild\". Um bei Bedarf besser mit der API-Dokumentation übereinstimmen zu können, wurde das Modell in :class:`Guild` umbenannt und alle darauf bezogenen Instanzen wurden ebenfalls geändert."
 
 msgid "A list of changes is as follows:"
-msgstr "A list of changes is as follows:"
+msgstr "Eine Liste der Änderungen lautet wie folgt:"
 
 msgid "Before"
 msgstr "Vor / Bevor"
@@ -129,13 +129,13 @@ msgid ":meth:`Client.create_guild`"
 msgstr ":meth:`Client.create_guild`"
 
 msgid "Models are Stateful"
-msgstr "Models are Stateful"
+msgstr "Modelle sind Zustands-fähig"
 
 msgid "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
-msgstr "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
+msgstr "Wie bereits erwähnt, wurde eine Menge Funktionalität aus :class:`Client` verschoben und in ihre jeweilige :ref:`model <discord_api_models>` aufgenommen."
 
 msgid "A list of these changes is enumerated below."
-msgstr "A list of these changes is enumerated below."
+msgstr "Eine Liste dieser Änderungen ist unten aufgeführt."
 
 msgid "``Client.add_reaction``"
 msgstr "``Client.add_reaction``"
@@ -153,7 +153,7 @@ msgid "``Client.ban``"
 msgstr "``Client.ban``"
 
 msgid ":meth:`Member.ban` or :meth:`Guild.ban`"
-msgstr ":meth:`Member.ban` or :meth:`Guild.ban`"
+msgstr ":meth:`Member.ban` oder :meth:`Guild.ban`"
 
 msgid "``Client.change_nickname``"
 msgstr "``Client.change_nickname``"
@@ -171,7 +171,7 @@ msgid "``Client.create_channel``"
 msgstr "``Client.create_channel``"
 
 msgid ":meth:`Guild.create_text_channel` and :meth:`Guild.create_voice_channel`"
-msgstr ":meth:`Guild.create_text_channel` and :meth:`Guild.create_voice_channel`"
+msgstr ":meth:`Guild.create_text_channel` und :meth:`Guild.create_voice_channel`"
 
 msgid "``Client.create_custom_emoji``"
 msgstr "``Client.create_custom_emoji``"
@@ -201,7 +201,7 @@ msgid "``Client.delete_channel_permissions``"
 msgstr "``Client.delete_channel_permissions``"
 
 msgid ":meth:`abc.GuildChannel.set_permissions` with ``overwrite`` set to ``None``"
-msgstr ":meth:`abc.GuildChannel.set_permissions` with ``overwrite`` set to ``None``"
+msgstr ":meth:`abc.GuildChannel.set_permissions` mit ``overwrite`` auf ``None`` gesetzt"
 
 msgid "``Client.delete_custom_emoji``"
 msgstr "``Client.delete_custom_emoji``"
@@ -213,7 +213,7 @@ msgid "``Client.delete_invite``"
 msgstr "``Client.delete_invite``"
 
 msgid ":meth:`Invite.delete` or :meth:`Client.delete_invite`"
-msgstr ":meth:`Invite.delete` or :meth:`Client.delete_invite`"
+msgstr ":meth:`Invite.delete` oder :meth:`Client.delete_invite`"
 
 msgid "``Client.delete_message``"
 msgstr "``Client.delete_message``"
@@ -243,7 +243,7 @@ msgid "``Client.edit_channel``"
 msgstr "``Client.edit_channel``"
 
 msgid ":meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`"
-msgstr ":meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`"
+msgstr ":meth:`TextChannel.edit` oder :meth:`VoiceChannel.edit`"
 
 msgid "``Client.edit_channel_permissions``"
 msgstr "``Client.edit_channel_permissions``"
@@ -267,7 +267,7 @@ msgid "``Client.edit_profile``"
 msgstr "``Client.edit_profile``"
 
 msgid ":meth:`ClientUser.edit` (you get this from :attr:`Client.user`)"
-msgstr ":meth:`ClientUser.edit` (you get this from :attr:`Client.user`)"
+msgstr ":meth:`ClientUser.edit` (Sie bekommen diese von :attr:`Client.user`)"
 
 msgid "``Client.edit_role``"
 msgstr "``Client.edit_role``"
@@ -327,7 +327,7 @@ msgid "``Client.invites_from``"
 msgstr "``Client.invites_from``"
 
 msgid ":meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`"
-msgstr ":meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`"
+msgstr ":meth:`abc.GuildChannel.invites` oder :meth:`Guild.invites`"
 
 msgid "``Client.join_voice_channel``"
 msgstr "``Client.join_voice_channel``"
