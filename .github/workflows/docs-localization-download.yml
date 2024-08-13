@@ -100,9 +100,11 @@ jobs:
         with:
           workflow: version-updates.yml
           ref: ${{ needs.download.outputs.pr_ref }}
-      - run: gh pr review --approve ${{ needs.download.outputs.pr_id }} -b "auto-approval for localization sync :3"
+      - run: gh pr review --approve -b "auto-approval for localization sync :3" "$PR_ID"
         env:
+          PR_ID:  ${{ needs.download.outputs.pr_id }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - run: gh pr merge --auto -d --squash ${{ needs.download.outputs.pr_id }}
+      - run: gh pr merge --auto -d --squash $PR_ID
         env:
+          PR_ID:  ${{ needs.download.outputs.pr_id }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
