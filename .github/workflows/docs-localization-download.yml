@@ -9,9 +9,8 @@ jobs:
     name: "Download localizations from Crowdin"
     runs-on: ubuntu-latest
     outputs:
-      pr_ref: pull/${{ steps.crowdin.outputs.pull_request_number }}/head
-      pr_url: ${{ steps.crowdin.outputs.pull_request_url }}
-      pr_id: ${{ steps.crowdin.outputs.pull_request_number }}
+      pr_ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
     steps:
       - uses: actions/checkout@v4
       - name: "Install Python"
@@ -58,6 +57,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+      - name: "Convert Outputs"
+        id: convert_outputs
+        run: |
+          PR_REF=pull/${{ steps.crowdin.outputs.pull_request_number }}/head
+          PR_ID=${{ steps.crowdin.outputs.pull_request_number }}
+          BASE64_PR_REF=$(echo -n "$PR_REF" | base64)
+          BASE64_PR_ID=$(echo -n "$PR_ID" | base64)
+          echo "pr_ref=$BASE64_PR_REF" >> $GITHUB_OUTPUT
+          echo "pr_id=$BASE64_PR_ID" >> $GITHUB_OUTPUT
+          
   pr:
     permissions: write-all
     name: "Trigger PR workflows manually"
@@ -65,46 +74,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: "Convert Outputs"
+        id: convert_outputs
+        run: |
+          BASE64_PR_REF=${{ needs.download.outputs.pr_ref }}
+          BASE64_PR_ID=${{ needs.download.outputs.pr_id }}
+          PR_REF=$(echo -n "$BASE64_PR_REF" | base64 --decode)
+          PR_ID=$(echo -n "$BASE64_PR_ID" | base64 --decode)
+          echo "pr_ref=$PR_REF" >> $GITHUB_OUTPUT
+          echo "pr_id=$PR_ID" >> $GITHUB_OUTPUT
       - name: Invoke checks workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: check.yml
-          ref: ${{ needs.download.outputs.pr_ref }}
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: Invoke codeql workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: codeql-analysis.yml
-          ref: ${{ needs.download.outputs.pr_ref }}
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: Invoke lint workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: lint.yml
-          ref: ${{ needs.download.outputs.pr_ref }}
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: Invoke pr workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: pr.yml
-          ref: ${{ needs.download.outputs.pr_ref }}
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: Invoke test workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: test.yml
-          ref: ${{ needs.download.outputs.pr_ref }}
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: Invoke todo workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: todo.yml
-          ref: ${{ needs.download.outputs.pr_ref }}
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: Invoke version updates workflow
         uses: benc-uk/workflow-dispatch@v1.2.4
         with:
           workflow: version-updates.yml
-          ref: ${{ needs.download.outputs.pr_ref }}
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - run: gh pr review --approve -b "auto-approval for localization sync :3" "$PR_ID"
         env:
-          PR_ID:  ${{ needs.download.outputs.pr_id }}
+          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: gh pr merge --auto -d --squash $PR_ID
         env:
-          PR_ID:  ${{ needs.download.outputs.pr_id }}
+          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
