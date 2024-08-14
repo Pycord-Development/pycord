@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Frequently Asked Questions"
-msgstr "Preguntas Frecuentes"
+msgstr "Preguntas frecuentes"
 
 msgid "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
 msgstr "Esta es una lista de preguntas frecuentes sobre el uso de ``Pycord`` y sus módulos de extensión. Siéntete libre de sugerir una nueva pregunta o envía una a través de una pull request."
