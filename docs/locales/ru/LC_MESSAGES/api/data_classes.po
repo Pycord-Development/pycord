@@ -48,7 +48,7 @@ msgid "The ID of the object."
 msgstr "The ID of the object."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"

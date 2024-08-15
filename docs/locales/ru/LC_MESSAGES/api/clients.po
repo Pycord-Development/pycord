@@ -15,10 +15,10 @@ msgid "Client Objects"
 msgstr "Объекты клиента"
 
 msgid "Bots"
-msgstr "Bots"
+msgstr "Боты"
 
 msgid "Represents a discord bot."
-msgstr "Represents a discord bot."
+msgstr "Представляет собой дискорд-бота."
 
 msgid "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
 msgstr "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
@@ -30,7 +30,7 @@ msgid "The content prefixed into the default help message."
 msgstr "The content prefixed into the default help message."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"

@@ -129,7 +129,7 @@ msgid "The page group select menu associated with this paginator."
 msgstr "The page group select menu associated with this paginator."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid "Optional[List[:class:`PaginatorMenu`]]"
 msgstr "Optional[List[:class:`PaginatorMenu`]]"

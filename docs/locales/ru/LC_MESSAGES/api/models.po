@@ -237,7 +237,7 @@ msgid "Indicates if the user is currently deafened by the guild."
 msgstr "Indicates if the user is currently deafened by the guild."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"

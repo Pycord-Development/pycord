@@ -129,7 +129,7 @@ msgid "Timeout from last interaction with the UI before no longer accepting inpu
 msgstr "Timeout from last interaction with the UI before no longer accepting input. If ``None`` then there is no timeout."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid "Optional[:class:`float`]"
 msgstr "Optional[:class:`float`]"

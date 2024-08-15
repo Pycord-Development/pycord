@@ -27,10 +27,10 @@ msgid "Installing"
 msgstr "Instalación"
 
 msgid "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
-msgstr "Para nuevas características en las próximas versiones, necesitarás instalar el prelanzamiento hasta que se publique una versión estable. ::"
+msgstr "Para nuevas características en las próximas versiones, necesitarás instalar la versión de pre lanzamiento hasta que se publique una versión estable. ::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
-msgstr "Para los usuarios de Windows, este comando debe usarse para instalar el prelanzamiento: ::"
+msgstr "Para los usuarios de Windows, este comando debe usarse para instalar la versión de pre lanzamiento: ::"
 
 msgid "You can get the library directly from PyPI: ::"
 msgstr "Puedes obtener la biblioteca directamente desde PyPI: ::"
@@ -39,10 +39,10 @@ msgid "If you are using Windows, then the following should be used instead: ::"
 msgstr "Si estás usando Windows, entonces deberías usar lo siguiente en su lugar: ::"
 
 msgid "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
-msgstr "Para instalar paquetes adicionales para una mayor velocidad, deberías usar ``py-cord[speed]`` en lugar de ``py-cord``, por ejemplo,"
+msgstr "Para instalar paquetes adicionales para una mayor velocidad, deberías usar ``py-cord[speed]`` en lugar de ``py-cord``, por ejemplo."
 
 msgid "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
-msgstr "Para obtener soporte de voz, deberías usar ``py-cord[voice]`` en lugar de ``py-cord``, por ejemplo, ::"
+msgstr "Para obtener soporte de voz, deberías usar ``py-cord[voice]`` en lugar de ``py-cord``, por ejemplo ::"
 
 msgid "On Linux environments, installing voice requires getting the following dependencies:"
 msgstr "En entornos Linux, la instalación de voz requiere las siguientes dependencias:"

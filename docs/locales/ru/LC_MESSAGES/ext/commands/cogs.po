@@ -42,7 +42,7 @@ msgid "Quick Example"
 msgstr "Быстрый пример"
 
 msgid "This example cog defines a ``Greetings`` category for your commands, with a single :ref:`command <ext_commands_commands>` named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
-msgstr "Этот пример кога определяет категорию ``Greetings`` для ваших команд, с одной :ref:``командой <ext_commands_commands>`` под названием ``hello``, а также слушателем для прослушивания :ref:``События <discord-api-events>`."
+msgstr "Этот пример кога определяет категорию ``Greetings`` для ваших команд, с одной :ref:`командой <ext_commands_commands>` под названием ``hello``, а также слушателем для прослушивания :ref:`События <discord-api-events>`."
 
 msgid "A couple of technical notes to take into consideration:"
 msgstr "Несколько технических замечаний, которые следует принять во внимание:"
@@ -123,7 +123,7 @@ msgid "Since cogs ultimately are classes, we have some tools to help us inspect 
 msgstr "Поскольку коги в конечном счете являются классами, у нас есть некоторые инструменты, которые помогут нам проверить определенные свойства кога."
 
 msgid "To get a :class:`list` of commands, we can use :meth:`.Cog.get_commands`. ::"
-msgstr "Чтобы получить :class:`list` из команд, мы можем использовать :meth:`.Cog.get_commands`. ::"
+msgstr "Чтобы получить :class:`list`, состоящий из команд, мы можем использовать :meth:`.Cog.get_commands`. ::"
 
 msgid "If we want to get the subcommands as well, we can use the :meth:`.Cog.walk_commands` generator. ::"
 msgstr "Если мы хотим получить также и подкоманды, мы можем использовать генератор :meth:`.Cog.walk_commands`. ::"
