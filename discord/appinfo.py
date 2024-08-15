@@ -263,8 +263,7 @@ class AppInfo:
 
     @property
     def summary(self) -> str | None:
-        """summary: :class:`str`
-        If this application is a game sold on Discord,
+        """If this application is a game sold on Discord,
         this field will be the summary field for the store page of its primary SKU.
 
         It currently returns an empty string.
