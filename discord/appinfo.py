@@ -139,7 +139,7 @@ class AppInfo:
 
         .. versionadded:: 2.7
 
-    tags: Optional[:class:`str`]
+    tags: Optional[List[:class:`str`]]
         The list of tags describing the content and functionality of the app, if set.
 
         Maximium of 5 tags.
