@@ -12,13 +12,13 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "API Reference"
-msgstr "API Reference"
+msgstr "Referencia de la API"
 
 msgid "The reference manual that follows details the API of Pycord's bridge command extension module."
-msgstr "The reference manual that follows details the API of Pycord's bridge command extension module."
+msgstr "El manual de referencia que sigue los detalles de la API del módulo de extensiones puente de Pycord."
 
 msgid "Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge commands in guilds requires :attr:`Intents.message_context` to be enabled."
-msgstr "Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge commands in guilds requires :attr:`Intents.message_context` to be enabled."
+msgstr "Usar los comandos prefijados (que usa la extensión ``ext.commands``) de los comandos puente en gremios requiere que :attr:`Intents.message_context` esté habilitado."
 
 msgid "Bots"
 msgstr "Bots"
@@ -27,13 +27,13 @@ msgid "Bot"
 msgstr "Bot"
 
 msgid "Represents a discord bot, with support for cross-compatibility between command types."
-msgstr "Represents a discord bot, with support for cross-compatibility between command types."
+msgstr "Representa un bot de discord, con soporte de compatibilidad cruzada entre los tipos de comandos."
 
 msgid "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
 msgstr "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parámetros"
 
 msgid "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
 msgstr "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
@@ -42,19 +42,19 @@ msgid "A shortcut decorator that invokes :func:`bridge_command` and adds it to t
 msgstr "A shortcut decorator that invokes :func:`bridge_command` and adds it to the internal command list via :meth:`~.Bot.add_bridge_command`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retorna"
 
 msgid "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 msgstr "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Tipo del valor retornado"
 
 msgid "Callable[..., :class:`BridgeCommand`]"
 msgstr "Callable[..., :class:`BridgeCommand`]"
 
 msgid "A decorator that is used to wrap a function as a bridge command group."
-msgstr "A decorator that is used to wrap a function as a bridge command group."
+msgstr "Un decorador que se usa para envolver una función en un grupo de comandos."
 
 msgid "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)"
 msgstr "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)"
@@ -66,7 +66,7 @@ msgid "This is similar to :class:`.Bot` except that it is inherited from :class:
 msgstr "This is similar to :class:`.Bot` except that it is inherited from :class:`.ext.commands.AutoShardedBot` instead."
 
 msgid "Event Reference"
-msgstr "Event Reference"
+msgstr "Referencia del evento"
 
 msgid "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the bridge extension module."
 msgstr "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the bridge extension module."
@@ -75,10 +75,10 @@ msgid "An error handler that is called when an error is raised inside a command 
 msgstr "An error handler that is called when an error is raised inside a command either through user input error, check failure, or an error in your own code."
 
 msgid "The invocation context."
-msgstr "The invocation context."
+msgstr "El contexto de invocación."
 
 msgid "The error that was raised."
-msgstr "The error that was raised."
+msgstr "El error producido."
 
 msgid "An event that is called when a command is found and is about to be invoked."
 msgstr "An event that is called when a command is found and is about to be invoked."
@@ -93,7 +93,7 @@ msgid "This event is called only if the command succeeded, i.e. all checks have 
 msgstr "This event is called only if the command succeeded, i.e. all checks have passed and users input them correctly."
 
 msgid "Commands"
-msgstr "Commands"
+msgstr "Comandos"
 
 msgid "BridgeCommand"
 msgstr "BridgeCommand"
@@ -105,13 +105,13 @@ msgid "The callback to invoke when the command is executed. The first argument w
 msgstr "The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`, and any additional arguments will be passed to the callback. This callback must be a coroutine."
 
 msgid "Parent of the BridgeCommand."
-msgstr "Parent of the BridgeCommand."
+msgstr "Padre del BridgeCommand."
 
 msgid "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)"
-msgstr "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)"
+msgstr "Argumentos de palabras clave que se proporcionan directamente a los respectivos constructores de los comandos. (:class:`.SlashCommand` y :class:`.ext.commands.Command`)"
 
 msgid "The slash command version of this bridge command."
-msgstr "The slash command version of this bridge command."
+msgstr "La versión del comando slash de este comando puente."
 
 msgid "type"
 msgstr "type"
@@ -120,7 +120,7 @@ msgid ":class:`.BridgeSlashCommand`"
 msgstr ":class:`.BridgeSlashCommand`"
 
 msgid "The prefix-based version of this bridge command."
-msgstr "The prefix-based version of this bridge command."
+msgstr "La versión del comando prefijado de este comando puente."
 
 msgid ":class:`.BridgeExtCommand`"
 msgstr ":class:`.BridgeExtCommand`"
@@ -159,7 +159,7 @@ msgid "The coroutine to register as the local error handler."
 msgstr "The coroutine to register as the local error handler."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Errores"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
@@ -219,10 +219,10 @@ msgid "An iterator that recursively walks through all the bridge group's subcomm
 msgstr "An iterator that recursively walks through all the bridge group's subcommands."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Genera"
 
 msgid ":class:`.BridgeCommand` -- A bridge command of this bridge group."
-msgstr ":class:`.BridgeCommand` -- A bridge command of this bridge group."
+msgstr ":class:`.BridgeCommand` -- Un comando puente de este grupo puente."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Iterator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.bridge.core.BridgeCommand\\`\\]`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Iterator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.bridge.core.BridgeCommand\\`\\]`"
@@ -231,7 +231,7 @@ msgid "A decorator to register a function as a subcommand."
 msgstr "A decorator to register a function as a subcommand."
 
 msgid "Decorators"
-msgstr "Decorators"
+msgstr "Decoradores"
 
 msgid "A decorator that is used to wrap a function as a bridge command."
 msgstr "A decorator that is used to wrap a function as a bridge command."
@@ -249,7 +249,7 @@ msgid "The new description of the mapped command."
 msgstr "The new description of the mapped command."
 
 msgid "Example"
-msgstr "Example"
+msgstr "Ejemplo"
 
 msgid "Prefixed commands will not be affected, but slash commands will appear as:"
 msgstr "Prefixed commands will not be affected, but slash commands will appear as:"
@@ -279,7 +279,7 @@ msgid "An argument list of permissions to check for."
 msgstr "An argument list of permissions to check for."
 
 msgid "Command Subclasses"
-msgstr "Command Subclasses"
+msgstr "Subclases de los comandos"
 
 msgid "A subclass of :class:`.ext.commands.Command` that is used for bridge commands."
 msgstr "A subclass of :class:`.ext.commands.Command` that is used for bridge commands."

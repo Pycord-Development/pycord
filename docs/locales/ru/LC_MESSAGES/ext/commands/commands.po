@@ -45,7 +45,7 @@ msgid "Any parameter that is accepted by the :class:`.Command` constructor can b
 msgstr "Any parameter that is accepted by the :class:`.Command` constructor can be passed into the decorator. For example, to change the name to something other than the function would be as simple as doing this:"
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."
 msgstr "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."

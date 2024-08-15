@@ -12,37 +12,37 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Quickstart"
-msgstr "Quickstart"
+msgstr "快速入门"
 
 msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
-msgstr "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
+msgstr "这是一个简短介绍库的页面。假设您已经安装了库。如果你尚未安装，请查看 :ref:`installing`部份。"
 
 msgid "A Minimal Bot"
-msgstr "A Minimal Bot"
+msgstr "一个精简版的机器人"
 
 msgid "Let's make a bot that responds to a specific message and walk you through it."
-msgstr "Let's make a bot that responds to a specific message and walk you through it."
+msgstr "让我们制作一个机器人来回应特定讯息，并且引导您完成它。"
 
 msgid "It looks something like this:"
-msgstr "It looks something like this:"
+msgstr "它看起来像这样："
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
-msgstr "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
+msgstr "因为这个示例使用到了讯息内容，因此它需要 :attr:`Intents.message_content`网关意图。"
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
-msgstr "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
+msgstr "让我们将这个档案命名成``example_bot.py``。确保不要将它命名成像是``discord.py``这样会跟库引发冲突的命名。"
 
 msgid "There's a lot going on here, so let's walk you through it step by step:"
-msgstr "There's a lot going on here, so let's walk you through it step by step:"
+msgstr "这里有很多事要做，所以让我们带你一步一步来："
 
 msgid "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
-msgstr "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
+msgstr "在第一行的部份，导入库，如果发生了`ModuleNotFoundError`或者`ImportError`错误，则前往 :ref:`installing` 部份确认安装是否正确。"
 
 msgid "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
-msgstr "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
+msgstr "接下来，我们创建一个基于 :class:`Client`的实体。这个实体是我们用于跟Discord建立连结的。"
 
 msgid "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
-msgstr "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
+msgstr "接着我们使用 :meth:`Client.event` 装饰器去注册一个event。这个库拥有许多event。因为这个库是异步的，所以我们以\"callback\"的风格来做事。"
 
 msgid "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."
 msgstr "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."

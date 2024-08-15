@@ -57,7 +57,7 @@ msgid "The main interface to create this is through :func:`loop`."
 msgstr "The main interface to create this is through :func:`loop`."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "A decorator that register a coroutine to be called after the loop finished running."
 msgstr "A decorator that register a coroutine to be called after the loop finished running."
@@ -72,7 +72,7 @@ msgid "The coroutine to register after the loop finishes."
 msgstr "The coroutine to register after the loop finishes."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "The function was not a coroutine."
 msgstr "The function was not a coroutine."
@@ -147,7 +147,7 @@ msgid "A task has already been launched and is running."
 msgstr "A task has already been launched and is running."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The task that has been created."
 msgstr "The task that has been created."

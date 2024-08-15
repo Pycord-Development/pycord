@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "API Reference"
-msgstr "API Reference"
+msgstr "Référence de l'API"
 
 msgid "The following section outlines the API of Pycord's prefixed command extension module."
 msgstr "The following section outlines the API of Pycord's prefixed command extension module."
@@ -114,13 +114,13 @@ msgid "A shortcut decorator that invokes :func:`.command` and adds it to the int
 msgstr "A shortcut decorator that invokes :func:`.command` and adds it to the internal command list via :meth:`~.GroupMixin.add_command`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 msgstr "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de retour"
 
 msgid "Callable[..., :class:`Command`]"
 msgstr "Callable[..., :class:`Command`]"
@@ -1173,7 +1173,7 @@ msgid "The default command error handler provided by the bot."
 msgstr "The default command error handler provided by the bot."
 
 msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
-msgstr "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
+msgstr "Par défaut, cela imprime dans :data:`sys.stderr`, mais cela peut être remplacé par une autre implémentation."
 
 msgid "This only fires if you do not specify any listeners for command error."
 msgstr "This only fires if you do not specify any listeners for command error."
@@ -2898,10 +2898,10 @@ msgid "The command that is going to be called."
 msgstr "The command that is going to be called."
 
 msgid "The arguments to use."
-msgstr "The arguments to use."
+msgstr "Les arguments à utiliser."
 
 msgid "The keyword arguments to use."
-msgstr "The keyword arguments to use."
+msgstr "Les arguments de mot-clé à utiliser."
 
 msgid "The command argument to invoke is missing."
 msgstr "The command argument to invoke is missing."

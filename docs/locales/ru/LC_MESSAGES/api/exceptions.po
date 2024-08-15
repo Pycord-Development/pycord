@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Exceptions"
-msgstr "Exceptions"
+msgstr "Исключения"
 
 msgid "Exception Hierarchy"
-msgstr "Exception Hierarchy"
+msgstr "Иерархия исключений"
 
 msgid ":exc:`Exception`"
 msgstr ":exc:`Exception`"
@@ -117,106 +117,106 @@ msgid ":exc:`sinks.OGGSinkError`"
 msgstr ":exc:`sinks.OGGSinkError`"
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Объекты"
 
 msgid "The following exceptions are thrown by the library."
-msgstr "The following exceptions are thrown by the library."
+msgstr "Библиотека вызывает следующие исключения."
 
 msgid "Base exception class for pycord"
-msgstr "Base exception class for pycord"
+msgstr "Базовый класс исключения pycord"
 
 msgid "Ideally speaking, this could be caught to handle any exceptions raised from this library."
-msgstr "Ideally speaking, this could be caught to handle any exceptions raised from this library."
+msgstr "В идеале, это может быть сделано для обработки любых исключений, возникающих при работе с этой библиотекой."
 
 msgid "Exception that's raised when an operation in the :class:`Client` fails."
-msgstr "Exception that's raised when an operation in the :class:`Client` fails."
+msgstr "Исключение, возникающее при неудачном выполнении операции в :class:`Client`."
 
 msgid "These are usually for exceptions that happened due to user input."
-msgstr "These are usually for exceptions that happened due to user input."
+msgstr "Обычно они предназначены для исключений, возникших из-за ввода данных пользователем."
 
 msgid "Exception that's raised when the :meth:`Client.login` function fails to log you in from improper credentials or some other misc. failure."
-msgstr "Exception that's raised when the :meth:`Client.login` function fails to log you in from improper credentials or some other misc. failure."
+msgstr "Исключение, возникающее, когда функция :meth:`Client.login` не смогла войти в систему из-за неправильных учетных данных или других ошибок."
 
 msgid "Exception that is raised when an async iteration operation has no more items."
-msgstr "Exception that is raised when an async iteration operation has no more items."
+msgstr "Исключение, возникающее, когда в асинхронной итерационной операции больше нет элементов."
 
 msgid "Exception that's raised when an HTTP request operation fails."
-msgstr "Exception that's raised when an HTTP request operation fails."
+msgstr "Исключение, возникающее при неудачном HTTP-запросе."
 
 msgid "The response of the failed HTTP request. This is an instance of :class:`aiohttp.ClientResponse`. In some cases this could also be a :class:`requests.Response`."
-msgstr "The response of the failed HTTP request. This is an instance of :class:`aiohttp.ClientResponse`. In some cases this could also be a :class:`requests.Response`."
+msgstr "Ответ на неудачный HTTP-запрос. Это экземпляр :class:`aiohttp.ClientResponse`. В некоторых случаях это также может быть экземпляр :class:`requests.Response`."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`aiohttp.ClientResponse`"
 msgstr ":class:`aiohttp.ClientResponse`"
 
 msgid "The text of the error. Could be an empty string."
-msgstr "The text of the error. Could be an empty string."
+msgstr "Текст ошибки. Может быть пустой строкой."
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The status code of the HTTP request."
-msgstr "The status code of the HTTP request."
+msgstr "Код статуса HTTP-запроса."
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
 
 msgid "The Discord specific error code for the failure."
-msgstr "The Discord specific error code for the failure."
+msgstr "Код ошибки, связанный со сбоем в Discord."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "Exception that's raised for when status code 403 occurs."
-msgstr "Exception that's raised for when status code 403 occurs."
+msgstr "Исключение, возникающее при появлении кода состояния 403."
 
 msgid "Subclass of :exc:`HTTPException`"
-msgstr "Subclass of :exc:`HTTPException`"
+msgstr "Подкласс :exc:`HTTPException`"
 
 msgid "Exception that's raised for when status code 404 occurs."
-msgstr "Exception that's raised for when status code 404 occurs."
+msgstr "Исключение, возникающее при появлении кода состояния 404."
 
 msgid "Exception that's raised for when a 500 range status code occurs."
-msgstr "Exception that's raised for when a 500 range status code occurs."
+msgstr "Исключение, возникающее при появлении кода состояния в диапазоне 500."
 
 msgid "Subclass of :exc:`HTTPException`."
-msgstr "Subclass of :exc:`HTTPException`."
+msgstr "Подкласс :exc:`HTTPException`."
 
 msgid "Exception that's raised when the library encounters unknown or invalid data from Discord."
-msgstr "Exception that's raised when the library encounters unknown or invalid data from Discord."
+msgstr "Исключение, возникающее, когда библиотека получает неизвестные или недействительные данные из Discord."
 
 msgid "Exception that's raised when an argument to a function is invalid some way (e.g. wrong value or wrong type)."
-msgstr "Exception that's raised when an argument to a function is invalid some way (e.g. wrong value or wrong type)."
+msgstr "Исключение, возникающее, когда аргумент функции каким-либо образом недействителен (например, имеет неправильное значение или неправильный тип)."
 
 msgid "This could be considered the parallel of ``ValueError`` and ``TypeError`` except inherited from :exc:`ClientException` and thus :exc:`DiscordException`."
-msgstr "This could be considered the parallel of ``ValueError`` and ``TypeError`` except inherited from :exc:`ClientException` and thus :exc:`DiscordException`."
+msgstr "Это можно считать параллелью ``ValueError`` и ``TypeError``, только унаследованной от :exc:`ClientException`` и, соответственно, :exc:`DiscordException``."
 
 msgid "An exception that is raised when the gateway for Discord could not be found"
-msgstr "An exception that is raised when the gateway for Discord could not be found"
+msgstr "Исключение, которое возникает, когда шлюз для Discord не может быть найден"
 
 msgid "Exception that's raised when the gateway connection is closed for reasons that could not be handled internally."
-msgstr "Exception that's raised when the gateway connection is closed for reasons that could not be handled internally."
+msgstr "Исключение, возникающее, когда соединение со шлюзом закрывается по причинам, которые не могут быть обработаны."
 
 msgid "The close code of the websocket."
-msgstr "The close code of the websocket."
+msgstr "Код закрытия веб-сокета."
 
 msgid "The reason provided for the closure."
-msgstr "The reason provided for the closure."
+msgstr "Причина закрытия."
 
 msgid "The shard ID that got closed if applicable."
-msgstr "The shard ID that got closed if applicable."
+msgstr "Идентификатор шарда, который был закрыт, если применимо."
 
 msgid "Optional[:class:`int`]"
 msgstr "Optional[:class:`int`]"
 
 msgid "Exception that's raised when the gateway is requesting privileged intents, but they're not ticked in the developer page yet."
-msgstr "Exception that's raised when the gateway is requesting privileged intents, but they're not ticked in the developer page yet."
+msgstr "Исключение, возникающее, когда шлюз запрашивает привилегированные намерения, но они еще не включены на странице разработчика."
 
 msgid "Go to https://discord.com/developers/applications/ and enable the intents that are required. Currently, these are as follows:"
-msgstr "Go to https://discord.com/developers/applications/ and enable the intents that are required. Currently, these are as follows:"
+msgstr "Перейдите на страницу https://discord.com/developers/applications/ и включите необходимые намерения. В настоящее время они следующие:"
 
 msgid ":attr:`Intents.members`"
 msgstr ":attr:`Intents.members`"
@@ -228,104 +228,104 @@ msgid ":attr:`Intents.message_content`"
 msgstr ":attr:`Intents.message_content`"
 
 msgid "Exception that's raised when sending another interaction response using :class:`InteractionResponse` when one has already been done before."
-msgstr "Exception that's raised when sending another interaction response using :class:`InteractionResponse` when one has already been done before."
+msgstr "Исключение, возникающее при отправке еще одного ответа на интеракцию с помощью :class:`InteractionResponse`, когда один уже был сделан ранее."
 
 msgid "An interaction can only respond once."
-msgstr "An interaction can only respond once."
+msgstr "На интеракцию можно ответить только один раз."
 
 msgid "The interaction that's already been responded to."
-msgstr "The interaction that's already been responded to."
+msgstr "Интеракция, на которое уже был дан ответ."
 
 msgid ":class:`Interaction`"
 msgstr ":class:`Interaction`"
 
 msgid "An exception that is thrown for libopus related errors."
-msgstr "An exception that is thrown for libopus related errors."
+msgstr "Исключение, которое выбрасывается при ошибках, связанных с libopus."
 
 msgid "The error code returned."
-msgstr "The error code returned."
+msgstr "Возвращенный код ошибки."
 
 msgid "An exception that is thrown for when libopus is not loaded."
-msgstr "An exception that is thrown for when libopus is not loaded."
+msgstr "Исключение, возникающее, когда libopus не загружен."
 
 msgid "The base exception type for all application command related errors."
-msgstr "The base exception type for all application command related errors."
+msgstr "Базовый тип исключения для всех ошибок, связанных с командами приложения."
 
 msgid "This inherits from :exc:`DiscordException`."
-msgstr "This inherits from :exc:`DiscordException`."
+msgstr "Наследуется от :exc:`DiscordException`."
 
 msgid "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
-msgstr "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
+msgstr "Это исключение и унаследованные от него исключения обрабатываются особым образом, поскольку они перехватываются и передаются в специальное событие из :class:`.Bot`\\, :func:`.on_command_error`."
 
 msgid "Exception raised when the predicates in :attr:`.Command.checks` have failed."
-msgstr "Exception raised when the predicates in :attr:`.Command.checks` have failed."
+msgstr "Исключение поднимается, если предикаты в :attr:`.Command.checks` не сработали."
 
 msgid "This inherits from :exc:`ApplicationCommandError`"
-msgstr "This inherits from :exc:`ApplicationCommandError`"
+msgstr "Наследуется от :exc:`ApplicationCommandError`"
 
 msgid "Exception raised when the command being invoked raised an exception."
-msgstr "Exception raised when the command being invoked raised an exception."
+msgstr "Исключение, возникающее, когда вызываемая команда вызывает исключение."
 
 msgid "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
-msgstr "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
+msgstr "Первоначальное исключение, которое было поднято. Вы также можете получить его через атрибут ``__cause__``."
 
 msgid "Base exception for extension related errors."
-msgstr "Base exception for extension related errors."
+msgstr "Базовое исключение для ошибок, связанных с расширением."
 
 msgid "This inherits from :exc:`~discord.DiscordException`."
-msgstr "This inherits from :exc:`~discord.DiscordException`."
+msgstr "Оно наследуется от :exc:`~discord.DiscordException`."
 
 msgid "The extension that had an error."
-msgstr "The extension that had an error."
+msgstr "Расширение, в котором произошла ошибка."
 
 msgid "An exception raised when an extension has already been loaded."
-msgstr "An exception raised when an extension has already been loaded."
+msgstr "Исключение, возникающее, когда расширение уже было загружено."
 
 msgid "This inherits from :exc:`ExtensionError`"
-msgstr "This inherits from :exc:`ExtensionError`"
+msgstr "Наследуется от :exc:`ExtensionError`"
 
 msgid "An exception raised when an extension was not loaded."
-msgstr "An exception raised when an extension was not loaded."
+msgstr "Исключение, возникающее, когда расширение не было загружено."
 
 msgid "An exception raised when an extension does not have a ``setup`` entry point function."
-msgstr "An exception raised when an extension does not have a ``setup`` entry point function."
+msgstr "Исключение, возникающее, когда расширение не имеет функции точки входа ``setup``."
 
 msgid "An exception raised when an extension failed to load during execution of the module or ``setup`` entry point."
-msgstr "An exception raised when an extension failed to load during execution of the module or ``setup`` entry point."
+msgstr "Исключение, возникающее, когда расширение не удалось загрузить во время выполнения модуля или точки входа ``setup``."
 
 msgid "The extension that had the error."
-msgstr "The extension that had the error."
+msgstr "Расширение, в котором возникла ошибка."
 
 msgid "An exception raised when an extension is not found."
-msgstr "An exception raised when an extension is not found."
+msgstr "Исключение, возникающее, когда расширение не найдено."
 
 msgid "Made the ``original`` attribute always None."
-msgstr "Made the ``original`` attribute always None."
+msgstr "Атрибут ``original`` теперь всегда None."
 
 msgid "Raised when a Sink error occurs."
-msgstr "Raised when a Sink error occurs."
+msgstr "Возбуждается при возникновении ошибки Sink."
 
 msgid "Exception that's thrown when there is an error while trying to record audio from a voice channel."
-msgstr "Exception that's thrown when there is an error while trying to record audio from a voice channel."
+msgstr "Исключение, которое выбрасывается при ошибке во время попытки записи звука с голосового канала."
 
 msgid "Exception thrown when an exception occurs with :class:`WaveSink`"
-msgstr "Exception thrown when an exception occurs with :class:`WaveSink`"
+msgstr "Исключение, возникающее при возникновении исключения в :class:`WaveSink`"
 
 msgid "Exception thrown when an exception occurs with :class:`MP3Sink`"
-msgstr "Exception thrown when an exception occurs with :class:`MP3Sink`"
+msgstr "Исключение, возникающее при возникновении исключения в :class:`MP3Sink`"
 
 msgid "Exception thrown when an exception occurs with :class:`MP4Sink`"
-msgstr "Exception thrown when an exception occurs with :class:`MP4Sink`"
+msgstr "Исключение, возникающее при возникновении исключения в :class:`MP4Sink`"
 
 msgid "Exception thrown when an exception occurs with :class:`M4ASink`"
-msgstr "Exception thrown when an exception occurs with :class:`M4ASink`"
+msgstr "Исключение, возникающее при возникновении исключения в :class:`M4ASink`"
 
 msgid "Exception thrown when an exception occurs with :class:`MKVSink`"
-msgstr "Exception thrown when an exception occurs with :class:`MKVSink`"
+msgstr "Исключение, возникающее при возникновении исключения в :class:`MKVSink`"
 
 msgid "Exception thrown when an exception occurs with :class:`MKASink`"
-msgstr "Exception thrown when an exception occurs with :class:`MKASink`"
+msgstr "Исключение, возникающее при возникновении исключения в :class:`MKASink`"
 
 msgid "Exception thrown when an exception occurs with :class:`OGGSink`"
-msgstr "Exception thrown when an exception occurs with :class:`OGGSink`"
+msgstr "Исключение, возникающее при возникновении исключения в :class:`OGGSink`"
 

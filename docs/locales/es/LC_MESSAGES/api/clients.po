@@ -99,46 +99,46 @@ msgid "The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeErro
 msgstr "Los eventos deben ser una :ref:`corrutina <coroutine>`, si no, se lanza un :exc:`TypeError`."
 
 msgid "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
-msgstr "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
+msgstr "Esto reemplaza cualquier manejador por defecto. Se recomienda que los desarrolladores usen :py:meth:`~discord.Client.listen` para añadir manejadores adicionales en lugar de :py:meth:`~discord.Client.event` a no ser que quiera reemplazar el método por defecto."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Lanza"
 
 msgid "The coroutine passed is not actually a coroutine."
-msgstr "The coroutine passed is not actually a coroutine."
+msgstr "La corrutina pasada no es realmente una corrutina."
 
 msgid "Example"
-msgstr "Example"
+msgstr "Ejemplo"
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parámetros"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`Coro\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`Coro\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
 
 msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.MessageCommand`."
-msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.MessageCommand`."
+msgstr "Un acceso directo a un decorador que invoca :func:`command` y la añade a la lista de comandos internos a través de :meth:`add_application_command`. Este acceso directo está hecho específicamente para :class:`.MessageCommand`."
 
 msgid "A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot, then returns it."
-msgstr "A decorator that converts the provided method into a :class:`.MessageCommand`, adds it to the bot, then returns it."
+msgstr "Un decorador que convierte el método proporcionado en una :class:`.MessageCommand`, la añade al bot y la retorna."
 
 msgid "Callable[..., :class:`MessageCommand`]"
 msgstr "Callable[..., :class:`MessageCommand`]"
 
 msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.SlashCommand`."
-msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.SlashCommand`."
+msgstr "Un acceso directo a un decorador que invoca :func:`command` y la añade a la lista de comandos internos a través de :meth:`add_application_command`. Este acceso directo está hecho específicamente para :class:`.SlashCommand`."
 
 msgid "A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot, then returns it."
-msgstr "A decorator that converts the provided method into a :class:`.SlashCommand`, adds it to the bot, then returns it."
+msgstr "Un decorador que convierte el método proporcionado en un :class:`.SlashCommand`, la añade al bot y la retorna."
 
 msgid "Callable[..., :class:`SlashCommand`]"
 msgstr "Callable[..., :class:`SlashCommand`]"
 
 msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.UserCommand`."
-msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`add_application_command`. This shortcut is made specifically for :class:`.UserCommand`."
+msgstr "Un acceso directo a un decorador que invoca :func:`command` y la añade a la lista de comandos internos a través de :meth:`add_application_command`. Este acceso directo está hecho específicamente para :class:`.UserCommand`."
 
 msgid "A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot, then returns it."
-msgstr "A decorator that converts the provided method into a :class:`.UserCommand`, adds it to the bot, then returns it."
+msgstr "Un decorador que convierte el método proporcionado en un :class:`.UserCommand`, la añade al bot y la retorna."
 
 msgid "Callable[..., :class:`UserCommand`]"
 msgstr "Callable[..., :class:`UserCommand`]"
@@ -174,13 +174,13 @@ msgid "This is usually not called, instead the :meth:`command` or other shortcut
 msgstr "This is usually not called, instead the :meth:`command` or other shortcut decorators are used instead."
 
 msgid "The command to add."
-msgstr "The command to add."
+msgstr "El comando a añadir."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 
 msgid "Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and :meth:`.check_once`."
-msgstr "Adds a global check to the bot. This is the non-decorator interface to :meth:`.check` and :meth:`.check_once`."
+msgstr "Añade una comprobación global al bot. Esta es la interfaz no-decoradora de :meth:`.check` y :meth:`.check_once`."
 
 msgid "The function that was used as a global check."
 msgstr "The function that was used as a global check."
@@ -189,7 +189,7 @@ msgid "If the function should only be called once per :meth:`.Bot.invoke` call."
 msgstr "If the function should only be called once per :meth:`.Bot.invoke` call."
 
 msgid "Adds a \"cog\" to the bot."
-msgstr "Adds a \"cog\" to the bot."
+msgstr "Añade un \"cog\" al bot."
 
 msgid "A cog is a class that has its own event listeners and commands."
 msgstr "A cog is a class that has its own event listeners and commands."
@@ -219,10 +219,10 @@ msgid "The non decorator alternative to :meth:`.listen`."
 msgstr "The non decorator alternative to :meth:`.listen`."
 
 msgid "The function to call."
-msgstr "The function to call."
+msgstr "La función a llamar."
 
 msgid "The name of the event to listen for. Defaults to ``func.__name__``."
-msgstr "The name of the event to listen for. Defaults to ``func.__name__``."
+msgstr "El nombre del evento a escuchar. El valor por defecto es ``func.__name__``."
 
 msgid "The ``func`` parameter is not a coroutine function."
 msgstr "The ``func`` parameter is not a coroutine function."
@@ -468,7 +468,7 @@ msgid "Whether to limit the fetched entitlements to those that have not ended. D
 msgstr "Whether to limit the fetched entitlements to those that have not ended. Defaults to ``False``."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Genera"
 
 msgid ":class:`.Entitlement` -- The application's entitlements."
 msgstr ":class:`.Entitlement` -- The application's entitlements."
@@ -573,7 +573,7 @@ msgid "This method is an API call. For general usage, consider :attr:`guilds` in
 msgstr "This method is an API call. For general usage, consider :attr:`guilds` instead."
 
 msgid "The number of guilds to retrieve. If ``None``, it retrieves every guild you have access to. Note, however, that this would make it a slow operation. Defaults to ``100``."
-msgstr "The number of guilds to retrieve. If ``None``, it retrieves every guild you have access to. Note, however, that this would make it a slow operation. Defaults to ``100``."
+msgstr "La cantidad de gremios a obtener. Si se proporciona ``None``, obtiene todos los servidores a los que tienes acceso. Ten en cuenta que esto lo haría una operación lenta``. El valor por defecto es ``100``."
 
 msgid "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
 msgstr "Retrieves guilds before this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
@@ -798,7 +798,7 @@ msgid "The guild ids associated to the command to get."
 msgstr "The guild ids associated to the command to get."
 
 msgid "The type of the command to get. Defaults to :class:`.ApplicationCommand`."
-msgstr "The type of the command to get. Defaults to :class:`.ApplicationCommand`."
+msgstr "El tipo del comando a obtener. El valor por defecto es :class:`.ApplicationCommand`."
 
 msgid "The command that was requested. If not found, returns ``None``."
 msgstr "The command that was requested. If not found, returns ``None``."
@@ -1050,22 +1050,22 @@ msgid "The extension or folder name to load. It must be dot separated like regul
 msgstr "The extension or folder name to load. It must be dot separated like regular Python imports if accessing a submodule. e.g. ``foo.test`` if you want to import ``foo/test.py``."
 
 msgid "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
-msgstr "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``.  .. versionadded:: 1.7"
+msgstr "El nombre del paquete con el que resolver importaciones relativas. Esto se requiere al cargar una extensión usando una ruta relativa, por ejemplo, ``.foo.test``. El valor por defecto es ``None``.  .. versionadded:: 1.7"
 
 msgid "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
-msgstr "The package name to resolve relative imports with. This is required when loading an extension using a relative path, e.g ``.foo.test``. Defaults to ``None``."
+msgstr "El nombre del paquete con el que resolver importaciones relativas. Esto se requiere al cargar una extensión usando una ruta relativa, por ejemplo, ``.foo.test``. El valor por defecto es ``None``."
 
 msgid "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``.  .. versionadded:: 2.0"
-msgstr "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr "Si los directorios bajo el directorio principal dado deberían ser cargados recursivamente. El valor por defecto es ``False``.  .. versionadded:: 2.0"
 
 msgid "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``."
-msgstr "If subdirectories under the given head directory should be recursively loaded. Defaults to ``False``."
+msgstr "Si los directorios bajo el directorio principal dado deberían ser cargados recursivamente. El valor por defecto es ``False``."
 
 msgid "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``.  .. versionadded:: 2.0"
-msgstr "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``.  .. versionadded:: 2.0"
+msgstr "Si las excepciones deberián guardarse o lanzarse. Si se establece ``True``, todas las excepciones encontradas se guardaran en el diccionario retornado como estado cargador. Si se establece ``False``, cualquier excepcion que se encuentre será lanzada y el bot se cerrará. Si no se encuentra ninguna excepción, se retornará una lista con el nombre de extensiones cargadas. El valor por defecto es ``False``.  .. versionadded:: 2.0"
 
 msgid "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``."
-msgstr "If exceptions should be stored or raised. If set to ``True``, all exceptions encountered will be stored in a returned dictionary as a load status. If set to ``False``, if any exceptions are encountered they will be raised and the bot will be closed. If no exceptions are encountered, a list of loaded extension names will be returned. Defaults to ``False``."
+msgstr "Si las excepciones deberián guardarse o lanzarse. Si se establece ``True``, todas las excepciones encontradas se guardaran en el diccionario retornado como estado cargador. Si se establece ``False``, cualquier excepcion que se encuentre será lanzada y el bot se cerrará. Si no se encuentra ninguna excepción, se retornará una lista con el nombre de extensiones cargadas. El valor por defecto es ``False``."
 
 msgid "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing a list of loaded extensions or nothing due to an encountered exception."
 msgstr "If the store parameter is set to ``True``, a dictionary will be returned that contains keys to represent the loaded extension names. The values bound to each key can either be an exception that occurred when loading that extension or a ``True`` boolean representing a successful load. If the store parameter is set to ``False``, either a list containing a list of loaded extensions or nothing due to an encountered exception."
@@ -1545,22 +1545,22 @@ msgid "Returns a mapping of shard IDs to their respective info object."
 msgstr "Returns a mapping of shard IDs to their respective info object."
 
 msgid "Example: ::"
-msgstr "Example: ::"
+msgstr "Ejemplo: ::"
 
 msgid "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
-msgstr "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
+msgstr "Indica a que estado cambiar. Si se establece en ``None``, se usará :attr:`Status.online`."
 
 msgid "The shard_id to change the presence to. If not specified or ``None``, then it will change the presence of every shard the bot can see."
-msgstr "The shard_id to change the presence to. If not specified or ``None``, then it will change the presence of every shard the bot can see."
+msgstr "El shard_id a la que se cambiará la presencia. Si no se especifica o se establece en ``None``, se cambiará la presencia de cada shard que el bot pueda ver."
 
 msgid "If the ``activity`` parameter is not of proper type."
-msgstr "If the ``activity`` parameter is not of proper type."
+msgstr "Si el parámetro ``activity`` no es del tipo correcto."
 
 msgid "Whether the websocket is currently rate limited."
-msgstr "Whether the websocket is currently rate limited."
+msgstr "Si la velocidad del websocket está actualmente limitada."
 
 msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
-msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway."
+msgstr "Esto puede ser útil para saber si deberías consultar los miembros usando HTTP o a través del gateway."
 
 msgid "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr "This implementation checks if any of the shards are rate limited. For more granular control, consider :meth:`ShardInfo.is_ws_ratelimited`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"

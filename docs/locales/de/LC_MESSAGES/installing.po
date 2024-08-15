@@ -30,7 +30,7 @@ msgid "For new features in upcoming versions, you will need to install the pre-r
 msgstr "Für neue Funktionen in kommenden Versionen müssen Sie die Vorversion installieren, bis eine stabile Version veröffentlicht ist. ::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
-msgstr "Für Windows-Benutzer sollte dieser Befehl verwendet werden, um die Vorversion zu installieren: ::"
+msgstr "Für Windows-Benutzer sollte dieser Befehl verwendet werden, um die Betaversion zu installieren: ::"
 
 msgid "You can get the library directly from PyPI: ::"
 msgstr "Sie können die Bibliothek direkt von PyPI erhalten: ::"
@@ -93,8 +93,8 @@ msgid "Basic Concepts"
 msgstr "Basiskonzepte"
 
 msgid "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
-msgstr "Pycord dreht sich um das Konzept von :ref:`events <discord-api-events>`. Ein Ereignis ist etwas, auf das Sie hören und dann reagieren. Zum Beispiel, wenn eine Nachricht passiert, erhalten Sie ein Ereignis darüber, auf das Sie reagieren können."
+msgstr "Pycord dreht sich um das Konzept von :ref:`events <discord-api-events>`. Ein Event ist etwas, auf das Sie hören und dann reagieren. Zum Beispiel, wenn eine Nachricht passiert, erhalten Sie ein Event darüber, auf das Sie reagieren können."
 
 msgid "A quick example to showcase how events work:"
-msgstr "Ein schnelles Beispiel, um zu zeigen, wie Ereignisse funktionieren:"
+msgstr "Ein schnelles Beispiel, um zu zeigen, wie Events funktionieren:"
 

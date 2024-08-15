@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "A Primer to Gateway Intents"
-msgstr "A Primer to Gateway Intents"
+msgstr "Einführung zu Gateway Intents"
 
 msgid "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
 msgstr "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
@@ -54,7 +54,7 @@ msgid "Navigate to the `application page <https://discord.com/developers/applica
 msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_."
 
 msgid "Click on the bot you want to enable privileged intents for."
-msgstr "Click on the bot you want to enable privileged intents for."
+msgstr "Klicke auf den Bot, für den du Intents mit Privilegien aktivieren willst."
 
 msgid "Navigate to the bot tab on the left side of the screen."
 msgstr "Navigieren um Bot-Tab auf der linken Seite des Bildschirms."
@@ -66,7 +66,7 @@ msgid "Scroll down to the \"Privileged Gateway Intents\" section and enable the 
 msgstr "Scroll down to the \"Privileged Gateway Intents\" section and enable the ones you want."
 
 msgid "The privileged gateway intents selector."
-msgstr "The privileged gateway intents selector."
+msgstr "Der privilegierte Gateway-intents Selektor."
 
 msgid "Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_."
 msgstr "Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_."
@@ -75,13 +75,13 @@ msgid "Even if you enable intents through the developer portal, you still have t
 msgstr "Even if you enable intents through the developer portal, you still have to enable the intents through code as well."
 
 msgid "Do I need privileged intents?"
-msgstr "Do I need privileged intents?"
+msgstr "Brauche ich Intents mit Privilegien?"
 
 msgid "This is a quick checklist to see if you need specific privileged intents."
 msgstr "This is a quick checklist to see if you need specific privileged intents."
 
 msgid "Presence Intent"
-msgstr "Presence Intent"
+msgstr "Präsenz Intent"
 
 msgid "Whether you use :attr:`Member.status` at all to track member statuses."
 msgstr "Whether you use :attr:`Member.status` at all to track member statuses."

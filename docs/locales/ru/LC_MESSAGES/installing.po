@@ -12,40 +12,40 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Installing Pycord"
-msgstr "Installing Pycord"
+msgstr "Установка Pycord"
 
 msgid "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
-msgstr "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
+msgstr "Это документация по Pycord, библиотеке для Python, помогающей создавать приложения, использующие API Discord."
 
 msgid "Prerequisites"
-msgstr "Prerequisites"
+msgstr "Требования"
 
 msgid "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
-msgstr "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
+msgstr "Pycord работает с Python 3.8 или выше. Поддержка более ранних версий Python не предоставляется. Python 2.7 или ниже не поддерживается. Python 3.7 или ниже не поддерживается."
 
 msgid "Installing"
-msgstr "Installing"
+msgstr "Установка"
 
 msgid "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
-msgstr "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
+msgstr "Для новых возможностей в будущих версиях Вам нужно будет установить пререлиз до выпуска стабильной версии. ::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
-msgstr "For Windows users, this command should be used to install the pre-release: ::"
+msgstr "Для пользователей Windows, эта команда должна использоваться для установки пререлиза: ::"
 
 msgid "You can get the library directly from PyPI: ::"
-msgstr "You can get the library directly from PyPI: ::"
+msgstr "Библиотеку можно получить непосредственно из PyPI: ::"
 
 msgid "If you are using Windows, then the following should be used instead: ::"
-msgstr "If you are using Windows, then the following should be used instead: ::"
+msgstr "Если вы используете Windows, вместо этого следует использовать следующее: ::"
 
 msgid "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
-msgstr "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
+msgstr "Для установки дополнительных пакетов для ускорения используйте ``py-cord[speed]`` вместо ``py-cord``, например:"
 
 msgid "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
-msgstr "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
+msgstr "Чтобы получить голосовую поддержку, следует использовать ``py-cord[voice]`` вместо ``py-cord``, например ::"
 
 msgid "On Linux environments, installing voice requires getting the following dependencies:"
-msgstr "On Linux environments, installing voice requires getting the following dependencies:"
+msgstr "В среде Linux для установки голоса требуется наличие следующих зависимостей:"
 
 msgid "`libffi <https://github.com/libffi/libffi>`_"
 msgstr "`libffi <https://github.com/libffi/libffi>`_"
@@ -57,44 +57,44 @@ msgid "`python3-dev <https://packages.debian.org/python3-dev>`_"
 msgstr "`python3-dev <https://packages.debian.org/python3-dev>`_"
 
 msgid "For a Debian-based system, the following command will get these dependencies:"
-msgstr "For a Debian-based system, the following command will get these dependencies:"
+msgstr "Для основанной на Debian системы следующая команда получит требуемые зависимости:"
 
 msgid "Remember to check your permissions!"
-msgstr "Remember to check your permissions!"
+msgstr "Не забудьте проверить ваши права!"
 
 msgid "Virtual Environments"
-msgstr "Virtual Environments"
+msgstr "Виртуальные окружения"
 
 msgid "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
-msgstr "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
+msgstr "Иногда вы хотите, чтобы библиотеки не загрязняли системные установки или использовали версии библиотек, отличные от тех, что установлены в системе. Вы также можете не иметь прав на установку библиотек по всей системе. Для этой цели стандартная библиотека как Python 3.3 поставляется с концепцией \"Виртуальное окружение\", помогающей поддерживать эти отдельные версии."
 
 msgid "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
-msgstr "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
+msgstr "Более подробное руководство находится в :doc:`py:tutorial/venv`."
 
 msgid "However, for the quick and dirty:"
-msgstr "However, for the quick and dirty:"
+msgstr "Однако, если кратко:"
 
 msgid "Go to your project's working directory:"
-msgstr "Go to your project's working directory:"
+msgstr "Перейдите в рабочую папку вашего проекта:"
 
 msgid "Activate the virtual environment:"
-msgstr "Activate the virtual environment:"
+msgstr "Активируйте виртуальное окружение:"
 
 msgid "On Windows you activate it with:"
-msgstr "On Windows you activate it with:"
+msgstr "На Windows вы активируете её с помощью:"
 
 msgid "Use pip like usual:"
-msgstr "Use pip like usual:"
+msgstr "Используйте pip, как обычно:"
 
 msgid "Congratulations. You now have a virtual environment all set up."
-msgstr "Congratulations. You now have a virtual environment all set up."
+msgstr "Поздравляем. Теперь у вас есть настроенное виртуальное окружение."
 
 msgid "Basic Concepts"
-msgstr "Basic Concepts"
+msgstr "Основные концепции"
 
 msgid "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
-msgstr "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
+msgstr "Pycord работает на основе концепции :ref:`событий <discord-api-events>`. Событие - это то, что вы ожидаете и на что потом отвечаете. Например, когда происходит сообщение, вы получаете об этом событие, на которое можете ответить."
 
 msgid "A quick example to showcase how events work:"
-msgstr "A quick example to showcase how events work:"
+msgstr "Быстрый пример того, как работают события:"
 

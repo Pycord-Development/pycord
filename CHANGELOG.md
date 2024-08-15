@@ -22,6 +22,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `Guild.fetch_role` method.
+  ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
 - Added `AppInfo` attributes.
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 

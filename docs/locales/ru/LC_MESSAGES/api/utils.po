@@ -24,7 +24,7 @@ msgid "This is different from :func:`py:filter` due to the fact it stops the mom
 msgstr "This is different from :func:`py:filter` due to the fact it stops the moment it finds a valid entry."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Параметры"
 
 msgid "A function that returns a boolean-like result."
 msgstr "A function that returns a boolean-like result."
@@ -87,13 +87,13 @@ msgid "The default value to return if the object is not found, instead of raisin
 msgstr "The default value to return if the object is not found, instead of raising an error."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Возвращает"
 
 msgid "The object found or the default value."
 msgstr "The object found or the default value."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Вызывает"
 
 msgid "The object is missing a ``get_`` or ``fetch_`` method"
 msgstr "The object is missing a ``get_`` or ``fetch_`` method"

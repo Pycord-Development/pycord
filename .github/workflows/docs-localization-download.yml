@@ -4,12 +4,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  localizse:
+  download:
     permissions: write-all
-    name: "Localisize Docs"
+    name: "Download localizations from Crowdin"
     runs-on: ubuntu-latest
+    outputs:
+      pr_ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
       - name: "Install Python"
         uses: actions/setup-python@v5
         with:
@@ -28,10 +34,11 @@ jobs:
         working-directory: ./docs
       - name: "Build locales"
         run:
-          sphinx-intl update -p ./build/locales -l de -l ja -l de -l ja -l fr -l it -l
+          sphinx-intl update -p ./build/locales -l ja -l de -l ja -l fr -l it -l en -l
           hi -l ko -l pt_BR -l es -l zh_CN -l ru
         working-directory: ./docs
       - name: "Crowdin"
+        id: crowdin
         uses: crowdin/github-action@v2
         with:
           upload_sources: false
@@ -53,3 +60,74 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+      - name: "Convert Outputs"
+        id: convert_outputs
+        run: |
+          PR_REF="l10n_master"
+          PR_ID="${{ steps.crowdin.outputs.pull_request_number }}"
+          echo "pr_ref=$(echo -n "$PR_REF" | base64)" >> $GITHUB_OUTPUT
+          echo "pr_id=$(echo -n "$PR_ID" | base64)" >> $GITHUB_OUTPUT
+
+  pr:
+    permissions: write-all
+    name: "Trigger PR workflows manually"
+    needs: [download]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Refresh Pull
+        run: |
+          git fetch --all
+          git reset --hard origin/master
+          git pull
+      - name: "Convert Outputs"
+        id: convert_outputs
+        run: |
+          PR_REF=$(echo -n "${{ needs.download.outputs.pr_ref }}" | base64 --decode)
+          PR_ID=$(echo -n "${{ needs.download.outputs.pr_id }}" | base64 --decode)
+          echo "pr_ref=$PR_REF" >> $GITHUB_OUTPUT
+          echo "pr_id=$PR_ID" >> $GITHUB_OUTPUT
+      - name: Invoke checks workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: check.yml
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      - name: Invoke codeql workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: codeql-analysis.yml
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      - name: Invoke lint workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: lint.yml
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      - name: Invoke pr workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: pr.yml
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      - name: Invoke test workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: test.yml
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      - name: Invoke todo workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: todo.yml
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      - name: Invoke version updates workflow
+        uses: benc-uk/workflow-dispatch@v1.2.4
+        with:
+          workflow: version-updates.yml
+          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #      - run: gh pr review --approve -b "auto-approval for localization sync :3" "$PR_ID"
+      #        env:
+      #          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
+      #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: gh pr merge --auto --squash $PR_ID
+        env:
+          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

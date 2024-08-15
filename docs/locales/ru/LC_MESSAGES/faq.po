@@ -12,79 +12,79 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Frequently Asked Questions"
-msgstr "Frequently Asked Questions"
+msgstr "Часто Задаваемые Вопросы"
 
 msgid "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
-msgstr "This is a list of Frequently Asked Questions regarding using ``Pycord`` and its extension modules. Feel free to suggest a new question or submit one via pull requests."
+msgstr "Это список Часто Задаваемых Вопросов относительно использования ``Pycord`` и его модулей расширений. Не стесняйтесь предложить новый вопрос или отправить пулл-реквесты."
 
 msgid "Coroutines"
-msgstr "Coroutines"
+msgstr "Короутины"
 
 msgid "Questions regarding coroutines and asyncio belong here."
-msgstr "Questions regarding coroutines and asyncio belong here."
+msgstr "Здесь находятся вопросы, касающиеся короутинов и asyncio."
 
 msgid "What is a coroutine?"
-msgstr "What is a coroutine?"
+msgstr "Что такое короутин?"
 
 msgid "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
-msgstr "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
+msgstr "|coroutine_link|_ это функция, которая должна быть вызвана с ``await`` или ``yield from``. Когда Python сталкивается с ``await``, он останавливает выполнение функции в этой точке и работает над другими вещами, пока не вернется к этой точке и не завершит свою работу. Это позволяет вашей программе выполнять несколько действий одновременно без использования потоков или сложной многопроцессорной обработки."
 
 msgid "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
-msgstr "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
+msgstr "**Если вы забудете написать await перед короутином, то короутин не выполнится. Никогда не забывайте await.**"
 
 msgid "Where can I use ``await``\\?"
-msgstr "Where can I use ``await``\\?"
+msgstr "Где можно использовать ``await``\\?"
 
 msgid "You can only use ``await`` inside ``async def`` functions and nowhere else."
-msgstr "You can only use ``await`` inside ``async def`` functions and nowhere else."
+msgstr "Вы можете использовать ``await`` только внутри ``async def`` функций и нигде еще."
 
 msgid "What does \"blocking\" mean?"
-msgstr "What does \"blocking\" mean?"
+msgstr "Что означает \"блокирование\"?"
 
 msgid "In asynchronous programming a blocking call is essentially all the parts of the function that are not ``await``. Do not despair however, because not all forms of blocking are bad! Using blocking calls is inevitable, but you must work to make sure that you don't excessively block functions. Remember, if you block for too long then your bot will freeze since it has not stopped the function's execution at that point to do other things."
-msgstr "In asynchronous programming a blocking call is essentially all the parts of the function that are not ``await``. Do not despair however, because not all forms of blocking are bad! Using blocking calls is inevitable, but you must work to make sure that you don't excessively block functions. Remember, if you block for too long then your bot will freeze since it has not stopped the function's execution at that point to do other things."
+msgstr "В асинхронном программировании блокирующий вызов - это, по сути, все части функции, которые не являются ``await``. Однако не стоит отчаиваться, потому что не все формы блокировки плохи! Использование блокирующих вызовов неизбежно, но вы должны работать над тем, чтобы не блокировать функции чрезмерно. Помните, что если вы блокируете функцию слишком долго, то ваш бот зависнет, поскольку он не остановил выполнение функции в этот момент, чтобы заняться другими делами."
 
 msgid "If logging is enabled, this library will attempt to warn you that blocking is occurring with the message: ``Heartbeat blocked for more than N seconds.`` See :ref:`logging_setup` for details on enabling logging."
-msgstr "If logging is enabled, this library will attempt to warn you that blocking is occurring with the message: ``Heartbeat blocked for more than N seconds.`` See :ref:`logging_setup` for details on enabling logging."
+msgstr "Если логирование включено, библиотека попытается предупредить вас о блокирующем вызове с сообщением: ``Сердцебиение заблокировано более чем на N секунд.`` Подробности о включении логирования см. в :ref:`logging_setup``."
 
 msgid "A common source of blocking for too long is something like :func:`time.sleep`. Don't do that. Use :func:`asyncio.sleep` instead. Similar to this example: ::"
-msgstr "A common source of blocking for too long is something like :func:`time.sleep`. Don't do that. Use :func:`asyncio.sleep` instead. Similar to this example: ::"
+msgstr "Частым источником слишком долгой блокировки является что-то вроде :func:`time.sleep`. Не делайте этого. Вместо этого используйте :func:`asyncio.sleep`. Аналогично этому примеру: ::"
 
 msgid "Another common source of blocking for too long is using HTTP requests with the famous module :doc:`requests <req:index>`. While :doc:`requests <req:index>` is an amazing module for non-asynchronous programming, it is not a good choice for :mod:`asyncio` because certain requests can block the event loop too long. Instead, use the :doc:`aiohttp <aio:index>` library which is installed on the side with this library."
-msgstr "Another common source of blocking for too long is using HTTP requests with the famous module :doc:`requests <req:index>`. While :doc:`requests <req:index>` is an amazing module for non-asynchronous programming, it is not a good choice for :mod:`asyncio` because certain requests can block the event loop too long. Instead, use the :doc:`aiohttp <aio:index>` library which is installed on the side with this library."
+msgstr "Другим распространенным источником слишком долгой блокировки является использование HTTP-запросов с известным модулем :doc:`requests <req:index>`. Хотя :doc:`requests <req:index>` - это замечательный модуль для неасинхронного программирования, он не является хорошим выбором для :mod:`asyncio`, поскольку некоторые запросы могут слишком долго блокировать цикл событий. Вместо него используйте библиотеку :doc:`aiohttp <aio:index>`, которая устанавливается на ряду с этой библиотекой."
 
 msgid "Consider the following example: ::"
-msgstr "Consider the following example: ::"
+msgstr "Изучите следующий пример: ::"
 
 msgid "General"
-msgstr "General"
+msgstr "Общее"
 
 msgid "General questions regarding library usage belong here."
-msgstr "General questions regarding library usage belong here."
+msgstr "Общие вопросы, касающиеся использования библиотеки, находятся здесь."
 
 msgid "Where can I find usage examples?"
-msgstr "Where can I find usage examples?"
+msgstr "Где можно найти примеры использования?"
 
 msgid "Example code can be found in the `examples folder <https://github.com/Pycord-Development/pycord/tree/master/examples>`_ in the repository."
-msgstr "Example code can be found in the `examples folder <https://github.com/Pycord-Development/pycord/tree/master/examples>`_ in the repository."
+msgstr "Пример кода можно найти в папке `examples <https://github.com/Pycord-Development/pycord/tree/master/examples>`_ в репозитории."
 
 msgid "How do I set the \"Playing\" status?"
-msgstr "How do I set the \"Playing\" status?"
+msgstr "Как установить статус \"Играет в\"?"
 
 msgid "The ``activity`` keyword argument may be passed in the :class:`Client` constructor or :meth:`Client.change_presence`, given an :class:`Activity` object."
-msgstr "The ``activity`` keyword argument may be passed in the :class:`Client` constructor or :meth:`Client.change_presence`, given an :class:`Activity` object."
+msgstr "Ключевой аргумент ``activity`` может быть передан в конструктор :class:`Client` или :meth:`Client.change_presence`, передавая объект :class:`Activity`."
 
 msgid "The constructor may be used for static activities, while :meth:`Client.change_presence` may be used to update the activity at runtime."
-msgstr "The constructor may be used for static activities, while :meth:`Client.change_presence` may be used to update the activity at runtime."
+msgstr "Конструктор можно использовать для статичных активностей, а :meth:`Client.change_presence` можно использовать для обновления активности во время выполнения кода."
 
 msgid "It is highly discouraged to use :meth:`Client.change_presence` or API calls in :func:`on_ready` as this event may be called many times while running, not just once."
-msgstr "It is highly discouraged to use :meth:`Client.change_presence` or API calls in :func:`on_ready` as this event may be called many times while running, not just once."
+msgstr "Крайне не рекомендуется использовать :meth:`Client.change_presence` или вызовы API в :func:`on_ready`, так как это событие может быть вызвано много раз во время работы, а не только один раз."
 
 msgid "There is a high chance of disconnecting if presences are changed right after connecting."
-msgstr "There is a high chance of disconnecting if presences are changed right after connecting."
+msgstr "Высока вероятность отключения, если сменить статус активности сразу после подключения."
 
 msgid "The status type (playing, listening, streaming, watching) can be set using the :class:`ActivityType` enum. For memory optimisation purposes, some activities are offered in slimmed-down versions:"
-msgstr "The status type (playing, listening, streaming, watching) can be set using the :class:`ActivityType` enum. For memory optimisation purposes, some activities are offered in slimmed-down versions:"
+msgstr "Тип статуса (играет в, слушает, стримит, смотрит) можно задать с помощью перечисления :class:`ActivityType`. Для оптимизации памяти некоторые действия предлагаются в урезанных версиях:"
 
 msgid ":class:`Game`"
 msgstr ":class:`Game`"
@@ -93,58 +93,58 @@ msgid ":class:`Streaming`"
 msgstr ":class:`Streaming`"
 
 msgid "Putting both of these pieces of info together, you get the following: ::"
-msgstr "Putting both of these pieces of info together, you get the following: ::"
+msgstr "Если объединить два этих раздела информации, то получится следующее: ::"
 
 msgid "How do I send a message to a specific channel?"
-msgstr "How do I send a message to a specific channel?"
+msgstr "Как отправить сообщение в определенный канал?"
 
 msgid "You must fetch the channel directly and then call the appropriate method. Example: ::"
-msgstr "You must fetch the channel directly and then call the appropriate method. Example: ::"
+msgstr "Вы должны получить канал напрямую и затем вызвать соответствующий метод. Пример: ::"
 
 msgid "How do I send a DM?"
-msgstr "How do I send a DM?"
+msgstr "Как отправить ЛС?"
 
 msgid "Get the :class:`User` or :class:`Member` object and call :meth:`abc.Messageable.send`. For example: ::"
-msgstr "Get the :class:`User` or :class:`Member` object and call :meth:`abc.Messageable.send`. For example: ::"
+msgstr "Получите объект :class:`User` или :class:`Member` и вызовите :meth:`abc.Messageable.send`. Например: ::"
 
 msgid "If you are responding to an event, such as :func:`on_message`, you already have the :class:`User` object via :attr:`Message.author`: ::"
-msgstr "If you are responding to an event, such as :func:`on_message`, you already have the :class:`User` object via :attr:`Message.author`: ::"
+msgstr "Если вы отвечаете на событие, например :func:`on_message`, у вас уже есть объект `User` :class: через :attr:`Message.author`: ::"
 
 msgid "How do I get the ID of a sent message?"
-msgstr "How do I get the ID of a sent message?"
+msgstr "Как получить ID отправленного сообщения?"
 
 msgid ":meth:`abc.Messageable.send` returns the :class:`Message` that was sent. The ID of a message can be accessed via :attr:`Message.id`: ::"
-msgstr ":meth:`abc.Messageable.send` returns the :class:`Message` that was sent. The ID of a message can be accessed via :attr:`Message.id`: ::"
+msgstr ":meth:`abc.Messageable.send` возвращает отправленное сообщение :class:`Message`. ID сообщения можно получить через :attr:`Message.id`: ::"
 
 msgid "How do I upload an image?"
-msgstr "How do I upload an image?"
+msgstr "Как загрузить изображение?"
 
 msgid "To upload something to Discord you have to use the :class:`File` object."
-msgstr "To upload something to Discord you have to use the :class:`File` object."
+msgstr "Чтобы загрузить что-то в Discord, вы должны использовать объект :class:`File`."
 
 msgid "A :class:`File` accepts two parameters, the file-like object (or file path) and the filename to pass to Discord when uploading."
-msgstr "A :class:`File` accepts two parameters, the file-like object (or file path) and the filename to pass to Discord when uploading."
+msgstr ":class:`File` принимает два параметра: файловый объект (или путь к файлу) и имя файла, передаваемого в Discord при загрузке."
 
 msgid "If you want to upload an image it's as simple as: ::"
-msgstr "If you want to upload an image it's as simple as: ::"
+msgstr "Если вы хотите загрузить изображение, это просто: ::"
 
 msgid "If you have a file-like object you can do as follows: ::"
-msgstr "If you have a file-like object you can do as follows: ::"
+msgstr "Если у вас есть файловый объект, вы можете сделать следующее: ::"
 
 msgid "To upload multiple files, you can use the ``files`` keyword argument instead of ``file``\\: ::"
-msgstr "To upload multiple files, you can use the ``files`` keyword argument instead of ``file``\\: ::"
+msgstr "Чтобы загрузить несколько файлов, вы можете использовать именованный аргумент ``files`` вместо ``file``\\: ::"
 
 msgid "If you want to upload something from a URL, you will have to use an HTTP request using :doc:`aiohttp <aio:index>` and then pass an :class:`io.BytesIO` instance to :class:`File` like so:"
-msgstr "If you want to upload something from a URL, you will have to use an HTTP request using :doc:`aiohttp <aio:index>` and then pass an :class:`io.BytesIO` instance to :class:`File` like so:"
+msgstr "Если вы хотите загрузить что-то с URL, вам необходимо использовать HTTP-запрос с помощью :doc:`aiohttp <aio:index>`, а затем передать экземпляр :class:`io.BytesIO` в :class:`File`, как показано ниже:"
 
 msgid "How can I add a reaction to a message?"
-msgstr "How can I add a reaction to a message?"
+msgstr "Как добавить реакцию на сообщение?"
 
 msgid "You use the :meth:`Message.add_reaction` method."
-msgstr "You use the :meth:`Message.add_reaction` method."
+msgstr "Используйте метод :meth:`Message.add_reaction`."
 
 msgid "If you want to use unicode emoji, you must pass a valid unicode code point in a string. In your code, you can write this in a few different ways:"
-msgstr "If you want to use unicode emoji, you must pass a valid unicode code point in a string. In your code, you can write this in a few different ways:"
+msgstr "Если вы хотите использовать эмодзи unicode, вы должны передать в строке действительный код unicode эмодзи. В коде это можно записать несколькими разными способами:"
 
 msgid "``'👍'``"
 msgstr "``'👍'``"
@@ -156,40 +156,40 @@ msgid "``'\\N{THUMBS UP SIGN}'``"
 msgstr "``'\\N{THUMBS UP SIGN}'``"
 
 msgid "Quick example: ::"
-msgstr "Quick example: ::"
+msgstr "Быстрый пример: ::"
 
 msgid "In case you want to use emoji that come from a message, you already get their code points in the content without needing to do anything special. You **cannot** send ``':thumbsup:'`` style shorthands."
-msgstr "In case you want to use emoji that come from a message, you already get their code points in the content without needing to do anything special. You **cannot** send ``':thumbsup:'`` style shorthands."
+msgstr "Если вы хотите использовать эмодзи, полученные из сообщения, вы уже получите их код в содержимом без необходимости что-то делать. Вы **не можете** отправлять сокращения в стиле ``':thumbsup:'``."
 
 msgid "For custom emoji, you should pass an instance of :class:`Emoji`. You can also pass a ``'<:name:id>'`` string, but if you can use said emoji, you should be able to use :meth:`Client.get_emoji` to get an emoji via ID or use :func:`utils.find`/ :func:`utils.get` on :attr:`Client.emojis` or :attr:`Guild.emojis` collections."
-msgstr "For custom emoji, you should pass an instance of :class:`Emoji`. You can also pass a ``'<:name:id>'`` string, but if you can use said emoji, you should be able to use :meth:`Client.get_emoji` to get an emoji via ID or use :func:`utils.find`/ :func:`utils.get` on :attr:`Client.emojis` or :attr:`Guild.emojis` collections."
+msgstr "Для пользовательских эмодзи вы должны передать экземпляр :class:`Emoji`. Вы также можете передать строку ``'<:name:id>'``, а если вы можете использовать указанные эмодзи, вы можете использовать :meth:`Client.get_emoji` для получения эмодзи по ID или использовать :func:`utils.find`/ :func:`utils.get` на коллекциях :attr:`Client.emojis` или :attr:`Guild.emojis`."
 
 msgid "The name and ID of a custom emoji can be found with the client by prefixing ``:custom_emoji:`` with a backslash. For example, sending the message ``\\:python3:`` with the client will result in ``<:python3:232720527448342530>``."
-msgstr "The name and ID of a custom emoji can be found with the client by prefixing ``:custom_emoji:`` with a backslash. For example, sending the message ``\\:python3:`` with the client will result in ``<:python3:232720527448342530>``."
+msgstr "Имя и ID пользовательского эмодзи можно узнать в клиенте, добавив к ``:custom_emoji:`` обратный слэш. Например, отправив сообщение ``\\:python3:`` через клиент, вы получите ``<:python3:232720527448342530>``."
 
 msgid "How do I pass a coroutine to the player's \"after\" function?"
-msgstr "How do I pass a coroutine to the player's \"after\" function?"
+msgstr "Как передать короутин в функцию \"after\" плеера?"
 
 msgid "The library's music player launches on a separate thread, ergo it does not execute inside a coroutine. This does not mean that it is not possible to call a coroutine in the ``after`` parameter. To do so you must pass a callable that wraps up a couple of aspects."
-msgstr "The library's music player launches on a separate thread, ergo it does not execute inside a coroutine. This does not mean that it is not possible to call a coroutine in the ``after`` parameter. To do so you must pass a callable that wraps up a couple of aspects."
+msgstr "Музыкальный плеер библиотеки запускается в отдельном потоке, поэтому он не выполняется внутри короутина. Это не означает, что нельзя вызвать короутин в параметре ``after``. Для этого необходимо передать доступный для вызова объект, который включает в себя несколько моментов."
 
 msgid "The first gotcha that you must be aware of is that calling a coroutine is not a thread-safe operation. Since we are technically in another thread, we must take caution in calling thread-safe operations so things do not bug out. Luckily for us, :mod:`asyncio` comes with a :func:`asyncio.run_coroutine_threadsafe` function that allows us to call a coroutine from another thread."
-msgstr "The first gotcha that you must be aware of is that calling a coroutine is not a thread-safe operation. Since we are technically in another thread, we must take caution in calling thread-safe operations so things do not bug out. Luckily for us, :mod:`asyncio` comes with a :func:`asyncio.run_coroutine_threadsafe` function that allows us to call a coroutine from another thread."
+msgstr "Первый момент, о котором вы должны знать, заключается в том, что вызов короутина не является потокобезопасной операцией. Поскольку технически мы находимся в другом потоке, мы должны быть осторожны в вызове потокобезопасных операций, чтобы не допустить ошибок. К счастью для нас, :mod:`asyncio` имеет функцию :func:`asyncio.run_coroutine_threadsafe`, которая позволяет нам вызывать короутин из другого потока."
 
 msgid "However, this function returns a :class:`~concurrent.futures.Future` and to actually call it we have to fetch its result. Putting all of this together we can do the following: ::"
-msgstr "However, this function returns a :class:`~concurrent.futures.Future` and to actually call it we have to fetch its result. Putting all of this together we can do the following: ::"
+msgstr "Однако эта функция возвращает :class:`~concurrent.futures.Future`, и чтобы вызвать его, мы должны получить ее результат. Сложив все это вместе, мы можем сделать следующее: ::"
 
 msgid "How do I run something in the background?"
-msgstr "How do I run something in the background?"
+msgstr "Как выполнять что-то в фоновом режиме?"
 
 msgid "`Check the background_task.py example. <https://github.com/Pycord-Development/pycord/blob/master/examples/background_task.py>`_"
-msgstr "`Check the background_task.py example. <https://github.com/Pycord-Development/pycord/blob/master/examples/background_task.py>`_"
+msgstr "`Посмотрите пример background_task.py. <https://github.com/Pycord-Development/pycord/blob/master/examples/background_task.py>`_"
 
 msgid "How do I get a specific model?"
-msgstr "How do I get a specific model?"
+msgstr "Как получить конкретную модель?"
 
 msgid "There are multiple ways of doing this. If you have a specific model's ID then you can use one of the following functions:"
-msgstr "There are multiple ways of doing this. If you have a specific model's ID then you can use one of the following functions:"
+msgstr "Есть несколько способов сделать это. Если у вас есть ID конкретной модели, вы можете использовать одну из следующих функций:"
 
 msgid ":meth:`Client.get_channel`"
 msgstr ":meth:`Client.get_channel`"
@@ -216,7 +216,7 @@ msgid ":meth:`Guild.get_role`"
 msgstr ":meth:`Guild.get_role`"
 
 msgid "The following use an HTTP request:"
-msgstr "The following use an HTTP request:"
+msgstr "Следующие функции используют HTTP-запрос:"
 
 msgid ":meth:`abc.Messageable.fetch_message`"
 msgstr ":meth:`abc.Messageable.fetch_message`"
@@ -240,74 +240,74 @@ msgid ":meth:`Guild.fetch_member`"
 msgstr ":meth:`Guild.fetch_member`"
 
 msgid "If the functions above do not help you, then use of :func:`utils.find` or :func:`utils.get` would serve some use in finding specific models."
-msgstr "If the functions above do not help you, then use of :func:`utils.find` or :func:`utils.get` would serve some use in finding specific models."
+msgstr "Если приведенные выше функции вам не помогли, то использование :func:`utils.find` или :func:`utils.get` будет полезно для поиска конкретных моделей."
 
 msgid "How do I make a web request?"
-msgstr "How do I make a web request?"
+msgstr "Как сделать веб-запрос?"
 
 msgid "To make a request, you should use a non-blocking library. This library already uses and requires a 3rd party library for making requests, :doc:`aiohttp <aio:index>`."
-msgstr "To make a request, you should use a non-blocking library. This library already uses and requires a 3rd party library for making requests, :doc:`aiohttp <aio:index>`."
+msgstr "Для выполнения запроса необходимо использовать неблокирующую библиотеку. Эта библиотека уже использует и требует стороннюю библиотеку для выполнения запросов, :doc:`aiohttp <aio:index>`."
 
 msgid "See `aiohttp's full documentation <http://aiohttp.readthedocs.io/en/stable/>`_ for more information."
-msgstr "See `aiohttp's full documentation <http://aiohttp.readthedocs.io/en/stable/>`_ for more information."
+msgstr "Более подробную информацию можно найти в полной документации по `aiohttp <http://aiohttp.readthedocs.io/en/stable/>`_."
 
 msgid "How do I use a local image file for an embed image?"
-msgstr "How do I use a local image file for an embed image?"
+msgstr "Как использовать локальный файл изображения в качестве изображения для эмбеда?"
 
 msgid "Discord special-cases uploading an image attachment and using it within an embed so that it will not display separately, but instead in the embed's thumbnail, image, footer or author icon."
-msgstr "Discord special-cases uploading an image attachment and using it within an embed so that it will not display separately, but instead in the embed's thumbnail, image, footer or author icon."
+msgstr "Discord специально обрабатывает загрузку вложения изображения и его использование внутри эмбеда, чтобы оно отображалось не отдельно, а в миниатюре, изображении, нижнем колонтитуле или иконке автора эмбеда."
 
 msgid "To do so, upload the image normally with :meth:`abc.Messageable.send`, and set the embed's image URL to ``attachment://image.png``, where ``image.png`` is the filename of the image you will send."
-msgstr "To do so, upload the image normally with :meth:`abc.Messageable.send`, and set the embed's image URL to ``attachment://image.png``, where ``image.png`` is the filename of the image you will send."
+msgstr "Для этого загрузите изображение обычным способом с помощью :meth:`abc.Messageable.send` и установите URL-адрес изображения эмбеда как ``attachment://image.png``, где ``image.png`` - это имя файла изображения, которое вы будете отправлять."
 
 msgid "Is there an event for audit log entries being created?"
-msgstr "Is there an event for audit log entries being created?"
+msgstr "Есть ли событие для создания записей журнала аудита?"
 
 msgid "As of version 2.5, you can receive audit log entries with the :func:`on_audit_log_entry` event."
-msgstr "As of version 2.5, you can receive audit log entries with the :func:`on_audit_log_entry` event."
+msgstr "Начиная с версии 2.5, вы можете получать записи журнала аудита с помощью события :func:`on_audit_log_entry`."
 
 msgid "Commands Extension"
-msgstr "Commands Extension"
+msgstr "Расширение команд"
 
 msgid "Questions regarding ``discord.ext.commands`` belong here."
-msgstr "Questions regarding ``discord.ext.commands`` belong here."
+msgstr "Здесь находятся вопросы, касающиеся ``discord.ext.commands``."
 
 msgid "Why does ``on_message`` make my commands stop working?"
-msgstr "Why does ``on_message`` make my commands stop working?"
+msgstr "Почему ``on_message`` прекращает работу моих команд?"
 
 msgid "Overriding the default provided ``on_message`` forbids any extra commands from running. To fix this, add a ``bot.process_commands(message)`` line at the end of your ``on_message``. For example: ::"
-msgstr "Overriding the default provided ``on_message`` forbids any extra commands from running. To fix this, add a ``bot.process_commands(message)`` line at the end of your ``on_message``. For example: ::"
+msgstr "Переопределение предоставленного по умолчанию ``on_message`` запрещает выполнение любых других команд. Чтобы исправить это, добавьте строку ``bot.process_commands(message)`` в конец вашего ``on_message``. Например: ::"
 
 msgid "Alternatively, you can place your ``on_message`` logic into a **listener**. In this setup, you should not manually call ``bot.process_commands()``. This also allows you to do multiple things asynchronously in response to a message. Example::"
-msgstr "Alternatively, you can place your ``on_message`` logic into a **listener**. In this setup, you should not manually call ``bot.process_commands()``. This also allows you to do multiple things asynchronously in response to a message. Example::"
+msgstr "В качестве альтернативы вы можете поместить логику ``on_message`` в **listener**. При такой настройке не нужно вручную вызывать ``bot.process_commands()``. Это также позволяет выполнять несколько действий асинхронно в ответ на сообщение. Пример::"
 
 msgid "Why do my arguments require quotes?"
-msgstr "Why do my arguments require quotes?"
+msgstr "Почему мои аргументы требуют кавычки?"
 
 msgid "In a simple command defined as: ::"
-msgstr "In a simple command defined as: ::"
+msgstr "В простой команде, определенной как: ::"
 
 msgid "Calling it via ``?echo a b c`` will only fetch the first argument and disregard the rest. To fix this you should either call it via ``?echo \"a b c\"`` or change the signature to have \"consume rest\" behaviour. Example: ::"
-msgstr "Calling it via ``?echo a b c`` will only fetch the first argument and disregard the rest. To fix this you should either call it via ``?echo \"a b c\"`` or change the signature to have \"consume rest\" behaviour. Example: ::"
+msgstr "При вызове через ``?echo a b c``, будет получен только первый аргумент, а остальные будут проигнорированы. Чтобы исправить это, нужно либо вызвать его через ``?echo \"a b c\"``, либо изменить синтаксис так, чтобы она вела себя по принципу \"потреблять остальное\". Пример: ::"
 
 msgid "This will allow you to use ``?echo a b c`` without needing the quotes."
-msgstr "This will allow you to use ``?echo a b c`` without needing the quotes."
+msgstr "Это позволит вам использовать `` echo a b c`` без кавычек."
 
 msgid "How do I get the original ``message``\\?"
-msgstr "How do I get the original ``message``\\?"
+msgstr "Как получить исходное ``message``\\?"
 
 msgid "The :class:`~ext.commands.Context` contains an attribute, :attr:`~.Context.message` to get the original message."
-msgstr "The :class:`~ext.commands.Context` contains an attribute, :attr:`~.Context.message` to get the original message."
+msgstr "Класс :class:`~ext.commands.Context` содержит атрибут :attr:`~.Context.message` для получения исходного сообщения."
 
 msgid "Example: ::"
-msgstr "Example: ::"
+msgstr "Пример: ::"
 
 msgid "How do I make a subcommand?"
-msgstr "How do I make a subcommand?"
+msgstr "Как сделать подкоманду?"
 
 msgid "Use the :func:`~ext.commands.group` decorator. This will transform the callback into a :class:`~ext.commands.Group` which will allow you to add commands into the group operating as \"subcommands\". These groups can be arbitrarily nested as well."
-msgstr "Use the :func:`~ext.commands.group` decorator. This will transform the callback into a :class:`~ext.commands.Group` which will allow you to add commands into the group operating as \"subcommands\". These groups can be arbitrarily nested as well."
+msgstr "Используйте декоратор :func:`~ext.commands.group`. Это преобразует обратный вызов в :class:`~ext.commands.Group`, что позволит вам добавлять команды в группу, работающую как \"подкоманды\". Эти группы также могут быть произвольно вложенными."
 
 msgid "This could then be used as ``?git push origin master``."
-msgstr "This could then be used as ``?git push origin master``."
+msgstr "Затем это может быть использовано как ``?git push origin master``."
 

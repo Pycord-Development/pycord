@@ -2753,6 +2753,21 @@ msgstr "All roles in the guild."
 msgid "Retrieving the roles failed."
 msgstr "Retrieving the roles failed."
 
+msgid "Retrieves a :class:`Role` that the guild has."
+msgstr "Retrieves a :class:`Role` that the guild has."
+
+msgid "This method is an API call. For general usage, consider using :attr:`get_role` instead."
+msgstr "This method is an API call. For general usage, consider using :attr:`get_role` instead."
+
+msgid "The role in the guild with the specified ID."
+msgstr "The role in the guild with the specified ID."
+
+msgid ":class:`Role`"
+msgstr ":class:`Role`"
+
+msgid "Retrieving the role failed."
+msgstr "Retrieving the role failed."
+
 msgid "Creates a :class:`Role` for the guild."
 msgstr "Creates a :class:`Role` for the guild."
 
@@ -2791,9 +2806,6 @@ msgstr "The role's unicode emoji. If this argument is passed, ``icon`` is set to
 
 msgid "The newly created role."
 msgstr "The newly created role."
-
-msgid ":class:`Role`"
-msgstr ":class:`Role`"
 
 msgid "You do not have permissions to create the role."
 msgstr "You do not have permissions to create the role."
@@ -5250,7 +5262,7 @@ msgid "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e
 msgstr "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e. :meth:`.TextChannel.is_nsfw` is ``True``."
 
 msgid "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
-msgstr "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
+msgstr "Behandelt die Berechtigungsauflösung für :class:`~discord.Member` oder :class:`~discord.Role`."
 
 msgid "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
 msgstr "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
@@ -5961,10 +5973,10 @@ msgid "The object passed in can now be a role object."
 msgstr "The object passed in can now be a role object."
 
 msgid "Whether the permissions for this channel are synced with the category it belongs to."
-msgstr "Whether the permissions for this channel are synced with the category it belongs to."
+msgstr "Ob die Berechtigungen für diesen Kanal mit der Kategorie synchronisiert werden, zu der er gehört."
 
 msgid "If there is no category then this is ``False``."
-msgstr "If there is no category then this is ``False``."
+msgstr "Wenn es keine Kategorie gibt, dann ist dies ``False``."
 
 msgid "Sets the channel specific permission overwrites for a target in the channel."
 msgstr "Sets the channel specific permission overwrites for a target in the channel."

@@ -21,7 +21,7 @@ msgid "Example usage in a cog:"
 msgstr "Example usage in a cog:"
 
 msgid "API Reference"
-msgstr "API Reference"
+msgstr "Référence de l'API"
 
 msgid "Page"
 msgstr "Page"
@@ -60,7 +60,7 @@ msgid "Updates :class:`discord.File` objects so that they can be sent multiple t
 msgstr "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de retour"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
@@ -228,7 +228,7 @@ msgid "The interaction to use when editing the message. If not provided, the mes
 msgstr "The interaction to use when editing the message. If not provided, the message will be edited using the paginator's stored :attr:`message` attribute instead."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "The message associated with the paginator."
 msgstr "The message associated with the paginator."

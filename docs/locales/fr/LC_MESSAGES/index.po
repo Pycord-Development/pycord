@@ -21,19 +21,19 @@ msgid "Welcome to Pycord"
 msgstr "Bienvenue sur Pycord"
 
 msgid "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
-msgstr "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
+msgstr "Pycord est un wrapper API moderne, facile à utiliser, riche en fonctionnalités et prêt pour l'aspour Discord."
 
 msgid "**Features:**"
 msgstr "**Fonctionnalités :**"
 
 msgid "Modern Pythonic API using ``async``\\/``await`` syntax"
-msgstr "Modern Pythonic API using ``async``\\/``await`` syntax"
+msgstr "API Pythonique moderne utilisant la syntaxe ``async``\\/``await``"
 
 msgid "Sane rate limit handling that prevents 429s"
-msgstr "Sane rate limit handling that prevents 429s"
+msgstr "Manipulation de la limite de vitesse de la sane qui empêche les 429 s"
 
 msgid "Command extension to aid with bot creation"
-msgstr "Command extension to aid with bot creation"
+msgstr "Commandez l'extension pour aider à la création du bot"
 
 msgid "Easy to use with an object oriented design"
 msgstr "Easy to use with an object oriented design"

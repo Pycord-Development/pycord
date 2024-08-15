@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v1.0"
-msgstr "Migrating to v1.0"
+msgstr "Миграция на v1.0"
 
 msgid "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
 msgstr "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
@@ -24,7 +24,7 @@ msgid "Part of the redesign involves making things more easy to use and natural.
 msgstr "Part of the redesign involves making things more easy to use and natural. Things are done on the :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work."
 
 msgid "Python Version Change"
-msgstr "Python Version Change"
+msgstr "Изменение версии Python"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
 msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
@@ -42,7 +42,7 @@ msgid "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has
 msgstr "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
 
 msgid "Quick example: ::"
-msgstr "Quick example: ::"
+msgstr "Быстрый пример: ::"
 
 msgid "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
 msgstr "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
@@ -57,10 +57,10 @@ msgid "A list of changes is as follows:"
 msgstr "A list of changes is as follows:"
 
 msgid "Before"
-msgstr "Before"
+msgstr "До"
 
 msgid "After"
-msgstr "After"
+msgstr "После"
 
 msgid "``Message.server``"
 msgstr "``Message.server``"
