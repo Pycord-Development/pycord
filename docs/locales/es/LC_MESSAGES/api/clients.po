@@ -54,7 +54,7 @@ msgid "Optional[List[:class:`int`]]"
 msgstr "Optional[List[:class:`int`]]"
 
 msgid "Whether to automatically sync slash commands. This will call :meth:`~.Bot.sync_commands` in :func:`discord.on_connect`, and in :attr:`.process_application_commands` if the command is not found. Defaults to ``True``."
-msgstr "Si hay que sincronizar automáticamente los comandos slash. Esto llamará :meth:`~.Bot.sync_commands` en :func:`discord.on_connect`, y :attr:`.process_application_commands` si el comando no se encuentra. El valor por defecto es ``True``."
+msgstr "Si hay que sincronizar automáticamente los comandos de barra. Esto llamará :meth:`~.Bot.sync_commands` en :func:`discord.on_connect`, y :attr:`.process_application_commands` si el comando no se encuentra. El valor por defecto es ``True``."
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"

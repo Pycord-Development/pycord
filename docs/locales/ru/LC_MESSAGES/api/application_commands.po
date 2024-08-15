@@ -51,7 +51,7 @@ msgid "Note that apps intending to be listed in the App Directory cannot have NS
 msgstr "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
 
 msgid "Commands"
-msgstr "Commands"
+msgstr "Команды"
 
 msgid "Shortcut Decorators"
 msgstr "Shortcut Decorators"
@@ -219,7 +219,7 @@ msgid "The name of the command."
 msgstr "The name of the command."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -357,7 +357,7 @@ msgid "An iterator that recursively walks through all slash commands and groups 
 msgstr "An iterator that recursively walks through all slash commands and groups in this group."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Выход"
 
 msgid ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
 msgstr ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
@@ -393,7 +393,7 @@ msgid ":class:`MessageCommand`"
 msgstr ":class:`MessageCommand`"
 
 msgid "Options"
-msgstr "Options"
+msgstr "Опции"
 
 msgid "A decorator that can be used instead of typehinting :class:`.Option`."
 msgstr "A decorator that can be used instead of typehinting :class:`.Option`."
@@ -471,10 +471,10 @@ msgid "The description localizations for this option. The values of this should 
 msgstr "The description localizations for this option. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
 
 msgid "Examples"
-msgstr "Examples"
+msgstr "Примеры"
 
 msgid "Basic usage: ::"
-msgstr "Basic usage: ::"
+msgstr "Базовое использование: ::"
 
 msgid "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."
 msgstr "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."

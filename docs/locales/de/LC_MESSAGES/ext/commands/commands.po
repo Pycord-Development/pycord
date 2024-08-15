@@ -18,13 +18,13 @@ msgid "One of the most appealing aspects of the command extension is how easy it
 msgstr "Einer der attraktivsten Aspekte der Befehlserweiterung ist die einfache Definition von Befehlen und die Möglichkeit, Gruppen und Befehle beliebig zu verschachteln, um ein umfangreiches System von Unterbefehlen zu erhalten."
 
 msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
-msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
+msgstr "Die Verwendung von Prefix-Befehlen in Gilden erfordert die Aktivierung von :attr:`Intents.message_content`."
 
 msgid "Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar signature to the Python function."
 msgstr "Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar signature to the Python function."
 
 msgid "For example, in the given command definition:"
-msgstr "For example, in the given command definition:"
+msgstr "Zum Beispiel in der angegebenen Befehlsdefinition:"
 
 msgid "With the following prefix (``$``), it would be invoked by the user via:"
 msgstr "With the following prefix (``$``), it would be invoked by the user via:"

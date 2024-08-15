@@ -63,7 +63,7 @@ msgid "``Client.fetch_user_profile``"
 msgstr "``Client.fetch_user_profile``"
 
 msgid "``Message.call`` and ``ack``"
-msgstr "``Message.call`` and ``ack``"
+msgstr "``Message.call`` и ``ack``"
 
 msgid "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
 msgstr "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"

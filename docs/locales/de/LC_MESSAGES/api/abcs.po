@@ -192,7 +192,7 @@ msgid "Handles permission resolution for the :class:`~discord.Member` or :class:
 msgstr "Behandelt die Berechtigungsauflösung für :class:`~discord.Member` oder :class:`~discord.Role`."
 
 msgid "This function takes into consideration the following cases:"
-msgstr "This function takes into consideration the following cases:"
+msgstr "Diese Funktion berücksichtigt die folgenden Fälle:"
 
 msgid "Guild owner"
 msgstr "Gilden Besitzer"
@@ -237,7 +237,7 @@ msgid "|coro|"
 msgstr "|coro|"
 
 msgid "Deletes the channel."
-msgstr "Deletes the channel."
+msgstr "Löscht den Kanal."
 
 msgid "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
 msgstr "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
@@ -246,13 +246,13 @@ msgid "The reason for deleting this channel. Shows up on the audit log."
 msgstr "The reason for deleting this channel. Shows up on the audit log."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "You do not have proper permissions to delete the channel."
 msgstr "You do not have proper permissions to delete the channel."
 
 msgid "The channel was not found or was already deleted."
-msgstr "The channel was not found or was already deleted."
+msgstr "Der Kanal wurde nicht gefunden oder schon gelöscht."
 
 msgid "Deleting the channel failed."
 msgstr "Deleting the channel failed."
@@ -516,19 +516,19 @@ msgid "All parameters are optional."
 msgstr "Alle Parameter sind optional."
 
 msgid "Returns a context manager that allows you to type for an indefinite period of time."
-msgstr "Returns a context manager that allows you to type for an indefinite period of time."
+msgstr "Gibt einen Kontextmanager zurück, der es Ihnen erlaubt, auf unbegrenzte Zeit zu schreiben."
 
 msgid "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 msgstr "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 
 msgid "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
-msgstr "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
+msgstr "Dies ist sowohl ein regulärer Kontextmanager als auch ein Async-Kontextmanager. Das heißt, dass sowohl ```with``` als auch ```async with``` hiermit funktionieren."
 
 msgid "Example Usage: ::"
 msgstr "Example Usage: ::"
 
 msgid "Sends a message to the destination with the content given."
-msgstr "Sends a message to the destination with the content given."
+msgstr "Sendet eine Nachricht an das Ziel mit dem gegebenen Inhalt."
 
 msgid "The content must be a type that can convert to a string through ``str(content)``. If the content is set to ``None`` (the default), then the ``embed`` parameter must be provided."
 msgstr "The content must be a type that can convert to a string through ``str(content)``. If the content is set to ``None`` (the default), then the ``embed`` parameter must be provided."
@@ -540,19 +540,19 @@ msgid "To upload a single embed, the ``embed`` parameter should be used with a s
 msgstr "To upload a single embed, the ``embed`` parameter should be used with a single :class:`~discord.Embed` object. To upload multiple embeds, the ``embeds`` parameter should be used with a :class:`list` of :class:`~discord.Embed` objects. **Specifying both parameters will lead to an exception**."
 
 msgid "The content of the message to send."
-msgstr "The content of the message to send."
+msgstr "Der Inhalt der zu sendenden Nachricht."
 
 msgid "Indicates if the message should be sent using text-to-speech."
-msgstr "Indicates if the message should be sent using text-to-speech."
+msgstr "Gibt an, ob die Nachricht mit Text-zu-Sprache gesendet werden soll."
 
 msgid "The rich embed for the content."
 msgstr "The rich embed for the content."
 
 msgid "The file to upload."
-msgstr "The file to upload."
+msgstr "Die hochzuladende Datei."
 
 msgid "A list of files to upload. Must be a maximum of 10."
-msgstr "A list of files to upload. Must be a maximum of 10."
+msgstr "Eine Liste von hochzuladenden Dateien. Es dürfen maximal 10 sein."
 
 msgid "The nonce to use for sending this message. If the message was successfully sent, then the message will have a nonce with this value."
 msgstr "The nonce to use for sending this message. If the message was successfully sent, then the message will have a nonce with this value."
@@ -612,19 +612,19 @@ msgid "The poll to send.  .. versionadded:: 2.6"
 msgstr "The poll to send.  .. versionadded:: 2.6"
 
 msgid "The poll to send."
-msgstr "The poll to send."
+msgstr "Die zu sendende Umfrage."
 
 msgid "The message that was sent."
-msgstr "The message that was sent."
+msgstr "Die Nachricht, die gesendet wurde."
 
 msgid ":class:`~discord.Message`"
 msgstr ":class:`~discord.Message`"
 
 msgid "Sending the message failed."
-msgstr "Sending the message failed."
+msgstr "Das Senden der Nachricht ist fehlgeschlagen."
 
 msgid "You do not have the proper permissions to send the message."
-msgstr "You do not have the proper permissions to send the message."
+msgstr "Du hast nicht die nötigen Berechtigungen, um die Nachricht zu senden."
 
 msgid "The ``files`` list is not of the appropriate size,     you specified both ``file`` and ``files``,     or you specified both ``embed`` and ``embeds``,     or the ``reference`` object is not a :class:`~discord.Message`,     :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`."
 msgstr "The ``files`` list is not of the appropriate size,     you specified both ``file`` and ``files``,     or you specified both ``embed`` and ``embeds``,     or the ``reference`` object is not a :class:`~discord.Message`,     :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`."
@@ -642,25 +642,25 @@ msgid "The message ID to look for."
 msgstr "The message ID to look for."
 
 msgid "The message asked for."
-msgstr "The message asked for."
+msgstr "Die angefragte Nachricht."
 
 msgid "The specified message was not found."
-msgstr "The specified message was not found."
+msgstr "Die angegebene Nachricht wurde nicht gefunden."
 
 msgid "You do not have the permissions required to get a message."
 msgstr "You do not have the permissions required to get a message."
 
 msgid "Retrieving the message failed."
-msgstr "Retrieving the message failed."
+msgstr "Das Abrufen der Nachricht ist fehlgeschlagen."
 
 msgid "Retrieves all messages that are currently pinned in the channel."
-msgstr "Retrieves all messages that are currently pinned in the channel."
+msgstr "Ruft alle Nachrichten ab, die aktuell im Kanal angepinnt sind."
 
 msgid "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
 msgstr "Due to a limitation with the Discord API, the :class:`.Message` objects returned by this method do not contain complete :attr:`.Message.reactions` data."
 
 msgid "The messages that are currently pinned."
-msgstr "The messages that are currently pinned."
+msgstr "Die aktuell angepinnten Nachrichten."
 
 msgid "List[:class:`~discord.Message`]"
 msgstr "List[:class:`~discord.Message`]"

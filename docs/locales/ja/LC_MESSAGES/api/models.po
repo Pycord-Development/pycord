@@ -555,7 +555,7 @@ msgid "Returns the user's name with discriminator or global_name."
 msgstr "Returns the user's name with discriminator or global_name."
 
 msgid "The user's username."
-msgstr "The user's username."
+msgstr "ユーザーのユーザー名"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -570,7 +570,7 @@ msgid "If the user has migrated to the new username system, this will always be 
 msgstr "If the user has migrated to the new username system, this will always be 0."
 
 msgid "The user's global name."
-msgstr "The user's global name."
+msgstr "ユーザーのグローバル名。"
 
 msgid "Specifies if the user is a bot account."
 msgstr "Specifies if the user is a bot account."
