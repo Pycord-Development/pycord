@@ -16,8 +16,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Guild.fetch_role` method.
   ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
-- Added the following `AppInfo` attributes: `approximate_guild_count`, `approximate_user_install_count`, `custom_install_url`, `install_params`, `interactions_endpoint_url`, `redirect_uris`, `role_connections_verification_url`, and `tags`.
-  ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+- Added the following `AppInfo` attributes: `approximate_guild_count`,
+  `approximate_user_install_count`, `custom_install_url`, `install_params`,
+  `interactions_endpoint_url`, `redirect_uris`, `role_connections_verification_url`, and
+  `tags`. ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 
 ### Changed
 
