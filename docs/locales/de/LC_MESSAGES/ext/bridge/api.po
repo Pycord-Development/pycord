@@ -159,7 +159,7 @@ msgid "The coroutine to register as the local error handler."
 msgstr "The coroutine to register as the local error handler."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."

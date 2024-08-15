@@ -33,7 +33,7 @@ msgid "The iterable to search through."
 msgstr "The iterable to search through."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
@@ -297,7 +297,7 @@ msgid "Example Output"
 msgstr "Example Output"
 
 msgid "Description"
-msgstr "Description"
+msgstr "Описание"
 
 msgid "t"
 msgstr "t"
@@ -423,7 +423,7 @@ msgid "A helper function that collects an iterator into chunks of a given size."
 msgstr "A helper function that collects an iterator into chunks of a given size."
 
 msgid "The last chunk collected may not be as large as ``max_size``."
-msgstr "The last chunk collected may not be as large as ``max_size``."
+msgstr "Последний собранный чанк может быть не таким большим, как ``max_size``."
 
 msgid "The iterator to chunk, can be sync or async."
 msgstr "The iterator to chunk, can be sync or async."

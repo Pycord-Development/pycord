@@ -15,7 +15,7 @@ msgid "Voice Related"
 msgstr "Voice Related"
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Objetos"
 
 msgid "Represents a Discord voice connection."
 msgstr "Represents a Discord voice connection."
@@ -477,7 +477,7 @@ msgid "Not loading a library and attempting to use PCM based AudioSources will l
 msgstr "Not loading a library and attempting to use PCM based AudioSources will lead to voice not working."
 
 msgid "This function propagates the exceptions thrown."
-msgstr "This function propagates the exceptions thrown."
+msgstr "Esta función propaga las excepciones lanzadas."
 
 msgid "The bitness of the library must match the bitness of your python interpreter. If the library is 64-bit then your python interpreter must be 64-bit as well. Usually if there's a mismatch in bitness then the load will throw an exception."
 msgstr "The bitness of the library must match the bitness of your python interpreter. If the library is 64-bit then your python interpreter must be 64-bit as well. Usually if there's a mismatch in bitness then the load will throw an exception."

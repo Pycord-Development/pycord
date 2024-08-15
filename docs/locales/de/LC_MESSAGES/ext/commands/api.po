@@ -18,7 +18,7 @@ msgid "The following section outlines the API of Pycord's prefixed command exten
 msgstr "The following section outlines the API of Pycord's prefixed command extension module."
 
 msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
-msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
+msgstr "Die Verwendung von Prefix-Befehlen in Gilden erfordert die Aktivierung von :attr:`Intents.message_content`."
 
 msgid "Bots"
 msgstr "Bots"
@@ -81,7 +81,7 @@ msgid "The coroutine to register as the post-invoke hook."
 msgstr "The coroutine to register as the post-invoke hook."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."

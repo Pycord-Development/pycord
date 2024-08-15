@@ -111,7 +111,7 @@ msgid "Keyword arguments that are directly passed to the respective command cons
 msgstr "Argumentos de palabras clave que se proporcionan directamente a los respectivos constructores de los comandos. (:class:`.SlashCommand` y :class:`.ext.commands.Command`)"
 
 msgid "The slash command version of this bridge command."
-msgstr "La versión del comando slash de este comando puente."
+msgstr "La versión del comando de barra de este comando puente."
 
 msgid "type"
 msgstr "type"
@@ -228,7 +228,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Ite
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~collections.abc.Iterator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.bridge.core.BridgeCommand\\`\\]`"
 
 msgid "A decorator to register a function as a subcommand."
-msgstr "A decorator to register a function as a subcommand."
+msgstr "Un decorador para registrar la función como un subcomando."
 
 msgid "Decorators"
 msgstr "Decoradores"
@@ -318,7 +318,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.interaction
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.interactions.Interaction\\` \\| \\:py\\:class\\:\\`\\~discord.webhook.async\\_.WebhookMessage\\` \\| \\:py\\:class\\:\\`\\~discord.message.Message\\``"
 
 msgid "Alias for :meth:`~.BridgeContext.respond`."
-msgstr "Alias for :meth:`~.BridgeContext.respond`."
+msgstr "Alias para :meth:`~.BridgeContext.respond`."
 
 msgid "Defers the command with the respective approach to the current context. In :class:`BridgeExtContext`, this will be :meth:`~discord.abc.Messageable.trigger_typing` while in :class:`BridgeApplicationContext`, this will be :attr:`~.ApplicationContext.defer`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr "Defers the command with the respective approach to the current context. In :class:`BridgeExtContext`, this will be :meth:`~discord.abc.Messageable.trigger_typing` while in :class:`BridgeApplicationContext`, this will be :attr:`~.ApplicationContext.defer`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
@@ -336,7 +336,7 @@ msgid "Whether the context is an :class:`BridgeApplicationContext` or not."
 msgstr "Whether the context is an :class:`BridgeApplicationContext` or not."
 
 msgid "BridgeContext Subclasses"
-msgstr "BridgeContext Subclasses"
+msgstr "Subclases de BridgeContext"
 
 msgid "The application context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and :class:`~.ApplicationContext`. This class is meant to be used with :class:`BridgeCommand`."
 msgstr "The application context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and :class:`~.ApplicationContext`. This class is meant to be used with :class:`BridgeCommand`."

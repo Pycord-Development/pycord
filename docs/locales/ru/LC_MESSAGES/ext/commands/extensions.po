@@ -33,7 +33,7 @@ msgid "In this example we define a simple command, and when the extension is loa
 msgstr "In this example we define a simple command, and when the extension is loaded this command is added to the bot. Now the final step to this is loading the extension, which we do by calling :meth:`.Bot.load_extension`. To load this extension we call ``bot.load_extension('hello')``."
 
 msgid "Cogs"
-msgstr "Cogs"
+msgstr "Коги"
 
 msgid "Extensions are usually used in conjunction with cogs. To read more about them, check out the documentation, :ref:`ext_commands_cogs`."
 msgstr "Extensions are usually used in conjunction with cogs. To read more about them, check out the documentation, :ref:`ext_commands_cogs`."

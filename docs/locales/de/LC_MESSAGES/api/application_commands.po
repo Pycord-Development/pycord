@@ -24,82 +24,82 @@ msgid "The permissions passed in must be exactly like the properties shown under
 msgstr "Die übergebenen Berechtigungen müssen exakt mit den Eigenschaften in :class:`.discord.Permissions` übereinstimmen."
 
 msgid "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
-msgstr "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
+msgstr "Diese Berechtigungen können von jedem Server Administrator je Discord-Server verändert werden. Aus diesem Grund heißt die Funktion auch nur \"default\" da die benötigten Berechtigungen geändert werden können. Wenn du wirklich sicher gehen willst das der Nutzer **immer** die festgelegten Berechtigungen hat, solltest du das selber intern prüfen mit einer Funktion wie :func:`~ext-commands.hast_permissions`."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parameter"
 
 msgid "An argument list of permissions to check for."
-msgstr "An argument list of permissions to check for."
+msgstr "Eine Liste mit Berechtigungen gegen die geprüft werden soll."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Rückgabetyp"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 
 msgid "Example"
-msgstr "Example"
+msgstr "Beispiel"
 
 msgid "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
-msgstr "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
+msgstr "Ein Decorator welcher die Nutzung eines App-Befehls nur in Discord-Servern erlaubt. Das heißt, der Befehl ist nicht mehr in Direktnachrichten verfügbar."
 
 msgid "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
-msgstr "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
+msgstr "Ein Decorator welcher die Nutzung des App-Befehls nur in Discord-Kanälen mit aktivierter NSFW Einstellung erlaubt. Nutzer müssen, um den Befehl in Direktnachrichten zu nutzen, in ihren Privatsphäre Einstellungen \"Zugriff auf altersbegrenzte Befehle von Apps in Direknachrichten zulassen\" aktiviert haben."
 
 msgid "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
-msgstr "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
+msgstr "Beachten Sie, dass Apps, die im App-Verzeichnis aufgelistet werden sollen, keine NSFW-Befehle haben können."
 
 msgid "Commands"
-msgstr "Commands"
+msgstr "Befehle"
 
 msgid "Shortcut Decorators"
 msgstr "Shortcut Decorators"
 
 msgid "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
-msgstr "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
+msgstr "tftftfEin Decorator welcher eine Funktion in eine :class:`.ApplicationCommand` verwandelt. Meistens eines von :class:`.SlashCommand`, :class:`.UserCommand` oder :class:`.MessageCommand` wobei die exakte Klasse von dem ``cls`` Parameter abhängt. Normalerweise ist die ``Beschreibung`` direkt aus der Funktionsbeschreibung entnommen und wird von ``inspect.cleandoc`` gereinigt. Falls die Funktionsbeschreibung vom Typen ``bytes`` ist, wird es in einen :class:`str` mit Utf-8 Codierung dekodiert. Das ``Name`` Attribut ist normalerweise der Funktionsname ungeändert."
 
 msgid "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
-msgstr "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
+msgstr "Die Klasse zum Erschaffen. Normalerweise :class:`.SlashCommand`, normalerweise wird es nicht geändert."
 
 msgid "Keyword arguments to pass into the construction of the class denoted by ``cls``."
-msgstr "Keyword arguments to pass into the construction of the class denoted by ``cls``."
+msgstr "Argumente welche in den Konstruktor der ``cls`` Klasse gegeben werden."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Gibt zurück"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
-msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
+msgstr "Ein Decorator, der die angegebene Methode in einen :class:`.ApplicationCommand`, oder Unterklasse davon konvertiert."
 
 msgid "Callable[..., :class:`.ApplicationCommand`]"
 msgstr "Callable[..., :class:`.ApplicationCommand`]"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Mögliche Fehlermeldungen"
 
 msgid "If the function is not a coroutine or is already a command."
-msgstr "If the function is not a coroutine or is already a command."
+msgstr "Die Funktion ist keine Coroutine oder ist bereits ein Befehl"
 
 msgid "An alias for :meth:`application_command`."
-msgstr "An alias for :meth:`application_command`."
+msgstr "Ein Alias für :meth:`application_command`."
 
 msgid "This decorator is overridden by :func:`ext.commands.command`."
-msgstr "This decorator is overridden by :func:`ext.commands.command`."
+msgstr "Dieser Decorator wird von :func:`ext.commands.command` überschrieben."
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`."
-msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`."
+msgstr "Ein Decorator, der die angegebene Methode in einen :class:`.ApplicationCommand` umwandelt."
 
 msgid "Decorator for slash commands that invokes :func:`application_command`."
-msgstr "Decorator for slash commands that invokes :func:`application_command`."
+msgstr "Decorator für Slash Befehle, die :func:`application_command` aufrufen."
 
 msgid "A decorator that converts the provided method into a :class:`.SlashCommand`."
-msgstr "A decorator that converts the provided method into a :class:`.SlashCommand`."
+msgstr "Ein Decorator, der die angegebene Methode in einen :class:`.SlashCommand` umwandelt."
 
 msgid "Callable[..., :class:`.SlashCommand`]"
 msgstr "Callable[..., :class:`.SlashCommand`]"
 
 msgid "Decorator for user commands that invokes :func:`application_command`."
-msgstr "Decorator for user commands that invokes :func:`application_command`."
+msgstr "Decorator für Nutzer Befehle, die :func:`application_command` aufrufen."
 
 msgid "A decorator that converts the provided method into a :class:`.UserCommand`."
 msgstr "A decorator that converts the provided method into a :class:`.UserCommand`."
@@ -108,67 +108,67 @@ msgid "Callable[..., :class:`.UserCommand`]"
 msgstr "Callable[..., :class:`.UserCommand`]"
 
 msgid "Decorator for message commands that invokes :func:`application_command`."
-msgstr "Decorator for message commands that invokes :func:`application_command`."
+msgstr "Decorator für Nachrichten Befehle, die :func:`application_command` aufrufen."
 
 msgid "A decorator that converts the provided method into a :class:`.MessageCommand`."
-msgstr "A decorator that converts the provided method into a :class:`.MessageCommand`."
+msgstr "Ein Decorator, der die angegebene Methode in einen :class:`.MessageCommand` umwandelt."
 
 msgid "Callable[..., :class:`.MessageCommand`]"
 msgstr "Callable[..., :class:`.MessageCommand`]"
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Objekte"
 
 msgid "Checks whether the command is currently on cooldown."
-msgstr "Checks whether the command is currently on cooldown."
+msgstr "Prüft, ob der Befehl momentan in der Abklingzeit ist."
 
 msgid "This uses the current time instead of the interaction time."
-msgstr "This uses the current time instead of the interaction time."
+msgstr "Dies verwendet die aktuelle Zeit anstelle der Interaktionszeit."
 
 msgid "The invocation context to use when checking the command's cooldown status."
-msgstr "The invocation context to use when checking the command's cooldown status."
+msgstr "Der Kontext mit welchem die Befehls Abklingzeit geprüft werden soll."
 
 msgid "A boolean indicating if the command is on cooldown."
-msgstr "A boolean indicating if the command is on cooldown."
+msgstr "Ein boolescher Ausdruck, ob der Befehl noch abklingt."
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"
 
 msgid "Resets the cooldown on this command."
-msgstr "Resets the cooldown on this command."
+msgstr "Setzt die Abklingzeit dieses Befehls zurück."
 
 msgid "The invocation context to reset the cooldown under."
-msgstr "The invocation context to reset the cooldown under."
+msgstr "Der Kontext des Befehls zum Zurücksetzen der Abklingzeit."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 
 msgid "Retrieves the amount of seconds before this command can be tried again."
-msgstr "Retrieves the amount of seconds before this command can be tried again."
+msgstr "Ruft die Anzahl der Sekunden ab, bevor dieser Befehl erneut ausgeführt werden kann."
 
 msgid "The invocation context to retrieve the cooldown from."
-msgstr "The invocation context to retrieve the cooldown from."
+msgstr "Der Kontext des Befehls zum Erhalten der Abklingzeit."
 
 msgid "The amount of time left on this command's cooldown in seconds. If this is ``0.0`` then the command isn't on cooldown."
-msgstr "The amount of time left on this command's cooldown in seconds. If this is ``0.0`` then the command isn't on cooldown."
+msgstr "Die verbleibende Abklingzeit des Befehls in Sekunden. Wenn dies ``0.0`` ist, ist der Befehl nicht am Abklingen."
 
 msgid ":class:`float`"
 msgstr ":class:`float`"
 
 msgid "A decorator that registers a coroutine as a local error handler."
-msgstr "A decorator that registers a coroutine as a local error handler."
+msgstr "Ein Decorator welcher die Coroutine zur lokalen Fehlerbehandlung registriert."
 
 msgid "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."
-msgstr "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."
+msgstr "Ein lokaler Fehlerhändler ist ein :func:`.on_command_error` Ereignis auf einen einzigen Befehl limitiert. Trotz des Fehlerhändlers wird danach noch :func:`.on_command_error` aufgerufen, um alle Fehler zu behandeln."
 
 msgid "The coroutine to register as the local error handler."
-msgstr "The coroutine to register as the local error handler."
+msgstr "Die Coroutine, die als lokale Fehlerbehandlung registriert werden soll."
 
 msgid "The coroutine passed is not actually a coroutine."
-msgstr "The coroutine passed is not actually a coroutine."
+msgstr "Die übergebene Coroutine ist keine Coroutine."
 
 msgid "Checks whether the command has an error handler registered."
-msgstr "Checks whether the command has an error handler registered."
+msgstr "Prüft, ob der Befehl einen Fehlerhändler registriert hat."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"

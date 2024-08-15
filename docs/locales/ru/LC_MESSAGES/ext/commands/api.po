@@ -120,7 +120,7 @@ msgid "A decorator that converts the provided method into a Command, adds it to 
 msgstr "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid "Callable[..., :class:`Command`]"
 msgstr "Callable[..., :class:`Command`]"
@@ -1917,7 +1917,7 @@ msgid "Whether the commands should be case-insensitive. Defaults to ``False``."
 msgstr "Whether the commands should be case-insensitive. Defaults to ``False``."
 
 msgid "Cogs"
-msgstr "Cogs"
+msgstr "Коги"
 
 msgid "Cog"
 msgstr "Cog"

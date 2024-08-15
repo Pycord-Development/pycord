@@ -24,7 +24,7 @@ msgid "Questions regarding coroutines and asyncio belong here."
 msgstr "Здесь находятся вопросы, касающиеся короутинов и asyncio."
 
 msgid "What is a coroutine?"
-msgstr "Что такое короутин?"
+msgstr "Что такое короутина?"
 
 msgid "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
 msgstr "|coroutine_link|_ это функция, которая должна быть вызвана с ``await`` или ``yield from``. Когда Python сталкивается с ``await``, он останавливает выполнение функции в этой точке и работает над другими вещами, пока не вернется к этой точке и не завершит свою работу. Это позволяет вашей программе выполнять несколько действий одновременно без использования потоков или сложной многопроцессорной обработки."

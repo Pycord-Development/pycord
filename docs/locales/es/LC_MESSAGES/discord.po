@@ -12,40 +12,40 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Creating a Bot Account"
-msgstr "Creating a Bot Account"
+msgstr "Crear una cuenta bot"
 
 msgid "In order to work with the library and the Discord API in general, we must first create a Discord Bot account."
-msgstr "In order to work with the library and the Discord API in general, we must first create a Discord Bot account."
+msgstr "Para poder trabajar con la biblioteca y la API de Discord en general, primero debemos crear una cuenta de bot en Discord."
 
 msgid "Creating a Bot account is a pretty straightforward process."
-msgstr "Creating a Bot account is a pretty straightforward process."
+msgstr "Crear una cuenta de bot es un proceso bastante sencillo."
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
-msgstr "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+msgstr "Asegúrate de haber iniciado sesión en el `sitio web de Discord <https://discord.com>`_."
 
 msgid "Navigate to the `application page <https://discord.com/developers/applications>`_"
-msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_"
+msgstr "Ve a la página de `aplicaciones <https://discord.com/developers/applications>`_"
 
 msgid "Click on the \"New Application\" button."
-msgstr "Click on the \"New Application\" button."
+msgstr "Haz clic en el botón \"New Application\"."
 
 msgid "The new application button."
-msgstr "The new application button."
+msgstr "El botón de nueva aplicación."
 
 msgid "Give the application a name and click \"Create\"."
-msgstr "Give the application a name and click \"Create\"."
+msgstr "Dale un nombre a la aplicación y haz clic en \"Create\"."
 
 msgid "The new application form filled in."
-msgstr "The new application form filled in."
+msgstr "El formulario de la nueva aplicación llenado."
 
 msgid "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
-msgstr "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
+msgstr "Crea un usuario de bot navegando a la pestaña \"Bot\" y haz clic en \"Add Bot\"."
 
 msgid "Click \"Yes, do it!\" to continue."
-msgstr "Click \"Yes, do it!\" to continue."
+msgstr "Haz clic en \"Yes, do it!\" para continuar."
 
 msgid "The Add Bot button."
-msgstr "The Add Bot button."
+msgstr "El botón Añadir bot."
 
 msgid "Make sure that **Public Bot** is ticked if you want others to invite your bot."
 msgstr "Make sure that **Public Bot** is ticked if you want others to invite your bot."

@@ -111,7 +111,7 @@ msgid "A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.
 msgstr "A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`."
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Objetos"
 
 msgid "Represents a UI view."
 msgstr "Represents a UI view."

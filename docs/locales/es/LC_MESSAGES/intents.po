@@ -24,7 +24,7 @@ msgid "If intents are not passed, then the library defaults to every intent bein
 msgstr "If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members`, :attr:`Intents.presences`, and :attr:`Intents.message_content`."
 
 msgid "What intents are needed?"
-msgstr "What intents are needed?"
+msgstr "¿Qué intents se necesitan?"
 
 msgid "The intents that are necessary for your bot can only be dictated by yourself. Each attribute in the :class:`Intents` class documents what :ref:`events <discord-api-events>` it corresponds to and what kind of cache it enables."
 msgstr "The intents that are necessary for your bot can only be dictated by yourself. Each attribute in the :class:`Intents` class documents what :ref:`events <discord-api-events>` it corresponds to and what kind of cache it enables."
@@ -39,7 +39,7 @@ msgid "Another example showing a bot that only deals with messages and guild inf
 msgstr "Another example showing a bot that only deals with messages and guild information:"
 
 msgid "Privileged Intents"
-msgstr "Privileged Intents"
+msgstr "Intenciones elevadas"
 
 msgid "With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**."
 msgstr "With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**."
@@ -48,7 +48,7 @@ msgid "A privileged intent is one that requires you to go to the developer porta
 msgstr "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
-msgstr "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+msgstr "Asegúrate de haber iniciado sesión en el `sitio web de Discord <https://discord.com>`_."
 
 msgid "Navigate to the `application page <https://discord.com/developers/applications>`_."
 msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_."
@@ -75,13 +75,13 @@ msgid "Even if you enable intents through the developer portal, you still have t
 msgstr "Even if you enable intents through the developer portal, you still have to enable the intents through code as well."
 
 msgid "Do I need privileged intents?"
-msgstr "Do I need privileged intents?"
+msgstr "¿Necesito intenciones elevadas?"
 
 msgid "This is a quick checklist to see if you need specific privileged intents."
 msgstr "This is a quick checklist to see if you need specific privileged intents."
 
 msgid "Presence Intent"
-msgstr "Presence Intent"
+msgstr "Intención de presencia"
 
 msgid "Whether you use :attr:`Member.status` at all to track member statuses."
 msgstr "Whether you use :attr:`Member.status` at all to track member statuses."
@@ -90,7 +90,7 @@ msgid "Whether you use :attr:`Member.activity` or :attr:`Member.activities` to c
 msgstr "Whether you use :attr:`Member.activity` or :attr:`Member.activities` to check member's activities."
 
 msgid "Member Intent"
-msgstr "Member Intent"
+msgstr "Intención de miembros"
 
 msgid "Whether you track member joins or member leaves, corresponds to :func:`on_member_join` and :func:`on_member_remove` events."
 msgstr "Whether you track member joins or member leaves, corresponds to :func:`on_member_join` and :func:`on_member_remove` events."
@@ -108,7 +108,7 @@ msgid "Whether you want high accuracy member cache under :attr:`Guild.members`."
 msgstr "Whether you want high accuracy member cache under :attr:`Guild.members`."
 
 msgid "Message Content Intent"
-msgstr "Message Content Intent"
+msgstr "Intención de contenido del mensaje"
 
 msgid "Whether you have a message based command system using ext.commands"
 msgstr "Whether you have a message based command system using ext.commands"
@@ -123,7 +123,7 @@ msgid "The bot can still receive message contents in DMs, when mentioned in guil
 msgstr "The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages."
 
 msgid "Member Cache"
-msgstr "Member Cache"
+msgstr "Caché de miembros"
 
 msgid "Along with intents, Discord now further restricts the ability to cache members and expects bot authors to cache as little as is necessary. However, to properly maintain a cache the :attr:`Intents.members` intent is required in order to track the members who left and properly evict them."
 msgstr "Along with intents, Discord now further restricts the ability to cache members and expects bot authors to cache as little as is necessary. However, to properly maintain a cache the :attr:`Intents.members` intent is required in order to track the members who left and properly evict them."
@@ -156,7 +156,7 @@ msgid "Other events that take a :class:`Member` will require the use of the memb
 msgstr "Other events that take a :class:`Member` will require the use of the member cache. If absolute accuracy over the member cache is desirable, then it is advisable to have the :attr:`Intents.members` intent enabled."
 
 msgid "Retrieving Members"
-msgstr "Retrieving Members"
+msgstr "Recuperar miembros"
 
 msgid "If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:"
 msgstr "If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:"
@@ -195,22 +195,22 @@ msgid "It should be noted that the gateway has a strict rate limit of 120 reques
 msgstr "It should be noted that the gateway has a strict rate limit of 120 requests per 60 seconds."
 
 msgid "Troubleshooting"
-msgstr "Troubleshooting"
+msgstr "Resolución de problemas"
 
 msgid "Some common issues relating to the mandatory intent change."
 msgstr "Some common issues relating to the mandatory intent change."
 
 msgid "Where'd my members go?"
-msgstr "Where'd my members go?"
+msgstr "¿A dónde irían mis miembros?"
 
 msgid "Due to an :ref:`API change <intents_member_cache>` Discord is now forcing developers who want member caching to explicitly opt-in to it. This is a Discord mandated change and there is no way to bypass it. In order to get members back you have to explicitly enable the :ref:`members privileged intent <privileged_intents>` and change the :attr:`Intents.members` attribute to true."
 msgstr "Due to an :ref:`API change <intents_member_cache>` Discord is now forcing developers who want member caching to explicitly opt-in to it. This is a Discord mandated change and there is no way to bypass it. In order to get members back you have to explicitly enable the :ref:`members privileged intent <privileged_intents>` and change the :attr:`Intents.members` attribute to true."
 
 msgid "For example:"
-msgstr "For example:"
+msgstr "Por ejemplo:"
 
 msgid "Why does ``on_ready`` take so long to fire?"
-msgstr "Why does ``on_ready`` take so long to fire?"
+msgstr "¿Por qué ``on_ready`` tarda tanto en disparar?"
 
 msgid "As part of the API change regarding intents, Discord also changed how members are loaded in the beginning. Originally the library could request 75 guilds at once and only request members from guilds that have the :attr:`Guild.large` attribute set to ``True``. With the new intent changes, Discord mandates that we can only send 1 guild per request. This causes a 75x slowdown which is further compounded by the fact that *all* guilds, not just large guilds are being requested."
 msgstr "As part of the API change regarding intents, Discord also changed how members are loaded in the beginning. Originally the library could request 75 guilds at once and only request members from guilds that have the :attr:`Guild.large` attribute set to ``True``. With the new intent changes, Discord mandates that we can only send 1 guild per request. This causes a 75x slowdown which is further compounded by the fact that *all* guilds, not just large guilds are being requested."
@@ -234,5 +234,5 @@ msgid "Unfortunately due to this change being required from Discord there is not
 msgstr "Unfortunately due to this change being required from Discord there is nothing that the library can do to mitigate this."
 
 msgid "If you truly dislike the direction Discord is going with their API, you can contact them via `support <https://dis.gd/contact>`_."
-msgstr "If you truly dislike the direction Discord is going with their API, you can contact them via `support <https://dis.gd/contact>`_."
+msgstr "Si realmente no te gusta la dirección que Discord va con su API, puedes contactarlos a través de `soporte <https://dis.gd/contact>`_."
 

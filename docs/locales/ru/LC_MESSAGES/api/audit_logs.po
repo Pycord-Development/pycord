@@ -12,46 +12,46 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Audit Log Data"
-msgstr "Audit Log Data"
+msgstr "Данные журнала аудита"
 
 msgid "Working with :meth:`Guild.audit_logs` is a complicated process with a lot of machinery involved. The library attempts to make it easy to use and friendly. In order to accomplish this goal, it must make use of a couple of data classes that aid in this goal."
 msgstr "Working with :meth:`Guild.audit_logs` is a complicated process with a lot of machinery involved. The library attempts to make it easy to use and friendly. In order to accomplish this goal, it must make use of a couple of data classes that aid in this goal."
 
 msgid "Represents an Audit Log entry."
-msgstr "Represents an Audit Log entry."
+msgstr "Представляет собой запись в журнале аудита."
 
 msgid "You retrieve these via :meth:`Guild.audit_logs`."
 msgstr "You retrieve these via :meth:`Guild.audit_logs`."
 
 msgid "Checks if two entries are equal."
-msgstr "Checks if two entries are equal."
+msgstr "Проверяет, совпадают ли две записи."
 
 msgid "Checks if two entries are not equal."
-msgstr "Checks if two entries are not equal."
+msgstr "Проверяет две записи на неравенство."
 
 msgid "Returns the entry's hash."
-msgstr "Returns the entry's hash."
+msgstr "Возвращает хеш записи."
 
 msgid "Audit log entries are now comparable and hashable."
-msgstr "Audit log entries are now comparable and hashable."
+msgstr "Записи журнала аудита теперь хэшируемы и сравнимы."
 
 msgid "The action that was done."
-msgstr "The action that was done."
+msgstr "Совершенное действие."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`AuditLogAction`"
 msgstr ":class:`AuditLogAction`"
 
 msgid "The user who initiated this action. Usually a :class:`Member`\\, unless gone then it's a :class:`User`."
-msgstr "The user who initiated this action. Usually a :class:`Member`\\, unless gone then it's a :class:`User`."
+msgstr "Пользователь, инициировавший это действие. Обычно :class:`Member`\\, в случае отсутствия :class:`User`."
 
 msgid "Optional[:class:`abc.User`]"
 msgstr "Optional[:class:`abc.User`]"
 
 msgid "The entry ID."
-msgstr "The entry ID."
+msgstr "ID записи."
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
@@ -63,7 +63,7 @@ msgid "Any"
 msgstr "Any"
 
 msgid "The reason this action was done."
-msgstr "The reason this action was done."
+msgstr "Причина совершения данного действия."
 
 msgid "Optional[:class:`str`]"
 msgstr "Optional[:class:`str`]"
@@ -75,19 +75,19 @@ msgid "Parameters"
 msgstr "Параметры"
 
 msgid "Returns the entry's creation time in UTC."
-msgstr "Returns the entry's creation time in UTC."
+msgstr "Возвращает время создания записи в UTC."
 
 msgid "The category of the action, if applicable."
-msgstr "The category of the action, if applicable."
+msgstr "Категория действия, если применимо."
 
 msgid "The list of changes this entry has."
-msgstr "The list of changes this entry has."
+msgstr "Список изменений в данной записи."
 
 msgid "The target's prior state."
-msgstr "The target's prior state."
+msgstr "Предыдущее состояние цели."
 
 msgid "The target's subsequent state."
-msgstr "The target's subsequent state."
+msgstr "Последующее состояние цели."
 
 msgid "An audit log change set."
 msgstr "An audit log change set."
@@ -99,34 +99,34 @@ msgid "Depending on the :class:`AuditLogActionCategory` retrieved by :attr:`~Aud
 msgstr "Depending on the :class:`AuditLogActionCategory` retrieved by :attr:`~AuditLogEntry.category`\\, the data retrieved by this attribute differs:"
 
 msgid "Category"
-msgstr "Category"
+msgstr "Категория"
 
 msgid "Description"
-msgstr "Description"
+msgstr "Описание"
 
 msgid ":attr:`~AuditLogActionCategory.create`"
 msgstr ":attr:`~AuditLogActionCategory.create`"
 
 msgid "All attributes are set to ``None``."
-msgstr "All attributes are set to ``None``."
+msgstr "Все атрибуты имеют значение ``None``."
 
 msgid ":attr:`~AuditLogActionCategory.delete`"
 msgstr ":attr:`~AuditLogActionCategory.delete`"
 
 msgid "All attributes are set the value before deletion."
-msgstr "All attributes are set the value before deletion."
+msgstr "Атрибутам задаются значения до удаления."
 
 msgid ":attr:`~AuditLogActionCategory.update`"
 msgstr ":attr:`~AuditLogActionCategory.update`"
 
 msgid "All attributes are set the value before updating."
-msgstr "All attributes are set the value before updating."
+msgstr "Атрибутам задаются значения до обновления."
 
 msgid "``None``"
 msgstr "``None``"
 
 msgid "No attributes are set."
-msgstr "No attributes are set."
+msgstr "Атрибуты не задаются."
 
 msgid "The new value. The attribute has the type of :class:`AuditLogDiff`."
 msgstr "The new value. The attribute has the type of :class:`AuditLogDiff`."
@@ -153,7 +153,7 @@ msgid "Returns an iterator over (attribute, value) tuple of this diff."
 msgstr "Returns an iterator over (attribute, value) tuple of this diff."
 
 msgid "A name of something."
-msgstr "A name of something."
+msgstr "Имя чего-либо."
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
