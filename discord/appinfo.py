@@ -274,6 +274,7 @@ class AppInfo:
         """
         utils.warn_deprecated(
             "summary",
+            "description",
             reference="https://discord.com/developers/docs/resources/application#application-object-application-structure",
         )
         return self._summary

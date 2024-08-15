@@ -27,7 +27,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - ⚠️ **This Version Removes Support For Python 3.8** ⚠️
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
 
+### Deprecated
 
+- Deprecated `AppInfo.summary` in favor of `AppInfo.description`.
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 
 ## [2.6.0] - 2024-07-09
