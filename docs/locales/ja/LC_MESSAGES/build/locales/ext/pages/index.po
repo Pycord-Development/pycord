@@ -1,0 +1,649 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "discord.ext.pages"
+msgstr "discord.ext.pages"
+
+msgid "This module provides an easy pagination system with buttons, page groups, and custom view support."
+msgstr "This module provides an easy pagination system with buttons, page groups, and custom view support."
+
+msgid "Example usage in a cog:"
+msgstr "Example usage in a cog:"
+
+msgid "API Reference"
+msgstr "API Reference"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "Represents a page shown in the paginator."
+msgstr "Represents a page shown in the paginator."
+
+msgid "Allows for directly referencing and modifying each page as a class instance."
+msgstr "Allows for directly referencing and modifying each page as a class instance."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "The content of the page. Corresponds to the :class:`discord.Message.content` attribute."
+msgstr "The content of the page. Corresponds to the :class:`discord.Message.content` attribute."
+
+msgid "The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute."
+msgstr "The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute."
+
+msgid "A list of local files to be shown with the page."
+msgstr "A list of local files to be shown with the page."
+
+msgid "The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator."
+msgstr "The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called."
+msgstr "The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called."
+
+msgid "The interaction associated with the callback, if any."
+msgstr "The interaction associated with the callback, if any."
+
+msgid "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
+msgstr "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid ":py:data:`~typing.Optional`\\[:py:class:`list`\\[:py:class:`~discord.file.File`]]"
+msgstr ":py:data:`~typing.Optional`\\[:py:class:`list`\\[:py:class:`~discord.file.File`]]"
+
+msgid "Gets the content for the page."
+msgstr "Gets the content for the page."
+
+msgid "Gets the embeds for the page."
+msgstr "Gets the embeds for the page."
+
+msgid "Gets the custom view assigned to the page."
+msgstr "Gets the custom view assigned to the page."
+
+msgid "Gets the files associated with the page."
+msgstr "Gets the files associated with the page."
+
+msgid "Paginator"
+msgstr "Paginator"
+
+msgid "Creates a paginator which can be sent as a message and uses buttons for navigation."
+msgstr "Creates a paginator which can be sent as a message and uses buttons for navigation."
+
+msgid "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate. If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed."
+msgstr "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate. If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed."
+
+msgid "Whether to show disabled buttons."
+msgstr "Whether to show disabled buttons."
+
+msgid "Whether to show the page indicator when using the default buttons."
+msgstr "Whether to show the page indicator when using the default buttons."
+
+msgid "Whether to show a select menu that allows the user to switch between groups of pages."
+msgstr "Whether to show a select menu that allows the user to switch between groups of pages."
+
+msgid "The placeholder text to show in the page group menu when no page group has been selected yet. Defaults to \"Select Page Group\" if not provided."
+msgstr "The placeholder text to show in the page group menu when no page group has been selected yet. Defaults to \"Select Page Group\" if not provided."
+
+msgid "Whether only the original user of the command can change pages."
+msgstr "Whether only the original user of the command can change pages."
+
+msgid "Whether the buttons get disabled when the paginator view times out."
+msgstr "Whether the buttons get disabled when the paginator view times out."
+
+msgid "Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)"
+msgstr "Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)"
+
+msgid "The row where the default paginator buttons are displayed. Has no effect if custom buttons are used."
+msgstr "The row where the default paginator buttons are displayed. Has no effect if custom buttons are used."
+
+msgid "Whether to loop the pages when clicking prev/next while at the first/last page in the list."
+msgstr "Whether to loop the pages when clicking prev/next while at the first/last page in the list."
+
+msgid "A custom view whose items are appended below the pagination components. If the currently displayed page has a `custom_view` assigned, it will replace these view components when that page is displayed."
+msgstr "A custom view whose items are appended below the pagination components. If the currently displayed page has a `custom_view` assigned, it will replace these view components when that page is displayed."
+
+msgid "Timeout in seconds from last interaction with the paginator before no longer accepting input."
+msgstr "Timeout in seconds from last interaction with the paginator before no longer accepting input."
+
+msgid "A list of PaginatorButtons to initialize the Paginator with. If ``use_default_buttons`` is ``True``, this parameter is ignored."
+msgstr "A list of PaginatorButtons to initialize the Paginator with. If ``use_default_buttons`` is ``True``, this parameter is ignored."
+
+msgid "Whether to automatically trigger the callback associated with a `Page` whenever it is displayed. Has no effect if no callback exists for a `Page`."
+msgstr "Whether to automatically trigger the callback associated with a `Page` whenever it is displayed. Has no effect if no callback exists for a `Page`."
+
+msgid "The page group select menu associated with this paginator."
+msgstr "The page group select menu associated with this paginator."
+
+msgid "type"
+msgstr "type"
+
+msgid "Optional[List[:class:`PaginatorMenu`]]"
+msgstr "Optional[List[:class:`PaginatorMenu`]]"
+
+msgid "List of :class:`PageGroup` objects the user can switch between."
+msgstr "List of :class:`PageGroup` objects the user can switch between."
+
+msgid "Optional[List[:class:`PageGroup`]]"
+msgstr "Optional[List[:class:`PageGroup`]]"
+
+msgid "The index of the default page group shown when the paginator is initially sent. Defined by setting ``default`` to ``True`` on a :class:`PageGroup`."
+msgstr "The index of the default page group shown when the paginator is initially sent. Defined by setting ``default`` to ``True`` on a :class:`PageGroup`."
+
+msgid "Optional[:class:`int`]"
+msgstr "Optional[:class:`int`]"
+
+msgid "A zero-indexed value showing the current page number."
+msgstr "A zero-indexed value showing the current page number."
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "A zero-indexed value showing the total number of pages."
+msgstr "A zero-indexed value showing the total number of pages."
+
+msgid "A dictionary containing the :class:`~PaginatorButton` objects included in this paginator."
+msgstr "A dictionary containing the :class:`~PaginatorButton` objects included in this paginator."
+
+msgid "Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]"
+msgstr "Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]"
+
+msgid "The user or member that invoked the paginator."
+msgstr "The user or member that invoked the paginator."
+
+msgid "Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]"
+msgstr "Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]"
+
+msgid "The message the paginator is attached to."
+msgstr "The message the paginator is attached to."
+
+msgid "Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]"
+msgstr "Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]"
+
+msgid "Updates the existing :class:`Paginator` instance with the provided options."
+msgstr "Updates the existing :class:`Paginator` instance with the provided options."
+
+msgid "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate."
+msgstr "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate."
+
+msgid "A custom view whose items are appended below the pagination components."
+msgstr "A custom view whose items are appended below the pagination components."
+
+msgid "The interaction to use when updating the paginator. If not provided, the paginator will be updated by using its stored :attr:`message` attribute instead."
+msgstr "The interaction to use when updating the paginator. If not provided, the paginator will be updated by using its stored :attr:`message` attribute instead."
+
+msgid "The initial page number to display when updating the paginator."
+msgstr "The initial page number to display when updating the paginator."
+
+msgid "Disables all buttons when the view times out."
+msgstr "Disables all buttons when the view times out."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "Stops the paginator, disabling all of its components."
+msgstr "Stops the paginator, disabling all of its components."
+
+msgid "Whether to disable components added via custom views."
+msgstr "Whether to disable components added via custom views."
+
+msgid "The page content to show after disabling the paginator."
+msgstr "The page content to show after disabling the paginator."
+
+msgid "Cancels the paginator, removing all of its components from the message."
+msgstr "Cancels the paginator, removing all of its components from the message."
+
+msgid "Whether to remove components added via custom views."
+msgstr "Whether to remove components added via custom views."
+
+msgid "The page content to show after canceling the paginator."
+msgstr "The page content to show after canceling the paginator."
+
+msgid "Updates the paginator message to show the specified page number."
+msgstr "Updates the paginator message to show the specified page number."
+
+msgid "The page to display.  .. note::      Page numbers are zero-indexed when referenced internally,     but appear as one-indexed when shown to the user."
+msgstr "The page to display.  .. note::      Page numbers are zero-indexed when referenced internally,     but appear as one-indexed when shown to the user."
+
+msgid "The page to display."
+msgstr "The page to display."
+
+msgid "Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user."
+msgstr "Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user."
+
+msgid "The interaction to use when editing the message. If not provided, the message will be edited using the paginator's stored :attr:`message` attribute instead."
+msgstr "The interaction to use when editing the message. If not provided, the message will be edited using the paginator's stored :attr:`message` attribute instead."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "The message associated with the paginator."
+msgstr "The message associated with the paginator."
+
+msgid ":class:`~discord.Message`"
+msgstr ":class:`~discord.Message`"
+
+msgid "A callback that is called when an interaction happens within the view that checks whether the view should process item callbacks for the interaction."
+msgstr "A callback that is called when an interaction happens within the view that checks whether the view should process item callbacks for the interaction."
+
+msgid "This is useful to override if, for example, you want to ensure that the interaction author is a given user."
+msgstr "This is useful to override if, for example, you want to ensure that the interaction author is a given user."
+
+msgid "The default implementation of this returns ``True``."
+msgstr "The default implementation of this returns ``True``."
+
+msgid "If this returns ``False``, :meth:`on_check_failure` is called."
+msgstr "If this returns ``False``, :meth:`on_check_failure` is called."
+
+msgid "If an exception occurs within the body then the check is considered a failure and :meth:`on_error` is called."
+msgstr "If an exception occurs within the body then the check is considered a failure and :meth:`on_error` is called."
+
+msgid "The interaction that occurred."
+msgstr "The interaction that occurred."
+
+msgid "Whether the view children's callbacks should be called."
+msgstr "Whether the view children's callbacks should be called."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "Adds the default :class:`PaginatorMenu` instance to the paginator."
+msgstr "Adds the default :class:`PaginatorMenu` instance to the paginator."
+
+msgid "Adds the full list of default buttons that can be used with the paginator. Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."
+msgstr "Adds the full list of default buttons that can be used with the paginator. Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."
+
+msgid "Adds a :class:`PaginatorButton` to the paginator."
+msgstr "Adds a :class:`PaginatorButton` to the paginator."
+
+msgid "Removes a :class:`PaginatorButton` from the paginator."
+msgstr "Removes a :class:`PaginatorButton` from the paginator."
+
+msgid "Updates the display state of the buttons (disabled/hidden)"
+msgstr "Updates the display state of the buttons (disabled/hidden)"
+
+msgid "The dictionary of buttons that were updated."
+msgstr "The dictionary of buttons that were updated."
+
+msgid "Updates the custom view shown on the paginator."
+msgstr "Updates the custom view shown on the paginator."
+
+msgid "Returns a converted list of `Page` objects for the given page group based on the content of its pages."
+msgstr "Returns a converted list of `Page` objects for the given page group based on the content of its pages."
+
+msgid ":py:class:`list`\\[:py:class:`~discord.ext.pages.pagination.Page`]"
+msgstr ":py:class:`list`\\[:py:class:`~discord.ext.pages.pagination.Page`]"
+
+msgid "Converts a page into a :class:`Page` object based on its content."
+msgstr "Converts a page into a :class:`Page` object based on its content."
+
+msgid ":py:class:`~discord.ext.pages.pagination.Page`"
+msgstr ":py:class:`~discord.ext.pages.pagination.Page`"
+
+msgid "Triggers the callback associated with the current page, if any."
+msgstr "Triggers the callback associated with the current page, if any."
+
+msgid "The interaction that was used to trigger the page action."
+msgstr "The interaction that was used to trigger the page action."
+
+msgid "Sends a message with the paginated items."
+msgstr "Sends a message with the paginated items."
+
+msgid "A command's invocation context."
+msgstr "A command's invocation context."
+
+msgid "A target where the paginated message should be sent, if different from the original :class:`Context`"
+msgstr "A target where the paginated message should be sent, if different from the original :class:`Context`"
+
+msgid "An optional message shown when the paginator message is sent elsewhere."
+msgstr "An optional message shown when the paginator message is sent elsewhere."
+
+msgid "A reference to the :class:`~discord.Message` to which you are replying with the paginator. This can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgstr "A reference to the :class:`~discord.Message` to which you are replying with the paginator. This can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+
+msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
+msgstr "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
+
+msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``."
+msgstr "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``."
+
+msgid "If set, deletes the paginator after the specified time."
+msgstr "If set, deletes the paginator after the specified time."
+
+msgid "The message that was sent with the paginator."
+msgstr "The message that was sent with the paginator."
+
+msgid "Adds an item to the view."
+msgstr "Adds an item to the view."
+
+msgid "The item to add to the view."
+msgstr "The item to add to the view."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "An :class:`Item` was not passed."
+msgstr "An :class:`Item` was not passed."
+
+msgid "Maximum number of children has been exceeded (25)     or the row the item is trying to be added to is full."
+msgstr "Maximum number of children has been exceeded (25)     or the row the item is trying to be added to is full."
+
+msgid "Removes all items from the view."
+msgstr "Removes all items from the view."
+
+msgid "Disables all items in the view."
+msgstr "Disables all items in the view."
+
+msgid "A list of items in `self.children` to not disable from the view."
+msgstr "A list of items in `self.children` to not disable from the view."
+
+msgid "Edits an existing message to replace it with the paginator contents."
+msgstr "Edits an existing message to replace it with the paginator contents."
+
+msgid "If invoked from an interaction, you will still need to respond to the interaction."
+msgstr "If invoked from an interaction, you will still need to respond to the interaction."
+
+msgid "The message to edit with the paginator."
+msgstr "The message to edit with the paginator."
+
+msgid "Whether to suppress embeds for the message. This removes all the embeds if set to ``True``. If set to ``False`` this brings the embeds back if they were suppressed. Using this parameter requires :attr:`~.Permissions.manage_messages`."
+msgstr "Whether to suppress embeds for the message. This removes all the embeds if set to ``True``. If set to ``False`` this brings the embeds back if they were suppressed. Using this parameter requires :attr:`~.Permissions.manage_messages`."
+
+msgid "If set, changes the user that this paginator belongs to."
+msgstr "If set, changes the user that this paginator belongs to."
+
+msgid "The message that was edited. Returns ``None`` if the operation failed."
+msgstr "The message that was edited. Returns ``None`` if the operation failed."
+
+msgid "Optional[:class:`discord.Message`]"
+msgstr "Optional[:class:`discord.Message`]"
+
+msgid "Enables all items in the view."
+msgstr "Enables all items in the view."
+
+msgid "A list of items in `self.children` to not enable from the view."
+msgstr "A list of items in `self.children` to not enable from the view."
+
+msgid "Converts a message's components into a :class:`View`."
+msgstr "Converts a message's components into a :class:`View`."
+
+msgid "The :attr:`.Message.components` of a message are read-only and separate types from those in the ``discord.ui`` namespace. In order to modify and edit message components they must be converted into a :class:`View` first."
+msgstr "The :attr:`.Message.components` of a message are read-only and separate types from those in the ``discord.ui`` namespace. In order to modify and edit message components they must be converted into a :class:`View` first."
+
+msgid "The message with components to convert into a view."
+msgstr "The message with components to convert into a view."
+
+msgid "The timeout of the converted view."
+msgstr "The timeout of the converted view."
+
+msgid "The converted view. This always returns a :class:`View` and not one of its subclasses."
+msgstr "The converted view. This always returns a :class:`View` and not one of its subclasses."
+
+msgid ":class:`View`"
+msgstr ":class:`View`"
+
+msgid "Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`."
+msgstr "Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`."
+
+msgid "The custom_id of the item to get"
+msgstr "The custom_id of the item to get"
+
+msgid "The item with the matching ``custom_id`` if it exists."
+msgstr "The item with the matching ``custom_id`` if it exists."
+
+msgid "Optional[:class:`Item`]"
+msgstr "Optional[:class:`Item`]"
+
+msgid "Whether the view has been added for dispatching purposes."
+msgstr "Whether the view has been added for dispatching purposes."
+
+msgid ":py:class:`bool`"
+msgstr ":py:class:`bool`"
+
+msgid "Whether the view has finished interacting."
+msgstr "Whether the view has finished interacting."
+
+msgid "Whether the view is set up as persistent."
+msgstr "Whether the view is set up as persistent."
+
+msgid "A persistent view has all their components with a set ``custom_id`` and a :attr:`timeout` set to ``None``."
+msgstr "A persistent view has all their components with a set ``custom_id`` and a :attr:`timeout` set to ``None``."
+
+msgid "|coro| A callback that is called when a :meth:`View.interaction_check` returns ``False``. This can be used to send a response when a check failure occurs."
+msgstr "|coro| A callback that is called when a :meth:`View.interaction_check` returns ``False``. This can be used to send a response when a check failure occurs."
+
+msgid "A callback that is called when an item's callback or :meth:`interaction_check` fails with an error."
+msgstr "A callback that is called when an item's callback or :meth:`interaction_check` fails with an error."
+
+msgid "The default implementation prints the traceback to stderr."
+msgstr "The default implementation prints the traceback to stderr."
+
+msgid "The exception that was raised."
+msgstr "The exception that was raised."
+
+msgid "The item that failed the dispatch."
+msgstr "The item that failed the dispatch."
+
+msgid "The interaction that led to the failure."
+msgstr "The interaction that led to the failure."
+
+msgid "Removes an item from the view."
+msgstr "Removes an item from the view."
+
+msgid "The item to remove from the view."
+msgstr "The item to remove from the view."
+
+msgid "Stops listening to interaction events from this view."
+msgstr "Stops listening to interaction events from this view."
+
+msgid "This operation cannot be undone."
+msgstr "This operation cannot be undone."
+
+msgid "Waits until the view has finished interacting."
+msgstr "Waits until the view has finished interacting."
+
+msgid "A view is considered finished when :meth:`stop` is called, or it times out."
+msgstr "A view is considered finished when :meth:`stop` is called, or it times out."
+
+msgid "If ``True``, then the view timed out. If ``False`` then the view finished normally."
+msgstr "If ``True``, then the view timed out. If ``False`` then the view finished normally."
+
+msgid "Sends an interaction response or followup with the paginated items."
+msgstr "Sends an interaction response or followup with the paginated items."
+
+msgid "The interaction or BridgeContext which invoked the paginator. If passing a BridgeContext object, you cannot make this an ephemeral paginator."
+msgstr "The interaction or BridgeContext which invoked the paginator. If passing a BridgeContext object, you cannot make this an ephemeral paginator."
+
+msgid "Whether the paginator message and its components are ephemeral. If ``target`` is specified, the ephemeral message content will be ``target_message`` instead.  .. warning::      If your paginator is ephemeral, it cannot have a timeout     longer than 15 minutes (and cannot be persistent)."
+msgstr "Whether the paginator message and its components are ephemeral. If ``target`` is specified, the ephemeral message content will be ``target_message`` instead.  .. warning::      If your paginator is ephemeral, it cannot have a timeout     longer than 15 minutes (and cannot be persistent)."
+
+msgid "Whether the paginator message and its components are ephemeral. If ``target`` is specified, the ephemeral message content will be ``target_message`` instead."
+msgstr "Whether the paginator message and its components are ephemeral. If ``target`` is specified, the ephemeral message content will be ``target_message`` instead."
+
+msgid "If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be persistent)."
+msgstr "If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be persistent)."
+
+msgid "A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`"
+msgstr "A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`"
+
+msgid "The content of the interaction response shown when the paginator message is sent elsewhere."
+msgstr "The content of the interaction response shown when the paginator message is sent elsewhere."
+
+msgid "The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator."
+msgstr "The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator."
+
+msgid "PaginatorButton"
+msgstr "PaginatorButton"
+
+msgid "Creates a button used to navigate the paginator."
+msgstr "Creates a button used to navigate the paginator."
+
+msgid "The type of button being created. Must be one of ``first``, ``prev``, ``next``, ``last``, or ``page_indicator``."
+msgstr "The type of button being created. Must be one of ``first``, ``prev``, ``next``, ``last``, or ``page_indicator``."
+
+msgid "The label shown on the button. Defaults to a capitalized version of ``button_type`` (e.g. \"Next\", \"Prev\", etc.)"
+msgstr "The label shown on the button. Defaults to a capitalized version of ``button_type`` (e.g. \"Next\", \"Prev\", etc.)"
+
+msgid "The emoji shown on the button in front of the label."
+msgstr "The emoji shown on the button in front of the label."
+
+msgid "Whether to initially show the button as disabled."
+msgstr "Whether to initially show the button as disabled."
+
+msgid "The label shown on the button when ``loop_pages`` is set to ``True`` in the Paginator class."
+msgstr "The label shown on the button when ``loop_pages`` is set to ``True`` in the Paginator class."
+
+msgid "The paginator class where this button is being used. Assigned to the button when ``Paginator.add_button`` is called."
+msgstr "The paginator class where this button is being used. Assigned to the button when ``Paginator.add_button`` is called."
+
+msgid ":class:`Paginator`"
+msgstr ":class:`Paginator`"
+
+msgid "The label of the button, if available."
+msgstr "The label of the button, if available."
+
+msgid "The emoji of the button, if available."
+msgstr "The emoji of the button, if available."
+
+msgid "The style of the button."
+msgstr "The style of the button."
+
+msgid "Whether the button is disabled or not."
+msgstr "Whether the button is disabled or not."
+
+msgid "The coroutine that is called when the navigation button is clicked."
+msgstr "The coroutine that is called when the navigation button is clicked."
+
+msgid "The interaction created by clicking the navigation button."
+msgstr "The interaction created by clicking the navigation button."
+
+msgid "The ID of the button that gets received during an interaction."
+msgstr "The ID of the button that gets received during an interaction."
+
+msgid "If this button is for a URL, it does not have a custom ID."
+msgstr "If this button is for a URL, it does not have a custom ID."
+
+msgid "The ID of the SKU this button refers to."
+msgstr "The ID of the SKU this button refers to."
+
+msgid "The URL this button sends you to."
+msgstr "The URL this button sends you to."
+
+msgid "The underlying view for this item."
+msgstr "The underlying view for this item."
+
+msgid "PaginatorMenu"
+msgstr "PaginatorMenu"
+
+msgid "Creates a select menu used to switch between page groups, which can each have their own set of buttons."
+msgstr "Creates a select menu used to switch between page groups, which can each have their own set of buttons."
+
+msgid "The placeholder text that is shown if nothing is selected."
+msgstr "The placeholder text that is shown if nothing is selected."
+
+msgid "The paginator class where this menu is being used. Assigned to the menu when ``Paginator.add_menu`` is called."
+msgstr "The paginator class where this menu is being used. Assigned to the menu when ``Paginator.add_menu`` is called."
+
+msgid "Adds an option to the select menu."
+msgstr "Adds an option to the select menu."
+
+msgid "To append a pre-existing :class:`discord.SelectOption` use the :meth:`append_option` method instead."
+msgstr "To append a pre-existing :class:`discord.SelectOption` use the :meth:`append_option` method instead."
+
+msgid "The label of the option. This is displayed to users. Can only be up to 100 characters."
+msgstr "The label of the option. This is displayed to users. Can only be up to 100 characters."
+
+msgid "The value of the option. This is not displayed to users. If not given, defaults to the label. Can only be up to 100 characters."
+msgstr "The value of the option. This is not displayed to users. If not given, defaults to the label. Can only be up to 100 characters."
+
+msgid "An additional description of the option, if any. Can only be up to 100 characters."
+msgstr "An additional description of the option, if any. Can only be up to 100 characters."
+
+msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
+msgstr "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
+
+msgid "Whether this option is selected by default."
+msgstr "Whether this option is selected by default."
+
+msgid "The number of options exceeds 25."
+msgstr "The number of options exceeds 25."
+
+msgid "Appends an option to the select menu."
+msgstr "Appends an option to the select menu."
+
+msgid "The option to append to the select menu."
+msgstr "The option to append to the select menu."
+
+msgid "A list of channel types that can be selected in this menu."
+msgstr "A list of channel types that can be selected in this menu."
+
+msgid "The ID of the select menu that gets received during an interaction."
+msgstr "The ID of the select menu that gets received during an interaction."
+
+msgid "Whether the select is disabled or not."
+msgstr "Whether the select is disabled or not."
+
+msgid "The maximum number of items that must be chosen for this select menu."
+msgstr "The maximum number of items that must be chosen for this select menu."
+
+msgid "The minimum number of items that must be chosen for this select menu."
+msgstr "The minimum number of items that must be chosen for this select menu."
+
+msgid "A list of options that can be selected in this menu."
+msgstr "A list of options that can be selected in this menu."
+
+msgid "The placeholder text that is shown if nothing is selected, if any."
+msgstr "The placeholder text that is shown if nothing is selected, if any."
+
+msgid "List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] | List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None: A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet."
+msgstr "List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] | List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None: A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet."
+
+msgid "The coroutine that is called when a menu option is selected."
+msgstr "The coroutine that is called when a menu option is selected."
+
+msgid "The interaction created by selecting the menu option."
+msgstr "The interaction created by selecting the menu option."
+
+msgid "PageGroup"
+msgstr "PageGroup"
+
+msgid "Creates a group of pages which the user can switch between."
+msgstr "Creates a group of pages which the user can switch between."
+
+msgid "Each group of pages can have its own options, custom buttons, custom views, etc."
+msgstr "Each group of pages can have its own options, custom buttons, custom views, etc."
+
+msgid "If multiple :class:`PageGroup` objects have different options, they should all be set explicitly when creating each instance."
+msgstr "If multiple :class:`PageGroup` objects have different options, they should all be set explicitly when creating each instance."
+
+msgid "The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group."
+msgstr "The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group."
+
+msgid "The label shown on the corresponding PaginatorMenu dropdown option. Also used as the SelectOption value."
+msgstr "The label shown on the corresponding PaginatorMenu dropdown option. Also used as the SelectOption value."
+
+msgid "The description shown on the corresponding PaginatorMenu dropdown option."
+msgstr "The description shown on the corresponding PaginatorMenu dropdown option."
+
+msgid "The emoji shown on the corresponding PaginatorMenu dropdown option."
+msgstr "The emoji shown on the corresponding PaginatorMenu dropdown option."
+
+msgid "Whether the page group should be the default page group initially shown when the paginator response is sent. Only one ``PageGroup`` can be the default page group."
+msgstr "Whether the page group should be the default page group initially shown when the paginator response is sent. Only one ``PageGroup`` can be the default page group."
+
+msgid "A custom view whose items are appended below the pagination buttons."
+msgstr "A custom view whose items are appended below the pagination buttons."
+

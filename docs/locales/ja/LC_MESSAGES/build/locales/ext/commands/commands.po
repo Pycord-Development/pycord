@@ -1,0 +1,592 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Commands"
+msgstr "Commands"
+
+msgid "One of the most appealing aspects of the command extension is how easy it is to define commands and how you can arbitrarily nest groups and commands to have a rich sub-command system."
+msgstr "One of the most appealing aspects of the command extension is how easy it is to define commands and how you can arbitrarily nest groups and commands to have a rich sub-command system."
+
+msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
+msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
+
+msgid "Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar signature to the Python function."
+msgstr "Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar signature to the Python function."
+
+msgid "For example, in the given command definition:"
+msgstr "For example, in the given command definition:"
+
+msgid "With the following prefix (``$``), it would be invoked by the user via:"
+msgstr "With the following prefix (``$``), it would be invoked by the user via:"
+
+msgid "A command must always have at least one parameter, ``ctx``, which is the :class:`.Context` as the first one."
+msgstr "A command must always have at least one parameter, ``ctx``, which is the :class:`.Context` as the first one."
+
+msgid "There are two ways of registering a command. The first one is by using :meth:`.Bot.command` decorator, as seen in the example above. The second is using the :func:`~ext.commands.command` decorator followed by :meth:`.Bot.add_command` on the instance."
+msgstr "There are two ways of registering a command. The first one is by using :meth:`.Bot.command` decorator, as seen in the example above. The second is using the :func:`~ext.commands.command` decorator followed by :meth:`.Bot.add_command` on the instance."
+
+msgid "Essentially, these two are equivalent: ::"
+msgstr "Essentially, these two are equivalent: ::"
+
+msgid "Since the :meth:`.Bot.command` decorator is shorter and easier to comprehend, it will be the one used throughout the documentation here."
+msgstr "Since the :meth:`.Bot.command` decorator is shorter and easier to comprehend, it will be the one used throughout the documentation here."
+
+msgid "Any parameter that is accepted by the :class:`.Command` constructor can be passed into the decorator. For example, to change the name to something other than the function would be as simple as doing this:"
+msgstr "Any parameter that is accepted by the :class:`.Command` constructor can be passed into the decorator. For example, to change the name to something other than the function would be as simple as doing this:"
+
+msgid "Parameters"
+msgstr "Parameters"
+
+msgid "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."
+msgstr "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."
+
+msgid "Certain parameter types do different things in the user side and most forms of parameter types are supported."
+msgstr "Certain parameter types do different things in the user side and most forms of parameter types are supported."
+
+msgid "Positional"
+msgstr "Positional"
+
+msgid "The most basic form of parameter passing is the positional parameter. This is where we pass a parameter as-is:"
+msgstr "The most basic form of parameter passing is the positional parameter. This is where we pass a parameter as-is:"
+
+msgid "On the bot using side, you can provide positional arguments by just passing a regular string:"
+msgstr "On the bot using side, you can provide positional arguments by just passing a regular string:"
+
+msgid "To make use of a word with spaces in between, you should quote it:"
+msgstr "To make use of a word with spaces in between, you should quote it:"
+
+msgid "As a note of warning, if you omit the quotes, you will only get the first word:"
+msgstr "As a note of warning, if you omit the quotes, you will only get the first word:"
+
+msgid "Since positional arguments are just regular Python arguments, you can have as many as you want:"
+msgstr "Since positional arguments are just regular Python arguments, you can have as many as you want:"
+
+msgid "Variable"
+msgstr "Variable"
+
+msgid "Sometimes you want users to pass in an undetermined number of parameters. The library supports this similar to how variable list parameters are done in Python:"
+msgstr "Sometimes you want users to pass in an undetermined number of parameters. The library supports this similar to how variable list parameters are done in Python:"
+
+msgid "This allows our user to accept either one or many arguments as they please. This works similar to positional arguments, so multi-word parameters should be quoted."
+msgstr "This allows our user to accept either one or many arguments as they please. This works similar to positional arguments, so multi-word parameters should be quoted."
+
+msgid "For example, on the bot side:"
+msgstr "For example, on the bot side:"
+
+msgid "If the user wants to input a multi-word argument, they have to quote it like earlier:"
+msgstr "If the user wants to input a multi-word argument, they have to quote it like earlier:"
+
+msgid "Do note that similar to the Python function behaviour, a user can technically pass no arguments at all:"
+msgstr "Do note that similar to the Python function behaviour, a user can technically pass no arguments at all:"
+
+msgid "Since the ``args`` variable is a :class:`py:tuple`, you can do anything you would usually do with one."
+msgstr "Since the ``args`` variable is a :class:`py:tuple`, you can do anything you would usually do with one."
+
+msgid "Keyword-Only Arguments"
+msgstr "Keyword-Only Arguments"
+
+msgid "When you want to handle parsing of the argument yourself or do not feel like you want to wrap multi-word user input into quotes, you can ask the library to give you the rest as a single argument. We do this by using a **keyword-only argument**, seen below:"
+msgstr "When you want to handle parsing of the argument yourself or do not feel like you want to wrap multi-word user input into quotes, you can ask the library to give you the rest as a single argument. We do this by using a **keyword-only argument**, seen below:"
+
+msgid "You can only have one keyword-only argument due to parsing ambiguities."
+msgstr "You can only have one keyword-only argument due to parsing ambiguities."
+
+msgid "On the bot side, we do not need to quote input with spaces:"
+msgstr "On the bot side, we do not need to quote input with spaces:"
+
+msgid "Do keep in mind that wrapping it in quotes leaves it as-is:"
+msgstr "Do keep in mind that wrapping it in quotes leaves it as-is:"
+
+msgid "By default, the keyword-only arguments are stripped of white space to make it easier to work with. This behaviour can be toggled by the :attr:`.Command.rest_is_raw` argument in the decorator."
+msgstr "By default, the keyword-only arguments are stripped of white space to make it easier to work with. This behaviour can be toggled by the :attr:`.Command.rest_is_raw` argument in the decorator."
+
+msgid "Invocation Context"
+msgstr "Invocation Context"
+
+msgid "As seen earlier, every command must take at least a single parameter, called the :class:`~ext.commands.Context`."
+msgstr "As seen earlier, every command must take at least a single parameter, called the :class:`~ext.commands.Context`."
+
+msgid "This parameter gives you access to something called the \"invocation context\". Essentially all the information you need to know how the command was executed. It contains a lot of useful information:"
+msgstr "This parameter gives you access to something called the \"invocation context\". Essentially all the information you need to know how the command was executed. It contains a lot of useful information:"
+
+msgid ":attr:`.Context.guild` to fetch the :class:`Guild` of the command, if any."
+msgstr ":attr:`.Context.guild` to fetch the :class:`Guild` of the command, if any."
+
+msgid ":attr:`.Context.message` to fetch the :class:`Message` of the command."
+msgstr ":attr:`.Context.message` to fetch the :class:`Message` of the command."
+
+msgid ":attr:`.Context.author` to fetch the :class:`Member` or :class:`User` that called the command."
+msgstr ":attr:`.Context.author` to fetch the :class:`Member` or :class:`User` that called the command."
+
+msgid ":meth:`.Context.send` to send a message to the channel the command was used in."
+msgstr ":meth:`.Context.send` to send a message to the channel the command was used in."
+
+msgid "The context implements the :class:`abc.Messageable` interface, so anything you can do on a :class:`abc.Messageable` you can do on the :class:`~ext.commands.Context`."
+msgstr "The context implements the :class:`abc.Messageable` interface, so anything you can do on a :class:`abc.Messageable` you can do on the :class:`~ext.commands.Context`."
+
+msgid "Converters"
+msgstr "Converters"
+
+msgid "Adding bot arguments with function parameters is only the first step in defining your bot's command interface. To actually make use of the arguments, we usually want to convert the data into a target type. We call these :ref:`ext_commands_api_converters`."
+msgstr "Adding bot arguments with function parameters is only the first step in defining your bot's command interface. To actually make use of the arguments, we usually want to convert the data into a target type. We call these :ref:`ext_commands_api_converters`."
+
+msgid "Converters come in a few flavours:"
+msgstr "Converters come in a few flavours:"
+
+msgid "A regular callable object that takes an argument as a sole parameter and returns a different type."
+msgstr "A regular callable object that takes an argument as a sole parameter and returns a different type."
+
+msgid "These range from your own function, to something like :class:`bool` or :class:`int`."
+msgstr "These range from your own function, to something like :class:`bool` or :class:`int`."
+
+msgid "A custom class that inherits from :class:`~ext.commands.Converter`."
+msgstr "A custom class that inherits from :class:`~ext.commands.Converter`."
+
+msgid "Basic Converters"
+msgstr "Basic Converters"
+
+msgid "At its core, a basic converter is a callable that takes in an argument and turns it into something else."
+msgstr "At its core, a basic converter is a callable that takes in an argument and turns it into something else."
+
+msgid "For example, if we wanted to add two numbers together, we could request that they are turned into integers for us by specifying the converter:"
+msgstr "For example, if we wanted to add two numbers together, we could request that they are turned into integers for us by specifying the converter:"
+
+msgid "We specify converters by using something called a **function annotation**. This is a Python 3 exclusive feature that was introduced in :pep:`3107`."
+msgstr "We specify converters by using something called a **function annotation**. This is a Python 3 exclusive feature that was introduced in :pep:`3107`."
+
+msgid "This works with any callable, such as a function that would convert a string to all upper-case:"
+msgstr "This works with any callable, such as a function that would convert a string to all upper-case:"
+
+msgid "bool"
+msgstr "bool"
+
+msgid "Unlike the other basic converters, the :class:`bool` converter is treated slightly different. Instead of casting directly to the :class:`bool` type, which would result in any non-empty argument returning ``True``, it instead evaluates the argument as ``True`` or ``False`` based on its given content:"
+msgstr "Unlike the other basic converters, the :class:`bool` converter is treated slightly different. Instead of casting directly to the :class:`bool` type, which would result in any non-empty argument returning ``True``, it instead evaluates the argument as ``True`` or ``False`` based on its given content:"
+
+msgid "Advanced Converters"
+msgstr "Advanced Converters"
+
+msgid "Sometimes a basic converter doesn't have enough information that we need. For example, sometimes we want to get some information from the :class:`Message` that called the command or we want to do some asynchronous processing."
+msgstr "Sometimes a basic converter doesn't have enough information that we need. For example, sometimes we want to get some information from the :class:`Message` that called the command or we want to do some asynchronous processing."
+
+msgid "For this, the library provides the :class:`~ext.commands.Converter` interface. This allows you to have access to the :class:`.Context` and have the callable be asynchronous. Defining a custom converter using this interface requires overriding a single method, :meth:`.Converter.convert`."
+msgstr "For this, the library provides the :class:`~ext.commands.Converter` interface. This allows you to have access to the :class:`.Context` and have the callable be asynchronous. Defining a custom converter using this interface requires overriding a single method, :meth:`.Converter.convert`."
+
+msgid "An example converter:"
+msgstr "An example converter:"
+
+msgid "The converter provided can either be constructed or not. Essentially these two are equivalent:"
+msgstr "The converter provided can either be constructed or not. Essentially these two are equivalent:"
+
+msgid "Having the possibility of the converter be constructed allows you to set up some state in the converter's ``__init__`` for fine tuning the converter. An example of this is actually in the library, :class:`~ext.commands.clean_content`."
+msgstr "Having the possibility of the converter be constructed allows you to set up some state in the converter's ``__init__`` for fine tuning the converter. An example of this is actually in the library, :class:`~ext.commands.clean_content`."
+
+msgid "If a converter fails to convert an argument to its designated target type, the :exc:`.BadArgument` exception must be raised."
+msgstr "If a converter fails to convert an argument to its designated target type, the :exc:`.BadArgument` exception must be raised."
+
+msgid "Inline Advanced Converters"
+msgstr "Inline Advanced Converters"
+
+msgid "If we don't want to inherit from :class:`~ext.commands.Converter`, we can still provide a converter that has the advanced functionalities of an advanced converter and save us from specifying two types."
+msgstr "If we don't want to inherit from :class:`~ext.commands.Converter`, we can still provide a converter that has the advanced functionalities of an advanced converter and save us from specifying two types."
+
+msgid "For example, a common idiom would be to have a class and a converter for that class:"
+msgstr "For example, a common idiom would be to have a class and a converter for that class:"
+
+msgid "This can get tedious, so an inline advanced converter is possible through a :func:`classmethod` inside the type:"
+msgstr "This can get tedious, so an inline advanced converter is possible through a :func:`classmethod` inside the type:"
+
+msgid "Discord Converters"
+msgstr "Discord Converters"
+
+msgid "Working with :ref:`discord_api_models` is a fairly common thing when defining commands, as a result the library makes working with them easy."
+msgstr "Working with :ref:`discord_api_models` is a fairly common thing when defining commands, as a result the library makes working with them easy."
+
+msgid "For example, to receive a :class:`Member` you can just pass it as a converter:"
+msgstr "For example, to receive a :class:`Member` you can just pass it as a converter:"
+
+msgid "When this command is executed, it attempts to convert the string given into a :class:`Member` and then passes it as a parameter for the function. This works by checking if the string is a mention, an ID, a nickname, a username + discriminator, or just a regular username. The default set of converters have been written to be as easy to use as possible."
+msgstr "When this command is executed, it attempts to convert the string given into a :class:`Member` and then passes it as a parameter for the function. This works by checking if the string is a mention, an ID, a nickname, a username + discriminator, or just a regular username. The default set of converters have been written to be as easy to use as possible."
+
+msgid "A lot of discord models work out of the gate as a parameter:"
+msgstr "A lot of discord models work out of the gate as a parameter:"
+
+msgid ":class:`Object` (since v2.0)"
+msgstr ":class:`Object` (since v2.0)"
+
+msgid ":class:`Member`"
+msgstr ":class:`Member`"
+
+msgid ":class:`User`"
+msgstr ":class:`User`"
+
+msgid ":class:`Message` (since v1.1)"
+msgstr ":class:`Message` (since v1.1)"
+
+msgid ":class:`PartialMessage` (since v1.7)"
+msgstr ":class:`PartialMessage` (since v1.7)"
+
+msgid ":class:`abc.GuildChannel` (since 2.0)"
+msgstr ":class:`abc.GuildChannel` (since 2.0)"
+
+msgid ":class:`TextChannel`"
+msgstr ":class:`TextChannel`"
+
+msgid ":class:`VoiceChannel`"
+msgstr ":class:`VoiceChannel`"
+
+msgid ":class:`StageChannel` (since v1.7)"
+msgstr ":class:`StageChannel` (since v1.7)"
+
+msgid ":class:`CategoryChannel`"
+msgstr ":class:`CategoryChannel`"
+
+msgid ":class:`Invite`"
+msgstr ":class:`Invite`"
+
+msgid ":class:`Guild` (since v1.7)"
+msgstr ":class:`Guild` (since v1.7)"
+
+msgid ":class:`Role`"
+msgstr ":class:`Role`"
+
+msgid ":class:`Game`"
+msgstr ":class:`Game`"
+
+msgid ":class:`Colour`"
+msgstr ":class:`Colour`"
+
+msgid ":class:`Emoji`"
+msgstr ":class:`Emoji`"
+
+msgid ":class:`PartialEmoji`"
+msgstr ":class:`PartialEmoji`"
+
+msgid ":class:`Thread` (since v2.0)"
+msgstr ":class:`Thread` (since v2.0)"
+
+msgid "Having any of these set as the converter will intelligently convert the argument to the appropriate target type you specify."
+msgstr "Having any of these set as the converter will intelligently convert the argument to the appropriate target type you specify."
+
+msgid "Under the hood, these are implemented by the :ref:`ext_commands_adv_converters` interface. A table of the equivalent converter is given below:"
+msgstr "Under the hood, these are implemented by the :ref:`ext_commands_adv_converters` interface. A table of the equivalent converter is given below:"
+
+msgid "Discord Class"
+msgstr "Discord Class"
+
+msgid "Converter"
+msgstr "Converter"
+
+msgid ":class:`Object`"
+msgstr ":class:`Object`"
+
+msgid ":class:`~ext.commands.ObjectConverter`"
+msgstr ":class:`~ext.commands.ObjectConverter`"
+
+msgid ":class:`~ext.commands.MemberConverter`"
+msgstr ":class:`~ext.commands.MemberConverter`"
+
+msgid ":class:`~ext.commands.UserConverter`"
+msgstr ":class:`~ext.commands.UserConverter`"
+
+msgid ":class:`Message`"
+msgstr ":class:`Message`"
+
+msgid ":class:`~ext.commands.MessageConverter`"
+msgstr ":class:`~ext.commands.MessageConverter`"
+
+msgid ":class:`PartialMessage`"
+msgstr ":class:`PartialMessage`"
+
+msgid ":class:`~ext.commands.PartialMessageConverter`"
+msgstr ":class:`~ext.commands.PartialMessageConverter`"
+
+msgid ":class:`.GuildChannel`"
+msgstr ":class:`.GuildChannel`"
+
+msgid ":class:`~ext.commands.GuildChannelConverter`"
+msgstr ":class:`~ext.commands.GuildChannelConverter`"
+
+msgid ":class:`~ext.commands.TextChannelConverter`"
+msgstr ":class:`~ext.commands.TextChannelConverter`"
+
+msgid ":class:`~ext.commands.VoiceChannelConverter`"
+msgstr ":class:`~ext.commands.VoiceChannelConverter`"
+
+msgid ":class:`StageChannel`"
+msgstr ":class:`StageChannel`"
+
+msgid ":class:`~ext.commands.StageChannelConverter`"
+msgstr ":class:`~ext.commands.StageChannelConverter`"
+
+msgid ":class:`~ext.commands.CategoryChannelConverter`"
+msgstr ":class:`~ext.commands.CategoryChannelConverter`"
+
+msgid ":class:`~ext.commands.InviteConverter`"
+msgstr ":class:`~ext.commands.InviteConverter`"
+
+msgid ":class:`Guild`"
+msgstr ":class:`Guild`"
+
+msgid ":class:`~ext.commands.GuildConverter`"
+msgstr ":class:`~ext.commands.GuildConverter`"
+
+msgid ":class:`~ext.commands.RoleConverter`"
+msgstr ":class:`~ext.commands.RoleConverter`"
+
+msgid ":class:`~ext.commands.GameConverter`"
+msgstr ":class:`~ext.commands.GameConverter`"
+
+msgid ":class:`~ext.commands.ColourConverter`"
+msgstr ":class:`~ext.commands.ColourConverter`"
+
+msgid ":class:`~ext.commands.EmojiConverter`"
+msgstr ":class:`~ext.commands.EmojiConverter`"
+
+msgid ":class:`~ext.commands.PartialEmojiConverter`"
+msgstr ":class:`~ext.commands.PartialEmojiConverter`"
+
+msgid ":class:`Thread`"
+msgstr ":class:`Thread`"
+
+msgid ":class:`~ext.commands.ThreadConverter`"
+msgstr ":class:`~ext.commands.ThreadConverter`"
+
+msgid "By providing the converter it allows us to use them as building blocks for another converter:"
+msgstr "By providing the converter it allows us to use them as building blocks for another converter:"
+
+msgid "Special Converters"
+msgstr "Special Converters"
+
+msgid "The command extension also has support for certain converters to allow for more advanced and intricate use cases that go beyond the generic linear parsing. These converters allow you to introduce some more relaxed and dynamic grammar to your commands in an easy to use manner."
+msgstr "The command extension also has support for certain converters to allow for more advanced and intricate use cases that go beyond the generic linear parsing. These converters allow you to introduce some more relaxed and dynamic grammar to your commands in an easy to use manner."
+
+msgid "typing.Union"
+msgstr "typing.Union"
+
+msgid "A :data:`typing.Union` is a special type hint that allows for the command to take in any of the specific types instead of a singular type. For example, given the following:"
+msgstr "A :data:`typing.Union` is a special type hint that allows for the command to take in any of the specific types instead of a singular type. For example, given the following:"
+
+msgid "The ``what`` parameter would either take a :class:`discord.TextChannel` converter or a :class:`discord.Member` converter. The way this works is through a left-to-right order. It first attempts to convert the input to a :class:`discord.TextChannel`, and if it fails it tries to convert it to a :class:`discord.Member`. If all converters fail, then a special error is raised, :exc:`~ext.commands.BadUnionArgument`."
+msgstr "The ``what`` parameter would either take a :class:`discord.TextChannel` converter or a :class:`discord.Member` converter. The way this works is through a left-to-right order. It first attempts to convert the input to a :class:`discord.TextChannel`, and if it fails it tries to convert it to a :class:`discord.Member`. If all converters fail, then a special error is raised, :exc:`~ext.commands.BadUnionArgument`."
+
+msgid "Note that any valid converter discussed above can be passed in to the argument list of a :data:`typing.Union`."
+msgstr "Note that any valid converter discussed above can be passed in to the argument list of a :data:`typing.Union`."
+
+msgid "typing.Optional"
+msgstr "typing.Optional"
+
+msgid "A :data:`typing.Optional` is a special type hint that allows for \"back-referencing\" behaviour. If the converter fails to parse into the specified type, the parser will skip the parameter and then either ``None`` or the specified default will be passed into the parameter instead. The parser will then continue on to the next parameters and converters, if any."
+msgstr "A :data:`typing.Optional` is a special type hint that allows for \"back-referencing\" behaviour. If the converter fails to parse into the specified type, the parser will skip the parameter and then either ``None`` or the specified default will be passed into the parameter instead. The parser will then continue on to the next parameters and converters, if any."
+
+msgid "Consider the following example:"
+msgstr "Consider the following example:"
+
+msgid "In this example, since the argument could not be converted into an ``int``, the default of ``99`` is passed and the parser resumes handling, which in this case would be to pass it into the ``liquid`` parameter."
+msgstr "In this example, since the argument could not be converted into an ``int``, the default of ``99`` is passed and the parser resumes handling, which in this case would be to pass it into the ``liquid`` parameter."
+
+msgid "This converter only works in regular positional parameters, not variable parameters or keyword-only parameters."
+msgstr "This converter only works in regular positional parameters, not variable parameters or keyword-only parameters."
+
+msgid "typing.Literal"
+msgstr "typing.Literal"
+
+msgid "A :data:`typing.Literal` is a special type hint that requires the passed parameter to be equal to one of the listed values after being converted to the same type. For example, given the following:"
+msgstr "A :data:`typing.Literal` is a special type hint that requires the passed parameter to be equal to one of the listed values after being converted to the same type. For example, given the following:"
+
+msgid "The ``buy_sell`` parameter must be either the literal string ``\"buy\"`` or ``\"sell\"`` and ``amount`` must convert to the ``int`` ``1`` or ``2``. If ``buy_sell`` or ``amount`` don't match any value, then a special error is raised, :exc:`~.ext.commands.BadLiteralArgument`. Any literal values can be mixed and matched within the same :data:`typing.Literal` converter."
+msgstr "The ``buy_sell`` parameter must be either the literal string ``\"buy\"`` or ``\"sell\"`` and ``amount`` must convert to the ``int`` ``1`` or ``2``. If ``buy_sell`` or ``amount`` don't match any value, then a special error is raised, :exc:`~.ext.commands.BadLiteralArgument`. Any literal values can be mixed and matched within the same :data:`typing.Literal` converter."
+
+msgid "Note that ``typing.Literal[True]`` and ``typing.Literal[False]`` still follow the :class:`bool` converter rules."
+msgstr "Note that ``typing.Literal[True]`` and ``typing.Literal[False]`` still follow the :class:`bool` converter rules."
+
+msgid "Greedy"
+msgstr "Greedy"
+
+msgid "The :class:`~ext.commands.Greedy` converter is a generalisation of the :data:`typing.Optional` converter, except applied to a list of arguments. In simple terms, this means that it tries to convert as much as it can until it can't convert any further."
+msgstr "The :class:`~ext.commands.Greedy` converter is a generalisation of the :data:`typing.Optional` converter, except applied to a list of arguments. In simple terms, this means that it tries to convert as much as it can until it can't convert any further."
+
+msgid "When invoked, it allows for any number of members to be passed in:"
+msgstr "When invoked, it allows for any number of members to be passed in:"
+
+msgid "The type passed when using this converter depends on the parameter type that it is being attached to:"
+msgstr "The type passed when using this converter depends on the parameter type that it is being attached to:"
+
+msgid "Positional parameter types will receive either the default parameter or a :class:`list` of the converted values."
+msgstr "Positional parameter types will receive either the default parameter or a :class:`list` of the converted values."
+
+msgid "Variable parameter types will be a :class:`tuple` as usual."
+msgstr "Variable parameter types will be a :class:`tuple` as usual."
+
+msgid "Keyword-only parameter types will be the same as if :class:`~ext.commands.Greedy` was not passed at all."
+msgstr "Keyword-only parameter types will be the same as if :class:`~ext.commands.Greedy` was not passed at all."
+
+msgid ":class:`~ext.commands.Greedy` parameters can also be made optional by specifying an optional value."
+msgstr ":class:`~ext.commands.Greedy` parameters can also be made optional by specifying an optional value."
+
+msgid "When mixed with the :data:`typing.Optional` converter you can provide simple and expressive command invocation syntaxes:"
+msgstr "When mixed with the :data:`typing.Optional` converter you can provide simple and expressive command invocation syntaxes:"
+
+msgid "This command can be invoked any of the following ways:"
+msgstr "This command can be invoked any of the following ways:"
+
+msgid "The usage of :class:`~ext.commands.Greedy` and :data:`typing.Optional` are powerful and useful, however as a price, they open you up to some parsing ambiguities that might surprise some people."
+msgstr "The usage of :class:`~ext.commands.Greedy` and :data:`typing.Optional` are powerful and useful, however as a price, they open you up to some parsing ambiguities that might surprise some people."
+
+msgid "For example, a signature expecting a :data:`typing.Optional` of a :class:`discord.Member` followed by a :class:`int` could catch a member named after a number due to the different ways a :class:`~ext.commands.MemberConverter` decides to fetch members. You should take care to not introduce unintended parsing ambiguities in your code. One technique would be to clamp down the expected syntaxes allowed through custom converters or reordering the parameters to minimise clashes."
+msgstr "For example, a signature expecting a :data:`typing.Optional` of a :class:`discord.Member` followed by a :class:`int` could catch a member named after a number due to the different ways a :class:`~ext.commands.MemberConverter` decides to fetch members. You should take care to not introduce unintended parsing ambiguities in your code. One technique would be to clamp down the expected syntaxes allowed through custom converters or reordering the parameters to minimise clashes."
+
+msgid "To help aid with some parsing ambiguities, :class:`str`, ``None``, :data:`typing.Optional` and :class:`~ext.commands.Greedy` are forbidden as parameters for the :class:`~ext.commands.Greedy` converter."
+msgstr "To help aid with some parsing ambiguities, :class:`str`, ``None``, :data:`typing.Optional` and :class:`~ext.commands.Greedy` are forbidden as parameters for the :class:`~ext.commands.Greedy` converter."
+
+msgid "FlagConverter"
+msgstr "FlagConverter"
+
+msgid "A :class:`~ext.commands.FlagConverter` allows the user to specify user-friendly \"flags\" using :pep:`526` type annotations or a syntax more reminiscent of the :mod:`py:dataclasses` module."
+msgstr "A :class:`~ext.commands.FlagConverter` allows the user to specify user-friendly \"flags\" using :pep:`526` type annotations or a syntax more reminiscent of the :mod:`py:dataclasses` module."
+
+msgid "For example, the following code:"
+msgstr "For example, the following code:"
+
+msgid "Allows the user to invoke the command using a simple flag-like syntax:"
+msgstr "Allows the user to invoke the command using a simple flag-like syntax:"
+
+msgid "Flags use a syntax that allows the user to not require quotes when passing in values to the flag. The goal of the flag syntax is to be as user-friendly as possible. This makes flags a good choice for complicated commands that can have multiple knobs to turn or simulating keyword-only parameters in your external command interface. **It is recommended to use keyword-only parameters with the flag converter**. This ensures proper parsing and behaviour with quoting."
+msgstr "Flags use a syntax that allows the user to not require quotes when passing in values to the flag. The goal of the flag syntax is to be as user-friendly as possible. This makes flags a good choice for complicated commands that can have multiple knobs to turn or simulating keyword-only parameters in your external command interface. **It is recommended to use keyword-only parameters with the flag converter**. This ensures proper parsing and behaviour with quoting."
+
+msgid "Internally, the :class:`~ext.commands.FlagConverter` class examines the class to find flags. A flag can either be a class variable with a type annotation or a class variable that's been assigned the result of the :func:`~ext.commands.flag` function. These flags are then used to define the interface that your users will use. The annotations correspond to the converters that the flag arguments must adhere to."
+msgstr "Internally, the :class:`~ext.commands.FlagConverter` class examines the class to find flags. A flag can either be a class variable with a type annotation or a class variable that's been assigned the result of the :func:`~ext.commands.flag` function. These flags are then used to define the interface that your users will use. The annotations correspond to the converters that the flag arguments must adhere to."
+
+msgid "For most use cases, no extra work is required to define flags. However, if customisation is needed to control the flag name or the default value then the :func:`~ext.commands.flag` function can come in handy:"
+msgstr "For most use cases, no extra work is required to define flags. However, if customisation is needed to control the flag name or the default value then the :func:`~ext.commands.flag` function can come in handy:"
+
+msgid "This tells the parser that the ``members`` attribute is mapped to a flag named ``member`` and that the default value is an empty list. For greater customisability, the default can either be a value or a callable that takes the :class:`~ext.commands.Context` as a sole parameter. This callable can either be a function or a coroutine."
+msgstr "This tells the parser that the ``members`` attribute is mapped to a flag named ``member`` and that the default value is an empty list. For greater customisability, the default can either be a value or a callable that takes the :class:`~ext.commands.Context` as a sole parameter. This callable can either be a function or a coroutine."
+
+msgid "In order to customise the flag syntax we also have a few options that can be passed to the class parameter list:"
+msgstr "In order to customise the flag syntax we also have a few options that can be passed to the class parameter list:"
+
+msgid "Despite the similarities in these examples to command like arguments, the syntax and parser is not a command line parser. The syntax is mainly inspired by Discord's search bar input and as a result all flags need a corresponding value."
+msgstr "Despite the similarities in these examples to command like arguments, the syntax and parser is not a command line parser. The syntax is mainly inspired by Discord's search bar input and as a result all flags need a corresponding value."
+
+msgid "The flag converter is similar to regular commands and allows you to use most types of converters (with the exception of :class:`~ext.commands.Greedy`) as the type annotation. Some extra support is added for specific annotations as described below."
+msgstr "The flag converter is similar to regular commands and allows you to use most types of converters (with the exception of :class:`~ext.commands.Greedy`) as the type annotation. Some extra support is added for specific annotations as described below."
+
+msgid "typing.List"
+msgstr "typing.List"
+
+msgid "If a list is given as a flag annotation it tells the parser that the argument can be passed multiple times."
+msgstr "If a list is given as a flag annotation it tells the parser that the argument can be passed multiple times."
+
+msgid "For example, augmenting the example above:"
+msgstr "For example, augmenting the example above:"
+
+msgid "This is called by repeatedly specifying the flag:"
+msgstr "This is called by repeatedly specifying the flag:"
+
+msgid "typing.Tuple"
+msgstr "typing.Tuple"
+
+msgid "Since the above syntax can be a bit repetitive when specifying a flag many times, the :class:`py:tuple` type annotation allows for \"greedy-like\" semantics using a variadic tuple:"
+msgstr "Since the above syntax can be a bit repetitive when specifying a flag many times, the :class:`py:tuple` type annotation allows for \"greedy-like\" semantics using a variadic tuple:"
+
+msgid "This allows the previous ``ban`` command to be called like this:"
+msgstr "This allows the previous ``ban`` command to be called like this:"
+
+msgid "The :class:`py:tuple` annotation also allows for parsing of pairs. For example, given the following code:"
+msgstr "The :class:`py:tuple` annotation also allows for parsing of pairs. For example, given the following code:"
+
+msgid "Due to potential parsing ambiguities, the parser expects tuple arguments to be quoted if they require spaces. So if one of the inner types is :class:`str` and the argument requires spaces then quotes should be used to disambiguate it from the other element of the tuple."
+msgstr "Due to potential parsing ambiguities, the parser expects tuple arguments to be quoted if they require spaces. So if one of the inner types is :class:`str` and the argument requires spaces then quotes should be used to disambiguate it from the other element of the tuple."
+
+msgid "typing.Dict"
+msgstr "typing.Dict"
+
+msgid "A :class:`dict` annotation is functionally equivalent to ``List[Tuple[K, V]]`` except with the return type given as a :class:`dict` rather than a :class:`list`."
+msgstr "A :class:`dict` annotation is functionally equivalent to ``List[Tuple[K, V]]`` except with the return type given as a :class:`dict` rather than a :class:`list`."
+
+msgid "Error Handling"
+msgstr "Error Handling"
+
+msgid "When our commands fail to parse we will, by default, receive a noisy error in ``stderr`` of our console that tells us that an error has happened and has been silently ignored."
+msgstr "When our commands fail to parse we will, by default, receive a noisy error in ``stderr`` of our console that tells us that an error has happened and has been silently ignored."
+
+msgid "In order to handle our errors, we must use something called an error handler. There is a global error handler, called :func:`.on_command_error` which works like any other event in the :ref:`discord-api-events`. This global error handler is called for every error reached."
+msgstr "In order to handle our errors, we must use something called an error handler. There is a global error handler, called :func:`.on_command_error` which works like any other event in the :ref:`discord-api-events`. This global error handler is called for every error reached."
+
+msgid "Most of the time however, we want to handle an error local to the command itself. Luckily, commands come with local error handlers that allow us to do just that. First we decorate an error handler function with :meth:`.Command.error`:"
+msgstr "Most of the time however, we want to handle an error local to the command itself. Luckily, commands come with local error handlers that allow us to do just that. First we decorate an error handler function with :meth:`.Command.error`:"
+
+msgid "The first parameter of the error handler is the :class:`.Context` while the second one is an exception that is derived from :exc:`~ext.commands.CommandError`. A list of errors is found in the :ref:`ext_commands_api_errors` page of the documentation."
+msgstr "The first parameter of the error handler is the :class:`.Context` while the second one is an exception that is derived from :exc:`~ext.commands.CommandError`. A list of errors is found in the :ref:`ext_commands_api_errors` page of the documentation."
+
+msgid "Checks"
+msgstr "Checks"
+
+msgid "There are cases when we don't want a user to use our commands. They don't have permissions to do so or maybe we blocked them from using our bot earlier. The commands extension comes with full support for these things in a concept called a :ref:`ext_commands_api_checks`."
+msgstr "There are cases when we don't want a user to use our commands. They don't have permissions to do so or maybe we blocked them from using our bot earlier. The commands extension comes with full support for these things in a concept called a :ref:`ext_commands_api_checks`."
+
+msgid "A check is a basic predicate that can take in a :class:`.Context` as its sole parameter. Within it, you have the following options:"
+msgstr "A check is a basic predicate that can take in a :class:`.Context` as its sole parameter. Within it, you have the following options:"
+
+msgid "Return ``True`` to signal that the person can run the command."
+msgstr "Return ``True`` to signal that the person can run the command."
+
+msgid "Return ``False`` to signal that the person cannot run the command."
+msgstr "Return ``False`` to signal that the person cannot run the command."
+
+msgid "Raise a :exc:`~ext.commands.CommandError` derived exception to signal the person cannot run the command."
+msgstr "Raise a :exc:`~ext.commands.CommandError` derived exception to signal the person cannot run the command."
+
+msgid "This allows you to have custom error messages for you to handle in the :ref:`error handlers <ext_commands_error_handler>`."
+msgstr "This allows you to have custom error messages for you to handle in the :ref:`error handlers <ext_commands_error_handler>`."
+
+msgid "To register a check for a command, we would have two ways of doing so. The first is using the :meth:`~ext.commands.check` decorator. For example:"
+msgstr "To register a check for a command, we would have two ways of doing so. The first is using the :meth:`~ext.commands.check` decorator. For example:"
+
+msgid "This would only evaluate the command if the function ``is_owner`` returns ``True``. Sometimes we re-use a check often and want to split it into its own decorator. To do that we can just add another level of depth:"
+msgstr "This would only evaluate the command if the function ``is_owner`` returns ``True``. Sometimes we re-use a check often and want to split it into its own decorator. To do that we can just add another level of depth:"
+
+msgid "Since an owner check is so common, the library provides it for you (:func:`~ext.commands.is_owner`):"
+msgstr "Since an owner check is so common, the library provides it for you (:func:`~ext.commands.is_owner`):"
+
+msgid "When multiple checks are specified, **all** of them must be ``True``:"
+msgstr "When multiple checks are specified, **all** of them must be ``True``:"
+
+msgid "If any of those checks fail in the example above, then the command will not be run."
+msgstr "If any of those checks fail in the example above, then the command will not be run."
+
+msgid "When an error happens, the error is propagated to the :ref:`error handlers <ext_commands_error_handler>`. If you do not raise a custom :exc:`~ext.commands.CommandError` derived exception, then it will get wrapped up into a :exc:`~ext.commands.CheckFailure` exception as so:"
+msgstr "When an error happens, the error is propagated to the :ref:`error handlers <ext_commands_error_handler>`. If you do not raise a custom :exc:`~ext.commands.CommandError` derived exception, then it will get wrapped up into a :exc:`~ext.commands.CheckFailure` exception as so:"
+
+msgid "If you want a more robust error system, you can derive from the exception and raise it instead of returning ``False``:"
+msgstr "If you want a more robust error system, you can derive from the exception and raise it instead of returning ``False``:"
+
+msgid "Since having a ``guild_only`` decorator is pretty common, it comes built-in via :func:`~ext.commands.guild_only`."
+msgstr "Since having a ``guild_only`` decorator is pretty common, it comes built-in via :func:`~ext.commands.guild_only`."
+
+msgid "Global Checks"
+msgstr "Global Checks"
+
+msgid "Sometimes we want to apply a check to **every** command, not just certain commands. The library supports this as well using the global check concept."
+msgstr "Sometimes we want to apply a check to **every** command, not just certain commands. The library supports this as well using the global check concept."
+
+msgid "Global checks work similarly to regular checks except they are registered with the :meth:`.Bot.check` decorator."
+msgstr "Global checks work similarly to regular checks except they are registered with the :meth:`.Bot.check` decorator."
+
+msgid "For example, to block all DMs we could do the following:"
+msgstr "For example, to block all DMs we could do the following:"
+
+msgid "Be careful on how you write your global checks, as it could also lock you out of your own bot."
+msgstr "Be careful on how you write your global checks, as it could also lock you out of your own bot."
+

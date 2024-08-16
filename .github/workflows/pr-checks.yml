@@ -1,0 +1,30 @@
+name: "Pull Request Checks"
+
+on:
+  workflow_dispatch:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: write-all
+
+jobs:
+  pr-dependencies:
+    runs-on: ubuntu-latest
+    name: "Check PR Dependencies"
+    steps:
+      - name: PR Dependency Check
+        uses: gregsdennis/dependencies-action@v1.4.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  semantic-title:
+    name: "Check Semantic Title"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check Semantic Pull Request"
+        uses: amannn/action-semantic-pull-request@v5.5.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,189 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../api/async_iter.rst:4
+#: 683210b308c6452eaa81b17e1758cde5
+msgid "Async Iterator"
+msgstr ""
+
+#: ../../api/async_iter.rst:6
+#: 26660b1f875c4116b27b57231b3e326a
+msgid "Some API functions return an \"async iterator\". An async iterator is something that is capable of being used in an :ref:`async for statement <py:async for>`."
+msgstr ""
+
+#: ../../api/async_iter.rst:9
+#: b2a8e2358fff4dee94538dd7db885436
+msgid "These async iterators can be used as follows: ::"
+msgstr ""
+
+#: ../../api/async_iter.rst:14
+#: fedb68a3877f4bf9852c7f4d88ebf653
+msgid "Certain utilities make working with async iterators easier, detailed below."
+msgstr ""
+
+#: ../../api/async_iter.rst:18
+#: ee607db54b2c48399a3993ad596a5e4e
+msgid "Represents the \"AsyncIterator\" concept. Note that no such class exists, it is purely abstract."
+msgstr ""
+
+#: ../../api/async_iter.rst:25
+#: ea99bb1f015e4745a085c595d3f45632
+msgid "Iterates over the contents of the async iterator."
+msgstr ""
+
+#: ../../api/async_iter.rst:31
+#: ../../api/async_iter.rst:39
+#: ../../api/async_iter.rst:50
+#: ../../api/async_iter.rst:70
+#: 50240befea20487a938b5c3a1962b897
+#: 88aa64e2c65e49549cc72afb29d11079
+#: 4f95ac8bdd4e4ed5860bb668349643c0
+#: ebb326024af642caa846a9c8d1e5cd22
+msgid "|coro|"
+msgstr ""
+
+#: ../../api/async_iter.rst:33
+#: fc2a0e5b432b46688ed1bfe2e81923ba
+msgid "Advances the iterator by one, if possible. If no more items are found then this raises :exc:`NoMoreItems`."
+msgstr ""
+
+#: ../../api/async_iter.rst:41
+#: 8e78bfd5f23e4fa78ed058d83f803620
+msgid "Similar to :func:`utils.get` except run over the async iterator."
+msgstr ""
+
+#: ../../api/async_iter.rst:43
+#: cebb25e3e89a40a8a9feb2e09df074b5
+msgid "Getting the last message by a user named 'Dave' or ``None``: ::"
+msgstr ""
+
+#: ../../api/async_iter.rst:52
+#: bba5fc8cdec74acdbdf398084ae65c71
+msgid "Similar to :func:`utils.find` except run over the async iterator."
+msgstr ""
+
+#: ../../api/async_iter.rst:54
+#: d800ba8608e54e989bb3ad7e8402e459
+msgid "Unlike :func:`utils.find`\\, the predicate provided can be a |coroutine_link|_."
+msgstr ""
+
+#: ../../api/async_iter.rst:57
+#: 7b251694963241aaae3bed1c7d8cbc4d
+msgid "Getting the last audit log with a reason or ``None``: ::"
+msgstr ""
+
+#: ../../api/async_iter.rst:0
+#: 5e49651663164532b4c188e7f9394698
+#: 06e87b915f3e4228881a5514b6a00865
+#: 71a78339b59244759117eab739d2bf8d
+#: 647540de23184651ae6d19f426de83ae
+msgid "Parameters"
+msgstr ""
+
+#: ../../api/async_iter.rst:64
+#: 980baa97820542859943b5e915b7291e
+msgid "The predicate to use. Could be a |coroutine_link|_."
+msgstr ""
+
+#: ../../api/async_iter.rst:0
+#: 2211459cc06e4959a9d358fbf30fb169
+#: e96973ea3d57420497cbef89229b1b1b
+msgid "Returns"
+msgstr ""
+
+#: ../../api/async_iter.rst:65
+#: fd39c8efddfb48dabbe8042c515512b5
+msgid "The first element that returns ``True`` for the predicate or ``None``."
+msgstr ""
+
+#: ../../api/async_iter.rst:72
+#: 9515f54767c5484bba41645724d6e70d
+msgid "Flattens the async iterator into a :class:`list` with all the elements."
+msgstr ""
+
+#: ../../api/async_iter.rst:74
+#: b8db6657e3ba49f1a150adf43bd3441e
+msgid "A list of every element in the async iterator."
+msgstr ""
+
+#: ../../api/async_iter.rst:0
+#: d1d2046aaf5c4fd69ff7ef7375d0b3d2
+#: 8d1fdc4db23d471aa821ca1ace2f2cbe
+#: aab818990f18433e93d0cb25aaab6308
+#: ffef918ac0614e37ae24ac20c9915dca
+msgid "Return type"
+msgstr ""
+
+#: ../../api/async_iter.rst:79
+#: 5074748f45454936b9d1cfe063527db2
+msgid "Collects items into chunks of up to a given maximum size. Another :class:`AsyncIterator` is returned which collects items into :class:`list`\\s of a given size. The maximum chunk size must be a positive integer."
+msgstr ""
+
+#: ../../api/async_iter.rst:85
+#: 6393efcbcb3f47d38f1d9a3e5cd573e8
+msgid "Collecting groups of users: ::"
+msgstr ""
+
+#: ../../api/async_iter.rst:92
+#: 717925fddfaa4df2bd9630eae0a2648c
+msgid "The last chunk collected may not be as large as ``max_size``."
+msgstr ""
+
+#: ../../api/async_iter.rst:94
+#: add0fdb0c5ff469aae610f6c9c8325bd
+msgid "The size of individual chunks."
+msgstr ""
+
+#: ../../api/async_iter.rst:95
+#: ../../api/async_iter.rst:113
+#: ../../api/async_iter.rst:130
+#: d482560e0a4b46a792f1cbeaa515857c
+#: 7774370fc45f4f54b7e247891786b2af
+#: c6022e74eeaf41deabfef4ae43c8f694
+msgid ":class:`AsyncIterator`"
+msgstr ""
+
+#: ../../api/async_iter.rst:99
+#: 064e5dad853e44059d92e277ce556721
+msgid "This is similar to the built-in :func:`map <py:map>` function. Another :class:`AsyncIterator` is returned that executes the function on every element it is iterating over. This function can either be a regular function or a |coroutine_link|_."
+msgstr ""
+
+#: ../../api/async_iter.rst:104
+#: a29ba78bc12347d6a668a329ef6012da
+msgid "Creating a content iterator: ::"
+msgstr ""
+
+#: ../../api/async_iter.rst:112
+#: 5a0baeb5df5d452591bafc3d4262eb82
+msgid "The function to call on every element. Could be a |coroutine_link|_."
+msgstr ""
+
+#: ../../api/async_iter.rst:117
+#: 8093476ff4f941168ba84770614e0bed
+msgid "This is similar to the built-in :func:`filter <py:filter>` function. Another :class:`AsyncIterator` is returned that filters over the original async iterator. This predicate can be a regular function or a |coroutine_link|_."
+msgstr ""
+
+#: ../../api/async_iter.rst:121
+#: ff128eb38e014fb7ab8d315b033fb599
+msgid "Getting messages by non-bot accounts: ::"
+msgstr ""
+
+#: ../../api/async_iter.rst:129
+#: 0218f7cdb3cc48bc8cdc637c9302b0ee
+msgid "The predicate to call on every element. Could be a |coroutine_link|_."
+msgstr ""

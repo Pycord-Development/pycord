@@ -1,0 +1,996 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../api/audit_logs.rst:6
+#: c15e7cd810f943f28c384477750f4f15
+msgid "Audit Log Data"
+msgstr ""
+
+#: ../../api/audit_logs.rst:8
+#: b0e7037de5f546648bf72d690c1ded4a
+msgid "Working with :meth:`Guild.audit_logs` is a complicated process with a lot of machinery involved. The library attempts to make it easy to use and friendly. In order to accomplish this goal, it must make use of a couple of data classes that aid in this goal."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:1
+#: c16e0a4155244540969a7ad0dbbb4106
+msgid "Represents an Audit Log entry."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:3
+#: 37848f380eba497886afcb59340fa3ff
+msgid "You retrieve these via :meth:`Guild.audit_logs`."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:9
+#: 01d8023134d6484b904d45265e979c57
+msgid "Checks if two entries are equal."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:13
+#: cefb6c8408f94b1f9c157fb84ac1bd04
+msgid "Checks if two entries are not equal."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:17
+#: 75e42cbd096245d3ac7fae79dadf793a
+msgid "Returns the entry's hash."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:19
+#: b9c1b72d908a4400a3263cf3f638c8b3
+msgid "Audit log entries are now comparable and hashable."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:24
+#: fdc08052c4c940a1b7e0a45a4e86e46f
+msgid "The action that was done."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:0
+#: ../../api/audit_logs.rst:0
+#: 77fc83cde9ff4a79b7698efcbf4442c7
+#: c3d2889d125c481ebd191ec6a179c253
+#: d2a278e08dde4150b5dcd92ddb321dcf
+#: 3c577c20e66c4e9c8d87d90f55396906
+#: 83c485385fe3478290a0e78dedcf9cb2
+#: d4d94dd92843423db8465de85409e5bf
+#: 9edb5cae872e4dd3877591d5a7001b92
+#: 6f39b2f108094f9381a9a3838f656705
+#: ea85bad4af264314aa2c7ec6e16d1e53
+#: 888211cdb8ab46758cfb862cc4a3d5bd
+#: 5873a38c4b474eb49674201367bc55e7
+#: 14d7b570aa5440ac91af03d9d8ddc1ce
+#: cbac2288ff274b719bdcf57f8b9661fb
+#: 0e91bcd374344924b95f83fbe77acdc7
+#: ed7384c9d8d6407eb8b0b145cd1b0a43
+#: 12669c582e7f45689043622ba5bd5b40
+#: 52630aeafd804fa999184290dcdd066e
+#: 4d2c80465b854d4d80922e7e5ca5a332
+#: f840f1761b5a4a508ba57b2113a897a9
+#: 1b29fadde7984fd8b4998aaaad2f28e8
+#: 619d10656cab4f38a8f13dd01055559a
+#: 72a4088527df4f81954a2771767fc5d7
+#: c60356036ca745f4b40fed50de3b3474
+#: ce2b8b2a277d418c8ffd666502e64697
+#: 93fafdc3767245c1b52628509caf0af2
+#: 74d33a3f44e64e60a33e576170b5aa76
+#: 3b08ecbcedce4e1e8f7d65b0166100fe
+#: 20f20240e73442398f90c533449c5b62
+#: 626724f8358847c199a526221635442c
+#: f1b22b933ffd4502ae08190e61ab1dd3
+#: a5e79d2bf9b0440abeb92e949a5878a6
+#: 3165fb299696495fbf798eff6314b71b
+#: 54c6f9deb1f74456aab58fa1853da21c
+#: 83b846ddac2a43d3939bd1f1847b5ef1
+#: 34a455ed93514bab850d4f8a8b31fb79
+#: f93ebef541414ae4a422ba3257083910
+#: c57b847ed99d48408e23d66e88a31c68
+#: 5af4849d13ad467c9c761975b562b685
+#: fb0c7fd0eed34636a9a0c40ae5cc04c5
+#: 6299ba933ef74274a75ee97287374ad5
+#: 018838c92cf443998e3528806f535ef1
+#: 7962ad5ea3f8408995139fc1864a0906
+#: f719b0f52c4349f7a1114e8c16abd49e
+#: 287eae04e8bc4c0b8bc2f459950882e6
+#: 88015128497741aaa3336ce4accd8cd3
+#: 25e96b71d7d84bceabf66ebd3ff12b25
+#: f6dc9c09512e4f42875d84f023641208
+#: c49d2a0985e145e7a383f0123dc1ff52
+#: 99df7c68d5f24841a158b287d5cc41df
+#: 31de64c8a9ef44bb90b82785f4a755c2
+#: f8c4ba816552415482b1c2d63e8f4a14
+#: dd73304f0e1a477799a52784017c8a51
+#: f7a45a775bde4406bea1e457c7060dea
+#: 07ec8ed57b334e898b2027ce9a23f533
+#: 8b1ecea53f54442eb26246fcc07156f7
+#: 0a9a730958434cb6b48de053b91f207f
+#: b78a900781d64dfb8728cde0bc78ff60
+#: 7095e060ff754284a061d7debf035204
+#: f4b0051464374dffbab9e489460a9e4a
+#: 9e1f7ebe763c4148acace5eaffee8b7d
+#: cdbfcba6d6cb422084edcdfc438027f0
+#: ae9ec0bda90b41c1804663b15d03ff46
+#: 9167517e1b4440e488acc02f4d53b6dd
+#: 1b2f941479d9453db940b802623e13ed
+msgid "type"
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:26
+#: eb1bb86761ed47aa9289333648a2f29c
+msgid ":class:`AuditLogAction`"
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:30
+#: 066412f2b2574cd89fc465846f4a13c3
+msgid "The user who initiated this action. Usually a :class:`Member`\\, unless gone then it's a :class:`User`."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:33
+#: b35aa754f9f648fba64070e2a6494f49
+msgid "Optional[:class:`abc.User`]"
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:37
+#: 32ae59d50cad4b0186310a8e7eadd72d
+msgid "The entry ID."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:39
+#: ../../api/audit_logs.rst:171
+#: ../../api/audit_logs.rst:177
+#: ../../api/audit_logs.rst:222
+#: ../../api/audit_logs.rst:236
+#: ../../api/audit_logs.rst:258
+#: ../../api/audit_logs.rst:376
+#: ../../api/audit_logs.rst:384
+#: ../../api/audit_logs.rst:392
+#: ../../api/audit_logs.rst:413
+#: ../../api/audit_logs.rst:430
+#: ../../api/audit_logs.rst:499
+#: ../../api/audit_logs.rst:505
+#: ../../api/audit_logs.rst:517
+#: 77f9a261fe6a44be9899d99d86a3eb8d
+#: efae14602d334dc6af7f23da6d78cf2e
+#: b19f850def9247d191d5a1f6f0ef6c51
+#: 711f82da8b154c25827aca6f3e1bdf44
+#: 3a3211324625490bb19bcb97d023071c
+#: c51f09691c8f4659a5cddce1f4e07943
+#: efceb465209a4a239309f1b5d1afe3de
+#: 4c3c46c457d945369a3529520a9d230a
+#: 6200ce13167d41ccbf154adf09263591
+#: 033ec36b1cc443ce925d8006608c9306
+#: 119dcd786d094e9fa3d9f9355d2acdcc
+#: 56703ed09270429582f88902d4dcbfc1
+#: 9cd5338801f9430abae7be7fe8f678fa
+#: 4b30306c6a9742db97a87c0642f0b06b
+msgid ":class:`int`"
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:43
+#: c524a8a01fb44a2f83e94cb40e722a2e
+msgid "The target that got changed. The exact type of this depends on the action being done."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:46
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:61
+#: 63c82e15ae6c4b81b56c84ed06a65f35
+#: d765c3c8a02c4108b5f0d7fa50a155cf
+msgid "Any"
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:50
+#: c4f3e86c1f3445358a51a82414495e6b
+msgid "The reason this action was done."
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:52
+#: ../../api/audit_logs.rst:294
+#: 8552845caae447a6a93c291d3468bc18
+#: ab1fd845cf7847fdb5f84ece35f22c4a
+msgid "Optional[:class:`str`]"
+msgstr ""
+
+#: ../../../discord/audit_logs.py:docstring of discord.audit_logs.AuditLogEntry:56
+#: 1fafdfdb8be5486fb6c469d4a8e9ccdf
+msgid "Extra information that this entry has that might be useful. For most actions, this is ``None``. However, in some cases it contains extra information. See :class:`AuditLogAction` for which actions have this field filled out."
+msgstr ""
+
+#: ../../api/audit_logs.rst:0
+#: c08175ab86fd405fb649cf0d0c775b14
+msgid "Parameters"
+msgstr ""
+
+#: ../../docstring of discord.AuditLogEntry.created_at:1
+#: 35c34734a85b4772ab44cafcdb0c1487
+msgid "Returns the entry's creation time in UTC."
+msgstr ""
+
+#: ../../docstring of discord.AuditLogEntry.category:1
+#: 42a54accd66e4774b590c0e2c23cef74
+msgid "The category of the action, if applicable."
+msgstr ""
+
+#: ../../docstring of discord.AuditLogEntry.changes:1
+#: 3f099394b54d4de38f2c30f64db98003
+msgid "The list of changes this entry has."
+msgstr ""
+
+#: ../../docstring of discord.AuditLogEntry.before:1
+#: 413918f132a3422e93b9002da753ffe3
+msgid "The target's prior state."
+msgstr ""
+
+#: ../../docstring of discord.AuditLogEntry.after:1
+#: 3a963ab211594298b7dce384b294f823
+msgid "The target's subsequent state."
+msgstr ""
+
+#: ../../api/audit_logs.rst:21
+#: 9c34e793cb5f4b34a8d6cd512b05b6d4
+msgid "An audit log change set."
+msgstr ""
+
+#: ../../api/audit_logs.rst:25
+#: 648cb0d7d9424adb89c8770d0b186cac
+msgid "The old value. The attribute has the type of :class:`AuditLogDiff`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:27
+#: ../../api/audit_logs.rst:47
+#: 22738dc254a74ae8affa4e1f1f8070c5
+#: e75457782a604b12aeb144f622cfe39b
+msgid "Depending on the :class:`AuditLogActionCategory` retrieved by :attr:`~AuditLogEntry.category`\\, the data retrieved by this attribute differs:"
+msgstr ""
+
+#: ../../api/audit_logs.rst:32
+#: ../../api/audit_logs.rst:52
+#: 379adfee54274485af0b1e0f7dc23210
+#: fcd3038e483a44f9a03e061bbd948a64
+msgid "Category"
+msgstr ""
+
+#: ../../api/audit_logs.rst:32
+#: ../../api/audit_logs.rst:52
+#: 7bd15b04a76e4179b168c633efa30f9e
+#: b05a2b6a3b6f475982250fadc236f33a
+msgid "Description"
+msgstr ""
+
+#: ../../api/audit_logs.rst:34
+#: ../../api/audit_logs.rst:54
+#: 902907e14ba441e68b97aef85eb47f72
+#: f2d6dd2b9e4b4d6b88069f0cdb91faa6
+msgid ":attr:`~AuditLogActionCategory.create`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:34
+#: 96aae1a9c95142c7849d54db6879d73f
+msgid "All attributes are set to ``None``."
+msgstr ""
+
+#: ../../api/audit_logs.rst:36
+#: ../../api/audit_logs.rst:56
+#: 525ec285c87441b886ce406e12a9d4d6
+#: 4d9f86b779414b2bb942360ba5e35da7
+msgid ":attr:`~AuditLogActionCategory.delete`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:36
+#: 5480a9ad1e824c3099b5563be257c2b3
+msgid "All attributes are set the value before deletion."
+msgstr ""
+
+#: ../../api/audit_logs.rst:38
+#: ../../api/audit_logs.rst:58
+#: 739dd30af79f4035b167f2cc35db3041
+#: 0373be925ad74c8691a4b7b06d0a7d89
+msgid ":attr:`~AuditLogActionCategory.update`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:38
+#: df09ff4f27d34aa185e94b1c06d9dfae
+msgid "All attributes are set the value before updating."
+msgstr ""
+
+#: ../../api/audit_logs.rst:40
+#: ../../api/audit_logs.rst:60
+#: 52b5f385907040839f5868a9d4477e32
+#: 7a9cdb005dbe4e89a838c79fd69c1a7f
+msgid "``None``"
+msgstr ""
+
+#: ../../api/audit_logs.rst:40
+#: ../../api/audit_logs.rst:60
+#: 111233d756ec4cf1bfd5cef5cff6cf04
+#: 6c7e921e96c94a3e854950a8c6b146ba
+msgid "No attributes are set."
+msgstr ""
+
+#: ../../api/audit_logs.rst:45
+#: edb4a55e3e5f4caabff853f3be4b798e
+msgid "The new value. The attribute has the type of :class:`AuditLogDiff`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:54
+#: 89f9d7137cb44ab792b4337fbf783706
+msgid "All attributes are set to the created value"
+msgstr ""
+
+#: ../../api/audit_logs.rst:56
+#: 70697ea9742a4aa89cc8b3753ad0b492
+msgid "All attributes are set to ``None``"
+msgstr ""
+
+#: ../../api/audit_logs.rst:58
+#: 63982e1978f84b79bf1b5f1ea26e542f
+msgid "All attributes are set the value after updating."
+msgstr ""
+
+#: ../../api/audit_logs.rst:67
+#: 2bdd655c0b224e57ab49fa7ecdd5f9f9
+msgid "Represents an audit log \"change\" object. A change object has dynamic attributes that depend on the type of action being done. Certain actions map to certain attributes being set."
+msgstr ""
+
+#: ../../api/audit_logs.rst:71
+#: 64e739ada7d84c9ab9329fdec9e293ef
+msgid "Note that accessing an attribute that does not match the specified action will lead to an attribute error."
+msgstr ""
+
+#: ../../api/audit_logs.rst:74
+#: ea2b849865ee43b2b21ed87142d49b37
+msgid "To get a list of attributes that have been set, you can iterate over them. To see a list of all possible attributes that could be set based on the action being done, check the documentation for :class:`AuditLogAction`, otherwise check the documentation below for all attributes that are possible."
+msgstr ""
+
+#: ../../api/audit_logs.rst:83
+#: ef597c9d783f40568dc26ac23521500b
+msgid "Returns an iterator over (attribute, value) tuple of this diff."
+msgstr ""
+
+#: ../../api/audit_logs.rst:87
+#: bc618385e5f4451383183bf6a929b942
+msgid "A name of something."
+msgstr ""
+
+#: ../../api/audit_logs.rst:89
+#: ../../api/audit_logs.rst:230
+#: ../../api/audit_logs.rst:250
+#: ../../api/audit_logs.rst:351
+#: ../../api/audit_logs.rst:463
+#: ../../api/audit_logs.rst:471
+#: ../../api/audit_logs.rst:525
+#: ../../api/audit_logs.rst:531
+#: c5c4e0ae4e45496eb32c7907364cb483
+#: 446725aaf65d4ddfb3011dd6c382a9bf
+#: d40120b690fa458fb3677608ad3130cb
+#: d41973787ca043fe878e0c937df69154
+#: 4b2ddc1049304c70bfa9ea00ac6484df
+#: a30eef0197584b019e89d220d779e48a
+#: e3f884ad7910494394662d3476eaa4d8
+#: 8d014103b85e4d18bbf90074f7f42db2
+msgid ":class:`str`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:93
+#: 0e63465fd6d14b7d8ce61e59c71f8814
+msgid "A guild's icon. See also :attr:`Guild.icon`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:95
+#: ../../api/audit_logs.rst:101
+#: ../../api/audit_logs.rst:107
+#: ../../api/audit_logs.rst:113
+#: ../../api/audit_logs.rst:421
+#: 4c1306f7d9c04f5fb67d12193248a253
+#: 5c48319392134b6aacddc014c3f33a96
+#: 27f36233f3e748669f14d6b5a674e1aa
+#: a8c90701ac52439082d83abf62f9e7ac
+#: 2bbdc8f9bd49492ebf765dbefaf45f2f
+msgid ":class:`Asset`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:99
+#: 5b303b9cf83c46fca0dba405038b2970
+msgid "The guild's invite splash. See also :attr:`Guild.splash`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:105
+#: 970bba8b6a354068930ec6c5bf999c14
+msgid "The guild's discovery splash. See also :attr:`Guild.discovery_splash`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:111
+#: be8abed6d08947a784fabd6da26d7ae5
+msgid "The guild's banner. See also :attr:`Guild.banner`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:117
+#: bec033ce155d429a831d95885153df21
+msgid "The guild's owner. See also :attr:`Guild.owner`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:119
+#: abf04331146546d7bd6db1c76f3bbcf6
+msgid "Union[:class:`Member`, :class:`User`]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:123
+#: aaccca5628a140a6a100e9ae8ff6e610
+msgid "The guild's AFK channel."
+msgstr ""
+
+#: ../../api/audit_logs.rst:125
+#: ../../api/audit_logs.rst:136
+#: 8aa8716742134fe481fb5a6efa9c8e31
+#: 94a41db4bd5b442caf00ed7897f5f95b
+msgid "If this could not be found, then it falls back to a :class:`Object` with the ID being set."
+msgstr ""
+
+#: ../../api/audit_logs.rst:128
+#: dc2ab86efd5a482d896f744e0838bb34
+msgid "See :attr:`Guild.afk_channel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:130
+#: 5e0504eb0bb24ea0a88e0d59634b71bd
+msgid "Union[:class:`VoiceChannel`, :class:`Object`]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:134
+#: e6c5b28e91214bd7b7362d4386242487
+msgid "The guild's system channel."
+msgstr ""
+
+#: ../../api/audit_logs.rst:139
+#: f290a0b588aa450aae75a95c1af3b494
+msgid "See :attr:`Guild.system_channel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:141
+#: ../../api/audit_logs.rst:153
+#: ../../api/audit_logs.rst:165
+#: ../../api/audit_logs.rst:192
+#: ede7bc22df7845f8ae20d1d1831204b4
+#: 752da77502a64b3f80cda3b10ece282d
+#: 75f60680df544cd6bd165b17b47dcae0
+#: 4f3c183d07a647a68232bc6f960e39dc
+msgid "Union[:class:`TextChannel`, :class:`Object`]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:146
+#: 8faef8366bdb43a58ffe62635a483aef
+msgid "The guild's rules channel."
+msgstr ""
+
+#: ../../api/audit_logs.rst:148
+#: ../../api/audit_logs.rst:160
+#: ../../api/audit_logs.rst:189
+#: 96ccebfcd99048b8b8f130eddd487b0f
+#: d70c738ba4ed464387fe8d9dd4469707
+#: 7668ff4c498d417094db3a518125a694
+msgid "If this could not be found then it falls back to a :class:`Object` with the ID being set."
+msgstr ""
+
+#: ../../api/audit_logs.rst:151
+#: 2be308fc4ff24d44a416b91c21c36c0b
+msgid "See :attr:`Guild.rules_channel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:158
+#: bfff8d711723497783a47ebed12b641a
+msgid "The guild's public updates channel."
+msgstr ""
+
+#: ../../api/audit_logs.rst:163
+#: dff462f591124507b6264cdb9b1e7004
+msgid "See :attr:`Guild.public_updates_channel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:169
+#: 1568138420834f2391b05c079775376b
+msgid "The guild's AFK timeout. See :attr:`Guild.afk_timeout`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:175
+#: 5287c0b314ec41518facad6060be03a9
+msgid "The guild's MFA level. See :attr:`Guild.mfa_level`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:181
+#: 8d14a1e130c7403d9c1a381cb96983c9
+msgid "The guild's widget has been enabled or disabled."
+msgstr ""
+
+#: ../../api/audit_logs.rst:183
+#: ../../api/audit_logs.rst:302
+#: ../../api/audit_logs.rst:310
+#: ../../api/audit_logs.rst:335
+#: ../../api/audit_logs.rst:343
+#: ../../api/audit_logs.rst:400
+#: ../../api/audit_logs.rst:479
+#: ../../api/audit_logs.rst:485
+#: ../../api/audit_logs.rst:491
+#: ../../api/audit_logs.rst:511
+#: da435cbab68b4c9bb613f0a21f9d3e9b
+#: 5ea7f3ebf0e3458aab55647bc2b6b207
+#: d354c177497e4afeb2eda288f2c1ed27
+#: aab3070967ec4ba68ad8d040d459b62a
+#: 150d6c683e5e43338ea9c52fcb44296e
+#: eb1dc1ce86b84aeb9a7498d83da1ed2b
+#: b66e3d7285524390ac5536c97ffcb8fa
+#: 6d333e9edc9743f889dfaf5c46e70264
+#: 6b1ec8059db9461eba7c85c1813e9749
+#: 41b6b46f42b542cca84e22064c42649d
+msgid ":class:`bool`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:187
+#: c39996a2e84747dc93d10ff89e1d686d
+msgid "The widget's channel."
+msgstr ""
+
+#: ../../api/audit_logs.rst:196
+#: 801f1f0e800b4c34b11266b369312838
+msgid "The guild's verification level."
+msgstr ""
+
+#: ../../api/audit_logs.rst:198
+#: 5607dd7e4de149f29dc88cfb79f0a564
+msgid "See also :attr:`Guild.verification_level`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:200
+#: 734c187892f04c4fade41a9d6b7864a3
+msgid ":class:`VerificationLevel`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:204
+#: f55da2b798784c2e98ea700f82e4b595
+msgid "The guild's default notification level."
+msgstr ""
+
+#: ../../api/audit_logs.rst:206
+#: 3ddff88f4798418ba297485780c239d3
+msgid "See also :attr:`Guild.default_notifications`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:208
+#: 7d348b8ad0a144738c16a613b907dcdc
+msgid ":class:`NotificationLevel`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:212
+#: 4c1a0f78b396443d9aa4acf1b3c39aed
+msgid "The guild's content filter."
+msgstr ""
+
+#: ../../api/audit_logs.rst:214
+#: 8979396960e34ebfa8f70c43bbc4fa99
+msgid "See also :attr:`Guild.explicit_content_filter`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:216
+#: 4034eefe613e4a599556b650983a1b13
+msgid ":class:`ContentFilter`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:220
+#: a27fb3efca7f47a1b55ef70533a61c15
+msgid "The guild's default message notification setting."
+msgstr ""
+
+#: ../../api/audit_logs.rst:226
+#: dd6f3d7094014fb4b57bd573d461ca19
+msgid "The guild's vanity URL."
+msgstr ""
+
+#: ../../api/audit_logs.rst:228
+#: a4f27efea9584e64bc09d1281de74041
+msgid "See also :meth:`Guild.vanity_invite` and :meth:`Guild.edit`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:234
+#: cab946ceefb34cbdbb201b6ee9faa4ff
+msgid "The position of a :class:`Role` or :class:`abc.GuildChannel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:240
+#: cd2b82d9399b4fc1a53bd1faa7ff0a47
+msgid "The type of channel or sticker."
+msgstr ""
+
+#: ../../api/audit_logs.rst:242
+#: 4c4285a9bab749a4a8528ec7d131df5f
+msgid "Union[:class:`ChannelType`, :class:`StickerType`]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:246
+#: 60f321ea7cbb469d8d488dc97e96023f
+msgid "The topic of a :class:`TextChannel` or :class:`StageChannel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:248
+#: 7b27114b6e11464e9f2e37c9017f987a
+msgid "See also :attr:`TextChannel.topic` or :attr:`StageChannel.topic`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:254
+#: c2672f5fdf1c4c66864f02f146c1a0d7
+msgid "The bitrate of a :class:`VoiceChannel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:256
+#: f4774c7dd9bb4800a5a94a6c67b562f3
+msgid "See also :attr:`VoiceChannel.bitrate`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:262
+#: a8e6fa9993e84b819491b9ca68fb802e
+msgid "A list of permission overwrite tuples that represents a target and a :class:`PermissionOverwrite` for said target."
+msgstr ""
+
+#: ../../api/audit_logs.rst:265
+#: c583fbbb96a1450bac4273b8b018711d
+msgid "The first element is the object being targeted, which can either be a :class:`Member` or :class:`User` or :class:`Role`. If this object is not found then it is a :class:`Object` with an ID being filled and a ``type`` attribute set to either ``'role'`` or ``'member'`` to help decide what type of ID it is."
+msgstr ""
+
+#: ../../api/audit_logs.rst:271
+#: cdaab8d4d2bb4c95960cccc87668788d
+msgid "List[Tuple[target, :class:`PermissionOverwrite`]]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:275
+#: dd4d023a07754d20869e7c45e3045b06
+msgid "The privacy level of the stage instance or scheduled event."
+msgstr ""
+
+#: ../../api/audit_logs.rst:277
+#: 508657738a654db1b7eb6838f21bd0e6
+msgid "Union[:class:`StagePrivacyLevel`, :class:`ScheduledEventPrivacyLevel`]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:281
+#: 46995ba9d85c4080af86b7665885f165
+msgid "A list of roles being added or removed from a member."
+msgstr ""
+
+#: ../../api/audit_logs.rst:283
+#: a0e20a7805af4926a3fa92e47895f7f6
+msgid "If a role is not found then it is a :class:`Object` with the ID and name being filled in."
+msgstr ""
+
+#: ../../api/audit_logs.rst:286
+#: f2df3a2b3b1849bbb3878af005243bac
+msgid "List[Union[:class:`Role`, :class:`Object`]]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:290
+#: 4d70f85ee1ec4a2381d32f10d335eb69
+msgid "The nickname of a member."
+msgstr ""
+
+#: ../../api/audit_logs.rst:292
+#: 16305a55a7c842b188d1ccbd3742c186
+msgid "See also :attr:`Member.nick`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:298
+#: 35419da87a914a11b46ff7fae236ead8
+msgid "Whether the member is being server deafened."
+msgstr ""
+
+#: ../../api/audit_logs.rst:300
+#: 064049dcc09946d394019bdf067049d4
+msgid "See also :attr:`VoiceState.deaf`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:306
+#: d764d48f607042e285298a7b2995279e
+msgid "Whether the member is being server muted."
+msgstr ""
+
+#: ../../api/audit_logs.rst:308
+#: 6f2f962dc5e54ccd9062f510af15c64e
+msgid "See also :attr:`VoiceState.mute`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:314
+#: fe8687b2538d4db4b0f4aa82a8d0a8c7
+msgid "The permissions of a role."
+msgstr ""
+
+#: ../../api/audit_logs.rst:316
+#: e89aa3f4fab04e3c8b084cf0ca8b29ee
+msgid "See also :attr:`Role.permissions`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:318
+#: ../../api/audit_logs.rst:407
+#: b8ee17b89d06486894ada8257b51077a
+#: b28c52db483d462d9a4a19cb548cb0a2
+msgid ":class:`Permissions`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:323
+#: 4da7e939e514443c8a9e16bff5eaf851
+msgid "The colour of a role."
+msgstr ""
+
+#: ../../api/audit_logs.rst:325
+#: e2211420ff06488ca4538d66c441b2b4
+msgid "See also :attr:`Role.colour`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:327
+#: 078b52a5307145a5867e268f7dd9c91b
+msgid ":class:`Colour`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:331
+#: 18e2a34ffc1243a38abe7abb91ec9011
+msgid "Whether the role is being hoisted or not."
+msgstr ""
+
+#: ../../api/audit_logs.rst:333
+#: 762b47089d634dabbd143aad28ac6b9a
+msgid "See also :attr:`Role.hoist`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:339
+#: 22f67e8949e341e9bc501a8058af5e77
+msgid "Whether the role is mentionable or not."
+msgstr ""
+
+#: ../../api/audit_logs.rst:341
+#: 15c7f2a8346848e195fd3b084516f324
+msgid "See also :attr:`Role.mentionable`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:347
+#: 4ef6f0361cb542e7bcb23bc0dd36648e
+msgid "The invite's code."
+msgstr ""
+
+#: ../../api/audit_logs.rst:349
+#: ad1db9cf2cc04650a0c4fa67e0b2605c
+msgid "See also :attr:`Invite.code`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:355
+#: 49f35564ce96413196fb574cea5bbeb8
+msgid "A guild channel."
+msgstr ""
+
+#: ../../api/audit_logs.rst:357
+#: dee6f7b2ca214481bf352411a4127029
+msgid "If the channel is not found then it is a :class:`Object` with the ID being set. In some cases the channel name is also set."
+msgstr ""
+
+#: ../../api/audit_logs.rst:360
+#: b5c18089d22443fdb6744b7e54265149
+msgid "Union[:class:`abc.GuildChannel`, :class:`Object`]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:364
+#: 4f4f4e2df1884936945c72e140cef320
+msgid "The user who created the invite."
+msgstr ""
+
+#: ../../api/audit_logs.rst:366
+#: 41c0b057932f4fdb831f10a123f4f5cd
+msgid "See also :attr:`Invite.inviter`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:368
+#: 9c3d05e61e0842d492250cebdc30de68
+msgid "Optional[:class:`User`]"
+msgstr ""
+
+#: ../../api/audit_logs.rst:372
+#: 785fe8eb046342ed8e3d1820b6171fc1
+msgid "The invite's max uses."
+msgstr ""
+
+#: ../../api/audit_logs.rst:374
+#: f23a0ed1b8764469a5363f90e504b0dd
+msgid "See also :attr:`Invite.max_uses`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:380
+#: 2f7a9ebe47b24b3289f28a2af2df4064
+msgid "The invite's current uses."
+msgstr ""
+
+#: ../../api/audit_logs.rst:382
+#: 0697b46b1b1a46ff9aa3f95a624a8f53
+msgid "See also :attr:`Invite.uses`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:388
+#: 1ccb1f8f72844dcbb048f17a94ee6a76
+msgid "The invite's max age in seconds."
+msgstr ""
+
+#: ../../api/audit_logs.rst:390
+#: b5d3678b20594a5f815453b4f8518588
+msgid "See also :attr:`Invite.max_age`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:396
+#: ef58ca62545041cca49baa61fb343e9e
+msgid "If the invite is a temporary invite."
+msgstr ""
+
+#: ../../api/audit_logs.rst:398
+#: af67554ac8044df4a29aefb2b3401ab4
+msgid "See also :attr:`Invite.temporary`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:405
+#: dc4d674c3f28400e8361fa172b779c7a
+msgid "The permissions being allowed or denied."
+msgstr ""
+
+#: ../../api/audit_logs.rst:411
+#: 371791d7ef4e4ecb8d38a07a6070d232
+msgid "The ID of the object being changed."
+msgstr ""
+
+#: ../../api/audit_logs.rst:417
+#: f540f674d6474fb8b63d04b273858111
+msgid "The avatar of a member."
+msgstr ""
+
+#: ../../api/audit_logs.rst:419
+#: b836e98621804b13a085b320db564b6f
+msgid "See also :attr:`User.avatar`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:425
+#: 7b62e7346b814745b8c95a4f415c9984
+msgid "The number of seconds members have to wait before sending another message in the channel."
+msgstr ""
+
+#: ../../api/audit_logs.rst:428
+#: a727ab53b80f41e0a0ff884cbb1769bf
+msgid "See also :attr:`TextChannel.slowmode_delay`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:434
+#: 7e8d6adaf21e44bd8b352011f1bbdd86
+msgid "The region for the voice channel’s voice communication. A value of ``None`` indicates automatic voice region detection."
+msgstr ""
+
+#: ../../api/audit_logs.rst:437
+#: 5eea22819cb84ace84ff22d4e4eca544
+msgid "See also :attr:`VoiceChannel.rtc_region`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:439
+#: 26a26dcb023b4335a5401b828880afb6
+msgid ":class:`VoiceRegion`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:443
+#: aa13a908998247d5a5c6b4f1105db8d3
+msgid "The camera video quality for the voice channel's participants."
+msgstr ""
+
+#: ../../api/audit_logs.rst:445
+#: 2f820e9c62fd44d7b4f1d67638eb6ca4
+msgid "See also :attr:`VoiceChannel.video_quality_mode`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:447
+#: 69066d43b5f045e49a33eec9ff6d02b6
+msgid ":class:`VideoQualityMode`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:451
+#: fcf66655ea9f426f9fb75681433021dd
+msgid "The format type of a sticker being changed."
+msgstr ""
+
+#: ../../api/audit_logs.rst:453
+#: bac989ca498044eba06367ab7dfa6634
+msgid "See also :attr:`GuildSticker.format`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:455
+#: 4bab0c4f82da46b0a6db49bff1ccf5cd
+msgid ":class:`StickerFormatType`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:459
+#: b8ae93cb7b2d4d74af69a82dbdecd356
+msgid "The name of the emoji that represents a sticker being changed."
+msgstr ""
+
+#: ../../api/audit_logs.rst:461
+#: 1781bca470444de9a4d6b7ab31571a47
+msgid "See also :attr:`GuildSticker.emoji`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:467
+#: f4aabbb068064df8af5244ad049889c8
+msgid "The description of a sticker being changed."
+msgstr ""
+
+#: ../../api/audit_logs.rst:469
+#: 13447d39e8f74a369753ce9b67583f77
+msgid "See also :attr:`GuildSticker.description`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:475
+#: 3a82a86af6b84b5f9083e815345ec579
+msgid "The availability of a sticker being changed."
+msgstr ""
+
+#: ../../api/audit_logs.rst:477
+#: 334832529c474126b92c8c76bf7f94cc
+msgid "See also :attr:`GuildSticker.available`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:483
+#: e429e343ee4040fb978dd3ace51dfd41
+msgid "The thread is now archived."
+msgstr ""
+
+#: ../../api/audit_logs.rst:489
+#: 3624467b8c544d64929c19e279917797
+msgid "The thread is being locked or unlocked."
+msgstr ""
+
+#: ../../api/audit_logs.rst:495
+#: 40135d8e19024baf9e887b135810e19c
+msgid "The thread's auto archive duration being changed."
+msgstr ""
+
+#: ../../api/audit_logs.rst:497
+#: 6e370527751f40e8a0852525260dcb09
+msgid "See also :attr:`Thread.auto_archive_duration`"
+msgstr ""
+
+#: ../../api/audit_logs.rst:503
+#: 49a68128a1c8419eae71d41acf3ddb55
+msgid "The default auto archive duration for newly created threads being changed."
+msgstr ""
+
+#: ../../api/audit_logs.rst:509
+#: af1fc2690db941d7be6015fbdec83129
+msgid "Non-moderators can now add other non-moderators to this thread."
+msgstr ""
+
+#: ../../api/audit_logs.rst:515
+#: 92b70a2eafdd47af9ae03b88a54a908a
+msgid "This command's permissions were updated."
+msgstr ""
+
+#: ../../api/audit_logs.rst:521
+#: b8dde8324c9845ac910a7aa80ee6d36b
+msgid "The voice channel status of a :class:`VoiceChannel`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:523
+#: c7e2046260194accae7da7099026c93e
+msgid "See also :attr:`VoiceChannel.status`."
+msgstr ""
+
+#: ../../api/audit_logs.rst:529
+#: 1028bd2d6f464ae48a24408209380e30
+msgid "The cover image of a :class:`ScheduledEvent`."
+msgstr ""

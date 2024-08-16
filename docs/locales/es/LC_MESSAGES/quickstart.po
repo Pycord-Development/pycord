@@ -1,0 +1,97 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Quickstart"
+msgstr "Inicio rápido"
+
+msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
+msgstr "Esta página da una breve introducción a la biblioteca. Se asume que tienes la biblioteca instalada. Si no la tienes, revisa :ref:`installing`."
+
+msgid "A Minimal Bot"
+msgstr "Un bot mínimo"
+
+msgid "Let's make a bot that responds to a specific message and walk you through it."
+msgstr "Creemos un bot que responda a un mensaje en específico y guiarte en el proceso."
+
+msgid "It looks something like this:"
+msgstr "Se ve algo así:"
+
+msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
+msgstr "Debido a que este ejemplo usa el contenido del mensaje, necesitamos la intención privilegiada :attr:`Intents.message_content`."
+
+msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
+msgstr "Nombremos a este archivo ``example_bot.py``. Asegúrate de no nombrarlo ``discord.py``, ya que puede causar conflictos con la biblioteca."
+
+msgid "There's a lot going on here, so let's walk you through it step by step:"
+msgstr "Muchas cosas están sucediendo aquí, vamos paso a paso:"
+
+msgid "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
+msgstr "La primera línea importa la biblioteca, si esto genera un `ModuleNotFoundError` o `ImportError`, entonces ve a la sección de :ref:`installing` para instalar correctamente la biblioteca."
+
+msgid "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
+msgstr "A continuación, creamos una instancia de :class:`Client`. Este cliente es nuestra conexión a Discord."
+
+msgid "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
+msgstr "Luego usamos el decorador :meth:`Client.event` para registrar un evento. La biblioteca cuenta con muchos eventos. Puesto que la biblioteca es asíncrona, hacemos las cosas en un estilo de \"retrollamada\"."
+
+msgid "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."
+msgstr "Una retrollamada es esencialmente una función que es llamada cuando algo pasa. En nuestro caso, el evento :func:`on_ready` es llamado cuando nuestro bot ha terminado de iniciar sesión y configurarse, y el evento :func:`on_message` es llamado cuando nuestro bot recibe un mensaje."
+
+msgid "Since the :func:`on_message` event triggers for *every* message received, we have to make sure that we ignore messages from ourselves. We do this by checking if the :attr:`Message.author` is the same as the :attr:`Client.user`."
+msgstr "Puesto que nuestro evento :func:`on_message` es llamado por *cada* mensaje recibido, tenemos que asegurarnos de ignorar nuestros mismos mensajes. Hacemos esto comprobando si el :attr:`Message.author` es el mismo que :attr:`Client.user`."
+
+msgid "Afterwards, we check if the :class:`Message.content` starts with ``'$hello'``. If it does, then we send a message in the channel it was used in with ``'Hello!'``. This is a basic way of handling commands, which can be later automated with the :doc:`./ext/commands/index` framework."
+msgstr "Después, comprobamos si :class:`Message.content` empieza con ``'$hello'``. Si lo hace, entonces enviamos un mensaje al canal donde fue usado con ``'Hello!'``. Esto es una forma básica de manejar comandos, que luego puede ser automatizado con el framework :doc:`./ext/commands/index`."
+
+msgid "Finally, we run the bot with our login token. If you need help getting your token or creating a bot, look in the :ref:`discord-intro` section."
+msgstr "Finalmente, ejecutamos nuestro bot con nuestro token de inicio de sesión. Si necesitas ayuda para obtener tu token o para crear un bot, mira la sección :ref:`discord-intro`."
+
+msgid "Now that we've made a bot, we have to *run* the bot. Luckily, this is simple since this is just a Python script, we can run it directly."
+msgstr "Ahora que hemos creado un bot, tenemos que *ejecutar* el bot. Por suerte, esto es simple, ya que este es solo un script de Python, podemos ejecutarlo directamente."
+
+msgid "On Windows:"
+msgstr "En Windows:"
+
+msgid "On other systems:"
+msgstr "En otros sistemas:"
+
+msgid "Now you can try playing around with your basic bot."
+msgstr "Ahora puedes intentar jugar con tu bot básico."
+
+msgid "A Minimal Bot with Slash Commands"
+msgstr "Un bot mínimo con comandos de barra"
+
+msgid "As a continuation, let's create a bot that registers a simple slash command!"
+msgstr "Como una continuación, vamos a crear un bot que registre un simple comando de barra."
+
+msgid "Let's look at the differences compared to the previous example, step-by-step:"
+msgstr "Veamos las diferencias en comparación con el ejemplo anterior, paso a paso:"
+
+msgid "The first line remains unchanged."
+msgstr "La primera línea no ha cambiado."
+
+msgid "Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports slash command creation and other features, while inheriting all the features of :class:`.Client`."
+msgstr "A continuación, creamos una instancia de :class:`.Bot`. Esto es diferente de :class:`.Client`, ya que soporta la creación de comandos de barra y otras características, al tiempo que hereda todas las características de :class:`.Client`."
+
+msgid "We then use the :meth:`.Bot.slash_command` decorator to register a new slash command. The ``guild_ids`` attribute contains a list of guilds where this command will be active. If you omit it, the command will be globally available, and may take up to an hour to register."
+msgstr "Luego usamos el decorador :meth:`.Bot.slash_command` para registrar un nuevo comando de barra. El atributo ``guild_ids`` contiene una lista de servidores donde este comando será activo. Si se omite, el comando estará disponible globalmente, y puede tardar hasta una hora en registrarse."
+
+msgid "Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that all slash commands must have some form of response, otherwise they will fail."
+msgstr "Después, activamos una respuesta al comando de barra en forma de texto. Por favor, ten en cuenta que todos los comandos de barra deben tener alguna forma de respuesta, de lo contrario fallarán."
+
+msgid "Finally, we, once again, run the bot with our login token."
+msgstr "Por último, una vez más, ejecutamos el bot con nuestro token de inicio de sesión."
+
+msgid "Congratulations! Now you have created your first slash command!"
+msgstr "¡Enhorabuena! ¡Ahora has creado tu primer comando de barra!"
+

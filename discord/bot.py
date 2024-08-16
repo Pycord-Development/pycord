@@ -1051,7 +1051,7 @@ class ApplicationCommandMixin(ABC):
 
     slash_group = group
 
-    def walk_application_commands(self) -> Generator[ApplicationCommand, None, None]:
+    def walk_application_commands(self) -> Generator[ApplicationCommand]:
         """An iterator that recursively walks through all application commands and subcommands.
 
         Yields

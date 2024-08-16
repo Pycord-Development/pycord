@@ -1,0 +1,25 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Table of Contents"
+msgstr "Table of Contents"
+
+msgid "API Reference"
+msgstr "API Reference"
+
+msgid "The following section outlines the API of Pycord."
+msgstr "The following section outlines the API of Pycord."
+
+msgid "This module uses the Python logging module to log diagnostic and errors in an output independent way.  If the logging module is not configured, these logs will not be output anywhere.  See :ref:`logging_setup` for more information on how to set up and use the logging module with Pycord."
+msgstr "This module uses the Python logging module to log diagnostic and errors in an output independent way.  If the logging module is not configured, these logs will not be output anywhere.  See :ref:`logging_setup` for more information on how to set up and use the logging module with Pycord."
+

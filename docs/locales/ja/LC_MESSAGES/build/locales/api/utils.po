@@ -1,0 +1,481 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Utility Functions"
+msgstr "Utility Functions"
+
+msgid "A helper to return the first element found in the sequence that meets the predicate. For example: ::"
+msgstr "A helper to return the first element found in the sequence that meets the predicate. For example: ::"
+
+msgid "would find the first :class:`~discord.Member` whose name is 'Mighty' and return it. If an entry is not found, then ``None`` is returned."
+msgstr "would find the first :class:`~discord.Member` whose name is 'Mighty' and return it. If an entry is not found, then ``None`` is returned."
+
+msgid "This is different from :func:`py:filter` due to the fact it stops the moment it finds a valid entry."
+msgstr "This is different from :func:`py:filter` due to the fact it stops the moment it finds a valid entry."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "A function that returns a boolean-like result."
+msgstr "A function that returns a boolean-like result."
+
+msgid "The iterable to search through."
+msgstr "The iterable to search through."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid ":py:data:`~typing.Optional`\\[:py:class:`~typing.TypeVar`\\(``T``)]"
+msgstr ":py:data:`~typing.Optional`\\[:py:class:`~typing.TypeVar`\\(``T``)]"
+
+msgid "A helper that returns the first element in the iterable that meets all the traits passed in ``attrs``. This is an alternative for :func:`~discord.utils.find`."
+msgstr "A helper that returns the first element in the iterable that meets all the traits passed in ``attrs``. This is an alternative for :func:`~discord.utils.find`."
+
+msgid "When multiple attributes are specified, they are checked using logical AND, not logical OR. Meaning they have to meet every attribute passed in and not one of them."
+msgstr "When multiple attributes are specified, they are checked using logical AND, not logical OR. Meaning they have to meet every attribute passed in and not one of them."
+
+msgid "To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument."
+msgstr "To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument."
+
+msgid "If nothing is found that matches the attributes passed, then ``None`` is returned."
+msgstr "If nothing is found that matches the attributes passed, then ``None`` is returned."
+
+msgid "Examples"
+msgstr "Examples"
+
+msgid "Basic usage:"
+msgstr "Basic usage:"
+
+msgid "Multiple attribute matching:"
+msgstr "Multiple attribute matching:"
+
+msgid "Nested attribute matching:"
+msgstr "Nested attribute matching:"
+
+msgid "An iterable to search through."
+msgstr "An iterable to search through."
+
+msgid "Keyword arguments that denote attributes to search with."
+msgstr "Keyword arguments that denote attributes to search with."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it. If the fetch also fails, an error will be raised."
+msgstr "Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it. If the fetch also fails, an error will be raised."
+
+msgid "The object to use the get or fetch methods in"
+msgstr "The object to use the get or fetch methods in"
+
+msgid "The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute."
+msgstr "The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute."
+
+msgid "The ID of the object"
+msgstr "The ID of the object"
+
+msgid "The default value to return if the object is not found, instead of raising an error."
+msgstr "The default value to return if the object is not found, instead of raising an error."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "The object found or the default value."
+msgstr "The object found or the default value."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "The object is missing a ``get_`` or ``fetch_`` method"
+msgstr "The object is missing a ``get_`` or ``fetch_`` method"
+
+msgid "Invalid ID for the object"
+msgstr "Invalid ID for the object"
+
+msgid "An error occurred fetching the object"
+msgstr "An error occurred fetching the object"
+
+msgid "You do not have permission to fetch the object"
+msgstr "You do not have permission to fetch the object"
+
+msgid "Getting a guild from a guild ID: ::"
+msgstr "Getting a guild from a guild ID: ::"
+
+msgid "Getting a channel from the guild. If the channel is not found, return None: ::"
+msgstr "Getting a channel from the guild. If the channel is not found, return None: ::"
+
+msgid "A helper function that returns the OAuth2 URL for inviting the bot into guilds."
+msgstr "A helper function that returns the OAuth2 URL for inviting the bot into guilds."
+
+msgid "The client ID for your bot."
+msgstr "The client ID for your bot."
+
+msgid "The permissions you're requesting. If not given then you won't be requesting any permissions."
+msgstr "The permissions you're requesting. If not given then you won't be requesting any permissions."
+
+msgid "The guild to pre-select in the authorization screen, if available."
+msgstr "The guild to pre-select in the authorization screen, if available."
+
+msgid "An optional valid redirect URI."
+msgstr "An optional valid redirect URI."
+
+msgid "An optional valid list of scopes. Defaults to ``('bot',)``.  .. versionadded:: 1.7"
+msgstr "An optional valid list of scopes. Defaults to ``('bot',)``.  .. versionadded:: 1.7"
+
+msgid "An optional valid list of scopes. Defaults to ``('bot',)``."
+msgstr "An optional valid list of scopes. Defaults to ``('bot',)``."
+
+msgid "Whether to disallow the user from changing the guild dropdown.  .. versionadded:: 2.0"
+msgstr "Whether to disallow the user from changing the guild dropdown.  .. versionadded:: 2.0"
+
+msgid "Whether to disallow the user from changing the guild dropdown."
+msgstr "Whether to disallow the user from changing the guild dropdown."
+
+msgid "The OAuth2 URL for inviting the bot into guilds."
+msgstr "The OAuth2 URL for inviting the bot into guilds."
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "A helper function that removes markdown characters."
+msgstr "A helper function that removes markdown characters."
+
+msgid "This function is not markdown aware and may remove meaning from the original text. For example, if the input contains ``10 * 5`` then it will be converted into ``10  5``."
+msgstr "This function is not markdown aware and may remove meaning from the original text. For example, if the input contains ``10 * 5`` then it will be converted into ``10  5``."
+
+msgid "The text to remove markdown from."
+msgstr "The text to remove markdown from."
+
+msgid "Whether to leave links alone when removing markdown. For example, if a URL in the text contains characters such as ``_`` then it will be left alone. Defaults to ``True``."
+msgstr "Whether to leave links alone when removing markdown. For example, if a URL in the text contains characters such as ``_`` then it will be left alone. Defaults to ``True``."
+
+msgid "The text with the markdown special characters removed."
+msgstr "The text with the markdown special characters removed."
+
+msgid "A helper function that escapes Discord's markdown."
+msgstr "A helper function that escapes Discord's markdown."
+
+msgid "The text to escape markdown from."
+msgstr "The text to escape markdown from."
+
+msgid "Whether to escape the markdown characters as needed. This means that it does not escape extraneous characters if it's not necessary, e.g. ``**hello**`` is escaped into ``\\*\\*hello**`` instead of ``\\*\\*hello\\*\\*``. Note however that this can open you up to some clever syntax abuse. Defaults to ``False``."
+msgstr "Whether to escape the markdown characters as needed. This means that it does not escape extraneous characters if it's not necessary, e.g. ``**hello**`` is escaped into ``\\*\\*hello**`` instead of ``\\*\\*hello\\*\\*``. Note however that this can open you up to some clever syntax abuse. Defaults to ``False``."
+
+msgid "Whether to leave links alone when escaping markdown. For example, if a URL in the text contains characters such as ``_`` then it will be left alone. This option is not supported with ``as_needed``. Defaults to ``True``."
+msgstr "Whether to leave links alone when escaping markdown. For example, if a URL in the text contains characters such as ``_`` then it will be left alone. This option is not supported with ``as_needed``. Defaults to ``True``."
+
+msgid "The text with the markdown special characters escaped with a slash."
+msgstr "The text with the markdown special characters escaped with a slash."
+
+msgid "A helper function that escapes everyone, here, role, and user mentions."
+msgstr "A helper function that escapes everyone, here, role, and user mentions."
+
+msgid "This does not include channel mentions."
+msgstr "This does not include channel mentions."
+
+msgid "For more granular control over what mentions should be escaped within messages, refer to the :class:`~discord.AllowedMentions` class."
+msgstr "For more granular control over what mentions should be escaped within messages, refer to the :class:`~discord.AllowedMentions` class."
+
+msgid "The text to escape mentions from."
+msgstr "The text to escape mentions from."
+
+msgid "The text with the mentions removed."
+msgstr "The text with the mentions removed."
+
+msgid "Returns a list of user IDs matching ``<@user_id>`` in the string."
+msgstr "Returns a list of user IDs matching ``<@user_id>`` in the string."
+
+msgid "The string to get user mentions from."
+msgstr "The string to get user mentions from."
+
+msgid "A list of user IDs found in the string."
+msgstr "A list of user IDs found in the string."
+
+msgid "List[:class:`int`]"
+msgstr "List[:class:`int`]"
+
+msgid "Returns a list of channel IDs matching ``<@#channel_id>`` in the string."
+msgstr "Returns a list of channel IDs matching ``<@#channel_id>`` in the string."
+
+msgid "The string to get channel mentions from."
+msgstr "The string to get channel mentions from."
+
+msgid "A list of channel IDs found in the string."
+msgstr "A list of channel IDs found in the string."
+
+msgid "Returns a list of role IDs matching ``<@&role_id>`` in the string."
+msgstr "Returns a list of role IDs matching ``<@&role_id>`` in the string."
+
+msgid "The string to get role mentions from."
+msgstr "The string to get role mentions from."
+
+msgid "A list of role IDs found in the string."
+msgstr "A list of role IDs found in the string."
+
+msgid "Resolves an invite from a :class:`~discord.Invite`, URL or code."
+msgstr "Resolves an invite from a :class:`~discord.Invite`, URL or code."
+
+msgid "The invite."
+msgstr "The invite."
+
+msgid "The invite code."
+msgstr "The invite code."
+
+msgid "Resolves a template code from a :class:`~discord.Template`, URL or code."
+msgstr "Resolves a template code from a :class:`~discord.Template`, URL or code."
+
+msgid "The code."
+msgstr "The code."
+
+msgid "The template code."
+msgstr "The template code."
+
+msgid "Sleep until a specified time."
+msgstr "Sleep until a specified time."
+
+msgid "If the time supplied is in the past this function will yield instantly."
+msgstr "If the time supplied is in the past this function will yield instantly."
+
+msgid "The timestamp in which to sleep until. If the datetime is naive then it is assumed to be local time."
+msgstr "The timestamp in which to sleep until. If the datetime is naive then it is assumed to be local time."
+
+msgid "If provided is returned to the caller when the coroutine completes."
+msgstr "If provided is returned to the caller when the coroutine completes."
+
+msgid "A helper function to return an aware UTC datetime representing the current time."
+msgstr "A helper function to return an aware UTC datetime representing the current time."
+
+msgid "This should be preferred to :meth:`datetime.datetime.utcnow` since it is an aware datetime, compared to the naive datetime in the standard library."
+msgstr "This should be preferred to :meth:`datetime.datetime.utcnow` since it is an aware datetime, compared to the naive datetime in the standard library."
+
+msgid "The current aware datetime in UTC."
+msgstr "The current aware datetime in UTC."
+
+msgid ":class:`datetime.datetime`"
+msgstr ":class:`datetime.datetime`"
+
+msgid "Converts a Discord snowflake ID to a UTC-aware datetime object."
+msgstr "Converts a Discord snowflake ID to a UTC-aware datetime object."
+
+msgid "The snowflake ID."
+msgstr "The snowflake ID."
+
+msgid "An aware datetime in UTC representing the creation time of the snowflake."
+msgstr "An aware datetime in UTC representing the creation time of the snowflake."
+
+msgid "A helper function to convert an ISO 8601 timestamp to a datetime object."
+msgstr "A helper function to convert an ISO 8601 timestamp to a datetime object."
+
+msgid "The timestamp to convert."
+msgstr "The timestamp to convert."
+
+msgid "The converted datetime object."
+msgstr "The converted datetime object."
+
+msgid "Optional[:class:`datetime.datetime`]"
+msgstr "Optional[:class:`datetime.datetime`]"
+
+msgid "A helper function to format a :class:`datetime.datetime` for presentation within Discord."
+msgstr "A helper function to format a :class:`datetime.datetime` for presentation within Discord."
+
+msgid "This allows for a locale-independent way of presenting data using Discord specific Markdown."
+msgstr "This allows for a locale-independent way of presenting data using Discord specific Markdown."
+
+msgid "Style"
+msgstr "Style"
+
+msgid "Example Output"
+msgstr "Example Output"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "t"
+msgstr "t"
+
+msgid "22:57"
+msgstr "22:57"
+
+msgid "Short Time"
+msgstr "Short Time"
+
+msgid "T"
+msgstr "T"
+
+msgid "22:57:58"
+msgstr "22:57:58"
+
+msgid "Long Time"
+msgstr "Long Time"
+
+msgid "d"
+msgstr "d"
+
+msgid "17/05/2016"
+msgstr "17/05/2016"
+
+msgid "Short Date"
+msgstr "Short Date"
+
+msgid "D"
+msgstr "D"
+
+msgid "17 May 2016"
+msgstr "17 May 2016"
+
+msgid "Long Date"
+msgstr "Long Date"
+
+msgid "f (default)"
+msgstr "f (default)"
+
+msgid "17 May 2016 22:57"
+msgstr "17 May 2016 22:57"
+
+msgid "Short Date Time"
+msgstr "Short Date Time"
+
+msgid "F"
+msgstr "F"
+
+msgid "Tuesday, 17 May 2016 22:57"
+msgstr "Tuesday, 17 May 2016 22:57"
+
+msgid "Long Date Time"
+msgstr "Long Date Time"
+
+msgid "R"
+msgstr "R"
+
+msgid "5 years ago"
+msgstr "5 years ago"
+
+msgid "Relative Time"
+msgstr "Relative Time"
+
+msgid "Note that the exact output depends on the user's locale setting in the client. The example output presented is using the ``en-GB`` locale."
+msgstr "Note that the exact output depends on the user's locale setting in the client. The example output presented is using the ``en-GB`` locale."
+
+msgid "The datetime to format."
+msgstr "The datetime to format."
+
+msgid "The style to format the datetime with."
+msgstr "The style to format the datetime with."
+
+msgid "The formatted string."
+msgstr "The formatted string."
+
+msgid "Returns a numeric snowflake pretending to be created at the given date."
+msgstr "Returns a numeric snowflake pretending to be created at the given date."
+
+msgid "When using as the lower end of a range, use ``time_snowflake(high=False) - 1`` to be inclusive, ``high=True`` to be exclusive."
+msgstr "When using as the lower end of a range, use ``time_snowflake(high=False) - 1`` to be inclusive, ``high=True`` to be exclusive."
+
+msgid "When using as the higher end of a range, use ``time_snowflake(high=True) + 1`` to be inclusive, ``high=False`` to be exclusive"
+msgstr "When using as the higher end of a range, use ``time_snowflake(high=True) + 1`` to be inclusive, ``high=False`` to be exclusive"
+
+msgid "A datetime object to convert to a snowflake. If naive, the timezone is assumed to be local time."
+msgstr "A datetime object to convert to a snowflake. If naive, the timezone is assumed to be local time."
+
+msgid "Whether to set the lower 22 bit to high or low."
+msgstr "Whether to set the lower 22 bit to high or low."
+
+msgid "The snowflake representing the time given."
+msgstr "The snowflake representing the time given."
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "Returns a numeric snowflake pretending to be created at the given date but more accurate and random than :func:`time_snowflake`. If dt is not passed, it makes one from the current time using utcnow."
+msgstr "Returns a numeric snowflake pretending to be created at the given date but more accurate and random than :func:`time_snowflake`. If dt is not passed, it makes one from the current time using utcnow."
+
+msgid "A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is callable, it will be called with the AutocompleteContext."
+msgstr "A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is callable, it will be called with the AutocompleteContext."
+
+msgid "This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute."
+msgstr "This is meant to be passed into the :attr:`discord.Option.autocomplete` attribute."
+
+msgid "Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`."
+msgstr "Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`."
+
+msgid "A wrapped callback for the autocomplete."
+msgstr "A wrapped callback for the autocomplete."
+
+msgid "Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]"
+msgstr "Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]"
+
+msgid "Autocomplete cannot be used for options that have specified choices."
+msgstr "Autocomplete cannot be used for options that have specified choices."
+
+msgid "Example"
+msgstr "Example"
+
+msgid "A helper function that collects an iterator into chunks of a given size."
+msgstr "A helper function that collects an iterator into chunks of a given size."
+
+msgid "The last chunk collected may not be as large as ``max_size``."
+msgstr "The last chunk collected may not be as large as ``max_size``."
+
+msgid "The iterator to chunk, can be sync or async."
+msgstr "The iterator to chunk, can be sync or async."
+
+msgid "The maximum chunk size."
+msgstr "The maximum chunk size."
+
+msgid "A new iterator which yields chunks of a given size."
+msgstr "A new iterator which yields chunks of a given size."
+
+msgid "Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]"
+msgstr "Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]"
+
+msgid "A helper function to filter out and replace certain keyword parameters"
+msgstr "A helper function to filter out and replace certain keyword parameters"
+
+msgid "The initial parameters to filter."
+msgstr "The initial parameters to filter."
+
+msgid "Key to value pairs where the key's contents would be moved to the value, or if the value is None, remove key's contents (see code example)."
+msgstr "Key to value pairs where the key's contents would be moved to the value, or if the value is None, remove key's contents (see code example)."
+
+msgid "Warn about a deprecated function, with the ability to specify details about the deprecation. Emits a DeprecationWarning."
+msgstr "Warn about a deprecated function, with the ability to specify details about the deprecation. Emits a DeprecationWarning."
+
+msgid "The name of the deprecated function."
+msgstr "The name of the deprecated function."
+
+msgid "A recommended alternative to the function."
+msgstr "A recommended alternative to the function."
+
+msgid "The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where the patch version is optional."
+msgstr "The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where the patch version is optional."
+
+msgid "The version in which the function is planned to be removed. This should be in the format ``major.minor(.patch)``, where the patch version is optional."
+msgstr "The version in which the function is planned to be removed. This should be in the format ``major.minor(.patch)``, where the patch version is optional."
+
+msgid "A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub issue/PR."
+msgstr "A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub issue/PR."
+
+msgid "The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3."
+msgstr "The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when the decorated function is called."
+msgstr "A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when the decorated function is called."
+
+msgid "Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__ will display as ``login``. Defaults to ``True``."
+msgstr "Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__ will display as ``login``. Defaults to ``True``."
+
+msgid ":py:data:`~typing.Callable`\\[\\[:py:data:`~typing.Callable`\\[\\[:py:class:`~typing.ParamSpec`\\(``P``, bound= :py:obj:`None`)], :py:class:`~typing.TypeVar`\\(``T``)]], :py:data:`~typing.Callable`\\[\\[:py:class:`~typing.ParamSpec`\\(``P``, bound= :py:obj:`None`)], :py:class:`~typing.TypeVar`\\(``T``)]]"
+msgstr ":py:data:`~typing.Callable`\\[\\[:py:data:`~typing.Callable`\\[\\[:py:class:`~typing.ParamSpec`\\(``P``, bound= :py:obj:`None`)], :py:class:`~typing.TypeVar`\\(``T``)]], :py:data:`~typing.Callable`\\[\\[:py:class:`~typing.ParamSpec`\\(``P``, bound= :py:obj:`None`)], :py:class:`~typing.TypeVar`\\(``T``)]]"
+

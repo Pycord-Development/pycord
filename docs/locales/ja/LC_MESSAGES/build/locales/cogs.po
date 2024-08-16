@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Cogs"
+msgstr "Cogs"
+
+msgid "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
+msgstr "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
+
+msgid "The gist:"
+msgstr "The gist:"
+
+msgid "Each cog is a Python class that subclasses :class:`.Cog`."
+msgstr "Each cog is a Python class that subclasses :class:`.Cog`."
+
+msgid "Every command is marked with the :func:`discord.command` decorator or the corresponding shortcut command decorator."
+msgstr "Every command is marked with the :func:`discord.command` decorator or the corresponding shortcut command decorator."
+
+msgid "Every listener is marked with the :meth:`.Cog.listener` decorator."
+msgstr "Every listener is marked with the :meth:`.Cog.listener` decorator."
+
+msgid "Cogs are then registered with the :meth:`.Bot.add_cog` call."
+msgstr "Cogs are then registered with the :meth:`.Bot.add_cog` call."
+
+msgid "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
+msgstr "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
+
+msgid "Quick Example"
+msgstr "Quick Example"
+
+msgid "This example cog defines a ``Greetings`` category for your commands, with a single slash command named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
+msgstr "This example cog defines a ``Greetings`` category for your commands, with a single slash command named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
+
+msgid "A couple of technical notes to take into consideration:"
+msgstr "A couple of technical notes to take into consideration:"
+
+msgid "All listeners must be explicitly marked via decorator, :meth:`~.Cog.listener`."
+msgstr "All listeners must be explicitly marked via decorator, :meth:`~.Cog.listener`."
+
+msgid "The name of the cog is automatically derived from the class name but can be overridden."
+msgstr "The name of the cog is automatically derived from the class name but can be overridden."
+
+msgid "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
+msgstr "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
+
+msgid "Cog Registration"
+msgstr "Cog Registration"
+
+msgid "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.Bot.add_cog` method."
+msgstr "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.Bot.add_cog` method."
+
+msgid "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
+msgstr "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
+
+msgid "Using Cogs"
+msgstr "Using Cogs"
+
+msgid "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
+msgstr "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
+

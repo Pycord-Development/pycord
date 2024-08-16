@@ -1,0 +1,2 @@
+-r all.txt
+build==1.2.1
