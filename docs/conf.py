@@ -483,7 +483,6 @@ linkcheck_ignore = [
 ]
 
 modindex_common_prefix = ["discord."]
-# suppress_warnings = ['autosectionlabel.*']
 myst_enable_extensions = [
     "amsmath",
     "attrs_inline",
