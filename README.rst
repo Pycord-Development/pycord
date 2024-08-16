@@ -1,9 +1,9 @@
-Pycord
+.. image:: https://raw.githubusercontent.com/Pycord-Development/pycord-v3/main/docs/assets/pycord-v3.png
+   :alt: Pycord v3
+Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+
 ======
 
-.. image:: https://img.shields.io/discord/881207955029110855?label=discord&style=for-the-badge&logo=discord&color=5865F2&logoColor=white
-   :target: https://pycord.dev/discord
-   :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
@@ -16,11 +16,16 @@ Pycord
 .. image:: https://img.shields.io/github/v/release/Pycord-Development/pycord?include_prereleases&label=Latest%20Release&logo=github&sort=semver&style=for-the-badge&logoColor=white
    :target: https://github.com/Pycord-Development/pycord/releases
    :alt: Latest release
+
+.. image:: https://img.shields.io/discord/881207955029110855?label=discord&style=for-the-badge&logo=discord&color=5865F2&logoColor=white
+   :target: https://pycord.dev/discord
+   :alt: Discord server invite
+
 .. image:: https://badges.crowdin.net/badge/dark/crowdin-on-light.png
    :target: https://translations.pycord.dev/documentation/?utm_source=badge&utm_medium=referral&utm_campaign=badge-add-on
    :alt: Crowdin | Agile localization for tech companies
 
- Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+======
 
 Key Features
 ------------
