@@ -4,11 +4,11 @@ updates:
     directory: "/"
     groups:
       minor-version-bumps:
-        update-types: minor
+        update-types: ["minor"]
       patch-version-bumps:
-        update-types: patch
+        update-types: ["patch"]
       major-version-bumps:
-        update-types: major
+        update-types: ["major"]
     schedule:
       interval: "weekly"
     commit-message:
@@ -19,11 +19,11 @@ updates:
     directory: "/"
     groups:
       minor-version-bumps:
-        update-types: minor
+        update-types: ["minor"]
       patch-version-bumps:
-        update-types: patch
+        update-types: ["patch"]
       major-version-bumps:
-        update-types: major
+        update-types: ["major"]
     schedule:
       interval: "weekly"
     commit-message:
