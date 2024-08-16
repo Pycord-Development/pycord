@@ -1,19 +1,18 @@
-name: Multilingual Docs Upload
+name: "Multilingual Docs Upload"
 
 on:
   push:
     branches:
       - master
   workflow_dispatch:
+  
+permissions: write-all
 
 jobs:
   upload:
-    permissions: write-all
     name: "Upload localization base to Crowdin"
     runs-on: ubuntu-latest
-    if:
-      contains(github.event.head_commit.message, '!crowdin upload') || github.event_name
-      == 'workflow_dispatch'
+    if: ${{ contains(github.event.head_commit.message, '!crowdin upload') || github.event_name == 'workflow_dispatch' }}
     steps:
       - uses: actions/checkout@v4
       - name: "Install Python"
@@ -34,8 +33,7 @@ jobs:
         working-directory: ./docs
       - name: "Build locales"
         run:
-          sphinx-intl update -p ./build/locales -l ja -l de -l ja -l fr -l it -l en -l
-          hi -l ko -l pt_BR -l es -l zh_CN -l ru
+          sphinx-intl update -p ./build/locales -l ja -l de -l ja -l fr -l it -l en -l hi -l ko -l pt_BR -l es -l zh_CN -l ru
         working-directory: ./docs
       - name: "Crowdin"
         uses: crowdin/github-action@v2
