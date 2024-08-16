@@ -1,12 +1,15 @@
-name: Version Update Auto Merge
-on: [pull_request, workflow_dispatch]
+name: "Auto Approve"
 
-permissions:
-  contents: write
-  pull-requests: write
+on: [pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: write-all
 
 jobs:
-  auto-merge:
+  auto-approve:
     runs-on: ubuntu-latest
     if:
       ${{ github.actor == 'dependabot[bot]' || github.actor == 'crowdin-bot' ||
@@ -14,11 +17,14 @@ jobs:
       == 58779643 }}
     continue-on-error: true
     steps:
-      - run: gh pr review --approve "$PR_URL"
+      - name: "Auto Approve"
+        run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - run: gh pr merge --auto --squash "$PR_URL"
+      - name: "Enable Auto Merge"
+        if: ${{ always() }}
+        run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

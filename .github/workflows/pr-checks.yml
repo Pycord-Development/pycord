@@ -1,4 +1,4 @@
-name: "Lint PR"
+name: "Pull Request Checks"
 
 on:
   workflow_dispatch:
@@ -9,18 +9,22 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions: write-all
+
 jobs:
-  check_dependencies:
+  pr-dependencies:
     runs-on: ubuntu-latest
-    name: Check Dependencies
+    name: "Check PR Dependencies"
     steps:
-      - uses: gregsdennis/dependencies-action@main
+      - name: PR Dependency Check
+        uses: gregsdennis/dependencies-action@v1.4.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  check_title:
-    name: Check Title
+  semantic-title:
+    name: "Check Semantic Title"
     runs-on: ubuntu-latest
     steps:
-      - uses: amannn/action-semantic-pull-request@v5
+      - name: "Check Semantic Pull Request"
+        uses: amannn/action-semantic-pull-request@v5.5.3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
