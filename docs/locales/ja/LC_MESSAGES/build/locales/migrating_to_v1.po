@@ -1,0 +1,1507 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Migrating to v1.0"
+msgstr "Migrating to v1.0"
+
+msgid "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
+msgstr "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
+
+msgid "The amount of changes are so massive and long that for all intents and purposes, it is a completely new library."
+msgstr "The amount of changes are so massive and long that for all intents and purposes, it is a completely new library."
+
+msgid "Part of the redesign involves making things more easy to use and natural. Things are done on the :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work."
+msgstr "Part of the redesign involves making things more easy to use and natural. Things are done on the :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work."
+
+msgid "Python Version Change"
+msgstr "Python Version Change"
+
+msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
+msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
+
+msgid "Major Model Changes"
+msgstr "Major Model Changes"
+
+msgid "Below are major model changes that have happened in v1.0"
+msgstr "Below are major model changes that have happened in v1.0"
+
+msgid "Snowflakes are int"
+msgstr "Snowflakes are int"
+
+msgid "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
+msgstr "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
+
+msgid "Quick example: ::"
+msgstr "Quick example: ::"
+
+msgid "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
+msgstr "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
+
+msgid "Server is now Guild"
+msgstr "Server is now Guild"
+
+msgid "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
+msgstr "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
+
+msgid "A list of changes is as follows:"
+msgstr "A list of changes is as follows:"
+
+msgid "Before"
+msgstr "Before"
+
+msgid "After"
+msgstr "After"
+
+msgid "``Message.server``"
+msgstr "``Message.server``"
+
+msgid ":attr:`Message.guild`"
+msgstr ":attr:`Message.guild`"
+
+msgid "``Channel.server``"
+msgstr "``Channel.server``"
+
+msgid ":attr:`.GuildChannel.guild`"
+msgstr ":attr:`.GuildChannel.guild`"
+
+msgid "``Client.servers``"
+msgstr "``Client.servers``"
+
+msgid ":attr:`Client.guilds`"
+msgstr ":attr:`Client.guilds`"
+
+msgid "``Client.get_server``"
+msgstr "``Client.get_server``"
+
+msgid ":meth:`Client.get_guild`"
+msgstr ":meth:`Client.get_guild`"
+
+msgid "``Emoji.server``"
+msgstr "``Emoji.server``"
+
+msgid ":attr:`Emoji.guild`"
+msgstr ":attr:`Emoji.guild`"
+
+msgid "``Role.server``"
+msgstr "``Role.server``"
+
+msgid ":attr:`Role.guild`"
+msgstr ":attr:`Role.guild`"
+
+msgid "``Invite.server``"
+msgstr "``Invite.server``"
+
+msgid ":attr:`Invite.guild`"
+msgstr ":attr:`Invite.guild`"
+
+msgid "``Member.server``"
+msgstr "``Member.server``"
+
+msgid ":attr:`Member.guild`"
+msgstr ":attr:`Member.guild`"
+
+msgid "``Permissions.manage_server``"
+msgstr "``Permissions.manage_server``"
+
+msgid ":attr:`Permissions.manage_guild`"
+msgstr ":attr:`Permissions.manage_guild`"
+
+msgid "``VoiceClient.server``"
+msgstr "``VoiceClient.server``"
+
+msgid ":attr:`VoiceClient.guild`"
+msgstr ":attr:`VoiceClient.guild`"
+
+msgid "``Client.create_server``"
+msgstr "``Client.create_server``"
+
+msgid ":meth:`Client.create_guild`"
+msgstr ":meth:`Client.create_guild`"
+
+msgid "Models are Stateful"
+msgstr "Models are Stateful"
+
+msgid "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
+msgstr "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
+
+msgid "A list of these changes is enumerated below."
+msgstr "A list of these changes is enumerated below."
+
+msgid "``Client.add_reaction``"
+msgstr "``Client.add_reaction``"
+
+msgid ":meth:`Message.add_reaction`"
+msgstr ":meth:`Message.add_reaction`"
+
+msgid "``Client.add_roles``"
+msgstr "``Client.add_roles``"
+
+msgid ":meth:`Member.add_roles`"
+msgstr ":meth:`Member.add_roles`"
+
+msgid "``Client.ban``"
+msgstr "``Client.ban``"
+
+msgid ":meth:`Member.ban` or :meth:`Guild.ban`"
+msgstr ":meth:`Member.ban` or :meth:`Guild.ban`"
+
+msgid "``Client.change_nickname``"
+msgstr "``Client.change_nickname``"
+
+msgid ":meth:`Member.edit`"
+msgstr ":meth:`Member.edit`"
+
+msgid "``Client.clear_reactions``"
+msgstr "``Client.clear_reactions``"
+
+msgid ":meth:`Message.clear_reactions`"
+msgstr ":meth:`Message.clear_reactions`"
+
+msgid "``Client.create_channel``"
+msgstr "``Client.create_channel``"
+
+msgid ":meth:`Guild.create_text_channel` and :meth:`Guild.create_voice_channel`"
+msgstr ":meth:`Guild.create_text_channel` and :meth:`Guild.create_voice_channel`"
+
+msgid "``Client.create_custom_emoji``"
+msgstr "``Client.create_custom_emoji``"
+
+msgid ":meth:`Guild.create_custom_emoji`"
+msgstr ":meth:`Guild.create_custom_emoji`"
+
+msgid "``Client.create_invite``"
+msgstr "``Client.create_invite``"
+
+msgid ":meth:`abc.GuildChannel.create_invite`"
+msgstr ":meth:`abc.GuildChannel.create_invite`"
+
+msgid "``Client.create_role``"
+msgstr "``Client.create_role``"
+
+msgid ":meth:`Guild.create_role`"
+msgstr ":meth:`Guild.create_role`"
+
+msgid "``Client.delete_channel``"
+msgstr "``Client.delete_channel``"
+
+msgid ":meth:`abc.GuildChannel.delete`"
+msgstr ":meth:`abc.GuildChannel.delete`"
+
+msgid "``Client.delete_channel_permissions``"
+msgstr "``Client.delete_channel_permissions``"
+
+msgid ":meth:`abc.GuildChannel.set_permissions` with ``overwrite`` set to ``None``"
+msgstr ":meth:`abc.GuildChannel.set_permissions` with ``overwrite`` set to ``None``"
+
+msgid "``Client.delete_custom_emoji``"
+msgstr "``Client.delete_custom_emoji``"
+
+msgid ":meth:`Emoji.delete`"
+msgstr ":meth:`Emoji.delete`"
+
+msgid "``Client.delete_invite``"
+msgstr "``Client.delete_invite``"
+
+msgid ":meth:`Invite.delete` or :meth:`Client.delete_invite`"
+msgstr ":meth:`Invite.delete` or :meth:`Client.delete_invite`"
+
+msgid "``Client.delete_message``"
+msgstr "``Client.delete_message``"
+
+msgid ":meth:`Message.delete`"
+msgstr ":meth:`Message.delete`"
+
+msgid "``Client.delete_messages``"
+msgstr "``Client.delete_messages``"
+
+msgid ":meth:`TextChannel.delete_messages`"
+msgstr ":meth:`TextChannel.delete_messages`"
+
+msgid "``Client.delete_role``"
+msgstr "``Client.delete_role``"
+
+msgid ":meth:`Role.delete`"
+msgstr ":meth:`Role.delete`"
+
+msgid "``Client.delete_server``"
+msgstr "``Client.delete_server``"
+
+msgid ":meth:`Guild.delete`"
+msgstr ":meth:`Guild.delete`"
+
+msgid "``Client.edit_channel``"
+msgstr "``Client.edit_channel``"
+
+msgid ":meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`"
+msgstr ":meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`"
+
+msgid "``Client.edit_channel_permissions``"
+msgstr "``Client.edit_channel_permissions``"
+
+msgid ":meth:`abc.GuildChannel.set_permissions`"
+msgstr ":meth:`abc.GuildChannel.set_permissions`"
+
+msgid "``Client.edit_custom_emoji``"
+msgstr "``Client.edit_custom_emoji``"
+
+msgid ":meth:`Emoji.edit`"
+msgstr ":meth:`Emoji.edit`"
+
+msgid "``Client.edit_message``"
+msgstr "``Client.edit_message``"
+
+msgid ":meth:`Message.edit`"
+msgstr ":meth:`Message.edit`"
+
+msgid "``Client.edit_profile``"
+msgstr "``Client.edit_profile``"
+
+msgid ":meth:`ClientUser.edit` (you get this from :attr:`Client.user`)"
+msgstr ":meth:`ClientUser.edit` (you get this from :attr:`Client.user`)"
+
+msgid "``Client.edit_role``"
+msgstr "``Client.edit_role``"
+
+msgid ":meth:`Role.edit`"
+msgstr ":meth:`Role.edit`"
+
+msgid "``Client.edit_server``"
+msgstr "``Client.edit_server``"
+
+msgid ":meth:`Guild.edit`"
+msgstr ":meth:`Guild.edit`"
+
+msgid "``Client.estimate_pruned_members``"
+msgstr "``Client.estimate_pruned_members``"
+
+msgid ":meth:`Guild.estimate_pruned_members`"
+msgstr ":meth:`Guild.estimate_pruned_members`"
+
+msgid "``Client.get_all_emojis``"
+msgstr "``Client.get_all_emojis``"
+
+msgid ":attr:`Client.emojis`"
+msgstr ":attr:`Client.emojis`"
+
+msgid "``Client.get_bans``"
+msgstr "``Client.get_bans``"
+
+msgid ":meth:`Guild.bans`"
+msgstr ":meth:`Guild.bans`"
+
+msgid "``Client.get_invite``"
+msgstr "``Client.get_invite``"
+
+msgid ":meth:`Client.fetch_invite`"
+msgstr ":meth:`Client.fetch_invite`"
+
+msgid "``Client.get_message``"
+msgstr "``Client.get_message``"
+
+msgid ":meth:`abc.Messageable.fetch_message`"
+msgstr ":meth:`abc.Messageable.fetch_message`"
+
+msgid "``Client.get_reaction_users``"
+msgstr "``Client.get_reaction_users``"
+
+msgid ":meth:`Reaction.users`"
+msgstr ":meth:`Reaction.users`"
+
+msgid "``Client.get_user_info``"
+msgstr "``Client.get_user_info``"
+
+msgid ":meth:`Client.fetch_user`"
+msgstr ":meth:`Client.fetch_user`"
+
+msgid "``Client.invites_from``"
+msgstr "``Client.invites_from``"
+
+msgid ":meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`"
+msgstr ":meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`"
+
+msgid "``Client.join_voice_channel``"
+msgstr "``Client.join_voice_channel``"
+
+msgid ":meth:`VoiceChannel.connect` (see :ref:`migrating_1_0_voice`)"
+msgstr ":meth:`VoiceChannel.connect` (see :ref:`migrating_1_0_voice`)"
+
+msgid "``Client.kick``"
+msgstr "``Client.kick``"
+
+msgid ":meth:`Guild.kick` or :meth:`Member.kick`"
+msgstr ":meth:`Guild.kick` or :meth:`Member.kick`"
+
+msgid "``Client.leave_server``"
+msgstr "``Client.leave_server``"
+
+msgid ":meth:`Guild.leave`"
+msgstr ":meth:`Guild.leave`"
+
+msgid "``Client.logs_from``"
+msgstr "``Client.logs_from``"
+
+msgid ":meth:`abc.Messageable.history` (see :ref:`migrating_1_0_async_iter`)"
+msgstr ":meth:`abc.Messageable.history` (see :ref:`migrating_1_0_async_iter`)"
+
+msgid "``Client.move_channel``"
+msgstr "``Client.move_channel``"
+
+msgid "``Client.move_member``"
+msgstr "``Client.move_member``"
+
+msgid "``Client.move_role``"
+msgstr "``Client.move_role``"
+
+msgid "``Client.pin_message``"
+msgstr "``Client.pin_message``"
+
+msgid ":meth:`Message.pin`"
+msgstr ":meth:`Message.pin`"
+
+msgid "``Client.pins_from``"
+msgstr "``Client.pins_from``"
+
+msgid ":meth:`abc.Messageable.pins`"
+msgstr ":meth:`abc.Messageable.pins`"
+
+msgid "``Client.prune_members``"
+msgstr "``Client.prune_members``"
+
+msgid ":meth:`Guild.prune_members`"
+msgstr ":meth:`Guild.prune_members`"
+
+msgid "``Client.purge_from``"
+msgstr "``Client.purge_from``"
+
+msgid ":meth:`TextChannel.purge`"
+msgstr ":meth:`TextChannel.purge`"
+
+msgid "``Client.remove_reaction``"
+msgstr "``Client.remove_reaction``"
+
+msgid ":meth:`Message.remove_reaction`"
+msgstr ":meth:`Message.remove_reaction`"
+
+msgid "``Client.remove_roles``"
+msgstr "``Client.remove_roles``"
+
+msgid ":meth:`Member.remove_roles`"
+msgstr ":meth:`Member.remove_roles`"
+
+msgid "``Client.replace_roles``"
+msgstr "``Client.replace_roles``"
+
+msgid "``Client.send_file``"
+msgstr "``Client.send_file``"
+
+msgid ":meth:`abc.Messageable.send` (see :ref:`migrating_1_0_sending_messages`)"
+msgstr ":meth:`abc.Messageable.send` (see :ref:`migrating_1_0_sending_messages`)"
+
+msgid "``Client.send_message``"
+msgstr "``Client.send_message``"
+
+msgid "``Client.send_typing``"
+msgstr "``Client.send_typing``"
+
+msgid ":meth:`abc.Messageable.trigger_typing` (use :meth:`abc.Messageable.typing`)"
+msgstr ":meth:`abc.Messageable.trigger_typing` (use :meth:`abc.Messageable.typing`)"
+
+msgid "``Client.server_voice_state``"
+msgstr "``Client.server_voice_state``"
+
+msgid "``Client.start_private_message``"
+msgstr "``Client.start_private_message``"
+
+msgid ":meth:`User.create_dm`"
+msgstr ":meth:`User.create_dm`"
+
+msgid "``Client.unban``"
+msgstr "``Client.unban``"
+
+msgid ":meth:`Guild.unban` or :meth:`Member.unban`"
+msgstr ":meth:`Guild.unban` or :meth:`Member.unban`"
+
+msgid "``Client.unpin_message``"
+msgstr "``Client.unpin_message``"
+
+msgid ":meth:`Message.unpin`"
+msgstr ":meth:`Message.unpin`"
+
+msgid "``Client.wait_for_message``"
+msgstr "``Client.wait_for_message``"
+
+msgid ":meth:`Client.wait_for` (see :ref:`migrating_1_0_wait_for`)"
+msgstr ":meth:`Client.wait_for` (see :ref:`migrating_1_0_wait_for`)"
+
+msgid "``Client.wait_for_reaction``"
+msgstr "``Client.wait_for_reaction``"
+
+msgid "``Client.wait_until_login``"
+msgstr "``Client.wait_until_login``"
+
+msgid "Removed"
+msgstr "Removed"
+
+msgid "``Client.wait_until_ready``"
+msgstr "``Client.wait_until_ready``"
+
+msgid "No change"
+msgstr "No change"
+
+msgid "Property Changes"
+msgstr "Property Changes"
+
+msgid "In order to be a bit more consistent, certain things that were properties were changed to methods instead."
+msgstr "In order to be a bit more consistent, certain things that were properties were changed to methods instead."
+
+msgid "The following are now methods instead of properties (requires parentheses):"
+msgstr "The following are now methods instead of properties (requires parentheses):"
+
+msgid ":meth:`Role.is_default`"
+msgstr ":meth:`Role.is_default`"
+
+msgid ":meth:`Client.is_ready`"
+msgstr ":meth:`Client.is_ready`"
+
+msgid ":meth:`Client.is_closed`"
+msgstr ":meth:`Client.is_closed`"
+
+msgid "Dict Value Change"
+msgstr "Dict Value Change"
+
+msgid "Prior to v1.0 some aggregating properties that retrieved models would return \"dict view\" objects."
+msgstr "Prior to v1.0 some aggregating properties that retrieved models would return \"dict view\" objects."
+
+msgid "As a consequence, when the dict would change size while you would iterate over it, a RuntimeError would be raised and crash the task. To alleviate this, the \"dict view\" objects were changed into lists."
+msgstr "As a consequence, when the dict would change size while you would iterate over it, a RuntimeError would be raised and crash the task. To alleviate this, the \"dict view\" objects were changed into lists."
+
+msgid "The following views were changed to a list:"
+msgstr "The following views were changed to a list:"
+
+msgid ":attr:`Client.users` (new in v1.0)"
+msgstr ":attr:`Client.users` (new in v1.0)"
+
+msgid ":attr:`Client.emojis` (new in v1.0)"
+msgstr ":attr:`Client.emojis` (new in v1.0)"
+
+msgid ":attr:`Guild.channels`"
+msgstr ":attr:`Guild.channels`"
+
+msgid ":attr:`Guild.text_channels` (new in v1.0)"
+msgstr ":attr:`Guild.text_channels` (new in v1.0)"
+
+msgid ":attr:`Guild.voice_channels` (new in v1.0)"
+msgstr ":attr:`Guild.voice_channels` (new in v1.0)"
+
+msgid ":attr:`Guild.emojis`"
+msgstr ":attr:`Guild.emojis`"
+
+msgid ":attr:`Guild.members`"
+msgstr ":attr:`Guild.members`"
+
+msgid "Voice State Changes"
+msgstr "Voice State Changes"
+
+msgid "Earlier, in v0.11.0 a :class:`VoiceState` class was added to refer to voice states along with a :attr:`Member.voice` attribute to refer to it."
+msgstr "Earlier, in v0.11.0 a :class:`VoiceState` class was added to refer to voice states along with a :attr:`Member.voice` attribute to refer to it."
+
+msgid "However, it was transparent to the user. In an effort to make the library save more memory, the voice state change is now more visible."
+msgstr "However, it was transparent to the user. In an effort to make the library save more memory, the voice state change is now more visible."
+
+msgid "The only way to access voice attributes is via the :attr:`Member.voice` attribute. Note that if the member does not have a voice state this attribute can be ``None``."
+msgstr "The only way to access voice attributes is via the :attr:`Member.voice` attribute. Note that if the member does not have a voice state this attribute can be ``None``."
+
+msgid "User and Member Type Split"
+msgstr "User and Member Type Split"
+
+msgid "In v1.0 to save memory, :class:`User` and :class:`Member` are no longer inherited. Instead, they are \"flattened\" by having equivalent properties that map out to the functional underlying :class:`User`. Thus, there is no functional change in how they are used. However this breaks :func:`isinstance` checks and thus is something to keep in mind."
+msgstr "In v1.0 to save memory, :class:`User` and :class:`Member` are no longer inherited. Instead, they are \"flattened\" by having equivalent properties that map out to the functional underlying :class:`User`. Thus, there is no functional change in how they are used. However this breaks :func:`isinstance` checks and thus is something to keep in mind."
+
+msgid "These memory savings were accomplished by having a global :class:`User` cache, and as a positive consequence you can now easily fetch a :class:`User` by their ID by using the new :meth:`Client.get_user`. You can also get a list of all :class:`User` your client can see with :attr:`Client.users`."
+msgstr "These memory savings were accomplished by having a global :class:`User` cache, and as a positive consequence you can now easily fetch a :class:`User` by their ID by using the new :meth:`Client.get_user`. You can also get a list of all :class:`User` your client can see with :attr:`Client.users`."
+
+msgid "Channel Type Split"
+msgstr "Channel Type Split"
+
+msgid "Prior to v1.0, channels were two different types, ``Channel`` and ``PrivateChannel`` with a ``is_private`` property to help differentiate between them."
+msgstr "Prior to v1.0, channels were two different types, ``Channel`` and ``PrivateChannel`` with a ``is_private`` property to help differentiate between them."
+
+msgid "In order to save memory the channels have been split into 4 different types:"
+msgstr "In order to save memory the channels have been split into 4 different types:"
+
+msgid ":class:`TextChannel` for guild text channels."
+msgstr ":class:`TextChannel` for guild text channels."
+
+msgid ":class:`VoiceChannel` for guild voice channels."
+msgstr ":class:`VoiceChannel` for guild voice channels."
+
+msgid ":class:`DMChannel` for DM channels with members."
+msgstr ":class:`DMChannel` for DM channels with members."
+
+msgid ":class:`GroupChannel` for Group DM channels with members."
+msgstr ":class:`GroupChannel` for Group DM channels with members."
+
+msgid "With this split came the removal of the ``is_private`` attribute. You should now use :func:`isinstance`."
+msgstr "With this split came the removal of the ``is_private`` attribute. You should now use :func:`isinstance`."
+
+msgid "The types are split into two different :ref:`discord_api_abcs`:"
+msgstr "The types are split into two different :ref:`discord_api_abcs`:"
+
+msgid ":class:`abc.GuildChannel` for guild channels."
+msgstr ":class:`abc.GuildChannel` for guild channels."
+
+msgid ":class:`abc.PrivateChannel` for private channels (DMs and group DMs)."
+msgstr ":class:`abc.PrivateChannel` for private channels (DMs and group DMs)."
+
+msgid "So to check if something is a guild channel you would do: ::"
+msgstr "So to check if something is a guild channel you would do: ::"
+
+msgid "And to check if it's a private channel you would do: ::"
+msgstr "And to check if it's a private channel you would do: ::"
+
+msgid "Of course, if you're looking for only a specific type you can pass that too, e.g. ::"
+msgstr "Of course, if you're looking for only a specific type you can pass that too, e.g. ::"
+
+msgid "With this type split also came event changes, which are enumerated in :ref:`migrating_1_0_event_changes`."
+msgstr "With this type split also came event changes, which are enumerated in :ref:`migrating_1_0_event_changes`."
+
+msgid "Miscellaneous Model Changes"
+msgstr "Miscellaneous Model Changes"
+
+msgid "There were lots of other things added or removed in the models in general."
+msgstr "There were lots of other things added or removed in the models in general."
+
+msgid "They will be enumerated here."
+msgstr "They will be enumerated here."
+
+msgid "**Removed**"
+msgstr "**Removed**"
+
+msgid ":meth:`Client.login` no longer accepts email and password logins."
+msgstr ":meth:`Client.login` no longer accepts email and password logins."
+
+msgid "Use a token and ``bot=False``."
+msgstr "Use a token and ``bot=False``."
+
+msgid "Use :attr:`Client.emojis` instead."
+msgstr "Use :attr:`Client.emojis` instead."
+
+msgid "``Client.messages``"
+msgstr "``Client.messages``"
+
+msgid "Use read-only :attr:`Client.cached_messages` instead."
+msgstr "Use read-only :attr:`Client.cached_messages` instead."
+
+msgid "``Client.wait_for_message`` and ``Client.wait_for_reaction`` are gone."
+msgstr "``Client.wait_for_message`` and ``Client.wait_for_reaction`` are gone."
+
+msgid "Use :meth:`Client.wait_for` instead."
+msgstr "Use :meth:`Client.wait_for` instead."
+
+msgid "``Channel.voice_members``"
+msgstr "``Channel.voice_members``"
+
+msgid "Use :attr:`VoiceChannel.members` instead."
+msgstr "Use :attr:`VoiceChannel.members` instead."
+
+msgid "``Channel.is_private``"
+msgstr "``Channel.is_private``"
+
+msgid "Use ``isinstance`` instead with one of the :ref:`discord_api_abcs` instead."
+msgstr "Use ``isinstance`` instead with one of the :ref:`discord_api_abcs` instead."
+
+msgid "e.g. ``isinstance(channel, discord.abc.GuildChannel)`` will check if it isn't a private channel."
+msgstr "e.g. ``isinstance(channel, discord.abc.GuildChannel)`` will check if it isn't a private channel."
+
+msgid "``Client.accept_invite``"
+msgstr "``Client.accept_invite``"
+
+msgid "There is no replacement for this one. This functionality is deprecated API wise."
+msgstr "There is no replacement for this one. This functionality is deprecated API wise."
+
+msgid "``Guild.default_channel`` / ``Server.default_channel`` and ``Channel.is_default``"
+msgstr "``Guild.default_channel`` / ``Server.default_channel`` and ``Channel.is_default``"
+
+msgid "The concept of a default channel was removed from Discord. See `#329 <https://github.com/hammerandchisel/discord-api-docs/pull/329>`_."
+msgstr "The concept of a default channel was removed from Discord. See `#329 <https://github.com/hammerandchisel/discord-api-docs/pull/329>`_."
+
+msgid "``Message.edited_timestamp``"
+msgstr "``Message.edited_timestamp``"
+
+msgid "Use :attr:`Message.edited_at` instead."
+msgstr "Use :attr:`Message.edited_at` instead."
+
+msgid "``Message.timestamp``"
+msgstr "``Message.timestamp``"
+
+msgid "Use :attr:`Message.created_at` instead."
+msgstr "Use :attr:`Message.created_at` instead."
+
+msgid "``Colour.to_tuple()``"
+msgstr "``Colour.to_tuple()``"
+
+msgid "Use :meth:`Colour.to_rgb` instead."
+msgstr "Use :meth:`Colour.to_rgb` instead."
+
+msgid "``Permissions.view_audit_logs``"
+msgstr "``Permissions.view_audit_logs``"
+
+msgid "Use :attr:`Permissions.view_audit_log` instead."
+msgstr "Use :attr:`Permissions.view_audit_log` instead."
+
+msgid "``Member.game``"
+msgstr "``Member.game``"
+
+msgid "Use :attr:`Member.activities` instead."
+msgstr "Use :attr:`Member.activities` instead."
+
+msgid "``Guild.role_hierarchy`` / ``Server.role_hierarchy``"
+msgstr "``Guild.role_hierarchy`` / ``Server.role_hierarchy``"
+
+msgid "Use :attr:`Guild.roles` instead. Note that while sorted, it is in the opposite order of what the old ``Guild.role_hierarchy`` used to be."
+msgstr "Use :attr:`Guild.roles` instead. Note that while sorted, it is in the opposite order of what the old ``Guild.role_hierarchy`` used to be."
+
+msgid "**Changed**"
+msgstr "**Changed**"
+
+msgid ":attr:`Member.avatar_url` and :attr:`User.avatar_url` now return the default avatar if a custom one is not set."
+msgstr ":attr:`Member.avatar_url` and :attr:`User.avatar_url` now return the default avatar if a custom one is not set."
+
+msgid ":attr:`Message.embeds` is now a list of :class:`Embed` instead of :class:`dict` objects."
+msgstr ":attr:`Message.embeds` is now a list of :class:`Embed` instead of :class:`dict` objects."
+
+msgid ":attr:`Message.attachments` is now a list of :class:`Attachment` instead of :class:`dict` object."
+msgstr ":attr:`Message.attachments` is now a list of :class:`Attachment` instead of :class:`dict` object."
+
+msgid ":attr:`Guild.roles` is now sorted through hierarchy. The first element is always the ``@everyone`` role."
+msgstr ":attr:`Guild.roles` is now sorted through hierarchy. The first element is always the ``@everyone`` role."
+
+msgid "**Added**"
+msgstr "**Added**"
+
+msgid ":class:`Attachment` to represent a discord attachment."
+msgstr ":class:`Attachment` to represent a discord attachment."
+
+msgid ":class:`CategoryChannel` to represent a channel category."
+msgstr ":class:`CategoryChannel` to represent a channel category."
+
+msgid ":attr:`VoiceChannel.members` for fetching members connected to a voice channel."
+msgstr ":attr:`VoiceChannel.members` for fetching members connected to a voice channel."
+
+msgid ":attr:`TextChannel.members` for fetching members that can see the channel."
+msgstr ":attr:`TextChannel.members` for fetching members that can see the channel."
+
+msgid ":attr:`Role.members` for fetching members that have the role."
+msgstr ":attr:`Role.members` for fetching members that have the role."
+
+msgid ":attr:`Guild.text_channels` for fetching text channels only."
+msgstr ":attr:`Guild.text_channels` for fetching text channels only."
+
+msgid ":attr:`Guild.voice_channels` for fetching voice channels only."
+msgstr ":attr:`Guild.voice_channels` for fetching voice channels only."
+
+msgid ":attr:`Guild.categories` for fetching channel categories only."
+msgstr ":attr:`Guild.categories` for fetching channel categories only."
+
+msgid ":attr:`TextChannel.category` and :attr:`VoiceChannel.category` to get the category a channel belongs to."
+msgstr ":attr:`TextChannel.category` and :attr:`VoiceChannel.category` to get the category a channel belongs to."
+
+msgid ":meth:`Guild.by_category` to get channels grouped by their category."
+msgstr ":meth:`Guild.by_category` to get channels grouped by their category."
+
+msgid ":attr:`Guild.chunked` to check member chunking status."
+msgstr ":attr:`Guild.chunked` to check member chunking status."
+
+msgid ":attr:`Guild.explicit_content_filter` to fetch the content filter."
+msgstr ":attr:`Guild.explicit_content_filter` to fetch the content filter."
+
+msgid ":attr:`Guild.shard_id` to get a guild's Shard ID if you're sharding."
+msgstr ":attr:`Guild.shard_id` to get a guild's Shard ID if you're sharding."
+
+msgid ":attr:`Client.users` to get all visible :class:`User` instances."
+msgstr ":attr:`Client.users` to get all visible :class:`User` instances."
+
+msgid ":meth:`Client.get_user` to get a :class:`User` by ID."
+msgstr ":meth:`Client.get_user` to get a :class:`User` by ID."
+
+msgid ":meth:`User.avatar_url_as` to get an avatar in a specific size or format."
+msgstr ":meth:`User.avatar_url_as` to get an avatar in a specific size or format."
+
+msgid ":meth:`Guild.vanity_invite` to fetch the guild's vanity invite."
+msgstr ":meth:`Guild.vanity_invite` to fetch the guild's vanity invite."
+
+msgid ":meth:`Guild.audit_logs` to fetch the guild's audit logs."
+msgstr ":meth:`Guild.audit_logs` to fetch the guild's audit logs."
+
+msgid ":attr:`Message.webhook_id` to fetch the message's webhook ID."
+msgstr ":attr:`Message.webhook_id` to fetch the message's webhook ID."
+
+msgid ":attr:`Message.activity` and :attr:`Message.application` for Rich Presence related information."
+msgstr ":attr:`Message.activity` and :attr:`Message.application` for Rich Presence related information."
+
+msgid ":meth:`TextChannel.is_nsfw` to check if a text channel is NSFW."
+msgstr ":meth:`TextChannel.is_nsfw` to check if a text channel is NSFW."
+
+msgid ":meth:`Colour.from_rgb` to construct a :class:`Colour` from RGB tuple."
+msgstr ":meth:`Colour.from_rgb` to construct a :class:`Colour` from RGB tuple."
+
+msgid ":meth:`Guild.get_role` to get a role by its ID."
+msgstr ":meth:`Guild.get_role` to get a role by its ID."
+
+msgid "Sending Messages"
+msgstr "Sending Messages"
+
+msgid "One of the changes that were done was the merger of the previous ``Client.send_message`` and ``Client.send_file`` functionality into a single method, :meth:`~abc.Messageable.send`."
+msgstr "One of the changes that were done was the merger of the previous ``Client.send_message`` and ``Client.send_file`` functionality into a single method, :meth:`~abc.Messageable.send`."
+
+msgid "Basically: ::"
+msgstr "Basically: ::"
+
+msgid "This supports everything that the old ``send_message`` supported such as embeds: ::"
+msgstr "This supports everything that the old ``send_message`` supported such as embeds: ::"
+
+msgid "There is a caveat with sending files however, as this functionality was expanded to support multiple file attachments, you must now use a :class:`File` pseudo-namedtuple to upload a single file. ::"
+msgstr "There is a caveat with sending files however, as this functionality was expanded to support multiple file attachments, you must now use a :class:`File` pseudo-namedtuple to upload a single file. ::"
+
+msgid "This change was to facilitate multiple file uploads: ::"
+msgstr "This change was to facilitate multiple file uploads: ::"
+
+msgid "Asynchronous Iterators"
+msgstr "Asynchronous Iterators"
+
+msgid "Prior to v1.0, certain functions like ``Client.logs_from`` would return a different type if done in Python 3.4 or 3.5+."
+msgstr "Prior to v1.0, certain functions like ``Client.logs_from`` would return a different type if done in Python 3.4 or 3.5+."
+
+msgid "In v1.0, this change has been reverted and will now return a singular type meeting an abstract concept called :class:`AsyncIterator`."
+msgstr "In v1.0, this change has been reverted and will now return a singular type meeting an abstract concept called :class:`AsyncIterator`."
+
+msgid "This allows you to iterate over it like normal: ::"
+msgstr "This allows you to iterate over it like normal: ::"
+
+msgid "Or turn it into a list: ::"
+msgstr "Or turn it into a list: ::"
+
+msgid "A handy aspect of returning :class:`AsyncIterator` is that it allows you to chain functions together such as :meth:`AsyncIterator.map` or :meth:`AsyncIterator.filter`: ::"
+msgstr "A handy aspect of returning :class:`AsyncIterator` is that it allows you to chain functions together such as :meth:`AsyncIterator.map` or :meth:`AsyncIterator.filter`: ::"
+
+msgid "The functions passed to :meth:`AsyncIterator.map` or :meth:`AsyncIterator.filter` can be either coroutines or regular functions."
+msgstr "The functions passed to :meth:`AsyncIterator.map` or :meth:`AsyncIterator.filter` can be either coroutines or regular functions."
+
+msgid "You can also get single elements a la :func:`discord.utils.find` or :func:`discord.utils.get` via :meth:`AsyncIterator.get` or :meth:`AsyncIterator.find`: ::"
+msgstr "You can also get single elements a la :func:`discord.utils.find` or :func:`discord.utils.get` via :meth:`AsyncIterator.get` or :meth:`AsyncIterator.find`: ::"
+
+msgid "The following return :class:`AsyncIterator`:"
+msgstr "The following return :class:`AsyncIterator`:"
+
+msgid ":meth:`abc.Messageable.history`"
+msgstr ":meth:`abc.Messageable.history`"
+
+msgid ":meth:`Guild.audit_logs`"
+msgstr ":meth:`Guild.audit_logs`"
+
+msgid "Event Changes"
+msgstr "Event Changes"
+
+msgid "A lot of events have gone through some changes."
+msgstr "A lot of events have gone through some changes."
+
+msgid "Many events with ``server`` in the name were changed to use ``guild`` instead."
+msgstr "Many events with ``server`` in the name were changed to use ``guild`` instead."
+
+msgid "Before:"
+msgstr "Before:"
+
+msgid "``on_server_join``"
+msgstr "``on_server_join``"
+
+msgid "``on_server_remove``"
+msgstr "``on_server_remove``"
+
+msgid "``on_server_update``"
+msgstr "``on_server_update``"
+
+msgid "``on_server_role_create``"
+msgstr "``on_server_role_create``"
+
+msgid "``on_server_role_delete``"
+msgstr "``on_server_role_delete``"
+
+msgid "``on_server_role_update``"
+msgstr "``on_server_role_update``"
+
+msgid "``on_server_emojis_update``"
+msgstr "``on_server_emojis_update``"
+
+msgid "``on_server_available``"
+msgstr "``on_server_available``"
+
+msgid "``on_server_unavailable``"
+msgstr "``on_server_unavailable``"
+
+msgid "After:"
+msgstr "After:"
+
+msgid ":func:`on_guild_join`"
+msgstr ":func:`on_guild_join`"
+
+msgid ":func:`on_guild_remove`"
+msgstr ":func:`on_guild_remove`"
+
+msgid ":func:`on_guild_update`"
+msgstr ":func:`on_guild_update`"
+
+msgid ":func:`on_guild_role_create`"
+msgstr ":func:`on_guild_role_create`"
+
+msgid ":func:`on_guild_role_delete`"
+msgstr ":func:`on_guild_role_delete`"
+
+msgid ":func:`on_guild_role_update`"
+msgstr ":func:`on_guild_role_update`"
+
+msgid ":func:`on_guild_emojis_update`"
+msgstr ":func:`on_guild_emojis_update`"
+
+msgid ":func:`on_guild_available`"
+msgstr ":func:`on_guild_available`"
+
+msgid ":func:`on_guild_unavailable`"
+msgstr ":func:`on_guild_unavailable`"
+
+msgid "The :func:`on_voice_state_update` event has received an argument change."
+msgstr "The :func:`on_voice_state_update` event has received an argument change."
+
+msgid "Before: ::"
+msgstr "Before: ::"
+
+msgid "After: ::"
+msgstr "After: ::"
+
+msgid "Instead of two :class:`Member` objects, the new event takes one :class:`Member` object and two :class:`VoiceState` objects."
+msgstr "Instead of two :class:`Member` objects, the new event takes one :class:`Member` object and two :class:`VoiceState` objects."
+
+msgid "The :func:`on_guild_emojis_update` event has received an argument change."
+msgstr "The :func:`on_guild_emojis_update` event has received an argument change."
+
+msgid "The first argument is now the :class:`Guild` that the emojis were updated from."
+msgstr "The first argument is now the :class:`Guild` that the emojis were updated from."
+
+msgid "The :func:`on_member_ban` event has received an argument change as well:"
+msgstr "The :func:`on_member_ban` event has received an argument change as well:"
+
+msgid "As part of the change, the event can either receive a :class:`User` or :class:`Member`. To help in the cases that have :class:`User`, the :class:`Guild` is provided as the first parameter."
+msgstr "As part of the change, the event can either receive a :class:`User` or :class:`Member`. To help in the cases that have :class:`User`, the :class:`Guild` is provided as the first parameter."
+
+msgid "The ``on_channel_`` events have received a type level split (see :ref:`migrating_1_0_channel_split`)."
+msgstr "The ``on_channel_`` events have received a type level split (see :ref:`migrating_1_0_channel_split`)."
+
+msgid "``on_channel_delete``"
+msgstr "``on_channel_delete``"
+
+msgid "``on_channel_create``"
+msgstr "``on_channel_create``"
+
+msgid "``on_channel_update``"
+msgstr "``on_channel_update``"
+
+msgid ":func:`on_guild_channel_delete`"
+msgstr ":func:`on_guild_channel_delete`"
+
+msgid ":func:`on_guild_channel_create`"
+msgstr ":func:`on_guild_channel_create`"
+
+msgid ":func:`on_guild_channel_update`"
+msgstr ":func:`on_guild_channel_update`"
+
+msgid ":func:`on_private_channel_delete`"
+msgstr ":func:`on_private_channel_delete`"
+
+msgid ":func:`on_private_channel_create`"
+msgstr ":func:`on_private_channel_create`"
+
+msgid ":func:`on_private_channel_update`"
+msgstr ":func:`on_private_channel_update`"
+
+msgid "The ``on_guild_channel_`` events correspond to :class:`abc.GuildChannel` being updated (i.e. :class:`TextChannel` and :class:`VoiceChannel`) and the ``on_private_channel_`` events correspond to :class:`abc.PrivateChannel` being updated (i.e. :class:`DMChannel` and :class:`GroupChannel`)."
+msgstr "The ``on_guild_channel_`` events correspond to :class:`abc.GuildChannel` being updated (i.e. :class:`TextChannel` and :class:`VoiceChannel`) and the ``on_private_channel_`` events correspond to :class:`abc.PrivateChannel` being updated (i.e. :class:`DMChannel` and :class:`GroupChannel`)."
+
+msgid "Voice Changes"
+msgstr "Voice Changes"
+
+msgid "Voice sending has gone through a complete redesign."
+msgstr "Voice sending has gone through a complete redesign."
+
+msgid "In particular:"
+msgstr "In particular:"
+
+msgid "Connection is done through :meth:`VoiceChannel.connect` instead of ``Client.join_voice_channel``."
+msgstr "Connection is done through :meth:`VoiceChannel.connect` instead of ``Client.join_voice_channel``."
+
+msgid "You no longer create players and operate on them (you no longer store them)."
+msgstr "You no longer create players and operate on them (you no longer store them)."
+
+msgid "You instead request :class:`VoiceClient` to play an :class:`AudioSource` via :meth:`VoiceClient.play`."
+msgstr "You instead request :class:`VoiceClient` to play an :class:`AudioSource` via :meth:`VoiceClient.play`."
+
+msgid "There are different built-in :class:`AudioSource`\\s."
+msgstr "There are different built-in :class:`AudioSource`\\s."
+
+msgid ":class:`FFmpegPCMAudio` is the equivalent of ``create_ffmpeg_player``"
+msgstr ":class:`FFmpegPCMAudio` is the equivalent of ``create_ffmpeg_player``"
+
+msgid "create_ffmpeg_player/create_stream_player/create_ytdl_player have all been removed."
+msgstr "create_ffmpeg_player/create_stream_player/create_ytdl_player have all been removed."
+
+msgid "The goal is to create :class:`AudioSource` instead."
+msgstr "The goal is to create :class:`AudioSource` instead."
+
+msgid "Using :meth:`VoiceClient.play` will not return an ``AudioPlayer``."
+msgstr "Using :meth:`VoiceClient.play` will not return an ``AudioPlayer``."
+
+msgid "Instead, it's \"flattened\" like :class:`User` -> :class:`Member` is."
+msgstr "Instead, it's \"flattened\" like :class:`User` -> :class:`Member` is."
+
+msgid "The ``after`` parameter now takes a single parameter (the error)."
+msgstr "The ``after`` parameter now takes a single parameter (the error)."
+
+msgid "Basically:"
+msgstr "Basically:"
+
+msgid "With the changed :class:`AudioSource` design, you can now change the source that the :class:`VoiceClient` is playing at runtime via :attr:`VoiceClient.source`."
+msgstr "With the changed :class:`AudioSource` design, you can now change the source that the :class:`VoiceClient` is playing at runtime via :attr:`VoiceClient.source`."
+
+msgid "For example, you can add a :class:`PCMVolumeTransformer` to allow changing the volume: ::"
+msgstr "For example, you can add a :class:`PCMVolumeTransformer` to allow changing the volume: ::"
+
+msgid "An added benefit of the redesign is that it will be much more resilient towards reconnections:"
+msgstr "An added benefit of the redesign is that it will be much more resilient towards reconnections:"
+
+msgid "The voice websocket will now automatically re-connect and re-do the handshake when disconnected."
+msgstr "The voice websocket will now automatically re-connect and re-do the handshake when disconnected."
+
+msgid "The initial connect handshake will now retry up to 5 times so you no longer get as many ``asyncio.TimeoutError``."
+msgstr "The initial connect handshake will now retry up to 5 times so you no longer get as many ``asyncio.TimeoutError``."
+
+msgid "Audio will now stop and resume when a disconnect is found."
+msgstr "Audio will now stop and resume when a disconnect is found."
+
+msgid "This includes changing voice regions etc."
+msgstr "This includes changing voice regions etc."
+
+msgid "Waiting For Events"
+msgstr "Waiting For Events"
+
+msgid "Prior to v1.0, the machinery for waiting for an event outside of the event itself was done through two different functions, ``Client.wait_for_message`` and ``Client.wait_for_reaction``. One problem with one such approach is that it did not allow you to wait for events outside of the ones provided by the library."
+msgstr "Prior to v1.0, the machinery for waiting for an event outside of the event itself was done through two different functions, ``Client.wait_for_message`` and ``Client.wait_for_reaction``. One problem with one such approach is that it did not allow you to wait for events outside of the ones provided by the library."
+
+msgid "In v1.0 the concept of waiting for another event has been generalised to work with any event as :meth:`Client.wait_for`."
+msgstr "In v1.0 the concept of waiting for another event has been generalised to work with any event as :meth:`Client.wait_for`."
+
+msgid "For example, to wait for a message: ::"
+msgstr "For example, to wait for a message: ::"
+
+msgid "To facilitate multiple returns, :meth:`Client.wait_for` returns either a single argument, no arguments, or a tuple of arguments."
+msgstr "To facilitate multiple returns, :meth:`Client.wait_for` returns either a single argument, no arguments, or a tuple of arguments."
+
+msgid "For example, to wait for a reaction: ::"
+msgstr "For example, to wait for a reaction: ::"
+
+msgid "Since this function now can return multiple arguments, the ``timeout`` parameter will now raise a :exc:`asyncio.TimeoutError` when reached instead of setting the return to ``None``. For example:"
+msgstr "Since this function now can return multiple arguments, the ``timeout`` parameter will now raise a :exc:`asyncio.TimeoutError` when reached instead of setting the return to ``None``. For example:"
+
+msgid "Upgraded Dependencies"
+msgstr "Upgraded Dependencies"
+
+msgid "Following v1.0 of the library, we've updated our requirements to :doc:`aiohttp <aio:index>` v2.0 or higher."
+msgstr "Following v1.0 of the library, we've updated our requirements to :doc:`aiohttp <aio:index>` v2.0 or higher."
+
+msgid "Since this is a backwards incompatible change, it is recommended that you see the `changes <http://aiohttp.readthedocs.io/en/stable/changes.html#rc1-2017-03-15>`_ and the :doc:`aio:migration_to_2xx` pages for details on the breaking changes in :doc:`aiohttp <aio:index>`."
+msgstr "Since this is a backwards incompatible change, it is recommended that you see the `changes <http://aiohttp.readthedocs.io/en/stable/changes.html#rc1-2017-03-15>`_ and the :doc:`aio:migration_to_2xx` pages for details on the breaking changes in :doc:`aiohttp <aio:index>`."
+
+msgid "Of the most significant for common users is the removal of helper functions such as:"
+msgstr "Of the most significant for common users is the removal of helper functions such as:"
+
+msgid "``aiohttp.get``"
+msgstr "``aiohttp.get``"
+
+msgid "``aiohttp.post``"
+msgstr "``aiohttp.post``"
+
+msgid "``aiohttp.delete``"
+msgstr "``aiohttp.delete``"
+
+msgid "``aiohttp.patch``"
+msgstr "``aiohttp.patch``"
+
+msgid "``aiohttp.head``"
+msgstr "``aiohttp.head``"
+
+msgid "``aiohttp.put``"
+msgstr "``aiohttp.put``"
+
+msgid "``aiohttp.request``"
+msgstr "``aiohttp.request``"
+
+msgid "It is recommended that you create a session instead: ::"
+msgstr "It is recommended that you create a session instead: ::"
+
+msgid "Since it is better to not create a session for every request, you should store it in a variable and then call ``session.close`` on it when it needs to be disposed."
+msgstr "Since it is better to not create a session for every request, you should store it in a variable and then call ``session.close`` on it when it needs to be disposed."
+
+msgid "Sharding"
+msgstr "Sharding"
+
+msgid "The library has received significant changes on how it handles sharding and now has sharding as a first-class citizen."
+msgstr "The library has received significant changes on how it handles sharding and now has sharding as a first-class citizen."
+
+msgid "If using a Bot account and you want to shard your bot in a single process then you can use the :class:`AutoShardedClient`."
+msgstr "If using a Bot account and you want to shard your bot in a single process then you can use the :class:`AutoShardedClient`."
+
+msgid "This class allows you to use sharding without having to launch multiple processes or deal with complicated IPC."
+msgstr "This class allows you to use sharding without having to launch multiple processes or deal with complicated IPC."
+
+msgid "It should be noted that **the sharded client does not support user accounts**. This is due to the changes in connection logic and state handling."
+msgstr "It should be noted that **the sharded client does not support user accounts**. This is due to the changes in connection logic and state handling."
+
+msgid "Usage is as simple as doing: ::"
+msgstr "Usage is as simple as doing: ::"
+
+msgid "instead of using :class:`Client`."
+msgstr "instead of using :class:`Client`."
+
+msgid "This will launch as many shards as your bot needs using the ``/gateway/bot`` endpoint, which allocates about 1000 guilds per shard."
+msgstr "This will launch as many shards as your bot needs using the ``/gateway/bot`` endpoint, which allocates about 1000 guilds per shard."
+
+msgid "If you want more control over the sharding you can specify ``shard_count`` and ``shard_ids``. ::"
+msgstr "If you want more control over the sharding you can specify ``shard_count`` and ``shard_ids``. ::"
+
+msgid "For users of the command extension, there is also :class:`~ext.commands.AutoShardedBot` which behaves similarly."
+msgstr "For users of the command extension, there is also :class:`~ext.commands.AutoShardedBot` which behaves similarly."
+
+msgid "Connection Improvements"
+msgstr "Connection Improvements"
+
+msgid "In v1.0, the auto reconnection logic has been powered up significantly."
+msgstr "In v1.0, the auto reconnection logic has been powered up significantly."
+
+msgid ":meth:`Client.connect` has gained a new keyword argument, ``reconnect`` that defaults to ``True`` which controls the reconnect logic. When enabled, the client will automatically reconnect in all instances of your internet going offline or Discord going offline with exponential back-off."
+msgstr ":meth:`Client.connect` has gained a new keyword argument, ``reconnect`` that defaults to ``True`` which controls the reconnect logic. When enabled, the client will automatically reconnect in all instances of your internet going offline or Discord going offline with exponential back-off."
+
+msgid ":meth:`Client.run` and :meth:`Client.start` gains this keyword argument as well, but for most cases you will not need to specify it unless turning it off."
+msgstr ":meth:`Client.run` and :meth:`Client.start` gains this keyword argument as well, but for most cases you will not need to specify it unless turning it off."
+
+msgid "Command Extension Changes"
+msgstr "Command Extension Changes"
+
+msgid "Due to the :ref:`migrating_1_0_model_state` changes, some of the design of the extension module had to undergo some design changes as well."
+msgstr "Due to the :ref:`migrating_1_0_model_state` changes, some of the design of the extension module had to undergo some design changes as well."
+
+msgid "Context Changes"
+msgstr "Context Changes"
+
+msgid "In v1.0, the :class:`.Context` has received a lot of changes with how it's retrieved and used."
+msgstr "In v1.0, the :class:`.Context` has received a lot of changes with how it's retrieved and used."
+
+msgid "The biggest change is that ``pass_context=True`` no longer exists, :class:`.Context` is always passed. Ergo:"
+msgstr "The biggest change is that ``pass_context=True`` no longer exists, :class:`.Context` is always passed. Ergo:"
+
+msgid "The reason for this is because :class:`~ext.commands.Context` now meets the requirements of :class:`abc.Messageable`. This makes it have similar functionality to :class:`TextChannel` or :class:`DMChannel`. Using :meth:`~.Context.send` will either DM the user in a DM context or send a message in the channel it was in, similar to the old ``bot.say`` functionality. The old helpers have been removed in favour of the new :class:`abc.Messageable` interface. See :ref:`migrating_1_0_removed_helpers` for more information."
+msgstr "The reason for this is because :class:`~ext.commands.Context` now meets the requirements of :class:`abc.Messageable`. This makes it have similar functionality to :class:`TextChannel` or :class:`DMChannel`. Using :meth:`~.Context.send` will either DM the user in a DM context or send a message in the channel it was in, similar to the old ``bot.say`` functionality. The old helpers have been removed in favour of the new :class:`abc.Messageable` interface. See :ref:`migrating_1_0_removed_helpers` for more information."
+
+msgid "Since the :class:`~ext.commands.Context` is now passed by default, several shortcuts have been added:"
+msgstr "Since the :class:`~ext.commands.Context` is now passed by default, several shortcuts have been added:"
+
+msgid "**New Shortcuts**"
+msgstr "**New Shortcuts**"
+
+msgid ":attr:`ctx.author <ext.commands.Context.author>` is a shortcut for ``ctx.message.author``."
+msgstr ":attr:`ctx.author <ext.commands.Context.author>` is a shortcut for ``ctx.message.author``."
+
+msgid ":attr:`ctx.guild <ext.commands.Context.guild>` is a shortcut for ``ctx.message.guild``."
+msgstr ":attr:`ctx.guild <ext.commands.Context.guild>` is a shortcut for ``ctx.message.guild``."
+
+msgid ":attr:`ctx.channel <ext.commands.Context.channel>` is a shortcut for ``ctx.message.channel``."
+msgstr ":attr:`ctx.channel <ext.commands.Context.channel>` is a shortcut for ``ctx.message.channel``."
+
+msgid ":attr:`ctx.me <ext.commands.Context.me>` is a shortcut for ``ctx.message.guild.me`` or ``ctx.bot.user``."
+msgstr ":attr:`ctx.me <ext.commands.Context.me>` is a shortcut for ``ctx.message.guild.me`` or ``ctx.bot.user``."
+
+msgid ":attr:`ctx.voice_client <ext.commands.Context.voice_client>` is a shortcut for ``ctx.message.guild.voice_client``."
+msgstr ":attr:`ctx.voice_client <ext.commands.Context.voice_client>` is a shortcut for ``ctx.message.guild.voice_client``."
+
+msgid "**New Functionality**"
+msgstr "**New Functionality**"
+
+msgid ":meth:`.Context.reinvoke` to invoke a command again."
+msgstr ":meth:`.Context.reinvoke` to invoke a command again."
+
+msgid "This is useful for bypassing cooldowns."
+msgstr "This is useful for bypassing cooldowns."
+
+msgid ":attr:`.Context.valid` to check if a context can be invoked with :meth:`.Bot.invoke`."
+msgstr ":attr:`.Context.valid` to check if a context can be invoked with :meth:`.Bot.invoke`."
+
+msgid ":meth:`.Context.send_help` to show the help command for an entity using the new :class:`~.ext.commands.HelpCommand` system."
+msgstr ":meth:`.Context.send_help` to show the help command for an entity using the new :class:`~.ext.commands.HelpCommand` system."
+
+msgid "This is useful if you want to show the user help if they misused a command."
+msgstr "This is useful if you want to show the user help if they misused a command."
+
+msgid "Subclassing Context"
+msgstr "Subclassing Context"
+
+msgid "In v1.0, there is now the ability to subclass :class:`~ext.commands.Context` and use it instead of the default provided one."
+msgstr "In v1.0, there is now the ability to subclass :class:`~ext.commands.Context` and use it instead of the default provided one."
+
+msgid "For example, if you want to add some functionality to the context:"
+msgstr "For example, if you want to add some functionality to the context:"
+
+msgid "Then you can use :meth:`~ext.commands.Bot.get_context` inside :func:`on_message` with combination with :meth:`~ext.commands.Bot.invoke` to use your custom context:"
+msgstr "Then you can use :meth:`~ext.commands.Bot.get_context` inside :func:`on_message` with combination with :meth:`~ext.commands.Bot.invoke` to use your custom context:"
+
+msgid "Now inside your commands you will have access to your custom context:"
+msgstr "Now inside your commands you will have access to your custom context:"
+
+msgid "Removed Helpers"
+msgstr "Removed Helpers"
+
+msgid "With the new :class:`.Context` changes, a lot of message sending helpers have been removed."
+msgstr "With the new :class:`.Context` changes, a lot of message sending helpers have been removed."
+
+msgid "For a full list of changes, see below:"
+msgstr "For a full list of changes, see below:"
+
+msgid "``Bot.say``"
+msgstr "``Bot.say``"
+
+msgid ":meth:`.Context.send`"
+msgstr ":meth:`.Context.send`"
+
+msgid "``Bot.upload``"
+msgstr "``Bot.upload``"
+
+msgid "``Bot.whisper``"
+msgstr "``Bot.whisper``"
+
+msgid "``ctx.author.send``"
+msgstr "``ctx.author.send``"
+
+msgid "``Bot.type``"
+msgstr "``Bot.type``"
+
+msgid ":meth:`.Context.typing` or :meth:`.Context.trigger_typing`"
+msgstr ":meth:`.Context.typing` or :meth:`.Context.trigger_typing`"
+
+msgid "``Bot.reply``"
+msgstr "``Bot.reply``"
+
+msgid "No replacement."
+msgstr "No replacement."
+
+msgid "Command Changes"
+msgstr "Command Changes"
+
+msgid "As mentioned earlier, the first command change is that ``pass_context=True`` no longer exists, so there is no need to pass this as a parameter."
+msgstr "As mentioned earlier, the first command change is that ``pass_context=True`` no longer exists, so there is no need to pass this as a parameter."
+
+msgid "Another change is the removal of ``no_pm=True``. Instead, use the new :func:`~ext.commands.guild_only` built-in check."
+msgstr "Another change is the removal of ``no_pm=True``. Instead, use the new :func:`~ext.commands.guild_only` built-in check."
+
+msgid "The ``commands`` attribute of :class:`~ext.commands.Bot` and :class:`~ext.commands.Group` have been changed from a dictionary to a set that does not have aliases. To retrieve the previous dictionary behaviour, use ``all_commands`` instead."
+msgstr "The ``commands`` attribute of :class:`~ext.commands.Bot` and :class:`~ext.commands.Group` have been changed from a dictionary to a set that does not have aliases. To retrieve the previous dictionary behaviour, use ``all_commands`` instead."
+
+msgid "Command instances have gained new attributes and properties:"
+msgstr "Command instances have gained new attributes and properties:"
+
+msgid ":attr:`~ext.commands.Command.signature` to get the signature of the command."
+msgstr ":attr:`~ext.commands.Command.signature` to get the signature of the command."
+
+msgid ":attr:`~.Command.usage`, an attribute to override the default signature."
+msgstr ":attr:`~.Command.usage`, an attribute to override the default signature."
+
+msgid ":attr:`~.Command.root_parent` to get the root parent group of a subcommand."
+msgstr ":attr:`~.Command.root_parent` to get the root parent group of a subcommand."
+
+msgid "For :class:`~ext.commands.Group` and :class:`~ext.commands.Bot` the following changed:"
+msgstr "For :class:`~ext.commands.Group` and :class:`~ext.commands.Bot` the following changed:"
+
+msgid "Changed :attr:`~.GroupMixin.commands` to be a :class:`set` without aliases."
+msgstr "Changed :attr:`~.GroupMixin.commands` to be a :class:`set` without aliases."
+
+msgid "Use :attr:`~.GroupMixin.all_commands` to get the old :class:`dict` with all commands."
+msgstr "Use :attr:`~.GroupMixin.all_commands` to get the old :class:`dict` with all commands."
+
+msgid "Check Changes"
+msgstr "Check Changes"
+
+msgid "Prior to v1.0, :func:`~ext.commands.check`\\s could only be synchronous. As of v1.0 checks can now be coroutines."
+msgstr "Prior to v1.0, :func:`~ext.commands.check`\\s could only be synchronous. As of v1.0 checks can now be coroutines."
+
+msgid "Along with this change, a couple new checks were added."
+msgstr "Along with this change, a couple new checks were added."
+
+msgid ":func:`~ext.commands.guild_only` replaces the old ``no_pm=True`` functionality."
+msgstr ":func:`~ext.commands.guild_only` replaces the old ``no_pm=True`` functionality."
+
+msgid ":func:`~ext.commands.is_owner` uses the :meth:`Client.application_info` endpoint by default to fetch owner ID."
+msgstr ":func:`~ext.commands.is_owner` uses the :meth:`Client.application_info` endpoint by default to fetch owner ID."
+
+msgid "This is actually powered by a different function, :meth:`~ext.commands.Bot.is_owner`."
+msgstr "This is actually powered by a different function, :meth:`~ext.commands.Bot.is_owner`."
+
+msgid "You can set the owner ID yourself by setting :attr:`.Bot.owner_id`."
+msgstr "You can set the owner ID yourself by setting :attr:`.Bot.owner_id`."
+
+msgid ":func:`~ext.commands.is_nsfw` checks if the channel the command is in is a NSFW channel."
+msgstr ":func:`~ext.commands.is_nsfw` checks if the channel the command is in is a NSFW channel."
+
+msgid "This is powered by the new :meth:`TextChannel.is_nsfw` method."
+msgstr "This is powered by the new :meth:`TextChannel.is_nsfw` method."
+
+msgid "All command extension events have changed."
+msgstr "All command extension events have changed."
+
+msgid "The extraneous ``command`` parameter in :func:`.on_command` and :func:`.on_command_completion` have been removed. The :class:`~ext.commands.Command` instance was not kept up-to date so it was incorrect. In order to get the up to date :class:`~ext.commands.Command` instance, use the :attr:`.Context.command` attribute."
+msgstr "The extraneous ``command`` parameter in :func:`.on_command` and :func:`.on_command_completion` have been removed. The :class:`~ext.commands.Command` instance was not kept up-to date so it was incorrect. In order to get the up to date :class:`~ext.commands.Command` instance, use the :attr:`.Context.command` attribute."
+
+msgid "The error handlers, either :meth:`.Command.error` or :func:`.on_command_error`, have been re-ordered to use the :class:`~ext.commands.Context` as its first parameter to be consistent with other events and commands."
+msgstr "The error handlers, either :meth:`.Command.error` or :func:`.on_command_error`, have been re-ordered to use the :class:`~ext.commands.Context` as its first parameter to be consistent with other events and commands."
+
+msgid "HelpFormatter and Help Command Changes"
+msgstr "HelpFormatter and Help Command Changes"
+
+msgid "The ``HelpFormatter`` class has been removed. It has been replaced with a :class:`~.commands.HelpCommand` class. This class now stores all the command handling and processing of the help command."
+msgstr "The ``HelpFormatter`` class has been removed. It has been replaced with a :class:`~.commands.HelpCommand` class. This class now stores all the command handling and processing of the help command."
+
+msgid "The help command is now stored in the :attr:`.Bot.help_command` attribute. As an added extension, you can disable the help command completely by assigning the attribute to ``None`` or passing it at ``__init__`` as ``help_command=None``."
+msgstr "The help command is now stored in the :attr:`.Bot.help_command` attribute. As an added extension, you can disable the help command completely by assigning the attribute to ``None`` or passing it at ``__init__`` as ``help_command=None``."
+
+msgid "The new interface allows the help command to be customised through special methods that can be overridden."
+msgstr "The new interface allows the help command to be customised through special methods that can be overridden."
+
+msgid ":meth:`.HelpCommand.send_bot_help`"
+msgstr ":meth:`.HelpCommand.send_bot_help`"
+
+msgid "Called when the user requested for help with the entire bot."
+msgstr "Called when the user requested for help with the entire bot."
+
+msgid ":meth:`.HelpCommand.send_cog_help`"
+msgstr ":meth:`.HelpCommand.send_cog_help`"
+
+msgid "Called when the user requested for help with a specific cog."
+msgstr "Called when the user requested for help with a specific cog."
+
+msgid ":meth:`.HelpCommand.send_group_help`"
+msgstr ":meth:`.HelpCommand.send_group_help`"
+
+msgid "Called when the user requested for help with a :class:`~.commands.Group`"
+msgstr "Called when the user requested for help with a :class:`~.commands.Group`"
+
+msgid ":meth:`.HelpCommand.send_command_help`"
+msgstr ":meth:`.HelpCommand.send_command_help`"
+
+msgid "Called when the user requested for help with a :class:`~.commands.Command`"
+msgstr "Called when the user requested for help with a :class:`~.commands.Command`"
+
+msgid ":meth:`.HelpCommand.get_destination`"
+msgstr ":meth:`.HelpCommand.get_destination`"
+
+msgid "Called to know where to send the help messages. Useful for deciding whether to DM or not."
+msgstr "Called to know where to send the help messages. Useful for deciding whether to DM or not."
+
+msgid ":meth:`.HelpCommand.command_not_found`"
+msgstr ":meth:`.HelpCommand.command_not_found`"
+
+msgid "A function (or coroutine) that returns a presentable no command found string."
+msgstr "A function (or coroutine) that returns a presentable no command found string."
+
+msgid ":meth:`.HelpCommand.subcommand_not_found`"
+msgstr ":meth:`.HelpCommand.subcommand_not_found`"
+
+msgid "A function (or coroutine) that returns a string when a subcommand is not found."
+msgstr "A function (or coroutine) that returns a string when a subcommand is not found."
+
+msgid ":meth:`.HelpCommand.send_error_message`"
+msgstr ":meth:`.HelpCommand.send_error_message`"
+
+msgid "A coroutine that gets passed the result of :meth:`.HelpCommand.command_not_found` and :meth:`.HelpCommand.subcommand_not_found`."
+msgstr "A coroutine that gets passed the result of :meth:`.HelpCommand.command_not_found` and :meth:`.HelpCommand.subcommand_not_found`."
+
+msgid "By default it just sends the message. But you can, for example, override it to put it in an embed."
+msgstr "By default it just sends the message. But you can, for example, override it to put it in an embed."
+
+msgid ":meth:`.HelpCommand.on_help_command_error`"
+msgstr ":meth:`.HelpCommand.on_help_command_error`"
+
+msgid "The :ref:`error handler <ext_commands_error_handler>` for the help command if you want to add one."
+msgstr "The :ref:`error handler <ext_commands_error_handler>` for the help command if you want to add one."
+
+msgid ":meth:`.HelpCommand.prepare_help_command`"
+msgstr ":meth:`.HelpCommand.prepare_help_command`"
+
+msgid "A coroutine that is called right before the help command processing is done."
+msgstr "A coroutine that is called right before the help command processing is done."
+
+msgid "Certain subclasses can implement more customisable methods."
+msgstr "Certain subclasses can implement more customisable methods."
+
+msgid "The old ``HelpFormatter`` was replaced with :class:`~.commands.DefaultHelpCommand`\\, which implements all of the logic of the old help command. The customisable methods can be found in the accompanying documentation."
+msgstr "The old ``HelpFormatter`` was replaced with :class:`~.commands.DefaultHelpCommand`\\, which implements all of the logic of the old help command. The customisable methods can be found in the accompanying documentation."
+
+msgid "The library now provides a new more minimalistic :class:`~.commands.HelpCommand` implementation that doesn't take as much space, :class:`~.commands.MinimalHelpCommand`. The customisable methods can also be found in the accompanying documentation."
+msgstr "The library now provides a new more minimalistic :class:`~.commands.HelpCommand` implementation that doesn't take as much space, :class:`~.commands.MinimalHelpCommand`. The customisable methods can also be found in the accompanying documentation."
+
+msgid "A frequent request was if you could associate a help command with a cog. The new design allows for dynamically changing of cog through binding it to the :attr:`.HelpCommand.cog` attribute. After this assignment the help command will pretend to be part of the cog and everything should work as expected. When the cog is unloaded then the help command will be \"unbound\" from the cog."
+msgstr "A frequent request was if you could associate a help command with a cog. The new design allows for dynamically changing of cog through binding it to the :attr:`.HelpCommand.cog` attribute. After this assignment the help command will pretend to be part of the cog and everything should work as expected. When the cog is unloaded then the help command will be \"unbound\" from the cog."
+
+msgid "For example, to implement a :class:`~.commands.HelpCommand` in a cog, the following snippet can be used."
+msgstr "For example, to implement a :class:`~.commands.HelpCommand` in a cog, the following snippet can be used."
+
+msgid "For more information, check out the relevant :ref:`documentation <ext_commands_help_command>`."
+msgstr "For more information, check out the relevant :ref:`documentation <ext_commands_help_command>`."
+
+msgid "Cog Changes"
+msgstr "Cog Changes"
+
+msgid "Cogs have completely been revamped. They are documented in :ref:`ext_commands_cogs` as well."
+msgstr "Cogs have completely been revamped. They are documented in :ref:`ext_commands_cogs` as well."
+
+msgid "Cogs are now required to have a base class, :class:`~.commands.Cog` for future proofing purposes. This comes with special methods to customise some behaviour."
+msgstr "Cogs are now required to have a base class, :class:`~.commands.Cog` for future proofing purposes. This comes with special methods to customise some behaviour."
+
+msgid ":meth:`.Cog.cog_unload`"
+msgstr ":meth:`.Cog.cog_unload`"
+
+msgid "This is called when a cog needs to do some cleanup, such as cancelling a task."
+msgstr "This is called when a cog needs to do some cleanup, such as cancelling a task."
+
+msgid ":meth:`.Cog.bot_check_once`"
+msgstr ":meth:`.Cog.bot_check_once`"
+
+msgid "This registers a :meth:`.Bot.check_once` check."
+msgstr "This registers a :meth:`.Bot.check_once` check."
+
+msgid ":meth:`.Cog.bot_check`"
+msgstr ":meth:`.Cog.bot_check`"
+
+msgid "This registers a regular :meth:`.Bot.check` check."
+msgstr "This registers a regular :meth:`.Bot.check` check."
+
+msgid ":meth:`.Cog.cog_check`"
+msgstr ":meth:`.Cog.cog_check`"
+
+msgid "This registers a check that applies to every command in the cog."
+msgstr "This registers a check that applies to every command in the cog."
+
+msgid ":meth:`.Cog.cog_command_error`"
+msgstr ":meth:`.Cog.cog_command_error`"
+
+msgid "This is a special error handler that is called whenever an error happens inside the cog."
+msgstr "This is a special error handler that is called whenever an error happens inside the cog."
+
+msgid ":meth:`.Cog.cog_before_invoke` and :meth:`.Cog.cog_after_invoke`"
+msgstr ":meth:`.Cog.cog_before_invoke` and :meth:`.Cog.cog_after_invoke`"
+
+msgid "A special method that registers a cog before and after invoke hook. More information can be found in :ref:`migrating_1_0_before_after_hook`."
+msgstr "A special method that registers a cog before and after invoke hook. More information can be found in :ref:`migrating_1_0_before_after_hook`."
+
+msgid "Those that were using listeners, such as ``on_message`` inside a cog will now have to explicitly mark them as such using the :meth:`.commands.Cog.listener` decorator."
+msgstr "Those that were using listeners, such as ``on_message`` inside a cog will now have to explicitly mark them as such using the :meth:`.commands.Cog.listener` decorator."
+
+msgid "Along with that, cogs have gained the ability to have custom names through specifying it in the class definition line. More options can be found in the metaclass that facilitates all this, :class:`.commands.CogMeta`."
+msgstr "Along with that, cogs have gained the ability to have custom names through specifying it in the class definition line. More options can be found in the metaclass that facilitates all this, :class:`.commands.CogMeta`."
+
+msgid "An example cog with every special method registered and a custom name is as follows:"
+msgstr "An example cog with every special method registered and a custom name is as follows:"
+
+msgid "Before and After Invocation Hooks"
+msgstr "Before and After Invocation Hooks"
+
+msgid "Commands have gained new before and after invocation hooks that allow you to do an action before and after a command is run."
+msgstr "Commands have gained new before and after invocation hooks that allow you to do an action before and after a command is run."
+
+msgid "They take a single parameter, :class:`~ext.commands.Context` and they must be a coroutine."
+msgstr "They take a single parameter, :class:`~ext.commands.Context` and they must be a coroutine."
+
+msgid "They are on a global, per-cog, or per-command basis."
+msgstr "They are on a global, per-cog, or per-command basis."
+
+msgid "The after invocation is hook always called, **regardless of an error in the command**. This makes it ideal for some error handling or clean up of certain resources such a database connection."
+msgstr "The after invocation is hook always called, **regardless of an error in the command**. This makes it ideal for some error handling or clean up of certain resources such a database connection."
+
+msgid "The per-command registration is as follows: ::"
+msgstr "The per-command registration is as follows: ::"
+
+msgid "The special cog method for these is :meth:`.Cog.cog_before_invoke` and :meth:`.Cog.cog_after_invoke`, e.g.:"
+msgstr "The special cog method for these is :meth:`.Cog.cog_before_invoke` and :meth:`.Cog.cog_after_invoke`, e.g.:"
+
+msgid "To check if a command failed in the after invocation hook, you can use :attr:`.Context.command_failed`."
+msgstr "To check if a command failed in the after invocation hook, you can use :attr:`.Context.command_failed`."
+
+msgid "The invocation order is as follows:"
+msgstr "The invocation order is as follows:"
+
+msgid "Command local before invocation hook"
+msgstr "Command local before invocation hook"
+
+msgid "Cog local before invocation hook"
+msgstr "Cog local before invocation hook"
+
+msgid "Global before invocation hook"
+msgstr "Global before invocation hook"
+
+msgid "The actual command"
+msgstr "The actual command"
+
+msgid "Command local after invocation hook"
+msgstr "Command local after invocation hook"
+
+msgid "Cog local after invocation hook"
+msgstr "Cog local after invocation hook"
+
+msgid "Global after invocation hook"
+msgstr "Global after invocation hook"
+
+msgid "Converter Changes"
+msgstr "Converter Changes"
+
+msgid "Prior to v1.0, a converter was a type hint that could be a callable that could be invoked with a singular argument denoting the argument passed by the user as a string."
+msgstr "Prior to v1.0, a converter was a type hint that could be a callable that could be invoked with a singular argument denoting the argument passed by the user as a string."
+
+msgid "This system was eventually expanded to support a :class:`~ext.commands.Converter` system to allow plugging in the :class:`~ext.commands.Context` and do more complicated conversions such as the built-in \"discord\" converters."
+msgstr "This system was eventually expanded to support a :class:`~ext.commands.Converter` system to allow plugging in the :class:`~ext.commands.Context` and do more complicated conversions such as the built-in \"discord\" converters."
+
+msgid "In v1.0 this converter system was revamped to allow instances of :class:`~ext.commands.Converter` derived classes to be passed. For consistency, the :meth:`~ext.commands.Converter.convert` method was changed to always be a coroutine and will now take the two arguments as parameters."
+msgstr "In v1.0 this converter system was revamped to allow instances of :class:`~ext.commands.Converter` derived classes to be passed. For consistency, the :meth:`~ext.commands.Converter.convert` method was changed to always be a coroutine and will now take the two arguments as parameters."
+
+msgid "Essentially, before: ::"
+msgstr "Essentially, before: ::"
+
+msgid "The command framework also got a couple new converters:"
+msgstr "The command framework also got a couple new converters:"
+
+msgid ":class:`~ext.commands.clean_content` this is akin to :attr:`Message.clean_content` which scrubs mentions."
+msgstr ":class:`~ext.commands.clean_content` this is akin to :attr:`Message.clean_content` which scrubs mentions."
+
+msgid ":class:`~ext.commands.UserConverter` will now appropriately convert :class:`User` only."
+msgstr ":class:`~ext.commands.UserConverter` will now appropriately convert :class:`User` only."
+
+msgid "``ChannelConverter`` is now split into two different converters."
+msgstr "``ChannelConverter`` is now split into two different converters."
+
+msgid ":class:`~ext.commands.TextChannelConverter` for :class:`TextChannel`."
+msgstr ":class:`~ext.commands.TextChannelConverter` for :class:`TextChannel`."
+
+msgid ":class:`~ext.commands.VoiceChannelConverter` for :class:`VoiceChannel`."
+msgstr ":class:`~ext.commands.VoiceChannelConverter` for :class:`VoiceChannel`."
+

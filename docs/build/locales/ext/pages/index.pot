@@ -1,0 +1,1257 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../ext/pages/index.rst:4
+#: 2437ba416cf848d9a3d8222dc9eb281b
+msgid "discord.ext.pages"
+msgstr ""
+
+#: ../../ext/pages/index.rst:8
+#: 5cdbc5387d524c98acf4e627941314f8
+msgid "This module provides an easy pagination system with buttons, page groups, and custom view support."
+msgstr ""
+
+#: ../../ext/pages/index.rst:10
+#: 1bdddfae47c249d2b2299c043a10b84d
+msgid "Example usage in a cog:"
+msgstr ""
+
+#: ../../ext/pages/index.rst:292
+#: 9e46b970fe514e50ada40895294dd205
+msgid "API Reference"
+msgstr ""
+
+#: ../../ext/pages/index.rst:295
+#: 5d9b9cc1f79549f38b8a4d3b2f0be4c8
+msgid "Page"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page:1
+#: bd25b5c331004759a671ad50a0fb4b41
+msgid "Represents a page shown in the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page:3
+#: ae8bacdd6f74434091d786f43b97b4e3
+msgid "Allows for directly referencing and modifying each page as a class instance."
+msgstr ""
+
+#: ../../ext/pages/index.rst:0
+#: 697e50f1545c45f4b9e7370baba6fb36
+#: 9a2b6c56e51f47e6b866350220f8c0f6
+#: 1ed97b7d592d457e91f0607e776a78d6
+#: 5d0da1f34118460c8f4eddf4eedb0437
+#: beac103455d843ac836e933650a4dd62
+#: 063bbc6f3e424780b3fca294ca70043c
+#: 001d8bed52f640e6b65faeb5e57cd564
+#: ac20d3e78ca94a39857c8376d4001b92
+#: 99a76d768ef6423e9a3952a8dec21a78
+#: 422220e75757468b9e523551808c390d
+#: 5526f25c16e840daa4ff844390a50843
+#: c11dd90c56d64c83a8bbac2e2b0f341e
+#: 6a04ca7a36094db29f14c6fe2ce8b176
+#: df1997f923f64977a58153c7935dca20
+#: 6bf63b66304d4c34b3dee842785b34c1
+#: 341e6342cd654d72a002d8bc1bbf025a
+#: c6df38aa49414da5a6de205f703db624
+#: 655fc98117b74364b87cb5d49111b23f
+#: 13ad2f1d0c7641d59bec5738903ebd38
+#: 6e0c755cc95c460dacb7bb287f7856fc
+#: 0e9e89efe9e643c3acc962e0648c89a5
+#: 34ba1e0e3f634a529e2461c1c8d10b16
+#: 4ebe1f73ecfe4d27aff3c7e8aca24bfd
+#: 09ddd6dd6d764f9d8afa0a4291730274
+#: 4c13c6d74aac47ba8b3ab6fc503d4c08
+#: c1d3f802b5e54055a23682050656d600
+#: d5bca9a9f4e3404884791ef3d4aca196
+#: f2a2b2cd04354ce2b4dbcb6e77dd1bd1
+#: 5a2d03e908f5498ca371e47073d60077
+#: 148f4b586e154d7b9784cf4e6149b19c
+#: 0ee33849feaa4e1c9b968a1b176c4840
+#: 075fafed1a384290b249cd03322da598
+#: dbf01b3b2c5841ba9be4972edf38c752
+#: 5d6bf83ea6804891811293d85965e471
+msgid "Parameters"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page:6
+#: 11cf6e703d674e4b84c439e1aa100391
+msgid "The content of the page. Corresponds to the :class:`discord.Message.content` attribute."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page:9
+#: 838dc022445d4c7288ddb26f9b9e7b79
+msgid "The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page:12
+#: 7863a87aab514116a1c91370164c4eff
+msgid "A list of local files to be shown with the page."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page:15
+#: d9743329c81241099f5684a505c85dd2
+msgid "The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page.callback:1
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:1
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton.callback:1
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu.callback:1
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_error:1
+#: 0ac477cf619c420fafdaac5b6a1fbd18
+#: cfc9f4305077455fad6922d274bc383d
+#: 0e2e6db2218f41dc81c2bbdf0354cbe4
+#: b2df49c3af9a4c74bb099b83349ddcfc
+#: 5d024d19341544b2a7a40d0969eef03e
+msgid "|coro|"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page.callback:3
+#: 00e243c7a32046b3bb334815364cd744
+msgid "The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page.callback:6
+#: a43956ce2cc443b4a7dc593c11685574
+msgid "The interaction associated with the callback, if any."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page.update_files:1
+#: 14dc2bbbfd654ccea6ef76d9d586e887
+msgid "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
+msgstr ""
+
+#: ../../ext/pages/index.rst:0
+#: be696f9851b549dc9e9ac50b6f55f198
+#: 5f9e2f91dd6f4ddf8aba9945c851a7d0
+#: 89185399683243b8a8161ef2321fb944
+#: 2b3e3b8a6018461984a424487aa9e6ab
+#: 4cee4928e1df4606b6ef905abbd63533
+#: df303e968a55460b84813fa21867fc46
+#: 7fae07446dae40adbe93cfc309708f70
+#: d4e5702bc04a4bc4b7641557751fde48
+#: aeb2988a559840d3ba83ac47b72253f7
+#: 550c48f6c2e1423ba8c77b021dbb3dcd
+#: e5bcc53a42f240c9b5ff34f27d6f0bc4
+#: 2aef4bef743e42c6b10dc7dc409dddee
+#: 44df48e0960e411391d8959fd9d11450
+#: b17d3a717a7c43bfbf6a28db9c9e8847
+#: 371cb60b44484310bd22f6a9197741e9
+#: 0df6b7d0cf984f17843c219c54453fdd
+#: 20aa4fd3a1ba4a329e930300f1bfec70
+#: 08830e24540a4075a566ce6b6055bf58
+#: 1f00671156554ebb8b1e8e178a7e76bb
+#: 38bb18eb66264addb0e210e066903922
+#: abda4ea8404f4fd1b6ff60b850d9f36b
+#: a97d7cfc0d8547fba1a07c473d6aa220
+#: 68cd1cac42dd4ab384b9d993fd5b3d3d
+#: 8b422ca21de24735a81d7c356e107d08
+#: 4d583655849d4c3eae271f096ea6e32a
+#: d5396ed79c0a49578511de018e0b2963
+#: 1562ad6d689b4e78a93104700ab3429f
+msgid "Return type"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Page.update_files:5
+#: c00ec830bb5c410f8a62d21db42e50e4
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.Page.content:1
+#: ffe769a89ef340cd91dac029ddf8a270
+msgid "Gets the content for the page."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.Page.embeds:1
+#: 4a20614242ff49c98c15934b6aacaea9
+msgid "Gets the embeds for the page."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.Page.custom_view:1
+#: 734b759d6f34415790c449280122f7c0
+msgid "Gets the custom view assigned to the page."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.Page.files:1
+#: c7ec9a0c9bf34cc8831e0cedb813b560
+msgid "Gets the files associated with the page."
+msgstr ""
+
+#: ../../ext/pages/index.rst:303
+#: 35d41aaa665649e88470e1f4d3913ae4
+msgid "Paginator"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:1
+#: fd8a1d163c3a4ee1945a7434adfec3b8
+msgid "Creates a paginator which can be sent as a message and uses buttons for navigation."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:4
+#: 8cda8ae5c6884250afa6014ccd2d1518
+msgid "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate. If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:28
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:9
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:8
+#: c1ef75e202bf43d089126729e2fbfa5a
+#: 9db02074d9c94a49bb0521fec4c63a78
+#: 9862f559cf4d46f7a8dddfd90b6913db
+msgid "Whether to show disabled buttons."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:31
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:12
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:11
+#: 20144622344a4ac6a82ba99b28691461
+#: 7bae99044a5a4aa9ab38e9546c5f3427
+#: 9f7169cd5e0841edb66e3b4afc357032
+msgid "Whether to show the page indicator when using the default buttons."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:15
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:14
+#: 7350d44eca9e4b60ba03f3756966c84d
+#: 87d7b2f7eda64012b345e45181b5aa9a
+msgid "Whether to show a select menu that allows the user to switch between groups of pages."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:18
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:20
+#: c80991802f7749b7997151be89ffe3ac
+#: 48cdaafe961448ea8435a914b65d59b1
+msgid "The placeholder text to show in the page group menu when no page group has been selected yet. Defaults to \"Select Page Group\" if not provided."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:34
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:22
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:17
+#: bfd67da67dc84a2db829bcfb79ae099d
+#: 899bfeaaf84b4233aa6a174ab45803d0
+#: dea0f3e5ef3c4c6ea0067ef707954f13
+msgid "Whether only the original user of the command can change pages."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:37
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:25
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:24
+#: cf4e82cd445643499f51a23de19eea56
+#: 779b82d3374f4bab948e1fe6d9fedd84
+#: f55070f9c63b4f438d22e271d923e292
+msgid "Whether the buttons get disabled when the paginator view times out."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:40
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:28
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:27
+#: a97270c704f840a79d3a26539fa11c44
+#: 9d80446d78c74078828826d8fad283fd
+#: 7c8f9e0762e4471a8f475ad877770d3f
+msgid "Whether to use the default buttons (i.e. ``first``, ``prev``, ``page_indicator``, ``next``, ``last``)"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:43
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:31
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:30
+#: b521eded949b46f39de788085cad3ac5
+#: 3d89ab0ca1ca4ddf95a66e1052b1416b
+#: 359dca5b47f9408b86cc5b913f19ae1a
+msgid "The row where the default paginator buttons are displayed. Has no effect if custom buttons are used."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:46
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:34
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:33
+#: d4e55005744346dfa8bec1e681ba7b61
+#: 28f65f81ba3a46e6aae6abe2d4ff3ef1
+#: 98a9d82f780e433d8df62c12f3ba9583
+msgid "Whether to loop the pages when clicking prev/next while at the first/last page in the list."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:37
+#: 4d2ba455eeef4ae0be01901805d02dde
+msgid "A custom view whose items are appended below the pagination components. If the currently displayed page has a `custom_view` assigned, it will replace these view components when that page is displayed."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:52
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:42
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:39
+#: b4dd779623cc447686e75ded05b049d5
+#: 7cfd82ebd0c3445fbc2e87f9cc91d6c9
+#: 060cb092dcd84afbab1654c4a673ae40
+msgid "Timeout in seconds from last interaction with the paginator before no longer accepting input."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:55
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:45
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:42
+#: 53a7f7e412d544caa4ea3554dfcd74c2
+#: fcff089de6814bc8b2b2bbd270418f40
+#: 61407496e9e345548b4662bf9c3f4420
+msgid "A list of PaginatorButtons to initialize the Paginator with. If ``use_default_buttons`` is ``True``, this parameter is ignored."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:59
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:49
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:46
+#: a606dd1d1de94ab685aa1d8ce6e80fb8
+#: 554037abcf4f47588ac9452c56ce0e92
+#: 3724bfedfe9d4166b773ce52f6f96b10
+msgid "Whether to automatically trigger the callback associated with a `Page` whenever it is displayed. Has no effect if no callback exists for a `Page`."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:55
+#: 756df0e58bf4427d9c783f16cb3c0e4e
+msgid "The page group select menu associated with this paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:0
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:0
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu:0
+#: 3bf364dda08e4407b362896b9f58c12d
+#: 0018653201484c08a1efb39a95e5496a
+#: 95024e9505d948148493ddafe8b895de
+#: db10884582044f4e9c0b780d876ae769
+#: 10fc8a4ebd814531a213613eb9c1a227
+#: cf1fd8809876457cad8b65bb8ecdff62
+#: 5ab60fb665a04f979c0831942086c3de
+#: 370e4876a6f44d2fb97522e2d6436744
+#: 6463e465ccd0446d997680daed481da6
+#: 25f5deaf82234969896d2ff9af594576
+msgid "type"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:57
+#: b4c0337d404a45e8892fe156cc9bd943
+msgid "Optional[List[:class:`PaginatorMenu`]]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:61
+#: f93be253c778483880b98ed031460760
+msgid "List of :class:`PageGroup` objects the user can switch between."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:63
+#: bf99cdb634044fbdaa3eb8afab3539a1
+msgid "Optional[List[:class:`PageGroup`]]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:67
+#: ebe7495d7a554db8911766d9a94dda30
+msgid "The index of the default page group shown when the paginator is initially sent. Defined by setting ``default`` to ``True`` on a :class:`PageGroup`."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:70
+#: 9427ff2e436a432290830b7a5ed07653
+msgid "Optional[:class:`int`]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:74
+#: ce115ee07db249d3b02b2739d39dfb9f
+msgid "A zero-indexed value showing the current page number."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:76
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:82
+#: cd1000c6b1654d0f856cdf9321d03a5c
+#: 2ac3cef8cda94569a45f9c40a7419fcf
+msgid ":class:`int`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:80
+#: a3dcbf307b9f4881923e5a7270193d27
+msgid "A zero-indexed value showing the total number of pages."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:86
+#: 4e8469fd89304c68966aad2f8bc27030
+msgid "A dictionary containing the :class:`~PaginatorButton` objects included in this paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:88
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update_buttons:4
+#: 603b801b380945289ad846d62a25d0f3
+#: 6f163c5ef9af46fb96941b6d6f597e70
+msgid "Dict[:class:`str`, Dict[:class:`str`, Union[:class:`~PaginatorButton`, :class:`bool`]]]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:92
+#: b8fbd37143be495fa07f7afd6e225bee
+msgid "The user or member that invoked the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:94
+#: a193d3a3f88146cdbc98453f06ba4224
+msgid "Optional[Union[:class:`~discord.User`, :class:`~discord.Member`]]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:98
+#: 3434a6aec3d144e28ca23d5691b76c64
+msgid "The message the paginator is attached to."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:100
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:25
+#: be60611a1e5f4142bc4e8c2825ad0bce
+#: 249266a0e6c24ccdbd83f6d3b93049b7
+msgid "Union[:class:`~discord.Message`, :class:`~discord.WebhookMessage`]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:1
+#: 02e566c042de48b1841f604571514d29
+msgid "Updates the existing :class:`Paginator` instance with the provided options."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:4
+#: 429d25bcb3884adca03177c1cf56439d
+msgid "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:36
+#: b3c853535a3147128ef4397cfa4c2631
+msgid "A custom view whose items are appended below the pagination components."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:50
+#: da4ea72df96a4fbe99896196a3b51693
+msgid "The interaction to use when updating the paginator. If not provided, the paginator will be updated by using its stored :attr:`message` attribute instead."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update:54
+#: 32cf976654204696bcf4a6210302ffe3
+msgid "The initial page number to display when updating the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.on_timeout:1
+#: 0a8139d4555647b2bb348dabbddcbc6e
+msgid "Disables all buttons when the view times out."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.cancel:10
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.disable:10
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.on_timeout:4
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.page_action:7
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.add_item:10
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.clear_items:4
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.disable_all_items:7
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.enable_all_items:7
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_check_failure:9
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_error:18
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.remove_item:7
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.stop:6
+#: 68e2cc93f0e6490b8f2f6cee4790cba9
+#: 718868e38cac43a586cfbd4a6305d236
+#: c2fbf9bef8224850b4afa5ea4c5afbc2
+#: e63b8fb4db3b4bee81d67b79af441412
+#: 3c63f3adb2364adead3012e035129ebc
+#: a7be2bff8d9e4794b701800978b38389
+#: 128c5298c9494f91a4b3f649fa6df996
+#: 948ff3860b7449e189966372f0999657
+#: 1b99936247fa444d8f760ffecb3bfbeb
+#: 73506917c2ae4d10839ac863f15c0649
+#: b6e8b71f2e914b7aa52f4bf5895f9498
+#: e7e7b98e6e7b4408b492675432ece6e4
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.disable:1
+#: 8d470e192c8f45a28576b5da00104921
+msgid "Stops the paginator, disabling all of its components."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.disable:4
+#: 1c19001e498d4934b264501cf3f195de
+msgid "Whether to disable components added via custom views."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.disable:7
+#: e09e9f0034204fa084519c19526ececf
+msgid "The page content to show after disabling the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.cancel:1
+#: 385f026c4c984195899345daeff900dc
+msgid "Cancels the paginator, removing all of its components from the message."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.cancel:4
+#: d92a2abb21bd49f0b1a6c02cb2f1b83a
+msgid "Whether to remove components added via custom views."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.cancel:7
+#: 5ced813a67dd4e249de76fa20d2cbfe4
+msgid "The page content to show after canceling the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.goto_page:1
+#: 273705cd08924bcc81e0fb7eb24ab41f
+msgid "Updates the paginator message to show the specified page number."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.goto_page:4
+#: 86705ad6d652450a8187cf631ecc4aef
+msgid "The page to display.  .. note::      Page numbers are zero-indexed when referenced internally,     but appear as one-indexed when shown to the user."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.goto_page:4
+#: 8e4069b66dfd41f9a73acb1874a5723d
+msgid "The page to display."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.goto_page:8
+#: a05df0eb26fa4b9ebaf18d70d4d979f2
+msgid "Page numbers are zero-indexed when referenced internally, but appear as one-indexed when shown to the user."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.goto_page:12
+#: b46a6169ff5b433981d54d5239460cc7
+msgid "The interaction to use when editing the message. If not provided, the message will be edited using the paginator's stored :attr:`message` attribute instead."
+msgstr ""
+
+#: ../../ext/pages/index.rst:0
+#: 23d2d513e75249be834c3da0e3806faf
+#: 433ab35ccdc34f8a8721f26b0e699f02
+#: 60cad8cd26d448e497604cad7a23855a
+#: 9d3a83013ff043eda39a19a8533e2db2
+#: 071b3f2f83194ecb863f34a81f2b7318
+#: 5b58697a956a4cf4a58ce5a800e4deb1
+#: afe45ade9581404fbe8fb11422546746
+#: 7194b0de3a6c48f09395740786c65dfe
+#: b76f2a1bbef34d9e922ff8ccd944e554
+msgid "Returns"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.goto_page:16
+#: 395be673321547f88323e638d86c0bbf
+msgid "The message associated with the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.goto_page:17
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:35
+#: b6dcdd3d4ca34722a9e4b56af3acc19c
+#: 1e69c14db8ce48d48ba9c2d633221880
+msgid ":class:`~discord.Message`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:3
+#: 9bde443dec424572b5043c1a1666c470
+msgid "A callback that is called when an interaction happens within the view that checks whether the view should process item callbacks for the interaction."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:6
+#: 1ab2878c6df045968a80c9a6132ff611
+msgid "This is useful to override if, for example, you want to ensure that the interaction author is a given user."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:9
+#: 74ea1075550e4bfead0fa3cc3dedbcf3
+msgid "The default implementation of this returns ``True``."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:11
+#: 327caaf61c324a10a0dfaf64d5f4e77b
+msgid "If this returns ``False``, :meth:`on_check_failure` is called."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:15
+#: 504f795f741c495fab7278de056195c6
+msgid "If an exception occurs within the body then the check is considered a failure and :meth:`on_error` is called."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:19
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_check_failure:6
+#: 62c2722e6b6a40fd8c8a215d7cb11a21
+#: 616d5c00eb544301af1b0d00548c865e
+msgid "The interaction that occurred."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:22
+#: cf58c9c3031c44dcbcc4d6428b2e79ca
+msgid "Whether the view children's callbacks should be called."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.interaction_check:23
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.wait:8
+#: c5464d8a113b4293be79478ba33f200d
+#: 607f9270f774451e96d48d6a223876de
+msgid ":class:`bool`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.add_menu:1
+#: 3cb43fceb24a4303a7740545bbb7404d
+msgid "Adds the default :class:`PaginatorMenu` instance to the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.add_default_buttons:1
+#: abdf9feeb622435d94c856d8fcc2d2ff
+msgid "Adds the full list of default buttons that can be used with the paginator. Includes ``first``, ``prev``, ``page_indicator``, ``next``, and ``last``."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.add_button:1
+#: 16033ccfd3734326b67553524cb67b97
+msgid "Adds a :class:`PaginatorButton` to the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.remove_button:1
+#: ac7bec46e3714d67afca04109440ae90
+msgid "Removes a :class:`PaginatorButton` from the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update_buttons:1
+#: 4658b4a4f750447183ee2ecd2cbaadfe
+msgid "Updates the display state of the buttons (disabled/hidden)"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update_buttons:3
+#: c2d8bc65b789479db1e60116d49bab98
+msgid "The dictionary of buttons that were updated."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.update_custom_view:1
+#: 638eaa550f0547419dffb949d7e9ceb6
+msgid "Updates the custom view shown on the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.get_page_group_content:1
+#: 997aaa398a3a43b6b53b595557fe623b
+msgid "Returns a converted list of `Page` objects for the given page group based on the content of its pages."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.get_page_group_content:5
+#: d51ced468afd49acbb4cf1d506cd4f1c
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.pages.pagination.Page\\`\\]`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.get_page_content:1
+#: 0ee5e3fd03144afb81fc1a6c6c12210b
+msgid "Converts a page into a :class:`Page` object based on its content."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.get_page_content:5
+#: a0ccbe1c8fc4425295588d16116d15d6
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.ext.pages.pagination.Page\\``"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.page_action:1
+#: 5de60ff973594979bbbebf60e8de1154
+msgid "Triggers the callback associated with the current page, if any."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.page_action:4
+#: 12777550042c4fc88db802149be1f8c1
+msgid "The interaction that was used to trigger the page action."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:1
+#: d38f6b90fb214fd2a38c0598a305e9a6
+msgid "Sends a message with the paginated items."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:4
+#: abf2c08783684a009f6acb497aefbc07
+msgid "A command's invocation context."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:7
+#: 6b819a6920f04efdbefbc83eff28faaa
+msgid "A target where the paginated message should be sent, if different from the original :class:`Context`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:10
+#: 9630cacaacc24ddcb6ffc7702609685e
+msgid "An optional message shown when the paginator message is sent elsewhere."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:13
+#: 867846727c0943ff80115b0482336ac1
+msgid "A reference to the :class:`~discord.Message` to which you are replying with the paginator. This can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:17
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:20
+#: fba3e242c89c4eefab5d66255b0cf54b
+#: 65b0b09d70bf4e49b640609c5e99a404
+msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:28
+#: 060f7bfa5d004b3d86d6a1c172bba770
+msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:25
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:31
+#: f202d710e2904f8a8f758be7d1f8e13f
+#: 669ef73d878345249fe2920dcef25bb4
+msgid "If set, deletes the paginator after the specified time."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.send:34
+#: ac39d8da08a34f0dae55de6f23200c09
+msgid "The message that was sent with the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.add_item:1
+#: 0d286971aaf84f359ea3f2b868341679
+msgid "Adds an item to the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.add_item:4
+#: b596145e148445798536949956fec5b6
+msgid "The item to add to the view."
+msgstr ""
+
+#: ../../ext/pages/index.rst:0
+#: db25be38ef7749eab275cfcf7ce4fb30
+#: b67cd9be980a4fdf8e179a3825ce7070
+#: 9f2e580e981742ac800ab0c0ffa636e3
+msgid "Raises"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.add_item:7
+#: 799eb95c1d8f40df9edcf9e5b694789e
+msgid "An :class:`Item` was not passed."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.add_item:8
+#: e69d7b97a3c8409c8efd81ad1626f25d
+msgid "Maximum number of children has been exceeded (25)     or the row the item is trying to be added to is full."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.clear_items:1
+#: f7b8e5d7c4304348abcbfbc505545cf3
+msgid "Removes all items from the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.disable_all_items:1
+#: 1a4ac6f032f5427aab3f14952bb0a9ae
+msgid "Disables all items in the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.disable_all_items:4
+#: 115ed036dbed4b93bf59511d61482bc4
+msgid "A list of items in `self.children` to not disable from the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:1
+#: db376aa4460347ecaa0cc6a71294ed64
+msgid "Edits an existing message to replace it with the paginator contents."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:5
+#: d041a66736ff473ea7a033d2a180a519
+msgid "If invoked from an interaction, you will still need to respond to the interaction."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:8
+#: 698e3ece2a734f139df7af407e051dc5
+msgid "The message to edit with the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:11
+#: 8eb175cbee9947f89eee0e3239a53d93
+msgid "Whether to suppress embeds for the message. This removes all the embeds if set to ``True``. If set to ``False`` this brings the embeds back if they were suppressed. Using this parameter requires :attr:`~.Permissions.manage_messages`."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:28
+#: 441faf97de83480f8e9acd0688378a8c
+msgid "If set, changes the user that this paginator belongs to."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:31
+#: b9b96a33a4134ec08e531b25ce552a7b
+msgid "The message that was edited. Returns ``None`` if the operation failed."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.edit:32
+#: bde2084b48ec4c9787e78682dcc81fb5
+msgid "Optional[:class:`discord.Message`]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.enable_all_items:1
+#: 5529aa1751fe48a1aac3071120fe5b99
+msgid "Enables all items in the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.enable_all_items:4
+#: b115fab8e9f441ae97058262b47e4eeb
+msgid "A list of items in `self.children` to not enable from the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.from_message:1
+#: fb9fe3622ae9490eba53b40685382759
+msgid "Converts a message's components into a :class:`View`."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.from_message:3
+#: a5239e55bd5d43f5831e3e995120db1d
+msgid "The :attr:`.Message.components` of a message are read-only and separate types from those in the ``discord.ui`` namespace. In order to modify and edit message components they must be converted into a :class:`View` first."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.from_message:9
+#: 5e13e4d3661642fd8e02726cc001660a
+msgid "The message with components to convert into a view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.from_message:12
+#: 1830d4b99a8e451d8fc931733f8bfd68
+msgid "The timeout of the converted view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.from_message:15
+#: 9bc9774d4bd74c418de1d9b36c3c5c8a
+msgid "The converted view. This always returns a :class:`View` and not one of its subclasses."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.from_message:17
+#: 086f552dd0d342c290385bf3bdf985ab
+msgid ":class:`View`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.get_item:1
+#: b2a30fc2dab449648d3ccac33a6713a4
+msgid "Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.get_item:4
+#: 39c8c0f1510244288c5734268ff2ecfc
+msgid "The custom_id of the item to get"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.get_item:7
+#: d3278dd56b5e4104b98070ea85764693
+msgid "The item with the matching ``custom_id`` if it exists."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.get_item:8
+#: 49f9aab462e146199bb0ad2eb8987e74
+msgid "Optional[:class:`Item`]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.is_dispatching:1
+#: 1d7e2b0e1c18422c9227cbe351a94a36
+msgid "Whether the view has been added for dispatching purposes."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.is_dispatching:4
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.is_finished:4
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.is_persistent:7
+#: 47016b19dd1741b1a063b2f5068dd3ec
+#: e528916f3a854bc58c88136808c5e02c
+#: 7ebc8aa9eb5a4749b302688f0898a9bc
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.is_finished:1
+#: 37860b521c8143f3833fb4beb0a1a2ea
+msgid "Whether the view has finished interacting."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.is_persistent:1
+#: 8fcb089aef584d57b8d0165e8a22048e
+msgid "Whether the view is set up as persistent."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.is_persistent:3
+#: b1fe671c39f5430baade51f464b8eaf2
+msgid "A persistent view has all their components with a set ``custom_id`` and a :attr:`timeout` set to ``None``."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_check_failure:1
+#: 26ea98091eed4b37a02e4fb299ce6413
+msgid "|coro| A callback that is called when a :meth:`View.interaction_check` returns ``False``. This can be used to send a response when a check failure occurs."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_error:3
+#: de6e9c49e57d45b2a3a59296cd5da7c8
+msgid "A callback that is called when an item's callback or :meth:`interaction_check` fails with an error."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_error:6
+#: bf46d9fcc45d4f1b885a743615cbd049
+msgid "The default implementation prints the traceback to stderr."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_error:9
+#: 955a74f46d014b4db4a84da5f9e43c02
+msgid "The exception that was raised."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_error:12
+#: f882a5d3e3cb47b1bcf9d7c720cf97d7
+msgid "The item that failed the dispatch."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.on_error:15
+#: 0eaa94893f944a62a87305a25f22ee07
+msgid "The interaction that led to the failure."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.remove_item:1
+#: cb2bb9fa0f2d4adf8ae284983f41b8eb
+msgid "Removes an item from the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.remove_item:4
+#: 13af2b65c7a6448b89c506d4b733b44a
+msgid "The item to remove from the view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.stop:1
+#: cd3fd1e5c76042c8896020ad68e3d6ed
+msgid "Stops listening to interaction events from this view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.stop:3
+#: da2a7c40b68548eea51cd5f66cd11ea1
+msgid "This operation cannot be undone."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.wait:1
+#: a7fd726fe8824da08c1ef4726cb85e56
+msgid "Waits until the view has finished interacting."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.wait:3
+#: 2c6c8756f7ad4b758c243288a6f448be
+msgid "A view is considered finished when :meth:`stop` is called, or it times out."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.view.View.wait:6
+#: 3c69a4b00f914f128f11aa2b8240d061
+msgid "If ``True``, then the view timed out. If ``False`` then the view finished normally."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:1
+#: 5a13e5a534e2484180375a59f828dadf
+msgid "Sends an interaction response or followup with the paginated items."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:4
+#: da2b82bc0dac4e5e9ffff1e289a0efc3
+msgid "The interaction or BridgeContext which invoked the paginator. If passing a BridgeContext object, you cannot make this an ephemeral paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:8
+#: f5d2bd10e4864a64b7bb4175916dc97c
+msgid "Whether the paginator message and its components are ephemeral. If ``target`` is specified, the ephemeral message content will be ``target_message`` instead.  .. warning::      If your paginator is ephemeral, it cannot have a timeout     longer than 15 minutes (and cannot be persistent)."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:8
+#: a5b209f9e41c40668aa22f24ab3cc043
+msgid "Whether the paginator message and its components are ephemeral. If ``target`` is specified, the ephemeral message content will be ``target_message`` instead."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:13
+#: a5a9d6f0eeae435e85be10f33420ae78
+msgid "If your paginator is ephemeral, it cannot have a timeout longer than 15 minutes (and cannot be persistent)."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:17
+#: 050718b89ecc46ca8d2bc5eb98e6e72c
+msgid "A target where the paginated message should be sent, if different from the original :class:`discord.Interaction`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:21
+#: 095ca86d10b7456e90419b5b5023b0d3
+msgid "The content of the interaction response shown when the paginator message is sent elsewhere."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator.respond:24
+#: bd17bd959c86463c8dc7581e9843ad82
+msgid "The :class:`~discord.Message` or :class:`~discord.WebhookMessage` that was sent with the paginator."
+msgstr ""
+
+#: ../../ext/pages/index.rst:312
+#: 20630bd0e40b4eeaa17398c49bc9c715
+msgid "PaginatorButton"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:1
+#: 9d89624578c7499fb29f824d9a4a0336
+msgid "Creates a button used to navigate the paginator."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:4
+#: ef90e083b4c24a29b99dc4bbe2197f46
+msgid "The type of button being created. Must be one of ``first``, ``prev``, ``next``, ``last``, or ``page_indicator``."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:8
+#: d839761b333045e49f5c7ae824615764
+msgid "The label shown on the button. Defaults to a capitalized version of ``button_type`` (e.g. \"Next\", \"Prev\", etc.)"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:12
+#: e3c16ce4afa94d8099e73c3985fde852
+msgid "The emoji shown on the button in front of the label."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:15
+#: 33acfd60dff04f368d4eced4ccde5acd
+msgid "Whether to initially show the button as disabled."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:18
+#: 629096497ac84fc69a4ff620e40e46ff
+msgid "The label shown on the button when ``loop_pages`` is set to ``True`` in the Paginator class."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:23
+#: 5161e3d1f2ea4042bcf7f389c9cb86fe
+msgid "The paginator class where this button is being used. Assigned to the button when ``Paginator.add_button`` is called."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton:26
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu:12
+#: 65b16c206cc54c01a115ae6dd829d2c1
+#: f24f43ef85fc4fa49db3873d9f486199
+msgid ":class:`Paginator`"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.label:1
+#: 19fef157664f4c64a9b773232fe202e6
+msgid "The label of the button, if available."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.emoji:1
+#: 9b573729b4a841b88ca87d1314759096
+msgid "The emoji of the button, if available."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.style:1
+#: e095e568418b49cdbbac418b65bddc4a
+msgid "The style of the button."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.disabled:1
+#: 73ee32fb4f884db8a2baaec52956a4ff
+msgid "Whether the button is disabled or not."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton.callback:3
+#: b2dbc527cb194711bb5c77bedc10c1e1
+msgid "The coroutine that is called when the navigation button is clicked."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorButton.callback:6
+#: 9b2955fae778492b859452b34a58b65a
+msgid "The interaction created by clicking the navigation button."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.custom_id:1
+#: cd80cb2731d3486b84b9c1a19aed382d
+msgid "The ID of the button that gets received during an interaction."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.custom_id:3
+#: 57fd2e9ba90f45fc9504e7438dbe787f
+msgid "If this button is for a URL, it does not have a custom ID."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.sku_id:1
+#: c87c8240e5dd4ff69d19866fc6522c5f
+msgid "The ID of the SKU this button refers to."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.url:1
+#: dda9b3885e0a4250979ffbca77e592f9
+msgid "The URL this button sends you to."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.view:1
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.view:1
+#: 779b1ffc73854c80b1b87b3fb7b03228
+#: b3dc3a0e33de4930b09c6128690cc85b
+msgid "The underlying view for this item."
+msgstr ""
+
+#: ../../ext/pages/index.rst:321
+#: bbee89d0c8f54cddb8d204dce6e729bd
+msgid "PaginatorMenu"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu:1
+#: 11ee7599b2af45e69b577929e02558da
+msgid "Creates a select menu used to switch between page groups, which can each have their own set of buttons."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu:4
+#: 93f0b0f5f5344cd7917004ed6c17ade5
+msgid "The placeholder text that is shown if nothing is selected."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu:9
+#: 733bbd198a724ff89d849e17bb4464ef
+msgid "The paginator class where this menu is being used. Assigned to the menu when ``Paginator.add_menu`` is called."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:1
+#: fd0f251caa31466f86f28a963b80e74e
+msgid "Adds an option to the select menu."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:3
+#: 0ef246583a96465ab9a2662925dea262
+msgid "To append a pre-existing :class:`discord.SelectOption` use the :meth:`append_option` method instead."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:7
+#: 7debbe68aa84435e8200d7e2981cd202
+msgid "The label of the option. This is displayed to users. Can only be up to 100 characters."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:11
+#: 08e93f8f2b6b4e2e9bc8a54af7e9cabf
+msgid "The value of the option. This is not displayed to users. If not given, defaults to the label. Can only be up to 100 characters."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:15
+#: c8c94a6f3925491fbdbfc616e9f7a4bb
+msgid "An additional description of the option, if any. Can only be up to 100 characters."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:19
+#: 03aca7b4fad14c57a7cec8d245b4958b
+msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:23
+#: e73c3cef480d411881ff3001d10f64f4
+msgid "Whether this option is selected by default."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:26
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.append_option:7
+#: 8aa241191edb441496f0c1bd02fe0da0
+#: 39baed4852504458b9d8d46f72c39a2a
+msgid "The number of options exceeds 25."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.append_option:1
+#: bafa80d0afd248d4b54b80365d46b82a
+msgid "Appends an option to the select menu."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.append_option:4
+#: 2d8599f9eca74a0cb9cc8f88c0406158
+msgid "The option to append to the select menu."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.channel_types:1
+#: 97d6790260324dad936de6871ef37839
+msgid "A list of channel types that can be selected in this menu."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.custom_id:1
+#: d75ecd6ec9e44825a919ca427b5ec5e4
+msgid "The ID of the select menu that gets received during an interaction."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.disabled:1
+#: 4ca8076e7aa84cf0959662de2d2070a3
+msgid "Whether the select is disabled or not."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.max_values:1
+#: 89964f8198b14cc49d9b7ab8b6b5b5c1
+msgid "The maximum number of items that must be chosen for this select menu."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.min_values:1
+#: 63d719dbf42149e1ad7e9107549a1c8e
+msgid "The minimum number of items that must be chosen for this select menu."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.options:1
+#: 6323c7b02d2242bfaec760b147775d6d
+msgid "A list of options that can be selected in this menu."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.placeholder:1
+#: 2360c22bf0db488ea313baf24fc77930
+msgid "The placeholder text that is shown if nothing is selected, if any."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.values:1
+#: 1a9c671416ff416a8098e527e4238487
+msgid "List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] | List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None: A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu.callback:3
+#: f77011c86cae47989890beafa1381460
+msgid "The coroutine that is called when a menu option is selected."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PaginatorMenu.callback:6
+#: b46da7fdc2e2499f8b9c9229a1d4258e
+msgid "The interaction created by selecting the menu option."
+msgstr ""
+
+#: ../../ext/pages/index.rst:330
+#: 729faa6949a64481845ce15d9de049be
+msgid "PageGroup"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:1
+#: 0f19f3e8fcae4dd2b7871b731090eeb4
+msgid "Creates a group of pages which the user can switch between."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:3
+#: ddf81666476e43c1b66bac8ad7016d82
+msgid "Each group of pages can have its own options, custom buttons, custom views, etc."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:7
+#: ecc0ed43087e49ce9f6bc57ac582a2cb
+msgid "If multiple :class:`PageGroup` objects have different options, they should all be set explicitly when creating each instance."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:11
+#: f44c1d50fe2241ae90bd68f0b86bc490
+msgid "The list of :class:`Page` objects, strings, embeds, or list of embeds to include in the page group."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:14
+#: 618c8dc7c14745af8932b5e444a46f47
+msgid "The label shown on the corresponding PaginatorMenu dropdown option. Also used as the SelectOption value."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:18
+#: 6233ba31ec5d4ae6a3e21fea5df4fd03
+msgid "The description shown on the corresponding PaginatorMenu dropdown option."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:21
+#: 406c3c7333924c1a928efb524d4d59b3
+msgid "The emoji shown on the corresponding PaginatorMenu dropdown option."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:24
+#: 640d81823b8945488f29aa310f7b50fe
+msgid "Whether the page group should be the default page group initially shown when the paginator response is sent. Only one ``PageGroup`` can be the default page group."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.PageGroup:49
+#: a0d57e1edeaa4012830f0df83c584427
+msgid "A custom view whose items are appended below the pagination buttons."
+msgstr ""

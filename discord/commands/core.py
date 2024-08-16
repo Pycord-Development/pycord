@@ -1513,7 +1513,7 @@ class SlashCommandGroup(ApplicationCommand):
             else:
                 await self._after_invoke(ctx)  # type: ignore
 
-    def walk_commands(self) -> Generator[SlashCommand | SlashCommandGroup, None, None]:
+    def walk_commands(self) -> Generator[SlashCommand | SlashCommandGroup]:
         """An iterator that recursively walks through all slash commands and groups in this group.
 
         Yields

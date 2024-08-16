@@ -10,6 +10,21 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+⚠️ **This Version Removes Support For Python 3.8** ⚠️
+
+### Changed
+
+- Renamed `cover` property of `ScheduledEvent` and `cover` argument of
+  `ScheduledEvent.edit` to `image`.
+  ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
+- ⚠️ **This Version Removes Support For Python 3.8** ⚠️
+  ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
+
+### Added
+
+- Added `Guild.fetch_role` method.
+  ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
+
 ### Fixed
 
 - Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
@@ -23,12 +38,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the type of the `default_sort_order` attribute, changing it from `int` to
   `SortOrder`. enum in `ForumChannel` class.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
-
-### Changed
-
-- Renamed `cover` property of `ScheduledEvent` and `cover` argument of
-  `ScheduledEvent.edit` to `image`.
-  ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
 
 ## [2.6.0] - 2024-07-09
 

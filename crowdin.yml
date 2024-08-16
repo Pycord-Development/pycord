@@ -1,0 +1,19 @@
+base_path: "docs/build/locales"
+base_url: "https://pycord.crowdin.com"
+
+preserve_hierarchy: true
+
+commit_message: "docs: Update translations"
+
+export_languages: ["de", "ja", "fr", "it", "hi", "ko", "pt-BR", "es-ES", "zh-CN"]
+
+bundles:
+  - 1
+
+files:
+  [
+    {
+      source: "**/*.pot",
+      translation: "/docs/locales/%two_letters_code%/LC_MESSAGES/%original_path%/%file_name%.po",
+    },
+  ]

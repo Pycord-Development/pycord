@@ -1,0 +1,552 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../faq.rst:7 42c694dc6243417398dfda77b5d62118
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: ../../faq.rst:9 aadc6d39fd624f2a9caf5a3afaed39f7
+msgid ""
+"This is a list of Frequently Asked Questions regarding using ``Pycord`` "
+"and its extension modules. Feel free to suggest a new question or submit "
+"one via pull requests."
+msgstr ""
+
+#: ../../faq.rst:14 f1deeae5e8ec4fa1a960f38a3506f17e
+msgid "Coroutines"
+msgstr ""
+
+#: ../../faq.rst:16 0d979a5f910e4b458a5e259f76d88293
+msgid "Questions regarding coroutines and asyncio belong here."
+msgstr ""
+
+#: ../../faq.rst:19 73708e0cc4d54d139990aafd94812778
+msgid "What is a coroutine?"
+msgstr ""
+
+#: ../../faq.rst:21 1e95db0d82644800b67bcc3db6e722a3
+msgid ""
+"A |coroutine_link|_ is a function that must be invoked with ``await`` or "
+"``yield from``. When Python encounters an ``await`` it stops the "
+"function's execution at that point and works on other things until it "
+"comes back to that point and finishes off its work. This allows for your "
+"program to be doing multiple things at the same time without using "
+"threads or complicated multiprocessing."
+msgstr ""
+
+#: ../../faq.rst:26 ffd553a66e4f4313b68911d1727daed8
+msgid ""
+"**If you forget to await a coroutine then the coroutine will not run. "
+"Never forget to await a coroutine.**"
+msgstr ""
+
+#: ../../faq.rst:29 5e4c81ff3a0d48aca229db1d69f5868b
+msgid "Where can I use ``await``\\?"
+msgstr ""
+
+#: ../../faq.rst:31 efa3ec603fe54b8fab857ce490ec3cb6
+msgid ""
+"You can only use ``await`` inside ``async def`` functions and nowhere "
+"else."
+msgstr ""
+
+#: ../../faq.rst:34 c826e0a3d9684b32be75af0a16e6c9e0
+msgid "What does \"blocking\" mean?"
+msgstr ""
+
+#: ../../faq.rst:36 f740f2b4ae774915aa7baafaa04b69f4
+msgid ""
+"In asynchronous programming a blocking call is essentially all the parts "
+"of the function that are not ``await``. Do not despair however, because "
+"not all forms of blocking are bad! Using blocking calls is inevitable, "
+"but you must work to make sure that you don't excessively block "
+"functions. Remember, if you block for too long then your bot will freeze "
+"since it has not stopped the function's execution at that point to do "
+"other things."
+msgstr ""
+
+#: ../../faq.rst:41 87e4373c7de24a56af1623cc126c63f1
+msgid ""
+"If logging is enabled, this library will attempt to warn you that "
+"blocking is occurring with the message: ``Heartbeat blocked for more than"
+" N seconds.`` See :ref:`logging_setup` for details on enabling logging."
+msgstr ""
+
+#: ../../faq.rst:45 0f6c774e82c54d809d7eab2e5343db1f
+msgid ""
+"A common source of blocking for too long is something like "
+":func:`time.sleep`. Don't do that. Use :func:`asyncio.sleep` instead. "
+"Similar to this example: ::"
+msgstr ""
+
+#: ../../faq.rst:54 b4f3d4ffd28b4499abc2b803cceef267
+msgid ""
+"Another common source of blocking for too long is using HTTP requests "
+"with the famous module :doc:`requests <req:index>`. While :doc:`requests "
+"<req:index>` is an amazing module for non-asynchronous programming, it is"
+" not a good choice for :mod:`asyncio` because certain requests can block "
+"the event loop too long. Instead, use the :doc:`aiohttp <aio:index>` "
+"library which is installed on the side with this library."
+msgstr ""
+
+#: ../../faq.rst:59 e745924d9a314b659d522d7e2908f735
+msgid "Consider the following example: ::"
+msgstr ""
+
+#: ../../faq.rst:75 75b3be6463eb414996f8e998c3901719
+msgid "General"
+msgstr ""
+
+#: ../../faq.rst:77 486e6101fbaf473ca14a3f2a2d156634
+msgid "General questions regarding library usage belong here."
+msgstr ""
+
+#: ../../faq.rst:80 61cea3fbaefe441589ee75c6ef47044e
+msgid "Where can I find usage examples?"
+msgstr ""
+
+#: ../../faq.rst:82 75110bb3b99547c4a0785fa8b5306634
+msgid ""
+"Example code can be found in the `examples folder <https://github.com"
+"/Pycord-Development/pycord/tree/master/examples>`_ in the repository."
+msgstr ""
+
+#: ../../faq.rst:86 4debeae373084131a5142dda06bdf003
+msgid "How do I set the \"Playing\" status?"
+msgstr ""
+
+#: ../../faq.rst:88 c1ed0473c08a4f2d84bfe7c3c0668879
+msgid ""
+"The ``activity`` keyword argument may be passed in the :class:`Client` "
+"constructor or :meth:`Client.change_presence`, given an :class:`Activity`"
+" object."
+msgstr ""
+
+#: ../../faq.rst:90 ed575ddcf47c4421a518efbfab76cdcf
+msgid ""
+"The constructor may be used for static activities, while "
+":meth:`Client.change_presence` may be used to update the activity at "
+"runtime."
+msgstr ""
+
+#: ../../faq.rst:94 205690eee5334303a093ae89a20b2115
+msgid ""
+"It is highly discouraged to use :meth:`Client.change_presence` or API "
+"calls in :func:`on_ready` as this event may be called many times while "
+"running, not just once."
+msgstr ""
+
+#: ../../faq.rst:96 1e3e9fad12604c21b0f70d73f8b72520
+msgid ""
+"There is a high chance of disconnecting if presences are changed right "
+"after connecting."
+msgstr ""
+
+#: ../../faq.rst:98 4bcfe431e4b94a3bbb4f442963b89f41
+msgid ""
+"The status type (playing, listening, streaming, watching) can be set "
+"using the :class:`ActivityType` enum. For memory optimisation purposes, "
+"some activities are offered in slimmed-down versions:"
+msgstr ""
+
+#: ../../faq.rst:101 e078b8a7823f45e5bb41baca9e0c9c88
+msgid ":class:`Game`"
+msgstr ""
+
+#: ../../faq.rst:102 60eaac3fd0ec4801ae0764d3422c333c
+msgid ":class:`Streaming`"
+msgstr ""
+
+#: ../../faq.rst:104 53c37fa6b2ff42e6bb7ab64e48bdcfeb
+msgid "Putting both of these pieces of info together, you get the following: ::"
+msgstr ""
+
+#: ../../faq.rst:113 445f9e722bfe4fc5bbf9640c49fbcbc5
+msgid "How do I send a message to a specific channel?"
+msgstr ""
+
+#: ../../faq.rst:115 fed233889a0040e3a7044530689843b4
+msgid ""
+"You must fetch the channel directly and then call the appropriate method."
+" Example: ::"
+msgstr ""
+
+#: ../../faq.rst:121 efdd5354470e487c8e4a4ededb220e73
+msgid "How do I send a DM?"
+msgstr ""
+
+#: ../../faq.rst:123 7c73470058c540b7b6211dde4dd78c89
+msgid ""
+"Get the :class:`User` or :class:`Member` object and call "
+":meth:`abc.Messageable.send`. For example: ::"
+msgstr ""
+
+#: ../../faq.rst:128 d942a2a29c834b23a7228600a3ac8947
+msgid ""
+"If you are responding to an event, such as :func:`on_message`, you "
+"already have the :class:`User` object via :attr:`Message.author`: ::"
+msgstr ""
+
+#: ../../faq.rst:133 dd32f32169e44c28840bcc496597f50e
+msgid "How do I get the ID of a sent message?"
+msgstr ""
+
+#: ../../faq.rst:135 0537432c7b8c475e8dd7fcd295387b35
+msgid ""
+":meth:`abc.Messageable.send` returns the :class:`Message` that was sent. "
+"The ID of a message can be accessed via :attr:`Message.id`: ::"
+msgstr ""
+
+#: ../../faq.rst:142 d5d5efa3a769462896d5f4ae71592c82
+msgid "How do I upload an image?"
+msgstr ""
+
+#: ../../faq.rst:144 a27fec8be055451191c60ff0dac0389e
+msgid "To upload something to Discord you have to use the :class:`File` object."
+msgstr ""
+
+#: ../../faq.rst:146 ab655cc9b8db425c8a9883536ae60fd7
+msgid ""
+"A :class:`File` accepts two parameters, the file-like object (or file "
+"path) and the filename to pass to Discord when uploading."
+msgstr ""
+
+#: ../../faq.rst:149 b581efc9510c4249a68da678b8f19a5a
+msgid "If you want to upload an image it's as simple as: ::"
+msgstr ""
+
+#: ../../faq.rst:153 daff6be6e19b4749a1021c8240a8c2c6
+msgid "If you have a file-like object you can do as follows: ::"
+msgstr ""
+
+#: ../../faq.rst:158 c3b8713a8aef46fda35e6ac17b5e32d0
+msgid ""
+"To upload multiple files, you can use the ``files`` keyword argument "
+"instead of ``file``\\: ::"
+msgstr ""
+
+#: ../../faq.rst:166 15d211e0a15e4e9fb1ca3873ea167290
+msgid ""
+"If you want to upload something from a URL, you will have to use an HTTP "
+"request using :doc:`aiohttp <aio:index>` and then pass an "
+":class:`io.BytesIO` instance to :class:`File` like so:"
+msgstr ""
+
+#: ../../faq.rst:183 5cbb9695485342d8ad7cb81efe8a1c9d
+msgid "How can I add a reaction to a message?"
+msgstr ""
+
+#: ../../faq.rst:185 a465b71cb0bb4d93a0b93a90d4a5908e
+msgid "You use the :meth:`Message.add_reaction` method."
+msgstr ""
+
+#: ../../faq.rst:187 5945a133b4f04ee2a5756ad1d92a69ea
+msgid ""
+"If you want to use unicode emoji, you must pass a valid unicode code "
+"point in a string. In your code, you can write this in a few different "
+"ways:"
+msgstr ""
+
+#: ../../faq.rst:189 4b2c00f729364d54ae46abe524019f69
+msgid "``'👍'``"
+msgstr ""
+
+#: ../../faq.rst:190 a16f06193ba143b7bf99419f710cc7b3
+msgid "``'\\U0001F44D'``"
+msgstr ""
+
+#: ../../faq.rst:191 3b675c057f77434183fe3ba30d93d2bf
+msgid "``'\\N{THUMBS UP SIGN}'``"
+msgstr ""
+
+#: ../../faq.rst:193 ../../faq.rst:209 ../../faq.rst:285 ../../faq.rst:301
+#: ../../faq.rst:321 2ac40c17e7e146adaf2e1882a0895624
+#: 4af31f34d79f4b15bdcd9f9c0ecb638d 7466bd3209ed4da6a1db6c319e409d98
+#: 8a59ed4e66c942a0abc4d59c6b33ad77 d619f977a1fc4114ae22961529c04ae9
+msgid "Quick example: ::"
+msgstr ""
+
+#: ../../faq.rst:199 50d17ed090ff4403a93ddb3e8e6fcf2c
+msgid ""
+"In case you want to use emoji that come from a message, you already get "
+"their code points in the content without needing to do anything special. "
+"You **cannot** send ``':thumbsup:'`` style shorthands."
+msgstr ""
+
+#: ../../faq.rst:202 83b6da571d72418b976c492e3fe88640
+msgid ""
+"For custom emoji, you should pass an instance of :class:`Emoji`. You can "
+"also pass a ``'<:name:id>'`` string, but if you can use said emoji, you "
+"should be able to use :meth:`Client.get_emoji` to get an emoji via ID or "
+"use :func:`utils.find`/ :func:`utils.get` on :attr:`Client.emojis` or "
+":attr:`Guild.emojis` collections."
+msgstr ""
+
+#: ../../faq.rst:206 2025e4eb563846b6ab9ca3c36bfbaf22
+msgid ""
+"The name and ID of a custom emoji can be found with the client by "
+"prefixing ``:custom_emoji:`` with a backslash. For example, sending the "
+"message ``\\:python3:`` with the client will result in "
+"``<:python3:232720527448342530>``."
+msgstr ""
+
+#: ../../faq.rst:226 8348ea888c9c4f998ce1b608a36687ab
+msgid "How do I pass a coroutine to the player's \"after\" function?"
+msgstr ""
+
+#: ../../faq.rst:228 31fd3ba1351f47edaf088f8a1ca132d0
+msgid ""
+"The library's music player launches on a separate thread, ergo it does "
+"not execute inside a coroutine. This does not mean that it is not "
+"possible to call a coroutine in the ``after`` parameter. To do so you "
+"must pass a callable that wraps up a couple of aspects."
+msgstr ""
+
+#: ../../faq.rst:232 3a6dc9b3a9e3440eb71e0ebd4f935de7
+msgid ""
+"The first gotcha that you must be aware of is that calling a coroutine is"
+" not a thread-safe operation. Since we are technically in another thread,"
+" we must take caution in calling thread-safe operations so things do not "
+"bug out. Luckily for us, :mod:`asyncio` comes with a "
+":func:`asyncio.run_coroutine_threadsafe` function that allows us to call "
+"a coroutine from another thread."
+msgstr ""
+
+#: ../../faq.rst:237 c759400dc1344921970c74fdf5a861e2
+msgid ""
+"However, this function returns a :class:`~concurrent.futures.Future` and "
+"to actually call it we have to fetch its result. Putting all of this "
+"together we can do the following: ::"
+msgstr ""
+
+#: ../../faq.rst:252 a29ad71864ee45478c2585ea1682ce88
+msgid "How do I run something in the background?"
+msgstr ""
+
+#: ../../faq.rst:254 fc7a63eea1d941e0ba8fc931ce98d69b
+msgid ""
+"`Check the background_task.py example. <https://github.com/Pycord-"
+"Development/pycord/blob/master/examples/background_task.py>`_"
+msgstr ""
+
+#: ../../faq.rst:257 e123c76a03bc4bba94c4ea7823059d30
+msgid "How do I get a specific model?"
+msgstr ""
+
+#: ../../faq.rst:259 c6ea38dff8ef49dbb15674cda4f76fee
+msgid ""
+"There are multiple ways of doing this. If you have a specific model's ID "
+"then you can use one of the following functions:"
+msgstr ""
+
+#: ../../faq.rst:262 df8275f393d74fd2b8aecc522b3b028d
+msgid ":meth:`Client.get_channel`"
+msgstr ""
+
+#: ../../faq.rst:263 1b0bd9baafff48ab8d9b51392f87cb88
+msgid ":meth:`Client.get_message`"
+msgstr ""
+
+#: ../../faq.rst:264 a4fdecfa549c4af29c85a2ac6af0adb8
+msgid ":meth:`Client.get_guild`"
+msgstr ""
+
+#: ../../faq.rst:265 e8a1b227e0bc4c4ca6ecab9de950fa39
+msgid ":meth:`Client.get_user`"
+msgstr ""
+
+#: ../../faq.rst:266 fa1ef088ffd649e7be0756077ebb5204
+msgid ":meth:`Client.get_emoji`"
+msgstr ""
+
+#: ../../faq.rst:267 ce6bba09a863412085379af1b86f43f4
+msgid ":meth:`Guild.get_member`"
+msgstr ""
+
+#: ../../faq.rst:268 cdb641bf33ca4081af71f6fbab38c7ef
+msgid ":meth:`Guild.get_channel`"
+msgstr ""
+
+#: ../../faq.rst:269 52c8ef2610ed40df9d821bd9b72f52c0
+msgid ":meth:`Guild.get_role`"
+msgstr ""
+
+#: ../../faq.rst:271 4432c4bdbd43488497d53d09fb757cea
+msgid "The following use an HTTP request:"
+msgstr ""
+
+#: ../../faq.rst:273 c33931c8a1d94df2977b7d2400e795ff
+msgid ":meth:`abc.Messageable.fetch_message`"
+msgstr ""
+
+#: ../../faq.rst:274 6c4aeb1c43744304964e174c90155da8
+msgid ":meth:`Client.fetch_user`"
+msgstr ""
+
+#: ../../faq.rst:275 61dbda6f00104881bebe25d22bd0b9b6
+msgid ":meth:`Client.fetch_guilds`"
+msgstr ""
+
+#: ../../faq.rst:276 82be9a6851bb47969a025ac8a83842cd
+msgid ":meth:`Client.fetch_guild`"
+msgstr ""
+
+#: ../../faq.rst:277 22c47fa480604e00a1331d55158290d6
+msgid ":meth:`Guild.fetch_emoji`"
+msgstr ""
+
+#: ../../faq.rst:278 280a399aea224f21b4982931f9634884
+msgid ":meth:`Guild.fetch_emojis`"
+msgstr ""
+
+#: ../../faq.rst:279 880bae3974c640258ffbc8c38ee6b023
+msgid ":meth:`Guild.fetch_member`"
+msgstr ""
+
+#: ../../faq.rst:282 64a069b8f1fc43fdb461eb1f0b6353cb
+msgid ""
+"If the functions above do not help you, then use of :func:`utils.find` or"
+" :func:`utils.get` would serve some use in finding specific models."
+msgstr ""
+
+#: ../../faq.rst:296 117011a3c921470791e0fb9ae1a99887
+msgid "How do I make a web request?"
+msgstr ""
+
+#: ../../faq.rst:298 a81d38db11e34929840d202e3e39e014
+msgid ""
+"To make a request, you should use a non-blocking library. This library "
+"already uses and requires a 3rd party library for making requests, "
+":doc:`aiohttp <aio:index>`."
+msgstr ""
+
+#: ../../faq.rst:308 f7fcd1f2851748b496f550b00027a817
+msgid ""
+"See `aiohttp's full documentation "
+"<http://aiohttp.readthedocs.io/en/stable/>`_ for more information."
+msgstr ""
+
+#: ../../faq.rst:311 33bfccbec5e44bd8875eb5535d5c4ba7
+msgid "How do I use a local image file for an embed image?"
+msgstr ""
+
+#: ../../faq.rst:313 4ac20ca08166409b95cd618f3a9d247f
+msgid ""
+"Discord special-cases uploading an image attachment and using it within "
+"an embed so that it will not display separately, but instead in the "
+"embed's thumbnail, image, footer or author icon."
+msgstr ""
+
+#: ../../faq.rst:316 5a4543d51c054078a317ba9eb73ece9b
+msgid ""
+"To do so, upload the image normally with :meth:`abc.Messageable.send`, "
+"and set the embed's image URL to ``attachment://image.png``, where "
+"``image.png`` is the filename of the image you will send."
+msgstr ""
+
+#: ../../faq.rst:329 cea3d47022ad45399532475aed28dad2
+msgid "Is there an event for audit log entries being created?"
+msgstr ""
+
+#: ../../faq.rst:331 d54188f6cfa34ff5b4f3cb79d04113eb
+msgid ""
+"As of version 2.5, you can receive audit log entries with the "
+":func:`on_audit_log_entry` event."
+msgstr ""
+
+#: ../../faq.rst:334 af9b163a1a404649b60bc68e4aa18658
+msgid "Commands Extension"
+msgstr ""
+
+#: ../../faq.rst:336 f6b5f936ec2246b3b2f804b9f0228f76
+msgid "Questions regarding ``discord.ext.commands`` belong here."
+msgstr ""
+
+#: ../../faq.rst:339 60e1562627864406bfd930e966f3834b
+msgid "Why does ``on_message`` make my commands stop working?"
+msgstr ""
+
+#: ../../faq.rst:341 eb6e93a1f5a745df9633622c9c43befd
+msgid ""
+"Overriding the default provided ``on_message`` forbids any extra commands"
+" from running. To fix this, add a ``bot.process_commands(message)`` line "
+"at the end of your ``on_message``. For example: ::"
+msgstr ""
+
+#: ../../faq.rst:350 3d9bcd5624e048a095c6660f92687fb8
+msgid ""
+"Alternatively, you can place your ``on_message`` logic into a "
+"**listener**. In this setup, you should not manually call "
+"``bot.process_commands()``. This also allows you to do multiple things "
+"asynchronously in response to a message. Example::"
+msgstr ""
+
+#: ../../faq.rst:360 a7c7415a26b048a2a5f6604066be146a
+msgid "Why do my arguments require quotes?"
+msgstr ""
+
+#: ../../faq.rst:362 86911130df094c728d135487c8732c02
+msgid "In a simple command defined as: ::"
+msgstr ""
+
+#: ../../faq.rst:368 1c0677bdf38b4842829596fafcbef588
+msgid ""
+"Calling it via ``?echo a b c`` will only fetch the first argument and "
+"disregard the rest. To fix this you should either call it via ``?echo \"a"
+" b c\"`` or change the signature to have \"consume rest\" behaviour. "
+"Example: ::"
+msgstr ""
+
+#: ../../faq.rst:375 200e58391f9f4db0a074373036d54117
+msgid "This will allow you to use ``?echo a b c`` without needing the quotes."
+msgstr ""
+
+#: ../../faq.rst:378 c4f3a0dc111f45358fccaa11113f345f
+msgid "How do I get the original ``message``\\?"
+msgstr ""
+
+#: ../../faq.rst:380 9fe189d10192426288f5ea7ef96c203e
+msgid ""
+"The :class:`~ext.commands.Context` contains an attribute, "
+":attr:`~.Context.message` to get the original message."
+msgstr ""
+
+#: ../../faq.rst:383 ../../faq.rst:395 2bca210db4524a3dab85438e7d12f2b3
+#: 8a369aaa0965425abecf4147f8627866
+msgid "Example: ::"
+msgstr ""
+
+#: ../../faq.rst:390 fe8cf520d18b47a6bc64e350dced6b0b
+msgid "How do I make a subcommand?"
+msgstr ""
+
+#: ../../faq.rst:392 e03e295bf8864bb3954ff5b558e7aae0
+msgid ""
+"Use the :func:`~ext.commands.group` decorator. This will transform the "
+"callback into a :class:`~ext.commands.Group` which will allow you to add "
+"commands into the group operating as \"subcommands\". These groups can be"
+" arbitrarily nested as well."
+msgstr ""
+
+#: ../../faq.rst:406 293c6bec61af42d7803ffc3d3ab42a5a
+msgid "This could then be used as ``?git push origin master``."
+msgstr ""
+

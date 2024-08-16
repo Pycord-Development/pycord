@@ -1,0 +1,115 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Extensions"
+msgstr "Extensions"
+
+msgid "Meta"
+msgstr "Meta"
+
+msgid "Welcome to Pycord"
+msgstr "Welcome to Pycord"
+
+msgid "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
+msgstr "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
+
+msgid "**Features:**"
+msgstr "**Features:**"
+
+msgid "Modern Pythonic API using ``async``\\/``await`` syntax"
+msgstr "Modern Pythonic API using ``async``\\/``await`` syntax"
+
+msgid "Sane rate limit handling that prevents 429s"
+msgstr "Sane rate limit handling that prevents 429s"
+
+msgid "Command extension to aid with bot creation"
+msgstr "Command extension to aid with bot creation"
+
+msgid "Easy to use with an object oriented design"
+msgstr "Easy to use with an object oriented design"
+
+msgid "Optimised for both speed and memory"
+msgstr "Optimised for both speed and memory"
+
+msgid "Getting started"
+msgstr "Getting started"
+
+msgid "Is this your first time using the library? This is the place to get started!"
+msgstr "Is this your first time using the library? This is the place to get started!"
+
+msgid "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
+msgstr "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
+
+msgid "**Working with Discord:** :doc:`discord` | :doc:`intents`"
+msgstr "**Working with Discord:** :doc:`discord` | :doc:`intents`"
+
+msgid "**Examples:** Many examples are available in the :resource:`repository <examples>`."
+msgstr "**Examples:** Many examples are available in the :resource:`repository <examples>`."
+
+msgid "Getting help"
+msgstr "Getting help"
+
+msgid "If you're having trouble with something, these resources might help."
+msgstr "If you're having trouble with something, these resources might help."
+
+msgid "Try the :doc:`faq` first, it's got answers to all common questions."
+msgstr "Try the :doc:`faq` first, it's got answers to all common questions."
+
+msgid "Ask us and hang out with us in our :resource:`Discord <discord>` server."
+msgstr "Ask us and hang out with us in our :resource:`Discord <discord>` server."
+
+msgid "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
+msgstr "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
+
+msgid "Report bugs in the :resource:`issue tracker <issues>`."
+msgstr "Report bugs in the :resource:`issue tracker <issues>`."
+
+msgid "Manuals"
+msgstr "Manuals"
+
+msgid "These pages go into great detail about everything the API can do."
+msgstr "These pages go into great detail about everything the API can do."
+
+msgid "Core API"
+msgstr "Core API"
+
+msgid "These extensions help you during development when it comes to common tasks."
+msgstr "These extensions help you during development when it comes to common tasks."
+
+msgid ":doc:`ext/commands/index` - Bot commands framework"
+msgstr ":doc:`ext/commands/index` - Bot commands framework"
+
+msgid ":doc:`ext/tasks/index` - asyncio.Task helpers"
+msgstr ":doc:`ext/tasks/index` - asyncio.Task helpers"
+
+msgid ":doc:`ext/pages/index` - A pagination extension module"
+msgstr ":doc:`ext/pages/index` - A pagination extension module"
+
+msgid ":doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands"
+msgstr ":doc:`ext/bridge/index` - A module that bridges slash commands to prefixed commands"
+
+msgid "If you're looking for something related to the project itself, it's here."
+msgstr "If you're looking for something related to the project itself, it's here."
+
+msgid ":doc:`changelog` - The changelog for the library."
+msgstr ":doc:`changelog` - The changelog for the library."
+
+msgid ":doc:`version_guarantees` - The version guarantees for the library."
+msgstr ":doc:`version_guarantees` - The version guarantees for the library."
+
+msgid ":doc:`migrating_to_v1` - How to migrate from v0.x to v1.x."
+msgstr ":doc:`migrating_to_v1` - How to migrate from v0.x to v1.x."
+
+msgid ":doc:`migrating_to_v2` - How to migrate from v1.x to v2.x."
+msgstr ":doc:`migrating_to_v2` - How to migrate from v1.x to v2.x."
+
