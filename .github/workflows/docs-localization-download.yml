@@ -57,7 +57,7 @@ jobs:
           base_path: "."
           commit_message: "docs: Update localizations from Crowdin"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
       - name: "Convert Outputs"
@@ -88,46 +88,46 @@ jobs:
           PR_ID=$(echo -n "${{ needs.download.outputs.pr_id }}" | base64 --decode)
           echo "pr_ref=$PR_REF" >> $GITHUB_OUTPUT
           echo "pr_id=$PR_ID" >> $GITHUB_OUTPUT
-      - name: Invoke checks workflow
-        uses: benc-uk/workflow-dispatch@v1.2.4
-        with:
-          workflow: check.yml
-          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      - name: Invoke codeql workflow
-        uses: benc-uk/workflow-dispatch@v1.2.4
-        with:
-          workflow: codeql-analysis.yml
-          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      - name: Invoke lint workflow
-        uses: benc-uk/workflow-dispatch@v1.2.4
-        with:
-          workflow: lint.yml
-          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      - name: Invoke pr workflow
-        uses: benc-uk/workflow-dispatch@v1.2.4
-        with:
-          workflow: pr.yml
-          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      - name: Invoke test workflow
-        uses: benc-uk/workflow-dispatch@v1.2.4
-        with:
-          workflow: test.yml
-          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      - name: Invoke todo workflow
-        uses: benc-uk/workflow-dispatch@v1.2.4
-        with:
-          workflow: todo.yml
-          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      - name: Invoke version updates workflow
-        uses: benc-uk/workflow-dispatch@v1.2.4
-        with:
-          workflow: version-updates.yml
-          ref: ${{ steps.convert_outputs.outputs.pr_ref }}
-      #      - run: gh pr review --approve -b "auto-approval for localization sync :3" "$PR_ID"
-      #        env:
-      #          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
-      #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #- name: Invoke checks workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: check.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke codeql workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: codeql-analysis.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke lint workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: lint.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke pr workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: pr.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke test workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: test.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke todo workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: todo.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke version updates workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: version-updates.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - run: gh pr merge --auto --squash $PR_ID
+        env:
+          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+      - run: gh pr review --approve -b "auto-approval for localization sync :3" "$PR_ID"
         env:
           PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

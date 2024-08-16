@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     if:
       ${{ github.actor == 'dependabot[bot]' || github.actor == 'crowdin-bot' ||
-      github.actor == 'Crowdin Bot' }}
+      github.actor == 'Crowdin Bot' || github.actor_id == 106019021 || 
+      github.actor_id == 58779643 }}
+    continue-on-error: true
     steps:
       - run: gh pr review --approve "$PR_URL"
         env:
