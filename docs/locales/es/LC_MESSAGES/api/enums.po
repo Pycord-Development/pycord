@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Enumerations"
-msgstr "Enumerations"
+msgstr "Enumeraciones"
 
 msgid "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
 msgstr "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
@@ -24,97 +24,97 @@ msgid "Specifies the input type of an option."
 msgstr "Specifies the input type of an option."
 
 msgid "A slash subcommand."
-msgstr "A slash subcommand."
+msgstr "Un subcomando de barra."
 
 msgid "A slash command group."
-msgstr "A slash command group."
+msgstr "Un grupo de comandos de barra."
 
 msgid "A string."
-msgstr "A string."
+msgstr "Una cadena de texto."
 
 msgid "An integer between -2⁵³ and 2⁵³."
-msgstr "An integer between -2⁵³ and 2⁵³."
+msgstr "Un entero entre -2⁵³ y 2⁵³."
 
 msgid "IDs, such as 881224361015672863, are often too big for this input type."
-msgstr "IDs, such as 881224361015672863, are often too big for this input type."
+msgstr "Los ID, como 881224361015672863, son a menudo demasiado grandes para este tipo de entrada."
 
 msgid "A boolean."
-msgstr "A boolean."
+msgstr "Un booleano."
 
 msgid "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
-msgstr "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
+msgstr "Un usuario del canal actual. Esto se convertirá en una instancia de :class:`User` en canales privados, de lo contrario, :class:`.Member`"
 
 msgid "A channel from the current guild."
-msgstr "A channel from the current guild."
+msgstr "Un canal del gremio actual."
 
 msgid "A role from the current guild."
-msgstr "A role from the current guild."
+msgstr "Un canal del gremio actual."
 
 msgid "A mentionable (user or role)."
-msgstr "A mentionable (user or role)."
+msgstr "Una mención (usuario o rol)."
 
 msgid "A floating-point number between -2⁵³ and 2⁵³."
-msgstr "A floating-point number between -2⁵³ and 2⁵³."
+msgstr "Un número de punto flotante entre -2⁵³ y 2⁵³."
 
 msgid "An attachment."
-msgstr "An attachment."
+msgstr "Un adjunto."
 
 msgid "Specifies the type of channel."
-msgstr "Specifies the type of channel."
+msgstr "Especifica el tipo de canal."
 
 msgid "A text channel."
-msgstr "A text channel."
+msgstr "Un canal de texto."
 
 msgid "A voice channel."
-msgstr "A voice channel."
+msgstr "Un canal de voz."
 
 msgid "A private text channel. Also called a direct message."
-msgstr "A private text channel. Also called a direct message."
+msgstr "Un canal de texto privado. También llamado un mensaje directo."
 
 msgid "A private group text channel."
-msgstr "A private group text channel."
+msgstr "Un canal de texto grupal privado."
 
 msgid "A category channel."
-msgstr "A category channel."
+msgstr "Un canal categoría."
 
 msgid "A guild news channel."
-msgstr "A guild news channel."
+msgstr "Un canal de noticias del gremio."
 
 msgid "A guild stage voice channel."
-msgstr "A guild stage voice channel."
+msgstr "Un canal de voz (escenario) del gremio."
 
 msgid "A news thread."
-msgstr "A news thread."
+msgstr "Un hilo de noticias."
 
 msgid "A public thread."
-msgstr "A public thread."
+msgstr "Un hilo público."
 
 msgid "A private thread."
-msgstr "A private thread."
+msgstr "Un hilo privado."
 
 msgid "A guild directory entry, used in hub guilds, currently in experiment."
-msgstr "A guild directory entry, used in hub guilds, currently in experiment."
+msgstr "Una entrada en el directorio del gremio, usada en el descubrimieto de gremios, actualmente en experimento."
 
 msgid "User can only write in threads, similar functionality to a forum."
-msgstr "User can only write in threads, similar functionality to a forum."
+msgstr "El usuario solo puede escribir en hilos, funcionas similar a un foro."
 
 msgid "Specifies the type of :class:`Message`. This is used to denote if a message is to be interpreted as a system message or a regular message."
 msgstr "Specifies the type of :class:`Message`. This is used to denote if a message is to be interpreted as a system message or a regular message."
 
 msgid "Checks if two messages are equal."
-msgstr "Checks if two messages are equal."
+msgstr "Comprueba si dos mensajes son iguales."
 
 msgid "Checks if two messages are not equal."
-msgstr "Checks if two messages are not equal."
+msgstr "Comprueba si dos mensajes no son iguales."
 
 msgid "The default message type. This is the same as regular messages."
-msgstr "The default message type. This is the same as regular messages."
+msgstr "El tipo de mensaje predeterminado. Esto es lo mismo que los mensajes normales."
 
 msgid "The system message when a user is added to a group private message or a thread."
-msgstr "The system message when a user is added to a group private message or a thread."
+msgstr "El mensaje del sistema cuando un usuario se añade a un mensaje privado de grupo o un hilo."
 
 msgid "The system message when a user is removed from a group private message or a thread."
-msgstr "The system message when a user is removed from a group private message or a thread."
+msgstr "El mensaje del sistema cuando un usuario se añade a un mensaje privado de grupo o un hilo."
 
 msgid "The system message denoting call state, e.g. missed call, started call, etc."
 msgstr "The system message denoting call state, e.g. missed call, started call, etc."
@@ -132,16 +132,16 @@ msgid "The system message denoting that a new member has joined a Guild."
 msgstr "The system message denoting that a new member has joined a Guild."
 
 msgid "The system message denoting that a member has \"nitro boosted\" a guild."
-msgstr "The system message denoting that a member has \"nitro boosted\" a guild."
+msgstr "El mensaje del sistema que indica que un miembro ha \"potenciado con nitro\" un gremio."
 
 msgid "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 1."
-msgstr "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 1."
+msgstr "El mensaje del sistema que indica que un miembro ha \"potenciado con nitro\" un gremio y ha conseguido el nivel 1."
 
 msgid "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 2."
-msgstr "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 2."
+msgstr "El mensaje del sistema que indica que un miembro ha \"potenciado con nitro\" un gremio y ha conseguido el nivel 2."
 
 msgid "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 3."
-msgstr "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 3."
+msgstr "El mensaje del sistema que indica que un miembro ha \"potenciado con nitro\" un gremio y ha conseguido el nivel 3."
 
 msgid "The system message denoting that an announcement channel has been followed."
 msgstr "The system message denoting that an announcement channel has been followed."
@@ -282,22 +282,22 @@ msgid "An unknown activity type. This should generally not happen."
 msgstr "An unknown activity type. This should generally not happen."
 
 msgid "A \"Playing\" activity type."
-msgstr "A \"Playing\" activity type."
+msgstr "Un tipo de actividad \"Jugando\"."
 
 msgid "A \"Streaming\" activity type."
-msgstr "A \"Streaming\" activity type."
+msgstr "Un tipo de actividad \"Transmitiendo\"."
 
 msgid "A \"Listening\" activity type."
-msgstr "A \"Listening\" activity type."
+msgstr "Un tipo de actividad \"Escuchando\"."
 
 msgid "A \"Watching\" activity type."
-msgstr "A \"Watching\" activity type."
+msgstr "Un tipo de actividad \"Viendo\"."
 
 msgid "A custom activity type."
-msgstr "A custom activity type."
+msgstr "Un tipo de actividad personalizada."
 
 msgid "A competing activity type."
-msgstr "A competing activity type."
+msgstr "Un tipo de actividad competitiva."
 
 msgid "Specifies the type of :class:`Interaction`."
 msgstr "Specifies the type of :class:`Interaction`."
@@ -306,7 +306,7 @@ msgid "Represents Discord pinging to see if the interaction response server is a
 msgstr "Represents Discord pinging to see if the interaction response server is alive."
 
 msgid "Represents a slash command interaction."
-msgstr "Represents a slash command interaction."
+msgstr "Representa una interacción con un comando de barra."
 
 msgid "Represents a component-based interaction, i.e. using the Discord Bot UI Kit."
 msgstr "Represents a component-based interaction, i.e. using the Discord Bot UI Kit."
@@ -411,19 +411,19 @@ msgid "Represents a premium button."
 msgstr "Represents a premium button."
 
 msgid "An alias for :attr:`primary`."
-msgstr "An alias for :attr:`primary`."
+msgstr "Un alias para :attr:`primary`."
 
 msgid "An alias for :attr:`secondary`."
-msgstr "An alias for :attr:`secondary`."
+msgstr "Un alias para :attr:`secondary`."
 
 msgid "An alias for :attr:`success`."
-msgstr "An alias for :attr:`success`."
+msgstr "Un alias para :attr:`success`."
 
 msgid "An alias for :attr:`danger`."
-msgstr "An alias for :attr:`danger`."
+msgstr "Un alias para :attr:`danger`."
 
 msgid "An alias for :attr:`link`."
-msgstr "An alias for :attr:`link`."
+msgstr "Un alias para :attr:`link`."
 
 msgid "Represents the style of the input text component."
 msgstr "Represents the style of the input text component."
@@ -435,10 +435,10 @@ msgid "Represents a multi-line input text field."
 msgstr "Represents a multi-line input text field."
 
 msgid "An alias for :attr:`short`."
-msgstr "An alias for :attr:`short`."
+msgstr "Un alias para :attr:`short`."
 
 msgid "An alias for :attr:`long`."
-msgstr "An alias for :attr:`long`."
+msgstr "Un alias para :attr:`long`."
 
 msgid "Specifies the region a voice server belongs to."
 msgstr "Specifies the region a voice server belongs to."
@@ -621,7 +621,7 @@ msgid "The member is \"Do Not Disturb\"."
 msgstr "The member is \"Do Not Disturb\"."
 
 msgid "An alias for :attr:`dnd`."
-msgstr "An alias for :attr:`dnd`."
+msgstr "Un alias para :attr:`dnd`."
 
 msgid "The member is \"invisible\". In reality, this is only used in sending a presence a la :meth:`Client.change_presence`. When you receive a user's presence this will be :attr:`offline` instead."
 msgstr "The member is \"invisible\". In reality, this is only used in sending a presence a la :meth:`Client.change_presence`. When you receive a user's presence this will be :attr:`offline` instead."
@@ -702,7 +702,7 @@ msgid ":attr:`~AuditLogDiff.vanity_url_code`"
 msgstr ":attr:`~AuditLogDiff.vanity_url_code`"
 
 msgid "A new channel was created."
-msgstr "A new channel was created."
+msgstr "Se ha creado un nuevo canal."
 
 msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is either a :class:`abc.GuildChannel` or :class:`Object` with an ID."
 msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is either a :class:`abc.GuildChannel` or :class:`Object` with an ID."
@@ -954,7 +954,7 @@ msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the
 msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the webhook ID."
 
 msgid ":attr:`~AuditLogDiff.type` (always set to ``1`` if so)"
-msgstr ":attr:`~AuditLogDiff.type` (always set to ``1`` if so)"
+msgstr ":attr:`~AuditLogDiff.type` (siempre establecido en ``1`` si es así)"
 
 msgid "A webhook was updated. This trigger in the following situations:"
 msgstr "A webhook was updated. This trigger in the following situations:"
@@ -1266,7 +1266,7 @@ msgid "Represents the default avatar with the color grey. See also :attr:`Colour
 msgstr "Represents the default avatar with the color grey. See also :attr:`Colour.greyple`"
 
 msgid "An alias for :attr:`grey`."
-msgstr "An alias for :attr:`grey`."
+msgstr "Un alias para :attr:`grey`."
 
 msgid "Represents the default avatar with the color green. See also :attr:`Colour.green`"
 msgstr "Represents the default avatar with the color green. See also :attr:`Colour.green`"
@@ -1332,7 +1332,7 @@ msgid "The stage instance can only be joined by members of the guild."
 msgstr "The stage instance can only be joined by members of the guild."
 
 msgid "Alias for :attr:`.closed`"
-msgstr "Alias for :attr:`.closed`"
+msgstr "Alias para :attr:`.closed`"
 
 msgid "Represents the NSFW level of a guild."
 msgstr "Represents the NSFW level of a guild."
@@ -1542,7 +1542,7 @@ msgid "The scheduled event has been canceled before it can start."
 msgstr "The scheduled event has been canceled before it can start."
 
 msgid "Alias to :attr:`canceled`."
-msgstr "Alias to :attr:`canceled`."
+msgstr "Alias para :attr:`canceled`."
 
 msgid "Represents a scheduled event location type (otherwise known as the entity type on the API)."
 msgstr "Represents a scheduled event location type (otherwise known as the entity type on the API)."
@@ -1632,7 +1632,7 @@ msgid "Represents a harmful link rule trigger."
 msgstr "Represents a harmful link rule trigger."
 
 msgid "Removed by Discord and merged into :attr:`spam`."
-msgstr "Removed by Discord and merged into :attr:`spam`."
+msgstr "Eliminado por Discord y fusionado con :attr:`spam`."
 
 msgid "Represents an AutoMod event type."
 msgstr "Represents an AutoMod event type."

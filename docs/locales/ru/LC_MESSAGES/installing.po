@@ -27,7 +27,7 @@ msgid "Installing"
 msgstr "Установка"
 
 msgid "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
-msgstr "Для новых возможностей в будущих версиях Вам нужно будет установить пререлиз до выпуска стабильной версии. ::"
+msgstr "Чтобы получить новые функции будущих версий, вам придется установить предрелизную версию до выхода стабильной версии. ::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
 msgstr "Для пользователей Windows, эта команда должна использоваться для установки пререлиза: ::"

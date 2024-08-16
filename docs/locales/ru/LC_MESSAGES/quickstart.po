@@ -15,7 +15,7 @@ msgid "Quickstart"
 msgstr "Быстрый старт"
 
 msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
-msgstr "Эта страница дает краткое введение в библиотеку. Предполагается, что Вы уже установили библиотеку. Если нет, следуйте :ref:`installing`."
+msgstr "Эта страница дает краткое введение в библиотеку. Предполагается, что Вы уже установили библиотеку. Если нет, следуйте инструкции :ref:`installing`."
 
 msgid "A Minimal Bot"
 msgstr "Минимальный бот"
@@ -27,7 +27,7 @@ msgid "It looks something like this:"
 msgstr "Это выглядит примерно так:"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
-msgstr "Поскольку в этом примере используется содержимое сообщения, для него требуется привилегированное Intent :attr:`Intents.message_content`."
+msgstr "Поскольку в этом примере используется содержимое сообщения, для него требуется привилегированный интент :attr:`Intents.message_content`."
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
 msgstr "Давайте назовем этот файл ``example_bot.py``. Убедитесь, что Вы не назвали его ``discord.py``, так как это будет конфликтовать с библиотекой."
@@ -42,7 +42,7 @@ msgid "Next, we create an instance of a :class:`Client`. This client is our conn
 msgstr "Далее мы создаем экземпляр :class:`Client`. Этот клиент является нашим соединением с Discord."
 
 msgid "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
-msgstr "Затем мы используем декоратор :meth:`Client.event` для регистрации события. Эта библиотека имеет много событий. Поскольку эта библиотека асинхронна, мы делаем вещи в стиле \"обратного вызова\"."
+msgstr "Затем мы используем декоратор :meth:`Client.event` для регистрации события. Эта библиотека имеет много событий. Поскольку эта библиотека асинхронна, мы делаем все в стиле \"обратного вызова\"."
 
 msgid "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."
 msgstr "Обратный вызов - это, функция, которая вызывается, когда что-то происходит. В нашем случае событие :func:`on_ready` вызывается, когда бот завершает авторизацию и настройку, а событие :func:`on_message` вызывается, когда бот получает сообщение."

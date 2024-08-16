@@ -102,7 +102,7 @@ msgid "This replaces any default handlers. Developers are encouraged to use :py:
 msgstr "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."

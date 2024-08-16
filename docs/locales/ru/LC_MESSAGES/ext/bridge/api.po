@@ -21,7 +21,7 @@ msgid "Using the prefixed command version (which uses the ``ext.commands`` exten
 msgstr "Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge commands in guilds requires :attr:`Intents.message_context` to be enabled."
 
 msgid "Bots"
-msgstr "Bots"
+msgstr "Боты"
 
 msgid "Bot"
 msgstr "Bot"
@@ -48,7 +48,7 @@ msgid "A decorator that converts the provided method into an :class:`.BridgeComm
 msgstr "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid "Callable[..., :class:`BridgeCommand`]"
 msgstr "Callable[..., :class:`BridgeCommand`]"
@@ -114,7 +114,7 @@ msgid "The slash command version of this bridge command."
 msgstr "The slash command version of this bridge command."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`.BridgeSlashCommand`"
 msgstr ":class:`.BridgeSlashCommand`"

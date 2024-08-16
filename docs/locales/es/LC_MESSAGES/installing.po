@@ -15,7 +15,7 @@ msgid "Installing Pycord"
 msgstr "Instalación de Pycord"
 
 msgid "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
-msgstr "Esta es la documentación para Pycord, una librería para Python para ayudar en la creación de aplicaciones que utilizan la API de Discord."
+msgstr "Esta es la documentación para Pycord, una biblioteca para Python para ayudar en la creación de aplicaciones que usan la API de Discord."
 
 msgid "Prerequisites"
 msgstr "Requisitos previos"
@@ -27,22 +27,22 @@ msgid "Installing"
 msgstr "Instalación"
 
 msgid "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
-msgstr "Para nuevas características en las próximas versiones, necesitarás instalar el prelanzamiento hasta que se publique una versión estable. ::"
+msgstr "Para nuevas características en las próximas versiones, necesitarás instalar la versión de pre lanzamiento hasta que se publique una versión estable. ::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
-msgstr "Para los usuarios de Windows, este comando debe usarse para instalar el prelanzamiento: ::"
+msgstr "Para los usuarios de Windows, este comando debe usarse para instalar la versión de pre lanzamiento: ::"
 
 msgid "You can get the library directly from PyPI: ::"
-msgstr "Puedes obtener la librería directamente desde PyPI: ::"
+msgstr "Puedes obtener la biblioteca directamente desde PyPI: ::"
 
 msgid "If you are using Windows, then the following should be used instead: ::"
 msgstr "Si estás usando Windows, entonces deberías usar lo siguiente en su lugar: ::"
 
 msgid "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
-msgstr "Para instalar paquetes adicionales para una mayor velocidad, deberías usar ``py-cord[speed]`` en lugar de ``py-cord``, por ejemplo,"
+msgstr "Para instalar paquetes adicionales para una mayor velocidad, deberías usar ``py-cord[speed]`` en lugar de ``py-cord``, por ejemplo."
 
 msgid "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
-msgstr "Para obtener soporte de voz, deberías usar ``py-cord[voice]`` en lugar de ``py-cord``, por ejemplo, ::"
+msgstr "Para obtener soporte de voz, deberías usar ``py-cord[voice]`` en lugar de ``py-cord``, por ejemplo ::"
 
 msgid "On Linux environments, installing voice requires getting the following dependencies:"
 msgstr "En entornos Linux, la instalación de voz requiere las siguientes dependencias:"
@@ -66,7 +66,7 @@ msgid "Virtual Environments"
 msgstr "Entornos virtuales"
 
 msgid "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
-msgstr "A veces se quiere evitar que las librerías contaminen las instalaciones en el sistema o usar una versión distinta de aquellas instaladas en el sistema. Es posible que tampoco tengas permisos para instalar librerías en tu sistema. Para este propósito, la librería estandar a partir de Python 3.3 viene con un concepto llamado \"entornos virtuales\" para ayudar a mantener estas versiones separadas."
+msgstr "A veces se quiere evitar que las bibliotecas contaminen las instalaciones en el sistema o usar una versión distinta de aquellas instaladas en el sistema. Es posible que tampoco tengas permisos para instalar bibliotecas en tu sistema. Para este propósito, la biblioteca estándar a partir de Python 3.3 viene con un concepto llamado \"entornos virtuales\" para ayudar a mantener estas versiones separadas."
 
 msgid "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
 msgstr "Puedes encontrar un tutorial más detallado en :doc:`py:tutorial/venv`."

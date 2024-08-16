@@ -60,7 +60,7 @@ msgid "Updates :class:`discord.File` objects so that they can be sent multiple t
 msgstr "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
@@ -129,7 +129,7 @@ msgid "The page group select menu associated with this paginator."
 msgstr "The page group select menu associated with this paginator."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid "Optional[List[:class:`PaginatorMenu`]]"
 msgstr "Optional[List[:class:`PaginatorMenu`]]"

@@ -12,22 +12,22 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "API Reference"
-msgstr "API Reference"
+msgstr "Справочник по API"
 
 msgid "The following section outlines the API of Pycord's prefixed command extension module."
-msgstr "The following section outlines the API of Pycord's prefixed command extension module."
+msgstr "В следующем разделе описывается API модуля расширения префиксных команд Pycord."
 
 msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
-msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
+msgstr "Использование префиксных команд в серверах требует включения :attr:`Intents.message_content."
 
 msgid "Bots"
-msgstr "Bots"
+msgstr "Боты"
 
 msgid "Bot"
-msgstr "Bot"
+msgstr "Бот"
 
 msgid "Represents a discord bot."
-msgstr "Represents a discord bot."
+msgstr "Представляет собой дискорд-бота."
 
 msgid "This class is a subclass of :class:`discord.Bot` and as a result anything that you can do with a :class:`discord.Bot` you can do with this bot."
 msgstr "This class is a subclass of :class:`discord.Bot` and as a result anything that you can do with a :class:`discord.Bot` you can do with this bot."
@@ -54,7 +54,7 @@ msgid "Whether the commands should be case-insensitive. Defaults to ``False``. T
 msgstr "Whether the commands should be case-insensitive. Defaults to ``False``. This attribute does not carry over to groups. You must set it to every group if you require group commands to be case-insensitive as well."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"
@@ -102,7 +102,7 @@ msgid "This function can either be a regular function or a coroutine. Similar to
 msgstr "This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from :exc:`.ApplicationCommandError`."
 
 msgid "Example"
-msgstr "Example"
+msgstr "Пример"
 
 msgid "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
 msgstr "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
@@ -120,7 +120,7 @@ msgid "A decorator that converts the provided method into a Command, adds it to 
 msgstr "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid "Callable[..., :class:`Command`]"
 msgstr "Callable[..., :class:`Command`]"
@@ -480,10 +480,10 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.E
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.EntitlementIterator\\``"
 
 msgid "Examples"
-msgstr "Examples"
+msgstr "Примеры"
 
 msgid "Usage ::"
-msgstr "Usage ::"
+msgstr "Использование ::"
 
 msgid "Flattening into a list ::"
 msgstr "Flattening into a list ::"
@@ -1917,7 +1917,7 @@ msgid "Whether the commands should be case-insensitive. Defaults to ``False``."
 msgstr "Whether the commands should be case-insensitive. Defaults to ``False``."
 
 msgid "Cogs"
-msgstr "Cogs"
+msgstr "Коги"
 
 msgid "Cog"
 msgstr "Cog"

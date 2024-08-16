@@ -12,49 +12,49 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Extensions"
-msgstr "Extensions"
+msgstr "Расширения"
 
 msgid "There comes a time in the bot development when you want to extend the bot functionality at run-time and quickly unload and reload code (also called hot-reloading). The command framework comes with this ability built-in, with a concept called **extensions**."
-msgstr "There comes a time in the bot development when you want to extend the bot functionality at run-time and quickly unload and reload code (also called hot-reloading). The command framework comes with this ability built-in, with a concept called **extensions**."
+msgstr "В процессе разработки бота наступает момент, когда вы хотите расширить его функциональность во время выполнения и быстро выгрузить и перезагрузить код (также называемый горячей загрузкой). В командный фреймворк встроена такая возможность, концепция называется **расширения**."
 
 msgid "Primer"
-msgstr "Primer"
+msgstr "Краткая информация"
 
 msgid "An extension at its core is a python file with an entry point called ``setup``. This setup must be a plain Python function (not a coroutine). It takes a single parameter -- the :class:`~.commands.Bot` that loads the extension."
-msgstr "An extension at its core is a python file with an entry point called ``setup``. This setup must be a plain Python function (not a coroutine). It takes a single parameter -- the :class:`~.commands.Bot` that loads the extension."
+msgstr "По своей сути расширение представляет собой файл python с точкой входа под названием ``setup``. Эта установка должна быть обычной функцией Python (не короутиной). Она принимает единственный параметр - :class:`~.commands.Bot`, который загружает расширение."
 
 msgid "An example extension looks like this:"
-msgstr "An example extension looks like this:"
+msgstr "Пример расширения выглядит следующим образом:"
 
 msgid "hello.py"
 msgstr "hello.py"
 
 msgid "In this example we define a simple command, and when the extension is loaded this command is added to the bot. Now the final step to this is loading the extension, which we do by calling :meth:`.Bot.load_extension`. To load this extension we call ``bot.load_extension('hello')``."
-msgstr "In this example we define a simple command, and when the extension is loaded this command is added to the bot. Now the final step to this is loading the extension, which we do by calling :meth:`.Bot.load_extension`. To load this extension we call ``bot.load_extension('hello')``."
+msgstr "В этом примере мы определяем простую команду, и когда расширение загружается, эта команда добавляется в бота. Теперь последний шаг - загрузка расширения, которую мы выполняем с помощью вызова :meth:`.Bot.load_extension`. Чтобы загрузить это расширение, мы вызываем ``bot.load_extension('hello')``."
 
 msgid "Cogs"
-msgstr "Cogs"
+msgstr "Коги"
 
 msgid "Extensions are usually used in conjunction with cogs. To read more about them, check out the documentation, :ref:`ext_commands_cogs`."
-msgstr "Extensions are usually used in conjunction with cogs. To read more about them, check out the documentation, :ref:`ext_commands_cogs`."
+msgstr "Расширения обычно используются в сочетании с когами. Чтобы узнать о них больше, ознакомьтесь с документацией, :ref:`ext_commands_cogs`."
 
 msgid "Extension paths are ultimately similar to the import mechanism. What this means is that if there is a folder, then it must be dot-qualified. For example to load an extension in ``plugins/hello.py`` then we use the string ``plugins.hello``."
-msgstr "Extension paths are ultimately similar to the import mechanism. What this means is that if there is a folder, then it must be dot-qualified. For example to load an extension in ``plugins/hello.py`` then we use the string ``plugins.hello``."
+msgstr "Пути расширения в конечном итоге аналогичны механизму импорта. Это означает, что если есть папка, то она должна быть точечно-квалификационной. Например, чтобы загрузить расширение в ``plugins/hello.py``, мы используем строку ``plugins.hello``."
 
 msgid "Reloading"
-msgstr "Reloading"
+msgstr "Перезагрузка"
 
 msgid "When you make a change to the extension and want to reload the references, the library comes with a function to do this for you, :meth:`.Bot.reload_extension`."
-msgstr "When you make a change to the extension and want to reload the references, the library comes with a function to do this for you, :meth:`.Bot.reload_extension`."
+msgstr "Когда вы вносите изменения в расширение и хотите перезагрузить ссылки, библиотека поставляется с функцией, которая делает это за вас, :meth:`.Bot.reload_extension`."
 
 msgid "Once the extension reloads, any changes that we did will be applied. This is useful if we want to add or remove functionality without restarting our bot. If an error occurred during the reloading process, the bot will pretend as if the reload never happened."
-msgstr "Once the extension reloads, any changes that we did will be applied. This is useful if we want to add or remove functionality without restarting our bot. If an error occurred during the reloading process, the bot will pretend as if the reload never happened."
+msgstr "Когда расширение перезагрузится, все сделанные нами изменения будут применены. Это полезно, если мы хотим добавить или удалить функциональность, не перезапуская нашего бота. Если в процессе перезагрузки произошла ошибка, бот сделает вид, будто перезагрузки не было."
 
 msgid "Cleaning Up"
-msgstr "Cleaning Up"
+msgstr "Очистка"
 
 msgid "Although rare, sometimes an extension needs to clean-up or know when it's being unloaded. For cases like these, there is another entry point named ``teardown`` which is similar to ``setup`` except called when the extension is unloaded."
-msgstr "Although rare, sometimes an extension needs to clean-up or know when it's being unloaded. For cases like these, there is another entry point named ``teardown`` which is similar to ``setup`` except called when the extension is unloaded."
+msgstr "Хотя и редко, но иногда расширению нужно очиститься или узнать, когда его выгружают. Для таких случаев существует другая точка входа под названием ``teardown``, которая аналогична ``setup``, но вызывается, когда расширение выгружается."
 
 msgid "basic_ext.py"
 msgstr "basic_ext.py"

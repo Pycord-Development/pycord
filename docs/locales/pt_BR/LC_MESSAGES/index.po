@@ -12,19 +12,19 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Extensions"
-msgstr "Extensions"
+msgstr "Extensões"
 
 msgid "Meta"
 msgstr "Meta"
 
 msgid "Welcome to Pycord"
-msgstr "Welcome to Pycord"
+msgstr "Bem-vindo ao Pycord"
 
 msgid "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
-msgstr "Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord."
+msgstr "Pycord é um wrapper moderno, fácil de usar, rico em recursos e assíncrono para a API do Discord."
 
 msgid "**Features:**"
-msgstr "**Features:**"
+msgstr "**Recursos:**"
 
 msgid "Modern Pythonic API using ``async``\\/``await`` syntax"
 msgstr "Modern Pythonic API using ``async``\\/``await`` syntax"
@@ -33,19 +33,19 @@ msgid "Sane rate limit handling that prevents 429s"
 msgstr "Sane rate limit handling that prevents 429s"
 
 msgid "Command extension to aid with bot creation"
-msgstr "Command extension to aid with bot creation"
+msgstr "Extensão de comando para ajudar com a criação do bot"
 
 msgid "Easy to use with an object oriented design"
-msgstr "Easy to use with an object oriented design"
+msgstr "Fácil de usar com um design orientado a objetos"
 
 msgid "Optimised for both speed and memory"
-msgstr "Optimised for both speed and memory"
+msgstr "Otimizado para velocidade e memória"
 
 msgid "Getting started"
-msgstr "Getting started"
+msgstr "Primeiros passos"
 
 msgid "Is this your first time using the library? This is the place to get started!"
-msgstr "Is this your first time using the library? This is the place to get started!"
+msgstr "Esta é a sua primeira vez usando a biblioteca? Este é o lugar para começar!"
 
 msgid "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
 msgstr "**First steps:** :doc:`installing` | :doc:`quickstart` | :doc:`logging` | :resource:`Guide <guide>`"
@@ -57,10 +57,10 @@ msgid "**Examples:** Many examples are available in the :resource:`repository <e
 msgstr "**Examples:** Many examples are available in the :resource:`repository <examples>`."
 
 msgid "Getting help"
-msgstr "Getting help"
+msgstr "Obtendo ajuda"
 
 msgid "If you're having trouble with something, these resources might help."
-msgstr "If you're having trouble with something, these resources might help."
+msgstr "Se você estiver tendo problemas com algo, esses recursos podem ajudar."
 
 msgid "Try the :doc:`faq` first, it's got answers to all common questions."
 msgstr "Try the :doc:`faq` first, it's got answers to all common questions."
@@ -72,10 +72,10 @@ msgid "If you're looking for something specific, try the :ref:`index <genindex>`
 msgstr "If you're looking for something specific, try the :ref:`index <genindex>` or :ref:`searching <search>`."
 
 msgid "Report bugs in the :resource:`issue tracker <issues>`."
-msgstr "Report bugs in the :resource:`issue tracker <issues>`."
+msgstr "Reporte bugs em :resource:`issue tracker <issues>`."
 
 msgid "Manuals"
-msgstr "Manuals"
+msgstr "Manuais"
 
 msgid "These pages go into great detail about everything the API can do."
 msgstr "These pages go into great detail about everything the API can do."

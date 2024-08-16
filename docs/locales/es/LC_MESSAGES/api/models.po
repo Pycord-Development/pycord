@@ -87,7 +87,7 @@ msgid ":class:`Asset`"
 msgstr ":class:`Asset`"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Errores"
 
 msgid "An invalid size or format was passed."
 msgstr "An invalid size or format was passed."
@@ -162,7 +162,7 @@ msgid "Represents a Spotify listening activity from Discord. This is a special c
 msgstr "Represents a Spotify listening activity from Discord. This is a special case of :class:`Activity` that makes it easier to work with the Spotify integration."
 
 msgid "Checks if two activities are equal."
-msgstr "Checks if two activities are equal."
+msgstr "Comprueba si dos actividades son iguales."
 
 msgid "Checks if two activities are not equal."
 msgstr "Checks if two activities are not equal."
@@ -906,10 +906,10 @@ msgid "Represents a message from Discord."
 msgstr "Represents a message from Discord."
 
 msgid "Checks if two messages are equal."
-msgstr "Checks if two messages are equal."
+msgstr "Comprueba si dos mensajes son iguales."
 
 msgid "Checks if two messages are not equal."
-msgstr "Checks if two messages are not equal."
+msgstr "Comprueba si dos mensajes no son iguales."
 
 msgid "Returns the message's hash."
 msgstr "Returns the message's hash."
@@ -3015,7 +3015,7 @@ msgid "The presences intent is not enabled."
 msgstr "The presences intent is not enabled."
 
 msgid "Changes client's voice state in the guild."
-msgstr "Changes client's voice state in the guild."
+msgstr "Cambia el estado de voz del cliente en el gremio."
 
 msgid "Channel the client wants to join. Use ``None`` to disconnect."
 msgstr "Channel the client wants to join. Use ``None`` to disconnect."
@@ -3657,7 +3657,7 @@ msgid "You must have the :attr:`~Permissions.move_members` permission to use thi
 msgstr "You must have the :attr:`~Permissions.move_members` permission to use this."
 
 msgid "This raises the same exceptions as :meth:`edit`."
-msgstr "This raises the same exceptions as :meth:`edit`."
+msgstr "Esto lanza las mismas excepciones que :meth:`edit`."
 
 msgid "Can now pass ``None`` to kick a member from voice."
 msgstr "Can now pass ``None`` to kick a member from voice."

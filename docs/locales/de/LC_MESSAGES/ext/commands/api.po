@@ -18,7 +18,7 @@ msgid "The following section outlines the API of Pycord's prefixed command exten
 msgstr "The following section outlines the API of Pycord's prefixed command extension module."
 
 msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
-msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
+msgstr "Die Verwendung von Präfix-Befehlen in Gilden erfordert die Aktivierung von :attr:`Intents.message_content`."
 
 msgid "Bots"
 msgstr "Bots"
@@ -81,7 +81,7 @@ msgid "The coroutine to register as the post-invoke hook."
 msgstr "The coroutine to register as the post-invoke hook."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
@@ -1566,7 +1566,7 @@ msgid "An event that is called when a command is found and is about to be invoke
 msgstr "An event that is called when a command is found and is about to be invoked."
 
 msgid "This event is called regardless of whether the command itself succeeds via error or completes."
-msgstr "This event is called regardless of whether the command itself succeeds via error or completes."
+msgstr "Dieses Ereignis wird unabhängig davon aufgerufen, ob der Befehl erfolgreich ausgeführt wird oder einen Fehler verursacht."
 
 msgid "An event that is called when a command has completed its invocation."
 msgstr "An event that is called when a command has completed its invocation."
@@ -1734,7 +1734,7 @@ msgid "See :meth:`.Bot.before_invoke` for more info."
 msgstr "See :meth:`.Bot.before_invoke` for more info."
 
 msgid "A decorator that registers a coroutine as a local error handler."
-msgstr "A decorator that registers a coroutine as a local error handler."
+msgstr "Ein Decorator, der eine Coroutine als lokalen Fehlerbehandler registriert."
 
 msgid "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."
 msgstr "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."

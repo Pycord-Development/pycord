@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Abstract Base Classes"
-msgstr "Clases Base Abstractas"
+msgstr "Clases base abstractas"
 
 msgid "An :term:`abstract base class` (also known as an ``abc``) is a class that models can inherit to get their behaviour. **Abstract base classes should not be instantiated**. They are mainly there for usage with :func:`isinstance` and :func:`issubclass`\\."
 msgstr "Una :term:`clase base abstracta` (también conocidas como ``cba``) es un tipo de clase la cual otros objetos utilizan heredar sus funcionalidades. **Las clases base abstractas no deben ser inicializadas**. Su principal causa de uso es para utilizar comprobaciones :func:`isinstance` e :func:`issubclass`\\."
