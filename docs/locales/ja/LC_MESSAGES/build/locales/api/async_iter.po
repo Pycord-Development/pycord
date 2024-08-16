@@ -1,0 +1,106 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Async Iterator"
+msgstr "Async Iterator"
+
+msgid "Some API functions return an \"async iterator\". An async iterator is something that is capable of being used in an :ref:`async for statement <py:async for>`."
+msgstr "Some API functions return an \"async iterator\". An async iterator is something that is capable of being used in an :ref:`async for statement <py:async for>`."
+
+msgid "These async iterators can be used as follows: ::"
+msgstr "These async iterators can be used as follows: ::"
+
+msgid "Certain utilities make working with async iterators easier, detailed below."
+msgstr "Certain utilities make working with async iterators easier, detailed below."
+
+msgid "Represents the \"AsyncIterator\" concept. Note that no such class exists, it is purely abstract."
+msgstr "Represents the \"AsyncIterator\" concept. Note that no such class exists, it is purely abstract."
+
+msgid "Iterates over the contents of the async iterator."
+msgstr "Iterates over the contents of the async iterator."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Advances the iterator by one, if possible. If no more items are found then this raises :exc:`NoMoreItems`."
+msgstr "Advances the iterator by one, if possible. If no more items are found then this raises :exc:`NoMoreItems`."
+
+msgid "Similar to :func:`utils.get` except run over the async iterator."
+msgstr "Similar to :func:`utils.get` except run over the async iterator."
+
+msgid "Getting the last message by a user named 'Dave' or ``None``: ::"
+msgstr "Getting the last message by a user named 'Dave' or ``None``: ::"
+
+msgid "Similar to :func:`utils.find` except run over the async iterator."
+msgstr "Similar to :func:`utils.find` except run over the async iterator."
+
+msgid "Unlike :func:`utils.find`\\, the predicate provided can be a |coroutine_link|_."
+msgstr "Unlike :func:`utils.find`\\, the predicate provided can be a |coroutine_link|_."
+
+msgid "Getting the last audit log with a reason or ``None``: ::"
+msgstr "Getting the last audit log with a reason or ``None``: ::"
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "The predicate to use. Could be a |coroutine_link|_."
+msgstr "The predicate to use. Could be a |coroutine_link|_."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "The first element that returns ``True`` for the predicate or ``None``."
+msgstr "The first element that returns ``True`` for the predicate or ``None``."
+
+msgid "Flattens the async iterator into a :class:`list` with all the elements."
+msgstr "Flattens the async iterator into a :class:`list` with all the elements."
+
+msgid "A list of every element in the async iterator."
+msgstr "A list of every element in the async iterator."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid "Collects items into chunks of up to a given maximum size. Another :class:`AsyncIterator` is returned which collects items into :class:`list`\\s of a given size. The maximum chunk size must be a positive integer."
+msgstr "Collects items into chunks of up to a given maximum size. Another :class:`AsyncIterator` is returned which collects items into :class:`list`\\s of a given size. The maximum chunk size must be a positive integer."
+
+msgid "Collecting groups of users: ::"
+msgstr "Collecting groups of users: ::"
+
+msgid "The last chunk collected may not be as large as ``max_size``."
+msgstr "The last chunk collected may not be as large as ``max_size``."
+
+msgid "The size of individual chunks."
+msgstr "The size of individual chunks."
+
+msgid ":class:`AsyncIterator`"
+msgstr ":class:`AsyncIterator`"
+
+msgid "This is similar to the built-in :func:`map <py:map>` function. Another :class:`AsyncIterator` is returned that executes the function on every element it is iterating over. This function can either be a regular function or a |coroutine_link|_."
+msgstr "This is similar to the built-in :func:`map <py:map>` function. Another :class:`AsyncIterator` is returned that executes the function on every element it is iterating over. This function can either be a regular function or a |coroutine_link|_."
+
+msgid "Creating a content iterator: ::"
+msgstr "Creating a content iterator: ::"
+
+msgid "The function to call on every element. Could be a |coroutine_link|_."
+msgstr "The function to call on every element. Could be a |coroutine_link|_."
+
+msgid "This is similar to the built-in :func:`filter <py:filter>` function. Another :class:`AsyncIterator` is returned that filters over the original async iterator. This predicate can be a regular function or a |coroutine_link|_."
+msgstr "This is similar to the built-in :func:`filter <py:filter>` function. Another :class:`AsyncIterator` is returned that filters over the original async iterator. This predicate can be a regular function or a |coroutine_link|_."
+
+msgid "Getting messages by non-bot accounts: ::"
+msgstr "Getting messages by non-bot accounts: ::"
+
+msgid "The predicate to call on every element. Could be a |coroutine_link|_."
+msgstr "The predicate to call on every element. Could be a |coroutine_link|_."
+

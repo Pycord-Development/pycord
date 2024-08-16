@@ -1,0 +1,47 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../api/version_info.rst:4 e2693c05b8734ff3bd738ea8e3f79b49
+msgid "Version Related Info"
+msgstr ""
+
+#: ../../api/version_info.rst:6 0e23d91f6e6a4d3da6ff964b98836926
+msgid ""
+"There are two main ways to query version information about the library. "
+"For guarantees, check :ref:`version_guarantees`."
+msgstr ""
+
+#: ../../api/version_info.rst:10 655eab73191943599a3ac9db5642e146
+msgid "A named tuple that is similar to :obj:`py:sys.version_info`."
+msgstr ""
+
+#: ../../api/version_info.rst:12 4331afd1ca6f4c91ac3258eaf4901282
+msgid ""
+"Just like :obj:`py:sys.version_info` the valid values for "
+"``releaselevel`` are 'alpha', 'beta', 'candidate' and 'final'."
+msgstr ""
+
+#: ../../api/version_info.rst:17 a03a04703c6647bc83580f977672decf
+msgid ""
+"A string representation of the version. e.g. ``'1.0.0rc1'``. This is "
+"based off of :pep:`440`."
+msgstr ""
+

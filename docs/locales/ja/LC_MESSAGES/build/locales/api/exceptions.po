@@ -1,0 +1,331 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Exceptions"
+msgstr "Exceptions"
+
+msgid "Exception Hierarchy"
+msgstr "Exception Hierarchy"
+
+msgid ":exc:`Exception`"
+msgstr ":exc:`Exception`"
+
+msgid ":exc:`DiscordException`"
+msgstr ":exc:`DiscordException`"
+
+msgid ":exc:`ClientException`"
+msgstr ":exc:`ClientException`"
+
+msgid ":exc:`InvalidData`"
+msgstr ":exc:`InvalidData`"
+
+msgid ":exc:`InvalidArgument`"
+msgstr ":exc:`InvalidArgument`"
+
+msgid ":exc:`LoginFailure`"
+msgstr ":exc:`LoginFailure`"
+
+msgid ":exc:`ConnectionClosed`"
+msgstr ":exc:`ConnectionClosed`"
+
+msgid ":exc:`PrivilegedIntentsRequired`"
+msgstr ":exc:`PrivilegedIntentsRequired`"
+
+msgid ":exc:`InteractionResponded`"
+msgstr ":exc:`InteractionResponded`"
+
+msgid ":exc:`NoMoreItems`"
+msgstr ":exc:`NoMoreItems`"
+
+msgid ":exc:`GatewayNotFound`"
+msgstr ":exc:`GatewayNotFound`"
+
+msgid ":exc:`HTTPException`"
+msgstr ":exc:`HTTPException`"
+
+msgid ":exc:`Forbidden`"
+msgstr ":exc:`Forbidden`"
+
+msgid ":exc:`NotFound`"
+msgstr ":exc:`NotFound`"
+
+msgid ":exc:`DiscordServerError`"
+msgstr ":exc:`DiscordServerError`"
+
+msgid ":exc:`ApplicationCommandError`"
+msgstr ":exc:`ApplicationCommandError`"
+
+msgid ":exc:`CheckFailure`"
+msgstr ":exc:`CheckFailure`"
+
+msgid ":exc:`ApplicationCommandInvokeError`"
+msgstr ":exc:`ApplicationCommandInvokeError`"
+
+msgid ":exc:`ExtensionError`"
+msgstr ":exc:`ExtensionError`"
+
+msgid ":exc:`ExtensionAlreadyLoaded`"
+msgstr ":exc:`ExtensionAlreadyLoaded`"
+
+msgid ":exc:`ExtensionNotLoaded`"
+msgstr ":exc:`ExtensionNotLoaded`"
+
+msgid ":exc:`NoEntryPointError`"
+msgstr ":exc:`NoEntryPointError`"
+
+msgid ":exc:`ExtensionFailed`"
+msgstr ":exc:`ExtensionFailed`"
+
+msgid ":exc:`ExtensionNotFound`"
+msgstr ":exc:`ExtensionNotFound`"
+
+msgid ":exc:`sinks.SinkException`"
+msgstr ":exc:`sinks.SinkException`"
+
+msgid ":exc:`sinks.RecordingException`"
+msgstr ":exc:`sinks.RecordingException`"
+
+msgid ":exc:`sinks.WaveSinkError`"
+msgstr ":exc:`sinks.WaveSinkError`"
+
+msgid ":exc:`sinks.MP3SinkError`"
+msgstr ":exc:`sinks.MP3SinkError`"
+
+msgid ":exc:`sinks.MP4SinkError`"
+msgstr ":exc:`sinks.MP4SinkError`"
+
+msgid ":exc:`sinks.M4ASinkError`"
+msgstr ":exc:`sinks.M4ASinkError`"
+
+msgid ":exc:`sinks.MKVSinkError`"
+msgstr ":exc:`sinks.MKVSinkError`"
+
+msgid ":exc:`sinks.MKASinkError`"
+msgstr ":exc:`sinks.MKASinkError`"
+
+msgid ":exc:`sinks.OGGSinkError`"
+msgstr ":exc:`sinks.OGGSinkError`"
+
+msgid "Objects"
+msgstr "Objects"
+
+msgid "The following exceptions are thrown by the library."
+msgstr "The following exceptions are thrown by the library."
+
+msgid "Base exception class for pycord"
+msgstr "Base exception class for pycord"
+
+msgid "Ideally speaking, this could be caught to handle any exceptions raised from this library."
+msgstr "Ideally speaking, this could be caught to handle any exceptions raised from this library."
+
+msgid "Exception that's raised when an operation in the :class:`Client` fails."
+msgstr "Exception that's raised when an operation in the :class:`Client` fails."
+
+msgid "These are usually for exceptions that happened due to user input."
+msgstr "These are usually for exceptions that happened due to user input."
+
+msgid "Exception that's raised when the :meth:`Client.login` function fails to log you in from improper credentials or some other misc. failure."
+msgstr "Exception that's raised when the :meth:`Client.login` function fails to log you in from improper credentials or some other misc. failure."
+
+msgid "Exception that is raised when an async iteration operation has no more items."
+msgstr "Exception that is raised when an async iteration operation has no more items."
+
+msgid "Exception that's raised when an HTTP request operation fails."
+msgstr "Exception that's raised when an HTTP request operation fails."
+
+msgid "The response of the failed HTTP request. This is an instance of :class:`aiohttp.ClientResponse`. In some cases this could also be a :class:`requests.Response`."
+msgstr "The response of the failed HTTP request. This is an instance of :class:`aiohttp.ClientResponse`. In some cases this could also be a :class:`requests.Response`."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`aiohttp.ClientResponse`"
+msgstr ":class:`aiohttp.ClientResponse`"
+
+msgid "The text of the error. Could be an empty string."
+msgstr "The text of the error. Could be an empty string."
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The status code of the HTTP request."
+msgstr "The status code of the HTTP request."
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "The Discord specific error code for the failure."
+msgstr "The Discord specific error code for the failure."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "Exception that's raised for when status code 403 occurs."
+msgstr "Exception that's raised for when status code 403 occurs."
+
+msgid "Subclass of :exc:`HTTPException`"
+msgstr "Subclass of :exc:`HTTPException`"
+
+msgid "Exception that's raised for when status code 404 occurs."
+msgstr "Exception that's raised for when status code 404 occurs."
+
+msgid "Exception that's raised for when a 500 range status code occurs."
+msgstr "Exception that's raised for when a 500 range status code occurs."
+
+msgid "Subclass of :exc:`HTTPException`."
+msgstr "Subclass of :exc:`HTTPException`."
+
+msgid "Exception that's raised when the library encounters unknown or invalid data from Discord."
+msgstr "Exception that's raised when the library encounters unknown or invalid data from Discord."
+
+msgid "Exception that's raised when an argument to a function is invalid some way (e.g. wrong value or wrong type)."
+msgstr "Exception that's raised when an argument to a function is invalid some way (e.g. wrong value or wrong type)."
+
+msgid "This could be considered the parallel of ``ValueError`` and ``TypeError`` except inherited from :exc:`ClientException` and thus :exc:`DiscordException`."
+msgstr "This could be considered the parallel of ``ValueError`` and ``TypeError`` except inherited from :exc:`ClientException` and thus :exc:`DiscordException`."
+
+msgid "An exception that is raised when the gateway for Discord could not be found"
+msgstr "An exception that is raised when the gateway for Discord could not be found"
+
+msgid "Exception that's raised when the gateway connection is closed for reasons that could not be handled internally."
+msgstr "Exception that's raised when the gateway connection is closed for reasons that could not be handled internally."
+
+msgid "The close code of the websocket."
+msgstr "The close code of the websocket."
+
+msgid "The reason provided for the closure."
+msgstr "The reason provided for the closure."
+
+msgid "The shard ID that got closed if applicable."
+msgstr "The shard ID that got closed if applicable."
+
+msgid "Optional[:class:`int`]"
+msgstr "Optional[:class:`int`]"
+
+msgid "Exception that's raised when the gateway is requesting privileged intents, but they're not ticked in the developer page yet."
+msgstr "Exception that's raised when the gateway is requesting privileged intents, but they're not ticked in the developer page yet."
+
+msgid "Go to https://discord.com/developers/applications/ and enable the intents that are required. Currently, these are as follows:"
+msgstr "Go to https://discord.com/developers/applications/ and enable the intents that are required. Currently, these are as follows:"
+
+msgid ":attr:`Intents.members`"
+msgstr ":attr:`Intents.members`"
+
+msgid ":attr:`Intents.presences`"
+msgstr ":attr:`Intents.presences`"
+
+msgid ":attr:`Intents.message_content`"
+msgstr ":attr:`Intents.message_content`"
+
+msgid "Exception that's raised when sending another interaction response using :class:`InteractionResponse` when one has already been done before."
+msgstr "Exception that's raised when sending another interaction response using :class:`InteractionResponse` when one has already been done before."
+
+msgid "An interaction can only respond once."
+msgstr "An interaction can only respond once."
+
+msgid "The interaction that's already been responded to."
+msgstr "The interaction that's already been responded to."
+
+msgid ":class:`Interaction`"
+msgstr ":class:`Interaction`"
+
+msgid "An exception that is thrown for libopus related errors."
+msgstr "An exception that is thrown for libopus related errors."
+
+msgid "The error code returned."
+msgstr "The error code returned."
+
+msgid "An exception that is thrown for when libopus is not loaded."
+msgstr "An exception that is thrown for when libopus is not loaded."
+
+msgid "The base exception type for all application command related errors."
+msgstr "The base exception type for all application command related errors."
+
+msgid "This inherits from :exc:`DiscordException`."
+msgstr "This inherits from :exc:`DiscordException`."
+
+msgid "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
+msgstr "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
+
+msgid "Exception raised when the predicates in :attr:`.Command.checks` have failed."
+msgstr "Exception raised when the predicates in :attr:`.Command.checks` have failed."
+
+msgid "This inherits from :exc:`ApplicationCommandError`"
+msgstr "This inherits from :exc:`ApplicationCommandError`"
+
+msgid "Exception raised when the command being invoked raised an exception."
+msgstr "Exception raised when the command being invoked raised an exception."
+
+msgid "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
+msgstr "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
+
+msgid "Base exception for extension related errors."
+msgstr "Base exception for extension related errors."
+
+msgid "This inherits from :exc:`~discord.DiscordException`."
+msgstr "This inherits from :exc:`~discord.DiscordException`."
+
+msgid "The extension that had an error."
+msgstr "The extension that had an error."
+
+msgid "An exception raised when an extension has already been loaded."
+msgstr "An exception raised when an extension has already been loaded."
+
+msgid "This inherits from :exc:`ExtensionError`"
+msgstr "This inherits from :exc:`ExtensionError`"
+
+msgid "An exception raised when an extension was not loaded."
+msgstr "An exception raised when an extension was not loaded."
+
+msgid "An exception raised when an extension does not have a ``setup`` entry point function."
+msgstr "An exception raised when an extension does not have a ``setup`` entry point function."
+
+msgid "An exception raised when an extension failed to load during execution of the module or ``setup`` entry point."
+msgstr "An exception raised when an extension failed to load during execution of the module or ``setup`` entry point."
+
+msgid "The extension that had the error."
+msgstr "The extension that had the error."
+
+msgid "An exception raised when an extension is not found."
+msgstr "An exception raised when an extension is not found."
+
+msgid "Made the ``original`` attribute always None."
+msgstr "Made the ``original`` attribute always None."
+
+msgid "Raised when a Sink error occurs."
+msgstr "Raised when a Sink error occurs."
+
+msgid "Exception that's thrown when there is an error while trying to record audio from a voice channel."
+msgstr "Exception that's thrown when there is an error while trying to record audio from a voice channel."
+
+msgid "Exception thrown when an exception occurs with :class:`WaveSink`"
+msgstr "Exception thrown when an exception occurs with :class:`WaveSink`"
+
+msgid "Exception thrown when an exception occurs with :class:`MP3Sink`"
+msgstr "Exception thrown when an exception occurs with :class:`MP3Sink`"
+
+msgid "Exception thrown when an exception occurs with :class:`MP4Sink`"
+msgstr "Exception thrown when an exception occurs with :class:`MP4Sink`"
+
+msgid "Exception thrown when an exception occurs with :class:`M4ASink`"
+msgstr "Exception thrown when an exception occurs with :class:`M4ASink`"
+
+msgid "Exception thrown when an exception occurs with :class:`MKVSink`"
+msgstr "Exception thrown when an exception occurs with :class:`MKVSink`"
+
+msgid "Exception thrown when an exception occurs with :class:`MKASink`"
+msgstr "Exception thrown when an exception occurs with :class:`MKASink`"
+
+msgid "Exception thrown when an exception occurs with :class:`OGGSink`"
+msgstr "Exception thrown when an exception occurs with :class:`OGGSink`"
+

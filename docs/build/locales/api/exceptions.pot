@@ -1,0 +1,621 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../api/exceptions.rst:4
+#: 905c88850259467092e1b8e338f90565
+msgid "Exceptions"
+msgstr ""
+
+#: ../../api/exceptions.rst:7
+#: 53e7e8d0686b48dcb95509c92b7a7b84
+msgid "Exception Hierarchy"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandInvokeError:10
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionFailed:16
+#: ../../api/exceptions.rst:11
+#: 889371d042124d10a698ad8826c671c4
+#: 47b569e25f35402db0c5bb4132894053
+#: c335ab33962a47c78ca52d33e998481f
+msgid ":exc:`Exception`"
+msgstr ""
+
+#: ../../api/exceptions.rst:12
+#: dd81b2c40c4443f1994d19146092117c
+msgid ":exc:`DiscordException`"
+msgstr ""
+
+#: ../../api/exceptions.rst:13
+#: 35e1705ec8384fe586c477bfb995fe1f
+msgid ":exc:`ClientException`"
+msgstr ""
+
+#: ../../api/exceptions.rst:14
+#: dfedaace178b4b04884f50be480617c9
+msgid ":exc:`InvalidData`"
+msgstr ""
+
+#: ../../api/exceptions.rst:15
+#: c27d0bb098a447428a284ca5d023c57d
+msgid ":exc:`InvalidArgument`"
+msgstr ""
+
+#: ../../api/exceptions.rst:16
+#: 51774789129f449cb560ddcfaa9a803f
+msgid ":exc:`LoginFailure`"
+msgstr ""
+
+#: ../../api/exceptions.rst:17
+#: 3afa22c5daa04e60b127c44ec5d07180
+msgid ":exc:`ConnectionClosed`"
+msgstr ""
+
+#: ../../api/exceptions.rst:18
+#: 4d88732f5db34d53b20962e8afa25a46
+msgid ":exc:`PrivilegedIntentsRequired`"
+msgstr ""
+
+#: ../../api/exceptions.rst:19
+#: 3e7d901618d546ca925a8ecd3cf9d136
+msgid ":exc:`InteractionResponded`"
+msgstr ""
+
+#: ../../api/exceptions.rst:20
+#: c6fa2936034d4731ab1aeaa4b614ff42
+msgid ":exc:`NoMoreItems`"
+msgstr ""
+
+#: ../../api/exceptions.rst:21
+#: ea3b24d6eef44faa8ef8ec9249070490
+msgid ":exc:`GatewayNotFound`"
+msgstr ""
+
+#: ../../api/exceptions.rst:22
+#: 532d3c95695d4d6fa4e0473791f4a4f7
+msgid ":exc:`HTTPException`"
+msgstr ""
+
+#: ../../api/exceptions.rst:23
+#: 9eebfbbe60bb4106a3b639f6f45ad07c
+msgid ":exc:`Forbidden`"
+msgstr ""
+
+#: ../../api/exceptions.rst:24
+#: 1bde5328566b4e7fab1aae599ee1a565
+msgid ":exc:`NotFound`"
+msgstr ""
+
+#: ../../api/exceptions.rst:25
+#: 0a58a73846bc4a18941aa971d078364b
+msgid ":exc:`DiscordServerError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:26
+#: f29304804655430dad81c3d59e546a63
+msgid ":exc:`ApplicationCommandError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:27
+#: b37502c50f0843ae943c87c7dd67d5b6
+msgid ":exc:`CheckFailure`"
+msgstr ""
+
+#: ../../api/exceptions.rst:28
+#: 0cce9f5fbcb74b468b1486d842bc37ce
+msgid ":exc:`ApplicationCommandInvokeError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:29
+#: c0bc52a0a7354ea6949487633ceab22c
+msgid ":exc:`ExtensionError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:30
+#: 8398035b6616440587f4fd9c558f9e1a
+msgid ":exc:`ExtensionAlreadyLoaded`"
+msgstr ""
+
+#: ../../api/exceptions.rst:31
+#: 1895dc7629c543ff9faff1a0910e9f71
+msgid ":exc:`ExtensionNotLoaded`"
+msgstr ""
+
+#: ../../api/exceptions.rst:32
+#: 228943094df54f5e85488f9097fbf719
+msgid ":exc:`NoEntryPointError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:33
+#: cf4495b523474d45bfc0b6dd6d5c12ec
+msgid ":exc:`ExtensionFailed`"
+msgstr ""
+
+#: ../../api/exceptions.rst:34
+#: 49d4a6cc59664a2e8343d03b2aec0c6e
+msgid ":exc:`ExtensionNotFound`"
+msgstr ""
+
+#: ../../api/exceptions.rst:35
+#: 58a32d7c9bea4910a40a79acc301f307
+msgid ":exc:`sinks.SinkException`"
+msgstr ""
+
+#: ../../api/exceptions.rst:36
+#: ecc415221b5d43c88a9b019f81916dea
+msgid ":exc:`sinks.RecordingException`"
+msgstr ""
+
+#: ../../api/exceptions.rst:37
+#: 6cb46421436a4f5da41d5ce4f96b8b72
+msgid ":exc:`sinks.WaveSinkError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:38
+#: 38041836606a4fcfba3572a7c0daf8c7
+msgid ":exc:`sinks.MP3SinkError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:39
+#: 2db35433e3264ecf98330cb7705502ff
+msgid ":exc:`sinks.MP4SinkError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:40
+#: ba5662ba422a4369b2b8f1f665378896
+msgid ":exc:`sinks.M4ASinkError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:41
+#: f5c7a61d892d40ec91dd9f022d327953
+msgid ":exc:`sinks.MKVSinkError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:42
+#: 1989e76c0f0d4288b8d71f7553a64c97
+msgid ":exc:`sinks.MKASinkError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:43
+#: 4d93b42667a445899b60eece4adce2c2
+msgid ":exc:`sinks.OGGSinkError`"
+msgstr ""
+
+#: ../../api/exceptions.rst:46
+#: 0a8986c1f9fe4880bb2c64822a11ab4f
+msgid "Objects"
+msgstr ""
+
+#: ../../api/exceptions.rst:48
+#: 7aa7998b08df4af68c8ace342caa93b5
+msgid "The following exceptions are thrown by the library."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.DiscordException:1
+#: 7a440737679a426fa7a7c89f2a31db07
+msgid "Base exception class for pycord"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.DiscordException:3
+#: c63dd0e386964ccfb2ed6fd3a6be053d
+msgid "Ideally speaking, this could be caught to handle any exceptions raised from this library."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ClientException:1
+#: 022cc7b12b61404d95709c9876f0e517
+msgid "Exception that's raised when an operation in the :class:`Client` fails."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ClientException:3
+#: 72e32d92abb148ce85ccfff0a1d1ada7
+msgid "These are usually for exceptions that happened due to user input."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.LoginFailure:1
+#: 35b288843d43407289c000fe32985e83
+msgid "Exception that's raised when the :meth:`Client.login` function fails to log you in from improper credentials or some other misc. failure."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.NoMoreItems:1
+#: e8c7fa94b9074f5685b8ff305095e230
+msgid "Exception that is raised when an async iteration operation has no more items."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:1
+#: 79d0ec5004a64282934d619362c00adc
+msgid "Exception that's raised when an HTTP request operation fails."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:5
+#: 5cea3ad7edfc46f98cc3d3639fe2c58a
+msgid "The response of the failed HTTP request. This is an instance of :class:`aiohttp.ClientResponse`. In some cases this could also be a :class:`requests.Response`."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandInvokeError:0
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:0
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionError:0
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionFailed:0
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotFound:0
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:0
+#: ../../../discord/errors.py:docstring of discord.errors.InteractionResponded:0
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:0
+#: ../../../discord/opus.py:docstring of discord.opus.OpusError:0
+#: ad6ceaf381c244c196eaa9e2c5c54f62
+#: d516381deef64c62a01e612de0485c15
+#: 36fe0b953f674793b8dd415161dc94f7
+#: 9e1201a1fc2546dc917e8cc272c39dbb
+#: b222bcaab3384a428d9f3869d7c49166
+#: 5d3bb39d794c4babb6473ae2943d4ae3
+#: eaaa700780244b3ab76d45ff50c8fa38
+#: fcbe8c71151e4e77b1c0bbb59f3df1c4
+#: 00aed8628a2c4432af93e9fc483154aa
+#: 8549f4429cce4661a795fb271ca15397
+#: 10825f2b28304b7aa76626de12eabd04
+#: de1455fa8690404684e1dea43f6ffeb4
+#: 6b22000658564039b294a02bf2e6978a
+#: 7ec2e0f0129b42fda6b30c5c761c88c3
+#: 9474bf04f702459f93552f7909337706
+msgid "type"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:9
+#: b9be9bcf60594106b05151c479fcbb62
+msgid ":class:`aiohttp.ClientResponse`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:13
+#: 4cd8b7f4c80243608b629e05a0b82093
+msgid "The text of the error. Could be an empty string."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:14
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionError:9
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionFailed:9
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotFound:12
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:15
+#: 130c6752e7eb41e7943175215cfc448d
+#: 765da4906ff94393ad18c1d66850c3b8
+#: 4a69a70e867e4a23a84ef67491a86a84
+#: 467be59d59894b21a4b6c9c2f2aa5ef9
+#: 8f37cdfd7fb2410895855b1ab1cb10ac
+msgid ":class:`str`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:19
+#: b77d580f0e7840b5971d4135181ac6f4
+msgid "The status code of the HTTP request."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:8
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:21
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:27
+#: ../../../discord/opus.py:docstring of discord.opus.OpusError:7
+#: 3c18707e0ee841358f3dd424085d1b30
+#: 46b36037252e4cb0be7044ee26eec116
+#: 862454a4c48f4cebb4f3836d9f02381d
+#: 12f947d587da438ea01b9101da0a9497
+msgid ":class:`int`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.HTTPException:25
+#: 2ed3cec390ee4551b59099fdde2a8dcd
+msgid "The Discord specific error code for the failure."
+msgstr ""
+
+#: ../../api/exceptions.rst:0
+#: 07ff437c106b4199ab1b15405361a8de
+#: 477f7375a778484c8d34a844717b3aad
+#: c9c817fae24b4e3da05a33a666ae0be5
+#: 61beddc1a3fd4da4ac0427c7f0747e06
+#: 52102f458d044481b865bebfa84bf489
+#: 36f2eab9bb524eecb4ce1aba97bc42c7
+#: 01ee9ba2deb744d7b92451a931529aa1
+#: 40eab0def975438badd887750af77f0b
+#: ed0e9e2b68c04c76b794fc6e8e472c81
+#: 6de9bb08e23a417ca3708e32c93af240
+#: 80abf15e5074477e8f43380ebd8e2eb5
+#: 2492bdfb6bbc4d13ae0d8ea01b564017
+#: 771beee3311e448086db629aee6c4070
+#: 4b046040948c49c289a15ac2a5537311
+#: 4a1d7c3c1e934702ab6f71ca0c36450f
+msgid "Parameters"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.Forbidden:1
+#: 67a7c71de0a1470dbabcc5de48d5aee9
+msgid "Exception that's raised for when status code 403 occurs."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.Forbidden:3
+#: ../../../discord/errors.py:docstring of discord.errors.NotFound:3
+#: 09342b5d6dc549dfbc16c2ce0935932c
+#: d149e85486744382a40735339e24667b
+msgid "Subclass of :exc:`HTTPException`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.NotFound:1
+#: 25d70cb14b8640ef94180870b2575e45
+msgid "Exception that's raised for when status code 404 occurs."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.DiscordServerError:1
+#: 51a32935531241329221c1e89e97ff41
+msgid "Exception that's raised for when a 500 range status code occurs."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.DiscordServerError:3
+#: 4b503b2ec1944eca98de74a200c2c179
+msgid "Subclass of :exc:`HTTPException`."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.InvalidData:1
+#: 6b581300399849dd9c96910c90a8d543
+msgid "Exception that's raised when the library encounters unknown or invalid data from Discord."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.InvalidArgument:1
+#: aaa3f0a0a8be409594bf857e3ca59802
+msgid "Exception that's raised when an argument to a function is invalid some way (e.g. wrong value or wrong type)."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.InvalidArgument:4
+#: a4a8722ecbdb4fbba7477c447b82440e
+msgid "This could be considered the parallel of ``ValueError`` and ``TypeError`` except inherited from :exc:`ClientException` and thus :exc:`DiscordException`."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.GatewayNotFound:1
+#: 22be332c77ad43c29747f0c830b50dec
+msgid "An exception that is raised when the gateway for Discord could not be found"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:1
+#: 20116a3ed16a4f098c4b3b69a5e341ca
+msgid "Exception that's raised when the gateway connection is closed for reasons that could not be handled internally."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:6
+#: d509ada602b848bdbd50c21cf0233978
+msgid "The close code of the websocket."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:12
+#: 7f37197e4ee74530bb88cb21b6a73f0a
+msgid "The reason provided for the closure."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:18
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:13
+#: 3d446df749944ec4ab403b1ae13406af
+#: 171c5579acb2413c935a3d3e8f1d1b45
+msgid "The shard ID that got closed if applicable."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ConnectionClosed:20
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:15
+#: 0c5edc13c29a4fcba0c5644e1ebe0e19
+#: a5aede21eb0f4acc8948671949905250
+msgid "Optional[:class:`int`]"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:1
+#: c35e141e7013495ea8c6f6f71dd78203
+msgid "Exception that's raised when the gateway is requesting privileged intents, but they're not ticked in the developer page yet."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:4
+#: 9196e61bb84944db8fff5530c4d0d413
+msgid "Go to https://discord.com/developers/applications/ and enable the intents that are required. Currently, these are as follows:"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:7
+#: 030b7d6b61454efebb407201550cd7a9
+msgid ":attr:`Intents.members`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:8
+#: b7642c9a817a49da89462e50b15e975b
+msgid ":attr:`Intents.presences`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.PrivilegedIntentsRequired:9
+#: 470bcd80cfd7496d98de1a3f2be5c22a
+msgid ":attr:`Intents.message_content`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.InteractionResponded:1
+#: 3573b8e0f8ab401e8b9b71a868031367
+msgid "Exception that's raised when sending another interaction response using :class:`InteractionResponse` when one has already been done before."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.InteractionResponded:4
+#: 34a4cd18050c48ed8392c9700be6d396
+msgid "An interaction can only respond once."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.InteractionResponded:10
+#: 9943182c689e42acbd083cbe6818da5d
+msgid "The interaction that's already been responded to."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.InteractionResponded:12
+#: 5e386ba748274173b7734455c842a270
+msgid ":class:`Interaction`"
+msgstr ""
+
+#: ../../../discord/opus.py:docstring of discord.opus.OpusError:1
+#: 1c1ea797ac5a40129e42d95b86fd38d4
+msgid "An exception that is thrown for libopus related errors."
+msgstr ""
+
+#: ../../../discord/opus.py:docstring of discord.opus.OpusError:5
+#: c7c96aac320a4bda9ce5bc7fcfada69f
+msgid "The error code returned."
+msgstr ""
+
+#: ../../../discord/opus.py:docstring of discord.opus.OpusNotLoaded:1
+#: b7f591cca75a46a0b206b4c9859d3aa5
+msgid "An exception that is thrown for when libopus is not loaded."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandError:1
+#: 7cabf009ba0e4a83b39b4876c02bb864
+msgid "The base exception type for all application command related errors."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandError:3
+#: 80e6f2d8a4d940c292d9d094f3b67480
+msgid "This inherits from :exc:`DiscordException`."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandError:5
+#: 799361c7da824355a6b0744337a69ed3
+msgid "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.CheckFailure:1
+#: c81f4d594afa42ce8860c68647fc343c
+msgid "Exception raised when the predicates in :attr:`.Command.checks` have failed."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandInvokeError:3
+#: ../../../discord/errors.py:docstring of discord.errors.CheckFailure:3
+#: 6fb9bf3276c74e69b2a38256c28e1ec0
+#: d5608f50352b46ada015d057ebd2d8a3
+msgid "This inherits from :exc:`ApplicationCommandError`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandInvokeError:1
+#: 014df6d7579143978bdc8d92695bc502
+msgid "Exception raised when the command being invoked raised an exception."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ApplicationCommandInvokeError:7
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionFailed:13
+#: 9b23087d6dab4078a722e14af474ff0a
+#: de46c67c0d34451d8cf4676f58567c93
+msgid "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionError:1
+#: c595f594796040aea80635be71c18f09
+msgid "Base exception for extension related errors."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionError:3
+#: 4ac31a298cd0422daf77b257ce912716
+msgid "This inherits from :exc:`~discord.DiscordException`."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionError:7
+#: 25c5c3c8fb2d458cbda274f919af01a4
+msgid "The extension that had an error."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionAlreadyLoaded:1
+#: b5b0ffc88ecb415ebe57a386b79458bc
+msgid "An exception raised when an extension has already been loaded."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionAlreadyLoaded:3
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionFailed:3
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotFound:3
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotLoaded:3
+#: ../../../discord/errors.py:docstring of discord.errors.NoEntryPointError:3
+#: 6c5a2c9815dd49d2b3c1d2a23baa67d8
+#: 28e512cb2cf24be19c6e32bc23841bbb
+#: 39c6885c65794beb9120470780ac767e
+#: e2125d928b54437bac568f64e733bfe7
+#: a59b7a8232614578bc2f7a2c3c532ffc
+msgid "This inherits from :exc:`ExtensionError`"
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotLoaded:1
+#: 53e72a006f6241409b12457ba8b8e427
+msgid "An exception raised when an extension was not loaded."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.NoEntryPointError:1
+#: 67c40091d97d405098f489ef8ec672d8
+msgid "An exception raised when an extension does not have a ``setup`` entry point function."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionFailed:1
+#: 8168ccb6e48c40acacdcd3767115a1e7
+msgid "An exception raised when an extension failed to load during execution of the module or ``setup`` entry point."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionFailed:7
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotFound:10
+#: 2e49b1133d3c4757ba35ed0415f07b34
+#: 8c44c489681d42b6a508ccb656164b0d
+msgid "The extension that had the error."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotFound:1
+#: ef648aab45b0455690d58d28dfbe3e38
+msgid "An exception raised when an extension is not found."
+msgstr ""
+
+#: ../../../discord/errors.py:docstring of discord.errors.ExtensionNotFound:5
+#: 7d6e25e7e1c54cbfbeb620fbdcfeaa37
+msgid "Made the ``original`` attribute always None."
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.SinkException:1
+#: 21739c1cf0ac475b89bb1107726f3f79
+msgid "Raised when a Sink error occurs."
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.RecordingException:1
+#: 7e64bdea145d4bb7875e1bcef1a3a483
+msgid "Exception that's thrown when there is an error while trying to record audio from a voice channel."
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.WaveSinkError:1
+#: 6e4acf4cb73947dca4f423639b8cab3f
+msgid "Exception thrown when an exception occurs with :class:`WaveSink`"
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.MP3SinkError:1
+#: 6ae6e3ecf68c4d69ab5c019cba190af4
+msgid "Exception thrown when an exception occurs with :class:`MP3Sink`"
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.MP4SinkError:1
+#: 672f48e9a57f4a60b9061b0e91e2abf4
+msgid "Exception thrown when an exception occurs with :class:`MP4Sink`"
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.M4ASinkError:1
+#: 2389561c34a8497c91f4375f02708fb1
+msgid "Exception thrown when an exception occurs with :class:`M4ASink`"
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.MKVSinkError:1
+#: b90dda587cf54324aee88041db439ac9
+msgid "Exception thrown when an exception occurs with :class:`MKVSink`"
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.MKASinkError:1
+#: 218e43ce373a429e98b880bcd9e4f748
+msgid "Exception thrown when an exception occurs with :class:`MKASink`"
+msgstr ""
+
+#: ../../../discord/sinks/errors.py:docstring of discord.sinks.errors.OGGSinkError:1
+#: 9cdf58aa453f4e2f896a496c0a20bd25
+msgid "Exception thrown when an exception occurs with :class:`OGGSink`"
+msgstr ""

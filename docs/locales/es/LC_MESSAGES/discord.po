@@ -1,0 +1,121 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Creating a Bot Account"
+msgstr "Crear una cuenta bot"
+
+msgid "In order to work with the library and the Discord API in general, we must first create a Discord Bot account."
+msgstr "Para poder trabajar con la biblioteca y la API de Discord en general, primero debemos crear una cuenta de bot en Discord."
+
+msgid "Creating a Bot account is a pretty straightforward process."
+msgstr "Crear una cuenta de bot es un proceso bastante sencillo."
+
+msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+msgstr "Asegúrate de haber iniciado sesión en el `sitio web de Discord <https://discord.com>`_."
+
+msgid "Navigate to the `application page <https://discord.com/developers/applications>`_"
+msgstr "Ve a la página de `aplicaciones <https://discord.com/developers/applications>`_"
+
+msgid "Click on the \"New Application\" button."
+msgstr "Haz clic en el botón \"New Application\"."
+
+msgid "The new application button."
+msgstr "El botón de nueva aplicación."
+
+msgid "Give the application a name and click \"Create\"."
+msgstr "Dale un nombre a la aplicación y haz clic en \"Create\"."
+
+msgid "The new application form filled in."
+msgstr "El formulario de la nueva aplicación llenado."
+
+msgid "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
+msgstr "Crea un usuario de bot navegando a la pestaña \"Bot\" y haz clic en \"Add Bot\"."
+
+msgid "Click \"Yes, do it!\" to continue."
+msgstr "Haz clic en \"Yes, do it!\" para continuar."
+
+msgid "The Add Bot button."
+msgstr "El botón Añadir bot."
+
+msgid "Make sure that **Public Bot** is ticked if you want others to invite your bot."
+msgstr "Asegúrate de que el **Public Bot** esté activado si quieres que otros inviten a tu bot."
+
+msgid "You should also make sure that **Require OAuth2 Code Grant** is unchecked unless you are developing a service that needs it. If you're unsure, then **leave it unchecked**."
+msgstr "También deberías asegurarte que **Require OAuth2 Code Grant** esté desactivado, a no ser que estés desarrollando un servicio que lo necesite. Si no estás seguro, entonces **mantenlo desactivado**."
+
+msgid "How the Bot User options should look like for most people."
+msgstr "Cómo se deberían ver las opciones de usuario Bot para la mayoría de las personas."
+
+msgid "Copy the token using the \"Copy\" button."
+msgstr "Copie el token usando el botón \"Copy\"."
+
+msgid "**This is not the Client Secret at the General Information page.**"
+msgstr "**Este no es el Client Secret de la página de General Information.**"
+
+msgid "It should be worth noting that this token is essentially your bot's password. You should **never** share this with someone else. In doing so, someone can log in to your bot and do malicious things, such as leaving servers, ban all members inside a server, or pinging everyone maliciously."
+msgstr "Vale la pena señalar que este token es esencialmente la contraseña de tu bot. **Nunca** deberías compartir esto con otra persona. Al hacerlo, alguien puede iniciar sesión en tu bot y realizar acciones maliciosas, como abandonar servidores, banear todos los miembros dentro de un servidor, o mencionar a everyone maliciosamente."
+
+msgid "The possibilities are endless, so **do not share this token.**"
+msgstr "Las posibilidades son infinitas, así que **no compartas este token.**"
+
+msgid "If you accidentally leaked your token, click the \"Regenerate\" button as soon as possible. This revokes your old token and re-generates a new one. Now you need to use the new token to login."
+msgstr "Si accidentalmente filtraste tu token, haz clic en el botón \"Regenerate\" tan pronto como puedas. Esto revoca tu viejo token y vuelve a generar uno nuevo. Ahora necesitas usar este nuevo token para iniciar sesión."
+
+msgid "And that's it. You now have a bot account and you can login with that token."
+msgstr "Y eso es todo. Ahora tienes una cuenta de bot y puedes iniciar sesión con ese token."
+
+msgid "Inviting Your Bot"
+msgstr "Invitar a tu bot"
+
+msgid "So you've made a Bot User but it's not actually in any server."
+msgstr "Así que has creado un usuario de bot, pero en realidad no está en ningún servidor."
+
+msgid "If you want to invite your bot you must create an invite URL for it."
+msgstr "Si quieres invitar a tu bot debes crear una URL de invitación para él."
+
+msgid "Click on your bot's page."
+msgstr "Haz clic en la página de tu bot."
+
+msgid "Expand the \"OAuth2\" tab and click on \"URL Generator\"."
+msgstr "Expande la pestaña \"OAuth2\" y haz clic en \"URL Generator\"."
+
+msgid "How the OAuth2 tab should look like."
+msgstr "Cómo debería verse la pestaña OAuth2."
+
+msgid "Tick the \"bot\" and \"applications.commands\" checkboxes under \"scopes\"."
+msgstr "Marca las casillas \"bot\" y \"applications.commands\" bajo \"scopes\"."
+
+msgid "The scopes checkbox with \"bot\" and \"applications.commands\" ticked."
+msgstr "Las casillas \"bot\" y \"applications.commands\" marcadas."
+
+msgid "Tick the permissions required for your bot to function under \"Bot Permissions\"."
+msgstr "Selecciona los permisos necesarios para que tu bot funcione bajo \"Bot Permissions\"."
+
+msgid "Please be aware of the consequences of requiring your bot to have the \"Administrator\" permission."
+msgstr "Por favor, ten en cuenta las consecuencias de requerir que tu bot tenga el permiso de \"Administrador\"."
+
+msgid "Bot owners must have 2FA enabled for certain actions and permissions when added in servers that have Server-Wide 2FA enabled. Check the `2FA support page <https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_ for more information."
+msgstr "Los propietarios de bots deben tener A2F habilitados para ciertas acciones y permisos cuando se agregan en servidores que tienen habilitado A2F. Consulta la `página de soporte de A2F <https://support.discord.com/hc/es/articles/219576828>`_ para más información."
+
+msgid "The permission checkboxes with some permissions checked."
+msgstr "Las casillas de permisos con algunos permisos marcados."
+
+msgid "Now the resulting URL can be used to add your bot to a server. Copy and paste the URL into your browser, choose a server to invite the bot to, and click \"Authorize\"."
+msgstr "Ahora la URL resultante puede ser usada para agregar tu bot a un servidor. Copia y pega la URL en tu navegador, elige un servidor al que invitar al bot, y haz clic en \"Autorizar\"."
+
+msgid "The person adding the bot needs \"Manage Server\" permissions to do so."
+msgstr "La persona que añade el bot necesita permisos de \"Administrar Servidor\" para hacerlo."
+
+msgid "If you want to generate this URL dynamically at run-time inside your bot and using the :class:`discord.Permissions` interface, you can use :func:`discord.utils.oauth_url`."
+msgstr "Si quieres generar esta URL dinámicamente en tiempo de ejecución dentro de tu bot y usando la interfaz :class:`discord.Permissions`, puedes usar :func:`discord.utils.oauth_url`."
+

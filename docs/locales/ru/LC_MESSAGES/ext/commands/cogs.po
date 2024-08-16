@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Cogs"
+msgstr "Коги"
+
+msgid "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
+msgstr "В процессе разработки бота наступает момент, когда вы хотите организовать набор команд, слушателей и некоторых состояний в один класс. Коги позволяют вам сделать именно это."
+
+msgid "The gist:"
+msgstr "Основная суть:"
+
+msgid "Each cog is a Python class that subclasses :class:`.commands.Cog`."
+msgstr "Каждый ког - это класс Python, который является подклассом :class:`.commands.Cog`."
+
+msgid "Every command is marked with the :func:`.commands.command` decorator."
+msgstr "Каждая команда помечается декоратором :func:`.commands.command`."
+
+msgid "Every listener is marked with the :meth:`.commands.Cog.listener` decorator."
+msgstr "Каждый слушатель помечается декоратором :meth:`.commands.Cog.listener`."
+
+msgid "Cogs are then registered with the :meth:`.Bot.add_cog` call."
+msgstr "Затем коги регистрируются с помощью вызова :meth:`.Bot.add_cog`."
+
+msgid "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
+msgstr "Впоследствии коги удаляются с помощью вызова :meth:`.Bot.remove_cog`."
+
+msgid "It should be noted that cogs are typically used alongside with :ref:`ext_commands_extensions`."
+msgstr "Следует отметить, что коги обычно используются вместе с :ref:`ext_commands_extensions`."
+
+msgid "Quick Example"
+msgstr "Быстрый пример"
+
+msgid "This example cog defines a ``Greetings`` category for your commands, with a single :ref:`command <ext_commands_commands>` named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
+msgstr "Этот пример кога определяет категорию ``Greetings`` для ваших команд, с одной :ref:`командой <ext_commands_commands>` под названием ``hello``, а также слушателем для прослушивания :ref:`События <discord-api-events>`."
+
+msgid "A couple of technical notes to take into consideration:"
+msgstr "Несколько технических замечаний, которые следует принять во внимание:"
+
+msgid "All listeners must be explicitly marked via decorator, :meth:`~.commands.Cog.listener`."
+msgstr "Все слушатели должны быть явно помечены с помощью декоратора, :meth:`~.commands.Cog.listener`."
+
+msgid "The name of the cog is automatically derived from the class name but can be overridden. See :ref:`ext_commands_cogs_meta_options`."
+msgstr "Имя кога автоматически происходит от имени класса, но может быть переопределено. См. :ref:`ext_commands_cogs_meta_options`."
+
+msgid "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
+msgstr "Все команды теперь должны принимать параметр ``self``, чтобы позволить использовать атрибуты экземпляра, которые могут быть использованы для поддержания состояния."
+
+msgid "Cog Registration"
+msgstr "Регистрация Когов"
+
+msgid "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.commands.Bot.add_cog` method."
+msgstr "После того как вы определили коги, вам нужно сообщить боту, чтобы он зарегистрировал коги для использования. Мы делаем это с помощью метода :meth:`~.commands.Bot.add_cog`."
+
+msgid "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
+msgstr "Это связывает ког с ботом, автоматически добавляя к нему все команды и слушателей."
+
+msgid "Note that we reference the cog by name, which we can override through :ref:`ext_commands_cogs_meta_options`. So if we ever want to remove the cog eventually, we would have to do the following."
+msgstr "Обратите внимание, что мы ссылаемся на ког по имени, которое мы можем переопределить через :ref:`ext_commands_cogs_meta_options`. Поэтому, если мы захотим в конечном итоге удалить ког, нам нужно будет сделать следующее."
+
+msgid "Using Cogs"
+msgstr "Использование Когов"
+
+msgid "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
+msgstr "Точно так же, как мы удаляем ког по его имени, мы можем и получить его по имени. Это позволяет нам использовать ког в качестве протокола межкомандной связи для обмена данными. Например:"
+
+msgid "Special Methods"
+msgstr "Специальные Методы"
+
+msgid "As cogs get more complicated and have more commands, there comes a point where we want to customise the behaviour of the entire cog or bot."
+msgstr "По мере того как коги становятся все сложнее и имеют больше команд, наступает момент, когда мы хотим кастомизировать поведение всего кога или бота."
+
+msgid "They are as follows:"
+msgstr "К их числу относятся:"
+
+msgid ":meth:`.Cog.cog_unload`"
+msgstr ":meth:`.Cog.cog_unload`"
+
+msgid ":meth:`.Cog.cog_check`"
+msgstr ":meth:`.Cog.cog_check`"
+
+msgid ":meth:`.Cog.cog_command_error`"
+msgstr ":meth:`.Cog.cog_command_error`"
+
+msgid ":meth:`.Cog.cog_before_invoke`"
+msgstr ":meth:`.Cog.cog_before_invoke`"
+
+msgid ":meth:`.Cog.cog_after_invoke`"
+msgstr ":meth:`.Cog.cog_after_invoke`"
+
+msgid ":meth:`.Cog.bot_check`"
+msgstr ":meth:`.Cog.bot_check`"
+
+msgid ":meth:`.Cog.bot_check_once`"
+msgstr ":meth:`.Cog.bot_check_once`"
+
+msgid "You can visit the reference to get more detail."
+msgstr "Вы можете посмотреть справочник, чтобы получить более подробную информацию."
+
+msgid "Meta Options"
+msgstr "Мета-опции"
+
+msgid "At the heart of a cog resides a metaclass, :class:`.commands.CogMeta`, which can take various options to customise some of the behaviour. To do this, we pass keyword arguments to the class definition line. For example, to change the cog name we can pass the ``name`` keyword argument as follows:"
+msgstr "В основе кога лежит метакласс, :class:`.commands.CogMeta`, который может принимать различные опции для кастомизации поведения. Для этого в строке определения класса мы передаем аргументы с ключевыми словами. Например, чтобы изменить имя кога, мы можем передать именованный аргумент ``name`` следующим образом:"
+
+msgid "To see more options that you can set, see the documentation of :class:`.commands.CogMeta`."
+msgstr "Чтобы узнать больше опций, которые вы можете задать, смотрите документацию по :class:`.commands.CogMeta`."
+
+msgid "Inspection"
+msgstr "Инспекция"
+
+msgid "Since cogs ultimately are classes, we have some tools to help us inspect certain properties of the cog."
+msgstr "Поскольку коги в конечном счете являются классами, у нас есть некоторые инструменты, которые помогут нам проверить определенные свойства кога."
+
+msgid "To get a :class:`list` of commands, we can use :meth:`.Cog.get_commands`. ::"
+msgstr "Чтобы получить :class:`list`, состоящий из команд, мы можем использовать :meth:`.Cog.get_commands`. ::"
+
+msgid "If we want to get the subcommands as well, we can use the :meth:`.Cog.walk_commands` generator. ::"
+msgstr "Если мы хотим получить также и подкоманды, мы можем использовать генератор :meth:`.Cog.walk_commands`. ::"
+
+msgid "To do the same with listeners, we can query them with :meth:`.Cog.get_listeners`. This returns a list of tuples -- the first element being the listener name and the second one being the actual function itself. ::"
+msgstr "Чтобы сделать то же самое со слушателями, мы можем запросить их с помощью :meth:`.Cog.get_listeners`. Это возвращает список кортежей - первый элемент - имя слушателя, второй - сама функция. ::"
+

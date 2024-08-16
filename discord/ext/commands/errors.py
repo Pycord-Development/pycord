@@ -212,10 +212,10 @@ class CheckAnyFailure(CheckFailure):
     """
 
     def __init__(
-        self, checks: list[CheckFailure], errors: list[Callable[[Context], bool]]
+        self, checks: list[Callable[[Context], bool]], errors: list[CheckFailure]
     ) -> None:
-        self.checks: list[CheckFailure] = checks
-        self.errors: list[Callable[[Context], bool]] = errors
+        self.checks: list[Callable[[Context], bool]] = checks
+        self.errors: list[CheckFailure] = errors
         super().__init__("You do not have permission to run this command.")
 
 

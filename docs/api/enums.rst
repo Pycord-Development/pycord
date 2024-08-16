@@ -418,13 +418,13 @@ of :class:`enum.Enum`.
         Represents a slash command interaction.
     .. attribute:: component
 
-        Represents a component based interaction, i.e. using the Discord Bot UI Kit.
+        Represents a component-based interaction, i.e. using the Discord Bot UI Kit.
     .. attribute:: auto_complete
 
         Represents a autocomplete interaction for slash commands.
     .. attribute:: modal_submit
 
-        Represents a modal based interaction.
+        Represents a modal-based interaction.
 
 .. class:: InteractionResponseType
 
@@ -1413,6 +1413,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
@@ -1433,6 +1434,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
@@ -1453,6 +1455,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
