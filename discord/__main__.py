@@ -110,6 +110,7 @@ lib64/
 parts/
 sdist/
 var/
+_build/
 *.egg-info/
 .installed.cfg
 *.egg
