@@ -3,17 +3,11 @@ name: "TODO Checks"
 on:
   push:
     paths:
-      - discord/
-      - docs/
-      - examples/
-      - tests/
+      - "discord/"
+      - "docs/"
+      - "examples/"
+      - "tests/"
     branches: [master]
-  pull_request:
-    paths:
-      - discord/
-      - docs/
-      - examples/
-      - tests/
   workflow_dispatch:
 
 concurrency:
