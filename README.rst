@@ -149,4 +149,4 @@ Translations
 ------------
 
 .. image:: https://badges.awesome-crowdin.com/translation-200034237-5.png
-   :alt: Translation Status
+   :alt: Translation Completion Per Language
