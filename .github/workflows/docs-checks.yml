@@ -8,6 +8,7 @@ on:
       - "requirements/**"
       - "*.toml"
       - "*.py"
+    branches: [master]
   pull_request:
     paths:
       - "discord/**"

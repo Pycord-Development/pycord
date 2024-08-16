@@ -2,8 +2,7 @@ name: "Multilingual Docs Upload"
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   workflow_dispatch:
   
 permissions: write-all
