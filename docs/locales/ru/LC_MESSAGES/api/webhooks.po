@@ -51,7 +51,7 @@ msgid "The webhook's ID"
 msgstr "The webhook's ID"
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"

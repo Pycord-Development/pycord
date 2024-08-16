@@ -27,7 +27,7 @@ msgid "What is a coroutine?"
 msgstr "¿Qué es una corutina?"
 
 msgid "A |coroutine_link|_ is a function that must be invoked with ``await`` or ``yield from``. When Python encounters an ``await`` it stops the function's execution at that point and works on other things until it comes back to that point and finishes off its work. This allows for your program to be doing multiple things at the same time without using threads or complicated multiprocessing."
-msgstr "Una |coroutine_link|_ es una función que debe ser llamada con ``await`` o ```yield from``. Cuando Python se encuentra con un ``await``, se detiene la ejecución de la función en ese punto y se trabaja en otras cosas hasta que regresa a ese punto y termina su trabajo. Esto le permite a tu programa hacer múltiples cosas al mismo tiempo sin usar hilos o multiprocesamiento complicado."
+msgstr "Una |coroutine_link|_ es una función que debe ser llamada con ``await`` o ``yield from``. Cuando Python se encuentra con un ``await``, se detiene la ejecución de la función en ese punto y se trabaja en otras cosas hasta que regresa a ese punto y termina su trabajo. Esto le permite a tu programa hacer múltiples cosas al mismo tiempo sin usar hilos o multiprocesamiento complicado."
 
 msgid "**If you forget to await a coroutine then the coroutine will not run. Never forget to await a coroutine.**"
 msgstr "**Si te olvidas de utilizar await en una corrutina, entonces ésta no funcionará. Nunca olvides utilizar await en una corutina.**"
@@ -132,7 +132,7 @@ msgid "If you have a file-like object you can do as follows: ::"
 msgstr "Si tienes un objeto tipo archivo, puedes hacer lo siguiente: ::"
 
 msgid "To upload multiple files, you can use the ``files`` keyword argument instead of ``file``\\: ::"
-msgstr "Para subir varios archivos, puedes utilizar el argumento de palabra clave ```files`` en lugar de ``file``\\: ::"
+msgstr "Para subir varios archivos, puedes utilizar el argumento de palabra clave ``files`` en lugar de ``file``\\: ::"
 
 msgid "If you want to upload something from a URL, you will have to use an HTTP request using :doc:`aiohttp <aio:index>` and then pass an :class:`io.BytesIO` instance to :class:`File` like so:"
 msgstr "Si quiere subir algo desde una URL, tendrás que realizar una petición HTTP utilizando :doc:`aiohttp <aio:index>` y luego pasar una instancia de :class:`io.BytesIO` a la clase :class:`File`. Tal que así:"
@@ -246,7 +246,7 @@ msgid "How do I make a web request?"
 msgstr "¿Cómo hago una petición web?"
 
 msgid "To make a request, you should use a non-blocking library. This library already uses and requires a 3rd party library for making requests, :doc:`aiohttp <aio:index>`."
-msgstr "Para hacer una solicitud, deberóas usar una librería sin bloqueo. Esta biblioteca ya usa y requiere una librería de terceros para hacer peticiones, :doc:`aiohttp <aio:index>`."
+msgstr "Para hacer una solicitud, deberás usar una librería sin bloqueo. Esta biblioteca ya usa y requiere una librería de terceros para hacer peticiones, :doc:`aiohttp <aio:index>`."
 
 msgid "See `aiohttp's full documentation <http://aiohttp.readthedocs.io/en/stable/>`_ for more information."
 msgstr "Véase la `documentación completa de aiohttp <http://aiohttp.readthedocs.io/en/stable/>`_ para más información."

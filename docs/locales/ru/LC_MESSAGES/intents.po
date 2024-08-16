@@ -45,7 +45,7 @@ msgid "With the API change requiring bot owners to specify intents, some intents
 msgstr "С изменением API, требующим от владельцев ботов указывать интенты, некоторые из них были дополнительно ограничены и требуют больше ручных действий. Такие интенты называются **привилегированными интентами**."
 
 msgid "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
-msgstr "Привилегированный intent - это intent, который требует перехода на портал разработчика и ручного включения. Чтобы включить привилегированные intent'ы, выполните следующие действия:"
+msgstr "Привилегированный intent - это интент, который требует перехода на портал разработчика и ручного включения. Чтобы включить привилегированные интенты, выполните следующие действия:"
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
 msgstr "Убедитесь, что вы вошли на сайте `Discord <https://discord.com>`_."

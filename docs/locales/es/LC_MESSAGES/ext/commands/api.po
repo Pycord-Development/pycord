@@ -81,7 +81,7 @@ msgid "The coroutine to register as the post-invoke hook."
 msgstr "The coroutine to register as the post-invoke hook."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Errores"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."

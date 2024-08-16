@@ -27,10 +27,10 @@ msgid "In order to make development easier and also to allow for our dependencie
 msgstr "Чтобы упростить разработку, а также для того, чтобы наши зависимости могли обновляться для использования 3.8 и выше, библиотеке пришлось убрать поддержку версий Python ниже 3.7, что по сути означает, что **поддержка Python 3.7 и ниже была прекращена**."
 
 msgid "Major Model Changes"
-msgstr "Major Model Changes"
+msgstr "Большие изменения в моделях"
 
 msgid "Below are major changes that have happened in v2.0:"
-msgstr "Below are major changes that have happened in v2.0:"
+msgstr "Ниже приведены основные изменения, произошедшие в 2.0:"
 
 msgid "Dropped User Accounts Support"
 msgstr "Dropped User Accounts Support"

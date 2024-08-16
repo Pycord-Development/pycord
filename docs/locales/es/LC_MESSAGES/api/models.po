@@ -87,7 +87,7 @@ msgid ":class:`Asset`"
 msgstr ":class:`Asset`"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Errores"
 
 msgid "An invalid size or format was passed."
 msgstr "An invalid size or format was passed."
