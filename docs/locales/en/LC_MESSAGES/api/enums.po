@@ -1,0 +1,2799 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: ../../api/enums.rst:7 62a3a42200714266a982a184b801615b
+msgid "Enumerations"
+msgstr ""
+
+#: ../../api/enums.rst:9 8edd78317af744249156d7fc55d53459
+msgid ""
+"The API provides some enumerations for certain types of strings to avoid "
+"the API from being stringly typed in case the strings change in the "
+"future."
+msgstr ""
+
+#: ../../api/enums.rst:12 5bede53965bb438f89620d1184cc4998
+msgid ""
+"All enumerations are subclasses of an internal class which mimics the "
+"behaviour of :class:`enum.Enum`."
+msgstr ""
+
+#: ../../api/enums.rst:17 41dd3d7ade864c7fac7f33bdc7997cf5
+msgid "Specifies the input type of an option."
+msgstr ""
+
+#: ../../api/enums.rst:23 c09bf4f35dff41199774467ec1a71d65
+msgid "A slash subcommand."
+msgstr ""
+
+#: ../../api/enums.rst:26 a32c124790b44aaa8f9cc124d791ae6a
+msgid "A slash command group."
+msgstr ""
+
+#: ../../api/enums.rst:29 2893d306dd214f12a1fc100b94446759
+msgid "A string."
+msgstr ""
+
+#: ../../api/enums.rst:32 d5b40b4a9cee43d3b0adba7e86c21fc9
+msgid "An integer between -2⁵³ and 2⁵³."
+msgstr ""
+
+#: ../../api/enums.rst:36 ../../api/enums.rst:59
+#: 70b2bd1e114440079b80fffca89ae1ab dda4596a99714ab38e3ec0b5a2b10fd6
+msgid "IDs, such as 881224361015672863, are often too big for this input type."
+msgstr ""
+
+#: ../../api/enums.rst:40 aeb8467bda844397bd89efd7ed2d6e51
+msgid "A boolean."
+msgstr ""
+
+#: ../../api/enums.rst:43 b441f0733b824c1c90e5af72c6428036
+msgid ""
+"A user from the current channel. This will be converted to an instance of"
+" :class:`.User` in private channels, else :class:`.Member`"
+msgstr ""
+
+#: ../../api/enums.rst:46 c1d9b05304ed4d9782bca5b63910f471
+msgid "A channel from the current guild."
+msgstr ""
+
+#: ../../api/enums.rst:49 8af7497f3271434a9221371639bf0a20
+msgid "A role from the current guild."
+msgstr ""
+
+#: ../../api/enums.rst:52 29768171f9034607ac74932b5b671189
+msgid "A mentionable (user or role)."
+msgstr ""
+
+#: ../../api/enums.rst:55 3678469398f4443d949e846231813f41
+msgid "A floating-point number between -2⁵³ and 2⁵³."
+msgstr ""
+
+#: ../../api/enums.rst:63 8518d8d0bc574c7bbda674dcb9fc74e4
+msgid "An attachment."
+msgstr ""
+
+#: ../../api/enums.rst:67 5dc42347281244ac9245a598cee06ef6
+msgid "Specifies the type of channel."
+msgstr ""
+
+#: ../../api/enums.rst:71 811232ae673c4d43926ab75b4ff53889
+msgid "A text channel."
+msgstr ""
+
+#: ../../api/enums.rst:75 e66f26c0877b46c2a74930543ec5dda3
+msgid "A voice channel."
+msgstr ""
+
+#: ../../api/enums.rst:79 eb457db22b6f4992b255e5f8f3b35cea
+msgid "A private text channel. Also called a direct message."
+msgstr ""
+
+#: ../../api/enums.rst:83 4c89995ca9c04d3e939768d30f72f6b0
+msgid "A private group text channel."
+msgstr ""
+
+#: ../../api/enums.rst:87 0f8a9c0389de4ff3b66bcf5e58f20346
+msgid "A category channel."
+msgstr ""
+
+#: ../../api/enums.rst:91 ec7bb4b12e9044d7be4521fe4c4dfc5a
+msgid "A guild news channel."
+msgstr ""
+
+#: ../../api/enums.rst:95 cfd6ca96420f4b7b8e2f211569d82926
+msgid "A guild stage voice channel."
+msgstr ""
+
+#: ../../api/enums.rst:101 15e714bf45b64bfba322a1fa4decb9e0
+msgid "A news thread."
+msgstr ""
+
+#: ../../api/enums.rst:107 d873c480bdcd4fe4bc547139c961bc99
+msgid "A public thread."
+msgstr ""
+
+#: ../../api/enums.rst:113 5b47a4c12c3547c4876c1a68d67d2729
+msgid "A private thread."
+msgstr ""
+
+#: ../../api/enums.rst:119 7ebdf56610c44fbaa6d9dee200161197
+msgid "A guild directory entry, used in hub guilds, currently in experiment."
+msgstr ""
+
+#: ../../api/enums.rst:125 211b7a19c3ee433db673e226f56f938f
+msgid "User can only write in threads, similar functionality to a forum."
+msgstr ""
+
+#: ../../api/enums.rst:131 fc3cd4ddb3b74613b0513faab63616e9
+msgid ""
+"Specifies the type of :class:`Message`. This is used to denote if a "
+"message is to be interpreted as a system message or a regular message."
+msgstr ""
+
+#: ../../api/enums.rst:138 a7a6cd05d7eb4191a78e415784ba36bf
+msgid "Checks if two messages are equal."
+msgstr ""
+
+#: ../../api/enums.rst:141 f5630a500dd8482b84bceada63ebaa2a
+msgid "Checks if two messages are not equal."
+msgstr ""
+
+#: ../../api/enums.rst:145 af618381e61a4f44a8f1ca183ea3655a
+msgid "The default message type. This is the same as regular messages."
+msgstr ""
+
+#: ../../api/enums.rst:148 0437846f556d4b09a2d83ca98f6b4ee5
+msgid ""
+"The system message when a user is added to a group private message or a "
+"thread."
+msgstr ""
+
+#: ../../api/enums.rst:152 495303b8a3cb49fd9dceba3da06944bb
+msgid ""
+"The system message when a user is removed from a group private message or"
+" a thread."
+msgstr ""
+
+#: ../../api/enums.rst:156 44f702d90f1d4d63a913bc95a83439c3
+msgid ""
+"The system message denoting call state, e.g. missed call, started call, "
+"etc."
+msgstr ""
+
+#: ../../api/enums.rst:160 d89cf744022a484a83f6742bdfcf6f20
+msgid "The system message denoting that a channel's name has been changed."
+msgstr ""
+
+#: ../../api/enums.rst:163 a033722ff74045c58e32708afe0429d1
+msgid "The system message denoting that a channel's icon has been changed."
+msgstr ""
+
+#: ../../api/enums.rst:166 98b57a613ed3419a8bdf4d5c892266fa
+msgid ""
+"The system message denoting that a pinned message has been added to a "
+"channel."
+msgstr ""
+
+#: ../../api/enums.rst:169 b493fbf3a6da442e97d2a46132bce3ec
+msgid "The system message denoting that a new member has joined a Guild."
+msgstr ""
+
+#: ../../api/enums.rst:173 f0d57b0b7bd04689b669a24fd805c747
+msgid "The system message denoting that a member has \"nitro boosted\" a guild."
+msgstr ""
+
+#: ../../api/enums.rst:176 e423cd2290a74b4ab87c81bd0376da8c
+msgid ""
+"The system message denoting that a member has \"nitro boosted\" a guild "
+"and it achieved level 1."
+msgstr ""
+
+#: ../../api/enums.rst:180 721d284c53a94769b51b9d509a335fdb
+msgid ""
+"The system message denoting that a member has \"nitro boosted\" a guild "
+"and it achieved level 2."
+msgstr ""
+
+#: ../../api/enums.rst:184 6ab3d0acd4c3455186ff388965f8cd2a
+msgid ""
+"The system message denoting that a member has \"nitro boosted\" a guild "
+"and it achieved level 3."
+msgstr ""
+
+#: ../../api/enums.rst:188 fb77bf0ae82f44f0b0a01b4b84f1f638
+msgid ""
+"The system message denoting that an announcement channel has been "
+"followed."
+msgstr ""
+
+#: ../../api/enums.rst:193 7f9a47eb82674f4482ed2a477ba7dea9
+msgid "The system message denoting that a member is streaming in the guild."
+msgstr ""
+
+#: ../../api/enums.rst:198 18a8ceefd10b4d009b3bf16bc802e1e7
+msgid ""
+"The system message denoting that the guild is no longer eligible for "
+"Server Discovery."
+msgstr ""
+
+#: ../../api/enums.rst:204 4db35fd8f97a438ab56a809bf764ddf2
+msgid ""
+"The system message denoting that the guild has become eligible again for "
+"Server Discovery."
+msgstr ""
+
+#: ../../api/enums.rst:210 56ef390d6df84b8e8e8bf1f8ef25b248
+msgid ""
+"The system message denoting that the guild has failed to meet the Server "
+"Discovery requirements for one week."
+msgstr ""
+
+#: ../../api/enums.rst:216 39734c8f19fb49dba5af36e56f055d4f
+msgid ""
+"The system message denoting that the guild has failed to meet the Server "
+"Discovery requirements for 3 weeks in a row."
+msgstr ""
+
+#: ../../api/enums.rst:222 4e88f0a260624a6f887880b3c2979b5d
+msgid ""
+"The system message denoting that a thread has been created. This is only "
+"sent if the thread has been created from an older message. The period of "
+"time required for a message to be considered old cannot be relied upon "
+"and is up to Discord."
+msgstr ""
+
+#: ../../api/enums.rst:230 c658f0e4f08540898166e76907aec5b7
+msgid "The system message denoting that the author is replying to a message."
+msgstr ""
+
+#: ../../api/enums.rst:235 9204abcbf0d94e83a5038c8b433ff036
+msgid ""
+"The system message denoting that an application (or \"slash\") command "
+"was executed."
+msgstr ""
+
+#: ../../api/enums.rst:240 3c0e282e20f74ec6b2a5fd2b8f91dc27
+msgid "The system message sent as a reminder to invite people to the guild."
+msgstr ""
+
+#: ../../api/enums.rst:245 cc2f2d7948e1473aa2ea3650d4c05110
+msgid ""
+"The system message denoting the message in the thread that is the one "
+"that started the thread's conversation topic."
+msgstr ""
+
+#: ../../api/enums.rst:251 e6c19002d4ea4a579b30e7b3b0e0025e
+msgid "The system message denoting that an context menu command was executed."
+msgstr ""
+
+#: ../../api/enums.rst:256 80e276c807444d5cb17a265fa33fec81
+msgid "The system message denoting an action by automod."
+msgstr ""
+
+#: ../../api/enums.rst:261 ab90d66043534202a3eded21dfc4b98a
+msgid "The system message denoting a role-subscription purchase."
+msgstr ""
+
+#: ../../api/enums.rst:267 ca98e7da88294704bcae6d05929c2ce0
+msgid "The system message denoting an interaction premium upsell."
+msgstr ""
+
+#: ../../api/enums.rst:273 10a242e386334e56b0cbb2bb07eb6b2c
+msgid "The system message denoting that a stage event has started."
+msgstr ""
+
+#: ../../api/enums.rst:279 2d965c77932f419eb56f5ca8ea70ce06
+msgid "The system message denoting that a stage event has ended."
+msgstr ""
+
+#: ../../api/enums.rst:285 19e883e516d44790a1b4ae8123962c72
+msgid "The system message denoting that a stage event has a new speaker."
+msgstr ""
+
+#: ../../api/enums.rst:291 82c9e7d6f6444f30b9f2120480f1d261
+msgid ""
+"The system message denoting that someone in a stage event is raising "
+"their hand."
+msgstr ""
+
+#: ../../api/enums.rst:297 f5ccefca15ae44df81088ad63aebd697
+msgid "The system message denoting that a stage event has a new topic."
+msgstr ""
+
+#: ../../api/enums.rst:303 e12495e3fdbf4b6ab3c0b33eb06bcaf5
+msgid ""
+"The system message denoting that a member has subscribed to a guild "
+"application."
+msgstr ""
+
+#: ../../api/enums.rst:309 d1b2db02188c4405a8fdc05c5185884c
+msgid "Represents Discord User flags."
+msgstr ""
+
+#: ../../api/enums.rst:313 db076302bd274dd891362a95c450ee19
+msgid "The user is a Discord Employee."
+msgstr ""
+
+#: ../../api/enums.rst:316 751304832a704b3bbb95d0a64761a7b1
+msgid "The user is a Discord Partner."
+msgstr ""
+
+#: ../../api/enums.rst:319 e8f8e65b3c75489e8407576ce7c7877c
+msgid "The user is a HypeSquad Events member."
+msgstr ""
+
+#: ../../api/enums.rst:322 7e3d6737fb6740fc89b66afefdf43bd2
+msgid "The user is a Bug Hunter."
+msgstr ""
+
+#: ../../api/enums.rst:325 f534b2c373a946d99ddefd438a23b652
+msgid "The user has SMS recovery for Multi Factor Authentication enabled."
+msgstr ""
+
+#: ../../api/enums.rst:328 e309f734cb2f4d45884824ebcc227101
+msgid "The user has dismissed the Discord Nitro promotion."
+msgstr ""
+
+#: ../../api/enums.rst:331 958daf6b65bc4c6bbf599daf544f20bd
+msgid "The user is a HypeSquad Bravery member."
+msgstr ""
+
+#: ../../api/enums.rst:334 e5a0f53d13e141bdb1957dcb2971597a
+msgid "The user is a HypeSquad Brilliance member."
+msgstr ""
+
+#: ../../api/enums.rst:337 3d45427279a54e33865f258b5dad30a5
+msgid "The user is a HypeSquad Balance member."
+msgstr ""
+
+#: ../../api/enums.rst:340 c0270429a6704771b33f183d7875c56c
+msgid "The user is an Early Supporter."
+msgstr ""
+
+#: ../../api/enums.rst:343 fc75d8c9c2a643318cefaa8d1da707e0
+msgid "The user is a Team User."
+msgstr ""
+
+#: ../../api/enums.rst:346 d30d781a82a8418db1ed989738bb34c2
+msgid "Relates to partner/verification applications."
+msgstr ""
+
+#: ../../api/enums.rst:349 bb9df3bd7c10469bbcfc6cef8a4d2566
+msgid "The user is a system user (i.e. represents Discord officially)."
+msgstr ""
+
+#: ../../api/enums.rst:352 fa1149684fc2412593ecb660ca6b670a
+msgid "The user has an unread system message."
+msgstr ""
+
+#: ../../api/enums.rst:355 725026bcdcf2468fb0fddb9fce267852
+msgid "The user is a Bug Hunter Level 2."
+msgstr ""
+
+#: ../../api/enums.rst:358 60011fa78ac34e20825ce6de66234250
+msgid "The user was deleted for being underage."
+msgstr ""
+
+#: ../../api/enums.rst:361 413b980c139b411d9710cf3871f624b6
+msgid "The user is a Verified Bot."
+msgstr ""
+
+#: ../../api/enums.rst:364 f9904f90fedd47a1aeeb230f775f851b
+msgid "The user is an Early Verified Bot Developer."
+msgstr ""
+
+#: ../../api/enums.rst:367 75c7a0e249be4a47b66e0c046af57986
+msgid "The user is a Moderator Programs Alumni."
+msgstr ""
+
+#: ../../api/enums.rst:370 0ca562896cc7423281a975f5494cd845
+msgid "The bot has set an interactions endpoint url."
+msgstr ""
+
+#: ../../api/enums.rst:373 2210c3a20a70450a96e94214a3357642
+msgid "The user is disabled for being a spammer."
+msgstr ""
+
+#: ../../api/enums.rst:376 281d19bf6c19491e9c3a38b138fb2c78
+msgid "The user is an Active Developer."
+msgstr ""
+
+#: ../../api/enums.rst:380 0b62632dec6147c9aae71cbe50ec3b88
+msgid ""
+"Specifies the type of :class:`Activity`. This is used to check how to "
+"interpret the activity itself."
+msgstr ""
+
+#: ../../api/enums.rst:385 cb5aa857d2e74dbca5ed598bfa4b83a7
+msgid "An unknown activity type. This should generally not happen."
+msgstr ""
+
+#: ../../api/enums.rst:388 78b9ef2656fa4163a4221e114d6bc0e3
+msgid "A \"Playing\" activity type."
+msgstr ""
+
+#: ../../api/enums.rst:391 744b4ca84d3b4522ac2e119a7b5c59eb
+msgid "A \"Streaming\" activity type."
+msgstr ""
+
+#: ../../api/enums.rst:394 a0cc249c7b2449db995e1f19b310c2cd
+msgid "A \"Listening\" activity type."
+msgstr ""
+
+#: ../../api/enums.rst:397 21ca511d445542c1bbcc579172356e77
+msgid "A \"Watching\" activity type."
+msgstr ""
+
+#: ../../api/enums.rst:400 7b3fc29cd8e04f94b40453acc74f8d9a
+msgid "A custom activity type."
+msgstr ""
+
+#: ../../api/enums.rst:403 3673101e51264eb4bf6747615b709662
+msgid "A competing activity type."
+msgstr ""
+
+#: ../../api/enums.rst:409 b1832754b0eb4f5384d3a9d69fdf9077
+msgid "Specifies the type of :class:`Interaction`."
+msgstr ""
+
+#: ../../api/enums.rst:415 4ac9cd54f9324d6ea403f83bc2438983
+msgid ""
+"Represents Discord pinging to see if the interaction response server is "
+"alive."
+msgstr ""
+
+#: ../../api/enums.rst:418 98ac7aa9cbff4e658b2c35bf9e4482e9
+msgid "Represents a slash command interaction."
+msgstr ""
+
+#: ../../api/enums.rst:421 4057e136a5a34be2b63de5112cd66ada
+msgid ""
+"Represents a component-based interaction, i.e. using the Discord Bot UI "
+"Kit."
+msgstr ""
+
+#: ../../api/enums.rst:424 1d288a3a908e4fe78bf568876c54d5ca
+msgid "Represents a autocomplete interaction for slash commands."
+msgstr ""
+
+#: ../../api/enums.rst:427 7b9dd73bb4b443f287ef44bb27a1c8bc
+msgid "Represents a modal-based interaction."
+msgstr ""
+
+#: ../../api/enums.rst:431 9e176cc976b64630bec05ad11754bcae
+msgid "Specifies the response type for the interaction."
+msgstr ""
+
+#: ../../api/enums.rst:437 fa591cd4599a4f05b1f5e841f1e4baf3
+msgid "Pongs the interaction when given a ping."
+msgstr ""
+
+#: ../../api/enums.rst:439 4b837e2b0c904c6a979c1f95628cf7a5
+msgid "See also :meth:`InteractionResponse.pong`"
+msgstr ""
+
+#: ../../api/enums.rst:442 0d614902bed94b34a7fda8cb1d96d7ff
+msgid "Respond to the interaction with a message."
+msgstr ""
+
+#: ../../api/enums.rst:444 b7642fbf5dfc40189da0c697a68596a8
+msgid "See also :meth:`InteractionResponse.send_message`"
+msgstr ""
+
+#: ../../api/enums.rst:447 93f602a99b7e4bb38b36cf5514988a2e
+msgid "Responds to the interaction with a message at a later time."
+msgstr ""
+
+#: ../../api/enums.rst:449 ../../api/enums.rst:455
+#: e330ae3ca05f42ce920b833974ede206 f707eb8b54664d4b969081dec115130f
+msgid "See also :meth:`InteractionResponse.defer`"
+msgstr ""
+
+#: ../../api/enums.rst:452 c29479e9e1bd47d3939deb08f0e65473
+msgid ""
+"Acknowledges the component interaction with a promise that the message "
+"will update later (though there is no need to actually update the "
+"message)."
+msgstr ""
+
+#: ../../api/enums.rst:458 5592dad54ac44dbda11a34bdaf74ade5
+msgid "Responds to the interaction by editing the message."
+msgstr ""
+
+#: ../../api/enums.rst:460 0fb171764af24d828e91710586137f16
+msgid "See also :meth:`InteractionResponse.edit_message`"
+msgstr ""
+
+#: ../../api/enums.rst:463 c7f5bd0fccab49b1bc0f5b4efe913222
+msgid "Responds to the interaction by sending the autocomplete choices."
+msgstr ""
+
+#: ../../api/enums.rst:465 3cc9bf7c3c33453d9cfb85a46738649a
+msgid "See also :meth:`InteractionResponse.send_autocomplete_result`"
+msgstr ""
+
+#: ../../api/enums.rst:468 1e1ee59416334ee0977d2a76bc53cca6
+msgid "Responds to the interaction by sending a modal dialog."
+msgstr ""
+
+#: ../../api/enums.rst:470 80c98134ede1446c802b20484960a73b
+msgid "See also :meth:`InteractionResponse.send_modal`"
+msgstr ""
+
+#: ../../api/enums.rst:474 79880e63219e47d999eaaaf7a536034c
+msgid "Represents the component type of a component."
+msgstr ""
+
+#: ../../api/enums.rst:480 d30bdba858fb46e497c5f0c55f193d68
+msgid "Represents the group component which holds different components in a row."
+msgstr ""
+
+#: ../../api/enums.rst:483 389c912e3d21445aa60707594022cbce
+msgid "Represents a button component."
+msgstr ""
+
+#: ../../api/enums.rst:486 ../../api/enums.rst:492
+#: 3e83eaa0d1844924b452bc0453c951e1 9f02fd0355114b83b9ad4e2923235a6f
+msgid "Represents a string select component."
+msgstr ""
+
+#: ../../api/enums.rst:488 cbc6e9d1411d4f8b95e3b81ecaa43458
+msgid "Use :attr:`ComponentType.string_select` instead."
+msgstr ""
+
+#: ../../api/enums.rst:495 1a375b3f3c2149a18218a50153afbd76
+msgid "Represents an input_text component."
+msgstr ""
+
+#: ../../api/enums.rst:498 dd4d7eaeb3344260b86c54e9e2f6d05a
+msgid "Represents a user select component."
+msgstr ""
+
+#: ../../api/enums.rst:501 c7939395f31d4630b1b14a652251afd0
+msgid "Represents a role select component."
+msgstr ""
+
+#: ../../api/enums.rst:504 5efbf6efaa7743768aea8e2b57471242
+msgid "Represents a mentionable select component."
+msgstr ""
+
+#: ../../api/enums.rst:507 448aec20bf2c45b1b36e0da5a1d006a5
+msgid "Represents a channel select component."
+msgstr ""
+
+#: ../../api/enums.rst:511 d3b5cb245cdb413e91512ec53ec704f4
+msgid "Represents the style of the button component."
+msgstr ""
+
+#: ../../api/enums.rst:517 5147110dee214022bd8fa7c4fb1d2dc0
+msgid "Represents a blurple button for the primary action."
+msgstr ""
+
+#: ../../api/enums.rst:520 1cafc57fe172466d9a3292c4ce8f9957
+msgid "Represents a grey button for the secondary action."
+msgstr ""
+
+#: ../../api/enums.rst:523 c46243584e72480695b518b1bc58612a
+msgid "Represents a green button for a successful action."
+msgstr ""
+
+#: ../../api/enums.rst:526 cc2f997a688f42a9be197407721214ca
+msgid "Represents a red button for a dangerous action."
+msgstr ""
+
+#: ../../api/enums.rst:529 8b4e7393b35b417c908436be790e01e3
+msgid "Represents a link button."
+msgstr ""
+
+#: ../../api/enums.rst:532 d870b9c8c6fc49bda0956cafbe9d2dc1
+msgid "Represents a premium button."
+msgstr ""
+
+#: ../../api/enums.rst:536 4a114ecfde0f415aa78c23ae95a03eef
+msgid "An alias for :attr:`primary`."
+msgstr ""
+
+#: ../../api/enums.rst:539 ../../api/enums.rst:542
+#: 82535fcd360147e880dca049310bbe6f 8321fe52ffb845e19b1b7d9aed7e6705
+msgid "An alias for :attr:`secondary`."
+msgstr ""
+
+#: ../../api/enums.rst:545 3ac0aea49e2a45ca9d6688296413400f
+msgid "An alias for :attr:`success`."
+msgstr ""
+
+#: ../../api/enums.rst:548 a12dc437275b4f269f536cd4658d804e
+msgid "An alias for :attr:`danger`."
+msgstr ""
+
+#: ../../api/enums.rst:551 8534814e7c964ade81128db570fe9b6e
+msgid "An alias for :attr:`link`."
+msgstr ""
+
+#: ../../api/enums.rst:555 66cbc8468aa84de2b570acda87ac130e
+msgid "Represents the style of the input text component."
+msgstr ""
+
+#: ../../api/enums.rst:561 48cbe43e6fb342169300a8f53803f539
+msgid "Represents a single-line input text field."
+msgstr ""
+
+#: ../../api/enums.rst:564 77b11ba453194692b73e560ba59cb52a
+msgid "Represents a multi-line input text field."
+msgstr ""
+
+#: ../../api/enums.rst:567 60ab6349de2b49b39d9242a76836ba0e
+msgid "An alias for :attr:`short`."
+msgstr ""
+
+#: ../../api/enums.rst:570 ../../api/enums.rst:573
+#: 02075561dbb8468d89db81730ef848ee b1e4514a32ca4b6f8d3540036646f09e
+msgid "An alias for :attr:`long`."
+msgstr ""
+
+#: ../../api/enums.rst:577 14687525b9ad476bb6208d62748cf54b
+msgid "Specifies the region a voice server belongs to."
+msgstr ""
+
+#: ../../api/enums.rst:581 90f499fb4f134385bbfc3af0699539fb
+msgid "The Amsterdam region."
+msgstr ""
+
+#: ../../api/enums.rst:584 b776b0a8473c45bd803f3b6a7eb18410
+msgid "The Brazil region."
+msgstr ""
+
+#: ../../api/enums.rst:587 64cb8a3f20e849b4a9eb427399fbd903
+msgid "The Dubai region."
+msgstr ""
+
+#: ../../api/enums.rst:593 66e324a8246644efa7fa06a3d95ab7ad
+msgid "The EU Central region."
+msgstr ""
+
+#: ../../api/enums.rst:596 0d0795530dc0414abf31cc814d1737de
+msgid "The EU West region."
+msgstr ""
+
+#: ../../api/enums.rst:599 e0dd74b91b684d24bce94aa56f83166b
+msgid "The Europe region."
+msgstr ""
+
+#: ../../api/enums.rst:605 a80849d6f4ce4ad383e30e781f322e13
+msgid "The Frankfurt region."
+msgstr ""
+
+#: ../../api/enums.rst:608 f61ccdd7bd194959897b4f24e4749d5e
+msgid "The Hong Kong region."
+msgstr ""
+
+#: ../../api/enums.rst:611 efe001fde7084049845f0785b375921c
+msgid "The India region."
+msgstr ""
+
+#: ../../api/enums.rst:617 9862cb3b6d0a4f438ce362db4434fb41
+msgid "The Japan region."
+msgstr ""
+
+#: ../../api/enums.rst:620 5d5b6e0af5c348f78a25651f1e1b2df4
+msgid "The London region."
+msgstr ""
+
+#: ../../api/enums.rst:623 d63a694b0fcf4b829467b9a98cc27faa
+msgid "The Russia region."
+msgstr ""
+
+#: ../../api/enums.rst:626 792f94d71ab242a5bde4f22c1b97068a
+msgid "The Singapore region."
+msgstr ""
+
+#: ../../api/enums.rst:629 a4d6c698bba747428f33df48f401115c
+msgid "The South Africa region."
+msgstr ""
+
+#: ../../api/enums.rst:632 c67af79dafd047d9b4d90bd0a4d6cc5d
+msgid "The South Korea region."
+msgstr ""
+
+#: ../../api/enums.rst:635 0c7bc1130add4b35aa955bcd3e55badd
+msgid "The Sydney region."
+msgstr ""
+
+#: ../../api/enums.rst:638 ce77bd1b4d53463cadaa224887643131
+msgid "The US Central region."
+msgstr ""
+
+#: ../../api/enums.rst:641 ef82ec5d51974062a0ae97b3eb643d99
+msgid "The US East region."
+msgstr ""
+
+#: ../../api/enums.rst:644 7b3d68f69b0c40d88d2cb95e84bdac4d
+msgid "The US South region."
+msgstr ""
+
+#: ../../api/enums.rst:647 793045d5ba3043d78311ec589d46636f
+msgid "The US West region."
+msgstr ""
+
+#: ../../api/enums.rst:650 edfc1b9463f2411fa8c94042ccfb2138
+msgid "The Amsterdam region for VIP guilds."
+msgstr ""
+
+#: ../../api/enums.rst:653 8b2691fc24fd496592d208408dec5829
+msgid "The US East region for VIP guilds."
+msgstr ""
+
+#: ../../api/enums.rst:656 50201921761246bc9caa8e6c22c0a084
+msgid "The US West region for VIP guilds."
+msgstr ""
+
+#: ../../api/enums.rst:660 3bf69f93ed404d34b15b826ae657bf5c
+msgid ""
+"Specifies a :class:`Guild`\\'s verification level, which is the criteria "
+"in which a member must meet before being able to send messages to the "
+"guild."
+msgstr ""
+
+#: ../../api/enums.rst:669 fe1ad00c158c4c00acb1ea118a53928b
+msgid "Checks if two verification levels are equal."
+msgstr ""
+
+#: ../../api/enums.rst:672 46216c7a546b4c91912d7c8e9573c349
+msgid "Checks if two verification levels are not equal."
+msgstr ""
+
+#: ../../api/enums.rst:675 2e0bb775b6df4ee8a04963d54dfb731f
+msgid "Checks if a verification level is higher than another."
+msgstr ""
+
+#: ../../api/enums.rst:678 7a3f52cd944049e887290b1231a1964a
+msgid "Checks if a verification level is lower than another."
+msgstr ""
+
+#: ../../api/enums.rst:681 620771d877bc4ef6aac111a4148a8bfb
+msgid "Checks if a verification level is higher or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:684 e2b18998a2844ea8b31ae008fdbc6b58
+msgid "Checks if a verification level is lower or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:688 fb66916bd09d4ce1a73920a30968db22
+msgid "No criteria set."
+msgstr ""
+
+#: ../../api/enums.rst:691 bd647ba2a4774531947bfcf3f9ad1f89
+msgid "Member must have a verified email on their Discord account."
+msgstr ""
+
+#: ../../api/enums.rst:694 21bbe20b61c84b9b9cb300365c10afa0
+msgid ""
+"Member must have a verified email and be registered on Discord for more "
+"than five minutes."
+msgstr ""
+
+#: ../../api/enums.rst:698 299d3b3c431b4bae9a49515dfb2ddbec
+msgid ""
+"Member must have a verified email, be registered on Discord for more than"
+" five minutes, and be a member of the guild itself for more than ten "
+"minutes."
+msgstr ""
+
+#: ../../api/enums.rst:703 1469ed3a1ca6460fa6c38ed7a7a2d52c
+msgid "Member must have a verified phone on their Discord account."
+msgstr ""
+
+#: ../../api/enums.rst:707 ec6aa59281a448b2ac2592ee503e482d
+msgid ""
+"Specifies whether a :class:`Guild` has notifications on for all messages "
+"or mentions only by default."
+msgstr ""
+
+#: ../../api/enums.rst:715 dc966a5e848642bea42db5392f380906
+msgid "Checks if two notification levels are equal."
+msgstr ""
+
+#: ../../api/enums.rst:718 0be81a2959e048d69194270daa8d7163
+msgid "Checks if two notification levels are not equal."
+msgstr ""
+
+#: ../../api/enums.rst:721 fd3e2b62b4e9464381f697a2ce986496
+msgid "Checks if a notification level is higher than another."
+msgstr ""
+
+#: ../../api/enums.rst:724 f105280bb0c943be98437aa0c245d024
+msgid "Checks if a notification level is lower than another."
+msgstr ""
+
+#: ../../api/enums.rst:727 846701cab8e64caa9e80f34c7bd03a54
+msgid "Checks if a notification level is higher or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:730 ba3d791aa9ff4ad8870b943ac0e1ae2e
+msgid "Checks if a notification level is lower or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:734 be084b93aa534c83a085d8da3691a961
+msgid ""
+"Members receive notifications for every message regardless of them being "
+"mentioned."
+msgstr ""
+
+#: ../../api/enums.rst:737 f92e661d81964e76a2c775a52c6657cb
+msgid "Members receive notifications for messages they are mentioned in."
+msgstr ""
+
+#: ../../api/enums.rst:741 95af5bd00d43462a906e5084192ed897
+msgid ""
+"Specifies a :class:`Guild`\\'s explicit content filter, which is the "
+"machine learning algorithms that Discord uses to detect if an image "
+"contains pornography or otherwise explicit content."
+msgstr ""
+
+#: ../../api/enums.rst:751 a306a70455c3408d8c5e838c614c2555
+msgid "Checks if two content filter levels are equal."
+msgstr ""
+
+#: ../../api/enums.rst:754 dfe076afd3cb44fd85205ba4d94cf663
+msgid "Checks if two content filter levels are not equal."
+msgstr ""
+
+#: ../../api/enums.rst:757 0a9e650407c34c7f9dc886f8c8a775f9
+msgid "Checks if a content filter level is higher than another."
+msgstr ""
+
+#: ../../api/enums.rst:760 ce931389a4cf4b66a5f4b13d9045274d
+msgid "Checks if a content filter level is lower than another."
+msgstr ""
+
+#: ../../api/enums.rst:763 dfcdb88cdef544e78bae9e35fa0459bb
+msgid "Checks if a content filter level is higher or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:766 1792e32dd6e843af9dd1121e4e8bc63d
+msgid "Checks if a content filter level is lower or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:770 c66d2de8b0bd4072942c7a693c3b7ae3
+msgid "The guild does not have the content filter enabled."
+msgstr ""
+
+#: ../../api/enums.rst:773 ef98aa26fcaa4365b198f3e765a07fd6
+msgid "The guild has the content filter enabled for members without a role."
+msgstr ""
+
+#: ../../api/enums.rst:776 8bc9bb4ad1ea4f1a89ce1889d698ec18
+msgid "The guild has the content filter enabled for every member."
+msgstr ""
+
+#: ../../api/enums.rst:780 f773f9149bb44c4d83e0298ae408fd6a
+msgid "Specifies a :class:`Member` 's status."
+msgstr ""
+
+#: ../../api/enums.rst:784 727979554bd64ac1a0b4393cd7bb5228
+msgid "The member is online."
+msgstr ""
+
+#: ../../api/enums.rst:787 7b5be27e51204bcdaffd82a57a6de69c
+msgid "The member is offline."
+msgstr ""
+
+#: ../../api/enums.rst:790 74ddceb1cc1a4566ac34fe6a0b1abb54
+msgid "The member is idle."
+msgstr ""
+
+#: ../../api/enums.rst:793 4490b159c76941dbab94c39b712ccaf2
+msgid "The member is \"Do Not Disturb\"."
+msgstr ""
+
+#: ../../api/enums.rst:796 64dc5bb4a3954ac9ad8e84ee8959ba78
+msgid "An alias for :attr:`dnd`."
+msgstr ""
+
+#: ../../api/enums.rst:799 6db87d8dee034d9d8685436fa8a26db0
+msgid ""
+"The member is \"invisible\". In reality, this is only used in sending a "
+"presence a la :meth:`Client.change_presence`. When you receive a user's "
+"presence this will be :attr:`offline` instead."
+msgstr ""
+
+#: ../../api/enums.rst:804 5638a65a34fa4c8b90930cd7817a2867
+msgid "The member is streaming."
+msgstr ""
+
+#: ../../api/enums.rst:809 60612463044b4cde8d8308b993f3063e
+msgid ""
+"Represents the type of action being done for a :class:`AuditLogEntry`\\, "
+"which is retrievable via :meth:`Guild.audit_logs`."
+msgstr ""
+
+#: ../../api/enums.rst:814 632a23827cce4e32a73c4ba7e5176503
+msgid "The guild has updated. Things that trigger this include:"
+msgstr ""
+
+#: ../../api/enums.rst:816 739c484cff324836b4bbc7e9a4ba5727
+msgid "Changing the guild vanity URL"
+msgstr ""
+
+#: ../../api/enums.rst:817 e2613a32359c47618dd6be48de2d7696
+msgid "Changing the guild invite splash"
+msgstr ""
+
+#: ../../api/enums.rst:818 bd56053367fa4283bb319f326001c04c
+msgid "Changing the guild AFK channel or timeout"
+msgstr ""
+
+#: ../../api/enums.rst:819 9822d25614704b7cb849ddd61ea89034
+msgid "Changing the guild voice server region"
+msgstr ""
+
+#: ../../api/enums.rst:820 9f5b610f62304c51a1999c420d0b5c31
+msgid "Changing the guild icon, banner, or discovery splash"
+msgstr ""
+
+#: ../../api/enums.rst:821 8f44ea06843349ef910d0e022ee62ebd
+msgid "Changing the guild moderation settings"
+msgstr ""
+
+#: ../../api/enums.rst:822 2ba541de1193448fa261b50507c699fb
+msgid "Changing things related to the guild widget"
+msgstr ""
+
+#: ../../api/enums.rst:824 c890e719787243a5af28be7c6f82f77b
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Guild`."
+msgstr ""
+
+#: ../../api/enums.rst:827 ../../api/enums.rst:853 ../../api/enums.rst:872
+#: ../../api/enums.rst:894 ../../api/enums.rst:913 ../../api/enums.rst:929
+#: ../../api/enums.rst:944 ../../api/enums.rst:1003 ../../api/enums.rst:1017
+#: ../../api/enums.rst:1062 ../../api/enums.rst:1082 ../../api/enums.rst:1097
+#: ../../api/enums.rst:1112 ../../api/enums.rst:1136 ../../api/enums.rst:1153
+#: ../../api/enums.rst:1169 ../../api/enums.rst:1182 ../../api/enums.rst:1195
+#: ../../api/enums.rst:1206 ../../api/enums.rst:1217 ../../api/enums.rst:1314
+#: ../../api/enums.rst:1329 ../../api/enums.rst:1350 ../../api/enums.rst:1369
+#: ../../api/enums.rst:1388 ../../api/enums.rst:1407 ../../api/enums.rst:1428
+#: ../../api/enums.rst:1449 ../../api/enums.rst:1470 ../../api/enums.rst:1488
+#: ../../api/enums.rst:1506 ../../api/enums.rst:1524 ../../api/enums.rst:1534
+#: ../../api/enums.rst:1551 ../../api/enums.rst:1567 ../../api/enums.rst:1618
+#: ../../api/enums.rst:1632 050b5f3e2f0b4e75b8f233a76bd515dd
+#: 0619742d7fa140278430c051be11dc1b 0776e36908074d45bfacf9e98b402a96
+#: 0857346d12f54c63ba891ac188e985b3 093c3ea325f44f168aac272a73defeec
+#: 1e5784f497904a1b8ea5e31e43b2a0ad 22d68de8370648cf9093a7a877656bf4
+#: 252bbee44ed14a1f9ddb9a6c43cbda0d 3411856d93a14776a6aa2dbfe75fdef0
+#: 38aec5e643c249b19b3d7b91ef993e5e 4ad9e4ec222545458f27f958fe5bf43d
+#: 5226c38d1fd44f3b816c29f729fa90c3 5baecd9f1e2143c88378ba7f0e3ffb96
+#: 61e23683148c4bf68627e0418b64f5f3 69139dd3ef9e48d3b1af81c1e81c39d4
+#: 6bfd123a5fca4eb0b0ac3ef7104dfac3 7499b8f78f014a8d8f9513dd6c5e69e3
+#: 752fd4d41eb541729116bdab7b643fc9 91b67ae606ac453c9bf64b0b2012bac5
+#: 95b8db2d9c284969b08a1156718090be 96717b9a46964b4692326fe8a96295a2
+#: 9a20bd8774814a64b14884977510d1e6 a1736cc07b154021a682d4e42420bf9a
+#: a2803ec37cea445fbe05eee14f7e763a a6e309f478874004a40055c758f64d0e
+#: a9cdc043a5fb4f8db268fa48136a2dfe ad53aecba09c4cff97fbe106a8aae4c3
+#: bc68c25f397a452f91ce7b919f52007c bd06e8336d7741e7adfae9936f1bf7fe
+#: bfff5308473d4af998d5e90e81bd9d42 c506008e4ec74cef851b196b09e69815
+#: db4eb198caca4bd08cb1893c95ad57a7 de04652441c24b81be6d3d268922492e
+#: ecd21b91f59c49bdabb7f8d74a287e1e f0e7616a583a47d4831939f3e25e8627
+#: f1a1175365964973a77e600680c1613b fffb0afd84694213a281950c9c2906db
+msgid "Possible attributes for :class:`AuditLogDiff`:"
+msgstr ""
+
+#: ../../api/enums.rst:829 22e4308bba9c4789ad88e620c6469324
+msgid ":attr:`~AuditLogDiff.afk_channel`"
+msgstr ""
+
+#: ../../api/enums.rst:830 f3892be329644776b547cf3fa7c32533
+msgid ":attr:`~AuditLogDiff.system_channel`"
+msgstr ""
+
+#: ../../api/enums.rst:831 c31a4836714247cc8ae5d1e97f1fa0a1
+msgid ":attr:`~AuditLogDiff.afk_timeout`"
+msgstr ""
+
+#: ../../api/enums.rst:832 b144fcde9e3e42499f4790871baa00c5
+msgid ":attr:`~AuditLogDiff.default_message_notifications`"
+msgstr ""
+
+#: ../../api/enums.rst:833 0d0e5e72f40447838c0a0c80fcdd0d6f
+msgid ":attr:`~AuditLogDiff.explicit_content_filter`"
+msgstr ""
+
+#: ../../api/enums.rst:834 c2be22b8817b42c48e8a71489d583ebe
+msgid ":attr:`~AuditLogDiff.mfa_level`"
+msgstr ""
+
+#: ../../api/enums.rst:835 ../../api/enums.rst:855 ../../api/enums.rst:874
+#: ../../api/enums.rst:896 ../../api/enums.rst:1067 ../../api/enums.rst:1087
+#: ../../api/enums.rst:1102 ../../api/enums.rst:1156 ../../api/enums.rst:1172
+#: ../../api/enums.rst:1185 ../../api/enums.rst:1197 ../../api/enums.rst:1208
+#: ../../api/enums.rst:1219 ../../api/enums.rst:1352 ../../api/enums.rst:1371
+#: ../../api/enums.rst:1390 ../../api/enums.rst:1409 ../../api/enums.rst:1430
+#: ../../api/enums.rst:1451 ../../api/enums.rst:1472 ../../api/enums.rst:1490
+#: ../../api/enums.rst:1508 ../../api/enums.rst:1536 ../../api/enums.rst:1553
+#: ../../api/enums.rst:1569 0c293715eca54347b0f133a596ecfedf
+#: 12c512f9e9f24101b8341757dbbeb0f4 1394b20d84104b49a743fdfeb699c225
+#: 1de697d2ea2c4cae9ccab9fb6fc6d38a 2f935e45567444cca02d6e556a3e0904
+#: 46d1f8301ff548f1af259ccd664c3f42 515eb479a052419d88d9d9bd1eb338a0
+#: 558f751460d247b2a058a50b81e48a08 580ac06e34cc423d8a0c7804bcfa7dff
+#: 646a54b16dff41a2b03ed31ac183c0b2 70b4a80497dc4c718cba972b132e9059
+#: 895caa8a7a2b40a3be55d2ec1baf44b1 99cc876d108e4eab8371a7d45c0ea1b9
+#: ac7026819cf84b46ab62b7fc660eec2a ac7b378f7a1046ebab645d5f7d3ff34e
+#: b44ca51adbc64e51b77c441b2878ad83 b5339c2060384a359e7c71febf3ca2ce
+#: b5ae5559c92341f9946a0237c88316b8 bfe00e359c3f448eace931206c0b2ee9
+#: c31820d94e12407ba086b701f92569b0 c5d4dc545e724ea9989d999fa6992cce
+#: d5910caed39b4422a0bf2361a6565612 d7fd5443343b4bc88ce6cd8918cdfeab
+#: e51f5200cbe140f19c8c3b3e2d75a534 fe717eea581f494ebf36019cc19d9964
+msgid ":attr:`~AuditLogDiff.name`"
+msgstr ""
+
+#: ../../api/enums.rst:836 c02c63c7c88f4fe181dda7376bebc148
+msgid ":attr:`~AuditLogDiff.owner`"
+msgstr ""
+
+#: ../../api/enums.rst:837 0c026e75724c47d7beb2a2c77e9f7c79
+msgid ":attr:`~AuditLogDiff.splash`"
+msgstr ""
+
+#: ../../api/enums.rst:838 2e2b9b9568f446af9fc48b3fb53bf57c
+msgid ":attr:`~AuditLogDiff.discovery_splash`"
+msgstr ""
+
+#: ../../api/enums.rst:839 eca51cbb07124eafb49aafd57720c935
+msgid ":attr:`~AuditLogDiff.icon`"
+msgstr ""
+
+#: ../../api/enums.rst:840 e88cfaca97164239924deb0947a3bb53
+msgid ":attr:`~AuditLogDiff.banner`"
+msgstr ""
+
+#: ../../api/enums.rst:841 8f50869b6362417792226758c9cee340
+msgid ":attr:`~AuditLogDiff.vanity_url_code`"
+msgstr ""
+
+#: ../../api/enums.rst:845 902049bae0b942798334fe1b7ca30562
+msgid "A new channel was created."
+msgstr ""
+
+#: ../../api/enums.rst:847 e00bbae1ecc54cd4aa7b2f97761a2857
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is "
+"either a :class:`abc.GuildChannel` or :class:`Object` with an ID."
+msgstr ""
+
+#: ../../api/enums.rst:850 a1df25c5f1984895b983d5275d8f8af5
+msgid ""
+"A more filled out object in the :class:`Object` case can be found by "
+"using :attr:`~AuditLogEntry.after`."
+msgstr ""
+
+#: ../../api/enums.rst:856 ../../api/enums.rst:875 ../../api/enums.rst:897
+#: ../../api/enums.rst:918 ../../api/enums.rst:934 ../../api/enums.rst:949
+#: ../../api/enums.rst:1354 ../../api/enums.rst:1373 ../../api/enums.rst:1392
+#: 0ae29b838f1448d8b8f928d6939b92cd 1eec71ede8394476b9a4dc4ebffa9df6
+#: 2ee6e5873b53484eb7bd37f41c17a4bb 3de7a19ea4524c6bb59edd609646a050
+#: 998ef1796ea64671a79e87a4227e271c 9ec89df3159c46e287c1d83f1fa8ba27
+#: a9329e3bd572430b8360afda3dd26ee0 b61a8e74c58248e4a0d8c0c18806f0d4
+#: ff75120af4cd405d9f119936bb32f72d
+msgid ":attr:`~AuditLogDiff.type`"
+msgstr ""
+
+#: ../../api/enums.rst:857 ../../api/enums.rst:877 ../../api/enums.rst:898
+#: 11cbe518c99642b49c959a2204a2c37a 648726ce83124608809879a7571168a2
+#: b3e74457949d4229b324163fc858e635
+msgid ":attr:`~AuditLogDiff.overwrites`"
+msgstr ""
+
+#: ../../api/enums.rst:861 d3e3191004c34df799b5f5fbe25f013f
+msgid "A channel was updated. Things that trigger this include:"
+msgstr ""
+
+#: ../../api/enums.rst:863 98d0c561278d4e9d8096de31ee31173c
+msgid "The channel name or topic was changed"
+msgstr ""
+
+#: ../../api/enums.rst:864 5bc50a7dc2e240ad8f79a8c4704a3418
+msgid "The channel bitrate was changed"
+msgstr ""
+
+#: ../../api/enums.rst:866 ../../api/enums.rst:904
+#: 5257b72e408a46d4a7b06498d32f7209 8f81efbdafac4745899e4ad861717ecd
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`abc.GuildChannel` or :class:`Object` with an ID."
+msgstr ""
+
+#: ../../api/enums.rst:869 48fbbcac84324aeeb2f83e415ad0b051
+msgid ""
+"A more filled out object in the :class:`Object` case can be found by "
+"using :attr:`~AuditLogEntry.after` or :attr:`~AuditLogEntry.before`."
+msgstr ""
+
+#: ../../api/enums.rst:876 b9290b43388846c7a46f16bceccfbdbf
+msgid ":attr:`~AuditLogDiff.position`"
+msgstr ""
+
+#: ../../api/enums.rst:878 ../../api/enums.rst:1316 ../../api/enums.rst:1331
+#: 51da4ef9f1994a6789fb2c54c371a367 67ee76e83c454d32899f6326a4949701
+#: 7aeb804efb7d4bb8bd585a9b325278ba
+msgid ":attr:`~AuditLogDiff.topic`"
+msgstr ""
+
+#: ../../api/enums.rst:879 6464625c11634cc199dd526145504a9e
+msgid ":attr:`~AuditLogDiff.bitrate`"
+msgstr ""
+
+#: ../../api/enums.rst:880 e914c09c71f34c58ab692ba1c54e5750
+msgid ":attr:`~AuditLogDiff.rtc_region`"
+msgstr ""
+
+#: ../../api/enums.rst:881 d42f4667cecb4ff28a06c06c21882209
+msgid ":attr:`~AuditLogDiff.video_quality_mode`"
+msgstr ""
+
+#: ../../api/enums.rst:882 e50b4d7fb0624f398085aa35aef1ce5b
+msgid ":attr:`~AuditLogDiff.default_auto_archive_duration`"
+msgstr ""
+
+#: ../../api/enums.rst:886 4bca3568aafc430883f16570fd625acb
+msgid "A channel was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:888 5af5984da736481eae7b9ec37355167b
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is an "
+":class:`Object` with an ID."
+msgstr ""
+
+#: ../../api/enums.rst:891 aa14e43f332a43d2a9076ca32feb165e
+msgid ""
+"A more filled out object can be found by using the "
+":attr:`~AuditLogEntry.before` object."
+msgstr ""
+
+#: ../../api/enums.rst:902 0a3eeba6a561475bb1093b0e9c574110
+msgid "A channel permission overwrite was created."
+msgstr ""
+
+#: ../../api/enums.rst:907 10f0d8428fb44ef8b43417b8f03cc667
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.extra` is "
+"either a :class:`Role` or :class:`Member`. If the object is not found "
+"then it is a :class:`Object` with an ID being filled, a name, and a "
+"``type`` attribute set to either ``'role'`` or ``'member'`` to help "
+"dictate what type of ID it is."
+msgstr ""
+
+#: ../../api/enums.rst:915 ../../api/enums.rst:931 ../../api/enums.rst:946
+#: 5a13c30cb38b4c0b9d3a2a369009cf4c 70e9189a4a7b4f49ac3a3308fb205f8a
+#: b424ed66d8e84fb79fbfe5ed3ed2cb86
+msgid ":attr:`~AuditLogDiff.deny`"
+msgstr ""
+
+#: ../../api/enums.rst:916 ../../api/enums.rst:932 ../../api/enums.rst:947
+#: 4c5c591191e04caca5c233d14a2705a7 c7199b2fdb5742238c2221d7b22c7954
+#: dc4242d8e2824db3a5e69e283a111660
+msgid ":attr:`~AuditLogDiff.allow`"
+msgstr ""
+
+#: ../../api/enums.rst:917 ../../api/enums.rst:933 ../../api/enums.rst:948
+#: 1b799e07563746b4a908a2ec9213439b 35f09304dc1349a39b5f06c5dcee6b92
+#: 4655625eec82495495f1912345214c5b
+msgid ":attr:`~AuditLogDiff.id`"
+msgstr ""
+
+#: ../../api/enums.rst:922 d2431e9dfea74688bba2536e6c35b787
+msgid ""
+"A channel permission overwrite was changed, this is typically when the "
+"permission values change."
+msgstr ""
+
+#: ../../api/enums.rst:925 ../../api/enums.rst:940
+#: 548a7a8ca0314acf9735eac331d866e9 b74dea0f59eb486f98c229b259e001f9
+msgid ""
+"See :attr:`overwrite_create` for more information on how the "
+":attr:`~AuditLogEntry.target` and :attr:`~AuditLogEntry.extra` fields are"
+" set."
+msgstr ""
+
+#: ../../api/enums.rst:938 80f46495697548b5a7050db9f950fbae
+msgid "A channel permission overwrite was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:953 da1fc8cf0b4b4f41a454b0142a8cfdb4
+msgid "A member was kicked."
+msgstr ""
+
+#: ../../api/enums.rst:955 9462b1de374b4d8696d91df0e11eaf2e
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`User` who got kicked."
+msgstr ""
+
+#: ../../api/enums.rst:958 ../../api/enums.rst:973 ../../api/enums.rst:982
+#: ../../api/enums.rst:991 27a6a127989d4532a61debf08a3fa570
+#: 71e96ce05c754141bdccada47c638e79 8d80f3e4c17140e9ac2805db8431e4e8
+#: a414b2f116ac46ada7444b1b3e19804c
+msgid "When this is the action, :attr:`~AuditLogEntry.changes` is empty."
+msgstr ""
+
+#: ../../api/enums.rst:962 a42f6c019433416db0d63e147f403d85
+msgid "A member prune was triggered."
+msgstr ""
+
+#: ../../api/enums.rst:964 4c83a0acb3cc4f5d9f86ee20117108e6
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is set"
+" to ``None``."
+msgstr ""
+
+#: ../../api/enums.rst:967 ../../api/enums.rst:1026 ../../api/enums.rst:1229
+#: ../../api/enums.rst:1256 ../../api/enums.rst:1271
+#: 2dbf8d34537d45518170b5a4c8ffb3cc 7716d95527c348e5b78e86a177044241
+#: 812eb56e424040508ad06db116cc0f17 96a3ff2630e046b69b446776774304a9
+#: b77778578eb74355ae650d2fd52036ed
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.extra` is set "
+"to an unspecified proxy object with two attributes:"
+msgstr ""
+
+#: ../../api/enums.rst:970 97c74c62f95b40a3a6cbff5163170239
+msgid "``delete_members_days``: An integer specifying how far the prune was."
+msgstr ""
+
+#: ../../api/enums.rst:971 096f33ff779c4097a1ef75c0e894457e
+msgid "``members_removed``: An integer specifying how many members were removed."
+msgstr ""
+
+#: ../../api/enums.rst:977 877a04c39e16466dade6cfadc93f7c27
+msgid "A member was banned."
+msgstr ""
+
+#: ../../api/enums.rst:979 770451079d8d4b5f8e33b6c52da5f3ff
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`User` who got banned."
+msgstr ""
+
+#: ../../api/enums.rst:986 3b2ae463eb7b4f7a9791c566854c5c1a
+msgid "A member was unbanned."
+msgstr ""
+
+#: ../../api/enums.rst:988 456609aa1df0460dbb3dcd6b5414aca8
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`User` who got unbanned."
+msgstr ""
+
+#: ../../api/enums.rst:995 9f69f34e9ff743b994009ea40c627614
+msgid "A member has updated. This triggers in the following situations:"
+msgstr ""
+
+#: ../../api/enums.rst:997 a544a120b4ee4844a5309e3925de5b11
+msgid "A nickname was changed"
+msgstr ""
+
+#: ../../api/enums.rst:998 4633d30e1e5045e2b6c5c1c0695a0636
+msgid "They were server muted or deafened (or it was undone)"
+msgstr ""
+
+#: ../../api/enums.rst:1000 3685711e4704496c8312ef6113636f20
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Member` or :class:`User` who got updated."
+msgstr ""
+
+#: ../../api/enums.rst:1005 c510c63833424799981d8707385c2273
+msgid ":attr:`~AuditLogDiff.nick`"
+msgstr ""
+
+#: ../../api/enums.rst:1006 df5ef4a4cc2947b68d3a3009467c3315
+msgid ":attr:`~AuditLogDiff.mute`"
+msgstr ""
+
+#: ../../api/enums.rst:1007 669b0e98d96f4a4bb1d02efd76cc2f33
+msgid ":attr:`~AuditLogDiff.deaf`"
+msgstr ""
+
+#: ../../api/enums.rst:1011 3168c0f6dd594f0eaefc02e12dbc54c8
+msgid ""
+"A member's role has been updated. This triggers when a member either "
+"gains a role or loses a role."
+msgstr ""
+
+#: ../../api/enums.rst:1014 a57b479bb72143a6b0e1fa6cff760c1a
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Member` or :class:`User` who got the role."
+msgstr ""
+
+#: ../../api/enums.rst:1019 cb8587e29f82416e87ff25127dc06b2e
+msgid ":attr:`~AuditLogDiff.roles`"
+msgstr ""
+
+#: ../../api/enums.rst:1023 c70c7e8ef89345efafdbab17bf609ff9
+msgid ""
+"A member's voice channel has been updated. This triggers when a member is"
+" moved to a different voice channel."
+msgstr ""
+
+#: ../../api/enums.rst:1029 5440bab9f6a64c3fb332fe281170aefd
+msgid ""
+"``channel``: A :class:`TextChannel` or :class:`Object` with the channel "
+"ID where the members were moved."
+msgstr ""
+
+#: ../../api/enums.rst:1030 797d8b3c02204f6ebfed77b79d469a69
+msgid "``count``: An integer specifying how many members were moved."
+msgstr ""
+
+#: ../../api/enums.rst:1036 b317d4610f7e4869b25a224b1fbdca0b
+msgid ""
+"A member's voice state has changed. This triggers when a member is force "
+"disconnected from voice."
+msgstr ""
+
+#: ../../api/enums.rst:1039 ../../api/enums.rst:1242
+#: a7df0bd89c504de1bd34eb9aae01ffdd f1c87b2f6b27443a9bfb2f71e47d823b
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.extra` is set "
+"to an unspecified proxy object with one attribute:"
+msgstr ""
+
+#: ../../api/enums.rst:1042 a37ce51898424e1588bffced6528805d
+msgid "``count``: An integer specifying how many members were disconnected."
+msgstr ""
+
+#: ../../api/enums.rst:1048 767c4131a5a44823a1e7f53894454c9e
+msgid "A bot was added to the guild."
+msgstr ""
+
+#: ../../api/enums.rst:1050 aad1bbec2f2a487784929c43e432558a
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Member` or :class:`User` which was added to the guild."
+msgstr ""
+
+#: ../../api/enums.rst:1057 113e9849b1e74752a8869a0c1ffd14e4
+msgid "A new role was created."
+msgstr ""
+
+#: ../../api/enums.rst:1059 ../../api/enums.rst:1079 ../../api/enums.rst:1094
+#: 5547887ba3e64a6cadc87783c1bcecf7 91ed6f1edab04e8aad95cd8d9aa069f7
+#: f5e5f97f23e7451c8914aad7c3391dd4
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Role` or a :class:`Object` with the ID."
+msgstr ""
+
+#: ../../api/enums.rst:1064 ../../api/enums.rst:1084 ../../api/enums.rst:1099
+#: 78a55e9bc42241f9a96d7224c5f829b9 c8f52d8ffd564aeeb79100f37e0325a9
+#: c9397379c14f4c23ac15cd0553fafd82
+msgid ":attr:`~AuditLogDiff.colour`"
+msgstr ""
+
+#: ../../api/enums.rst:1065 ../../api/enums.rst:1085 ../../api/enums.rst:1100
+#: 16cea7c03f6f467cb4885cc212ad03ed 42aa4a1fa28042b6880c172318537e00
+#: eedbba5c376e47df94bda7b4263dad48
+msgid ":attr:`~AuditLogDiff.mentionable`"
+msgstr ""
+
+#: ../../api/enums.rst:1066 ../../api/enums.rst:1086 ../../api/enums.rst:1101
+#: a6bebfacdbd34302b9f9d66309f5cdac c3a50507a9ed44eaa961e0cd5cf90b8b
+#: cae8f831afd84c8f8ec3f34a605bf3a5
+msgid ":attr:`~AuditLogDiff.hoist`"
+msgstr ""
+
+#: ../../api/enums.rst:1068 ../../api/enums.rst:1088 ../../api/enums.rst:1103
+#: 6291a02bf06e4893b114eb374c0972ea 9eb0712d85af4316b0ce621843c8e83a
+#: add7cd11dbb04b919e545c8027e3abac
+msgid ":attr:`~AuditLogDiff.permissions`"
+msgstr ""
+
+#: ../../api/enums.rst:1072 d9dfda6a35974401a26b2c11d5bbbc7a
+msgid "A role was updated. This triggers in the following situations:"
+msgstr ""
+
+#: ../../api/enums.rst:1074 c0be7ff1754a484db3ff044dc08a5819
+msgid "The name has changed"
+msgstr ""
+
+#: ../../api/enums.rst:1075 6fa2713e239b4564bf5605320b494175
+msgid "The permissions have changed"
+msgstr ""
+
+#: ../../api/enums.rst:1076 4ff2b1766c94484b96274b722058b292
+msgid "The colour has changed"
+msgstr ""
+
+#: ../../api/enums.rst:1077 98644645ef474f4396c1f75dc07216c1
+msgid "Its hoist/mentionable state has changed"
+msgstr ""
+
+#: ../../api/enums.rst:1092 3254c9db3f0e44e79d2d800a84c5e124
+msgid "A role was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1107 07b94a8a9e374347b683f0f1830b37d3
+msgid "An invite was created."
+msgstr ""
+
+#: ../../api/enums.rst:1109 ce279e2749bb47529031e1755e0740c2
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Invite` that was created."
+msgstr ""
+
+#: ../../api/enums.rst:1114 ../../api/enums.rst:1138
+#: 4b17ff80832c43dc985fef67f54f8867 63ed30d0cf114ac7897b93dbf0ebf677
+msgid ":attr:`~AuditLogDiff.max_age`"
+msgstr ""
+
+#: ../../api/enums.rst:1115 ../../api/enums.rst:1139
+#: 80061f89311c4b1c840a03cb3d637b8a 98082e38b018425aad8bb7cba4329f6b
+msgid ":attr:`~AuditLogDiff.code`"
+msgstr ""
+
+#: ../../api/enums.rst:1116 ../../api/enums.rst:1140
+#: 491537ae15b2481b96f5f897cbc0f594 a06a13e2c7fd4ea58ff641ae8758f789
+msgid ":attr:`~AuditLogDiff.temporary`"
+msgstr ""
+
+#: ../../api/enums.rst:1117 ../../api/enums.rst:1141
+#: 7d631cc9c2c84b1f87e678854919422a a2b61b72f027412aaf6e17de2db74522
+msgid ":attr:`~AuditLogDiff.inviter`"
+msgstr ""
+
+#: ../../api/enums.rst:1118 ../../api/enums.rst:1142 ../../api/enums.rst:1155
+#: ../../api/enums.rst:1171 ../../api/enums.rst:1184 ../../api/enums.rst:1411
+#: ../../api/enums.rst:1432 ../../api/enums.rst:1453
+#: 28ea5cd1a0434d598a0aef1d8ed865b9 4237027b541d4783b363e232e7b14c04
+#: 723c64f924f24657939b655291a50d47 80cd12851d3d4ef3a24a79f9a22518ee
+#: a5886d55b844447395a66697a447146e d0f57a601eda4711a767462d7dcd2f7e
+#: f6760b3a7eeb420bae78324ec9219b80 fe4c5c753de54249aa866828f408a565
+msgid ":attr:`~AuditLogDiff.channel`"
+msgstr ""
+
+#: ../../api/enums.rst:1119 ../../api/enums.rst:1143
+#: 58673fccfc5e44d693f2c5a9b836cfd6 f0cb2c7e0fd845bf97ab419451436a0d
+msgid ":attr:`~AuditLogDiff.uses`"
+msgstr ""
+
+#: ../../api/enums.rst:1120 ../../api/enums.rst:1144
+#: 9c22d47dc70d4bf6b8eb85c93024ecea ed096900498d4549bfcca4bfce2acfcf
+msgid ":attr:`~AuditLogDiff.max_uses`"
+msgstr ""
+
+#: ../../api/enums.rst:1124 6fba5968ea2140edaf5c6920b4177d38
+msgid "An invite was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1126 c0adb6372c474dd9a6fa1b79ababb781
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Invite` that was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1131 89c1b80cc1114e8a89ba6aa80e3b635a
+msgid "An invite was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1133 951939c17ece4b73a544877c61858520
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Invite` that was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1148 d8d5352632bd48d381951430129bba1d
+msgid "A webhook was created."
+msgstr ""
+
+#: ../../api/enums.rst:1150 ../../api/enums.rst:1166 ../../api/enums.rst:1179
+#: 2fe79b01b896449f8a2711781524a8df 59d99fea521c4d5f9ce1c97173c5a522
+#: ef972dbe7ec941a5907d624c86a390d6
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Object` with the webhook ID."
+msgstr ""
+
+#: ../../api/enums.rst:1157 ../../api/enums.rst:1186
+#: 0bdfb34cd2b849d0a7293c9a911f4adf 4cd9b18b6fd844f084981705eb37900e
+msgid ":attr:`~AuditLogDiff.type` (always set to ``1`` if so)"
+msgstr ""
+
+#: ../../api/enums.rst:1161 41467b9018c348b4ada46a61a597aae0
+msgid "A webhook was updated. This trigger in the following situations:"
+msgstr ""
+
+#: ../../api/enums.rst:1163 7fdd2431c3c246bc83d907abb08f3801
+msgid "The webhook name changed"
+msgstr ""
+
+#: ../../api/enums.rst:1164 b0d8e438c965430ab7887a917e0e8e59
+msgid "The webhook channel changed"
+msgstr ""
+
+#: ../../api/enums.rst:1173 db08795bf6dc4cdf875deacb581bf66d
+msgid ":attr:`~AuditLogDiff.avatar`"
+msgstr ""
+
+#: ../../api/enums.rst:1177 53f84f6d911b427a82d7422c010c7be6
+msgid "A webhook was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1190 e7175cc208c84d12957322bfb535b34b
+msgid "An emoji was created."
+msgstr ""
+
+#: ../../api/enums.rst:1192 ../../api/enums.rst:1203
+#: 41aeb9dc3c5840aeb56f92ec751f6cd0 df5de1fd8daa4ce2a481835fc9ae71f4
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Emoji` or :class:`Object` with the emoji ID."
+msgstr ""
+
+#: ../../api/enums.rst:1201 68f03695f66b4169a03ed9c1dc80389f
+msgid "An emoji was updated. This triggers when the name has changed."
+msgstr ""
+
+#: ../../api/enums.rst:1212 48163ca0ef4c45ae844e45109240ea51
+msgid "An emoji was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1214 6c4676bf1a414f30a39f7196f7d82d10
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Object` with the emoji ID."
+msgstr ""
+
+#: ../../api/enums.rst:1223 00ed260437894ceca3ae37e9a173fe0d
+msgid ""
+"A message was deleted by a moderator. Note that this only triggers if the"
+" message was deleted by someone other than the author."
+msgstr ""
+
+#: ../../api/enums.rst:1226 8982961c175341f9a00e1d4196d2528a
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Member` or :class:`User` who had their message deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1232 ../../api/enums.rst:1245
+#: 4468836a846542d6a6df219845f7c8c0 92a746616613438f9e44ef14f58c45f6
+msgid "``count``: An integer specifying how many messages were deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1233 0465bcc39989438fbc4fc946201f3198
+msgid ""
+"``channel``: A :class:`TextChannel` or :class:`Object` with the channel "
+"ID where the message got deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1237 b666af6168ac4da4925c44e8955fd829
+msgid "Messages were bulk deleted by a moderator."
+msgstr ""
+
+#: ../../api/enums.rst:1239 b496e7abbf6641c6aa0ecb2f408fa88d
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`TextChannel` or :class:`Object` with the ID of the channel that "
+"was purged."
+msgstr ""
+
+#: ../../api/enums.rst:1251 26b1fef40156492aade7797dec762c5b
+msgid "A message was pinned in a channel."
+msgstr ""
+
+#: ../../api/enums.rst:1253 d1e5158c3f894e9098ce7240dda29673
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Member` or :class:`User` who had their message pinned."
+msgstr ""
+
+#: ../../api/enums.rst:1259 33b6b5d83e1b460da4ba77c314d523a0
+msgid ""
+"``channel``: A :class:`TextChannel` or :class:`Object` with the channel "
+"ID where the message was pinned."
+msgstr ""
+
+#: ../../api/enums.rst:1260 b02423c690af4a9fb690657d4b07c8e5
+msgid "``message_id``: the ID of the message which was pinned."
+msgstr ""
+
+#: ../../api/enums.rst:1266 044f2e7645914a0ba5e4145600a04267
+msgid "A message was unpinned in a channel."
+msgstr ""
+
+#: ../../api/enums.rst:1268 9133756a00814e1591bec12ddd56edb6
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Member` or :class:`User` who had their message unpinned."
+msgstr ""
+
+#: ../../api/enums.rst:1274 88df13e8f17342db8d4441d72f234b2a
+msgid ""
+"``channel``: A :class:`TextChannel` or :class:`Object` with the channel "
+"ID where the message was unpinned."
+msgstr ""
+
+#: ../../api/enums.rst:1275 b626f07690e84a63af8a2164b849883c
+msgid "``message_id``: the ID of the message which was unpinned."
+msgstr ""
+
+#: ../../api/enums.rst:1281 3dd421c8d563469a97e25a3e6ddea1e8
+msgid "A guild integration was created."
+msgstr ""
+
+#: ../../api/enums.rst:1283 28a61562db5c42e58719d9abdd270252
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Object` with the integration ID of the integration which was "
+"created."
+msgstr ""
+
+#: ../../api/enums.rst:1290 760589bb3a7d45058bd7bef6a304f95d
+msgid "A guild integration was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1292 cc4ffb3112c04683842b7de2775fb45d
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Object` with the integration ID of the integration which was "
+"updated."
+msgstr ""
+
+#: ../../api/enums.rst:1299 933106178e5547948aa91bdcbd78433d
+msgid "A guild integration was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1301 f5bd9a45dda249209e96a6ee8751ca52
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Object` with the integration ID of the integration which was "
+"deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1308 5f8e9f5c32bf4508b5f303a3410265aa
+msgid "A stage instance was started."
+msgstr ""
+
+#: ../../api/enums.rst:1310 c2e9a68539184e2fa02ef00208b3a2aa
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`StageInstance` or :class:`Object` with the ID of the stage "
+"instance which was created."
+msgstr ""
+
+#: ../../api/enums.rst:1317 ../../api/enums.rst:1332 ../../api/enums.rst:1412
+#: ../../api/enums.rst:1433 ../../api/enums.rst:1454
+#: 44e35106f7094f5fb9455ee772ec0ab6 625caa87aa24485fb1397616cf577a7a
+#: d65c3aecb6c0489696f90eadd54ecddf f8fdb84c50e44daeb4c36d389b641c96
+#: fad91e851d004a6b90a25284db67decf
+msgid ":attr:`~AuditLogDiff.privacy_level`"
+msgstr ""
+
+#: ../../api/enums.rst:1323 39f42f6186ef44da90259d27f7714aaa
+msgid "A stage instance was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1325 5f94e6a27480458483dd65b0a69b1037
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`StageInstance` or :class:`Object` with the ID of the stage "
+"instance which was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1338 68be42754dcf431aa9cbbc788139632b
+msgid "A stage instance was ended."
+msgstr ""
+
+#: ../../api/enums.rst:1344 b272d864a7ce4045bafbee2d91846c0d
+msgid "A sticker was created."
+msgstr ""
+
+#: ../../api/enums.rst:1346 ../../api/enums.rst:1365 ../../api/enums.rst:1384
+#: 3d62e77b4351433b96277edb798f3ce3 83e568d602594a06a3755e2645cea0e5
+#: a544a30d24fe44ce9cbd11c4d6bf9f7c
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`GuildSticker` or :class:`Object` with the ID of the sticker "
+"which was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1353 ../../api/enums.rst:1372 ../../api/enums.rst:1391
+#: 2c0f60d87b514b59b8c45d1eb06bf0dd 583a543779cf4d9c86a08d861082267b
+#: 7d2c2dae92fa4be7bcd52331157da5bb
+msgid ":attr:`~AuditLogDiff.emoji`"
+msgstr ""
+
+#: ../../api/enums.rst:1355 ../../api/enums.rst:1374 ../../api/enums.rst:1393
+#: 123dd92166354b2782efe70594d4c669 591225f4c32c4c6cb4296ef99a4a5aea
+#: 98d494cb41e24671a60a79da9eafe995
+msgid ":attr:`~AuditLogDiff.format_type`"
+msgstr ""
+
+#: ../../api/enums.rst:1356 ../../api/enums.rst:1375 ../../api/enums.rst:1394
+#: ../../api/enums.rst:1410 ../../api/enums.rst:1431 ../../api/enums.rst:1452
+#: 0e3cd3da365646e3a19d92b79ab09390 1c84003999434ea1b83339033d6f1b08
+#: 799a4b9a391c4475baa04647431d2cf1 7d0a742e6503449abe9e681184246edf
+#: be345a6986ef4009a3e94c8dcab51547 efb8bf105929454c942dbc678084c415
+msgid ":attr:`~AuditLogDiff.description`"
+msgstr ""
+
+#: ../../api/enums.rst:1357 ../../api/enums.rst:1376 ../../api/enums.rst:1395
+#: 2364c53b67874e0bb8ef85cc03081b1e 91fe394c81e54010909f486a0a62ccda
+#: e621569837954f27972fc94f56f0b1bb
+msgid ":attr:`~AuditLogDiff.available`"
+msgstr ""
+
+#: ../../api/enums.rst:1363 899d08deac6348098bd7c041fbf23728
+msgid "A sticker was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1382 f9aabd9368034d05978e3ee12f1155fc
+msgid "A sticker was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1401 38576243ba11499c8f6670a8e071b23b
+msgid "A scheduled event was created."
+msgstr ""
+
+#: ../../api/enums.rst:1403 ../../api/enums.rst:1424 ../../api/enums.rst:1445
+#: 3a98586e07cd4bd4b61d000b98c58dec 5a0b011e635a4d84895b73b59e7641c9
+#: af920a7bbbc94e369a1d93f7a1cc290a
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`ScheduledEvent` or :class:`Object` with the ID of the thread "
+"which was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1413 ../../api/enums.rst:1434 ../../api/enums.rst:1455
+#: 3ce8b3fb8cdb40feb984d3851b53ed2d 4e176938b5ab445290fa6b9fe22d0261
+#: a42a905118e545359543f03054ca8874
+msgid ":attr:`~discord.ScheduledEvent.location`"
+msgstr ""
+
+#: ../../api/enums.rst:1414 ../../api/enums.rst:1435 ../../api/enums.rst:1456
+#: b6a63604628744a3bc3aa26a49390e7f c47fb618a6a947ec9ff4a6875bf364ae
+#: e59ba5034b72405cba2bd082ef739063
+msgid ":attr:`~discord.ScheduledEvent.status`"
+msgstr ""
+
+#: ../../api/enums.rst:1415 ../../api/enums.rst:1436 ../../api/enums.rst:1457
+#: 0c99d4fce1d04a07812e647b68078da6 9d33cef93ba04aaeaa2ad8cae3d8dc49
+#: b89408ceb4084309b42b7239e9feb62b
+msgid ":attr:`~discord.ScheduledEventLocation.type`"
+msgstr ""
+
+#: ../../api/enums.rst:1416 ../../api/enums.rst:1437 ../../api/enums.rst:1458
+#: 0e093f4fc20c4d4c93052a0e73f2c90c 28f6a91e32b84ed0a6993a51d9b36113
+#: 6a7f6324a52842f78660d3d570b3474f
+msgid ":attr:`~discord.ScheduledEvent.image`"
+msgstr ""
+
+#: ../../api/enums.rst:1422 2252dcfbdddc4518ba9f0199a082b519
+msgid "A scheduled event was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1443 bb429c2196f24695b2d8d9eb0078ecd6
+msgid "A scheduled event was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1464 cceba1207c31456faba4376926117457
+msgid "A thread was created."
+msgstr ""
+
+#: ../../api/enums.rst:1466 afb06852a1554bf69f47285f8ffc16d4
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Thread` or :class:`Object` with the ID of the thread which was "
+"created."
+msgstr ""
+
+#: ../../api/enums.rst:1473 ../../api/enums.rst:1491 ../../api/enums.rst:1509
+#: 043230d39cfa4461a1c9f34486530bfe 5e10df6626994f96aa8ca205bb584fdf
+#: 912ddcb3355a458d90aeab0137082161
+msgid ":attr:`~AuditLogDiff.archived`"
+msgstr ""
+
+#: ../../api/enums.rst:1474 ../../api/enums.rst:1492 ../../api/enums.rst:1510
+#: 85bc413b27d047e89aec8a40c120b255 c83aa80e1c8642d6bfa6257faf79c176
+#: e862a1e81d244239be82de48fc3618c1
+msgid ":attr:`~AuditLogDiff.locked`"
+msgstr ""
+
+#: ../../api/enums.rst:1475 ../../api/enums.rst:1493 ../../api/enums.rst:1511
+#: 0d034477efc24673bc7165634eec50bc 6ee5745a5889407f923396b63d2c0be9
+#: 81ec3efdb28a4f1da2a70783422b8b6e
+msgid ":attr:`~AuditLogDiff.auto_archive_duration`"
+msgstr ""
+
+#: ../../api/enums.rst:1476 ../../api/enums.rst:1494 ../../api/enums.rst:1512
+#: 4f086715273847ed83469dd67b4c9823 adce5da724a64308a735139135250eb8
+#: b78b252d467f4092846c5159c58b890b
+msgid ":attr:`~AuditLogDiff.invitable`"
+msgstr ""
+
+#: ../../api/enums.rst:1482 df6fa3e3ec454818b8d9a17d68135162
+msgid "A thread was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1484 43b8091416ca4f4987c31bc8136e00f5
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Thread` or :class:`Object` with the ID of the thread which was "
+"updated."
+msgstr ""
+
+#: ../../api/enums.rst:1500 1ac5abed8f7042188c6f9a597b4d9e1f
+msgid "A thread was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1502 438ec881b324479aad7b59bb720a7b9c
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`Thread` or :class:`Object` with the ID of the thread which was "
+"deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1518 2bfad9ddfb214fa4a9ca9516c683488c
+msgid "An application command's permissions were updated."
+msgstr ""
+
+#: ../../api/enums.rst:1520 e7552f8804b04c728f78efa08726afe8
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is an "
+":class:`Object` with the ID of the command that had it's permissions "
+"edited."
+msgstr ""
+
+#: ../../api/enums.rst:1526 78afc906ed3c4751996fd204584c1948
+msgid ":attr:`~AuditLogDiff.command_id`"
+msgstr ""
+
+#: ../../api/enums.rst:1532 df674749995940d79c7bd5cfb222a814
+msgid "A guild auto moderation rule was created."
+msgstr ""
+
+#: ../../api/enums.rst:1537 ../../api/enums.rst:1554 ../../api/enums.rst:1570
+#: 1a6da37f97714504b63b3cc67cd287dd 31b47099c3d143e38933e93b4bed7600
+#: c0e72ba6aeee400ba6b6be2c8179c441
+msgid ":attr:`~AuditLogDiff.enabled`"
+msgstr ""
+
+#: ../../api/enums.rst:1538 ../../api/enums.rst:1555 ../../api/enums.rst:1571
+#: 96f0dbd43fab42cd8da1b295291534a8 a29d09b8d1a54079b17bf108895a1d2c
+#: e55b2c534b8a48b28c7486027a472d80
+msgid ":attr:`~AuditLogDiff.trigger_type`"
+msgstr ""
+
+#: ../../api/enums.rst:1539 ../../api/enums.rst:1572
+#: e4de7bbff1904eb083376272e84eebd8 e6e0f32618fe463999317e89c13b2b4c
+msgid ":attr:`~AuditLogDiff.event_type`"
+msgstr ""
+
+#: ../../api/enums.rst:1540 ../../api/enums.rst:1556 ../../api/enums.rst:1573
+#: 53ff474414c545e0877c9dcfa81b07e9 c1d3188e8fff44d683c45799cc96404b
+#: f158418a61d24685822ad2d4026e7fb9
+msgid ":attr:`~AuditLogDiff.trigger_metadata`"
+msgstr ""
+
+#: ../../api/enums.rst:1541 ../../api/enums.rst:1557 ../../api/enums.rst:1574
+#: 60f92a70f105440b83650e54eeb14221 75430aa557ed4c2a87460a3fadad5137
+#: b792aaf740e045babb81c2f58ab9407a
+msgid ":attr:`~AuditLogDiff.actions`"
+msgstr ""
+
+#: ../../api/enums.rst:1542 ../../api/enums.rst:1558 ../../api/enums.rst:1575
+#: 8a6a24983308476d8bb356863b85873f a3b6f535700543959d3bb54fb078e015
+#: c38f20feb116471888fe077289ce8040
+msgid ":attr:`~AuditLogDiff.exempt_roles`"
+msgstr ""
+
+#: ../../api/enums.rst:1543 ../../api/enums.rst:1559 ../../api/enums.rst:1576
+#: 6db5bcd67f51475aacbe4e00cfd33b12 70b8c754ddd74892ac549fe3d22f8772
+#: d0fcfcce917e4cdba1501e04cd870554
+msgid ":attr:`~AuditLogDiff.exempt_channels`"
+msgstr ""
+
+#: ../../api/enums.rst:1549 08714b4c79eb4a06bd4bad4c53f201af
+msgid "A guild auto moderation rule was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1565 b6818219409d4e6aacbe23037c32b8ac
+msgid "A guild auto moderation rule was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1582 9c85ec4f6e2f48cdaa7c1697b08dbd12
+msgid "A message was blocked by auto moderation."
+msgstr ""
+
+#: ../../api/enums.rst:1588 20649608cd1c49eb8887ce7a5a1064c3
+msgid "A message was flagged by auto moderation."
+msgstr ""
+
+#: ../../api/enums.rst:1594 a271ec7a81804ceaa6c9e8de7f8c16ac
+msgid "A member was timed out by auto moderation."
+msgstr ""
+
+#: ../../api/enums.rst:1600 db5791aff5df4a76b6dd46f17ba8eb10
+msgid "A creator monetization request was created."
+msgstr ""
+
+#: ../../api/enums.rst:1606 29b4fe1bf2594cd6923b822ddb23f607
+msgid "The creator monetization terms were accepted."
+msgstr ""
+
+#: ../../api/enums.rst:1612 6d784c3658104e46b3553fa88209e336
+msgid "A voice channel status was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1614 ../../api/enums.rst:1628
+#: 21d7aa25fa2449bdbc086189b5743a39 d09aa244691540dbaeff35ae7f802cd6
+msgid ""
+"When this is the action, the type of :attr:`~AuditLogEntry.target` is the"
+" :class:`VoiceChannel` or :class:`Object` with the ID of the voice "
+"channel which was updated."
+msgstr ""
+
+#: ../../api/enums.rst:1620 ../../api/enums.rst:1634
+#: 73946b20ffa0408d809d244e405077f2 9e02b19e51fd49449aacc3c074f5918a
+msgid ":attr:`~AuditLogDiff.status`"
+msgstr ""
+
+#: ../../api/enums.rst:1626 d1f055c436d14c188223461f9ca0cb1f
+msgid "A voice channel status was deleted."
+msgstr ""
+
+#: ../../api/enums.rst:1641 4b5b16167df54688914416bf0caf7627
+msgid "Represents the category that the :class:`AuditLogAction` belongs to."
+msgstr ""
+
+#: ../../api/enums.rst:1643 9dbab0a232604abd8953a7df6a0bdf70
+msgid "This can be retrieved via :attr:`AuditLogEntry.category`."
+msgstr ""
+
+#: ../../api/enums.rst:1647 f06b452c09974142b467507b70205eab
+msgid "The action is the creation of something."
+msgstr ""
+
+#: ../../api/enums.rst:1651 7dd989a90a0e43eca243d490ffef3bff
+msgid "The action is the deletion of something."
+msgstr ""
+
+#: ../../api/enums.rst:1655 183aa68fd5254ee7a6db373fb9097160
+msgid "The action is the update of something."
+msgstr ""
+
+#: ../../api/enums.rst:1659 6a3f9302095245598ef3c8f0ffd44f83
+msgid ""
+"Represents the membership state of a team member retrieved through "
+":func:`Client.application_info`."
+msgstr ""
+
+#: ../../api/enums.rst:1665 f99b7db7002a426498d6216ff366a87f
+msgid "Represents an invited member."
+msgstr ""
+
+#: ../../api/enums.rst:1669 5932ead93d9b4001a809e94b536efbaf
+msgid "Represents a member currently in the team."
+msgstr ""
+
+#: ../../api/enums.rst:1673 d78900c618414d258b8bf82e4c53d0ce
+msgid "Represents the type of webhook that can be received."
+msgstr ""
+
+#: ../../api/enums.rst:1679 45607f9417c8476bbe61af59ae2145bb
+msgid "Represents a webhook that can post messages to channels with a token."
+msgstr ""
+
+#: ../../api/enums.rst:1683 92040f62183548ba9f04a9c654fb5b9f
+msgid ""
+"Represents a webhook that is internally managed by Discord, used for "
+"following channels."
+msgstr ""
+
+#: ../../api/enums.rst:1687 edd45f91b353433baa215c38fb8cfcfe
+msgid "Represents a webhook that is used for interactions or applications."
+msgstr ""
+
+#: ../../api/enums.rst:1693 b9a957369e784999aa4db4b99d37e718
+msgid ""
+"Represents the behaviour the :class:`Integration` should perform when a "
+"user's subscription has finished."
+msgstr ""
+
+#: ../../api/enums.rst:1696 e3e3956bce32458eab440f079ac72be1
+msgid "There is an alias for this called ``ExpireBehavior``."
+msgstr ""
+
+#: ../../api/enums.rst:1702 dde2cba259b942be9d7daa7f75050e95
+msgid ""
+"This will remove the :attr:`StreamIntegration.role` from the user when "
+"their subscription is finished."
+msgstr ""
+
+#: ../../api/enums.rst:1707 8f56b4a6ec50439d8486352d8f2ec42c
+msgid "This will kick the user when their subscription is finished."
+msgstr ""
+
+#: ../../api/enums.rst:1711 110f5f127cf34700aebef11bd948132d
+msgid "Represents the default avatar of a Discord :class:`User`"
+msgstr ""
+
+#: ../../api/enums.rst:1715 95430a94d7b947f3a821f07b70aab0c5
+msgid ""
+"Represents the default avatar with the color blurple. See also "
+":attr:`Colour.blurple`"
+msgstr ""
+
+#: ../../api/enums.rst:1719 58fcc73eebea461890325809557e6dc8
+msgid ""
+"Represents the default avatar with the color grey. See also "
+":attr:`Colour.greyple`"
+msgstr ""
+
+#: ../../api/enums.rst:1723 d96b0ce740304a21a5d1db1f45051d0c
+msgid "An alias for :attr:`grey`."
+msgstr ""
+
+#: ../../api/enums.rst:1726 01c0705a0c01418ba8c2bee502a423b7
+msgid ""
+"Represents the default avatar with the color green. See also "
+":attr:`Colour.green`"
+msgstr ""
+
+#: ../../api/enums.rst:1730 acdf3d58f3ac468592d6eb672e7927ab
+msgid ""
+"Represents the default avatar with the color orange. See also "
+":attr:`Colour.orange`"
+msgstr ""
+
+#: ../../api/enums.rst:1734 63d1d5cafeb745c1a8da433c1c130535
+msgid ""
+"Represents the default avatar with the color red. See also "
+":attr:`Colour.red`"
+msgstr ""
+
+#: ../../api/enums.rst:1739 ae3f995775e245e5abf45bc2dda7078c
+msgid "Represents the type of sticker."
+msgstr ""
+
+#: ../../api/enums.rst:1745 151fd406272c490e93b3cf88e7ab8974
+msgid "Represents a standard sticker that all Nitro users can use."
+msgstr ""
+
+#: ../../api/enums.rst:1749 39793037eae8422ba9536d90e842bb02
+msgid "Represents a custom sticker created in a guild."
+msgstr ""
+
+#: ../../api/enums.rst:1753 b05e06d5a5354367b3b7a284ac12d311
+msgid "Represents the type of sticker images."
+msgstr ""
+
+#: ../../api/enums.rst:1759 4e9c50adfad0429eacfe68de8c0581d6
+msgid "Represents a sticker with a png image."
+msgstr ""
+
+#: ../../api/enums.rst:1763 e8bfe207df5b45708af4bbd905129a8b
+msgid "Represents a sticker with an apng image."
+msgstr ""
+
+#: ../../api/enums.rst:1767 b0fde2a0da464265ab504c4c9bef1f2a
+msgid "Represents a sticker with a lottie image."
+msgstr ""
+
+#: ../../api/enums.rst:1771 1381383432f44e6eb5368c0835da0f62
+msgid "Represents a sticker with a gif image."
+msgstr ""
+
+#: ../../api/enums.rst:1777 8e5bfa0150ba4362936661ad4d6a554f
+msgid "Represents the invite type for voice channel invites."
+msgstr ""
+
+#: ../../api/enums.rst:1783 c7f7db69ae9f4aac9e422022c828aa9b
+msgid "The invite doesn't target anyone or anything."
+msgstr ""
+
+#: ../../api/enums.rst:1787 99696cffc0224f118163d8732e9a10d6
+msgid "A stream invite that targets a user."
+msgstr ""
+
+#: ../../api/enums.rst:1791 4721dd8e936842c5bbd1a61a15097822
+msgid "A invite that targets an embedded application."
+msgstr ""
+
+#: ../../api/enums.rst:1793 9b51feef851e411aabb0c0038cd3b750
+msgid "Note that your bot won't be verified if you provide users access to this"
+msgstr ""
+
+#: ../../api/enums.rst:1797 dc0bb1003ef04faaa4b36bd79dd3badc
+msgid "Represents the camera video quality mode for voice channel participants."
+msgstr ""
+
+#: ../../api/enums.rst:1803 088bf995fa014f37a03bf9c347e018c7
+msgid "Represents auto camera video quality."
+msgstr ""
+
+#: ../../api/enums.rst:1807 f5c93fe91c704114af9cb34d427c1921
+msgid "Represents full camera video quality."
+msgstr ""
+
+#: ../../api/enums.rst:1811 965f3cd4c033475cb1cc38b821f8bded
+msgid ""
+"Represents a stage instance's privacy level. Stage event privacy levels "
+"can only have 1 possible value at the moment so this shouldn't really be "
+"used."
+msgstr ""
+
+#: ../../api/enums.rst:1819 8fca712babea4c3a9a70f16a55863fad
+msgid "The stage instance can only be joined by members of the guild."
+msgstr ""
+
+#: ../../api/enums.rst:1823 eb7b9565987841f0b48a3db792db276a
+msgid "Alias for :attr:`.closed`"
+msgstr ""
+
+#: ../../api/enums.rst:1827 d5c29b81b2c14cc18c675c80d475f6a1
+msgid "Represents the NSFW level of a guild."
+msgstr ""
+
+#: ../../api/enums.rst:1835 12bcaa8cfcb842c5a148f65f193cc74f
+msgid "Checks if two NSFW levels are equal."
+msgstr ""
+
+#: ../../api/enums.rst:1838 654b4dfd63874e9f819b003f72cf07b2
+msgid "Checks if two NSFW levels are not equal."
+msgstr ""
+
+#: ../../api/enums.rst:1841 f7c2e3b237eb4ce0a21fefe5b1189439
+msgid "Checks if a NSFW level is higher than another."
+msgstr ""
+
+#: ../../api/enums.rst:1844 2305a4e94a2f4497bd17faa6e1171158
+msgid "Checks if a NSFW level is lower than another."
+msgstr ""
+
+#: ../../api/enums.rst:1847 d63e8c2fcee54c94a148283479fcdaba
+msgid "Checks if a NSFW level is higher or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:1850 0bdeecdc326a477f99e3d20b23060fbd
+msgid "Checks if a NSFW level is lower or equal to another."
+msgstr ""
+
+#: ../../api/enums.rst:1854 73f672f9e2dc41f3868c069d8f016e01
+msgid "The guild has not been categorised yet."
+msgstr ""
+
+#: ../../api/enums.rst:1858 281c15a151fb4dcb95ea4c02e970ede6
+msgid "The guild contains NSFW content."
+msgstr ""
+
+#: ../../api/enums.rst:1862 f4359419ec5941e8b5e91c4ef5403f4a
+msgid "The guild does not contain any NSFW content."
+msgstr ""
+
+#: ../../api/enums.rst:1866 03593a6c2994467b9ed47bf3876b3622
+msgid "The guild may contain NSFW content."
+msgstr ""
+
+#: ../../api/enums.rst:1870 1702f291fcb34353a6ab9d1d950767f0
+msgid "Represents an embedded activity application."
+msgstr ""
+
+#: ../../api/enums.rst:1872 e09b1261ff9e4aed838e56dc0f2d0ba1
+msgid "Some might be boost-only or gated."
+msgstr ""
+
+#: ../../api/enums.rst:1876 51a321ee62d54d98a9eccf81b593ba9d
+msgid ""
+"Discord said that they won't verify bots who gives access to embedded "
+"activities."
+msgstr ""
+
+#: ../../api/enums.rst:1878 e421667f43d645a19bf6e4f2ec7619d3
+msgid ""
+"Read more here: "
+"https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321."
+msgstr ""
+
+#: ../../api/enums.rst:1884 8634ae2fdeae4337b6d96d3695dcfd5b
+msgid "Represents the embedded application Ask Away."
+msgstr ""
+
+#: ../../api/enums.rst:1890 4d3efac29bec4fea95eb83fb78c5e715
+msgid "Represents the embedded application Awkword."
+msgstr ""
+
+#: ../../api/enums.rst:1894 ../../api/enums.rst:1902 ../../api/enums.rst:1982
+#: ../../api/enums.rst:1990 ../../api/enums.rst:1998 ../../api/enums.rst:2086
+#: ../../api/enums.rst:2106 ../../api/enums.rst:2114
+#: 26a17bd0648f42319205d7e93d492172 46a7b3bd09264237b2c107acc73ecd72
+#: 5d37fd74de88463abc545e8a9bc6c324 6f540ae1a6bc40778c30e5b6ed6c1ebd
+#: 7e84904cbf23461b85b39425620e25ed 88f0d371b1894498954ed6863c819b42
+#: 9db4622ff7d24f809e4ebf3a64cd2d2d a79b808e86594cdb8093ee9de1e8d5ec
+msgid "This activity has been removed."
+msgstr ""
+
+#: ../../api/enums.rst:1898 7df3a9c26b4f4fac8b39048deb5657dc
+msgid "Development version of :attr:`.awkword`."
+msgstr ""
+
+#: ../../api/enums.rst:1906 abbce992b4e24550996b4cd9cbf4eb60
+msgid "Represents the embedded application Bash Out."
+msgstr ""
+
+#: ../../api/enums.rst:1912 262e49924cc14a02865aa50c57045b60
+msgid "Represents the embedded application Betrayal.io."
+msgstr ""
+
+#: ../../api/enums.rst:1916 ca9d81dfd82f4031b335c4bc19933a46
+msgid "Represents the embedded application Blazing 8s."
+msgstr ""
+
+#: ../../api/enums.rst:1922 37e760d58a7143b89abba2d5b19e1078
+msgid "Development version of :attr:`.blazing_8s`."
+msgstr ""
+
+#: ../../api/enums.rst:1928 126662fd83ef43cd965f2fde2fbc3d90
+msgid "QA version of :attr:`.blazing_8s`."
+msgstr ""
+
+#: ../../api/enums.rst:1934 bceb40c70ad54faea89657ff53a8b6ed
+msgid "Staging version of :attr:`.blazing_8s`."
+msgstr ""
+
+#: ../../api/enums.rst:1940 ece980f3196e4e22826bf0b9fbd9ba4d
+msgid "Represents the embedded application Bobble League."
+msgstr ""
+
+#: ../../api/enums.rst:1946 2cd323b60d65453680bf7e879ce98f88
+msgid "Represents the embedded application Checkers in the Park."
+msgstr ""
+
+#: ../../api/enums.rst:1950 a78c47930e5a4ba8b51f71dcea78c7ce
+msgid "Development version of :attr:`.checkers_in_the_park`."
+msgstr ""
+
+#: ../../api/enums.rst:1954 c2cc29ea6e184e83b2be17704af74c56
+msgid "QA version of :attr:`.checkers_in_the_park`."
+msgstr ""
+
+#: ../../api/enums.rst:1958 7eb39863607f40c380be079505668760
+msgid "Staging version of :attr:`.checkers_in_the_park`."
+msgstr ""
+
+#: ../../api/enums.rst:1962 ef05be1c5f7e4079ac7c56305f89ebfa
+msgid "Represents the embedded application Chess in the Park."
+msgstr ""
+
+#: ../../api/enums.rst:1966 6320ce907144405b876049b648120b12
+msgid "Development version of :attr:`.chess_in_the_park`."
+msgstr ""
+
+#: ../../api/enums.rst:1970 749604a85ea64bbf996c3637266a7dfd
+msgid "QA version of :attr:`.chess_in_the_park`."
+msgstr ""
+
+#: ../../api/enums.rst:1974 4d7d5cbee8df40f39c5bd67d2a5cf15a
+msgid "Staging version of :attr:`.chess_in_the_park`."
+msgstr ""
+
+#: ../../api/enums.rst:1978 bf380b08e1e1407eafa744eae41fbb85
+msgid "Represents the embedded application Decoders Development."
+msgstr ""
+
+#: ../../api/enums.rst:1986 5f272d25b38e42c5b02ff61dfc3ded42
+msgid "Represents the embedded application Doodle Crew."
+msgstr ""
+
+#: ../../api/enums.rst:1994 90460a782454406b9eba77e90bbc0d65
+msgid "Development version of :attr:`.doodle_crew`."
+msgstr ""
+
+#: ../../api/enums.rst:2002 adbde9ea5c7740d88be1a57b89ad8046
+msgid "Represents the embedded application Fishington.io."
+msgstr ""
+
+#: ../../api/enums.rst:2006 d6011665aa3848a8810933d33109f014
+msgid "Represents the embedded application Gartic Phone."
+msgstr ""
+
+#: ../../api/enums.rst:2012 5b98bc6e985645759adce7b6dc973bc2
+msgid "Represents the embedded application Jamspace."
+msgstr ""
+
+#: ../../api/enums.rst:2018 8cb40366f76a471182114e1d2bf663a4
+msgid "Represents the embedded application Know What I Meme."
+msgstr ""
+
+#: ../../api/enums.rst:2024 4611eb49709143a7943172b1ecd4af36
+msgid "Represents the embedded application Land.io."
+msgstr ""
+
+#: ../../api/enums.rst:2030 1cef475005fa4d3e977b4a250336eaff
+msgid "Represents the embedded application Letter League."
+msgstr ""
+
+#: ../../api/enums.rst:2034 90d3eb8aa9354387bab79c9666a7f6be
+msgid "Development version of :attr:`.letter_league`."
+msgstr ""
+
+#: ../../api/enums.rst:2040 5900632eb0bd408aaeaceea4df6a3400
+msgid "Represents the embedded application Poker Night."
+msgstr ""
+
+#: ../../api/enums.rst:2044 859bd24025a04598a607f82fe33e2303
+msgid "Development version of :attr:`.poker_night`."
+msgstr ""
+
+#: ../../api/enums.rst:2050 364952c675e345bfa20f62bb6295b569
+msgid "QA version of :attr:`.poker_night`."
+msgstr ""
+
+#: ../../api/enums.rst:2054 306415ef45014befbf99265bc432d5d5
+msgid "Staging version of :attr:`.poker_night`."
+msgstr ""
+
+#: ../../api/enums.rst:2058 6b68a438b88f4507bfaea1747c902c24
+msgid "Represents the embedded application Putt Party."
+msgstr ""
+
+#: ../../api/enums.rst:2064 1db9baa076ee480d8d0aa84283c03a90
+msgid "Development version of :attr:`.putt_party`."
+msgstr ""
+
+#: ../../api/enums.rst:2070 28f5321d2a88463a87a98cc3fe977eee
+msgid "QA version of :attr:`.putt_party`."
+msgstr ""
+
+#: ../../api/enums.rst:2076 d1c4dbb002ad4b59b6f095bd3c9e8241
+msgid "Staging version of :attr:`.putt_party`."
+msgstr ""
+
+#: ../../api/enums.rst:2082 10dffbd7ae7346b1a9adb510b348b139
+msgid "Represents the embedded application Putts."
+msgstr ""
+
+#: ../../api/enums.rst:2090 1a64c939106a47e89fa93d72ccffb2dd
+msgid "Represents the embedded application Sketch Heads."
+msgstr ""
+
+#: ../../api/enums.rst:2096 fe0828898e684c07ac1bb2b084c6b92e
+msgid "Development version of :attr:`.sketch_heads`."
+msgstr ""
+
+#: ../../api/enums.rst:2102 2abfe4abd47a4b16a8759924e64d5f61
+msgid "Represents the embedded application Sketchy Artist."
+msgstr ""
+
+#: ../../api/enums.rst:2110 0c2730bb638249d491ca800b236c561d
+msgid "Development version of :attr:`.sketchy_artist`."
+msgstr ""
+
+#: ../../api/enums.rst:2118 57f7dbca4655440a93c3fd350e137039
+msgid "Represents the embedded application Spell Cast."
+msgstr ""
+
+#: ../../api/enums.rst:2122 5db2665a5810470ebfdcde53e0c9844e
+msgid "Staging version of :attr:`.spell_cast`."
+msgstr ""
+
+#: ../../api/enums.rst:2128 e5f509a034fc4e12b38a85f3efc3e443
+msgid ""
+"Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature "
+"which allows guild admins to limit the playlist access."
+msgstr ""
+
+#: ../../api/enums.rst:2132 40693975970c4aba91b20cbb710c3df5
+msgid "Development version of :attr:`.watch_together`."
+msgstr ""
+
+#: ../../api/enums.rst:2136 b171892fb9124323bb2b98d60e1b7a85
+msgid "Represents the embedded application word snacks."
+msgstr ""
+
+#: ../../api/enums.rst:2140 f667ed7f17934a5886e9dbab4028d854
+msgid "Development version of :attr:`.word_snacks`."
+msgstr ""
+
+#: ../../api/enums.rst:2144 f2e8046479ab4befb1b09badb53ceac4
+msgid "Represents the embedded application Youtube Together."
+msgstr ""
+
+#: ../../api/enums.rst:2148 3aafbe2b679b447ba75d81c817faba38
+msgid "Represents the status of a scheduled event."
+msgstr ""
+
+#: ../../api/enums.rst:2154 203576378c61466aafba5a0280b7d8d7
+msgid "The scheduled event hasn't started or been canceled yet."
+msgstr ""
+
+#: ../../api/enums.rst:2158 11cbb117b6e540df9c5cf85a8692ddd0
+msgid "The scheduled event is in progress."
+msgstr ""
+
+#: ../../api/enums.rst:2162 59952e0eaaed49e283b98e7bc4fc4827
+msgid "The scheduled event is over."
+msgstr ""
+
+#: ../../api/enums.rst:2166 347d83904c7c44bc93ff95674bf1dc88
+msgid "The scheduled event has been canceled before it can start."
+msgstr ""
+
+#: ../../api/enums.rst:2170 f3e431347c5e494ab804674c1a47785e
+msgid "Alias to :attr:`canceled`."
+msgstr ""
+
+#: ../../api/enums.rst:2174 9367cb26de98424599dc80ef69d1a73d
+msgid ""
+"Represents a scheduled event location type (otherwise known as the entity"
+" type on the API)."
+msgstr ""
+
+#: ../../api/enums.rst:2180 4266c50b2bdf4fcf8936d92fa70abac3
+msgid "Represents a scheduled event that is happening in a :class:`StageChannel`."
+msgstr ""
+
+#: ../../api/enums.rst:2184 f9e4297eb07d41a3bde1dbf3e89b5675
+msgid "Represents a scheduled event that is happening in a :class:`VoiceChannel`."
+msgstr ""
+
+#: ../../api/enums.rst:2188 e4af5f9d382340e3828ebe79f1ebfee7
+msgid "Represents a generic location as a :class:`str`."
+msgstr ""
+
+#: ../../api/enums.rst:2192 fe8d3a7422cf4811950c7096d1a6910d
+msgid ""
+"Represents the privacy level of a scheduled event. Scheduled event "
+"privacy levels can only have 1 possible value at the moment so this "
+"shouldn't really be used."
+msgstr ""
+
+#: ../../api/enums.rst:2198 e258adae10a24e399876694c35f291ee
+msgid ""
+"Represents a scheduled event that is only available to members inside the"
+" guild."
+msgstr ""
+
+#: ../../api/enums.rst:2202 43c0ea119a5d4ddeae31a1891ab90bba
+msgid "Represents an application role connection metadata type."
+msgstr ""
+
+#: ../../api/enums.rst:2204 a48a777f05f8404ea3f84c2eea0b407b
+msgid ""
+"Each metadata type offers a comparison operation that allows guilds to "
+"configure role requirements based on metadata values stored by the bot. "
+"Bots specify a ``metadata value`` for each user and guilds specify the "
+"required ``guild's configured value`` within the guild role settings."
+msgstr ""
+
+#: ../../api/enums.rst:2213 7a2243082c9146148a159adfd210797b
+msgid ""
+"The metadata value (``integer``) is less than or equal to the guild's "
+"configured value (``integer``)."
+msgstr ""
+
+#: ../../api/enums.rst:2217 e05c266364924b249c892a96ae04c509
+msgid ""
+"The metadata value (``integer``) is greater than or equal to the guild's "
+"configured value (``integer``)."
+msgstr ""
+
+#: ../../api/enums.rst:2221 dc164a530b7748a890b89df5f1d48a3a
+msgid ""
+"The metadata value (``integer``) is equal to the guild's configured value"
+" (``integer``)."
+msgstr ""
+
+#: ../../api/enums.rst:2225 271247e528204d5caec08f683630d00c
+msgid ""
+"The metadata value (``integer``) is not equal to the guild's configured "
+"value (``integer``)."
+msgstr ""
+
+#: ../../api/enums.rst:2229 c5cbe1ee08764e95af0db6111e8f10c0
+msgid ""
+"The metadata value (``datetime``) is less than or equal to the guild's "
+"configured value (``integer``; the number of days before the current "
+"date)."
+msgstr ""
+
+#: ../../api/enums.rst:2234 4f4f013f472b4670a51d9240fd8f71cb
+msgid ""
+"The metadata value (``datetime``) is greater than or equal to the guild's"
+" configured value (``integer``; the number of days before the current "
+"date)."
+msgstr ""
+
+#: ../../api/enums.rst:2239 fa757acb4e9841578e85bd76d6678b17
+msgid ""
+"The metadata value (``integer``) is equal to the guild's configured value"
+" (``integer``; 1)."
+msgstr ""
+
+#: ../../api/enums.rst:2243 0f6c437fb349410593e5fc67633b1ed0
+msgid ""
+"The metadata value (``integer``) is not equal to the guild's configured "
+"value (``integer``; 1)."
+msgstr ""
+
+#: ../../api/enums.rst:2247 6cd1703bdbcb49af8199d10e0be98536
+msgid "Represents an AutoMod trigger type."
+msgstr ""
+
+#: ../../api/enums.rst:2253 92785878e944483596614511844290d9
+msgid "Represents a keyword rule trigger, which are customizable by a guild."
+msgstr ""
+
+#: ../../api/enums.rst:2255 ../../api/enums.rst:2265 ../../api/enums.rst:2280
+#: 2748f446a4944afcac405b4e6431d085 6b22e3f8c2104c49a2126255db4d2a25
+#: 6e7fe5085c2c473ebe25b9e17a6473c3
+msgid "Possible attributes for :class:`AutoModTriggerMetadata`:"
+msgstr ""
+
+#: ../../api/enums.rst:2257 164ea467f5a74a77a09fffe0604d2e6f
+msgid ":attr:`~AutoModTriggerMetadata.keyword_filter`"
+msgstr ""
+
+#: ../../api/enums.rst:2258 3a554f78cf8f4a0386b8cde531dbbbf4
+msgid ":attr:`~AutoModTriggerMetadata.regex_patterns`"
+msgstr ""
+
+#: ../../api/enums.rst:2259 ../../api/enums.rst:2268
+#: e648d4c07e7849498fa1e37f3dc9d7a4 f18a268f3f3847c59e0ef614ee5a88ca
+msgid ":attr:`~AutoModTriggerMetadata.allow_list`"
+msgstr ""
+
+#: ../../api/enums.rst:2263 9cb29d61a6674cc58252b6ff7ec0ee65
+msgid "Represents a preset keyword rule trigger."
+msgstr ""
+
+#: ../../api/enums.rst:2267 d6aa05f209664d85a235c190d3043cd9
+msgid ":attr:`~AutoModTriggerMetadata.presets`"
+msgstr ""
+
+#: ../../api/enums.rst:2272 fc23e3e17deb4d2db2f13578e975407f
+msgid "Represents the spam rule trigger."
+msgstr ""
+
+#: ../../api/enums.rst:2274 5052fa1e23f84d919094b527e6780760
+msgid "There are no possible attributes for :class:`AutoModTriggerMetadata`."
+msgstr ""
+
+#: ../../api/enums.rst:2278 c1b72bd121c64fd9b20ca8fdb200b748
+msgid "Represents a mention spam keyword rule trigger."
+msgstr ""
+
+#: ../../api/enums.rst:2282 cca7bd82a2394c6083489b7e39c4c738
+msgid ":attr:`~AutoModTriggerMetadata.mention_total_limit`"
+msgstr ""
+
+#: ../../api/enums.rst:2288 70879d5f0ea545c6a8e2c43268f3a44a
+msgid "Represents a harmful link rule trigger."
+msgstr ""
+
+#: ../../api/enums.rst:2290 ab821fbd1d1c44e7b9adfaccc49878cc
+msgid "Removed by Discord and merged into :attr:`spam`."
+msgstr ""
+
+#: ../../api/enums.rst:2295 1d15948ea48048f3a54cb3fd56f98949
+msgid "Represents an AutoMod event type."
+msgstr ""
+
+#: ../../api/enums.rst:2301 de04935db43e47bb8ad4d5ad0a2e794a
+msgid "Represents a message send AutoMod event."
+msgstr ""
+
+#: ../../api/enums.rst:2305 20ab54c4886942d6a8b40c6cb79dc15e
+msgid "Represents the type of action AutoMod is performing."
+msgstr ""
+
+#: ../../api/enums.rst:2311 2052ac6a159c413096526b93f53fc40f
+msgid "Represents a block message action."
+msgstr ""
+
+#: ../../api/enums.rst:2315 52326fdbc82c40b78fb2d012ee46d6e0
+msgid "Represents a send alert message action."
+msgstr ""
+
+#: ../../api/enums.rst:2319 e71766619bd345e6adacc517795aa546
+msgid "Represents a timeout action."
+msgstr ""
+
+#: ../../api/enums.rst:2323 a67c1f449b7b46a6b3945dbe581eecf5
+msgid "Represents an AutoMod keyword preset type."
+msgstr ""
+
+#: ../../api/enums.rst:2329 16fae1e09da548e194ff3e9b141d0b3e
+msgid "Represents the profanity keyword preset rule."
+msgstr ""
+
+#: ../../api/enums.rst:2333 ab390cf38fb84df4a3a96714d0211fb6
+msgid "Represents the sexual content keyword preset rule."
+msgstr ""
+
+#: ../../api/enums.rst:2337 1a4ffd11aed54240903e82e327560e9b
+msgid "Represents the slurs keyword preset rule."
+msgstr ""
+
+#: ../../api/enums.rst:2341 e06b2688ab0040a886ef9dc2896bc3a3
+msgid "Represents how each prompt's options are displayed."
+msgstr ""
+
+#: ../../api/enums.rst:2347 49a64ce72b5949fbb573a3ccaee7703f
+msgid "The options will appear in a grid form, showing the name and description."
+msgstr ""
+
+#: ../../api/enums.rst:2351 0a3bb3bdb2714e2cbf932539ebc78a91
+msgid ""
+"The options will appear in a dropdown (similar to select menus), but "
+"without the description displayed. This is **enforced** if there are more"
+" than 12 options in the prompt."
+msgstr ""
+
+#: ../../api/enums.rst:2355 a23abfb2ecad4cd8ad6e055957bf964e
+msgid "Represents the current mode of the guild's onboarding flow."
+msgstr ""
+
+#: ../../api/enums.rst:2361 6aa44f6eace5404f9d4a7f22c35aa583
+msgid "Only default channels are counted towards the Onboarding requirements."
+msgstr ""
+
+#: ../../api/enums.rst:2365 fb8b2393e31646fea2a6b5c6cff080cb
+msgid ""
+"Both default channels and questions (``OnboardingPrompt``s) will count "
+"towards the Onboarding requirements."
+msgstr ""
+
+#: ../../api/enums.rst:2369 d984d2edafa0494198f40de75ba4ee65
+msgid "Represents a Reaction's type."
+msgstr ""
+
+#: ../../api/enums.rst:2375 7093ffd76bf040fbabd2de615bea62a7
+msgid "Represents a normal reaction."
+msgstr ""
+
+#: ../../api/enums.rst:2379 7ff6dcebaa89470b8b1b9ee4585e7e04
+msgid "Represents a super reaction."
+msgstr ""
+
+#: ../../api/enums.rst:2383 8441ff853aa64a7da5c19e1df2a877a2
+msgid "Represents an SKU's type."
+msgstr ""
+
+#: ../../api/enums.rst:2389 bc04deae624c4ff79197fba79bb3d505
+msgid ""
+"A one-time purchase that is permanent and is not subject to either "
+"renewal or consumption, such as lifetime access to an app's premium "
+"features."
+msgstr ""
+
+#: ../../api/enums.rst:2394 ac5ad3bc7e1642909644aad6bf116481
+msgid ""
+"A one-time, non-renewable purchase that provides access, such as a "
+"temporary power-up or boost in a game."
+msgstr ""
+
+#: ../../api/enums.rst:2399 ac2cba0273274f94888cf5be8147f0b0
+msgid "Represents a recurring subscription."
+msgstr ""
+
+#: ../../api/enums.rst:2403 9755ce16658e4e5aaf283233f4ba8e6c
+msgid ""
+"A system-generated group for each subscription SKU created. These types "
+"of SKUs are currently unused."
+msgstr ""
+
+#: ../../api/enums.rst:2408 f47ba3afb4144d7cb79cacb32af9f292
+msgid "Represents an entitlement's type."
+msgstr ""
+
+#: ../../api/enums.rst:2414 f0c9c5eeaf1d4576b1977a50ebff3be9
+msgid "Entitlement was purchased by the user."
+msgstr ""
+
+#: ../../api/enums.rst:2418 0fd3167c06bb4f73a4373acc350c29f4
+msgid "Entitlement is for a Discord Nitro subscription."
+msgstr ""
+
+#: ../../api/enums.rst:2422 6e360623ccd14c7ba737664a0720387b
+msgid "Entitlement was gifted by the developer."
+msgstr ""
+
+#: ../../api/enums.rst:2426 a3753cbe720248baad7006b741b83d0f
+msgid "Entitlement was purchased by a developer in the application's test mode."
+msgstr ""
+
+#: ../../api/enums.rst:2430 c50fbfb4231547299d0b58c756a526ef
+msgid "Entitlement was granted when the SKU was free."
+msgstr ""
+
+#: ../../api/enums.rst:2434 664d88fce1c945589b43e457c0a039ab
+msgid "Entitlement was gifted by another user."
+msgstr ""
+
+#: ../../api/enums.rst:2438 bcce02698e7c4d93b0593a4738376114
+msgid "Entitlement was claimed by a user for free as a Nitro subscriber."
+msgstr ""
+
+#: ../../api/enums.rst:2442 94fb5669a76e4d5799331d41c4367469
+msgid "Entitlement was purchased as an app subscription."
+msgstr ""
+
+#: ../../api/enums.rst:2447 043f69aa903442b79ab0a54119892850
+msgid "Represents an entitlement's ownership type."
+msgstr ""
+
+#: ../../api/enums.rst:2453 72cb5e1565fc455191948cdc346b5907
+msgid "Entitlement is owned by a guild."
+msgstr ""
+
+#: ../../api/enums.rst:2457 e781c8a6bbb243499cddce3c2086358f
+msgid "Entitlement is owned by a user."
+msgstr ""
+
+#: ../../api/enums.rst:2462 61f4a928d66440c58ffbf67cfb15c5a1
+msgid "Represents a poll's layout type."
+msgstr ""
+
+#: ../../api/enums.rst:2468 f54fed3455b144949f6a44f072c31a50
+msgid "Represents the default layout."
+msgstr ""
+
+#: ../../api/enums.rst:2473 2b0b8bc9cad04acebb5612d68a8de5bc
+msgid "The integration type for an application."
+msgstr ""
+
+#: ../../api/enums.rst:2479 a15a8b77c15e4992bc42c8bb77ef4798
+msgid "The integration is added to a guild."
+msgstr ""
+
+#: ../../api/enums.rst:2483 3c01a27a108a44fd993f5951533ed1d6
+msgid "The integration is added to a user account."
+msgstr ""
+
+#: ../../api/enums.rst:2488 d351c5701a90482b9a4914a152ef4078
+msgid "The context where an interaction occurs."
+msgstr ""
+
+#: ../../api/enums.rst:2494 e8e8e4cc8a314af0b8169d0786b9b761
+msgid "The interaction is in a guild."
+msgstr ""
+
+#: ../../api/enums.rst:2498 9c92e2dd1a0f4c0c85a016d87b6eef8f
+msgid "The interaction is in the bot's own DM channel with the user."
+msgstr ""
+
+#: ../../api/enums.rst:2502 1e9f15c549cb42a1974d9ba887984e15
+msgid "The interaction is in a private DM or group DM channel."
+msgstr ""
+
+#~ msgid ""
+#~ "Represents a component based interaction, "
+#~ "i.e. using the Discord Bot UI Kit."
+#~ msgstr ""
+
+#~ msgid "Represents a modal based interaction."
+#~ msgstr ""
+

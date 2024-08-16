@@ -1,0 +1,164 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../installing.rst:8 b987cf7921b843929fe5cce90461619d
+msgid "Installing Pycord"
+msgstr ""
+
+#: ../../installing.rst:10 ff6116c1f1bd4a8ea4084082816c256f
+msgid ""
+"This is the documentation for Pycord, a library for Python to aid in "
+"creating applications that utilise the Discord API."
+msgstr ""
+
+#: ../../installing.rst:14 99384c0e85ae44dfb29c6ffd64d07c15
+msgid "Prerequisites"
+msgstr ""
+
+#: ../../installing.rst:16 45a4a81029114e39967f1a217892cee4
+msgid ""
+"Pycord works with Python 3.8 or higher. Support for earlier versions of "
+"Python is not provided. Python 2.7 or lower is not supported. Python 3.7 "
+"or lower is not supported."
+msgstr ""
+
+#: ../../installing.rst:23 3315ef6314374d80b289a31a9319565c
+msgid "Installing"
+msgstr ""
+
+#: ../../installing.rst:27 3bfcb21ea1394d478638fa54953b05af
+msgid ""
+"For new features in upcoming versions, you will need to install the pre-"
+"release until a stable version is released. ::"
+msgstr ""
+
+#: ../../installing.rst:31 d3de67df16fb4a36a5a1bd15ad340bb0
+msgid ""
+"For Windows users, this command should be used to install the pre-"
+"release: ::"
+msgstr ""
+
+#: ../../installing.rst:35 bfb05c0721a546f1bd0444d6eedcb567
+msgid "You can get the library directly from PyPI: ::"
+msgstr ""
+
+#: ../../installing.rst:39 7dfc0ffce098447881eddb3cbdcd90bd
+msgid "If you are using Windows, then the following should be used instead: ::"
+msgstr ""
+
+#: ../../installing.rst:44 e815f26d5d194fbeb3b185e9960f01a0
+msgid ""
+"To install additional packages for speedup,  you should use ``py-"
+"cord[speed]`` instead of ``py-cord``, e.g."
+msgstr ""
+
+#: ../../installing.rst:55 bd4a16413b354b5f849723217b8c9da6
+msgid ""
+"To get voice support, you should use ``py-cord[voice]`` instead of ``py-"
+"cord``, e.g. ::"
+msgstr ""
+
+#: ../../installing.rst:59 b3effdad7bf24b5387a42b48c1eea265
+msgid ""
+"On Linux environments, installing voice requires getting the following "
+"dependencies:"
+msgstr ""
+
+#: ../../installing.rst:61 874d8e468b3c425b892c4bbe45c64165
+msgid "`libffi <https://github.com/libffi/libffi>`_"
+msgstr ""
+
+#: ../../installing.rst:62 15d34551532b42cbbfcce1f27c282ac7
+msgid "`libnacl <https://github.com/saltstack/libnacl>`_"
+msgstr ""
+
+#: ../../installing.rst:63 d4350b9dc07b4c2d9ed7155d3229cac1
+msgid "`python3-dev <https://packages.debian.org/python3-dev>`_"
+msgstr ""
+
+#: ../../installing.rst:65 133137400c01499f9368503dab246762
+msgid ""
+"For a Debian-based system, the following command will get these "
+"dependencies:"
+msgstr ""
+
+#: ../../installing.rst:71 647fb6f3c4294493bf010cc4b38918ae
+msgid "Remember to check your permissions!"
+msgstr ""
+
+#: ../../installing.rst:74 1505dc98348743daa96c3e2a8bb4e35f
+msgid "Virtual Environments"
+msgstr ""
+
+#: ../../installing.rst:76 2a79ff807f0440f9b29b38e5e8f34fe7
+msgid ""
+"Sometimes you want to keep libraries from polluting system installs or "
+"use a different version of libraries than the ones installed on the "
+"system. You might also not have permissions to install libraries system-"
+"wide. For this purpose, the standard library as of Python 3.3 comes with "
+"a concept called \"Virtual Environment\"s to help maintain these separate"
+" versions."
+msgstr ""
+
+#: ../../installing.rst:81 2707c58339d8492cb4643fde3924e0c4
+msgid "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
+msgstr ""
+
+#: ../../installing.rst:83 b4a38a361f9d4b029b782bc0991071f1
+msgid "However, for the quick and dirty:"
+msgstr ""
+
+#: ../../installing.rst:85 875aa9044a994c748e89365a4319d53d
+msgid "Go to your project's working directory:"
+msgstr ""
+
+#: ../../installing.rst:92 d3ee92e529f5468d861804a69cf06872
+msgid "Activate the virtual environment:"
+msgstr ""
+
+#: ../../installing.rst:98 1fe5cd4ed06d4dd0bdc9c107663b7623
+msgid "On Windows you activate it with:"
+msgstr ""
+
+#: ../../installing.rst:104 fd63a39a2e324067bff700957152f4a8
+msgid "Use pip like usual:"
+msgstr ""
+
+#: ../../installing.rst:110 4b0ca73ad69c4a339a72a3dd4405c3ef
+msgid "Congratulations. You now have a virtual environment all set up."
+msgstr ""
+
+#: ../../installing.rst:113 f05aab80a33a45088869a4951f8eff63
+msgid "Basic Concepts"
+msgstr ""
+
+#: ../../installing.rst:115 122378e2443b4f5e9c3109ad7e84a78c
+msgid ""
+"Pycord revolves around the concept of :ref:`events <discord-api-events>`."
+" An event is something you listen to and then respond to. For example, "
+"when a message happens, you will receive an event about it that you can "
+"respond to."
+msgstr ""
+
+#: ../../installing.rst:119 24eaab1e93fb4abc8f263c716591e584
+msgid "A quick example to showcase how events work:"
+msgstr ""
+

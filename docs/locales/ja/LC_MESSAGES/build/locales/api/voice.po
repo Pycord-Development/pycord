@@ -1,0 +1,505 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Voice Related"
+msgstr "Voice Related"
+
+msgid "Objects"
+msgstr "Objects"
+
+msgid "Represents a Discord voice connection."
+msgstr "Represents a Discord voice connection."
+
+msgid "You do not create these, you typically get them from e.g. :meth:`VoiceChannel.connect`."
+msgstr "You do not create these, you typically get them from e.g. :meth:`VoiceChannel.connect`."
+
+msgid "The voice connection session ID."
+msgstr "The voice connection session ID."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The voice connection token."
+msgstr "The voice connection token."
+
+msgid "The endpoint we are connecting to."
+msgstr "The endpoint we are connecting to."
+
+msgid "The voice channel connected to."
+msgstr "The voice channel connected to."
+
+msgid ":class:`abc.Connectable`"
+msgstr ":class:`abc.Connectable`"
+
+msgid "The event loop that the voice client is running on."
+msgstr "The event loop that the voice client is running on."
+
+msgid ":class:`asyncio.AbstractEventLoop`"
+msgstr ":class:`asyncio.AbstractEventLoop`"
+
+msgid "In order to use PCM based AudioSources, you must have the opus library installed on your system and loaded through :func:`opus.load_opus`. Otherwise, your AudioSources must be opus encoded (e.g. using :class:`FFmpegOpusAudio`) or the library will not be able to transmit audio."
+msgstr "In order to use PCM based AudioSources, you must have the opus library installed on your system and loaded through :func:`opus.load_opus`. Otherwise, your AudioSources must be opus encoded (e.g. using :class:`FFmpegOpusAudio`) or the library will not be able to transmit audio."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "The guild we're connected to, if applicable."
+msgstr "The guild we're connected to, if applicable."
+
+msgid "The user connected to voice (i.e. ourselves)."
+msgstr "The user connected to voice (i.e. ourselves)."
+
+msgid "Latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+msgstr "Latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+
+msgid "This could be referred to as the Discord Voice WebSocket latency and is an analogue of user's voice latencies as seen in the Discord client."
+msgstr "This could be referred to as the Discord Voice WebSocket latency and is an analogue of user's voice latencies as seen in the Discord client."
+
+msgid "Average of most recent 20 HEARTBEAT latencies in seconds."
+msgstr "Average of most recent 20 HEARTBEAT latencies in seconds."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Disconnects this voice client from voice."
+msgstr "Disconnects this voice client from voice."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "Moves you to a different voice channel."
+msgstr "Moves you to a different voice channel."
+
+msgid "The channel to move to. Must be a voice channel."
+msgstr "The channel to move to. Must be a voice channel."
+
+msgid "Indicates if the voice client is connected to voice."
+msgstr "Indicates if the voice client is connected to voice."
+
+msgid ":py:class:`bool`"
+msgstr ":py:class:`bool`"
+
+msgid "Plays an :class:`AudioSource`."
+msgstr "Plays an :class:`AudioSource`."
+
+msgid "The finalizer, ``after`` is called after the source has been exhausted or an error occurred."
+msgstr "The finalizer, ``after`` is called after the source has been exhausted or an error occurred."
+
+msgid "If an error happens while the audio player is running, the exception is caught and the audio player is then stopped. If no after callback is passed, any caught exception will be displayed as if it were raised."
+msgstr "If an error happens while the audio player is running, the exception is caught and the audio player is then stopped. If no after callback is passed, any caught exception will be displayed as if it were raised."
+
+msgid "The audio source we're reading from."
+msgstr "The audio source we're reading from."
+
+msgid "The finalizer that is called after the stream is exhausted. This function must have a single parameter, ``error``, that denotes an optional exception that was raised during playing."
+msgstr "The finalizer that is called after the stream is exhausted. This function must have a single parameter, ``error``, that denotes an optional exception that was raised during playing."
+
+msgid "If True, an awaitable will be returned, which can be used to wait for audio to stop playing. This awaitable will return an exception if raised, or None when no exception is raised.  If False, None is returned and the function does not block.  .. versionadded:: v2.5"
+msgstr "If True, an awaitable will be returned, which can be used to wait for audio to stop playing. This awaitable will return an exception if raised, or None when no exception is raised.  If False, None is returned and the function does not block.  .. versionadded:: v2.5"
+
+msgid "If True, an awaitable will be returned, which can be used to wait for audio to stop playing. This awaitable will return an exception if raised, or None when no exception is raised."
+msgstr "If True, an awaitable will be returned, which can be used to wait for audio to stop playing. This awaitable will return an exception if raised, or None when no exception is raised."
+
+msgid "If False, None is returned and the function does not block."
+msgstr "If False, None is returned and the function does not block."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "Already playing audio or not connected."
+msgstr "Already playing audio or not connected."
+
+msgid "Source is not a :class:`AudioSource` or after is not a callable."
+msgstr "Source is not a :class:`AudioSource` or after is not a callable."
+
+msgid "Source is not opus encoded and opus is not loaded."
+msgstr "Source is not opus encoded and opus is not loaded."
+
+msgid ":py:data:`~typing.Optional`\\[:py:class:`~_asyncio.Future`]"
+msgstr ":py:data:`~typing.Optional`\\[:py:class:`~_asyncio.Future`]"
+
+msgid "Takes an audio packet received from Discord and decodes it into pcm audio data. If there are no users talking in the channel, `None` will be returned."
+msgstr "Takes an audio packet received from Discord and decodes it into pcm audio data. If there are no users talking in the channel, `None` will be returned."
+
+msgid "You must be connected to receive audio."
+msgstr "You must be connected to receive audio."
+
+msgid "Bytes received by Discord via the UDP connection used for sending and receiving voice data."
+msgstr "Bytes received by Discord via the UDP connection used for sending and receiving voice data."
+
+msgid "The bot will begin recording audio from the current voice channel it is in. This function uses a thread so the current code line will not be stopped. Must be in a voice channel to use. Must not be already recording."
+msgstr "The bot will begin recording audio from the current voice channel it is in. This function uses a thread so the current code line will not be stopped. Must be in a voice channel to use. Must not be already recording."
+
+msgid "A Sink which will \"store\" all the audio data."
+msgstr "A Sink which will \"store\" all the audio data."
+
+msgid "A function which is called after the bot has stopped recording."
+msgstr "A function which is called after the bot has stopped recording."
+
+msgid "Args which will be passed to the callback function."
+msgstr "Args which will be passed to the callback function."
+
+msgid "If True, the recordings of subsequent users will start with silence. This is useful for recording audio just as it was heard."
+msgstr "If True, the recordings of subsequent users will start with silence. This is useful for recording audio just as it was heard."
+
+msgid "Not connected to a voice channel."
+msgstr "Not connected to a voice channel."
+
+msgid "Already recording."
+msgstr "Already recording."
+
+msgid "Must provide a Sink object."
+msgstr "Must provide a Sink object."
+
+msgid "Stops the recording. Must be already recording."
+msgstr "Stops the recording. Must be already recording."
+
+msgid "Not currently recording."
+msgstr "Not currently recording."
+
+msgid "Pauses or unpauses the recording. Must be already recording."
+msgstr "Pauses or unpauses the recording. Must be already recording."
+
+msgid "Indicates if we're currently playing audio."
+msgstr "Indicates if we're currently playing audio."
+
+msgid "Indicates if we're playing audio, but if we're paused."
+msgstr "Indicates if we're playing audio, but if we're paused."
+
+msgid "Stops playing audio."
+msgstr "Stops playing audio."
+
+msgid "Pauses the audio playing."
+msgstr "Pauses the audio playing."
+
+msgid "Resumes the audio playing."
+msgstr "Resumes the audio playing."
+
+msgid "The audio source being played, if playing."
+msgstr "The audio source being played, if playing."
+
+msgid "This property can also be used to change the audio source currently being played."
+msgstr "This property can also be used to change the audio source currently being played."
+
+msgid "Sends an audio packet composed of the data."
+msgstr "Sends an audio packet composed of the data."
+
+msgid "You must be connected to play audio."
+msgstr "You must be connected to play audio."
+
+msgid "The :term:`py:bytes-like object` denoting PCM or Opus voice data."
+msgstr "The :term:`py:bytes-like object` denoting PCM or Opus voice data."
+
+msgid "Indicates if ``data`` should be encoded into Opus."
+msgstr "Indicates if ``data`` should be encoded into Opus."
+
+msgid "You are not connected."
+msgstr "You are not connected."
+
+msgid "Encoding the data failed."
+msgstr "Encoding the data failed."
+
+msgid "A class that represents the Discord voice protocol."
+msgstr "A class that represents the Discord voice protocol."
+
+msgid "This is an abstract class. The library provides a concrete implementation under :class:`VoiceClient`."
+msgstr "This is an abstract class. The library provides a concrete implementation under :class:`VoiceClient`."
+
+msgid "This class allows you to implement a protocol to allow for an external method of sending voice, such as Lavalink_ or a native library implementation."
+msgstr "This class allows you to implement a protocol to allow for an external method of sending voice, such as Lavalink_ or a native library implementation."
+
+msgid "These classes are passed to :meth:`abc.Connectable.connect <VoiceChannel.connect>`."
+msgstr "These classes are passed to :meth:`abc.Connectable.connect <VoiceChannel.connect>`."
+
+msgid "The client (or its subclasses) that started the connection request."
+msgstr "The client (or its subclasses) that started the connection request."
+
+msgid "The voice channel that is being connected to."
+msgstr "The voice channel that is being connected to."
+
+msgid "An abstract method that is called when the client's voice state has changed. This corresponds to ``VOICE_STATE_UPDATE``."
+msgstr "An abstract method that is called when the client's voice state has changed. This corresponds to ``VOICE_STATE_UPDATE``."
+
+msgid "The raw `voice state payload`__.  .. _voice_state_update_payload: https://discord.com/developers/docs/resources/voice#voice-state-object  __ voice_state_update_payload_"
+msgstr "The raw `voice state payload`__.  .. _voice_state_update_payload: https://discord.com/developers/docs/resources/voice#voice-state-object  __ voice_state_update_payload_"
+
+msgid "The raw `voice state payload`__."
+msgstr "The raw `voice state payload`__."
+
+msgid "An abstract method that is called when initially connecting to voice. This corresponds to ``VOICE_SERVER_UPDATE``."
+msgstr "An abstract method that is called when initially connecting to voice. This corresponds to ``VOICE_SERVER_UPDATE``."
+
+msgid "The raw `voice server update payload`__.  .. _voice_server_update_payload: https://discord.com/developers/docs/topics/gateway#voice-server-update-voice-server-update-event-fields  __ voice_server_update_payload_"
+msgstr "The raw `voice server update payload`__.  .. _voice_server_update_payload: https://discord.com/developers/docs/topics/gateway#voice-server-update-voice-server-update-event-fields  __ voice_server_update_payload_"
+
+msgid "The raw `voice server update payload`__."
+msgstr "The raw `voice server update payload`__."
+
+msgid "An abstract method called when the client initiates the connection request."
+msgstr "An abstract method called when the client initiates the connection request."
+
+msgid "When a connection is requested initially, the library calls the constructor under ``__init__`` and then calls :meth:`connect`. If :meth:`connect` fails at some point then :meth:`disconnect` is called."
+msgstr "When a connection is requested initially, the library calls the constructor under ``__init__`` and then calls :meth:`connect`. If :meth:`connect` fails at some point then :meth:`disconnect` is called."
+
+msgid "Within this method, to start the voice connection flow it is recommended to use :meth:`Guild.change_voice_state` to start the flow. After which, :meth:`on_voice_server_update` and :meth:`on_voice_state_update` will be called. The order that these two are called is unspecified."
+msgstr "Within this method, to start the voice connection flow it is recommended to use :meth:`Guild.change_voice_state` to start the flow. After which, :meth:`on_voice_server_update` and :meth:`on_voice_state_update` will be called. The order that these two are called is unspecified."
+
+msgid "The timeout for the connection."
+msgstr "The timeout for the connection."
+
+msgid "Whether reconnection is expected."
+msgstr "Whether reconnection is expected."
+
+msgid "An abstract method called when the client terminates the connection."
+msgstr "An abstract method called when the client terminates the connection."
+
+msgid "See :meth:`cleanup`."
+msgstr "See :meth:`cleanup`."
+
+msgid "Whether the disconnection was forced."
+msgstr "Whether the disconnection was forced."
+
+msgid "This method *must* be called to ensure proper clean-up during a disconnect."
+msgstr "This method *must* be called to ensure proper clean-up during a disconnect."
+
+msgid "It is advisable to call this from within :meth:`disconnect` when you are completely done with the voice protocol instance."
+msgstr "It is advisable to call this from within :meth:`disconnect` when you are completely done with the voice protocol instance."
+
+msgid "This method removes it from the internal state cache that keeps track of currently alive voice clients. Failure to clean-up will cause subsequent connections to report that it's still connected."
+msgstr "This method removes it from the internal state cache that keeps track of currently alive voice clients. Failure to clean-up will cause subsequent connections to report that it's still connected."
+
+msgid "Represents an audio stream."
+msgstr "Represents an audio stream."
+
+msgid "The audio stream can be Opus encoded or not, however if the audio stream is not Opus encoded then the audio format must be 16-bit 48KHz stereo PCM."
+msgstr "The audio stream can be Opus encoded or not, however if the audio stream is not Opus encoded then the audio format must be 16-bit 48KHz stereo PCM."
+
+msgid "The audio source reads are done in a separate thread."
+msgstr "The audio source reads are done in a separate thread."
+
+msgid "Reads 20ms worth of audio."
+msgstr "Reads 20ms worth of audio."
+
+msgid "Subclasses must implement this."
+msgstr "Subclasses must implement this."
+
+msgid "If the audio is complete, then returning an empty :term:`py:bytes-like object` to signal this is the way to do so."
+msgstr "If the audio is complete, then returning an empty :term:`py:bytes-like object` to signal this is the way to do so."
+
+msgid "If :meth:`~AudioSource.is_opus` method returns ``True``, then it must return 20ms worth of Opus encoded audio. Otherwise, it must be 20ms worth of 16-bit 48KHz stereo PCM, which is about 3,840 bytes per frame (20ms worth of audio)."
+msgstr "If :meth:`~AudioSource.is_opus` method returns ``True``, then it must return 20ms worth of Opus encoded audio. Otherwise, it must be 20ms worth of 16-bit 48KHz stereo PCM, which is about 3,840 bytes per frame (20ms worth of audio)."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "A bytes like object that represents the PCM or Opus data."
+msgstr "A bytes like object that represents the PCM or Opus data."
+
+msgid ":class:`bytes`"
+msgstr ":class:`bytes`"
+
+msgid "Checks if the audio source is already encoded in Opus."
+msgstr "Checks if the audio source is already encoded in Opus."
+
+msgid "Called when clean-up is needed to be done."
+msgstr "Called when clean-up is needed to be done."
+
+msgid "Useful for clearing buffer data or processes after it is done playing audio."
+msgstr "Useful for clearing buffer data or processes after it is done playing audio."
+
+msgid "Represents raw 16-bit 48KHz stereo PCM audio source."
+msgstr "Represents raw 16-bit 48KHz stereo PCM audio source."
+
+msgid "A file-like object that reads byte data representing raw PCM."
+msgstr "A file-like object that reads byte data representing raw PCM."
+
+msgid ":term:`py:file object`"
+msgstr ":term:`py:file object`"
+
+msgid "Represents an FFmpeg (or AVConv) based AudioSource."
+msgstr "Represents an FFmpeg (or AVConv) based AudioSource."
+
+msgid "User created AudioSources using FFmpeg differently from how :class:`FFmpegPCMAudio` and :class:`FFmpegOpusAudio` work should subclass this."
+msgstr "User created AudioSources using FFmpeg differently from how :class:`FFmpegPCMAudio` and :class:`FFmpegOpusAudio` work should subclass this."
+
+msgid "An audio source from FFmpeg (or AVConv)."
+msgstr "An audio source from FFmpeg (or AVConv)."
+
+msgid "This launches a sub-process to a specific input file given."
+msgstr "This launches a sub-process to a specific input file given."
+
+msgid "You must have the ffmpeg or avconv executable in your path environment variable in order for this to work."
+msgstr "You must have the ffmpeg or avconv executable in your path environment variable in order for this to work."
+
+msgid "The input that ffmpeg will take and convert to PCM bytes. If ``pipe`` is ``True`` then this is a file-like object that is passed to the stdin of ffmpeg."
+msgstr "The input that ffmpeg will take and convert to PCM bytes. If ``pipe`` is ``True`` then this is a file-like object that is passed to the stdin of ffmpeg."
+
+msgid "The executable name (and path) to use. Defaults to ``ffmpeg``."
+msgstr "The executable name (and path) to use. Defaults to ``ffmpeg``."
+
+msgid "If ``True``, denotes that ``source`` parameter will be passed to the stdin of ffmpeg. Defaults to ``False``."
+msgstr "If ``True``, denotes that ``source`` parameter will be passed to the stdin of ffmpeg. Defaults to ``False``."
+
+msgid "A file-like object to pass to the Popen constructor. Could also be an instance of ``subprocess.PIPE``."
+msgstr "A file-like object to pass to the Popen constructor. Could also be an instance of ``subprocess.PIPE``."
+
+msgid "Extra command line arguments to pass to ffmpeg before the ``-i`` flag."
+msgstr "Extra command line arguments to pass to ffmpeg before the ``-i`` flag."
+
+msgid "Extra command line arguments to pass to ffmpeg after the ``-i`` flag."
+msgstr "Extra command line arguments to pass to ffmpeg after the ``-i`` flag."
+
+msgid "The subprocess failed to be created."
+msgstr "The subprocess failed to be created."
+
+msgid "This launches a sub-process to a specific input file given.  However, rather than producing PCM packets like :class:`FFmpegPCMAudio` does that need to be encoded to Opus, this class produces Opus packets, skipping the encoding step done by the library."
+msgstr "This launches a sub-process to a specific input file given.  However, rather than producing PCM packets like :class:`FFmpegPCMAudio` does that need to be encoded to Opus, this class produces Opus packets, skipping the encoding step done by the library."
+
+msgid "Alternatively, instead of instantiating this class directly, you can use :meth:`FFmpegOpusAudio.from_probe` to probe for bitrate and codec information.  This can be used to opportunistically skip pointless re-encoding of existing Opus audio data for a boost in performance at the cost of a short initial delay to gather the information. The same can be achieved by passing ``copy`` to the ``codec`` parameter, but only if you know that the input source is Opus encoded beforehand."
+msgstr "Alternatively, instead of instantiating this class directly, you can use :meth:`FFmpegOpusAudio.from_probe` to probe for bitrate and codec information.  This can be used to opportunistically skip pointless re-encoding of existing Opus audio data for a boost in performance at the cost of a short initial delay to gather the information. The same can be achieved by passing ``copy`` to the ``codec`` parameter, but only if you know that the input source is Opus encoded beforehand."
+
+msgid "The input that ffmpeg will take and convert to Opus bytes. If ``pipe`` is ``True`` then this is a file-like object that is passed to the stdin of ffmpeg."
+msgstr "The input that ffmpeg will take and convert to Opus bytes. If ``pipe`` is ``True`` then this is a file-like object that is passed to the stdin of ffmpeg."
+
+msgid "The bitrate in kbps to encode the output to.  Defaults to ``128``."
+msgstr "The bitrate in kbps to encode the output to.  Defaults to ``128``."
+
+msgid "The codec to use to encode the audio data.  Normally this would be just ``libopus``, but is used by :meth:`FFmpegOpusAudio.from_probe` to opportunistically skip pointlessly re-encoding Opus audio data by passing ``copy`` as the codec value.  Any values other than ``copy``, ``opus``, or ``libopus`` will be considered ``libopus``.  Defaults to ``libopus``.  .. warning::      Do not provide this parameter unless you are certain that the audio input is     already Opus encoded.  For typical use :meth:`FFmpegOpusAudio.from_probe`     should be used to determine the proper value for this parameter."
+msgstr "The codec to use to encode the audio data.  Normally this would be just ``libopus``, but is used by :meth:`FFmpegOpusAudio.from_probe` to opportunistically skip pointlessly re-encoding Opus audio data by passing ``copy`` as the codec value.  Any values other than ``copy``, ``opus``, or ``libopus`` will be considered ``libopus``.  Defaults to ``libopus``.  .. warning::      Do not provide this parameter unless you are certain that the audio input is     already Opus encoded.  For typical use :meth:`FFmpegOpusAudio.from_probe`     should be used to determine the proper value for this parameter."
+
+msgid "The codec to use to encode the audio data.  Normally this would be just ``libopus``, but is used by :meth:`FFmpegOpusAudio.from_probe` to opportunistically skip pointlessly re-encoding Opus audio data by passing ``copy`` as the codec value.  Any values other than ``copy``, ``opus``, or ``libopus`` will be considered ``libopus``.  Defaults to ``libopus``."
+msgstr "The codec to use to encode the audio data.  Normally this would be just ``libopus``, but is used by :meth:`FFmpegOpusAudio.from_probe` to opportunistically skip pointlessly re-encoding Opus audio data by passing ``copy`` as the codec value.  Any values other than ``copy``, ``opus``, or ``libopus`` will be considered ``libopus``.  Defaults to ``libopus``."
+
+msgid "Do not provide this parameter unless you are certain that the audio input is already Opus encoded.  For typical use :meth:`FFmpegOpusAudio.from_probe` should be used to determine the proper value for this parameter."
+msgstr "Do not provide this parameter unless you are certain that the audio input is already Opus encoded.  For typical use :meth:`FFmpegOpusAudio.from_probe` should be used to determine the proper value for this parameter."
+
+msgid "A factory method that creates a :class:`FFmpegOpusAudio` after probing the input source for audio codec and bitrate information."
+msgstr "A factory method that creates a :class:`FFmpegOpusAudio` after probing the input source for audio codec and bitrate information."
+
+msgid "Identical to the ``source`` parameter for the constructor."
+msgstr "Identical to the ``source`` parameter for the constructor."
+
+msgid "The probing method used to determine bitrate and codec information. As a string, valid values are ``native`` to use ffprobe (or avprobe) and ``fallback`` to use ffmpeg (or avconv).  As a callable, it must take two string arguments, ``source`` and ``executable``.  Both parameters are the same values passed to this factory function. ``executable`` will default to ``ffmpeg`` if not provided as a keyword argument."
+msgstr "The probing method used to determine bitrate and codec information. As a string, valid values are ``native`` to use ffprobe (or avprobe) and ``fallback`` to use ffmpeg (or avconv).  As a callable, it must take two string arguments, ``source`` and ``executable``.  Both parameters are the same values passed to this factory function. ``executable`` will default to ``ffmpeg`` if not provided as a keyword argument."
+
+msgid "The remaining parameters to be passed to the :class:`FFmpegOpusAudio` constructor, excluding ``bitrate`` and ``codec``."
+msgstr "The remaining parameters to be passed to the :class:`FFmpegOpusAudio` constructor, excluding ``bitrate`` and ``codec``."
+
+msgid "An instance of this class."
+msgstr "An instance of this class."
+
+msgid ":class:`FFmpegOpusAudio`"
+msgstr ":class:`FFmpegOpusAudio`"
+
+msgid "Invalid probe method, must be ``'native'`` or ``'fallback'``."
+msgstr "Invalid probe method, must be ``'native'`` or ``'fallback'``."
+
+msgid "Invalid value for ``probe`` parameter, must be :class:`str` or a callable."
+msgstr "Invalid value for ``probe`` parameter, must be :class:`str` or a callable."
+
+msgid "Examples"
+msgstr "Examples"
+
+msgid "Use this function to create an :class:`FFmpegOpusAudio` instance instead of the constructor: ::"
+msgstr "Use this function to create an :class:`FFmpegOpusAudio` instance instead of the constructor: ::"
+
+msgid "If you are on Windows and don't have ffprobe installed, use the ``fallback`` method to probe using ffmpeg instead: ::"
+msgstr "If you are on Windows and don't have ffprobe installed, use the ``fallback`` method to probe using ffmpeg instead: ::"
+
+msgid "Using a custom method of determining codec and bitrate: ::"
+msgstr "Using a custom method of determining codec and bitrate: ::"
+
+msgid "Probes the input source for bitrate and codec information."
+msgstr "Probes the input source for bitrate and codec information."
+
+msgid "Identical to the ``source`` parameter for :class:`FFmpegOpusAudio`."
+msgstr "Identical to the ``source`` parameter for :class:`FFmpegOpusAudio`."
+
+msgid "Identical to the ``method`` parameter for :meth:`FFmpegOpusAudio.from_probe`."
+msgstr "Identical to the ``method`` parameter for :meth:`FFmpegOpusAudio.from_probe`."
+
+msgid "Identical to the ``executable`` parameter for :class:`FFmpegOpusAudio`."
+msgstr "Identical to the ``executable`` parameter for :class:`FFmpegOpusAudio`."
+
+msgid "A 2-tuple with the codec and bitrate of the input source."
+msgstr "A 2-tuple with the codec and bitrate of the input source."
+
+msgid "Optional[Tuple[Optional[:class:`str`], Optional[:class:`int`]]]"
+msgstr "Optional[Tuple[Optional[:class:`str`], Optional[:class:`int`]]]"
+
+msgid "Transforms a previous :class:`AudioSource` to have volume controls."
+msgstr "Transforms a previous :class:`AudioSource` to have volume controls."
+
+msgid "This does not work on audio sources that have :meth:`AudioSource.is_opus` set to ``True``."
+msgstr "This does not work on audio sources that have :meth:`AudioSource.is_opus` set to ``True``."
+
+msgid "The original AudioSource to transform."
+msgstr "The original AudioSource to transform."
+
+msgid "The initial volume to set it to. See :attr:`volume` for more info."
+msgstr "The initial volume to set it to. See :attr:`volume` for more info."
+
+msgid "Not an audio source."
+msgstr "Not an audio source."
+
+msgid "The audio source is opus encoded."
+msgstr "The audio source is opus encoded."
+
+msgid "Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%)."
+msgstr "Retrieves or sets the volume as a floating point percentage (e.g. ``1.0`` for 100%)."
+
+msgid "Opus Library"
+msgstr "Opus Library"
+
+msgid "Loads the libopus shared library for use with voice."
+msgstr "Loads the libopus shared library for use with voice."
+
+msgid "If this function is not called then the library uses the function :func:`ctypes.util.find_library` and then loads that one if available."
+msgstr "If this function is not called then the library uses the function :func:`ctypes.util.find_library` and then loads that one if available."
+
+msgid "Not loading a library and attempting to use PCM based AudioSources will lead to voice not working."
+msgstr "Not loading a library and attempting to use PCM based AudioSources will lead to voice not working."
+
+msgid "This function propagates the exceptions thrown."
+msgstr "This function propagates the exceptions thrown."
+
+msgid "The bitness of the library must match the bitness of your python interpreter. If the library is 64-bit then your python interpreter must be 64-bit as well. Usually if there's a mismatch in bitness then the load will throw an exception."
+msgstr "The bitness of the library must match the bitness of your python interpreter. If the library is 64-bit then your python interpreter must be 64-bit as well. Usually if there's a mismatch in bitness then the load will throw an exception."
+
+msgid "On Windows, this function should not need to be called as the binaries are automatically loaded."
+msgstr "On Windows, this function should not need to be called as the binaries are automatically loaded."
+
+msgid "On Windows, the .dll extension is not necessary. However, on Linux the full extension is required to load the library, e.g. ``libopus.so.1``. On Linux however, :func:`ctypes.util.find_library` will usually find the library automatically without you having to call this."
+msgstr "On Windows, the .dll extension is not necessary. However, on Linux the full extension is required to load the library, e.g. ``libopus.so.1``. On Linux however, :func:`ctypes.util.find_library` will usually find the library automatically without you having to call this."
+
+msgid "The filename of the shared library."
+msgstr "The filename of the shared library."
+
+msgid "Function to check if opus lib is successfully loaded either via the :func:`ctypes.util.find_library` call of :func:`load_opus`."
+msgstr "Function to check if opus lib is successfully loaded either via the :func:`ctypes.util.find_library` call of :func:`load_opus`."
+
+msgid "This must return ``True`` for voice to work."
+msgstr "This must return ``True`` for voice to work."
+
+msgid "Indicates if the opus library has been loaded."
+msgstr "Indicates if the opus library has been loaded."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+

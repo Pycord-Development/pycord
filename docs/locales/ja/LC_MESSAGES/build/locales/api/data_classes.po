@@ -1,0 +1,2896 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Data Classes"
+msgstr "Data Classes"
+
+msgid "Some classes are just there to be data containers, this lists them."
+msgstr "Some classes are just there to be data containers, this lists them."
+
+msgid "Unlike :ref:`models <discord_api_models>` you are allowed to create most of these yourself, even if they can also be used to hold attributes."
+msgstr "Unlike :ref:`models <discord_api_models>` you are allowed to create most of these yourself, even if they can also be used to hold attributes."
+
+msgid "Nearly all classes here have :ref:`py:slots` defined which means that it is impossible to have dynamic attributes to the data classes."
+msgstr "Nearly all classes here have :ref:`py:slots` defined which means that it is impossible to have dynamic attributes to the data classes."
+
+msgid "The only exception to this rule is :class:`Object`, which is made with dynamic attributes in mind."
+msgstr "The only exception to this rule is :class:`Object`, which is made with dynamic attributes in mind."
+
+msgid "Represents a generic Discord object."
+msgstr "Represents a generic Discord object."
+
+msgid "The purpose of this class is to allow you to create 'miniature' versions of data classes if you want to pass in just an ID. Most functions that take in a specific data class with an ID can also take in this class as a substitute instead. Note that even though this is the case, not all objects (if any) actually inherit from this class."
+msgstr "The purpose of this class is to allow you to create 'miniature' versions of data classes if you want to pass in just an ID. Most functions that take in a specific data class with an ID can also take in this class as a substitute instead. Note that even though this is the case, not all objects (if any) actually inherit from this class."
+
+msgid "There are also some cases where some WebSocket events are received in :dpy-issue:`strange order <21>` and when such events happened you would receive this class rather than the actual data class. These cases are extremely rare."
+msgstr "There are also some cases where some WebSocket events are received in :dpy-issue:`strange order <21>` and when such events happened you would receive this class rather than the actual data class. These cases are extremely rare."
+
+msgid "Checks if two objects are equal."
+msgstr "Checks if two objects are equal."
+
+msgid "Checks if two objects are not equal."
+msgstr "Checks if two objects are not equal."
+
+msgid "Returns the object's hash."
+msgstr "Returns the object's hash."
+
+msgid "The ID of the object."
+msgstr "The ID of the object."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "Returns the snowflake's creation time in UTC."
+msgstr "Returns the snowflake's creation time in UTC."
+
+msgid "Returns the worker id that made the snowflake."
+msgstr "Returns the worker id that made the snowflake."
+
+msgid "Returns the process id that made the snowflake."
+msgstr "Returns the process id that made the snowflake."
+
+msgid "Returns the increment id that made the snowflake."
+msgstr "Returns the increment id that made the snowflake."
+
+msgid "Represents a :class:`discord.SelectMenu`'s option."
+msgstr "Represents a :class:`discord.SelectMenu`'s option."
+
+msgid "These can be created by users."
+msgstr "These can be created by users."
+
+msgid "The label of the option. This is displayed to users. Can only be up to 100 characters."
+msgstr "The label of the option. This is displayed to users. Can only be up to 100 characters."
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The value of the option. This is not displayed to users. If not provided when constructed then it defaults to the label. Can only be up to 100 characters."
+msgstr "The value of the option. This is not displayed to users. If not provided when constructed then it defaults to the label. Can only be up to 100 characters."
+
+msgid "An additional description of the option, if any. Can only be up to 100 characters."
+msgstr "An additional description of the option, if any. Can only be up to 100 characters."
+
+msgid "Optional[:class:`str`]"
+msgstr "Optional[:class:`str`]"
+
+msgid "Whether this option is selected by default."
+msgstr "Whether this option is selected by default."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "The emoji of the option, if available."
+msgstr "The emoji of the option, if available."
+
+msgid "Wraps up a Discord gateway intent flag."
+msgstr "Wraps up a Discord gateway intent flag."
+
+msgid "Similar to :class:`Permissions`\\, the properties provided are two way. You can set and retrieve individual bits using the properties as if they were regular bools."
+msgstr "Similar to :class:`Permissions`\\, the properties provided are two way. You can set and retrieve individual bits using the properties as if they were regular bools."
+
+msgid "To construct an object you can pass keyword arguments denoting the flags to enable or disable."
+msgstr "To construct an object you can pass keyword arguments denoting the flags to enable or disable."
+
+msgid "This is used to disable certain gateway features that are unnecessary to run your bot. To make use of this, it is passed to the ``intents`` keyword argument of :class:`Client`."
+msgstr "This is used to disable certain gateway features that are unnecessary to run your bot. To make use of this, it is passed to the ``intents`` keyword argument of :class:`Client`."
+
+msgid "Checks if two flags are equal."
+msgstr "Checks if two flags are equal."
+
+msgid "Checks if two flags are not equal."
+msgstr "Checks if two flags are not equal."
+
+msgid "Adds two flags together. Equivalent to ``x | y``."
+msgstr "Adds two flags together. Equivalent to ``x | y``."
+
+msgid "Subtracts two flags from each other."
+msgstr "Subtracts two flags from each other."
+
+msgid "Returns the union of two flags. Equivalent to ``x + y``."
+msgstr "Returns the union of two flags. Equivalent to ``x + y``."
+
+msgid "Returns the intersection of two flags."
+msgstr "Returns the intersection of two flags."
+
+msgid "Returns the inverse of a flag."
+msgstr "Returns the inverse of a flag."
+
+msgid "Return the flag's hash."
+msgstr "Return the flag's hash."
+
+msgid "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs."
+msgstr "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs."
+
+msgid "The raw value. You should query flags via the properties rather than using this raw value."
+msgstr "The raw value. You should query flags via the properties rather than using this raw value."
+
+msgid "A factory method that creates a :class:`Intents` with everything enabled."
+msgstr "A factory method that creates a :class:`Intents` with everything enabled."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid ":py:class:`~discord.flags.Intents`"
+msgstr ":py:class:`~discord.flags.Intents`"
+
+msgid "A factory method that creates a :class:`Intents` with everything disabled."
+msgstr "A factory method that creates a :class:`Intents` with everything disabled."
+
+msgid "A factory method that creates a :class:`Intents` with everything enabled except :attr:`presences`, :attr:`members`, and :attr:`message_content`."
+msgstr "A factory method that creates a :class:`Intents` with everything enabled except :attr:`presences`, :attr:`members`, and :attr:`message_content`."
+
+msgid "Whether guild related events are enabled."
+msgstr "Whether guild related events are enabled."
+
+msgid "This corresponds to the following events:"
+msgstr "This corresponds to the following events:"
+
+msgid ":func:`on_guild_join`"
+msgstr ":func:`on_guild_join`"
+
+msgid ":func:`on_guild_remove`"
+msgstr ":func:`on_guild_remove`"
+
+msgid ":func:`on_guild_available`"
+msgstr ":func:`on_guild_available`"
+
+msgid ":func:`on_guild_unavailable`"
+msgstr ":func:`on_guild_unavailable`"
+
+msgid ":func:`on_guild_channel_update`"
+msgstr ":func:`on_guild_channel_update`"
+
+msgid ":func:`on_guild_channel_create`"
+msgstr ":func:`on_guild_channel_create`"
+
+msgid ":func:`on_guild_channel_delete`"
+msgstr ":func:`on_guild_channel_delete`"
+
+msgid ":func:`on_guild_channel_pins_update`"
+msgstr ":func:`on_guild_channel_pins_update`"
+
+msgid "This also corresponds to the following attributes and classes in terms of cache:"
+msgstr "This also corresponds to the following attributes and classes in terms of cache:"
+
+msgid ":attr:`Client.guilds`"
+msgstr ":attr:`Client.guilds`"
+
+msgid ":class:`Guild` and all its attributes."
+msgstr ":class:`Guild` and all its attributes."
+
+msgid ":meth:`Client.get_channel`"
+msgstr ":meth:`Client.get_channel`"
+
+msgid ":meth:`Client.get_all_channels`"
+msgstr ":meth:`Client.get_all_channels`"
+
+msgid "It is highly advisable to leave this intent enabled for your bot to function."
+msgstr "It is highly advisable to leave this intent enabled for your bot to function."
+
+msgid "Whether guild member related events are enabled."
+msgstr "Whether guild member related events are enabled."
+
+msgid ":func:`on_member_join`"
+msgstr ":func:`on_member_join`"
+
+msgid ":func:`on_member_remove`"
+msgstr ":func:`on_member_remove`"
+
+msgid ":func:`on_raw_member_remove`"
+msgstr ":func:`on_raw_member_remove`"
+
+msgid ":func:`on_member_update`"
+msgstr ":func:`on_member_update`"
+
+msgid ":func:`on_user_update`"
+msgstr ":func:`on_user_update`"
+
+msgid ":meth:`Client.get_all_members`"
+msgstr ":meth:`Client.get_all_members`"
+
+msgid ":meth:`Client.get_user`"
+msgstr ":meth:`Client.get_user`"
+
+msgid ":meth:`Guild.chunk`"
+msgstr ":meth:`Guild.chunk`"
+
+msgid ":meth:`Guild.fetch_members`"
+msgstr ":meth:`Guild.fetch_members`"
+
+msgid ":meth:`Guild.get_member`"
+msgstr ":meth:`Guild.get_member`"
+
+msgid ":attr:`Guild.members`"
+msgstr ":attr:`Guild.members`"
+
+msgid ":attr:`Member.roles`"
+msgstr ":attr:`Member.roles`"
+
+msgid ":attr:`Member.nick`"
+msgstr ":attr:`Member.nick`"
+
+msgid ":attr:`Member.premium_since`"
+msgstr ":attr:`Member.premium_since`"
+
+msgid ":attr:`User.name`"
+msgstr ":attr:`User.name`"
+
+msgid ":attr:`User.avatar`"
+msgstr ":attr:`User.avatar`"
+
+msgid ":attr:`User.discriminator`"
+msgstr ":attr:`User.discriminator`"
+
+msgid "For more information go to the :ref:`member intent documentation <need_members_intent>`."
+msgstr "For more information go to the :ref:`member intent documentation <need_members_intent>`."
+
+msgid "This intent is privileged, meaning that bots in over 100 guilds that require this intent would need to request this intent on the Developer Portal."
+msgstr "This intent is privileged, meaning that bots in over 100 guilds that require this intent would need to request this intent on the Developer Portal."
+
+msgid "Alias of :attr:`.moderation`."
+msgstr "Alias of :attr:`.moderation`."
+
+msgid "Changed to an alias."
+msgstr "Changed to an alias."
+
+msgid "Whether guild moderation related events are enabled."
+msgstr "Whether guild moderation related events are enabled."
+
+msgid ":func:`on_audit_log_entry`"
+msgstr ":func:`on_audit_log_entry`"
+
+msgid ":func:`on_member_ban`"
+msgstr ":func:`on_member_ban`"
+
+msgid ":func:`on_member_unban`"
+msgstr ":func:`on_member_unban`"
+
+msgid "This does not correspond to any attributes or classes in the library in terms of cache."
+msgstr "This does not correspond to any attributes or classes in the library in terms of cache."
+
+msgid "Alias of :attr:`.emojis_and_stickers`."
+msgstr "Alias of :attr:`.emojis_and_stickers`."
+
+msgid "Whether guild emoji and sticker related events are enabled."
+msgstr "Whether guild emoji and sticker related events are enabled."
+
+msgid ":func:`on_guild_emojis_update`"
+msgstr ":func:`on_guild_emojis_update`"
+
+msgid ":func:`on_guild_stickers_update`"
+msgstr ":func:`on_guild_stickers_update`"
+
+msgid ":class:`Emoji`"
+msgstr ":class:`Emoji`"
+
+msgid ":class:`GuildSticker`"
+msgstr ":class:`GuildSticker`"
+
+msgid ":meth:`Client.get_emoji`"
+msgstr ":meth:`Client.get_emoji`"
+
+msgid ":meth:`Client.get_sticker`"
+msgstr ":meth:`Client.get_sticker`"
+
+msgid ":meth:`Client.emojis`"
+msgstr ":meth:`Client.emojis`"
+
+msgid ":meth:`Client.stickers`"
+msgstr ":meth:`Client.stickers`"
+
+msgid ":attr:`Guild.emojis`"
+msgstr ":attr:`Guild.emojis`"
+
+msgid ":attr:`Guild.stickers`"
+msgstr ":attr:`Guild.stickers`"
+
+msgid "Whether guild integration related events are enabled."
+msgstr "Whether guild integration related events are enabled."
+
+msgid ":func:`on_guild_integrations_update`"
+msgstr ":func:`on_guild_integrations_update`"
+
+msgid ":func:`on_integration_create`"
+msgstr ":func:`on_integration_create`"
+
+msgid ":func:`on_integration_update`"
+msgstr ":func:`on_integration_update`"
+
+msgid ":func:`on_raw_integration_delete`"
+msgstr ":func:`on_raw_integration_delete`"
+
+msgid "Whether guild webhook related events are enabled."
+msgstr "Whether guild webhook related events are enabled."
+
+msgid ":func:`on_webhooks_update`"
+msgstr ":func:`on_webhooks_update`"
+
+msgid "Whether guild invite related events are enabled."
+msgstr "Whether guild invite related events are enabled."
+
+msgid ":func:`on_invite_create`"
+msgstr ":func:`on_invite_create`"
+
+msgid ":func:`on_invite_delete`"
+msgstr ":func:`on_invite_delete`"
+
+msgid "Whether guild voice state related events are enabled."
+msgstr "Whether guild voice state related events are enabled."
+
+msgid ":func:`on_voice_state_update`"
+msgstr ":func:`on_voice_state_update`"
+
+msgid ":attr:`VoiceChannel.members`"
+msgstr ":attr:`VoiceChannel.members`"
+
+msgid ":attr:`VoiceChannel.voice_states`"
+msgstr ":attr:`VoiceChannel.voice_states`"
+
+msgid ":attr:`StageChannel.members`"
+msgstr ":attr:`StageChannel.members`"
+
+msgid ":attr:`StageChannel.speakers`"
+msgstr ":attr:`StageChannel.speakers`"
+
+msgid ":attr:`StageChannel.listeners`"
+msgstr ":attr:`StageChannel.listeners`"
+
+msgid ":attr:`StageChannel.moderators`"
+msgstr ":attr:`StageChannel.moderators`"
+
+msgid ":attr:`StageChannel.voice_states`"
+msgstr ":attr:`StageChannel.voice_states`"
+
+msgid ":attr:`Member.voice`"
+msgstr ":attr:`Member.voice`"
+
+msgid "This intent is required to connect to voice."
+msgstr "This intent is required to connect to voice."
+
+msgid "Whether guild presence related events are enabled."
+msgstr "Whether guild presence related events are enabled."
+
+msgid ":func:`on_presence_update`"
+msgstr ":func:`on_presence_update`"
+
+msgid ":attr:`Member.activities`"
+msgstr ":attr:`Member.activities`"
+
+msgid ":attr:`Member.status`"
+msgstr ":attr:`Member.status`"
+
+msgid ":attr:`Member.raw_status`"
+msgstr ":attr:`Member.raw_status`"
+
+msgid "For more information go to the :ref:`presence intent documentation <need_presence_intent>`."
+msgstr "For more information go to the :ref:`presence intent documentation <need_presence_intent>`."
+
+msgid "Whether guild and direct message related events are enabled."
+msgstr "Whether guild and direct message related events are enabled."
+
+msgid "This is a shortcut to set or get both :attr:`guild_messages` and :attr:`dm_messages`."
+msgstr "This is a shortcut to set or get both :attr:`guild_messages` and :attr:`dm_messages`."
+
+msgid ":func:`on_message` (both guilds and DMs)"
+msgstr ":func:`on_message` (both guilds and DMs)"
+
+msgid ":func:`on_message_edit` (both guilds and DMs)"
+msgstr ":func:`on_message_edit` (both guilds and DMs)"
+
+msgid ":func:`on_message_delete` (both guilds and DMs)"
+msgstr ":func:`on_message_delete` (both guilds and DMs)"
+
+msgid ":func:`on_raw_message_delete` (both guilds and DMs)"
+msgstr ":func:`on_raw_message_delete` (both guilds and DMs)"
+
+msgid ":func:`on_raw_message_edit` (both guilds and DMs)"
+msgstr ":func:`on_raw_message_edit` (both guilds and DMs)"
+
+msgid ":class:`Message`"
+msgstr ":class:`Message`"
+
+msgid ":attr:`Client.cached_messages`"
+msgstr ":attr:`Client.cached_messages`"
+
+msgid ":meth:`Client.get_message`"
+msgstr ":meth:`Client.get_message`"
+
+msgid ":attr:`Client.polls`"
+msgstr ":attr:`Client.polls`"
+
+msgid ":meth:`Client.get_poll`"
+msgstr ":meth:`Client.get_poll`"
+
+msgid "Note that due to an implicit relationship this also corresponds to the following events:"
+msgstr "Note that due to an implicit relationship this also corresponds to the following events:"
+
+msgid ":func:`on_reaction_add` (both guilds and DMs)"
+msgstr ":func:`on_reaction_add` (both guilds and DMs)"
+
+msgid ":func:`on_reaction_remove` (both guilds and DMs)"
+msgstr ":func:`on_reaction_remove` (both guilds and DMs)"
+
+msgid ":func:`on_reaction_clear` (both guilds and DMs)"
+msgstr ":func:`on_reaction_clear` (both guilds and DMs)"
+
+msgid ":attr:`message_content` is required to receive the actual content of guild messages."
+msgstr ":attr:`message_content` is required to receive the actual content of guild messages."
+
+msgid "Whether guild message related events are enabled."
+msgstr "Whether guild message related events are enabled."
+
+msgid "See also :attr:`dm_messages` for DMs or :attr:`messages` for both."
+msgstr "See also :attr:`dm_messages` for DMs or :attr:`messages` for both."
+
+msgid ":func:`on_message` (only for guilds)"
+msgstr ":func:`on_message` (only for guilds)"
+
+msgid ":func:`on_message_edit` (only for guilds)"
+msgstr ":func:`on_message_edit` (only for guilds)"
+
+msgid ":func:`on_message_delete` (only for guilds)"
+msgstr ":func:`on_message_delete` (only for guilds)"
+
+msgid ":func:`on_raw_message_delete` (only for guilds)"
+msgstr ":func:`on_raw_message_delete` (only for guilds)"
+
+msgid ":func:`on_raw_message_edit` (only for guilds)"
+msgstr ":func:`on_raw_message_edit` (only for guilds)"
+
+msgid ":attr:`Client.cached_messages` (only for guilds)"
+msgstr ":attr:`Client.cached_messages` (only for guilds)"
+
+msgid ":meth:`Client.get_message` (only for guilds)"
+msgstr ":meth:`Client.get_message` (only for guilds)"
+
+msgid ":attr:`Client.polls` (only for guilds)"
+msgstr ":attr:`Client.polls` (only for guilds)"
+
+msgid ":meth:`Client.get_poll` (only for guilds)"
+msgstr ":meth:`Client.get_poll` (only for guilds)"
+
+msgid ":func:`on_reaction_add` (only for guilds)"
+msgstr ":func:`on_reaction_add` (only for guilds)"
+
+msgid ":func:`on_reaction_remove` (only for guilds)"
+msgstr ":func:`on_reaction_remove` (only for guilds)"
+
+msgid ":func:`on_reaction_clear` (only for guilds)"
+msgstr ":func:`on_reaction_clear` (only for guilds)"
+
+msgid "Without the :attr:`message_content` intent enabled, the following fields are either an empty string or empty array:"
+msgstr "Without the :attr:`message_content` intent enabled, the following fields are either an empty string or empty array:"
+
+msgid ":attr:`Message.content`"
+msgstr ":attr:`Message.content`"
+
+msgid ":attr:`Message.embeds`"
+msgstr ":attr:`Message.embeds`"
+
+msgid ":attr:`Message.attachments`"
+msgstr ":attr:`Message.attachments`"
+
+msgid ":attr:`Message.components`"
+msgstr ":attr:`Message.components`"
+
+msgid ":attr:`Message.poll`"
+msgstr ":attr:`Message.poll`"
+
+msgid "For more information go to the :ref:`message content intent documentation <need_message_content_intent>`."
+msgstr "For more information go to the :ref:`message content intent documentation <need_message_content_intent>`."
+
+msgid "Whether direct message related events are enabled."
+msgstr "Whether direct message related events are enabled."
+
+msgid "See also :attr:`guild_messages` for guilds or :attr:`messages` for both."
+msgstr "See also :attr:`guild_messages` for guilds or :attr:`messages` for both."
+
+msgid ":func:`on_message` (only for DMs)"
+msgstr ":func:`on_message` (only for DMs)"
+
+msgid ":func:`on_message_edit` (only for DMs)"
+msgstr ":func:`on_message_edit` (only for DMs)"
+
+msgid ":func:`on_message_delete` (only for DMs)"
+msgstr ":func:`on_message_delete` (only for DMs)"
+
+msgid ":func:`on_raw_message_delete` (only for DMs)"
+msgstr ":func:`on_raw_message_delete` (only for DMs)"
+
+msgid ":func:`on_raw_message_edit` (only for DMs)"
+msgstr ":func:`on_raw_message_edit` (only for DMs)"
+
+msgid ":attr:`Client.cached_messages` (only for DMs)"
+msgstr ":attr:`Client.cached_messages` (only for DMs)"
+
+msgid ":meth:`Client.get_message` (only for DMs)"
+msgstr ":meth:`Client.get_message` (only for DMs)"
+
+msgid ":attr:`Client.polls` (only for DMs)"
+msgstr ":attr:`Client.polls` (only for DMs)"
+
+msgid ":meth:`Client.get_poll` (only for DMs)"
+msgstr ":meth:`Client.get_poll` (only for DMs)"
+
+msgid ":func:`on_reaction_add` (only for DMs)"
+msgstr ":func:`on_reaction_add` (only for DMs)"
+
+msgid ":func:`on_reaction_remove` (only for DMs)"
+msgstr ":func:`on_reaction_remove` (only for DMs)"
+
+msgid ":func:`on_reaction_clear` (only for DMs)"
+msgstr ":func:`on_reaction_clear` (only for DMs)"
+
+msgid "Whether guild and direct message reaction related events are enabled."
+msgstr "Whether guild and direct message reaction related events are enabled."
+
+msgid "This is a shortcut to set or get both :attr:`guild_reactions` and :attr:`dm_reactions`."
+msgstr "This is a shortcut to set or get both :attr:`guild_reactions` and :attr:`dm_reactions`."
+
+msgid ":func:`on_raw_reaction_add` (both guilds and DMs)"
+msgstr ":func:`on_raw_reaction_add` (both guilds and DMs)"
+
+msgid ":func:`on_raw_reaction_remove` (both guilds and DMs)"
+msgstr ":func:`on_raw_reaction_remove` (both guilds and DMs)"
+
+msgid ":func:`on_raw_reaction_clear` (both guilds and DMs)"
+msgstr ":func:`on_raw_reaction_clear` (both guilds and DMs)"
+
+msgid ":attr:`Message.reactions` (both guild and DM messages)"
+msgstr ":attr:`Message.reactions` (both guild and DM messages)"
+
+msgid "Whether guild message reaction related events are enabled."
+msgstr "Whether guild message reaction related events are enabled."
+
+msgid "See also :attr:`dm_reactions` for DMs or :attr:`reactions` for both."
+msgstr "See also :attr:`dm_reactions` for DMs or :attr:`reactions` for both."
+
+msgid ":func:`on_raw_reaction_add` (only for guilds)"
+msgstr ":func:`on_raw_reaction_add` (only for guilds)"
+
+msgid ":func:`on_raw_reaction_remove` (only for guilds)"
+msgstr ":func:`on_raw_reaction_remove` (only for guilds)"
+
+msgid ":func:`on_raw_reaction_clear` (only for guilds)"
+msgstr ":func:`on_raw_reaction_clear` (only for guilds)"
+
+msgid ":attr:`Message.reactions` (only for guild messages)"
+msgstr ":attr:`Message.reactions` (only for guild messages)"
+
+msgid "Whether direct message reaction related events are enabled."
+msgstr "Whether direct message reaction related events are enabled."
+
+msgid "See also :attr:`guild_reactions` for guilds or :attr:`reactions` for both."
+msgstr "See also :attr:`guild_reactions` for guilds or :attr:`reactions` for both."
+
+msgid ":func:`on_raw_reaction_add` (only for DMs)"
+msgstr ":func:`on_raw_reaction_add` (only for DMs)"
+
+msgid ":func:`on_raw_reaction_remove` (only for DMs)"
+msgstr ":func:`on_raw_reaction_remove` (only for DMs)"
+
+msgid ":func:`on_raw_reaction_clear` (only for DMs)"
+msgstr ":func:`on_raw_reaction_clear` (only for DMs)"
+
+msgid ":attr:`Message.reactions` (only for DM messages)"
+msgstr ":attr:`Message.reactions` (only for DM messages)"
+
+msgid "Whether guild and direct message typing related events are enabled."
+msgstr "Whether guild and direct message typing related events are enabled."
+
+msgid "This is a shortcut to set or get both :attr:`guild_typing` and :attr:`dm_typing`."
+msgstr "This is a shortcut to set or get both :attr:`guild_typing` and :attr:`dm_typing`."
+
+msgid ":func:`on_typing` (both guilds and DMs)"
+msgstr ":func:`on_typing` (both guilds and DMs)"
+
+msgid "See also :attr:`dm_typing` for DMs or :attr:`typing` for both."
+msgstr "See also :attr:`dm_typing` for DMs or :attr:`typing` for both."
+
+msgid ":func:`on_typing` (only for guilds)"
+msgstr ":func:`on_typing` (only for guilds)"
+
+msgid "See also :attr:`guild_typing` for guilds or :attr:`typing` for both."
+msgstr "See also :attr:`guild_typing` for guilds or :attr:`typing` for both."
+
+msgid ":func:`on_typing` (only for DMs)"
+msgstr ":func:`on_typing` (only for DMs)"
+
+msgid "Whether the bot will receive message content in guild messages."
+msgstr "Whether the bot will receive message content in guild messages."
+
+msgid "This corresponds to the following attributes:"
+msgstr "This corresponds to the following attributes:"
+
+msgid "These attributes will still be available for messages received from interactions, the bot's own messages, messages the bot was mentioned in, and DMs."
+msgstr "These attributes will still be available for messages received from interactions, the bot's own messages, messages the bot was mentioned in, and DMs."
+
+msgid "As of September 2022 using this intent requires opting in explicitly via the Developer Portal to receive the actual content of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this intent would need to request this intent on the Developer Portal. See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information."
+msgstr "As of September 2022 using this intent requires opting in explicitly via the Developer Portal to receive the actual content of the guild messages. This intent is privileged, meaning that bots in over 100 guilds that require this intent would need to request this intent on the Developer Portal. See https://support-dev.discord.com/hc/en-us/articles/4404772028055 for more information."
+
+msgid "Whether \"scheduled event\" related events are enabled."
+msgstr "Whether \"scheduled event\" related events are enabled."
+
+msgid ":func:`on_scheduled_event_create`"
+msgstr ":func:`on_scheduled_event_create`"
+
+msgid ":func:`on_scheduled_event_update`"
+msgstr ":func:`on_scheduled_event_update`"
+
+msgid ":func:`on_scheduled_event_delete`"
+msgstr ":func:`on_scheduled_event_delete`"
+
+msgid ":func:`on_scheduled_event_user_add`"
+msgstr ":func:`on_scheduled_event_user_add`"
+
+msgid ":func:`on_raw_scheduled_event_user_add`"
+msgstr ":func:`on_raw_scheduled_event_user_add`"
+
+msgid ":func:`on_scheduled_event_user_remove`"
+msgstr ":func:`on_scheduled_event_user_remove`"
+
+msgid ":func:`on_raw_scheduled_event_user_remove`"
+msgstr ":func:`on_raw_scheduled_event_user_remove`"
+
+msgid ":class:`ScheduledEvent`"
+msgstr ":class:`ScheduledEvent`"
+
+msgid ":meth:`Guild.get_scheduled_event`"
+msgstr ":meth:`Guild.get_scheduled_event`"
+
+msgid "Whether guild auto moderation configuration events are enabled."
+msgstr "Whether guild auto moderation configuration events are enabled."
+
+msgid ":func:`on_auto_moderation_rule_create`"
+msgstr ":func:`on_auto_moderation_rule_create`"
+
+msgid ":func:`on_auto_moderation_rule_update`"
+msgstr ":func:`on_auto_moderation_rule_update`"
+
+msgid ":func:`on_auto_moderation_rule_delete`"
+msgstr ":func:`on_auto_moderation_rule_delete`"
+
+msgid "Whether guild auto moderation execution events are enabled."
+msgstr "Whether guild auto moderation execution events are enabled."
+
+msgid ":func:`on_auto_moderation_action_execution`"
+msgstr ":func:`on_auto_moderation_action_execution`"
+
+msgid "Whether poll-related events in guilds are enabled."
+msgstr "Whether poll-related events in guilds are enabled."
+
+msgid "See also :attr:`dm_polls` for DMs or :attr:`polls` for both."
+msgstr "See also :attr:`dm_polls` for DMs or :attr:`polls` for both."
+
+msgid ":func:`on_poll_vote_add` (only for guilds)"
+msgstr ":func:`on_poll_vote_add` (only for guilds)"
+
+msgid ":func:`on_poll_vote_remove` (only for guilds)"
+msgstr ":func:`on_poll_vote_remove` (only for guilds)"
+
+msgid ":func:`on_raw_poll_vote_add` (only for guilds)"
+msgstr ":func:`on_raw_poll_vote_add` (only for guilds)"
+
+msgid ":func:`on_raw_poll_vote_remove` (only for guilds)"
+msgstr ":func:`on_raw_poll_vote_remove` (only for guilds)"
+
+msgid ":attr:`PollAnswer.count` (only for guild polls)"
+msgstr ":attr:`PollAnswer.count` (only for guild polls)"
+
+msgid ":attr:`PollResults.answer_counts` (only for guild polls)"
+msgstr ":attr:`PollResults.answer_counts` (only for guild polls)"
+
+msgid "Whether poll-related events in direct messages are enabled."
+msgstr "Whether poll-related events in direct messages are enabled."
+
+msgid "See also :attr:`guild_polls` for guilds or :attr:`polls` for both."
+msgstr "See also :attr:`guild_polls` for guilds or :attr:`polls` for both."
+
+msgid ":func:`on_poll_vote_add` (only for DMs)"
+msgstr ":func:`on_poll_vote_add` (only for DMs)"
+
+msgid ":func:`on_poll_vote_remove` (only for DMs)"
+msgstr ":func:`on_poll_vote_remove` (only for DMs)"
+
+msgid ":func:`on_raw_poll_vote_add` (only for DMs)"
+msgstr ":func:`on_raw_poll_vote_add` (only for DMs)"
+
+msgid ":func:`on_raw_poll_vote_remove` (only for DMs)"
+msgstr ":func:`on_raw_poll_vote_remove` (only for DMs)"
+
+msgid ":attr:`PollAnswer.count` (only for DM polls)"
+msgstr ":attr:`PollAnswer.count` (only for DM polls)"
+
+msgid ":attr:`PollResults.answer_counts` (only for DM polls)"
+msgstr ":attr:`PollResults.answer_counts` (only for DM polls)"
+
+msgid "Whether poll-related events in guilds and direct messages are enabled."
+msgstr "Whether poll-related events in guilds and direct messages are enabled."
+
+msgid "This is a shortcut to set or get both :attr:`guild_polls` and :attr:`dm_polls`."
+msgstr "This is a shortcut to set or get both :attr:`guild_polls` and :attr:`dm_polls`."
+
+msgid ":func:`on_poll_vote_add` (both guilds and DMs)"
+msgstr ":func:`on_poll_vote_add` (both guilds and DMs)"
+
+msgid ":func:`on_poll_vote_remove` (both guilds and DMs)"
+msgstr ":func:`on_poll_vote_remove` (both guilds and DMs)"
+
+msgid ":func:`on_raw_poll_vote_add` (both guilds and DMs)"
+msgstr ":func:`on_raw_poll_vote_add` (both guilds and DMs)"
+
+msgid ":func:`on_raw_poll_vote_remove` (both guilds and DMs)"
+msgstr ":func:`on_raw_poll_vote_remove` (both guilds and DMs)"
+
+msgid ":attr:`PollAnswer.count` (both guild and DM polls)"
+msgstr ":attr:`PollAnswer.count` (both guild and DM polls)"
+
+msgid ":attr:`PollResults.answer_counts` (both guild and DM polls)"
+msgstr ":attr:`PollResults.answer_counts` (both guild and DM polls)"
+
+msgid "A class that gives information and control over a specific shard."
+msgstr "A class that gives information and control over a specific shard."
+
+msgid "You can retrieve this object via :meth:`AutoShardedClient.get_shard` or :attr:`AutoShardedClient.shards`."
+msgstr "You can retrieve this object via :meth:`AutoShardedClient.get_shard` or :attr:`AutoShardedClient.shards`."
+
+msgid "The shard ID for this shard."
+msgstr "The shard ID for this shard."
+
+msgid "The shard count for this cluster. If this is ``None`` then the bot has not started yet."
+msgstr "The shard count for this cluster. If this is ``None`` then the bot has not started yet."
+
+msgid "Optional[:class:`int`]"
+msgstr "Optional[:class:`int`]"
+
+msgid "Whether the shard connection is currently closed."
+msgstr "Whether the shard connection is currently closed."
+
+msgid ":py:class:`bool`"
+msgstr ":py:class:`bool`"
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Disconnects a shard. When this is called, the shard connection will no longer be open."
+msgstr "Disconnects a shard. When this is called, the shard connection will no longer be open."
+
+msgid "If the shard is already disconnected this does nothing."
+msgstr "If the shard is already disconnected this does nothing."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "Disconnects and then connects the shard again."
+msgstr "Disconnects and then connects the shard again."
+
+msgid "Connects a shard. If the shard is already connected this does nothing."
+msgstr "Connects a shard. If the shard is already connected this does nothing."
+
+msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."
+msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."
+
+msgid "Whether the websocket is currently rate limited."
+msgstr "Whether the websocket is currently rate limited."
+
+msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :py:class:`bool`"
+msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :py:class:`bool`"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "A class that represents what mentions are allowed in a message."
+msgstr "A class that represents what mentions are allowed in a message."
+
+msgid "This class can be set during :class:`Client` initialisation to apply to every message sent. It can also be applied on a per-message basis via :meth:`abc.Messageable.send` for more fine-grained control."
+msgstr "This class can be set during :class:`Client` initialisation to apply to every message sent. It can also be applied on a per-message basis via :meth:`abc.Messageable.send` for more fine-grained control."
+
+msgid "Whether to allow everyone and here mentions. Defaults to ``True``."
+msgstr "Whether to allow everyone and here mentions. Defaults to ``True``."
+
+msgid "Controls the users being mentioned. If ``True`` (the default) then users are mentioned based on the message content. If ``False`` then users are not mentioned at all. If a list of :class:`abc.Snowflake` is given then only the users provided will be mentioned, provided those users are in the message content."
+msgstr "Controls the users being mentioned. If ``True`` (the default) then users are mentioned based on the message content. If ``False`` then users are not mentioned at all. If a list of :class:`abc.Snowflake` is given then only the users provided will be mentioned, provided those users are in the message content."
+
+msgid "Union[:class:`bool`, List[:class:`abc.Snowflake`]]"
+msgstr "Union[:class:`bool`, List[:class:`abc.Snowflake`]]"
+
+msgid "Controls the roles being mentioned. If ``True`` (the default) then roles are mentioned based on the message content. If ``False`` then roles are not mentioned at all. If a list of :class:`abc.Snowflake` is given then only the roles provided will be mentioned, provided those roles are in the message content."
+msgstr "Controls the roles being mentioned. If ``True`` (the default) then roles are mentioned based on the message content. If ``False`` then roles are not mentioned at all. If a list of :class:`abc.Snowflake` is given then only the roles provided will be mentioned, provided those roles are in the message content."
+
+msgid "Whether to mention the author of the message being replied to. Defaults to ``True``."
+msgstr "Whether to mention the author of the message being replied to. Defaults to ``True``."
+
+msgid "A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True`` :rtype: :py:class:`~typing.TypeVar`\\(``A``, bound= AllowedMentions)"
+msgstr "A factory method that returns a :class:`AllowedMentions` with all fields explicitly set to ``True`` :rtype: :py:class:`~typing.TypeVar`\\(``A``, bound= AllowedMentions)"
+
+msgid "A factory method that returns a :class:`AllowedMentions` with all fields set to ``False`` :rtype: :py:class:`~typing.TypeVar`\\(``A``, bound= AllowedMentions)"
+msgstr "A factory method that returns a :class:`AllowedMentions` with all fields set to ``False`` :rtype: :py:class:`~typing.TypeVar`\\(``A``, bound= AllowedMentions)"
+
+msgid "Represents a reference to a :class:`~discord.Message`."
+msgstr "Represents a reference to a :class:`~discord.Message`."
+
+msgid "This class can now be constructed by users."
+msgstr "This class can now be constructed by users."
+
+msgid "The id of the message referenced."
+msgstr "The id of the message referenced."
+
+msgid "The channel id of the message referenced."
+msgstr "The channel id of the message referenced."
+
+msgid "The guild id of the message referenced."
+msgstr "The guild id of the message referenced."
+
+msgid "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message."
+msgstr "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message."
+
+msgid "The message that this reference resolved to. If this is ``None`` then the original message was not fetched either due to the Discord API not attempting to resolve it or it not being available at the time of creation. If the message was resolved at a prior point but has since been deleted then this will be of type :class:`DeletedReferencedMessage`."
+msgstr "The message that this reference resolved to. If this is ``None`` then the original message was not fetched either due to the Discord API not attempting to resolve it or it not being available at the time of creation. If the message was resolved at a prior point but has since been deleted then this will be of type :class:`DeletedReferencedMessage`."
+
+msgid "Currently, this is mainly the replied to message when a user replies to a message."
+msgstr "Currently, this is mainly the replied to message when a user replies to a message."
+
+msgid "Optional[Union[:class:`Message`, :class:`DeletedReferencedMessage`]]"
+msgstr "Optional[Union[:class:`Message`, :class:`DeletedReferencedMessage`]]"
+
+msgid "Creates a :class:`MessageReference` from an existing :class:`~discord.Message`."
+msgstr "Creates a :class:`MessageReference` from an existing :class:`~discord.Message`."
+
+msgid "The message to be converted into a reference."
+msgstr "The message to be converted into a reference."
+
+msgid "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
+msgstr "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "A reference to the message."
+msgstr "A reference to the message."
+
+msgid ":class:`MessageReference`"
+msgstr ":class:`MessageReference`"
+
+msgid "The cached message, if found in the internal message cache."
+msgstr "The cached message, if found in the internal message cache."
+
+msgid "Returns a URL that allows the client to jump to the referenced message."
+msgstr "Returns a URL that allows the client to jump to the referenced message."
+
+msgid "Represents information about a call in a private channel."
+msgstr "Represents information about a call in a private channel."
+
+msgid "A list of :class:`User` that participated in this call."
+msgstr "A list of :class:`User` that participated in this call."
+
+msgid "If a user is not found in the client's cache, then it will be returned as an :class:`Object`."
+msgstr "If a user is not found in the client's cache, then it will be returned as an :class:`Object`."
+
+msgid "An aware timestamp of when the call ended."
+msgstr "An aware timestamp of when the call ended."
+
+msgid "Represents a partial message to aid with working messages when only a message and channel ID are present."
+msgstr "Represents a partial message to aid with working messages when only a message and channel ID are present."
+
+msgid "There are two ways to construct this class. The first one is through the constructor itself, and the second is via the following:"
+msgstr "There are two ways to construct this class. The first one is through the constructor itself, and the second is via the following:"
+
+msgid ":meth:`TextChannel.get_partial_message`"
+msgstr ":meth:`TextChannel.get_partial_message`"
+
+msgid ":meth:`Thread.get_partial_message`"
+msgstr ":meth:`Thread.get_partial_message`"
+
+msgid ":meth:`DMChannel.get_partial_message`"
+msgstr ":meth:`DMChannel.get_partial_message`"
+
+msgid ":meth:`VoiceChannel.get_partial_message`"
+msgstr ":meth:`VoiceChannel.get_partial_message`"
+
+msgid ":meth:`StageChannel.get_partial_message`"
+msgstr ":meth:`StageChannel.get_partial_message`"
+
+msgid "Note that this class is trimmed down and has no rich attributes."
+msgstr "Note that this class is trimmed down and has no rich attributes."
+
+msgid "Checks if two partial messages are equal."
+msgstr "Checks if two partial messages are equal."
+
+msgid "Checks if two partial messages are not equal."
+msgstr "Checks if two partial messages are not equal."
+
+msgid "Returns the partial message's hash."
+msgstr "Returns the partial message's hash."
+
+msgid "The channel associated with this partial message."
+msgstr "The channel associated with this partial message."
+
+msgid "Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]"
+msgstr "Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]"
+
+msgid "The message ID."
+msgstr "The message ID."
+
+msgid "Returns a URL that allows the client to jump to this message."
+msgstr "Returns a URL that allows the client to jump to this message."
+
+msgid "Deletes the message."
+msgstr "Deletes the message."
+
+msgid "Your own messages could be deleted without any proper permissions. However, to delete other people's messages, you need the :attr:`~Permissions.manage_messages` permission."
+msgstr "Your own messages could be deleted without any proper permissions. However, to delete other people's messages, you need the :attr:`~Permissions.manage_messages` permission."
+
+msgid "Added the new ``delay`` keyword-only parameter."
+msgstr "Added the new ``delay`` keyword-only parameter."
+
+msgid "If provided, the number of seconds to wait in the background before deleting the message. If the deletion fails then it is silently ignored."
+msgstr "If provided, the number of seconds to wait in the background before deleting the message. If the deletion fails then it is silently ignored."
+
+msgid "The reason for deleting the message. Shows up on the audit log."
+msgstr "The reason for deleting the message. Shows up on the audit log."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "You do not have proper permissions to delete the message."
+msgstr "You do not have proper permissions to delete the message."
+
+msgid "The message was deleted already"
+msgstr "The message was deleted already"
+
+msgid "Deleting the message failed."
+msgstr "Deleting the message failed."
+
+msgid "Publishes this message to your announcement channel."
+msgstr "Publishes this message to your announcement channel."
+
+msgid "You must have the :attr:`~Permissions.send_messages` permission to do this."
+msgstr "You must have the :attr:`~Permissions.send_messages` permission to do this."
+
+msgid "If the message is not your own then the :attr:`~Permissions.manage_messages` permission is also needed."
+msgstr "If the message is not your own then the :attr:`~Permissions.manage_messages` permission is also needed."
+
+msgid "You do not have the proper permissions to publish this message."
+msgstr "You do not have the proper permissions to publish this message."
+
+msgid "Publishing the message failed."
+msgstr "Publishing the message failed."
+
+msgid "Pins the message."
+msgstr "Pins the message."
+
+msgid "You must have the :attr:`~Permissions.manage_messages` permission to do this in a non-private channel context."
+msgstr "You must have the :attr:`~Permissions.manage_messages` permission to do this in a non-private channel context."
+
+msgid "The reason for pinning the message. Shows up on the audit log.  .. versionadded:: 1.4"
+msgstr "The reason for pinning the message. Shows up on the audit log.  .. versionadded:: 1.4"
+
+msgid "The reason for pinning the message. Shows up on the audit log."
+msgstr "The reason for pinning the message. Shows up on the audit log."
+
+msgid "You do not have permissions to pin the message."
+msgstr "You do not have permissions to pin the message."
+
+msgid "The message or channel was not found or deleted."
+msgstr "The message or channel was not found or deleted."
+
+msgid "Pinning the message failed, probably due to the channel     having more than 50 pinned messages."
+msgstr "Pinning the message failed, probably due to the channel     having more than 50 pinned messages."
+
+msgid "Unpins the message."
+msgstr "Unpins the message."
+
+msgid "The reason for unpinning the message. Shows up on the audit log.  .. versionadded:: 1.4"
+msgstr "The reason for unpinning the message. Shows up on the audit log.  .. versionadded:: 1.4"
+
+msgid "The reason for unpinning the message. Shows up on the audit log."
+msgstr "The reason for unpinning the message. Shows up on the audit log."
+
+msgid "You do not have permissions to unpin the message."
+msgstr "You do not have permissions to unpin the message."
+
+msgid "Unpinning the message failed."
+msgstr "Unpinning the message failed."
+
+msgid "Add a reaction to the message."
+msgstr "Add a reaction to the message."
+
+msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+msgstr "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+
+msgid "You must have the :attr:`~Permissions.read_message_history` permission to use this. If nobody else has reacted to the message using this emoji, the :attr:`~Permissions.add_reactions` permission is required."
+msgstr "You must have the :attr:`~Permissions.read_message_history` permission to use this. If nobody else has reacted to the message using this emoji, the :attr:`~Permissions.add_reactions` permission is required."
+
+msgid "The emoji to react with."
+msgstr "The emoji to react with."
+
+msgid "Adding the reaction failed."
+msgstr "Adding the reaction failed."
+
+msgid "You do not have the proper permissions to react to the message."
+msgstr "You do not have the proper permissions to react to the message."
+
+msgid "The emoji you specified was not found."
+msgstr "The emoji you specified was not found."
+
+msgid "The emoji parameter is invalid."
+msgstr "The emoji parameter is invalid."
+
+msgid "Remove a reaction by the member from the message."
+msgstr "Remove a reaction by the member from the message."
+
+msgid "If the reaction is not your own (i.e. ``member`` parameter is not you) then the :attr:`~Permissions.manage_messages` permission is needed."
+msgstr "If the reaction is not your own (i.e. ``member`` parameter is not you) then the :attr:`~Permissions.manage_messages` permission is needed."
+
+msgid "The ``member`` parameter must represent a member and meet the :class:`abc.Snowflake` abc."
+msgstr "The ``member`` parameter must represent a member and meet the :class:`abc.Snowflake` abc."
+
+msgid "The emoji to remove."
+msgstr "The emoji to remove."
+
+msgid "The member for which to remove the reaction."
+msgstr "The member for which to remove the reaction."
+
+msgid "Removing the reaction failed."
+msgstr "Removing the reaction failed."
+
+msgid "You do not have the proper permissions to remove the reaction."
+msgstr "You do not have the proper permissions to remove the reaction."
+
+msgid "The member or emoji you specified was not found."
+msgstr "The member or emoji you specified was not found."
+
+msgid "Clears a specific reaction from the message."
+msgstr "Clears a specific reaction from the message."
+
+msgid "You need the :attr:`~Permissions.manage_messages` permission to use this."
+msgstr "You need the :attr:`~Permissions.manage_messages` permission to use this."
+
+msgid "The emoji to clear."
+msgstr "The emoji to clear."
+
+msgid "Clearing the reaction failed."
+msgstr "Clearing the reaction failed."
+
+msgid "You do not have the proper permissions to clear the reaction."
+msgstr "You do not have the proper permissions to clear the reaction."
+
+msgid "Removes all the reactions from the message."
+msgstr "Removes all the reactions from the message."
+
+msgid "Removing the reactions failed."
+msgstr "Removing the reactions failed."
+
+msgid "You do not have the proper permissions to remove all the reactions."
+msgstr "You do not have the proper permissions to remove all the reactions."
+
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+msgstr "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+
+msgid "The message that was sent."
+msgstr "The message that was sent."
+
+msgid ":class:`.Message`"
+msgstr ":class:`.Message`"
+
+msgid "Sending the message failed."
+msgstr "Sending the message failed."
+
+msgid "You do not have the proper permissions to send the message."
+msgstr "You do not have the proper permissions to send the message."
+
+msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
+msgstr "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
+
+msgid "Creates a :class:`~discord.MessageReference` from the current message."
+msgstr "Creates a :class:`~discord.MessageReference` from the current message."
+
+msgid "Whether replying using the message reference should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
+msgstr "Whether replying using the message reference should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
+
+msgid "Whether replying using the message reference should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message."
+msgstr "Whether replying using the message reference should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message."
+
+msgid "The reference to this message."
+msgstr "The reference to this message."
+
+msgid ":class:`~discord.MessageReference`"
+msgstr ":class:`~discord.MessageReference`"
+
+msgid "The partial message's creation time in UTC."
+msgstr "The partial message's creation time in UTC."
+
+msgid "The guild that the partial message belongs to, if applicable."
+msgstr "The guild that the partial message belongs to, if applicable."
+
+msgid "Fetches the partial message to a full :class:`Message`."
+msgstr "Fetches the partial message to a full :class:`Message`."
+
+msgid "The full message."
+msgstr "The full message."
+
+msgid "The message was not found."
+msgstr "The message was not found."
+
+msgid "You do not have the permissions required to get a message."
+msgstr "You do not have the permissions required to get a message."
+
+msgid "Retrieving the message failed."
+msgstr "Retrieving the message failed."
+
+msgid "Edits the message."
+msgstr "Edits the message."
+
+msgid ":class:`discord.Message` is returned instead of ``None`` if an edit took place."
+msgstr ":class:`discord.Message` is returned instead of ``None`` if an edit took place."
+
+msgid "The new content to replace the message with. Could be ``None`` to remove the content."
+msgstr "The new content to replace the message with. Could be ``None`` to remove the content."
+
+msgid "The new embed to replace the original with. Could be ``None`` to remove the embed."
+msgstr "The new embed to replace the original with. Could be ``None`` to remove the embed."
+
+msgid "A list of embeds to upload. Must be a maximum of 10.  .. versionadded:: 2.0"
+msgstr "A list of embeds to upload. Must be a maximum of 10.  .. versionadded:: 2.0"
+
+msgid "A list of embeds to upload. Must be a maximum of 10."
+msgstr "A list of embeds to upload. Must be a maximum of 10."
+
+msgid "Whether to suppress embeds for the message. This removes all the embeds if set to ``True``. If set to ``False`` this brings the embeds back if they were suppressed. Using this parameter requires :attr:`~.Permissions.manage_messages`."
+msgstr "Whether to suppress embeds for the message. This removes all the embeds if set to ``True``. If set to ``False`` this brings the embeds back if they were suppressed. Using this parameter requires :attr:`~.Permissions.manage_messages`."
+
+msgid "If provided, the number of seconds to wait in the background before deleting the message we just edited. If the deletion fails, then it is silently ignored."
+msgstr "If provided, the number of seconds to wait in the background before deleting the message we just edited. If the deletion fails, then it is silently ignored."
+
+msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
+msgstr "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
+
+msgid "The updated view to update this message with. If ``None`` is passed then the view is removed.  .. versionadded:: 2.0"
+msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed.  .. versionadded:: 2.0"
+
+msgid "The updated view to update this message with. If ``None`` is passed then the view is removed."
+msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed."
+
+msgid "The message that was edited."
+msgstr "The message that was edited."
+
+msgid "Optional[:class:`Message`]"
+msgstr "Optional[:class:`Message`]"
+
+msgid "Editing the message failed."
+msgstr "Editing the message failed."
+
+msgid "Tried to suppress a message without permissions or     edited a message's content or embed that isn't yours."
+msgstr "Tried to suppress a message without permissions or     edited a message's content or embed that isn't yours."
+
+msgid "Immediately ends the poll associated with this message. Only doable by the poll's owner."
+msgstr "Immediately ends the poll associated with this message. Only doable by the poll's owner."
+
+msgid "The updated message."
+msgstr "The updated message."
+
+msgid "You do not have permissions to end this poll."
+msgstr "You do not have permissions to end this poll."
+
+msgid "Ending this poll failed."
+msgstr "Ending this poll failed."
+
+msgid "A parameter object used for :meth:`abc.Messageable.send` for sending file objects."
+msgstr "A parameter object used for :meth:`abc.Messageable.send` for sending file objects."
+
+msgid "File objects are single use and are not meant to be reused in multiple :meth:`abc.Messageable.send`\\s."
+msgstr "File objects are single use and are not meant to be reused in multiple :meth:`abc.Messageable.send`\\s."
+
+msgid "A file-like object opened in binary mode and read mode or a filename representing a file in the hard drive to open."
+msgstr "A file-like object opened in binary mode and read mode or a filename representing a file in the hard drive to open."
+
+msgid "If the file-like object passed is opened via ``open`` then the modes 'rb' should be used."
+msgstr "If the file-like object passed is opened via ``open`` then the modes 'rb' should be used."
+
+msgid "To pass binary data, consider usage of ``io.BytesIO``."
+msgstr "To pass binary data, consider usage of ``io.BytesIO``."
+
+msgid "Union[:class:`os.PathLike`, :class:`io.BufferedIOBase`]"
+msgstr "Union[:class:`os.PathLike`, :class:`io.BufferedIOBase`]"
+
+msgid "The filename to display when uploading to Discord. If this is not given then it defaults to ``fp.name`` or if ``fp`` is a string then the ``filename`` will default to the string given."
+msgstr "The filename to display when uploading to Discord. If this is not given then it defaults to ``fp.name`` or if ``fp`` is a string then the ``filename`` will default to the string given."
+
+msgid "The description of a file, used by Discord to display alternative text on images."
+msgstr "The description of a file, used by Discord to display alternative text on images."
+
+msgid "Whether the attachment is a spoiler."
+msgstr "Whether the attachment is a spoiler."
+
+msgid "Embed"
+msgstr "Embed"
+
+msgid "Represents a Discord embed."
+msgstr "Represents a Discord embed."
+
+msgid "Returns the total size of the embed. Useful for checking if it's within the 6000 character limit."
+msgstr "Returns the total size of the embed. Useful for checking if it's within the 6000 character limit."
+
+msgid "Returns whether the embed has any data set."
+msgstr "Returns whether the embed has any data set."
+
+msgid "For ease of use, all parameters that expect a :class:`str` are implicitly cast to :class:`str` for you."
+msgstr "For ease of use, all parameters that expect a :class:`str` are implicitly cast to :class:`str` for you."
+
+msgid "The title of the embed. This can be set during initialisation. Must be 256 characters or fewer."
+msgstr "The title of the embed. This can be set during initialisation. Must be 256 characters or fewer."
+
+msgid "The type of embed. Usually \"rich\". This can be set during initialisation. Possible strings for embed types can be found on discord's `api docs <https://discord.com/developers/docs/resources/channel#embed-object-embed-types>`_"
+msgstr "The type of embed. Usually \"rich\". This can be set during initialisation. Possible strings for embed types can be found on discord's `api docs <https://discord.com/developers/docs/resources/channel#embed-object-embed-types>`_"
+
+msgid "The description of the embed. This can be set during initialisation. Must be 4096 characters or fewer."
+msgstr "The description of the embed. This can be set during initialisation. Must be 4096 characters or fewer."
+
+msgid "The URL of the embed. This can be set during initialisation."
+msgstr "The URL of the embed. This can be set during initialisation."
+
+msgid "The timestamp of the embed content. This is an aware datetime. If a naive datetime is passed, it is converted to an aware datetime with the local timezone."
+msgstr "The timestamp of the embed content. This is an aware datetime. If a naive datetime is passed, it is converted to an aware datetime with the local timezone."
+
+msgid ":class:`datetime.datetime`"
+msgstr ":class:`datetime.datetime`"
+
+msgid "The colour code of the embed. Aliased to ``color`` as well. This can be set during initialisation."
+msgstr "The colour code of the embed. Aliased to ``color`` as well. This can be set during initialisation."
+
+msgid "Union[:class:`Colour`, :class:`int`]"
+msgstr "Union[:class:`Colour`, :class:`int`]"
+
+msgid "Converts a :class:`dict` to a :class:`Embed` provided it is in the format that Discord expects it to be in."
+msgstr "Converts a :class:`dict` to a :class:`Embed` provided it is in the format that Discord expects it to be in."
+
+msgid "You can find out about this format in the `official Discord documentation`__."
+msgstr "You can find out about this format in the `official Discord documentation`__."
+
+msgid "The dictionary to convert into an embed."
+msgstr "The dictionary to convert into an embed."
+
+msgid "The converted embed object."
+msgstr "The converted embed object."
+
+msgid ":class:`Embed`"
+msgstr ":class:`Embed`"
+
+msgid "Creates a shallow copy of the :class:`Embed` object."
+msgstr "Creates a shallow copy of the :class:`Embed` object."
+
+msgid "The copied embed object."
+msgstr "The copied embed object."
+
+msgid "Returns an :class:`EmbedFooter` denoting the footer contents."
+msgstr "Returns an :class:`EmbedFooter` denoting the footer contents."
+
+msgid "See :meth:`set_footer` for possible values you can access."
+msgstr "See :meth:`set_footer` for possible values you can access."
+
+msgid "If the footer is not set then `None` is returned."
+msgstr "If the footer is not set then `None` is returned."
+
+msgid "Sets the footer for the embed content."
+msgstr "Sets the footer for the embed content."
+
+msgid "This function returns the class instance to allow for fluent-style chaining."
+msgstr "This function returns the class instance to allow for fluent-style chaining."
+
+msgid "The footer text. Must be 2048 characters or fewer."
+msgstr "The footer text. Must be 2048 characters or fewer."
+
+msgid "The URL of the footer icon. Only HTTP(S) is supported."
+msgstr "The URL of the footer icon. Only HTTP(S) is supported."
+
+msgid ":py:class:`~typing.TypeVar`\\(``E``, bound= Embed)"
+msgstr ":py:class:`~typing.TypeVar`\\(``E``, bound= Embed)"
+
+msgid "Clears embed's footer information."
+msgstr "Clears embed's footer information."
+
+msgid "Returns an :class:`EmbedMedia` denoting the image contents."
+msgstr "Returns an :class:`EmbedMedia` denoting the image contents."
+
+msgid "Attributes you can access are:"
+msgstr "Attributes you can access are:"
+
+msgid "``url``"
+msgstr "``url``"
+
+msgid "``proxy_url``"
+msgstr "``proxy_url``"
+
+msgid "``width``"
+msgstr "``width``"
+
+msgid "``height``"
+msgstr "``height``"
+
+msgid "If the image is not set then `None` is returned."
+msgstr "If the image is not set then `None` is returned."
+
+msgid "Sets the image for the embed content."
+msgstr "Sets the image for the embed content."
+
+msgid "Passing `None` removes the image."
+msgstr "Passing `None` removes the image."
+
+msgid "The source URL for the image. Only HTTP(S) is supported."
+msgstr "The source URL for the image. Only HTTP(S) is supported."
+
+msgid "Removes the embed's image."
+msgstr "Removes the embed's image."
+
+msgid "Returns an :class:`EmbedMedia` denoting the thumbnail contents."
+msgstr "Returns an :class:`EmbedMedia` denoting the thumbnail contents."
+
+msgid "If the thumbnail is not set then `None` is returned."
+msgstr "If the thumbnail is not set then `None` is returned."
+
+msgid "Sets the thumbnail for the embed content."
+msgstr "Sets the thumbnail for the embed content."
+
+msgid "Passing `None` removes the thumbnail."
+msgstr "Passing `None` removes the thumbnail."
+
+msgid "The source URL for the thumbnail. Only HTTP(S) is supported."
+msgstr "The source URL for the thumbnail. Only HTTP(S) is supported."
+
+msgid "Removes the embed's thumbnail."
+msgstr "Removes the embed's thumbnail."
+
+msgid "Returns an :class:`EmbedMedia` denoting the video contents."
+msgstr "Returns an :class:`EmbedMedia` denoting the video contents."
+
+msgid "Attributes include:"
+msgstr "Attributes include:"
+
+msgid "``url`` for the video URL."
+msgstr "``url`` for the video URL."
+
+msgid "``height`` for the video height."
+msgstr "``height`` for the video height."
+
+msgid "``width`` for the video width."
+msgstr "``width`` for the video width."
+
+msgid "If the video is not set then `None` is returned."
+msgstr "If the video is not set then `None` is returned."
+
+msgid "Returns an :class:`EmbedProvider` denoting the provider contents."
+msgstr "Returns an :class:`EmbedProvider` denoting the provider contents."
+
+msgid "The only attributes that might be accessed are ``name`` and ``url``."
+msgstr "The only attributes that might be accessed are ``name`` and ``url``."
+
+msgid "If the provider is not set then `None` is returned."
+msgstr "If the provider is not set then `None` is returned."
+
+msgid "Returns an :class:`EmbedAuthor` denoting the author contents."
+msgstr "Returns an :class:`EmbedAuthor` denoting the author contents."
+
+msgid "See :meth:`set_author` for possible values you can access."
+msgstr "See :meth:`set_author` for possible values you can access."
+
+msgid "If the author is not set then `None` is returned."
+msgstr "If the author is not set then `None` is returned."
+
+msgid "Sets the author for the embed content."
+msgstr "Sets the author for the embed content."
+
+msgid "The name of the author. Must be 256 characters or fewer."
+msgstr "The name of the author. Must be 256 characters or fewer."
+
+msgid "The URL for the author."
+msgstr "The URL for the author."
+
+msgid "The URL of the author icon. Only HTTP(S) is supported."
+msgstr "The URL of the author icon. Only HTTP(S) is supported."
+
+msgid "Clears embed's author information."
+msgstr "Clears embed's author information."
+
+msgid "Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents."
+msgstr "Returns a :class:`list` of :class:`EmbedField` objects denoting the field contents."
+
+msgid "See :meth:`add_field` for possible values you can access."
+msgstr "See :meth:`add_field` for possible values you can access."
+
+msgid "If the attribute has no value then ``None`` is returned."
+msgstr "If the attribute has no value then ``None`` is returned."
+
+msgid "Appends an :class:`EmbedField` object to the embed."
+msgstr "Appends an :class:`EmbedField` object to the embed."
+
+msgid "The field to add."
+msgstr "The field to add."
+
+msgid "Adds a field to the embed object."
+msgstr "Adds a field to the embed object."
+
+msgid "This function returns the class instance to allow for fluent-style chaining. There must be 25 fields or fewer."
+msgstr "This function returns the class instance to allow for fluent-style chaining. There must be 25 fields or fewer."
+
+msgid "The name of the field. Must be 256 characters or fewer."
+msgstr "The name of the field. Must be 256 characters or fewer."
+
+msgid "The value of the field. Must be 1024 characters or fewer."
+msgstr "The value of the field. Must be 1024 characters or fewer."
+
+msgid "Whether the field should be displayed inline."
+msgstr "Whether the field should be displayed inline."
+
+msgid "Inserts a field before a specified index to the embed."
+msgstr "Inserts a field before a specified index to the embed."
+
+msgid "The index of where to insert the field."
+msgstr "The index of where to insert the field."
+
+msgid "Removes all fields from this embed."
+msgstr "Removes all fields from this embed."
+
+msgid "Removes a field at a specified index."
+msgstr "Removes a field at a specified index."
+
+msgid "If the index is invalid or out of bounds then the error is silently swallowed."
+msgstr "If the index is invalid or out of bounds then the error is silently swallowed."
+
+msgid "When deleting a field by index, the index of the other fields shift to fill the gap just like a regular list."
+msgstr "When deleting a field by index, the index of the other fields shift to fill the gap just like a regular list."
+
+msgid "The index of the field to remove."
+msgstr "The index of the field to remove."
+
+msgid "Modifies a field to the embed object."
+msgstr "Modifies a field to the embed object."
+
+msgid "The index must point to a valid pre-existing field. There must be 25 fields or fewer."
+msgstr "The index must point to a valid pre-existing field. There must be 25 fields or fewer."
+
+msgid "The index of the field to modify."
+msgstr "The index of the field to modify."
+
+msgid "An invalid index was provided."
+msgstr "An invalid index was provided."
+
+msgid "Converts this embed object into a dict."
+msgstr "Converts this embed object into a dict."
+
+msgid "A dictionary of :class:`str` embed keys bound to the respective value."
+msgstr "A dictionary of :class:`str` embed keys bound to the respective value."
+
+msgid "Dict[:class:`str`, Union[:class:`str`, :class:`int`, :class:`bool`]]"
+msgstr "Dict[:class:`str`, Union[:class:`str`, :class:`int`, :class:`bool`]]"
+
+msgid "Represents a field on the :class:`Embed` object."
+msgstr "Represents a field on the :class:`Embed` object."
+
+msgid "The name of the field."
+msgstr "The name of the field."
+
+msgid "The value of the field."
+msgstr "The value of the field."
+
+msgid "Converts a :class:`dict` to a :class:`EmbedField` provided it is in the format that Discord expects it to be in."
+msgstr "Converts a :class:`dict` to a :class:`EmbedField` provided it is in the format that Discord expects it to be in."
+
+msgid "The dictionary to convert into an EmbedField object."
+msgstr "The dictionary to convert into an EmbedField object."
+
+msgid ":py:class:`~discord.embeds.EmbedField`"
+msgstr ":py:class:`~discord.embeds.EmbedField`"
+
+msgid "Converts this EmbedField object into a dict."
+msgstr "Converts this EmbedField object into a dict."
+
+msgid "A dictionary of :class:`str` embed field keys bound to the respective value."
+msgstr "A dictionary of :class:`str` embed field keys bound to the respective value."
+
+msgid "Dict[:class:`str`, Union[:class:`str`, :class:`bool`]]"
+msgstr "Dict[:class:`str`, Union[:class:`str`, :class:`bool`]]"
+
+msgid "Represents the author on the :class:`Embed` object."
+msgstr "Represents the author on the :class:`Embed` object."
+
+msgid "The name of the author."
+msgstr "The name of the author."
+
+msgid "The URL of the hyperlink created in the author's name."
+msgstr "The URL of the hyperlink created in the author's name."
+
+msgid "The URL of the author icon image."
+msgstr "The URL of the author icon image."
+
+msgid "The proxied URL of the author icon image. This can't be set directly, it is set by Discord."
+msgstr "The proxied URL of the author icon image. This can't be set directly, it is set by Discord."
+
+msgid "Represents the footer on the :class:`Embed` object."
+msgstr "Represents the footer on the :class:`Embed` object."
+
+msgid "The text inside the footer."
+msgstr "The text inside the footer."
+
+msgid "The URL of the footer icon image."
+msgstr "The URL of the footer icon image."
+
+msgid "The proxied URL of the footer icon image. This can't be set directly, it is set by Discord."
+msgstr "The proxied URL of the footer icon image. This can't be set directly, it is set by Discord."
+
+msgid "Represents a media on the :class:`Embed` object. This includes thumbnails, images, and videos."
+msgstr "Represents a media on the :class:`Embed` object. This includes thumbnails, images, and videos."
+
+msgid "The source URL of the media."
+msgstr "The source URL of the media."
+
+msgid "The proxied URL of the media."
+msgstr "The proxied URL of the media."
+
+msgid "The height of the media."
+msgstr "The height of the media."
+
+msgid "The width of the media."
+msgstr "The width of the media."
+
+msgid "Represents a provider on the :class:`Embed` object."
+msgstr "Represents a provider on the :class:`Embed` object."
+
+msgid "The name of the provider."
+msgstr "The name of the provider."
+
+msgid "The URL of the provider."
+msgstr "The URL of the provider."
+
+msgid "Poll"
+msgstr "Poll"
+
+msgid "Represents a Poll. Polls are sent in regular messages, and you must have :attr:`~discord.Permissions.send_polls` to send them."
+msgstr "Represents a Poll. Polls are sent in regular messages, and you must have :attr:`~discord.Permissions.send_polls` to send them."
+
+msgid "The poll's question media, or a ``str`` representing the question text. Question text can be up to 300 characters."
+msgstr "The poll's question media, or a ``str`` representing the question text. Question text can be up to 300 characters."
+
+msgid "Union[:class:`PollMedia`, :class:`str`]"
+msgstr "Union[:class:`PollMedia`, :class:`str`]"
+
+msgid "A list of the poll's answers. A maximum of 10 answers can be set."
+msgstr "A list of the poll's answers. A maximum of 10 answers can be set."
+
+msgid "Optional[List[:class:`PollAnswer`]]"
+msgstr "Optional[List[:class:`PollAnswer`]]"
+
+msgid "The number of hours until this poll expires. Users must specify this when creating a poll, but existing polls return :attr:`expiry` instead. Defaults to 24."
+msgstr "The number of hours until this poll expires. Users must specify this when creating a poll, but existing polls return :attr:`expiry` instead. Defaults to 24."
+
+msgid "Whether multiple answers can be selected. Defaults to ``False``."
+msgstr "Whether multiple answers can be selected. Defaults to ``False``."
+
+msgid "The poll's layout type. Only one exists at the moment."
+msgstr "The poll's layout type. Only one exists at the moment."
+
+msgid ":class:`PollLayoutType`"
+msgstr ":class:`PollLayoutType`"
+
+msgid "The results of this poll recieved from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
+msgstr "The results of this poll recieved from Discord. If ``None``, this should be considered \"unknown\" rather than \"no\" results."
+
+msgid "Optional[:class:`PollResults`]"
+msgstr "Optional[:class:`PollResults`]"
+
+msgid "An aware datetime object that specifies the date and time in UTC when the poll will end."
+msgstr "An aware datetime object that specifies the date and time in UTC when the poll will end."
+
+msgid "Checks if this poll has completely ended. Shortcut for :attr:`PollResults.is_finalized`, if available."
+msgstr "Checks if this poll has completely ended. Shortcut for :attr:`PollResults.is_finalized`, if available."
+
+msgid "Returns a boolean if :attr:`results` is available, otherwise ``None``."
+msgstr "Returns a boolean if :attr:`results` is available, otherwise ``None``."
+
+msgid "Optional[:class:`bool`]"
+msgstr "Optional[:class:`bool`]"
+
+msgid "Shortcut for :meth:`PollResults.total_votes` This may not be precise if :attr:`is_finalized` is ``False``."
+msgstr "Shortcut for :meth:`PollResults.total_votes` This may not be precise if :attr:`is_finalized` is ``False``."
+
+msgid "The total number of votes on this poll if :attr:`results` is available, otherwise ``None``."
+msgstr "The total number of votes on this poll if :attr:`results` is available, otherwise ``None``."
+
+msgid "Get a poll answer by ID."
+msgstr "Get a poll answer by ID."
+
+msgid "The ID to search for."
+msgstr "The ID to search for."
+
+msgid "The returned answer or ``None`` if not found."
+msgstr "The returned answer or ``None`` if not found."
+
+msgid "Optional[:class:`.PollAnswer`]"
+msgstr "Optional[:class:`.PollAnswer`]"
+
+msgid "Add an answer to this poll."
+msgstr "Add an answer to this poll."
+
+msgid "The answer text. Maximum 55 characters."
+msgstr "The answer text. Maximum 55 characters."
+
+msgid "The answer's emoji."
+msgstr "The answer's emoji."
+
+msgid "The poll already has 10 answers or ``text`` exceeds the character length."
+msgstr "The poll already has 10 answers or ``text`` exceeds the character length."
+
+msgid "You cannot add an answer to an existing poll."
+msgstr "You cannot add an answer to an existing poll."
+
+msgid ":py:class:`~discord.poll.Poll`"
+msgstr ":py:class:`~discord.poll.Poll`"
+
+msgid "Examples"
+msgstr "Examples"
+
+msgid "Regular usage ::"
+msgstr "Regular usage ::"
+
+msgid "Chaining style ::"
+msgstr "Chaining style ::"
+
+msgid "Immediately ends this poll, if attached to a message. Only doable by the poll's owner. Shortcut to :meth:`Message.end_poll`"
+msgstr "Immediately ends this poll, if attached to a message. Only doable by the poll's owner. Shortcut to :meth:`Message.end_poll`"
+
+msgid "This poll wasn't recieved from a message."
+msgstr "This poll wasn't recieved from a message."
+
+msgid "Represents a poll media object that supports both questions and answers."
+msgstr "Represents a poll media object that supports both questions and answers."
+
+msgid "The question/answer text. May have up to 300 characters for questions and 55 characters for answers."
+msgstr "The question/answer text. May have up to 300 characters for questions and 55 characters for answers."
+
+msgid "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
+msgstr "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
+
+msgid "Represents a poll answer object."
+msgstr "Represents a poll answer object."
+
+msgid "The answer's ID. It currently starts at ``1`` for the first answer, then goes up sequentially. It may not be reliable to depend on this."
+msgstr "The answer's ID. It currently starts at ``1`` for the first answer, then goes up sequentially. It may not be reliable to depend on this."
+
+msgid "The relevant media for this answer."
+msgstr "The relevant media for this answer."
+
+msgid ":class:`PollMedia`"
+msgstr ":class:`PollMedia`"
+
+msgid "The answer's text. Shortcut for :attr:`PollMedia.text`."
+msgstr "The answer's text. Shortcut for :attr:`PollMedia.text`."
+
+msgid "The answer's emoji. Shortcut for :attr:`PollMedia.emoji`."
+msgstr "The answer's emoji. Shortcut for :attr:`PollMedia.emoji`."
+
+msgid "This answer's vote count, if recieved from Discord."
+msgstr "This answer's vote count, if recieved from Discord."
+
+msgid "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was recieved from Discord."
+msgstr "Returns an :class:`AsyncIterator` representing the users that have voted with this answer. Only works if this poll was recieved from Discord."
+
+msgid "The ``after`` parameter must represent a member and meet the :class:`abc.Snowflake` abc."
+msgstr "The ``after`` parameter must represent a member and meet the :class:`abc.Snowflake` abc."
+
+msgid "The maximum number of results to return. If not provided, returns all the users who voted with this answer."
+msgstr "The maximum number of results to return. If not provided, returns all the users who voted with this answer."
+
+msgid "For pagination, answers are sorted by member."
+msgstr "For pagination, answers are sorted by member."
+
+msgid "Yields"
+msgstr "Yields"
+
+msgid "Union[:class:`User`, :class:`Member`] -- The member (if retrievable) or the user that has voted with this answer. The case where it can be a :class:`Member` is in a guild message context. Sometimes it can be a :class:`User` if the member has left the guild."
+msgstr "Union[:class:`User`, :class:`Member`] -- The member (if retrievable) or the user that has voted with this answer. The case where it can be a :class:`Member` is in a guild message context. Sometimes it can be a :class:`User` if the member has left the guild."
+
+msgid "Getting the voters for the answer failed."
+msgstr "Getting the voters for the answer failed."
+
+msgid ":py:class:`~discord.iterators.VoteIterator`"
+msgstr ":py:class:`~discord.iterators.VoteIterator`"
+
+msgid "Usage ::"
+msgstr "Usage ::"
+
+msgid "Flattening into a list: ::"
+msgstr "Flattening into a list: ::"
+
+msgid "Represents a poll answer count object."
+msgstr "Represents a poll answer count object."
+
+msgid "The number of votes for this answer."
+msgstr "The number of votes for this answer."
+
+msgid "If the current user voted this answer. This is always ``False`` for bots."
+msgstr "If the current user voted this answer. This is always ``False`` for bots."
+
+msgid "Represents a poll results object."
+msgstr "Represents a poll results object."
+
+msgid "Whether the poll has ended and all answer counts have been precisely tallied."
+msgstr "Whether the poll has ended and all answer counts have been precisely tallied."
+
+msgid "A list of counts for each answer. If an answer isn't included, it has no votes."
+msgstr "A list of counts for each answer. If an answer isn't included, it has no votes."
+
+msgid "List[:class:`PollAnswerCount`]"
+msgstr "List[:class:`PollAnswerCount`]"
+
+msgid "Get the total number of votes across all answers. This may not be accurate if :attr:`is_finalized` is ``False``."
+msgstr "Get the total number of votes across all answers. This may not be accurate if :attr:`is_finalized` is ``False``."
+
+msgid "The total number of votes on this poll."
+msgstr "The total number of votes on this poll."
+
+msgid "Flags"
+msgstr "Flags"
+
+msgid "Controls the library's cache policy when it comes to members."
+msgstr "Controls the library's cache policy when it comes to members."
+
+msgid "This allows for finer grained control over what members are cached. Note that the bot's own member is always cached. This class is passed to the ``member_cache_flags`` parameter in :class:`Client`."
+msgstr "This allows for finer grained control over what members are cached. Note that the bot's own member is always cached. This class is passed to the ``member_cache_flags`` parameter in :class:`Client`."
+
+msgid "Due to a quirk in how Discord works, in order to ensure proper cleanup of cache resources it is recommended to have :attr:`Intents.members` enabled. Otherwise, the library cannot know when a member leaves a guild and is thus unable to clean up after itself."
+msgstr "Due to a quirk in how Discord works, in order to ensure proper cleanup of cache resources it is recommended to have :attr:`Intents.members` enabled. Otherwise, the library cannot know when a member leaves a guild and is thus unable to clean up after itself."
+
+msgid "The default value is all flags enabled."
+msgstr "The default value is all flags enabled."
+
+msgid "A factory method that creates a :class:`MemberCacheFlags` with everything enabled."
+msgstr "A factory method that creates a :class:`MemberCacheFlags` with everything enabled."
+
+msgid ":py:class:`~discord.flags.MemberCacheFlags`"
+msgstr ":py:class:`~discord.flags.MemberCacheFlags`"
+
+msgid "A factory method that creates a :class:`MemberCacheFlags` with everything disabled."
+msgstr "A factory method that creates a :class:`MemberCacheFlags` with everything disabled."
+
+msgid "Whether to cache members that are in voice."
+msgstr "Whether to cache members that are in voice."
+
+msgid "This requires :attr:`Intents.voice_states`."
+msgstr "This requires :attr:`Intents.voice_states`."
+
+msgid "Members that leave voice are no longer cached."
+msgstr "Members that leave voice are no longer cached."
+
+msgid "Whether to cache members that joined the guild or are chunked as part of the initial log in flow."
+msgstr "Whether to cache members that joined the guild or are chunked as part of the initial log in flow."
+
+msgid "This requires :attr:`Intents.members`."
+msgstr "This requires :attr:`Intents.members`."
+
+msgid "Members that leave the guild are no longer cached."
+msgstr "Members that leave the guild are no longer cached."
+
+msgid "Whether to cache members obtained through interactions."
+msgstr "Whether to cache members obtained through interactions."
+
+msgid "This includes members received through :class:`discord.Interaction` and :class:`discord.Option`."
+msgstr "This includes members received through :class:`discord.Interaction` and :class:`discord.Option`."
+
+msgid "A factory method that creates a :class:`MemberCacheFlags` based on the currently selected :class:`Intents`."
+msgstr "A factory method that creates a :class:`MemberCacheFlags` based on the currently selected :class:`Intents`."
+
+msgid "The intents to select from."
+msgstr "The intents to select from."
+
+msgid "The resulting member cache flags."
+msgstr "The resulting member cache flags."
+
+msgid ":class:`MemberCacheFlags`"
+msgstr ":class:`MemberCacheFlags`"
+
+msgid "Wraps up the Discord Application flags."
+msgstr "Wraps up the Discord Application flags."
+
+msgid "Checks if two ApplicationFlags are equal."
+msgstr "Checks if two ApplicationFlags are equal."
+
+msgid "Checks if two ApplicationFlags are not equal."
+msgstr "Checks if two ApplicationFlags are not equal."
+
+msgid "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs. Note that aliases are not shown."
+msgstr "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs. Note that aliases are not shown."
+
+msgid "Returns ``True`` if the application is a managed emoji."
+msgstr "Returns ``True`` if the application is a managed emoji."
+
+msgid "Returns ``True`` if the application can create group DMs."
+msgstr "Returns ``True`` if the application can create group DMs."
+
+msgid "Returns ``True`` if the application uses the Auto Moderation API."
+msgstr "Returns ``True`` if the application uses the Auto Moderation API."
+
+msgid "Returns ``True`` if the application has connected to RPC."
+msgstr "Returns ``True`` if the application has connected to RPC."
+
+msgid "Returns ``True`` if the application is verified and is allowed to receive presence information over the gateway."
+msgstr "Returns ``True`` if the application is verified and is allowed to receive presence information over the gateway."
+
+msgid "Returns ``True`` if the application is allowed to receive limited presence information over the gateway."
+msgstr "Returns ``True`` if the application is allowed to receive limited presence information over the gateway."
+
+msgid "Returns ``True`` if the application is verified and is allowed to receive guild members information over the gateway."
+msgstr "Returns ``True`` if the application is verified and is allowed to receive guild members information over the gateway."
+
+msgid "Returns ``True`` if the application is allowed to receive limited guild members information over the gateway."
+msgstr "Returns ``True`` if the application is allowed to receive limited guild members information over the gateway."
+
+msgid "Returns ``True`` if the application is currently pending verification and has hit the guild limit."
+msgstr "Returns ``True`` if the application is currently pending verification and has hit the guild limit."
+
+msgid "Returns ``True`` if the application is embedded within the Discord client."
+msgstr "Returns ``True`` if the application is embedded within the Discord client."
+
+msgid "Returns ``True`` if the application is allowed to read message contents in guilds."
+msgstr "Returns ``True`` if the application is allowed to read message contents in guilds."
+
+msgid "Returns ``True`` if the application has registered at least one global application command, and by extension has the badge."
+msgstr "Returns ``True`` if the application has registered at least one global application command, and by extension has the badge."
+
+msgid "Returns ``True`` if the  app is considered active. Applications are considered active if they have had any command executions in the past 30 days."
+msgstr "Returns ``True`` if the  app is considered active. Applications are considered active if they have had any command executions in the past 30 days."
+
+msgid "Wraps up a Discord system channel flag value."
+msgstr "Wraps up a Discord system channel flag value."
+
+msgid "Similar to :class:`Permissions`\\, the properties provided are two way. You can set and retrieve individual bits using the properties as if they were regular bools. This allows you to edit the system flags easily."
+msgstr "Similar to :class:`Permissions`\\, the properties provided are two way. You can set and retrieve individual bits using the properties as if they were regular bools. This allows you to edit the system flags easily."
+
+msgid "The raw value. This value is a bit array field of a 53-bit integer representing the currently available flags. You should query flags via the properties rather than using this raw value."
+msgstr "The raw value. This value is a bit array field of a 53-bit integer representing the currently available flags. You should query flags via the properties rather than using this raw value."
+
+msgid "Returns ``True`` if the system channel is used for member join notifications."
+msgstr "Returns ``True`` if the system channel is used for member join notifications."
+
+msgid "Returns ``True`` if the system channel is used for \"Nitro boosting\" notifications."
+msgstr "Returns ``True`` if the system channel is used for \"Nitro boosting\" notifications."
+
+msgid "Returns ``True`` if the system channel is used for server setup helpful tips notifications."
+msgstr "Returns ``True`` if the system channel is used for server setup helpful tips notifications."
+
+msgid "Returns ``True`` if the system channel is allowing member join sticker replies."
+msgstr "Returns ``True`` if the system channel is allowing member join sticker replies."
+
+msgid "Wraps up a Discord Message flag value."
+msgstr "Wraps up a Discord Message flag value."
+
+msgid "See :class:`SystemChannelFlags`."
+msgstr "See :class:`SystemChannelFlags`."
+
+msgid "Returns ``True`` if the message is the original crossposted message."
+msgstr "Returns ``True`` if the message is the original crossposted message."
+
+msgid "Returns ``True`` if the message was crossposted from another channel."
+msgstr "Returns ``True`` if the message was crossposted from another channel."
+
+msgid "Returns ``True`` if the message's embeds have been suppressed."
+msgstr "Returns ``True`` if the message's embeds have been suppressed."
+
+msgid "Returns ``True`` if the source message for this crosspost has been deleted."
+msgstr "Returns ``True`` if the source message for this crosspost has been deleted."
+
+msgid "Returns ``True`` if the source message is an urgent message."
+msgstr "Returns ``True`` if the source message is an urgent message."
+
+msgid "An urgent message is one sent by Discord Trust and Safety."
+msgstr "An urgent message is one sent by Discord Trust and Safety."
+
+msgid "Returns ``True`` if the source message is associated with a thread."
+msgstr "Returns ``True`` if the source message is associated with a thread."
+
+msgid "Returns ``True`` if the source message is ephemeral."
+msgstr "Returns ``True`` if the source message is ephemeral."
+
+msgid "Returns ``True`` if the source message is deferred."
+msgstr "Returns ``True`` if the source message is deferred."
+
+msgid "The user sees a 'thinking' state."
+msgstr "The user sees a 'thinking' state."
+
+msgid "Returns ``True`` if some roles are failed to mention in a thread."
+msgstr "Returns ``True`` if some roles are failed to mention in a thread."
+
+msgid "Returns ``True`` if the source message does not trigger push and desktop notifications."
+msgstr "Returns ``True`` if the source message does not trigger push and desktop notifications."
+
+msgid "Users will still receive mentions."
+msgstr "Users will still receive mentions."
+
+msgid "Returns ``True`` if this message is a voice message."
+msgstr "Returns ``True`` if this message is a voice message."
+
+msgid "Wraps up the Discord Attachment flags."
+msgstr "Wraps up the Discord Attachment flags."
+
+msgid "Returns ``True`` if the attachment is a clip."
+msgstr "Returns ``True`` if the attachment is a clip."
+
+msgid "Returns ``True`` if the attachment is a thumbnail."
+msgstr "Returns ``True`` if the attachment is a thumbnail."
+
+msgid "Returns ``True`` if the attachment has been remixed."
+msgstr "Returns ``True`` if the attachment has been remixed."
+
+msgid "Wraps up the Discord User Public flags."
+msgstr "Wraps up the Discord User Public flags."
+
+msgid "Checks if two PublicUserFlags are equal."
+msgstr "Checks if two PublicUserFlags are equal."
+
+msgid "Checks if two PublicUserFlags are not equal."
+msgstr "Checks if two PublicUserFlags are not equal."
+
+msgid "Returns ``True`` if the user is a Discord Employee."
+msgstr "Returns ``True`` if the user is a Discord Employee."
+
+msgid "Returns ``True`` if the user is a Discord Partner."
+msgstr "Returns ``True`` if the user is a Discord Partner."
+
+msgid "Returns ``True`` if the user is a HypeSquad Events member."
+msgstr "Returns ``True`` if the user is a HypeSquad Events member."
+
+msgid "Returns ``True`` if the user is a Bug Hunter"
+msgstr "Returns ``True`` if the user is a Bug Hunter"
+
+msgid "Returns ``True`` if the user is marked as dismissed Nitro promotion"
+msgstr "Returns ``True`` if the user is marked as dismissed Nitro promotion"
+
+msgid "Returns ``True`` if the user is a HypeSquad Bravery member."
+msgstr "Returns ``True`` if the user is a HypeSquad Bravery member."
+
+msgid "Returns ``True`` if the user is a HypeSquad Brilliance member."
+msgstr "Returns ``True`` if the user is a HypeSquad Brilliance member."
+
+msgid "Returns ``True`` if the user is a HypeSquad Balance member."
+msgstr "Returns ``True`` if the user is a HypeSquad Balance member."
+
+msgid "Returns ``True`` if the user is an Early Supporter."
+msgstr "Returns ``True`` if the user is an Early Supporter."
+
+msgid "Returns ``True`` if the user is a Team User."
+msgstr "Returns ``True`` if the user is a Team User."
+
+msgid "Returns ``True`` if the user is a system user (i.e. represents Discord officially)."
+msgstr "Returns ``True`` if the user is a system user (i.e. represents Discord officially)."
+
+msgid "Returns ``True`` if the user is a Bug Hunter Level 2"
+msgstr "Returns ``True`` if the user is a Bug Hunter Level 2"
+
+msgid "Returns ``True`` if the user is a Verified Bot."
+msgstr "Returns ``True`` if the user is a Verified Bot."
+
+msgid "Returns ``True`` if the user is an Early Verified Bot Developer."
+msgstr "Returns ``True`` if the user is an Early Verified Bot Developer."
+
+msgid "An alias for :attr:`verified_bot_developer`."
+msgstr "An alias for :attr:`verified_bot_developer`."
+
+msgid "Returns ``True`` if the user is a Discord Certified Moderator."
+msgstr "Returns ``True`` if the user is a Discord Certified Moderator."
+
+msgid "Returns ``True`` if the bot has set an interactions endpoint url."
+msgstr "Returns ``True`` if the bot has set an interactions endpoint url."
+
+msgid "Returns ``True`` if the user is an Active Developer."
+msgstr "Returns ``True`` if the user is an Active Developer."
+
+msgid "List[:class:`UserFlags`]: Returns all public flags the user has."
+msgstr "List[:class:`UserFlags`]: Returns all public flags the user has."
+
+msgid ":py:class:`list`\\[:py:class:`~discord.enums.UserFlags`]"
+msgstr ":py:class:`list`\\[:py:class:`~discord.enums.UserFlags`]"
+
+msgid "Wraps up the Discord Channel flags."
+msgstr "Wraps up the Discord Channel flags."
+
+msgid "Checks if two ChannelFlags are equal."
+msgstr "Checks if two ChannelFlags are equal."
+
+msgid "Checks if two ChannelFlags are not equal."
+msgstr "Checks if two ChannelFlags are not equal."
+
+msgid "Returns ``True`` if the thread is pinned to the top of its parent forum channel."
+msgstr "Returns ``True`` if the thread is pinned to the top of its parent forum channel."
+
+msgid "Returns ``True`` if a tag is required to be specified when creating a thread in a :class:`ForumChannel`."
+msgstr "Returns ``True`` if a tag is required to be specified when creating a thread in a :class:`ForumChannel`."
+
+msgid "Wraps up the Discord SKU flags."
+msgstr "Wraps up the Discord SKU flags."
+
+msgid "Checks if two SKUFlags are equal."
+msgstr "Checks if two SKUFlags are equal."
+
+msgid "Checks if two SKUFlags are not equal."
+msgstr "Checks if two SKUFlags are not equal."
+
+msgid "Returns ``True`` if the SKU is available for purchase."
+msgstr "Returns ``True`` if the SKU is available for purchase."
+
+msgid "Returns ``True`` if the SKU is a guild subscription."
+msgstr "Returns ``True`` if the SKU is a guild subscription."
+
+msgid "Returns ``True`` if the SKU is a user subscription."
+msgstr "Returns ``True`` if the SKU is a user subscription."
+
+msgid "Wraps up the Discord Member flags."
+msgstr "Wraps up the Discord Member flags."
+
+msgid "Checks if two MemberFlags are equal."
+msgstr "Checks if two MemberFlags are equal."
+
+msgid "Checks if two MemberFlags are not equal."
+msgstr "Checks if two MemberFlags are not equal."
+
+msgid "Returns ``True`` if the member left and rejoined the guild."
+msgstr "Returns ``True`` if the member left and rejoined the guild."
+
+msgid "Returns ``True`` if the member has completed onboarding."
+msgstr "Returns ``True`` if the member has completed onboarding."
+
+msgid "Returns ``True`` if the member is exempt from verification requirements."
+msgstr "Returns ``True`` if the member is exempt from verification requirements."
+
+msgid "This can be edited through :func:`~discord.Member.edit`."
+msgstr "This can be edited through :func:`~discord.Member.edit`."
+
+msgid "Returns ``True`` if the member has started onboarding."
+msgstr "Returns ``True`` if the member has started onboarding."
+
+msgid "Wraps up the Discord Role flags."
+msgstr "Wraps up the Discord Role flags."
+
+msgid "Checks if two RoleFlags are equal."
+msgstr "Checks if two RoleFlags are equal."
+
+msgid "Checks if two RoleFlags are not equal."
+msgstr "Checks if two RoleFlags are not equal."
+
+msgid "Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`."
+msgstr "Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`."
+
+msgid "Colour"
+msgstr "Colour"
+
+msgid "Represents a Discord role colour. This class is similar to a (red, green, blue) :class:`tuple`."
+msgstr "Represents a Discord role colour. This class is similar to a (red, green, blue) :class:`tuple`."
+
+msgid "There is an alias for this called Color."
+msgstr "There is an alias for this called Color."
+
+msgid "Checks if two colours are equal."
+msgstr "Checks if two colours are equal."
+
+msgid "Checks if two colours are not equal."
+msgstr "Checks if two colours are not equal."
+
+msgid "Return the colour's hash."
+msgstr "Return the colour's hash."
+
+msgid "Returns the hex format for the colour."
+msgstr "Returns the hex format for the colour."
+
+msgid "Returns the raw colour value."
+msgstr "Returns the raw colour value."
+
+msgid "The raw integer colour value."
+msgstr "The raw integer colour value."
+
+msgid "Returns the red component of the colour."
+msgstr "Returns the red component of the colour."
+
+msgid "Returns the green component of the colour."
+msgstr "Returns the green component of the colour."
+
+msgid "Returns the blue component of the colour."
+msgstr "Returns the blue component of the colour."
+
+msgid "Returns an (r, g, b) tuple representing the colour."
+msgstr "Returns an (r, g, b) tuple representing the colour."
+
+msgid ":py:class:`tuple`\\[:py:class:`int`, :py:class:`int`, :py:class:`int`]"
+msgstr ":py:class:`tuple`\\[:py:class:`int`, :py:class:`int`, :py:class:`int`]"
+
+msgid "Constructs a :class:`Colour` from an RGB tuple."
+msgstr "Constructs a :class:`Colour` from an RGB tuple."
+
+msgid ":py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+msgstr ":py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+
+msgid "Constructs a :class:`Colour` from an HSV tuple."
+msgstr "Constructs a :class:`Colour` from an HSV tuple."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0``."
+
+msgid "A factory method that returns a :class:`Colour` with a random hue."
+msgstr "A factory method that returns a :class:`Colour` with a random hue."
+
+msgid "The random algorithm works by choosing a colour with a random hue but with maxed out saturation and value."
+msgstr "The random algorithm works by choosing a colour with a random hue but with maxed out saturation and value."
+
+msgid "The seed to initialize the RNG with. If ``None`` is passed the default RNG is used.  .. versionadded:: 1.7"
+msgstr "The seed to initialize the RNG with. If ``None`` is passed the default RNG is used.  .. versionadded:: 1.7"
+
+msgid "The seed to initialize the RNG with. If ``None`` is passed the default RNG is used."
+msgstr "The seed to initialize the RNG with. If ``None`` is passed the default RNG is used."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x1abc9c``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x1abc9c``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x11806a``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x11806a``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x57F287``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x57F287``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x2ecc71``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x2ecc71``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x1f8b4c``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x1f8b4c``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x3498db``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x3498db``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x206694``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x206694``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x9b59b6``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x9b59b6``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x71368a``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x71368a``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xe91e63``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xe91e63``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xad1457``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xad1457``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xf1c40f``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xf1c40f``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xc27c0e``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xc27c0e``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xe67e22``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xe67e22``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xa84300``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xa84300``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xED4245``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xED4245``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xe74c3c``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xe74c3c``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x992d22``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x992d22``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x95a5a6``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x95a5a6``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x607d8b``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x607d8b``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x979c9f``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x979c9f``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x546e7a``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x546e7a``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x7289da``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x7289da``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x5865F2``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x5865F2``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x99aab5``."
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x99aab5``."
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0x36393F``. This will appear transparent on Discord's dark theme. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0x36393F``. This will appear transparent on Discord's dark theme. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xEB459E``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xEB459E``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xFEE75C``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xFEE75C``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+
+msgid "A factory method that returns a :class:`Colour` with a value of ``0xf47fff``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+msgstr "A factory method that returns a :class:`Colour` with a value of ``0xf47fff``. :rtype: :py:class:`~typing.TypeVar`\\(``CT``, bound= Colour)"
+
+msgid "A factory method that returns a :class:`Colour` corresponding to the embed colours on discord clients, with a value of:"
+msgstr "A factory method that returns a :class:`Colour` corresponding to the embed colours on discord clients, with a value of:"
+
+msgid "``0x2B2D31`` (dark)"
+msgstr "``0x2B2D31`` (dark)"
+
+msgid "``0xEEEFF1`` (light)"
+msgstr "``0xEEEFF1`` (light)"
+
+msgid "``0x000000`` (amoled)."
+msgstr "``0x000000`` (amoled)."
+
+msgid "The theme colour to apply, must be one of \"dark\", \"light\", or \"amoled\"."
+msgstr "The theme colour to apply, must be one of \"dark\", \"light\", or \"amoled\"."
+
+msgid "Activity"
+msgstr "Activity"
+
+msgid "Represents an activity in Discord."
+msgstr "Represents an activity in Discord."
+
+msgid "This could be an activity such as streaming, playing, listening or watching."
+msgstr "This could be an activity such as streaming, playing, listening or watching."
+
+msgid "For memory optimisation purposes, some activities are offered in slimmed down versions:"
+msgstr "For memory optimisation purposes, some activities are offered in slimmed down versions:"
+
+msgid ":class:`Game`"
+msgstr ":class:`Game`"
+
+msgid ":class:`Streaming`"
+msgstr ":class:`Streaming`"
+
+msgid "The application ID of the game."
+msgstr "The application ID of the game."
+
+msgid "The name of the activity."
+msgstr "The name of the activity."
+
+msgid "A stream URL that the activity could be doing."
+msgstr "A stream URL that the activity could be doing."
+
+msgid "The type of activity currently being done."
+msgstr "The type of activity currently being done."
+
+msgid ":class:`ActivityType`"
+msgstr ":class:`ActivityType`"
+
+msgid "The user's current party status or text used for a custom status."
+msgstr "The user's current party status or text used for a custom status."
+
+msgid "The detail of the user's current activity."
+msgstr "The detail of the user's current activity."
+
+msgid "A dictionary of timestamps. It contains the following optional keys:"
+msgstr "A dictionary of timestamps. It contains the following optional keys:"
+
+msgid "``start``: Corresponds to when the user started doing the activity in milliseconds since Unix epoch."
+msgstr "``start``: Corresponds to when the user started doing the activity in milliseconds since Unix epoch."
+
+msgid "``end``: Corresponds to when the user will finish doing the activity in milliseconds since Unix epoch."
+msgstr "``end``: Corresponds to when the user will finish doing the activity in milliseconds since Unix epoch."
+
+msgid "Dict[:class:`str`, :class:`int`]"
+msgstr "Dict[:class:`str`, :class:`int`]"
+
+msgid "A dictionary representing the images and their hover text of an activity. It contains the following optional keys:"
+msgstr "A dictionary representing the images and their hover text of an activity. It contains the following optional keys:"
+
+msgid "``large_image``: A string representing the ID for the large image asset."
+msgstr "``large_image``: A string representing the ID for the large image asset."
+
+msgid "``large_text``: A string representing the text when hovering over the large image asset."
+msgstr "``large_text``: A string representing the text when hovering over the large image asset."
+
+msgid "``small_image``: A string representing the ID for the small image asset."
+msgstr "``small_image``: A string representing the ID for the small image asset."
+
+msgid "``small_text``: A string representing the text when hovering over the small image asset."
+msgstr "``small_text``: A string representing the text when hovering over the small image asset."
+
+msgid "Dict[:class:`str`, :class:`str`]"
+msgstr "Dict[:class:`str`, :class:`str`]"
+
+msgid "A dictionary representing the activity party. It contains the following optional keys:"
+msgstr "A dictionary representing the activity party. It contains the following optional keys:"
+
+msgid "``id``: A string representing the party ID."
+msgstr "``id``: A string representing the party ID."
+
+msgid "``size``: A list of up to two integer elements denoting (current_size, maximum_size)."
+msgstr "``size``: A list of up to two integer elements denoting (current_size, maximum_size)."
+
+msgid "Dict[:class:`str`, Union[:class:`str`, List[:class:`int`]]]"
+msgstr "Dict[:class:`str`, Union[:class:`str`, List[:class:`int`]]]"
+
+msgid "A list of dictionaries representing custom buttons shown in a rich presence. Each dictionary contains the following keys:"
+msgstr "A list of dictionaries representing custom buttons shown in a rich presence. Each dictionary contains the following keys:"
+
+msgid "``label``: A string representing the text shown on the button."
+msgstr "``label``: A string representing the text shown on the button."
+
+msgid "``url``: A string representing the URL opened upon clicking the button."
+msgstr "``url``: A string representing the URL opened upon clicking the button."
+
+msgid "Bots cannot access a user's activity button URLs. Therefore, the type of this attribute will be List[:class:`str`] when received through the gateway."
+msgstr "Bots cannot access a user's activity button URLs. Therefore, the type of this attribute will be List[:class:`str`] when received through the gateway."
+
+msgid "Union[List[Dict[:class:`str`, :class:`str`]], List[:class:`str`]]"
+msgstr "Union[List[Dict[:class:`str`, :class:`str`]], List[:class:`str`]]"
+
+msgid "The emoji that belongs to this activity."
+msgstr "The emoji that belongs to this activity."
+
+msgid "Optional[:class:`PartialEmoji`]"
+msgstr "Optional[:class:`PartialEmoji`]"
+
+msgid "When the user started doing this activity in UTC, if applicable."
+msgstr "When the user started doing this activity in UTC, if applicable."
+
+msgid "When the user will stop doing this activity in UTC, if applicable."
+msgstr "When the user will stop doing this activity in UTC, if applicable."
+
+msgid "Returns a URL pointing to the large image asset of this activity if applicable."
+msgstr "Returns a URL pointing to the large image asset of this activity if applicable."
+
+msgid "Returns a URL pointing to the small image asset of this activity if applicable."
+msgstr "Returns a URL pointing to the small image asset of this activity if applicable."
+
+msgid "Returns the large image asset hover text of this activity if applicable."
+msgstr "Returns the large image asset hover text of this activity if applicable."
+
+msgid "Returns the small image asset hover text of this activity if applicable."
+msgstr "Returns the small image asset hover text of this activity if applicable."
+
+msgid "The base activity that all user-settable activities inherit from. A user-settable activity is one that can be used in :meth:`Client.change_presence`."
+msgstr "The base activity that all user-settable activities inherit from. A user-settable activity is one that can be used in :meth:`Client.change_presence`."
+
+msgid "The following types currently count as user-settable:"
+msgstr "The following types currently count as user-settable:"
+
+msgid ":class:`Activity`"
+msgstr ":class:`Activity`"
+
+msgid ":class:`CustomActivity`"
+msgstr ":class:`CustomActivity`"
+
+msgid "Note that although these types are considered user-settable by the library, Discord typically ignores certain combinations of activity depending on what is currently set. This behaviour may change in the future so there are no guarantees on whether Discord will actually let you set these types."
+msgstr "Note that although these types are considered user-settable by the library, Discord typically ignores certain combinations of activity depending on what is currently set. This behaviour may change in the future so there are no guarantees on whether Discord will actually let you set these types."
+
+msgid "When the user started doing this activity in UTC."
+msgstr "When the user started doing this activity in UTC."
+
+msgid "A slimmed down version of :class:`Activity` that represents a Discord game."
+msgstr "A slimmed down version of :class:`Activity` that represents a Discord game."
+
+msgid "This is typically displayed via **Playing** on the official Discord client."
+msgstr "This is typically displayed via **Playing** on the official Discord client."
+
+msgid "Checks if two games are equal."
+msgstr "Checks if two games are equal."
+
+msgid "Checks if two games are not equal."
+msgstr "Checks if two games are not equal."
+
+msgid "Returns the game's hash."
+msgstr "Returns the game's hash."
+
+msgid "Returns the game's name."
+msgstr "Returns the game's name."
+
+msgid "The game's name."
+msgstr "The game's name."
+
+msgid "Returns the game's type. This is for compatibility with :class:`Activity`."
+msgstr "Returns the game's type. This is for compatibility with :class:`Activity`."
+
+msgid "It always returns :attr:`ActivityType.playing`."
+msgstr "It always returns :attr:`ActivityType.playing`."
+
+msgid "When the user started playing this game in UTC, if applicable."
+msgstr "When the user started playing this game in UTC, if applicable."
+
+msgid "When the user will stop playing this game in UTC, if applicable."
+msgstr "When the user will stop playing this game in UTC, if applicable."
+
+msgid "A slimmed down version of :class:`Activity` that represents a Discord streaming status."
+msgstr "A slimmed down version of :class:`Activity` that represents a Discord streaming status."
+
+msgid "This is typically displayed via **Streaming** on the official Discord client."
+msgstr "This is typically displayed via **Streaming** on the official Discord client."
+
+msgid "Checks if two streams are equal."
+msgstr "Checks if two streams are equal."
+
+msgid "Checks if two streams are not equal."
+msgstr "Checks if two streams are not equal."
+
+msgid "Returns the stream's hash."
+msgstr "Returns the stream's hash."
+
+msgid "Returns the stream's name."
+msgstr "Returns the stream's name."
+
+msgid "Where the user is streaming from (ie. YouTube, Twitch)."
+msgstr "Where the user is streaming from (ie. YouTube, Twitch)."
+
+msgid "The stream's name."
+msgstr "The stream's name."
+
+msgid "An alias for :attr:`name`"
+msgstr "An alias for :attr:`name`"
+
+msgid "The game being streamed."
+msgstr "The game being streamed."
+
+msgid "The stream's URL."
+msgstr "The stream's URL."
+
+msgid "A dictionary comprised of similar keys than those in :attr:`Activity.assets`."
+msgstr "A dictionary comprised of similar keys than those in :attr:`Activity.assets`."
+
+msgid "It always returns :attr:`ActivityType.streaming`."
+msgstr "It always returns :attr:`ActivityType.streaming`."
+
+msgid "If provided, the twitch name of the user streaming."
+msgstr "If provided, the twitch name of the user streaming."
+
+msgid "This corresponds to the ``large_image`` key of the :attr:`Streaming.assets` dictionary if it starts with ``twitch:``. Typically this is set by the Discord client."
+msgstr "This corresponds to the ``large_image`` key of the :attr:`Streaming.assets` dictionary if it starts with ``twitch:``. Typically this is set by the Discord client."
+
+msgid "Represents a Custom activity from Discord."
+msgstr "Represents a Custom activity from Discord."
+
+msgid "Checks if two activities are equal."
+msgstr "Checks if two activities are equal."
+
+msgid "Checks if two activities are not equal."
+msgstr "Checks if two activities are not equal."
+
+msgid "Returns the activity's hash."
+msgstr "Returns the activity's hash."
+
+msgid "Returns the custom status text."
+msgstr "Returns the custom status text."
+
+msgid "The custom activity's name."
+msgstr "The custom activity's name."
+
+msgid "The emoji to pass to the activity, if any."
+msgstr "The emoji to pass to the activity, if any."
+
+msgid "The text used for the custom activity."
+msgstr "The text used for the custom activity."
+
+msgid "Returns the activity's type. This is for compatibility with :class:`Activity`."
+msgstr "Returns the activity's type. This is for compatibility with :class:`Activity`."
+
+msgid "It always returns :attr:`ActivityType.custom`."
+msgstr "It always returns :attr:`ActivityType.custom`."
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid "Wraps up the Discord permission value."
+msgstr "Wraps up the Discord permission value."
+
+msgid "The properties provided are two way. You can set and retrieve individual bits using the properties as if they were regular bools. This allows you to edit permissions."
+msgstr "The properties provided are two way. You can set and retrieve individual bits using the properties as if they were regular bools. This allows you to edit permissions."
+
+msgid "You can now use keyword arguments to initialize :class:`Permissions` similar to :meth:`update`."
+msgstr "You can now use keyword arguments to initialize :class:`Permissions` similar to :meth:`update`."
+
+msgid "Checks if two permissions are equal."
+msgstr "Checks if two permissions are equal."
+
+msgid "Checks if two permissions are not equal."
+msgstr "Checks if two permissions are not equal."
+
+msgid "Checks if a permission is a subset of another permission."
+msgstr "Checks if a permission is a subset of another permission."
+
+msgid "Checks if a permission is a superset of another permission."
+msgstr "Checks if a permission is a superset of another permission."
+
+msgid "Checks if a permission is a strict subset of another permission."
+msgstr "Checks if a permission is a strict subset of another permission."
+
+msgid "Adds two permissions together. Equivalent to ``x | y``."
+msgstr "Adds two permissions together. Equivalent to ``x | y``."
+
+msgid "Subtracts two permissions from each other."
+msgstr "Subtracts two permissions from each other."
+
+msgid "Returns the union of two permissions. Equivalent to ``x + y``."
+msgstr "Returns the union of two permissions. Equivalent to ``x + y``."
+
+msgid "Returns the intersection of two permissions."
+msgstr "Returns the intersection of two permissions."
+
+msgid "Returns the inverse of a permission."
+msgstr "Returns the inverse of a permission."
+
+msgid "Checks if a permission is a strict superset of another permission."
+msgstr "Checks if a permission is a strict superset of another permission."
+
+msgid "Return the permission's hash."
+msgstr "Return the permission's hash."
+
+msgid "Returns an iterator of ``(perm, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs. Note that aliases are not shown."
+msgstr "Returns an iterator of ``(perm, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs. Note that aliases are not shown."
+
+msgid "The raw value. This value is a bit array field of a 53-bit integer representing the currently available permissions. You should query permissions via the properties rather than using this raw value."
+msgstr "The raw value. This value is a bit array field of a 53-bit integer representing the currently available permissions. You should query permissions via the properties rather than using this raw value."
+
+msgid "Returns ``True`` if self has the same or fewer permissions as other."
+msgstr "Returns ``True`` if self has the same or fewer permissions as other."
+
+msgid "Returns ``True`` if self has the same or more permissions as other."
+msgstr "Returns ``True`` if self has the same or more permissions as other."
+
+msgid "Returns ``True`` if the permissions on other are a strict subset of those on self."
+msgstr "Returns ``True`` if the permissions on other are a strict subset of those on self."
+
+msgid "Returns ``True`` if the permissions on other are a strict superset of those on self."
+msgstr "Returns ``True`` if the permissions on other are a strict superset of those on self."
+
+msgid "A factory method that creates a :class:`Permissions` with all permissions set to ``False``."
+msgstr "A factory method that creates a :class:`Permissions` with all permissions set to ``False``."
+
+msgid ":py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr ":py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid "A factory method that creates a :class:`Permissions` with all permissions set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all permissions set to ``True``."
+
+msgid "A :class:`Permissions` with all channel-specific permissions set to ``True`` and the guild-specific ones set to ``False``. The guild-specific permissions are currently: :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr "A :class:`Permissions` with all channel-specific permissions set to ``True`` and the guild-specific ones set to ``False``. The guild-specific permissions are currently: :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid ":attr:`manage_emojis`"
+msgstr ":attr:`manage_emojis`"
+
+msgid ":attr:`view_audit_log`"
+msgstr ":attr:`view_audit_log`"
+
+msgid ":attr:`view_guild_insights`"
+msgstr ":attr:`view_guild_insights`"
+
+msgid ":attr:`manage_guild`"
+msgstr ":attr:`manage_guild`"
+
+msgid ":attr:`change_nickname`"
+msgstr ":attr:`change_nickname`"
+
+msgid ":attr:`manage_nicknames`"
+msgstr ":attr:`manage_nicknames`"
+
+msgid ":attr:`kick_members`"
+msgstr ":attr:`kick_members`"
+
+msgid ":attr:`ban_members`"
+msgstr ":attr:`ban_members`"
+
+msgid ":attr:`administrator`"
+msgstr ":attr:`administrator`"
+
+msgid "Added :attr:`stream`, :attr:`priority_speaker` and :attr:`use_slash_commands` permissions."
+msgstr "Added :attr:`stream`, :attr:`priority_speaker` and :attr:`use_slash_commands` permissions."
+
+msgid "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`, :attr:`use_external_stickers`, :attr:`send_messages_in_threads` and :attr:`request_to_speak` permissions."
+msgstr "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`, :attr:`use_external_stickers`, :attr:`send_messages_in_threads` and :attr:`request_to_speak` permissions."
+
+msgid "A factory method that creates a :class:`Permissions` with all \"General\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr "A factory method that creates a :class:`Permissions` with all \"General\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid "Permission :attr:`read_messages` is now included in the general permissions, but permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part of the general permissions."
+msgstr "Permission :attr:`read_messages` is now included in the general permissions, but permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part of the general permissions."
+
+msgid "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid "A factory method that creates a :class:`Permissions` with all \"Text\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr "A factory method that creates a :class:`Permissions` with all \"Text\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid "Permission :attr:`read_messages` is no longer part of the text permissions. Added :attr:`use_slash_commands` permission."
+msgstr "Permission :attr:`read_messages` is no longer part of the text permissions. Added :attr:`use_slash_commands` permission."
+
+msgid "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`, :attr:`send_messages_in_threads` and :attr:`use_external_stickers` permissions."
+msgstr "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`, :attr:`send_messages_in_threads` and :attr:`use_external_stickers` permissions."
+
+msgid "A factory method that creates a :class:`Permissions` with all \"Voice\" permissions from the official Discord UI set to ``True``."
+msgstr "A factory method that creates a :class:`Permissions` with all \"Voice\" permissions from the official Discord UI set to ``True``."
+
+msgid "A factory method that creates a :class:`Permissions` with all \"Stage Channel\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr "A factory method that creates a :class:`Permissions` with all \"Stage Channel\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid "A factory method that creates a :class:`Permissions` with all \"Stage Moderator\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr "A factory method that creates a :class:`Permissions` with all \"Stage Moderator\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid "A factory method that creates a :class:`Permissions` with all \"Advanced\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+msgstr "A factory method that creates a :class:`Permissions` with all \"Advanced\" permissions from the official Discord UI set to ``True``. :rtype: :py:class:`~typing.TypeVar`\\(``P``, bound= Permissions)"
+
+msgid "Bulk updates this permission object."
+msgstr "Bulk updates this permission object."
+
+msgid "Allows you to set multiple attributes by using keyword arguments. The names must be equivalent to the properties listed. Extraneous key/value pairs will be silently ignored."
+msgstr "Allows you to set multiple attributes by using keyword arguments. The names must be equivalent to the properties listed. Extraneous key/value pairs will be silently ignored."
+
+msgid "A list of key/value pairs to bulk update permissions with."
+msgstr "A list of key/value pairs to bulk update permissions with."
+
+msgid "Returns ``True`` if the user can create instant invites."
+msgstr "Returns ``True`` if the user can create instant invites."
+
+msgid "Returns ``True`` if the user can kick users from the guild."
+msgstr "Returns ``True`` if the user can kick users from the guild."
+
+msgid "Returns ``True`` if a user can ban users from the guild."
+msgstr "Returns ``True`` if a user can ban users from the guild."
+
+msgid "Returns ``True`` if a user is an administrator. This role overrides all other permissions."
+msgstr "Returns ``True`` if a user is an administrator. This role overrides all other permissions."
+
+msgid "This also bypasses all channel-specific overrides."
+msgstr "This also bypasses all channel-specific overrides."
+
+msgid "Returns ``True`` if a user can edit, delete, or create channels in the guild."
+msgstr "Returns ``True`` if a user can edit, delete, or create channels in the guild."
+
+msgid "This also corresponds to the \"Manage Channel\" channel-specific override."
+msgstr "This also corresponds to the \"Manage Channel\" channel-specific override."
+
+msgid "Returns ``True`` if a user can edit guild properties."
+msgstr "Returns ``True`` if a user can edit guild properties."
+
+msgid "Returns ``True`` if a user can add reactions to messages."
+msgstr "Returns ``True`` if a user can add reactions to messages."
+
+msgid "Returns ``True`` if a user can view the guild's audit log."
+msgstr "Returns ``True`` if a user can view the guild's audit log."
+
+msgid "Returns ``True`` if a user can be more easily heard while talking."
+msgstr "Returns ``True`` if a user can be more easily heard while talking."
+
+msgid "Returns ``True`` if a user can stream in a voice channel."
+msgstr "Returns ``True`` if a user can stream in a voice channel."
+
+msgid "Returns ``True`` if a user can view all or specific channels."
+msgstr "Returns ``True`` if a user can view all or specific channels."
+
+msgid "An alias for :attr:`view_channel`."
+msgstr "An alias for :attr:`view_channel`."
+
+msgid "Returns ``True`` if a user can send messages from all or specific text channels."
+msgstr "Returns ``True`` if a user can send messages from all or specific text channels."
+
+msgid "Returns ``True`` if a user can send TTS messages from all or specific text channels."
+msgstr "Returns ``True`` if a user can send TTS messages from all or specific text channels."
+
+msgid "Returns ``True`` if a user can delete or pin messages in a text channel."
+msgstr "Returns ``True`` if a user can delete or pin messages in a text channel."
+
+msgid "Note that there are currently no ways to edit other people's messages."
+msgstr "Note that there are currently no ways to edit other people's messages."
+
+msgid "Returns ``True`` if a user's messages will automatically be embedded by Discord."
+msgstr "Returns ``True`` if a user's messages will automatically be embedded by Discord."
+
+msgid "Returns ``True`` if a user can send files in their messages."
+msgstr "Returns ``True`` if a user can send files in their messages."
+
+msgid "Returns ``True`` if a user can read a text channel's previous messages."
+msgstr "Returns ``True`` if a user can read a text channel's previous messages."
+
+msgid "Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel."
+msgstr "Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel."
+
+msgid "Returns ``True`` if a user can use emojis from other guilds."
+msgstr "Returns ``True`` if a user can use emojis from other guilds."
+
+msgid "An alias for :attr:`external_emojis`."
+msgstr "An alias for :attr:`external_emojis`."
+
+msgid "Returns ``True`` if a user can view the guild's insights."
+msgstr "Returns ``True`` if a user can view the guild's insights."
+
+msgid "Returns ``True`` if a user can connect to a voice channel."
+msgstr "Returns ``True`` if a user can connect to a voice channel."
+
+msgid "Returns ``True`` if a user can speak in a voice channel."
+msgstr "Returns ``True`` if a user can speak in a voice channel."
+
+msgid "Returns ``True`` if a user can mute other users."
+msgstr "Returns ``True`` if a user can mute other users."
+
+msgid "Returns ``True`` if a user can deafen other users."
+msgstr "Returns ``True`` if a user can deafen other users."
+
+msgid "Returns ``True`` if a user can move users between other voice channels."
+msgstr "Returns ``True`` if a user can move users between other voice channels."
+
+msgid "Returns ``True`` if a user can use voice activation in voice channels."
+msgstr "Returns ``True`` if a user can use voice activation in voice channels."
+
+msgid "Returns ``True`` if a user can change their nickname in the guild."
+msgstr "Returns ``True`` if a user can change their nickname in the guild."
+
+msgid "Returns ``True`` if a user can change other user's nickname in the guild."
+msgstr "Returns ``True`` if a user can change other user's nickname in the guild."
+
+msgid "Returns ``True`` if a user can create or edit roles less than their role's position."
+msgstr "Returns ``True`` if a user can create or edit roles less than their role's position."
+
+msgid "This also corresponds to the \"Manage Permissions\" channel-specific override."
+msgstr "This also corresponds to the \"Manage Permissions\" channel-specific override."
+
+msgid "An alias for :attr:`manage_roles`."
+msgstr "An alias for :attr:`manage_roles`."
+
+msgid "Returns ``True`` if a user can create, edit, or delete webhooks."
+msgstr "Returns ``True`` if a user can create, edit, or delete webhooks."
+
+msgid "Returns ``True`` if a user can create, edit, or delete emojis."
+msgstr "Returns ``True`` if a user can create, edit, or delete emojis."
+
+msgid "An alias for :attr:`manage_emojis`."
+msgstr "An alias for :attr:`manage_emojis`."
+
+msgid "Returns ``True`` if a user can use slash commands."
+msgstr "Returns ``True`` if a user can use slash commands."
+
+msgid "An alias for :attr:`use_slash_commands`."
+msgstr "An alias for :attr:`use_slash_commands`."
+
+msgid "Returns ``True`` if a user can request to speak in a stage channel."
+msgstr "Returns ``True`` if a user can request to speak in a stage channel."
+
+msgid "Returns ``True`` if a user can manage guild events."
+msgstr "Returns ``True`` if a user can manage guild events."
+
+msgid "Returns ``True`` if a user can manage threads."
+msgstr "Returns ``True`` if a user can manage threads."
+
+msgid "Returns ``True`` if a user can create public threads."
+msgstr "Returns ``True`` if a user can create public threads."
+
+msgid "Returns ``True`` if a user can create private threads."
+msgstr "Returns ``True`` if a user can create private threads."
+
+msgid "Returns ``True`` if a user can use stickers from other guilds."
+msgstr "Returns ``True`` if a user can use stickers from other guilds."
+
+msgid "An alias for :attr:`external_stickers`."
+msgstr "An alias for :attr:`external_stickers`."
+
+msgid "Returns ``True`` if a user can send messages in threads."
+msgstr "Returns ``True`` if a user can send messages in threads."
+
+msgid "Returns ``True`` if a user can launch an activity flagged 'EMBEDDED' in a voice channel."
+msgstr "Returns ``True`` if a user can launch an activity flagged 'EMBEDDED' in a voice channel."
+
+msgid "Returns ``True`` if a user can moderate members (timeout)."
+msgstr "Returns ``True`` if a user can moderate members (timeout)."
+
+msgid "Returns ``True`` if a member can send voice messages."
+msgstr "Returns ``True`` if a member can send voice messages."
+
+msgid "Returns ``True`` if a member can set voice channel status."
+msgstr "Returns ``True`` if a member can set voice channel status."
+
+msgid "Returns ``True`` if a member can send polls."
+msgstr "Returns ``True`` if a member can send polls."
+
+msgid "Returns ``True`` if a member's user-installed apps can show public responses. Users will still be able to use user-installed apps, but responses will be ephemeral."
+msgstr "Returns ``True`` if a member's user-installed apps can show public responses. Users will still be able to use user-installed apps, but responses will be ephemeral."
+
+msgid "This only applies to apps that are also not installed to the guild."
+msgstr "This only applies to apps that are also not installed to the guild."
+
+msgid "A type that is used to represent a channel specific permission."
+msgstr "A type that is used to represent a channel specific permission."
+
+msgid "Unlike a regular :class:`Permissions`\\, the default value of a permission is equivalent to ``None`` and not ``False``. Setting a value to ``False`` is **explicitly** denying that permission, while setting a value to ``True`` is **explicitly** allowing that permission."
+msgstr "Unlike a regular :class:`Permissions`\\, the default value of a permission is equivalent to ``None`` and not ``False``. Setting a value to ``False`` is **explicitly** denying that permission, while setting a value to ``True`` is **explicitly** allowing that permission."
+
+msgid "The values supported by this are the same as :class:`Permissions` with the added possibility of it being set to ``None``."
+msgstr "The values supported by this are the same as :class:`Permissions` with the added possibility of it being set to ``None``."
+
+msgid "Checks if two overwrites are equal."
+msgstr "Checks if two overwrites are equal."
+
+msgid "Checks if two overwrites are not equal."
+msgstr "Checks if two overwrites are not equal."
+
+msgid "Set the value of permissions by their name."
+msgstr "Set the value of permissions by their name."
+
+msgid "Returns the (allow, deny) pair from this overwrite."
+msgstr "Returns the (allow, deny) pair from this overwrite."
+
+msgid ":py:class:`tuple`\\[:py:class:`~discord.permissions.Permissions`, :py:class:`~discord.permissions.Permissions`]"
+msgstr ":py:class:`tuple`\\[:py:class:`~discord.permissions.Permissions`, :py:class:`~discord.permissions.Permissions`]"
+
+msgid "Creates an overwrite from an allow/deny pair of :class:`Permissions`."
+msgstr "Creates an overwrite from an allow/deny pair of :class:`Permissions`."
+
+msgid ":py:class:`~typing.TypeVar`\\(``PO``, bound= PermissionOverwrite)"
+msgstr ":py:class:`~typing.TypeVar`\\(``PO``, bound= PermissionOverwrite)"
+
+msgid "Checks if the permission overwrite is currently empty."
+msgstr "Checks if the permission overwrite is currently empty."
+
+msgid "An empty permission overwrite is one that has no overwrites set to ``True`` or ``False``."
+msgstr "An empty permission overwrite is one that has no overwrites set to ``True`` or ``False``."
+
+msgid "Indicates if the overwrite is empty."
+msgstr "Indicates if the overwrite is empty."
+
+msgid "Bulk updates this permission overwrite object."
+msgstr "Bulk updates this permission overwrite object."
+
+msgid "A list of key/value pairs to bulk update with."
+msgstr "A list of key/value pairs to bulk update with."
+
+msgid "Application Role Connections"
+msgstr "Application Role Connections"
+
+msgid "Represents role connection metadata for a Discord application."
+msgstr "Represents role connection metadata for a Discord application."
+
+msgid "The type of metadata value."
+msgstr "The type of metadata value."
+
+msgid "The key for this metadata field. May only be the ``a-z``, ``0-9``, or ``_`` characters, with a maximum of 50 characters."
+msgstr "The key for this metadata field. May only be the ``a-z``, ``0-9``, or ``_`` characters, with a maximum of 50 characters."
+
+msgid "The name for this metadata field. Maximum 100 characters."
+msgstr "The name for this metadata field. Maximum 100 characters."
+
+msgid "The description for this metadata field. Maximum 200 characters."
+msgstr "The description for this metadata field. Maximum 200 characters."
+
+msgid "The name localizations for this metadata field. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+msgstr "The name localizations for this metadata field. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+
+msgid "The description localizations for this metadata field. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+msgstr "The description localizations for this metadata field. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+

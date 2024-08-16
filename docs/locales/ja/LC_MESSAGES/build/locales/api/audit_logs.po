@@ -1,0 +1,502 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Audit Log Data"
+msgstr "Audit Log Data"
+
+msgid "Working with :meth:`Guild.audit_logs` is a complicated process with a lot of machinery involved. The library attempts to make it easy to use and friendly. In order to accomplish this goal, it must make use of a couple of data classes that aid in this goal."
+msgstr "Working with :meth:`Guild.audit_logs` is a complicated process with a lot of machinery involved. The library attempts to make it easy to use and friendly. In order to accomplish this goal, it must make use of a couple of data classes that aid in this goal."
+
+msgid "Represents an Audit Log entry."
+msgstr "Represents an Audit Log entry."
+
+msgid "You retrieve these via :meth:`Guild.audit_logs`."
+msgstr "You retrieve these via :meth:`Guild.audit_logs`."
+
+msgid "Checks if two entries are equal."
+msgstr "Checks if two entries are equal."
+
+msgid "Checks if two entries are not equal."
+msgstr "Checks if two entries are not equal."
+
+msgid "Returns the entry's hash."
+msgstr "Returns the entry's hash."
+
+msgid "Audit log entries are now comparable and hashable."
+msgstr "Audit log entries are now comparable and hashable."
+
+msgid "The action that was done."
+msgstr "The action that was done."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`AuditLogAction`"
+msgstr ":class:`AuditLogAction`"
+
+msgid "The user who initiated this action. Usually a :class:`Member`\\, unless gone then it's a :class:`User`."
+msgstr "The user who initiated this action. Usually a :class:`Member`\\, unless gone then it's a :class:`User`."
+
+msgid "Optional[:class:`abc.User`]"
+msgstr "Optional[:class:`abc.User`]"
+
+msgid "The entry ID."
+msgstr "The entry ID."
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "The target that got changed. The exact type of this depends on the action being done."
+msgstr "The target that got changed. The exact type of this depends on the action being done."
+
+msgid "Any"
+msgstr "Any"
+
+msgid "The reason this action was done."
+msgstr "The reason this action was done."
+
+msgid "Optional[:class:`str`]"
+msgstr "Optional[:class:`str`]"
+
+msgid "Extra information that this entry has that might be useful. For most actions, this is ``None``. However, in some cases it contains extra information. See :class:`AuditLogAction` for which actions have this field filled out."
+msgstr "Extra information that this entry has that might be useful. For most actions, this is ``None``. However, in some cases it contains extra information. See :class:`AuditLogAction` for which actions have this field filled out."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "Returns the entry's creation time in UTC."
+msgstr "Returns the entry's creation time in UTC."
+
+msgid "The category of the action, if applicable."
+msgstr "The category of the action, if applicable."
+
+msgid "The list of changes this entry has."
+msgstr "The list of changes this entry has."
+
+msgid "The target's prior state."
+msgstr "The target's prior state."
+
+msgid "The target's subsequent state."
+msgstr "The target's subsequent state."
+
+msgid "An audit log change set."
+msgstr "An audit log change set."
+
+msgid "The old value. The attribute has the type of :class:`AuditLogDiff`."
+msgstr "The old value. The attribute has the type of :class:`AuditLogDiff`."
+
+msgid "Depending on the :class:`AuditLogActionCategory` retrieved by :attr:`~AuditLogEntry.category`\\, the data retrieved by this attribute differs:"
+msgstr "Depending on the :class:`AuditLogActionCategory` retrieved by :attr:`~AuditLogEntry.category`\\, the data retrieved by this attribute differs:"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Description"
+msgstr "Description"
+
+msgid ":attr:`~AuditLogActionCategory.create`"
+msgstr ":attr:`~AuditLogActionCategory.create`"
+
+msgid "All attributes are set to ``None``."
+msgstr "All attributes are set to ``None``."
+
+msgid ":attr:`~AuditLogActionCategory.delete`"
+msgstr ":attr:`~AuditLogActionCategory.delete`"
+
+msgid "All attributes are set the value before deletion."
+msgstr "All attributes are set the value before deletion."
+
+msgid ":attr:`~AuditLogActionCategory.update`"
+msgstr ":attr:`~AuditLogActionCategory.update`"
+
+msgid "All attributes are set the value before updating."
+msgstr "All attributes are set the value before updating."
+
+msgid "``None``"
+msgstr "``None``"
+
+msgid "No attributes are set."
+msgstr "No attributes are set."
+
+msgid "The new value. The attribute has the type of :class:`AuditLogDiff`."
+msgstr "The new value. The attribute has the type of :class:`AuditLogDiff`."
+
+msgid "All attributes are set to the created value"
+msgstr "All attributes are set to the created value"
+
+msgid "All attributes are set to ``None``"
+msgstr "All attributes are set to ``None``"
+
+msgid "All attributes are set the value after updating."
+msgstr "All attributes are set the value after updating."
+
+msgid "Represents an audit log \"change\" object. A change object has dynamic attributes that depend on the type of action being done. Certain actions map to certain attributes being set."
+msgstr "Represents an audit log \"change\" object. A change object has dynamic attributes that depend on the type of action being done. Certain actions map to certain attributes being set."
+
+msgid "Note that accessing an attribute that does not match the specified action will lead to an attribute error."
+msgstr "Note that accessing an attribute that does not match the specified action will lead to an attribute error."
+
+msgid "To get a list of attributes that have been set, you can iterate over them. To see a list of all possible attributes that could be set based on the action being done, check the documentation for :class:`AuditLogAction`, otherwise check the documentation below for all attributes that are possible."
+msgstr "To get a list of attributes that have been set, you can iterate over them. To see a list of all possible attributes that could be set based on the action being done, check the documentation for :class:`AuditLogAction`, otherwise check the documentation below for all attributes that are possible."
+
+msgid "Returns an iterator over (attribute, value) tuple of this diff."
+msgstr "Returns an iterator over (attribute, value) tuple of this diff."
+
+msgid "A name of something."
+msgstr "A name of something."
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "A guild's icon. See also :attr:`Guild.icon`."
+msgstr "A guild's icon. See also :attr:`Guild.icon`."
+
+msgid ":class:`Asset`"
+msgstr ":class:`Asset`"
+
+msgid "The guild's invite splash. See also :attr:`Guild.splash`."
+msgstr "The guild's invite splash. See also :attr:`Guild.splash`."
+
+msgid "The guild's discovery splash. See also :attr:`Guild.discovery_splash`."
+msgstr "The guild's discovery splash. See also :attr:`Guild.discovery_splash`."
+
+msgid "The guild's banner. See also :attr:`Guild.banner`."
+msgstr "The guild's banner. See also :attr:`Guild.banner`."
+
+msgid "The guild's owner. See also :attr:`Guild.owner`"
+msgstr "The guild's owner. See also :attr:`Guild.owner`"
+
+msgid "Union[:class:`Member`, :class:`User`]"
+msgstr "Union[:class:`Member`, :class:`User`]"
+
+msgid "The guild's AFK channel."
+msgstr "The guild's AFK channel."
+
+msgid "If this could not be found, then it falls back to a :class:`Object` with the ID being set."
+msgstr "If this could not be found, then it falls back to a :class:`Object` with the ID being set."
+
+msgid "See :attr:`Guild.afk_channel`."
+msgstr "See :attr:`Guild.afk_channel`."
+
+msgid "Union[:class:`VoiceChannel`, :class:`Object`]"
+msgstr "Union[:class:`VoiceChannel`, :class:`Object`]"
+
+msgid "The guild's system channel."
+msgstr "The guild's system channel."
+
+msgid "See :attr:`Guild.system_channel`."
+msgstr "See :attr:`Guild.system_channel`."
+
+msgid "Union[:class:`TextChannel`, :class:`Object`]"
+msgstr "Union[:class:`TextChannel`, :class:`Object`]"
+
+msgid "The guild's rules channel."
+msgstr "The guild's rules channel."
+
+msgid "If this could not be found then it falls back to a :class:`Object` with the ID being set."
+msgstr "If this could not be found then it falls back to a :class:`Object` with the ID being set."
+
+msgid "See :attr:`Guild.rules_channel`."
+msgstr "See :attr:`Guild.rules_channel`."
+
+msgid "The guild's public updates channel."
+msgstr "The guild's public updates channel."
+
+msgid "See :attr:`Guild.public_updates_channel`."
+msgstr "See :attr:`Guild.public_updates_channel`."
+
+msgid "The guild's AFK timeout. See :attr:`Guild.afk_timeout`."
+msgstr "The guild's AFK timeout. See :attr:`Guild.afk_timeout`."
+
+msgid "The guild's MFA level. See :attr:`Guild.mfa_level`."
+msgstr "The guild's MFA level. See :attr:`Guild.mfa_level`."
+
+msgid "The guild's widget has been enabled or disabled."
+msgstr "The guild's widget has been enabled or disabled."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "The widget's channel."
+msgstr "The widget's channel."
+
+msgid "The guild's verification level."
+msgstr "The guild's verification level."
+
+msgid "See also :attr:`Guild.verification_level`."
+msgstr "See also :attr:`Guild.verification_level`."
+
+msgid ":class:`VerificationLevel`"
+msgstr ":class:`VerificationLevel`"
+
+msgid "The guild's default notification level."
+msgstr "The guild's default notification level."
+
+msgid "See also :attr:`Guild.default_notifications`."
+msgstr "See also :attr:`Guild.default_notifications`."
+
+msgid ":class:`NotificationLevel`"
+msgstr ":class:`NotificationLevel`"
+
+msgid "The guild's content filter."
+msgstr "The guild's content filter."
+
+msgid "See also :attr:`Guild.explicit_content_filter`."
+msgstr "See also :attr:`Guild.explicit_content_filter`."
+
+msgid ":class:`ContentFilter`"
+msgstr ":class:`ContentFilter`"
+
+msgid "The guild's default message notification setting."
+msgstr "The guild's default message notification setting."
+
+msgid "The guild's vanity URL."
+msgstr "The guild's vanity URL."
+
+msgid "See also :meth:`Guild.vanity_invite` and :meth:`Guild.edit`."
+msgstr "See also :meth:`Guild.vanity_invite` and :meth:`Guild.edit`."
+
+msgid "The position of a :class:`Role` or :class:`abc.GuildChannel`."
+msgstr "The position of a :class:`Role` or :class:`abc.GuildChannel`."
+
+msgid "The type of channel or sticker."
+msgstr "The type of channel or sticker."
+
+msgid "Union[:class:`ChannelType`, :class:`StickerType`]"
+msgstr "Union[:class:`ChannelType`, :class:`StickerType`]"
+
+msgid "The topic of a :class:`TextChannel` or :class:`StageChannel`."
+msgstr "The topic of a :class:`TextChannel` or :class:`StageChannel`."
+
+msgid "See also :attr:`TextChannel.topic` or :attr:`StageChannel.topic`."
+msgstr "See also :attr:`TextChannel.topic` or :attr:`StageChannel.topic`."
+
+msgid "The bitrate of a :class:`VoiceChannel`."
+msgstr "The bitrate of a :class:`VoiceChannel`."
+
+msgid "See also :attr:`VoiceChannel.bitrate`."
+msgstr "See also :attr:`VoiceChannel.bitrate`."
+
+msgid "A list of permission overwrite tuples that represents a target and a :class:`PermissionOverwrite` for said target."
+msgstr "A list of permission overwrite tuples that represents a target and a :class:`PermissionOverwrite` for said target."
+
+msgid "The first element is the object being targeted, which can either be a :class:`Member` or :class:`User` or :class:`Role`. If this object is not found then it is a :class:`Object` with an ID being filled and a ``type`` attribute set to either ``'role'`` or ``'member'`` to help decide what type of ID it is."
+msgstr "The first element is the object being targeted, which can either be a :class:`Member` or :class:`User` or :class:`Role`. If this object is not found then it is a :class:`Object` with an ID being filled and a ``type`` attribute set to either ``'role'`` or ``'member'`` to help decide what type of ID it is."
+
+msgid "List[Tuple[target, :class:`PermissionOverwrite`]]"
+msgstr "List[Tuple[target, :class:`PermissionOverwrite`]]"
+
+msgid "The privacy level of the stage instance or scheduled event."
+msgstr "The privacy level of the stage instance or scheduled event."
+
+msgid "Union[:class:`StagePrivacyLevel`, :class:`ScheduledEventPrivacyLevel`]"
+msgstr "Union[:class:`StagePrivacyLevel`, :class:`ScheduledEventPrivacyLevel`]"
+
+msgid "A list of roles being added or removed from a member."
+msgstr "A list of roles being added or removed from a member."
+
+msgid "If a role is not found then it is a :class:`Object` with the ID and name being filled in."
+msgstr "If a role is not found then it is a :class:`Object` with the ID and name being filled in."
+
+msgid "List[Union[:class:`Role`, :class:`Object`]]"
+msgstr "List[Union[:class:`Role`, :class:`Object`]]"
+
+msgid "The nickname of a member."
+msgstr "The nickname of a member."
+
+msgid "See also :attr:`Member.nick`"
+msgstr "See also :attr:`Member.nick`"
+
+msgid "Whether the member is being server deafened."
+msgstr "Whether the member is being server deafened."
+
+msgid "See also :attr:`VoiceState.deaf`."
+msgstr "See also :attr:`VoiceState.deaf`."
+
+msgid "Whether the member is being server muted."
+msgstr "Whether the member is being server muted."
+
+msgid "See also :attr:`VoiceState.mute`."
+msgstr "See also :attr:`VoiceState.mute`."
+
+msgid "The permissions of a role."
+msgstr "The permissions of a role."
+
+msgid "See also :attr:`Role.permissions`."
+msgstr "See also :attr:`Role.permissions`."
+
+msgid ":class:`Permissions`"
+msgstr ":class:`Permissions`"
+
+msgid "The colour of a role."
+msgstr "The colour of a role."
+
+msgid "See also :attr:`Role.colour`"
+msgstr "See also :attr:`Role.colour`"
+
+msgid ":class:`Colour`"
+msgstr ":class:`Colour`"
+
+msgid "Whether the role is being hoisted or not."
+msgstr "Whether the role is being hoisted or not."
+
+msgid "See also :attr:`Role.hoist`"
+msgstr "See also :attr:`Role.hoist`"
+
+msgid "Whether the role is mentionable or not."
+msgstr "Whether the role is mentionable or not."
+
+msgid "See also :attr:`Role.mentionable`"
+msgstr "See also :attr:`Role.mentionable`"
+
+msgid "The invite's code."
+msgstr "The invite's code."
+
+msgid "See also :attr:`Invite.code`"
+msgstr "See also :attr:`Invite.code`"
+
+msgid "A guild channel."
+msgstr "A guild channel."
+
+msgid "If the channel is not found then it is a :class:`Object` with the ID being set. In some cases the channel name is also set."
+msgstr "If the channel is not found then it is a :class:`Object` with the ID being set. In some cases the channel name is also set."
+
+msgid "Union[:class:`abc.GuildChannel`, :class:`Object`]"
+msgstr "Union[:class:`abc.GuildChannel`, :class:`Object`]"
+
+msgid "The user who created the invite."
+msgstr "The user who created the invite."
+
+msgid "See also :attr:`Invite.inviter`."
+msgstr "See also :attr:`Invite.inviter`."
+
+msgid "Optional[:class:`User`]"
+msgstr "Optional[:class:`User`]"
+
+msgid "The invite's max uses."
+msgstr "The invite's max uses."
+
+msgid "See also :attr:`Invite.max_uses`."
+msgstr "See also :attr:`Invite.max_uses`."
+
+msgid "The invite's current uses."
+msgstr "The invite's current uses."
+
+msgid "See also :attr:`Invite.uses`."
+msgstr "See also :attr:`Invite.uses`."
+
+msgid "The invite's max age in seconds."
+msgstr "The invite's max age in seconds."
+
+msgid "See also :attr:`Invite.max_age`."
+msgstr "See also :attr:`Invite.max_age`."
+
+msgid "If the invite is a temporary invite."
+msgstr "If the invite is a temporary invite."
+
+msgid "See also :attr:`Invite.temporary`."
+msgstr "See also :attr:`Invite.temporary`."
+
+msgid "The permissions being allowed or denied."
+msgstr "The permissions being allowed or denied."
+
+msgid "The ID of the object being changed."
+msgstr "The ID of the object being changed."
+
+msgid "The avatar of a member."
+msgstr "The avatar of a member."
+
+msgid "See also :attr:`User.avatar`."
+msgstr "See also :attr:`User.avatar`."
+
+msgid "The number of seconds members have to wait before sending another message in the channel."
+msgstr "The number of seconds members have to wait before sending another message in the channel."
+
+msgid "See also :attr:`TextChannel.slowmode_delay`."
+msgstr "See also :attr:`TextChannel.slowmode_delay`."
+
+msgid "The region for the voice channel’s voice communication. A value of ``None`` indicates automatic voice region detection."
+msgstr "The region for the voice channel’s voice communication. A value of ``None`` indicates automatic voice region detection."
+
+msgid "See also :attr:`VoiceChannel.rtc_region`."
+msgstr "See also :attr:`VoiceChannel.rtc_region`."
+
+msgid ":class:`VoiceRegion`"
+msgstr ":class:`VoiceRegion`"
+
+msgid "The camera video quality for the voice channel's participants."
+msgstr "The camera video quality for the voice channel's participants."
+
+msgid "See also :attr:`VoiceChannel.video_quality_mode`."
+msgstr "See also :attr:`VoiceChannel.video_quality_mode`."
+
+msgid ":class:`VideoQualityMode`"
+msgstr ":class:`VideoQualityMode`"
+
+msgid "The format type of a sticker being changed."
+msgstr "The format type of a sticker being changed."
+
+msgid "See also :attr:`GuildSticker.format`"
+msgstr "See also :attr:`GuildSticker.format`"
+
+msgid ":class:`StickerFormatType`"
+msgstr ":class:`StickerFormatType`"
+
+msgid "The name of the emoji that represents a sticker being changed."
+msgstr "The name of the emoji that represents a sticker being changed."
+
+msgid "See also :attr:`GuildSticker.emoji`"
+msgstr "See also :attr:`GuildSticker.emoji`"
+
+msgid "The description of a sticker being changed."
+msgstr "The description of a sticker being changed."
+
+msgid "See also :attr:`GuildSticker.description`"
+msgstr "See also :attr:`GuildSticker.description`"
+
+msgid "The availability of a sticker being changed."
+msgstr "The availability of a sticker being changed."
+
+msgid "See also :attr:`GuildSticker.available`"
+msgstr "See also :attr:`GuildSticker.available`"
+
+msgid "The thread is now archived."
+msgstr "The thread is now archived."
+
+msgid "The thread is being locked or unlocked."
+msgstr "The thread is being locked or unlocked."
+
+msgid "The thread's auto archive duration being changed."
+msgstr "The thread's auto archive duration being changed."
+
+msgid "See also :attr:`Thread.auto_archive_duration`"
+msgstr "See also :attr:`Thread.auto_archive_duration`"
+
+msgid "The default auto archive duration for newly created threads being changed."
+msgstr "The default auto archive duration for newly created threads being changed."
+
+msgid "Non-moderators can now add other non-moderators to this thread."
+msgstr "Non-moderators can now add other non-moderators to this thread."
+
+msgid "This command's permissions were updated."
+msgstr "This command's permissions were updated."
+
+msgid "The voice channel status of a :class:`VoiceChannel`."
+msgstr "The voice channel status of a :class:`VoiceChannel`."
+
+msgid "See also :attr:`VoiceChannel.status`."
+msgstr "See also :attr:`VoiceChannel.status`."
+
+msgid "The cover image of a :class:`ScheduledEvent`."
+msgstr "The cover image of a :class:`ScheduledEvent`."
+

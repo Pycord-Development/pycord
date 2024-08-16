@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Version Related Info"
+msgstr "Version Related Info"
+
+msgid "There are two main ways to query version information about the library. For guarantees, check :ref:`version_guarantees`."
+msgstr "There are two main ways to query version information about the library. For guarantees, check :ref:`version_guarantees`."
+
+msgid "A named tuple that is similar to :obj:`py:sys.version_info`."
+msgstr "A named tuple that is similar to :obj:`py:sys.version_info`."
+
+msgid "Just like :obj:`py:sys.version_info` the valid values for ``releaselevel`` are 'alpha', 'beta', 'candidate' and 'final'."
+msgstr "Just like :obj:`py:sys.version_info` the valid values for ``releaselevel`` are 'alpha', 'beta', 'candidate' and 'final'."
+
+msgid "A string representation of the version. e.g. ``'1.0.0rc1'``. This is based off of :pep:`440`."
+msgstr "A string representation of the version. e.g. ``'1.0.0rc1'``. This is based off of :pep:`440`."
+

@@ -1,0 +1,58 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Version Guarantees"
+msgstr "Garantías de versión"
+
+msgid "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
+msgstr "La biblioteca sigue el `principio de versionado semántico <https://semver.org/>`_ lo que significa que la mayor versión es actualizada cada vez que hay un cambio incompatible en la API. Sin embargo, debido a la falta de garantías en el lado de Discord cuando se refiere a ruptura de cambios junto con la naturaleza bastante dinámica de Python, puede ser difícil discernir que se puede considerar una ruptura de cambios o no."
+
+msgid "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
+msgstr "La primera cosa a tener en cuenta es que la ruptura de cambios solo se aplica a **funciones y clases públicamente documentadas**. Si no aparece en la documentación, no es parte de la API pública y puede cambiar en cualquier momento. Esto incluye atributos que empiezan por una barra baja o funciones que no estén documentadas."
+
+msgid "The examples below are non-exhaustive."
+msgstr "Los siguientes ejemplos no son exhaustivos."
+
+msgid "Examples of Breaking Changes"
+msgstr "Ejemplos de roturas de cambios"
+
+msgid "Changing the default parameter value to something else."
+msgstr "Cambiar el valor por defecto del parámetro a otra cosa."
+
+msgid "Renaming a function without an alias to an old function."
+msgstr "Renombrar una función sin alias a una función antigua."
+
+msgid "Adding or removing parameters to an event."
+msgstr "Añadir o quitar parámetros a un evento."
+
+msgid "Examples of Non-Breaking Changes"
+msgstr "Ejemplos de cambios sin rupturas"
+
+msgid "Adding or removing private underscored attributes."
+msgstr "Añadir o quitar atributos privados."
+
+msgid "Adding an element into the ``__slots__`` of a data class."
+msgstr "Añadir un elemento en los ``__slots__`` de una clase de datos."
+
+msgid "Changing the behaviour of a function to fix a bug."
+msgstr "Cambiar el comportamiento de una función para arreglar un bug."
+
+msgid "Changes in the documentation."
+msgstr "Cambios en la documentación."
+
+msgid "Modifying the internal HTTP handling."
+msgstr "Modificar el manejo del HTTP interno."
+
+msgid "Upgrading the dependencies to a new version, major or otherwise."
+msgstr "Actualizar las dependencias a una nueva versión, mayor o de otro tipo."
+
