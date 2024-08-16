@@ -3,10 +3,10 @@ name: "TODO Checks"
 on:
   push:
     paths:
-      - "discord/"
-      - "docs/"
-      - "examples/"
-      - "tests/"
+      - "discord/**"
+      - "docs/**"
+      - "examples/**"
+      - "tests/**"
     branches: [master]
   workflow_dispatch:
 

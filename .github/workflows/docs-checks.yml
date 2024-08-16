@@ -3,18 +3,18 @@ name: "Documentation Checks"
 on:
   push:
     paths:
-      - "discord/"
-      - "docs/"
-      - "requirements/"
-      - "pyproject.toml"
-      - "setup.py"
+      - "discord/**"
+      - "docs/**"
+      - "requirements/**"
+      - "*.toml"
+      - "*.py"
   pull_request:
     paths:
-      - "discord/"
-      - "docs/"
+      - "discord/**"
+      - "docs/**"
       - "requirements/"
-      - "pyproject.toml"
-      - "setup.py"
+      - "*.toml"
+      - "*.py"
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"

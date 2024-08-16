@@ -3,20 +3,18 @@ name: "Library Checks"
 on:
   push:
     paths:
-      - "discord/"
-      - "requirements/"
-      - "pyproject.toml"
-      - "setup.py"
-      - ."flake8"
-      - ".prettierrc"
+      - "discord/**"
+      - "requirements/**"
+      - "*.toml"
+      - "*.py"
+      - ".*"
   pull_request:
     paths:
-      - discord/
-      - requirements/
-      - pyproject.toml
-      - setup.py
-      - .flake8
-      - .prettierrc
+      - "discord/**"
+      - "requirements/**"
+      - "*.toml"
+      - "*.py"
+      - ".*"
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
