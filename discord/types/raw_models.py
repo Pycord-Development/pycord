@@ -154,3 +154,11 @@ class AuditLogEntryEvent(TypedDict):
     changes: NotRequired[list[dict]]
     reason: NotRequired[str]
     options: NotRequired[dict]
+
+
+class MessagePollVoteEvent(TypedDict):
+    user_id: Snowflake
+    guild_id: NotRequired[Snowflake]
+    channel_id: Snowflake
+    message_id: Snowflake
+    answer_id: int

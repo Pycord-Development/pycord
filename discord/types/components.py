@@ -30,9 +30,10 @@ from typing import Literal, Union
 from .._typed_dict import NotRequired, TypedDict
 from .channel import ChannelType
 from .emoji import PartialEmoji
+from .snowflake import Snowflake
 
 ComponentType = Literal[1, 2, 3, 4]
-ButtonStyle = Literal[1, 2, 3, 4, 5]
+ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 
 
@@ -49,6 +50,7 @@ class ButtonComponent(TypedDict):
     label: NotRequired[str]
     type: Literal[2]
     style: ButtonStyle
+    sku_id: Snowflake
 
 
 class InputText(TypedDict):

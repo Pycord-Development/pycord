@@ -1,0 +1,61 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Extensions"
+msgstr "Extensions"
+
+msgid "There comes a time in the bot development when you want to extend the bot functionality at run-time and quickly unload and reload code (also called hot-reloading). The command framework comes with this ability built-in, with a concept called **extensions**."
+msgstr "There comes a time in the bot development when you want to extend the bot functionality at run-time and quickly unload and reload code (also called hot-reloading). The command framework comes with this ability built-in, with a concept called **extensions**."
+
+msgid "Primer"
+msgstr "Primer"
+
+msgid "An extension at its core is a python file with an entry point called ``setup``. This setup must be a plain Python function (not a coroutine). It takes a single parameter -- the :class:`~.commands.Bot` that loads the extension."
+msgstr "An extension at its core is a python file with an entry point called ``setup``. This setup must be a plain Python function (not a coroutine). It takes a single parameter -- the :class:`~.commands.Bot` that loads the extension."
+
+msgid "An example extension looks like this:"
+msgstr "An example extension looks like this:"
+
+msgid "hello.py"
+msgstr "hello.py"
+
+msgid "In this example we define a simple command, and when the extension is loaded this command is added to the bot. Now the final step to this is loading the extension, which we do by calling :meth:`.Bot.load_extension`. To load this extension we call ``bot.load_extension('hello')``."
+msgstr "In this example we define a simple command, and when the extension is loaded this command is added to the bot. Now the final step to this is loading the extension, which we do by calling :meth:`.Bot.load_extension`. To load this extension we call ``bot.load_extension('hello')``."
+
+msgid "Cogs"
+msgstr "Cogs"
+
+msgid "Extensions are usually used in conjunction with cogs. To read more about them, check out the documentation, :ref:`ext_commands_cogs`."
+msgstr "Extensions are usually used in conjunction with cogs. To read more about them, check out the documentation, :ref:`ext_commands_cogs`."
+
+msgid "Extension paths are ultimately similar to the import mechanism. What this means is that if there is a folder, then it must be dot-qualified. For example to load an extension in ``plugins/hello.py`` then we use the string ``plugins.hello``."
+msgstr "Extension paths are ultimately similar to the import mechanism. What this means is that if there is a folder, then it must be dot-qualified. For example to load an extension in ``plugins/hello.py`` then we use the string ``plugins.hello``."
+
+msgid "Reloading"
+msgstr "Reloading"
+
+msgid "When you make a change to the extension and want to reload the references, the library comes with a function to do this for you, :meth:`.Bot.reload_extension`."
+msgstr "When you make a change to the extension and want to reload the references, the library comes with a function to do this for you, :meth:`.Bot.reload_extension`."
+
+msgid "Once the extension reloads, any changes that we did will be applied. This is useful if we want to add or remove functionality without restarting our bot. If an error occurred during the reloading process, the bot will pretend as if the reload never happened."
+msgstr "Once the extension reloads, any changes that we did will be applied. This is useful if we want to add or remove functionality without restarting our bot. If an error occurred during the reloading process, the bot will pretend as if the reload never happened."
+
+msgid "Cleaning Up"
+msgstr "Cleaning Up"
+
+msgid "Although rare, sometimes an extension needs to clean-up or know when it's being unloaded. For cases like these, there is another entry point named ``teardown`` which is similar to ``setup`` except called when the extension is unloaded."
+msgstr "Although rare, sometimes an extension needs to clean-up or know when it's being unloaded. For cases like these, there is another entry point named ``teardown`` which is similar to ``setup`` except called when the extension is unloaded."
+
+msgid "basic_ext.py"
+msgstr "basic_ext.py"
+

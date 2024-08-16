@@ -29,7 +29,12 @@ of :class:`enum.Enum`.
         A string.
     .. attribute:: integer
 
-        An integer.
+        An integer between -2⁵³ and 2⁵³.
+
+        .. note::
+
+            IDs, such as 881224361015672863, are often too big for this input type.
+
     .. attribute:: boolean
 
         A boolean.
@@ -47,7 +52,11 @@ of :class:`enum.Enum`.
         A mentionable (user or role).
     .. attribute:: number
 
-        A floating number.
+        A floating-point number between -2⁵³ and 2⁵³.
+
+        .. note::
+
+            IDs, such as 881224361015672863, are often too big for this input type.
 
     .. attribute:: attachment
 
@@ -409,13 +418,13 @@ of :class:`enum.Enum`.
         Represents a slash command interaction.
     .. attribute:: component
 
-        Represents a component based interaction, i.e. using the Discord Bot UI Kit.
+        Represents a component-based interaction, i.e. using the Discord Bot UI Kit.
     .. attribute:: auto_complete
 
         Represents a autocomplete interaction for slash commands.
     .. attribute:: modal_submit
 
-        Represents a modal based interaction.
+        Represents a modal-based interaction.
 
 .. class:: InteractionResponseType
 
@@ -518,6 +527,9 @@ of :class:`enum.Enum`.
     .. attribute:: link
 
         Represents a link button.
+    .. attribute:: premium
+
+        Represents a premium button.
 
     .. attribute:: blurple
 
@@ -1401,6 +1413,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
@@ -1421,6 +1434,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
@@ -1441,6 +1455,7 @@ of :class:`enum.Enum`.
         - :attr:`~discord.ScheduledEvent.location`
         - :attr:`~discord.ScheduledEvent.status`
         - :attr:`~discord.ScheduledEventLocation.type`
+        - :attr:`~discord.ScheduledEvent.image`
 
         .. versionadded:: 2.0
 
@@ -2369,6 +2384,16 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.5
 
+    .. attribute:: durable
+
+       A one-time purchase that is permanent and is not subject to either renewal
+       or consumption, such as lifetime access to an app's premium features.
+
+    .. attribute:: consumable
+
+       A one-time, non-renewable purchase that provides access, such as a temporary
+       power-up or boost in a game.
+
     .. attribute:: subscription
 
         Represents a recurring subscription.
@@ -2384,7 +2409,35 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.5
 
-    .. attribute:: app_subscription
+    .. attribute:: purchase
+
+        Entitlement was purchased by the user.
+
+    .. attribute:: premium_subscription
+
+        Entitlement is for a Discord Nitro subscription.
+
+    .. attribute:: developer_gift
+
+        Entitlement was gifted by the developer.
+
+    .. attribute:: test_mode_purchase
+
+        Entitlement was purchased by a developer in the application's test mode.
+
+    .. attribute:: free_purchase
+
+        Entitlement was granted when the SKU was free.
+
+    .. attribute:: user_gift
+
+        Entitlement was gifted by another user.
+
+    .. attribute:: premium_purchase
+
+        Entitlement was claimed by a user for free as a Nitro subscriber.
+
+    .. attribute:: application_subscription
 
         Entitlement was purchased as an app subscription.
 
@@ -2402,3 +2455,48 @@ of :class:`enum.Enum`.
     .. attribute:: user
 
         Entitlement is owned by a user.
+
+
+.. class:: PollLayoutType
+
+    Represents a poll's layout type.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: default
+
+        Represents the default layout.
+
+
+.. class:: IntegrationType
+
+    The integration type for an application.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: guild_install
+
+        The integration is added to a guild.
+
+    .. attribute:: user_install
+
+        The integration is added to a user account.
+
+
+.. class:: InteractionContextType
+
+    The context where an interaction occurs.
+
+    .. versionadded:: 2.6
+
+    .. attribute:: guild
+
+        The interaction is in a guild.
+
+    .. attribute:: bot_dm
+
+        The interaction is in the bot's own DM channel with the user.
+
+    .. attribute:: private_channel
+
+        The interaction is in a private DM or group DM channel.

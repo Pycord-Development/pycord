@@ -1,0 +1,121 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Creating a Bot Account"
+msgstr "创建一个Bot帐户"
+
+msgid "In order to work with the library and the Discord API in general, we must first create a Discord Bot account."
+msgstr "为了与库和Discord API进行合作，我们必须先创建一个 Discord Bot 帐户。"
+
+msgid "Creating a Bot account is a pretty straightforward process."
+msgstr "创建一个Bot帐户是一个非常简单且直观的操作。"
+
+msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+msgstr "请确保你已经登入了 `Discord网站<https://discord.com>`_。"
+
+msgid "Navigate to the `application page <https://discord.com/developers/applications>`_"
+msgstr "前往`应用程序页面 <https://discord.com/developers/applications>`_"
+
+msgid "Click on the \"New Application\" button."
+msgstr "点击 \"New Application\" 按钮。"
+
+msgid "The new application button."
+msgstr "新的应用程序按钮。"
+
+msgid "Give the application a name and click \"Create\"."
+msgstr "给予应用程序一个名字然后点击\"Create\"。"
+
+msgid "The new application form filled in."
+msgstr "填写新的应用程序表格。"
+
+msgid "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
+msgstr "通过导航到“Bot”选项卡点击“Add Bot” 以创建机器人用户。"
+
+msgid "Click \"Yes, do it!\" to continue."
+msgstr "点击\"Yes, do it!\"继续"
+
+msgid "The Add Bot button."
+msgstr "添加机器人按钮。"
+
+msgid "Make sure that **Public Bot** is ticked if you want others to invite your bot."
+msgstr "如果你想让其他人可以邀请你的机器人，请确保**Public Bot**选项已启用。"
+
+msgid "You should also make sure that **Require OAuth2 Code Grant** is unchecked unless you are developing a service that needs it. If you're unsure, then **leave it unchecked**."
+msgstr "你还需要确保 **Require OAuth2 Code Grant** 是不启用的，除非你正在开发一个需要它的服务。如果你不确定是否要启用，则**让他处于不启用的状态**。"
+
+msgid "How the Bot User options should look like for most people."
+msgstr "对于大多数人来说，Bot 用户选项应该是什么样子。"
+
+msgid "Copy the token using the \"Copy\" button."
+msgstr "透过使用\"Copy\"按钮复制令牌。"
+
+msgid "**This is not the Client Secret at the General Information page.**"
+msgstr "**这个并不是在General页面内的Client Secret**"
+
+msgid "It should be worth noting that this token is essentially your bot's password. You should **never** share this with someone else. In doing so, someone can log in to your bot and do malicious things, such as leaving servers, ban all members inside a server, or pinging everyone maliciously."
+msgstr "需要注意的是，令牌就跟机器人的密码一样重要。你应该**永远不要**分享令牌给任何人。如果你分享了，则其他人可以登入你的机器人并且做一些怀有恶意的事情，例如说离开伺服器、停权在一个伺服器的所有使用者、或者是恶意艾特所有人。"
+
+msgid "The possibilities are endless, so **do not share this token.**"
+msgstr "可能性是无限的，所以**请勿分享这个令牌**。"
+
+msgid "If you accidentally leaked your token, click the \"Regenerate\" button as soon as possible. This revokes your old token and re-generates a new one. Now you need to use the new token to login."
+msgstr "如果你不小心泄漏了你的令牌，请立刻点击\"Regenerate\"按钮。这将会撤销你旧有的令牌并且重新生成一个新的令牌。现在，你需要使用新的令牌进行登入。"
+
+msgid "And that's it. You now have a bot account and you can login with that token."
+msgstr "这样就结束了。你现在就拥有了一个机器人帐号而且可以透过令牌登入。"
+
+msgid "Inviting Your Bot"
+msgstr "邀请你的机器人"
+
+msgid "So you've made a Bot User but it's not actually in any server."
+msgstr "你創建了一個機器人用戶，但是他並不存在於任何一個伺服器。"
+
+msgid "If you want to invite your bot you must create an invite URL for it."
+msgstr "如果你想邀请你的机器人，你需要创建一个邀请连结来邀请它。"
+
+msgid "Click on your bot's page."
+msgstr "点击你的机器人的页面。"
+
+msgid "Expand the \"OAuth2\" tab and click on \"URL Generator\"."
+msgstr "展开\"OAuth2\"的分页并且点击\"URL Generator\"。"
+
+msgid "How the OAuth2 tab should look like."
+msgstr "OAuth2 选项卡应该是什么样子。"
+
+msgid "Tick the \"bot\" and \"applications.commands\" checkboxes under \"scopes\"."
+msgstr "在\"scopes\"分类底下勾选\"bot\"跟\"applications.commands\"两个选项。"
+
+msgid "The scopes checkbox with \"bot\" and \"applications.commands\" ticked."
+msgstr "勾选scopes区块内的\"bot\"跟\"applications.commands\"的勾选框。"
+
+msgid "Tick the permissions required for your bot to function under \"Bot Permissions\"."
+msgstr "在\"Bot Permissions\"区块勾选你的机器人需要的权限。"
+
+msgid "Please be aware of the consequences of requiring your bot to have the \"Administrator\" permission."
+msgstr "请注意，您需要考虑要求您的机器人具备“管理员”权限的后果。"
+
+msgid "Bot owners must have 2FA enabled for certain actions and permissions when added in servers that have Server-Wide 2FA enabled. Check the `2FA support page <https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_ for more information."
+msgstr "当机器人被邀请到有开启2FA伺服器的时候，机器人拥有者也必须开启2FA，机器人才可以进行一些特殊操作。\\n查看`2FA支援页面<https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_了解更多资讯。"
+
+msgid "The permission checkboxes with some permissions checked."
+msgstr "被勾选部分权限的权限部分。"
+
+msgid "Now the resulting URL can be used to add your bot to a server. Copy and paste the URL into your browser, choose a server to invite the bot to, and click \"Authorize\"."
+msgstr "现在生成的 URL 可以用于将你的机器人添加到服务器。 复制并粘贴URL到您的浏览器，选择一个服务器邀请机器人并点击“授权”。"
+
+msgid "The person adding the bot needs \"Manage Server\" permissions to do so."
+msgstr "添加机器人的人需要具有“管理服务器”的权限才能进行此操作。"
+
+msgid "If you want to generate this URL dynamically at run-time inside your bot and using the :class:`discord.Permissions` interface, you can use :func:`discord.utils.oauth_url`."
+msgstr "如果你想在运行时动态生成此 URL 并使用 :class: `discord.Permissions` 接口，你可以使用:func:`discord.utils.oauth_url`。"
+

@@ -27,8 +27,10 @@ from __future__ import annotations
 from typing import List
 
 import discord
+from discord.errors import DiscordException
 from discord.ext.bridge import BridgeContext
 from discord.ext.commands import Context
+from discord.file import File
 from discord.member import Member
 from discord.user import User
 
@@ -103,26 +105,25 @@ class PaginatorButton(discord.ui.Button):
         interaction: :class:`discord.Interaction`
             The interaction created by clicking the navigation button.
         """
+        new_page = self.paginator.current_page
         if self.button_type == "first":
-            self.paginator.current_page = 0
+            new_page = 0
         elif self.button_type == "prev":
             if self.paginator.loop_pages and self.paginator.current_page == 0:
-                self.paginator.current_page = self.paginator.page_count
+                new_page = self.paginator.page_count
             else:
-                self.paginator.current_page -= 1
+                new_page -= 1
         elif self.button_type == "next":
             if (
                 self.paginator.loop_pages
                 and self.paginator.current_page == self.paginator.page_count
             ):
-                self.paginator.current_page = 0
+                new_page = 0
             else:
-                self.paginator.current_page += 1
+                new_page += 1
         elif self.button_type == "last":
-            self.paginator.current_page = self.paginator.page_count
-        await self.paginator.goto_page(
-            page_number=self.paginator.current_page, interaction=interaction
-        )
+            new_page = self.paginator.page_count
+        await self.paginator.goto_page(page_number=new_page, interaction=interaction)
 
 
 class Page:
@@ -656,6 +657,20 @@ class Paginator(discord.ui.View):
         else:
             await self.message.edit(view=self)
 
+    def _goto_page(self, page_number: int = 0) -> tuple[Page, list[File] | None]:
+        self.current_page = page_number
+        self.update_buttons()
+
+        page = self.pages[page_number]
+        page = self.get_page_content(page)
+
+        if page.custom_view:
+            self.update_custom_view(page.custom_view)
+
+        files = page.update_files()
+
+        return page, files
+
     async def goto_page(
         self, page_number: int = 0, *, interaction: discord.Interaction | None = None
     ) -> None:
@@ -680,42 +695,34 @@ class Paginator(discord.ui.View):
         :class:`~discord.Message`
             The message associated with the paginator.
         """
-        self.update_buttons()
-        self.current_page = page_number
-        if self.show_indicator:
-            try:
-                self.buttons["page_indicator"][
-                    "object"
-                ].label = f"{self.current_page + 1}/{self.page_count + 1}"
-            except KeyError:
-                pass
+        old_page = self.current_page
+        page, files = self._goto_page(page_number)
 
-        page = self.pages[page_number]
-        page = self.get_page_content(page)
+        try:
+            if interaction:
+                await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+                await interaction.followup.edit_message(
+                    message_id=self.message.id,
+                    content=page.content,
+                    embeds=page.embeds,
+                    attachments=[],
+                    files=files or [],
+                    view=self,
+                )
+            else:
+                await self.message.edit(
+                    content=page.content,
+                    embeds=page.embeds,
+                    attachments=[],
+                    files=files or [],
+                    view=self,
+                )
+        except DiscordException:
+            # Something went wrong, and the paginator couldn't be updated.
+            # Revert our changes and propagate the error.
+            self._goto_page(old_page)
+            raise
 
-        if page.custom_view:
-            self.update_custom_view(page.custom_view)
-
-        files = page.update_files()
-
-        if interaction:
-            await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
-            await interaction.followup.edit_message(
-                message_id=self.message.id,
-                content=page.content,
-                embeds=page.embeds,
-                attachments=[],
-                files=files or [],
-                view=self,
-            )
-        else:
-            await self.message.edit(
-                content=page.content,
-                embeds=page.embeds,
-                attachments=[],
-                files=files or [],
-                view=self,
-            )
         if self.trigger_on_display:
             await self.page_action(interaction=interaction)
 

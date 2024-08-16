@@ -1,0 +1,223 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../api/sinks.rst:4
+#: da5ec43759ab47fdb55072ef2d386b77
+msgid "Sinks"
+msgstr ""
+
+#: ../../api/sinks.rst:7
+#: 69ccca52dd344eba81f86600350345de
+msgid "Core"
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Filters:1
+#: 0142ecf442b940a78a28dc08a1ce93cb
+msgid "Filters for :class:`~.Sink`"
+msgstr ""
+
+#: ../../api/sinks.rst:0
+#: 378afe544b724d8f90393291fdc85369
+#: fab663f2aebe45c48cdc3b54b4e31005
+msgid "Parameters"
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Filters:5
+#: 0703f5343d364e319360f8c62ab449e0
+msgid "Container of all Filters."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink:1
+#: eb6c1cd03ec9420db458b64f82b0e54d
+msgid "A sink \"stores\" recorded audio data."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink:3
+#: f84d8b866bf9422c8920ca48f7442fd7
+msgid "Can be subclassed for extra customizablilty."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink:6
+#: 46f6384351cd4250abdc80e42a256c2f
+msgid "It is recommended you use the officially provided sink classes, such as :class:`~discord.sinks.WaveSink`."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink:10
+#: 7e2733f87658404cba7b6fe06dd64f29
+msgid "just replace the following like so: ::"
+msgstr ""
+
+#: ../../api/sinks.rst:0
+#: 3a24bec2087b4fd2828ce8bcf7bfcce6
+#: e7eb3ded3c57413c9ee86ee3409252f9
+#: 817268b268934544944a1cdba3c85456
+#: 98ec647e22e34424b43cef44e33d1f5d
+#: 0132a5cc6ea140e993f0c67c578b8564
+#: e41d37b52642478ba8b5960322091c62
+#: 49d6e90fbe7345e296ddb91c800584da
+#: db671b98041f42c69d09637b747da230
+#: a75ba41f4c624334b98deb28f10ff722
+#: 77e45956053343f4a15cfc2f1834d79a
+#: 7640928653394b188296110e0ec788fb
+msgid "Raises"
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink:20
+#: 2750e2c115da40ecaf706f78f45897a8
+msgid "An invalid encoding type was specified."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink:21
+#: ../../../discord/sinks/m4a.py:docstring of discord.sinks.m4a.M4ASink.format_audio:3
+#: ../../../discord/sinks/mka.py:docstring of discord.sinks.mka.MKASink.format_audio:3
+#: ../../../discord/sinks/mkv.py:docstring of discord.sinks.mkv.MKVSink.format_audio:3
+#: ../../../discord/sinks/mp3.py:docstring of discord.sinks.mp3.MP3Sink.format_audio:3
+#: ../../../discord/sinks/mp4.py:docstring of discord.sinks.mp4.MP4Sink.format_audio:3
+#: ../../../discord/sinks/ogg.py:docstring of discord.sinks.ogg.OGGSink.format_audio:3
+#: ../../../discord/sinks/wave.py:docstring of discord.sinks.wave.WaveSink.format_audio:3
+#: 01169f852b5a4038ae7d519f251930b4
+#: 45b9ef0215544a9d860e550bc4ccb921
+#: 4e7509b88ea04946bc020fc4de77c0b6
+#: 1588985c20834c0ba74aaef6231a58bd
+#: b356e78d934c4cd9993fc61cbe1af4e9
+#: fc1928b8934a4555af9965d0c2317ea2
+#: 7d38b47a020b40cdb95c6af18cc1d6d1
+#: bea313c3e6fa42beba3ab64e756ce223
+msgid "Audio may only be formatted after recording is finished."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink.get_all_audio:1
+#: ce7e04b04b104eaf98b124fe959e2088
+msgid "Gets all audio files."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.Sink.get_user_audio:1
+#: 377a9171544b4e1a90582106b504271e
+msgid "Gets the audio file(s) of one specific user."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.AudioData:1
+#: 8c98ad6ace2a490eb332d994e20ee698
+msgid "Handles data that's been completely decrypted and decoded and is ready to be saved to file."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.AudioData.write:1
+#: 691bcb7057ff4b668a6924f1567447bb
+msgid "Writes audio data."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.AudioData.cleanup:3
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.AudioData.write:3
+#: c514847e5b65402d9c119e0fba871115
+#: 156dcea554294f688d2303b360e8eeb5
+msgid "The AudioData is already finished writing."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.AudioData.cleanup:1
+#: 8878b11f4bb44242b182551f312611e0
+msgid "Finishes and cleans up the audio data."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.AudioData.on_format:1
+#: bcc4d0731438457bb3b42134f2de664d
+msgid "Called when audio data is formatted."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.AudioData.on_format:3
+#: 4328bd3adc894e768723c4be7aa942e0
+msgid "The AudioData is still writing."
+msgstr ""
+
+#: ../../../discord/sinks/core.py:docstring of discord.sinks.core.RawData:1
+#: 570b9f01ec964f44a6f4e780cd307291
+msgid "Handles raw data from Discord so that it can be decrypted and decoded to be used."
+msgstr ""
+
+#: ../../api/sinks.rst:23
+#: 169639fab74b449ba82498b86bb44876
+msgid "Sink Classes"
+msgstr ""
+
+#: ../../../discord/sinks/wave.py:docstring of discord.sinks.wave.WaveSink:1
+#: 433ebcc0d30f4d9fbd220456a7abbbeb
+msgid "A special sink for .wav(wave) files."
+msgstr ""
+
+#: ../../../discord/sinks/m4a.py:docstring of discord.sinks.m4a.M4ASink.format_audio:1
+#: ../../../discord/sinks/mka.py:docstring of discord.sinks.mka.MKASink.format_audio:1
+#: ../../../discord/sinks/mkv.py:docstring of discord.sinks.mkv.MKVSink.format_audio:1
+#: ../../../discord/sinks/mp3.py:docstring of discord.sinks.mp3.MP3Sink.format_audio:1
+#: ../../../discord/sinks/mp4.py:docstring of discord.sinks.mp4.MP4Sink.format_audio:1
+#: ../../../discord/sinks/ogg.py:docstring of discord.sinks.ogg.OGGSink.format_audio:1
+#: ../../../discord/sinks/wave.py:docstring of discord.sinks.wave.WaveSink.format_audio:1
+#: 285ad63cdb584ebd94d7e557e5314619
+#: 08a57363e08c4ea6a322cda7ca882dd2
+#: 665fa3dc297f4f22b0369bd5cbd3b255
+#: f5b24a38289c496a9f4d55948337d7b2
+#: 6e115579af2240c3ada2216ac756d626
+#: c5088f6657d347dab6bb07ea09dccd7d
+#: 8edc17c4981b4fc6881cb2c4ccca081d
+msgid "Formats the recorded audio."
+msgstr ""
+
+#: ../../../discord/sinks/m4a.py:docstring of discord.sinks.m4a.M4ASink.format_audio:4
+#: ../../../discord/sinks/mka.py:docstring of discord.sinks.mka.MKASink.format_audio:4
+#: ../../../discord/sinks/mkv.py:docstring of discord.sinks.mkv.MKVSink.format_audio:4
+#: ../../../discord/sinks/mp3.py:docstring of discord.sinks.mp3.MP3Sink.format_audio:4
+#: ../../../discord/sinks/mp4.py:docstring of discord.sinks.mp4.MP4Sink.format_audio:4
+#: ../../../discord/sinks/ogg.py:docstring of discord.sinks.ogg.OGGSink.format_audio:4
+#: ../../../discord/sinks/wave.py:docstring of discord.sinks.wave.WaveSink.format_audio:4
+#: bee146d8a4ce454ca6ab676a1f751bdd
+#: 0d6886be966b465182e4ac7708898391
+#: b4bafc34899b43ada086ab5e6ca5064b
+#: 6bad2ce294a342759f75493790b102b5
+#: 47a74f69bb6540ef9f21dfaa43684d36
+#: f1da7192debb4976a99f255ff8f3d860
+#: 9fa092f5912b4cc794dc15ec1615bb3c
+msgid "Formatting the audio failed."
+msgstr ""
+
+#: ../../../discord/sinks/mp3.py:docstring of discord.sinks.mp3.MP3Sink:1
+#: d0b8264ce4284da5b4f00d3bd6fc0b27
+msgid "A special sink for .mp3 files."
+msgstr ""
+
+#: ../../../discord/sinks/mp4.py:docstring of discord.sinks.mp4.MP4Sink:1
+#: 12c1601a144f47c2b658cdb1638c2a1a
+msgid "A special sink for .mp4 files."
+msgstr ""
+
+#: ../../../discord/sinks/m4a.py:docstring of discord.sinks.m4a.M4ASink:1
+#: ec93398e6fab40c3963078ee6efec8fd
+msgid "A special sink for .m4a files."
+msgstr ""
+
+#: ../../../discord/sinks/mkv.py:docstring of discord.sinks.mkv.MKVSink:1
+#: caa9e491104c47bf87dbe04c48e5107d
+msgid "A special sink for .mkv files."
+msgstr ""
+
+#: ../../../discord/sinks/mka.py:docstring of discord.sinks.mka.MKASink:1
+#: 90d4defae7c241bbb26aeec83cfe661e
+msgid "A special sink for .mka files."
+msgstr ""
+
+#: ../../../discord/sinks/ogg.py:docstring of discord.sinks.ogg.OGGSink:1
+#: 3bf2e13e0ec743b19e3d9c47ef3fc435
+msgid "A special sink for .ogg files."
+msgstr ""

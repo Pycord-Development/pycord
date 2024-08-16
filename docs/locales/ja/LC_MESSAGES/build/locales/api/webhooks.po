@@ -1,0 +1,553 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Webhook Support"
+msgstr "Webhook Support"
+
+msgid "Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class."
+msgstr "Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class."
+
+msgid "Represents an asynchronous Discord webhook."
+msgstr "Represents an asynchronous Discord webhook."
+
+msgid "Webhooks are a form to send messages to channels in Discord without a bot user or authentication."
+msgstr "Webhooks are a form to send messages to channels in Discord without a bot user or authentication."
+
+msgid "There are two main ways to use Webhooks. The first is through the ones received by the library such as :meth:`.Guild.webhooks` and :meth:`.TextChannel.webhooks`. The ones received by the library will automatically be bound using the library's internal HTTP session."
+msgstr "There are two main ways to use Webhooks. The first is through the ones received by the library such as :meth:`.Guild.webhooks` and :meth:`.TextChannel.webhooks`. The ones received by the library will automatically be bound using the library's internal HTTP session."
+
+msgid "The second form involves creating a webhook object manually using the :meth:`~.Webhook.from_url` or :meth:`~.Webhook.partial` classmethods."
+msgstr "The second form involves creating a webhook object manually using the :meth:`~.Webhook.from_url` or :meth:`~.Webhook.partial` classmethods."
+
+msgid "For example, creating a webhook from a URL and using :doc:`aiohttp <aio:index>`:"
+msgstr "For example, creating a webhook from a URL and using :doc:`aiohttp <aio:index>`:"
+
+msgid "For a synchronous counterpart, see :class:`SyncWebhook`."
+msgstr "For a synchronous counterpart, see :class:`SyncWebhook`."
+
+msgid "Checks if two webhooks are equal."
+msgstr "Checks if two webhooks are equal."
+
+msgid "Checks if two webhooks are not equal."
+msgstr "Checks if two webhooks are not equal."
+
+msgid "Returns the webhook's hash."
+msgstr "Returns the webhook's hash."
+
+msgid "Webhooks are now comparable and hashable."
+msgstr "Webhooks are now comparable and hashable."
+
+msgid "The webhook's ID"
+msgstr "The webhook's ID"
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "The type of the webhook."
+msgstr "The type of the webhook."
+
+msgid ":class:`WebhookType`"
+msgstr ":class:`WebhookType`"
+
+msgid "The authentication token of the webhook. If this is ``None`` then the webhook cannot be used to make requests."
+msgstr "The authentication token of the webhook. If this is ``None`` then the webhook cannot be used to make requests."
+
+msgid "Optional[:class:`str`]"
+msgstr "Optional[:class:`str`]"
+
+msgid "The guild ID this webhook is for."
+msgstr "The guild ID this webhook is for."
+
+msgid "Optional[:class:`int`]"
+msgstr "Optional[:class:`int`]"
+
+msgid "The channel ID this webhook is for."
+msgstr "The channel ID this webhook is for."
+
+msgid "The user this webhook was created by. If the webhook was received without authentication then this will be ``None``."
+msgstr "The user this webhook was created by. If the webhook was received without authentication then this will be ``None``."
+
+msgid "Optional[:class:`abc.User`]"
+msgstr "Optional[:class:`abc.User`]"
+
+msgid "The default name of the webhook."
+msgstr "The default name of the webhook."
+
+msgid "The guild of the channel that this webhook is following. Only given if :attr:`type` is :attr:`WebhookType.channel_follower`."
+msgstr "The guild of the channel that this webhook is following. Only given if :attr:`type` is :attr:`WebhookType.channel_follower`."
+
+msgid "Optional[:class:`PartialWebhookGuild`]"
+msgstr "Optional[:class:`PartialWebhookGuild`]"
+
+msgid "The channel that this webhook is following. Only given if :attr:`type` is :attr:`WebhookType.channel_follower`."
+msgstr "The channel that this webhook is following. Only given if :attr:`type` is :attr:`WebhookType.channel_follower`."
+
+msgid "Optional[:class:`PartialWebhookChannel`]"
+msgstr "Optional[:class:`PartialWebhookChannel`]"
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "Returns the webhook's url."
+msgstr "Returns the webhook's url."
+
+msgid "Creates a partial :class:`Webhook`."
+msgstr "Creates a partial :class:`Webhook`."
+
+msgid "The ID of the webhook."
+msgstr "The ID of the webhook."
+
+msgid "The authentication token of the webhook."
+msgstr "The authentication token of the webhook."
+
+msgid "The session to use to send requests with. Note that the library does not manage the session and will not close it.  .. versionadded:: 2.0"
+msgstr "The session to use to send requests with. Note that the library does not manage the session and will not close it.  .. versionadded:: 2.0"
+
+msgid "The session to use to send requests with. Note that the library does not manage the session and will not close it."
+msgstr "The session to use to send requests with. Note that the library does not manage the session and will not close it."
+
+msgid "The bot authentication token for authenticated requests involving the webhook.  .. versionadded:: 2.0"
+msgstr "The bot authentication token for authenticated requests involving the webhook.  .. versionadded:: 2.0"
+
+msgid "The bot authentication token for authenticated requests involving the webhook."
+msgstr "The bot authentication token for authenticated requests involving the webhook."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "A partial :class:`Webhook`. A partial webhook is just a webhook object with an ID and a token."
+msgstr "A partial :class:`Webhook`. A partial webhook is just a webhook object with an ID and a token."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid ":class:`Webhook`"
+msgstr ":class:`Webhook`"
+
+msgid "Creates a partial :class:`Webhook` from a webhook URL."
+msgstr "Creates a partial :class:`Webhook` from a webhook URL."
+
+msgid "The URL of the webhook."
+msgstr "The URL of the webhook."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "The URL is invalid."
+msgstr "The URL is invalid."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Fetches the current webhook."
+msgstr "Fetches the current webhook."
+
+msgid "This could be used to get a full webhook from a partial webhook."
+msgstr "This could be used to get a full webhook from a partial webhook."
+
+msgid "When fetching with an unauthenticated webhook, i.e. :meth:`is_authenticated` returns ``False``, then the returned webhook does not contain any user information."
+msgstr "When fetching with an unauthenticated webhook, i.e. :meth:`is_authenticated` returns ``False``, then the returned webhook does not contain any user information."
+
+msgid "Whether to use the bot token over the webhook token if available. Defaults to ``True``."
+msgstr "Whether to use the bot token over the webhook token if available. Defaults to ``True``."
+
+msgid "The fetched webhook."
+msgstr "The fetched webhook."
+
+msgid "Could not fetch the webhook"
+msgstr "Could not fetch the webhook"
+
+msgid "Could not find the webhook by this ID"
+msgstr "Could not find the webhook by this ID"
+
+msgid "This webhook does not have a token associated with it."
+msgstr "This webhook does not have a token associated with it."
+
+msgid "Deletes this Webhook."
+msgstr "Deletes this Webhook."
+
+msgid "The reason for deleting this webhook. Shows up on the audit log.  .. versionadded:: 1.4"
+msgstr "The reason for deleting this webhook. Shows up on the audit log.  .. versionadded:: 1.4"
+
+msgid "The reason for deleting this webhook. Shows up on the audit log."
+msgstr "The reason for deleting this webhook. Shows up on the audit log."
+
+msgid "Whether to use the bot token over the webhook token if available. Defaults to ``True``.  .. versionadded:: 2.0"
+msgstr "Whether to use the bot token over the webhook token if available. Defaults to ``True``.  .. versionadded:: 2.0"
+
+msgid "Deleting the webhook failed."
+msgstr "Deleting the webhook failed."
+
+msgid "This webhook does not exist."
+msgstr "This webhook does not exist."
+
+msgid "You do not have permissions to delete this webhook."
+msgstr "You do not have permissions to delete this webhook."
+
+msgid "Edits this Webhook."
+msgstr "Edits this Webhook."
+
+msgid "The webhook's new default name."
+msgstr "The webhook's new default name."
+
+msgid "A :term:`py:bytes-like object` representing the webhook's new default avatar."
+msgstr "A :term:`py:bytes-like object` representing the webhook's new default avatar."
+
+msgid "The webhook's new channel. This requires an authenticated webhook.  .. versionadded:: 2.0"
+msgstr "The webhook's new channel. This requires an authenticated webhook.  .. versionadded:: 2.0"
+
+msgid "The webhook's new channel. This requires an authenticated webhook."
+msgstr "The webhook's new channel. This requires an authenticated webhook."
+
+msgid "The reason for editing this webhook. Shows up on the audit log.  .. versionadded:: 1.4"
+msgstr "The reason for editing this webhook. Shows up on the audit log.  .. versionadded:: 1.4"
+
+msgid "The reason for editing this webhook. Shows up on the audit log."
+msgstr "The reason for editing this webhook. Shows up on the audit log."
+
+msgid "Editing the webhook failed."
+msgstr "Editing the webhook failed."
+
+msgid "This webhook does not have a token associated with it, or     it tried editing a channel without authentication."
+msgstr "This webhook does not have a token associated with it, or     it tried editing a channel without authentication."
+
+msgid ":py:class:`~discord.webhook.async_.Webhook`"
+msgstr ":py:class:`~discord.webhook.async_.Webhook`"
+
+msgid "Sends a message using the webhook."
+msgstr "Sends a message using the webhook."
+
+msgid "The content must be a type that can convert to a string through ``str(content)``."
+msgstr "The content must be a type that can convert to a string through ``str(content)``."
+
+msgid "To upload a single file, the ``file`` parameter should be used with a single :class:`File` object."
+msgstr "To upload a single file, the ``file`` parameter should be used with a single :class:`File` object."
+
+msgid "If the ``embed`` parameter is provided, it must be of type :class:`Embed` and it must be a rich embed type. You cannot mix the ``embed`` parameter with the ``embeds`` parameter, which must be a :class:`list` of :class:`Embed` objects to send."
+msgstr "If the ``embed`` parameter is provided, it must be of type :class:`Embed` and it must be a rich embed type. You cannot mix the ``embed`` parameter with the ``embeds`` parameter, which must be a :class:`list` of :class:`Embed` objects to send."
+
+msgid "The content of the message to send."
+msgstr "The content of the message to send."
+
+msgid "Whether the server should wait before sending a response. This essentially means that the return type of this function changes from ``None`` to a :class:`WebhookMessage` if set to ``True``. If the type of webhook is :attr:`WebhookType.application` then this is always set to ``True``."
+msgstr "Whether the server should wait before sending a response. This essentially means that the return type of this function changes from ``None`` to a :class:`WebhookMessage` if set to ``True``. If the type of webhook is :attr:`WebhookType.application` then this is always set to ``True``."
+
+msgid "The username to send with this message. If no username is provided then the default username for the webhook is used."
+msgstr "The username to send with this message. If no username is provided then the default username for the webhook is used."
+
+msgid "The avatar URL to send with this message. If no avatar URL is provided then the default avatar for the webhook is used. If this is not a string then it is explicitly cast using ``str``."
+msgstr "The avatar URL to send with this message. If no avatar URL is provided then the default avatar for the webhook is used. If this is not a string then it is explicitly cast using ``str``."
+
+msgid "Indicates if the message should be sent using text-to-speech."
+msgstr "Indicates if the message should be sent using text-to-speech."
+
+msgid "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes.  .. versionadded:: 2.0"
+msgstr "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes.  .. versionadded:: 2.0"
+
+msgid "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes."
+msgstr "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes."
+
+msgid "The file to upload. This cannot be mixed with ``files`` parameter."
+msgstr "The file to upload. This cannot be mixed with ``files`` parameter."
+
+msgid "A list of files to send with the content. This cannot be mixed with the ``file`` parameter."
+msgstr "A list of files to send with the content. This cannot be mixed with the ``file`` parameter."
+
+msgid "The rich embed for the content to send. This cannot be mixed with ``embeds`` parameter."
+msgstr "The rich embed for the content to send. This cannot be mixed with ``embeds`` parameter."
+
+msgid "A list of embeds to send with the content. Maximum of 10. This cannot be mixed with the ``embed`` parameter."
+msgstr "A list of embeds to send with the content. Maximum of 10. This cannot be mixed with the ``embed`` parameter."
+
+msgid "Controls the mentions being processed in this message.  .. versionadded:: 1.4"
+msgstr "Controls the mentions being processed in this message.  .. versionadded:: 1.4"
+
+msgid "Controls the mentions being processed in this message."
+msgstr "Controls the mentions being processed in this message."
+
+msgid "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library.  .. versionadded:: 2.0"
+msgstr "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library.  .. versionadded:: 2.0"
+
+msgid "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library."
+msgstr "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library."
+
+msgid "The thread to send this webhook to.  .. versionadded:: 2.0"
+msgstr "The thread to send this webhook to.  .. versionadded:: 2.0"
+
+msgid "The thread to send this webhook to."
+msgstr "The thread to send this webhook to."
+
+msgid "The name of the thread to create. Only works for forum channels.  .. versionadded:: 2.0"
+msgstr "The name of the thread to create. Only works for forum channels.  .. versionadded:: 2.0"
+
+msgid "The name of the thread to create. Only works for forum channels."
+msgstr "The name of the thread to create. Only works for forum channels."
+
+msgid "A list of tags to apply to the message. Only works for threads.  .. versionadded:: 2.5"
+msgstr "A list of tags to apply to the message. Only works for threads.  .. versionadded:: 2.5"
+
+msgid "A list of tags to apply to the message. Only works for threads."
+msgstr "A list of tags to apply to the message. Only works for threads."
+
+msgid "If provided, the number of seconds to wait in the background before deleting the message we just sent."
+msgstr "If provided, the number of seconds to wait in the background before deleting the message we just sent."
+
+msgid "The poll to send.  .. versionadded:: 2.6"
+msgstr "The poll to send.  .. versionadded:: 2.6"
+
+msgid "The poll to send."
+msgstr "The poll to send."
+
+msgid "If ``wait`` is ``True`` then the message that was sent, otherwise ``None``."
+msgstr "If ``wait`` is ``True`` then the message that was sent, otherwise ``None``."
+
+msgid "Optional[:class:`WebhookMessage`]"
+msgstr "Optional[:class:`WebhookMessage`]"
+
+msgid "Sending the message failed."
+msgstr "Sending the message failed."
+
+msgid "This webhook was not found."
+msgstr "This webhook was not found."
+
+msgid "The authorization token for the webhook is incorrect."
+msgstr "The authorization token for the webhook is incorrect."
+
+msgid "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``."
+msgstr "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``."
+
+msgid "The length of ``embeds`` was invalid."
+msgstr "The length of ``embeds`` was invalid."
+
+msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
+msgstr "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
+
+msgid "Returns an :class:`Asset` for the avatar the webhook has."
+msgstr "Returns an :class:`Asset` for the avatar the webhook has."
+
+msgid "If the webhook does not have a traditional avatar, an asset for the default avatar is returned instead."
+msgstr "If the webhook does not have a traditional avatar, an asset for the default avatar is returned instead."
+
+msgid "The text channel this webhook belongs to."
+msgstr "The text channel this webhook belongs to."
+
+msgid "If this is a partial webhook, then this will always return ``None``."
+msgstr "If this is a partial webhook, then this will always return ``None``."
+
+msgid "Returns the webhook's creation time in UTC."
+msgstr "Returns the webhook's creation time in UTC."
+
+msgid "Retrieves a single :class:`~discord.WebhookMessage` owned by this webhook."
+msgstr "Retrieves a single :class:`~discord.WebhookMessage` owned by this webhook."
+
+msgid "The message ID to look for."
+msgstr "The message ID to look for."
+
+msgid "The ID of the thread that contains the message."
+msgstr "The ID of the thread that contains the message."
+
+msgid "The message asked for."
+msgstr "The message asked for."
+
+msgid ":class:`~discord.WebhookMessage`"
+msgstr ":class:`~discord.WebhookMessage`"
+
+msgid "The specified message was not found."
+msgstr "The specified message was not found."
+
+msgid "You do not have the permissions required to get a message."
+msgstr "You do not have the permissions required to get a message."
+
+msgid "Retrieving the message failed."
+msgstr "Retrieving the message failed."
+
+msgid "There was no token associated with this webhook."
+msgstr "There was no token associated with this webhook."
+
+msgid "The guild this webhook belongs to."
+msgstr "The guild this webhook belongs to."
+
+msgid "Whether the webhook is authenticated with a bot token. :rtype: :py:class:`bool`"
+msgstr "Whether the webhook is authenticated with a bot token. :rtype: :py:class:`bool`"
+
+msgid "Whether the webhook is a \"partial\" webhook. :rtype: :py:class:`bool`"
+msgstr "Whether the webhook is a \"partial\" webhook. :rtype: :py:class:`bool`"
+
+msgid "Edits a message owned by this webhook."
+msgstr "Edits a message owned by this webhook."
+
+msgid "This is a lower level interface to :meth:`WebhookMessage.edit` in case you only have an ID."
+msgstr "This is a lower level interface to :meth:`WebhookMessage.edit` in case you only have an ID."
+
+msgid "The edit is no longer in-place, instead the newly edited message is returned."
+msgstr "The edit is no longer in-place, instead the newly edited message is returned."
+
+msgid "The message ID to edit."
+msgstr "The message ID to edit."
+
+msgid "The content to edit the message with or ``None`` to clear it."
+msgstr "The content to edit the message with or ``None`` to clear it."
+
+msgid "A list of embeds to edit the message with."
+msgstr "A list of embeds to edit the message with."
+
+msgid "The embed to edit the message with. ``None`` suppresses the embeds. This should not be mixed with the ``embeds`` parameter."
+msgstr "The embed to edit the message with. ``None`` suppresses the embeds. This should not be mixed with the ``embeds`` parameter."
+
+msgid "A list of attachments to keep in the message. If ``[]`` is passed then all attachments are removed."
+msgstr "A list of attachments to keep in the message. If ``[]`` is passed then all attachments are removed."
+
+msgid "The file to upload. This cannot be mixed with ``files`` parameter.  .. versionadded:: 2.0"
+msgstr "The file to upload. This cannot be mixed with ``files`` parameter.  .. versionadded:: 2.0"
+
+msgid "A list of files to send with the content. This cannot be mixed with the ``file`` parameter.  .. versionadded:: 2.0"
+msgstr "A list of files to send with the content. This cannot be mixed with the ``file`` parameter.  .. versionadded:: 2.0"
+
+msgid "Controls the mentions being processed in this message. See :meth:`.abc.Messageable.send` for more information."
+msgstr "Controls the mentions being processed in this message. See :meth:`.abc.Messageable.send` for more information."
+
+msgid "The updated view to update this message with. If ``None`` is passed then the view is removed. The webhook must have state attached, similar to :meth:`send`.  .. versionadded:: 2.0"
+msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed. The webhook must have state attached, similar to :meth:`send`.  .. versionadded:: 2.0"
+
+msgid "The updated view to update this message with. If ``None`` is passed then the view is removed. The webhook must have state attached, similar to :meth:`send`."
+msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed. The webhook must have state attached, similar to :meth:`send`."
+
+msgid "The thread that contains the message."
+msgstr "The thread that contains the message."
+
+msgid "Whether to suppress embeds for the message."
+msgstr "Whether to suppress embeds for the message."
+
+msgid "The newly edited webhook message."
+msgstr "The newly edited webhook message."
+
+msgid ":class:`WebhookMessage`"
+msgstr ":class:`WebhookMessage`"
+
+msgid "Editing the message failed."
+msgstr "Editing the message failed."
+
+msgid "Edited a message that is not yours."
+msgstr "Edited a message that is not yours."
+
+msgid "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``"
+msgstr "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``"
+
+msgid "The length of ``embeds`` was invalid"
+msgstr "The length of ``embeds`` was invalid"
+
+msgid "There was no token associated with this webhook or the webhook had     no state."
+msgstr "There was no token associated with this webhook or the webhook had     no state."
+
+msgid "Deletes a message owned by this webhook."
+msgstr "Deletes a message owned by this webhook."
+
+msgid "This is a lower level interface to :meth:`WebhookMessage.delete` in case you only have an ID."
+msgstr "This is a lower level interface to :meth:`WebhookMessage.delete` in case you only have an ID."
+
+msgid "The message ID to delete."
+msgstr "The message ID to delete."
+
+msgid "Deleting the message failed."
+msgstr "Deleting the message failed."
+
+msgid "Deleted a message that is not yours."
+msgstr "Deleted a message that is not yours."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "Represents a message sent from your webhook."
+msgstr "Represents a message sent from your webhook."
+
+msgid "This allows you to edit or delete a message sent by your webhook."
+msgstr "This allows you to edit or delete a message sent by your webhook."
+
+msgid "This inherits from :class:`discord.Message` with changes to :meth:`edit` and :meth:`delete` to work."
+msgstr "This inherits from :class:`discord.Message` with changes to :meth:`edit` and :meth:`delete` to work."
+
+msgid "Edits the message."
+msgstr "Edits the message."
+
+msgid "A list of attachments to keep in the message. If ``[]`` is passed then all attachments are removed.  .. versionadded:: 2.0"
+msgstr "A list of attachments to keep in the message. If ``[]`` is passed then all attachments are removed.  .. versionadded:: 2.0"
+
+msgid "The updated view to update this message with. If ``None`` is passed then the view is removed.  .. versionadded:: 2.0"
+msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed.  .. versionadded:: 2.0"
+
+msgid "The updated view to update this message with. If ``None`` is passed then the view is removed."
+msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed."
+
+msgid "The newly edited message."
+msgstr "The newly edited message."
+
+msgid "Deletes the message."
+msgstr "Deletes the message."
+
+msgid "If provided, the number of seconds to wait before deleting the message. The waiting is done in the background and deletion failures are ignored."
+msgstr "If provided, the number of seconds to wait before deleting the message. The waiting is done in the background and deletion failures are ignored."
+
+msgid "You do not have proper permissions to delete the message."
+msgstr "You do not have proper permissions to delete the message."
+
+msgid "The message was deleted already."
+msgstr "The message was deleted already."
+
+msgid "Represents a synchronous Discord webhook."
+msgstr "Represents a synchronous Discord webhook."
+
+msgid "For an asynchronous counterpart, see :class:`Webhook`."
+msgstr "For an asynchronous counterpart, see :class:`Webhook`."
+
+msgid "The session to use to send requests with. Note that the library does not manage the session and will not close it. If not given, the ``requests`` auto session creation functions are used instead."
+msgstr "The session to use to send requests with. Note that the library does not manage the session and will not close it. If not given, the ``requests`` auto session creation functions are used instead."
+
+msgid ":class:`SyncWebhook`"
+msgstr ":class:`SyncWebhook`"
+
+msgid "The newly edited webhook."
+msgstr "The newly edited webhook."
+
+msgid "Whether the server should wait before sending a response. This essentially means that the return type of this function changes from ``None`` to a :class:`WebhookMessage` if set to ``True``."
+msgstr "Whether the server should wait before sending a response. This essentially means that the return type of this function changes from ``None`` to a :class:`WebhookMessage` if set to ``True``."
+
+msgid "The thread to send this message to.  .. versionadded:: 2.0"
+msgstr "The thread to send this message to.  .. versionadded:: 2.0"
+
+msgid "The thread to send this message to."
+msgstr "The thread to send this message to."
+
+msgid "Optional[:class:`SyncWebhookMessage`]"
+msgstr "Optional[:class:`SyncWebhookMessage`]"
+
+msgid "There was no token associated with this webhook, or you specified both     a thread to send to and a thread to create (the ``thread`` and ``thread_name`` parameters)."
+msgstr "There was no token associated with this webhook, or you specified both     a thread to send to and a thread to create (the ``thread`` and ``thread_name`` parameters)."
+
+msgid "Retrieves a single :class:`~discord.SyncWebhookMessage` owned by this webhook."
+msgstr "Retrieves a single :class:`~discord.SyncWebhookMessage` owned by this webhook."
+
+msgid ":class:`~discord.SyncWebhookMessage`"
+msgstr ":class:`~discord.SyncWebhookMessage`"
+
+msgid ":py:class:`~discord.webhook.sync.SyncWebhookMessage`"
+msgstr ":py:class:`~discord.webhook.sync.SyncWebhookMessage`"
+
+msgid ":class:`SyncWebhookMessage`"
+msgstr ":class:`SyncWebhookMessage`"
+
+msgid "If provided, the number of seconds to wait before deleting the message. This blocks the thread."
+msgstr "If provided, the number of seconds to wait before deleting the message. This blocks the thread."
+

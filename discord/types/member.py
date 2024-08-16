@@ -48,6 +48,7 @@ class Member(PartialMember, total=False):
     pending: bool
     permissions: str
     communication_disabled_until: str
+    flags: int
 
 
 class _OptionalMemberWithUser(PartialMember, total=False):

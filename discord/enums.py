@@ -74,6 +74,8 @@ __all__ = (
     "SKUType",
     "EntitlementType",
     "EntitlementOwnerType",
+    "IntegrationType",
+    "InteractionContextType",
 )
 
 
@@ -722,6 +724,7 @@ class ButtonStyle(Enum):
     success = 3
     danger = 4
     link = 5
+    premium = 6
 
     # Aliases
     blurple = 1
@@ -1003,6 +1006,8 @@ class ReactionType(Enum):
 class SKUType(Enum):
     """The SKU type"""
 
+    durable = 2
+    consumable = 3
     subscription = 5
     subscription_group = 6
 
@@ -1010,6 +1015,13 @@ class SKUType(Enum):
 class EntitlementType(Enum):
     """The entitlement type"""
 
+    purchase = 1
+    premium_subscription = 2
+    developer_gift = 3
+    test_mode_purchase = 4
+    free_purchase = 5
+    user_gift = 6
+    premium_purchase = 7
     application_subscription = 8
 
 
@@ -1018,6 +1030,27 @@ class EntitlementOwnerType(Enum):
 
     guild = 1
     user = 2
+
+
+class IntegrationType(Enum):
+    """The application's integration type"""
+
+    guild_install = 0
+    user_install = 1
+
+
+class InteractionContextType(Enum):
+    """The interaction's context type"""
+
+    guild = 0
+    bot_dm = 1
+    private_channel = 2
+
+
+class PollLayoutType(Enum):
+    """The poll's layout type."""
+
+    default = 1
 
 
 T = TypeVar("T")

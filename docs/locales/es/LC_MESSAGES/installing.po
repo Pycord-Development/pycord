@@ -1,0 +1,100 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Installing Pycord"
+msgstr "Instalación de Pycord"
+
+msgid "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
+msgstr "Esta es la documentación para Pycord, una biblioteca para Python para ayudar en la creación de aplicaciones que usan la API de Discord."
+
+msgid "Prerequisites"
+msgstr "Requisitos previos"
+
+msgid "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
+msgstr "Pycord funciona con Python 3.8 o superior. No se proporciona soporte para versiones anteriores de Python. Python 2.7 o inferior no es compatible. Python 3.7 o inferior, no es compatible."
+
+msgid "Installing"
+msgstr "Instalación"
+
+msgid "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
+msgstr "Para nuevas características en las próximas versiones, necesitarás instalar la versión de pre lanzamiento hasta que se publique una versión estable. ::"
+
+msgid "For Windows users, this command should be used to install the pre-release: ::"
+msgstr "Para los usuarios de Windows, este comando debe usarse para instalar la versión de pre lanzamiento: ::"
+
+msgid "You can get the library directly from PyPI: ::"
+msgstr "Puedes obtener la biblioteca directamente desde PyPI: ::"
+
+msgid "If you are using Windows, then the following should be used instead: ::"
+msgstr "Si estás usando Windows, entonces deberías usar lo siguiente en su lugar: ::"
+
+msgid "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
+msgstr "Para instalar paquetes adicionales para una mayor velocidad, deberías usar ``py-cord[speed]`` en lugar de ``py-cord``, por ejemplo."
+
+msgid "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
+msgstr "Para obtener soporte de voz, deberías usar ``py-cord[voice]`` en lugar de ``py-cord``, por ejemplo ::"
+
+msgid "On Linux environments, installing voice requires getting the following dependencies:"
+msgstr "En entornos Linux, la instalación de voz requiere las siguientes dependencias:"
+
+msgid "`libffi <https://github.com/libffi/libffi>`_"
+msgstr "`libffi <https://github.com/libffi/libffi>`_"
+
+msgid "`libnacl <https://github.com/saltstack/libnacl>`_"
+msgstr "`libnacl <https://github.com/saltstack/libnacl>`_"
+
+msgid "`python3-dev <https://packages.debian.org/python3-dev>`_"
+msgstr "`python3-dev <https://packages.debian.org/python3-dev>`_"
+
+msgid "For a Debian-based system, the following command will get these dependencies:"
+msgstr "Para un sistema basado en Debian, el siguiente comando instalará estas dependencias:"
+
+msgid "Remember to check your permissions!"
+msgstr "¡Recuerda comprobar tus permisos!"
+
+msgid "Virtual Environments"
+msgstr "Entornos virtuales"
+
+msgid "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
+msgstr "A veces se quiere evitar que las bibliotecas contaminen las instalaciones en el sistema o usar una versión distinta de aquellas instaladas en el sistema. Es posible que tampoco tengas permisos para instalar bibliotecas en tu sistema. Para este propósito, la biblioteca estándar a partir de Python 3.3 viene con un concepto llamado \"entornos virtuales\" para ayudar a mantener estas versiones separadas."
+
+msgid "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
+msgstr "Puedes encontrar un tutorial más detallado en :doc:`py:tutorial/venv`."
+
+msgid "However, for the quick and dirty:"
+msgstr "Sin embargo, para lo rápido y sucio:"
+
+msgid "Go to your project's working directory:"
+msgstr "Ve al directorio de trabajo de tu proyecto:"
+
+msgid "Activate the virtual environment:"
+msgstr "Activa el entorno virtual:"
+
+msgid "On Windows you activate it with:"
+msgstr "En Windows lo activas con:"
+
+msgid "Use pip like usual:"
+msgstr "Usa pip como de costumbre:"
+
+msgid "Congratulations. You now have a virtual environment all set up."
+msgstr "Enhorabuena. Ahora tienes un entorno virtual configurado."
+
+msgid "Basic Concepts"
+msgstr "Conceptos básicos"
+
+msgid "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
+msgstr "Pycord gira en torno al concepto de :ref:`eventos <discord-api-events>`. Un evento es algo a lo que escuchas y luego respondes. Por ejemplo, cuando ocurre un mensaje, recibirás un evento al que puedas responder."
+
+msgid "A quick example to showcase how events work:"
+msgstr "Un ejemplo rápido para mostrar cómo funcionan los eventos:"
+

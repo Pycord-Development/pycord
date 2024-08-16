@@ -68,7 +68,12 @@ from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
 from .invite import Invite
-from .iterators import AuditLogIterator, BanIterator, MemberIterator
+from .iterators import (
+    AuditLogIterator,
+    BanIterator,
+    EntitlementIterator,
+    MemberIterator,
+)
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
@@ -107,7 +112,7 @@ if TYPE_CHECKING:
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
-    from .voice_client import VoiceProtocol
+    from .voice_client import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]
@@ -647,8 +652,8 @@ class Guild(Hashable):
         return self.get_member(self_id)  # type: ignore
 
     @property
-    def voice_client(self) -> VoiceProtocol | None:
-        """Returns the :class:`VoiceProtocol` associated with this guild, if any."""
+    def voice_client(self) -> VoiceClient | None:
+        """Returns the :class:`VoiceClient` associated with this guild, if any."""
         return self._state._get_voice_client(self.id)
 
     @property
@@ -1649,7 +1654,6 @@ class Guild(Hashable):
         default_notifications: NotificationLevel = MISSING,
         verification_level: VerificationLevel = MISSING,
         explicit_content_filter: ContentFilter = MISSING,
-        vanity_code: str = MISSING,
         system_channel: TextChannel | None = MISSING,
         system_channel_flags: SystemChannelFlags = MISSING,
         preferred_locale: str = MISSING,
@@ -1715,8 +1719,6 @@ class Guild(Hashable):
             The new default notification level for the guild.
         explicit_content_filter: :class:`ContentFilter`
             The new explicit content filter for the guild.
-        vanity_code: :class:`str`
-            The new vanity code for the guild.
         system_channel: Optional[:class:`TextChannel`]
             The new channel that is used for the system channel. Could be ``None`` for no system channel.
         system_channel_flags: :class:`SystemChannelFlags`
@@ -1758,9 +1760,6 @@ class Guild(Hashable):
         """
 
         http = self._state.http
-
-        if vanity_code is not MISSING:
-            await http.change_vanity_code(self.id, vanity_code, reason=reason)
 
         fields: dict[str, Any] = {}
         if name is not MISSING:
@@ -2816,6 +2815,30 @@ class Guild(Hashable):
         data = await self._state.http.get_roles(self.id)
         return [Role(guild=self, state=self._state, data=d) for d in data]
 
+    async def fetch_role(self, role_id: int) -> Role:
+        """|coro|
+
+        Retrieves a :class:`Role` that the guild has.
+
+        .. note::
+
+            This method is an API call. For general usage, consider using :attr:`get_role` instead.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        :class:`Role`
+            The role in the guild with the specified ID.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the role failed.
+        """
+        data = await self._state.http.get_role(self.id, role_id)
+        return Role(guild=self, state=self._state, data=data)
+
     async def _fetch_role(self, role_id: int) -> Role:
         """|coro|
 
@@ -3121,7 +3144,7 @@ class Guild(Hashable):
         *users: Snowflake,
         delete_message_seconds: int | None = None,
         reason: str | None = None,
-    ) -> list[list[Snowflake], list[Snowflake]]:
+    ) -> tuple[list[Snowflake], list[Snowflake]]:
         r"""|coro|
 
         Bulk ban users from the guild.
@@ -3152,7 +3175,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        List[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
+        Tuple[List[:class:`abc.Snowflake`], List[:class:`abc.Snowflake`]]
             Returns two lists: the first contains members that were successfully banned, while the second is members that could not be banned.
 
         Raises
@@ -3261,13 +3284,15 @@ class Guild(Hashable):
         limit: int | None = 100,
         before: SnowflakeTime | None = None,
         after: SnowflakeTime | None = None,
-        oldest_first: bool | None = None,
         user: Snowflake = None,
         action: AuditLogAction = None,
     ) -> AuditLogIterator:
         """Returns an :class:`AsyncIterator` that enables receiving the guild's audit logs.
 
         You must have the :attr:`~Permissions.view_audit_log` permission to use this.
+
+        See `API documentation <https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log>`_
+        for more information about the `before` and `after` parameters.
 
         Parameters
         ----------
@@ -3281,9 +3306,6 @@ class Guild(Hashable):
             Retrieve entries after this date or entry.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
-        oldest_first: :class:`bool`
-            If set to ``True``, return entries in oldest->newest order. Defaults to ``True`` if
-            ``after`` is specified, otherwise ``False``.
         user: :class:`abc.Snowflake`
             The moderator to filter entries from.
         action: :class:`AuditLogAction`
@@ -3328,7 +3350,6 @@ class Guild(Hashable):
             before=before,
             after=after,
             limit=limit,
-            oldest_first=oldest_first,
             user_id=user_id,
             action_type=action,
         )
@@ -4070,3 +4091,57 @@ class Guild(Hashable):
         }
         data = await self._state.http.create_test_entitlement(self.id, payload)
         return Entitlement(data=data, state=self._state)
+
+    def entitlements(
+        self,
+        skus: list[Snowflake] | None = None,
+        before: SnowflakeTime | None = None,
+        after: SnowflakeTime | None = None,
+        limit: int | None = 100,
+        exclude_ended: bool = False,
+    ) -> EntitlementIterator:
+        """Returns an :class:`.AsyncIterator` that enables fetching the guild's entitlements.
+
+        This is identical to :meth:`Client.entitlements` with the ``guild`` parameter.
+
+        .. versionadded:: 2.6
+
+        Parameters
+        ----------
+        skus: list[:class:`.abc.Snowflake`] | None
+            Limit the fetched entitlements to entitlements that are for these SKUs.
+        before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieves guilds before this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        after: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
+            Retrieve guilds after this date or object.
+            If a datetime is provided, it is recommended to use a UTC-aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+        limit: Optional[:class:`int`]
+            The number of entitlements to retrieve.
+            If ``None``, retrieves every entitlement, which may be slow.
+            Defaults to ``100``.
+        exclude_ended: :class:`bool`
+            Whether to limit the fetched entitlements to those that have not ended.
+            Defaults to ``False``.
+
+        Yields
+        ------
+        :class:`.Entitlement`
+            The application's entitlements.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Retrieving the entitlements failed.
+        """
+        return EntitlementIterator(
+            self._state,
+            sku_ids=[sku.id for sku in skus] if skus else None,
+            before=before,
+            after=after,
+            limit=limit,
+            guild_id=self.id,
+            exclude_ended=exclude_ended,
+        )

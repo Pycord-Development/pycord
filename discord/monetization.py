@@ -96,6 +96,11 @@ class SKU(Hashable):
     def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and other.id == self.id
 
+    @property
+    def url(self) -> str:
+        """:class:`str`: Returns the URL for the SKU."""
+        return f"https://discord.com/application-directory/{self.application_id}/store/{self.id}"
+
 
 class Entitlement(Hashable):
     """Represents a Discord entitlement.
@@ -122,6 +127,10 @@ class Entitlement(Hashable):
         When the entitlement expires.
     guild_id: Union[:class:`int`, :class:`MISSING`]
         The ID of the guild that owns this entitlement.
+    consumed: :class:`bool`
+        Whether or not this entitlement has been consumed.
+        This will always be ``False`` for entitlements that are not
+        of type :attr:`EntitlementType.consumable`.
     """
 
     __slots__ = (
@@ -135,6 +144,7 @@ class Entitlement(Hashable):
         "starts_at",
         "ends_at",
         "guild_id",
+        "consumed",
     )
 
     def __init__(self, *, data: EntitlementPayload, state: ConnectionState) -> None:
@@ -150,16 +160,37 @@ class Entitlement(Hashable):
         )
         self.ends_at: datetime | MISSING = parse_time(data.get("ends_at")) or MISSING
         self.guild_id: int | MISSING = _get_as_snowflake(data, "guild_id") or MISSING
+        self.consumed: bool = data.get("consumed", False)
 
     def __repr__(self) -> str:
         return (
             f"<Entitlement id={self.id} sku_id={self.sku_id} application_id={self.application_id} "
             f"user_id={self.user_id} type={self.type} deleted={self.deleted} "
-            f"starts_at={self.starts_at} ends_at={self.ends_at} guild_id={self.guild_id}>"
+            f"starts_at={self.starts_at} ends_at={self.ends_at} guild_id={self.guild_id} consumed={self.consumed}>"
         )
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, self.__class__) and other.id == self.id
+
+    async def consume(self) -> None:
+        """|coro|
+
+        Consumes this entitlement.
+
+        This can only be done on entitlements of type :attr:`EntitlementType.consumable`.
+
+        Raises
+        ------
+        TypeError
+            The entitlement is not consumable.
+        HTTPException
+            Consuming the entitlement failed.
+        """
+        if self.type is not EntitlementType.consumable:
+            raise TypeError("Cannot consume non-consumable entitlement")
+
+        await self._state.http.consume_entitlement(self._state.application_id, self.id)
+        self.consumed = True
 
     async def delete(self) -> None:
         """|coro|
@@ -173,4 +204,4 @@ class Entitlement(Hashable):
         HTTPException
             Deleting the entitlement failed.
         """
-        await self._state.http.delete_test_entitlement(self.id)
+        await self._state.http.delete_test_entitlement(self.application_id, self.id)

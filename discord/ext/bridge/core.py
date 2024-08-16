@@ -96,6 +96,28 @@ class BridgeExtCommand(Command):
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
 
+        # TODO: v2.7: Remove backwards support for Option in bridge commands.
+        for name, option in self.params.items():
+            if isinstance(option.annotation, Option) and not isinstance(
+                option.annotation, BridgeOption
+            ):
+                # Warn not to do this
+                warn_deprecated(
+                    "Using Option for bridge commands",
+                    "BridgeOption",
+                    "2.5",
+                    "2.7",
+                    reference="https://github.com/Pycord-Development/pycord/pull/2417",
+                    stacklevel=6,
+                )
+                # Override the convert method of the parameter's annotated Option.
+                # We can use the convert method from BridgeOption, and bind "self"
+                # using a manual invocation of the descriptor protocol.
+                # Definitely not a good approach, but gets the job done until removal.
+                self.params[name].annotation.convert = BridgeOption.convert.__get__(
+                    self.params[name].annotation
+                )
+
     async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
         await super().dispatch_error(ctx, error)
         ctx.bot.dispatch("bridge_command_error", ctx, error)
@@ -638,7 +660,7 @@ def bridge_option(name, input_type=None, **kwargs):
     Attributes
     ----------
     parameter_name: :class:`str`
-        The name of the target parameter this option is mapped to.
+        The name of the target function parameter this option is mapped to.
         This allows you to have a separate UI ``name`` and parameter name.
     """
 
@@ -653,13 +675,3 @@ def bridge_option(name, input_type=None, **kwargs):
         return func
 
     return decorator
-
-
-discord.commands.options.Option = BridgeOption
-discord.Option = BridgeOption
-warn_deprecated(
-    "Option",
-    "BridgeOption",
-    "2.5",
-    reference="https://github.com/Pycord-Development/pycord/pull/2417",
-)
