@@ -2,8 +2,13 @@ name: "Multilingual Docs Upload"
 
 on:
   push:
+    paths:
+      - "discord/**"
+      - "docs/**"
     branches: [master]
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
   
 permissions: write-all
 
