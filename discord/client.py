@@ -266,6 +266,9 @@ class Client:
             VoiceClient.warn_nacl = False
             _log.warning("PyNaCl is not installed, voice will NOT be supported")
 
+        # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
+        self._tasks = set()
+
     async def __aenter__(self) -> Client:
         loop = asyncio.get_running_loop()
         self.loop = loop
@@ -453,8 +456,12 @@ class Client:
         **kwargs: Any,
     ) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
-        # Schedules the task
-        return asyncio.create_task(wrapped, name=f"pycord: {event_name}")
+
+        # Schedule task and store in set to avoid task garbage collection
+        task = asyncio.create_task(wrapped, name=f"pycord: {event_name}")
+        self._tasks.add(task)
+        task.add_done_callback(self._tasks.discard)
+        return task
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
         _log.debug("Dispatching event %s", event)
@@ -1064,7 +1071,7 @@ class Client:
         """
         return self._connection.get_poll(id)
 
-    def get_all_channels(self) -> Generator[GuildChannel, None, None]:
+    def get_all_channels(self) -> Generator[GuildChannel]:
         """A generator that retrieves every :class:`.abc.GuildChannel` the client can 'access'.
 
         This is equivalent to: ::
@@ -1088,7 +1095,7 @@ class Client:
         for guild in self.guilds:
             yield from guild.channels
 
-    def get_all_members(self) -> Generator[Member, None, None]:
+    def get_all_members(self) -> Generator[Member]:
         """Returns a generator with every :class:`.Member` the client can see.
 
         This is equivalent to: ::

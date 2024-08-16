@@ -1,0 +1,880 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Application Commands"
+msgstr "Application Commands"
+
+msgid "Command Permission Decorators"
+msgstr "Command Permission Decorators"
+
+msgid "A decorator that limits the usage of an application command to members with certain permissions."
+msgstr "A decorator that limits the usage of an application command to members with certain permissions."
+
+msgid "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
+msgstr "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
+
+msgid "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
+msgstr "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "An argument list of permissions to check for."
+msgstr "An argument list of permissions to check for."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid ":py:data:`~typing.Callable`"
+msgstr ":py:data:`~typing.Callable`"
+
+msgid "Example"
+msgstr "Example"
+
+msgid "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
+msgstr "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
+
+msgid "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
+msgstr "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
+
+msgid "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
+msgstr "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
+
+msgid "Commands"
+msgstr "Commands"
+
+msgid "Shortcut Decorators"
+msgstr "Shortcut Decorators"
+
+msgid "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
+msgstr "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
+
+msgid "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
+msgstr "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
+
+msgid "Keyword arguments to pass into the construction of the class denoted by ``cls``."
+msgstr "Keyword arguments to pass into the construction of the class denoted by ``cls``."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
+msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
+
+msgid "Callable[..., :class:`.ApplicationCommand`]"
+msgstr "Callable[..., :class:`.ApplicationCommand`]"
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "If the function is not a coroutine or is already a command."
+msgstr "If the function is not a coroutine or is already a command."
+
+msgid "An alias for :meth:`application_command`."
+msgstr "An alias for :meth:`application_command`."
+
+msgid "This decorator is overridden by :func:`ext.commands.command`."
+msgstr "This decorator is overridden by :func:`ext.commands.command`."
+
+msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`."
+msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`."
+
+msgid "Decorator for slash commands that invokes :func:`application_command`."
+msgstr "Decorator for slash commands that invokes :func:`application_command`."
+
+msgid "A decorator that converts the provided method into a :class:`.SlashCommand`."
+msgstr "A decorator that converts the provided method into a :class:`.SlashCommand`."
+
+msgid "Callable[..., :class:`.SlashCommand`]"
+msgstr "Callable[..., :class:`.SlashCommand`]"
+
+msgid "Decorator for user commands that invokes :func:`application_command`."
+msgstr "Decorator for user commands that invokes :func:`application_command`."
+
+msgid "A decorator that converts the provided method into a :class:`.UserCommand`."
+msgstr "A decorator that converts the provided method into a :class:`.UserCommand`."
+
+msgid "Callable[..., :class:`.UserCommand`]"
+msgstr "Callable[..., :class:`.UserCommand`]"
+
+msgid "Decorator for message commands that invokes :func:`application_command`."
+msgstr "Decorator for message commands that invokes :func:`application_command`."
+
+msgid "A decorator that converts the provided method into a :class:`.MessageCommand`."
+msgstr "A decorator that converts the provided method into a :class:`.MessageCommand`."
+
+msgid "Callable[..., :class:`.MessageCommand`]"
+msgstr "Callable[..., :class:`.MessageCommand`]"
+
+msgid "Objects"
+msgstr "Objects"
+
+msgid "Checks whether the command is currently on cooldown."
+msgstr "Checks whether the command is currently on cooldown."
+
+msgid "This uses the current time instead of the interaction time."
+msgstr "This uses the current time instead of the interaction time."
+
+msgid "The invocation context to use when checking the command's cooldown status."
+msgstr "The invocation context to use when checking the command's cooldown status."
+
+msgid "A boolean indicating if the command is on cooldown."
+msgstr "A boolean indicating if the command is on cooldown."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "Resets the cooldown on this command."
+msgstr "Resets the cooldown on this command."
+
+msgid "The invocation context to reset the cooldown under."
+msgstr "The invocation context to reset the cooldown under."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "Retrieves the amount of seconds before this command can be tried again."
+msgstr "Retrieves the amount of seconds before this command can be tried again."
+
+msgid "The invocation context to retrieve the cooldown from."
+msgstr "The invocation context to retrieve the cooldown from."
+
+msgid "The amount of time left on this command's cooldown in seconds. If this is ``0.0`` then the command isn't on cooldown."
+msgstr "The amount of time left on this command's cooldown in seconds. If this is ``0.0`` then the command isn't on cooldown."
+
+msgid ":class:`float`"
+msgstr ":class:`float`"
+
+msgid "A decorator that registers a coroutine as a local error handler."
+msgstr "A decorator that registers a coroutine as a local error handler."
+
+msgid "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."
+msgstr "A local error handler is an :func:`.on_command_error` event limited to a single command. However, the :func:`.on_command_error` is still invoked afterwards as the catch-all."
+
+msgid "The coroutine to register as the local error handler."
+msgstr "The coroutine to register as the local error handler."
+
+msgid "The coroutine passed is not actually a coroutine."
+msgstr "The coroutine passed is not actually a coroutine."
+
+msgid "Checks whether the command has an error handler registered."
+msgstr "Checks whether the command has an error handler registered."
+
+msgid ":py:class:`bool`"
+msgstr ":py:class:`bool`"
+
+msgid "A decorator that registers a coroutine as a pre-invoke hook. A pre-invoke hook is called directly before the command is called. This makes it a useful function to set up database connections or any type of set up required."
+msgstr "A decorator that registers a coroutine as a pre-invoke hook. A pre-invoke hook is called directly before the command is called. This makes it a useful function to set up database connections or any type of set up required."
+
+msgid "This pre-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.before_invoke` for more info."
+msgstr "This pre-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.before_invoke` for more info."
+
+msgid "The coroutine to register as the pre-invoke hook."
+msgstr "The coroutine to register as the pre-invoke hook."
+
+msgid "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required."
+msgstr "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required."
+
+msgid "This post-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.after_invoke` for more info."
+msgstr "This post-invoke hook takes a sole parameter, an :class:`.ApplicationContext`. See :meth:`.Bot.after_invoke` for more info."
+
+msgid "The coroutine to register as the post-invoke hook."
+msgstr "The coroutine to register as the post-invoke hook."
+
+msgid "Retrieves the fully qualified parent command name."
+msgstr "Retrieves the fully qualified parent command name."
+
+msgid "This the base command name required to execute it. For example, in ``/one two three`` the parent name would be ``one two``."
+msgstr "This the base command name required to execute it. For example, in ``/one two three`` the parent name would be ``one two``."
+
+msgid "Retrieves the fully qualified command name."
+msgstr "Retrieves the fully qualified command name."
+
+msgid "This is the full parent name with the command name as well. For example, in ``/one two three`` the qualified name would be ``one two three``."
+msgstr "This is the full parent name with the command name as well. For example, in ``/one two three`` the qualified name would be ``one two three``."
+
+msgid "Retrieves the fully qualified command ID."
+msgstr "Retrieves the fully qualified command ID."
+
+msgid "This is the root parent ID. For example, in ``/one two three`` the qualified ID would return ``one.id``."
+msgstr "This is the root parent ID. For example, in ``/one two three`` the qualified ID would return ``one.id``."
+
+msgid "A class that implements the protocol for a slash command."
+msgstr "A class that implements the protocol for a slash command."
+
+msgid "These are not created manually, instead they are created via the decorator or functional interface."
+msgstr "These are not created manually, instead they are created via the decorator or functional interface."
+
+msgid "The name of the command."
+msgstr "The name of the command."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The coroutine that is executed when the command is called."
+msgstr "The coroutine that is executed when the command is called."
+
+msgid ":ref:`coroutine <coroutine>`"
+msgstr ":ref:`coroutine <coroutine>`"
+
+msgid "The description for the command."
+msgstr "The description for the command."
+
+msgid "Optional[:class:`str`]"
+msgstr "Optional[:class:`str`]"
+
+msgid "The ids of the guilds where this command will be registered."
+msgstr "The ids of the guilds where this command will be registered."
+
+msgid "Optional[List[:class:`int`]]"
+msgstr "Optional[List[:class:`int`]]"
+
+msgid "The parameters for this command."
+msgstr "The parameters for this command."
+
+msgid "List[:class:`Option`]"
+msgstr "List[:class:`Option`]"
+
+msgid "The parent group that this command belongs to. ``None`` if there isn't one."
+msgstr "The parent group that this command belongs to. ``None`` if there isn't one."
+
+msgid "Optional[:class:`SlashCommandGroup`]"
+msgstr "Optional[:class:`SlashCommandGroup`]"
+
+msgid "Returns a string that allows you to mention the slash command."
+msgstr "Returns a string that allows you to mention the slash command."
+
+msgid "Whether the command should only be usable inside a guild."
+msgstr "Whether the command should only be usable inside a guild."
+
+msgid "Use the :attr:`contexts` parameter instead."
+msgstr "Use the :attr:`contexts` parameter instead."
+
+msgid "Whether the command should be restricted to 18+ channels and users. Apps intending to be listed in the App Directory cannot have NSFW commands."
+msgstr "Whether the command should be restricted to 18+ channels and users. Apps intending to be listed in the App Directory cannot have NSFW commands."
+
+msgid "The default permissions a member needs to be able to run the command."
+msgstr "The default permissions a member needs to be able to run the command."
+
+msgid ":class:`~discord.Permissions`"
+msgstr ":class:`~discord.Permissions`"
+
+msgid "The cog that this command belongs to. ``None`` if there isn't one."
+msgstr "The cog that this command belongs to. ``None`` if there isn't one."
+
+msgid "Optional[:class:`Cog`]"
+msgstr "Optional[:class:`Cog`]"
+
+msgid "A list of predicates that verifies if the command could be executed with the given :class:`.ApplicationContext` as the sole parameter. If an exception is necessary to be thrown to signal failure, then one inherited from :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error` event."
+msgstr "A list of predicates that verifies if the command could be executed with the given :class:`.ApplicationContext` as the sole parameter. If an exception is necessary to be thrown to signal failure, then one inherited from :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error` event."
+
+msgid "List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]"
+msgstr "List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]"
+
+msgid "The cooldown applied when the command is invoked. ``None`` if the command doesn't have a cooldown."
+msgstr "The cooldown applied when the command is invoked. ``None`` if the command doesn't have a cooldown."
+
+msgid "Optional[:class:`~discord.ext.commands.Cooldown`]"
+msgstr "Optional[:class:`~discord.ext.commands.Cooldown`]"
+
+msgid "The name localizations for this command. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+msgstr "The name localizations for this command. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+
+msgid "Dict[:class:`str`, :class:`str`]"
+msgstr "Dict[:class:`str`, :class:`str`]"
+
+msgid "The description localizations for this command. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+msgstr "The description localizations for this command. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+
+msgid "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Unapplicable for guild commands."
+msgstr "The type of installation this command should be available to. For instance, if set to :attr:`IntegrationType.user_install`, the command will only be available to users with the application installed on their account. Unapplicable for guild commands."
+
+msgid "Set[:class:`IntegrationType`]"
+msgstr "Set[:class:`IntegrationType`]"
+
+msgid "The location where this command can be used. Cannot be set if this is a guild command."
+msgstr "The location where this command can be used. Cannot be set if this is a guild command."
+
+msgid "Set[:class:`InteractionContextType`]"
+msgstr "Set[:class:`InteractionContextType`]"
+
+msgid "Creates a copy of this command."
+msgstr "Creates a copy of this command."
+
+msgid "A new instance of this command."
+msgstr "A new instance of this command."
+
+msgid ":class:`SlashCommand`"
+msgstr ":class:`SlashCommand`"
+
+msgid "A class that implements the protocol for a slash command group."
+msgstr "A class that implements the protocol for a slash command group."
+
+msgid "These can be created manually, but they should be created via the decorator or functional interface."
+msgstr "These can be created manually, but they should be created via the decorator or functional interface."
+
+msgid "The parent group that this group belongs to. ``None`` if there isn't one."
+msgstr "The parent group that this group belongs to. ``None`` if there isn't one."
+
+msgid "The location where this command can be used. Unapplicable for guild commands."
+msgstr "The location where this command can be used. Unapplicable for guild commands."
+
+msgid "Creates a new subgroup for this SlashCommandGroup."
+msgstr "Creates a new subgroup for this SlashCommandGroup."
+
+msgid "The name of the group to create."
+msgstr "The name of the group to create."
+
+msgid "The description of the group to create."
+msgstr "The description of the group to create."
+
+msgid "A list of the IDs of each guild this group should be added to, making it a guild command. This will be a global command if ``None`` is passed."
+msgstr "A list of the IDs of each guild this group should be added to, making it a guild command. This will be a global command if ``None`` is passed."
+
+msgid "The slash command group that was created."
+msgstr "The slash command group that was created."
+
+msgid "A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup` as a subgroup."
+msgstr "A shortcut decorator that initializes the provided subclass of :class:`.SlashCommandGroup` as a subgroup."
+
+msgid "The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed."
+msgstr "The name of the group to create. This will resolve to the name of the decorated class if ``None`` is passed."
+
+msgid "An iterator that recursively walks through all slash commands and groups in this group."
+msgstr "An iterator that recursively walks through all slash commands and groups in this group."
+
+msgid "Yields"
+msgstr "Yields"
+
+msgid ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
+msgstr ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
+
+msgid ":py:class:`~typing.Generator`\\[:py:class:`~discord.commands.core.SlashCommand` | :py:class:`~discord.commands.core.SlashCommandGroup`, :py:obj:`None`, :py:obj:`None`]"
+msgstr ":py:class:`~typing.Generator`\\[:py:class:`~discord.commands.core.SlashCommand` | :py:class:`~discord.commands.core.SlashCommandGroup`, :py:obj:`None`, :py:obj:`None`]"
+
+msgid "Creates a copy of this command group."
+msgstr "Creates a copy of this command group."
+
+msgid "A new instance of this command group."
+msgstr "A new instance of this command group."
+
+msgid ":class:`SlashCommandGroup`"
+msgstr ":class:`SlashCommandGroup`"
+
+msgid "A class that implements the protocol for user context menu commands."
+msgstr "A class that implements the protocol for user context menu commands."
+
+msgid "Use the ``contexts`` parameter instead."
+msgstr "Use the ``contexts`` parameter instead."
+
+msgid "The installation contexts where this command is available. Unapplicable for guild commands."
+msgstr "The installation contexts where this command is available. Unapplicable for guild commands."
+
+msgid "The interaction contexts where this command is available. Unapplicable for guild commands."
+msgstr "The interaction contexts where this command is available. Unapplicable for guild commands."
+
+msgid ":class:`UserCommand`"
+msgstr ":class:`UserCommand`"
+
+msgid "A class that implements the protocol for message context menu commands."
+msgstr "A class that implements the protocol for message context menu commands."
+
+msgid ":class:`MessageCommand`"
+msgstr ":class:`MessageCommand`"
+
+msgid "Options"
+msgstr "Options"
+
+msgid "A decorator that can be used instead of typehinting :class:`.Option`."
+msgstr "A decorator that can be used instead of typehinting :class:`.Option`."
+
+msgid "The name of the target function parameter this option is mapped to. This allows you to have a separate UI ``name`` and parameter name."
+msgstr "The name of the target function parameter this option is mapped to. This allows you to have a separate UI ``name`` and parameter name."
+
+msgid "Represents a selectable option for a slash command."
+msgstr "Represents a selectable option for a slash command."
+
+msgid "The type of input that is expected for this option. This can be a :class:`SlashCommandOptionType`, an associated class, a channel type, a :class:`Converter`, a converter class or an :class:`enum.Enum`. If a :class:`enum.Enum` is used and it has up to 25 values, :attr:`choices` will be automatically filled. If the :class:`enum.Enum` has more than 25 values, :attr:`autocomplete` will be implemented with :func:`discord.utils.basic_autocomplete` instead."
+msgstr "The type of input that is expected for this option. This can be a :class:`SlashCommandOptionType`, an associated class, a channel type, a :class:`Converter`, a converter class or an :class:`enum.Enum`. If a :class:`enum.Enum` is used and it has up to 25 values, :attr:`choices` will be automatically filled. If the :class:`enum.Enum` has more than 25 values, :attr:`autocomplete` will be implemented with :func:`discord.utils.basic_autocomplete` instead."
+
+msgid "Union[Type[:class:`str`], Type[:class:`bool`], Type[:class:`int`], Type[:class:`float`], Type[:class:`.abc.GuildChannel`], Type[:class:`Thread`], Type[:class:`Member`], Type[:class:`User`], Type[:class:`Attachment`], Type[:class:`Role`], Type[:class:`.abc.Mentionable`], :class:`SlashCommandOptionType`, Type[:class:`.ext.commands.Converter`], Type[:class:`enums.Enum`], Type[:class:`Enum`]]"
+msgstr "Union[Type[:class:`str`], Type[:class:`bool`], Type[:class:`int`], Type[:class:`float`], Type[:class:`.abc.GuildChannel`], Type[:class:`Thread`], Type[:class:`Member`], Type[:class:`User`], Type[:class:`Attachment`], Type[:class:`Role`], Type[:class:`.abc.Mentionable`], :class:`SlashCommandOptionType`, Type[:class:`.ext.commands.Converter`], Type[:class:`enums.Enum`], Type[:class:`Enum`]]"
+
+msgid "The name of this option visible in the UI. Inherits from the variable name if not provided as a parameter."
+msgstr "The name of this option visible in the UI. Inherits from the variable name if not provided as a parameter."
+
+msgid "The description of this option. Must be 100 characters or fewer. If :attr:`input_type` is a :class:`enum.Enum` and :attr:`description` is not specified, :attr:`input_type`'s docstring will be used."
+msgstr "The description of this option. Must be 100 characters or fewer. If :attr:`input_type` is a :class:`enum.Enum` and :attr:`description` is not specified, :attr:`input_type`'s docstring will be used."
+
+msgid "The list of available choices for this option. Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair). If provided, the input from the user must match one of the choices in the list."
+msgstr "The list of available choices for this option. Can be a list of values or :class:`OptionChoice` objects (which represent a name:value pair). If provided, the input from the user must match one of the choices in the list."
+
+msgid "Optional[List[Union[:class:`Any`, :class:`OptionChoice`]]]"
+msgstr "Optional[List[Union[:class:`Any`, :class:`OptionChoice`]]]"
+
+msgid "Whether this option is required."
+msgstr "Whether this option is required."
+
+msgid "Optional[:class:`bool`]"
+msgstr "Optional[:class:`bool`]"
+
+msgid "The default value for this option. If provided, ``required`` will be considered ``False``."
+msgstr "The default value for this option. If provided, ``required`` will be considered ``False``."
+
+msgid "Optional[:class:`Any`]"
+msgstr "Optional[:class:`Any`]"
+
+msgid "The minimum value that can be entered. Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`."
+msgstr "The minimum value that can be entered. Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`."
+
+msgid "Optional[:class:`int`]"
+msgstr "Optional[:class:`int`]"
+
+msgid "The maximum value that can be entered. Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`."
+msgstr "The maximum value that can be entered. Only applies to Options with an :attr:`.input_type` of :class:`int` or :class:`float`."
+
+msgid "The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive). Only applies to Options with an :attr:`input_type` of :class:`str`."
+msgstr "The minimum length of the string that can be entered. Must be between 0 and 6000 (inclusive). Only applies to Options with an :attr:`input_type` of :class:`str`."
+
+msgid "The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive). Only applies to Options with an :attr:`input_type` of :class:`str`."
+msgstr "The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive). Only applies to Options with an :attr:`input_type` of :class:`str`."
+
+msgid "The autocomplete handler for the option. Accepts a callable (sync or async) that takes a single argument of :class:`AutocompleteContext`. The callable must return an iterable of :class:`str` or :class:`OptionChoice`. Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable."
+msgstr "The autocomplete handler for the option. Accepts a callable (sync or async) that takes a single argument of :class:`AutocompleteContext`. The callable must return an iterable of :class:`str` or :class:`OptionChoice`. Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable."
+
+msgid "Does not validate the input value against the autocomplete results."
+msgstr "Does not validate the input value against the autocomplete results."
+
+msgid "Optional[Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]]"
+msgstr "Optional[Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]]"
+
+msgid "A list of channel types that can be selected in this option. Only applies to Options with an :attr:`input_type` of :class:`discord.SlashCommandOptionType.channel`. If this argument is used, :attr:`input_type` will be ignored."
+msgstr "A list of channel types that can be selected in this option. Only applies to Options with an :attr:`input_type` of :class:`discord.SlashCommandOptionType.channel`. If this argument is used, :attr:`input_type` will be ignored."
+
+msgid "list[:class:`discord.ChannelType`] | None"
+msgstr "list[:class:`discord.ChannelType`] | None"
+
+msgid "The name localizations for this option. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+msgstr "The name localizations for this option. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+
+msgid "The description localizations for this option. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+msgstr "The description localizations for this option. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+
+msgid "Examples"
+msgstr "Examples"
+
+msgid "Basic usage: ::"
+msgstr "Basic usage: ::"
+
+msgid "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."
+msgstr "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."
+
+msgid "The thread type to expect for this options input."
+msgstr "The thread type to expect for this options input."
+
+msgid "Represents a name:value pairing for a selected :class:`.Option`."
+msgstr "Represents a name:value pairing for a selected :class:`.Option`."
+
+msgid "The name of the choice. Shown in the UI when selecting an option."
+msgstr "The name of the choice. Shown in the UI when selecting an option."
+
+msgid "The value of the choice. If not provided, will use the value of ``name``."
+msgstr "The value of the choice. If not provided, will use the value of ``name``."
+
+msgid "Optional[Union[:class:`str`, :class:`int`, :class:`float`]]"
+msgstr "Optional[Union[:class:`str`, :class:`int`, :class:`float`]]"
+
+msgid "The name localizations for this choice. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+msgstr "The name localizations for this choice. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
+
+msgid "Context Objects"
+msgstr "Context Objects"
+
+msgid "Represents a Discord application command interaction context."
+msgstr "Represents a Discord application command interaction context."
+
+msgid "This class is not created manually and is instead passed to application commands as the first parameter."
+msgstr "This class is not created manually and is instead passed to application commands as the first parameter."
+
+msgid "The bot that the command belongs to."
+msgstr "The bot that the command belongs to."
+
+msgid ":class:`.Bot`"
+msgstr ":class:`.Bot`"
+
+msgid "The interaction object that invoked the command."
+msgstr "The interaction object that invoked the command."
+
+msgid ":class:`.Interaction`"
+msgstr ":class:`.Interaction`"
+
+msgid "The command that this context belongs to."
+msgstr "The command that this context belongs to."
+
+msgid ":class:`.ApplicationCommand`"
+msgstr ":class:`.ApplicationCommand`"
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Calls a command with the arguments given. This is useful if you want to just call the callback that a :class:`.ApplicationCommand` holds internally."
+msgstr "Calls a command with the arguments given. This is useful if you want to just call the callback that a :class:`.ApplicationCommand` holds internally."
+
+msgid "This does not handle converters, checks, cooldowns, pre-invoke, or after-invoke hooks in any matter. It calls the internal callback directly as-if it was a regular function. You must take care in passing the proper arguments when using this function."
+msgstr "This does not handle converters, checks, cooldowns, pre-invoke, or after-invoke hooks in any matter. It calls the internal callback directly as-if it was a regular function. You must take care in passing the proper arguments when using this function."
+
+msgid "The command that is going to be called."
+msgstr "The command that is going to be called."
+
+msgid "The arguments to use."
+msgstr "The arguments to use."
+
+msgid "The keyword arguments to use."
+msgstr "The keyword arguments to use."
+
+msgid "The command argument to invoke is missing."
+msgstr "The command argument to invoke is missing."
+
+msgid ":py:class:`~typing.TypeVar`\\(``T``)"
+msgstr ":py:class:`~typing.TypeVar`\\(``T``)"
+
+msgid "Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]: Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`."
+msgstr "Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]: Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`."
+
+msgid "Returns the ID of the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel_id`."
+msgstr "Returns the ID of the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel_id`."
+
+msgid "Returns the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild`."
+msgstr "Returns the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild`."
+
+msgid "Returns the ID of the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild_id`."
+msgstr "Returns the ID of the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild_id`."
+
+msgid "Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.locale`."
+msgstr "Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.locale`."
+
+msgid "Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild_locale`."
+msgstr "Returns the locale of the guild associated with this context's command. Shorthand for :attr:`.Interaction.guild_locale`."
+
+msgid "Union[:class:`.Member`, :class:`.ClientUser`]: Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message message contexts, or when :meth:`Intents.guilds` is absent."
+msgstr "Union[:class:`.Member`, :class:`.ClientUser`]: Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message message contexts, or when :meth:`Intents.guilds` is absent."
+
+msgid "Returns the message sent with this context's command. Shorthand for :attr:`.Interaction.message`, if applicable."
+msgstr "Returns the message sent with this context's command. Shorthand for :attr:`.Interaction.message`, if applicable."
+
+msgid "Returns the user that sent this context's command. Shorthand for :attr:`.Interaction.user`."
+msgstr "Returns the user that sent this context's command. Shorthand for :attr:`.Interaction.user`."
+
+msgid "Returns the voice client associated with this context's command. Shorthand for :attr:`Interaction.guild.voice_client<~discord.Guild.voice_client>`, if applicable."
+msgstr "Returns the voice client associated with this context's command. Shorthand for :attr:`Interaction.guild.voice_client<~discord.Guild.voice_client>`, if applicable."
+
+msgid "Returns the response object associated with this context's command. Shorthand for :attr:`.Interaction.response`."
+msgstr "Returns the response object associated with this context's command. Shorthand for :attr:`.Interaction.response`."
+
+msgid "The options and values that were selected by the user when sending the command."
+msgstr "The options and values that were selected by the user when sending the command."
+
+msgid "A dictionary containing the options and values that were selected by the user when the command was processed, if applicable. Returns ``None`` if the command has not yet been invoked, or if there are no options defined for that command."
+msgstr "A dictionary containing the options and values that were selected by the user when the command was processed, if applicable. Returns ``None`` if the command has not yet been invoked, or if there are no options defined for that command."
+
+msgid "Optional[List[Dict[:class:`str`, Any]]]"
+msgstr "Optional[List[Dict[:class:`str`, Any]]]"
+
+msgid "The options that were not provided by the user when sending the command."
+msgstr "The options that were not provided by the user when sending the command."
+
+msgid "A list of Option objects (if any) that were not selected by the user when the command was processed. Returns ``None`` if there are no options defined for that command."
+msgstr "A list of Option objects (if any) that were not selected by the user when the command was processed. Returns ``None`` if there are no options defined for that command."
+
+msgid "Optional[List[:class:`.Option`]]"
+msgstr "Optional[List[:class:`.Option`]]"
+
+msgid "|coro| Responds to this interaction by sending a modal dialog. This cannot be used to respond to another modal dialog submission."
+msgstr "|coro| Responds to this interaction by sending a modal dialog. This cannot be used to respond to another modal dialog submission."
+
+msgid "The modal dialog to display to the user."
+msgstr "The modal dialog to display to the user."
+
+msgid "Sending the modal failed."
+msgstr "Sending the modal failed."
+
+msgid "This interaction has already been responded to before."
+msgstr "This interaction has already been responded to before."
+
+msgid "Sends either a response or a message using the followup webhook determined by whether the interaction has been responded to or not."
+msgstr "Sends either a response or a message using the followup webhook determined by whether the interaction has been responded to or not."
+
+msgid "The response, its type depending on whether it's an interaction response or a followup."
+msgstr "The response, its type depending on whether it's an interaction response or a followup."
+
+msgid "Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]"
+msgstr "Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]"
+
+msgid "Responds to this interaction by sending a message."
+msgstr "Responds to this interaction by sending a message."
+
+msgid "The content of the message to send."
+msgstr "The content of the message to send."
+
+msgid "A list of embeds to send with the content. Maximum of 10. This cannot be mixed with the ``embed`` parameter."
+msgstr "A list of embeds to send with the content. Maximum of 10. This cannot be mixed with the ``embed`` parameter."
+
+msgid "The rich embed for the content to send. This cannot be mixed with ``embeds`` parameter."
+msgstr "The rich embed for the content to send. This cannot be mixed with ``embeds`` parameter."
+
+msgid "Indicates if the message should be sent using text-to-speech."
+msgstr "Indicates if the message should be sent using text-to-speech."
+
+msgid "The view to send with the message."
+msgstr "The view to send with the message."
+
+msgid "Indicates if the message should only be visible to the user who started the interaction. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes."
+msgstr "Indicates if the message should only be visible to the user who started the interaction. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes."
+
+msgid "Controls the mentions being processed in this message. See :meth:`.abc.Messageable.send` for more information."
+msgstr "Controls the mentions being processed in this message. See :meth:`.abc.Messageable.send` for more information."
+
+msgid "If provided, the number of seconds to wait in the background before deleting the message we just sent."
+msgstr "If provided, the number of seconds to wait in the background before deleting the message we just sent."
+
+msgid "The file to upload."
+msgstr "The file to upload."
+
+msgid "A list of files to upload. Must be a maximum of 10."
+msgstr "A list of files to upload. Must be a maximum of 10."
+
+msgid "The poll to send.  .. versionadded:: 2.6"
+msgstr "The poll to send.  .. versionadded:: 2.6"
+
+msgid "The poll to send."
+msgstr "The poll to send."
+
+msgid "The interaction object associated with the sent message."
+msgstr "The interaction object associated with the sent message."
+
+msgid "Sending the message failed."
+msgstr "Sending the message failed."
+
+msgid "You specified both ``embed`` and ``embeds``."
+msgstr "You specified both ``embed`` and ``embeds``."
+
+msgid "The length of ``embeds`` was invalid."
+msgstr "The length of ``embeds`` was invalid."
+
+msgid "Sends a message using the webhook."
+msgstr "Sends a message using the webhook."
+
+msgid "The content must be a type that can convert to a string through ``str(content)``."
+msgstr "The content must be a type that can convert to a string through ``str(content)``."
+
+msgid "To upload a single file, the ``file`` parameter should be used with a single :class:`File` object."
+msgstr "To upload a single file, the ``file`` parameter should be used with a single :class:`File` object."
+
+msgid "If the ``embed`` parameter is provided, it must be of type :class:`Embed` and it must be a rich embed type. You cannot mix the ``embed`` parameter with the ``embeds`` parameter, which must be a :class:`list` of :class:`Embed` objects to send."
+msgstr "If the ``embed`` parameter is provided, it must be of type :class:`Embed` and it must be a rich embed type. You cannot mix the ``embed`` parameter with the ``embeds`` parameter, which must be a :class:`list` of :class:`Embed` objects to send."
+
+msgid "Whether the server should wait before sending a response. This essentially means that the return type of this function changes from ``None`` to a :class:`WebhookMessage` if set to ``True``. If the type of webhook is :attr:`WebhookType.application` then this is always set to ``True``."
+msgstr "Whether the server should wait before sending a response. This essentially means that the return type of this function changes from ``None`` to a :class:`WebhookMessage` if set to ``True``. If the type of webhook is :attr:`WebhookType.application` then this is always set to ``True``."
+
+msgid "The username to send with this message. If no username is provided then the default username for the webhook is used."
+msgstr "The username to send with this message. If no username is provided then the default username for the webhook is used."
+
+msgid "The avatar URL to send with this message. If no avatar URL is provided then the default avatar for the webhook is used. If this is not a string then it is explicitly cast using ``str``."
+msgstr "The avatar URL to send with this message. If no avatar URL is provided then the default avatar for the webhook is used. If this is not a string then it is explicitly cast using ``str``."
+
+msgid "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes.  .. versionadded:: 2.0"
+msgstr "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes.  .. versionadded:: 2.0"
+
+msgid "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes."
+msgstr "Indicates if the message should only be visible to the user. This is only available to :attr:`WebhookType.application` webhooks. If a view is sent with an ephemeral message, and it has no timeout set then the timeout is set to 15 minutes."
+
+msgid "The file to upload. This cannot be mixed with ``files`` parameter."
+msgstr "The file to upload. This cannot be mixed with ``files`` parameter."
+
+msgid "A list of files to send with the content. This cannot be mixed with the ``file`` parameter."
+msgstr "A list of files to send with the content. This cannot be mixed with the ``file`` parameter."
+
+msgid "Controls the mentions being processed in this message.  .. versionadded:: 1.4"
+msgstr "Controls the mentions being processed in this message.  .. versionadded:: 1.4"
+
+msgid "Controls the mentions being processed in this message."
+msgstr "Controls the mentions being processed in this message."
+
+msgid "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library.  .. versionadded:: 2.0"
+msgstr "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library.  .. versionadded:: 2.0"
+
+msgid "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library."
+msgstr "The view to send with the message. You can only send a view if this webhook is not partial and has state attached. A webhook has state attached if the webhook is managed by the library."
+
+msgid "The thread to send this webhook to.  .. versionadded:: 2.0"
+msgstr "The thread to send this webhook to.  .. versionadded:: 2.0"
+
+msgid "The thread to send this webhook to."
+msgstr "The thread to send this webhook to."
+
+msgid "The name of the thread to create. Only works for forum channels.  .. versionadded:: 2.0"
+msgstr "The name of the thread to create. Only works for forum channels.  .. versionadded:: 2.0"
+
+msgid "The name of the thread to create. Only works for forum channels."
+msgstr "The name of the thread to create. Only works for forum channels."
+
+msgid "A list of tags to apply to the message. Only works for threads.  .. versionadded:: 2.5"
+msgstr "A list of tags to apply to the message. Only works for threads.  .. versionadded:: 2.5"
+
+msgid "A list of tags to apply to the message. Only works for threads."
+msgstr "A list of tags to apply to the message. Only works for threads."
+
+msgid "If ``wait`` is ``True`` then the message that was sent, otherwise ``None``."
+msgstr "If ``wait`` is ``True`` then the message that was sent, otherwise ``None``."
+
+msgid "Optional[:class:`WebhookMessage`]"
+msgstr "Optional[:class:`WebhookMessage`]"
+
+msgid "This webhook was not found."
+msgstr "This webhook was not found."
+
+msgid "The authorization token for the webhook is incorrect."
+msgstr "The authorization token for the webhook is incorrect."
+
+msgid "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``."
+msgstr "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``."
+
+msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
+msgstr "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
+
+msgid "Defers the interaction response."
+msgstr "Defers the interaction response."
+
+msgid "This is typically used when the interaction is acknowledged and a secondary action will be done later."
+msgstr "This is typically used when the interaction is acknowledged and a secondary action will be done later."
+
+msgid "This can only be used with the following interaction types:"
+msgstr "This can only be used with the following interaction types:"
+
+msgid ":attr:`InteractionType.application_command`"
+msgstr ":attr:`InteractionType.application_command`"
+
+msgid ":attr:`InteractionType.component`"
+msgstr ":attr:`InteractionType.component`"
+
+msgid ":attr:`InteractionType.modal_submit`"
+msgstr ":attr:`InteractionType.modal_submit`"
+
+msgid "The follow-up response will also be non-ephemeral if the `ephemeral` argument is ``False``, and ephemeral if ``True``."
+msgstr "The follow-up response will also be non-ephemeral if the `ephemeral` argument is ``False``, and ephemeral if ``True``."
+
+msgid "Indicates whether the deferred message will eventually be ephemeral. This only applies to :attr:`InteractionType.application_command` interactions, or if ``invisible`` is ``False``."
+msgstr "Indicates whether the deferred message will eventually be ephemeral. This only applies to :attr:`InteractionType.application_command` interactions, or if ``invisible`` is ``False``."
+
+msgid "Indicates whether the deferred type should be 'invisible' (:attr:`InteractionResponseType.deferred_message_update`) instead of 'thinking' (:attr:`InteractionResponseType.deferred_channel_message`). In the Discord UI, this is represented as the bot thinking of a response. You must eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away. This parameter does not apply to interactions of type :attr:`InteractionType.application_command`."
+msgstr "Indicates whether the deferred type should be 'invisible' (:attr:`InteractionResponseType.deferred_message_update`) instead of 'thinking' (:attr:`InteractionResponseType.deferred_channel_message`). In the Discord UI, this is represented as the bot thinking of a response. You must eventually send a followup message via :attr:`Interaction.followup` to make this thinking state go away. This parameter does not apply to interactions of type :attr:`InteractionType.application_command`."
+
+msgid "Deferring the interaction failed."
+msgstr "Deferring the interaction failed."
+
+msgid "Returns the followup webhook for followup interactions."
+msgstr "Returns the followup webhook for followup interactions."
+
+msgid "Deletes the original interaction response message."
+msgstr "Deletes the original interaction response message."
+
+msgid "This is a higher level interface to :meth:`Interaction.delete_original_response`."
+msgstr "This is a higher level interface to :meth:`Interaction.delete_original_response`."
+
+msgid "If provided, the number of seconds to wait before deleting the message."
+msgstr "If provided, the number of seconds to wait before deleting the message."
+
+msgid "Deleting the message failed."
+msgstr "Deleting the message failed."
+
+msgid "You do not have proper permissions to delete the message."
+msgstr "You do not have proper permissions to delete the message."
+
+msgid "Edits the original interaction response message."
+msgstr "Edits the original interaction response message."
+
+msgid "This is a lower level interface to :meth:`InteractionMessage.edit` in case you do not want to fetch the message and save an HTTP request."
+msgstr "This is a lower level interface to :meth:`InteractionMessage.edit` in case you do not want to fetch the message and save an HTTP request."
+
+msgid "This method is also the only way to edit the original message if the message sent was ephemeral."
+msgstr "This method is also the only way to edit the original message if the message sent was ephemeral."
+
+msgid "The content to edit the message with or ``None`` to clear it."
+msgstr "The content to edit the message with or ``None`` to clear it."
+
+msgid "A list of embeds to edit the message with."
+msgstr "A list of embeds to edit the message with."
+
+msgid "The embed to edit the message with. ``None`` suppresses the embeds. This should not be mixed with the ``embeds`` parameter."
+msgstr "The embed to edit the message with. ``None`` suppresses the embeds. This should not be mixed with the ``embeds`` parameter."
+
+msgid "A list of attachments to keep in the message. If ``[]`` is passed then all attachments are removed."
+msgstr "A list of attachments to keep in the message. If ``[]`` is passed then all attachments are removed."
+
+msgid "The updated view to update this message with. If ``None`` is passed then the view is removed."
+msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed."
+
+msgid "If provided, the number of seconds to wait in the background before deleting the message we just edited. If the deletion fails, then it is silently ignored."
+msgstr "If provided, the number of seconds to wait in the background before deleting the message we just edited. If the deletion fails, then it is silently ignored."
+
+msgid "Whether to suppress embeds for the message."
+msgstr "Whether to suppress embeds for the message."
+
+msgid "The newly edited message."
+msgstr "The newly edited message."
+
+msgid ":class:`InteractionMessage`"
+msgstr ":class:`InteractionMessage`"
+
+msgid "Editing the message failed."
+msgstr "Editing the message failed."
+
+msgid "Edited a message that is not yours."
+msgstr "Edited a message that is not yours."
+
+msgid "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``"
+msgstr "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``"
+
+msgid "Returns the cog associated with this context's command. ``None`` if it does not exist."
+msgstr "Returns the cog associated with this context's command. ``None`` if it does not exist."
+
+msgid "Represents context for a slash command's option autocomplete."
+msgstr "Represents context for a slash command's option autocomplete."
+
+msgid "This class is not created manually and is instead passed to an :class:`.Option`'s autocomplete callback."
+msgstr "This class is not created manually and is instead passed to an :class:`.Option`'s autocomplete callback."
+
+msgid "The interaction object that invoked the autocomplete."
+msgstr "The interaction object that invoked the autocomplete."
+
+msgid "The option the user is currently typing."
+msgstr "The option the user is currently typing."
+
+msgid ":class:`.Option`"
+msgstr ":class:`.Option`"
+
+msgid "The content of the focused option."
+msgstr "The content of the focused option."
+
+msgid ":class:`.str`"
+msgstr ":class:`.str`"
+
+msgid "A name to value mapping of the options that the user has selected before this option."
+msgstr "A name to value mapping of the options that the user has selected before this option."
+
+msgid "Dict[:class:`str`, Any]"
+msgstr "Dict[:class:`str`, Any]"
+

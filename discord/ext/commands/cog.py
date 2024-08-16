@@ -50,7 +50,7 @@ class Cog(Cog):
         # To do this, we need to interfere with the Cog creation process.
         return super().__new__(cls)
 
-    def walk_commands(self) -> Generator[Command, None, None]:
+    def walk_commands(self) -> Generator[Command]:
         """An iterator that recursively walks through this cog's commands and subcommands.
 
         Yields

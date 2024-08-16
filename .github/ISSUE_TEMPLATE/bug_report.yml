@@ -1,6 +1,6 @@
 name: Bug Report
 description: Report broken or incorrect behaviour
-labels: unconfirmed bug
+labels: ["unconfirmed bug"]
 body:
   - type: markdown
     attributes:

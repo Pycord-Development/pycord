@@ -1,0 +1,112 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../cogs.rst:7
+#: c8ac825e6b994a9aa60b3bcbe6c34043
+msgid "Cogs"
+msgstr ""
+
+#: ../../cogs.rst:9
+#: 2f754881bfc94c2998a3ae81ef02f86b
+msgid "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
+msgstr ""
+
+#: ../../cogs.rst:11
+#: 9107f5b551204d178a48c1f69d6cbba5
+msgid "The gist:"
+msgstr ""
+
+#: ../../cogs.rst:13
+#: f173fd127aeb4f5abadc830d73d74ffb
+msgid "Each cog is a Python class that subclasses :class:`.Cog`."
+msgstr ""
+
+#: ../../cogs.rst:14
+#: 5cfe1bcf770d4bf59444548582bd4859
+msgid "Every command is marked with the :func:`discord.command` decorator or the corresponding shortcut command decorator."
+msgstr ""
+
+#: ../../cogs.rst:15
+#: 321f3f7b3a1d413790527b3d7b821138
+msgid "Every listener is marked with the :meth:`.Cog.listener` decorator."
+msgstr ""
+
+#: ../../cogs.rst:16
+#: 77021c1918474cfcb90679c1faeb4f6f
+msgid "Cogs are then registered with the :meth:`.Bot.add_cog` call."
+msgstr ""
+
+#: ../../cogs.rst:17
+#: b1c663eca3844c198e4539ce53c4c756
+msgid "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
+msgstr ""
+
+#: ../../cogs.rst:20
+#: 9e5fcbbf6d574ef796df6335903ce9bc
+msgid "Quick Example"
+msgstr ""
+
+#: ../../cogs.rst:22
+#: 2026f5d8c0ae400980fc4ddc47d46d2a
+msgid "This example cog defines a ``Greetings`` category for your commands, with a single slash command named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
+msgstr ""
+
+#: ../../cogs.rst:47
+#: bd6a08fc260d4f339594086965422dae
+msgid "A couple of technical notes to take into consideration:"
+msgstr ""
+
+#: ../../cogs.rst:49
+#: 16d111580cb940cdb64948e7ed41192a
+msgid "All listeners must be explicitly marked via decorator, :meth:`~.Cog.listener`."
+msgstr ""
+
+#: ../../cogs.rst:50
+#: 202723f7a4984aba9f44561f14721b3c
+msgid "The name of the cog is automatically derived from the class name but can be overridden."
+msgstr ""
+
+#: ../../cogs.rst:51
+#: fbcb39ba8b6f4e43b17b48546e9b9348
+msgid "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
+msgstr ""
+
+#: ../../cogs.rst:54
+#: 29313ee75df44d1a9e587cf204e86eea
+msgid "Cog Registration"
+msgstr ""
+
+#: ../../cogs.rst:56
+#: 934a0af7f99a4fa39afbc59c69c7a904
+msgid "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.Bot.add_cog` method."
+msgstr ""
+
+#: ../../cogs.rst:62
+#: fab3613b468549498b33327e5bb3bf81
+msgid "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
+msgstr ""
+
+#: ../../cogs.rst:65
+#: 0961f63000044a2ebc4c847b0c2a4c5b
+msgid "Using Cogs"
+msgstr ""
+
+#: ../../cogs.rst:67
+#: c63e277a7d6d4e788a85d37fadc395d5
+msgid "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
+msgstr ""

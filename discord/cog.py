@@ -346,7 +346,7 @@ class Cog(metaclass=CogMeta):
     def description(self, description: str) -> None:
         self.__cog_description__ = description
 
-    def walk_commands(self) -> Generator[ApplicationCommand, None, None]:
+    def walk_commands(self) -> Generator[ApplicationCommand]:
         """An iterator that recursively walks through this cog's commands and subcommands.
 
         Yields

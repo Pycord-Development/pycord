@@ -2117,6 +2117,16 @@ class HTTPClient:
     def get_roles(self, guild_id: Snowflake) -> Response[list[role.Role]]:
         return self.request(Route("GET", "/guilds/{guild_id}/roles", guild_id=guild_id))
 
+    def get_role(self, guild_id: Snowflake, role_id: Snowflake) -> Response[role.Role]:
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/roles/{role_id}",
+                guild_id=guild_id,
+                role_id=role_id,
+            )
+        )
+
     def edit_role(
         self,
         guild_id: Snowflake,

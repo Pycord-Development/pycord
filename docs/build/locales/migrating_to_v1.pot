@@ -1,0 +1,2565 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../migrating_to_v1.rst:6
+#: 05d2ff2da0bf4a26b3d502e09d78f50e
+msgid "Migrating to v1.0"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:8
+#: 08a114e33514430eaac09e99fae0b271
+msgid "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:11
+#: 3fcb6833d08c48378f58cda01ad7c2c9
+msgid "The amount of changes are so massive and long that for all intents and purposes, it is a completely new library."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:14
+#: 29d8d0562ff047b6872ce1a4b2292eed
+msgid "Part of the redesign involves making things more easy to use and natural. Things are done on the :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:18
+#: a3a80bf8b8a54fd4a764a3266f73d6bf
+msgid "Python Version Change"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:20
+#: 01478e23f1264f16be197f066be1b7c9
+msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:25
+#: fbcf913efbc2403eb6a6ebbc4ee19855
+msgid "Major Model Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:27
+#: c1ddcfd6e5564ca495d5aab4d29e3eed
+msgid "Below are major model changes that have happened in v1.0"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:30
+#: ab7eeee841a345c0a6fc69854509b783
+msgid "Snowflakes are int"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:32
+#: 86f1da0714544984bbc6cb9c9b02d5d1
+msgid "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:34
+#: ../../migrating_to_v1.rst:254
+#: 726778b710c04e76978dff7b349cf252
+#: 925613332baf474794a7ea8ba3760111
+msgid "Quick example: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:46
+#: 92094b94ad5e4c96bb4103624ff1e7ed
+msgid "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:50
+#: 6bf6aae7d7a24e108f113412fa3c039f
+msgid "Server is now Guild"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:52
+#: afd49bf9015d443187ca1a42f24d59a2
+msgid "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:56
+#: cd47980922e44b96aa22fa8238a42998
+msgid "A list of changes is as follows:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:59
+#: ../../migrating_to_v1.rst:95
+#: ../../migrating_to_v1.rst:869
+#: 9e94073e377e4f0e982b3de50c7f9206
+#: 6cb5196bb0504400af83d4731274d8be
+#: 6b67d4e97b6d4c8694c2e8da96a76517
+msgid "Before"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:59
+#: ../../migrating_to_v1.rst:95
+#: ../../migrating_to_v1.rst:869
+#: eb2dcd846f054ca58906e7e4b49a54c5
+#: a331664e22074b3a87583500ac143465
+#: 0ee0a1495d2d41beaa51cd3784372563
+msgid "After"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:61
+#: 13f32d70cf83477f82296124e4cdcb90
+msgid "``Message.server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:61
+#: 848d312489e0445ca918844f862eea2f
+msgid ":attr:`Message.guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:63
+#: ee989678780a439e8e869ab5863db5a9
+msgid "``Channel.server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:63
+#: 903a4bed805f45d2bd606304c5c55ff8
+msgid ":attr:`.GuildChannel.guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:65
+#: 21084db1e16941c6a730d938e56f5732
+msgid "``Client.servers``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:65
+#: ../../migrating_to_v1.rst:233
+#: bf57f40e45224fb6b17b85631e1cd610
+#: c0744923b6ad4866b1d44b17f03192dc
+msgid ":attr:`Client.guilds`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:67
+#: 945daa4c554640b1855029d249c5b8d7
+msgid "``Client.get_server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:67
+#: 68cfaa3d9fbe461eb7dfd5fff7c06c5c
+msgid ":meth:`Client.get_guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:69
+#: 875c2ef6561f4509b9ff0b5f4f20e0ad
+msgid "``Emoji.server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:69
+#: 3c37d605a0764fecb6891d6570e0f59c
+msgid ":attr:`Emoji.guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:71
+#: 29f06211fc3a451080147b3fa1b63ecf
+msgid "``Role.server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:71
+#: 45a2673f1722437da461561f91d40dc4
+msgid ":attr:`Role.guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:73
+#: 96b745ba395d4504a3ddd38f88ec7104
+msgid "``Invite.server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:73
+#: fc9f937fe96f42a4a27286ebb0ff422c
+msgid ":attr:`Invite.guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:75
+#: 5d3f552e24a347648b4ed8d1faa3ec4b
+msgid "``Member.server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:75
+#: 096b13e7789940b39edb3afc84270347
+msgid ":attr:`Member.guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:77
+#: 0314f6751297469f921e125c6e6a0bc8
+msgid "``Permissions.manage_server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:77
+#: affd96346b0b4e01bcbde35265580bea
+msgid ":attr:`Permissions.manage_guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:79
+#: 5e44ec077a944f84b7e8d3f99ac23868
+msgid "``VoiceClient.server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:79
+#: dbdf10d3e3e3429f8c02921f1ca1b843
+msgid ":attr:`VoiceClient.guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:81
+#: 9316c0bac15449e49e73ddb4a78e2fc2
+msgid "``Client.create_server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:81
+#: 2d48655041c44ee38f073c15d1f36a9b
+msgid ":meth:`Client.create_guild`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:87
+#: 011af788cddf4c26aa243f725dcdd5e5
+msgid "Models are Stateful"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:89
+#: c999a05b88fe4eedbc6371c77cef842c
+msgid "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:92
+#: e9b15496d50c4ec0a05adf9442bde7a4
+msgid "A list of these changes is enumerated below."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:97
+#: 94e795e1da494a64b0c0bc866ae68c15
+msgid "``Client.add_reaction``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:97
+#: 8bea368aaa4d4177909d013637a2829d
+msgid ":meth:`Message.add_reaction`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:99
+#: 8db0940f543543059a77cf8df0b81c5d
+msgid "``Client.add_roles``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:99
+#: 9a303369f600474aadc221234b1c1a1c
+msgid ":meth:`Member.add_roles`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:101
+#: fd21c1b2c3e34b429c1cf07bd8756eff
+msgid "``Client.ban``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:101
+#: b6a7d155d4784c9193fad59b72a6ae3a
+msgid ":meth:`Member.ban` or :meth:`Guild.ban`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:103
+#: 8ea042cb92df473c872e8bd49c658d33
+msgid "``Client.change_nickname``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:103
+#: ../../migrating_to_v1.rst:171
+#: ../../migrating_to_v1.rst:187
+#: ../../migrating_to_v1.rst:195
+#: ea928f7105be4ba58ae0cf4fafee9a56
+#: aa792784735d4bdba990f4c81103bdf8
+#: de31911786464ca6ba77fd0a83061978
+#: 74f3be9c3add4f368f86a690fc5d1472
+msgid ":meth:`Member.edit`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:105
+#: 0e56f79feaf942f2b47ef31533e852be
+msgid "``Client.clear_reactions``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:105
+#: c677bd80cb794404a16dd85913b026fd
+msgid ":meth:`Message.clear_reactions`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:107
+#: 405430deafd44706b1d2ccfdc7adffef
+msgid "``Client.create_channel``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:107
+#: 8197239135d4498c987d70feeb74230e
+msgid ":meth:`Guild.create_text_channel` and :meth:`Guild.create_voice_channel`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:109
+#: e078594a079a4fc7afe2da419064f075
+msgid "``Client.create_custom_emoji``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:109
+#: f2a7d3500a6843ce8571812144dbcdd1
+msgid ":meth:`Guild.create_custom_emoji`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:111
+#: 8b7d857db2c04131b45dcc292a87350d
+msgid "``Client.create_invite``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:111
+#: a60b083866944e07b48eb011fcded1fd
+msgid ":meth:`abc.GuildChannel.create_invite`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:113
+#: 6897002f63c34b1aa54f7db07bcaca52
+msgid "``Client.create_role``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:113
+#: 725a519d0f244b5da03b8c093fb489cc
+msgid ":meth:`Guild.create_role`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:115
+#: d4ab86d5c94f4605910cea8cf12e4106
+msgid "``Client.delete_channel``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:115
+#: d0908cd8ea9b403f9d6de25b14807e11
+msgid ":meth:`abc.GuildChannel.delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:117
+#: efd47808372b4129adcb9edaaba93f37
+msgid "``Client.delete_channel_permissions``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:117
+#: 6b38d46ef27f48cfba916a202e9e100e
+msgid ":meth:`abc.GuildChannel.set_permissions` with ``overwrite`` set to ``None``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:119
+#: 5c12aa9ffd114e83b757f7a014de636b
+msgid "``Client.delete_custom_emoji``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:119
+#: 9a1c29f1279b41f2b999cb7904b381c2
+msgid ":meth:`Emoji.delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:121
+#: ebf7d015a5b14213a5eaee0813f0ffb1
+msgid "``Client.delete_invite``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:121
+#: b4e1fb2064484dfabf7352cad2f466e9
+msgid ":meth:`Invite.delete` or :meth:`Client.delete_invite`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:123
+#: adc92ae100614899b29e8676b7a1ef5e
+msgid "``Client.delete_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:123
+#: 51be51cd47d649ae9efc2cc87a9affb2
+msgid ":meth:`Message.delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:125
+#: 5db9f035ef83430a89b58e8ec64f50be
+msgid "``Client.delete_messages``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:125
+#: 8eb231dcf1534abb83d85ffe5e117d32
+msgid ":meth:`TextChannel.delete_messages`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:127
+#: 7655a15760eb4237aad379eee0dfe37b
+msgid "``Client.delete_role``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:127
+#: d1111acf427b4f1886208654311f7c6a
+msgid ":meth:`Role.delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:129
+#: 9fab1feb27fc4216b4672fb8d6b1c6d4
+msgid "``Client.delete_server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:129
+#: b44734280874458eafaaa518cb0ce20f
+msgid ":meth:`Guild.delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:131
+#: fcc22c5f49c4431c94ce4b63152e9590
+msgid "``Client.edit_channel``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:131
+#: ../../migrating_to_v1.rst:169
+#: 93122c34f2a241d5acb80ac8a27f3c4f
+#: e04c8bcd4136405b9c220ca7cc7d1e94
+msgid ":meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:133
+#: 7b6e8997079445cb8147f3d3d23e1191
+msgid "``Client.edit_channel_permissions``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:133
+#: cf899de66e4d48f6a029c40b2d6c2003
+msgid ":meth:`abc.GuildChannel.set_permissions`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:135
+#: 5103bd1efa634efb98de457fd1af2c92
+msgid "``Client.edit_custom_emoji``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:135
+#: 20888f79720b4d519397d484a767dd0d
+msgid ":meth:`Emoji.edit`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:137
+#: 38060dbbe60044ac904147be01829edd
+msgid "``Client.edit_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:137
+#: 8dbe5754dd5d4f08839579fe2437035f
+msgid ":meth:`Message.edit`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:139
+#: fae4deadcb5c4faab066509db2b40df8
+msgid "``Client.edit_profile``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:139
+#: 91cd7eb6ec4a484a929c0065a1c1be12
+msgid ":meth:`ClientUser.edit` (you get this from :attr:`Client.user`)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:141
+#: ec1708f42e1b4837b199eb03aa6d0802
+msgid "``Client.edit_role``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:141
+#: ../../migrating_to_v1.rst:173
+#: 7a3c12cb8dfb41bf955590556e87f472
+#: 2ca2af0b09124e90a2f0d31328f8e1d6
+msgid ":meth:`Role.edit`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:143
+#: 5c59f45214844d8381809ca387bfc230
+msgid "``Client.edit_server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:143
+#: 2db144ee0f7b4fffa9fd39e1ca3238ae
+msgid ":meth:`Guild.edit`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:145
+#: dbee023d8b504910a06bd022ff49933d
+msgid "``Client.estimate_pruned_members``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:145
+#: fd3396dc423045bab0ceca5f4316dd7a
+msgid ":meth:`Guild.estimate_pruned_members`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:147
+#: ../../migrating_to_v1.rst:327
+#: ea5522c34eaf4037834c736733e6c0f5
+#: f8ab0d799f99475cb3ac68107b5033e1
+msgid "``Client.get_all_emojis``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:147
+#: 3f799da829b84af9b77c1eb7e280d747
+msgid ":attr:`Client.emojis`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:149
+#: 85a7cbed901245c1a33ff023c25ec644
+msgid "``Client.get_bans``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:149
+#: b01d0c956dcc43b1a204501308966016
+msgid ":meth:`Guild.bans`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:151
+#: 35c46218094b4f62bd661e0c8c5c9f39
+msgid "``Client.get_invite``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:151
+#: 4167a66028c4468698d060ea2c5d2ab3
+msgid ":meth:`Client.fetch_invite`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:153
+#: fa438a74ea2b486eb04f95af7fa5f014
+msgid "``Client.get_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:153
+#: 5bf6ea90b56a434ab46dc6b403c513ab
+msgid ":meth:`abc.Messageable.fetch_message`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:155
+#: a19cc4a9328042938def362716827d73
+msgid "``Client.get_reaction_users``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:155
+#: ../../migrating_to_v1.rst:493
+#: 0aeff23f2d644390a344002dc788bf88
+#: 350c6a6c4c384a2b90bb54dedbb75987
+msgid ":meth:`Reaction.users`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:157
+#: a66f58f3ec2740b6a6a82a49e167c3d7
+msgid "``Client.get_user_info``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:157
+#: a8a6c6c74f714667b21fd9bc30bc6925
+msgid ":meth:`Client.fetch_user`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:159
+#: 0a14f4f2c56e49cd8f365edb1f82c378
+msgid "``Client.invites_from``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:159
+#: 67cdab68e2bb4467a38adcb61049dc23
+msgid ":meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:161
+#: 7c03320da8d242f992b1573330ce8b7d
+msgid "``Client.join_voice_channel``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:161
+#: 0d44d955e09a43b199a05191d5900ba8
+msgid ":meth:`VoiceChannel.connect` (see :ref:`migrating_1_0_voice`)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:163
+#: 27881100eed84bf7b795c126be68f1a6
+msgid "``Client.kick``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:163
+#: 94e0f7141cda45ae903c35aa6a69c35d
+msgid ":meth:`Guild.kick` or :meth:`Member.kick`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:165
+#: 3b984ccf21c145a7ad6a39a55f951f37
+msgid "``Client.leave_server``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:165
+#: cc54c4b806da43aaada0c9bb0aff3fe0
+msgid ":meth:`Guild.leave`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:167
+#: 46e93cb3d74148509eaba7bcba6d3773
+msgid "``Client.logs_from``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:167
+#: 9db5389e5ae84620869db55173736111
+msgid ":meth:`abc.Messageable.history` (see :ref:`migrating_1_0_async_iter`)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:169
+#: 12d4e4d1daf04ec3ba27607b30bcbf9c
+msgid "``Client.move_channel``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:171
+#: f5b76a01d47a4e5d8031370a4d864786
+msgid "``Client.move_member``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:173
+#: b9787931f9a0423b97f79701c74670f6
+msgid "``Client.move_role``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:175
+#: 5c8fdd44558b4ca7a1bff8d6380fa123
+msgid "``Client.pin_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:175
+#: 0c34b268afcc48caaee11aaf50000804
+msgid ":meth:`Message.pin`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:177
+#: 2d28dfd9a6d64279a5e2b700a3e68bcc
+msgid "``Client.pins_from``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:177
+#: de48b36586f04dbabbbed5b57bdc119c
+msgid ":meth:`abc.Messageable.pins`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:179
+#: 09aeb1072a5644b68615c67361062d68
+msgid "``Client.prune_members``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:179
+#: 6802632e0c70420aba56713487e598f2
+msgid ":meth:`Guild.prune_members`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:181
+#: 17170c5bcff34c0e9539a8eea220a74f
+msgid "``Client.purge_from``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:181
+#: d36ebb5d874648cc85d51b970a233a74
+msgid ":meth:`TextChannel.purge`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:183
+#: 13be010f52b34321918e1696c8383852
+msgid "``Client.remove_reaction``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:183
+#: 29aa2125f7a34ccfa54c4372872b7f43
+msgid ":meth:`Message.remove_reaction`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:185
+#: 06fd7f80d1634176804ee99ef6ae311a
+msgid "``Client.remove_roles``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:185
+#: f9648fd1303a4d0aaf94af88c0d1ea8f
+msgid ":meth:`Member.remove_roles`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:187
+#: 4a8077b6aac245ae80a7d0c20ad2eca1
+msgid "``Client.replace_roles``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:189
+#: 82070de88db3450382a6e8b64b0638b5
+msgid "``Client.send_file``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:189
+#: ../../migrating_to_v1.rst:191
+#: 21b5cb332c3140118eea23a5db6c5918
+#: 5a9ebc5464ae436a878e4068f6380ee5
+msgid ":meth:`abc.Messageable.send` (see :ref:`migrating_1_0_sending_messages`)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:191
+#: 44ae95f930be41b6a6594c20c055e7d4
+msgid "``Client.send_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:193
+#: c760774b209f42b1b2d308fde2e7aba5
+msgid "``Client.send_typing``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:193
+#: 04926c93000d411b812f6983e5f467a5
+msgid ":meth:`abc.Messageable.trigger_typing` (use :meth:`abc.Messageable.typing`)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:195
+#: b11c308b2aeb41b287e1cc0bd595959b
+msgid "``Client.server_voice_state``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:197
+#: b1b87fd6d1274c8bb1e5442c9df56101
+msgid "``Client.start_private_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:197
+#: 610cb6f98f2845af9066ca0bde6716fc
+msgid ":meth:`User.create_dm`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:199
+#: a11d9f52701b407d8d2335f74dbbfcea
+msgid "``Client.unban``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:199
+#: 031a1c0155c44f0ca8f9b5132954bc1e
+msgid ":meth:`Guild.unban` or :meth:`Member.unban`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:201
+#: 5c196c6af2fd45daadf86d1dc9704580
+msgid "``Client.unpin_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:201
+#: 08494bd8ab9c4acb9673ef7581383b31
+msgid ":meth:`Message.unpin`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:203
+#: d2cf551969f646918ce0e788d35b6e5e
+msgid "``Client.wait_for_message``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:203
+#: ../../migrating_to_v1.rst:205
+#: aeb94dbd878040e18cd6830187c6c850
+#: 202dc8001ca4408aa742db9ad98ce404
+msgid ":meth:`Client.wait_for` (see :ref:`migrating_1_0_wait_for`)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:205
+#: 4ca6e12c3be449439cfa64b0df3c5e3d
+msgid "``Client.wait_for_reaction``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:207
+#: 28b6320bfed6413d998a266242586173
+msgid "``Client.wait_until_login``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:207
+#: 5424bd2db4c04063adeb15efa0b596ee
+msgid "Removed"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:209
+#: 2b683045f0154326bbe09da63799050c
+msgid "``Client.wait_until_ready``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:209
+#: 969b537044544ccd96e09e7bb393f9a4
+msgid "No change"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:213
+#: b833197c9eda40ceb1f0458d1dbdc1b0
+msgid "Property Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:215
+#: 96fb89d21cfc4269b3340e8bf24c3ff3
+msgid "In order to be a bit more consistent, certain things that were properties were changed to methods instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:217
+#: db5e4c126dc6483597ae4b448fd25a01
+msgid "The following are now methods instead of properties (requires parentheses):"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:219
+#: 9e67c72b4a5447c1bcdf5fe2e5c844ee
+msgid ":meth:`Role.is_default`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:220
+#: 49bacae9ae944b169775bac1e871de18
+msgid ":meth:`Client.is_ready`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:221
+#: f1ed0e382f1945588d162fb5af03420f
+msgid ":meth:`Client.is_closed`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:224
+#: ece133f97cff4d0dad36e052438c7a64
+msgid "Dict Value Change"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:226
+#: 7cd0083e51a84abb9055eb5f10b5f4f1
+msgid "Prior to v1.0 some aggregating properties that retrieved models would return \"dict view\" objects."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:228
+#: 8a5302be472945d2b648830639c97007
+msgid "As a consequence, when the dict would change size while you would iterate over it, a RuntimeError would be raised and crash the task. To alleviate this, the \"dict view\" objects were changed into lists."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:231
+#: 39186001d0b9465fb4fe28855a9402eb
+msgid "The following views were changed to a list:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:234
+#: cb1e36effc2d4f3f89ce30bc609fc2e9
+msgid ":attr:`Client.users` (new in v1.0)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:235
+#: 4e04941d05bb4c6baf35ec2c3333cde9
+msgid ":attr:`Client.emojis` (new in v1.0)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:236
+#: 64adbb946f4d4c8dab5bd36915a526f9
+msgid ":attr:`Guild.channels`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:237
+#: e4ff974617fb4c86a225769bec0d2b9c
+msgid ":attr:`Guild.text_channels` (new in v1.0)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:238
+#: 39239d0c77204068bb8730a9672a929b
+msgid ":attr:`Guild.voice_channels` (new in v1.0)"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:239
+#: e5a4c980d3ed471ea95c02e62c8ab392
+msgid ":attr:`Guild.emojis`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:240
+#: 5098e9b55b9f4fc4a7456fd18644e798
+msgid ":attr:`Guild.members`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:243
+#: fc819b1aa6a743ddbf0cb3fc9d8f8380
+msgid "Voice State Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:245
+#: 4208d2bddf8d4a58a07a51fdd2a08b0e
+msgid "Earlier, in v0.11.0 a :class:`VoiceState` class was added to refer to voice states along with a :attr:`Member.voice` attribute to refer to it."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:248
+#: d77f52311c20468597ad6cae9b443580
+msgid "However, it was transparent to the user. In an effort to make the library save more memory, the voice state change is now more visible."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:251
+#: 95db5960ec01462d8b943bc47a492b11
+msgid "The only way to access voice attributes is via the :attr:`Member.voice` attribute. Note that if the member does not have a voice state this attribute can be ``None``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:267
+#: 6db07e90c3b340d28b008cc0078339c8
+msgid "User and Member Type Split"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:269
+#: 5a79efb82b2642fda44762a3c85a558d
+msgid "In v1.0 to save memory, :class:`User` and :class:`Member` are no longer inherited. Instead, they are \"flattened\" by having equivalent properties that map out to the functional underlying :class:`User`. Thus, there is no functional change in how they are used. However this breaks :func:`isinstance` checks and thus is something to keep in mind."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:273
+#: 6419a01d88174ef6a777c54e617e0404
+msgid "These memory savings were accomplished by having a global :class:`User` cache, and as a positive consequence you can now easily fetch a :class:`User` by their ID by using the new :meth:`Client.get_user`. You can also get a list of all :class:`User` your client can see with :attr:`Client.users`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:280
+#: 5bf8ba5e79d54e13b799945973a41880
+msgid "Channel Type Split"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:282
+#: 45a2593f472643d6a19e40a147888513
+msgid "Prior to v1.0, channels were two different types, ``Channel`` and ``PrivateChannel`` with a ``is_private`` property to help differentiate between them."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:285
+#: dc8f4981304946ff88e31e42f80a2a29
+msgid "In order to save memory the channels have been split into 4 different types:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:287
+#: f550804ce1204cb2b636820acf1af973
+msgid ":class:`TextChannel` for guild text channels."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:288
+#: 8f4c1f0b78cb48889fa2a2d2fc3cc260
+msgid ":class:`VoiceChannel` for guild voice channels."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:289
+#: 19b50d1fe9fb49e59fce3623f1f447ac
+msgid ":class:`DMChannel` for DM channels with members."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:290
+#: e6f2c36a649a4de483721010dfb6b395
+msgid ":class:`GroupChannel` for Group DM channels with members."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:292
+#: f9f1dcdab18c4ef7b8a1869e026589aa
+msgid "With this split came the removal of the ``is_private`` attribute. You should now use :func:`isinstance`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:294
+#: c16783ba48b64517a3c6fd00e76880e5
+msgid "The types are split into two different :ref:`discord_api_abcs`:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:296
+#: a08dd7257a9a418cbdd428cfe61d8255
+msgid ":class:`abc.GuildChannel` for guild channels."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:297
+#: ab147f4fc32e4a128bd8a3ac4c39cfc5
+msgid ":class:`abc.PrivateChannel` for private channels (DMs and group DMs)."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:299
+#: e3e9a8d1db9b472da8d40eb0f0a67f26
+msgid "So to check if something is a guild channel you would do: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:303
+#: b3383f30092b4653a41adedacbf9d65d
+msgid "And to check if it's a private channel you would do: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:307
+#: 03625cafc46e403db8b3dc9d11450f0e
+msgid "Of course, if you're looking for only a specific type you can pass that too, e.g. ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:311
+#: 7ac3cf11adc9479c8bf2ad730811c516
+msgid "With this type split also came event changes, which are enumerated in :ref:`migrating_1_0_event_changes`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:315
+#: 2d828c5926924c8f86e32794b479d977
+msgid "Miscellaneous Model Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:317
+#: cc198061f9b64c929962944acf543124
+msgid "There were lots of other things added or removed in the models in general."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:319
+#: fd469142924b4fd7a3b4921523036b46
+msgid "They will be enumerated here."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:321
+#: e9404c8e82e3482fab8d708ea362e99a
+msgid "**Removed**"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:323
+#: 9462ce20bfef475e93af420b16f85ca2
+msgid ":meth:`Client.login` no longer accepts email and password logins."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:325
+#: 0cc0d2cfe0da43c493b34b540b4af4a8
+msgid "Use a token and ``bot=False``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:329
+#: 1390977a01694002a12fd426db34ce2f
+msgid "Use :attr:`Client.emojis` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:331
+#: d40f8bd32e1e49ab90022f5188a954b2
+msgid "``Client.messages``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:333
+#: d72282cc08364496b2ca23a1c5c981b7
+msgid "Use read-only :attr:`Client.cached_messages` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:335
+#: 36216d86592e4d5d88a6c5964e07858d
+msgid "``Client.wait_for_message`` and ``Client.wait_for_reaction`` are gone."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:337
+#: 612b385adaf749f1a4f052e1dab81603
+msgid "Use :meth:`Client.wait_for` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:339
+#: aa636de7e20142d993f176264467d788
+msgid "``Channel.voice_members``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:341
+#: f2ddce14d7014b77aa99274280ab8085
+msgid "Use :attr:`VoiceChannel.members` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:343
+#: c7cbd4c6cc2e44ffbb1e374f16e3ca14
+msgid "``Channel.is_private``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:345
+#: af2e0b9e82fe451d8e968fd44078eecc
+msgid "Use ``isinstance`` instead with one of the :ref:`discord_api_abcs` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:346
+#: 8ff877a7d0494dc6885840c9a9af926d
+msgid "e.g. ``isinstance(channel, discord.abc.GuildChannel)`` will check if it isn't a private channel."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:348
+#: 2c690055e6e84005bc23d6e022f6d0fe
+msgid "``Client.accept_invite``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:350
+#: 3ed5021249ef44a3aaf415eb444809fd
+msgid "There is no replacement for this one. This functionality is deprecated API wise."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:352
+#: 2f00496bbdbb43b5bb4f3c2959b5a36c
+msgid "``Guild.default_channel`` / ``Server.default_channel`` and ``Channel.is_default``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:354
+#: d9cc44a13d7d4d68b6284345d21ad0b2
+msgid "The concept of a default channel was removed from Discord. See `#329 <https://github.com/hammerandchisel/discord-api-docs/pull/329>`_."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:357
+#: cc7ab25609f64d84ad2e7ead99fd4740
+msgid "``Message.edited_timestamp``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:359
+#: c279877dabcf4c55a054fdd2f3bb1859
+msgid "Use :attr:`Message.edited_at` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:361
+#: 37c351618c12422c9a87f21796f1a45e
+msgid "``Message.timestamp``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:363
+#: 4fa300b20b3345a6ba9b288a4465cc4c
+msgid "Use :attr:`Message.created_at` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:365
+#: 2eb7618a262b47cb90ce5652125b2366
+msgid "``Colour.to_tuple()``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:367
+#: f834ba8e5c954537bfd16b57228fbb7c
+msgid "Use :meth:`Colour.to_rgb` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:369
+#: d6bfb84091fc4d72b69ac916cb1579dd
+msgid "``Permissions.view_audit_logs``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:371
+#: 10465e08fdd24e06a15519f0ed384032
+msgid "Use :attr:`Permissions.view_audit_log` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:373
+#: 04e56cd829e1486ab65d3b92fc39852d
+msgid "``Member.game``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:375
+#: 846418d5f6814e27a4e9ac9f835a9c9f
+msgid "Use :attr:`Member.activities` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:377
+#: d08bcf48a20046708bfd6f085c9a0b7d
+msgid "``Guild.role_hierarchy`` / ``Server.role_hierarchy``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:379
+#: 625da8eb89cc4472912ff9ba5a136d65
+msgid "Use :attr:`Guild.roles` instead. Note that while sorted, it is in the opposite order of what the old ``Guild.role_hierarchy`` used to be."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:382
+#: 1d7540080ea24244a8583392ea4b5af6
+msgid "**Changed**"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:384
+#: 64a5c7f0e72b471988d21597f4240121
+msgid ":attr:`Member.avatar_url` and :attr:`User.avatar_url` now return the default avatar if a custom one is not set."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:385
+#: 54bd91c8c6884da59346bba5e163c898
+msgid ":attr:`Message.embeds` is now a list of :class:`Embed` instead of :class:`dict` objects."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:386
+#: c98a7b8d27c4406a819e2b4e8ecd688c
+msgid ":attr:`Message.attachments` is now a list of :class:`Attachment` instead of :class:`dict` object."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:387
+#: 32d1ba30b24045379f0dd4138ec8dab6
+msgid ":attr:`Guild.roles` is now sorted through hierarchy. The first element is always the ``@everyone`` role."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:389
+#: 4cbc420538d8497a9acfd60c569bc87d
+msgid "**Added**"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:391
+#: 14dadba990844c66a56441cea7741e86
+msgid ":class:`Attachment` to represent a discord attachment."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:392
+#: 5c834b00f5c741f0a0023eb764f35852
+msgid ":class:`CategoryChannel` to represent a channel category."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:393
+#: 2e0e1b0db23640338188a19254667a01
+msgid ":attr:`VoiceChannel.members` for fetching members connected to a voice channel."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:394
+#: 679c97019b704cb9a55160c05ab8d03a
+msgid ":attr:`TextChannel.members` for fetching members that can see the channel."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:395
+#: ddafe9fedca0419eb5210bd1d23c3358
+msgid ":attr:`Role.members` for fetching members that have the role."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:396
+#: 0e7db41ddde4453eae7d065d60eb2ef5
+msgid ":attr:`Guild.text_channels` for fetching text channels only."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:397
+#: 3343b58250264ea1a3edd8a2ae90ec1d
+msgid ":attr:`Guild.voice_channels` for fetching voice channels only."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:398
+#: 0e5f8bbd9111437c94d828d8aa4abf28
+msgid ":attr:`Guild.categories` for fetching channel categories only."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:399
+#: 84147ba1e8c547daa2038b9984ac64d5
+msgid ":attr:`TextChannel.category` and :attr:`VoiceChannel.category` to get the category a channel belongs to."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:400
+#: f8dbf611354144578256e71473ef5556
+msgid ":meth:`Guild.by_category` to get channels grouped by their category."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:401
+#: 03fd7a8161a349ad9afa53e366917cb3
+msgid ":attr:`Guild.chunked` to check member chunking status."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:402
+#: b4e50029b4bd433fa6d5fbd8afe42d3a
+msgid ":attr:`Guild.explicit_content_filter` to fetch the content filter."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:403
+#: 894c9d25dce5446e941cf54a226c64b5
+msgid ":attr:`Guild.shard_id` to get a guild's Shard ID if you're sharding."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:404
+#: 0e1a13e6497a4994984adf71ac3d018d
+msgid ":attr:`Client.users` to get all visible :class:`User` instances."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:405
+#: bb959e7f5430417babe1bf43e7073351
+msgid ":meth:`Client.get_user` to get a :class:`User` by ID."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:406
+#: df5dce28532c4ea7bd6c75e1535ad238
+msgid ":meth:`User.avatar_url_as` to get an avatar in a specific size or format."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:407
+#: 47388b4ae3ee45f9945824b02d116a3e
+msgid ":meth:`Guild.vanity_invite` to fetch the guild's vanity invite."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:408
+#: c6443ea78c7646d58a81f4f6021f48b1
+msgid ":meth:`Guild.audit_logs` to fetch the guild's audit logs."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:409
+#: 8d298003d6194b059a7e22e9caf69fed
+msgid ":attr:`Message.webhook_id` to fetch the message's webhook ID."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:410
+#: 01bfca795c93402594ec5e740adbf1f5
+msgid ":attr:`Message.activity` and :attr:`Message.application` for Rich Presence related information."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:411
+#: 3a3b4ed3653e44859829df298d331289
+msgid ":meth:`TextChannel.is_nsfw` to check if a text channel is NSFW."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:412
+#: 0f551cce961242699bfc7f5ff1a08858
+msgid ":meth:`Colour.from_rgb` to construct a :class:`Colour` from RGB tuple."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:413
+#: 64342a1e3ab94a9caf4fdea4cddf74a7
+msgid ":meth:`Guild.get_role` to get a role by its ID."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:418
+#: 93483cd0b11742a5be6a2630fcadfd6c
+msgid "Sending Messages"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:420
+#: 4a7d41fa39074e78af801e0ccb92fc52
+msgid "One of the changes that were done was the merger of the previous ``Client.send_message`` and ``Client.send_file`` functionality into a single method, :meth:`~abc.Messageable.send`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:423
+#: ../../migrating_to_v1.rst:1077
+#: a95df90801f5424ba3ffc944daf822d2
+#: 635b9e52c62b40be95e8f1251bc4cecf
+msgid "Basically: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:431
+#: 75b25b7eecf34fbb90e4c65fce5225ab
+msgid "This supports everything that the old ``send_message`` supported such as embeds: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:436
+#: 0ef5563378af41de874e269e1cd5b715
+msgid "There is a caveat with sending files however, as this functionality was expanded to support multiple file attachments, you must now use a :class:`File` pseudo-namedtuple to upload a single file. ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:445
+#: 8443012316c74ad193cb170f3e814f1d
+msgid "This change was to facilitate multiple file uploads: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:457
+#: 0d4c2304e5664095afccfa5ed96747d3
+msgid "Asynchronous Iterators"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:459
+#: 77bd460a27e14dddb3ce6500b4c9320a
+msgid "Prior to v1.0, certain functions like ``Client.logs_from`` would return a different type if done in Python 3.4 or 3.5+."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:461
+#: a3a3f79370b2492c86b4affcf4a5c94f
+msgid "In v1.0, this change has been reverted and will now return a singular type meeting an abstract concept called :class:`AsyncIterator`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:464
+#: 5d5f83816f9d44b5b3707a7e7475ab04
+msgid "This allows you to iterate over it like normal: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:469
+#: 1fc400dcbe254cfab5aed6427460356b
+msgid "Or turn it into a list: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:475
+#: 7326483343ea4cf691a3711031f4643e
+msgid "A handy aspect of returning :class:`AsyncIterator` is that it allows you to chain functions together such as :meth:`AsyncIterator.map` or :meth:`AsyncIterator.filter`: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:481
+#: 3b65f1ee651543878ac2a4feadf18d68
+msgid "The functions passed to :meth:`AsyncIterator.map` or :meth:`AsyncIterator.filter` can be either coroutines or regular functions."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:484
+#: 0dcb16850ed4472d94ac1a873afd2c49
+msgid "You can also get single elements a la :func:`discord.utils.find` or :func:`discord.utils.get` via :meth:`AsyncIterator.get` or :meth:`AsyncIterator.find`: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:489
+#: c335fa3d422745b6bc51f91e811acc63
+msgid "The following return :class:`AsyncIterator`:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:491
+#: 02e5d9e1999645289ffd7e3664d02f8b
+msgid ":meth:`abc.Messageable.history`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:492
+#: 0d5fbee7dd1246b8ab9958162096803d
+msgid ":meth:`Guild.audit_logs`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:498
+#: ../../migrating_to_v1.rst:924
+#: a06857ff194c4c8d9879e9d48b66a4e0
+#: f19b1d3c85b14c5090e82a7e8f4abf7e
+msgid "Event Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:500
+#: 73a83837fbd74e929cce57fb5a3e4a0f
+msgid "A lot of events have gone through some changes."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:502
+#: efb7fb2ba44c497993cbd45815884179
+msgid "Many events with ``server`` in the name were changed to use ``guild`` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:504
+#: ../../migrating_to_v1.rst:568
+#: 44ad88423637441a84457439a0f40c90
+#: 05be7cd79c304f8d8d3938d10271bd25
+msgid "Before:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:506
+#: 3e26664afda3432e979887340292fd4e
+msgid "``on_server_join``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:507
+#: bfca7cb48a0443a59641d34c4f77414e
+msgid "``on_server_remove``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:508
+#: 3b758973e78446e0b64fb4ac24b283ac
+msgid "``on_server_update``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:509
+#: 225ab365b80f46b4b6abc2d218692712
+msgid "``on_server_role_create``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:510
+#: f2d40c3b31a248ec84a7838fd269c021
+msgid "``on_server_role_delete``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:511
+#: 12325851acf84556be5553ad3e8a02b0
+msgid "``on_server_role_update``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:512
+#: 2b2b76f5b5c14c57bf4a72304d9a1f42
+msgid "``on_server_emojis_update``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:513
+#: 253c9805a2664e738602b6e2a7eb24f7
+msgid "``on_server_available``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:514
+#: ccf36e9aa1a34a34a0ca1cfcda1a8129
+msgid "``on_server_unavailable``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:516
+#: ../../migrating_to_v1.rst:574
+#: 164f5c204a764a6e89e9a9ac4f131f4d
+#: b27e082641724727b1d09366a780883d
+msgid "After:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:518
+#: 80efc076afd748cd8e9bb0346e68c204
+msgid ":func:`on_guild_join`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:519
+#: 1c025ced74894b8f90770059394c1cf7
+msgid ":func:`on_guild_remove`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:520
+#: 18b24e3e47de485ea172d04fcd65894e
+msgid ":func:`on_guild_update`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:521
+#: 54318d6c483b4fb9a15ca23092016794
+msgid ":func:`on_guild_role_create`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:522
+#: ee473486cb6b437db292bff45960be1e
+msgid ":func:`on_guild_role_delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:523
+#: 357b45fa893b42919c27663616c68c61
+msgid ":func:`on_guild_role_update`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:524
+#: 850177a045774335bdb609cca813b4ba
+msgid ":func:`on_guild_emojis_update`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:525
+#: a3c14e69548442f290c0fe2965ab9932
+msgid ":func:`on_guild_available`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:526
+#: 1265b1a2ee624cba8173434262b3965e
+msgid ":func:`on_guild_unavailable`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:529
+#: 1586e1d1ad2f4516bf02ffd5c9d0de6f
+msgid "The :func:`on_voice_state_update` event has received an argument change."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:531
+#: ../../migrating_to_v1.rst:543
+#: ../../migrating_to_v1.rst:555
+#: ../../migrating_to_v1.rst:615
+#: ../../migrating_to_v1.rst:928
+#: 6da4ff8098aa4351a5c83d1ffcc4f1d1
+#: 5e096ef003564027843e2cf77fd49905
+#: c58eac28c0944f9ea8c790dcb2b6fdae
+#: 43cd0c51ff7c4ecb97667690a1b6ef3a
+#: b07d66fff1a5420480498608ba884ffe
+msgid "Before: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:535
+#: ../../migrating_to_v1.rst:547
+#: ../../migrating_to_v1.rst:559
+#: ../../migrating_to_v1.rst:627
+#: ../../migrating_to_v1.rst:934
+#: ../../migrating_to_v1.rst:1159
+#: 4eb11e4ee15f433b860e24da2cc52f5b
+#: f2d06097e5364ac494727a51843f9e15
+#: f7e16601163143e5a5c386382d1cc530
+#: 708ade3f91f04892bdda6c045520adb8
+#: 1e2d99c8a53d4b3b84555fbdaa0098c0
+#: 6c20b982c40b44939fc9ee44f1a8ca76
+msgid "After: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:539
+#: 82b7c550dae34853ad149374be9cf35e
+msgid "Instead of two :class:`Member` objects, the new event takes one :class:`Member` object and two :class:`VoiceState` objects."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:541
+#: 90c71970e4fb4650bac2f5b2665f3cfd
+msgid "The :func:`on_guild_emojis_update` event has received an argument change."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:551
+#: da4b663442e04f998d838b3c8ed930fa
+msgid "The first argument is now the :class:`Guild` that the emojis were updated from."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:553
+#: c620f04df9154f268e6a50f4fc4c8cf3
+msgid "The :func:`on_member_ban` event has received an argument change as well:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:563
+#: b807f0e4fb744ae4870db96a8d91ad1e
+msgid "As part of the change, the event can either receive a :class:`User` or :class:`Member`. To help in the cases that have :class:`User`, the :class:`Guild` is provided as the first parameter."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:566
+#: 7f1c9df9cef94f68a806bffba429bc72
+msgid "The ``on_channel_`` events have received a type level split (see :ref:`migrating_1_0_channel_split`)."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:570
+#: 10ca24d1b78447019a505aaac5426f39
+msgid "``on_channel_delete``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:571
+#: 080299c8597a427c80b2a16b424c478c
+msgid "``on_channel_create``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:572
+#: 91599eaf8d5e4aa7a6d54059f6b57a6e
+msgid "``on_channel_update``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:576
+#: 728a95daa9f7443c8d84b1f211fe1501
+msgid ":func:`on_guild_channel_delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:577
+#: b7dd268376e24a2f846d016c0f255cc3
+msgid ":func:`on_guild_channel_create`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:578
+#: b68cb8d115c64182aef5f9aceba2f926
+msgid ":func:`on_guild_channel_update`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:579
+#: c514f86a93154c86994195c5d0bed7b0
+msgid ":func:`on_private_channel_delete`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:580
+#: 8b1b2f3c7e2d467d80cb240928e09f05
+msgid ":func:`on_private_channel_create`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:581
+#: 8ced5d5e429840069ac52377edb7fa72
+msgid ":func:`on_private_channel_update`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:583
+#: 048baf8067854cdc9c7c9a67627a5fd9
+msgid "The ``on_guild_channel_`` events correspond to :class:`abc.GuildChannel` being updated (i.e. :class:`TextChannel` and :class:`VoiceChannel`) and the ``on_private_channel_`` events correspond to :class:`abc.PrivateChannel` being updated (i.e. :class:`DMChannel` and :class:`GroupChannel`)."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:590
+#: c5c36d2cf4b24d558b3cfdfcae63e51f
+msgid "Voice Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:592
+#: 639e1a05cfca400fa757212f628b7c79
+msgid "Voice sending has gone through a complete redesign."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:594
+#: 79fd4850356c40629b03c961b1774211
+msgid "In particular:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:596
+#: 5110a9d33fb1423fa9c54bd7542a90d2
+msgid "Connection is done through :meth:`VoiceChannel.connect` instead of ``Client.join_voice_channel``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:597
+#: 0a1d45d0024b47369c5d41a7f1c69496
+msgid "You no longer create players and operate on them (you no longer store them)."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:598
+#: 94a1e1a0b2d948289e9ad1e5bdf9f884
+msgid "You instead request :class:`VoiceClient` to play an :class:`AudioSource` via :meth:`VoiceClient.play`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:599
+#: d028a9d1d35b4e28ab709ca6b30e3748
+msgid "There are different built-in :class:`AudioSource`\\s."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:601
+#: 7a16c3f9a33a4f63bed56cc2fc51aa11
+msgid ":class:`FFmpegPCMAudio` is the equivalent of ``create_ffmpeg_player``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:603
+#: dd63ad95e21f4ac2bd5ef9a2d44c25d7
+msgid "create_ffmpeg_player/create_stream_player/create_ytdl_player have all been removed."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:605
+#: 98ea76b951774246a1de6b99ea446da8
+msgid "The goal is to create :class:`AudioSource` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:607
+#: 32e6ad132d7c47be9e9cd27c81a2256d
+msgid "Using :meth:`VoiceClient.play` will not return an ``AudioPlayer``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:609
+#: b7d478040bea4896b140e306ba5ac50b
+msgid "Instead, it's \"flattened\" like :class:`User` -> :class:`Member` is."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:611
+#: 1042d8cec0524ee48bfc23030609a2d6
+msgid "The ``after`` parameter now takes a single parameter (the error)."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:613
+#: 5c7eb0c9618c461da50a08ad3798b31b
+msgid "Basically:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:637
+#: c05b1ad0d2cd4b11b5cdb43038c54e2f
+msgid "With the changed :class:`AudioSource` design, you can now change the source that the :class:`VoiceClient` is playing at runtime via :attr:`VoiceClient.source`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:640
+#: 8a538c1130dc436992090e73e6aab004
+msgid "For example, you can add a :class:`PCMVolumeTransformer` to allow changing the volume: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:645
+#: 99ca270b30804d3fb23482708242605d
+msgid "An added benefit of the redesign is that it will be much more resilient towards reconnections:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:647
+#: e3aacf3b65c94ba6a7e9ac42d6e11242
+msgid "The voice websocket will now automatically re-connect and re-do the handshake when disconnected."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:648
+#: fd913cc4554d469cb2710f36f3187313
+msgid "The initial connect handshake will now retry up to 5 times so you no longer get as many ``asyncio.TimeoutError``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:649
+#: fc59acabd7e447c2ae887dc918a1edf5
+msgid "Audio will now stop and resume when a disconnect is found."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:651
+#: 4a9f6035023e4b759c02c7b2afed9a7e
+msgid "This includes changing voice regions etc."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:657
+#: 44f1d6863c1e44e88f69f9d70c4ef390
+msgid "Waiting For Events"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:659
+#: ac2497871ce4455e92504c02e2f85915
+msgid "Prior to v1.0, the machinery for waiting for an event outside of the event itself was done through two different functions, ``Client.wait_for_message`` and ``Client.wait_for_reaction``. One problem with one such approach is that it did not allow you to wait for events outside of the ones provided by the library."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:663
+#: f25f38d107d140319f0043e3ccd1fd47
+msgid "In v1.0 the concept of waiting for another event has been generalised to work with any event as :meth:`Client.wait_for`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:665
+#: c26f16a7656d47d29bdb6d38ba686340
+msgid "For example, to wait for a message: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:676
+#: c5124534816c42f592f1902f246de487
+msgid "To facilitate multiple returns, :meth:`Client.wait_for` returns either a single argument, no arguments, or a tuple of arguments."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:679
+#: ef6869db7dfa468eab3e1414dddd8b28
+msgid "For example, to wait for a reaction: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:685
+#: d1e874e26d094947b75a21620a0bef4b
+msgid "Since this function now can return multiple arguments, the ``timeout`` parameter will now raise a :exc:`asyncio.TimeoutError` when reached instead of setting the return to ``None``. For example:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:702
+#: 731714a9d67b47b5ac49c21865774415
+msgid "Upgraded Dependencies"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:704
+#: a0425b5ad3e64f05b5e23ed9323cdc1c
+msgid "Following v1.0 of the library, we've updated our requirements to :doc:`aiohttp <aio:index>` v2.0 or higher."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:706
+#: 51740f4309a2436cb62226d8d85fd887
+msgid "Since this is a backwards incompatible change, it is recommended that you see the `changes <http://aiohttp.readthedocs.io/en/stable/changes.html#rc1-2017-03-15>`_ and the :doc:`aio:migration_to_2xx` pages for details on the breaking changes in :doc:`aiohttp <aio:index>`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:711
+#: 2294a5360bd44948bb46d8a1fb7ab6fd
+msgid "Of the most significant for common users is the removal of helper functions such as:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:713
+#: d80a9eea20cf47dcbfaa9f7e35b2eb18
+msgid "``aiohttp.get``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:714
+#: 5b2fcfa101f542c09f9978040e42f279
+msgid "``aiohttp.post``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:715
+#: f452afc6a8bc441dbd4599ced672e757
+msgid "``aiohttp.delete``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:716
+#: ff32585353ed484aaf798b70578d10b1
+msgid "``aiohttp.patch``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:717
+#: f29e27af477743bb8b34e521d293553c
+msgid "``aiohttp.head``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:718
+#: 6895169f2ac44a9fb250ac23831e7745
+msgid "``aiohttp.put``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:719
+#: 3926a1bb14794fc2b781f8388a6340a8
+msgid "``aiohttp.request``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:721
+#: 52d8ed3a00fd4f198e643262691a0758
+msgid "It is recommended that you create a session instead: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:727
+#: ff34c1c48eee41ada64ebf3ac237280a
+msgid "Since it is better to not create a session for every request, you should store it in a variable and then call ``session.close`` on it when it needs to be disposed."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:731
+#: 5dc3438852f24fb187cee1eb39823cf6
+msgid "Sharding"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:733
+#: 22fee65c18c245ad92f61d38e350e931
+msgid "The library has received significant changes on how it handles sharding and now has sharding as a first-class citizen."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:735
+#: 3adb6bc4dfa7469aab5ca3df23d33bed
+msgid "If using a Bot account and you want to shard your bot in a single process then you can use the :class:`AutoShardedClient`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:737
+#: 494082dd3a8a45f68190588a71f0380d
+msgid "This class allows you to use sharding without having to launch multiple processes or deal with complicated IPC."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:739
+#: 91d9563cdce4401b85eb7d5952e81086
+msgid "It should be noted that **the sharded client does not support user accounts**. This is due to the changes in connection logic and state handling."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:742
+#: 7a92820e2e064495bb1c29175a50e6ed
+msgid "Usage is as simple as doing: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:746
+#: 31d4cfddbb834783a532a0bd4ca61a72
+msgid "instead of using :class:`Client`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:748
+#: 2a45112531d1449eaa539f71951b5f7f
+msgid "This will launch as many shards as your bot needs using the ``/gateway/bot`` endpoint, which allocates about 1000 guilds per shard."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:751
+#: 0f8d9aa5dfae43f491ba1bf8fa6e92be
+msgid "If you want more control over the sharding you can specify ``shard_count`` and ``shard_ids``. ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:759
+#: 40d3205bd2b045d0b71112efcbf3f549
+msgid "For users of the command extension, there is also :class:`~ext.commands.AutoShardedBot` which behaves similarly."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:762
+#: d9a5985bc3c84c72a00ee4f368bea021
+msgid "Connection Improvements"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:764
+#: 66d45ba4e6de47fb8a308e38a2de5926
+msgid "In v1.0, the auto reconnection logic has been powered up significantly."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:766
+#: 7e8c57cfd8b747dea99a46fc6aab8dad
+msgid ":meth:`Client.connect` has gained a new keyword argument, ``reconnect`` that defaults to ``True`` which controls the reconnect logic. When enabled, the client will automatically reconnect in all instances of your internet going offline or Discord going offline with exponential back-off."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:770
+#: af171ea6a44c4eb0a6ac3b1dffde1857
+msgid ":meth:`Client.run` and :meth:`Client.start` gains this keyword argument as well, but for most cases you will not need to specify it unless turning it off."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:776
+#: 290461c03fbf40a7ae66eb7fe258b751
+msgid "Command Extension Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:778
+#: 285f3b1bc4d746edb66e0bb3331a2ad6
+msgid "Due to the :ref:`migrating_1_0_model_state` changes, some of the design of the extension module had to undergo some design changes as well."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:782
+#: 54a972125952485d9f8ddcbbec3bd632
+msgid "Context Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:784
+#: 717f2cec8bc042e4a9854286efbac788
+msgid "In v1.0, the :class:`.Context` has received a lot of changes with how it's retrieved and used."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:786
+#: 06979fb694e64cf5a84f92191a22a93a
+msgid "The biggest change is that ``pass_context=True`` no longer exists, :class:`.Context` is always passed. Ergo:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:800
+#: 63f0eaa0d7a5426782ca5b0d8937ee7d
+msgid "The reason for this is because :class:`~ext.commands.Context` now meets the requirements of :class:`abc.Messageable`. This makes it have similar functionality to :class:`TextChannel` or :class:`DMChannel`. Using :meth:`~.Context.send` will either DM the user in a DM context or send a message in the channel it was in, similar to the old ``bot.say`` functionality. The old helpers have been removed in favour of the new :class:`abc.Messageable` interface. See :ref:`migrating_1_0_removed_helpers` for more information."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:806
+#: e4d3262fccaf46348b94da432e16430a
+msgid "Since the :class:`~ext.commands.Context` is now passed by default, several shortcuts have been added:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:808
+#: 6be6a39f6cf6437d98fea51d2f9445da
+msgid "**New Shortcuts**"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:810
+#: fddb63ad14994840b26862fd62c99646
+msgid ":attr:`ctx.author <ext.commands.Context.author>` is a shortcut for ``ctx.message.author``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:811
+#: 7e11740529834443b5e001f4b212d850
+msgid ":attr:`ctx.guild <ext.commands.Context.guild>` is a shortcut for ``ctx.message.guild``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:812
+#: c69a20d95b9240ee9e6653b2016111e5
+msgid ":attr:`ctx.channel <ext.commands.Context.channel>` is a shortcut for ``ctx.message.channel``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:813
+#: cda911fe3ed942a596bf62e21c3c9203
+msgid ":attr:`ctx.me <ext.commands.Context.me>` is a shortcut for ``ctx.message.guild.me`` or ``ctx.bot.user``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:814
+#: 6d25f3e72c83417a994d1478e91ab48c
+msgid ":attr:`ctx.voice_client <ext.commands.Context.voice_client>` is a shortcut for ``ctx.message.guild.voice_client``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:816
+#: 3f1992c3e51f440383c92c4ed8763407
+msgid "**New Functionality**"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:818
+#: 6ca3137248eb468ca054a8b34c2f23da
+msgid ":meth:`.Context.reinvoke` to invoke a command again."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:820
+#: e18dafeddb844b20bf307436e8dfdce9
+msgid "This is useful for bypassing cooldowns."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:821
+#: f88d749068fe43119fa54e48f7fc6fdd
+msgid ":attr:`.Context.valid` to check if a context can be invoked with :meth:`.Bot.invoke`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:822
+#: 7b512fb184ea40de80bfd8306a439755
+msgid ":meth:`.Context.send_help` to show the help command for an entity using the new :class:`~.ext.commands.HelpCommand` system."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:824
+#: 1ab773b999044ccd95814808410767d5
+msgid "This is useful if you want to show the user help if they misused a command."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:827
+#: cda91e2c85124e59a4a8214b82fd0c3a
+msgid "Subclassing Context"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:829
+#: 1f64d32eea034e8eaa435e786a42bb2d
+msgid "In v1.0, there is now the ability to subclass :class:`~ext.commands.Context` and use it instead of the default provided one."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:832
+#: 3281b69da3e94834b4201581ece2db2e
+msgid "For example, if you want to add some functionality to the context:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:841
+#: 6161661d05de4e589638ecce448f047d
+msgid "Then you can use :meth:`~ext.commands.Bot.get_context` inside :func:`on_message` with combination with :meth:`~ext.commands.Bot.invoke` to use your custom context:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:851
+#: 6e443877b4434dcbaec136025efd3369
+msgid "Now inside your commands you will have access to your custom context:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:862
+#: 8503aa2ca91c496b9300e31b8e827ad4
+msgid "Removed Helpers"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:864
+#: d36927bade34457086107fb9c4b3d3f9
+msgid "With the new :class:`.Context` changes, a lot of message sending helpers have been removed."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:866
+#: 7bb8008204224bce8ba8e13ed1e80694
+msgid "For a full list of changes, see below:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:871
+#: 874a5ba3779a4d8c96ef07996275c06b
+msgid "``Bot.say``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:871
+#: ../../migrating_to_v1.rst:873
+#: 17ba17ef146b431b898fa91702d109e2
+#: 3026d352aa3049c5b74c1ac5222b7034
+msgid ":meth:`.Context.send`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:873
+#: ee27f36d1b2846cfb547f5cb9d2540ca
+msgid "``Bot.upload``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:875
+#: 7484c6a90d4646ddb36ab0d31070d0cc
+msgid "``Bot.whisper``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:875
+#: 02ef5a5351f4402ba6b044568a7c8fec
+msgid "``ctx.author.send``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:877
+#: 7ee1fadc67734315b264ff59a07f24bf
+msgid "``Bot.type``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:877
+#: 8f299e3adb2847ffa794e94be31373f2
+msgid ":meth:`.Context.typing` or :meth:`.Context.trigger_typing`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:879
+#: 95809e3221234cb3b884dcb0de4e64d8
+msgid "``Bot.reply``"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:879
+#: 2c2c944602f84df2b32fa84e36cfe33a
+msgid "No replacement."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:883
+#: f6a7fbadb0da48c08367ff0fcda8e31b
+msgid "Command Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:885
+#: 20a7906e511c4cb190d4861534cca13d
+msgid "As mentioned earlier, the first command change is that ``pass_context=True`` no longer exists, so there is no need to pass this as a parameter."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:888
+#: bfb080ca3c604a39a3fb06a78bfd4e5f
+msgid "Another change is the removal of ``no_pm=True``. Instead, use the new :func:`~ext.commands.guild_only` built-in check."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:891
+#: 512908aca81f4c8fa6a737b6cc7e55fd
+msgid "The ``commands`` attribute of :class:`~ext.commands.Bot` and :class:`~ext.commands.Group` have been changed from a dictionary to a set that does not have aliases. To retrieve the previous dictionary behaviour, use ``all_commands`` instead."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:894
+#: ff1555c5f5ff49d7907f8d700516a693
+msgid "Command instances have gained new attributes and properties:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:896
+#: d35fd07ccb584166bbaf3b527b2bab86
+msgid ":attr:`~ext.commands.Command.signature` to get the signature of the command."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:897
+#: 7b0323a2c33d48d480591f93d667eb6c
+msgid ":attr:`~.Command.usage`, an attribute to override the default signature."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:898
+#: 96906e117b634f49bfcd23abe048dd17
+msgid ":attr:`~.Command.root_parent` to get the root parent group of a subcommand."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:900
+#: b567aa827d33419684c2e31370cb3ba1
+msgid "For :class:`~ext.commands.Group` and :class:`~ext.commands.Bot` the following changed:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:902
+#: 09c93e87f21143ef883ebd133fec141c
+msgid "Changed :attr:`~.GroupMixin.commands` to be a :class:`set` without aliases."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:904
+#: ecab4d18d394470d8b425624e232b2cf
+msgid "Use :attr:`~.GroupMixin.all_commands` to get the old :class:`dict` with all commands."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:907
+#: 15bf276c256e4d9eb233d44849813257
+msgid "Check Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:909
+#: d6e916c5dd2a4afcb0d9721c0afafcfa
+msgid "Prior to v1.0, :func:`~ext.commands.check`\\s could only be synchronous. As of v1.0 checks can now be coroutines."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:911
+#: d1c87ef2f2ad4853866a1bada5a211c8
+msgid "Along with this change, a couple new checks were added."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:913
+#: e63059a9bef24dc59f1def488e39338d
+msgid ":func:`~ext.commands.guild_only` replaces the old ``no_pm=True`` functionality."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:914
+#: c1bcf86648bf49d6be2eda9cac2b8996
+msgid ":func:`~ext.commands.is_owner` uses the :meth:`Client.application_info` endpoint by default to fetch owner ID."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:916
+#: 5649ecc5d44d499cae4334eeef850000
+msgid "This is actually powered by a different function, :meth:`~ext.commands.Bot.is_owner`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:917
+#: 8fab6bde3c4d4c0eb2f0d3393f4bae29
+msgid "You can set the owner ID yourself by setting :attr:`.Bot.owner_id`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:919
+#: 83cc31526f314335983a8b180dcac697
+msgid ":func:`~ext.commands.is_nsfw` checks if the channel the command is in is a NSFW channel."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:921
+#: bc84973dc2024308834175f683bc2106
+msgid "This is powered by the new :meth:`TextChannel.is_nsfw` method."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:926
+#: 3155a125d1b44571a1d222aaa46f09d2
+msgid "All command extension events have changed."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:940
+#: 525b0059e0e74e58955f03ba7ca7bcb5
+msgid "The extraneous ``command`` parameter in :func:`.on_command` and :func:`.on_command_completion` have been removed. The :class:`~ext.commands.Command` instance was not kept up-to date so it was incorrect. In order to get the up to date :class:`~ext.commands.Command` instance, use the :attr:`.Context.command` attribute."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:945
+#: fb4efa1d13f54ff7a5a558e6c8bb6b13
+msgid "The error handlers, either :meth:`.Command.error` or :func:`.on_command_error`, have been re-ordered to use the :class:`~ext.commands.Context` as its first parameter to be consistent with other events and commands."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:950
+#: 8be35639009845c2ba7e870eed8789e4
+msgid "HelpFormatter and Help Command Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:952
+#: 0c9b00898be3410f8ae07000636749c3
+msgid "The ``HelpFormatter`` class has been removed. It has been replaced with a :class:`~.commands.HelpCommand` class. This class now stores all the command handling and processing of the help command."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:954
+#: 24d138b1770e4f17aa48b94777253ffd
+msgid "The help command is now stored in the :attr:`.Bot.help_command` attribute. As an added extension, you can disable the help command completely by assigning the attribute to ``None`` or passing it at ``__init__`` as ``help_command=None``."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:956
+#: 60281936a03a4fecbc9927fe81bfc80a
+msgid "The new interface allows the help command to be customised through special methods that can be overridden."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:958
+#: f79e515d8f184b57a5de04ae7368b39d
+msgid ":meth:`.HelpCommand.send_bot_help`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:959
+#: 05299dfeb65b4b4bb1f6bb711903e479
+msgid "Called when the user requested for help with the entire bot."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:960
+#: 0a16847a732b4a33bb9c46fbd429a86c
+msgid ":meth:`.HelpCommand.send_cog_help`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:961
+#: 6c1b0bb7432643fe9882de314453af35
+msgid "Called when the user requested for help with a specific cog."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:962
+#: e9f39f7388ff451e9a42bb5a6e5453f6
+msgid ":meth:`.HelpCommand.send_group_help`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:963
+#: 0e621712f43c4a40997b4b9cf205fdfb
+msgid "Called when the user requested for help with a :class:`~.commands.Group`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:964
+#: 77786b71f5ac4549994e33f787876d80
+msgid ":meth:`.HelpCommand.send_command_help`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:965
+#: bbec26d0bd544503a4f36050954dbf65
+msgid "Called when the user requested for help with a :class:`~.commands.Command`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:966
+#: 3fd95879c0b4442aa6fc292595cb92ad
+msgid ":meth:`.HelpCommand.get_destination`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:967
+#: 663877b824494a57a242b013c9031390
+msgid "Called to know where to send the help messages. Useful for deciding whether to DM or not."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:968
+#: c7a7f2315f884483a626a2ece68e73fa
+msgid ":meth:`.HelpCommand.command_not_found`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:969
+#: 0bf3df49be06494a9717e43302a0becc
+msgid "A function (or coroutine) that returns a presentable no command found string."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:970
+#: 709ad40da26b4676b4211bf0b610f665
+msgid ":meth:`.HelpCommand.subcommand_not_found`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:971
+#: cbfdf9b0bbef47d3b0f8ec54dd2584c3
+msgid "A function (or coroutine) that returns a string when a subcommand is not found."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:972
+#: eb5e38cfbab8442fa9229e0b543e6134
+msgid ":meth:`.HelpCommand.send_error_message`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:973
+#: 956e387c59d940dbb5cfea61c9a41b76
+msgid "A coroutine that gets passed the result of :meth:`.HelpCommand.command_not_found` and :meth:`.HelpCommand.subcommand_not_found`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:974
+#: bb66812909bb4b8ba1255a3f40e37248
+msgid "By default it just sends the message. But you can, for example, override it to put it in an embed."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:975
+#: 37ab407ddd2240208b1c40ef8a5a93b7
+msgid ":meth:`.HelpCommand.on_help_command_error`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:976
+#: 871ad537f58f4ffc84aba6124b74a2ba
+msgid "The :ref:`error handler <ext_commands_error_handler>` for the help command if you want to add one."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:977
+#: 3baa287475f145a88daa190c9d376d60
+msgid ":meth:`.HelpCommand.prepare_help_command`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:978
+#: 98cf89ef2de44735a950a1ff98a633a4
+msgid "A coroutine that is called right before the help command processing is done."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:980
+#: 3e8046f2a2d74cabb513a61f9b8a768b
+msgid "Certain subclasses can implement more customisable methods."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:982
+#: 7ed5712265a9430f8cf494eca8c6bc7b
+msgid "The old ``HelpFormatter`` was replaced with :class:`~.commands.DefaultHelpCommand`\\, which implements all of the logic of the old help command. The customisable methods can be found in the accompanying documentation."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:984
+#: 7416bfc025324b03bb6149314c91e927
+msgid "The library now provides a new more minimalistic :class:`~.commands.HelpCommand` implementation that doesn't take as much space, :class:`~.commands.MinimalHelpCommand`. The customisable methods can also be found in the accompanying documentation."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:986
+#: 606b9af1346e400da08be6121fedfe43
+msgid "A frequent request was if you could associate a help command with a cog. The new design allows for dynamically changing of cog through binding it to the :attr:`.HelpCommand.cog` attribute. After this assignment the help command will pretend to be part of the cog and everything should work as expected. When the cog is unloaded then the help command will be \"unbound\" from the cog."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:988
+#: cce8cea9431c4addbba7a553c99c85f1
+msgid "For example, to implement a :class:`~.commands.HelpCommand` in a cog, the following snippet can be used."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1005
+#: fc2d755d59074231b2d341e37fc6eda1
+msgid "For more information, check out the relevant :ref:`documentation <ext_commands_help_command>`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1008
+#: fe160abf5fbc47ae841b183aba015fcd
+msgid "Cog Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1010
+#: 05d6024f34aa48d0980fb0e8ecbccb47
+msgid "Cogs have completely been revamped. They are documented in :ref:`ext_commands_cogs` as well."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1012
+#: 1a7bfb167f9b4a08a7b31f72efb1f489
+msgid "Cogs are now required to have a base class, :class:`~.commands.Cog` for future proofing purposes. This comes with special methods to customise some behaviour."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1014
+#: 5c63bb2ba59d4b54aa7df8c8bb3c6640
+msgid ":meth:`.Cog.cog_unload`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1015
+#: 10e27bc000c14d5cb00799e79420b488
+msgid "This is called when a cog needs to do some cleanup, such as cancelling a task."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1016
+#: 6f56b325bc9e435c88c6e172de7196f1
+msgid ":meth:`.Cog.bot_check_once`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1017
+#: 5090d9b233f24f09af3d96bf1562c074
+msgid "This registers a :meth:`.Bot.check_once` check."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1018
+#: f88a1a6b759d49bdbd404bc627bb8efe
+msgid ":meth:`.Cog.bot_check`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1019
+#: 21f426a77fb74c21b52cb99613f2e192
+msgid "This registers a regular :meth:`.Bot.check` check."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1020
+#: ab3b85086968449faa4fcc32b245c872
+msgid ":meth:`.Cog.cog_check`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1021
+#: c687c5c069164790849266ed50d9cdf0
+msgid "This registers a check that applies to every command in the cog."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1022
+#: 104c27d7b5dd4311af8ed3a9d7b9edc8
+msgid ":meth:`.Cog.cog_command_error`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1023
+#: 3bad7c5764454cb796e64c6ef72a6429
+msgid "This is a special error handler that is called whenever an error happens inside the cog."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1024
+#: 81ddfc0d92a941c0b10e93e6193710a6
+msgid ":meth:`.Cog.cog_before_invoke` and :meth:`.Cog.cog_after_invoke`"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1025
+#: c1eeaf0c1338401a9c51c8260a9da67c
+msgid "A special method that registers a cog before and after invoke hook. More information can be found in :ref:`migrating_1_0_before_after_hook`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1027
+#: f6d60513b8a647f5856bdd734bf5d011
+msgid "Those that were using listeners, such as ``on_message`` inside a cog will now have to explicitly mark them as such using the :meth:`.commands.Cog.listener` decorator."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1029
+#: 60f543f3a24e42b49b279240372c0e4d
+msgid "Along with that, cogs have gained the ability to have custom names through specifying it in the class definition line. More options can be found in the metaclass that facilitates all this, :class:`.commands.CogMeta`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1031
+#: 378561fce8524f1297e1b249ca0649db
+msgid "An example cog with every special method registered and a custom name is as follows:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1068
+#: 0ec7b2c5084449a995eb701700f5cf7e
+msgid "Before and After Invocation Hooks"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1070
+#: c4ef253feb744eea8dd3a08128d03059
+msgid "Commands have gained new before and after invocation hooks that allow you to do an action before and after a command is run."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1073
+#: b824473c4f5c4178afa96810bba97280
+msgid "They take a single parameter, :class:`~ext.commands.Context` and they must be a coroutine."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1075
+#: b442785647a8418cbd2b7f0d33cef3c8
+msgid "They are on a global, per-cog, or per-command basis."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1092
+#: 430f182bcddc484ab78c334a7c6f8ab0
+msgid "The after invocation is hook always called, **regardless of an error in the command**. This makes it ideal for some error handling or clean up of certain resources such a database connection."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1095
+#: b2e97f7402864e1ab40e32868e54096f
+msgid "The per-command registration is as follows: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1111
+#: f514a792cd464f7ca9ca3e467a2f0412
+msgid "The special cog method for these is :meth:`.Cog.cog_before_invoke` and :meth:`.Cog.cog_after_invoke`, e.g.:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1126
+#: a414472f93704bd79a6583fefac3de39
+msgid "To check if a command failed in the after invocation hook, you can use :attr:`.Context.command_failed`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1129
+#: 8857e26d53c844a38338ca128ea9bd81
+msgid "The invocation order is as follows:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1131
+#: 2e6f90c6abf34317884cbf3c169979bf
+msgid "Command local before invocation hook"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1132
+#: 6584654e12624974b751232c2816df42
+msgid "Cog local before invocation hook"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1133
+#: 9fb11b92d3d34c788c97c8a520081179
+msgid "Global before invocation hook"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1134
+#: bb82bf5fcc504e958d935b4f42f18f55
+msgid "The actual command"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1135
+#: 7ac69893d3ff4078ba575835e76adfd4
+msgid "Command local after invocation hook"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1136
+#: 33c959cee1514f7698b4d8e2ab036bc4
+msgid "Cog local after invocation hook"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1137
+#: 7a799ee1e1f843238bce6b0a9c219178
+msgid "Global after invocation hook"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1140
+#: a9a61f01258340fd99507b9580b79f48
+msgid "Converter Changes"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1142
+#: 9c1c9b09a3ce482eadeba27f3a62bea0
+msgid "Prior to v1.0, a converter was a type hint that could be a callable that could be invoked with a singular argument denoting the argument passed by the user as a string."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1145
+#: 3f21ebec94cb4b04bfa061ee31043954
+msgid "This system was eventually expanded to support a :class:`~ext.commands.Converter` system to allow plugging in the :class:`~ext.commands.Context` and do more complicated conversions such as the built-in \"discord\" converters."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1149
+#: 840e5bca05e444fa999f883b85bf9696
+msgid "In v1.0 this converter system was revamped to allow instances of :class:`~ext.commands.Converter` derived classes to be passed. For consistency, the :meth:`~ext.commands.Converter.convert` method was changed to always be a coroutine and will now take the two arguments as parameters."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1153
+#: bc16d3cb7261452a87e865880e5b5965
+msgid "Essentially, before: ::"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1165
+#: c4090e9a0b3d42848479e432afc500d0
+msgid "The command framework also got a couple new converters:"
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1167
+#: 0cb6f2bfb3fb4b778bd614701ce20b08
+msgid ":class:`~ext.commands.clean_content` this is akin to :attr:`Message.clean_content` which scrubs mentions."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1168
+#: 3d3757364d9348cebd30cf5d98432dee
+msgid ":class:`~ext.commands.UserConverter` will now appropriately convert :class:`User` only."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1169
+#: 8168f2b9bd9c4fd2ad725246a1a15a21
+msgid "``ChannelConverter`` is now split into two different converters."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1171
+#: d8e61bfc29cb4d26a44c089dff96a017
+msgid ":class:`~ext.commands.TextChannelConverter` for :class:`TextChannel`."
+msgstr ""
+
+#: ../../migrating_to_v1.rst:1172
+#: 5c33a3bdd9094d41aa9e96d68a32b6b5
+msgid ":class:`~ext.commands.VoiceChannelConverter` for :class:`VoiceChannel`."
+msgstr ""

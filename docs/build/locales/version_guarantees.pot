@@ -1,0 +1,92 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../version_guarantees.rst:4
+#: fc77d7996f0e4fa6943e346e2024d85b
+msgid "Version Guarantees"
+msgstr ""
+
+#: ../../version_guarantees.rst:6
+#: eafd23556d684b68b8c379f59e025d96
+msgid "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
+msgstr ""
+
+#: ../../version_guarantees.rst:8
+#: 62326bdd6dc049c992db7b0e8231569c
+msgid "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
+msgstr ""
+
+#: ../../version_guarantees.rst:12
+#: 5e7e62867b42403cad0054c07e206768
+msgid "The examples below are non-exhaustive."
+msgstr ""
+
+#: ../../version_guarantees.rst:15
+#: 693f7c7b524042fea0ed8b964ab5fc20
+msgid "Examples of Breaking Changes"
+msgstr ""
+
+#: ../../version_guarantees.rst:17
+#: e7ecac84084b485bbf3345040c9309d4
+msgid "Changing the default parameter value to something else."
+msgstr ""
+
+#: ../../version_guarantees.rst:18
+#: 0c6bf4dc61c64b00aac027ab7a5935cd
+msgid "Renaming a function without an alias to an old function."
+msgstr ""
+
+#: ../../version_guarantees.rst:19
+#: 7768026a492e4b928e2302ca7a51821e
+msgid "Adding or removing parameters to an event."
+msgstr ""
+
+#: ../../version_guarantees.rst:22
+#: d78682c8e2a748eb943adbac3edfe909
+msgid "Examples of Non-Breaking Changes"
+msgstr ""
+
+#: ../../version_guarantees.rst:24
+#: c6d8aca18b984144b34789f77d05a4ba
+msgid "Adding or removing private underscored attributes."
+msgstr ""
+
+#: ../../version_guarantees.rst:25
+#: c58dced83e23479ab768188c4718abf1
+msgid "Adding an element into the ``__slots__`` of a data class."
+msgstr ""
+
+#: ../../version_guarantees.rst:26
+#: 60de17508ca2439a84c6574c1618a186
+msgid "Changing the behaviour of a function to fix a bug."
+msgstr ""
+
+#: ../../version_guarantees.rst:27
+#: a2115ba8046345178ff42b59e41c8e82
+msgid "Changes in the documentation."
+msgstr ""
+
+#: ../../version_guarantees.rst:28
+#: 977d5c241d33494b9178f82c1cbfe613
+msgid "Modifying the internal HTTP handling."
+msgstr ""
+
+#: ../../version_guarantees.rst:29
+#: 68bb4e80257a4e9c85b670b2c5e78161
+msgid "Upgrading the dependencies to a new version, major or otherwise."
+msgstr ""

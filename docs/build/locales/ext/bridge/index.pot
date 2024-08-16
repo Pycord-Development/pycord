@@ -1,0 +1,32 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../ext/bridge/index.rst:4
+#: 8e92a85fefad410e8daabe8f96d6df34
+msgid "discord.ext.bridge"
+msgstr ""
+
+#: ../../ext/bridge/index.rst:8
+#: 23a5963c0d484144bd55d09400c808b6
+msgid "This module allows using one command callback in order to make both a prefix command and a slash command. This page includes the API reference/documentation for the module, but only contains a short example. For a more detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_."
+msgstr ""
+
+#: ../../ext/bridge/index.rst:12
+#: beb89b26b2aa4547affecbb8e5d4f488
+msgid "Example usage:"
+msgstr ""
