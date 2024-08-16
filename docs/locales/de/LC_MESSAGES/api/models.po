@@ -87,7 +87,7 @@ msgid ":class:`Asset`"
 msgstr ":class:`Asset`"
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "An invalid size or format was passed."
 msgstr "An invalid size or format was passed."
@@ -5262,7 +5262,7 @@ msgid "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e
 msgstr "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e. :meth:`.TextChannel.is_nsfw` is ``True``."
 
 msgid "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
-msgstr "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
+msgstr "Behandelt die Berechtigungsauflösung für :class:`~discord.Member` oder :class:`~discord.Role`."
 
 msgid "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
 msgstr "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
@@ -5841,7 +5841,7 @@ msgid "The channel that was passed is a category or an invalid channel."
 msgstr "Der übergebene Kanal ist eine Kategorie oder ein ungültiger Kanal."
 
 msgid "Deletes the channel."
-msgstr "Deletes the channel."
+msgstr "Löscht den Kanal."
 
 msgid "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
 msgstr "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
@@ -5853,7 +5853,7 @@ msgid "You do not have proper permissions to delete the channel."
 msgstr "You do not have proper permissions to delete the channel."
 
 msgid "The channel was not found or was already deleted."
-msgstr "The channel was not found or was already deleted."
+msgstr "Der Kanal wurde nicht gefunden oder schon gelöscht."
 
 msgid "Deleting the channel failed."
 msgstr "Deleting the channel failed."
@@ -5940,7 +5940,7 @@ msgid ":class:`~discord.PermissionOverwrite`"
 msgstr ":class:`~discord.PermissionOverwrite`"
 
 msgid "This function takes into consideration the following cases:"
-msgstr "This function takes into consideration the following cases:"
+msgstr "Diese Funktion berücksichtigt die folgenden Fälle:"
 
 msgid "Guild owner"
 msgstr "Gilden Besitzer"
@@ -5973,10 +5973,10 @@ msgid "The object passed in can now be a role object."
 msgstr "The object passed in can now be a role object."
 
 msgid "Whether the permissions for this channel are synced with the category it belongs to."
-msgstr "Whether the permissions for this channel are synced with the category it belongs to."
+msgstr "Ob die Berechtigungen für diesen Kanal mit der Kategorie synchronisiert werden, zu der er gehört."
 
 msgid "If there is no category then this is ``False``."
-msgstr "If there is no category then this is ``False``."
+msgstr "Wenn es keine Kategorie gibt, dann ist dies ``False``."
 
 msgid "Sets the channel specific permission overwrites for a target in the channel."
 msgstr "Sets the channel specific permission overwrites for a target in the channel."

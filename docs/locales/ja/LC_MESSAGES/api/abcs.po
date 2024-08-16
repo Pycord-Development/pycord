@@ -12,25 +12,25 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Abstract Base Classes"
-msgstr "Abstract Base Classes"
+msgstr "抽象的な基底クラス"
 
 msgid "An :term:`abstract base class` (also known as an ``abc``) is a class that models can inherit to get their behaviour. **Abstract base classes should not be instantiated**. They are mainly there for usage with :func:`isinstance` and :func:`issubclass`\\."
 msgstr "An :term:`abstract base class` (also known as an ``abc``) is a class that models can inherit to get their behaviour. **Abstract base classes should not be instantiated**. They are mainly there for usage with :func:`isinstance` and :func:`issubclass`\\."
 
 msgid "This library has a module related to abstract base classes, in which all the ABCs are subclasses of :class:`typing.Protocol`."
-msgstr "This library has a module related to abstract base classes, in which all the ABCs are subclasses of :class:`typing.Protocol`."
+msgstr "このライブラリには抽象基底クラスに関連するモジュールがあり、すべての ABC は :class:`typing.Protocol` のサブクラスです。"
 
 msgid "An ABC that details the common operations on a Discord model."
-msgstr "An ABC that details the common operations on a Discord model."
+msgstr "Discordモデルの一般的な操作について詳しく説明するABC。"
 
 msgid "Almost all :ref:`Discord models <discord_api_models>` meet this abstract base class."
-msgstr "Almost all :ref:`Discord models <discord_api_models>` meet this abstract base class."
+msgstr "ほぼすべての :ref:`Discord models <discord_api_models>` は、この抽象基底クラスを満たしています。"
 
 msgid "If you want to create a snowflake on your own, consider using :class:`.Object`."
-msgstr "If you want to create a snowflake on your own, consider using :class:`.Object`."
+msgstr "スノーフレークを自分で作成したい場合は、 :class:`.Object` の使用を検討してください。"
 
 msgid "The model's unique ID."
-msgstr "The model's unique ID."
+msgstr "モデルの固有ID。"
 
 msgid "type"
 msgstr "type"
@@ -39,10 +39,10 @@ msgid ":class:`int`"
 msgstr ":class:`int`"
 
 msgid "An ABC that details the common operations on a Discord user."
-msgstr "An ABC that details the common operations on a Discord user."
+msgstr "Discordユーザーの一般的な操作を詳細に説明するABC。"
 
 msgid "The following implement this ABC:"
-msgstr "The following implement this ABC:"
+msgstr "以下の ABC を実装:"
 
 msgid ":class:`~discord.User`"
 msgstr ":class:`~discord.User`"
@@ -51,28 +51,28 @@ msgid ":class:`~discord.ClientUser`"
 msgstr ":class:`~discord.ClientUser`"
 
 msgid ":class:`~discord.Member`"
-msgstr ":class:`~discord.Member`"
+msgstr ":class:`~ discord.Member`"
 
 msgid "This ABC must also implement :class:`~discord.abc.Snowflake`."
-msgstr "This ABC must also implement :class:`~discord.abc.Snowflake`."
+msgstr "このABCは、 :class:`~discord.abc.Snowflake` も実装しなければなりません。"
 
 msgid "The user's username."
-msgstr "The user's username."
+msgstr "ユーザーのユーザー名"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The user's discriminator."
-msgstr "The user's discriminator."
+msgstr "ユーザーの識別子。"
 
 msgid "If the user has migrated to the new username system, this will always be \"0\"."
-msgstr "If the user has migrated to the new username system, this will always be \"0\"."
+msgstr "ユーザーが新しいユーザー名システムに移行した場合は、常に「0」になります。"
 
 msgid "The user's global name."
-msgstr "The user's global name."
+msgstr "ユーザーのグローバル名。"
 
 msgid "The avatar asset the user has."
-msgstr "The avatar asset the user has."
+msgstr "ユーザーが持っているアバターアセット。"
 
 msgid ":class:`~discord.Asset`"
 msgstr ":class:`~discord.Asset`"

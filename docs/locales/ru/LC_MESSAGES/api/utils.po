@@ -12,28 +12,28 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Utility Functions"
-msgstr "Utility Functions"
+msgstr "Полезные функции"
 
 msgid "A helper to return the first element found in the sequence that meets the predicate. For example: ::"
-msgstr "A helper to return the first element found in the sequence that meets the predicate. For example: ::"
+msgstr "Помощник, возвращающий первый найденный элемент в последовательности, удовлетворяющий предикату. Например: ::"
 
 msgid "would find the first :class:`~discord.Member` whose name is 'Mighty' and return it. If an entry is not found, then ``None`` is returned."
-msgstr "would find the first :class:`~discord.Member` whose name is 'Mighty' and return it. If an entry is not found, then ``None`` is returned."
+msgstr "найдет первый :class:`~discord.Member`, имя которого равно 'Mighty', и вернет его. Если запись не найдена, то возвращается ``None``."
 
 msgid "This is different from :func:`py:filter` due to the fact it stops the moment it finds a valid entry."
-msgstr "This is different from :func:`py:filter` due to the fact it stops the moment it finds a valid entry."
+msgstr "Он отличается от :func:`py:filter` тем, что останавливается в тот момент, когда находит правильную запись."
 
 msgid "Parameters"
 msgstr "Параметры"
 
 msgid "A function that returns a boolean-like result."
-msgstr "A function that returns a boolean-like result."
+msgstr "Функция, возвращающая результат в виде булевых значений."
 
 msgid "The iterable to search through."
 msgstr "The iterable to search through."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
@@ -51,10 +51,10 @@ msgid "If nothing is found that matches the attributes passed, then ``None`` is 
 msgstr "If nothing is found that matches the attributes passed, then ``None`` is returned."
 
 msgid "Examples"
-msgstr "Examples"
+msgstr "Примеры"
 
 msgid "Basic usage:"
-msgstr "Basic usage:"
+msgstr "Базовое использование:"
 
 msgid "Multiple attribute matching:"
 msgstr "Multiple attribute matching:"
@@ -291,13 +291,13 @@ msgid "This allows for a locale-independent way of presenting data using Discord
 msgstr "This allows for a locale-independent way of presenting data using Discord specific Markdown."
 
 msgid "Style"
-msgstr "Style"
+msgstr "Стиль"
 
 msgid "Example Output"
-msgstr "Example Output"
+msgstr "Пример вывода"
 
 msgid "Description"
-msgstr "Description"
+msgstr "Описание"
 
 msgid "t"
 msgstr "t"
@@ -306,7 +306,7 @@ msgid "22:57"
 msgstr "22:57"
 
 msgid "Short Time"
-msgstr "Short Time"
+msgstr "Короткое Время"
 
 msgid "T"
 msgstr "T"
@@ -315,52 +315,52 @@ msgid "22:57:58"
 msgstr "22:57:58"
 
 msgid "Long Time"
-msgstr "Long Time"
+msgstr "Длинное Время"
 
 msgid "d"
 msgstr "d"
 
 msgid "17/05/2016"
-msgstr "17/05/2016"
+msgstr "17.05.2016"
 
 msgid "Short Date"
-msgstr "Short Date"
+msgstr "Короткая Дата"
 
 msgid "D"
 msgstr "D"
 
 msgid "17 May 2016"
-msgstr "17 May 2016"
+msgstr "17 мая 2016 г."
 
 msgid "Long Date"
-msgstr "Long Date"
+msgstr "Длинная Дата"
 
 msgid "f (default)"
-msgstr "f (default)"
+msgstr "f (по умолчанию)"
 
 msgid "17 May 2016 22:57"
-msgstr "17 May 2016 22:57"
+msgstr "17 мая 2016 г., 22:57"
 
 msgid "Short Date Time"
-msgstr "Short Date Time"
+msgstr "Краткая Дата и Время"
 
 msgid "F"
 msgstr "F"
 
 msgid "Tuesday, 17 May 2016 22:57"
-msgstr "Tuesday, 17 May 2016 22:57"
+msgstr "Вторник, 17 мая 2016 г., 22:57"
 
 msgid "Long Date Time"
-msgstr "Long Date Time"
+msgstr "Длинная Дата и Время"
 
 msgid "R"
 msgstr "R"
 
 msgid "5 years ago"
-msgstr "5 years ago"
+msgstr "5 лет назад"
 
 msgid "Relative Time"
-msgstr "Relative Time"
+msgstr "Относительное время"
 
 msgid "Note that the exact output depends on the user's locale setting in the client. The example output presented is using the ``en-GB`` locale."
 msgstr "Note that the exact output depends on the user's locale setting in the client. The example output presented is using the ``en-GB`` locale."
@@ -417,13 +417,13 @@ msgid "Autocomplete cannot be used for options that have specified choices."
 msgstr "Autocomplete cannot be used for options that have specified choices."
 
 msgid "Example"
-msgstr "Example"
+msgstr "Пример"
 
 msgid "A helper function that collects an iterator into chunks of a given size."
 msgstr "A helper function that collects an iterator into chunks of a given size."
 
 msgid "The last chunk collected may not be as large as ``max_size``."
-msgstr "The last chunk collected may not be as large as ``max_size``."
+msgstr "Последний собранный чанк может быть не таким большим, как ``max_size``."
 
 msgid "The iterator to chunk, can be sync or async."
 msgstr "The iterator to chunk, can be sync or async."

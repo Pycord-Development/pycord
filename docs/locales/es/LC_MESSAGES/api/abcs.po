@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Abstract Base Classes"
-msgstr "Clases Base Abstractas"
+msgstr "Clases base abstractas"
 
 msgid "An :term:`abstract base class` (also known as an ``abc``) is a class that models can inherit to get their behaviour. **Abstract base classes should not be instantiated**. They are mainly there for usage with :func:`isinstance` and :func:`issubclass`\\."
 msgstr "Una :term:`clase base abstracta` (también conocidas como ``cba``) es un tipo de clase la cual otros objetos utilizan heredar sus funcionalidades. **Las clases base abstractas no deben ser inicializadas**. Su principal causa de uso es para utilizar comprobaciones :func:`isinstance` e :func:`issubclass`\\."
@@ -408,19 +408,19 @@ msgid "The type of target for the voice channel invite, if any."
 msgstr "El tipo de objetivo para la invitación al canal de voz, si aplicable."
 
 msgid "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel.  .. versionadded:: 2.0"
-msgstr "El usuario cuál directo mostrar en esta invitación. Obligatorio si el valor del parámetro `target_type` es `TargetType.stream`. El usuario ha de estar en directo en el canal.  .. versionadded:: 2.0"
+msgstr "El usuario cuál directo mostrar en esta invitación. Obligatorio si el valor del parámetro `target_type` es `TargetType.stream`. El usuario debe estar en directo en el canal.  .. versionadded:: 2.0"
 
 msgid "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel."
-msgstr "El usuario cuál directo mostrar en esta invitación. Obligatorio si el valor del parámetro `target_type` es `TargetType.stream`. El usuario ha de estar en directo en el canal."
+msgstr "El usuario cuál directo mostrar en esta invitación. Obligatorio si el valor del parámetro `target_type` es `TargetType.stream`. El usuario debe estar en directo en el canal."
 
 msgid "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`.  .. versionadded:: 2.0"
-msgstr "El id de la aplicación que mostrar en la invitación. Obligatorio si el valor del parámetro de `target_type` es `TargetType.embedded_application`.  .. versionadded:: 2.0"
+msgstr "El ID de la aplicación que mostrar en la invitación. Obligatorio si el valor del parámetro de `target_type` es `TargetType.embedded_application`.  .. versionadded:: 2.0"
 
 msgid "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`."
-msgstr "El id de la aplicación que mostrar en la invitación. Obligatorio si el valor del parámetro de `target_type` es `TargetType.embedded_application`."
+msgstr "El ID de la aplicación que mostrar en la invitación. Obligatorio si el valor del parámetro de `target_type` es `TargetType.embedded_application`."
 
 msgid "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`  See :meth:`.Invite.set_scheduled_event` for more info on event invite linking.  .. versionadded:: 2.0"
-msgstr "El objeto de evento para enlazar a la invitación. Atajo de :meth:`.Invite.set_scheduled_event`. Véase también :meth:`.Invite.set_scheduled_event` para más información en como enlazar un evento a la invitación.  .. versionadded:: 2.0"
+msgstr "El objeto de evento que enlazar a la invitación. Atajo de :meth:`.Invite.set_scheduled_event`. Véase también :meth:`.Invite.set_scheduled_event` para más información en como enlazar un evento a la invitación.  .. versionadded:: 2.0"
 
 msgid "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`"
 msgstr "El objeto de evento que enlazar a la invitación. Atajo de :meth:`.Invite.set_scheduled_event`."
@@ -477,7 +477,7 @@ msgid "You must have :attr:`~discord.Permissions.read_message_history` permissio
 msgstr "Debes tener el permiso :attr:`~discord.Permissions.read_message_history` para poder usar esto."
 
 msgid "The number of messages to retrieve. If ``None``, retrieves every message in the channel. Note, however, that this would make it a slow operation."
-msgstr "La cantidad de mensajes que obtener. Si se proporciona ``None``, obtiene todos los mensajes del canal. Ten en cuenta que esto sería una operación lenta."
+msgstr "La cantidad de mensajes a obtener. Si se proporciona ``None``, obtiene todos los mensajes del canal. Ten en cuenta que esto lo haría una operación lenta."
 
 msgid "Retrieve messages before this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
 msgstr "Obtiene los mensajes antes de esta fecha o mensaje. Si se proporciona un datetime, se recomienda que sea con una zona horaria establecida en UTC, en caso de que no, se asumirá que está en hora local."
@@ -486,10 +486,10 @@ msgid "Retrieve messages after this date or message. If a datetime is provided, 
 msgstr "Obtiene los mensajes después de esta fecha o mensaje. Si se proporciona un datetime, se recomienda que sea con una zona horaria establecida en UTC, en caso de que no, se asumirá que está en hora local."
 
 msgid "Retrieve messages around this date or message. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time. When using this argument, the maximum limit is 101. Note that if the limit is an even number, then this will return at most limit + 1 messages."
-msgstr "Obtiene los mensajes alrededor de esta fecha o mensaje. Si se proporciona un datetime, se recomienda que sea con una zona horaria establecida en UTC, en caso de que no, se asumirá que está en hora local. Cuando se usa este parámetro, el límite que se pueden obtener es de 101. Ten en cuenta que si el límite es par, entonces esto retornará como mucho el límite + 1 mensajes."
+msgstr "Obtiene los mensajes alrededor de esta fecha o mensaje. Si se proporciona un datetime, se recomienda que sea con una zona horaria establecida en UTC, en caso de que no, se asumirá que está en hora local. Cuando se usa este argumento, el límite que se pueden obtener es de 101. Ten en cuenta que si el límite es par, entonces esto retornará como mucho el límite + 1 mensajes."
 
 msgid "If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if ``after`` is specified, otherwise ``False``."
-msgstr "Si se proporciona ``True``, retorna los mensajes en orden de creación descendente (antiguo -> nuevo). El valor por defecto es ``True`` si se proporciona un valor a ``after``, si no es ``False``."
+msgstr "Si se proporciona ``True``, retorna los mensajes en orden de creación descendente (antiguo -> nuevo). El valor por defecto es ``True`` si se proporciona un valor a ``after``, sino es ``False``."
 
 msgid "Yields"
 msgstr "Genera"
@@ -516,16 +516,16 @@ msgid "All parameters are optional."
 msgstr "Todos los parámetros son opcionales."
 
 msgid "Returns a context manager that allows you to type for an indefinite period of time."
-msgstr "Retorna un gestor de contexto (\"context manager\") que permite marcarte como \"Escribiendo\" por un periodo de tiempo indefinido."
+msgstr "Retorna un gestor de contexto que permite que aparezcas como \"escribiendo\" por un periodo de tiempo indefinido."
 
 msgid "This is useful for denoting long computations in your bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
-msgstr "Esto es útil si su bot tiene que realizar cálculos longevos. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
+msgstr "Esto es útil si tu bot tiene que realizar cálculos longevos. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 
 msgid "This is both a regular context manager and an async context manager. This means that both ``with`` and ``async with`` work with this."
 msgstr "Esto es tanto como un gestor de contexto síncrono como asíncrono, que quiere decir que, se puede utilizar tanto en un gestor de contexto ``with`` como ``async with``."
 
 msgid "Example Usage: ::"
-msgstr "Uso de ejemplo: ::"
+msgstr "Ejemplo de uso: ::"
 
 msgid "Sends a message to the destination with the content given."
 msgstr "Envía un mensaje al canal con el contenido proporcionado."
@@ -534,7 +534,7 @@ msgid "The content must be a type that can convert to a string through ``str(con
 msgstr "El valor del parámetro ``content`` debe de ser un objeto convertible a una cadena mediante ``str(content)``. Si se establece a ``None`` (el valor por defecto), entonces el parámetro ``embed`` debe ser porporcionado."
 
 msgid "To upload a single file, the ``file`` parameter should be used with a single :class:`~discord.File` object. To upload multiple files, the ``files`` parameter should be used with a :class:`list` of :class:`~discord.File` objects. **Specifying both parameters will lead to an exception**."
-msgstr "Para adjuntar un solo archivo se ha de utilizar el parámetro ``file`` con un objeto de tipo :class:`~discord.File`. Para adjuntar varios archivos se recomienda utilizar el parámetro ``files`` en vez, en este caso, proporcionando un objeto de tipo :class:`list` cuyos elementos han de ser instancias de :class:`~discord.File`. **En caso de especificar los dos, se mostrará un error**."
+msgstr "Para adjuntar un solo archivo se ha de utilizar el parámetro ``file`` con un :class:`~discord.File`. Para adjuntar varios archivos se recomienda utilizar el parámetro ``files`` en vez, en este caso, proporcionando una :class:`list` de objetos :class:`~discord.File`. **En caso de especificar los dos, se mostrará un error**."
 
 msgid "To upload a single embed, the ``embed`` parameter should be used with a single :class:`~discord.Embed` object. To upload multiple embeds, the ``embeds`` parameter should be used with a :class:`list` of :class:`~discord.Embed` objects. **Specifying both parameters will lead to an exception**."
 msgstr "Para enviar un solo embed se ha de utilizar el parámetro ``embed`` con un objeto de tipo :class:`~discord.Embed`. Para adjuntar varios embeds se recomienda utilizar el parámetro ``embeds`` en vez, en este caso, proporcionando un objeto de tipo :class:`list` cuyos elementos han de ser instancias de :class:`~discord.Embed`. **En caso de especificar los dos, se mostrará un error**."
@@ -552,52 +552,52 @@ msgid "The file to upload."
 msgstr "El archivo que adjuntar."
 
 msgid "A list of files to upload. Must be a maximum of 10."
-msgstr "Una lista de archivos a adjuntar. Debe de ser máximo de 10 elementos."
+msgstr "Una lista de archivos a adjuntar. Debe de ser un máximo de 10 elementos."
 
 msgid "The nonce to use for sending this message. If the message was successfully sent, then the message will have a nonce with this value."
-msgstr "El valor único a utilizar para enviar este mensaje. Si el mensaje se envió correctamente, entonces el mensaje tendrá como ``nonce`` este valor."
+msgstr "El valor único a utilizar para enviar este mensaje. Si el mensaje se envió correctamente, entonces el mensaje tendrá como nonce este valor."
 
 msgid "Whether :attr:`nonce` is enforced to be validated.  .. versionadded:: 2.5"
-msgstr "Si el atributo :attr:`nonce` se forzará a validación. .. versionadded:: 2.5"
+msgstr "Si se forzará la validación del atributo :attr:`nonce`. .. versionadded:: 2.5"
 
 msgid "Whether :attr:`nonce` is enforced to be validated."
-msgstr "Si el atributo :attr:`nonce` se forzará a validación."
+msgstr "Si se forzará la validación del atributo :attr:`nonce`."
 
 msgid "If provided, the number of seconds to wait in the background before deleting the message we just sent. If the deletion fails, then it is silently ignored."
-msgstr "Si proporcionado, la cantidad de segundos a esperar en segundo plano antes de eliminar el mensaje que se envió. Si algo falla mientras se eliminaba el mensaje entonces el error es silenciosamente ignorado."
+msgstr "Si es proporcionado, la cantidad de segundos a esperar en segundo plano antes de eliminar el mensaje que se envió. Si algo falla mientras se eliminaba el mensaje, entonces el error es silenciosamente ignorado."
 
 msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead.  .. versionadded:: 1.4"
-msgstr "Controla las menciones que se procesarán en el mensaje. Si esto es proporcionado entonces se combinará con :attr:`~discord.Client.allowed_mentions`. El combinación solo sobrescribirá aquellos atributos que se hayan explícitamente proporcionado, si no, utiliza los establecidos en :attr:`~discord.Client.allowed_mentions`. Si no se proporciona ningún valor utiliza como valor el establecido en :attr:`~discord.Client.allowed_mentions`. .. versionadded:: 1.4"
+msgstr "Controla las menciones que se procesarán en el mensaje. Si esto es proporcionado entonces se combinará con :attr:`~discord.Client.allowed_mentions`. La combinación solo sobrescribirá aquellos atributos que se hayan explícitamente proporcionado, sino, usa los establecidos en :attr:`~discord.Client.allowed_mentions`. Si no se proporciona ningún valor, usa como valor el establecido en :attr:`~discord.Client.allowed_mentions`. .. versionadded:: 1.4"
 
 msgid "Controls the mentions being processed in this message. If this is passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`. The merging behaviour only overrides attributes that have been explicitly passed to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`. If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions` are used instead."
-msgstr "Controla las menciones que se procesarán en el mensaje. Si esto es proporcionado entonces se combinará con :attr:`~discord.Client.allowed_mentions`. El combinación solo sobrescribirá aquellos atributos que se hayan explícitamente proporcionado, si no, utiliza los establecidos en :attr:`~discord.Client.allowed_mentions`. Si no se proporciona ningún valor utiliza como valor el establecido en :attr:`~discord.Client.allowed_mentions`."
+msgstr "Controla las menciones que se procesarán en el mensaje. Si esto es proporcionado entonces se combinará con :attr:`~discord.Client.allowed_mentions`. La combinación solo sobrescribirá aquellos atributos que se hayan explícitamente proporcionado, sino, usa los establecidos en :attr:`~discord.Client.allowed_mentions`. Si no se proporciona ningún valor, usa como valor el establecido en :attr:`~discord.Client.allowed_mentions`."
 
 msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
-msgstr "La referencia a un objeto de tipo :class:`~discord.Message` que representa el mensaje al cual estás respondiendo, esto se puede crear mediante :meth:`~discord.Message.to_reference` o directamente proporcionando un objeto de tipo :class:`~discord.Message`. Puedes controlas si esto menciona al autor del mensaje al que respondes usando el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions`` o estableciendo un valor a ``mention_author``. .. versionadded:: 1.6"
+msgstr "La referencia al :class:`~discord.Message` que representa el mensaje al cual estás respondiendo, esto se puede crear mediante :meth:`~discord.Message.to_reference` o directamente proporcionando como un :class:`~discord.Message`. Puedes controlar si esto menciona al autor del mensaje al que respondes usando el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions`` o estableciendo ``mention_author``. .. versionadded:: 1.6"
 
 msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
-msgstr "La referencia a un objeto de tipo :class:`~discord.Message` que representa el mensaje al cual estás respondiendo, esto se puede crear mediante :meth:`~discord.Message.to_reference` o directamente proporcionando un objeto de tipo :class:`~discord.Message`. Puedes controlas si esto menciona al autor del mensaje al que respondes usando el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions`` o estableciendo un valor a ``mention_author``."
+msgstr "La referencia al :class:`~discord.Message` que representa el mensaje al cual estás respondiendo, esto se puede crear mediante :meth:`~discord.Message.to_reference` o directamente proporcionando como un :class:`~discord.Message`. Puedes controlar si esto menciona al autor del mensaje al que respondes usando el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions`` o estableciendo ``mention_author``."
 
 msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
-msgstr "Si establecido, sobrescribe el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions``. .. versionadded:: 1.6"
+msgstr "Si es establecido, sobrescribe el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions``. .. versionadded:: 1.6"
 
 msgid "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``."
-msgstr "Si establecido, sobrescribe el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions``."
+msgstr "Si es establecido, sobrescribe el atributo :attr:`~discord.AllowedMentions.replied_user` del parámetro ``allowed_mentions``."
 
 msgid "A Discord UI View to add to the message."
-msgstr "El contenedor de componentes que añadir al mensaje."
+msgstr "El contenedor de componentes al que añadir al mensaje."
 
 msgid "A list of embeds to upload. Must be a maximum of 10.  .. versionadded:: 2.0"
-msgstr "Una lista de embeds que adjuntar. Debe de ser máximo de 10 elementos. .. versionadded:: 2.0"
+msgstr "Una lista de embeds que adjuntar. El máximo de elementos es 10. .. versionadded:: 2.0"
 
 msgid "A list of embeds to upload. Must be a maximum of 10."
-msgstr "Una lista de embeds que adjuntar. Debe de ser máximo de 10 elementos."
+msgstr "Una lista de embeds que adjuntar. El máximo de elementos es 10."
 
 msgid "A list of stickers to upload. Must be a maximum of 3.  .. versionadded:: 2.0"
-msgstr "Una lista de stickers que adjuntar. Debe de ser máximo de 3 elementos. .. versionadded:: 2.0"
+msgstr "Una lista de stickers que adjuntar. El máximo de elementos es 3. .. versionadded:: 2.0"
 
 msgid "A list of stickers to upload. Must be a maximum of 3."
-msgstr "Una lista de stickers que adjuntar. Debe de ser máximo de 3 elementos."
+msgstr "Una lista de stickers que adjuntar. El máximo de elementos es 3."
 
 msgid "Whether to suppress embeds for the message."
 msgstr "Si suprimir los embeds del mensaje."
@@ -627,19 +627,19 @@ msgid "You do not have the proper permissions to send the message."
 msgstr "No tienes los permisos necesarios para enviar este mensaje."
 
 msgid "The ``files`` list is not of the appropriate size,     you specified both ``file`` and ``files``,     or you specified both ``embed`` and ``embeds``,     or the ``reference`` object is not a :class:`~discord.Message`,     :class:`~discord.MessageReference` or :class:`~discord.PartialMessage`."
-msgstr "La lista ``files`` no cumple los límites de tamaño,     especificaste ambos parámetros ``file`` y ``files``,     especificaste ambos parámetros ``embed`` y ``embeds``,     o el valor del parámetro ``reference`` no es un objeto de tipo :class:`~discord.Message`,      :class:`~discord.MesageReference` o :class:`~discord.PartialMessage`."
+msgstr "La lista ``files`` no cumple con los límites de tamaño, especificaste ambos parámetros ``file`` y ``files``,     especificaste ambos parámetros ``embed`` y ``embeds``, o el valor del parámetro ``reference`` no es un objeto de tipo :class:`~discord.Message`, :class:`~discord.MesageReference` o :class:`~discord.PartialMessage`."
 
 msgid "Triggers a *typing* indicator to the destination."
 msgstr "Activa el indicador de *escribiendo* en el canal."
 
 msgid "*Typing* indicator will go away after 10 seconds, or after a message is sent."
-msgstr "El indicador *Escribiendo* desaparecerá luego de 10 segundos, o cuando se envía un mensaje."
+msgstr "El indicador *escribiendo* desaparecerá luego de 10 segundos, o cuando se envía un mensaje."
 
 msgid "Retrieves a single :class:`~discord.Message` from the destination."
-msgstr "Obtiene un solo objeto de tipo :class:`~discord.Message` del canal."
+msgstr "Obtiene un solo :class:`~discord.Message` del canal."
 
 msgid "The message ID to look for."
-msgstr "La ID del mensaje a buscar."
+msgstr "El ID del mensaje a buscar."
 
 msgid "The message asked for."
 msgstr "El mensaje solicitado."
@@ -669,13 +669,13 @@ msgid "Retrieving the pinned messages failed."
 msgstr "Algo falló mientras se obtenían los mensajes fijados."
 
 msgid "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
-msgstr "Retorna un booleano (:class:`bool`) el cual indica si tienes permisos de enviar el/los objeto/s."
+msgstr "Retorna un :class:`bool` el cual indica si tienes permisos de enviar el/los objeto/s."
 
 msgid "Indicates whether you have the permissions to send the object(s)."
 msgstr "Indica si tienes permisos de enviar el/los objeto/s."
 
 msgid "An invalid type has been passed."
-msgstr "Un objeto de tipo no válido se ha proporcionado."
+msgstr "Un objeto de tipo no válido ha sido proporcionado."
 
 msgid "An ABC that details the common operations on a channel that can connect to a voice server."
 msgstr "Una CBA que detalla las operaciones más comunes en un canal al que se puede conectar."

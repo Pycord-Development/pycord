@@ -18,10 +18,10 @@ msgid "One of the most common operations when making a bot is having a loop run 
 msgstr "One of the most common operations when making a bot is having a loop run in the background at a specified interval. This pattern is very common but has a lot of things you need to look out for:"
 
 msgid "How do I handle :exc:`asyncio.CancelledError`?"
-msgstr "How do I handle :exc:`asyncio.CancelledError`?"
+msgstr "Wie gehe ich mit :exc:`asyncio.CancelledError` um?"
 
 msgid "What do I do if the internet goes out?"
-msgstr "What do I do if the internet goes out?"
+msgstr "Was mache ich, wenn das Internet ausgeht?"
 
 msgid "What is the maximum number of seconds I can sleep anyway?"
 msgstr "What is the maximum number of seconds I can sleep anyway?"
@@ -72,7 +72,7 @@ msgid "The coroutine to register after the loop finishes."
 msgstr "The coroutine to register after the loop finishes."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "The function was not a coroutine."
 msgstr "The function was not a coroutine."

@@ -18,25 +18,25 @@ msgid "One of the most appealing aspects of the command extension is how easy it
 msgstr "Einer der attraktivsten Aspekte der Befehlserweiterung ist die einfache Definition von Befehlen und die Möglichkeit, Gruppen und Befehle beliebig zu verschachteln, um ein umfangreiches System von Unterbefehlen zu erhalten."
 
 msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
-msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
+msgstr "Die Verwendung von Präfix-Befehlen in Gilden erfordert die Aktivierung von :attr:`Intents.message_content`."
 
 msgid "Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar signature to the Python function."
-msgstr "Commands are defined by attaching it to a regular Python function. The command is then invoked by the user using a similar signature to the Python function."
+msgstr "Befehle werden durch Anhängen einer regulären Python-Funktion definiert. Der Befehl wird dann vom Benutzer mit einer ähnlichen Signatur wie die Python-Funktion aufgerufen."
 
 msgid "For example, in the given command definition:"
-msgstr "For example, in the given command definition:"
+msgstr "Zum Beispiel in der angegebenen Befehlsdefinition:"
 
 msgid "With the following prefix (``$``), it would be invoked by the user via:"
-msgstr "With the following prefix (``$``), it would be invoked by the user via:"
+msgstr "Mit dem folgenden Präfix (``$``) würde es vom Benutzer aufgerufen werden über:"
 
 msgid "A command must always have at least one parameter, ``ctx``, which is the :class:`.Context` as the first one."
-msgstr "A command must always have at least one parameter, ``ctx``, which is the :class:`.Context` as the first one."
+msgstr "Ein Befehl muss immer mindestens einen Parameter haben, ``ctx``, das ist die :class:`.Context` als erster Parameter."
 
 msgid "There are two ways of registering a command. The first one is by using :meth:`.Bot.command` decorator, as seen in the example above. The second is using the :func:`~ext.commands.command` decorator followed by :meth:`.Bot.add_command` on the instance."
-msgstr "There are two ways of registering a command. The first one is by using :meth:`.Bot.command` decorator, as seen in the example above. The second is using the :func:`~ext.commands.command` decorator followed by :meth:`.Bot.add_command` on the instance."
+msgstr "Es gibt zwei Möglichkeiten, einen Befehl zu registrieren. Die erste ist die Verwendung von :meth:`.Bot.command` Dekorator, wie im obigen Beispiel zu sehen. Der zweite benutzt :func:`~ext.commands.command` Dekorator, gefolgt von :meth:`.Bot.add_command` in der Instanz."
 
 msgid "Essentially, these two are equivalent: ::"
-msgstr "Essentially, these two are equivalent: ::"
+msgstr "Im Wesentlichen sind diese beiden gleichwertig: ::"
 
 msgid "Since the :meth:`.Bot.command` decorator is shorter and easier to comprehend, it will be the one used throughout the documentation here."
 msgstr "Since the :meth:`.Bot.command` decorator is shorter and easier to comprehend, it will be the one used throughout the documentation here."

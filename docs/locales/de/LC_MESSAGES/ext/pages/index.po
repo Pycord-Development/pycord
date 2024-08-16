@@ -333,7 +333,7 @@ msgid "The item to add to the view."
 msgstr "The item to add to the view."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "An :class:`Item` was not passed."
 msgstr "An :class:`Item` was not passed."

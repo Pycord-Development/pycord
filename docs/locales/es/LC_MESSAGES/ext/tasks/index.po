@@ -72,7 +72,7 @@ msgid "The coroutine to register after the loop finishes."
 msgstr "The coroutine to register after the loop finishes."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Errores"
 
 msgid "The function was not a coroutine."
 msgstr "The function was not a coroutine."
@@ -186,7 +186,7 @@ msgid "By default, the exception types handled are those handled by :meth:`disco
 msgstr "By default, the exception types handled are those handled by :meth:`discord.Client.connect`\\, which includes a lot of internet disconnection errors."
 
 msgid "This function is useful if you're interacting with a 3rd party library that raises its own set of exceptions."
-msgstr "This function is useful if you're interacting with a 3rd party library that raises its own set of exceptions."
+msgstr "Esta función es útil si estás interactuando con una biblioteca de terceros que lanza sus propias extensiones."
 
 msgid "An argument list of exception classes to handle."
 msgstr "An argument list of exception classes to handle."
@@ -204,7 +204,7 @@ msgid "Removes exception types from being handled during the reconnect logic."
 msgstr "Removes exception types from being handled during the reconnect logic."
 
 msgid "Whether all exceptions were successfully removed."
-msgstr "Whether all exceptions were successfully removed."
+msgstr "Si todas las excepciones se eliminaron correctamente."
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"

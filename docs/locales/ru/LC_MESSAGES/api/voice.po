@@ -12,85 +12,85 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Voice Related"
-msgstr "Voice Related"
+msgstr "Связанные с голосом"
 
 msgid "Objects"
 msgstr "Объекты"
 
 msgid "Represents a Discord voice connection."
-msgstr "Represents a Discord voice connection."
+msgstr "Представляет собой голосовое соединение Discord."
 
 msgid "You do not create these, you typically get them from e.g. :meth:`VoiceChannel.connect`."
-msgstr "You do not create these, you typically get them from e.g. :meth:`VoiceChannel.connect`."
+msgstr "Вы не создаете их, вы обычно получаете их, например, из :meth:`VoiceChannel.connect`."
 
 msgid "The voice connection session ID."
-msgstr "The voice connection session ID."
+msgstr "Идентификатор сеанса голосового соединения."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The voice connection token."
-msgstr "The voice connection token."
+msgstr "Токен голосового соединения."
 
 msgid "The endpoint we are connecting to."
-msgstr "The endpoint we are connecting to."
+msgstr "Конечная точка, к которой мы подключаемся."
 
 msgid "The voice channel connected to."
-msgstr "The voice channel connected to."
+msgstr "Голосовой канал, с которым установлено соединение."
 
 msgid ":class:`abc.Connectable`"
 msgstr ":class:`abc.Connectable`"
 
 msgid "The event loop that the voice client is running on."
-msgstr "The event loop that the voice client is running on."
+msgstr "Цикл событий, в котором работает голосовой клиент."
 
 msgid ":class:`asyncio.AbstractEventLoop`"
 msgstr ":class:`asyncio.AbstractEventLoop`"
 
 msgid "In order to use PCM based AudioSources, you must have the opus library installed on your system and loaded through :func:`opus.load_opus`. Otherwise, your AudioSources must be opus encoded (e.g. using :class:`FFmpegOpusAudio`) or the library will not be able to transmit audio."
-msgstr "In order to use PCM based AudioSources, you must have the opus library installed on your system and loaded through :func:`opus.load_opus`. Otherwise, your AudioSources must be opus encoded (e.g. using :class:`FFmpegOpusAudio`) or the library will not be able to transmit audio."
+msgstr "Для использования аудиоисточников, основанных на PCM, в вашей системе должна быть установлена библиотека opus и загружена через :func:`opus.load_opus`. В противном случае ваши аудиоисточники должны быть закодированы в opus (например, с помощью :class:`FFmpegOpusAudio`), иначе библиотека не сможет передавать звук."
 
 msgid "Parameters"
 msgstr "Параметры"
 
 msgid "The guild we're connected to, if applicable."
-msgstr "The guild we're connected to, if applicable."
+msgstr "Сервер, с которым мы связаны, если это применимо."
 
 msgid "The user connected to voice (i.e. ourselves)."
-msgstr "The user connected to voice (i.e. ourselves)."
+msgstr "Пользователь, подключившийся к голосовой связи (т.е. мы сами)."
 
 msgid "Latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
-msgstr "Latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+msgstr "Задержка между HEARTBEAT и HEARTBEAT_ACK в секундах."
 
 msgid "This could be referred to as the Discord Voice WebSocket latency and is an analogue of user's voice latencies as seen in the Discord client."
-msgstr "This could be referred to as the Discord Voice WebSocket latency and is an analogue of user's voice latencies as seen in the Discord client."
+msgstr "Это может быть названо задержкой Discord Voice WebSocket и является аналогом задержки голоса пользователя в клиенте Discord."
 
 msgid "Average of most recent 20 HEARTBEAT latencies in seconds."
-msgstr "Average of most recent 20 HEARTBEAT latencies in seconds."
+msgstr "Среднее значение последних 20 задержек HEARTBEAT в секундах."
 
 msgid "|coro|"
 msgstr "|coro|"
 
 msgid "Disconnects this voice client from voice."
-msgstr "Disconnects this voice client from voice."
+msgstr "Отключение данного голосового клиента от голосовой связи."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 
 msgid "Moves you to a different voice channel."
-msgstr "Moves you to a different voice channel."
+msgstr "Перемещает вас на другой голосовой канал."
 
 msgid "The channel to move to. Must be a voice channel."
-msgstr "The channel to move to. Must be a voice channel."
+msgstr "Канал, в который нужно перейти. Должен быть голосовым каналом."
 
 msgid "Indicates if the voice client is connected to voice."
-msgstr "Indicates if the voice client is connected to voice."
+msgstr "Указывает, подключен ли голосовой клиент к голосовой связи."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"

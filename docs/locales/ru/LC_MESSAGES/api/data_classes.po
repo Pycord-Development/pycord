@@ -48,7 +48,7 @@ msgid "The ID of the object."
 msgstr "The ID of the object."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
@@ -132,7 +132,7 @@ msgid "Returns the inverse of a flag."
 msgstr "Returns the inverse of a flag."
 
 msgid "Return the flag's hash."
-msgstr "Return the flag's hash."
+msgstr "Возвращает хеш флага."
 
 msgid "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs."
 msgstr "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs."
@@ -144,7 +144,7 @@ msgid "A factory method that creates a :class:`Intents` with everything enabled.
 msgstr "A factory method that creates a :class:`Intents` with everything enabled."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.flags.Intents\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.flags.Intents\\``"

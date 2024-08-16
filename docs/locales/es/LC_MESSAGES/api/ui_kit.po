@@ -111,7 +111,7 @@ msgid "A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.
 msgstr "A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`."
 
 msgid "Objects"
-msgstr "Objects"
+msgstr "Objetos"
 
 msgid "Represents a UI view."
 msgstr "Represents a UI view."
@@ -186,7 +186,7 @@ msgid "The item to add to the view."
 msgstr "The item to add to the view."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Errores"
 
 msgid "An :class:`Item` was not passed."
 msgstr "An :class:`Item` was not passed."

@@ -15,46 +15,46 @@ msgid "Application Commands"
 msgstr "Команды приложения"
 
 msgid "Command Permission Decorators"
-msgstr "Command Permission Decorators"
+msgstr "Декораторы разрешений команд"
 
 msgid "A decorator that limits the usage of an application command to members with certain permissions."
-msgstr "A decorator that limits the usage of an application command to members with certain permissions."
+msgstr "Декоратор, который ограничивает использование команды приложения для участников с определенными правами."
 
 msgid "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
-msgstr "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
+msgstr "Передаваемые разрешения должны совпадать со свойствами :class:`.discord.Permissions`."
 
 msgid "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
-msgstr "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
+msgstr "Эти разрешения могут быть изменены администраторами сервера для каждой гильдии. Как таковые, они являются лишь \"значениями по умолчанию\", как следует из названия. Если вы хотите убедиться, что пользователь **всегда** имеет указанные права независимо от этого, вам следует использовать внутреннюю проверку, такую как :func:`~.ext.commands.has_permissions`."
 
 msgid "Parameters"
 msgstr "Параметры"
 
 msgid "An argument list of permissions to check for."
-msgstr "An argument list of permissions to check for."
+msgstr "Список аргументов для проверки разрешений."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Тип возврата"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 
 msgid "Example"
-msgstr "Example"
+msgstr "Пример"
 
 msgid "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
-msgstr "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
+msgstr "Декоратор, ограничивающий использование команды приложения контекстом гильдии. Команда не может быть использована в каналах личных сообщений."
 
 msgid "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
-msgstr "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
+msgstr "Декоратор, ограничивающий использование команды приложения каналами и пользователями 18+. В гильдиях команда может быть использована только в каналах, помеченных как NSFW. В личных сообщениях пользователи должны разрешить использование команд с возрастными ограничениями через настройки приватности."
 
 msgid "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
 msgstr "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
 
 msgid "Commands"
-msgstr "Commands"
+msgstr "Команды"
 
 msgid "Shortcut Decorators"
-msgstr "Shortcut Decorators"
+msgstr "Короткие декораторы"
 
 msgid "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
 msgstr "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
@@ -219,7 +219,7 @@ msgid "The name of the command."
 msgstr "The name of the command."
 
 msgid "type"
-msgstr "type"
+msgstr "тип"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -357,7 +357,7 @@ msgid "An iterator that recursively walks through all slash commands and groups 
 msgstr "An iterator that recursively walks through all slash commands and groups in this group."
 
 msgid "Yields"
-msgstr "Yields"
+msgstr "Выход"
 
 msgid ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
 msgstr ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
@@ -393,7 +393,7 @@ msgid ":class:`MessageCommand`"
 msgstr ":class:`MessageCommand`"
 
 msgid "Options"
-msgstr "Options"
+msgstr "Опции"
 
 msgid "A decorator that can be used instead of typehinting :class:`.Option`."
 msgstr "A decorator that can be used instead of typehinting :class:`.Option`."
@@ -471,10 +471,10 @@ msgid "The description localizations for this option. The values of this should 
 msgstr "The description localizations for this option. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
 
 msgid "Examples"
-msgstr "Examples"
+msgstr "Примеры"
 
 msgid "Basic usage: ::"
-msgstr "Basic usage: ::"
+msgstr "Базовое использование: ::"
 
 msgid "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."
 msgstr "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."

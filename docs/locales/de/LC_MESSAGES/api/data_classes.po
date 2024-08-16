@@ -966,7 +966,7 @@ msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr "The reason for deleting the message. Shows up on the audit log."
 
 msgid "Raises"
-msgstr "Raises"
+msgstr "Verursacht"
 
 msgid "You do not have proper permissions to delete the message."
 msgstr "You do not have proper permissions to delete the message."
