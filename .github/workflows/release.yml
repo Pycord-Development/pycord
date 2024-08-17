@@ -16,7 +16,7 @@ jobs:
     environment: release
     steps:
       - name: "Security Check"
-        uses: pycord-development/execute-whitelist-action@v1.0.6
+        uses: pycord-development/execute-whitelist-action@v1.0.10
         with:
           whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
           token: ${{ secrets.GITHUB_TOKEN }}
