@@ -9,6 +9,7 @@ jobs:
   download:
     name: "Download localizations from Crowdin"
     runs-on: ubuntu-latest
+    environment: translations
     outputs:
       pr_ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
@@ -35,7 +36,7 @@ jobs:
         working-directory: ./docs
       - name: "Build locales"
         run:
-          sphinx-intl update -p ./build/locales -l ja -l de -l ja -l fr -l it -l en -l hi -l ko -l pt_BR -l es -l zh_CN -l ru
+          sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
         working-directory: ./docs
       - name: "Crowdin"
         id: crowdin
@@ -44,19 +45,19 @@ jobs:
           upload_sources: false
           upload_translations: false
           download_translations: false
-          download_bundle: ${{ secrets.CROWDIN_BUNDLE_ID }}
-          localization_branch_name: l10n_master
+          download_bundle: ${{ vars.CROWDIN_BUNDLE_ID }}
+          localization_branch_name: ${{ vars.CROWDIN_LOCALIZATION_BRANCH }}
           create_pull_request: true
-          pull_request_title: "docs: Update localizations from Crowdin"
-          pull_request_body: "Crowdin download was triggered due to completely translated file or project. Starting sync. CC @Lulalaby"
+          pull_request_title: ${{ vars.CROWDIN_PR_TITLE }}
+          pull_request_body: ${{ vars.CROWDIN_PR_BODY }}
           pull_request_base_branch_name: "master"
           pull_request_reviewers: "Lulalaby"
           config: "crowdin.yml"
           base_path: "."
-          commit_message: "docs: Update localizations from Crowdin"
+          commit_message: ${{ vars.CROWDIN_COMMIT_MSG }}
         env:
           GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PROJECT_ID: ${{ vars.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
       - name: "Convert Outputs"
         id: convert_outputs
@@ -70,6 +71,7 @@ jobs:
     name: "PR operations"
     needs: [download]
     runs-on: ubuntu-latest
+    environment: translations
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
@@ -121,7 +123,7 @@ jobs:
       #workflow: version-updates.yml
       #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
       - name: "Auto Approve"
-        run: gh pr review --approve -b "auto-approval for localization sync :3" "$PR_ID"
+        run: gh pr review --approve -b "Auto-approval for localization sync" "$PR_ID"
         env:
           PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
