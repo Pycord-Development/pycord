@@ -14,20 +14,12 @@ jobs:
   safety_check:
     runs-on: ubuntu-latest
     environment: release
-    env: 
-      ALLOWED_USER_IDS: ${{ vars.ALLOWED_USER_IDS }}
     steps:
-      - name: "Check if Executing User is Allowed"
-        id: safety
-        run: |
-          USER_ID=${{ github.actor_id }}
-          ALLOWED_IDS=$(echo $ALLOWED_USER_IDS | tr "," "\n")
-          if echo "$ALLOWED_IDS" | grep -q -w "$USER_ID"; then
-            echo "User $USER_ID is allowed to run this workflow."
-          else
-            echo "User $USER_ID is not authorized to run this workflow."
-            exit 1
-          fi
+      - name: "Security Check"
+        uses: pycord-development/execute-whitelist-action@v1.0.5
+        with:
+          whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   pre_config:
     needs: [safety_check]
