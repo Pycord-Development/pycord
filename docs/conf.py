@@ -483,7 +483,8 @@ linkcheck_ignore = [
     r"https://guide.pycord.dev/",
     r"https://guide.pycord.dev/.*",
     r"https://pycord.dev/",
-    r"https://pycord.dev/.*"
+    r"https://pycord.dev/.*",
+    r"https://packages.debian.org/.*"
 ]
 
 linkcheck_anchors_ignore_for_url = [
