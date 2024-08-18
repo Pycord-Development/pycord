@@ -480,6 +480,14 @@ linkcheck_ignore = [
     r"https://discord.com/developers/docs/.*#",
     r"https://support(?:-dev)?.discord.com/hc/en-us/articles/.*",
     r"https://dis.gd/contact",
+    r"https://guide.pycord.dev/",
+    r"https://guide.pycord.dev/.*",
+    r"https://pycord.dev/",
+    r"https://pycord.dev/.*"
+]
+
+linkcheck_anchors_ignore_for_url = [
+    r"https://github.com/Delitefully/DiscordLists"
 ]
 
 modindex_common_prefix = ["discord."]
