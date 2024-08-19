@@ -1,5 +1,6 @@
 .. image:: https://raw.githubusercontent.com/Pycord-Development/pycord-next/main/docs/assets/pycord-v3.png
    :alt: Pycord v3
+
 Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
 ======

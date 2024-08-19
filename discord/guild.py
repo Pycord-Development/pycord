@@ -209,7 +209,7 @@ class Guild(Hashable):
     features: List[:class:`str`]
         A list of features that the guild has. The features that a guild can have are
         subject to arbitrary change by Discord. You can find a catalog of guild features
-        `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_.
+        `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_.
     premium_tier: :class:`int`
         The premium tier for this guild. Corresponds to "Nitro Server" in the official UI.
         The number goes from 0 to 3 inclusive.
