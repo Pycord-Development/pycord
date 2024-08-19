@@ -620,7 +620,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def guild_banner(self) -> Asset | None:
         """Returns an :class:`Asset` for the guild banner
         the member has. If unavailable, ``None`` is returned.
-        
+
         .. versionadded:: 2.7
         """
         if self._user.banner is None:

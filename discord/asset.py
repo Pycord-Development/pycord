@@ -213,7 +213,9 @@ class Asset(AssetMixin):
         )
 
     @classmethod
-    def _from_guild_banner(cls, state, guild_id: int, member_id: int, banner: str) -> Asset:
+    def _from_guild_banner(
+        cls, state, guild_id: int, member_id: int, banner: str
+    ) -> Asset:
         animated: bool = banner.startswith("a_")
         format: str = "gif" if animated else "png"
         return cls(
