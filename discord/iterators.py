@@ -1054,7 +1054,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             sku_ids=self.sku_ids,
             exclude_ended=self.exclude_ended,
         )
-        if len(data):
+        if data:
             if self.limit is not None:
                 self.limit -= retrieve
             self.before = Object(id=int(data[-1]["id"]))
@@ -1074,7 +1074,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             sku_ids=self.sku_ids,
             exclude_ended=self.exclude_ended,
         )
-        if len(data):
+        if data:
             if self.limit is not None:
                 self.limit -= retrieve
             self.after = Object(id=int(data[-1]["id"]))
