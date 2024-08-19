@@ -1040,7 +1040,9 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         """Retrieve entitlements and update next parameters."""
         raise NotImplementedError
 
-    async def _retrieve_entitlements_before_strategy(self, retrieve: int) -> list[EntitlementPayload]:
+    async def _retrieve_entitlements_before_strategy(
+        self, retrieve: int
+    ) -> list[EntitlementPayload]:
         """Retrieve entitlements using before parameter."""
         before = self.before.id if self.before else None
         data = await self.get_entitlements(
@@ -1058,7 +1060,9 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             self.before = Object(id=int(data[-1]["id"]))
         return data
 
-    async def _retrieve_entitlements_after_strategy(self, retrieve: int) -> list[EntitlementPayload]:
+    async def _retrieve_entitlements_after_strategy(
+        self, retrieve: int
+    ) -> list[EntitlementPayload]:
         """Retrieve entitlements using after parameter."""
         after = self.after.id if self.after else None
         data = await self.get_entitlements(
