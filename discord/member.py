@@ -306,6 +306,7 @@ class Member(discord.abc.Messageable, _UserTag):
         mutual_guilds: list[Guild]
         public_flags: PublicUserFlags
         banner: Asset | None
+        display_banner: Asset | None
         accent_color: Colour | None
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
@@ -601,6 +602,31 @@ class Member(discord.abc.Messageable, _UserTag):
             return None
         return Asset._from_guild_avatar(
             self._state, self.guild.id, self.id, self._avatar
+        )
+
+    @property
+    def display_banner(self) -> Asset | None:
+        """Returns the member's display banner.
+
+        For regular members this is just their banner, but
+        if they have a guild specific banner then that
+        is returned instead.
+
+        .. versionadded:: 2.7
+        """
+        return self.guild_banner or self._user.banner
+
+    @property
+    def guild_banner(self) -> Asset | None:
+        """Returns an :class:`Asset` for the guild banner
+        the member has. If unavailable, ``None`` is returned.
+        
+        .. versionadded:: 2.7
+        """
+        if self._user.banner is None:
+            return None
+        return Asset._from_guild_banner(
+            self._state, self.guild.id, self.id, self._user.banner
         )
 
     @property
