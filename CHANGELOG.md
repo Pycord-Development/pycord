@@ -22,6 +22,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `Member.display_banner` method.
+  ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
+
 - Added `Guild.fetch_role` method.
   ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
 
