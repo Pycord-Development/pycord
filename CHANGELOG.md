@@ -77,7 +77,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2406](https://github.com/Pycord-Development/pycord/pull/2406))
 - Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
   ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
-- C.
+- Fixed `ScheduledEvent.subscribers` behavior with `limit=None`.
   ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
 - Fixed invalid data being passed to `Interaction._guild` in certain cases.
   ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
