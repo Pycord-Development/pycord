@@ -27,7 +27,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed `EntitlementIterator` behavior with `limit > 100`. ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
+- Fixed `EntitlementIterator` behavior with `limit > 100`.
+  ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
 
 ## [2.6.0] - 2024-07-09
 
@@ -77,8 +78,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2406](https://github.com/Pycord-Development/pycord/pull/2406))
 - Fixed the type-hinting of `ScheduledEvent.subscribers` to reflect actual behavior.
   ([#2400](https://github.com/Pycord-Development/pycord/pull/2400))
-- C.
-  ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
+- C. ([#2407](https://github.com/Pycord-Development/pycord/pull/2407))
 - Fixed invalid data being passed to `Interaction._guild` in certain cases.
   ([#2411](https://github.com/Pycord-Development/pycord/pull/2411))
 - Fixed option typehints being ignored when using `parameter_name`.
