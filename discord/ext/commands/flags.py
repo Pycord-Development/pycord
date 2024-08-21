@@ -29,7 +29,16 @@ import inspect
 import re
 import sys
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Iterator, Literal, Optional, Pattern, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Iterator,
+    Literal,
+    Optional,
+    Pattern,
+    TypeVar,
+    Union,
+)
 
 from discord.utils import MISSING, MissingField, maybe_coroutine, resolve_annotation
 
@@ -294,7 +303,7 @@ class FlagsMeta(type):
         __commands_flag_case_insensitive__: bool
         __commands_flag_delimiter__: str
         __commands_flag_prefix__: str
-        __commands_flag_positional__: Optional[Flag]
+        __commands_flag_positional__: Flag | None
 
     def __new__(
         cls: type[type],
