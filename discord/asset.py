@@ -216,8 +216,8 @@ class Asset(AssetMixin):
     def _from_guild_banner(
         cls, state, guild_id: int, member_id: int, banner: str
     ) -> Asset:
-        animated: bool = banner.startswith("a_")
-        format: str = "gif" if animated else "png"
+        animated = banner.startswith("a_")
+        format = "gif" if animated else "png"
         return cls(
             state,
             url=f"{cls.BASE}/guilds/{guild_id}/users/{member_id}/banners/{banner}.{format}?size=1024",
