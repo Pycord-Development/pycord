@@ -54,7 +54,7 @@ msgid "Commands"
 msgstr "Comandos"
 
 msgid "Shortcut Decorators"
-msgstr "Decoradores \"Atajo\""
+msgstr "Decoradores atajo"
 
 msgid "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
 msgstr "Un decorador que transforma una función en un :class:`.ApplicationCommand`. Más específicamente, cualquier tipo de :class:`.SlashCommand`, :class:`.UserCommand` o :class:`.MessageCommand`. La clase exacta depende del parámetro ``cls``. Por defecto, el atributo ``description`` proviene de la cadena de documentación de la función, y es limpiada gracias a ``inspect.cleandoc``. Si el tipo de la cadena de documentación es ``bytes``, entonces es decodificado a :class:`str` usando la codificación utf-8. El atributo ``name`` también se predetermina al nombre de la función sin cambios."

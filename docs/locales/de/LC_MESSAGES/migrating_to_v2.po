@@ -372,7 +372,7 @@ msgid "``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extre
 msgstr "``VerificationLevel.table_flip`` (alias of ``high``) was removed. ``extreme``, ``very_high``, and ``double_table_flip`` attributes were removed and replaced with :attr:`VerificationLevel.highest`."
 
 msgid "The following were renamed:"
-msgstr "The following were renamed:"
+msgstr "Folgende wurden umbenannt:"
 
 msgid ":attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the newer color."
 msgstr ":attr:`Colour.blurple` is renamed to :attr:`Colour.og_blurple`, and :attr:`Colour.blurple` now returns the newer color."
