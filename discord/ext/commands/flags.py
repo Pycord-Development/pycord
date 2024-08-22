@@ -29,16 +29,7 @@ import inspect
 import re
 import sys
 from dataclasses import dataclass, field
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Iterator,
-    Literal,
-    Optional,
-    Pattern,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Iterator, Literal, Pattern, TypeVar, Union
 
 from discord.utils import MISSING, MissingField, maybe_coroutine, resolve_annotation
 
