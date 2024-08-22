@@ -7434,7 +7434,7 @@ msgstr ""
 
 #: ../../../discord/guild.py:docstring of discord.guild.Guild:141
 #: 96094a79a794453ca947a68e85a7ac9d
-msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_."
+msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_."
 msgstr ""
 
 #: ../../../discord/automod.py:docstring of discord.automod.AutoModTriggerMetadata:29

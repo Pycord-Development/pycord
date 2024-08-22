@@ -1,0 +1,5 @@
+-r all.txt
+setuptools>=72.2.0
+setuptools_scm>=8.1.0
+twine>=5.1.1
+build>=1.2.1

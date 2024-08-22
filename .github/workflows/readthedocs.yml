@@ -1,0 +1,39 @@
+name: "Read The Docs Localization"
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "discord/**"
+      - "docs/**"
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
+
+permissions: write-all
+
+jobs:
+  localization_builds:
+    runs-on: ubuntu-latest
+    environment: documentation
+    strategy:
+      matrix:
+        rdt_projects: [
+            "pycord-spanish",
+            "pycord-japanese",
+            "pycord-brazilian",
+            "pycord-russian",
+            "pycord-german",
+            "pycord-hindi",
+            "pycord-korean",
+            "pycord-italian",
+            "pycord-chinese",
+            "pycord-french"
+        ]
+    steps:
+      - name: "Trigger RDT ${{ matrix.rdt_projects }}"
+        run: |
+          PROJECT=${{ matrix.rdt_projects }}
+          curl --location --request POST "https://readthedocs.org/api/v3/projects/$PROJECT/versions/master/builds/" \
+          --header 'Content-Type: application/json' \
+          --header "Authorization: Token ${{ secrets.READTHEDOCS_TOKEN }}"
