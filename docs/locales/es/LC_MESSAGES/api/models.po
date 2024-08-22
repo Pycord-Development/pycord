@@ -6783,7 +6783,7 @@ msgid "If this isn't a custom emoji then an empty string is returned"
 msgstr "If this isn't a custom emoji then an empty string is returned"
 
 msgid "Channels"
-msgstr "Channels"
+msgstr "Canales"
 
 msgid "Represents a Discord text channel."
 msgstr "Represents a Discord text channel."
@@ -7801,3 +7801,4 @@ msgstr "These are typically given for channel follower webhooks."
 
 msgid "Represents a partial channel for webhooks."
 msgstr "Represents a partial channel for webhooks."
+

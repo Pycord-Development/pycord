@@ -18,7 +18,7 @@ msgid "The library has helpers to help create component-based UIs."
 msgstr "The library has helpers to help create component-based UIs."
 
 msgid "Shortcut decorators"
-msgstr "Shortcut decorators"
+msgstr "Decoradores atajo"
 
 msgid "A decorator that attaches a button to a component."
 msgstr "A decorator that attaches a button to a component."
