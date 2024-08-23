@@ -57,7 +57,7 @@ msgid "Shortcut Decorators"
 msgstr "Короткие декораторы"
 
 msgid "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
-msgstr "Идентификатор (ключ): Декоратор, которые превращает функцию в класс :class:`.ApplicationCommand`. Если быть более конкретным, то обычно в один из классов :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. Точный класс зависит от ``cls`` параметра. По-умолчанию, атрибут ``description`` принимается автоматически с docsting функции и \"очищается\" через ``inspect.cleandoc``. Если docstring является ``bytes``, то он перекодируется в :class:`str` с помощью UTF-8 кодирования. Атрибут ``name`` также по-умолчанию принимает значение неименного названия функции."
+msgstr "Декоратор, которые превращает функцию в класс :class:`.ApplicationCommand`. Если быть более конкретным, то обычно в один из классов :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. Точный класс зависит от ``cls`` параметра. По-умолчанию, атрибут ``description`` принимается автоматически с docsting функции и \"очищается\" через ``inspect.cleandoc``. Если docstring является ``bytes``, то он перекодируется в :class:`str` с помощью UTF-8 кодирования. Атрибут ``name`` также по-умолчанию принимает значение неизменного названия функции."
 
 msgid "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
 msgstr "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
@@ -204,7 +204,7 @@ msgid "This is the full parent name with the command name as well. For example, 
 msgstr "This is the full parent name with the command name as well. For example, in ``/one two three`` the qualified name would be ``one two three``."
 
 msgid "Retrieves the fully qualified command ID."
-msgstr "Retrieves the fully qualified command ID."
+msgstr "Извлекает полный ID команды."
 
 msgid "This is the root parent ID. For example, in ``/one two three`` the qualified ID would return ``one.id``."
 msgstr "This is the root parent ID. For example, in ``/one two three`` the qualified ID would return ``one.id``."

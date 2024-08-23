@@ -24,7 +24,7 @@ msgid "Let's make a bot that responds to a specific message and walk you through
 msgstr "Faisons, ensemble, un Bot qui répond à un message en particulier."
 
 msgid "It looks something like this:"
-msgstr "Cela ressemble à quelque chose comme ça :"
+msgstr "Cela devrait ressembler à ça :"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
 msgstr "Parce que cet exemple utilise le contenu des messages, nous avons besoin de l'intention particulière :  :attr:`Intents.message_content`."
