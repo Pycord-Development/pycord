@@ -30,7 +30,7 @@ msgid "A function that returns a boolean-like result."
 msgstr "Функция, возвращающая результат в виде булевых значений."
 
 msgid "The iterable to search through."
-msgstr "The iterable to search through."
+msgstr "Итерируемый объект для поиска."
 
 msgid "Return type"
 msgstr "Тип возврата"
@@ -39,16 +39,16 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)\\]`"
 
 msgid "A helper that returns the first element in the iterable that meets all the traits passed in ``attrs``. This is an alternative for :func:`~discord.utils.find`."
-msgstr "A helper that returns the first element in the iterable that meets all the traits passed in ``attrs``. This is an alternative for :func:`~discord.utils.find`."
+msgstr "Помощник, который возвращает первый элемент в итерируемой таблице, удовлетворяющий всем признакам, переданным в ``attrs``. Это альтернатива для :func:`~discord.utils.find`."
 
 msgid "When multiple attributes are specified, they are checked using logical AND, not logical OR. Meaning they have to meet every attribute passed in and not one of them."
-msgstr "When multiple attributes are specified, they are checked using logical AND, not logical OR. Meaning they have to meet every attribute passed in and not one of them."
+msgstr "Если указано несколько атрибутов, они проверяются с помощью логического И, а не логического ИЛИ. Это означает, что они должны соответствовать всем указанным атрибутам, а не одному из них."
 
 msgid "To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument."
-msgstr "To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument."
+msgstr "Чтобы выполнить поиск по вложенным атрибутам (например, поиск по ``x.y``), передайте ``x__y`` в качестве аргумента ключевого слова."
 
 msgid "If nothing is found that matches the attributes passed, then ``None`` is returned."
-msgstr "If nothing is found that matches the attributes passed, then ``None`` is returned."
+msgstr "Если не найдено ничего, что соответствовало бы переданным атрибутам, то возвращается ``None``."
 
 msgid "Examples"
 msgstr "Примеры"
@@ -57,91 +57,91 @@ msgid "Basic usage:"
 msgstr "Базовое использование:"
 
 msgid "Multiple attribute matching:"
-msgstr "Multiple attribute matching:"
+msgstr "Поиск по нескольким атрибутам:"
 
 msgid "Nested attribute matching:"
-msgstr "Nested attribute matching:"
+msgstr "Поиск по вложенным атрибутам:"
 
 msgid "An iterable to search through."
-msgstr "An iterable to search through."
+msgstr "Итерируемый объект для поиска."
 
 msgid "Keyword arguments that denote attributes to search with."
-msgstr "Keyword arguments that denote attributes to search with."
+msgstr "Ключевые аргументы, обозначающие атрибуты для поиска."
 
 msgid "|coro|"
 msgstr "|coro|"
 
 msgid "Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it. If the fetch also fails, an error will be raised."
-msgstr "Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it. If the fetch also fails, an error will be raised."
+msgstr "Пытается получить атрибут из объекта в кэше. Если это не удается, то будет предпринята попытка получить его. Если получение также не удастся, будет выдана ошибка."
 
 msgid "The object to use the get or fetch methods in"
-msgstr "The object to use the get or fetch methods in"
+msgstr "Объект для использования методов get или fetch"
 
 msgid "The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute."
-msgstr "The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute."
+msgstr "Атрибут для получения или извлечения. Обратите внимание, что объект должен иметь метод ``get_`` и ``fetch_`` для этого атрибута."
 
 msgid "The ID of the object"
-msgstr "The ID of the object"
+msgstr "Идентификатор объекта"
 
 msgid "The default value to return if the object is not found, instead of raising an error."
-msgstr "The default value to return if the object is not found, instead of raising an error."
+msgstr "Значение по умолчанию, которое возвращается, если объект не найден, вместо того, чтобы выдать ошибку."
 
 msgid "Returns"
 msgstr "Возвращает"
 
 msgid "The object found or the default value."
-msgstr "The object found or the default value."
+msgstr "Найденный объект или значение по умолчанию."
 
 msgid "Raises"
 msgstr "Вызывает"
 
 msgid "The object is missing a ``get_`` or ``fetch_`` method"
-msgstr "The object is missing a ``get_`` or ``fetch_`` method"
+msgstr "В объекте отсутствует метод ``get_`` или ``fetch_``"
 
 msgid "Invalid ID for the object"
-msgstr "Invalid ID for the object"
+msgstr "Невалидный идентификатор объекта"
 
 msgid "An error occurred fetching the object"
-msgstr "An error occurred fetching the object"
+msgstr "Произошла ошибка при получении объекта"
 
 msgid "You do not have permission to fetch the object"
-msgstr "You do not have permission to fetch the object"
+msgstr "У вас нет прав для получения объекта"
 
 msgid "Getting a guild from a guild ID: ::"
-msgstr "Getting a guild from a guild ID: ::"
+msgstr "Получение сервера из его идентификатора: ::"
 
 msgid "Getting a channel from the guild. If the channel is not found, return None: ::"
-msgstr "Getting a channel from the guild. If the channel is not found, return None: ::"
+msgstr "Получение канала из сервера. Если канал не найден, возвращается None: ::"
 
 msgid "A helper function that returns the OAuth2 URL for inviting the bot into guilds."
-msgstr "A helper function that returns the OAuth2 URL for inviting the bot into guilds."
+msgstr "Вспомогательная функция, возвращающая OAuth2 URL для приглашения бота на сервер."
 
 msgid "The client ID for your bot."
-msgstr "The client ID for your bot."
+msgstr "Идентификатор клиента вашего бота."
 
 msgid "The permissions you're requesting. If not given then you won't be requesting any permissions."
-msgstr "The permissions you're requesting. If not given then you won't be requesting any permissions."
+msgstr "Разрешения, которые вы запрашиваете. Если не указано, то вы не будете запрашивать никаких разрешений."
 
 msgid "The guild to pre-select in the authorization screen, if available."
-msgstr "The guild to pre-select in the authorization screen, if available."
+msgstr "Сервер для предварительного выбора на экране авторизации, если таковой имеется."
 
 msgid "An optional valid redirect URI."
-msgstr "An optional valid redirect URI."
+msgstr "Необязательный действительный URI перенаправления."
 
 msgid "An optional valid list of scopes. Defaults to ``('bot',)``.  .. versionadded:: 1.7"
-msgstr "An optional valid list of scopes. Defaults to ``('bot',)``.  .. versionadded:: 1.7"
+msgstr "Необязательный допустимый список scopes. По умолчанию принимает значение ``('bot',)``.  ... versionadded:: 1.7"
 
 msgid "An optional valid list of scopes. Defaults to ``('bot',)``."
-msgstr "An optional valid list of scopes. Defaults to ``('bot',)``."
+msgstr "Необязательный допустимый список scopes. По умолчанию принимает значение ``('bot',)``."
 
 msgid "Whether to disallow the user from changing the guild dropdown.  .. versionadded:: 2.0"
-msgstr "Whether to disallow the user from changing the guild dropdown.  .. versionadded:: 2.0"
+msgstr "Запретить ли пользователю изменять выпадающий список серверов. .. versionadded:: 2.0"
 
 msgid "Whether to disallow the user from changing the guild dropdown."
-msgstr "Whether to disallow the user from changing the guild dropdown."
+msgstr "Запретить ли пользователю изменять выпадающий список серверов."
 
 msgid "The OAuth2 URL for inviting the bot into guilds."
-msgstr "The OAuth2 URL for inviting the bot into guilds."
+msgstr "URL-адрес OAuth2 для приглашения бота на сервер."
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -225,16 +225,16 @@ msgid "Resolves an invite from a :class:`~discord.Invite`, URL or code."
 msgstr "Resolves an invite from a :class:`~discord.Invite`, URL or code."
 
 msgid "The invite."
-msgstr "The invite."
+msgstr "Приглашение."
 
 msgid "The invite code."
-msgstr "The invite code."
+msgstr "Код приглашения."
 
 msgid "Resolves a template code from a :class:`~discord.Template`, URL or code."
 msgstr "Resolves a template code from a :class:`~discord.Template`, URL or code."
 
 msgid "The code."
-msgstr "The code."
+msgstr "Код."
 
 msgid "The template code."
 msgstr "The template code."
@@ -267,7 +267,7 @@ msgid "Converts a Discord snowflake ID to a UTC-aware datetime object."
 msgstr "Converts a Discord snowflake ID to a UTC-aware datetime object."
 
 msgid "The snowflake ID."
-msgstr "The snowflake ID."
+msgstr "Идентификатор snowflake."
 
 msgid "An aware datetime in UTC representing the creation time of the snowflake."
 msgstr "An aware datetime in UTC representing the creation time of the snowflake."
