@@ -267,6 +267,7 @@ class Attachment(Hashable):
             return None
         return datetime.datetime.utcfromtimestamp(int(self._is, 16))
 
+    @property
     def is_spoiler(self) -> bool:
         """Whether this attachment contains a spoiler."""
         return self.filename.startswith("SPOILER_")
@@ -416,7 +417,7 @@ class Attachment(Hashable):
             "proxy_url": self.proxy_url,
             "size": self.size,
             "url": self.url,
-            "spoiler": self.is_spoiler(),
+            "spoiler": self.is_spoiler,
         }
         if self.height:
             result["height"] = self.height
