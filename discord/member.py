@@ -328,6 +328,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.nick: str | None = data.get("nick", None)
         self.pending: bool = data.get("pending", False)
         self._avatar: str | None = data.get("avatar")
+        self._banner: str | None = data.get("banner")
         self.communication_disabled_until: datetime.datetime | None = utils.parse_time(
             data.get("communication_disabled_until")
         )
@@ -406,6 +407,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.activities = member.activities
         self._state = member._state
         self._avatar = member._avatar
+        self._banner = member._banner
         self.communication_disabled_until = member.communication_disabled_until
         self.flags = member.flags
 
@@ -434,6 +436,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.premium_since = utils.parse_time(data.get("premium_since"))
         self._roles = utils.SnowflakeList(map(int, data["roles"]))
         self._avatar = data.get("avatar")
+        self._banner = data.get("banner")
         self.communication_disabled_until = utils.parse_time(
             data.get("communication_disabled_until")
         )
