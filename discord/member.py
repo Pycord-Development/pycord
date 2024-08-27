@@ -306,7 +306,6 @@ class Member(discord.abc.Messageable, _UserTag):
         mutual_guilds: list[Guild]
         public_flags: PublicUserFlags
         banner: Asset | None
-        display_banner: Asset | None
         accent_color: Colour | None
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
