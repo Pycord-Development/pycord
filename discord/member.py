@@ -288,6 +288,7 @@ class Member(discord.abc.Messageable, _UserTag):
         "_user",
         "_state",
         "_avatar",
+        "_banner",
         "communication_disabled_until",
         "flags",
     )
