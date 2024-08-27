@@ -622,10 +622,10 @@ class Member(discord.abc.Messageable, _UserTag):
 
         .. versionadded:: 2.7
         """
-        if self._user.banner is None:
+        if self._banner is None:
             return None
         return Asset._from_guild_banner(
-            self._state, self.guild.id, self.id, self._user.banner
+            self._state, self.guild.id, self.id, self._banner
         )
 
     @property
