@@ -65,10 +65,10 @@ if TYPE_CHECKING:
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
+    from .types.monetization import Subscription as SubscriptionPayload
     from .types.threads import Thread as ThreadPayload
     from .types.user import PartialUser as PartialUserPayload
     from .user import User
-    from .types.monetization import Subscription as SubscriptionPayload
 
 T = TypeVar("T")
 OT = TypeVar("OT")
@@ -1053,7 +1053,7 @@ class SubscriptionIterator(_AsyncIterator["Subscription"]):
         limit: int = None,
         before: datetime.datetime | None = None,
         after: datetime.datetime | None = None,
-        user_id: int | None = None
+        user_id: int | None = None,
     ):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
