@@ -1056,9 +1056,9 @@ class PollLayoutType(Enum):
 class SubscriptionStatus(Enum):
     """The status of a subscription."""
 
-    active = 1
-    ending = 2
-    inactive = 3
+    active = 0
+    ending = 1
+    inactive = 2
 
 
 T = TypeVar("T")
