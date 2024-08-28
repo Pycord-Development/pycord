@@ -26,7 +26,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Guild.fetch_role` method.
   ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
-- Added new `Subscription` object and related events. 
+- Added new `Subscription` object and related methods/events. 
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Fixed
