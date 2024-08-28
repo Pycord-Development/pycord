@@ -148,7 +148,7 @@ class Entitlement(Hashable):
 
     .. versionadded:: 2.5
 
-    .. notice::
+    .. note::
 
         As of October 1, 2024, entitlements that have been purchased will have ``ends_at`` set to ``None``
         unless the parent :class:`Subscription` has been cancelled.

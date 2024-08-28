@@ -891,7 +891,7 @@ Monetization
 
     .. versionadded:: 2.5
 
-    .. notice::
+    .. note::
 
         Before October 1, 2024, this event was called when a user's subscription was renewed.
 
