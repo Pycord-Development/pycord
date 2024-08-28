@@ -46,6 +46,7 @@ if TYPE_CHECKING:
 __all__ = (
     "SKU",
     "Entitlement",
+    "Subscription",
 )
 
 
@@ -106,7 +107,7 @@ class SKU(Hashable):
         """:class:`str`: Returns the URL for the SKU."""
         return f"https://discord.com/application-directory/{self.application_id}/store/{self.id}"
 
-    def list_subscriptions(
+    def fetch_subscriptions(
         self,
         user: Snowflake,  # user is required because this is a bot, we are not using oauth2
         *,
@@ -132,6 +133,31 @@ class SKU(Hashable):
             If the datetime is naive, it is assumed to be local time.
         limit: :class:`int` | None
             The number of subscriptions to retrieve. If ``None``, retrieves all subscriptions.
+
+        Yields
+        ------
+        :class:`Subscription`
+            A subscription that the user has for this SKU.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Getting the subscriptions failed.
+
+        Examples
+        --------
+
+        Usage ::
+
+            async for subscription in sku.fetch_subscriptions(discord.Object(id=123456789)):
+                print(subscription.status)
+
+        Flattening into a list ::
+
+            subscriptions = await sku.fetch_subscriptions(discord.Object(id=123456789)).flatten()
+            # subscriptions is now a list of Subscription...
+
+        All parameters except for ``user`` are optional.
         """
         return SubscriptionIterator(
             self._state,

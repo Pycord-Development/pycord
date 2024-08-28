@@ -114,6 +114,11 @@ Monetization
 .. autoclass:: Entitlement()
     :members:
 
+.. attributetable:: Subscription
+
+.. autoclass:: Subscription()
+    :members:
+
 Guild
 -----
 

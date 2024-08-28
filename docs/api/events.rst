@@ -946,6 +946,7 @@ Monetization
     :param subscription: The subscription that was deleted.
     :type subscription: :class:`Subscription`
 
+
 Polls
 ~~~~~~~~~
 .. function:: on_poll_vote_add(poll, user, answer)
