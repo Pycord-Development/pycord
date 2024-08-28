@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import List, Literal
+from typing import Literal
 
 from .._typed_dict import NotRequired, TypedDict
 from .snowflake import Snowflake
