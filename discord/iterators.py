@@ -40,7 +40,6 @@ from typing import (
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
-from .monetization import Entitlement
 from .object import Object
 from .utils import maybe_coroutine, snowflake_time, time_snowflake
 
@@ -1012,6 +1011,11 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.retrieve = r
         return r > 0
 
+    async def create_entitlement(self, data):
+        from .monetization import Entitlement
+
+        return Entitlement(data=data, state=self.state)
+
     async def fill_entitlements(self):
         if not self._get_retrieve():
             return
@@ -1042,7 +1046,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.after = Object(id=int(data[-1]["id"]))
 
         for element in reversed(data):
-            await self.entitlements.put(Entitlement(data=element, state=self.state))
+            await self.entitlements.put(self.create_entitlement(element))
 
 
 class SubscriptionIterator(_AsyncIterator["Subscription"]):
