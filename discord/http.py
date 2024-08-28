@@ -3057,8 +3057,10 @@ class HTTPClient:
     ) -> Response[monetization.Subscription]:
         return self.request(
             Route(
-                "GET", "/skus/{sku_id}/subscriptions/{subscription_id}",
-                sku_id=sku_id, subscription_id=subscription_id
+                "GET",
+                "/skus/{sku_id}/subscriptions/{subscription_id}",
+                sku_id=sku_id,
+                subscription_id=subscription_id,
             )
         )
 

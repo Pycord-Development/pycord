@@ -32,7 +32,13 @@ from .enums import EntitlementType, SKUType, SubscriptionStatus, try_enum
 from .flags import SKUFlags
 from .iterators import SubscriptionIterator
 from .mixins import Hashable
-from .utils import cached_property, cached_slot_property, MISSING, _get_as_snowflake, parse_time
+from .utils import (
+    MISSING,
+    _get_as_snowflake,
+    cached_property,
+    cached_slot_property,
+    parse_time,
+)
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -133,7 +139,14 @@ class SKU(Hashable):
         limit: :class:`int` | None
             The number of subscriptions to retrieve. If ``None``, retrieves all subscriptions.
         """
-        return SubscriptionIterator(self._state, self.id, user_id=user.id, before=before, after=after, limit=limit)
+        return SubscriptionIterator(
+            self._state,
+            self.id,
+            user_id=user.id,
+            before=before,
+            after=after,
+            limit=limit,
+        )
 
 
 class Entitlement(Hashable):
@@ -199,7 +212,9 @@ class Entitlement(Hashable):
         self.starts_at: datetime | MISSING = (
             parse_time(data.get("starts_at")) or MISSING
         )
-        self.ends_at: datetime | MISSING | None = parse_time(ea) if (ea := data.get("ends_at")) is not None else MISSING
+        self.ends_at: datetime | MISSING | None = (
+            parse_time(ea) if (ea := data.get("ends_at")) is not None else MISSING
+        )
         self.guild_id: int | MISSING = _get_as_snowflake(data, "guild_id") or MISSING
         self.consumed: bool = data.get("consumed", False)
 
@@ -269,6 +284,7 @@ class Subscription(Hashable):
     canceled_at: :class:`datetime.datetime` | ``None``
         When the subscription was canceled.
     """
+
     __slots__ = (
         "_state",
         "id",
@@ -292,7 +308,9 @@ class Subscription(Hashable):
         self.current_period_end: datetime = parse_time(data["current_period_end"])
         self.status: SubscriptionStatus = try_enum(SubscriptionStatus, data["status"])
         self.canceled_at: datetime | None = parse_time(data.get("canceled_at"))
-        self.country: str | None = data.get("country")  # Not documented, it is only available with oauth2, not bots
+        self.country: str | None = data.get(
+            "country"
+        )  # Not documented, it is only available with oauth2, not bots
 
     def __repr__(self) -> str:
         return (
@@ -306,4 +324,3 @@ class Subscription(Hashable):
     def user(self):
         """Optional[:class:`User`]: The user that owns this subscription."""
         return self._state.get_user(self.user_id)
-

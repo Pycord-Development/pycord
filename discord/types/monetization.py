@@ -67,8 +67,8 @@ class CreateTestEntitlementPayload(TypedDict):
 class Subscription(TypedDict):
     id: Snowflake
     user_id: Snowflake
-    sku_ids: List[Snowflake]
-    entitlement_ids: List[Snowflake]
+    sku_ids: list[Snowflake]
+    entitlement_ids: list[Snowflake]
     current_period_start: str
     current_period_end: str
     status: SubscriptionStatus
