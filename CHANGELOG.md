@@ -59,6 +59,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Webhook.send` not including attachment data.
   ([#2513](https://github.com/Pycord-Development/pycord/pull/2513))
 
+### Fixed
+
+- Fixed `EntitlementIterator` behavior with `limit > 100`.
+  ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
+
 ## [2.6.0] - 2024-07-09
 
 ### Added
