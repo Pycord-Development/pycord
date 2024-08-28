@@ -27,7 +27,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .abc import Snowflake, SnowflakeTime
 from .enums import EntitlementType, SKUType, SubscriptionStatus, try_enum
 from .flags import SKUFlags
 from .iterators import SubscriptionIterator
@@ -35,14 +34,13 @@ from .mixins import Hashable
 from .utils import (
     MISSING,
     _get_as_snowflake,
-    cached_property,
-    cached_slot_property,
     parse_time,
 )
 
 if TYPE_CHECKING:
     from datetime import datetime
 
+    from .abc import Snowflake, SnowflakeTime
     from .state import ConnectionState
     from .types.monetization import SKU as SKUPayload
     from .types.monetization import Entitlement as EntitlementPayload
