@@ -31,11 +31,7 @@ from .enums import EntitlementType, SKUType, SubscriptionStatus, try_enum
 from .flags import SKUFlags
 from .iterators import SubscriptionIterator
 from .mixins import Hashable
-from .utils import (
-    MISSING,
-    _get_as_snowflake,
-    parse_time,
-)
+from .utils import MISSING, _get_as_snowflake, parse_time
 
 if TYPE_CHECKING:
     from datetime import datetime
