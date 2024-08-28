@@ -410,42 +410,6 @@ Connection
                     WebSocket library. It can be :class:`bytes` to denote a binary
                     message or :class:`str` to denote a regular text message.
 
-Entitlements
-------------
-.. function:: on_entitlement_create(entitlement)
-
-    Called when a user subscribes to an SKU.
-
-    .. versionadded:: 2.5
-
-    :param entitlement: The entitlement that was created as a result of the subscription.
-    :type entitlement: :class:`Entitlement`
-
-.. function:: on_entitlement_update(entitlement)
-
-    Called when a user's subscription to an Entitlement is renewed for the next billing period.
-
-    .. versionadded:: 2.5
-
-    :param entitlement: The entitlement that was updated.
-    :type entitlement: :class:`Entitlement`
-
-.. function:: on_entitlement_delete(entitlement)
-
-    Called when a user's entitlement is deleted.
-
-    Entitlements are usually only deleted when Discord issues a refund for a subscription,
-    or manually removes an entitlement from a user.
-
-    .. note::
-
-        This is not called when a user's subscription is cancelled.
-
-    .. versionadded:: 2.5
-
-    :param entitlement: The entitlement that was deleted.
-    :type entitlement: :class:`Entitlement`
-
 Guilds
 ------
 .. function:: on_guild_join(guild)
@@ -909,6 +873,78 @@ Messages
 
     :param payload: The raw event payload data.
     :type payload: :class:`RawMessageUpdateEvent`
+
+Monetization
+------------
+.. function:: on_entitlement_create(entitlement)
+
+    Called when a user subscribes to an SKU.
+
+    .. versionadded:: 2.5
+
+    :param entitlement: The entitlement that was created as a result of the subscription.
+    :type entitlement: :class:`Entitlement`
+
+.. function:: on_entitlement_update(entitlement)
+
+    Called when a user's subscription to an Entitlement is cancelled.
+
+    .. versionadded:: 2.5
+
+    .. notice::
+
+        Before October 1, 2024, this event was called when a user's subscription was renewed.
+
+        Entitlements that no longer follow this behavior will have a type of :attr:`EntitlementType.purchase`.
+        Those that follow the old behavior will have a type of :attr:`EntitlementType.application_subscription`.
+
+        `See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_
+
+    :param entitlement: The entitlement that was updated.
+    :type entitlement: :class:`Entitlement`
+
+.. function:: on_entitlement_delete(entitlement)
+
+    Called when a user's entitlement is deleted.
+
+    Entitlements are usually only deleted when Discord issues a refund for a subscription,
+    or manually removes an entitlement from a user.
+
+    .. note::
+
+        This is not called when a user's subscription is cancelled.
+
+    .. versionadded:: 2.5
+
+    :param entitlement: The entitlement that was deleted.
+    :type entitlement: :class:`Entitlement`
+
+.. function:: on_subscription_create(subscription)
+
+    Called when a subscription is created for the application.
+
+    .. versionadded:: 2.7
+
+    :param subscription: The subscription that was created.
+    :type subscription: :class:`Subscription`
+
+.. function:: on_subscription_update(subscription)
+
+    Called when a subscription has been updated. This could be a renewal, cancellation, or other payment related update.
+
+    .. versionadded:: 2.7
+
+    :param subscription: The subscription that was updated.
+    :type subscription: :class:`Subscription`
+
+.. function:: on_subscription_delete(subscription)
+
+    Called when a subscription has been deleted.
+
+    .. versionadded:: 2.7
+
+    :param subscription: The subscription that was deleted.
+    :type subscription: :class:`Subscription`
 
 Polls
 ~~~~~~~~~

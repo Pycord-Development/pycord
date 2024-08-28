@@ -3027,6 +3027,41 @@ class HTTPClient:
         )
         return self.request(r)
 
+    async def list_sku_subscriptions(
+        self,
+        sku_id: Snowflake,
+        *,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
+        limit: int = 50,
+        user_id: Snowflake | None = None,
+    ) -> Response[list[monetization.Subscription]]:
+        params: dict[str, Any] = {}
+        if before is not None:
+            params["before"] = before
+        if after is not None:
+            params["after"] = after
+        if limit is not None:
+            params["limit"] = limit
+        if user_id is not None:
+            params["user_id"] = user_id
+        return self.request(
+            Route("GET", "/skus/{sku_id}/subscriptions", sku_id=sku_id),
+            params=params,
+        )
+
+    async def get_subscription(
+        self,
+        sku_id: Snowflake,
+        subscription_id: Snowflake,
+    ) -> Response[monetization.Subscription]:
+        return self.request(
+            Route(
+                "GET", "/skus/{sku_id}/subscriptions/{subscription_id}",
+                sku_id=sku_id, subscription_id=subscription_id
+            )
+        )
+
     # Onboarding
 
     def get_onboarding(self, guild_id: Snowflake) -> Response[onboarding.Onboarding]:

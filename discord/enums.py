@@ -1053,6 +1053,14 @@ class PollLayoutType(Enum):
     default = 1
 
 
+class SubscriptionStatus(Enum):
+    """The status of a subscription."""
+
+    active = 1
+    ending = 2
+    inactive = 3
+
+
 T = TypeVar("T")
 
 
