@@ -25,6 +25,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Guild.fetch_role` method.
   ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
 
+### Fixed
+
+- Fixed `EntitlementIterator` behavior with `limit > 100`.
+  ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
+
 ## [2.6.0] - 2024-07-09
 
 ### Added
