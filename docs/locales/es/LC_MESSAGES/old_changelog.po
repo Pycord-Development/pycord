@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Changelog"
-msgstr "Changelog"
+msgstr "Registro de cambios"
 
 msgid "This page keeps a detailed human-friendly rendering of what's new and changed in specific versions."
 msgstr "This page keeps a detailed human-friendly rendering of what's new and changed in specific versions."
@@ -27,10 +27,10 @@ msgid "Fully deprecated/removed store channels"
 msgstr "Fully deprecated/removed store channels"
 
 msgid "Buttons and Select Menus"
-msgstr "Buttons and Select Menus"
+msgstr "Botones y menús seleccionables"
 
 msgid "Slash commands, User commands, and Message commands (:issue:`31`)"
-msgstr "Slash commands, User commands, and Message commands (:issue:`31`)"
+msgstr "Comandos de barra, comandos de usuario y comandos de mensaje (:issue:`31`)"
 
 msgid "Message Content privileged intent (:issue:`332`)"
 msgstr "Message Content privileged intent (:issue:`332`)"
@@ -120,7 +120,7 @@ msgid "v1.7.3"
 msgstr "v1.7.3"
 
 msgid "Bug Fixes"
-msgstr "Bug Fixes"
+msgstr "Corrección de errores"
 
 msgid "Fix a crash involving guild uploaded stickers"
 msgstr "Fix a crash involving guild uploaded stickers"
@@ -156,7 +156,7 @@ msgid "Development of v2.0 will have breaking changes and support for newer API 
 msgstr "Development of v2.0 will have breaking changes and support for newer API features."
 
 msgid "New Features"
-msgstr "New Features"
+msgstr "Nuevas características"
 
 msgid "Add support for stage channels via :class:`StageChannel` (:dpy-issue:`6602`, :dpy-issue:`6608`)"
 msgstr "Add support for stage channels via :class:`StageChannel` (:dpy-issue:`6602`, :dpy-issue:`6608`)"

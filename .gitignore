@@ -186,6 +186,7 @@ docs/changelog.md
 # Translations
 docs/build/html
 docs/build/doctrees
+docs/build/linkcheck
 !docs/build/locales/*
 *.mo
 !docs/locales/*
