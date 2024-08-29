@@ -32,6 +32,19 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `EntitlementIterator` behavior with `limit > 100`.
   ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
 
+### Fixed
+
+- Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
+  `@utils.deprecated`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the typehint in `ConnectionState._polls` to reflect actual behavior, changing it
+  from `Guild` to `Poll`.
+  ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed missing `__slots__` attributes in `RawReactionClearEmojiEvent` and
+  `RawMessagePollVoteEvent`.
+  ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the type of `ForumChannel.default_sort_order`, changing it from `int` to
+  `SortOrder`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+
 ## [2.6.0] - 2024-07-09
 
 ### Added
