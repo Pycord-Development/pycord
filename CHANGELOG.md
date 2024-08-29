@@ -24,6 +24,13 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `Guild.fetch_role` method.
   ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
+- Added `Member.guild_banner` and `Member.display_banner` properties.
+  ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
+
+### Fixed
+
+- Fixed `EntitlementIterator` behavior with `limit > 100`.
+  ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
 
 ### Fixed
 
@@ -335,7 +342,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))
 - Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to
   include `Iterable[OptionChoice]`.
-  ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))
 - Fixed initial message inside of the create thread payload sending legacy beta payload.
   ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))
 - Fixed a misplaced payload object inside of the thread creation payload.
@@ -665,7 +671,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`.
   ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))
-- Fix type issues in options.py
+- Fix type issues in `options.py`
   ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))
 - Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent.
   ([#1521](https://github.com/Pycord-Development/pycord/pull/1521))
@@ -916,7 +922,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
 [unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...HEAD
-[2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...2.6.0
+[2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...v2.5.0
 [2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Pycord-Development/pycord/compare/v2.3.3...v2.4.0

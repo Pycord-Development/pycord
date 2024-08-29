@@ -10,7 +10,7 @@ updates:
       major-version-bumps:
         update-types: ["major"]
     schedule:
-      interval: "weekly"
+      interval: "daily"
     commit-message:
       prefix: "chore"
       prefix-development: "chore"
@@ -25,7 +25,7 @@ updates:
       major-version-bumps:
         update-types: ["major"]
     schedule:
-      interval: "weekly"
+      interval: "daily"
     commit-message:
       prefix: "ci"
       include: "scope"

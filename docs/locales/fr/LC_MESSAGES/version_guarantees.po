@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Version Guarantees"
-msgstr "Version Guarantees"
+msgstr "Garanties quant au versionnement"
 
 msgid "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
 msgstr "La bibliothèque suit le `principe de versionnage sémantique <https://semver.org/>`_, ce qui signifie que la version majeure est mise à jour à chaque changement incompatible de l'API. Cependant, en raison de l'absence de garanties du côté de Discord concernant les changements incompatibles, ainsi que de la nature assez dynamique de Python, il peut être difficile de discerner ce qui peut être considéré comme un changement incompatible et ce qui ne l'est pas."

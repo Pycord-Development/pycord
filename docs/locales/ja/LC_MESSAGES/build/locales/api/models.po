@@ -1727,8 +1727,8 @@ msgstr "The guild's notification settings."
 msgid ":class:`NotificationLevel`"
 msgstr ":class:`NotificationLevel`"
 
-msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_."
-msgstr "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_."
+msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_."
+msgstr "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_."
 
 msgid "List[:class:`str`]"
 msgstr "List[:class:`str`]"
@@ -7786,4 +7786,3 @@ msgstr "These are typically given for channel follower webhooks."
 
 msgid "Represents a partial channel for webhooks."
 msgstr "Represents a partial channel for webhooks."
-

@@ -3935,8 +3935,8 @@ msgstr ""
 msgid ""
 "A list of features that the guild has. The features that a guild can have"
 " are subject to arbitrary change by Discord. You can find a catalog of "
-"guild features `here <https://github.com/Delitefully/DiscordLists#guild-"
-"feature-glossary>`_."
+"guild features `here <https://github.com/Delitefully/DiscordLists?tab"
+"=readme-ov-file#guild-feature-glossary>`_."
 msgstr ""
 
 #: 1062d87a1499437b8d0fad52243a2c42 402fe8591df646adab6f23b2f9d9081b
@@ -14575,4 +14575,14 @@ msgstr ""
 #: discord.webhook.async_.PartialWebhookChannel:1 of
 msgid "Represents a partial channel for webhooks."
 msgstr ""
+
+#~ msgid ""
+#~ "A list of features that the guild"
+#~ " has. The features that a guild "
+#~ "can have are subject to arbitrary "
+#~ "change by Discord. You can find a"
+#~ " catalog of guild features `here "
+#~ "<https://github.com/Delitefully/DiscordLists#guild-feature-"
+#~ "glossary>`_."
+#~ msgstr ""
 

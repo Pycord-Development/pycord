@@ -39,19 +39,19 @@ msgid "Essentially, these two are equivalent: ::"
 msgstr "Im Wesentlichen sind diese beiden gleichwertig: ::"
 
 msgid "Since the :meth:`.Bot.command` decorator is shorter and easier to comprehend, it will be the one used throughout the documentation here."
-msgstr "Since the :meth:`.Bot.command` decorator is shorter and easier to comprehend, it will be the one used throughout the documentation here."
+msgstr "Da der :meth:`.Bot.command` Dekorator kürzer und leichter zu verstehen ist, wird dieser in der gesamten Dokumentation verwendet werden."
 
 msgid "Any parameter that is accepted by the :class:`.Command` constructor can be passed into the decorator. For example, to change the name to something other than the function would be as simple as doing this:"
-msgstr "Any parameter that is accepted by the :class:`.Command` constructor can be passed into the decorator. For example, to change the name to something other than the function would be as simple as doing this:"
+msgstr "Jeder Parameter, der vom :class:`.Command` Konstruktor akzeptiert wird, kann an den Dekorator übergeben werden. Zum Beispiel wäre es so einfach, den Namen in etwas anderes zu ändern als die Funktion zu ändern:"
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Parametern"
 
 msgid "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."
-msgstr "Since we define commands by making Python functions, we also define the argument passing behaviour by the function parameters."
+msgstr "Da wir Befehle definieren, indem wir Python-Funktionen erzeugen, definieren wir auch das Argument-Übergabeverhalten durch die Funktionsparameter."
 
 msgid "Certain parameter types do different things in the user side and most forms of parameter types are supported."
-msgstr "Certain parameter types do different things in the user side and most forms of parameter types are supported."
+msgstr "Bestimmte Parametertypen machen verschiedene Dinge auf der Benutzerseite und die meisten Formen von Parametertypen werden unterstützt."
 
 msgid "Positional"
 msgstr "Positional"
@@ -222,7 +222,7 @@ msgid "A lot of discord models work out of the gate as a parameter:"
 msgstr "A lot of discord models work out of the gate as a parameter:"
 
 msgid ":class:`Object` (since v2.0)"
-msgstr ":class:`Object` (since v2.0)"
+msgstr ":class:`Object` (seit v2.0)"
 
 msgid ":class:`Member`"
 msgstr ":class:`Member`"
@@ -231,13 +231,13 @@ msgid ":class:`User`"
 msgstr ":class:`User`"
 
 msgid ":class:`Message` (since v1.1)"
-msgstr ":class:`Message` (since v1.1)"
+msgstr ":class:`Message` (seit v1.1)"
 
 msgid ":class:`PartialMessage` (since v1.7)"
-msgstr ":class:`PartialMessage` (since v1.7)"
+msgstr ":class:`PartialMessage` (seit v1.7)"
 
 msgid ":class:`abc.GuildChannel` (since 2.0)"
-msgstr ":class:`abc.GuildChannel` (since 2.0)"
+msgstr ":class:`abc.GuildChannel` (seit 2.0)"
 
 msgid ":class:`TextChannel`"
 msgstr ":class:`TextChannel`"
@@ -246,7 +246,7 @@ msgid ":class:`VoiceChannel`"
 msgstr ":class:`VoiceChannel`"
 
 msgid ":class:`StageChannel` (since v1.7)"
-msgstr ":class:`StageChannel` (since v1.7)"
+msgstr ":class:`StageChannel` (seit v1.7)"
 
 msgid ":class:`CategoryChannel`"
 msgstr ":class:`CategoryChannel`"
@@ -255,7 +255,7 @@ msgid ":class:`Invite`"
 msgstr ":class:`Invite`"
 
 msgid ":class:`Guild` (since v1.7)"
-msgstr ":class:`Guild` (since v1.7)"
+msgstr ":class:`Guild` (seit v1.7)"
 
 msgid ":class:`Role`"
 msgstr ":class:`Role`"
@@ -273,7 +273,7 @@ msgid ":class:`PartialEmoji`"
 msgstr ":class:`PartialEmoji`"
 
 msgid ":class:`Thread` (since v2.0)"
-msgstr ":class:`Thread` (since v2.0)"
+msgstr ":class:`Thread` (seit v2.0)"
 
 msgid "Having any of these set as the converter will intelligently convert the argument to the appropriate target type you specify."
 msgstr "Having any of these set as the converter will intelligently convert the argument to the appropriate target type you specify."

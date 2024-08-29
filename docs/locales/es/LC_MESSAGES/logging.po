@@ -12,23 +12,23 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Setting Up Logging"
-msgstr "Setting Up Logging"
+msgstr "Configuración del registro"
 
 msgid "*Pycord* logs errors and debug information via the :mod:`logging` python module. It is strongly recommended that the logging module is configured, as no errors or warnings will be output if it is not set up. Configuration of the ``logging`` module can be as simple as::"
-msgstr "*Pycord* logs errors and debug information via the :mod:`logging` python module. It is strongly recommended that the logging module is configured, as no errors or warnings will be output if it is not set up. Configuration of the ``logging`` module can be as simple as::"
+msgstr "*Pycord* registra los errores e información de depuración a través del módulo de python :mod:`logging`. Se recomienda configurar el módulo logging, ya que no se mostraran errores o advertencias si no se configura. La configuración del módulo ``logging`` puede ser tan simple como::"
 
 msgid "Placed at the start of the application. This will output the logs from discord as well as other libraries that use the ``logging`` module directly to the console."
-msgstr "Placed at the start of the application. This will output the logs from discord as well as other libraries that use the ``logging`` module directly to the console."
+msgstr "Colocado al inicio de la aplicación. Esto mostrará los registros de discord así como otras bibliotecas que usan el módulo ``logging`` directamente en la consola."
 
 msgid "The optional ``level`` argument specifies what level of events to log out and can be any of ``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO``, and ``DEBUG`` and if not specified defaults to ``WARNING``."
-msgstr "The optional ``level`` argument specifies what level of events to log out and can be any of ``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO``, and ``DEBUG`` and if not specified defaults to ``WARNING``."
+msgstr "El argumento opcional ``level`` especifica que nivel de eventos registrar y pueden ser del tipo ``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO`` y ``DEBUG``, usará el valor por defecto ``WARNING`` si no especifica."
 
 msgid "More advanced setups are possible with the :mod:`logging` module. For example to write the logs to a file called ``discord.log`` instead of outputting them to the console the following snippet can be used::"
-msgstr "More advanced setups are possible with the :mod:`logging` module. For example to write the logs to a file called ``discord.log`` instead of outputting them to the console the following snippet can be used::"
+msgstr "Configuraciones más avanzadas son posibles con el módulo :mod:`logging`. Por ejemplo, para escribir los registros en un archivo llamado ``discord.log`` en lugar de ejecutarlos en la consola, puedes usar el siguiente fragmento de código ::"
 
 msgid "This is recommended, especially at verbose levels such as ``INFO`` and ``DEBUG``, as there are a lot of events logged and it would clog the stdout of your program."
-msgstr "This is recommended, especially at verbose levels such as ``INFO`` and ``DEBUG``, as there are a lot of events logged and it would clog the stdout of your program."
+msgstr "Esto es recomendado, especialmente en niveles detallados como ``INFO`` y ``DEBUG``, ya que hay un montón de eventos registrados, que obtendría el stdout de tu programa."
 
 msgid "For more information, check the documentation and tutorial of the :mod:`logging` module."
-msgstr "For more information, check the documentation and tutorial of the :mod:`logging` module."
+msgstr "Para obtener más información, consulta la documentación y el tutorial del módulo :mod:`logging`."
 
