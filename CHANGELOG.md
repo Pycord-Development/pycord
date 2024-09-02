@@ -12,6 +12,17 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ⚠️ **This Version Removes Support For Python 3.8** ⚠️
 
+### Added
+
+- Added `Guild.fetch_role` method.
+  ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
+- Added the following `AppInfo` attributes: `approximate_guild_count`,
+  `approximate_user_install_count`, `custom_install_url`, `install_params`,
+  `interactions_endpoint_url`, `redirect_uris`, `role_connections_verification_url`, and
+  `tags`. ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+- Added `Member.guild_banner` and `Member.display_banner` properties.
+  ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
+
 ### Changed
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
@@ -20,20 +31,15 @@ These changes are available on the `master` branch, but have not yet been releas
 - ⚠️ **This Version Removes Support For Python 3.8** ⚠️
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
 
-### Added
+### Deprecated
 
-- Added `Guild.fetch_role` method.
-  ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
-- Added `Member.guild_banner` and `Member.display_banner` properties.
-  ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
+- Deprecated `AppInfo.summary` in favor of `AppInfo.description`.
+  ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 
 ### Fixed
 
 - Fixed `EntitlementIterator` behavior with `limit > 100`.
   ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
-
-### Fixed
-
 - Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
   `@utils.deprecated`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed the typehint in `ConnectionState._polls` to reflect actual behavior, changing it
