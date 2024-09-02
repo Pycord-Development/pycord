@@ -42,7 +42,7 @@ msgid "Optimised for both speed and memory"
 msgstr "Optimised for both speed and memory"
 
 msgid "Getting started"
-msgstr "Getting started"
+msgstr ""
 
 msgid "Is this your first time using the library? This is the place to get started!"
 msgstr "Is this your first time using the library? This is the place to get started!"

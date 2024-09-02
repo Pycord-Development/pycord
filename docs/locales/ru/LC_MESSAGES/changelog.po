@@ -425,8 +425,8 @@ msgstr "Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`. ([#2
 msgid "Fixed `_bytes_to_base64_data` not defined. ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))"
 msgstr "Fixed `_bytes_to_base64_data` not defined. ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))"
 
-msgid "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`. ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))"
-msgstr "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`. ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))"
+msgid "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`."
+msgstr "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`."
 
 msgid "Fixed initial message inside of the create thread payload sending legacy beta payload. ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))"
 msgstr "Fixed initial message inside of the create thread payload sending legacy beta payload. ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))"
@@ -779,8 +779,8 @@ msgstr "`commands.has_permissions()` check now returns `True` in DM channels. ([
 msgid "Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`. ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))"
 msgstr "Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`. ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))"
 
-msgid "Fix type issues in options.py ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
-msgstr "Fix type issues in options.py ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
+msgid "Fix type issues in `options.py` ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
+msgstr "Fix type issues in `options.py` ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
 
 msgid "Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent. ([#1521](https://github.com/Pycord-Development/pycord/pull/1521))"
 msgstr "Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent. ([#1521](https://github.com/Pycord-Development/pycord/pull/1521))"
@@ -837,7 +837,7 @@ msgid "Fix required parameters validation error. ([#1589](https://github.com/Pyc
 msgstr "Fix required parameters validation error. ([#1589](https://github.com/Pycord-Development/pycord/pull/1589))"
 
 msgid "Security"
-msgstr "Security"
+msgstr "Безопасность"
 
 msgid "Improved fix for application-based bots without the bot scope ([#1584](https://github.com/Pycord-Development/pycord/pull/1584))"
 msgstr "Improved fix for application-based bots without the bot scope ([#1584](https://github.com/Pycord-Development/pycord/pull/1584))"
