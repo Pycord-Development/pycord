@@ -10,6 +10,49 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+⚠️ **This Version Removes Support For Python 3.8** ⚠️
+
+### Added
+
+- Added `Guild.fetch_role` method.
+  ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
+- Added the following `AppInfo` attributes: `approximate_guild_count`,
+  `approximate_user_install_count`, `custom_install_url`, `install_params`,
+  `interactions_endpoint_url`, `redirect_uris`, `role_connections_verification_url`, and
+  `tags`. ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+- Added `Member.guild_banner` and `Member.display_banner` properties.
+  ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
+
+### Changed
+
+- Renamed `cover` property of `ScheduledEvent` and `cover` argument of
+  `ScheduledEvent.edit` to `image`.
+  ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
+- ⚠️ **This Version Removes Support For Python 3.8** ⚠️
+  ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
+
+### Deprecated
+
+- Deprecated `AppInfo.summary` in favor of `AppInfo.description`.
+  ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+
+### Fixed
+
+- Fixed `EntitlementIterator` behavior with `limit > 100`.
+  ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
+- Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
+  `@utils.deprecated`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the typehint in `ConnectionState._polls` to reflect actual behavior, changing it
+  from `Guild` to `Poll`.
+  ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed missing `__slots__` attributes in `RawReactionClearEmojiEvent` and
+  `RawMessagePollVoteEvent`.
+  ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the type of `ForumChannel.default_sort_order`, changing it from `int` to
+  `SortOrder`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed `PartialMessage`s causing errors when created from `PartialMessageable`.
+  ([#2568](https://github.com/Pycord-Development/pycord/pull/2500))
+
 ## [2.6.0] - 2024-07-09
 
 ### Added
