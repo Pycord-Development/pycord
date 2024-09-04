@@ -50,6 +50,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed the type of `ForumChannel.default_sort_order`, changing it from `int` to
   `SortOrder`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed `PartialMessage`s causing errors when created from `PartialMessageable`.
+  ([#2568](https://github.com/Pycord-Development/pycord/pull/2500))
 
 ## [2.6.0] - 2024-07-09
 
