@@ -12,166 +12,166 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Event Reference"
-msgstr "Referencia para Eventos"
+msgstr "Event Reference"
 
 msgid "This section outlines the different types of events listened by :class:`Client`."
-msgstr "Esta sección describe los diferentes tipos de eventos escuchados por :class:`Client`."
+msgstr "This section outlines the different types of events listened by :class:`Client`."
 
 msgid "There are 3 ways to register an event, the first way is through the use of :meth:`Client.event`. The second way is through subclassing :class:`Client` and overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`. For example:"
-msgstr "Hay 3 maneras de registrar un evento, la primera forma es a través del uso de :meth:`Client.event`. La segunda forma es crear una subclase de :class:`Client` y reemplazar los eventos específicos. La tercera forma es a través del uso de :meth:`Cliente.listen`, que puede ser usado para asignar múltiples controladores de eventos en lugar de uno solo como en :meth:`Client.event`. Por ejemplo:"
+msgstr "There are 3 ways to register an event, the first way is through the use of :meth:`Client.event`. The second way is through subclassing :class:`Client` and overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`. For example:"
 
 msgid "If an event handler raises an exception, :func:`on_error` will be called to handle it, which defaults to print a traceback and ignoring the exception."
-msgstr "Si un controlador de eventos lanza una excepción, se llamará a :func:`on_error` para manejarla, que por defecto imprime un traceback e ignora la excepción."
+msgstr "If an event handler raises an exception, :func:`on_error` will be called to handle it, which defaults to print a traceback and ignoring the exception."
 
 msgid "All the events must be a |coroutine_link|_. If they aren't, then you might get unexpected errors. In order to turn a function into a coroutine they must be ``async def`` functions."
-msgstr "Todos los eventos deben ser una |coroutine_link|_. Si no lo son, puede que se produzcan errores inesperados. Para convertir una función en una corrutina deben ser funciones ``async def``."
+msgstr "All the events must be a |coroutine_link|_. If they aren't, then you might get unexpected errors. In order to turn a function into a coroutine they must be ``async def`` functions."
 
 msgid "Application Commands"
-msgstr "Comandos de aplicación"
+msgstr "Application Commands"
 
 msgid "Called when an application command is received."
-msgstr "Llamado cuando se recibe un comando de aplicación."
+msgstr "Called when an application command is received."
 
 msgid "Parameters"
-msgstr "Parámetros"
+msgstr "Parameters"
 
 msgid "The ApplicationContext associated to the command being received."
-msgstr "El ApplicationContext asociado al comando que se recibe."
+msgstr "The ApplicationContext associated to the command being received."
 
 msgid "Called when an application command is completed, after any checks have finished."
-msgstr "Llamado cuando un comando de aplicación se completa, después de que las comprobaciones hayan terminado."
+msgstr "Called when an application command is completed, after any checks have finished."
 
 msgid "The ApplicationContext associated to the command that was completed."
-msgstr "El ApplicationContext asociado al comando que se completó."
+msgstr "The ApplicationContext associated to the command that was completed."
 
 msgid "Called when an application command has an error."
-msgstr "Llamado cuando un comando de aplicación lanza un error."
+msgstr "Called when an application command has an error."
 
 msgid "The ApplicationContext associated to the command that has an error."
-msgstr "El ApplicationContext asociado al comando que lanzó el error."
+msgstr "The ApplicationContext associated to the command that has an error."
 
 msgid "The DiscordException associated to the error."
-msgstr "La DiscordException asociada al error."
+msgstr "The DiscordException associated to the error."
 
 msgid "Called when an application command was not found in the bot's internal cache."
-msgstr "Llamado cuando un comando de aplicación no fue encontrado dentro del caché interno del bot."
+msgstr "Called when an application command was not found in the bot's internal cache."
 
 msgid "The interaction associated to the unknown command."
-msgstr "La interacción asociada al comando desconocido."
+msgstr "The interaction associated to the unknown command."
 
 msgid "Audit Logs"
-msgstr "Registros de auditoría"
+msgstr "Audit Logs"
 
 msgid "Called when an audit log entry is created."
-msgstr "Llamado cuando un registro de auditoría es creado."
+msgstr "Called when an audit log entry is created."
 
 msgid "The bot must have :attr:`~Permissions.view_audit_log` to receive this, and :attr:`Intents.moderation` must be enabled."
-msgstr "El bot debe tener :attr:`~Permissions.view_audit_log` para recibir esto, y :attr:`Intents.moderation` debe estar activado."
+msgstr "The bot must have :attr:`~Permissions.view_audit_log` to receive this, and :attr:`Intents.moderation` must be enabled."
 
 msgid "The audit log entry that was created."
-msgstr "El registro de auditoría que fue creado."
+msgstr "The audit log entry that was created."
 
 msgid "Called when an audit log entry is created. Unlike :func:`on_audit_log_entry`, this is called regardless of the state of the internal user cache."
-msgstr "Llamado cuando un registro de auditoría es creado. A diferencia de :func:`on_audit_log_entry`, este es llamado independientemente del estado del caché interno del usuario."
+msgstr "Called when an audit log entry is created. Unlike :func:`on_audit_log_entry`, this is called regardless of the state of the internal user cache."
 
 msgid "The raw event payload data."
-msgstr "Los datos del evento sin procesar."
+msgstr "The raw event payload data."
 
 msgid "AutoMod"
 msgstr "AutoMod"
 
 msgid "Called when an auto moderation rule is created."
-msgstr "Llamado cuando una regla de auto moderación es creada."
+msgstr "Called when an auto moderation rule is created."
 
 msgid "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_configuration` must be enabled."
-msgstr "El bot debe tener :attr:`~Permissions.manage_guild` para recibir esto, y :attr:`Intents.auto_moderation_configuration` debe estar activado."
+msgstr "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_configuration` must be enabled."
 
 msgid "The newly created rule."
-msgstr "La regla recién creada."
+msgstr "The newly created rule."
 
 msgid "Called when an auto moderation rule is updated."
-msgstr "Llamado cuando una regla de auto moderación es actualizada."
+msgstr "Called when an auto moderation rule is updated."
 
 msgid "The updated rule."
-msgstr "La regla actualizada."
+msgstr "The updated rule."
 
 msgid "Called when an auto moderation rule is deleted."
-msgstr "Llamado cuando una regla de auto moderación es eliminada."
+msgstr "Called when an auto moderation rule is deleted."
 
 msgid "The deleted rule."
-msgstr "La regla eliminada."
+msgstr "The deleted rule."
 
 msgid "Called when an auto moderation action is executed."
-msgstr "Llamado cuando una acción de auto moderación es ejecutada."
+msgstr "Called when an auto moderation action is executed."
 
 msgid "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_execution` must be enabled."
-msgstr "El bot debe tener :attr:`~Permissions.manage_guild` para recibir esto, y :attr:`Intents.auto_moderation_execution` debe estar activado."
+msgstr "The bot must have :attr:`~Permissions.manage_guild` to receive this, and :attr:`Intents.auto_moderation_execution` must be enabled."
 
 msgid "The event's data."
-msgstr "Los datos del evento."
+msgstr "The event's data."
 
 msgid "Bans"
-msgstr "Baneos"
+msgstr "Bans"
 
 msgid "Called when user gets banned from a :class:`Guild`."
-msgstr "Llamado cuando un usuario es baneado de una :class:`Guild`."
+msgstr "Called when user gets banned from a :class:`Guild`."
 
 msgid "This requires :attr:`Intents.moderation` to be enabled."
-msgstr "Esto requiere que :attr:`Intents.moderation` esté activado."
+msgstr "This requires :attr:`Intents.moderation` to be enabled."
 
 msgid "The guild the user got banned from."
-msgstr "El servidor del cual el usuario fue baneado."
+msgstr "The guild the user got banned from."
 
 msgid "The user that got banned. Can be either :class:`User` or :class:`Member` depending if the user was in the guild or not at the time of removal."
-msgstr "El usuario que fue baneado. Puede ser un :class:`User` o :class:`Member` dependiendo si el usuario estaba en el servidor o no en el momento de la eliminación."
+msgstr "The user that got banned. Can be either :class:`User` or :class:`Member` depending if the user was in the guild or not at the time of removal."
 
 msgid "Called when a :class:`User` gets unbanned from a :class:`Guild`."
-msgstr "Llamado cuando un :class:`User` es desbaneado de una :class:`Guild`."
+msgstr "Called when a :class:`User` gets unbanned from a :class:`Guild`."
 
 msgid "The guild the user got unbanned from."
-msgstr "El servidor del cual es usuario fue desbaneado."
+msgstr "The guild the user got unbanned from."
 
 msgid "The user that got unbanned."
-msgstr "El usuario que fue desbaneado."
+msgstr "The user that got unbanned."
 
 msgid "Channels"
-msgstr "Canales"
+msgstr "Channels"
 
 msgid "Called whenever a private group DM is updated. e.g. changed name or topic."
-msgstr "Llamado cuando un grupo privado en MD es actualizado. e.j. se cambió el nombre o descripción."
+msgstr "Called whenever a private group DM is updated. e.g. changed name or topic."
 
 msgid "This requires :attr:`Intents.messages` to be enabled."
-msgstr "Esto requiere que :attr:`Intents.messages` esté activado."
+msgstr "This requires :attr:`Intents.messages` to be enabled."
 
 msgid "The updated group channel's old info."
-msgstr "La información antigua del canal de grupo actualizado."
+msgstr "The updated group channel's old info."
 
 msgid "The updated group channel's new info."
-msgstr "La nueva información del canal de grupo actualizado."
+msgstr "The updated group channel's new info."
 
 msgid "Called whenever a message is pinned or unpinned from a private channel."
-msgstr "Llamado cuando un mensaje es fijado o desfijado de un canal privado."
+msgstr "Called whenever a message is pinned or unpinned from a private channel."
 
 msgid "The private channel that had its pins updated."
-msgstr "El canal privado al cual se le actualizaron sus fijados."
+msgstr "The private channel that had its pins updated."
 
 msgid "The latest message that was pinned as an aware datetime in UTC. Could be ``None``."
-msgstr "El último mensaje que fue fijado como un aware datetime en UTC. Podría ser ``None``."
+msgstr "The latest message that was pinned as an aware datetime in UTC. Could be ``None``."
 
 msgid "Called whenever a guild channel is updated. e.g. changed name, topic, permissions."
-msgstr "Llamado cuando un canal en un servidor es actualizado. e.j. se cambió el nombre, descripción, permisos."
+msgstr "Called whenever a guild channel is updated. e.g. changed name, topic, permissions."
 
 msgid "This requires :attr:`Intents.guilds` to be enabled."
-msgstr "Esto requiere que :attr:`Intents.guilds` esté activado."
+msgstr "This requires :attr:`Intents.guilds` to be enabled."
 
 msgid "The updated guild channel's old info."
-msgstr "La información antigua del canal del servidor actualizado."
+msgstr "The updated guild channel's old info."
 
 msgid "The updated guild channel's new info."
-msgstr "La información nueva del canal del servidor actualizado."
+msgstr "The updated guild channel's new info."
 
 msgid "Called whenever a message is pinned or unpinned from a guild channel."
-msgstr "Llamado cuando un mensaje es fijado o desfijado de un canal de un servidor."
+msgstr "Called whenever a message is pinned or unpinned from a guild channel."
 
 msgid "The guild channel that had its pins updated."
 msgstr "The guild channel that had its pins updated."
@@ -555,13 +555,13 @@ msgid "status"
 msgstr "status"
 
 msgid "activity"
-msgstr "actividad"
+msgstr "activity"
 
 msgid "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
 msgstr "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
 
 msgid "Called when a :class:`Member` changes their :class:`VoiceState`."
-msgstr "Llamado cuando un :class:`Member` cambia su :class:`VoiceState`."
+msgstr "Called when a :class:`Member` changes their :class:`VoiceState`."
 
 msgid "The following, but not limited to, examples illustrate when this event is called:"
 msgstr "The following, but not limited to, examples illustrate when this event is called:"
@@ -585,10 +585,10 @@ msgid "The member whose voice states changed."
 msgstr "The member whose voice states changed."
 
 msgid "The voice state prior to the changes."
-msgstr "El estado de voz antes de los cambios."
+msgstr "The voice state prior to the changes."
 
 msgid "The voice state after the changes."
-msgstr "El estado de voz después de los cambios."
+msgstr "The voice state after the changes."
 
 msgid "Called when a :class:`User` updates their profile."
 msgstr "Called when a :class:`User` updates their profile."

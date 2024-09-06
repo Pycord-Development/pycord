@@ -12,22 +12,22 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "API Reference"
-msgstr "Справочник по API"
+msgstr "API Reference"
 
 msgid "The following section outlines the API of Pycord's prefixed command extension module."
-msgstr "В следующем разделе описывается API модуля расширения префиксных команд Pycord."
+msgstr "The following section outlines the API of Pycord's prefixed command extension module."
 
 msgid "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
-msgstr "Использование префиксных команд в серверах требует включения :attr:`Intents.message_content."
+msgstr "Using prefixed commands in guilds requires :attr:`Intents.message_content` to be enabled."
 
 msgid "Bots"
-msgstr "Боты"
+msgstr "Bots"
 
 msgid "Bot"
-msgstr "Бот"
+msgstr "Bot"
 
 msgid "Represents a discord bot."
-msgstr "Представляет собой дискорд-бота."
+msgstr "Represents a discord bot."
 
 msgid "This class is a subclass of :class:`discord.Bot` and as a result anything that you can do with a :class:`discord.Bot` you can do with this bot."
 msgstr "This class is a subclass of :class:`discord.Bot` and as a result anything that you can do with a :class:`discord.Bot` you can do with this bot."
@@ -54,7 +54,7 @@ msgid "Whether the commands should be case-insensitive. Defaults to ``False``. T
 msgstr "Whether the commands should be case-insensitive. Defaults to ``False``. This attribute does not carry over to groups. You must set it to every group if you require group commands to be case-insensitive as well."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"
@@ -69,7 +69,7 @@ msgid "Whether to strip whitespace characters after encountering the command pre
 msgstr "Whether to strip whitespace characters after encountering the command prefix. This allows for ``!   hello`` and ``!hello`` to both work if the ``command_prefix`` is set to ``!``. Defaults to ``False``."
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required. This post-invoke hook takes a sole parameter, a :class:`.Context`."
 msgstr "A decorator that registers a coroutine as a post-invoke hook. A post-invoke hook is called directly after the command is called. This makes it a useful function to clean-up database connections or any type of clean up required. This post-invoke hook takes a sole parameter, a :class:`.Context`."
@@ -81,7 +81,7 @@ msgid "The coroutine to register as the post-invoke hook."
 msgstr "The coroutine to register as the post-invoke hook."
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
@@ -102,7 +102,7 @@ msgid "This function can either be a regular function or a coroutine. Similar to
 msgstr "This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from :exc:`.ApplicationCommandError`."
 
 msgid "Example"
-msgstr "Пример"
+msgstr "Example"
 
 msgid "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
 msgstr "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
@@ -114,13 +114,13 @@ msgid "A shortcut decorator that invokes :func:`.command` and adds it to the int
 msgstr "A shortcut decorator that invokes :func:`.command` and adds it to the internal command list via :meth:`~.GroupMixin.add_command`."
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 msgstr "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid "Callable[..., :class:`Command`]"
 msgstr "Callable[..., :class:`Command`]"
@@ -480,10 +480,10 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.E
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.EntitlementIterator\\``"
 
 msgid "Examples"
-msgstr "Примеры"
+msgstr "Examples"
 
 msgid "Usage ::"
-msgstr "Использование ::"
+msgstr "Usage ::"
 
 msgid "Flattening into a list ::"
 msgstr "Flattening into a list ::"
@@ -1917,7 +1917,7 @@ msgid "Whether the commands should be case-insensitive. Defaults to ``False``."
 msgstr "Whether the commands should be case-insensitive. Defaults to ``False``."
 
 msgid "Cogs"
-msgstr "Коги"
+msgstr "Cogs"
 
 msgid "Cog"
 msgstr "Cog"
@@ -3579,7 +3579,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 
 msgid "Exceptions"
-msgstr "Исключения"
+msgstr "Exceptions"
 
 msgid "The base exception type for all command related errors."
 msgstr "The base exception type for all command related errors."
@@ -3588,7 +3588,7 @@ msgid "This inherits from :exc:`discord.DiscordException`."
 msgstr "This inherits from :exc:`discord.DiscordException`."
 
 msgid "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
-msgstr "Это исключение и унаследованные от него исключения обрабатываются особым образом, поскольку они перехватываются и передаются в специальное событие из :class:`.Bot`\\, :func:`.on_command_error`."
+msgstr "This exception and exceptions inherited from it are handled in a special way as they are caught and passed into a special event from :class:`.Bot`\\, :func:`.on_command_error`."
 
 msgid "Exception raised when a Converter class raises non-CommandError."
 msgstr "Exception raised when a Converter class raises non-CommandError."
@@ -3603,7 +3603,7 @@ msgid ":class:`discord.ext.commands.Converter`"
 msgstr ":class:`discord.ext.commands.Converter`"
 
 msgid "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
-msgstr "Первоначальное исключение, которое было поднято. Вы также можете получить его через атрибут ``__cause__``."
+msgstr "The original exception that was raised. You can also get this via the ``__cause__`` attribute."
 
 msgid ":exc:`Exception`"
 msgstr ":exc:`Exception`"
@@ -3690,7 +3690,7 @@ msgid "Exception raised when an operation does not work in private message conte
 msgstr "Exception raised when an operation does not work in private message contexts."
 
 msgid "Exception raised when the predicates in :attr:`.Command.checks` have failed."
-msgstr "Исключение поднимается, если предикаты в :attr:`.Command.checks` не сработали."
+msgstr "Exception raised when the predicates in :attr:`.Command.checks` have failed."
 
 msgid "This inherits from :exc:`CommandError`"
 msgstr "This inherits from :exc:`CommandError`"
@@ -3723,7 +3723,7 @@ msgid "Exception raised when the command being invoked is disabled."
 msgstr "Exception raised when the command being invoked is disabled."
 
 msgid "Exception raised when the command being invoked raised an exception."
-msgstr "Исключение, возникающее, когда вызываемая команда вызывает исключение."
+msgstr "Exception raised when the command being invoked raised an exception."
 
 msgid "Exception raised when the command was passed too many arguments and its :attr:`.Command.ignore_extra` attribute was not set to ``True``."
 msgstr "Exception raised when the command was passed too many arguments and its :attr:`.Command.ignore_extra` attribute was not set to ``True``."
@@ -3948,7 +3948,7 @@ msgid "Whether the name that conflicts is an alias of the command we try to add.
 msgstr "Whether the name that conflicts is an alias of the command we try to add."
 
 msgid "Exception Hierarchy"
-msgstr "Иерархия исключений"
+msgstr "Exception Hierarchy"
 
 msgid ":exc:`~.DiscordException`"
 msgstr ":exc:`~.DiscordException`"

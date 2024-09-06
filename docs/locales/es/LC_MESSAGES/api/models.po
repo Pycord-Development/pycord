@@ -87,7 +87,7 @@ msgid ":class:`Asset`"
 msgstr ":class:`Asset`"
 
 msgid "Raises"
-msgstr "Errores"
+msgstr "Raises"
 
 msgid "An invalid size or format was passed."
 msgstr "An invalid size or format was passed."
@@ -162,7 +162,7 @@ msgid "Represents a Spotify listening activity from Discord. This is a special c
 msgstr "Represents a Spotify listening activity from Discord. This is a special case of :class:`Activity` that makes it easier to work with the Spotify integration."
 
 msgid "Checks if two activities are equal."
-msgstr "Comprueba si dos actividades son iguales."
+msgstr "Checks if two activities are equal."
 
 msgid "Checks if two activities are not equal."
 msgstr "Checks if two activities are not equal."
@@ -360,7 +360,7 @@ msgid "If set to ``True``, return messages in oldest->newest order. Defaults to 
 msgstr "If set to ``True``, return messages in oldest->newest order. Defaults to ``True`` if ``after`` is specified, otherwise ``False``."
 
 msgid "Yields"
-msgstr "Genera"
+msgstr "Yields"
 
 msgid ":class:`~discord.Message` -- The message with the message data parsed."
 msgstr ":class:`~discord.Message` -- The message with the message data parsed."
@@ -906,10 +906,10 @@ msgid "Represents a message from Discord."
 msgstr "Represents a message from Discord."
 
 msgid "Checks if two messages are equal."
-msgstr "Comprueba si dos mensajes son iguales."
+msgstr "Checks if two messages are equal."
 
 msgid "Checks if two messages are not equal."
-msgstr "Comprueba si dos mensajes no son iguales."
+msgstr "Checks if two messages are not equal."
 
 msgid "Returns the message's hash."
 msgstr "Returns the message's hash."
@@ -3015,7 +3015,7 @@ msgid "The presences intent is not enabled."
 msgstr "The presences intent is not enabled."
 
 msgid "Changes client's voice state in the guild."
-msgstr "Cambia el estado de voz del cliente en el gremio."
+msgstr "Changes client's voice state in the guild."
 
 msgid "Channel the client wants to join. Use ``None`` to disconnect."
 msgstr "Channel the client wants to join. Use ``None`` to disconnect."
@@ -3657,7 +3657,7 @@ msgid "You must have the :attr:`~Permissions.move_members` permission to use thi
 msgstr "You must have the :attr:`~Permissions.move_members` permission to use this."
 
 msgid "This raises the same exceptions as :meth:`edit`."
-msgstr "Esto lanza las mismas excepciones que :meth:`edit`."
+msgstr "This raises the same exceptions as :meth:`edit`."
 
 msgid "Can now pass ``None`` to kick a member from voice."
 msgstr "Can now pass ``None`` to kick a member from voice."
@@ -4674,7 +4674,7 @@ msgid "Edits the welcome screen."
 msgstr "Edits the welcome screen."
 
 msgid "Example"
-msgstr "Ejemplo"
+msgstr "Example"
 
 msgid "Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above."
 msgstr "Welcome channels can only accept custom emojis if :attr:`~Guild.premium_tier` is level 2 or above."
@@ -6783,7 +6783,7 @@ msgid "If this isn't a custom emoji then an empty string is returned"
 msgstr "If this isn't a custom emoji then an empty string is returned"
 
 msgid "Channels"
-msgstr "Canales"
+msgstr "Channels"
 
 msgid "Represents a Discord text channel."
 msgstr "Represents a Discord text channel."

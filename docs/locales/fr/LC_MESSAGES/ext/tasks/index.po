@@ -201,7 +201,7 @@ msgid "This operation obviously cannot be undone!"
 msgstr "Cette opération ne peut évidemment pas être annulée !"
 
 msgid "Removes exception types from being handled during the reconnect logic."
-msgstr "Ajoute les types d'exception à traiter pendant la logique de reconnexion."
+msgstr "Removes exception types from being handled during the reconnect logic."
 
 msgid "Whether all exceptions were successfully removed."
 msgstr "Si toutes les exceptions ont bien été supprimées."
@@ -210,7 +210,7 @@ msgid ":class:`bool`"
 msgstr ":class:`bool`"
 
 msgid "Fetches the internal task or ``None`` if there isn't one running."
-msgstr "Récupère la tâche interne ou ``None`` s'il n'y en a pas un."
+msgstr "Récupère la tâche interne ou ``None`` s'il n'y en a pas."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~\\_asyncio.Task\\`\\\\ \\\\\\[\\:py\\:obj\\:\\`None\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~\\_asyncio.Task\\`\\\\ \\\\\\[\\:py\\:obj\\:\\:\\`None\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
@@ -264,7 +264,7 @@ msgid "The exact times to run this loop at. Either a non-empty list or a single 
 msgstr "Les heures exactes auxquelles exécuter cette boucle. Vous devez passer soit une liste non vide, soit une seule valeur de :class:`datetime.time`. Les fuseaux horaires sont pris en charge. Si aucun fuseau horaire n'est spécifié, il est supposé que les heures représentent l'heure UTC."
 
 msgid "This cannot be used in conjunction with the relative time parameters."
-msgstr "Cela ne peut pas être utilisé en conjonction avec les paramètres de temps relatifs."
+msgstr "Ne peut pas être utilisé en conjonction avec les paramètres de temps relatifs."
 
 msgid "The number of loops to do, ``None`` if it should be an infinite loop."
 msgstr "Le nombre de boucles à faire, ``None`` si elle doit être une boucle infinie."

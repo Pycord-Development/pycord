@@ -39,7 +39,7 @@ msgid "just replace the following like so: ::"
 msgstr "just replace the following like so: ::"
 
 msgid "Raises"
-msgstr "Verursacht"
+msgstr "Raises"
 
 msgid "An invalid encoding type was specified."
 msgstr "An invalid encoding type was specified."

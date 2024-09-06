@@ -12,14 +12,14 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Table of Contents"
-msgstr "Содержания"
+msgstr "Table of Contents"
 
 msgid "API Reference"
-msgstr "Справочник по API"
+msgstr "API Reference"
 
 msgid "The following section outlines the API of Pycord."
-msgstr "Следующий раздел описывает API Pycord."
+msgstr "The following section outlines the API of Pycord."
 
 msgid "This module uses the Python logging module to log diagnostic and errors in an output independent way.  If the logging module is not configured, these logs will not be output anywhere.  See :ref:`logging_setup` for more information on how to set up and use the logging module with Pycord."
-msgstr "Этот модуль использует модуль logging для регистрации диагностических данных и ошибок независимым от вывода способом.  Если модуль протоколирования не настроен, эти журналы не будут выводиться никуда. Смотрите :ref:`logging_setup` для получения дополнительной информации о том, как настроить и использовать модуль logging в Pycord."
+msgstr "This module uses the Python logging module to log diagnostic and errors in an output independent way.  If the logging module is not configured, these logs will not be output anywhere.  See :ref:`logging_setup` for more information on how to set up and use the logging module with Pycord."
 

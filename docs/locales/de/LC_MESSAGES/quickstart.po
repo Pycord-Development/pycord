@@ -12,25 +12,25 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Quickstart"
-msgstr "Schnellstart"
+msgstr "Quickstart"
 
 msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
-msgstr "Diese Seite gibt eine kurze Einführung in die Bibliothek. Es wird davon ausgegangen, dass du die Bibliothek installiert hast. Falls nicht, schau dir den :ref:`Installieren`-Abschnitt an."
+msgstr "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
 
 msgid "A Minimal Bot"
-msgstr "Ein minimaler Bot"
+msgstr "A Minimal Bot"
 
 msgid "Let's make a bot that responds to a specific message and walk you through it."
-msgstr "Lass uns einen Bot erstellen, der auf eine bestimmte Nachricht antwortet und dich dabei begleiten."
+msgstr "Let's make a bot that responds to a specific message and walk you through it."
 
 msgid "It looks something like this:"
-msgstr "Es sieht in etwa so aus:"
+msgstr "It looks something like this:"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
-msgstr "Da dieses Beispiel den Nachrichteninhalts-Intent nutzt, wird der :attr:`Intents.message_content privilegierter Intents benötigt."
+msgstr "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
-msgstr "Lass uns diese Datei ``beispiel_bot.py`` nennen. Nenn die Datei nicht ``discord.py`` das dies mit der Bibliothek in Konflikt kommen wird."
+msgstr "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
 
 msgid "There's a lot going on here, so let's walk you through it step by step:"
 msgstr "There's a lot going on here, so let's walk you through it step by step:"
@@ -57,28 +57,28 @@ msgid "Finally, we run the bot with our login token. If you need help getting yo
 msgstr "Finally, we run the bot with our login token. If you need help getting your token or creating a bot, look in the :ref:`discord-intro` section."
 
 msgid "Now that we've made a bot, we have to *run* the bot. Luckily, this is simple since this is just a Python script, we can run it directly."
-msgstr "Jetzt, wo wir einen Bot erstellt haben, müssen wir diesen *starten*. Glücklicherweise ist dies einfach, da dies nur ein Python-Skript ist und wir es direkt starten können."
+msgstr "Now that we've made a bot, we have to *run* the bot. Luckily, this is simple since this is just a Python script, we can run it directly."
 
 msgid "On Windows:"
-msgstr "Unter Windows:"
+msgstr "On Windows:"
 
 msgid "On other systems:"
-msgstr "Unter anderen Systemen:"
+msgstr "On other systems:"
 
 msgid "Now you can try playing around with your basic bot."
-msgstr "Jetzt kannst du probieren, mit deinem einfachen Bot herumzuspielen."
+msgstr "Now you can try playing around with your basic bot."
 
 msgid "A Minimal Bot with Slash Commands"
-msgstr "Ein minimaler Bot mit Slash Commands"
+msgstr "A Minimal Bot with Slash Commands"
 
 msgid "As a continuation, let's create a bot that registers a simple slash command!"
-msgstr "Lass uns als Fortsetzung einen Bot erstellen, der einen einfachen Slash Command registriert!"
+msgstr "As a continuation, let's create a bot that registers a simple slash command!"
 
 msgid "Let's look at the differences compared to the previous example, step-by-step:"
 msgstr "Let's look at the differences compared to the previous example, step-by-step:"
 
 msgid "The first line remains unchanged."
-msgstr "Die erste Zeile bleibt unverändert."
+msgstr "The first line remains unchanged."
 
 msgid "Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports slash command creation and other features, while inheriting all the features of :class:`.Client`."
 msgstr "Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports slash command creation and other features, while inheriting all the features of :class:`.Client`."

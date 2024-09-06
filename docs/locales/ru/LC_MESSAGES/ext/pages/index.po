@@ -33,7 +33,7 @@ msgid "Allows for directly referencing and modifying each page as a class instan
 msgstr "Allows for directly referencing and modifying each page as a class instance."
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "The content of the page. Corresponds to the :class:`discord.Message.content` attribute."
 msgstr "The content of the page. Corresponds to the :class:`discord.Message.content` attribute."
@@ -60,7 +60,7 @@ msgid "Updates :class:`discord.File` objects so that they can be sent multiple t
 msgstr "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
@@ -129,7 +129,7 @@ msgid "The page group select menu associated with this paginator."
 msgstr "The page group select menu associated with this paginator."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid "Optional[List[:class:`PaginatorMenu`]]"
 msgstr "Optional[List[:class:`PaginatorMenu`]]"
@@ -228,7 +228,7 @@ msgid "The interaction to use when editing the message. If not provided, the mes
 msgstr "The interaction to use when editing the message. If not provided, the message will be edited using the paginator's stored :attr:`message` attribute instead."
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "The message associated with the paginator."
 msgstr "The message associated with the paginator."
@@ -333,7 +333,7 @@ msgid "The item to add to the view."
 msgstr "The item to add to the view."
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "An :class:`Item` was not passed."
 msgstr "An :class:`Item` was not passed."
