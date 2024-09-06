@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2024-09-06 23:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,7 +72,7 @@ msgstr ""
 #: d414290a24964ae2827a233b80f9d820
 #: 2712df298b134b468aa30aa758768e1d
 #: ecc99c5f64b747e49d92d73c86da310a
-#: a4305c757d594d6f932e4154fc97ffcb
+#: ecc99c5f64b747e49d92d73c86da310a
 msgid "Parameters"
 msgstr ""
 
@@ -654,11 +654,6 @@ msgstr ""
 #: ../../../discord/ext/bridge/context.py:docstring of discord.ext.bridge.context.BridgeExtContext.delete:9
 #: bfea474cbf854303b371c49f389e86a6
 msgid "The reason for deleting the message. Shows up on the audit log."
-msgstr ""
-
-#: ../../ext/bridge/api.rst:159
-#: c7b8ca67d26945509519ac95d27a55dc
-msgid "Alias of :data:`typing.Union` [ :class:`.BridgeExtContext`, :class:`.BridgeApplicationContext` ] for typing convenience."
 msgstr ""
 
 #: ../../ext/bridge/api.rst:162

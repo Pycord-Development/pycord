@@ -120,7 +120,7 @@ msgid "If False, None is returned and the function does not block."
 msgstr "If False, None is returned and the function does not block."
 
 msgid "Raises"
-msgstr "Verursacht"
+msgstr "Raises"
 
 msgid "Already playing audio or not connected."
 msgstr "Already playing audio or not connected."

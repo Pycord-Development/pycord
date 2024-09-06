@@ -15,7 +15,7 @@ msgid "Client Objects"
 msgstr "Client Objects"
 
 msgid "Bots"
-msgstr "机器人"
+msgstr "Bots"
 
 msgid "Represents a discord bot."
 msgstr "Represents a discord bot."
@@ -108,7 +108,7 @@ msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
 
 msgid "Example"
-msgstr "示例"
+msgstr "Example"
 
 msgid "Parameters"
 msgstr "Parameters"
