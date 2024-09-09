@@ -278,7 +278,7 @@ class ConnectionState:
         self._emojis: dict[int, Emoji] = {}
         self._stickers: dict[int, GuildSticker] = {}
         self._guilds: dict[int, Guild] = {}
-        self._polls: dict[int, Guild] = {}
+        self._polls: dict[int, Poll] = {}
         if views:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)

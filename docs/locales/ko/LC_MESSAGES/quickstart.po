@@ -12,31 +12,31 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Quickstart"
-msgstr "빠른 시작"
+msgstr "Quickstart"
 
 msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
-msgstr "이 페이지는 라이브러리에 대해 짧게 소개합니다. 라이브러리가 설치돼 있다는 전제하에 진행됩니다. 만약 설치돼 있지 않다면 :ref:`installing` 항목을 확인해 주세요."
+msgstr "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
 
 msgid "A Minimal Bot"
-msgstr "최소 기능의 봇"
+msgstr "A Minimal Bot"
 
 msgid "Let's make a bot that responds to a specific message and walk you through it."
-msgstr "특정 메시지에 응답하는 봇을 만들어 봅시다. 차근차근 알려 드리겠습니다."
+msgstr "Let's make a bot that responds to a specific message and walk you through it."
 
 msgid "It looks something like this:"
-msgstr "결과는 대강 다음과 같습니다."
+msgstr "It looks something like this:"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
-msgstr "이 예시는 메시지 콘텐츠를 활용하기 때문에 :attr:`Intents.message_content` 권한이 부여된 인텐트가 필요합니다."
+msgstr "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
-msgstr "이 파일의 이름을 ``example_bot.py``라고 하겠습니다. 파일 이름은 라이브러리와 충돌할 수 있으니 ``discord.py``로 짓지 마세요."
+msgstr "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
 
 msgid "There's a lot going on here, so let's walk you through it step by step:"
-msgstr "많은 일이 일어나고 있으니 하나하나씩 설명해 드리겠습니다."
+msgstr "There's a lot going on here, so let's walk you through it step by step:"
 
 msgid "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
-msgstr "첫째 줄에서는 단순히 라이브러리를 불러옵니다. `ModuleNotFoundError`나 `ImportError`가 발생한다면 :ref:`installing` 항목에서 제대로 설치해 주세요."
+msgstr "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
 
 msgid "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
 msgstr "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."

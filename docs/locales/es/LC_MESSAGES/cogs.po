@@ -15,56 +15,56 @@ msgid "Cogs"
 msgstr "Cogs"
 
 msgid "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
-msgstr "Llega un punto en el desarrollo de tu bot cuando quieres organizar una colección de comandos, oyentes y algún estado en una clase. Los cogs te permiten hacer exactamente eso."
+msgstr "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
 
 msgid "The gist:"
-msgstr "El gist:"
+msgstr "The gist:"
 
 msgid "Each cog is a Python class that subclasses :class:`.Cog`."
-msgstr "Cada cog es una clase de Python que hereda de :class:`.Cog`."
+msgstr "Each cog is a Python class that subclasses :class:`.Cog`."
 
 msgid "Every command is marked with the :func:`discord.command` decorator or the corresponding shortcut command decorator."
-msgstr "Cada comando está marcado con el decorador :func:`discord.command` o el decorador de comandos atajo correspondiente."
+msgstr "Every command is marked with the :func:`discord.command` decorator or the corresponding shortcut command decorator."
 
 msgid "Every listener is marked with the :meth:`.Cog.listener` decorator."
-msgstr "Cada oyente está marcado con el decorador :meth:`.Cog.listener`."
+msgstr "Every listener is marked with the :meth:`.Cog.listener` decorator."
 
 msgid "Cogs are then registered with the :meth:`.Bot.add_cog` call."
-msgstr "Los cogs se registran con la llamada :meth:`.Bot.add_cog`."
+msgstr "Cogs are then registered with the :meth:`.Bot.add_cog` call."
 
 msgid "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
-msgstr "Los cogs se eliminan con la llamada :meth:`.Bot.remove_cog`."
+msgstr "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
 
 msgid "Quick Example"
-msgstr "Ejemplo rápido"
+msgstr "Quick Example"
 
 msgid "This example cog defines a ``Greetings`` category for your commands, with a single slash command named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
-msgstr "Este ejemplo de cog define una categoría ``Greetings`` para tus comandos, con un solo comando de barra llamado ``hello`` así como un oyente para escuchar un :ref:`Event <discord-api-events>`."
+msgstr "This example cog defines a ``Greetings`` category for your commands, with a single slash command named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
 
 msgid "A couple of technical notes to take into consideration:"
-msgstr "Un par de notas técnicas a tener en cuenta:"
+msgstr "A couple of technical notes to take into consideration:"
 
 msgid "All listeners must be explicitly marked via decorator, :meth:`~.Cog.listener`."
-msgstr "Todos los oyentes deben marcarse explícitamente a través de un decorador, :meth:`~.Cog.listener`."
+msgstr "All listeners must be explicitly marked via decorator, :meth:`~.Cog.listener`."
 
 msgid "The name of the cog is automatically derived from the class name but can be overridden."
-msgstr "El nombre del cog se deriva automáticamente del nombre de la clase pero se puede sobreescribir."
+msgstr "The name of the cog is automatically derived from the class name but can be overridden."
 
 msgid "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
-msgstr "Ahora todos los comandos deben tener un parámetro ``self`` para permitir el uso de atributos de la instancia que pueden ser usados para mantener el estado."
+msgstr "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
 
 msgid "Cog Registration"
-msgstr "Registro de cogs"
+msgstr "Cog Registration"
 
 msgid "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.Bot.add_cog` method."
-msgstr "Una vez que hayas definido tus cogs, necesitas decirle al bot que registre los cogs a usar. Hacemos esto mediante el método :meth:`~.Bot.add_cog`."
+msgstr "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.Bot.add_cog` method."
 
 msgid "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
-msgstr "Esto vincula el cog al bot, añadiendo todos los comandos y oyentes al bot automáticamente."
+msgstr "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
 
 msgid "Using Cogs"
-msgstr "Uso de cogs"
+msgstr "Using Cogs"
 
 msgid "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
-msgstr "Del mismo modo que eliminamos un cog por su nombre, también podemos recuperarlo por su nombre. Esto nos permite usar un cog como un protocolo de comunicación entre comandos para compartir datos. Por ejemplo:"
+msgstr "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
 

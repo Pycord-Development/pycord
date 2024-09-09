@@ -21,10 +21,10 @@ msgid "Using the prefixed command version (which uses the ``ext.commands`` exten
 msgstr "Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge commands in guilds requires :attr:`Intents.message_context` to be enabled."
 
 msgid "Bots"
-msgstr "机器人"
+msgstr "Bots"
 
 msgid "Bot"
-msgstr "机器人"
+msgstr "Bot"
 
 msgid "Represents a discord bot, with support for cross-compatibility between command types."
 msgstr "Represents a discord bot, with support for cross-compatibility between command types."
@@ -249,7 +249,7 @@ msgid "The new description of the mapped command."
 msgstr "The new description of the mapped command."
 
 msgid "Example"
-msgstr "示例"
+msgstr "Example"
 
 msgid "Prefixed commands will not be affected, but slash commands will appear as:"
 msgstr "Prefixed commands will not be affected, but slash commands will appear as:"

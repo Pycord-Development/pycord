@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2024-09-06 23:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: ../../ext/bridge/api.rst:4 6fa316d9035a4819abf06d5ae0850304
 msgid "API Reference"
@@ -63,11 +63,11 @@ msgstr ""
 #: 3cf8dd9f30944cd5ada56237da8290df 3e6ba5715e114d6fae10fa8ce19898f4
 #: 485704f10e284a189c55eacd55ea3968 530632fafabb426d8c56d3caece3f7b2
 #: 5492abf2718b4206b9d9d7d5f287fca0 864d918f2bc34eba95e43108295e2471
-#: 95d1ec3d0f144201a711952e040146be a4305c757d594d6f932e4154fc97ffcb
-#: bb06477aff3d4ac398c2b90dfc77b732 be224dfe5e9f4390b28f0c12baedd70e
-#: c4851b106cef42399e6a64f61c78fd3e d414290a24964ae2827a233b80f9d820
-#: daf51d42250a4b68a63ce4a569ff39d8 ecc99c5f64b747e49d92d73c86da310a
-#: fcee5fb1439849cb91efe93d9ca99a9e fe14b112db024067910f4c9edd3a2966
+#: 95d1ec3d0f144201a711952e040146be bb06477aff3d4ac398c2b90dfc77b732
+#: be224dfe5e9f4390b28f0c12baedd70e c4851b106cef42399e6a64f61c78fd3e
+#: d414290a24964ae2827a233b80f9d820 daf51d42250a4b68a63ce4a569ff39d8
+#: ecc99c5f64b747e49d92d73c86da310a fcee5fb1439849cb91efe93d9ca99a9e
+#: fe14b112db024067910f4c9edd3a2966
 msgid "Parameters"
 msgstr ""
 
@@ -722,12 +722,6 @@ msgstr ""
 msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr ""
 
-#: ../../ext/bridge/api.rst:159 c7b8ca67d26945509519ac95d27a55dc
-msgid ""
-"Alias of :data:`typing.Union` [ :class:`.BridgeExtContext`, "
-":class:`.BridgeApplicationContext` ] for typing convenience."
-msgstr ""
-
 #: ../../ext/bridge/api.rst:162 be07208f849b4f75afd5cb572c0a4830
 msgid "Option"
 msgstr ""
@@ -779,4 +773,10 @@ msgstr ""
 #: discord.ext.bridge.core.BridgeOption.convert:19 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 msgstr ""
+
+#~ msgid ""
+#~ "Alias of :data:`typing.Union` [ "
+#~ ":class:`.BridgeExtContext`, :class:`.BridgeApplicationContext`"
+#~ " ] for typing convenience."
+#~ msgstr ""
 

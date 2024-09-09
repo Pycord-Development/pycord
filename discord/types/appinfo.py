@@ -59,3 +59,8 @@ class PartialAppInfo(BaseAppInfo):
     rpc_origins: NotRequired[list[str]]
     cover_image: NotRequired[str]
     flags: NotRequired[int]
+
+
+class AppInstallParams(TypedDict):
+    scopes: list[str]
+    permissions: str
