@@ -48,13 +48,13 @@ msgid "The ID of the object."
 msgstr "The ID of the object."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "Returns the snowflake's creation time in UTC."
 msgstr "Returns the snowflake's creation time in UTC."
@@ -132,7 +132,7 @@ msgid "Returns the inverse of a flag."
 msgstr "Returns the inverse of a flag."
 
 msgid "Return the flag's hash."
-msgstr "Возвращает хеш флага."
+msgstr "Return the flag's hash."
 
 msgid "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs."
 msgstr "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs."
@@ -144,7 +144,7 @@ msgid "A factory method that creates a :class:`Intents` with everything enabled.
 msgstr "A factory method that creates a :class:`Intents` with everything enabled."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.flags.Intents\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.flags.Intents\\``"
@@ -879,7 +879,7 @@ msgid "Whether replying to the referenced message should raise :class:`HTTPExcep
 msgstr "Whether replying to the referenced message should raise :class:`HTTPException` if the message no longer exists or Discord could not fetch the message.  .. versionadded:: 1.7"
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "A reference to the message."
 msgstr "A reference to the message."
@@ -966,7 +966,7 @@ msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr "The reason for deleting the message. Shows up on the audit log."
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "You do not have proper permissions to delete the message."
 msgstr "You do not have proper permissions to delete the message."

@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Webhook Support"
-msgstr "Поддержка вебхуков"
+msgstr "Webhook Support"
 
 msgid "Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class."
 msgstr "Pycord offers support for creating, editing, and executing webhooks through the :class:`Webhook` class."
@@ -51,7 +51,7 @@ msgid "The webhook's ID"
 msgstr "The webhook's ID"
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
@@ -99,7 +99,7 @@ msgid "Optional[:class:`PartialWebhookChannel`]"
 msgstr "Optional[:class:`PartialWebhookChannel`]"
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "Returns the webhook's url."
 msgstr "Returns the webhook's url."
@@ -126,13 +126,13 @@ msgid "The bot authentication token for authenticated requests involving the web
 msgstr "The bot authentication token for authenticated requests involving the webhook."
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "A partial :class:`Webhook`. A partial webhook is just a webhook object with an ID and a token."
 msgstr "A partial :class:`Webhook`. A partial webhook is just a webhook object with an ID and a token."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid ":class:`Webhook`"
 msgstr ":class:`Webhook`"
@@ -144,7 +144,7 @@ msgid "The URL of the webhook."
 msgstr "The URL of the webhook."
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "The URL is invalid."
 msgstr "The URL is invalid."

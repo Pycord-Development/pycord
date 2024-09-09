@@ -12,110 +12,110 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Creating a Bot Account"
-msgstr "Создание учётной записи бота"
+msgstr "Creating a Bot Account"
 
 msgid "In order to work with the library and the Discord API in general, we must first create a Discord Bot account."
-msgstr "Для того чтобы работать с библиотекой и Discord API в целом, мы должны сначала создать учетную запись бота Discord."
+msgstr "In order to work with the library and the Discord API in general, we must first create a Discord Bot account."
 
 msgid "Creating a Bot account is a pretty straightforward process."
-msgstr "Создание учетной записи бота — это довольно простой процесс."
+msgstr "Creating a Bot account is a pretty straightforward process."
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
-msgstr "Убедитесь, что вы вошли на сайте `Discord <https://discord.com>`_."
+msgstr "Make sure you're logged on to the `Discord website <https://discord.com>`_."
 
 msgid "Navigate to the `application page <https://discord.com/developers/applications>`_"
-msgstr "Перейдите на `страницу приложений <https://discord.com/developers/applications>`_"
+msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_"
 
 msgid "Click on the \"New Application\" button."
-msgstr "Нажмите на кнопку \"New Application\"."
+msgstr "Click on the \"New Application\" button."
 
 msgid "The new application button."
-msgstr "Кнопка нового приложения."
+msgstr "The new application button."
 
 msgid "Give the application a name and click \"Create\"."
-msgstr "Дайте приложению имя и нажмите \"Создать\"."
+msgstr "Give the application a name and click \"Create\"."
 
 msgid "The new application form filled in."
-msgstr "Заполненная форма по созданию нового приложения."
+msgstr "The new application form filled in."
 
 msgid "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
-msgstr "Создайте бот пользователя, перейдя на вкладку \"Bot\" и нажав \"Add Bot\"."
+msgstr "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
 
 msgid "Click \"Yes, do it!\" to continue."
-msgstr "Нажмите \"Yes, do it!\", чтобы продолжить."
+msgstr "Click \"Yes, do it!\" to continue."
 
 msgid "The Add Bot button."
-msgstr "Кнопка Добавить бота."
+msgstr "The Add Bot button."
 
 msgid "Make sure that **Public Bot** is ticked if you want others to invite your bot."
-msgstr "Убедитесь, что флажок **Public Bot** установлен, если вы хотите, чтобы другие могли приглашать вашего бота."
+msgstr "Make sure that **Public Bot** is ticked if you want others to invite your bot."
 
 msgid "You should also make sure that **Require OAuth2 Code Grant** is unchecked unless you are developing a service that needs it. If you're unsure, then **leave it unchecked**."
-msgstr "Вам также следует убедиться, что флажок **Require OAuth2 Code Grant** снят, если только вы не разрабатываете сервис, которому это необходимо. Если вы не уверены, то **оставьте этот флажок снятым**."
+msgstr "You should also make sure that **Require OAuth2 Code Grant** is unchecked unless you are developing a service that needs it. If you're unsure, then **leave it unchecked**."
 
 msgid "How the Bot User options should look like for most people."
-msgstr "Как должны выглядеть опции бот пользователя для большинства людей."
+msgstr "How the Bot User options should look like for most people."
 
 msgid "Copy the token using the \"Copy\" button."
-msgstr "Скопируйте токен с помощью кнопки \"Copy\"."
+msgstr "Copy the token using the \"Copy\" button."
 
 msgid "**This is not the Client Secret at the General Information page.**"
-msgstr "**Это не Client Secret на странице Общей Информации.**"
+msgstr "**This is not the Client Secret at the General Information page.**"
 
 msgid "It should be worth noting that this token is essentially your bot's password. You should **never** share this with someone else. In doing so, someone can log in to your bot and do malicious things, such as leaving servers, ban all members inside a server, or pinging everyone maliciously."
-msgstr "Стоит отметить, что этот токен - фактически пароль вашего бота. Вы **никогда** не должны передавать его кому-либо еще. Это может привести к тому, что кто-то сможет войти в вашего бота и совершить вредоносные действия, например, покинуть серверы, забанить всех участников на сервере или злонамеренно пинговать всех подряд."
+msgstr "It should be worth noting that this token is essentially your bot's password. You should **never** share this with someone else. In doing so, someone can log in to your bot and do malicious things, such as leaving servers, ban all members inside a server, or pinging everyone maliciously."
 
 msgid "The possibilities are endless, so **do not share this token.**"
-msgstr "Варианты развития событий безграничны, поэтому **не делитесь этим токеном.**"
+msgstr "The possibilities are endless, so **do not share this token.**"
 
 msgid "If you accidentally leaked your token, click the \"Regenerate\" button as soon as possible. This revokes your old token and re-generates a new one. Now you need to use the new token to login."
-msgstr "В случае случайной утечки токена как можно скорее нажмите кнопку \"Regenerate\". Это отменит ваш старый токен и сгенерирует новый. Теперь вам нужно использовать новый токен для входа в систему."
+msgstr "If you accidentally leaked your token, click the \"Regenerate\" button as soon as possible. This revokes your old token and re-generates a new one. Now you need to use the new token to login."
 
 msgid "And that's it. You now have a bot account and you can login with that token."
-msgstr "Вот и все. Теперь у вас есть учетная запись бота, и вы можете войти в систему с помощью этого токена."
+msgstr "And that's it. You now have a bot account and you can login with that token."
 
 msgid "Inviting Your Bot"
-msgstr "Приглашение Вашего Бота"
+msgstr "Inviting Your Bot"
 
 msgid "So you've made a Bot User but it's not actually in any server."
-msgstr "Итак, вы создали бот пользователя, но на самом деле его нет ни на одном сервере."
+msgstr "So you've made a Bot User but it's not actually in any server."
 
 msgid "If you want to invite your bot you must create an invite URL for it."
-msgstr "Если вы хотите пригласить вашего бота, вы должны создать ссылку-приглашение для него."
+msgstr "If you want to invite your bot you must create an invite URL for it."
 
 msgid "Click on your bot's page."
-msgstr "Нажмите на страницу вашего бота."
+msgstr "Click on your bot's page."
 
 msgid "Expand the \"OAuth2\" tab and click on \"URL Generator\"."
-msgstr "Раскройте вкладку \"OAuth2\" и нажмите на \"URL Generator\"."
+msgstr "Expand the \"OAuth2\" tab and click on \"URL Generator\"."
 
 msgid "How the OAuth2 tab should look like."
-msgstr "Как должна выглядеть вкладка OAuth2."
+msgstr "How the OAuth2 tab should look like."
 
 msgid "Tick the \"bot\" and \"applications.commands\" checkboxes under \"scopes\"."
-msgstr "Установите флажки \"bot\" и \"applications.commands\" в разделе \"scopes\"."
+msgstr "Tick the \"bot\" and \"applications.commands\" checkboxes under \"scopes\"."
 
 msgid "The scopes checkbox with \"bot\" and \"applications.commands\" ticked."
-msgstr "Раздел scopes с установленными флажками \"bot\" и \"applications.commands\"."
+msgstr "The scopes checkbox with \"bot\" and \"applications.commands\" ticked."
 
 msgid "Tick the permissions required for your bot to function under \"Bot Permissions\"."
-msgstr "Установите разрешения, необходимые для работы вашего бота, в разделе \"Bot Permissions\"."
+msgstr "Tick the permissions required for your bot to function under \"Bot Permissions\"."
 
 msgid "Please be aware of the consequences of requiring your bot to have the \"Administrator\" permission."
-msgstr "Учтите последствия, если вы потребуете для вашего бота разрешение \"Администратор\"."
+msgstr "Please be aware of the consequences of requiring your bot to have the \"Administrator\" permission."
 
 msgid "Bot owners must have 2FA enabled for certain actions and permissions when added in servers that have Server-Wide 2FA enabled. Check the `2FA support page <https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_ for more information."
-msgstr "Владельцы ботов должны иметь включенную 2FA для определенных действий и разрешений при добавлении на серверы, где включена серверная 2FA. Более подробную информацию можно найти на `странице поддержки 2FA <https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_."
+msgstr "Bot owners must have 2FA enabled for certain actions and permissions when added in servers that have Server-Wide 2FA enabled. Check the `2FA support page <https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication>`_ for more information."
 
 msgid "The permission checkboxes with some permissions checked."
-msgstr "Флажки разрешений, в которых установлены некоторые разрешения."
+msgstr "The permission checkboxes with some permissions checked."
 
 msgid "Now the resulting URL can be used to add your bot to a server. Copy and paste the URL into your browser, choose a server to invite the bot to, and click \"Authorize\"."
-msgstr "Теперь полученный URL можно использовать для добавления бота на сервер. Скопируйте и вставьте URL в браузер, выберите сервер, на который хотите пригласить бота, и нажмите \"Authorize\"."
+msgstr "Now the resulting URL can be used to add your bot to a server. Copy and paste the URL into your browser, choose a server to invite the bot to, and click \"Authorize\"."
 
 msgid "The person adding the bot needs \"Manage Server\" permissions to do so."
-msgstr "Человеку, добавляющему бота, нужны права \"Управление сервером\"."
+msgstr "The person adding the bot needs \"Manage Server\" permissions to do so."
 
 msgid "If you want to generate this URL dynamically at run-time inside your bot and using the :class:`discord.Permissions` interface, you can use :func:`discord.utils.oauth_url`."
-msgstr "Если вы хотите генерировать этот URL динамически во время выполнения внутри вашего бота и используя интерфейс :class:`discord.Permissions`, вы можете использовать :func:`discord.utils.oauth_url`."
+msgstr "If you want to generate this URL dynamically at run-time inside your bot and using the :class:`discord.Permissions` interface, you can use :func:`discord.utils.oauth_url`."
 

@@ -15,92 +15,92 @@ msgid "Sinks"
 msgstr "Sinks"
 
 msgid "Core"
-msgstr "Ядро"
+msgstr "Core"
 
 msgid "Filters for :class:`~.Sink`"
-msgstr "Фильтры для :class:`~.Sink`"
+msgstr "Filters for :class:`~.Sink`"
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "Container of all Filters."
-msgstr "Контейнер всех Фильтров."
+msgstr "Container of all Filters."
 
 msgid "A sink \"stores\" recorded audio data."
-msgstr "Sink \"хранит\" записанные аудиоданные."
+msgstr "A sink \"stores\" recorded audio data."
 
 msgid "Can be subclassed for extra customizablilty."
-msgstr "Может быть подклассом для дополнительной настройки."
+msgstr "Can be subclassed for extra customizablilty."
 
 msgid "It is recommended you use the officially provided sink classes, such as :class:`~discord.sinks.WaveSink`."
-msgstr "Рекомендуется использовать официально предоставленные классы Sink, такие как :class:`~discord.sinks.WaveSink`."
+msgstr "It is recommended you use the officially provided sink classes, such as :class:`~discord.sinks.WaveSink`."
 
 msgid "just replace the following like so: ::"
-msgstr "просто замените это следующим образом: ::"
+msgstr "just replace the following like so: ::"
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "An invalid encoding type was specified."
-msgstr "Был указан неверный тип кодировки."
+msgstr "An invalid encoding type was specified."
 
 msgid "Audio may only be formatted after recording is finished."
-msgstr "Форматировать аудио можно только после завершения записи."
+msgstr "Audio may only be formatted after recording is finished."
 
 msgid "Gets all audio files."
-msgstr "Получает все аудиофайлы."
+msgstr "Gets all audio files."
 
 msgid "Gets the audio file(s) of one specific user."
-msgstr "Получает аудиофайл(ы) одного конкретного пользователя."
+msgstr "Gets the audio file(s) of one specific user."
 
 msgid "Handles data that's been completely decrypted and decoded and is ready to be saved to file."
-msgstr "Работает с данными, которые были полностью расшифрованы и декодированы и готовы к сохранению в файл."
+msgstr "Handles data that's been completely decrypted and decoded and is ready to be saved to file."
 
 msgid "Writes audio data."
-msgstr "Запись аудиоданных."
+msgstr "Writes audio data."
 
 msgid "The AudioData is already finished writing."
-msgstr "Запись AudioData уже завершена."
+msgstr "The AudioData is already finished writing."
 
 msgid "Finishes and cleans up the audio data."
-msgstr "Завершает и очищает аудиоданные."
+msgstr "Finishes and cleans up the audio data."
 
 msgid "Called when audio data is formatted."
-msgstr "Вызывается при форматировании аудиоданных."
+msgstr "Called when audio data is formatted."
 
 msgid "The AudioData is still writing."
-msgstr "AudioData продолжает писать."
+msgstr "The AudioData is still writing."
 
 msgid "Handles raw data from Discord so that it can be decrypted and decoded to be used."
-msgstr "Обрабатывает необработанные данные из Discord, чтобы их можно было расшифровать и использовать."
+msgstr "Handles raw data from Discord so that it can be decrypted and decoded to be used."
 
 msgid "Sink Classes"
-msgstr "Классы Sink"
+msgstr "Sink Classes"
 
 msgid "A special sink for .wav(wave) files."
-msgstr "Специальный Sink для файлов .wav (wave)."
+msgstr "A special sink for .wav(wave) files."
 
 msgid "Formats the recorded audio."
-msgstr "Форматирует записанный звук."
+msgstr "Formats the recorded audio."
 
 msgid "Formatting the audio failed."
-msgstr "Форматирование звука не удалось."
+msgstr "Formatting the audio failed."
 
 msgid "A special sink for .mp3 files."
-msgstr "Специальный Sink для файлов .mp3."
+msgstr "A special sink for .mp3 files."
 
 msgid "A special sink for .mp4 files."
-msgstr "Специальный Sink для файлов .mp4."
+msgstr "A special sink for .mp4 files."
 
 msgid "A special sink for .m4a files."
-msgstr "Специальный Sink для файлов .m4a."
+msgstr "A special sink for .m4a files."
 
 msgid "A special sink for .mkv files."
-msgstr "Специальный Sink для файлов .mkv."
+msgstr "A special sink for .mkv files."
 
 msgid "A special sink for .mka files."
-msgstr "Специальный Sink для файлов .mka."
+msgstr "A special sink for .mka files."
 
 msgid "A special sink for .ogg files."
-msgstr "Специальный Sink для файлов .ogg."
+msgstr "A special sink for .ogg files."
 

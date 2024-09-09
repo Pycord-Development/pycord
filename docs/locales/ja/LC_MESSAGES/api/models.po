@@ -555,7 +555,7 @@ msgid "Returns the user's name with discriminator or global_name."
 msgstr "Returns the user's name with discriminator or global_name."
 
 msgid "The user's username."
-msgstr "ユーザーのユーザー名"
+msgstr "The user's username."
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -570,7 +570,7 @@ msgid "If the user has migrated to the new username system, this will always be 
 msgstr "If the user has migrated to the new username system, this will always be 0."
 
 msgid "The user's global name."
-msgstr "ユーザーのグローバル名。"
+msgstr "The user's global name."
 
 msgid "Specifies if the user is a bot account."
 msgstr "Specifies if the user is a bot account."
@@ -1727,8 +1727,8 @@ msgstr "The guild's notification settings."
 msgid ":class:`NotificationLevel`"
 msgstr ":class:`NotificationLevel`"
 
-msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_."
-msgstr "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_."
+msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_."
+msgstr "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_."
 
 msgid "List[:class:`str`]"
 msgstr "List[:class:`str`]"

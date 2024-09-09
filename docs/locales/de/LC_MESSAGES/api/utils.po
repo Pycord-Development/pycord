@@ -93,7 +93,7 @@ msgid "The object found or the default value."
 msgstr "The object found or the default value."
 
 msgid "Raises"
-msgstr "Verursacht"
+msgstr "Raises"
 
 msgid "The object is missing a ``get_`` or ``fetch_`` method"
 msgstr "The object is missing a ``get_`` or ``fetch_`` method"

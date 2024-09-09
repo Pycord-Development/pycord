@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Event Reference"
-msgstr "Übersicht der Events"
+msgstr "Event Reference"
 
 msgid "This section outlines the different types of events listened by :class:`Client`."
-msgstr "Dieser Bereich beschreibt die verschiedenen Arten von Ereignissen in :class:`Client`."
+msgstr "This section outlines the different types of events listened by :class:`Client`."
 
 msgid "There are 3 ways to register an event, the first way is through the use of :meth:`Client.event`. The second way is through subclassing :class:`Client` and overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`. For example:"
 msgstr "There are 3 ways to register an event, the first way is through the use of :meth:`Client.event`. The second way is through subclassing :class:`Client` and overriding the specific events. The third way is through the use of :meth:`Client.listen`, which can be used to assign multiple event handlers instead of only one like in :meth:`Client.event`. For example:"
@@ -27,49 +27,49 @@ msgid "All the events must be a |coroutine_link|_. If they aren't, then you migh
 msgstr "All the events must be a |coroutine_link|_. If they aren't, then you might get unexpected errors. In order to turn a function into a coroutine they must be ``async def`` functions."
 
 msgid "Application Commands"
-msgstr "Anwendungsbefehle"
+msgstr "Application Commands"
 
 msgid "Called when an application command is received."
-msgstr "Ausgelöst, wenn ein Anwendungsbefehl empfangen wird."
+msgstr "Called when an application command is received."
 
 msgid "Parameters"
-msgstr "Parameter"
+msgstr "Parameters"
 
 msgid "The ApplicationContext associated to the command being received."
-msgstr "Der ApplicationContext verbunden mit dem Befehl, der empfangen wurde."
+msgstr "The ApplicationContext associated to the command being received."
 
 msgid "Called when an application command is completed, after any checks have finished."
-msgstr "Aufgerufen, wenn ein Anwendungsbefehl vollendet ist, nachdem alle Überprüfungen fertig sind."
+msgstr "Called when an application command is completed, after any checks have finished."
 
 msgid "The ApplicationContext associated to the command that was completed."
-msgstr "Der ApplicationContext verbunden mit dem Befehl, der vollendet wurde."
+msgstr "The ApplicationContext associated to the command that was completed."
 
 msgid "Called when an application command has an error."
-msgstr "Ausgelöst, wenn ein Anwendungsbefehl einen Fehler hat."
+msgstr "Called when an application command has an error."
 
 msgid "The ApplicationContext associated to the command that has an error."
-msgstr "Der ApplicationContext verbunden mit dem Befehl, der einen Fehler hat."
+msgstr "The ApplicationContext associated to the command that has an error."
 
 msgid "The DiscordException associated to the error."
-msgstr "Die DiscordException verbunden mit dem Fehler."
+msgstr "The DiscordException associated to the error."
 
 msgid "Called when an application command was not found in the bot's internal cache."
-msgstr "Aufgerufen, wenn ein Anwendungsbefehl nicht im bot internen Zwischenspeicher gefunden werden konnte."
+msgstr "Called when an application command was not found in the bot's internal cache."
 
 msgid "The interaction associated to the unknown command."
-msgstr "Die Interaktion verbunden mit dem unbekannten Befehl."
+msgstr "The interaction associated to the unknown command."
 
 msgid "Audit Logs"
-msgstr "Protokolle"
+msgstr "Audit Logs"
 
 msgid "Called when an audit log entry is created."
-msgstr "Aufgerufen, wenn ein Eintrag im Protokoll erstellt wurde."
+msgstr "Called when an audit log entry is created."
 
 msgid "The bot must have :attr:`~Permissions.view_audit_log` to receive this, and :attr:`Intents.moderation` must be enabled."
-msgstr "Der Bot muss die Berechtigung :attr:`~Permissions.view_audit_log` haben, damit dieses empfangen werden kann und :attr:`Intents.moderation` muss aktiviert sein."
+msgstr "The bot must have :attr:`~Permissions.view_audit_log` to receive this, and :attr:`Intents.moderation` must be enabled."
 
 msgid "The audit log entry that was created."
-msgstr "Der Eintrag vom Protokoll, der erstellt wurde."
+msgstr "The audit log entry that was created."
 
 msgid "Called when an audit log entry is created. Unlike :func:`on_audit_log_entry`, this is called regardless of the state of the internal user cache."
 msgstr "Called when an audit log entry is created. Unlike :func:`on_audit_log_entry`, this is called regardless of the state of the internal user cache."

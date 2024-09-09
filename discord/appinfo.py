@@ -29,11 +29,13 @@ from typing import TYPE_CHECKING
 
 from . import utils
 from .asset import Asset
+from .permissions import Permissions
 
 if TYPE_CHECKING:
     from .guild import Guild
     from .state import ConnectionState
     from .types.appinfo import AppInfo as AppInfoPayload
+    from .types.appinfo import AppInstallParams as AppInstallParamsPayload
     from .types.appinfo import PartialAppInfo as PartialAppInfoPayload
     from .types.appinfo import Team as TeamPayload
     from .user import User
@@ -41,6 +43,7 @@ if TYPE_CHECKING:
 __all__ = (
     "AppInfo",
     "PartialAppInfo",
+    "AppInstallParams",
 )
 
 
@@ -70,11 +73,6 @@ class AppInfo:
         grant flow to join.
     rpc_origins: Optional[List[:class:`str`]]
         A list of RPC origin URLs, if RPC is enabled.
-    summary: :class:`str`
-        If this application is a game sold on Discord,
-        this field will be the summary field for the store page of its primary SKU.
-
-        .. versionadded:: 1.3
 
     verify_key: :class:`str`
         The hex encoded key for verification in interactions and the
@@ -110,6 +108,48 @@ class AppInfo:
         The application's privacy policy URL, if set.
 
         .. versionadded:: 2.0
+
+    approximate_guild_count: Optional[:class:`int`]
+        The approximate count of guilds to which the app has been added, if any.
+
+        .. versionadded:: 2.7
+
+    approximate_user_install_count: Optional[:class:`int`]
+        The approximate count of users who have installed the application, if any.
+
+        .. versionadded:: 2.7
+
+    redirect_uris: Optional[List[:class:`str`]]
+        The list of redirect URIs for the application, if set.
+
+        .. versionadded:: 2.7
+
+    interactions_endpoint_url: Optional[:class:`str`]
+        The interactions endpoint URL for the application, if set.
+
+        .. versionadded:: 2.7
+
+    role_connections_verification_url: Optional[:class:`str`]
+        The role connection verification URL for the application, if set.
+
+        .. versionadded:: 2.7
+
+    install_params: Optional[List[:class:`AppInstallParams`]]
+        The settings for the application's default in-app authorization link, if set.
+
+        .. versionadded:: 2.7
+
+    tags: Optional[List[:class:`str`]]
+        The list of tags describing the content and functionality of the app, if set.
+
+        Maximium of 5 tags.
+
+        .. versionadded:: 2.7
+
+    custom_install_url: Optional[:class:`str`]
+        The default custom authorization URL for the application, if set.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -122,7 +162,7 @@ class AppInfo:
         "bot_require_code_grant",
         "owner",
         "_icon",
-        "summary",
+        "_summary",
         "verify_key",
         "team",
         "guild_id",
@@ -131,6 +171,14 @@ class AppInfo:
         "_cover_image",
         "terms_of_service_url",
         "privacy_policy_url",
+        "approximate_guild_count",
+        "approximate_user_install_count",
+        "redirect_uris",
+        "interactions_endpoint_url",
+        "role_connections_verification_url",
+        "install_params",
+        "tags",
+        "custom_install_url",
     )
 
     def __init__(self, state: ConnectionState, data: AppInfoPayload):
@@ -149,7 +197,7 @@ class AppInfo:
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
 
-        self.summary: str = data["summary"]
+        self._summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
 
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
@@ -161,6 +209,24 @@ class AppInfo:
         self._cover_image: str | None = data.get("cover_image")
         self.terms_of_service_url: str | None = data.get("terms_of_service_url")
         self.privacy_policy_url: str | None = data.get("privacy_policy_url")
+        self.approximate_guild_count: int | None = data.get("approximate_guild_count")
+        self.approximate_user_install_count: int | None = data.get(
+            "approximate_user_install_count"
+        )
+        self.redirect_uris: list[str] | None = data.get("redirect_uris", [])
+        self.interactions_endpoint_url: str | None = data.get(
+            "interactions_endpoint_url"
+        )
+        self.role_connections_verification_url: str | None = data.get(
+            "role_connections_verification_url"
+        )
+
+        install_params = data.get("install_params")
+        self.install_params: AppInstallParams | None = (
+            AppInstallParams(install_params) if install_params else None
+        )
+        self.tags: list[str] | None = data.get("tags", [])
+        self.custom_install_url: str | None = data.get("custom_install_url")
 
     def __repr__(self) -> str:
         return (
@@ -194,6 +260,23 @@ class AppInfo:
         .. versionadded:: 1.3
         """
         return self._state._get_guild(self.guild_id)
+
+    @property
+    def summary(self) -> str | None:
+        """If this application is a game sold on Discord,
+        this field will be the summary field for the store page of its primary SKU.
+
+        It currently returns an empty string.
+
+        .. versionadded:: 1.3
+        .. deprecated:: 2.7
+        """
+        utils.warn_deprecated(
+            "summary",
+            "description",
+            reference="https://discord.com/developers/docs/resources/application#application-object-application-structure",
+        )
+        return self._summary
 
 
 class PartialAppInfo:
@@ -257,3 +340,23 @@ class PartialAppInfo:
         if self._icon is None:
             return None
         return Asset._from_icon(self._state, self.id, self._icon, path="app")
+
+
+class AppInstallParams:
+    """Represents the settings for the custom authorization URL of an application.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    scopes: List[:class:`str`]
+        The list of OAuth2 scopes for adding the application to a guild.
+    permissions: :class:`Permissions`
+        The permissions to request for the bot role in the guild.
+    """
+
+    __slots__ = ("scopes", "permissions")
+
+    def __init__(self, data: AppInstallParamsPayload) -> None:
+        self.scopes: list[str] = data.get("scopes", [])
+        self.permissions: Permissions = Permissions(int(data["permissions"]))

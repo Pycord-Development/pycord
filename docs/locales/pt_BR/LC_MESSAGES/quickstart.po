@@ -12,25 +12,25 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Quickstart"
-msgstr "Introdução"
+msgstr "Quickstart"
 
 msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
-msgstr "Esta página faz uma breve introdução à biblioteca. Ela presume que você tem a biblioteca instalada. Se você não a tem instalada, verifique a seção :ref:`installing`."
+msgstr "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
 
 msgid "A Minimal Bot"
-msgstr "Um Bot Simples"
+msgstr "A Minimal Bot"
 
 msgid "Let's make a bot that responds to a specific message and walk you through it."
 msgstr "Let's make a bot that responds to a specific message and walk you through it."
 
 msgid "It looks something like this:"
-msgstr "É algo como isto:"
+msgstr "It looks something like this:"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
 msgstr "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
-msgstr "Vamos nomear este arquivo como \"example_bot.py\". Certifique-se de não o nomear como \"discord.py\" já que ele vai entrar em conflito com a biblioteca."
+msgstr "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
 
 msgid "There's a lot going on here, so let's walk you through it step by step:"
 msgstr "There's a lot going on here, so let's walk you through it step by step:"
@@ -60,13 +60,13 @@ msgid "Now that we've made a bot, we have to *run* the bot. Luckily, this is sim
 msgstr "Now that we've made a bot, we have to *run* the bot. Luckily, this is simple since this is just a Python script, we can run it directly."
 
 msgid "On Windows:"
-msgstr "No Windows:"
+msgstr "On Windows:"
 
 msgid "On other systems:"
-msgstr "Em outros sistemas:"
+msgstr "On other systems:"
 
 msgid "Now you can try playing around with your basic bot."
-msgstr "Agora você pode tentar brincar com seu bot simples."
+msgstr "Now you can try playing around with your basic bot."
 
 msgid "A Minimal Bot with Slash Commands"
 msgstr "A Minimal Bot with Slash Commands"
@@ -78,7 +78,7 @@ msgid "Let's look at the differences compared to the previous example, step-by-s
 msgstr "Let's look at the differences compared to the previous example, step-by-step:"
 
 msgid "The first line remains unchanged."
-msgstr "A primeira linha permanece inalterada."
+msgstr "The first line remains unchanged."
 
 msgid "Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports slash command creation and other features, while inheriting all the features of :class:`.Client`."
 msgstr "Next, we create an instance of :class:`.Bot`. This is different from :class:`.Client`, as it supports slash command creation and other features, while inheriting all the features of :class:`.Client`."
@@ -90,7 +90,7 @@ msgid "Afterwards, we trigger a response to the slash command in the form of a t
 msgstr "Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that all slash commands must have some form of response, otherwise they will fail."
 
 msgid "Finally, we, once again, run the bot with our login token."
-msgstr "Finalmente, mais uma vez, nós executamos o bot com nosso token de login."
+msgstr "Finally, we, once again, run the bot with our login token."
 
 msgid "Congratulations! Now you have created your first slash command!"
 msgstr "Congratulations! Now you have created your first slash command!"

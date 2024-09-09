@@ -12,25 +12,25 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "Миграция на v2.0"
+msgstr "Migrating to v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "В версии 2.0 появились новые функции Discord и были удалены некоторые старые."
+msgstr "v2.0 introduced new Discord features and deprecated some old ones."
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
-msgstr "Часть редизайна включает в себя изменение команд и компонентов приложения. Эти изменения включают в себя новый класс :class:`Bot`, :class:`ui.View` и новый класс :class:`ApplicationContext`. Если вы заинтересованы в их создании, ознакомьтесь с нашим :resource:`guide <guide>`."
+msgstr "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
 
 msgid "Python Version Change"
-msgstr "Изменение версии Python"
+msgstr "Python Version Change"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
-msgstr "Чтобы упростить разработку, а также для того, чтобы наши зависимости могли обновляться для использования 3.8 и выше, библиотеке пришлось убрать поддержку версий Python ниже 3.7, что по сути означает, что **поддержка Python 3.7 и ниже была прекращена**."
+msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.8 or higher, the library had to remove support for Python versions lower than 3.7, which essentially means that **support for Python 3.7 and below has been dropped**."
 
 msgid "Major Model Changes"
-msgstr "Большие изменения в моделях"
+msgstr "Major Model Changes"
 
 msgid "Below are major changes that have happened in v2.0:"
-msgstr "Ниже приведены основные изменения, произошедшие в 2.0:"
+msgstr "Below are major changes that have happened in v2.0:"
 
 msgid "Dropped User Accounts Support"
 msgstr "Dropped User Accounts Support"
@@ -63,7 +63,7 @@ msgid "``Client.fetch_user_profile``"
 msgstr "``Client.fetch_user_profile``"
 
 msgid "``Message.call`` and ``ack``"
-msgstr "``Message.call`` и ``ack``"
+msgstr "``Message.call`` and ``ack``"
 
 msgid "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
 msgstr "``ClientUser.email``, ``premium``, ``premium_type``, ``get_relationship``, ``relationships``, ``friends``, ``blocked``, ``create_group``, ``edit_settings``"
@@ -108,10 +108,10 @@ msgid ":attr:`User.avatar` returns ``None`` if the avatar is not set and is inst
 msgstr ":attr:`User.avatar` returns ``None`` if the avatar is not set and is instead the default avatar; use :attr:`User.display_avatar` for pre-2.0 behavior."
 
 msgid "Before"
-msgstr "До"
+msgstr "Before"
 
 msgid "After"
-msgstr "После"
+msgstr "After"
 
 msgid "``str(user.avatar_url)``"
 msgstr "``str(user.avatar_url)``"

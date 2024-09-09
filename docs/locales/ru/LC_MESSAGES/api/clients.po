@@ -12,13 +12,13 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Client Objects"
-msgstr "Объекты клиента"
+msgstr "Client Objects"
 
 msgid "Bots"
-msgstr "Боты"
+msgstr "Bots"
 
 msgid "Represents a discord bot."
-msgstr "Представляет собой дискорд-бота."
+msgstr "Represents a discord bot."
 
 msgid "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
 msgstr "This class is a subclass of :class:`discord.Client` and as a result anything that you can do with a :class:`discord.Client` you can do with this bot."
@@ -30,7 +30,7 @@ msgid "The content prefixed into the default help message."
 msgstr "The content prefixed into the default help message."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -78,13 +78,13 @@ msgid "This decorator is overridden by :class:`discord.ext.commands.Bot`."
 msgstr "This decorator is overridden by :class:`discord.ext.commands.Bot`."
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid "Callable[..., :class:`ApplicationCommand`]"
 msgstr "Callable[..., :class:`ApplicationCommand`]"
@@ -102,7 +102,7 @@ msgid "This replaces any default handlers. Developers are encouraged to use :py:
 msgstr "This replaces any default handlers. Developers are encouraged to use :py:meth:`~discord.Client.listen` for adding additional handlers instead of :py:meth:`~discord.Client.event` unless default method replacement is intended."
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
@@ -111,7 +111,7 @@ msgid "Example"
 msgstr "Example"
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`Coro\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`Coro\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Coroutine\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
@@ -1545,7 +1545,7 @@ msgid "Returns a mapping of shard IDs to their respective info object."
 msgstr "Returns a mapping of shard IDs to their respective info object."
 
 msgid "Example: ::"
-msgstr "Пример: ::"
+msgstr "Example: ::"
 
 msgid "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."
 msgstr "Indicates what status to change to. If ``None``, then :attr:`Status.online` is used."

@@ -1,9 +1,9 @@
 -r _.txt
-pylint~=3.2.6
+pylint~=3.2.7
 pytest~=8.3.2
-pytest-asyncio~=0.23.3
+pytest-asyncio~=0.23.8
 # pytest-order~=1.0.1
-mypy~=1.11.1
+mypy~=1.11.2
 coverage~=7.6
 pre-commit==3.8.0
 codespell==2.3.0

@@ -12,25 +12,25 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Quickstart"
-msgstr "Quickstart"
+msgstr "Avvio Rapido"
 
 msgid "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
-msgstr "This page gives a brief introduction to the library. It assumes you have the library installed. If you don't, check the :ref:`installing` portion."
+msgstr "Questa pagina fornisce una breve introduzione alla libreria. Presume che tu abbia installato la libreria. Se è il caso, vedi la sezione `installazione` :ref:."
 
 msgid "A Minimal Bot"
-msgstr "A Minimal Bot"
+msgstr "Un bot semplice"
 
 msgid "Let's make a bot that responds to a specific message and walk you through it."
-msgstr "Let's make a bot that responds to a specific message and walk you through it."
+msgstr "Facciamo un bot che risponde a un messaggio specifico passo dopo passo."
 
 msgid "It looks something like this:"
-msgstr "It looks something like this:"
+msgstr "Assomiglia a questo:"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
-msgstr "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
+msgstr "Poiché questo esempio utilizza il contenuto dei messaggi, è necessario attivare l'intento privilegiato :attr:`Intents.message_content`."
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
-msgstr "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
+msgstr "Nominiamo questo file ``example_bot.py``. Assicurati di non nominarlo ```discord.py`` in quanto è in conflitto con la libreria."
 
 msgid "There's a lot going on here, so let's walk you through it step by step:"
 msgstr "There's a lot going on here, so let's walk you through it step by step:"
