@@ -49,7 +49,7 @@ from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
-from .emoji import AppEmoji, Emoji, GuildEmoji
+from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, InteractionType, ScheduledEventStatus, Status, try_enum
 from .flags import ApplicationFlags, Intents, MemberCacheFlags
 from .guild import Guild

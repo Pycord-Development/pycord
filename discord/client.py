@@ -2233,8 +2233,6 @@ class Client:
 
         Raises
         -------
-        Forbidden
-            You are not allowed to create emojis.
         HTTPException
             An error occurred creating an emoji.
 
