@@ -644,9 +644,9 @@ def handle_message_parameters(
         payload["embeds"] = [] if embed is None else [embed.to_dict()]
     if content is not MISSING:
         payload["content"] = str(content) if content is not None else None
-    attachments = []
+    _attachments = []
     if attachments is not MISSING:
-        attachments = [a.to_dict() for a in attachments]
+        _attachments = [a.to_dict() for a in attachments]
 
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
@@ -689,7 +689,7 @@ def handle_message_parameters(
                     "content_type": "application/octet-stream",
                 }
             )
-            attachments.append(
+            _attachments.append(
                 {
                     "id": index,
                     "filename": file.filename,
@@ -697,8 +697,8 @@ def handle_message_parameters(
                 }
             )
 
-    if attachments:
-        payload["attachments"] = attachments
+    if _attachments:
+        payload["attachments"] = _attachments
 
     if multipart_files:
         multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
