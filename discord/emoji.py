@@ -92,7 +92,7 @@ class BaseEmoji(_EmojiTag, AssetMixin):
 
     def __repr__(self) -> str:
         return (
-            "<BaseEmoji" f" id={self.id} name={self.name!r} animated={self.animated}>"
+            f"<BaseEmoji id={self.id} name={self.name!r} animated={self.animated}>"
         )
 
     def __eq__(self, other: Any) -> bool:
