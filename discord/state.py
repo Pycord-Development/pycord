@@ -275,7 +275,7 @@ class ConnectionState:
         # using __del__. Testing this for memory leaks led to no discernible leaks,
         # though more testing will have to be done.
         self._users: dict[int, User] = {}
-        self._emojis: dict[int, Emoji] = {}
+        self._emojis: dict[int, (GuildEmoji, AppEmoji)] = {}
         self._stickers: dict[int, GuildSticker] = {}
         self._guilds: dict[int, Guild] = {}
         self._polls: dict[int, Poll] = {}
@@ -1952,7 +1952,7 @@ class ConnectionState:
             return channel.guild.get_member(user_id)
         return self.get_user(user_id)
 
-    def get_reaction_emoji(self, data) -> Emoji | PartialEmoji:
+    def get_reaction_emoji(self, data) -> GuildEmoji | AppEmoji | PartialEmoji:
         emoji_id = utils._get_as_snowflake(data, "id")
 
         if not emoji_id:
@@ -1968,7 +1968,7 @@ class ConnectionState:
                 name=data["name"],
             )
 
-    def _upgrade_partial_emoji(self, emoji: PartialEmoji) -> Emoji | PartialEmoji | str:
+    def _upgrade_partial_emoji(self, emoji: PartialEmoji) -> GuildEmoji | AppEmoji | PartialEmoji | str:
         emoji_id = emoji.id
         if not emoji_id:
             return emoji.name

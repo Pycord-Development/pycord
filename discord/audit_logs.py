@@ -47,7 +47,7 @@ if TYPE_CHECKING:
     import datetime
 
     from . import abc
-    from .emoji import Emoji
+    from .emoji import GuildEmoji
     from .guild import Guild
     from .member import Member
     from .role import Role
@@ -617,7 +617,7 @@ class AuditLogEntry(Hashable):
         | User
         | Role
         | Invite
-        | Emoji
+        | GuildEmoji
         | StageInstance
         | GuildSticker
         | Thread
@@ -689,7 +689,7 @@ class AuditLogEntry(Hashable):
             pass
         return obj
 
-    def _convert_target_emoji(self, target_id: int) -> Emoji | Object:
+    def _convert_target_emoji(self, target_id: int) -> GuildEmoji | Object:
         return self._state.get_emoji(target_id) or Object(id=target_id)
 
     def _convert_target_message(self, target_id: int) -> Member | User | None:
