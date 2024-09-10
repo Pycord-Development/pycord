@@ -56,9 +56,6 @@ class BaseEmoji(_EmojiTag, AssetMixin):
         "managed",
         "id",
         "name",
-        "_roles",
-        "guild_id",
-        "application_id",
         "_state",
         "user",
         "available",
@@ -75,7 +72,6 @@ class BaseEmoji(_EmojiTag, AssetMixin):
         self.name: str = emoji["name"]  # type: ignore
         self.animated: bool = emoji.get("animated", False)
         self.available: bool = emoji.get("available", True)
-        self._roles: SnowflakeList = SnowflakeList(map(int, emoji.get("roles", [])))
         user = emoji.get("user")
         self.user: User | None = User(state=self._state, data=user) if user else None
 
@@ -167,8 +163,14 @@ class GuildEmoji(BaseEmoji):
         having the :attr:`~Permissions.manage_emojis` permission.
     """
 
+    __slots__: tuple[str, ...] = (
+        "_roles",
+        "guild_id",
+    )
+
     def __init__(self, *, guild: Guild, state: ConnectionState, data: EmojiPayload):
         self.guild_id: int = guild.id
+        self._roles: SnowflakeList = SnowflakeList(map(int, data.get("roles", [])))
         super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
@@ -335,6 +337,10 @@ class AppEmoji(BaseEmoji):
     user: Optional[:class:`User`]
         The user that created the emoji.
     """
+
+    __slots__: tuple[str, ...] = (
+        "application_id",
+    )
 
     def __init__(
         self, *, application_id: int, state: ConnectionState, data: EmojiPayload
