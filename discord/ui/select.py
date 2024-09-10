@@ -31,7 +31,7 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectMenu, SelectOption
-from ..emoji import GuildEmoji, AppEmoji
+from ..emoji import AppEmoji, GuildEmoji
 from ..enums import ChannelType, ComponentType
 from ..errors import InvalidArgument
 from ..interactions import Interaction

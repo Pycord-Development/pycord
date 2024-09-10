@@ -1968,7 +1968,9 @@ class ConnectionState:
                 name=data["name"],
             )
 
-    def _upgrade_partial_emoji(self, emoji: PartialEmoji) -> GuildEmoji | AppEmoji | PartialEmoji | str:
+    def _upgrade_partial_emoji(
+        self, emoji: PartialEmoji
+    ) -> GuildEmoji | AppEmoji | PartialEmoji | str:
         emoji_id = emoji.id
         if not emoji_id:
             return emoji.name

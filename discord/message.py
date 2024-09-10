@@ -45,7 +45,7 @@ from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
 from .embeds import Embed
-from .emoji import GuildEmoji, AppEmoji
+from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, MessageType, try_enum
 from .errors import InvalidArgument
 from .file import File

@@ -72,7 +72,9 @@ class PaginatorButton(discord.ui.Button):
         self,
         button_type: str,
         label: str = None,
-        emoji: str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji = None,
+        emoji: (
+            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
+        ) = None,
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
@@ -89,7 +91,9 @@ class PaginatorButton(discord.ui.Button):
         )
         self.button_type = button_type
         self.label = label if label or emoji else button_type.capitalize()
-        self.emoji: str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji = emoji
+        self.emoji: (
+            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
+        ) = emoji
         self.style = style
         self.disabled = disabled
         self.loop_label = self.label if not loop_label else loop_label
@@ -278,7 +282,9 @@ class PageGroup:
         pages: list[str] | list[Page] | list[list[discord.Embed] | discord.Embed],
         label: str,
         description: str | None = None,
-        emoji: str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji = None,
+        emoji: (
+            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
+        ) = None,
         default: bool | None = None,
         show_disabled: bool | None = None,
         show_indicator: bool | None = None,
@@ -294,7 +300,9 @@ class PageGroup:
     ):
         self.label = label
         self.description: str | None = description
-        self.emoji: str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji = emoji
+        self.emoji: (
+            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
+        ) = emoji
         self.pages: list[str] | list[list[discord.Embed] | discord.Embed] = pages
         self.default: bool | None = default
         self.show_disabled = show_disabled

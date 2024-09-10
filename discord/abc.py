@@ -513,7 +513,9 @@ class GuildChannel:
         except KeyError:
             pass
         else:
-            if isinstance(default_reaction_emoji, _EmojiTag):  # GuildEmoji, PartialEmoji
+            if isinstance(
+                default_reaction_emoji, _EmojiTag
+            ):  # GuildEmoji, PartialEmoji
                 default_reaction_emoji = default_reaction_emoji._to_partial()
             elif isinstance(default_reaction_emoji, int):
                 default_reaction_emoji = PartialEmoji(

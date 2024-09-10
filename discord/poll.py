@@ -43,7 +43,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .emoji import GuildEmoji, AppEmoji
+    from .emoji import AppEmoji, GuildEmoji
     from .message import Message, PartialMessage
     from .types.poll import Poll as PollPayload
     from .types.poll import PollAnswer as PollAnswerPayload
@@ -66,7 +66,9 @@ class PollMedia:
         The answer's emoji.
     """
 
-    def __init__(self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None):
+    def __init__(
+        self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
+    ):
         self.text: str = text
         self.emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = emoji
 
@@ -124,7 +126,9 @@ class PollAnswer:
         The relevant media for this answer.
     """
 
-    def __init__(self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None):
+    def __init__(
+        self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
+    ):
         self.media = PollMedia(text, emoji)
         self.id = None
         self._poll = None
@@ -446,7 +450,10 @@ class Poll:
         return utils.get(self.answers, id=id)
 
     def add_answer(
-        self, text: str, *, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
+        self,
+        text: str,
+        *,
+        emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None,
     ) -> Poll:
         """Add an answer to this poll.
 

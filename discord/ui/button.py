@@ -40,7 +40,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from ..emoji import GuildEmoji, AppEmoji
+    from ..emoji import AppEmoji, GuildEmoji
     from .view import View
 
 B = TypeVar("B", bound="Button")

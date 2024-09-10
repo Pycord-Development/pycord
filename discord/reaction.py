@@ -35,7 +35,7 @@ __all__ = ("Reaction", "ReactionCountDetails")
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .emoji import GuildEmoji, AppEmoji
+    from .emoji import AppEmoji, GuildEmoji
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .types.message import Reaction as ReactionPayload
