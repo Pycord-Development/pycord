@@ -338,9 +338,7 @@ class AppEmoji(BaseEmoji):
         The user that created the emoji.
     """
 
-    __slots__: tuple[str, ...] = (
-        "application_id",
-    )
+    __slots__: tuple[str, ...] = ("application_id",)
 
     def __init__(
         self, *, application_id: int, state: ConnectionState, data: EmojiPayload
