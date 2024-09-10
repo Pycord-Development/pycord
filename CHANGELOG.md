@@ -52,6 +52,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `SortOrder`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed `PartialMessage`s causing errors when created from `PartialMessageable`.
   ([#2568](https://github.com/Pycord-Development/pycord/pull/2500))
+- Fixed the `guild` attribute of `Member`s recieved from a `UserCommand` being `None`.
+  ([#2573](https://github.com/Pycord-Development/pycord/pull/2573))
 
 ## [2.6.0] - 2024-07-09
 
