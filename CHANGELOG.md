@@ -409,7 +409,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Updated the values of the `Color.embed_background()` classmethod to correspond with
   new theme colors in the app.
-  ([#1931](https://github.com/Pycord-Development/pycord/pull/1931))
 
 ### Fixed
 
