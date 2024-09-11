@@ -54,6 +54,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2568](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed the `guild` attribute of `Member`s recieved from a `UserCommand` being `None`.
   ([#2573](https://github.com/Pycord-Development/pycord/pull/2573))
+- Fixed `Webhook.send` not including `Attachment` data.
+  ([#2513](https://github.com/Pycord-Development/pycord/pull/2513))
 
 ## [2.6.0] - 2024-07-09
 
