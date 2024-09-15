@@ -198,7 +198,7 @@ class Option:
         enum_choices = []
         input_type_is_class = isinstance(input_type, type)
         if input_type_is_class and issubclass(input_type, (Enum, DiscordEnum)):
-            if description is None:
+            if description is None and input_type.__doc__ is not None:
                 description = inspect.cleandoc(input_type.__doc__)
                 if description and len(description) > 100:
                     description = description[:97] + "..."
