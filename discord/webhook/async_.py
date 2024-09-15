@@ -156,6 +156,7 @@ class AsyncWebhookAdapter:
                     for p in multipart:
                         form_data.add_field(**p)
                     to_send = form_data
+                    print(to_send)
                 try:
                     async with session.request(
                         method,
@@ -512,6 +513,8 @@ class AsyncWebhookAdapter:
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
+                    "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
+                    "duration_secs": 60.0,
                 }
             )
             form.append(
@@ -687,6 +690,8 @@ def handle_message_parameters(
                     "value": file.fp,
                     "filename": file.filename,
                     "content_type": "application/octet-stream",
+                    "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
+                    "duration_secs": 60.0,
                 }
             )
             _attachments.append(

@@ -73,6 +73,8 @@ class File:
         "_owner",
         "_closer",
         "description",
+        "waveform",
+        "duration_secs",
     )
 
     if TYPE_CHECKING:
@@ -89,6 +91,9 @@ class File:
         description: str | None = None,
         spoiler: bool = False,
     ):
+        self.waveform = "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI="
+        self.duration_secs = 60.0
+
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
                 raise ValueError(f"File buffer {fp!r} must be seekable and readable")

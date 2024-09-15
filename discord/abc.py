@@ -1567,6 +1567,7 @@ class Messageable:
         flags = MessageFlags(
             suppress_embeds=bool(suppress),
             suppress_notifications=bool(silent),
+            is_voice_message=True,
         ).value
 
         if stickers is not None:

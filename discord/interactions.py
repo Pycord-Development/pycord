@@ -918,6 +918,8 @@ class InteractionResponse:
         if ephemeral:
             payload["flags"] = 64
 
+        payload["flags"] = 8192
+
         if view is not None:
             payload["components"] = view.to_components()
 
