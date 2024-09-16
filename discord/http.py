@@ -412,11 +412,17 @@ class HTTPClient:
     async def static_login(self, token: str) -> user.User:
         import logging
 
-        async def on_request_start(session, context, params: aiohttp.TraceRequestStartParams):
+        async def on_request_start(
+            session, context, params: aiohttp.TraceRequestStartParams
+        ):
             # breakpoint()
-            logging.getLogger('aiohttp.client').debug(f'Starting request <{params}> <{session}> <{context}>')
+            logging.getLogger("aiohttp.client").debug(
+                f"Starting request <{params}> <{session}> <{context}>"
+            )
 
-        async def on_request_chunk_sent(session, context, params: aiohttp.TraceRequestChunkSentParams):
+        async def on_request_chunk_sent(
+            session, context, params: aiohttp.TraceRequestChunkSentParams
+        ):
             with open("output.txt", "a") as file:
                 file.write(str(params.chunk))
             # logging.getLogger('aiohttp.client').debug(f'Sent Chunk <{params}>')
@@ -427,7 +433,9 @@ class HTTPClient:
 
         # Necessary to get aiohttp to stop complaining about session creation
         self.__session = aiohttp.ClientSession(
-            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse, trace_configs=[trace_config]
+            connector=self.connector,
+            ws_response_class=DiscordClientWebSocketResponse,
+            trace_configs=[trace_config],
         )
         old_token = self.token
         self.token = token
@@ -656,7 +664,7 @@ class HTTPClient:
                     "filename": file.filename,
                     "description": file.description,
                     "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
-                    "duration_secs": 60.0
+                    "duration_secs": 60.0,
                 }
             )
             form.append(
@@ -1292,7 +1300,7 @@ class HTTPClient:
                         "filename": file.filename,
                         "description": file.description,
                         "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
-                        "duration_secs": 60.0
+                        "duration_secs": 60.0,
                     }
                 )
                 form.append(
