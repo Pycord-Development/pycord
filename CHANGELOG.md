@@ -23,6 +23,10 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Member.guild_banner` and `Member.display_banner` properties.
   ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
 
+### Fixed
+- Fix `Enum` options not setting the correct type when only one choice is available.
+  ([#2575](https://github.com/Pycord-Development/pycord/pull/2575))
+
 ### Changed
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
