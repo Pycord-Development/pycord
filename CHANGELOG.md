@@ -24,6 +24,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
 
 ### Fixed
+
 - Fix `Enum` options not setting the correct type when only one choice is available.
   ([#2577](https://github.com/Pycord-Development/pycord/pull/2577))
 
@@ -50,8 +51,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
 - Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
   `@utils.deprecated`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
-- Fixed the type hint in `ConnectionState._polls` to reflect actual behavior, changing it
-  from `Guild` to `Poll`.
+- Fixed the type hint in `ConnectionState._polls` to reflect actual behavior, changing
+  it from `Guild` to `Poll`.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed missing `__slots__` attributes in `RawReactionClearEmojiEvent` and
   `RawMessagePollVoteEvent`.
