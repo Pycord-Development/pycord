@@ -209,7 +209,8 @@ class Option:
                     )
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
-            if all(isinstance(elem.value, value_class) for elem in enum_choices):
+            if (enum_choices[0].value.__class__ in SlashCommandOptionType.__members__ and
+                    all(isinstance(elem.value, value_class) for elem in enum_choices)):
                 input_type = SlashCommandOptionType.from_datatype(
                     enum_choices[0].value.__class__
                 )
