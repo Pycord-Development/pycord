@@ -25,7 +25,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 - Fix `Enum` options not setting the correct type when only one choice is available.
-  ([#2575](https://github.com/Pycord-Development/pycord/pull/2575))
+  ([#2577](https://github.com/Pycord-Development/pycord/pull/2577))
 
 ### Changed
 
