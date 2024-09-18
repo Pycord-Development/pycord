@@ -358,7 +358,6 @@ class FFmpegOpusAudio(FFmpegAudio):
         ``copy`` as the codec value.  Any values other than ``copy``, or
         ``libopus`` will be considered ``libopus``. ``opus`` will also be considered
         ``libopus`` since the ``opus`` encoder is still in development. Defaults to ``libopus``.
-        
 
         .. warning::
 
@@ -410,7 +409,7 @@ class FFmpegOpusAudio(FFmpegAudio):
         args.append("-" if pipe else source)
 
         # use "libopus" when "opus" is specified since the "opus" encoder is incomplete
-        # link to ffmpeg docs: https://www.ffmpeg.org/ffmpeg-codecs.html#opus 
+        # link to ffmpeg docs: https://www.ffmpeg.org/ffmpeg-codecs.html#opus
         codec = "copy" if codec == "copy" else "libopus"
 
         args.extend(
