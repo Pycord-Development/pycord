@@ -21,7 +21,7 @@ msgid "Using the prefixed command version (which uses the ``ext.commands`` exten
 msgstr "Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge commands in guilds requires :attr:`Intents.message_context` to be enabled."
 
 msgid "Bots"
-msgstr "Боты"
+msgstr "Bots"
 
 msgid "Bot"
 msgstr "Bot"
@@ -33,7 +33,7 @@ msgid "This class is a subclass of :class:`.ext.commands.Bot` and as a result an
 msgstr "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
 msgstr "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
@@ -42,13 +42,13 @@ msgid "A shortcut decorator that invokes :func:`bridge_command` and adds it to t
 msgstr "A shortcut decorator that invokes :func:`bridge_command` and adds it to the internal command list via :meth:`~.Bot.add_bridge_command`."
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 msgstr "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid "Callable[..., :class:`BridgeCommand`]"
 msgstr "Callable[..., :class:`BridgeCommand`]"
@@ -114,7 +114,7 @@ msgid "The slash command version of this bridge command."
 msgstr "The slash command version of this bridge command."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`.BridgeSlashCommand`"
 msgstr ":class:`.BridgeSlashCommand`"
@@ -159,7 +159,7 @@ msgid "The coroutine to register as the local error handler."
 msgstr "The coroutine to register as the local error handler."
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
