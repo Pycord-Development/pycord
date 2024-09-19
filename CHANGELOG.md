@@ -52,7 +52,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `AttributeError` when trying to consume a consumable entitlement.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
-
 ## [2.6.1] - 2024-09-15
 
 ### Fixed
@@ -79,7 +78,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2513](https://github.com/Pycord-Development/pycord/pull/2513))
 - Fixed inverted type hints in `CheckAnyFailure`.
   ([#2502](https://github.com/Pycord-Development/pycord/pull/2502))
-
 
 ## [2.6.0] - 2024-07-09
 

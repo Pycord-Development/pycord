@@ -64,7 +64,8 @@ if TYPE_CHECKING:
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
-    from .types.monetization import Entitlement as EntitlementPayload, Subscription as SubscriptionPayload
+    from .types.monetization import Entitlement as EntitlementPayload
+    from .types.monetization import Subscription as SubscriptionPayload
     from .types.threads import Thread as ThreadPayload
     from .types.user import PartialUser as PartialUserPayload
     from .user import User
@@ -1064,7 +1065,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
                 self.limit -= retrieve
             self.before = Object(id=int(data[-1]["id"]))
         return data
-      
+
     async def _retrieve_entitlements_after_strategy(
         self, retrieve: int
     ) -> list[EntitlementPayload]:
