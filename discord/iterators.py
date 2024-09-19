@@ -1011,7 +1011,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.retrieve = r
         return r > 0
 
-    async def create_entitlement(self, data):
+    def create_entitlement(self, data):
         from .monetization import Entitlement
 
         return Entitlement(data=data, state=self.state)

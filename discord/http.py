@@ -3027,7 +3027,7 @@ class HTTPClient:
         )
         return self.request(r)
 
-    async def list_sku_subscriptions(
+    def list_sku_subscriptions(
         self,
         sku_id: Snowflake,
         *,
@@ -3050,7 +3050,7 @@ class HTTPClient:
             params=params,
         )
 
-    async def get_subscription(
+    def get_subscription(
         self,
         sku_id: Snowflake,
         subscription_id: Snowflake,
