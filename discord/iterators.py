@@ -59,6 +59,7 @@ if TYPE_CHECKING:
     from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message
+    from .monetization import Entitlement, Subscription
     from .scheduled_events import ScheduledEvent
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
@@ -1022,7 +1023,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.retrieve = r
         return r > 0
 
-    def create_entitlement(self, data):
+    def create_entitlement(self, data) -> Entitlement:
         from .monetization import Entitlement
 
         return Entitlement(data=data, state=self.state)
@@ -1042,7 +1043,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         for element in data:
             await self.entitlements.put(self.create_entitlement(element))
 
-    async def _retrieve_entitlements(self, retrieve) -> list[Entitlement]:
+    async def _retrieve_entitlements(self, retrieve) -> list[EntitlementPayload]:
         """Retrieve entitlements and update next parameters."""
         raise NotImplementedError
 
@@ -1140,7 +1141,7 @@ class SubscriptionIterator(_AsyncIterator["Subscription"]):
         self.retrieve = r
         return r > 0
 
-    def create_subscription(self, data):
+    def create_subscription(self, data) -> Subscription:
         from .monetization import Subscription
 
         return Subscription(state=self.state, data=data)
