@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "A Primer to Gateway Intents"
-msgstr "Einführung zu Gateway Intents"
+msgstr "A Primer to Gateway Intents"
 
 msgid "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
 msgstr "In version 1.5 comes the introduction of :class:`Intents`. This is a radical change in how bots are written. An intent basically allows a bot to subscribe to specific buckets of events. The events that correspond to each intent is documented in the individual attribute of the :class:`Intents` documentation."
@@ -24,7 +24,7 @@ msgid "If intents are not passed, then the library defaults to every intent bein
 msgstr "If intents are not passed, then the library defaults to every intent being enabled except the privileged intents, currently :attr:`Intents.members`, :attr:`Intents.presences`, and :attr:`Intents.message_content`."
 
 msgid "What intents are needed?"
-msgstr "Welche Intents werden benötigt?"
+msgstr "What intents are needed?"
 
 msgid "The intents that are necessary for your bot can only be dictated by yourself. Each attribute in the :class:`Intents` class documents what :ref:`events <discord-api-events>` it corresponds to and what kind of cache it enables."
 msgstr "The intents that are necessary for your bot can only be dictated by yourself. Each attribute in the :class:`Intents` class documents what :ref:`events <discord-api-events>` it corresponds to and what kind of cache it enables."
@@ -39,13 +39,13 @@ msgid "Another example showing a bot that only deals with messages and guild inf
 msgstr "Another example showing a bot that only deals with messages and guild information:"
 
 msgid "Privileged Intents"
-msgstr "Privilegierte Intents"
+msgstr "Privileged Intents"
 
 msgid "With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**."
 msgstr "With the API change requiring bot owners to specify intents, some intents were restricted further and require more manual steps. These intents are called **privileged intents**."
 
 msgid "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
-msgstr "Privilegierte Intents müssen im Developer-Portal von dir manuell aktiviert werden. Um privilegierte Intents zu aktivieren, tu Folgendes:"
+msgstr "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
 msgstr "Make sure you're logged on to the `Discord website <https://discord.com>`_."
@@ -54,19 +54,19 @@ msgid "Navigate to the `application page <https://discord.com/developers/applica
 msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_."
 
 msgid "Click on the bot you want to enable privileged intents for."
-msgstr "Klicke auf den Bot, für den du Intents mit Privilegien aktivieren willst."
+msgstr "Click on the bot you want to enable privileged intents for."
 
 msgid "Navigate to the bot tab on the left side of the screen."
-msgstr "Navigieren um Bot-Tab auf der linken Seite des Bildschirms."
+msgstr "Navigate to the bot tab on the left side of the screen."
 
 msgid "The bot tab in the application page."
-msgstr "Der Bot-Tab auf der Seite der Anwendung."
+msgstr "The bot tab in the application page."
 
 msgid "Scroll down to the \"Privileged Gateway Intents\" section and enable the ones you want."
 msgstr "Scroll down to the \"Privileged Gateway Intents\" section and enable the ones you want."
 
 msgid "The privileged gateway intents selector."
-msgstr "Der privilegierte Gateway-intents Selektor."
+msgstr "The privileged gateway intents selector."
 
 msgid "Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_."
 msgstr "Enabling privileged intents when your bot is in over 100 guilds requires going through `bot verification <https://support.discord.com/hc/en-us/articles/360040720412>`_."
@@ -75,13 +75,13 @@ msgid "Even if you enable intents through the developer portal, you still have t
 msgstr "Even if you enable intents through the developer portal, you still have to enable the intents through code as well."
 
 msgid "Do I need privileged intents?"
-msgstr "Brauche ich Intents mit Privilegien?"
+msgstr "Do I need privileged intents?"
 
 msgid "This is a quick checklist to see if you need specific privileged intents."
 msgstr "This is a quick checklist to see if you need specific privileged intents."
 
 msgid "Presence Intent"
-msgstr "Präsenz Intent"
+msgstr "Presence Intent"
 
 msgid "Whether you use :attr:`Member.status` at all to track member statuses."
 msgstr "Whether you use :attr:`Member.status` at all to track member statuses."
@@ -108,7 +108,7 @@ msgid "Whether you want high accuracy member cache under :attr:`Guild.members`."
 msgstr "Whether you want high accuracy member cache under :attr:`Guild.members`."
 
 msgid "Message Content Intent"
-msgstr "Nachrichteninhalts-Intent"
+msgstr "Message Content Intent"
 
 msgid "Whether you have a message based command system using ext.commands"
 msgstr "Whether you have a message based command system using ext.commands"
@@ -120,10 +120,10 @@ msgid "Whether you use message content in :func:`on_message_edit`, :func:`on_mes
 msgstr "Whether you use message content in :func:`on_message_edit`, :func:`on_message_delete`, :func:`on_raw_message_edit`, :func:`on_raw_message_delete`."
 
 msgid "The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages."
-msgstr "Der Bot kann weiterhin Nachrichteninhalte in DMs, in Nachrichten, in welchen der Bot erwähnt wurde und in eigenen Nachrichten erhalten."
+msgstr "The bot can still receive message contents in DMs, when mentioned in guild messages, and for its own guild messages."
 
 msgid "Member Cache"
-msgstr "Mitglieder-Cache"
+msgstr "Member Cache"
 
 msgid "Along with intents, Discord now further restricts the ability to cache members and expects bot authors to cache as little as is necessary. However, to properly maintain a cache the :attr:`Intents.members` intent is required in order to track the members who left and properly evict them."
 msgstr "Along with intents, Discord now further restricts the ability to cache members and expects bot authors to cache as little as is necessary. However, to properly maintain a cache the :attr:`Intents.members` intent is required in order to track the members who left and properly evict them."
@@ -156,7 +156,7 @@ msgid "Other events that take a :class:`Member` will require the use of the memb
 msgstr "Other events that take a :class:`Member` will require the use of the member cache. If absolute accuracy over the member cache is desirable, then it is advisable to have the :attr:`Intents.members` intent enabled."
 
 msgid "Retrieving Members"
-msgstr "Abrufen von Mitgliedern"
+msgstr "Retrieving Members"
 
 msgid "If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:"
 msgstr "If the cache is disabled or you disable chunking guilds at startup, we might still need a way to load members. The library offers a few ways to do this:"

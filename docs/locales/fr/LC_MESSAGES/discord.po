@@ -75,13 +75,13 @@ msgid "And that's it. You now have a bot account and you can login with that tok
 msgstr "And that's it. You now have a bot account and you can login with that token."
 
 msgid "Inviting Your Bot"
-msgstr "Inviting Your Bot"
+msgstr "Inviter Son Bot"
 
 msgid "So you've made a Bot User but it's not actually in any server."
-msgstr "So you've made a Bot User but it's not actually in any server."
+msgstr "Donc vous avez créé votre utilisateur Bot mais il n'est pas sur votre serveur."
 
 msgid "If you want to invite your bot you must create an invite URL for it."
-msgstr "If you want to invite your bot you must create an invite URL for it."
+msgstr "Si vous voulez inviter votre bot, vous devez créer un lien d'invitation pour ça."
 
 msgid "Click on your bot's page."
 msgstr "Click on your bot's page."

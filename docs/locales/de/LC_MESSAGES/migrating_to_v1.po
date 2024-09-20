@@ -12,55 +12,55 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v1.0"
-msgstr "Migrieren zu v1.0"
+msgstr "Migrating to v1.0"
 
 msgid "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
-msgstr "v1.0 ist eine der größten Erneuerungen in der Bibliothek aufgrund eines kompletten Redesigns."
+msgstr "v1.0 is one of the biggest breaking changes in the library due to a complete redesign."
 
 msgid "The amount of changes are so massive and long that for all intents and purposes, it is a completely new library."
-msgstr "Die Anzahl der Änderungen sind so massiv und lang, dass es in jeder Hinsicht eine völlig neue Bibliothek ist."
+msgstr "The amount of changes are so massive and long that for all intents and purposes, it is a completely new library."
 
 msgid "Part of the redesign involves making things more easy to use and natural. Things are done on the :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work."
-msgstr "Ein Teil der Neugestaltung besteht darin, die Dinge einfacher und natürlicher zu gestalten. Dinge werden auf den :ref:`models <discord_api_models>` erledigt, anstatt eine :class:`Client` Instanz zu benötigen, um irgendeine Arbeit zu leisten."
+msgstr "Part of the redesign involves making things more easy to use and natural. Things are done on the :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work."
 
 msgid "Python Version Change"
-msgstr "Änderung der Python-Version"
+msgstr "Python Version Change"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
-msgstr "Um die Entwicklung zu vereinfachen und auch ein Upgrade unserer Abhängigkeiten zu ermöglichen, um die Verwendung von 3.7 oder höher zu ermöglichen, musste die Bibliothek die Unterstützung für Python-Versionen vor 3.5.3 entfernen, was im Wesentlichen bedeutet, dass **die Unterstützung für Python 3.4 fallen gelassen wurde.**."
+msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
 
 msgid "Major Model Changes"
-msgstr "Wichtige Modelländerungen"
+msgstr "Major Model Changes"
 
 msgid "Below are major model changes that have happened in v1.0"
-msgstr "Im Folgenden sind die wichtigsten Änderungen aufgeführt, die in Version 1.0 vorgenommen wurden"
+msgstr "Below are major model changes that have happened in v1.0"
 
 msgid "Snowflakes are int"
-msgstr "Snowflakes sind int"
+msgstr "Snowflakes are int"
 
 msgid "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
-msgstr "Vor v1.0 waren alle snowflakes (das ``id`` Attribut) strings. Dies wurde zu :class:`int` umgeändert."
+msgstr "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
 
 msgid "Quick example: ::"
-msgstr "Schnelles Beispiel: ::"
+msgstr "Quick example: ::"
 
 msgid "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
-msgstr "Diese Änderung ermöglicht weniger Fehler bei der Verwendung der Kopier-ID Funktion im offiziellen Client, da Sie diese nicht mehr in Anführungszeichen einpacken müssen und Optimierungsmöglichkeiten ermöglichen können, indem intern ETF anstelle von JSON verwenden werden kann."
+msgstr "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
 
 msgid "Server is now Guild"
-msgstr "Server ist jetzt Guild"
+msgstr "Server is now Guild"
 
 msgid "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
-msgstr "Die offizielle API-Dokumentation nennt das \"Server\"-Konzept stattdessen eine \"Guild\". Um bei Bedarf besser mit der API-Dokumentation übereinstimmen zu können, wurde das Modell in :class:`Guild` umbenannt und alle darauf bezogenen Instanzen wurden ebenfalls geändert."
+msgstr "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
 
 msgid "A list of changes is as follows:"
-msgstr "Eine Liste der Änderungen lautet wie folgt:"
+msgstr "A list of changes is as follows:"
 
 msgid "Before"
-msgstr "Vor / Bevor"
+msgstr "Before"
 
 msgid "After"
-msgstr "Nach"
+msgstr "After"
 
 msgid "``Message.server``"
 msgstr "``Message.server``"
@@ -129,13 +129,13 @@ msgid ":meth:`Client.create_guild`"
 msgstr ":meth:`Client.create_guild`"
 
 msgid "Models are Stateful"
-msgstr "Modelle sind Zustands-fähig"
+msgstr "Models are Stateful"
 
 msgid "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
-msgstr "Wie bereits erwähnt, wurde eine Menge Funktionalität aus :class:`Client` verschoben und in ihre jeweilige :ref:`model <discord_api_models>` aufgenommen."
+msgstr "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
 
 msgid "A list of these changes is enumerated below."
-msgstr "Eine Liste dieser Änderungen ist unten aufgeführt."
+msgstr "A list of these changes is enumerated below."
 
 msgid "``Client.add_reaction``"
 msgstr "``Client.add_reaction``"
@@ -153,7 +153,7 @@ msgid "``Client.ban``"
 msgstr "``Client.ban``"
 
 msgid ":meth:`Member.ban` or :meth:`Guild.ban`"
-msgstr ":meth:`Member.ban` oder :meth:`Guild.ban`"
+msgstr ":meth:`Member.ban` or :meth:`Guild.ban`"
 
 msgid "``Client.change_nickname``"
 msgstr "``Client.change_nickname``"
@@ -171,7 +171,7 @@ msgid "``Client.create_channel``"
 msgstr "``Client.create_channel``"
 
 msgid ":meth:`Guild.create_text_channel` and :meth:`Guild.create_voice_channel`"
-msgstr ":meth:`Guild.create_text_channel` und :meth:`Guild.create_voice_channel`"
+msgstr ":meth:`Guild.create_text_channel` and :meth:`Guild.create_voice_channel`"
 
 msgid "``Client.create_custom_emoji``"
 msgstr "``Client.create_custom_emoji``"
@@ -201,7 +201,7 @@ msgid "``Client.delete_channel_permissions``"
 msgstr "``Client.delete_channel_permissions``"
 
 msgid ":meth:`abc.GuildChannel.set_permissions` with ``overwrite`` set to ``None``"
-msgstr ":meth:`abc.GuildChannel.set_permissions` mit ``overwrite`` auf ``None`` gesetzt"
+msgstr ":meth:`abc.GuildChannel.set_permissions` with ``overwrite`` set to ``None``"
 
 msgid "``Client.delete_custom_emoji``"
 msgstr "``Client.delete_custom_emoji``"
@@ -213,7 +213,7 @@ msgid "``Client.delete_invite``"
 msgstr "``Client.delete_invite``"
 
 msgid ":meth:`Invite.delete` or :meth:`Client.delete_invite`"
-msgstr ":meth:`Invite.delete` oder :meth:`Client.delete_invite`"
+msgstr ":meth:`Invite.delete` or :meth:`Client.delete_invite`"
 
 msgid "``Client.delete_message``"
 msgstr "``Client.delete_message``"
@@ -243,7 +243,7 @@ msgid "``Client.edit_channel``"
 msgstr "``Client.edit_channel``"
 
 msgid ":meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`"
-msgstr ":meth:`TextChannel.edit` oder :meth:`VoiceChannel.edit`"
+msgstr ":meth:`TextChannel.edit` or :meth:`VoiceChannel.edit`"
 
 msgid "``Client.edit_channel_permissions``"
 msgstr "``Client.edit_channel_permissions``"
@@ -267,7 +267,7 @@ msgid "``Client.edit_profile``"
 msgstr "``Client.edit_profile``"
 
 msgid ":meth:`ClientUser.edit` (you get this from :attr:`Client.user`)"
-msgstr ":meth:`ClientUser.edit` (Sie bekommen diese von :attr:`Client.user`)"
+msgstr ":meth:`ClientUser.edit` (you get this from :attr:`Client.user`)"
 
 msgid "``Client.edit_role``"
 msgstr "``Client.edit_role``"
@@ -327,7 +327,7 @@ msgid "``Client.invites_from``"
 msgstr "``Client.invites_from``"
 
 msgid ":meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`"
-msgstr ":meth:`abc.GuildChannel.invites` oder :meth:`Guild.invites`"
+msgstr ":meth:`abc.GuildChannel.invites` or :meth:`Guild.invites`"
 
 msgid "``Client.join_voice_channel``"
 msgstr "``Client.join_voice_channel``"

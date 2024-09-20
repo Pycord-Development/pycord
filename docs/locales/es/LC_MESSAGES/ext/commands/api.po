@@ -81,7 +81,7 @@ msgid "The coroutine to register as the post-invoke hook."
 msgstr "The coroutine to register as the post-invoke hook."
 
 msgid "Raises"
-msgstr "Errores"
+msgstr "Raises"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
@@ -102,7 +102,7 @@ msgid "This function can either be a regular function or a coroutine. Similar to
 msgstr "This function can either be a regular function or a coroutine. Similar to a command :func:`.check`, this takes a single parameter of type :class:`.Context` and can only raise exceptions inherited from :exc:`.ApplicationCommandError`."
 
 msgid "Example"
-msgstr "Ejemplo"
+msgstr "Example"
 
 msgid "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
 msgstr "A decorator that adds a \"call once\" global check to the bot. Unlike regular global checks, this one is called only once per :meth:`.Bot.invoke` call. Regular global checks are called whenever a command is called or :meth:`.Command.can_run` is called. This type of check bypasses that and ensures that it's called only once, even inside the default help command."
@@ -468,7 +468,7 @@ msgid "Whether to limit the fetched entitlements to those that have not ended. D
 msgstr "Whether to limit the fetched entitlements to those that have not ended. Defaults to ``False``."
 
 msgid "Yields"
-msgstr "Genera"
+msgstr "Yields"
 
 msgid ":class:`.Entitlement` -- The application's entitlements."
 msgstr ":class:`.Entitlement` -- The application's entitlements."
@@ -1557,10 +1557,10 @@ msgid "A default one is provided (:meth:`.Bot.on_command_error`)."
 msgstr "A default one is provided (:meth:`.Bot.on_command_error`)."
 
 msgid "The invocation context."
-msgstr "El contexto de invocación."
+msgstr "The invocation context."
 
 msgid "The error that was raised."
-msgstr "El error producido."
+msgstr "The error that was raised."
 
 msgid "An event that is called when a command is found and is about to be invoked."
 msgstr "An event that is called when a command is found and is about to be invoked."
@@ -1575,10 +1575,10 @@ msgid "This event is called only if the command succeeded, i.e. all checks have 
 msgstr "This event is called only if the command succeeded, i.e. all checks have passed and the user input it correctly."
 
 msgid "Commands"
-msgstr "Comandos"
+msgstr "Commands"
 
 msgid "Decorators"
-msgstr "Decoradores"
+msgstr "Decorators"
 
 msgid "A decorator that transforms a function into a :class:`.Command` or if called with :func:`.group`, :class:`.Group`."
 msgstr "A decorator that transforms a function into a :class:`.Command` or if called with :func:`.group`, :class:`.Group`."
@@ -2550,7 +2550,7 @@ msgid "If the message is invoked in a private message context then the check wil
 msgstr "If the message is invoked in a private message context then the check will return ``False``."
 
 msgid "This check raises one of two special exceptions, :exc:`.MissingRole` if the user is missing a role, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
-msgstr "Esta comprobación lanza una de las dos excepciones especiales, :exc:`.MissingRole` si al usuario le falta un rol, o :exc:`.NoPrivateMessage` si se ha usado en un mensaje privado. Ambos heredan de :exc:`.CheckFailure`."
+msgstr "This check raises one of two special exceptions, :exc:`.MissingRole` if the user is missing a role, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
 
 msgid "Raise :exc:`.MissingRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`"
 msgstr "Raise :exc:`.MissingRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`"
@@ -2589,7 +2589,7 @@ msgid "Similar to :func:`.has_role`\\, the names or IDs passed in must be exact.
 msgstr "Similar to :func:`.has_role`\\, the names or IDs passed in must be exact."
 
 msgid "This check raises one of two special exceptions, :exc:`.MissingAnyRole` if the user is missing all roles, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
-msgstr "Esta comprobación lanza una de las dos excepciones especiales, :exc:`.MissingAnyRole` si al usuario le faltan todos los roles, o :exc:`.NoPrivateMessage` si se ha usado en un mensaje privado. Ambos heredan de :exc:`.CheckFailure`."
+msgstr "This check raises one of two special exceptions, :exc:`.MissingAnyRole` if the user is missing all roles, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
 
 msgid "Raise :exc:`.MissingAnyRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`"
 msgstr "Raise :exc:`.MissingAnyRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`"
@@ -2601,7 +2601,7 @@ msgid "Similar to :func:`.has_role` except checks if the bot itself has the role
 msgstr "Similar to :func:`.has_role` except checks if the bot itself has the role."
 
 msgid "This check raises one of two special exceptions, :exc:`.BotMissingRole` if the bot is missing the role, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
-msgstr "Esta comprobación lanza una de las dos excepciones especiales, :exc:`.BotMissingRole` si al bot le falta un rol, o :exc:`.NoPrivateMessage` si se ha usado en un mensaje privado. Ambos heredan de :exc:`.CheckFailure`."
+msgstr "This check raises one of two special exceptions, :exc:`.BotMissingRole` if the bot is missing the role, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
 
 msgid "Raise :exc:`.BotMissingRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`"
 msgstr "Raise :exc:`.BotMissingRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`"
@@ -2619,7 +2619,7 @@ msgid "Similar to :func:`.has_any_role` except checks if the bot itself has any 
 msgstr "Similar to :func:`.has_any_role` except checks if the bot itself has any of the roles listed."
 
 msgid "This check raises one of two special exceptions, :exc:`.BotMissingAnyRole` if the bot is missing all roles, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
-msgstr "Esta comprobación lanza una de las dos excepciones especiales, :exc:`.BotMissingAnyRole` si al bot le faltan todos los roles, o :exc:`.NoPrivateMessage` si se ha usado en un mensaje privado. Ambos heredan de :exc:`.CheckFailure`."
+msgstr "This check raises one of two special exceptions, :exc:`.BotMissingAnyRole` if the bot is missing all roles, or :exc:`.NoPrivateMessage` if it is used in a private message. Both inherit from :exc:`.CheckFailure`."
 
 msgid "Raise :exc:`.BotMissingAnyRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`."
 msgstr "Raise :exc:`.BotMissingAnyRole` or :exc:`.NoPrivateMessage` instead of generic :exc:`.CheckFailure`."
@@ -2913,7 +2913,7 @@ msgid "This is similar to :meth:`~.Context.invoke` except that it bypasses check
 msgstr "This is similar to :meth:`~.Context.invoke` except that it bypasses checks, cooldowns, and error handlers."
 
 msgid "If you want to bypass :exc:`.UserInputError` derived exceptions, it is recommended to use the regular :meth:`~.Context.invoke` as it will work more naturally. After all, this will end up using the old arguments the user has used and will thus just fail again."
-msgstr "Si quieres omitir las excepciones derivadas de :exc:`.UserInputError`, es recomendado usar el :meth:`~.Context.invoke` regular, ya que funcionará más naturalmente. Después de todo, esto acabará usando los argumentos antiguos que el usuario ha usado y simplemente fallará de nuevo."
+msgstr "If you want to bypass :exc:`.UserInputError` derived exceptions, it is recommended to use the regular :meth:`~.Context.invoke` as it will work more naturally. After all, this will end up using the old arguments the user has used and will thus just fail again."
 
 msgid "Whether to call the before and after invoke hooks."
 msgstr "Whether to call the before and after invoke hooks."
@@ -3579,7 +3579,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
 
 msgid "Exceptions"
-msgstr "Excepciones"
+msgstr "Exceptions"
 
 msgid "The base exception type for all command related errors."
 msgstr "The base exception type for all command related errors."
@@ -3948,7 +3948,7 @@ msgid "Whether the name that conflicts is an alias of the command we try to add.
 msgstr "Whether the name that conflicts is an alias of the command we try to add."
 
 msgid "Exception Hierarchy"
-msgstr "Jerarquía de excepciones"
+msgstr "Exception Hierarchy"
 
 msgid ":exc:`~.DiscordException`"
 msgstr ":exc:`~.DiscordException`"

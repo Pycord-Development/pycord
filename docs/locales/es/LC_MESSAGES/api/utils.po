@@ -93,7 +93,7 @@ msgid "The object found or the default value."
 msgstr "The object found or the default value."
 
 msgid "Raises"
-msgstr "Errores"
+msgstr "Raises"
 
 msgid "The object is missing a ``get_`` or ``fetch_`` method"
 msgstr "The object is missing a ``get_`` or ``fetch_`` method"
@@ -417,7 +417,7 @@ msgid "Autocomplete cannot be used for options that have specified choices."
 msgstr "Autocomplete cannot be used for options that have specified choices."
 
 msgid "Example"
-msgstr "Ejemplo"
+msgstr "Example"
 
 msgid "A helper function that collects an iterator into chunks of a given size."
 msgstr "A helper function that collects an iterator into chunks of a given size."

@@ -12,25 +12,25 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Changelog"
-msgstr "Список изменений"
+msgstr "Changelog"
 
 msgid "All notable changes to this project will be documented in this file."
-msgstr "Все заметные изменения этого проекта будут задокументированы в этом файле."
+msgstr "All notable changes to this project will be documented in this file."
 
 msgid "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when possible (see our [Version Guarantees] for more info)."
-msgstr "Формат основан на [Keep the Changelog](https://keepachangelog.com/en/1.0.0/), и этот проект придерживается [Semantic Versioning](https://semver.org/spec/v2.0.0.html) по возможности (подробнее см. в [Version Guarantees])."
+msgstr "The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) when possible (see our [Version Guarantees] for more info)."
 
 msgid "[Unreleased]"
 msgstr "[Unreleased]"
 
 msgid "These changes are available on the `master` branch, but have not yet been released."
-msgstr "Эти изменения доступны в ветке `master`, но еще не были выпущены."
+msgstr "These changes are available on the `master` branch, but have not yet been released."
 
 msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
 msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
 
 msgid "Changed"
-msgstr "Изменено"
+msgstr "Changed"
 
 msgid "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `ScheduledEvent.edit` to `image`. ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))"
 msgstr "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `ScheduledEvent.edit` to `image`. ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))"
@@ -39,7 +39,7 @@ msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](ht
 msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
 
 msgid "Added"
-msgstr "Добавлено"
+msgstr "Added"
 
 msgid "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
 msgstr "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
@@ -93,7 +93,7 @@ msgid "Added `MessageCall` information. ([#2488](https://github.com/Pycord-Devel
 msgstr "Added `MessageCall` information. ([#2488](https://github.com/Pycord-Development/pycord/pull/2488))"
 
 msgid "Fixed"
-msgstr "Исправлено"
+msgstr "Fixed"
 
 msgid "Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))"
 msgstr "Fixed the type-hinting of `Member.move_to` and `Member.edit` to reflect actual behavior. ([#2386](https://github.com/Pycord-Development/pycord/pull/2386))"
@@ -177,7 +177,7 @@ msgid "Changed the error message that appears when attempting to add a subcomman
 msgstr "Changed the error message that appears when attempting to add a subcommand group to a subcommand group. ([#2275](https://github.com/Pycord-Development/pycord/pull/2275))"
 
 msgid "Removed"
-msgstr "Удалено"
+msgstr "Removed"
 
 msgid "Removed the `delete_message_days` parameter from ban methods. Please use `delete_message_seconds` instead. ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))"
 msgstr "Removed the `delete_message_days` parameter from ban methods. Please use `delete_message_seconds` instead. ([#2421](https://github.com/Pycord-Development/pycord/pull/2421))"
@@ -425,8 +425,8 @@ msgstr "Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`. ([#2
 msgid "Fixed `_bytes_to_base64_data` not defined. ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))"
 msgstr "Fixed `_bytes_to_base64_data` not defined. ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))"
 
-msgid "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`. ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))"
-msgstr "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`. ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))"
+msgid "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`."
+msgstr "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`."
 
 msgid "Fixed initial message inside of the create thread payload sending legacy beta payload. ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))"
 msgstr "Fixed initial message inside of the create thread payload sending legacy beta payload. ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))"
@@ -779,8 +779,8 @@ msgstr "`commands.has_permissions()` check now returns `True` in DM channels. ([
 msgid "Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`. ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))"
 msgstr "Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`. ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))"
 
-msgid "Fix type issues in options.py ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
-msgstr "Fix type issues in options.py ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
+msgid "Fix type issues in `options.py` ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
+msgstr "Fix type issues in `options.py` ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
 
 msgid "Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent. ([#1521](https://github.com/Pycord-Development/pycord/pull/1521))"
 msgstr "Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent. ([#1521](https://github.com/Pycord-Development/pycord/pull/1521))"
@@ -1104,8 +1104,8 @@ msgid "Fix py3.10 UnionType checks issue. ([#1240](https://github.com/Pycord-Dev
 msgstr "Fix py3.10 UnionType checks issue. ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))"
 
 msgid "Older Versions"
-msgstr "Старые версии"
+msgstr "Older Versions"
 
 msgid "A changelog for versions prior to v2.0 can be found [here](old_changelog.rst)."
-msgstr "Список изменений до версии v2.0 находится [здесь](old_changelog.rst)."
+msgstr "A changelog for versions prior to v2.0 can be found [here](old_changelog.rst)."
 
