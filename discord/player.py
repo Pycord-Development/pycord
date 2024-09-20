@@ -511,7 +511,7 @@ class FFmpegOpusAudio(FFmpegAudio):
 
         executable = kwargs.get("executable")
         codec, bitrate = await cls.probe(source, method=method, executable=executable)
-        # only re-encode ir source isn't already opus, else directly copy source audio stream
+        # only re-encode if the source isn't already opus, else directly copy the source audio stream
         codec = "copy" if codec in ("opus", "libopus") else "libopus"
         return cls(source, bitrate=bitrate, codec=codec, **kwargs)  # type: ignore
 
