@@ -717,6 +717,9 @@ class AudioPlayer(threading.Thread):
             raise TypeError('Expected a callable for the "after" parameter.')
 
     def _do_run(self) -> None:
+        # attempt to read first audio segment from source before starting
+        # some sources can take a few seconds and may cause problems
+        first_data = self.source.read()
         self.loops = 0
         self._start = time.perf_counter()
 
@@ -740,7 +743,13 @@ class AudioPlayer(threading.Thread):
                 self._start = time.perf_counter()
 
             self.loops += 1
-            data = self.source.read()
+            # Send the data read from the start of the function if it is not None
+            if first_data is not None:
+                data = first_data
+                first_data = None
+            # Else read the next bit from the source
+            else:
+                data = self.source.read()
 
             if not data:
                 self.stop()
