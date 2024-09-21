@@ -29,7 +29,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2577](https://github.com/Pycord-Development/pycord/pull/2577))
 - Fixed `codec` option for `FFmpegOpusAudio` class to make it in line with
   documentation. ([#2581](https://github.com/Pycord-Development/pycord/pull/2581))
-- Fixed audio plays in fast forward at beginning of audio files.
+- Fixed a possible bug where audio would play too fast at the beginning of audio files.
   ([#2584](https://github.com/Pycord-Development/pycord/pull/2584))
 
 ### Changed
