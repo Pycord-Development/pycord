@@ -840,6 +840,7 @@ class InteractionResponse:
         files: list[File] = None,
         poll: Poll = None,
         delete_after: float = None,
+        voice_message: bool = False,
     ) -> Interaction:
         """|coro|
 
@@ -877,6 +878,10 @@ class InteractionResponse:
             The poll to send.
 
             .. versionadded:: 2.6
+        voice_message: :class:`bool`
+            If the file should be treated as a voice message.
+
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -917,8 +922,9 @@ class InteractionResponse:
 
         if ephemeral:
             payload["flags"] = 64
+        if voice_message:
+            payload["flags"] = payload.setdefault("flags", 0) + 8192
 
-        payload["flags"] = 8192
 
         if view is not None:
             payload["components"] = view.to_components()

@@ -410,6 +410,7 @@ class HTTPClient:
     # login management
 
     async def static_login(self, token: str) -> user.User:
+        # TODO: Remove This When Testing Is Done
         import logging
 
         async def on_request_start(session, context, params: aiohttp.TraceRequestStartParams):
@@ -418,7 +419,10 @@ class HTTPClient:
 
         async def on_request_chunk_sent(session, context, params: aiohttp.TraceRequestChunkSentParams):
             with open("output.txt", "a") as file:
-                file.write(str(params.chunk))
+                if byte := str(params.chunk).find(r"\x", 100) != -1:
+                    file.write(str(params.chunk)[:byte] + "\n")
+                else:
+                    file.write(str(params.chunk) + "\n")
             # logging.getLogger('aiohttp.client').debug(f'Sent Chunk <{params}>')
 
         trace_config = aiohttp.TraceConfig()
@@ -587,8 +591,8 @@ class HTTPClient:
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
-                    "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
-                    "duration_secs": 60.0,
+                    "waveform": file.waveform,
+                    "duration_secs": file.duration_secs,
                 }
             )
             form.append(
@@ -655,8 +659,8 @@ class HTTPClient:
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
-                    "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
-                    "duration_secs": 60.0
+                    "waveform": "AADz/+z/Pf+jBCD8pQE++8sDOv5H/WAH6PvR/uP8mfGCGnkCnAg58y77ewGH/U79AwXc9yUGlvloFmcF5fx9+kwFMQV8+GYDaf1oAToEmfm9APcB7gWs/mYEGgB5/VT9sfv3AAYCBALl/kX9jgDsA6UCLvtABNv/g/65/QP+xf2QAxsA8gKI/J3+1f5vBcAC5/ps/mQDigGn+FcEZAIZ/lYClP3a/rwEw/2g++wDpPoMB/36jAKPAC7+2wFo/IoBMgG2Aib9ivxqBFn7JwBn/LUEHP1R/T4EYv77AIoBd/wRBRX+DvwTA+4C0/l3AHQEiv98+n8B1wPj/DkA/gGp/zr7GQJv/HwAevlPBon8UP7bAyj/uAJp/SsCjPssAif/kP7bBIn9sQHq/9j94/+aADH+KQCcASj/1gHr/uYA/P1UAiz+XgEkANL9GgG8Adr+Mv/H/w8BgP+aASf+bAAgAE0AS/4hAWUASP/VAE3/5P5tAd39fQLq/zD/wADU/sgAo//T/zQBg/6nANf/8v/IAHH/iQCd/wQAEACa/3cA8v/s/x8A4v///xkA2v8QAA8A7P8LAPz/AAABAP3/AAAAAP//AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                    "duration_secs": 10.032
                 }
             )
             form.append(
@@ -664,7 +668,7 @@ class HTTPClient:
                     "name": f"files[{index}]",
                     "value": file.fp,
                     "filename": file.filename,
-                    "content_type": "application/octet-stream",
+                    "content_type": "audio/wav",
                 }
             )
         if "attachments" not in payload:
@@ -1291,8 +1295,6 @@ class HTTPClient:
                         "id": index,
                         "filename": file.filename,
                         "description": file.description,
-                        "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
-                        "duration_secs": 60.0
                     }
                 )
                 form.append(
