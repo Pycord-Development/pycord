@@ -2514,7 +2514,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: ending
 
-        The subscription is active but will not renew
+        The subscription is active but will not renew.
 
     .. attribute:: inactive
 

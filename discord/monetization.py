@@ -122,7 +122,7 @@ class SKU(Hashable):
         Parameters
         ----------
         user: :class:`.abc.Snowflake`
-            The user to retrieve subscriptions for.
+            The user for which to retrieve subscriptions.
         before: :class:`.abc.Snowflake` | :class:`datetime.datetime` | None
             Retrieves subscriptions before this date or object.
             If a datetime is provided, it is recommended to use a UTC-aware datetime.

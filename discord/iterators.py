@@ -1116,12 +1116,12 @@ class SubscriptionIterator(_AsyncIterator["Subscription"]):
         self.subscriptions = asyncio.Queue()
 
         if self.before and self.after:
-            self._retrieve_subscriptions = self._retrieve_subscriptions_before_strategy  # type: ignore
+            self._retrieve_subscriptions = self._retrieve_subscriptions_before_strategy
             self._filter = lambda m: int(m["id"]) > self.after.id
         elif self.after:
-            self._retrieve_subscriptions = self._retrieve_subscriptions_after_strategy  # type: ignore
+            self._retrieve_subscriptions = self._retrieve_subscriptions_after_strategy
         else:
-            self._retrieve_subscriptions = self._retrieve_subscriptions_before_strategy  # type: ignore
+            self._retrieve_subscriptions = self._retrieve_subscriptions_before_strategy
 
     async def next(self) -> Guild:
         if self.subscriptions.empty():
