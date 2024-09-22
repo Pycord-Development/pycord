@@ -198,7 +198,7 @@ class Option:
         enum_choices = []
         input_type_is_class = isinstance(input_type, type)
         if input_type_is_class and issubclass(input_type, (Enum, DiscordEnum)):
-            if description is None:
+            if description is None and input_type.__doc__ is not None:
                 description = inspect.cleandoc(input_type.__doc__)
                 if description and len(description) > 100:
                     description = description[:97] + "..."
@@ -209,7 +209,9 @@ class Option:
                     )
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
-            if all(isinstance(elem.value, value_class) for elem in enum_choices):
+            if value_class in SlashCommandOptionType.__members__ and all(
+                isinstance(elem.value, value_class) for elem in enum_choices
+            ):
                 input_type = SlashCommandOptionType.from_datatype(
                     enum_choices[0].value.__class__
                 )
