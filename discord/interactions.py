@@ -925,7 +925,6 @@ class InteractionResponse:
         if voice_message:
             payload["flags"] = payload.setdefault("flags", 0) + 8192
 
-
         if view is not None:
             payload["components"] = view.to_components()
 

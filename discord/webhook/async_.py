@@ -515,7 +515,7 @@ class AsyncWebhookAdapter:
                     "duration_secs": file.duration_secs,
                     "waveform": file.waveform,
                     # TODO: Fix content_type
-                    #"content_type": "audio/mp3",
+                    # "content_type": "audio/mp3",
                 }
             )
             form.append(
@@ -524,8 +524,8 @@ class AsyncWebhookAdapter:
                     "value": file.fp,
                     "filename": file.filename,
                     # TODO: Fix content_type
-                    #"content_type": "application/octet-stream",
-                    #"content_type": "audio/mp3",
+                    # "content_type": "application/octet-stream",
+                    # "content_type": "audio/mp3",
                 }
             )
         payload["flags"] = 1 << 13
@@ -666,7 +666,9 @@ def handle_message_parameters(
     if username:
         payload["username"] = username
 
-    flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral, is_voice_message=voice_message)
+    flags = MessageFlags(
+        suppress_embeds=suppress, ephemeral=ephemeral, is_voice_message=voice_message
+    )
     payload["flags"] = flags.value
 
     if applied_tags is not MISSING:
@@ -1804,7 +1806,7 @@ class Webhook(BaseWebhook):
             applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            voice_message=voice_message
+            voice_message=voice_message,
         )
         adapter = async_context.get()
         thread_id: int | None = None
