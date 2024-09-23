@@ -724,6 +724,7 @@ class AudioPlayer(threading.Thread):
         self._current_error: Exception | None = None
         self._connected: threading.Event = client._connected
         self._lock: threading.Lock = threading.Lock()
+        self._played_frames: int = 0
 
         if after is not None and not callable(after):
             raise TypeError('Expected a callable for the "after" parameter.')
@@ -755,6 +756,8 @@ class AudioPlayer(threading.Thread):
                 self._start = time.perf_counter()
 
             self.loops += 1
+            self._played_frames += 1
+
             # Send the data read from the start of the function if it is not None
             if first_data is not None:
                 data = first_data
@@ -834,3 +837,6 @@ class AudioPlayer(threading.Thread):
             )
         except Exception as e:
             _log.info("Speaking call in player failed: %s", e)
+
+    def played_seconds(self) -> int:
+        return self._played_frames // 50
