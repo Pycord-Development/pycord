@@ -40,13 +40,13 @@ Some documentation to refer to:
 from __future__ import annotations
 
 import asyncio
+import datetime
 import logging
 import select
 import socket
 import struct
 import threading
 import time
-import datetime
 from typing import TYPE_CHECKING, Any, Callable, Literal, overload
 
 from . import opus, utils
@@ -993,6 +993,6 @@ class VoiceClient(VoiceProtocol):
     def played_time(self) -> datetime.timedelta:
         """Gets the elapsed time of the playing audio. Returns 0 if not playing anything."""
         if self._player:
-            return datetime.timedelta(milliseconds=self._player.played_frames()*20)
+            return datetime.timedelta(milliseconds=self._player.played_frames() * 20)
         else:
             return datetime.timedelta()
