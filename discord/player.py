@@ -839,4 +839,5 @@ class AudioPlayer(threading.Thread):
             _log.info("Speaking call in player failed: %s", e)
 
     def played_frames(self) -> int:
+        """Gets the number of 20ms frames played since the start of the audio file."""
         return self._played_frames
