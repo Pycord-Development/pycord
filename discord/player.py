@@ -838,5 +838,5 @@ class AudioPlayer(threading.Thread):
         except Exception as e:
             _log.info("Speaking call in player failed: %s", e)
 
-    def played_seconds(self) -> int:
-        return self._played_frames // 50
+    def played_frames(self) -> int:
+        return self._played_frames

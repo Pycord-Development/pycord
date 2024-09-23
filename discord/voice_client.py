@@ -46,6 +46,7 @@ import socket
 import struct
 import threading
 import time
+import datetime
 from typing import TYPE_CHECKING, Any, Callable, Literal, overload
 
 from . import opus, utils
@@ -989,9 +990,9 @@ class VoiceClient(VoiceProtocol):
 
         self.checked_add("timestamp", opus.Encoder.SAMPLES_PER_FRAME, 4294967295)
 
-    def played_seconds(self) -> int:
-        """Gets the elapsed time of the playing audio in seconds. Returns 0 if not playing anything."""
+    def played_seconds(self) -> datetime.timedelta:
+        """Gets the elapsed time of the playing audio. Returns 0 if not playing anything."""
         if self._player:
-            return self._player.played_seconds()
+            return datetime.timedelta(milliseconds=self._player.played_frames()*20)
         else:
-            return 0
+            return datetime.timedelta()
