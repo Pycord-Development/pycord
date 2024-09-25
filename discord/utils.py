@@ -1306,9 +1306,12 @@ V = Union[Iterable[OptionChoice], Iterable[str], Iterable[int], Iterable[float]]
 AV = Awaitable[V]
 Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
 AutocompleteFunc = Callable[[AutocompleteContext], AV]
+CheckFunc = Callable[[AutocompleteContext, Any], Union[bool, Awaitable[bool]]]
 
 
-def basic_autocomplete(values: Values) -> AutocompleteFunc:
+def basic_autocomplete(
+    values: Values, *, check: CheckFunc | None = None
+) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
     callable, it will be called with the AutocompleteContext.
@@ -1320,6 +1323,9 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
     values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
+    check: Optional[Callable[[:class:`.AutocompleteContext`, Any], Union[:class:`bool`, Awaitable[:class:`bool`]]]]
+        Predicate callable (sync or async) used to filter the autocomplete options. This function should accept two arguments:
+        the :class:`.AutocompleteContext` and an item from ``values``. If ``None`` is provided, a default check is used that includes items whose string representation starts with the user's input value, case-insensitive.
 
     Returns
     -------
@@ -1355,11 +1361,23 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
         if asyncio.iscoroutine(_values):
             _values = await _values
 
-        def check(item: Any) -> bool:
-            item = getattr(item, "name", item)
-            return str(item).lower().startswith(str(ctx.value or "").lower())
+        if check is None:
 
-        gen = (val for val in _values if check(val))
+            def _check(ctx: AutocompleteContext, item: Any) -> bool:
+                item = getattr(item, "name", item)
+                return str(item).lower().startswith(str(ctx.value or "").lower())
+
+            gen = (val for val in _values if _check(ctx, val))
+
+        elif asyncio.iscoroutinefunction(check):
+            gen = (val for val in _values if await check(ctx, val))
+
+        elif callable(check):
+            gen = (val for val in _values if check(ctx, val))
+
+        else:
+            raise TypeError("``check`` must be callable.")
+
         return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback
