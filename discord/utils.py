@@ -1327,6 +1327,8 @@ def basic_autocomplete(
         Predicate callable (sync or async) used to filter the autocomplete options. This function should accept two arguments:
         the :class:`.AutocompleteContext` and an item from ``values``. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.
 
+        .. versionadded:: 2.7
+
     Returns
     -------
     Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
