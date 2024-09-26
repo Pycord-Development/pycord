@@ -25,8 +25,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fix `Enum` options not setting the correct type when only one choice is available.
+- Fixed `Enum` options not setting the correct type when only one choice is available.
   ([#2577](https://github.com/Pycord-Development/pycord/pull/2577))
+- Fixed `codec` option for `FFmpegOpusAudio` class to make it in line with
+  documentation. ([#2581](https://github.com/Pycord-Development/pycord/pull/2581))
+- Fixed a possible bug where audio would play too fast at the beginning of audio files.
+  ([#2584](https://github.com/Pycord-Development/pycord/pull/2584))
 
 ### Changed
 

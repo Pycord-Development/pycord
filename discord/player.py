@@ -355,8 +355,9 @@ class FFmpegOpusAudio(FFmpegAudio):
         The codec to use to encode the audio data.  Normally this would be
         just ``libopus``, but is used by :meth:`FFmpegOpusAudio.from_probe` to
         opportunistically skip pointlessly re-encoding Opus audio data by passing
-        ``copy`` as the codec value.  Any values other than ``copy``, ``opus``, or
-        ``libopus`` will be considered ``libopus``.  Defaults to ``libopus``.
+        ``copy`` as the codec value.  Any values other than ``copy``, or
+        ``libopus`` will be considered ``libopus``. ``opus`` will also be considered
+        ``libopus`` since the ``opus`` encoder is still in development. Defaults to ``libopus``.
 
         .. warning::
 
@@ -407,7 +408,9 @@ class FFmpegOpusAudio(FFmpegAudio):
         args.append("-i")
         args.append("-" if pipe else source)
 
-        codec = "copy" if codec in ("opus", "libopus") else "libopus"
+        # use "libopus" when "opus" is specified since the "opus" encoder is incomplete
+        # link to ffmpeg docs: https://www.ffmpeg.org/ffmpeg-codecs.html#opus
+        codec = "copy" if codec == "copy" else "libopus"
 
         args.extend(
             (
@@ -417,16 +420,23 @@ class FFmpegOpusAudio(FFmpegAudio):
                 "opus",
                 "-c:a",
                 codec,
-                "-ar",
-                "48000",
-                "-ac",
-                "2",
-                "-b:a",
-                f"{bitrate}k",
                 "-loglevel",
                 "warning",
             )
         )
+
+        # only pass in bitrate, sample rate, channels arguments when actually encoding to avoid ffmpeg warnings
+        if codec != "copy":
+            args.extend(
+                (
+                    "-ar",
+                    "48000",
+                    "-ac",
+                    "2",
+                    "-b:a",
+                    f"{bitrate}k",
+                )
+            )
 
         if isinstance(options, str):
             args.extend(shlex.split(options))
@@ -501,6 +511,8 @@ class FFmpegOpusAudio(FFmpegAudio):
 
         executable = kwargs.get("executable")
         codec, bitrate = await cls.probe(source, method=method, executable=executable)
+        # only re-encode if the source isn't already opus, else directly copy the source audio stream
+        codec = "copy" if codec in ("opus", "libopus") else "libopus"
         return cls(source, bitrate=bitrate, codec=codec, **kwargs)  # type: ignore
 
     @classmethod
@@ -717,6 +729,9 @@ class AudioPlayer(threading.Thread):
             raise TypeError('Expected a callable for the "after" parameter.')
 
     def _do_run(self) -> None:
+        # attempt to read first audio segment from source before starting
+        # some sources can take a few seconds and may cause problems
+        first_data = self.source.read()
         self.loops = 0
         self._start = time.perf_counter()
 
@@ -740,7 +755,13 @@ class AudioPlayer(threading.Thread):
                 self._start = time.perf_counter()
 
             self.loops += 1
-            data = self.source.read()
+            # Send the data read from the start of the function if it is not None
+            if first_data is not None:
+                data = first_data
+                first_data = None
+            # Else read the next bit from the source
+            else:
+                data = self.source.read()
 
             if not data:
                 self.stop()
