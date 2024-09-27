@@ -1334,12 +1334,8 @@ def basic_autocomplete(
     Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         A wrapped callback for the autocomplete.
 
-    Note
-    ----
-    Autocomplete cannot be used for options that have specified choices.
-
     Examples
-    -------
+    --------
 
     Basic usage:
 
@@ -1361,6 +1357,10 @@ def basic_autocomplete(
         Option(str, "color", autocomplete=basic_autocomplete(("red", "green", "blue"), filter=lambda c, i: str(c.value or "") in i))
 
     .. versionadded:: 2.0
+
+    Note
+    ----
+    Autocomplete cannot be used for options that have specified choices.
     """
 
     async def autocomplete_callback(ctx: AutocompleteContext) -> V:
