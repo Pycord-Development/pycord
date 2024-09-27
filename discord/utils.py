@@ -1324,8 +1324,8 @@ def basic_autocomplete(
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
     filter: Optional[Callable[[:class:`.AutocompleteContext`, Any], Union[:class:`bool`, Awaitable[:class:`bool`]]]]
-        Predicate callable (sync or async) used to filter the autocomplete options. This function should accept two arguments:
-        the :class:`.AutocompleteContext` and an item from ``values``. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.
+        An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments:
+        the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.
 
         .. versionadded:: 2.7
 
@@ -1338,8 +1338,10 @@ def basic_autocomplete(
     ----
     Autocomplete cannot be used for options that have specified choices.
 
-    Example
+    Examples
     -------
+
+    Basic usage:
 
     .. code-block:: python3
 
@@ -1351,6 +1353,12 @@ def basic_autocomplete(
             return "foo", "bar", "baz", ctx.interaction.user.name
 
         Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
+
+    With filter parameter:
+
+    .. code-block:: python3
+
+        Option(str, "color", autocomplete=basic_autocomplete(("red", "green", "blue"), filter=lambda c, i: str(c.value or "") in i))
 
     .. versionadded:: 2.0
     """
