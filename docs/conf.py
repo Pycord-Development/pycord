@@ -490,7 +490,7 @@ linkcheck_ignore = [
 linkcheck_anchors_ignore_for_url = [r"https://github.com/Delitefully/DiscordLists"]
 
 modindex_common_prefix = ["discord."]
-# suppress_warnings = ['autosectionlabel.*']
+suppress_warnings = ["ref.duplicate"]
 myst_enable_extensions = [
     "amsmath",
     "attrs_inline",
