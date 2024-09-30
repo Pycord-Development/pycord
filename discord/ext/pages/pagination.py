@@ -1090,8 +1090,10 @@ class Paginator(discord.ui.View):
 
         if page_content.custom_view:
             self.update_custom_view(page_content.custom_view)
-
-        self.user = user or self.user
+        if user or self.user:
+            self.user = user or self.user
+        else:
+            self.usercheck = False
 
         try:
             self.message = await message.edit(
