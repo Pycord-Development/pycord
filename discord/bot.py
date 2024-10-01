@@ -1407,7 +1407,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         self._after_invoke = coro
         return coro
 
-    async def is_owner(self, user: User) -> bool:
+    async def is_owner(self, user: User | Member) -> bool:
         """|coro|
 
         Checks if a :class:`~discord.User` or :class:`~discord.Member` is the owner of
@@ -1422,7 +1422,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         Parameters
         ----------
-        user: :class:`.abc.User`
+        user: Union[:class:`.abc.User`, :class:`.member.Member`]
             The user to check for.
 
         Returns

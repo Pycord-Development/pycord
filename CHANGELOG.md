@@ -34,6 +34,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed a possible bug where audio would play too fast at the beginning of audio files.
   ([#2584](https://github.com/Pycord-Development/pycord/pull/2584))
 - Fixed paginator buttons not responding when using `Paginator.edit()` with its default parameters ([#2594](https://github.com/Pycord-Development/pycord/pull/2594))
+- Fixed the `is_owner()` `user` type hint: `User` -> `User | Member`.
+  ([#2593](https://github.com/Pycord-Development/pycord/pull/2593))
 
 ### Changed
 
