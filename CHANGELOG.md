@@ -35,6 +35,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2584](https://github.com/Pycord-Development/pycord/pull/2584))
 - Fixed the `is_owner()` `user` type hint: `User` -> `User | Member`.
   ([#2593](https://github.com/Pycord-Development/pycord/pull/2593))
+- Fixed `guild.create_test_entitlement()` and `user.create_test_entitlement()` to send
+  `application_id` instead of `guild_id`/`user_id` to `http.create_test_entitlement()`.
+  ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
 
 ### Changed
 
