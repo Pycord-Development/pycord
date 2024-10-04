@@ -34,7 +34,16 @@ import logging
 import sys
 import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Literal,
+    Mapping,
+    TypeVar,
+)
 
 from .client import Client
 from .cog import CogMixin
@@ -55,6 +64,9 @@ from .shard import AutoShardedClient
 from .types import interactions
 from .user import User
 from .utils import MISSING, async_all, find, get
+
+if TYPE_CHECKING:
+    from .member import Member
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar("CFT", bound=CoroFunc)
