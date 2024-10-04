@@ -724,7 +724,7 @@ class AudioPlayer(threading.Thread):
         self._current_error: Exception | None = None
         self._connected: threading.Event = client._connected
         self._lock: threading.Lock = threading.Lock()
-        self._played_frames: int = 0
+        self._played_frames_offset: int = 0
 
         if after is not None and not callable(after):
             raise TypeError('Expected a callable for the "after" parameter.')
@@ -752,11 +752,11 @@ class AudioPlayer(threading.Thread):
                 # wait until we are connected
                 self._connected.wait()
                 # reset our internal data
+                self._played_frames_offset += self.loops
                 self.loops = 0
                 self._start = time.perf_counter()
 
             self.loops += 1
-            self._played_frames += 1
 
             # Send the data read from the start of the function if it is not None
             if first_data is not None:
@@ -812,6 +812,7 @@ class AudioPlayer(threading.Thread):
             self._speak(False)
 
     def resume(self, *, update_speaking: bool = True) -> None:
+        self._played_frames_offset += self.loops
         self.loops = 0
         self._start = time.perf_counter()
         self._resumed.set()
@@ -840,4 +841,4 @@ class AudioPlayer(threading.Thread):
 
     def played_frames(self) -> int:
         """Gets the number of 20ms frames played since the start of the audio file."""
-        return self._played_frames
+        return self._played_frames_offset + self.loops
