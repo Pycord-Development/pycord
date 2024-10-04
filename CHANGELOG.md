@@ -40,7 +40,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the `is_owner()` `user` type hint: `User` -> `User | Member`.
   ([#2593](https://github.com/Pycord-Development/pycord/pull/2593))
 
-
 ### Changed
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
