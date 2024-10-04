@@ -10,7 +10,7 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
-⚠️ **This Version Removes Support For Python 3.8** ⚠️
+⚠️ **This version removes support for Python 3.8.** ⚠️
 
 ### Added
 
@@ -26,13 +26,27 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Added `cache_app_emojis` parameter to `Client`.
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
+- Added optional `filter` parameter to `utils.basic_autocomplete()`.
+  ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+
+### Fixed
+
+- Fixed `Enum` options not setting the correct type when only one choice is available.
+  ([#2577](https://github.com/Pycord-Development/pycord/pull/2577))
+- Fixed `codec` option for `FFmpegOpusAudio` class to make it in line with
+  documentation. ([#2581](https://github.com/Pycord-Development/pycord/pull/2581))
+- Fixed a possible bug where audio would play too fast at the beginning of audio files.
+  ([#2584](https://github.com/Pycord-Development/pycord/pull/2584))
+- Fixed the `is_owner()` `user` type hint: `User` -> `User | Member`.
+  ([#2593](https://github.com/Pycord-Development/pycord/pull/2593))
+
 
 ### Changed
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
   `ScheduledEvent.edit` to `image`.
   ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
-- ⚠️ **This Version Removes Support For Python 3.8** ⚠️
+- ⚠️ **Removed support for Python 3.8.**
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
 - `Emoji` has been renamed to `GuildEmoji`.
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
@@ -42,24 +56,32 @@ These changes are available on the `master` branch, but have not yet been releas
 - Deprecated `AppInfo.summary` in favor of `AppInfo.description`.
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 
+## [2.6.1] - 2024-09-15
+
 ### Fixed
 
-- Fixed `EntitlementIterator` behavior with `limit > 100`.
+- Fixed premature garbage collection of tasks.
+  ([#2510](https://github.com/Pycord-Development/pycord/pull/2510))
+- Fixed `EntitlementIterator` type hints and behavior with `limit > 100`.
   ([#2555](https://github.com/Pycord-Development/pycord/pull/2555))
 - Fixed missing `stacklevel` parameter in `warn_deprecated` function call inside
   `@utils.deprecated`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
-- Fixed the typehint in `ConnectionState._polls` to reflect actual behavior, changing it
-  from `Guild` to `Poll`.
+- Fixed the type hint in `ConnectionState._polls` to reflect actual behavior, changing
+  it from `Guild` to `Poll`.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed missing `__slots__` attributes in `RawReactionClearEmojiEvent` and
   `RawMessagePollVoteEvent`.
   ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed the type of `ForumChannel.default_sort_order`, changing it from `int` to
   `SortOrder`. ([#2500](https://github.com/Pycord-Development/pycord/pull/2500))
-- Fixed `PartialMessage`s causing errors when created from `PartialMessageable`.
+- Fixed `PartialMessage` causing errors when created from `PartialMessageable`.
   ([#2568](https://github.com/Pycord-Development/pycord/pull/2500))
 - Fixed the `guild` attribute of `Member`s recieved from a `UserCommand` being `None`.
   ([#2573](https://github.com/Pycord-Development/pycord/pull/2573))
+- Fixed `Webhook.send` not including attachment data.
+  ([#2513](https://github.com/Pycord-Development/pycord/pull/2513))
+- Fixed inverted type hints in `CheckAnyFailure`.
+  ([#2502](https://github.com/Pycord-Development/pycord/pull/2502))
 
 ## [2.6.0] - 2024-07-09
 
