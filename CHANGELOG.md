@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added optional `guild_id` parameter to `Client.entitlements()`.
+  ([#2597](https://github.com/Pycord-Development/pycord/pull/2597))
 
 ### Fixed
 
