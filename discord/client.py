@@ -2058,6 +2058,7 @@ class Client:
         after: SnowflakeTime | None = None,
         limit: int | None = 100,
         guild: Snowflake | None = None,
+        guild_id: int | None = None,
         exclude_ended: bool = False,
     ) -> EntitlementIterator:
         """Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements.
@@ -2084,6 +2085,9 @@ class Client:
             Defaults to ``100``.
         guild: :class:`.abc.Snowflake` | None
             Limit the fetched entitlements to entitlements owned by this guild.
+            If not ``None``, ``guild`` takes priority over ``guild_id``.
+        guild_id: :class:`int` | None
+            Limit the fetched entitlements to entitlements owned by a guild with this ID.
         exclude_ended: :class:`bool`
             Whether to limit the fetched entitlements to those that have not ended.
             Defaults to ``False``.
@@ -2119,7 +2123,7 @@ class Client:
             before=before,
             after=after,
             limit=limit,
-            guild_id=guild.id if guild else None,
+            guild_id=guild.id if guild else guild_id if guild_id else None,
             exclude_ended=exclude_ended,
         )
 
