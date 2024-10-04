@@ -54,6 +54,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Deprecated `AppInfo.summary` in favor of `AppInfo.description`.
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+- Deprecated `Emoji` in favor of `GuildEmoji`
+  ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 
 ## [2.6.1] - 2024-09-15
 
