@@ -4089,7 +4089,9 @@ class Guild(Hashable):
             "owner_id": self.id,
             "owner_type": EntitlementOwnerType.guild.value,
         }
-        data = await self._state.http.create_test_entitlement(self.id, payload)
+        data = await self._state.http.create_test_entitlement(
+            self._state.application_id, payload
+        )
         return Entitlement(data=data, state=self._state)
 
     def entitlements(
