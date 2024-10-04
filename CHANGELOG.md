@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
 - Added `played_time` function to `VoiceClient` to get elapsed time of the playing audio
   file. ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
+- Added optional `filter` parameter to `utils.basic_autocomplete()`.
+  ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
 
 ### Fixed
 
@@ -33,6 +35,8 @@ These changes are available on the `master` branch, but have not yet been releas
   documentation. ([#2581](https://github.com/Pycord-Development/pycord/pull/2581))
 - Fixed a possible bug where audio would play too fast at the beginning of audio files.
   ([#2584](https://github.com/Pycord-Development/pycord/pull/2584))
+- Fixed the `is_owner()` `user` type hint: `User` -> `User | Member`.
+  ([#2593](https://github.com/Pycord-Development/pycord/pull/2593))
 
 ### Changed
 
