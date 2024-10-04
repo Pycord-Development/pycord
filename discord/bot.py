@@ -34,7 +34,16 @@ import logging
 import sys
 import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TYPE_CHECKING, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Literal,
+    Mapping,
+    TypeVar,
+)
 
 from .client import Client
 from .cog import CogMixin
