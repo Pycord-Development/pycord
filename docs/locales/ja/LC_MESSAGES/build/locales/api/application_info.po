@@ -1,0 +1,181 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Application Info"
+msgstr "Application Info"
+
+msgid "Represents the application info for the bot provided by Discord."
+msgstr "Represents the application info for the bot provided by Discord."
+
+msgid "The application ID."
+msgstr "The application ID."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`int`"
+msgstr ":class:`int`"
+
+msgid "The application name."
+msgstr "The application name."
+
+msgid ":class:`str`"
+msgstr ":class:`str`"
+
+msgid "The application owner."
+msgstr "The application owner."
+
+msgid ":class:`User`"
+msgstr ":class:`User`"
+
+msgid "The application's team."
+msgstr "The application's team."
+
+msgid "Optional[:class:`Team`]"
+msgstr "Optional[:class:`Team`]"
+
+msgid "The application description."
+msgstr "The application description."
+
+msgid "Whether the bot can be invited by anyone or if it is locked to the application owner."
+msgstr "Whether the bot can be invited by anyone or if it is locked to the application owner."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "Whether the bot requires the completion of the full OAuth2 code grant flow to join."
+msgstr "Whether the bot requires the completion of the full OAuth2 code grant flow to join."
+
+msgid "A list of RPC origin URLs, if RPC is enabled."
+msgstr "A list of RPC origin URLs, if RPC is enabled."
+
+msgid "Optional[List[:class:`str`]]"
+msgstr "Optional[List[:class:`str`]]"
+
+msgid "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
+msgstr "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
+
+msgid "The hex encoded key for verification in interactions and the GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_."
+msgstr "The hex encoded key for verification in interactions and the GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_."
+
+msgid "If this application is a game sold on Discord, this field will be the guild to which it has been linked to."
+msgstr "If this application is a game sold on Discord, this field will be the guild to which it has been linked to."
+
+msgid "Optional[:class:`int`]"
+msgstr "Optional[:class:`int`]"
+
+msgid "If this application is a game sold on Discord, this field will be the id of the \"Game SKU\" that is created, if it exists."
+msgstr "If this application is a game sold on Discord, this field will be the id of the \"Game SKU\" that is created, if it exists."
+
+msgid "If this application is a game sold on Discord, this field will be the URL slug that links to the store page."
+msgstr "If this application is a game sold on Discord, this field will be the URL slug that links to the store page."
+
+msgid "Optional[:class:`str`]"
+msgstr "Optional[:class:`str`]"
+
+msgid "The application's terms of service URL, if set."
+msgstr "The application's terms of service URL, if set."
+
+msgid "The application's privacy policy URL, if set."
+msgstr "The application's privacy policy URL, if set."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "Retrieves the application's icon asset, if any."
+msgstr "Retrieves the application's icon asset, if any."
+
+msgid "Retrieves the cover image on a store embed, if any."
+msgstr "Retrieves the cover image on a store embed, if any."
+
+msgid "This is only available if the application is a game sold on Discord."
+msgstr "This is only available if the application is a game sold on Discord."
+
+msgid "If this application is a game sold on Discord, this field will be the guild to which it has been linked."
+msgstr "If this application is a game sold on Discord, this field will be the guild to which it has been linked."
+
+msgid "Represents a partial AppInfo given by :func:`~discord.abc.GuildChannel.create_invite`"
+msgstr "Represents a partial AppInfo given by :func:`~discord.abc.GuildChannel.create_invite`"
+
+msgid "Represents an application team for a bot provided by Discord."
+msgstr "Represents an application team for a bot provided by Discord."
+
+msgid "The team ID."
+msgstr "The team ID."
+
+msgid "The team name."
+msgstr "The team name."
+
+msgid "The team's owner ID."
+msgstr "The team's owner ID."
+
+msgid "A list of the members in the team."
+msgstr "A list of the members in the team."
+
+msgid "List[:class:`TeamMember`]"
+msgstr "List[:class:`TeamMember`]"
+
+msgid "Retrieves the team's icon asset, if any."
+msgstr "Retrieves the team's icon asset, if any."
+
+msgid "The team's owner."
+msgstr "The team's owner."
+
+msgid "Represents a team member in a team."
+msgstr "Represents a team member in a team."
+
+msgid "Checks if two team members are equal."
+msgstr "Checks if two team members are equal."
+
+msgid "Checks if two team members are not equal."
+msgstr "Checks if two team members are not equal."
+
+msgid "Return the team member's hash."
+msgstr "Return the team member's hash."
+
+msgid "Returns the team member's name with discriminator or global_name."
+msgstr "Returns the team member's name with discriminator or global_name."
+
+msgid "The team member's username."
+msgstr "The team member's username."
+
+msgid "The team member's unique ID."
+msgstr "The team member's unique ID."
+
+msgid "The team member's discriminator. This is given when the username has conflicts."
+msgstr "The team member's discriminator. This is given when the username has conflicts."
+
+msgid "If the user has migrated to the new username system, this will always be \"0\"."
+msgstr "If the user has migrated to the new username system, this will always be \"0\"."
+
+msgid "The team member's global name."
+msgstr "The team member's global name."
+
+msgid "The avatar hash the team member has. Could be ``None``."
+msgstr "The avatar hash the team member has. Could be ``None``."
+
+msgid "Specifies if the user is a bot account."
+msgstr "Specifies if the user is a bot account."
+
+msgid "The team that the member is from."
+msgstr "The team that the member is from."
+
+msgid ":class:`Team`"
+msgstr ":class:`Team`"
+
+msgid "The membership state of the member (e.g. invited or accepted)"
+msgstr "The membership state of the member (e.g. invited or accepted)"
+
+msgid ":class:`TeamMembershipState`"
+msgstr ":class:`TeamMembershipState`"
+

@@ -1,0 +1,67 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: ../../logging.rst:7 11eccc080359468a86bef8d45358f539
+msgid "Setting Up Logging"
+msgstr ""
+
+#: ../../logging.rst:9 369e2bcd67d0413dbca92403fa9b2ff6
+msgid ""
+"*Pycord* logs errors and debug information via the :mod:`logging` python "
+"module. It is strongly recommended that the logging module is configured,"
+" as no errors or warnings will be output if it is not set up. "
+"Configuration of the ``logging`` module can be as simple as::"
+msgstr ""
+
+#: ../../logging.rst:18 15f27810b12a4d01bcb0243e98a20df4
+msgid ""
+"Placed at the start of the application. This will output the logs from "
+"discord as well as other libraries that use the ``logging`` module "
+"directly to the console."
+msgstr ""
+
+#: ../../logging.rst:22 6bd5cec9518243649ead4496c45f036e
+msgid ""
+"The optional ``level`` argument specifies what level of events to log out"
+" and can be any of ``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO``, and "
+"``DEBUG`` and if not specified defaults to ``WARNING``."
+msgstr ""
+
+#: ../../logging.rst:26 303ae7d601af46d2bead5ad7ae3a1ab9
+msgid ""
+"More advanced setups are possible with the :mod:`logging` module. For "
+"example to write the logs to a file called ``discord.log`` instead of "
+"outputting them to the console the following snippet can be used::"
+msgstr ""
+
+#: ../../logging.rst:39 7ec89923962d4f878759e0a19dfffcc9
+msgid ""
+"This is recommended, especially at verbose levels such as ``INFO`` and "
+"``DEBUG``, as there are a lot of events logged and it would clog the "
+"stdout of your program."
+msgstr ""
+
+#: ../../logging.rst:45 dc5471669f9240fba325278270e16118
+msgid ""
+"For more information, check the documentation and tutorial of the "
+":mod:`logging` module."
+msgstr ""
+

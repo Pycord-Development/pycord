@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Cogs"
+msgstr "Cogs"
+
+msgid "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
+msgstr "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
+
+msgid "The gist:"
+msgstr "The gist:"
+
+msgid "Each cog is a Python class that subclasses :class:`.commands.Cog`."
+msgstr "Each cog is a Python class that subclasses :class:`.commands.Cog`."
+
+msgid "Every command is marked with the :func:`.commands.command` decorator."
+msgstr "Every command is marked with the :func:`.commands.command` decorator."
+
+msgid "Every listener is marked with the :meth:`.commands.Cog.listener` decorator."
+msgstr "Every listener is marked with the :meth:`.commands.Cog.listener` decorator."
+
+msgid "Cogs are then registered with the :meth:`.Bot.add_cog` call."
+msgstr "Cogs are then registered with the :meth:`.Bot.add_cog` call."
+
+msgid "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
+msgstr "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
+
+msgid "It should be noted that cogs are typically used alongside with :ref:`ext_commands_extensions`."
+msgstr "It should be noted that cogs are typically used alongside with :ref:`ext_commands_extensions`."
+
+msgid "Quick Example"
+msgstr "Quick Example"
+
+msgid "This example cog defines a ``Greetings`` category for your commands, with a single :ref:`command <ext_commands_commands>` named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
+msgstr "This example cog defines a ``Greetings`` category for your commands, with a single :ref:`command <ext_commands_commands>` named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
+
+msgid "A couple of technical notes to take into consideration:"
+msgstr "A couple of technical notes to take into consideration:"
+
+msgid "All listeners must be explicitly marked via decorator, :meth:`~.commands.Cog.listener`."
+msgstr "All listeners must be explicitly marked via decorator, :meth:`~.commands.Cog.listener`."
+
+msgid "The name of the cog is automatically derived from the class name but can be overridden. See :ref:`ext_commands_cogs_meta_options`."
+msgstr "The name of the cog is automatically derived from the class name but can be overridden. See :ref:`ext_commands_cogs_meta_options`."
+
+msgid "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
+msgstr "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
+
+msgid "Cog Registration"
+msgstr "Cog Registration"
+
+msgid "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.commands.Bot.add_cog` method."
+msgstr "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.commands.Bot.add_cog` method."
+
+msgid "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
+msgstr "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
+
+msgid "Note that we reference the cog by name, which we can override through :ref:`ext_commands_cogs_meta_options`. So if we ever want to remove the cog eventually, we would have to do the following."
+msgstr "Note that we reference the cog by name, which we can override through :ref:`ext_commands_cogs_meta_options`. So if we ever want to remove the cog eventually, we would have to do the following."
+
+msgid "Using Cogs"
+msgstr "Using Cogs"
+
+msgid "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
+msgstr "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
+
+msgid "Special Methods"
+msgstr "Special Methods"
+
+msgid "As cogs get more complicated and have more commands, there comes a point where we want to customise the behaviour of the entire cog or bot."
+msgstr "As cogs get more complicated and have more commands, there comes a point where we want to customise the behaviour of the entire cog or bot."
+
+msgid "They are as follows:"
+msgstr "They are as follows:"
+
+msgid ":meth:`.Cog.cog_unload`"
+msgstr ":meth:`.Cog.cog_unload`"
+
+msgid ":meth:`.Cog.cog_check`"
+msgstr ":meth:`.Cog.cog_check`"
+
+msgid ":meth:`.Cog.cog_command_error`"
+msgstr ":meth:`.Cog.cog_command_error`"
+
+msgid ":meth:`.Cog.cog_before_invoke`"
+msgstr ":meth:`.Cog.cog_before_invoke`"
+
+msgid ":meth:`.Cog.cog_after_invoke`"
+msgstr ":meth:`.Cog.cog_after_invoke`"
+
+msgid ":meth:`.Cog.bot_check`"
+msgstr ":meth:`.Cog.bot_check`"
+
+msgid ":meth:`.Cog.bot_check_once`"
+msgstr ":meth:`.Cog.bot_check_once`"
+
+msgid "You can visit the reference to get more detail."
+msgstr "You can visit the reference to get more detail."
+
+msgid "Meta Options"
+msgstr "Meta Options"
+
+msgid "At the heart of a cog resides a metaclass, :class:`.commands.CogMeta`, which can take various options to customise some of the behaviour. To do this, we pass keyword arguments to the class definition line. For example, to change the cog name we can pass the ``name`` keyword argument as follows:"
+msgstr "At the heart of a cog resides a metaclass, :class:`.commands.CogMeta`, which can take various options to customise some of the behaviour. To do this, we pass keyword arguments to the class definition line. For example, to change the cog name we can pass the ``name`` keyword argument as follows:"
+
+msgid "To see more options that you can set, see the documentation of :class:`.commands.CogMeta`."
+msgstr "To see more options that you can set, see the documentation of :class:`.commands.CogMeta`."
+
+msgid "Inspection"
+msgstr "Inspection"
+
+msgid "Since cogs ultimately are classes, we have some tools to help us inspect certain properties of the cog."
+msgstr "Since cogs ultimately are classes, we have some tools to help us inspect certain properties of the cog."
+
+msgid "To get a :class:`list` of commands, we can use :meth:`.Cog.get_commands`. ::"
+msgstr "To get a :class:`list` of commands, we can use :meth:`.Cog.get_commands`. ::"
+
+msgid "If we want to get the subcommands as well, we can use the :meth:`.Cog.walk_commands` generator. ::"
+msgstr "If we want to get the subcommands as well, we can use the :meth:`.Cog.walk_commands` generator. ::"
+
+msgid "To do the same with listeners, we can query them with :meth:`.Cog.get_listeners`. This returns a list of tuples -- the first element being the listener name and the second one being the actual function itself. ::"
+msgstr "To do the same with listeners, we can query them with :meth:`.Cog.get_listeners`. This returns a list of tuples -- the first element being the listener name and the second one being the actual function itself. ::"
+

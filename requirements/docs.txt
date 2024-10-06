@@ -1,8 +1,11 @@
-sphinx==5.3.0
+sphinx==8.0.2
 sphinxcontrib_trio==1.1.2
-sphinxcontrib-websupport==1.2.4
-myst-parser==1.0.0
+sphinxcontrib-websupport==2.0.0
+myst-parser[linkify]==4.0.0
 sphinxext-opengraph==0.9.1
 sphinx-copybutton==0.5.2
-furo==2023.3.23
-sphinx-autodoc-typehints==1.23.0
+furo==2024.8.6
+sphinx-autodoc-typehints==2.2.3
+sphinx-intl==2.2.0
+typing_extensions==4.12.2
+levenshtein==0.26.0

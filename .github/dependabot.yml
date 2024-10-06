@@ -2,6 +2,13 @@ version: 2
 updates:
   - package-ecosystem: "pip"
     directory: "/"
+    groups:
+      minor-version-bumps:
+        update-types: ["minor"]
+      patch-version-bumps:
+        update-types: ["patch"]
+      major-version-bumps:
+        update-types: ["major"]
     schedule:
       interval: "daily"
     commit-message:
@@ -10,6 +17,13 @@ updates:
       include: "scope"
   - package-ecosystem: "github-actions"
     directory: "/"
+    groups:
+      minor-version-bumps:
+        update-types: ["minor"]
+      patch-version-bumps:
+        update-types: ["patch"]
+      major-version-bumps:
+        update-types: ["major"]
     schedule:
       interval: "daily"
     commit-message:

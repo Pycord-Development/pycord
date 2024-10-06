@@ -1,0 +1,355 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../api/cogs.rst:4
+#: 5374666c885c4434b06da0a8790fecdb
+msgid "Cogs"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog:1
+#: 458db600a9dc421f888e3b5e7c9f1351
+msgid "The base class that all cogs must inherit from."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog:3
+#: e1e94c83b83740df83784c2fff922069
+msgid "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog:7
+#: 8ecea32e63eb4fe29620ed571bb7681b
+msgid "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
+msgstr ""
+
+#: ../../api/cogs.rst:0
+#: 1d205dc90db34b6d9d28696d847dee05
+#: 35b5e3289e2e4915a8fe1a7f1955e20c
+msgid "Returns"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.get_commands:1
+#: 898f5042c0b34b3bad6c57241c7a13cb
+msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.get_commands:1
+#: 0397355338a240288c1b0d328ef921af
+msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.get_commands:6
+#: 8c92dad3ecb14b3098ece5e74258e9f0
+msgid "This does not include subcommands."
+msgstr ""
+
+#: ../../api/cogs.rst:0
+#: c4db6bbac90e467593f54b1cab05f4fb
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
+msgid "Return type"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.get_commands:7
+#: 12ea85ca434545618cfed65e71c9d1b2
+msgid "List[:class:`.ApplicationCommand`]"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.Cog.qualified_name:1
+#: 9b9b93d42d1444fdad773c091b29a12e
+msgid "Returns the cog's specified name, not the class name."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.Cog.description:1
+#: 09a4937043ae42de98974edac587af34
+msgid "Returns the cog's description, typically the cleaned docstring."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.walk_commands:1
+#: 79a0311d2c504a2683912a45a590a788
+msgid "An iterator that recursively walks through this cog's commands and subcommands."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.walk_commands:0
+#: 019b68caa9ae4423a195db1a4caac677
+msgid "Yields"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.walk_commands:3
+#: c6b428360ea8462ab87d860eeb14f885
+msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.get_listeners:1
+#: 483845d65d544491a23375ed5d92e183
+msgid "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.get_listeners:3
+#: 91c25427765a4ea29546f1167cdd4893
+msgid "The listeners defined in this cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.get_listeners:4
+#: 2fb7acbba5b24dcdb2dc03d91ffa65da
+msgid "List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.listener:1
+#: c3661694ba0d4447b0f9fd92354b48d8
+msgid "A decorator that marks a function as a listener."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.listener:3
+#: 22b14baebc684734bb4830d6299e5c83
+msgid "This is the cog equivalent of :meth:`.Bot.listen`."
+msgstr ""
+
+#: ../../api/cogs.rst:0
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+#: bd530b05086c4698967d87151c86bf4d
+msgid "Parameters"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.listener:6
+#: 056df5f1bcf2456e9448b7ac18cdf0b2
+msgid "The name of the event being listened to. If not provided, it defaults to the function's name."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.listener:10
+#: 988ebdf9035e4565aa89650d9bf379e5
+msgid "If this listener should only be called once after each cog load. Defaults to false."
+msgstr ""
+
+#: ../../api/cogs.rst:0
+#: 108c54a3aec540989381cab703ffb9cb
+msgid "Raises"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.listener:14
+#: 9dd1deee9f194fffafea26f9ed0c1d66
+msgid "The function is not a coroutine function or a string was not passed as     the name."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.listener:16
+#: 4f8e7498b5ae43b78c54b7b164dcdd88
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FuncT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FuncT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\)\\]`"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.has_error_handler:1
+#: 8540394b44384ceb81c96c63caa5c2d2
+msgid "Checks whether the cog has an error handler. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_unload:1
+#: d763221471154638916ac3d6956b3ae5
+msgid "A special method that is called when the cog gets removed."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_unload:3
+#: e9d793cd323741df9e72ffde220b07e9
+msgid "This function **cannot** be a coroutine. It must be a regular function."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_unload:6
+#: 724ad9a454b545179a30c4708ea00cff
+msgid "Subclasses must replace this if they want special unloading behaviour."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_after_invoke:11
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_before_invoke:11
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:16
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_unload:9
+#: bae3ff62cd7046098fd26a064a87ab95
+#: bae3ff62cd7046098fd26a064a87ab95
+#: bae3ff62cd7046098fd26a064a87ab95
+#: bae3ff62cd7046098fd26a064a87ab95
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:1
+#: c2514ac91866455db81eefb67426a70a
+msgid "A special method that registers as a :meth:`.Bot.check_once` check."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check:4
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:4
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:4
+#: 74a72b4805f9400f99581374cdd6e25d
+#: 74a72b4805f9400f99581374cdd6e25d
+#: 74a72b4805f9400f99581374cdd6e25d
+msgid "This function **can** be a coroutine and must take a sole parameter, ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check:8
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:8
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_after_invoke:8
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_before_invoke:8
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:8
+#: 21d75be906eb43a4839ac7c2ac76eb49
+#: 21d75be906eb43a4839ac7c2ac76eb49
+#: 21d75be906eb43a4839ac7c2ac76eb49
+#: 21d75be906eb43a4839ac7c2ac76eb49
+#: 21d75be906eb43a4839ac7c2ac76eb49
+msgid "The invocation context."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check:11
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check_once:11
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:11
+#: bc04772b95eb445880b68aa35b50195a
+#: bc04772b95eb445880b68aa35b50195a
+#: bc04772b95eb445880b68aa35b50195a
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.bot_check:1
+#: bbe43d3b5dd84335bd98b895da5c5d31
+msgid "A special method that registers as a :meth:`.Bot.check` check."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_check:1
+#: 565b81b5cfdc4cdda8521ef12839733b
+msgid "A special method that registers as a :func:`~discord.ext.commands.check` for every command and subcommand in this cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:1
+#: 2b94ea8c69b14735aa67ff32dc3c485c
+msgid "A special method that is called whenever an error is dispatched inside this cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:4
+#: 6a8806d6c4dc43f297f233cc8b7b6ee0
+msgid "This is similar to :func:`.on_command_error` except only applying to the commands inside this cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_after_invoke:5
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_before_invoke:5
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:7
+#: 2e2fb136a8f54e59a37867e585a665fa
+#: 2e2fb136a8f54e59a37867e585a665fa
+#: 2e2fb136a8f54e59a37867e585a665fa
+msgid "This **must** be a coroutine."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:10
+#: f45a4e9c378d4734bd2deb4595be8ade
+msgid "The invocation context where the error happened."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_command_error:13
+#: efb608efd0f84d848d9751acb811d5c4
+msgid "The error that happened."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_before_invoke:1
+#: e700e204ccb442a29787cdda38815ca5
+msgid "A special method that acts as a cog local pre-invoke hook."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_before_invoke:3
+#: 2d77573f53f44ca6b250e7f6df2489b4
+msgid "This is similar to :meth:`.ApplicationCommand.before_invoke`."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_after_invoke:1
+#: d9ccb004627a47bebf30219cd886dd84
+msgid "A special method that acts as a cog local post-invoke hook."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.cog_after_invoke:3
+#: dbfd268f9dc34ea49b98669dcbbdf3ec
+msgid "This is similar to :meth:`.ApplicationCommand.after_invoke`."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:1
+#: 904788c309034bf3afb023d13eecfd71
+msgid "A metaclass for defining a cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:3
+#: 161c4beefa534e7b9ab0609af6d8a6f9
+msgid "Note that you should probably not use this directly. It is exposed purely for documentation purposes along with making custom metaclasses to intermix with other metaclasses such as the :class:`abc.ABCMeta` metaclass."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:7
+#: a6eba5b14cd74e789809db87119d7c77
+msgid "For example, to create an abstract cog mixin class, the following would be done."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:24
+#: 206e4807ffc441bd8d611a6ea0a96b05
+msgid "When passing an attribute of a metaclass that is documented below, note that you must pass it as a keyword-only argument to the class creation like the following example:"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:35
+#: e1bd95d427ba4763beddd661b91be7c3
+msgid "The cog name. By default, it is the name of the class with no modification."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:0
+#: 89b6db804e56474fb08d5a060b7ed69d
+#: 89b6db804e56474fb08d5a060b7ed69d
+#: 89b6db804e56474fb08d5a060b7ed69d
+#: 89b6db804e56474fb08d5a060b7ed69d
+msgid "type"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:37
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:45
+#: 459eaf51b3d74a869ea18e53f787fcea
+#: 459eaf51b3d74a869ea18e53f787fcea
+msgid ":class:`str`"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:41
+#: a3bb879d22d1404a9ca12a99597eefef
+msgid "The cog description. By default, it is the cleaned docstring of the class."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:49
+#: 5976a1f483c5445ca1697a4a084bca66
+msgid "A list of attributes to apply to every command inside this cog. The dictionary is passed into the :class:`Command` options at ``__init__``. If you specify attributes inside the command attribute in the class, it will override the one specified inside this attribute. For example:"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:65
+#: 2ed6039376f64807b6b5820df01912d7
+msgid ":class:`dict`"
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:69
+#: 0194efeae73b4e52b6b48b3cba6e8c8c
+msgid "A shortcut to :attr:`.command_attrs`, what ``guild_ids`` should all application commands have in the cog. You can override this by setting ``guild_ids`` per command."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.CogMeta:74
+#: f3c34e2053064a7e9f686c4a5656fbf9
+msgid "Optional[List[:class:`int`]]"
+msgstr ""

@@ -1,0 +1,217 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../ext/commands/cogs.rst:6
+#: 7d8a14b96db54be3b73b46f1162cfd57
+msgid "Cogs"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:8
+#: 41ef7d4debd54cab990dc125e2249c37
+msgid "There comes a point in your bot's development when you want to organize a collection of commands, listeners, and some state into one class. Cogs allow you to do just that."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:10
+#: a21a197b686a425399b4053a1c4a3b4c
+msgid "The gist:"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:12
+#: 761abe3bf60b4bde8cbdf6e3a55371be
+msgid "Each cog is a Python class that subclasses :class:`.commands.Cog`."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:13
+#: 9517e5384a094f2bb1f431d2ce713ac6
+msgid "Every command is marked with the :func:`.commands.command` decorator."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:14
+#: d21d904b74eb4e89a2a4bc661d4aa00f
+msgid "Every listener is marked with the :meth:`.commands.Cog.listener` decorator."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:15
+#: e5459a2d0d6141ec8145b7ae5ba0600a
+msgid "Cogs are then registered with the :meth:`.Bot.add_cog` call."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:16
+#: eccd2572c7734092aacd752b4ae72121
+msgid "Cogs are subsequently removed with the :meth:`.Bot.remove_cog` call."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:18
+#: df03b5d52bef49abb33191f556a196d9
+msgid "It should be noted that cogs are typically used alongside with :ref:`ext_commands_extensions`."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:21
+#: 9629417da52d4bc796c9f2d88f7c0d3c
+msgid "Quick Example"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:23
+#: 398644f0c77043148ebb2331f2c41a7d
+msgid "This example cog defines a ``Greetings`` category for your commands, with a single :ref:`command <ext_commands_commands>` named ``hello`` as well as a listener to listen to an :ref:`Event <discord-api-events>`."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:48
+#: af7c9e23c9e34661b1978bd16b5f5d2f
+msgid "A couple of technical notes to take into consideration:"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:50
+#: 14622d4a1d7947e89b70882dd6311e88
+msgid "All listeners must be explicitly marked via decorator, :meth:`~.commands.Cog.listener`."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:51
+#: a3e030dda8d84fdfa20ac0b4745d3e66
+msgid "The name of the cog is automatically derived from the class name but can be overridden. See :ref:`ext_commands_cogs_meta_options`."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:52
+#: b8b3cbe90a264a4c9664e7c55cfa033a
+msgid "All commands must now take a ``self`` parameter to allow usage of instance attributes that can be used to maintain state."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:55
+#: b00093673c624886896e49bc30d483b5
+msgid "Cog Registration"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:57
+#: f133cc0e24b84376a8df459fb95e2fd2
+msgid "Once you have defined your cogs, you need to tell the bot to register the cogs to be used. We do this via the :meth:`~.commands.Bot.add_cog` method."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:63
+#: d6b663ac6c7e419780246e450051d1e4
+msgid "This binds the cog to the bot, adding all commands and listeners to the bot automatically."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:65
+#: 72947ff2c39045ffa1c88c854d997425
+msgid "Note that we reference the cog by name, which we can override through :ref:`ext_commands_cogs_meta_options`. So if we ever want to remove the cog eventually, we would have to do the following."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:72
+#: 21e748a565fa4b6a8a19aab2ccdad567
+msgid "Using Cogs"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:74
+#: c33c65a090bb4cbba543946df62d8476
+msgid "Just as we remove a cog by its name, we can also retrieve it by its name as well. This allows us to use a cog as an inter-command communication protocol to share data. For example:"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:109
+#: 70ea1a2dc1f346e89f071b2a90daaa32
+msgid "Special Methods"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:111
+#: 0be6debcef404ea9b950aeec82453364
+msgid "As cogs get more complicated and have more commands, there comes a point where we want to customise the behaviour of the entire cog or bot."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:113
+#: 24f5ccc99dff448bb57383ef47388bce
+msgid "They are as follows:"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:115
+#: 97d2ba6b9f644b8a8b1aac7ade166884
+msgid ":meth:`.Cog.cog_unload`"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:116
+#: 992d9055babe4cd68c4802a454c0db57
+msgid ":meth:`.Cog.cog_check`"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:117
+#: 22aae6ba82674e9f94b09e54c316c361
+msgid ":meth:`.Cog.cog_command_error`"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:118
+#: b6a3156bc70c4a838f82be1bac2547f3
+msgid ":meth:`.Cog.cog_before_invoke`"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:119
+#: 738a0b7b5afa4502a5cd77c2799c6038
+msgid ":meth:`.Cog.cog_after_invoke`"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:120
+#: ac053e4b875445869f0d9a05f14ab202
+msgid ":meth:`.Cog.bot_check`"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:121
+#: a82d2f25c8ec483c92e1692eff3ddb39
+msgid ":meth:`.Cog.bot_check_once`"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:123
+#: 4ce764c85d3742cf82684298f7449053
+msgid "You can visit the reference to get more detail."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:128
+#: 9d637060d66d49269866dc85d2f23b23
+msgid "Meta Options"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:130
+#: e314efe09f51456391d68e01b94401e2
+msgid "At the heart of a cog resides a metaclass, :class:`.commands.CogMeta`, which can take various options to customise some of the behaviour. To do this, we pass keyword arguments to the class definition line. For example, to change the cog name we can pass the ``name`` keyword argument as follows:"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:137
+#: 05e7b018ab0a462390d00af651d0cd48
+msgid "To see more options that you can set, see the documentation of :class:`.commands.CogMeta`."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:140
+#: 53da0f2c6f8c48a8a2b89433afd2a30e
+msgid "Inspection"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:142
+#: 0dc059e5db484b5e8b1b035f344b7519
+msgid "Since cogs ultimately are classes, we have some tools to help us inspect certain properties of the cog."
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:145
+#: 4913166c56a642bb8af6e4b6fb34e4c2
+msgid "To get a :class:`list` of commands, we can use :meth:`.Cog.get_commands`. ::"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:151
+#: 6f5856e1cd37414cb4b8f70288f9bed1
+msgid "If we want to get the subcommands as well, we can use the :meth:`.Cog.walk_commands` generator. ::"
+msgstr ""
+
+#: ../../ext/commands/cogs.rst:155
+#: 81b21d41a70242aa98044d585561b21c
+msgid "To do the same with listeners, we can query them with :meth:`.Cog.get_listeners`. This returns a list of tuples -- the first element being the listener name and the second one being the actual function itself. ::"
+msgstr ""

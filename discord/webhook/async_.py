@@ -644,8 +644,9 @@ def handle_message_parameters(
         payload["embeds"] = [] if embed is None else [embed.to_dict()]
     if content is not MISSING:
         payload["content"] = str(content) if content is not None else None
+    _attachments = []
     if attachments is not MISSING:
-        payload["attachments"] = [a.to_dict() for a in attachments]
+        _attachments = [a.to_dict() for a in attachments]
 
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
@@ -674,32 +675,35 @@ def handle_message_parameters(
         payload["allowed_mentions"] = previous_allowed_mentions.to_dict()
 
     multipart = []
+    multipart_files = []
     if file is not MISSING:
         files = [file]
 
     if files:
-        multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
-        payload = None
-        if len(files) == 1:
-            file = files[0]
-            multipart.append(
+        for index, file in enumerate(files):
+            multipart_files.append(
                 {
-                    "name": "file",
+                    "name": f"files[{index}]",
                     "value": file.fp,
                     "filename": file.filename,
                     "content_type": "application/octet-stream",
                 }
             )
-        else:
-            for index, file in enumerate(files):
-                multipart.append(
-                    {
-                        "name": f"file{index}",
-                        "value": file.fp,
-                        "filename": file.filename,
-                        "content_type": "application/octet-stream",
-                    }
-                )
+            _attachments.append(
+                {
+                    "id": index,
+                    "filename": file.filename,
+                    "description": file.description,
+                }
+            )
+
+    if _attachments:
+        payload["attachments"] = _attachments
+
+    if multipart_files:
+        multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
+        payload = None
+        multipart += multipart_files
 
     return ExecuteWebhookParameters(payload=payload, multipart=multipart, files=files)
 

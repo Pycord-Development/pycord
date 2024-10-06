@@ -1,9 +1,10 @@
-Pycord
+.. image:: https://raw.githubusercontent.com/Pycord-Development/pycord/master/pycord.png
+   :alt: Pycord v3
+
+Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+
 ======
 
-.. image:: https://img.shields.io/discord/881207955029110855?label=discord&style=for-the-badge&logo=discord&color=5865F2&logoColor=white
-   :target: https://pycord.dev/discord
-   :alt: Discord server invite
 .. image:: https://img.shields.io/pypi/v/py-cord.svg?style=for-the-badge&logo=pypi&color=yellowgreen&logoColor=white
    :target: https://pypi.python.org/pypi/py-cord
    :alt: PyPI version info
@@ -17,7 +18,15 @@ Pycord
    :target: https://github.com/Pycord-Development/pycord/releases
    :alt: Latest release
 
-A fork of discord.py. Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
+.. image:: https://img.shields.io/discord/881207955029110855?label=discord&style=for-the-badge&logo=discord&color=5865F2&logoColor=white
+   :target: https://pycord.dev/discord
+   :alt: Discord server invite
+
+.. image:: https://badges.crowdin.net/badge/dark/crowdin-on-light.png
+   :target: https://translations.pycord.dev/documentation/?utm_source=badge&utm_medium=referral&utm_campaign=badge-add-on
+   :alt: Crowdin | Agile localization for tech companies
+
+======
 
 Key Features
 ------------
@@ -30,7 +39,7 @@ Key Features
 Installing
 ----------
 
-**Python 3.8 or higher is required**
+**Python 3.9 or higher is required**
 
 To install the library without full voice support, run the following command:
 
@@ -141,3 +150,9 @@ Useful Links
 - `Learn how to create Discord bots with Pycord <https://guide.pycord.dev>`_
 - `Our Official Discord Server <https://pycord.dev/discord>`_
 - `Official Discord Developers Server <https://discord.gg/discord-developers>`_
+
+Translations
+------------
+
+.. image:: https://badges.awesome-crowdin.com/translation-200034237-5.png
+   :alt: Translation Status

@@ -1,0 +1,283 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord Documentation\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "discord.ext.tasks"
+msgstr "discord.ext.tasks"
+
+msgid "One of the most common operations when making a bot is having a loop run in the background at a specified interval. This pattern is very common but has a lot of things you need to look out for:"
+msgstr "L'une des opérations les plus courantes lors de la création d'un bot est d'avoir une boucle s'exécutant en arrière-plan à un intervalle spécifié. Ce modèle est très courant, mais présente de nombreux éléments auxquels il faut faire attention :"
+
+msgid "How do I handle :exc:`asyncio.CancelledError`?"
+msgstr "Comment gérer :exc:`asyncio.CancelledError` ?"
+
+msgid "What do I do if the internet goes out?"
+msgstr "Que faire si la connexion Internet est interrompue ?"
+
+msgid "What is the maximum number of seconds I can sleep anyway?"
+msgstr "Quelle est la durée maximale en secondes pendant laquelle je peux dormir de toute façon ?"
+
+msgid "The goal of this Pycord extension is to abstract all these worries away from you."
+msgstr "L'objectif de cette extension Pycord est d'abstraire toutes ces préoccupations pour vous."
+
+msgid "Recipes"
+msgstr "Recettes"
+
+msgid "A simple background task in a :class:`~discord.ext.commands.Cog`:"
+msgstr "Une tâche en arrière-plan simple dans un :class:`~discord.ext.commands.Cog` :"
+
+msgid "Adding an exception to handle during reconnect:"
+msgstr "Ajouter une exception à gérer lors de la reconnexion :"
+
+msgid "Looping a certain amount of times before exiting:"
+msgstr "Boucler un certain nombre de fois avant de quitter :"
+
+msgid "Waiting until the bot is ready before the loop starts:"
+msgstr "Attendre que le bot soit prêt avant le début de la boucle :"
+
+msgid "Doing something during cancellation:"
+msgstr "Faire quelque chose pendant l'annulation :"
+
+msgid "API Reference"
+msgstr "Référence de l'API"
+
+msgid "A background task helper that abstracts the loop and reconnection logic for you."
+msgstr "Un utilitaire de tâche en arrière-plan qui abstrait pour vous la logique de boucle et de reconnexion."
+
+msgid "The main interface to create this is through :func:`loop`."
+msgstr "L'interface principale pour créer ceci est à travers :func:`loop`."
+
+msgid "Parameters"
+msgstr "Paramètres"
+
+msgid "A decorator that register a coroutine to be called after the loop finished running."
+msgstr "Un décorateur qui enregistre une coroutine à appeler après l'exécution de la boucle."
+
+msgid "The coroutine must take no arguments (except ``self`` in a class context)."
+msgstr "La coroutine ne doit prendre aucun argument (sauf ``self`` dans un contexte de classe)."
+
+msgid "This coroutine is called even during cancellation. If it is desirable to tell apart whether something was cancelled or not, check to see whether :meth:`is_being_cancelled` is ``True`` or not."
+msgstr "Cette coroutine est appelée même en cas d'annulation. Si vous souhaitez distinguer si quelque chose a été annulé ou non, vérifiez si :meth:`is_being_cancelled` est ``True`` ou non."
+
+msgid "The coroutine to register after the loop finishes."
+msgstr "La coroutine à enregistrer après la fin de la boucle."
+
+msgid "Raises"
+msgstr "Lève"
+
+msgid "The function was not a coroutine."
+msgstr "La fonction n'était pas une coroutine."
+
+msgid "Return type"
+msgstr "Type de retour"
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`\\`\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\`\\~typing.Callable\\`\\\\\\\\\\\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\:\\`\\~typing.Awaitable\\`\\\\\\ \\\\[\\:py\\:data\\:\\:\\:\\`\\~typing.Any\\]\\)\\`"
+
+msgid "A decorator that registers a coroutine to be called before the loop starts running."
+msgstr "Un décorateur qui enregistre une coroutine à appeler avant le début de l'exécution de la boucle."
+
+msgid "This is useful if you want to wait for some bot state before the loop starts, such as :meth:`discord.Client.wait_until_ready`."
+msgstr "Ceci est utile si vous voulez attendre un état du bot avant le début de la boucle, comme :meth:`discord.Client.wait_until_ready`."
+
+msgid "The coroutine to register before the loop runs."
+msgstr "La coroutine à enregistrer avant l'exécution de la boucle."
+
+msgid "A decorator that registers a coroutine to be called if the task encounters an unhandled exception."
+msgstr "Un décorateur qui enregistre une coroutine à appeler si la tâche rencontre une exception non gérée."
+
+msgid "The coroutine must take only one argument the exception raised (except ``self`` in a class context)."
+msgstr "La coroutine ne doit prendre qu'un seul argument l'exception levée (sauf ``self`` dans un contexte de classe)."
+
+msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation."
+msgstr "Par défaut, cela imprime dans :data:`sys.stderr`, mais cela peut être remplacé par une autre implémentation."
+
+msgid "The coroutine to register in the event of an unhandled exception."
+msgstr "La coroutine à inscrire en cas d'exception non gérée."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`ET\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:class\\:\\`BaseException\\`\\]\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`\\`\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\`\\~typing.Callable\\`\\\\\\\\\\\\\\\\[\\:py\\:data\\:\\`...\\\\`\\, \\:py\\:class\\:\\:\\`\\~typing.Awaitable\\`\\\\\\ \\\\[\\:py\\:data\\:\\:\\:\\`\\~typing.Any\\]\\)\\`"
+
+msgid "Read-only value for the number of seconds between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+msgstr "Valeur en lecture seule pour le nombre de secondes entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
+
+msgid "Read-only value for the number of minutes between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+msgstr "Valeur en lecture seule pour le nombre de minutes entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
+
+msgid "Read-only value for the number of hours between each iteration. ``None`` if an explicit ``time`` value was passed instead."
+msgstr "Valeur en lecture seule pour le nombre d'heures entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
+
+msgid "Read-only list for the exact times this loop runs at. ``None`` if relative times were passed instead."
+msgstr "Liste en lecture seule du temps exacte auxquelles cette boucle s'exécute. ``None`` si du temps relatifs a été passées a la place."
+
+msgid "The current iteration of the loop."
+msgstr "L'itération actuelle de la boucle."
+
+msgid "When the next iteration of the loop will occur."
+msgstr "Quand l'itération suivante de la boucle se produira."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Calls the internal callback that the task holds."
+msgstr "Appelle le rappel interne que la tâche détient."
+
+msgid "The arguments to use."
+msgstr "Les arguments à utiliser."
+
+msgid "The keyword arguments to use."
+msgstr "Les arguments de mot-clé à utiliser."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Any\\``"
+
+msgid "Starts the internal task in the event loop."
+msgstr "Démarre la tâche interne dans la boucle d'événement."
+
+msgid "A task has already been launched and is running."
+msgstr "Une tâche a déjà été lancée et est en cours d'exécution."
+
+msgid "Returns"
+msgstr "Retours"
+
+msgid "The task that has been created."
+msgstr "La tâche qui a été créée."
+
+msgid ":class:`asyncio.Task`"
+msgstr ":class:`asyncio.Task`"
+
+msgid "Gracefully stops the task from running."
+msgstr "Empêche la tâche de s'exécuter."
+
+msgid "Unlike :meth:`cancel`\\, this allows the task to finish its current iteration before gracefully exiting. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr "Contrairement à :meth:`cancel`\\, cela permet à la tâche de terminer son itération actuelle avant de se terminer. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+
+msgid "If the internal function raises an error that can be handled before finishing then it will retry until it succeeds."
+msgstr "Si la fonction interne lève une erreur pouvant être gérée avant la fin, elle sera réessayée jusqu'à ce qu'elle réussisse."
+
+msgid "If this is undesirable, either remove the error handling before stopping via :meth:`clear_exception_types` or use :meth:`cancel` instead."
+msgstr "Si cela est indésirable, soit retirez la gestion des erreurs avant d'arrêter via :meth:`clear_exception_types`, soit utilisez :meth:`cancel` à la place."
+
+msgid "Cancels the internal task, if it is running."
+msgstr "Annule la tâche interne si elle est en cours d'exécution."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+
+msgid "A convenience method to restart the internal task."
+msgstr "Une méthode pratique pour redémarrer la tâche interne."
+
+msgid "Due to the way this function works, the task is not returned like :meth:`start`."
+msgstr "En raison de la façon dont cette fonction fonctionne, la tâche n'est pas retournée comme :meth:`start`."
+
+msgid "Adds exception types to be handled during the reconnect logic."
+msgstr "Ajoute les types d'exception à traiter pendant la logique de reconnexion."
+
+msgid "By default, the exception types handled are those handled by :meth:`discord.Client.connect`\\, which includes a lot of internet disconnection errors."
+msgstr "Par défaut, les types d'exceptions gérés sont ceux traités par :meth:`discord.Client.connect`, ce qui inclut de nombreux types d'erreurs de déconnexion Internet."
+
+msgid "This function is useful if you're interacting with a 3rd party library that raises its own set of exceptions."
+msgstr "Cette fonction est utile si vous interagissez avec une bibliothèque tierce qui augmente son propre ensemble d'exceptions."
+
+msgid "An argument list of exception classes to handle."
+msgstr "Une liste d'arguments de classes d'exception à gérer."
+
+msgid "An exception passed is either not a class or not inherited from :class:`BaseException`."
+msgstr "Une exception passée n'est soit pas une classe, soit elle n'est pas héritée de :class:`BaseException`."
+
+msgid "Removes all exception types that are handled. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr "Supprime tous les types d'exception qui sont gérés. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\:\\`None\\``"
+
+msgid "This operation obviously cannot be undone!"
+msgstr "Cette opération ne peut évidemment pas être annulée !"
+
+msgid "Removes exception types from being handled during the reconnect logic."
+msgstr "Removes exception types from being handled during the reconnect logic."
+
+msgid "Whether all exceptions were successfully removed."
+msgstr "Si toutes les exceptions ont bien été supprimées."
+
+msgid ":class:`bool`"
+msgstr ":class:`bool`"
+
+msgid "Fetches the internal task or ``None`` if there isn't one running."
+msgstr "Récupère la tâche interne ou ``None`` s'il n'y en a pas."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~\\_asyncio.Task\\`\\\\ \\\\\\[\\:py\\:obj\\:\\`None\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~\\_asyncio.Task\\`\\\\ \\\\\\[\\:py\\:obj\\:\\:\\`None\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
+
+msgid "Whether the task is being cancelled."
+msgstr "Si la tâche est en cours d'annulation."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid "Whether the internal task has failed. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Si la tâche interne a échoué. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid "Check if the task is currently running. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Vérifie si la tâche est en cours d'exécution. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid "Changes the interval for the sleep time."
+msgstr "Modifie l'intervalle de temps de veille."
+
+msgid "The number of seconds between every iteration."
+msgstr "Le nombre de secondes entre chaque itération."
+
+msgid "The number of minutes between every iteration."
+msgstr "Le nombre de minutes entre chaque itération."
+
+msgid "The number of hours between every iteration."
+msgstr "Le nombre d'heures entre chaque itération."
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. This cannot be used in conjunction with the relative time parameters.  .. versionadded:: 2.0  .. note::      Duplicate times will be ignored, and only run once."
+msgstr "Les heures exactes auxquelles exécuter cette boucle. Vous devez passer soit une liste non vide, soit une seule valeur de :class:`datetime.time`. Cela ne peut pas être utilisé en conjonction avec les paramètres de temps relatifs.  .. versionadded:: 2.0  .. note:: Les heures dupliquées seront ignorées et exécutées une seule fois."
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. This cannot be used in conjunction with the relative time parameters."
+msgstr "Les heures exactes auxquelles exécuter cette boucle. Vous devez passer soit une liste non vide, soit une seule valeur de :class:`datetime.time`. Cela ne peut pas être utilisé en conjonction avec les paramètres de temps relatifs."
+
+msgid "Duplicate times will be ignored, and only run once."
+msgstr "Les doublons seront ignorés, et ne seront exécutés qu'une seule fois."
+
+msgid "An invalid value was given."
+msgstr "Une valeur non valide a été donnée."
+
+msgid "An invalid value for the ``time`` parameter was passed, or the     ``time`` parameter was passed in conjunction with relative time parameters."
+msgstr "Une valeur invalide pour le paramètre ``time`` a été passée, ou le paramètre ``time`` a été passé en conjonction avec des paramètres de temps relatifs."
+
+msgid "A decorator that schedules a task in the background for you with optional reconnect logic. The decorator returns a :class:`Loop`."
+msgstr "Un décorateur qui planifie une tâche en arrière-plan pour vous avec une logique de reconnexion optionnelle. Le décorateur renvoie une :class:`Loop`."
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. Timezones are supported. If no timezone is given for the times, it is assumed to represent UTC time.  This cannot be used in conjunction with the relative time parameters.  .. note::      Duplicate times will be ignored, and only run once.  .. versionadded:: 2.0"
+msgstr "Les heures exactes auxquelles exécuter cette boucle. Vous devez passer soit une liste non vide, soit une seule valeur de :class:`datetime.time`. Les fuseaux horaires sont pris en charge. Si aucun fuseau horaire n'est spécifié pour les heures, il est supposé qu'elles représentent l'heure UTC. Cela ne peut pas être utilisé en conjonction avec les paramètres de temps relatifs.  .. note:: Les heures dupliquées seront ignorées et exécutées une seule fois.  .. versionadded:: 2.0"
+
+msgid "The exact times to run this loop at. Either a non-empty list or a single value of :class:`datetime.time` should be passed. Timezones are supported. If no timezone is given for the times, it is assumed to represent UTC time."
+msgstr "Les heures exactes auxquelles exécuter cette boucle. Vous devez passer soit une liste non vide, soit une seule valeur de :class:`datetime.time`. Les fuseaux horaires sont pris en charge. Si aucun fuseau horaire n'est spécifié, il est supposé que les heures représentent l'heure UTC."
+
+msgid "This cannot be used in conjunction with the relative time parameters."
+msgstr "Ne peut pas être utilisé en conjonction avec les paramètres de temps relatifs."
+
+msgid "The number of loops to do, ``None`` if it should be an infinite loop."
+msgstr "Le nombre de boucles à faire, ``None`` si elle doit être une boucle infinie."
+
+msgid "Whether to handle errors and restart the task using an exponential back-off algorithm similar to the one used in :meth:`discord.Client.connect`."
+msgstr "Si vous voulez gérer les erreurs et redémarrer la tâche en utilisant un algorithme de back-off exponentiel similaire à celui utilisé dans :meth:`discord.Client.connect`."
+
+msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
+msgstr "La boucle à utiliser pour enregistrer la tâche, si elle n'est pas donnée par défaut à :func:`asyncio.get_event_loop`."
+
+msgid "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."
+msgstr "La fonction n'était pas une coroutine, une valeur invalide a été passée pour le paramètre ``time``, ou le paramètre ``time`` a été passé en conjonction avec des paramètres de temps relatifs."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\, \\:py\\:class\\:\\`\\~discord.ext.tasks.Loop\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\, \\:py\\:class\\:\\`\\~discord.ext.tasks.Loop\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\]`"
+

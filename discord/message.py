@@ -42,6 +42,7 @@ from typing import (
 from urllib.parse import parse_qs, urlparse
 
 from . import utils
+from .channel import PartialMessageable
 from .components import _component_factory
 from .embeds import Embed
 from .emoji import Emoji
@@ -2171,6 +2172,7 @@ class PartialMessage(Hashable):
     - :meth:`DMChannel.get_partial_message`
     - :meth:`VoiceChannel.get_partial_message`
     - :meth:`StageChannel.get_partial_message`
+    - :meth:`PartialMessageable.get_partial_message`
 
     Note that this class is trimmed down and has no rich attributes.
 
@@ -2192,7 +2194,7 @@ class PartialMessage(Hashable):
 
     Attributes
     ----------
-    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]
+    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`, :class:`PartialMessageable`]
         The channel associated with this partial message.
     id: :class:`int`
         The message ID.
@@ -2223,9 +2225,9 @@ class PartialMessage(Hashable):
             ChannelType.news_thread,
             ChannelType.public_thread,
             ChannelType.private_thread,
-        ):
+        ) and not isinstance(channel, PartialMessageable):
             raise TypeError(
-                "Expected TextChannel, VoiceChannel, StageChannel, DMChannel or Thread not"
+                "Expected TextChannel, VoiceChannel, StageChannel, DMChannel, Thread or PartialMessageable not"
                 f" {type(channel)!r}"
             )
 

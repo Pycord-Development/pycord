@@ -18,7 +18,7 @@ from importlib.metadata import version as get_version
 old_changelog = os.path.join(os.path.dirname(__file__), "..", "CHANGELOG.md")
 new_changelog = os.path.join(os.path.dirname(__file__), "changelog.md")
 
-with open(old_changelog) as f:
+with open(old_changelog, encoding="utf-8") as f:
     changelog_lines = f.readlines()
 
 # Inject relative documentation links
@@ -39,19 +39,18 @@ A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
 
 # Only write if it's changed to avoid recompiling the docs
 def write_new():
-    with open(new_changelog, "w") as fw:
+    with open(new_changelog, "w", encoding="utf-8") as fw:
         fw.write(CHANGELOG_TEXT)
 
 
 try:
-    c_file = open(new_changelog)
+    c_file = open(new_changelog, encoding="utf-8")
 except FileNotFoundError:
     write_new()
 else:
     if c_file.read() != CHANGELOG_TEXT:
         write_new()
     c_file.close()
-
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -70,6 +69,8 @@ sys.path.append(os.path.abspath("extensions"))
 extensions = [
     # "builder",
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.autosummary",
     "sphinx.ext.extlinks",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
@@ -89,6 +90,7 @@ extensions = [
 
 always_document_param_types = True
 toc_object_entries_show_parents = "hide"
+autosectionlabel_prefix_document = True
 
 ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
@@ -99,8 +101,8 @@ autodoc_typehints = "none"
 # napoleon_attr_annotations = False
 
 extlinks = {
-    "issue": ("https://github.com/Pycord-Development/pycord/issues/%s", "GH-"),
-    "dpy-issue": ("https://github.com/Rapptz/discord.py/issues/%s", "GH-"),
+    "issue": ("https://github.com/Pycord-Development/pycord/issues/%s", "GH-%s"),
+    "dpy-issue": ("https://github.com/Rapptz/discord.py/issues/%s", "GH-%s"),
 }
 
 # Links used for cross-referencing stuff in other documentation
@@ -115,6 +117,9 @@ rst_prolog = """
 .. |maybecoro| replace:: This function *could be a* |coroutine_link|_.
 .. |coroutine_link| replace:: *coroutine*
 .. _coroutine_link: https://docs.python.org/3/library/asyncio-task.html#coroutine
+.. |gateway| replace:: |gateway_link|_
+.. |gateway_link| replace:: *gateway*
+.. _gateway_link: https://discord.com/developers/docs/topics/gateway-events
 """
 
 # Add any paths that contain templates here, relative to this directory.
@@ -164,6 +169,8 @@ html_title = f"{project} v{version} Documentation"
 language = "en"
 
 gettext_compact = False
+gettext_uuid = True
+locale_dirs = ["locales/"]  # Added locale directory
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -173,7 +180,7 @@ gettext_compact = False
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build", "node_modules"]
+exclude_patterns = ["_build", "node_modules", "build", "locales"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -204,6 +211,7 @@ pygments_style = "friendly"
 nitpick_ignore_files = [
     "migrating_to_v1",
     "whats_new",
+    "old_changelog",
 ]
 
 # -- Options for HTML output ----------------------------------------------
@@ -306,8 +314,8 @@ html_theme_options = {
 # A shorter title for the navigation bar.  Default is the same as html_title.
 # html_short_title = None
 
-# The name of an image file (relative to this directory) to place at the top
-# of the sidebar.
+# The name of an image file (relative to this directory) to place at the top of
+# the sidebar.
 html_logo = "./images/pycord_logo.png"
 
 # The name of an image file (within the static path) to use as favicon of the
@@ -372,7 +380,7 @@ html_js_files = ["js/custom.js"]
 # Sphinx supports the following languages:
 #   'da', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'ja'
 #   'nl', 'no', 'pt', 'ro', 'ru', 'sv', 'tr'
-# html_search_language = 'en'
+html_search_language = "en"
 
 # A dictionary with options for the search language support, empty by default.
 # Now only 'ja' uses this config value
@@ -380,7 +388,7 @@ html_js_files = ["js/custom.js"]
 
 # The name of a javascript file (relative to the configuration directory) that
 # implements a search results scorer. If empty, the default will be used.
-html_search_scorer = "_static/js/scorer.js"
+# html_search_scorer = "_static/js/scorer.js"
 
 # html_js_files = ["custom.js", "settings.js", "copy.js", "sidebar.js"]
 
@@ -391,13 +399,13 @@ htmlhelp_basename = "pycorddoc"
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
+    # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
+    # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
+    # 'preamble': '',
     # Latex figure (float) alignment
-    #'figure_align': 'htbp',
+    # 'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -472,4 +480,31 @@ linkcheck_ignore = [
     r"https://discord.com/developers/docs/.*#",
     r"https://support(?:-dev)?.discord.com/hc/en-us/articles/.*",
     r"https://dis.gd/contact",
+    r"https://guide.pycord.dev/",
+    r"https://guide.pycord.dev/.*",
+    r"https://pycord.dev/",
+    r"https://pycord.dev/.*",
+    r"https://packages.debian.org/.*",
 ]
+
+linkcheck_anchors_ignore_for_url = [r"https://github.com/Delitefully/DiscordLists"]
+
+modindex_common_prefix = ["discord."]
+# suppress_warnings = ['autosectionlabel.*']
+myst_enable_extensions = [
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist",
+]
+myst_links_external_new_tab = True

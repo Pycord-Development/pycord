@@ -1,0 +1,4 @@
+-r all.txt
+build>=1.2.1
+setuptools>=72.2.0
+setuptools_scm>=8.1.0

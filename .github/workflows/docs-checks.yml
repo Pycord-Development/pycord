@@ -1,0 +1,59 @@
+name: "Documentation Checks"
+
+on:
+  push:
+    paths:
+      - "discord/**"
+      - "docs/**"
+      - "requirements/**"
+      - "*.toml"
+      - "*.py"
+    branches: [master]
+  pull_request:
+    paths:
+      - "discord/**"
+      - "docs/**"
+      - "requirements/"
+      - "*.toml"
+      - "*.py"
+  workflow_dispatch:
+    inputs:
+      with_linkcheck:
+        type: boolean
+        description: "Whether to run the linkcheck"
+        default: true
+  schedule:
+    - cron: "0 0 * * *"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: write-all
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: "requirements/docs.txt"
+          check-latest: true
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install ".[docs]"
+      - name: "Check Links"
+        if: ${{ github.event_name == 'schedule' || inputs.with_linkcheck }}
+        run: |
+          cd docs
+          make linkcheck
+      - name: "Compile to html"
+        run: |
+          cd docs
+          make -e SPHINXOPTS="-D language='en'" html

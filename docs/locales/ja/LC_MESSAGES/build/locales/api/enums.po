@@ -1,0 +1,1771 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "Enumerations"
+msgstr "Enumerations"
+
+msgid "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
+msgstr "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
+
+msgid "All enumerations are subclasses of an internal class which mimics the behaviour of :class:`enum.Enum`."
+msgstr "All enumerations are subclasses of an internal class which mimics the behaviour of :class:`enum.Enum`."
+
+msgid "Specifies the input type of an option."
+msgstr "Specifies the input type of an option."
+
+msgid "A slash subcommand."
+msgstr "A slash subcommand."
+
+msgid "A slash command group."
+msgstr "A slash command group."
+
+msgid "A string."
+msgstr "A string."
+
+msgid "An integer between -2⁵³ and 2⁵³."
+msgstr "An integer between -2⁵³ and 2⁵³."
+
+msgid "IDs, such as 881224361015672863, are often too big for this input type."
+msgstr "IDs, such as 881224361015672863, are often too big for this input type."
+
+msgid "A boolean."
+msgstr "A boolean."
+
+msgid "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
+msgstr "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
+
+msgid "A channel from the current guild."
+msgstr "A channel from the current guild."
+
+msgid "A role from the current guild."
+msgstr "A role from the current guild."
+
+msgid "A mentionable (user or role)."
+msgstr "A mentionable (user or role)."
+
+msgid "A floating-point number between -2⁵³ and 2⁵³."
+msgstr "A floating-point number between -2⁵³ and 2⁵³."
+
+msgid "An attachment."
+msgstr "An attachment."
+
+msgid "Specifies the type of channel."
+msgstr "Specifies the type of channel."
+
+msgid "A text channel."
+msgstr "A text channel."
+
+msgid "A voice channel."
+msgstr "A voice channel."
+
+msgid "A private text channel. Also called a direct message."
+msgstr "A private text channel. Also called a direct message."
+
+msgid "A private group text channel."
+msgstr "A private group text channel."
+
+msgid "A category channel."
+msgstr "A category channel."
+
+msgid "A guild news channel."
+msgstr "A guild news channel."
+
+msgid "A guild stage voice channel."
+msgstr "A guild stage voice channel."
+
+msgid "A news thread."
+msgstr "A news thread."
+
+msgid "A public thread."
+msgstr "A public thread."
+
+msgid "A private thread."
+msgstr "A private thread."
+
+msgid "A guild directory entry, used in hub guilds, currently in experiment."
+msgstr "A guild directory entry, used in hub guilds, currently in experiment."
+
+msgid "User can only write in threads, similar functionality to a forum."
+msgstr "User can only write in threads, similar functionality to a forum."
+
+msgid "Specifies the type of :class:`Message`. This is used to denote if a message is to be interpreted as a system message or a regular message."
+msgstr "Specifies the type of :class:`Message`. This is used to denote if a message is to be interpreted as a system message or a regular message."
+
+msgid "Checks if two messages are equal."
+msgstr "Checks if two messages are equal."
+
+msgid "Checks if two messages are not equal."
+msgstr "Checks if two messages are not equal."
+
+msgid "The default message type. This is the same as regular messages."
+msgstr "The default message type. This is the same as regular messages."
+
+msgid "The system message when a user is added to a group private message or a thread."
+msgstr "The system message when a user is added to a group private message or a thread."
+
+msgid "The system message when a user is removed from a group private message or a thread."
+msgstr "The system message when a user is removed from a group private message or a thread."
+
+msgid "The system message denoting call state, e.g. missed call, started call, etc."
+msgstr "The system message denoting call state, e.g. missed call, started call, etc."
+
+msgid "The system message denoting that a channel's name has been changed."
+msgstr "The system message denoting that a channel's name has been changed."
+
+msgid "The system message denoting that a channel's icon has been changed."
+msgstr "The system message denoting that a channel's icon has been changed."
+
+msgid "The system message denoting that a pinned message has been added to a channel."
+msgstr "The system message denoting that a pinned message has been added to a channel."
+
+msgid "The system message denoting that a new member has joined a Guild."
+msgstr "The system message denoting that a new member has joined a Guild."
+
+msgid "The system message denoting that a member has \"nitro boosted\" a guild."
+msgstr "The system message denoting that a member has \"nitro boosted\" a guild."
+
+msgid "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 1."
+msgstr "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 1."
+
+msgid "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 2."
+msgstr "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 2."
+
+msgid "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 3."
+msgstr "The system message denoting that a member has \"nitro boosted\" a guild and it achieved level 3."
+
+msgid "The system message denoting that an announcement channel has been followed."
+msgstr "The system message denoting that an announcement channel has been followed."
+
+msgid "The system message denoting that a member is streaming in the guild."
+msgstr "The system message denoting that a member is streaming in the guild."
+
+msgid "The system message denoting that the guild is no longer eligible for Server Discovery."
+msgstr "The system message denoting that the guild is no longer eligible for Server Discovery."
+
+msgid "The system message denoting that the guild has become eligible again for Server Discovery."
+msgstr "The system message denoting that the guild has become eligible again for Server Discovery."
+
+msgid "The system message denoting that the guild has failed to meet the Server Discovery requirements for one week."
+msgstr "The system message denoting that the guild has failed to meet the Server Discovery requirements for one week."
+
+msgid "The system message denoting that the guild has failed to meet the Server Discovery requirements for 3 weeks in a row."
+msgstr "The system message denoting that the guild has failed to meet the Server Discovery requirements for 3 weeks in a row."
+
+msgid "The system message denoting that a thread has been created. This is only sent if the thread has been created from an older message. The period of time required for a message to be considered old cannot be relied upon and is up to Discord."
+msgstr "The system message denoting that a thread has been created. This is only sent if the thread has been created from an older message. The period of time required for a message to be considered old cannot be relied upon and is up to Discord."
+
+msgid "The system message denoting that the author is replying to a message."
+msgstr "The system message denoting that the author is replying to a message."
+
+msgid "The system message denoting that an application (or \"slash\") command was executed."
+msgstr "The system message denoting that an application (or \"slash\") command was executed."
+
+msgid "The system message sent as a reminder to invite people to the guild."
+msgstr "The system message sent as a reminder to invite people to the guild."
+
+msgid "The system message denoting the message in the thread that is the one that started the thread's conversation topic."
+msgstr "The system message denoting the message in the thread that is the one that started the thread's conversation topic."
+
+msgid "The system message denoting that an context menu command was executed."
+msgstr "The system message denoting that an context menu command was executed."
+
+msgid "The system message denoting an action by automod."
+msgstr "The system message denoting an action by automod."
+
+msgid "The system message denoting a role-subscription purchase."
+msgstr "The system message denoting a role-subscription purchase."
+
+msgid "The system message denoting an interaction premium upsell."
+msgstr "The system message denoting an interaction premium upsell."
+
+msgid "The system message denoting that a stage event has started."
+msgstr "The system message denoting that a stage event has started."
+
+msgid "The system message denoting that a stage event has ended."
+msgstr "The system message denoting that a stage event has ended."
+
+msgid "The system message denoting that a stage event has a new speaker."
+msgstr "The system message denoting that a stage event has a new speaker."
+
+msgid "The system message denoting that someone in a stage event is raising their hand."
+msgstr "The system message denoting that someone in a stage event is raising their hand."
+
+msgid "The system message denoting that a stage event has a new topic."
+msgstr "The system message denoting that a stage event has a new topic."
+
+msgid "The system message denoting that a member has subscribed to a guild application."
+msgstr "The system message denoting that a member has subscribed to a guild application."
+
+msgid "Represents Discord User flags."
+msgstr "Represents Discord User flags."
+
+msgid "The user is a Discord Employee."
+msgstr "The user is a Discord Employee."
+
+msgid "The user is a Discord Partner."
+msgstr "The user is a Discord Partner."
+
+msgid "The user is a HypeSquad Events member."
+msgstr "The user is a HypeSquad Events member."
+
+msgid "The user is a Bug Hunter."
+msgstr "The user is a Bug Hunter."
+
+msgid "The user has SMS recovery for Multi Factor Authentication enabled."
+msgstr "The user has SMS recovery for Multi Factor Authentication enabled."
+
+msgid "The user has dismissed the Discord Nitro promotion."
+msgstr "The user has dismissed the Discord Nitro promotion."
+
+msgid "The user is a HypeSquad Bravery member."
+msgstr "The user is a HypeSquad Bravery member."
+
+msgid "The user is a HypeSquad Brilliance member."
+msgstr "The user is a HypeSquad Brilliance member."
+
+msgid "The user is a HypeSquad Balance member."
+msgstr "The user is a HypeSquad Balance member."
+
+msgid "The user is an Early Supporter."
+msgstr "The user is an Early Supporter."
+
+msgid "The user is a Team User."
+msgstr "The user is a Team User."
+
+msgid "Relates to partner/verification applications."
+msgstr "Relates to partner/verification applications."
+
+msgid "The user is a system user (i.e. represents Discord officially)."
+msgstr "The user is a system user (i.e. represents Discord officially)."
+
+msgid "The user has an unread system message."
+msgstr "The user has an unread system message."
+
+msgid "The user is a Bug Hunter Level 2."
+msgstr "The user is a Bug Hunter Level 2."
+
+msgid "The user was deleted for being underage."
+msgstr "The user was deleted for being underage."
+
+msgid "The user is a Verified Bot."
+msgstr "The user is a Verified Bot."
+
+msgid "The user is an Early Verified Bot Developer."
+msgstr "The user is an Early Verified Bot Developer."
+
+msgid "The user is a Moderator Programs Alumni."
+msgstr "The user is a Moderator Programs Alumni."
+
+msgid "The bot has set an interactions endpoint url."
+msgstr "The bot has set an interactions endpoint url."
+
+msgid "The user is disabled for being a spammer."
+msgstr "The user is disabled for being a spammer."
+
+msgid "The user is an Active Developer."
+msgstr "The user is an Active Developer."
+
+msgid "Specifies the type of :class:`Activity`. This is used to check how to interpret the activity itself."
+msgstr "Specifies the type of :class:`Activity`. This is used to check how to interpret the activity itself."
+
+msgid "An unknown activity type. This should generally not happen."
+msgstr "An unknown activity type. This should generally not happen."
+
+msgid "A \"Playing\" activity type."
+msgstr "A \"Playing\" activity type."
+
+msgid "A \"Streaming\" activity type."
+msgstr "A \"Streaming\" activity type."
+
+msgid "A \"Listening\" activity type."
+msgstr "A \"Listening\" activity type."
+
+msgid "A \"Watching\" activity type."
+msgstr "A \"Watching\" activity type."
+
+msgid "A custom activity type."
+msgstr "A custom activity type."
+
+msgid "A competing activity type."
+msgstr "A competing activity type."
+
+msgid "Specifies the type of :class:`Interaction`."
+msgstr "Specifies the type of :class:`Interaction`."
+
+msgid "Represents Discord pinging to see if the interaction response server is alive."
+msgstr "Represents Discord pinging to see if the interaction response server is alive."
+
+msgid "Represents a slash command interaction."
+msgstr "Represents a slash command interaction."
+
+msgid "Represents a component based interaction, i.e. using the Discord Bot UI Kit."
+msgstr "Represents a component based interaction, i.e. using the Discord Bot UI Kit."
+
+msgid "Represents a autocomplete interaction for slash commands."
+msgstr "Represents a autocomplete interaction for slash commands."
+
+msgid "Represents a modal based interaction."
+msgstr "Represents a modal based interaction."
+
+msgid "Specifies the response type for the interaction."
+msgstr "Specifies the response type for the interaction."
+
+msgid "Pongs the interaction when given a ping."
+msgstr "Pongs the interaction when given a ping."
+
+msgid "See also :meth:`InteractionResponse.pong`"
+msgstr "See also :meth:`InteractionResponse.pong`"
+
+msgid "Respond to the interaction with a message."
+msgstr "Respond to the interaction with a message."
+
+msgid "See also :meth:`InteractionResponse.send_message`"
+msgstr "See also :meth:`InteractionResponse.send_message`"
+
+msgid "Responds to the interaction with a message at a later time."
+msgstr "Responds to the interaction with a message at a later time."
+
+msgid "See also :meth:`InteractionResponse.defer`"
+msgstr "See also :meth:`InteractionResponse.defer`"
+
+msgid "Acknowledges the component interaction with a promise that the message will update later (though there is no need to actually update the message)."
+msgstr "Acknowledges the component interaction with a promise that the message will update later (though there is no need to actually update the message)."
+
+msgid "Responds to the interaction by editing the message."
+msgstr "Responds to the interaction by editing the message."
+
+msgid "See also :meth:`InteractionResponse.edit_message`"
+msgstr "See also :meth:`InteractionResponse.edit_message`"
+
+msgid "Responds to the interaction by sending the autocomplete choices."
+msgstr "Responds to the interaction by sending the autocomplete choices."
+
+msgid "See also :meth:`InteractionResponse.send_autocomplete_result`"
+msgstr "See also :meth:`InteractionResponse.send_autocomplete_result`"
+
+msgid "Responds to the interaction by sending a modal dialog."
+msgstr "Responds to the interaction by sending a modal dialog."
+
+msgid "See also :meth:`InteractionResponse.send_modal`"
+msgstr "See also :meth:`InteractionResponse.send_modal`"
+
+msgid "Represents the component type of a component."
+msgstr "Represents the component type of a component."
+
+msgid "Represents the group component which holds different components in a row."
+msgstr "Represents the group component which holds different components in a row."
+
+msgid "Represents a button component."
+msgstr "Represents a button component."
+
+msgid "Represents a string select component."
+msgstr "Represents a string select component."
+
+msgid "Use :attr:`ComponentType.string_select` instead."
+msgstr "Use :attr:`ComponentType.string_select` instead."
+
+msgid "Represents an input_text component."
+msgstr "Represents an input_text component."
+
+msgid "Represents a user select component."
+msgstr "Represents a user select component."
+
+msgid "Represents a role select component."
+msgstr "Represents a role select component."
+
+msgid "Represents a mentionable select component."
+msgstr "Represents a mentionable select component."
+
+msgid "Represents a channel select component."
+msgstr "Represents a channel select component."
+
+msgid "Represents the style of the button component."
+msgstr "Represents the style of the button component."
+
+msgid "Represents a blurple button for the primary action."
+msgstr "Represents a blurple button for the primary action."
+
+msgid "Represents a grey button for the secondary action."
+msgstr "Represents a grey button for the secondary action."
+
+msgid "Represents a green button for a successful action."
+msgstr "Represents a green button for a successful action."
+
+msgid "Represents a red button for a dangerous action."
+msgstr "Represents a red button for a dangerous action."
+
+msgid "Represents a link button."
+msgstr "Represents a link button."
+
+msgid "Represents a premium button."
+msgstr "Represents a premium button."
+
+msgid "An alias for :attr:`primary`."
+msgstr "An alias for :attr:`primary`."
+
+msgid "An alias for :attr:`secondary`."
+msgstr "An alias for :attr:`secondary`."
+
+msgid "An alias for :attr:`success`."
+msgstr "An alias for :attr:`success`."
+
+msgid "An alias for :attr:`danger`."
+msgstr "An alias for :attr:`danger`."
+
+msgid "An alias for :attr:`link`."
+msgstr "An alias for :attr:`link`."
+
+msgid "Represents the style of the input text component."
+msgstr "Represents the style of the input text component."
+
+msgid "Represents a single-line input text field."
+msgstr "Represents a single-line input text field."
+
+msgid "Represents a multi-line input text field."
+msgstr "Represents a multi-line input text field."
+
+msgid "An alias for :attr:`short`."
+msgstr "An alias for :attr:`short`."
+
+msgid "An alias for :attr:`long`."
+msgstr "An alias for :attr:`long`."
+
+msgid "Specifies the region a voice server belongs to."
+msgstr "Specifies the region a voice server belongs to."
+
+msgid "The Amsterdam region."
+msgstr "The Amsterdam region."
+
+msgid "The Brazil region."
+msgstr "The Brazil region."
+
+msgid "The Dubai region."
+msgstr "The Dubai region."
+
+msgid "The EU Central region."
+msgstr "The EU Central region."
+
+msgid "The EU West region."
+msgstr "The EU West region."
+
+msgid "The Europe region."
+msgstr "The Europe region."
+
+msgid "The Frankfurt region."
+msgstr "The Frankfurt region."
+
+msgid "The Hong Kong region."
+msgstr "The Hong Kong region."
+
+msgid "The India region."
+msgstr "The India region."
+
+msgid "The Japan region."
+msgstr "The Japan region."
+
+msgid "The London region."
+msgstr "The London region."
+
+msgid "The Russia region."
+msgstr "The Russia region."
+
+msgid "The Singapore region."
+msgstr "The Singapore region."
+
+msgid "The South Africa region."
+msgstr "The South Africa region."
+
+msgid "The South Korea region."
+msgstr "The South Korea region."
+
+msgid "The Sydney region."
+msgstr "The Sydney region."
+
+msgid "The US Central region."
+msgstr "The US Central region."
+
+msgid "The US East region."
+msgstr "The US East region."
+
+msgid "The US South region."
+msgstr "The US South region."
+
+msgid "The US West region."
+msgstr "The US West region."
+
+msgid "The Amsterdam region for VIP guilds."
+msgstr "The Amsterdam region for VIP guilds."
+
+msgid "The US East region for VIP guilds."
+msgstr "The US East region for VIP guilds."
+
+msgid "The US West region for VIP guilds."
+msgstr "The US West region for VIP guilds."
+
+msgid "Specifies a :class:`Guild`\\'s verification level, which is the criteria in which a member must meet before being able to send messages to the guild."
+msgstr "Specifies a :class:`Guild`\\'s verification level, which is the criteria in which a member must meet before being able to send messages to the guild."
+
+msgid "Checks if two verification levels are equal."
+msgstr "Checks if two verification levels are equal."
+
+msgid "Checks if two verification levels are not equal."
+msgstr "Checks if two verification levels are not equal."
+
+msgid "Checks if a verification level is higher than another."
+msgstr "Checks if a verification level is higher than another."
+
+msgid "Checks if a verification level is lower than another."
+msgstr "Checks if a verification level is lower than another."
+
+msgid "Checks if a verification level is higher or equal to another."
+msgstr "Checks if a verification level is higher or equal to another."
+
+msgid "Checks if a verification level is lower or equal to another."
+msgstr "Checks if a verification level is lower or equal to another."
+
+msgid "No criteria set."
+msgstr "No criteria set."
+
+msgid "Member must have a verified email on their Discord account."
+msgstr "Member must have a verified email on their Discord account."
+
+msgid "Member must have a verified email and be registered on Discord for more than five minutes."
+msgstr "Member must have a verified email and be registered on Discord for more than five minutes."
+
+msgid "Member must have a verified email, be registered on Discord for more than five minutes, and be a member of the guild itself for more than ten minutes."
+msgstr "Member must have a verified email, be registered on Discord for more than five minutes, and be a member of the guild itself for more than ten minutes."
+
+msgid "Member must have a verified phone on their Discord account."
+msgstr "Member must have a verified phone on their Discord account."
+
+msgid "Specifies whether a :class:`Guild` has notifications on for all messages or mentions only by default."
+msgstr "Specifies whether a :class:`Guild` has notifications on for all messages or mentions only by default."
+
+msgid "Checks if two notification levels are equal."
+msgstr "Checks if two notification levels are equal."
+
+msgid "Checks if two notification levels are not equal."
+msgstr "Checks if two notification levels are not equal."
+
+msgid "Checks if a notification level is higher than another."
+msgstr "Checks if a notification level is higher than another."
+
+msgid "Checks if a notification level is lower than another."
+msgstr "Checks if a notification level is lower than another."
+
+msgid "Checks if a notification level is higher or equal to another."
+msgstr "Checks if a notification level is higher or equal to another."
+
+msgid "Checks if a notification level is lower or equal to another."
+msgstr "Checks if a notification level is lower or equal to another."
+
+msgid "Members receive notifications for every message regardless of them being mentioned."
+msgstr "Members receive notifications for every message regardless of them being mentioned."
+
+msgid "Members receive notifications for messages they are mentioned in."
+msgstr "Members receive notifications for messages they are mentioned in."
+
+msgid "Specifies a :class:`Guild`\\'s explicit content filter, which is the machine learning algorithms that Discord uses to detect if an image contains pornography or otherwise explicit content."
+msgstr "Specifies a :class:`Guild`\\'s explicit content filter, which is the machine learning algorithms that Discord uses to detect if an image contains pornography or otherwise explicit content."
+
+msgid "Checks if two content filter levels are equal."
+msgstr "Checks if two content filter levels are equal."
+
+msgid "Checks if two content filter levels are not equal."
+msgstr "Checks if two content filter levels are not equal."
+
+msgid "Checks if a content filter level is higher than another."
+msgstr "Checks if a content filter level is higher than another."
+
+msgid "Checks if a content filter level is lower than another."
+msgstr "Checks if a content filter level is lower than another."
+
+msgid "Checks if a content filter level is higher or equal to another."
+msgstr "Checks if a content filter level is higher or equal to another."
+
+msgid "Checks if a content filter level is lower or equal to another."
+msgstr "Checks if a content filter level is lower or equal to another."
+
+msgid "The guild does not have the content filter enabled."
+msgstr "The guild does not have the content filter enabled."
+
+msgid "The guild has the content filter enabled for members without a role."
+msgstr "The guild has the content filter enabled for members without a role."
+
+msgid "The guild has the content filter enabled for every member."
+msgstr "The guild has the content filter enabled for every member."
+
+msgid "Specifies a :class:`Member` 's status."
+msgstr "Specifies a :class:`Member` 's status."
+
+msgid "The member is online."
+msgstr "The member is online."
+
+msgid "The member is offline."
+msgstr "The member is offline."
+
+msgid "The member is idle."
+msgstr "The member is idle."
+
+msgid "The member is \"Do Not Disturb\"."
+msgstr "The member is \"Do Not Disturb\"."
+
+msgid "An alias for :attr:`dnd`."
+msgstr "An alias for :attr:`dnd`."
+
+msgid "The member is \"invisible\". In reality, this is only used in sending a presence a la :meth:`Client.change_presence`. When you receive a user's presence this will be :attr:`offline` instead."
+msgstr "The member is \"invisible\". In reality, this is only used in sending a presence a la :meth:`Client.change_presence`. When you receive a user's presence this will be :attr:`offline` instead."
+
+msgid "The member is streaming."
+msgstr "The member is streaming."
+
+msgid "Represents the type of action being done for a :class:`AuditLogEntry`\\, which is retrievable via :meth:`Guild.audit_logs`."
+msgstr "Represents the type of action being done for a :class:`AuditLogEntry`\\, which is retrievable via :meth:`Guild.audit_logs`."
+
+msgid "The guild has updated. Things that trigger this include:"
+msgstr "The guild has updated. Things that trigger this include:"
+
+msgid "Changing the guild vanity URL"
+msgstr "Changing the guild vanity URL"
+
+msgid "Changing the guild invite splash"
+msgstr "Changing the guild invite splash"
+
+msgid "Changing the guild AFK channel or timeout"
+msgstr "Changing the guild AFK channel or timeout"
+
+msgid "Changing the guild voice server region"
+msgstr "Changing the guild voice server region"
+
+msgid "Changing the guild icon, banner, or discovery splash"
+msgstr "Changing the guild icon, banner, or discovery splash"
+
+msgid "Changing the guild moderation settings"
+msgstr "Changing the guild moderation settings"
+
+msgid "Changing things related to the guild widget"
+msgstr "Changing things related to the guild widget"
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Guild`."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Guild`."
+
+msgid "Possible attributes for :class:`AuditLogDiff`:"
+msgstr "Possible attributes for :class:`AuditLogDiff`:"
+
+msgid ":attr:`~AuditLogDiff.afk_channel`"
+msgstr ":attr:`~AuditLogDiff.afk_channel`"
+
+msgid ":attr:`~AuditLogDiff.system_channel`"
+msgstr ":attr:`~AuditLogDiff.system_channel`"
+
+msgid ":attr:`~AuditLogDiff.afk_timeout`"
+msgstr ":attr:`~AuditLogDiff.afk_timeout`"
+
+msgid ":attr:`~AuditLogDiff.default_message_notifications`"
+msgstr ":attr:`~AuditLogDiff.default_message_notifications`"
+
+msgid ":attr:`~AuditLogDiff.explicit_content_filter`"
+msgstr ":attr:`~AuditLogDiff.explicit_content_filter`"
+
+msgid ":attr:`~AuditLogDiff.mfa_level`"
+msgstr ":attr:`~AuditLogDiff.mfa_level`"
+
+msgid ":attr:`~AuditLogDiff.name`"
+msgstr ":attr:`~AuditLogDiff.name`"
+
+msgid ":attr:`~AuditLogDiff.owner`"
+msgstr ":attr:`~AuditLogDiff.owner`"
+
+msgid ":attr:`~AuditLogDiff.splash`"
+msgstr ":attr:`~AuditLogDiff.splash`"
+
+msgid ":attr:`~AuditLogDiff.discovery_splash`"
+msgstr ":attr:`~AuditLogDiff.discovery_splash`"
+
+msgid ":attr:`~AuditLogDiff.icon`"
+msgstr ":attr:`~AuditLogDiff.icon`"
+
+msgid ":attr:`~AuditLogDiff.banner`"
+msgstr ":attr:`~AuditLogDiff.banner`"
+
+msgid ":attr:`~AuditLogDiff.vanity_url_code`"
+msgstr ":attr:`~AuditLogDiff.vanity_url_code`"
+
+msgid "A new channel was created."
+msgstr "A new channel was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is either a :class:`abc.GuildChannel` or :class:`Object` with an ID."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is either a :class:`abc.GuildChannel` or :class:`Object` with an ID."
+
+msgid "A more filled out object in the :class:`Object` case can be found by using :attr:`~AuditLogEntry.after`."
+msgstr "A more filled out object in the :class:`Object` case can be found by using :attr:`~AuditLogEntry.after`."
+
+msgid ":attr:`~AuditLogDiff.type`"
+msgstr ":attr:`~AuditLogDiff.type`"
+
+msgid ":attr:`~AuditLogDiff.overwrites`"
+msgstr ":attr:`~AuditLogDiff.overwrites`"
+
+msgid "A channel was updated. Things that trigger this include:"
+msgstr "A channel was updated. Things that trigger this include:"
+
+msgid "The channel name or topic was changed"
+msgstr "The channel name or topic was changed"
+
+msgid "The channel bitrate was changed"
+msgstr "The channel bitrate was changed"
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`abc.GuildChannel` or :class:`Object` with an ID."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`abc.GuildChannel` or :class:`Object` with an ID."
+
+msgid "A more filled out object in the :class:`Object` case can be found by using :attr:`~AuditLogEntry.after` or :attr:`~AuditLogEntry.before`."
+msgstr "A more filled out object in the :class:`Object` case can be found by using :attr:`~AuditLogEntry.after` or :attr:`~AuditLogEntry.before`."
+
+msgid ":attr:`~AuditLogDiff.position`"
+msgstr ":attr:`~AuditLogDiff.position`"
+
+msgid ":attr:`~AuditLogDiff.topic`"
+msgstr ":attr:`~AuditLogDiff.topic`"
+
+msgid ":attr:`~AuditLogDiff.bitrate`"
+msgstr ":attr:`~AuditLogDiff.bitrate`"
+
+msgid ":attr:`~AuditLogDiff.rtc_region`"
+msgstr ":attr:`~AuditLogDiff.rtc_region`"
+
+msgid ":attr:`~AuditLogDiff.video_quality_mode`"
+msgstr ":attr:`~AuditLogDiff.video_quality_mode`"
+
+msgid ":attr:`~AuditLogDiff.default_auto_archive_duration`"
+msgstr ":attr:`~AuditLogDiff.default_auto_archive_duration`"
+
+msgid "A channel was deleted."
+msgstr "A channel was deleted."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is an :class:`Object` with an ID."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is an :class:`Object` with an ID."
+
+msgid "A more filled out object can be found by using the :attr:`~AuditLogEntry.before` object."
+msgstr "A more filled out object can be found by using the :attr:`~AuditLogEntry.before` object."
+
+msgid "A channel permission overwrite was created."
+msgstr "A channel permission overwrite was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.extra` is either a :class:`Role` or :class:`Member`. If the object is not found then it is a :class:`Object` with an ID being filled, a name, and a ``type`` attribute set to either ``'role'`` or ``'member'`` to help dictate what type of ID it is."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.extra` is either a :class:`Role` or :class:`Member`. If the object is not found then it is a :class:`Object` with an ID being filled, a name, and a ``type`` attribute set to either ``'role'`` or ``'member'`` to help dictate what type of ID it is."
+
+msgid ":attr:`~AuditLogDiff.deny`"
+msgstr ":attr:`~AuditLogDiff.deny`"
+
+msgid ":attr:`~AuditLogDiff.allow`"
+msgstr ":attr:`~AuditLogDiff.allow`"
+
+msgid ":attr:`~AuditLogDiff.id`"
+msgstr ":attr:`~AuditLogDiff.id`"
+
+msgid "A channel permission overwrite was changed, this is typically when the permission values change."
+msgstr "A channel permission overwrite was changed, this is typically when the permission values change."
+
+msgid "See :attr:`overwrite_create` for more information on how the :attr:`~AuditLogEntry.target` and :attr:`~AuditLogEntry.extra` fields are set."
+msgstr "See :attr:`overwrite_create` for more information on how the :attr:`~AuditLogEntry.target` and :attr:`~AuditLogEntry.extra` fields are set."
+
+msgid "A channel permission overwrite was deleted."
+msgstr "A channel permission overwrite was deleted."
+
+msgid "A member was kicked."
+msgstr "A member was kicked."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`User` who got kicked."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`User` who got kicked."
+
+msgid "When this is the action, :attr:`~AuditLogEntry.changes` is empty."
+msgstr "When this is the action, :attr:`~AuditLogEntry.changes` is empty."
+
+msgid "A member prune was triggered."
+msgstr "A member prune was triggered."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is set to ``None``."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is set to ``None``."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.extra` is set to an unspecified proxy object with two attributes:"
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.extra` is set to an unspecified proxy object with two attributes:"
+
+msgid "``delete_members_days``: An integer specifying how far the prune was."
+msgstr "``delete_members_days``: An integer specifying how far the prune was."
+
+msgid "``members_removed``: An integer specifying how many members were removed."
+msgstr "``members_removed``: An integer specifying how many members were removed."
+
+msgid "A member was banned."
+msgstr "A member was banned."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`User` who got banned."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`User` who got banned."
+
+msgid "A member was unbanned."
+msgstr "A member was unbanned."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`User` who got unbanned."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`User` who got unbanned."
+
+msgid "A member has updated. This triggers in the following situations:"
+msgstr "A member has updated. This triggers in the following situations:"
+
+msgid "A nickname was changed"
+msgstr "A nickname was changed"
+
+msgid "They were server muted or deafened (or it was undone)"
+msgstr "They were server muted or deafened (or it was undone)"
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who got updated."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who got updated."
+
+msgid ":attr:`~AuditLogDiff.nick`"
+msgstr ":attr:`~AuditLogDiff.nick`"
+
+msgid ":attr:`~AuditLogDiff.mute`"
+msgstr ":attr:`~AuditLogDiff.mute`"
+
+msgid ":attr:`~AuditLogDiff.deaf`"
+msgstr ":attr:`~AuditLogDiff.deaf`"
+
+msgid "A member's role has been updated. This triggers when a member either gains a role or loses a role."
+msgstr "A member's role has been updated. This triggers when a member either gains a role or loses a role."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who got the role."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who got the role."
+
+msgid ":attr:`~AuditLogDiff.roles`"
+msgstr ":attr:`~AuditLogDiff.roles`"
+
+msgid "A member's voice channel has been updated. This triggers when a member is moved to a different voice channel."
+msgstr "A member's voice channel has been updated. This triggers when a member is moved to a different voice channel."
+
+msgid "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the members were moved."
+msgstr "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the members were moved."
+
+msgid "``count``: An integer specifying how many members were moved."
+msgstr "``count``: An integer specifying how many members were moved."
+
+msgid "A member's voice state has changed. This triggers when a member is force disconnected from voice."
+msgstr "A member's voice state has changed. This triggers when a member is force disconnected from voice."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.extra` is set to an unspecified proxy object with one attribute:"
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.extra` is set to an unspecified proxy object with one attribute:"
+
+msgid "``count``: An integer specifying how many members were disconnected."
+msgstr "``count``: An integer specifying how many members were disconnected."
+
+msgid "A bot was added to the guild."
+msgstr "A bot was added to the guild."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` which was added to the guild."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` which was added to the guild."
+
+msgid "A new role was created."
+msgstr "A new role was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Role` or a :class:`Object` with the ID."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Role` or a :class:`Object` with the ID."
+
+msgid ":attr:`~AuditLogDiff.colour`"
+msgstr ":attr:`~AuditLogDiff.colour`"
+
+msgid ":attr:`~AuditLogDiff.mentionable`"
+msgstr ":attr:`~AuditLogDiff.mentionable`"
+
+msgid ":attr:`~AuditLogDiff.hoist`"
+msgstr ":attr:`~AuditLogDiff.hoist`"
+
+msgid ":attr:`~AuditLogDiff.permissions`"
+msgstr ":attr:`~AuditLogDiff.permissions`"
+
+msgid "A role was updated. This triggers in the following situations:"
+msgstr "A role was updated. This triggers in the following situations:"
+
+msgid "The name has changed"
+msgstr "The name has changed"
+
+msgid "The permissions have changed"
+msgstr "The permissions have changed"
+
+msgid "The colour has changed"
+msgstr "The colour has changed"
+
+msgid "Its hoist/mentionable state has changed"
+msgstr "Its hoist/mentionable state has changed"
+
+msgid "A role was deleted."
+msgstr "A role was deleted."
+
+msgid "An invite was created."
+msgstr "An invite was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Invite` that was created."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Invite` that was created."
+
+msgid ":attr:`~AuditLogDiff.max_age`"
+msgstr ":attr:`~AuditLogDiff.max_age`"
+
+msgid ":attr:`~AuditLogDiff.code`"
+msgstr ":attr:`~AuditLogDiff.code`"
+
+msgid ":attr:`~AuditLogDiff.temporary`"
+msgstr ":attr:`~AuditLogDiff.temporary`"
+
+msgid ":attr:`~AuditLogDiff.inviter`"
+msgstr ":attr:`~AuditLogDiff.inviter`"
+
+msgid ":attr:`~AuditLogDiff.channel`"
+msgstr ":attr:`~AuditLogDiff.channel`"
+
+msgid ":attr:`~AuditLogDiff.uses`"
+msgstr ":attr:`~AuditLogDiff.uses`"
+
+msgid ":attr:`~AuditLogDiff.max_uses`"
+msgstr ":attr:`~AuditLogDiff.max_uses`"
+
+msgid "An invite was updated."
+msgstr "An invite was updated."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Invite` that was updated."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Invite` that was updated."
+
+msgid "An invite was deleted."
+msgstr "An invite was deleted."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Invite` that was deleted."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Invite` that was deleted."
+
+msgid "A webhook was created."
+msgstr "A webhook was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the webhook ID."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the webhook ID."
+
+msgid ":attr:`~AuditLogDiff.type` (always set to ``1`` if so)"
+msgstr ":attr:`~AuditLogDiff.type` (always set to ``1`` if so)"
+
+msgid "A webhook was updated. This trigger in the following situations:"
+msgstr "A webhook was updated. This trigger in the following situations:"
+
+msgid "The webhook name changed"
+msgstr "The webhook name changed"
+
+msgid "The webhook channel changed"
+msgstr "The webhook channel changed"
+
+msgid ":attr:`~AuditLogDiff.avatar`"
+msgstr ":attr:`~AuditLogDiff.avatar`"
+
+msgid "A webhook was deleted."
+msgstr "A webhook was deleted."
+
+msgid "An emoji was created."
+msgstr "An emoji was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Emoji` or :class:`Object` with the emoji ID."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Emoji` or :class:`Object` with the emoji ID."
+
+msgid "An emoji was updated. This triggers when the name has changed."
+msgstr "An emoji was updated. This triggers when the name has changed."
+
+msgid "An emoji was deleted."
+msgstr "An emoji was deleted."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the emoji ID."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the emoji ID."
+
+msgid "A message was deleted by a moderator. Note that this only triggers if the message was deleted by someone other than the author."
+msgstr "A message was deleted by a moderator. Note that this only triggers if the message was deleted by someone other than the author."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who had their message deleted."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who had their message deleted."
+
+msgid "``count``: An integer specifying how many messages were deleted."
+msgstr "``count``: An integer specifying how many messages were deleted."
+
+msgid "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the message got deleted."
+msgstr "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the message got deleted."
+
+msgid "Messages were bulk deleted by a moderator."
+msgstr "Messages were bulk deleted by a moderator."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`TextChannel` or :class:`Object` with the ID of the channel that was purged."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`TextChannel` or :class:`Object` with the ID of the channel that was purged."
+
+msgid "A message was pinned in a channel."
+msgstr "A message was pinned in a channel."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who had their message pinned."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who had their message pinned."
+
+msgid "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the message was pinned."
+msgstr "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the message was pinned."
+
+msgid "``message_id``: the ID of the message which was pinned."
+msgstr "``message_id``: the ID of the message which was pinned."
+
+msgid "A message was unpinned in a channel."
+msgstr "A message was unpinned in a channel."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who had their message unpinned."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Member` or :class:`User` who had their message unpinned."
+
+msgid "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the message was unpinned."
+msgstr "``channel``: A :class:`TextChannel` or :class:`Object` with the channel ID where the message was unpinned."
+
+msgid "``message_id``: the ID of the message which was unpinned."
+msgstr "``message_id``: the ID of the message which was unpinned."
+
+msgid "A guild integration was created."
+msgstr "A guild integration was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the integration ID of the integration which was created."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the integration ID of the integration which was created."
+
+msgid "A guild integration was updated."
+msgstr "A guild integration was updated."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the integration ID of the integration which was updated."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the integration ID of the integration which was updated."
+
+msgid "A guild integration was deleted."
+msgstr "A guild integration was deleted."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the integration ID of the integration which was deleted."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Object` with the integration ID of the integration which was deleted."
+
+msgid "A stage instance was started."
+msgstr "A stage instance was started."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`StageInstance` or :class:`Object` with the ID of the stage instance which was created."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`StageInstance` or :class:`Object` with the ID of the stage instance which was created."
+
+msgid ":attr:`~AuditLogDiff.privacy_level`"
+msgstr ":attr:`~AuditLogDiff.privacy_level`"
+
+msgid "A stage instance was updated."
+msgstr "A stage instance was updated."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`StageInstance` or :class:`Object` with the ID of the stage instance which was updated."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`StageInstance` or :class:`Object` with the ID of the stage instance which was updated."
+
+msgid "A stage instance was ended."
+msgstr "A stage instance was ended."
+
+msgid "A sticker was created."
+msgstr "A sticker was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`GuildSticker` or :class:`Object` with the ID of the sticker which was updated."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`GuildSticker` or :class:`Object` with the ID of the sticker which was updated."
+
+msgid ":attr:`~AuditLogDiff.emoji`"
+msgstr ":attr:`~AuditLogDiff.emoji`"
+
+msgid ":attr:`~AuditLogDiff.format_type`"
+msgstr ":attr:`~AuditLogDiff.format_type`"
+
+msgid ":attr:`~AuditLogDiff.description`"
+msgstr ":attr:`~AuditLogDiff.description`"
+
+msgid ":attr:`~AuditLogDiff.available`"
+msgstr ":attr:`~AuditLogDiff.available`"
+
+msgid "A sticker was updated."
+msgstr "A sticker was updated."
+
+msgid "A sticker was deleted."
+msgstr "A sticker was deleted."
+
+msgid "A scheduled event was created."
+msgstr "A scheduled event was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which was deleted."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`ScheduledEvent` or :class:`Object` with the ID of the thread which was deleted."
+
+msgid ":attr:`~discord.ScheduledEvent.location`"
+msgstr ":attr:`~discord.ScheduledEvent.location`"
+
+msgid ":attr:`~discord.ScheduledEvent.status`"
+msgstr ":attr:`~discord.ScheduledEvent.status`"
+
+msgid ":attr:`~discord.ScheduledEventLocation.type`"
+msgstr ":attr:`~discord.ScheduledEventLocation.type`"
+
+msgid ":attr:`~discord.ScheduledEvent.image`"
+msgstr ":attr:`~discord.ScheduledEvent.image`"
+
+msgid "A scheduled event was updated."
+msgstr "A scheduled event was updated."
+
+msgid "A scheduled event was deleted."
+msgstr "A scheduled event was deleted."
+
+msgid "A thread was created."
+msgstr "A thread was created."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Thread` or :class:`Object` with the ID of the thread which was created."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Thread` or :class:`Object` with the ID of the thread which was created."
+
+msgid ":attr:`~AuditLogDiff.archived`"
+msgstr ":attr:`~AuditLogDiff.archived`"
+
+msgid ":attr:`~AuditLogDiff.locked`"
+msgstr ":attr:`~AuditLogDiff.locked`"
+
+msgid ":attr:`~AuditLogDiff.auto_archive_duration`"
+msgstr ":attr:`~AuditLogDiff.auto_archive_duration`"
+
+msgid ":attr:`~AuditLogDiff.invitable`"
+msgstr ":attr:`~AuditLogDiff.invitable`"
+
+msgid "A thread was updated."
+msgstr "A thread was updated."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Thread` or :class:`Object` with the ID of the thread which was updated."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Thread` or :class:`Object` with the ID of the thread which was updated."
+
+msgid "A thread was deleted."
+msgstr "A thread was deleted."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Thread` or :class:`Object` with the ID of the thread which was deleted."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Thread` or :class:`Object` with the ID of the thread which was deleted."
+
+msgid "An application command's permissions were updated."
+msgstr "An application command's permissions were updated."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is an :class:`Object` with the ID of the command that had it's permissions edited."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is an :class:`Object` with the ID of the command that had it's permissions edited."
+
+msgid ":attr:`~AuditLogDiff.command_id`"
+msgstr ":attr:`~AuditLogDiff.command_id`"
+
+msgid "A guild auto moderation rule was created."
+msgstr "A guild auto moderation rule was created."
+
+msgid ":attr:`~AuditLogDiff.enabled`"
+msgstr ":attr:`~AuditLogDiff.enabled`"
+
+msgid ":attr:`~AuditLogDiff.trigger_type`"
+msgstr ":attr:`~AuditLogDiff.trigger_type`"
+
+msgid ":attr:`~AuditLogDiff.event_type`"
+msgstr ":attr:`~AuditLogDiff.event_type`"
+
+msgid ":attr:`~AuditLogDiff.trigger_metadata`"
+msgstr ":attr:`~AuditLogDiff.trigger_metadata`"
+
+msgid ":attr:`~AuditLogDiff.actions`"
+msgstr ":attr:`~AuditLogDiff.actions`"
+
+msgid ":attr:`~AuditLogDiff.exempt_roles`"
+msgstr ":attr:`~AuditLogDiff.exempt_roles`"
+
+msgid ":attr:`~AuditLogDiff.exempt_channels`"
+msgstr ":attr:`~AuditLogDiff.exempt_channels`"
+
+msgid "A guild auto moderation rule was updated."
+msgstr "A guild auto moderation rule was updated."
+
+msgid "A guild auto moderation rule was deleted."
+msgstr "A guild auto moderation rule was deleted."
+
+msgid "A message was blocked by auto moderation."
+msgstr "A message was blocked by auto moderation."
+
+msgid "A message was flagged by auto moderation."
+msgstr "A message was flagged by auto moderation."
+
+msgid "A member was timed out by auto moderation."
+msgstr "A member was timed out by auto moderation."
+
+msgid "A creator monetization request was created."
+msgstr "A creator monetization request was created."
+
+msgid "The creator monetization terms were accepted."
+msgstr "The creator monetization terms were accepted."
+
+msgid "A voice channel status was updated."
+msgstr "A voice channel status was updated."
+
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`VoiceChannel` or :class:`Object` with the ID of the voice channel which was updated."
+msgstr "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`VoiceChannel` or :class:`Object` with the ID of the voice channel which was updated."
+
+msgid ":attr:`~AuditLogDiff.status`"
+msgstr ":attr:`~AuditLogDiff.status`"
+
+msgid "A voice channel status was deleted."
+msgstr "A voice channel status was deleted."
+
+msgid "Represents the category that the :class:`AuditLogAction` belongs to."
+msgstr "Represents the category that the :class:`AuditLogAction` belongs to."
+
+msgid "This can be retrieved via :attr:`AuditLogEntry.category`."
+msgstr "This can be retrieved via :attr:`AuditLogEntry.category`."
+
+msgid "The action is the creation of something."
+msgstr "The action is the creation of something."
+
+msgid "The action is the deletion of something."
+msgstr "The action is the deletion of something."
+
+msgid "The action is the update of something."
+msgstr "The action is the update of something."
+
+msgid "Represents the membership state of a team member retrieved through :func:`Client.application_info`."
+msgstr "Represents the membership state of a team member retrieved through :func:`Client.application_info`."
+
+msgid "Represents an invited member."
+msgstr "Represents an invited member."
+
+msgid "Represents a member currently in the team."
+msgstr "Represents a member currently in the team."
+
+msgid "Represents the type of webhook that can be received."
+msgstr "Represents the type of webhook that can be received."
+
+msgid "Represents a webhook that can post messages to channels with a token."
+msgstr "Represents a webhook that can post messages to channels with a token."
+
+msgid "Represents a webhook that is internally managed by Discord, used for following channels."
+msgstr "Represents a webhook that is internally managed by Discord, used for following channels."
+
+msgid "Represents a webhook that is used for interactions or applications."
+msgstr "Represents a webhook that is used for interactions or applications."
+
+msgid "Represents the behaviour the :class:`Integration` should perform when a user's subscription has finished."
+msgstr "Represents the behaviour the :class:`Integration` should perform when a user's subscription has finished."
+
+msgid "There is an alias for this called ``ExpireBehavior``."
+msgstr "There is an alias for this called ``ExpireBehavior``."
+
+msgid "This will remove the :attr:`StreamIntegration.role` from the user when their subscription is finished."
+msgstr "This will remove the :attr:`StreamIntegration.role` from the user when their subscription is finished."
+
+msgid "This will kick the user when their subscription is finished."
+msgstr "This will kick the user when their subscription is finished."
+
+msgid "Represents the default avatar of a Discord :class:`User`"
+msgstr "Represents the default avatar of a Discord :class:`User`"
+
+msgid "Represents the default avatar with the color blurple. See also :attr:`Colour.blurple`"
+msgstr "Represents the default avatar with the color blurple. See also :attr:`Colour.blurple`"
+
+msgid "Represents the default avatar with the color grey. See also :attr:`Colour.greyple`"
+msgstr "Represents the default avatar with the color grey. See also :attr:`Colour.greyple`"
+
+msgid "An alias for :attr:`grey`."
+msgstr "An alias for :attr:`grey`."
+
+msgid "Represents the default avatar with the color green. See also :attr:`Colour.green`"
+msgstr "Represents the default avatar with the color green. See also :attr:`Colour.green`"
+
+msgid "Represents the default avatar with the color orange. See also :attr:`Colour.orange`"
+msgstr "Represents the default avatar with the color orange. See also :attr:`Colour.orange`"
+
+msgid "Represents the default avatar with the color red. See also :attr:`Colour.red`"
+msgstr "Represents the default avatar with the color red. See also :attr:`Colour.red`"
+
+msgid "Represents the type of sticker."
+msgstr "Represents the type of sticker."
+
+msgid "Represents a standard sticker that all Nitro users can use."
+msgstr "Represents a standard sticker that all Nitro users can use."
+
+msgid "Represents a custom sticker created in a guild."
+msgstr "Represents a custom sticker created in a guild."
+
+msgid "Represents the type of sticker images."
+msgstr "Represents the type of sticker images."
+
+msgid "Represents a sticker with a png image."
+msgstr "Represents a sticker with a png image."
+
+msgid "Represents a sticker with an apng image."
+msgstr "Represents a sticker with an apng image."
+
+msgid "Represents a sticker with a lottie image."
+msgstr "Represents a sticker with a lottie image."
+
+msgid "Represents a sticker with a gif image."
+msgstr "Represents a sticker with a gif image."
+
+msgid "Represents the invite type for voice channel invites."
+msgstr "Represents the invite type for voice channel invites."
+
+msgid "The invite doesn't target anyone or anything."
+msgstr "The invite doesn't target anyone or anything."
+
+msgid "A stream invite that targets a user."
+msgstr "A stream invite that targets a user."
+
+msgid "A invite that targets an embedded application."
+msgstr "A invite that targets an embedded application."
+
+msgid "Note that your bot won't be verified if you provide users access to this"
+msgstr "Note that your bot won't be verified if you provide users access to this"
+
+msgid "Represents the camera video quality mode for voice channel participants."
+msgstr "Represents the camera video quality mode for voice channel participants."
+
+msgid "Represents auto camera video quality."
+msgstr "Represents auto camera video quality."
+
+msgid "Represents full camera video quality."
+msgstr "Represents full camera video quality."
+
+msgid "Represents a stage instance's privacy level. Stage event privacy levels can only have 1 possible value at the moment so this shouldn't really be used."
+msgstr "Represents a stage instance's privacy level. Stage event privacy levels can only have 1 possible value at the moment so this shouldn't really be used."
+
+msgid "The stage instance can only be joined by members of the guild."
+msgstr "The stage instance can only be joined by members of the guild."
+
+msgid "Alias for :attr:`.closed`"
+msgstr "Alias for :attr:`.closed`"
+
+msgid "Represents the NSFW level of a guild."
+msgstr "Represents the NSFW level of a guild."
+
+msgid "Checks if two NSFW levels are equal."
+msgstr "Checks if two NSFW levels are equal."
+
+msgid "Checks if two NSFW levels are not equal."
+msgstr "Checks if two NSFW levels are not equal."
+
+msgid "Checks if a NSFW level is higher than another."
+msgstr "Checks if a NSFW level is higher than another."
+
+msgid "Checks if a NSFW level is lower than another."
+msgstr "Checks if a NSFW level is lower than another."
+
+msgid "Checks if a NSFW level is higher or equal to another."
+msgstr "Checks if a NSFW level is higher or equal to another."
+
+msgid "Checks if a NSFW level is lower or equal to another."
+msgstr "Checks if a NSFW level is lower or equal to another."
+
+msgid "The guild has not been categorised yet."
+msgstr "The guild has not been categorised yet."
+
+msgid "The guild contains NSFW content."
+msgstr "The guild contains NSFW content."
+
+msgid "The guild does not contain any NSFW content."
+msgstr "The guild does not contain any NSFW content."
+
+msgid "The guild may contain NSFW content."
+msgstr "The guild may contain NSFW content."
+
+msgid "Represents an embedded activity application."
+msgstr "Represents an embedded activity application."
+
+msgid "Some might be boost-only or gated."
+msgstr "Some might be boost-only or gated."
+
+msgid "Discord said that they won't verify bots who gives access to embedded activities."
+msgstr "Discord said that they won't verify bots who gives access to embedded activities."
+
+msgid "Read more here: https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321."
+msgstr "Read more here: https://discord.com/channels/613425648685547541/697236247739105340/901153332075315321."
+
+msgid "Represents the embedded application Ask Away."
+msgstr "Represents the embedded application Ask Away."
+
+msgid "Represents the embedded application Awkword."
+msgstr "Represents the embedded application Awkword."
+
+msgid "This activity has been removed."
+msgstr "This activity has been removed."
+
+msgid "Development version of :attr:`.awkword`."
+msgstr "Development version of :attr:`.awkword`."
+
+msgid "Represents the embedded application Bash Out."
+msgstr "Represents the embedded application Bash Out."
+
+msgid "Represents the embedded application Betrayal.io."
+msgstr "Represents the embedded application Betrayal.io."
+
+msgid "Represents the embedded application Blazing 8s."
+msgstr "Represents the embedded application Blazing 8s."
+
+msgid "Development version of :attr:`.blazing_8s`."
+msgstr "Development version of :attr:`.blazing_8s`."
+
+msgid "QA version of :attr:`.blazing_8s`."
+msgstr "QA version of :attr:`.blazing_8s`."
+
+msgid "Staging version of :attr:`.blazing_8s`."
+msgstr "Staging version of :attr:`.blazing_8s`."
+
+msgid "Represents the embedded application Bobble League."
+msgstr "Represents the embedded application Bobble League."
+
+msgid "Represents the embedded application Checkers in the Park."
+msgstr "Represents the embedded application Checkers in the Park."
+
+msgid "Development version of :attr:`.checkers_in_the_park`."
+msgstr "Development version of :attr:`.checkers_in_the_park`."
+
+msgid "QA version of :attr:`.checkers_in_the_park`."
+msgstr "QA version of :attr:`.checkers_in_the_park`."
+
+msgid "Staging version of :attr:`.checkers_in_the_park`."
+msgstr "Staging version of :attr:`.checkers_in_the_park`."
+
+msgid "Represents the embedded application Chess in the Park."
+msgstr "Represents the embedded application Chess in the Park."
+
+msgid "Development version of :attr:`.chess_in_the_park`."
+msgstr "Development version of :attr:`.chess_in_the_park`."
+
+msgid "QA version of :attr:`.chess_in_the_park`."
+msgstr "QA version of :attr:`.chess_in_the_park`."
+
+msgid "Staging version of :attr:`.chess_in_the_park`."
+msgstr "Staging version of :attr:`.chess_in_the_park`."
+
+msgid "Represents the embedded application Decoders Development."
+msgstr "Represents the embedded application Decoders Development."
+
+msgid "Represents the embedded application Doodle Crew."
+msgstr "Represents the embedded application Doodle Crew."
+
+msgid "Development version of :attr:`.doodle_crew`."
+msgstr "Development version of :attr:`.doodle_crew`."
+
+msgid "Represents the embedded application Fishington.io."
+msgstr "Represents the embedded application Fishington.io."
+
+msgid "Represents the embedded application Gartic Phone."
+msgstr "Represents the embedded application Gartic Phone."
+
+msgid "Represents the embedded application Jamspace."
+msgstr "Represents the embedded application Jamspace."
+
+msgid "Represents the embedded application Know What I Meme."
+msgstr "Represents the embedded application Know What I Meme."
+
+msgid "Represents the embedded application Land.io."
+msgstr "Represents the embedded application Land.io."
+
+msgid "Represents the embedded application Letter League."
+msgstr "Represents the embedded application Letter League."
+
+msgid "Development version of :attr:`.letter_league`."
+msgstr "Development version of :attr:`.letter_league`."
+
+msgid "Represents the embedded application Poker Night."
+msgstr "Represents the embedded application Poker Night."
+
+msgid "Development version of :attr:`.poker_night`."
+msgstr "Development version of :attr:`.poker_night`."
+
+msgid "QA version of :attr:`.poker_night`."
+msgstr "QA version of :attr:`.poker_night`."
+
+msgid "Staging version of :attr:`.poker_night`."
+msgstr "Staging version of :attr:`.poker_night`."
+
+msgid "Represents the embedded application Putt Party."
+msgstr "Represents the embedded application Putt Party."
+
+msgid "Development version of :attr:`.putt_party`."
+msgstr "Development version of :attr:`.putt_party`."
+
+msgid "QA version of :attr:`.putt_party`."
+msgstr "QA version of :attr:`.putt_party`."
+
+msgid "Staging version of :attr:`.putt_party`."
+msgstr "Staging version of :attr:`.putt_party`."
+
+msgid "Represents the embedded application Putts."
+msgstr "Represents the embedded application Putts."
+
+msgid "Represents the embedded application Sketch Heads."
+msgstr "Represents the embedded application Sketch Heads."
+
+msgid "Development version of :attr:`.sketch_heads`."
+msgstr "Development version of :attr:`.sketch_heads`."
+
+msgid "Represents the embedded application Sketchy Artist."
+msgstr "Represents the embedded application Sketchy Artist."
+
+msgid "Development version of :attr:`.sketchy_artist`."
+msgstr "Development version of :attr:`.sketchy_artist`."
+
+msgid "Represents the embedded application Spell Cast."
+msgstr "Represents the embedded application Spell Cast."
+
+msgid "Staging version of :attr:`.spell_cast`."
+msgstr "Staging version of :attr:`.spell_cast`."
+
+msgid "Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access."
+msgstr "Same as :attr:`~EmbeddedActivity.youtube_together` with remote feature which allows guild admins to limit the playlist access."
+
+msgid "Development version of :attr:`.watch_together`."
+msgstr "Development version of :attr:`.watch_together`."
+
+msgid "Represents the embedded application word snacks."
+msgstr "Represents the embedded application word snacks."
+
+msgid "Development version of :attr:`.word_snacks`."
+msgstr "Development version of :attr:`.word_snacks`."
+
+msgid "Represents the embedded application Youtube Together."
+msgstr "Represents the embedded application Youtube Together."
+
+msgid "Represents the status of a scheduled event."
+msgstr "Represents the status of a scheduled event."
+
+msgid "The scheduled event hasn't started or been canceled yet."
+msgstr "The scheduled event hasn't started or been canceled yet."
+
+msgid "The scheduled event is in progress."
+msgstr "The scheduled event is in progress."
+
+msgid "The scheduled event is over."
+msgstr "The scheduled event is over."
+
+msgid "The scheduled event has been canceled before it can start."
+msgstr "The scheduled event has been canceled before it can start."
+
+msgid "Alias to :attr:`canceled`."
+msgstr "Alias to :attr:`canceled`."
+
+msgid "Represents a scheduled event location type (otherwise known as the entity type on the API)."
+msgstr "Represents a scheduled event location type (otherwise known as the entity type on the API)."
+
+msgid "Represents a scheduled event that is happening in a :class:`StageChannel`."
+msgstr "Represents a scheduled event that is happening in a :class:`StageChannel`."
+
+msgid "Represents a scheduled event that is happening in a :class:`VoiceChannel`."
+msgstr "Represents a scheduled event that is happening in a :class:`VoiceChannel`."
+
+msgid "Represents a generic location as a :class:`str`."
+msgstr "Represents a generic location as a :class:`str`."
+
+msgid "Represents the privacy level of a scheduled event. Scheduled event privacy levels can only have 1 possible value at the moment so this shouldn't really be used."
+msgstr "Represents the privacy level of a scheduled event. Scheduled event privacy levels can only have 1 possible value at the moment so this shouldn't really be used."
+
+msgid "Represents a scheduled event that is only available to members inside the guild."
+msgstr "Represents a scheduled event that is only available to members inside the guild."
+
+msgid "Represents an application role connection metadata type."
+msgstr "Represents an application role connection metadata type."
+
+msgid "Each metadata type offers a comparison operation that allows guilds to configure role requirements based on metadata values stored by the bot. Bots specify a ``metadata value`` for each user and guilds specify the required ``guild's configured value`` within the guild role settings."
+msgstr "Each metadata type offers a comparison operation that allows guilds to configure role requirements based on metadata values stored by the bot. Bots specify a ``metadata value`` for each user and guilds specify the required ``guild's configured value`` within the guild role settings."
+
+msgid "The metadata value (``integer``) is less than or equal to the guild's configured value (``integer``)."
+msgstr "The metadata value (``integer``) is less than or equal to the guild's configured value (``integer``)."
+
+msgid "The metadata value (``integer``) is greater than or equal to the guild's configured value (``integer``)."
+msgstr "The metadata value (``integer``) is greater than or equal to the guild's configured value (``integer``)."
+
+msgid "The metadata value (``integer``) is equal to the guild's configured value (``integer``)."
+msgstr "The metadata value (``integer``) is equal to the guild's configured value (``integer``)."
+
+msgid "The metadata value (``integer``) is not equal to the guild's configured value (``integer``)."
+msgstr "The metadata value (``integer``) is not equal to the guild's configured value (``integer``)."
+
+msgid "The metadata value (``datetime``) is less than or equal to the guild's configured value (``integer``; the number of days before the current date)."
+msgstr "The metadata value (``datetime``) is less than or equal to the guild's configured value (``integer``; the number of days before the current date)."
+
+msgid "The metadata value (``datetime``) is greater than or equal to the guild's configured value (``integer``; the number of days before the current date)."
+msgstr "The metadata value (``datetime``) is greater than or equal to the guild's configured value (``integer``; the number of days before the current date)."
+
+msgid "The metadata value (``integer``) is equal to the guild's configured value (``integer``; 1)."
+msgstr "The metadata value (``integer``) is equal to the guild's configured value (``integer``; 1)."
+
+msgid "The metadata value (``integer``) is not equal to the guild's configured value (``integer``; 1)."
+msgstr "The metadata value (``integer``) is not equal to the guild's configured value (``integer``; 1)."
+
+msgid "Represents an AutoMod trigger type."
+msgstr "Represents an AutoMod trigger type."
+
+msgid "Represents a keyword rule trigger, which are customizable by a guild."
+msgstr "Represents a keyword rule trigger, which are customizable by a guild."
+
+msgid "Possible attributes for :class:`AutoModTriggerMetadata`:"
+msgstr "Possible attributes for :class:`AutoModTriggerMetadata`:"
+
+msgid ":attr:`~AutoModTriggerMetadata.keyword_filter`"
+msgstr ":attr:`~AutoModTriggerMetadata.keyword_filter`"
+
+msgid ":attr:`~AutoModTriggerMetadata.regex_patterns`"
+msgstr ":attr:`~AutoModTriggerMetadata.regex_patterns`"
+
+msgid ":attr:`~AutoModTriggerMetadata.allow_list`"
+msgstr ":attr:`~AutoModTriggerMetadata.allow_list`"
+
+msgid "Represents a preset keyword rule trigger."
+msgstr "Represents a preset keyword rule trigger."
+
+msgid ":attr:`~AutoModTriggerMetadata.presets`"
+msgstr ":attr:`~AutoModTriggerMetadata.presets`"
+
+msgid "Represents the spam rule trigger."
+msgstr "Represents the spam rule trigger."
+
+msgid "There are no possible attributes for :class:`AutoModTriggerMetadata`."
+msgstr "There are no possible attributes for :class:`AutoModTriggerMetadata`."
+
+msgid "Represents a mention spam keyword rule trigger."
+msgstr "Represents a mention spam keyword rule trigger."
+
+msgid ":attr:`~AutoModTriggerMetadata.mention_total_limit`"
+msgstr ":attr:`~AutoModTriggerMetadata.mention_total_limit`"
+
+msgid "Represents a harmful link rule trigger."
+msgstr "Represents a harmful link rule trigger."
+
+msgid "Removed by Discord and merged into :attr:`spam`."
+msgstr "Removed by Discord and merged into :attr:`spam`."
+
+msgid "Represents an AutoMod event type."
+msgstr "Represents an AutoMod event type."
+
+msgid "Represents a message send AutoMod event."
+msgstr "Represents a message send AutoMod event."
+
+msgid "Represents the type of action AutoMod is performing."
+msgstr "Represents the type of action AutoMod is performing."
+
+msgid "Represents a block message action."
+msgstr "Represents a block message action."
+
+msgid "Represents a send alert message action."
+msgstr "Represents a send alert message action."
+
+msgid "Represents a timeout action."
+msgstr "Represents a timeout action."
+
+msgid "Represents an AutoMod keyword preset type."
+msgstr "Represents an AutoMod keyword preset type."
+
+msgid "Represents the profanity keyword preset rule."
+msgstr "Represents the profanity keyword preset rule."
+
+msgid "Represents the sexual content keyword preset rule."
+msgstr "Represents the sexual content keyword preset rule."
+
+msgid "Represents the slurs keyword preset rule."
+msgstr "Represents the slurs keyword preset rule."
+
+msgid "Represents how each prompt's options are displayed."
+msgstr "Represents how each prompt's options are displayed."
+
+msgid "The options will appear in a grid form, showing the name and description."
+msgstr "The options will appear in a grid form, showing the name and description."
+
+msgid "The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt."
+msgstr "The options will appear in a dropdown (similar to select menus), but without the description displayed. This is **enforced** if there are more than 12 options in the prompt."
+
+msgid "Represents the current mode of the guild's onboarding flow."
+msgstr "Represents the current mode of the guild's onboarding flow."
+
+msgid "Only default channels are counted towards the Onboarding requirements."
+msgstr "Only default channels are counted towards the Onboarding requirements."
+
+msgid "Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements."
+msgstr "Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements."
+
+msgid "Represents a Reaction's type."
+msgstr "Represents a Reaction's type."
+
+msgid "Represents a normal reaction."
+msgstr "Represents a normal reaction."
+
+msgid "Represents a super reaction."
+msgstr "Represents a super reaction."
+
+msgid "Represents an SKU's type."
+msgstr "Represents an SKU's type."
+
+msgid "A one-time purchase that is permanent and is not subject to either renewal or consumption, such as lifetime access to an app's premium features."
+msgstr "A one-time purchase that is permanent and is not subject to either renewal or consumption, such as lifetime access to an app's premium features."
+
+msgid "A one-time, non-renewable purchase that provides access, such as a temporary power-up or boost in a game."
+msgstr "A one-time, non-renewable purchase that provides access, such as a temporary power-up or boost in a game."
+
+msgid "Represents a recurring subscription."
+msgstr "Represents a recurring subscription."
+
+msgid "A system-generated group for each subscription SKU created. These types of SKUs are currently unused."
+msgstr "A system-generated group for each subscription SKU created. These types of SKUs are currently unused."
+
+msgid "Represents an entitlement's type."
+msgstr "Represents an entitlement's type."
+
+msgid "Entitlement was purchased by the user."
+msgstr "Entitlement was purchased by the user."
+
+msgid "Entitlement is for a Discord Nitro subscription."
+msgstr "Entitlement is for a Discord Nitro subscription."
+
+msgid "Entitlement was gifted by the developer."
+msgstr "Entitlement was gifted by the developer."
+
+msgid "Entitlement was purchased by a developer in the application's test mode."
+msgstr "Entitlement was purchased by a developer in the application's test mode."
+
+msgid "Entitlement was granted when the SKU was free."
+msgstr "Entitlement was granted when the SKU was free."
+
+msgid "Entitlement was gifted by another user."
+msgstr "Entitlement was gifted by another user."
+
+msgid "Entitlement was claimed by a user for free as a Nitro subscriber."
+msgstr "Entitlement was claimed by a user for free as a Nitro subscriber."
+
+msgid "Entitlement was purchased as an app subscription."
+msgstr "Entitlement was purchased as an app subscription."
+
+msgid "Represents an entitlement's ownership type."
+msgstr "Represents an entitlement's ownership type."
+
+msgid "Entitlement is owned by a guild."
+msgstr "Entitlement is owned by a guild."
+
+msgid "Entitlement is owned by a user."
+msgstr "Entitlement is owned by a user."
+
+msgid "Represents a poll's layout type."
+msgstr "Represents a poll's layout type."
+
+msgid "Represents the default layout."
+msgstr "Represents the default layout."
+
+msgid "The integration type for an application."
+msgstr "The integration type for an application."
+
+msgid "The integration is added to a guild."
+msgstr "The integration is added to a guild."
+
+msgid "The integration is added to a user account."
+msgstr "The integration is added to a user account."
+
+msgid "The context where an interaction occurs."
+msgstr "The context where an interaction occurs."
+
+msgid "The interaction is in a guild."
+msgstr "The interaction is in a guild."
+
+msgid "The interaction is in the bot's own DM channel with the user."
+msgstr "The interaction is in the bot's own DM channel with the user."
+
+msgid "The interaction is in a private DM or group DM channel."
+msgstr "The interaction is in a private DM or group DM channel."
+

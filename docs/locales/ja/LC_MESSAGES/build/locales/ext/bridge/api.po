@@ -1,0 +1,388 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord\\n"
+"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
+"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"Last-Translator: \\n"
+"Language-Team: none\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+"X-Generator: Crowdin\\n"
+
+msgid "API Reference"
+msgstr "API Reference"
+
+msgid "The reference manual that follows details the API of Pycord's bridge command extension module."
+msgstr "The reference manual that follows details the API of Pycord's bridge command extension module."
+
+msgid "Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge commands in guilds requires :attr:`Intents.message_context` to be enabled."
+msgstr "Using the prefixed command version (which uses the ``ext.commands`` extension) of bridge commands in guilds requires :attr:`Intents.message_context` to be enabled."
+
+msgid "Bots"
+msgstr "Bots"
+
+msgid "Bot"
+msgstr "Bot"
+
+msgid "Represents a discord bot, with support for cross-compatibility between command types."
+msgstr "Represents a discord bot, with support for cross-compatibility between command types."
+
+msgid "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
+msgstr "This class is a subclass of :class:`.ext.commands.Bot` and as a result anything that you can do with a :class:`.ext.commands.Bot` you can do with this bot."
+
+msgid "Parameter"
+msgstr "Parameter"
+
+msgid "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
+msgstr "Takes a :class:`.BridgeCommand` and adds both a slash and traditional (prefix-based) version of the command to the bot."
+
+msgid "A shortcut decorator that invokes :func:`bridge_command` and adds it to the internal command list via :meth:`~.Bot.add_bridge_command`."
+msgstr "A shortcut decorator that invokes :func:`bridge_command` and adds it to the internal command list via :meth:`~.Bot.add_bridge_command`."
+
+msgid "Rückgabe"
+msgstr "Rückgabe"
+
+msgid "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
+msgstr "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
+
+msgid "Rückgabetyp"
+msgstr "Rückgabetyp"
+
+msgid "Callable[..., :class:`BridgeCommand`]"
+msgstr "Callable[..., :class:`BridgeCommand`]"
+
+msgid "A decorator that is used to wrap a function as a bridge command group."
+msgstr "A decorator that is used to wrap a function as a bridge command group."
+
+msgid "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)"
+msgstr "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)"
+
+msgid "AutoShardedBot"
+msgstr "AutoShardedBot"
+
+msgid "This is similar to :class:`.Bot` except that it is inherited from :class:`.ext.commands.AutoShardedBot` instead."
+msgstr "This is similar to :class:`.Bot` except that it is inherited from :class:`.ext.commands.AutoShardedBot` instead."
+
+msgid "Event Reference"
+msgstr "Event Reference"
+
+msgid "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the bridge extension module."
+msgstr "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the bridge extension module."
+
+msgid "An error handler that is called when an error is raised inside a command either through user input error, check failure, or an error in your own code."
+msgstr "An error handler that is called when an error is raised inside a command either through user input error, check failure, or an error in your own code."
+
+msgid "The invocation context."
+msgstr "The invocation context."
+
+msgid "The error that was raised."
+msgstr "The error that was raised."
+
+msgid "An event that is called when a command is found and is about to be invoked."
+msgstr "An event that is called when a command is found and is about to be invoked."
+
+msgid "This event is called regardless of whether the command itself succeeds via error or completes."
+msgstr "This event is called regardless of whether the command itself succeeds via error or completes."
+
+msgid "An event that is called when a command has completed its invocation."
+msgstr "An event that is called when a command has completed its invocation."
+
+msgid "This event is called only if the command succeeded, i.e. all checks have passed and users input them correctly."
+msgstr "This event is called only if the command succeeded, i.e. all checks have passed and users input them correctly."
+
+msgid "Commands"
+msgstr "Commands"
+
+msgid "BridgeCommand"
+msgstr "BridgeCommand"
+
+msgid "Compatibility class between prefixed-based commands and slash commands."
+msgstr "Compatibility class between prefixed-based commands and slash commands."
+
+msgid "The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`, and any additional arguments will be passed to the callback. This callback must be a coroutine."
+msgstr "The callback to invoke when the command is executed. The first argument will be a :class:`BridgeContext`, and any additional arguments will be passed to the callback. This callback must be a coroutine."
+
+msgid "Parent of the BridgeCommand."
+msgstr "Parent of the BridgeCommand."
+
+msgid "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)"
+msgstr "Keyword arguments that are directly passed to the respective command constructors. (:class:`.SlashCommand` and :class:`.ext.commands.Command`)"
+
+msgid "The slash command version of this bridge command."
+msgstr "The slash command version of this bridge command."
+
+msgid "type"
+msgstr "type"
+
+msgid ":class:`.BridgeSlashCommand`"
+msgstr ":class:`.BridgeSlashCommand`"
+
+msgid "The prefix-based version of this bridge command."
+msgstr "The prefix-based version of this bridge command."
+
+msgid ":class:`.BridgeExtCommand`"
+msgstr ":class:`.BridgeExtCommand`"
+
+msgid "Returns name_localizations from :attr:`slash_variant` You can edit/set name_localizations directly with .. code-block:: python3"
+msgstr "Returns name_localizations from :attr:`slash_variant` You can edit/set name_localizations directly with .. code-block:: python3"
+
+msgid "bridge_command.name_localizations[\"en-UK\"] = ...  # or any other locale # or bridge_command.name_localizations = {\"en-UK\": ..., \"fr-FR\": ...}"
+msgstr "bridge_command.name_localizations[\"en-UK\"] = ...  # or any other locale # or bridge_command.name_localizations = {\"en-UK\": ..., \"fr-FR\": ...}"
+
+msgid "Returns description_localizations from :attr:`slash_variant` You can edit/set description_localizations directly with .. code-block:: python3"
+msgstr "Returns description_localizations from :attr:`slash_variant` You can edit/set description_localizations directly with .. code-block:: python3"
+
+msgid "bridge_command.description_localizations[\"en-UK\"] = ...  # or any other locale # or bridge_command.description_localizations = {\"en-UK\": ..., \"fr-FR\": ...}"
+msgstr "bridge_command.description_localizations[\"en-UK\"] = ...  # or any other locale # or bridge_command.description_localizations = {\"en-UK\": ..., \"fr-FR\": ...}"
+
+msgid "Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`."
+msgstr "Adds the command to a bot. This method is inherited by :class:`.BridgeCommandGroup`."
+
+msgid "The bot to add the command to."
+msgstr "The bot to add the command to."
+
+msgid ":py:obj:`None`"
+msgstr ":py:obj:`None`"
+
+msgid "A decorator that registers a coroutine as a local error handler."
+msgstr "A decorator that registers a coroutine as a local error handler."
+
+msgid "This error handler is limited to the command it is defined to. However, higher scope handlers (per-cog and global) are still invoked afterwards as a catch-all. This handler also functions as the handler for both the prefixed and slash versions of the command."
+msgstr "This error handler is limited to the command it is defined to. However, higher scope handlers (per-cog and global) are still invoked afterwards as a catch-all. This handler also functions as the handler for both the prefixed and slash versions of the command."
+
+msgid "This error handler takes two parameters, a :class:`.BridgeContext` and a :class:`~discord.DiscordException`."
+msgstr "This error handler takes two parameters, a :class:`.BridgeContext` and a :class:`~discord.DiscordException`."
+
+msgid "The coroutine to register as the local error handler."
+msgstr "The coroutine to register as the local error handler."
+
+msgid "Verursacht"
+msgstr "Verursacht"
+
+msgid "The coroutine passed is not actually a coroutine."
+msgstr "The coroutine passed is not actually a coroutine."
+
+msgid "A decorator that registers a coroutine as a pre-invoke hook."
+msgstr "A decorator that registers a coroutine as a pre-invoke hook."
+
+msgid "This hook is called directly before the command is called, making it useful for any sort of set up required. This hook is called for both the prefixed and slash versions of the command."
+msgstr "This hook is called directly before the command is called, making it useful for any sort of set up required. This hook is called for both the prefixed and slash versions of the command."
+
+msgid "This pre-invoke hook takes a sole parameter, a :class:`.BridgeContext`."
+msgstr "This pre-invoke hook takes a sole parameter, a :class:`.BridgeContext`."
+
+msgid "The coroutine to register as the pre-invoke hook."
+msgstr "The coroutine to register as the pre-invoke hook."
+
+msgid "A decorator that registers a coroutine as a post-invoke hook."
+msgstr "A decorator that registers a coroutine as a post-invoke hook."
+
+msgid "This hook is called directly after the command is called, making it useful for any sort of clean up required. This hook is called for both the prefixed and slash versions of the command."
+msgstr "This hook is called directly after the command is called, making it useful for any sort of clean up required. This hook is called for both the prefixed and slash versions of the command."
+
+msgid "This post-invoke hook takes a sole parameter, a :class:`.BridgeContext`."
+msgstr "This post-invoke hook takes a sole parameter, a :class:`.BridgeContext`."
+
+msgid "The coroutine to register as the post-invoke hook."
+msgstr "The coroutine to register as the post-invoke hook."
+
+msgid "BridgeCommandGroup"
+msgstr "BridgeCommandGroup"
+
+msgid "The slash command version of this command group."
+msgstr "The slash command version of this command group."
+
+msgid ":class:`.SlashCommandGroup`"
+msgstr ":class:`.SlashCommandGroup`"
+
+msgid "The prefix-based version of this command group."
+msgstr "The prefix-based version of this command group."
+
+msgid ":class:`.ext.commands.Group`"
+msgstr ":class:`.ext.commands.Group`"
+
+msgid "List of bridge commands in this group"
+msgstr "List of bridge commands in this group"
+
+msgid "List[:class:`.BridgeCommand`]"
+msgstr "List[:class:`.BridgeCommand`]"
+
+msgid "If :func:`map_to` is used, the mapped slash command."
+msgstr "If :func:`map_to` is used, the mapped slash command."
+
+msgid "Optional[:class:`.SlashCommand`]"
+msgstr "Optional[:class:`.SlashCommand`]"
+
+msgid "An iterator that recursively walks through all the bridge group's subcommands."
+msgstr "An iterator that recursively walks through all the bridge group's subcommands."
+
+msgid "Yields"
+msgstr "Yields"
+
+msgid ":class:`.BridgeCommand` -- A bridge command of this bridge group."
+msgstr ":class:`.BridgeCommand` -- A bridge command of this bridge group."
+
+msgid ":py:class:`~collections.abc.Iterator`\\[:py:class:`~discord.ext.bridge.core.BridgeCommand`]"
+msgstr ":py:class:`~collections.abc.Iterator`\\[:py:class:`~discord.ext.bridge.core.BridgeCommand`]"
+
+msgid "A decorator to register a function as a subcommand."
+msgstr "A decorator to register a function as a subcommand."
+
+msgid "Decorators"
+msgstr "Decorators"
+
+msgid "A decorator that is used to wrap a function as a bridge command."
+msgstr "A decorator that is used to wrap a function as a bridge command."
+
+msgid "Keyword arguments that are directly passed to the respective command constructors (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)."
+msgstr "Keyword arguments that are directly passed to the respective command constructors (:class:`.SlashCommandGroup` and :class:`.ext.commands.Group`)."
+
+msgid "To be used with bridge command groups, map the main command to a slash subcommand."
+msgstr "To be used with bridge command groups, map the main command to a slash subcommand."
+
+msgid "The new name of the mapped command."
+msgstr "The new name of the mapped command."
+
+msgid "The new description of the mapped command."
+msgstr "The new description of the mapped command."
+
+msgid "Example"
+msgstr "Example"
+
+msgid "Prefixed commands will not be affected, but slash commands will appear as:"
+msgstr "Prefixed commands will not be affected, but slash commands will appear as:"
+
+msgid "Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check` that locks the command to only run in guilds, and also registers the command as guild only client-side (on discord)."
+msgstr "Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check` that locks the command to only run in guilds, and also registers the command as guild only client-side (on discord)."
+
+msgid "Basically a utility function that wraps both :func:`discord.ext.commands.guild_only` and :func:`discord.commands.guild_only`."
+msgstr "Basically a utility function that wraps both :func:`discord.ext.commands.guild_only` and :func:`discord.commands.guild_only`."
+
+msgid "Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check` that locks the command to only run in nsfw contexts, and also registers the command as nsfw client-side (on discord)."
+msgstr "Intended to work with :class:`.ApplicationCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check` that locks the command to only run in nsfw contexts, and also registers the command as nsfw client-side (on discord)."
+
+msgid "Basically a utility function that wraps both :func:`discord.ext.commands.is_nsfw` and :func:`discord.commands.is_nsfw`."
+msgstr "Basically a utility function that wraps both :func:`discord.ext.commands.is_nsfw` and :func:`discord.commands.is_nsfw`."
+
+msgid "In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly."
+msgstr "In DMs, the prefixed-based command will always run as the user's privacy settings cannot be checked directly."
+
+msgid "Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check` that locks the command to be run by people with certain permissions inside guilds, and also registers the command as locked behind said permissions."
+msgstr "Intended to work with :class:`.SlashCommand` and :class:`BridgeCommand`, adds a :func:`~ext.commands.check` that locks the command to be run by people with certain permissions inside guilds, and also registers the command as locked behind said permissions."
+
+msgid "Basically a utility function that wraps both :func:`discord.ext.commands.has_permissions` and :func:`discord.commands.default_permissions`."
+msgstr "Basically a utility function that wraps both :func:`discord.ext.commands.has_permissions` and :func:`discord.commands.default_permissions`."
+
+msgid "An argument list of permissions to check for."
+msgstr "An argument list of permissions to check for."
+
+msgid "Command Subclasses"
+msgstr "Command Subclasses"
+
+msgid "A subclass of :class:`.ext.commands.Command` that is used for bridge commands."
+msgstr "A subclass of :class:`.ext.commands.Command` that is used for bridge commands."
+
+msgid "A subclass of :class:`.ext.commands.Group` that is used for bridge commands."
+msgstr "A subclass of :class:`.ext.commands.Group` that is used for bridge commands."
+
+msgid "A subclass of :class:`.SlashCommand` that is used for bridge commands."
+msgstr "A subclass of :class:`.SlashCommand` that is used for bridge commands."
+
+msgid "A subclass of :class:`.SlashCommandGroup` that is used for bridge commands."
+msgstr "A subclass of :class:`.SlashCommandGroup` that is used for bridge commands."
+
+msgid "Context"
+msgstr "Context"
+
+msgid "BridgeContext"
+msgstr "BridgeContext"
+
+msgid "The base context class for compatibility commands. This class is an :term:`abstract base class` (also known as an ``abc``), which is subclassed by :class:`BridgeExtContext` and :class:`BridgeApplicationContext`. The methods in this class are meant to give parity between the two contexts, while still allowing for all of their functionality."
+msgstr "The base context class for compatibility commands. This class is an :term:`abstract base class` (also known as an ``abc``), which is subclassed by :class:`BridgeExtContext` and :class:`BridgeApplicationContext`. The methods in this class are meant to give parity between the two contexts, while still allowing for all of their functionality."
+
+msgid "When this is passed to a command, it will either be passed as :class:`BridgeExtContext`, or :class:`BridgeApplicationContext`. Since they are two separate classes, it's easy to use the :attr:`BridgeContext.is_app` attribute. to make different functionality for each context. For example, if you want to respond to a command with the command type that it was invoked with, you can do the following:"
+msgstr "When this is passed to a command, it will either be passed as :class:`BridgeExtContext`, or :class:`BridgeApplicationContext`. Since they are two separate classes, it's easy to use the :attr:`BridgeContext.is_app` attribute. to make different functionality for each context. For example, if you want to respond to a command with the command type that it was invoked with, you can do the following:"
+
+msgid "Helper for @overload to raise when called."
+msgstr "Helper for @overload to raise when called."
+
+msgid "|coro|"
+msgstr "|coro|"
+
+msgid "Responds to the command with the respective response type to the current context. In :class:`BridgeExtContext`, this will be :meth:`~.Context.reply` while in :class:`BridgeApplicationContext`, this will be :meth:`~.ApplicationContext.respond`."
+msgstr "Responds to the command with the respective response type to the current context. In :class:`BridgeExtContext`, this will be :meth:`~.Context.reply` while in :class:`BridgeApplicationContext`, this will be :meth:`~.ApplicationContext.respond`."
+
+msgid ":py:class:`~discord.interactions.Interaction` | :py:class:`~discord.webhook.async_.WebhookMessage` | :py:class:`~discord.message.Message`"
+msgstr ":py:class:`~discord.interactions.Interaction` | :py:class:`~discord.webhook.async_.WebhookMessage` | :py:class:`~discord.message.Message`"
+
+msgid "Alias for :meth:`~.BridgeContext.respond`."
+msgstr "Alias for :meth:`~.BridgeContext.respond`."
+
+msgid "Defers the command with the respective approach to the current context. In :class:`BridgeExtContext`, this will be :meth:`~discord.abc.Messageable.trigger_typing` while in :class:`BridgeApplicationContext`, this will be :attr:`~.ApplicationContext.defer`. :rtype: :py:obj:`None`"
+msgstr "Defers the command with the respective approach to the current context. In :class:`BridgeExtContext`, this will be :meth:`~discord.abc.Messageable.trigger_typing` while in :class:`BridgeApplicationContext`, this will be :attr:`~.ApplicationContext.defer`. :rtype: :py:obj:`None`"
+
+msgid "There is no ``trigger_typing`` alias for this method. ``trigger_typing`` will always provide the same functionality across contexts."
+msgstr "There is no ``trigger_typing`` alias for this method. ``trigger_typing`` will always provide the same functionality across contexts."
+
+msgid "Edits the original response message with the respective approach to the current context. In :class:`BridgeExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be edited here. In :class:`BridgeApplicationContext`, this will be :attr:`~.ApplicationContext.edit`."
+msgstr "Edits the original response message with the respective approach to the current context. In :class:`BridgeExtContext`, this will have a custom approach where :meth:`.respond` caches the message to be edited here. In :class:`BridgeApplicationContext`, this will be :attr:`~.ApplicationContext.edit`."
+
+msgid ":py:class:`~discord.interactions.InteractionMessage` | :py:class:`~discord.message.Message`"
+msgstr ":py:class:`~discord.interactions.InteractionMessage` | :py:class:`~discord.message.Message`"
+
+msgid "Whether the context is an :class:`BridgeApplicationContext` or not."
+msgstr "Whether the context is an :class:`BridgeApplicationContext` or not."
+
+msgid "BridgeContext Subclasses"
+msgstr "BridgeContext Subclasses"
+
+msgid "The application context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and :class:`~.ApplicationContext`. This class is meant to be used with :class:`BridgeCommand`."
+msgstr "The application context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and :class:`~.ApplicationContext`. This class is meant to be used with :class:`BridgeCommand`."
+
+msgid "The ext.commands context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and :class:`~.Context`. This class is meant to be used with :class:`BridgeCommand`."
+msgstr "The ext.commands context class for compatibility commands. This class is a subclass of :class:`BridgeContext` and :class:`~.Context`. This class is meant to be used with :class:`BridgeCommand`."
+
+msgid "Deletes the original response message, if it exists."
+msgstr "Deletes the original response message, if it exists."
+
+msgid "If provided, the number of seconds to wait before deleting the message."
+msgstr "If provided, the number of seconds to wait before deleting the message."
+
+msgid "The reason for deleting the message. Shows up on the audit log."
+msgstr "The reason for deleting the message. Shows up on the audit log."
+
+msgid "Alias of :data:`typing.Union` [ :class:`.BridgeExtContext`, :class:`.BridgeApplicationContext` ] for typing convenience."
+msgstr "Alias of :data:`typing.Union` [ :class:`.BridgeExtContext`, :class:`.BridgeApplicationContext` ] for typing convenience."
+
+msgid "Option"
+msgstr "Option"
+
+msgid "BridgeOption"
+msgstr "BridgeOption"
+
+msgid "A subclass of :class:`discord.Option` which represents a selectable slash command option and a prefixed command argument for bridge commands."
+msgstr "A subclass of :class:`discord.Option` which represents a selectable slash command option and a prefixed command argument for bridge commands."
+
+msgid "The method to override to do conversion logic."
+msgstr "The method to override to do conversion logic."
+
+msgid "If an error is found while converting, it is recommended to raise a :exc:`.CommandError` derived exception as it will properly propagate to the error handlers."
+msgstr "If an error is found while converting, it is recommended to raise a :exc:`.CommandError` derived exception as it will properly propagate to the error handlers."
+
+msgid "The invocation context that the argument is being used in."
+msgstr "The invocation context that the argument is being used in."
+
+msgid "The argument that is being converted."
+msgstr "The argument that is being converted."
+
+msgid "A generic exception occurred when converting the argument."
+msgstr "A generic exception occurred when converting the argument."
+
+msgid "The converter failed to convert the argument."
+msgstr "The converter failed to convert the argument."
+
+msgid ":py:data:`~typing.Any`"
+msgstr ":py:data:`~typing.Any`"
+

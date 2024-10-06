@@ -1,0 +1,58 @@
+name: "Multilingual Docs Upload"
+
+on:
+  push:
+    paths:
+      - "discord/**"
+      - "docs/**"
+    branches: [master]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
+  
+permissions: write-all
+
+jobs:
+  upload:
+    name: "Upload localization base to Crowdin"
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.head_commit.message, '!crowdin upload') || github.event_name == 'workflow_dispatch' }}
+    environment: translations
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+      - name: "Install Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: "requirements/_locale.txt"
+      - name: "Install Dependencies"
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements/_locale.txt
+          pip install .[speed,voice,docs]
+      - name: "Get locales"
+        run: |
+          make html
+          sphinx-build  -b gettext . ./build/locales
+        working-directory: ./docs
+      - name: "Build locales"
+        run:
+          sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
+        working-directory: ./docs
+      - name: "Crowdin"
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          localization_branch_name: ${{ vars.CROWDIN_LOCALIZATION_BRANCH }}
+          create_pull_request: false
+          config: "crowdin.yml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ vars.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}

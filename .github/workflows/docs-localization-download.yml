@@ -1,0 +1,135 @@
+name: "Multilingual Docs Download"
+
+on:
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  download:
+    name: "Download localizations from Crowdin"
+    runs-on: ubuntu-latest
+    environment: translations
+    outputs:
+      pr_ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+      - name: "Install Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: "requirements/_locale.txt"
+      - name: "Install Dependencies"
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements/_locale.txt
+          pip install .[speed,voice,docs]
+      - name: "Get locales"
+        run: |
+          make html
+          sphinx-build -b gettext . ./build/locales
+        working-directory: ./docs
+      - name: "Build locales"
+        run:
+          sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
+        working-directory: ./docs
+      - name: "Crowdin"
+        id: crowdin
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: false
+          upload_translations: false
+          download_translations: false
+          download_bundle: ${{ vars.CROWDIN_BUNDLE_ID }}
+          localization_branch_name: ${{ vars.CROWDIN_LOCALIZATION_BRANCH }}
+          create_pull_request: true
+          pull_request_title: ${{ vars.CROWDIN_PR_TITLE }}
+          pull_request_body: ${{ vars.CROWDIN_PR_BODY }}
+          pull_request_base_branch_name: "master"
+          pull_request_reviewers: "Lulalaby"
+          config: "crowdin.yml"
+          base_path: "."
+          commit_message: ${{ vars.CROWDIN_COMMIT_MSG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ vars.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
+      - name: "Convert Outputs"
+        id: convert_outputs
+        run: |
+          PR_REF="l10n_master"
+          PR_ID="${{ steps.crowdin.outputs.pull_request_number }}"
+          echo "pr_ref=$(echo -n "$PR_REF" | base64)" >> $GITHUB_OUTPUT
+          echo "pr_id=$(echo -n "$PR_ID" | base64)" >> $GITHUB_OUTPUT
+
+  pr:
+    name: "PR operations"
+    needs: [download]
+    runs-on: ubuntu-latest
+    environment: translations
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+      - name: "Refresh Pull"
+        run: |
+          git fetch --all
+          git reset --hard origin/master
+          git pull
+      - name: "Convert Outputs"
+        id: convert_outputs
+        run: |
+          PR_REF=$(echo -n "${{ needs.download.outputs.pr_ref }}" | base64 --decode)
+          PR_ID=$(echo -n "${{ needs.download.outputs.pr_id }}" | base64 --decode)
+          echo "pr_ref=$PR_REF" >> $GITHUB_OUTPUT
+          echo "pr_id=$PR_ID" >> $GITHUB_OUTPUT
+      #- name: Invoke checks workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: check.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke codeql workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: codeql-analysis.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke lint workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: lint.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke pr workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: pr.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke test workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: test.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke todo workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: todo.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      #- name: Invoke version updates workflow
+      #uses: benc-uk/workflow-dispatch@v1.2.4
+      #with:
+      #workflow: version-updates.yml
+      #ref: ${{ steps.convert_outputs.outputs.pr_ref }}
+      - name: "Auto Approve"
+        run: gh pr review --approve -b "Auto-approval for localization sync" "$PR_ID"
+        env:
+          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Enable Auto Merge"
+        if: ${{ always() }}
+        run: gh pr merge --auto --squash $PR_ID
+        env:
+          PR_ID: ${{ steps.convert_outputs.outputs.pr_id }}
+          GITHUB_TOKEN: ${{ secrets.CI_TOKEN }}

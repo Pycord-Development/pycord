@@ -1,0 +1,34 @@
+name: "TODO Checks"
+
+on:
+  push:
+    paths:
+      - "discord/**"
+      - "docs/**"
+      - "examples/**"
+      - "tests/**"
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: write-all
+
+jobs:
+  todo-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+      - name: "Track TODO Action"
+        uses: ribtoks/tdg-github-action@v0.4.12-beta
+        with:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          REF: ${{ github.ref }}
+          COMMENT_ON_ISSUES: true
+          EXCLUDE_PATTERN: "\\.(doctree|doctrees|pickle)$"
+          ASSIGN_FROM_BLAME: true

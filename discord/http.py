@@ -2048,6 +2048,16 @@ class HTTPClient:
     def get_roles(self, guild_id: Snowflake) -> Response[list[role.Role]]:
         return self.request(Route("GET", "/guilds/{guild_id}/roles", guild_id=guild_id))
 
+    def get_role(self, guild_id: Snowflake, role_id: Snowflake) -> Response[role.Role]:
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/roles/{role_id}",
+                guild_id=guild_id,
+                role_id=role_id,
+            )
+        )
+
     def edit_role(
         self,
         guild_id: Snowflake,
@@ -2582,35 +2592,6 @@ class HTTPClient:
         )
         return self.request(r, json=payload)
 
-    # Application commands (permissions)
-
-    def get_command_permissions(
-        self,
-        application_id: Snowflake,
-        guild_id: Snowflake,
-        command_id: Snowflake,
-    ) -> Response[interactions.GuildApplicationCommandPermissions]:
-        r = Route(
-            "GET",
-            "/applications/{application_id}/guilds/{guild_id}/commands/{command_id}/permissions",
-            application_id=application_id,
-            guild_id=guild_id,
-        )
-        return self.request(r)
-
-    def get_guild_command_permissions(
-        self,
-        application_id: Snowflake,
-        guild_id: Snowflake,
-    ) -> Response[list[interactions.GuildApplicationCommandPermissions]]:
-        r = Route(
-            "GET",
-            "/applications/{application_id}/guilds/{guild_id}/commands/permissions",
-            application_id=application_id,
-            guild_id=guild_id,
-        )
-        return self.request(r)
-
     # Guild Automod Rules
 
     def get_auto_moderation_rules(
@@ -2847,6 +2828,8 @@ class HTTPClient:
             message_id=message_id,
         )
         return self.request(r)
+
+    # Application commands (permissions)
 
     def get_guild_application_command_permissions(
         self,

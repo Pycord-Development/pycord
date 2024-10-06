@@ -210,7 +210,7 @@ class Guild(Hashable):
     features: List[:class:`str`]
         A list of features that the guild has. The features that a guild can have are
         subject to arbitrary change by Discord. You can find a catalog of guild features
-        `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_.
+        `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_.
     premium_tier: :class:`int`
         The premium tier for this guild. Corresponds to "Nitro Server" in the official UI.
         The number goes from 0 to 3 inclusive.
@@ -2815,6 +2815,30 @@ class Guild(Hashable):
         data = await self._state.http.get_roles(self.id)
         return [Role(guild=self, state=self._state, data=d) for d in data]
 
+    async def fetch_role(self, role_id: int) -> Role:
+        """|coro|
+
+        Retrieves a :class:`Role` that the guild has.
+
+        .. note::
+
+            This method is an API call. For general usage, consider using :attr:`get_role` instead.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        :class:`Role`
+            The role in the guild with the specified ID.
+
+        Raises
+        ------
+        HTTPException
+            Retrieving the role failed.
+        """
+        data = await self._state.http.get_role(self.id, role_id)
+        return Role(guild=self, state=self._state, data=data)
+
     async def _fetch_role(self, role_id: int) -> Role:
         """|coro|
 
@@ -4065,7 +4089,9 @@ class Guild(Hashable):
             "owner_id": self.id,
             "owner_type": EntitlementOwnerType.guild.value,
         }
-        data = await self._state.http.create_test_entitlement(self.id, payload)
+        data = await self._state.http.create_test_entitlement(
+            self._state.application_id, payload
+        )
         return Entitlement(data=data, state=self._state)
 
     def entitlements(
