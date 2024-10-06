@@ -733,7 +733,7 @@ class ForwardedMessage:
         return self._edited_timestamp
 
     def __repr__(self) -> str:
-        return f"<ForwardedMessage reference={self.reference!r}>"
+        return f"<ForwardedMessage reference={self._reference!r}>"
 
 
 class MessageSnapshot:
@@ -757,7 +757,7 @@ class MessageSnapshot:
         self._state: ConnectionState = state
         self.message: ForwardedMessage | None
         if fm := data.get("message"):
-            ForwardedMessage(state=state, reference=reference, data=fm)
+            self.message = ForwardedMessage(state=state, reference=reference, data=fm)
 
 
 def flatten_handlers(cls):
