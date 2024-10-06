@@ -45,7 +45,7 @@ from . import utils
 from .components import _component_factory
 from .embeds import Embed
 from .emoji import Emoji
-from .enums import ChannelType, MessageType, try_enum
+from .enums import ChannelType, MessageType, MessageReferenceType, try_enum
 from .errors import InvalidArgument
 from .file import File
 from .flags import AttachmentFlags, MessageFlags
@@ -477,6 +477,11 @@ class MessageReference:
 
     Attributes
     ----------
+    type: Optional[:class:`MessageReferenceType`]
+        The type of message reference. If this is not provided, assume default behavior.
+
+        .. versionadded:: 2.7
+
     message_id: Optional[:class:`int`]
         The id of the message referenced.
     channel_id: :class:`int`
@@ -507,6 +512,7 @@ class MessageReference:
         "guild_id",
         "fail_if_not_exists",
         "resolved",
+        "type",
         "_state",
     )
 
@@ -517,9 +523,11 @@ class MessageReference:
         channel_id: int,
         guild_id: int | None = None,
         fail_if_not_exists: bool = True,
+        type: MessageReferenceType | None = None
     ):
         self._state: ConnectionState | None = None
         self.resolved: Message | DeletedReferencedMessage | None = None
+        self.type: MessageReferenceType | None = type
         self.message_id: int | None = message_id
         self.channel_id: int = channel_id
         self.guild_id: int | None = guild_id
@@ -530,6 +538,7 @@ class MessageReference:
         cls: type[MR], state: ConnectionState, data: MessageReferencePayload
     ) -> MR:
         self = cls.__new__(cls)
+        self.type = try_enum(MessageReferenceType, data.get("type"))
         self.message_id = utils._get_as_snowflake(data, "message_id")
         self.channel_id = int(data.pop("channel_id"))
         self.guild_id = utils._get_as_snowflake(data, "guild_id")
@@ -540,7 +549,7 @@ class MessageReference:
 
     @classmethod
     def from_message(
-        cls: type[MR], message: Message, *, fail_if_not_exists: bool = True
+        cls: type[MR], message: Message, *, fail_if_not_exists: bool = True, type: MessageReferenceType = None
     ) -> MR:
         """Creates a :class:`MessageReference` from an existing :class:`~discord.Message`.
 
@@ -556,6 +565,11 @@ class MessageReference:
 
             .. versionadded:: 1.7
 
+        type: Optional[:class:`MessageReferenceType`]
+            The type of reference to create. Defaults to reply.
+
+            .. versionadded:: 2.7
+
         Returns
         -------
         :class:`MessageReference`
@@ -566,6 +580,7 @@ class MessageReference:
             channel_id=message.channel.id,
             guild_id=getattr(message.guild, "id", None),
             fail_if_not_exists=fail_if_not_exists,
+            type=type,
         )
         self._state = message._state
         return self

@@ -1059,6 +1059,13 @@ class PollLayoutType(Enum):
     default = 1
 
 
+class MessageReferenceType(Enum):
+    """The message reference's type"""
+
+    default = 0
+    forward = 1
+
+
 T = TypeVar("T")
 
 
