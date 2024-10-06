@@ -1585,6 +1585,7 @@ class Messageable:
             allowed_mentions = allowed_mentions or AllowedMentions().to_dict()
             allowed_mentions["replied_user"] = bool(mention_author)
 
+        _reference = None
         if reference is not None:
             try:
                 _reference = reference.to_message_reference_dict()
