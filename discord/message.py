@@ -696,6 +696,7 @@ class ForwardedMessage:
         data: ForwardedMessagePayload,
     ):
         self._state: ConnectionState = state
+        self._reference = reference
         self.id: int = reference.message_id
         self.channel = state.get_channel(reference.channel_id) or (
             reference.channel_id and Object(reference.channel_id)
@@ -730,6 +731,11 @@ class ForwardedMessage:
         edited time of the original message.
         """
         return self._edited_timestamp
+        
+    def __repr__(self) -> str:
+        return (
+            f"<ForwardedMessage reference={self.reference!r}>"
+        )
 
 
 class MessageSnapshot:
@@ -751,9 +757,11 @@ class MessageSnapshot:
         data: MessageSnapshotPayload,
     ):
         self._state: ConnectionState = state
-        self.message: ForwardedMessage = ForwardedMessage(
-            state=state, reference=reference, data=data
-        )
+        self.message: ForwardedMessage | None
+        if fm := data.get("message"):
+            ForwardedMessage(
+                state=state, reference=reference, data=fm
+            )
 
 
 def flatten_handlers(cls):
