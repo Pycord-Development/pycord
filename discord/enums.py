@@ -76,6 +76,8 @@ __all__ = (
     "EntitlementOwnerType",
     "IntegrationType",
     "InteractionContextType",
+    "PollLayoutType",
+    "MessageReferenceType",
 )
 
 

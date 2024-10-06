@@ -1493,8 +1493,8 @@ class Messageable:
             .. versionadded:: 1.4
 
         reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
-            A reference to the :class:`~discord.Message` to which you are replying, this can be created using
-            :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control
+            A reference to the :class:`~discord.Message` you are replying to or forwarding, this can be created using
+            :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. When replying, you can control
             whether this mentions the author of the referenced message using the
             :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by
             setting ``mention_author``.
@@ -1588,6 +1588,8 @@ class Messageable:
         if reference is not None:
             try:
                 reference = reference.to_message_reference_dict()
+                if not isinstance(reference, MessageReference):
+                    utils.warn_deprecated(f"Passing {type(reference).__name__} to reference", "MessageReference", "2.7", "3.0")
             except AttributeError:
                 raise InvalidArgument(
                     "reference parameter must be Message, MessageReference, or"
