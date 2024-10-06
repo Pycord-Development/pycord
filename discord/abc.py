@@ -1587,7 +1587,8 @@ class Messageable:
 
         if reference is not None:
             try:
-                reference = reference.to_message_reference_dict()
+                _reference = reference.to_message_reference_dict()
+                from .message import MessageReference
                 if not isinstance(reference, MessageReference):
                     utils.warn_deprecated(
                         f"Passing {type(reference).__name__} to reference",
@@ -1632,7 +1633,7 @@ class Messageable:
                     embeds=embeds,
                     nonce=nonce,
                     enforce_nonce=enforce_nonce,
-                    message_reference=reference,
+                    message_reference=_reference,
                     stickers=stickers,
                     components=components,
                     flags=flags,
@@ -1660,7 +1661,7 @@ class Messageable:
                     nonce=nonce,
                     enforce_nonce=enforce_nonce,
                     allowed_mentions=allowed_mentions,
-                    message_reference=reference,
+                    message_reference=_reference,
                     stickers=stickers,
                     components=components,
                     flags=flags,
@@ -1679,7 +1680,7 @@ class Messageable:
                 nonce=nonce,
                 enforce_nonce=enforce_nonce,
                 allowed_mentions=allowed_mentions,
-                message_reference=reference,
+                message_reference=_reference,
                 stickers=stickers,
                 components=components,
                 flags=flags,
