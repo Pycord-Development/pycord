@@ -688,16 +688,6 @@ class ForwardedMessage:
         A list of components in the original message.
     """
 
-    __slots__ = (
-        "message_id",
-        "channel_id",
-        "guild_id",
-        "fail_if_not_exists",
-        "resolved",
-        "type",
-        "_state",
-    )
-
     def __init__(
         self,
         *,
