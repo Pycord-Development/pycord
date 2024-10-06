@@ -1589,7 +1589,12 @@ class Messageable:
             try:
                 reference = reference.to_message_reference_dict()
                 if not isinstance(reference, MessageReference):
-                    utils.warn_deprecated(f"Passing {type(reference).__name__} to reference", "MessageReference", "2.7", "3.0")
+                    utils.warn_deprecated(
+                        f"Passing {type(reference).__name__} to reference",
+                        "MessageReference",
+                        "2.7",
+                        "3.0",
+                    )
             except AttributeError:
                 raise InvalidArgument(
                     "reference parameter must be Message, MessageReference, or"

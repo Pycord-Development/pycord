@@ -46,7 +46,7 @@ from .channel import PartialMessageable
 from .components import _component_factory
 from .embeds import Embed
 from .emoji import Emoji
-from .enums import ChannelType, MessageType, MessageReferenceType, try_enum
+from .enums import ChannelType, MessageReferenceType, MessageType, try_enum
 from .errors import InvalidArgument
 from .file import File
 from .flags import AttachmentFlags, MessageFlags
@@ -79,12 +79,12 @@ if TYPE_CHECKING:
     from .types.member import Member as MemberPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.message import Attachment as AttachmentPayload
+    from .types.message import ForwardedMessage as ForwardedMessagePayload
     from .types.message import Message as MessagePayload
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
     from .types.message import MessageCall as MessageCallPayload
     from .types.message import MessageReference as MessageReferencePayload
-    from .types.message import ForwardedMessage as ForwardedMessagePayload
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
@@ -104,7 +104,7 @@ __all__ = (
     "MessageReference",
     "MessageCall",
     "DeletedReferencedMessage",
-    "ForwardedMessage"
+    "ForwardedMessage",
 )
 
 
@@ -527,7 +527,7 @@ class MessageReference:
         channel_id: int,
         guild_id: int | None = None,
         fail_if_not_exists: bool = True,
-        type: MessageReferenceType = MessageReferenceType.default
+        type: MessageReferenceType = MessageReferenceType.default,
     ):
         self._state: ConnectionState | None = None
         self.resolved: Message | DeletedReferencedMessage | None = None
@@ -542,7 +542,10 @@ class MessageReference:
         cls: type[MR], state: ConnectionState, data: MessageReferencePayload
     ) -> MR:
         self = cls.__new__(cls)
-        self.type = try_enum(MessageReferenceType, data.get("type")) or MessageReferenceType.default
+        self.type = (
+            try_enum(MessageReferenceType, data.get("type"))
+            or MessageReferenceType.default
+        )
         self.message_id = utils._get_as_snowflake(data, "message_id")
         self.channel_id = utils._get_as_snowflake(data, "channel_id")
         self.guild_id = utils._get_as_snowflake(data, "guild_id")
@@ -553,7 +556,11 @@ class MessageReference:
 
     @classmethod
     def from_message(
-        cls: type[MR], message: Message, *, fail_if_not_exists: bool = True, type: MessageReferenceType = MessageReferenceType.default
+        cls: type[MR],
+        message: Message,
+        *,
+        fail_if_not_exists: bool = True,
+        type: MessageReferenceType = MessageReferenceType.default,
     ) -> MR:
         """Creates a :class:`MessageReference` from an existing :class:`~discord.Message`.
 
@@ -700,8 +707,12 @@ class ForwardedMessage:
     ):
         self._state: ConnectionState = state
         self.id: int = reference.message_id
-        self.channel = state.get_channel(reference.channel_id) or (reference.channel_id and Object(reference.channel_id))
-        self.guild = state._get_guild(reference.guild_id) or (reference.guild_id and Object(reference.guild_id))
+        self.channel = state.get_channel(reference.channel_id) or (
+            reference.channel_id and Object(reference.channel_id)
+        )
+        self.guild = state._get_guild(reference.guild_id) or (
+            reference.guild_id and Object(reference.guild_id)
+        )
         self.content: str = data["content"]
         self.embeds: list[Embed] = [Embed.from_dict(a) for a in data["embeds"]]
         self.attachments: list[Attachment] = [
@@ -750,7 +761,9 @@ class MessageSnapshot:
         data: MessageSnapshotPayload,
     ):
         self._state: ConnectionState = state
-        self.message: ForwardedMessage = ForwardedMessage(state=state, reference=reference, data=data)
+        self.message: ForwardedMessage = ForwardedMessage(
+            state=state, reference=reference, data=data
+        )
 
 
 def flatten_handlers(cls):
@@ -1029,9 +1042,14 @@ class Message(Hashable):
 
         self.snapshots: list[MessageSnapshot]
         try:
-            self.snapshots = [MessageSnapshot(
-                state=state, reference=self.reference, data=ms, 
-            ) for ms in data["message_snapshots"]]
+            self.snapshots = [
+                MessageSnapshot(
+                    state=state,
+                    reference=self.reference,
+                    data=ms,
+                )
+                for ms in data["message_snapshots"]
+            ]
         except KeyError:
             self.snapshots = []
 
@@ -2060,7 +2078,9 @@ class Message(Hashable):
 
         return await self.channel.send(content, reference=self.to_reference(), **kwargs)
 
-    async def forward(self, channel: MessageableChannel | PartialMessageableChannel, **kwargs) -> Message:
+    async def forward(
+        self, channel: MessageableChannel | PartialMessageableChannel, **kwargs
+    ) -> Message:
         """|coro|
 
         A shortcut method to :meth:`.abc.Messageable.send` to forward the
@@ -2089,7 +2109,9 @@ class Message(Hashable):
             you specified both ``file`` and ``files``.
         """
 
-        return await channel.send(reference=self.to_reference(type=MessageReferenceType.forward))
+        return await channel.send(
+            reference=self.to_reference(type=MessageReferenceType.forward)
+        )
 
     async def end_poll(self) -> Message:
         """|coro|
@@ -2119,7 +2141,9 @@ class Message(Hashable):
 
         return message
 
-    def to_reference(self, *, fail_if_not_exists: bool = True, type: MessageReferenceType = None) -> MessageReference:
+    def to_reference(
+        self, *, fail_if_not_exists: bool = True, type: MessageReferenceType = None
+    ) -> MessageReference:
         """Creates a :class:`~discord.MessageReference` from the current message.
 
         .. versionadded:: 1.6
@@ -2147,7 +2171,9 @@ class Message(Hashable):
             self, fail_if_not_exists=fail_if_not_exists, type=type
         )
 
-    def to_message_reference_dict(self, type: MessageReferenceType = None) -> MessageReferencePayload:
+    def to_message_reference_dict(
+        self, type: MessageReferenceType = None
+    ) -> MessageReferencePayload:
         data: MessageReferencePayload = {
             "message_id": self.id,
             "channel_id": self.channel.id,
