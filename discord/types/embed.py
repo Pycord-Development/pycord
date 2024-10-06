@@ -76,7 +76,7 @@ class EmbedAuthor(TypedDict, total=False):
 
 
 EmbedType = Literal[
-    "rich", "image", "video", "gifv", "article", "link", "auto_moderation_message"
+    "rich", "image", "video", "gifv", "article", "link", "auto_moderation_message", "poll_result"
 ]
 
 
