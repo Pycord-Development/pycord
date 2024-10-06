@@ -1589,6 +1589,7 @@ class Messageable:
             try:
                 _reference = reference.to_message_reference_dict()
                 from .message import MessageReference
+
                 if not isinstance(reference, MessageReference):
                     utils.warn_deprecated(
                         f"Passing {type(reference).__name__} to reference",
