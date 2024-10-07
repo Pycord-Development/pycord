@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "迁移到 v2.0"
+msgstr "Migrating to v2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "v2.0 引入了新的 Discord 功能并废弃了一些旧功能。"
+msgstr "v2.0 introduced new Discord features and deprecated some old ones."
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
 msgstr "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
@@ -273,7 +273,7 @@ msgid ":meth:`Reaction.users`"
 msgstr ":meth:`Reaction.users`"
 
 msgid "Event Changes"
-msgstr "事件更改"
+msgstr "Event Changes"
 
 msgid ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
 msgstr ":func:`on_presence_update` replaces `on_member_update` for updates to :attr:`Member.status` and :attr:`Member.activities`."
@@ -342,7 +342,7 @@ msgid ":attr:`ext.commands.Command.help` can now be ``None``."
 msgstr ":attr:`ext.commands.Command.help` can now be ``None``."
 
 msgid "Miscellaneous Changes"
-msgstr "其它更改"
+msgstr "Miscellaneous Changes"
 
 msgid "The following were removed:"
 msgstr "The following were removed:"

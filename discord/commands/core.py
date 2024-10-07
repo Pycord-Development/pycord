@@ -1786,12 +1786,8 @@ class UserCommand(ContextMenuCommand):
                 v["id"] = int(i)
                 user = v
             member["user"] = user
-            target = Member(
-                data=member,
-                guild=ctx.interaction._state._get_guild(ctx.interaction.guild_id),
-                state=ctx.interaction._state,
-            )
-
+            cache_flag = ctx.interaction._state.member_cache_flags.interaction
+            target = ctx.guild._get_and_update_member(member, user["id"], cache_flag)
         if self.cog is not None:
             await self.callback(self.cog, ctx, target)
         else:

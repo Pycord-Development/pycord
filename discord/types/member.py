@@ -42,6 +42,7 @@ class PartialMember(TypedDict):
 
 class Member(PartialMember, total=False):
     avatar: str
+    banner: str
     user: User
     nick: str
     premium_since: str

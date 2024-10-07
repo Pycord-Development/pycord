@@ -24,19 +24,19 @@ msgid "Part of the redesign involves making things more easy to use and natural.
 msgstr "Part of the redesign involves making things more easy to use and natural. Things are done on the :ref:`models <discord_api_models>` instead of requiring a :class:`Client` instance to do any work."
 
 msgid "Python Version Change"
-msgstr "Cambio de versión de Python"
+msgstr "Python Version Change"
 
 msgid "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
 msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
 
 msgid "Major Model Changes"
-msgstr "Cambios en el modelo principal"
+msgstr "Major Model Changes"
 
 msgid "Below are major model changes that have happened in v1.0"
-msgstr "A continuación se muestran los cambios en el modelo principal que han ocurrido en la v1.0"
+msgstr "Below are major model changes that have happened in v1.0"
 
 msgid "Snowflakes are int"
-msgstr "Los snowflakes son enteros"
+msgstr "Snowflakes are int"
 
 msgid "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
 msgstr "Before v1.0, all snowflakes (the ``id`` attribute) were strings. This has been changed to :class:`int`."
@@ -48,7 +48,7 @@ msgid "This change allows for fewer errors when using the Copy ID feature in the
 msgstr "This change allows for fewer errors when using the Copy ID feature in the official client since you no longer have to wrap it in quotes and allows for optimisation opportunities by allowing ETF to be used instead of JSON internally."
 
 msgid "Server is now Guild"
-msgstr "Server ahora es Guild"
+msgstr "Server is now Guild"
 
 msgid "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
 msgstr "The official API documentation calls the \"Server\" concept a \"Guild\" instead. In order to be more consistent with the API documentation when necessary, the model has been renamed to :class:`Guild` and all instances referring to it has been changed as well."
@@ -57,10 +57,10 @@ msgid "A list of changes is as follows:"
 msgstr "A list of changes is as follows:"
 
 msgid "Before"
-msgstr "Antes"
+msgstr "Before"
 
 msgid "After"
-msgstr "Después"
+msgstr "After"
 
 msgid "``Message.server``"
 msgstr "``Message.server``"
@@ -129,7 +129,7 @@ msgid ":meth:`Client.create_guild`"
 msgstr ":meth:`Client.create_guild`"
 
 msgid "Models are Stateful"
-msgstr "Los modelos tienen estado"
+msgstr "Models are Stateful"
 
 msgid "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
 msgstr "As mentioned earlier, a lot of functionality was moved out of :class:`Client` and put into their respective :ref:`model <discord_api_models>`."
@@ -405,7 +405,7 @@ msgid "``Client.send_file``"
 msgstr "``Client.send_file``"
 
 msgid ":meth:`abc.Messageable.send` (see :ref:`migrating_1_0_sending_messages`)"
-msgstr ":meth:`abc.Messageable.send` (véase :ref:`migrating_1_0_sending_messages`)"
+msgstr ":meth:`abc.Messageable.send` (see :ref:`migrating_1_0_sending_messages`)"
 
 msgid "``Client.send_message``"
 msgstr "``Client.send_message``"
@@ -459,7 +459,7 @@ msgid "No change"
 msgstr "No change"
 
 msgid "Property Changes"
-msgstr "Cambios de propiedad"
+msgstr "Property Changes"
 
 msgid "In order to be a bit more consistent, certain things that were properties were changed to methods instead."
 msgstr "In order to be a bit more consistent, certain things that were properties were changed to methods instead."
@@ -477,7 +477,7 @@ msgid ":meth:`Client.is_closed`"
 msgstr ":meth:`Client.is_closed`"
 
 msgid "Dict Value Change"
-msgstr "Cambios en los diccionarios"
+msgstr "Dict Value Change"
 
 msgid "Prior to v1.0 some aggregating properties that retrieved models would return \"dict view\" objects."
 msgstr "Prior to v1.0 some aggregating properties that retrieved models would return \"dict view\" objects."
@@ -489,19 +489,19 @@ msgid "The following views were changed to a list:"
 msgstr "The following views were changed to a list:"
 
 msgid ":attr:`Client.users` (new in v1.0)"
-msgstr ":attr:`Client.users` (nuevo en v1.0)"
+msgstr ":attr:`Client.users` (new in v1.0)"
 
 msgid ":attr:`Client.emojis` (new in v1.0)"
-msgstr ":attr:`Client.emojis` (nuevo en v1.0)"
+msgstr ":attr:`Client.emojis` (new in v1.0)"
 
 msgid ":attr:`Guild.channels`"
 msgstr ":attr:`Guild.channels`"
 
 msgid ":attr:`Guild.text_channels` (new in v1.0)"
-msgstr ":attr:`Guild.text_channels` (nuevo en v1.0)"
+msgstr ":attr:`Guild.text_channels` (new in v1.0)"
 
 msgid ":attr:`Guild.voice_channels` (new in v1.0)"
-msgstr ":attr:`Guild.voice_channels` (nuevo en v1.0)"
+msgstr ":attr:`Guild.voice_channels` (new in v1.0)"
 
 msgid ":attr:`Guild.emojis`"
 msgstr ":attr:`Guild.emojis`"
@@ -510,7 +510,7 @@ msgid ":attr:`Guild.members`"
 msgstr ":attr:`Guild.members`"
 
 msgid "Voice State Changes"
-msgstr "Cambio en los estados de voz"
+msgstr "Voice State Changes"
 
 msgid "Earlier, in v0.11.0 a :class:`VoiceState` class was added to refer to voice states along with a :attr:`Member.voice` attribute to refer to it."
 msgstr "Earlier, in v0.11.0 a :class:`VoiceState` class was added to refer to voice states along with a :attr:`Member.voice` attribute to refer to it."
@@ -522,7 +522,7 @@ msgid "The only way to access voice attributes is via the :attr:`Member.voice` a
 msgstr "The only way to access voice attributes is via the :attr:`Member.voice` attribute. Note that if the member does not have a voice state this attribute can be ``None``."
 
 msgid "User and Member Type Split"
-msgstr "Separar el tipo de usuario y miembro"
+msgstr "User and Member Type Split"
 
 msgid "In v1.0 to save memory, :class:`User` and :class:`Member` are no longer inherited. Instead, they are \"flattened\" by having equivalent properties that map out to the functional underlying :class:`User`. Thus, there is no functional change in how they are used. However this breaks :func:`isinstance` checks and thus is something to keep in mind."
 msgstr "In v1.0 to save memory, :class:`User` and :class:`Member` are no longer inherited. Instead, they are \"flattened\" by having equivalent properties that map out to the functional underlying :class:`User`. Thus, there is no functional change in how they are used. However this breaks :func:`isinstance` checks and thus is something to keep in mind."
@@ -531,13 +531,13 @@ msgid "These memory savings were accomplished by having a global :class:`User` c
 msgstr "These memory savings were accomplished by having a global :class:`User` cache, and as a positive consequence you can now easily fetch a :class:`User` by their ID by using the new :meth:`Client.get_user`. You can also get a list of all :class:`User` your client can see with :attr:`Client.users`."
 
 msgid "Channel Type Split"
-msgstr "Separar el tipo de canal"
+msgstr "Channel Type Split"
 
 msgid "Prior to v1.0, channels were two different types, ``Channel`` and ``PrivateChannel`` with a ``is_private`` property to help differentiate between them."
 msgstr "Prior to v1.0, channels were two different types, ``Channel`` and ``PrivateChannel`` with a ``is_private`` property to help differentiate between them."
 
 msgid "In order to save memory the channels have been split into 4 different types:"
-msgstr "Para guardar memoria, los canales se han separado en 4 tipos diferentes:"
+msgstr "In order to save memory the channels have been split into 4 different types:"
 
 msgid ":class:`TextChannel` for guild text channels."
 msgstr ":class:`TextChannel` for guild text channels."
@@ -576,7 +576,7 @@ msgid "With this type split also came event changes, which are enumerated in :re
 msgstr "With this type split also came event changes, which are enumerated in :ref:`migrating_1_0_event_changes`."
 
 msgid "Miscellaneous Model Changes"
-msgstr "Otros cambios del modelo"
+msgstr "Miscellaneous Model Changes"
 
 msgid "There were lots of other things added or removed in the models in general."
 msgstr "There were lots of other things added or removed in the models in general."
@@ -594,13 +594,13 @@ msgid "Use a token and ``bot=False``."
 msgstr "Use a token and ``bot=False``."
 
 msgid "Use :attr:`Client.emojis` instead."
-msgstr "Usa :attr:`Client.emojis` en su lugar."
+msgstr "Use :attr:`Client.emojis` instead."
 
 msgid "``Client.messages``"
 msgstr "``Client.messages``"
 
 msgid "Use read-only :attr:`Client.cached_messages` instead."
-msgstr "Usa la propiedad de solo lectura :attr:`Client.cached_messages` en su lugar."
+msgstr "Use read-only :attr:`Client.cached_messages` instead."
 
 msgid "``Client.wait_for_message`` and ``Client.wait_for_reaction`` are gone."
 msgstr "``Client.wait_for_message`` and ``Client.wait_for_reaction`` are gone."
@@ -612,7 +612,7 @@ msgid "``Channel.voice_members``"
 msgstr "``Channel.voice_members``"
 
 msgid "Use :attr:`VoiceChannel.members` instead."
-msgstr "Usa :attr:`VoiceChannel.members` en su lugar."
+msgstr "Use :attr:`VoiceChannel.members` instead."
 
 msgid "``Channel.is_private``"
 msgstr "``Channel.is_private``"
@@ -747,7 +747,7 @@ msgid ":attr:`Message.webhook_id` to fetch the message's webhook ID."
 msgstr ":attr:`Message.webhook_id` to fetch the message's webhook ID."
 
 msgid ":attr:`Message.activity` and :attr:`Message.application` for Rich Presence related information."
-msgstr ":attr:`Message.activity` y :attr:`Message.application` para más información sobre la presencia enriquecida."
+msgstr ":attr:`Message.activity` and :attr:`Message.application` for Rich Presence related information."
 
 msgid ":meth:`TextChannel.is_nsfw` to check if a text channel is NSFW."
 msgstr ":meth:`TextChannel.is_nsfw` to check if a text channel is NSFW."
@@ -759,7 +759,7 @@ msgid ":meth:`Guild.get_role` to get a role by its ID."
 msgstr ":meth:`Guild.get_role` to get a role by its ID."
 
 msgid "Sending Messages"
-msgstr "Enviar mensajes"
+msgstr "Sending Messages"
 
 msgid "One of the changes that were done was the merger of the previous ``Client.send_message`` and ``Client.send_file`` functionality into a single method, :meth:`~abc.Messageable.send`."
 msgstr "One of the changes that were done was the merger of the previous ``Client.send_message`` and ``Client.send_file`` functionality into a single method, :meth:`~abc.Messageable.send`."
@@ -810,7 +810,7 @@ msgid ":meth:`Guild.audit_logs`"
 msgstr ":meth:`Guild.audit_logs`"
 
 msgid "Event Changes"
-msgstr "Cambios de eventos"
+msgstr "Event Changes"
 
 msgid "A lot of events have gone through some changes."
 msgstr "A lot of events have gone through some changes."
@@ -903,7 +903,7 @@ msgid "As part of the change, the event can either receive a :class:`User` or :c
 msgstr "As part of the change, the event can either receive a :class:`User` or :class:`Member`. To help in the cases that have :class:`User`, the :class:`Guild` is provided as the first parameter."
 
 msgid "The ``on_channel_`` events have received a type level split (see :ref:`migrating_1_0_channel_split`)."
-msgstr "Los eventos ``on_channel_`` han recibido una separación de nivel de tipos (véase :ref:`migrating_1_0_channel_split`)."
+msgstr "The ``on_channel_`` events have received a type level split (see :ref:`migrating_1_0_channel_split`)."
 
 msgid "``on_channel_delete``"
 msgstr "``on_channel_delete``"
@@ -1242,7 +1242,7 @@ msgid "Use :attr:`~.GroupMixin.all_commands` to get the old :class:`dict` with a
 msgstr "Use :attr:`~.GroupMixin.all_commands` to get the old :class:`dict` with all commands."
 
 msgid "Check Changes"
-msgstr "Cambios en las comprobaciones"
+msgstr "Check Changes"
 
 msgid "Prior to v1.0, :func:`~ext.commands.check`\\s could only be synchronous. As of v1.0 checks can now be coroutines."
 msgstr "Prior to v1.0, :func:`~ext.commands.check`\\s could only be synchronous. As of v1.0 checks can now be coroutines."

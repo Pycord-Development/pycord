@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2024-09-06 23:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -85,22 +85,20 @@ msgstr ""
 #: 18a8b12540854ba4bd1ccf6a3faf2044 1d83346277d643b291dca0b949e3b058
 #: 2a4d60ac337a46c0bed1bc26c226038f 2ad70d3718a4499cb9197f85eb4abf87
 #: 2bb5fe9dcfdc4277aedd1b8cac88e88f 2c7f28585a7445caa3375c657bfa10fe
-#: 32729bb6214c4a0d9faddbd2797c356b 3993991579084341a58ae9581980d8f2
-#: 41f3ff189d5746b3b37769fc2f8e683d 47cf29f45d094211a6159f29fd08d82d
-#: 483e8acc9cae4b48aaaa0566e32bbf6c 4ad270a9f286434ea4210e41b4d84a2b
-#: 4cd55485c5ec409cb04d2efb51172d09 4e3426bccb324f8ca84175605fe88d97
-#: 67deeae9eedb44cc97fa9c9c32d8fb7f 6836891e883c423481ebac9ffd750fa1
-#: 6dc5c2e21b9b469dacb81a1e43968511 728aa08043a64adda19d956c6ff44128
+#: 3993991579084341a58ae9581980d8f2 41f3ff189d5746b3b37769fc2f8e683d
+#: 47cf29f45d094211a6159f29fd08d82d 483e8acc9cae4b48aaaa0566e32bbf6c
+#: 4ad270a9f286434ea4210e41b4d84a2b 4cd55485c5ec409cb04d2efb51172d09
+#: 4e3426bccb324f8ca84175605fe88d97 67deeae9eedb44cc97fa9c9c32d8fb7f
+#: 6836891e883c423481ebac9ffd750fa1 728aa08043a64adda19d956c6ff44128
 #: 7b1c6d12b4a842a997b5465a8ddbb287 7c47ce6d35854eabae233cb4388c1b7c
 #: 7cc43cf3dd184cd686b8bf1ec6c776c2 7cde32a58ded4bc89d170ba90e584f79
 #: 7db2c31f6b6b4368877cec63b61d725c 7eeef0117d73468bbf069e0735089439
 #: 8183ff58df9b4e73bc33a30fb382eb7b 81e36a1bf1c14fe2a37b210df30a3427
 #: 82c457d86c2142bcab50d8842bda9063 8358e6376bbf4ed99e959db533fd3e82
 #: 868a9098949744cf9fcf7c6f42e516f7 883bef32346f462e98c0bdec679b1efc
-#: 8bfaf5d7e1804eb5bf58cca632c716c2 8c746e49c2e643eda46543886844bdd0
-#: 8df6ae442263404b9f2b7ed7ae19f057 8fa9dbf39d3e4d458673e6e35abcb4c9
-#: 92bc5070285c4eb9b08cec9bafd803a0 978731b4ff544335acfad6f762b91b3e
-#: 9a1e6f7439c24f38a40e2ec918fd55a0 9b463aa7bf23454dbdca8aa23cc8539b
+#: 8bfaf5d7e1804eb5bf58cca632c716c2 8df6ae442263404b9f2b7ed7ae19f057
+#: 8fa9dbf39d3e4d458673e6e35abcb4c9 92bc5070285c4eb9b08cec9bafd803a0
+#: 978731b4ff544335acfad6f762b91b3e 9b463aa7bf23454dbdca8aa23cc8539b
 #: 9b83c72d2fe047bf93dffa69af7efd07 9d168ece95784b269773220dae484295
 #: a226e4fd036c4e87a2f9e3ab17fc1ca1 a24c93013f654f39aec619169aee3ffd
 #: a3bb38861f7d4b6f9fc2cde50a4f6e90 a70491d545954835a7ba3ee88e35ab11
@@ -143,20 +141,16 @@ msgid "Returns whether the asset is animated."
 msgstr ""
 
 #: ../../api/models.rst 0309d5bc75b4441c897a10094b96ac4a
-#: 03760cb475ed45078357270d9b6c3b33 0640e492b57342b5a13994bcb5450a85
-#: 077c7293671b47aea1ead298192db654 079c4c874eb34aa28b2cea04d85364e1
+#: 0640e492b57342b5a13994bcb5450a85 077c7293671b47aea1ead298192db654
 #: 0979548eb8314965a4232b002d6d8f8e 0ad9dd6e25d24167a508024ae35d87da
-#: 0c09c04ca6c24f37b7befefc1e27c108 0d5ce9ac536f48c3af3a64b83a094777
-#: 0e77fecc1b154fdaae5ecd7437e07fea 0ffde691430f49ef890254f0b87e9c2e
-#: 16749d2b71db4335acddc773be0d2f0a 18b90031dfc547088813e057a56401c1
-#: 18f9e3ed114d4d68973ef2d37672349e 19a35a7ed51a4b99a8041f75cf8e58a3
+#: 0c09c04ca6c24f37b7befefc1e27c108 0e77fecc1b154fdaae5ecd7437e07fea
+#: 0ffde691430f49ef890254f0b87e9c2e 16749d2b71db4335acddc773be0d2f0a
+#: 18b90031dfc547088813e057a56401c1 19a35a7ed51a4b99a8041f75cf8e58a3
 #: 19c515ba3ce24f398e966d395a7bab86 1c5c8239784e471dba566d1b92b2a5e5
 #: 21bbe3bfdbc446d695ba06c20c373f85 21ff3a60e1e84c648ce0a5d9aea70700
 #: 22c035014b65406b969da9bfa17929bc 254810d5159c4a7ab7e45312a75c3188
-#: 261deaa002874837a2c0c7f43b420d08 26610a2e71004eada14dc49724dd1382
-#: 2862e3ccc6274017a74b9196f3154985 28a6e45ecb76421b97a31e146ad93502
+#: 261deaa002874837a2c0c7f43b420d08 2862e3ccc6274017a74b9196f3154985
 #: 2907f41b9a254a10a732581db38bb3a9 2a1ad31a3f764795a2fb39aff9873758
-#: 2dff2df236b04c128a3de69f4dde566c 31d62f9c893e41399081d48e4866956f
 #: 350fcc488876465bad13a5796135bdf2 356bef769b5f47b4987d39eb1a7db4b6
 #: 3670d238b65946fc85955a7f42fa1a37 3744d240485643bfaaeedd4801535130
 #: 3a7e19ad0efc41afb60748ca5ec7ce49 3bc24b485df54ccc86aaa73edfdda00d
@@ -174,22 +168,20 @@ msgstr ""
 #: 6f73c53cb70247089d507722c9903f3e 77ceaeb103b7476c86ce358d994b966c
 #: 79440ec28ea74d52b17263e296d3409e 86bfec4746ab4883a54583e29dafe33d
 #: 872e315e148e4e858f69d56dc0ace95e 8b037c2dd39d43d7bab7234b9974ee26
-#: 8bafa417e0a24d19bfcfdbf5ca4e1358 8cf23c67e6aa4a318dc9702fd590e1f8
-#: 8f074c462f05439087eaf38bdcbde36a 8f1345380b4e4342a090f0d5cd984869
-#: 94da0913b5064103b4a4f1317d286d3e 9b83d663436b4b1385978a81a84e11d8
+#: 8cf23c67e6aa4a318dc9702fd590e1f8 8f074c462f05439087eaf38bdcbde36a
+#: 8f1345380b4e4342a090f0d5cd984869 9b83d663436b4b1385978a81a84e11d8
 #: 9c5c89e0d0874a8691ae9c0e0face8be 9fbc068a17a84765ab1cdd7a4092661d
 #: a19f99d9ba494816a26f530dcd4d3024 a35fe165deb2481da568d709dae266c2
 #: a491af9434bd4ae6b7adaf96a9ca0ef7 a57d083bbea64801a7d65f69c25a92fc
 #: a6245e82802e4b7193ce9a3c9ae5b2ad aa0eaae63db44458a10fa9b1b74828fe
-#: aa1bdf38092843cf94b6334d56e761af ab64e8b5946049a2b1cf13bb6b63fe97
-#: ac441bf274914d2f9dc6f264613f0faf adbc4a22ca1c4ac8959bac23ec4839d3
-#: b4bd8df1935644ce9c0489c8542cd1af b91691d031fa405b8a1d7c7a5d684d4b
-#: bac9870e0e33411ba53fb5c16935ecb0 bd10cae6ed2b4708a5a0c0f4dda84951
-#: c106589d8eff4543b272782e24ad92c8 c6a7d99157e3423285c53b00b65eef1b
-#: ca57d95ea26c4194994d202c3ff3ec2a cbcd88ced77f4597bfb0d4fd48bf4f58
-#: cd8afe5f874a4ed893d57cd0f29bb9a6 cdf62d9b674847e39744c3e80c1fb9ea
-#: d261c751d34446d5890e6fe388663db9 d3570283753343cdba2a6758d688bef4
-#: d3a9ecd345b9437a900862749bb1d523 d59c249cca4e40d9b26dded2423e6c8a
+#: ab64e8b5946049a2b1cf13bb6b63fe97 ac441bf274914d2f9dc6f264613f0faf
+#: adbc4a22ca1c4ac8959bac23ec4839d3 b4bd8df1935644ce9c0489c8542cd1af
+#: b91691d031fa405b8a1d7c7a5d684d4b bac9870e0e33411ba53fb5c16935ecb0
+#: bd10cae6ed2b4708a5a0c0f4dda84951 c106589d8eff4543b272782e24ad92c8
+#: c6a7d99157e3423285c53b00b65eef1b ca57d95ea26c4194994d202c3ff3ec2a
+#: cbcd88ced77f4597bfb0d4fd48bf4f58 cd8afe5f874a4ed893d57cd0f29bb9a6
+#: cdf62d9b674847e39744c3e80c1fb9ea d261c751d34446d5890e6fe388663db9
+#: d3570283753343cdba2a6758d688bef4 d3a9ecd345b9437a900862749bb1d523
 #: d90d732a2bb845569dedb27e471e7f93 da0e818d0fef430fbadf33a4e57ea595
 #: dbf4e8a592f049df9c417ab8b3d39404 dda4d63fbd664297808f901fc4957b29
 #: discord.abc.Messageable.history discord.channel.StageChannel.purge
@@ -201,8 +193,7 @@ msgstr ""
 #: ed9005f2cb1d47fb862b4be05f63997a f31cbc6d18c4492d8d39476d33e60215
 #: f32707707ee74b6dbff49ed14a238389 f5fb05070ebd4d488d1b462e0470b4c1
 #: f6f36e6c6c81482582ab35769ad90599 f852538e23ea4d0f954a427289c543f3
-#: f900904408044c2c8359e71f54e614b0 fc37f43ede9d48f9949589a404c7024f
-#: fc43e15d2f0b45ddb8f71cb25d370b0a of
+#: fc37f43ede9d48f9949589a404c7024f of
 msgid "Return type"
 msgstr ""
 
@@ -256,37 +247,33 @@ msgstr ""
 #: 2607b77d823943a39c83436bd083804e 27c881e4f9d54dbc8ab1466442f08633
 #: 27f96ff5ae5b4e83ab6648c6154d02e1 2e2ac69c07864724996d15ad04f08e14
 #: 2f6d4fffa6184f9780a0a1f424fb7cfe 35d53beb4f25480bb67fe4c3813e33e5
-#: 362375f37b194a349214ed5fc7c0f203 3c5b5f52348b43289904fa2dbb2419ab
-#: 3d661899f6cf48ebbebdc8e59ef6f6ec 4065753368ca48ba9303ab80be7280d6
-#: 433e78d93a284222b29b7c5c27f30975 43c1656cdb8c46c3a79e2da9fcc17b2b
-#: 46a0aa1454ae417e88e6b3cd870b72f5 4db57c6eb2ff45e683de729c56067875
-#: 51d0460ea52747fe85f7df2cb0591858 542167f6d3384e2a8ae24d73888b2ef4
+#: 362375f37b194a349214ed5fc7c0f203 3d661899f6cf48ebbebdc8e59ef6f6ec
+#: 4065753368ca48ba9303ab80be7280d6 433e78d93a284222b29b7c5c27f30975
+#: 43c1656cdb8c46c3a79e2da9fcc17b2b 46a0aa1454ae417e88e6b3cd870b72f5
+#: 4db57c6eb2ff45e683de729c56067875 51d0460ea52747fe85f7df2cb0591858
 #: 57f07e810e7a4586855dc28481b0158a 5a4bb964168c4d4bb38a489fc597be24
 #: 5b085ed69fe04b72a038408f1694f8b7 5b7671b931944b139d39fd1e649e4371
 #: 647c16affa9946b1954e30a98d48817e 6653c72cfad749238708f3ebe0122142
 #: 68305bc3e2184fd09fe9642896bc9d34 6ac49508d1c143e2a64cce304a570b5e
 #: 6ad8863060a441e4b4dc968c529722e7 74b5a057233e4cb5a1231cfc2ec593e2
 #: 750f91e4b5294b2eb91a6c4fd068c0e2 76becbf11cbf44e694d2b1ae7e64f923
-#: 79b32f14b5754c49b9a269a076411656 7d34f29ac67047a78da568e9efd49f1b
-#: 8283e51b1c044e2fb9250dd199dcac71 8343fcad75ca44efb89693f19ebe898f
-#: 83705baf8a864eec9f13163564e7cf6f 847dccc772424a3faf88bddcb661386d
-#: 86821b65aab74584ad8c55849a601d14 8aa9e45ae0fe4b84b38aee62c912c235
-#: 8e51aa1f2ed94e2094249f3044a9d198 96cc6a6f1f9d4894a37e737d95105b43
-#: 9f2285651c4f433f8b1c16881926f0bb 9f601fe77c824a16b0956178e383143e
-#: ac01e19d8d404b5dae571c9d27da19cb ac28978c972f468e98bb5e4bf37dd28e
+#: 8283e51b1c044e2fb9250dd199dcac71 83705baf8a864eec9f13163564e7cf6f
+#: 847dccc772424a3faf88bddcb661386d 86821b65aab74584ad8c55849a601d14
+#: 8aa9e45ae0fe4b84b38aee62c912c235 8e51aa1f2ed94e2094249f3044a9d198
+#: 96cc6a6f1f9d4894a37e737d95105b43 9f2285651c4f433f8b1c16881926f0bb
+#: 9f601fe77c824a16b0956178e383143e ac01e19d8d404b5dae571c9d27da19cb
 #: b2f1da5ff55c4a3b9346d3b6e1f1adaf b6c1b4114fb543e195c94aa432fe159c
 #: b739480c9c6f4adf8e1e3c3933784bc3 b86abad0dc784bcfbc12f4c84d1fa742
 #: bab7da69a6be495781382e54dbaca4de c9b9dc712a914abf8f2219351eeff240
-#: ca546d5bd9894f37a369d569f89868c5 d158caf1186e48c8a38e8020bc046db6
-#: d36b0236b9ea4776a7e6b378e9e2d52a d49a124f37e64f348e59d79ea1e601dc
-#: d5a133945e874db9945b37883aaded27 d8969dd93df444019b67ca16bb4ef691
-#: da72630aca084d3aaeafd45ebb6e90e2 dfd2a44a017442e29804dc590d1e49d5
-#: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
-#: discord.channel._TextChannel.purge discord.threads.Thread.purge
-#: e081836ae6504e498ac8f7e7f304807e e79560eeaad2454da4385f06e2aaee39
-#: ecd9fdca3e544014953f89c1e94c68f0 f66ddfebd98a4697bb828487d4a14e10
-#: f6f28fef35e44b52b7f0d8b8d69516ea f88c908a6f4c41fabacd70ad58cdf52a
-#: fdf7e9a3108d4be18ba445ce61cb75c8 of
+#: d158caf1186e48c8a38e8020bc046db6 d36b0236b9ea4776a7e6b378e9e2d52a
+#: d49a124f37e64f348e59d79ea1e601dc d5a133945e874db9945b37883aaded27
+#: d8969dd93df444019b67ca16bb4ef691 da72630aca084d3aaeafd45ebb6e90e2
+#: dfd2a44a017442e29804dc590d1e49d5 discord.channel.StageChannel.purge
+#: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
+#: discord.threads.Thread.purge e081836ae6504e498ac8f7e7f304807e
+#: e79560eeaad2454da4385f06e2aaee39 ecd9fdca3e544014953f89c1e94c68f0
+#: f66ddfebd98a4697bb828487d4a14e10 f6f28fef35e44b52b7f0d8b8d69516ea
+#: f88c908a6f4c41fabacd70ad58cdf52a fdf7e9a3108d4be18ba445ce61cb75c8 of
 msgid "Returns"
 msgstr ""
 
@@ -310,48 +297,43 @@ msgstr ""
 #: 1f953a100c764d178b276431e62b1992 22006d01559c4c56acdb79d7f1ed738f
 #: 22e7624f7c8a4117a3d3744545d2dcf3 2472859665d2470bb065bfc0b93027e1
 #: 267de63306354febb545e6ce928be1e6 26bd87134fbb4581a4f394d41b894084
-#: 2d288ac0eca6428fa8068b8aeb74e498 3589314f4d734e988d58db8fc3fec995
-#: 3902ae0d9db246adb81666c177be7db2 393c0085e60b406e91fa74316710ca6c
-#: 3c681436fcb64600ad5b441e2331589b 3df56f6e1f9a4a4999cbaaf11a1cd473
-#: 3f8de618dccb440bae0e587fb00cbbca 446b6f350b954c8c8ca60e07388a4126
+#: 2d288ac0eca6428fa8068b8aeb74e498 3902ae0d9db246adb81666c177be7db2
+#: 393c0085e60b406e91fa74316710ca6c 3c681436fcb64600ad5b441e2331589b
+#: 3df56f6e1f9a4a4999cbaaf11a1cd473 3f8de618dccb440bae0e587fb00cbbca
 #: 44b8d1766516447fb8c88325249d39b0 46cf6a58d072411e85e96d08a4ce189e
-#: 479fe8e8503a4eeda03033937fea8178 47de5658d9204fcd9828e2471198708a
-#: 47f45e0b2e5f442790500ab0a1cb7ae5 4b0ae9cfa8734a47aec5bc961bf7d8ea
-#: 5298538313c0410689ffa672c5266090 530048b485b64e259d50b0528f5a980e
-#: 55e5647b51fa4afb899876de7b44a51e 5c03c74134e3491dba9c9a283a2eb3ef
-#: 612731b71d164a1d85b70ee0e6acd7f7 63b00c35f848405e9fea923d03fa7759
-#: 658633a44db7427a933b8fcc6b93326f 699b6b4ff6544f7faeeb9f52f295dba8
+#: 479fe8e8503a4eeda03033937fea8178 47f45e0b2e5f442790500ab0a1cb7ae5
+#: 4b0ae9cfa8734a47aec5bc961bf7d8ea 5298538313c0410689ffa672c5266090
+#: 530048b485b64e259d50b0528f5a980e 55e5647b51fa4afb899876de7b44a51e
+#: 5c03c74134e3491dba9c9a283a2eb3ef 612731b71d164a1d85b70ee0e6acd7f7
+#: 63b00c35f848405e9fea923d03fa7759 699b6b4ff6544f7faeeb9f52f295dba8
 #: 6a70eeb5c346446eaa451b8a82fa36f0 6b49644c0a984cefa8ad37bd37e25c6c
 #: 6c88abffe12448c7999d0268dd98391d 6e2bbeaa9dbf4d0095fcab664be6f5ad
 #: 6f0007dd2faf4406952fee24462ad0ef 6f136f8c5e6d4b7088fce1fed9753458
-#: 73980af6f86141cf98c79c7088e50c86 76b96bec186e4b33864bf75de01575e8
-#: 8448a10ed39946c9814070a5a8747f5b 8cd7d37a539b4df8a6a38d86b91a57ca
-#: 8ee99948456b49e09dec4c13c8e74348 911a2045702c4b5da52b8d43e124cdf3
+#: 73980af6f86141cf98c79c7088e50c86 8448a10ed39946c9814070a5a8747f5b
+#: 8cd7d37a539b4df8a6a38d86b91a57ca 911a2045702c4b5da52b8d43e124cdf3
 #: 932053c3e0c04333bbe3132b2cc918f0 936a55c4d73045b7a97b48add3bbba31
 #: 949c13f67593491fb341a58620388b86 97d2c307e17a4aa98bf80c3816b2023f
 #: 9ed8c6957e594b989803867465b0832b a093e145386d4741a3c32f63e3d1b3b7
 #: a747b811291345929a132043b534d8f7 a78381ea68c5462ca57f748f4891aaeb
 #: ab281ddb680842b9a168aa9d9d1142c8 ac17053a86f84471be8fbb3466c02f59
 #: acf65750771442a785e04917545d20bc b2dbee1368ee427fad1bc38199801dfd
-#: b3a7951b4ce7467b884d54b09e4d7ffc b59762528dc74f0fa3c39634bbc7b257
-#: b8530b14839d4c8c8d553f5ecd20f041 b879e907e15d4b709a7c4fb7e4e46856
-#: b8b585cf380b493987d48a0079963528 bb7e2df55f9946449cbc87ba99d8e00a
-#: c2ea625207034985b0c360f2a82bcb33 c68960e6aa504d848baa9d228f79b622
-#: c793135c62ea436aad956d5fa0129ef6 ca68861e26e843c79b39454f02ce4bdb
-#: cca081068ed54c418626a8f0830289cc d64c9fbd67f44db186cc840553acf9c2
-#: d80bc37cab244a838dc6b22f210108fd dd7eff5537e64034b184274723af6237
-#: df047e2a4b19450294fe199cbece81dc discord.abc.Messageable.history
-#: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
-#: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
-#: discord.guild.Guild.bans discord.guild.Guild.fetch_members
-#: discord.reaction.Reaction.users
+#: b59762528dc74f0fa3c39634bbc7b257 b8530b14839d4c8c8d553f5ecd20f041
+#: b879e907e15d4b709a7c4fb7e4e46856 c2ea625207034985b0c360f2a82bcb33
+#: c68960e6aa504d848baa9d228f79b622 c793135c62ea436aad956d5fa0129ef6
+#: ca68861e26e843c79b39454f02ce4bdb cca081068ed54c418626a8f0830289cc
+#: d64c9fbd67f44db186cc840553acf9c2 d80bc37cab244a838dc6b22f210108fd
+#: dd7eff5537e64034b184274723af6237 df047e2a4b19450294fe199cbece81dc
+#: discord.abc.Messageable.history discord.channel.StageChannel.purge
+#: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
+#: discord.guild.Guild.audit_logs discord.guild.Guild.bans
+#: discord.guild.Guild.fetch_members discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.threads.Thread.purge e0eacc7163104667a12355c978c322ca
 #: eb9ad7bc68144f10904406488bd7ae24 ec0331f905e2441fab9824d1f8c4963c
-#: ee39cb64ba8349c2bb405000597a9be7 f540cbb4fa004ee6bea4303f94a62480
-#: f56f39ec6cb24f81ae8f8d24412d450e f5bccbd888d048908de44bba82b6968a
-#: f65abbd1f6c1479e933a7e770f0b0b9d fb448fea1e4d411da17ac96ac8102a8e
-#: fb44d6093f9241de967bd1a6a92c87d8 fb7a0c154ac948c6bb5db13e5ec9280f of
+#: f540cbb4fa004ee6bea4303f94a62480 f56f39ec6cb24f81ae8f8d24412d450e
+#: f5bccbd888d048908de44bba82b6968a f65abbd1f6c1479e933a7e770f0b0b9d
+#: fb448fea1e4d411da17ac96ac8102a8e fb44d6093f9241de967bd1a6a92c87d8
+#: fb7a0c154ac948c6bb5db13e5ec9280f of
 msgid "Raises"
 msgstr ""
 
@@ -406,15 +388,13 @@ msgstr ""
 
 #: 0370e808c57d45af969bace394918843 066b403845fe4067a93eb4cd4de9e874
 #: 0ca18e9a7adf4b6f9bfcce46aa9e3c6f 0cae40f9ce954ec9b15b77889eac1aa0
-#: 131568ab740844ef85bf80dbb6a876a6 160d2bd81c0b42bdbab49cfa35cacd7c
-#: 16bc1d11ba1242fcaaa2d5f3a231382b 16f0ba84894943f1aef0558e371df7b3
-#: 1f0e792748e34d5f94de6b86e6e95609 2074d7f99a844507a10fe0536d71e67f
-#: 24480af3fa9148cdaabce5cd5523cf8f 2aa6d567d1ec428a91a5b27e3a557493
-#: 35d10e85e986443a9e0a1f97dcac92c0 3b9f5473c35c4f9db28d3a986789472f
-#: 3db17b50b5c94a2e910ca4e66e1a92d6 3e7128aea19b401893ffdc27d203a3b0
-#: 3edfe5a70b18415b911ba5439cc5a95c 463e5fcc76984461a559231b6cd6dd11
-#: 5b3163ea99564932af894f02711d4317 5d4f482bbf7846e59a2374c6ee3eb3ad
-#: 5ef60e9b21b84048b0fe6334289f0abd 698b1cd3a9ed4599a6c56924f2c5e2f2
+#: 160d2bd81c0b42bdbab49cfa35cacd7c 16bc1d11ba1242fcaaa2d5f3a231382b
+#: 16f0ba84894943f1aef0558e371df7b3 2074d7f99a844507a10fe0536d71e67f
+#: 24480af3fa9148cdaabce5cd5523cf8f 35d10e85e986443a9e0a1f97dcac92c0
+#: 3b9f5473c35c4f9db28d3a986789472f 3db17b50b5c94a2e910ca4e66e1a92d6
+#: 3e7128aea19b401893ffdc27d203a3b0 3edfe5a70b18415b911ba5439cc5a95c
+#: 463e5fcc76984461a559231b6cd6dd11 5b3163ea99564932af894f02711d4317
+#: 5d4f482bbf7846e59a2374c6ee3eb3ad 5ef60e9b21b84048b0fe6334289f0abd
 #: 69a188049ab64f7ca4accf2252dc85f9 6ba495235f7645788ad7dded9e4cbc17
 #: 6ca83568bdad40798ecbdd6239c77a81 6e5bcc4045eb45ee9cc11a3a33632917
 #: 6eb05241c80d4ae3b044eb9161b223e3 704cb3891c8f40fd82c41a6e73d45468
@@ -423,12 +403,11 @@ msgstr ""
 #: 7fb30cd7713242d68f44b6b6ebcef3fb 7fb6be439be4482eb842382bddf0eb36
 #: 7ffdf73db5ab488e9b51b597babc8b61 80f4a463d8554a85a5f20b7b8a2e22e2
 #: 81253fd018124062b2e6978ba7f46e1c 867ac713660943d69dbd98f2164d01b6
-#: 871e2985ad244d5180e3968e7f08c87a 87c91af97b574208ae3fed3ce8222bd1
-#: 8c5c8dd3ede749a19ce6044fa98822d2 910794dd47a748b5b041934ea50a6337
-#: 960b97e779684aedae87fb6801d55474 97d7c3ed4fdb465b963224edb1f96c40
-#: 99adafd0bce74bca994af7d097e50577 9a10b90385b0491d98530df90fe54977
-#: a006e586ea96435888e9470ed4c69990 a228bf8cd1194556b2d999730fc00b47
-#: a31aba33f0f74e3482abbedb0bfb3c6b a5c07649e5ae469886fe90f590944332
+#: 87c91af97b574208ae3fed3ce8222bd1 8c5c8dd3ede749a19ce6044fa98822d2
+#: 910794dd47a748b5b041934ea50a6337 960b97e779684aedae87fb6801d55474
+#: 97d7c3ed4fdb465b963224edb1f96c40 99adafd0bce74bca994af7d097e50577
+#: 9a10b90385b0491d98530df90fe54977 a006e586ea96435888e9470ed4c69990
+#: a228bf8cd1194556b2d999730fc00b47 a5c07649e5ae469886fe90f590944332
 #: a7d1faaa3453418aa9971cf314037c1b aca413eb20544eddbf028107ebe44fe0
 #: adee786460914fdcb477594f45acb37a b1382f4fb77344589f6d0af222d4038d
 #: b417d4f6381b47c98b155db7cd64c5fb b41df4171ce3487289ea11713cb69daf
@@ -436,12 +415,12 @@ msgstr ""
 #: b7eba1a9a94b4abca974be4cda3b9439 bf7d7300665a42d4b2d8623f113713f2
 #: c126483eaf8f483ea012ef62bb4ca9a5 c475e3a182784df084eb336605c7944c
 #: c62fb81bdab94beba442b9b30c439099 c812fd05fc964c57aabd04b4b16b89e6
-#: c85efd72728d4227bb290ae439c27b81 c98a9314dab44cf1bfa78489978e74c7
-#: cb531c728a4e4ebe841b5d629b87de49 cbea66b66f524924bc315334fd17e07a
-#: d81d01d2bf864f69be7d59be99c53415 def68b192c7147ba9f95cf729e534f29
-#: discord.abc.Connectable.connect:1 discord.abc.GuildChannel.create_invite:1
-#: discord.abc.GuildChannel.delete:1 discord.abc.GuildChannel.invites:1
-#: discord.abc.GuildChannel.move:1 discord.abc.GuildChannel.set_permissions:1
+#: c98a9314dab44cf1bfa78489978e74c7 cb531c728a4e4ebe841b5d629b87de49
+#: cbea66b66f524924bc315334fd17e07a d81d01d2bf864f69be7d59be99c53415
+#: def68b192c7147ba9f95cf729e534f29 discord.abc.Connectable.connect:1
+#: discord.abc.GuildChannel.create_invite:1 discord.abc.GuildChannel.delete:1
+#: discord.abc.GuildChannel.invites:1 discord.abc.GuildChannel.move:1
+#: discord.abc.GuildChannel.set_permissions:1
 #: discord.abc.Messageable.fetch_message:1 discord.abc.Messageable.pins:1
 #: discord.abc.Messageable.send:1 discord.abc.Messageable.trigger_typing:1
 #: discord.asset.AssetMixin.read:1 discord.asset.AssetMixin.save:1
@@ -566,9 +545,9 @@ msgstr ""
 #: discord.user.User.create_dm:1 discord.user.User.create_test_entitlement:1
 #: discord.welcome_screen.WelcomeScreen.edit:1
 #: discord.widget.Widget.fetch_invite:1 e36857d00d4a4b03a1a0dde15176d0f7
-#: e3d44c95286a4379abdb70ce1c62f695 e4db3b2aeb53457297109bc676433dbe
-#: e9daf36896ce457cbddfeb00139760dd f18f5ee8a1464b5bad7b9626fb8800ed
-#: f6c37e86f96f473a8d467748569b3925 ff88a521f3414956bb0ae0fb0241dcbc of
+#: e4db3b2aeb53457297109bc676433dbe e9daf36896ce457cbddfeb00139760dd
+#: f18f5ee8a1464b5bad7b9626fb8800ed f6c37e86f96f473a8d467748569b3925
+#: ff88a521f3414956bb0ae0fb0241dcbc of
 msgid "|coro|"
 msgstr ""
 
@@ -863,47 +842,45 @@ msgstr ""
 #: 1bdb2cabcf67495ebdc667608c720a06 1f9651133d7a430f8a24b9a645ada2ce
 #: 21faf240333d4ce2bf3365f28aace9c3 22065b2145c345fcbc326d89075ec35b
 #: 220cdabc3311432b998e5c424c465750 22ac68d587fe4abc9f96441f06046dd9
-#: 24e335c8ccce4904aa18f16df1c37ff0 27158b656eca4afe88f99efb05ccb80e
-#: 272747f7539542f3b8a44148c72e26ea 2a608fc04cba49d98e1f1ddaeb64d63c
-#: 2cfabf5b7fef435e84dfb3fc2787f1ac 2e73b3fbe6374c54a25603c479a50d5b
-#: 301f746397184c208e2c02257b8dddbc 338106e55c8240eab14065502b864dfc
-#: 35a8b82808b8453db119ab7ba0ebcdd1 364abd3036f54f50916f10f4efd58771
-#: 38411a48b02d428999e9c0ecf39097ae 38452ae8461d43858b5eedf649345464
-#: 39b4f683f3684b8cb1b34e32eea8ac7c 39e122018c1842f396b368886b48e775
-#: 3f61e1f35e8e409586a1c02b6434c7ad 40e0a342c08347f4a56b1ca567727562
-#: 440f85a803964393857b04290988e1dc 445c00ebbc034cf592fd52d5d03e6cd2
-#: 46bc1c63dd9e4910a17146639aada31f 495f29871fc9457e9d2309a9a716f0d5
-#: 4ab61677a7bb4b46a38295c13b89b84c 4ca295d01b0b49c58f92e474e0ed1fc7
-#: 4dee2a1342b24edcbb70f7c373b370a3 4e47f55a759e4da2818894aa503b7ee5
-#: 4e9a5a92ba97487c98c0e80a7c1da703 4ff0756fe2ff475e9426ecf6e42de593
-#: 597e2c7023454f9bae54cdbdb61770d9 5c87aebcd49e483a94cadb1a64305abf
-#: 5d2422bd8d6c40aaa09875550353f8d8 614ea7004bc04ea0b4e031051f813524
-#: 6356776abd8f454aab1e3ef10a9b60ba 655791b8ec334318a71371e38c2748ad
-#: 65592515d2344a05a46a09f7c2971220 65673938e9ab431fb0c36fba6144e5e1
-#: 65b623a6ad5942158f94d51716ea4f68 69cefcf03e884ac7b5fc11b7d1d29cf3
-#: 6d42276c22a945b28406f8e09ad56b0f 6d94e4d6b4274516b6b9f993418424ab
-#: 6f14d3ecd2f343f7bb7a86e1056f87e5 6f42d562ae7947699c87a27afae00ca2
-#: 72133300fc0e4ceabfa5d18acd4f5a9c 7693963e34644ca1bd2effa6f88d8b9e
-#: 77b5c1a970774a8ebeabdf892fe59af6 784be10dac3d459faa6de5dc766fca6b
-#: 78e960b05b6f460ca4e148d0b59efded 7a27fafabfe045e1830b6e6d3c6728b6
-#: 7c45525c2a804ee983410a85d2856c72 7e3d3537787f4909a3f533956a0b2114
-#: 8011afda364b4ad79ae0165dd6b60d40 82e604d0bafb4db995460f2cd17d033d
-#: 8387e2278a404919af843b93e8115ab7 88b635d0d40c4f37a563725261f1c623
-#: 89686148b0db4a0f9ea120462a7f62b3 8e36b6cc07aa42da819389f7b2caa577
+#: 27158b656eca4afe88f99efb05ccb80e 272747f7539542f3b8a44148c72e26ea
+#: 2a608fc04cba49d98e1f1ddaeb64d63c 2cfabf5b7fef435e84dfb3fc2787f1ac
+#: 2e73b3fbe6374c54a25603c479a50d5b 301f746397184c208e2c02257b8dddbc
+#: 338106e55c8240eab14065502b864dfc 35a8b82808b8453db119ab7ba0ebcdd1
+#: 364abd3036f54f50916f10f4efd58771 38411a48b02d428999e9c0ecf39097ae
+#: 38452ae8461d43858b5eedf649345464 39b4f683f3684b8cb1b34e32eea8ac7c
+#: 39e122018c1842f396b368886b48e775 3f61e1f35e8e409586a1c02b6434c7ad
+#: 40e0a342c08347f4a56b1ca567727562 440f85a803964393857b04290988e1dc
+#: 445c00ebbc034cf592fd52d5d03e6cd2 46bc1c63dd9e4910a17146639aada31f
+#: 495f29871fc9457e9d2309a9a716f0d5 4ab61677a7bb4b46a38295c13b89b84c
+#: 4ca295d01b0b49c58f92e474e0ed1fc7 4dee2a1342b24edcbb70f7c373b370a3
+#: 4e47f55a759e4da2818894aa503b7ee5 4e9a5a92ba97487c98c0e80a7c1da703
+#: 4ff0756fe2ff475e9426ecf6e42de593 597e2c7023454f9bae54cdbdb61770d9
+#: 5c87aebcd49e483a94cadb1a64305abf 5d2422bd8d6c40aaa09875550353f8d8
+#: 614ea7004bc04ea0b4e031051f813524 6356776abd8f454aab1e3ef10a9b60ba
+#: 655791b8ec334318a71371e38c2748ad 65592515d2344a05a46a09f7c2971220
+#: 65673938e9ab431fb0c36fba6144e5e1 65b623a6ad5942158f94d51716ea4f68
+#: 69cefcf03e884ac7b5fc11b7d1d29cf3 6d42276c22a945b28406f8e09ad56b0f
+#: 6d94e4d6b4274516b6b9f993418424ab 6f14d3ecd2f343f7bb7a86e1056f87e5
+#: 6f42d562ae7947699c87a27afae00ca2 72133300fc0e4ceabfa5d18acd4f5a9c
+#: 7693963e34644ca1bd2effa6f88d8b9e 77b5c1a970774a8ebeabdf892fe59af6
+#: 784be10dac3d459faa6de5dc766fca6b 78e960b05b6f460ca4e148d0b59efded
+#: 7a27fafabfe045e1830b6e6d3c6728b6 7c45525c2a804ee983410a85d2856c72
+#: 7e3d3537787f4909a3f533956a0b2114 8011afda364b4ad79ae0165dd6b60d40
+#: 82e604d0bafb4db995460f2cd17d033d 8387e2278a404919af843b93e8115ab7
+#: 88b635d0d40c4f37a563725261f1c623 8e36b6cc07aa42da819389f7b2caa577
 #: 8fd99964bc5f4c75b99e76cd55db8f3f 9173191c27e6484794007b6452c643b8
 #: 95a4a27c7cc446feb8ade2dd0ed19a75 977d255a45434383aa099d0cffd1a8f2
-#: 9807910de97640019833188504fba5e2 986840e8778c40bf91c6791d5f91ac9d
-#: 997c9a6bf9f841e1a23ee87e07dc133a 998a56ee903a43baa0dcd25155351a0b
-#: 999d70ebdc004054bed7337133d7badb 9cfa3c015b574cc9879d457ec5fb2607
-#: 9f597ce69b054fe48d2922e85db0c3af a79f925772d5431288f420c483672dff
-#: a7eb34de6a7544ba80ac451d76e97de2 a854241a48da4657ac4191293b46900d
-#: a90d060620ea4f589990c3d137e2fd63 ab173d33d46744e6a0cb8b961e49e23d
-#: abb9957168004deb9b0b16726211ec29 ad846a914f534e62aa1a0fa410b7ffb3
-#: ae93341707b647f7ac229290218e5ebd b2584d98803a488da58a6cfeeb4ff514
-#: b337c6dc8c414befa7850e212ce7d7eb b89ba10007ff47f0a80093f54be43e16
-#: b8c22f4bd1b345eaa7b1ed351b8b599e b9452c8cf7c2467e9e6c1b7e509554ca
-#: b99c99a9aae44872b07a6e5714355931 ba3676ed311e42e99fd2a599b2467dba
-#: bb72445df2564b78b5412dd3dab80028 bc3aa6d4529e45068a1e542de6b4fb17
+#: 9807910de97640019833188504fba5e2 997c9a6bf9f841e1a23ee87e07dc133a
+#: 998a56ee903a43baa0dcd25155351a0b 999d70ebdc004054bed7337133d7badb
+#: 9cfa3c015b574cc9879d457ec5fb2607 9f597ce69b054fe48d2922e85db0c3af
+#: a79f925772d5431288f420c483672dff a7eb34de6a7544ba80ac451d76e97de2
+#: a854241a48da4657ac4191293b46900d a90d060620ea4f589990c3d137e2fd63
+#: ab173d33d46744e6a0cb8b961e49e23d abb9957168004deb9b0b16726211ec29
+#: ad846a914f534e62aa1a0fa410b7ffb3 ae93341707b647f7ac229290218e5ebd
+#: b2584d98803a488da58a6cfeeb4ff514 b337c6dc8c414befa7850e212ce7d7eb
+#: b89ba10007ff47f0a80093f54be43e16 b8c22f4bd1b345eaa7b1ed351b8b599e
+#: b9452c8cf7c2467e9e6c1b7e509554ca b99c99a9aae44872b07a6e5714355931
+#: ba3676ed311e42e99fd2a599b2467dba bc3aa6d4529e45068a1e542de6b4fb17
 #: bee43d44de1540dd8308d7840112e7ea bf0d57cc45cc4633bb0cc7df070c4418
 #: c036b2d5a57e4a3d89c4ac92c77e08bf c265aacd65f544b7b53d69cd86c1a6c9
 #: c6917a192f01402aabd064ec968591dd c73d884c4f3f47b3882953a0d0b64d00
@@ -972,12 +949,12 @@ msgstr ""
 #: e4ebc8ba68aa48d1ad1e4703697409ce ea38f3e356fa4161b8de01801d95f3b6
 #: ea5702097679494cbc117ca53b79b9d1 eb97cfb2bf1c4e2c98573c7e3bbd8c4a
 #: ebfd2a17c7c64a649b40a97c0397f08d ec2d1bea39794ebcbef93b57b9de6d67
-#: ee3b3590bdcd478e9bf22ad66c97f6cb f23cf6ac9be042dbb7f0bbecb578259d
-#: f2e4b8b8137d40a2bebbf3bc5de39968 f32c17be6b6e42cbbcc690990b864b62
-#: f40b4138a7f643cdad4ff34785e7a1a6 f619d28bcac54b87b9826c65caaa95d4
-#: f893de4cfff14b6fad708001d112c886 f8d9a7bee8654e418338d5153f0346e0
-#: fc1703444c8e43aeb6b207c0f0770564 fd31d6e51ff848fbaa774b695fb45f96
-#: fdd925840fb24e89b0f94205c0acc9fb ff120de4acd049acb1bd45f48960e558 of
+#: ee3b3590bdcd478e9bf22ad66c97f6cb f2e4b8b8137d40a2bebbf3bc5de39968
+#: f32c17be6b6e42cbbcc690990b864b62 f40b4138a7f643cdad4ff34785e7a1a6
+#: f619d28bcac54b87b9826c65caaa95d4 f893de4cfff14b6fad708001d112c886
+#: f8d9a7bee8654e418338d5153f0346e0 fc1703444c8e43aeb6b207c0f0770564
+#: fd31d6e51ff848fbaa774b695fb45f96 fdd925840fb24e89b0f94205c0acc9fb
+#: ff120de4acd049acb1bd45f48960e558 of
 msgid "type"
 msgstr ""
 
@@ -985,24 +962,24 @@ msgstr ""
 #: 105352a161e5411ba6f61e2fc15386f2 1073ecfb4a744835bbfaeda3378c9886
 #: 11c2f9ea736642a693a9574bc0b22721 12dadc55d4ba4391961b514f8a8f42cb
 #: 200ce5183d284487b83477bba2b7c24f 21d89e71e8b84b7ea2afdb3b82c26c07
-#: 24c8e520b8a64e1b985739e53ed463bc 285640291e424cc5beb45388126d03a9
-#: 3033e6f13ed54783b7677f34108bf609 4003d244e62a42b7ab7815a5cfe25417
-#: 55766eb1c16d48b9a0c2abbf506e9b9e 5fa3865947e547d3861918f336602cc1
-#: 60abce50c46249439a7420028aa5b862 672f9b3780724032b26e6627e52d3591
-#: 6afc41742da04070adb35652a57c9da3 789166acd786435a96c38745c7816111
-#: 7e4e194346944a07bc961f3e35ff72bd 8dd5694c8ba7416c96e14265ef887819
-#: 91ee58c33d2848ed8446bec74e5c8c94 94f78f94eef14c5eab8e517a73ffd096
-#: 975fd0fa469044a8a9710bc449dee9bc 9c07a12592d74668bddd9fa2ad17b925
-#: ae2156faa6f64461abb53909ccabe94a aed4fc542c3c49dd9f4ffe40e456a225
-#: afe0c59747ee4a43b812d58594001451 c0f57792bcc94fe6a59671a5e2fb01b3
-#: c553482c64d74d31a199dacf7d704993 df0105c172b14940b0ce5d8fb044beee
-#: discord.abc.Messageable.can_send:4 discord.automod.AutoModRule:69
-#: discord.channel.CategoryChannel:56 discord.channel.ForumChannel:86
-#: discord.channel.TextChannel:82 discord.components.Button:35
-#: discord.components.SelectMenu:70 discord.emoji.Emoji:45
-#: discord.emoji.Emoji:51 discord.emoji.Emoji:57 discord.emoji.Emoji:69
-#: discord.guild.Guild:65 discord.guild.Guild:81 discord.guild.Guild:166
-#: discord.integrations.BotIntegration:33 discord.integrations.Integration:33
+#: 24c8e520b8a64e1b985739e53ed463bc 3033e6f13ed54783b7677f34108bf609
+#: 4003d244e62a42b7ab7815a5cfe25417 55766eb1c16d48b9a0c2abbf506e9b9e
+#: 5fa3865947e547d3861918f336602cc1 60abce50c46249439a7420028aa5b862
+#: 672f9b3780724032b26e6627e52d3591 6afc41742da04070adb35652a57c9da3
+#: 789166acd786435a96c38745c7816111 7e4e194346944a07bc961f3e35ff72bd
+#: 8dd5694c8ba7416c96e14265ef887819 91ee58c33d2848ed8446bec74e5c8c94
+#: 94f78f94eef14c5eab8e517a73ffd096 975fd0fa469044a8a9710bc449dee9bc
+#: 9c07a12592d74668bddd9fa2ad17b925 ae2156faa6f64461abb53909ccabe94a
+#: aed4fc542c3c49dd9f4ffe40e456a225 afe0c59747ee4a43b812d58594001451
+#: c0f57792bcc94fe6a59671a5e2fb01b3 c553482c64d74d31a199dacf7d704993
+#: df0105c172b14940b0ce5d8fb044beee discord.abc.Messageable.can_send:4
+#: discord.automod.AutoModRule:69 discord.channel.CategoryChannel:56
+#: discord.channel.ForumChannel:86 discord.channel.TextChannel:82
+#: discord.components.Button:35 discord.components.SelectMenu:70
+#: discord.emoji.Emoji:45 discord.emoji.Emoji:51 discord.emoji.Emoji:57
+#: discord.emoji.Emoji:69 discord.guild.Guild:65 discord.guild.Guild:81
+#: discord.guild.Guild:166 discord.integrations.BotIntegration:33
+#: discord.integrations.Integration:33
 #: discord.integrations.StreamIntegration:33
 #: discord.integrations.StreamIntegration:39 discord.invite.Invite:71
 #: discord.invite.Invite:84 discord.member.Member:62
@@ -1612,17 +1589,16 @@ msgid ""
 msgstr ""
 
 #: 14645c52282b4897948d349951d1024a 27bc06838ac848c3b0fe0336815bbeac
-#: 29925c0db7454fd6a47a22df42a1d4f7 2ee40ebde871468f8f6de6897dac9c7d
-#: 3666c2339d0a49e19d24271c3bcba8bd 38872441954a4937b4adbe036302e6e8
-#: 75890795eb3141649ba62f2337421e6d 782f366e5ed847f6bf6c788c4f1925ff
-#: 86bbc2437e30463eba135081562d8883 93aac34c639a47d9b97c351311f4762b
-#: 9b0abd1a428341979fb585f00a3923ac 9b4d5894f2f7434e8f7a6db8d32e038b
-#: 9ee6181f007c4587958af0e67b61b634 a3c36d216f0b40c9a7c15665a87b7ddb
-#: ae96e1efcd9d40988c62cd01273b26ea c79512090a914dba8ab3fa21fd75cc6e
-#: cc254c16841e4da597b2cb03121e72a8 ce4e0e456b5b4d0cba2b85d163688001
-#: d6e84ae4d1504d90b0e567c3f8d16ffa d91143a7220f4b34bf74155cb8ae8be8
-#: discord.abc.GuildChannel.delete:16 discord.abc.GuildChannel.move:51
-#: discord.abc.Messageable.trigger_typing:8
+#: 2ee40ebde871468f8f6de6897dac9c7d 3666c2339d0a49e19d24271c3bcba8bd
+#: 38872441954a4937b4adbe036302e6e8 75890795eb3141649ba62f2337421e6d
+#: 782f366e5ed847f6bf6c788c4f1925ff 86bbc2437e30463eba135081562d8883
+#: 93aac34c639a47d9b97c351311f4762b 9b0abd1a428341979fb585f00a3923ac
+#: 9b4d5894f2f7434e8f7a6db8d32e038b 9ee6181f007c4587958af0e67b61b634
+#: a3c36d216f0b40c9a7c15665a87b7ddb ae96e1efcd9d40988c62cd01273b26ea
+#: c79512090a914dba8ab3fa21fd75cc6e cc254c16841e4da597b2cb03121e72a8
+#: ce4e0e456b5b4d0cba2b85d163688001 d6e84ae4d1504d90b0e567c3f8d16ffa
+#: d91143a7220f4b34bf74155cb8ae8be8 discord.abc.GuildChannel.delete:16
+#: discord.abc.GuildChannel.move:51 discord.abc.Messageable.trigger_typing:8
 #: discord.automod.AutoModRule.delete:12 discord.channel.GroupChannel.leave:10
 #: discord.channel.StageChannel.delete_messages:28
 #: discord.channel.VoiceChannel.delete_messages:28
@@ -2340,21 +2316,21 @@ msgstr ""
 msgid "The attachment's height, in pixels. Only applicable to images and videos."
 msgstr ""
 
-#: 16aa462320ca4ecfbe0d2390f73def67 18233b5f8f524f30ae9d138abb7b02e3
-#: 310192c648264bc086b55a67115104f5 32bfaad9dc0e42aba5a769f9c2139168
-#: 4eda47990854400088b81bf7ad06b60b 62e39fcf170c47679b6cd7bf3c126f84
-#: 861419498d894bd392b618fafce8f153 8a0504dbcaec4f5ca2890730091a5b6a
-#: a53dd3b06e6747ce830d157361089b45 cc7340cf856c432a8a37d01487f45c4c
-#: discord.Thread.category_id:4 discord.channel.CategoryChannel:46
-#: discord.channel.ForumChannel:43 discord.channel.ForumChannel:60
-#: discord.channel.ForumChannel:67 discord.channel.ForumChannel:126
-#: discord.channel.StageChannel:51 discord.channel.StageChannel:58
-#: discord.channel.StageChannel:100 discord.channel.TextChannel:43
-#: discord.channel.TextChannel:56 discord.channel.TextChannel:63
-#: discord.channel.TextChannel:106 discord.channel.VoiceChannel:43
-#: discord.channel.VoiceChannel:50 discord.channel.VoiceChannel:87
-#: discord.components.Button:53 discord.guild.Guild:87 discord.guild.Guild:97
-#: discord.guild.Guild:105 discord.guild.Guild:190 discord.guild.Guild:201
+#: 16aa462320ca4ecfbe0d2390f73def67 310192c648264bc086b55a67115104f5
+#: 32bfaad9dc0e42aba5a769f9c2139168 4eda47990854400088b81bf7ad06b60b
+#: 62e39fcf170c47679b6cd7bf3c126f84 861419498d894bd392b618fafce8f153
+#: 8a0504dbcaec4f5ca2890730091a5b6a a53dd3b06e6747ce830d157361089b45
+#: cc7340cf856c432a8a37d01487f45c4c discord.Thread.category_id:4
+#: discord.channel.CategoryChannel:46 discord.channel.ForumChannel:43
+#: discord.channel.ForumChannel:60 discord.channel.ForumChannel:67
+#: discord.channel.ForumChannel:126 discord.channel.StageChannel:51
+#: discord.channel.StageChannel:58 discord.channel.StageChannel:100
+#: discord.channel.TextChannel:43 discord.channel.TextChannel:56
+#: discord.channel.TextChannel:63 discord.channel.TextChannel:106
+#: discord.channel.VoiceChannel:43 discord.channel.VoiceChannel:50
+#: discord.channel.VoiceChannel:87 discord.components.Button:53
+#: discord.guild.Guild:87 discord.guild.Guild:97 discord.guild.Guild:105
+#: discord.guild.Guild:190 discord.guild.Guild:201
 #: discord.guild.Guild.prune_members:42 discord.interactions.Interaction:24
 #: discord.interactions.Interaction:36
 #: discord.interactions.InteractionMetadata:35
@@ -3070,8 +3046,7 @@ msgid ""
 "the view is removed."
 msgstr ""
 
-#: 12c60e70af4046e8ba10b2e84f4f0bb3 332dbf07fc3c4518af8fb62bff79dcac
-#: 67b05d01e4534778912bcc2bc182d711
+#: 332dbf07fc3c4518af8fb62bff79dcac 67b05d01e4534778912bcc2bc182d711
 #: discord.interactions.Interaction.edit_original_message:6
 #: discord.interactions.Interaction.edit_original_response:52
 #: discord.interactions.InteractionMessage.edit:46
@@ -3935,8 +3910,8 @@ msgstr ""
 msgid ""
 "A list of features that the guild has. The features that a guild can have"
 " are subject to arbitrary change by Discord. You can find a catalog of "
-"guild features `here <https://github.com/Delitefully/DiscordLists#guild-"
-"feature-glossary>`_."
+"guild features `here <https://github.com/Delitefully/DiscordLists?tab"
+"=readme-ov-file#guild-feature-glossary>`_."
 msgstr ""
 
 #: 1062d87a1499437b8d0fad52243a2c42 402fe8591df646adab6f23b2f9d9081b
@@ -5755,9 +5730,9 @@ msgstr ""
 msgid "Deletes the custom :class:`Emoji` from the guild."
 msgstr ""
 
-#: 3312ce3f569645198e48c2b41085b692 discord.emoji.Emoji.delete:5
-#: discord.emoji.Emoji.edit:5 discord.guild.Guild.delete_emoji:5
-#: fb90b1ef5ff84a2fa79294890e940a4e ff6de30aac954fea9e2f208059f9cb4c of
+#: discord.emoji.Emoji.delete:5 discord.emoji.Emoji.edit:5
+#: discord.guild.Guild.delete_emoji:5 fb90b1ef5ff84a2fa79294890e940a4e
+#: ff6de30aac954fea9e2f208059f9cb4c of
 msgid "You must have :attr:`~Permissions.manage_emojis` permission to do this."
 msgstr ""
 
@@ -6964,6 +6939,22 @@ msgstr ""
 #: 58517cfb8d7e46efa7aad63030e3d132 discord.Member.guild_avatar:1 of
 msgid ""
 "Returns an :class:`Asset` for the guild avatar the member has. If "
+"unavailable, ``None`` is returned."
+msgstr ""
+
+#: be1c1bedfca64980a23a4e6ce258f0d1 discord.Member.display_banner:1 of
+msgid "Returns the member's display banner."
+msgstr ""
+
+#: 66a66f71e0fe488ca806a75ad79389bd discord.Member.display_banner:3 of
+msgid ""
+"For regular members this is just their banner, but if they have a guild "
+"specific banner then that is returned instead."
+msgstr ""
+
+#: 11a30a6056824ad3b282435d7c3ac74f discord.Member.guild_banner:1 of
+msgid ""
+"Returns an :class:`Asset` for the guild banner the member has. If "
 "unavailable, ``None`` is returned."
 msgstr ""
 
@@ -10709,7 +10700,7 @@ msgstr ""
 msgid "The newly created stage instance."
 msgstr ""
 
-#: 155260cb1d8e4613b0448e82854766f1 9c9686e2d0a14683a181e9e88b509a14
+#: 155260cb1d8e4613b0448e82854766f1
 #: discord.channel.StageChannel.create_instance:25
 #: discord.channel.StageChannel.fetch_instance:8 of
 msgid ":class:`StageInstance`"
@@ -11856,35 +11847,35 @@ msgid ""
 ":meth:`.abc.Messageable.send` for more information."
 msgstr ""
 
-#: 57b7e0b2c9594f87a4f6a794d8f8311d 6e9e9dc0d2334596a368697a50b9bcdf
+#: 57b7e0b2c9594f87a4f6a794d8f8311d
 #: discord.interactions.Interaction.edit_original_message:3
 #: discord.interactions.Interaction.edit_original_response:49
 #: discord.interactions.InteractionMessage.edit:43 of
 msgid "The newly edited message."
 msgstr ""
 
-#: bac68fd9b9b94a4db357840571c0db30 c9d4555a10334b05844245ef0bb77543
+#: c9d4555a10334b05844245ef0bb77543
 #: discord.interactions.Interaction.edit_original_message:4
 #: discord.interactions.Interaction.edit_original_response:50
 #: discord.interactions.InteractionMessage.edit:44 of
 msgid ":class:`InteractionMessage`"
 msgstr ""
 
-#: 78d68e26f3c249a587002c93966ab85f b305b4b190304f928eacfe9998ad4a2b
+#: b305b4b190304f928eacfe9998ad4a2b
 #: discord.interactions.Interaction.edit_original_message:7
 #: discord.interactions.Interaction.edit_original_response:53
 #: discord.interactions.InteractionMessage.edit:47 of
 msgid "Edited a message that is not yours."
 msgstr ""
 
-#: 0e2e17416ca94d62957d593de02de4f8 4fd1e2553b774feead560beb83cb9a10
+#: 0e2e17416ca94d62957d593de02de4f8
 #: discord.interactions.Interaction.edit_original_message:8
 #: discord.interactions.Interaction.edit_original_response:54
 #: discord.interactions.InteractionMessage.edit:48 of
 msgid "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``"
 msgstr ""
 
-#: 02602cf743b24b9c840aa0cd9efd0edd a5114f88c58f463b828b0bbcdf8ea0cf
+#: a5114f88c58f463b828b0bbcdf8ea0cf
 #: discord.interactions.Interaction.edit_original_message:9
 #: discord.interactions.Interaction.edit_original_response:55
 #: discord.interactions.InteractionMessage.edit:49
@@ -14575,4 +14566,14 @@ msgstr ""
 #: discord.webhook.async_.PartialWebhookChannel:1 of
 msgid "Represents a partial channel for webhooks."
 msgstr ""
+
+#~ msgid ""
+#~ "A list of features that the guild"
+#~ " has. The features that a guild "
+#~ "can have are subject to arbitrary "
+#~ "change by Discord. You can find a"
+#~ " catalog of guild features `here "
+#~ "<https://github.com/Delitefully/DiscordLists#guild-feature-"
+#~ "glossary>`_."
+#~ msgstr ""
 

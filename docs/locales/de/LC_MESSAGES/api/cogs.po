@@ -81,7 +81,7 @@ msgid "If this listener should only be called once after each cog load. Defaults
 msgstr "If this listener should only be called once after each cog load. Defaults to false."
 
 msgid "Raises"
-msgstr "Verursacht"
+msgstr "Raises"
 
 msgid "The function is not a coroutine function or a string was not passed as     the name."
 msgstr "The function is not a coroutine function or a string was not passed as     the name."

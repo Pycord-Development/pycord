@@ -12,169 +12,169 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Application Info"
-msgstr "Информация о приложении"
+msgstr "Application Info"
 
 msgid "Represents the application info for the bot provided by Discord."
-msgstr "Представляет информацию о приложении для бота, предоставленную Discord."
+msgstr "Represents the application info for the bot provided by Discord."
 
 msgid "The application ID."
-msgstr "ID приложения."
+msgstr "The application ID."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
 
 msgid "The application name."
-msgstr "Название приложения."
+msgstr "The application name."
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The application owner."
-msgstr "Владелец приложения."
+msgstr "The application owner."
 
 msgid ":class:`User`"
 msgstr ":class:`User`"
 
 msgid "The application's team."
-msgstr "Команда приложения."
+msgstr "The application's team."
 
 msgid "Optional[:class:`Team`]"
 msgstr "Optional[:class:`Team`]"
 
 msgid "The application description."
-msgstr "Описание приложения."
+msgstr "The application description."
 
 msgid "Whether the bot can be invited by anyone or if it is locked to the application owner."
-msgstr "Может ли бот быть приглашен кем угодно, или он закрыт только для владельца приложения."
+msgstr "Whether the bot can be invited by anyone or if it is locked to the application owner."
 
 msgid ":class:`bool`"
 msgstr ":class:`bool`"
 
 msgid "Whether the bot requires the completion of the full OAuth2 code grant flow to join."
-msgstr "Требуется ли боту завершить полный поток предоставления кода OAuth2, чтобы присоединиться."
+msgstr "Whether the bot requires the completion of the full OAuth2 code grant flow to join."
 
 msgid "A list of RPC origin URLs, if RPC is enabled."
-msgstr "Список URL-адресов RPC, если RPC включен."
+msgstr "A list of RPC origin URLs, if RPC is enabled."
 
 msgid "Optional[List[:class:`str`]]"
 msgstr "Optional[List[:class:`str`]]"
 
 msgid "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
-msgstr "Если это приложение является игрой, продаваемой в Discord, это поле будет сводкой страницы магазина его основной SKU."
+msgstr "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
 
 msgid "The hex encoded key for verification in interactions and the GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_."
-msgstr "Ключ в шестнадцатеричной кодировке для проверки во взаимодействиях и GameSDK `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_."
+msgstr "The hex encoded key for verification in interactions and the GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_."
 
 msgid "If this application is a game sold on Discord, this field will be the guild to which it has been linked to."
-msgstr "Если это приложение является игрой, продаваемой в Discord, это поле будет сервером, к которому она была привязана."
+msgstr "If this application is a game sold on Discord, this field will be the guild to which it has been linked to."
 
 msgid "Optional[:class:`int`]"
 msgstr "Optional[:class:`int`]"
 
 msgid "If this application is a game sold on Discord, this field will be the id of the \"Game SKU\" that is created, if it exists."
-msgstr "Если это приложение является игрой, продаваемой в Discord, это поле будет идентификатором \"Game SKU\", который создается, если он существует."
+msgstr "If this application is a game sold on Discord, this field will be the id of the \"Game SKU\" that is created, if it exists."
 
 msgid "If this application is a game sold on Discord, this field will be the URL slug that links to the store page."
-msgstr "Если это приложение является игрой, продаваемой в Discord, это поле будет URL-адресом, который ссылается на страницу в магазине."
+msgstr "If this application is a game sold on Discord, this field will be the URL slug that links to the store page."
 
 msgid "Optional[:class:`str`]"
 msgstr "Optional[:class:`str`]"
 
 msgid "The application's terms of service URL, if set."
-msgstr "URL-адрес условий использования приложения, если установлено."
+msgstr "The application's terms of service URL, if set."
 
 msgid "The application's privacy policy URL, if set."
-msgstr "URL-адрес политики конфиденциальности приложения, если установлено."
+msgstr "The application's privacy policy URL, if set."
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "Retrieves the application's icon asset, if any."
-msgstr "Возвращает иконку приложения, если имеется."
+msgstr "Retrieves the application's icon asset, if any."
 
 msgid "Retrieves the cover image on a store embed, if any."
-msgstr "Возвращает обложку из магазина, если имеется."
+msgstr "Retrieves the cover image on a store embed, if any."
 
 msgid "This is only available if the application is a game sold on Discord."
-msgstr "Это доступно только в том случае, если приложение продается в Discord."
+msgstr "This is only available if the application is a game sold on Discord."
 
 msgid "If this application is a game sold on Discord, this field will be the guild to which it has been linked."
-msgstr "Если это приложение является игрой, продаваемой в Discord, это поле будет сервером, к которому она была привязана."
+msgstr "If this application is a game sold on Discord, this field will be the guild to which it has been linked."
 
 msgid "Represents a partial AppInfo given by :func:`~discord.abc.GuildChannel.create_invite`"
-msgstr "Представляет частичную AppInfo, предоставленную :func:`~discord.abc.GuildChannel.create_invite`"
+msgstr "Represents a partial AppInfo given by :func:`~discord.abc.GuildChannel.create_invite`"
 
 msgid "Represents an application team for a bot provided by Discord."
-msgstr "Представляет собой команду разработчиков бота, предоставляемого Discord."
+msgstr "Represents an application team for a bot provided by Discord."
 
 msgid "The team ID."
-msgstr "Идентификатор команды."
+msgstr "The team ID."
 
 msgid "The team name."
-msgstr "Название команды."
+msgstr "The team name."
 
 msgid "The team's owner ID."
-msgstr "Идентификатор владельца команды."
+msgstr "The team's owner ID."
 
 msgid "A list of the members in the team."
-msgstr "Список участников команды."
+msgstr "A list of the members in the team."
 
 msgid "List[:class:`TeamMember`]"
 msgstr "List[:class:`TeamMember`]"
 
 msgid "Retrieves the team's icon asset, if any."
-msgstr "Возвращает иконку команды, если имеется."
+msgstr "Retrieves the team's icon asset, if any."
 
 msgid "The team's owner."
-msgstr "Владелец команды."
+msgstr "The team's owner."
 
 msgid "Represents a team member in a team."
-msgstr "Представляет собой участника команды."
+msgstr "Represents a team member in a team."
 
 msgid "Checks if two team members are equal."
-msgstr "Проверяет, равны ли два участника команды."
+msgstr "Checks if two team members are equal."
 
 msgid "Checks if two team members are not equal."
-msgstr "Проверяет, не равны ли два участника команды."
+msgstr "Checks if two team members are not equal."
 
 msgid "Return the team member's hash."
-msgstr "Возвращает хеш участника команды."
+msgstr "Return the team member's hash."
 
 msgid "Returns the team member's name with discriminator or global_name."
-msgstr "Возвращает имя участника команды с дискриминатором или глобальным именем."
+msgstr "Returns the team member's name with discriminator or global_name."
 
 msgid "The team member's username."
-msgstr "Имя участника команды."
+msgstr "The team member's username."
 
 msgid "The team member's unique ID."
-msgstr "Уникальный идентификатор участника команды."
+msgstr "The team member's unique ID."
 
 msgid "The team member's discriminator. This is given when the username has conflicts."
-msgstr "Дискриминатор участника команды. Дается когда имена пользователей конфликтуют."
+msgstr "The team member's discriminator. This is given when the username has conflicts."
 
 msgid "If the user has migrated to the new username system, this will always be \"0\"."
-msgstr "Если пользователь мигрировал в новую систему имени пользователя, это всегда будет \"0\"."
+msgstr "If the user has migrated to the new username system, this will always be \"0\"."
 
 msgid "The team member's global name."
-msgstr "Глобальное имя участника команды."
+msgstr "The team member's global name."
 
 msgid "The avatar hash the team member has. Could be ``None``."
-msgstr "Хеш аватара участника команды. Может быть ``None``."
+msgstr "The avatar hash the team member has. Could be ``None``."
 
 msgid "Specifies if the user is a bot account."
-msgstr "Определяет, является ли пользователь учетной записью бота."
+msgstr "Specifies if the user is a bot account."
 
 msgid "The team that the member is from."
-msgstr "Команда, в которой состоит участник."
+msgstr "The team that the member is from."
 
 msgid ":class:`Team`"
 msgstr ":class:`Team`"
 
 msgid "The membership state of the member (e.g. invited or accepted)"
-msgstr "Статус членства участника (например, приглашенный или принятый)"
+msgstr "The membership state of the member (e.g. invited or accepted)"
 
 msgid ":class:`TeamMembershipState`"
 msgstr ":class:`TeamMembershipState`"

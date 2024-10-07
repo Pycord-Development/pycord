@@ -33,7 +33,7 @@ msgid "Called when an application command is received."
 msgstr "Called when an application command is received."
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "The ApplicationContext associated to the command being received."
 msgstr "The ApplicationContext associated to the command being received."

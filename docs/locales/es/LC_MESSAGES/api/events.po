@@ -555,13 +555,13 @@ msgid "status"
 msgstr "status"
 
 msgid "activity"
-msgstr "actividad"
+msgstr "activity"
 
 msgid "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
 msgstr "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be enabled."
 
 msgid "Called when a :class:`Member` changes their :class:`VoiceState`."
-msgstr "Llamado cuando un :class:`Member` cambia su :class:`VoiceState`."
+msgstr "Called when a :class:`Member` changes their :class:`VoiceState`."
 
 msgid "The following, but not limited to, examples illustrate when this event is called:"
 msgstr "The following, but not limited to, examples illustrate when this event is called:"
@@ -585,10 +585,10 @@ msgid "The member whose voice states changed."
 msgstr "The member whose voice states changed."
 
 msgid "The voice state prior to the changes."
-msgstr "El estado de voz antes de los cambios."
+msgstr "The voice state prior to the changes."
 
 msgid "The voice state after the changes."
-msgstr "El estado de voz después de los cambios."
+msgstr "The voice state after the changes."
 
 msgid "Called when a :class:`User` updates their profile."
 msgstr "Called when a :class:`User` updates their profile."

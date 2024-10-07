@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "API Reference"
-msgstr "API Referenz"
+msgstr "API Reference"
 
 msgid "The reference manual that follows details the API of Pycord's bridge command extension module."
 msgstr "The reference manual that follows details the API of Pycord's bridge command extension module."
@@ -66,7 +66,7 @@ msgid "This is similar to :class:`.Bot` except that it is inherited from :class:
 msgstr "This is similar to :class:`.Bot` except that it is inherited from :class:`.ext.commands.AutoShardedBot` instead."
 
 msgid "Event Reference"
-msgstr "Übersicht der Events"
+msgstr "Event Reference"
 
 msgid "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the bridge extension module."
 msgstr "These events function similar to :ref:`the regular events <discord-api-events>`, except they are custom to the bridge extension module."
@@ -84,7 +84,7 @@ msgid "An event that is called when a command is found and is about to be invoke
 msgstr "An event that is called when a command is found and is about to be invoked."
 
 msgid "This event is called regardless of whether the command itself succeeds via error or completes."
-msgstr "Dieses Ereignis wird unabhängig davon aufgerufen, ob der Befehl erfolgreich ausgeführt wird oder einen Fehler verursacht."
+msgstr "This event is called regardless of whether the command itself succeeds via error or completes."
 
 msgid "An event that is called when a command has completed its invocation."
 msgstr "An event that is called when a command has completed its invocation."
@@ -147,7 +147,7 @@ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 
 msgid "A decorator that registers a coroutine as a local error handler."
-msgstr "Ein Decorator, der eine Coroutine als lokalen Fehlerbehandler registriert."
+msgstr "A decorator that registers a coroutine as a local error handler."
 
 msgid "This error handler is limited to the command it is defined to. However, higher scope handlers (per-cog and global) are still invoked afterwards as a catch-all. This handler also functions as the handler for both the prefixed and slash versions of the command."
 msgstr "This error handler is limited to the command it is defined to. However, higher scope handlers (per-cog and global) are still invoked afterwards as a catch-all. This handler also functions as the handler for both the prefixed and slash versions of the command."
@@ -159,7 +159,7 @@ msgid "The coroutine to register as the local error handler."
 msgstr "The coroutine to register as the local error handler."
 
 msgid "Raises"
-msgstr "Verursacht"
+msgstr "Raises"
 
 msgid "The coroutine passed is not actually a coroutine."
 msgstr "The coroutine passed is not actually a coroutine."
