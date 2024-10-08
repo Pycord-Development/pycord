@@ -513,7 +513,9 @@ class GuildChannel:
         except KeyError:
             pass
         else:
-            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+            if isinstance(
+                default_reaction_emoji, _EmojiTag
+            ):  # GuildEmoji, PartialEmoji
                 default_reaction_emoji = default_reaction_emoji._to_partial()
             elif isinstance(default_reaction_emoji, int):
                 default_reaction_emoji = PartialEmoji(
@@ -523,7 +525,7 @@ class GuildChannel:
                 default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
             else:
                 raise InvalidArgument(
-                    "default_reaction_emoji must be of type: Emoji | int | str"
+                    "default_reaction_emoji must be of type: GuildEmoji | int | str"
                 )
 
             options["default_reaction_emoji"] = (
@@ -1792,7 +1794,7 @@ class Messageable:
             "Message": "send_messages",
             "Embed": "embed_links",
             "File": "attach_files",
-            "Emoji": "use_external_emojis",
+            "GuildEmoji": "use_external_emojis",
             "GuildSticker": "use_external_stickers",
         }
         # Can't use channel = await self._get_channel() since its async
@@ -1817,7 +1819,7 @@ class Messageable:
                         mapping.get(type(obj).__name__) or mapping[obj.__name__]
                     )
 
-                if type(obj).__name__ == "Emoji":
+                if type(obj).__name__ == "GuildEmoji":
                     if (
                         obj._to_partial().is_unicode_emoji
                         or obj.guild_id == channel.guild.id

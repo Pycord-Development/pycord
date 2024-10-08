@@ -769,7 +769,7 @@ class Intents(BaseFlags):
 
         This also corresponds to the following attributes and classes in terms of cache:
 
-        - :class:`Emoji`
+        - :class:`GuildEmoji`
         - :class:`GuildSticker`
         - :meth:`Client.get_emoji`
         - :meth:`Client.get_sticker`
