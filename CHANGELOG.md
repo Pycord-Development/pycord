@@ -40,7 +40,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Guild.create_test_entitlement()` and `User.create_test_entitlement()` using the
   guild/user ID instead of the application ID.
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
-- Fixed commands with `BucketType.cagegory` cooldown not working in DMs ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
+- Fixed commands with `BucketType.cagegory` cooldown not working in DMs
+  ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
 
 ### Changed
 
