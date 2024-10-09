@@ -73,6 +73,7 @@ class BucketType(Enum):
             return (
                 msg.channel.category.id
                 if isinstance(msg.channel, discord.abc.GuildChannel)
+                and channel.category
                 and msg.channel.category
                 else msg.channel.id
             )
