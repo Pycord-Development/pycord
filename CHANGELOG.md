@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added new `Subscription` object and related methods/events.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Fixed
 
@@ -50,11 +52,18 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
 - ⚠️ **Removed support for Python 3.8.**
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
+- `Entitlement.ends_at` can now be `None`.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Deprecated
 
 - Deprecated `AppInfo.summary` in favor of `AppInfo.description`.
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+
+### Fixed
+
+- Fixed `AttributeError` when trying to consume a consumable entitlement.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ## [2.6.1] - 2024-09-15
 
