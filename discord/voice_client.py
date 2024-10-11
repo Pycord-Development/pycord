@@ -990,9 +990,8 @@ class VoiceClient(VoiceProtocol):
 
         self.checked_add("timestamp", opus.Encoder.SAMPLES_PER_FRAME, 4294967295)
 
-    def played_time(self) -> datetime.timedelta:
+    def elapsed(self) -> datetime.timedelta:
         """Returns the elapsed time of the playing audio."""
         if self._player:
             return datetime.timedelta(milliseconds=self._player.played_frames() * 20)
-        else:
-            return datetime.timedelta()
+        return datetime.timedelta()
