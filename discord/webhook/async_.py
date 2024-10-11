@@ -512,6 +512,10 @@ class AsyncWebhookAdapter:
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
+                    "duration_secs": file.duration_secs,
+                    "waveform": file.waveform,
+                    # TODO: Fix content_type
+                    # "content_type": "audio/mp3",
                 }
             )
             form.append(
@@ -519,9 +523,12 @@ class AsyncWebhookAdapter:
                     "name": f"files[{index}]",
                     "value": file.fp,
                     "filename": file.filename,
-                    "content_type": "application/octet-stream",
+                    # TODO: Fix content_type
+                    # "content_type": "application/octet-stream",
+                    # "content_type": "audio/mp3",
                 }
             )
+        payload["flags"] = 1 << 13
         payload["attachments"] = attachments
         form[0]["value"] = utils._to_json(payload)
 
@@ -628,6 +635,7 @@ def handle_message_parameters(
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
+    voice_message: bool = False,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")
@@ -658,7 +666,9 @@ def handle_message_parameters(
     if username:
         payload["username"] = username
 
-    flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
+    flags = MessageFlags(
+        suppress_embeds=suppress, ephemeral=ephemeral, is_voice_message=voice_message
+    )
     payload["flags"] = flags.value
 
     if applied_tags is not MISSING:
@@ -694,6 +704,10 @@ def handle_message_parameters(
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
+                    "waveform": file.waveform,
+                    "duration_secs": file.duration_secs,
+                    # TODO: Fix content_type
+                    "content_type": "audio/wav",
                 }
             )
 
@@ -1581,6 +1595,7 @@ class Webhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
+        voice_message: bool = MISSING,
         wait: Literal[True],
         delete_after: float = None,
     ) -> WebhookMessage: ...
@@ -1604,6 +1619,7 @@ class Webhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
+        voice_message: bool = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
     ) -> None: ...
@@ -1626,6 +1642,7 @@ class Webhook(BaseWebhook):
         thread: Snowflake = MISSING,
         thread_name: str | None = None,
         applied_tags: list[Snowflake] = MISSING,
+        voice_message: bool = MISSING,
         wait: bool = False,
         delete_after: float = None,
     ) -> WebhookMessage | None:
@@ -1708,6 +1725,10 @@ class Webhook(BaseWebhook):
             The poll to send.
 
             .. versionadded:: 2.6
+        voice_message: :class:`bool`
+            If the file should be treated as a voice message.
+
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -1785,6 +1806,7 @@ class Webhook(BaseWebhook):
             applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            voice_message=voice_message,
         )
         adapter = async_context.get()
         thread_id: int | None = None
