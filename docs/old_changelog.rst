@@ -625,7 +625,7 @@ Bug Fixes
 - Fix out of order files being sent in webhooks when there are 10 files.
 - |commands| Extensions that fail internally due to ImportError will no longer raise :exc:`~.ext.commands.ExtensionNotFound`. (:dpy-issue:`2244`, :dpy-issue:`2275`, :dpy-issue:`2291`)
 - |commands| Updating the :attr:`Paginator.suffix <.ext.commands.Paginator.suffix>` will not cause out of date calculations. (:dpy-issue:`2251`)
-- |commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, :dpy-issue:`2374`)
+- |commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, 2374)
 - |commands| Fix issue with paginator prefix being ``None`` causing empty pages. (:dpy-issue:`2471`)
 - |commands| :class:`~.commands.Greedy` now ignores parsing errors rather than propagating them.
 - |commands| :meth:`Command.can_run <.ext.commands.Command.can_run>` now checks whether a command is disabled.
