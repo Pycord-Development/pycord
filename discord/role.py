@@ -167,8 +167,7 @@ class Role(Hashable):
             operators on the role objects themselves.
 
     managed: :class:`bool`
-        Indicates if the role is managed by the guild through some form of
-        integrations such as Twitch.
+        Indicates if the role is managed by the guild. This is true if :meth:`Role.is_integration`, :meth:`Role.is_premium_subscriber`, or :meth:`Role.is_bot_managed` is ``True``.
     mentionable: :class:`bool`
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
@@ -287,7 +286,8 @@ class Role(Hashable):
         return self.tags is not None and self.tags.is_premium_subscriber()
 
     def is_integration(self) -> bool:
-        """Whether the role is managed by an integration.
+        """Whether the role is managed by the guild through some form of
+        integrations such as Twitch.
 
         .. versionadded:: 1.6
         """
