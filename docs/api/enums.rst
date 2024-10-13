@@ -2500,3 +2500,22 @@ of :class:`enum.Enum`.
     .. attribute:: private_channel
 
         The interaction is in a private DM or group DM channel.
+
+
+.. class:: SubscriptionStatus
+
+    Represents a subscription's status.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: active
+
+        The subscription is active and is scheduled to renew.
+
+    .. attribute:: ending
+
+        The subscription is active but will not renew.
+
+    .. attribute:: inactive
+
+        The subscription is inactive and the subscription owner is not being charged.
