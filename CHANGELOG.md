@@ -26,6 +26,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Added `cache_app_emojis` parameter to `Client`.
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
+- Added `elapsed` method to `VoiceClient`.
+  ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
 
@@ -44,6 +46,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Guild.create_test_entitlement()` and `User.create_test_entitlement()` using the
   guild/user ID instead of the application ID.
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
+- Fixed commands with `BucketType.cagegory` cooldown causing issues in private channels.
+  ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
 
 ### Changed
 
