@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2024-10-11 09:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,9 +58,9 @@ msgstr ""
 #: e235bd384d1b429d8285ad37f2d4a591
 #: 7a0f3e4603c446ee80192ad6a4c2a275
 #: d084c891f79846a089b9181a6952a853
-#: 94c84324850542b18825d9ad059adfca
-#: 966fc85ec97e4462a08892e3238a8de7
-#: b4007756f3b14b119341325d85618f45
+#: d084c891f79846a089b9181a6952a853
+#: d084c891f79846a089b9181a6952a853
+#: d084c891f79846a089b9181a6952a853
 msgid "Parameters"
 msgstr ""
 
@@ -96,9 +96,9 @@ msgstr ""
 #: 3c6d52d4b8354e06b6ce0fcf3b086c85
 #: eaf3c063f00646c9a476d69b6683b0ac
 #: 7b6ea48218734b5d9fdac096eb1869e9
-#: cf3a47a3633248deb7dd10cf5aabac09
-#: bfc10ea03c514b9788b46e71d6bb66fd
-#: b91f8eeb2b9144e8ae6b7ef21d93a779
+#: 7b6ea48218734b5d9fdac096eb1869e9
+#: 7b6ea48218734b5d9fdac096eb1869e9
+#: 7b6ea48218734b5d9fdac096eb1869e9
 msgid "Return type"
 msgstr ""
 
@@ -131,15 +131,19 @@ msgstr ""
 msgid "If nothing is found that matches the attributes passed, then ``None`` is returned."
 msgstr ""
 
+#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:22
 #: ../../../discord/utils.py:docstring of discord.utils.get:16
 #: ../../../discord/utils.py:docstring of discord.utils.get_or_fetch:28
 #: 3924fb9efa21466e8ad1606af419115d
 #: 3521bfb272664038a752ad0c4215b894
+#: 38fdef3a74ae45a48840ee240fd21411
 msgid "Examples"
 msgstr ""
 
+#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:23
 #: ../../../discord/utils.py:docstring of discord.utils.get:17
 #: ebf141cbc71a4423aa0f9536eaa183a4
+#: 19a0e7b1793540e8a019407150d0b27a
 msgid "Basic usage:"
 msgstr ""
 
@@ -214,7 +218,7 @@ msgstr ""
 #: 96d038e7361c4ea69e5d5fb8389f92dd
 #: 8035ef1de15d4808923a8f8d047577bc
 #: 36f7538b818747bba0d09bfdca701d0c
-#: 2518caf557d74fe89605eb9ccea011f7
+#: 36f7538b818747bba0d09bfdca701d0c
 msgid "Returns"
 msgstr ""
 
@@ -773,25 +777,33 @@ msgid "Possible values for the option. Accepts an iterable of :class:`str`, a ca
 msgstr ""
 
 #: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:12
+#: c0f0a3612cc74a278647f21b62775366
+msgid "An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments: the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.  .. versionadded:: 2.7"
+msgstr ""
+
+#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:12
+#: 4f8f6a20ccb74da0bedc2af0272683dd
+msgid "An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments: the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive."
+msgstr ""
+
+#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:18
 #: 42efe68651a145729d12aa25efb1c936
 msgid "A wrapped callback for the autocomplete."
 msgstr ""
 
-#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:13
+#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:19
 #: 62cb574c35064e82b913901dea277846
 msgid "Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]"
 msgstr ""
 
-#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:15
-#: 3701cd6df81947f6b20b79fcfdf29842
-msgid "Autocomplete cannot be used for options that have specified choices."
+#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:36
+#: 7fef041098264e3091c78a0aee99f4cb
+msgid "With filter parameter:"
 msgstr ""
 
-#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:18
-#: ../../../discord/utils.py:docstring of discord.utils.filter_params:12
-#: 38fdef3a74ae45a48840ee240fd21411
-#: f0afb50f77a84f8a8f6c19c3c315c4c4
-msgid "Example"
+#: ../../../discord/utils.py:docstring of discord.utils.basic_autocomplete:44
+#: 3701cd6df81947f6b20b79fcfdf29842
+msgid "Autocomplete cannot be used for options that have specified choices."
 msgstr ""
 
 #: ../../../discord/utils.py:docstring of discord.utils.as_chunks:1
@@ -839,6 +851,11 @@ msgstr ""
 msgid "Key to value pairs where the key's contents would be moved to the value, or if the value is None, remove key's contents (see code example)."
 msgstr ""
 
+#: ../../../discord/utils.py:docstring of discord.utils.filter_params:12
+#: 38fdef3a74ae45a48840ee240fd21411
+msgid "Example"
+msgstr ""
+
 #: ../../../discord/utils.py:docstring of discord.utils.warn_deprecated:1
 #: 8da4e468cec14bc380a9febfd1ecb5f6
 msgid "Warn about a deprecated function, with the ability to specify details about the deprecation. Emits a DeprecationWarning."
@@ -852,35 +869,35 @@ msgstr ""
 #: ../../../discord/utils.py:docstring of discord.utils.deprecated:5
 #: ../../../discord/utils.py:docstring of discord.utils.warn_deprecated:8
 #: 1aba31edeed24fc0bf925b49f4d01770
-#: ed5919ff292b4888b37ac2b10a02a9e3
+#: 1aba31edeed24fc0bf925b49f4d01770
 msgid "A recommended alternative to the function."
 msgstr ""
 
 #: ../../../discord/utils.py:docstring of discord.utils.deprecated:8
 #: ../../../discord/utils.py:docstring of discord.utils.warn_deprecated:11
 #: b9b3be6c3207442c804878da48136de5
-#: 5b13e7161cf943cab770cdf8f1dbc614
+#: b9b3be6c3207442c804878da48136de5
 msgid "The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where the patch version is optional."
 msgstr ""
 
 #: ../../../discord/utils.py:docstring of discord.utils.deprecated:12
 #: ../../../discord/utils.py:docstring of discord.utils.warn_deprecated:15
 #: a626227cb070430481695b7033d08037
-#: 0d693d37c2264cc7b13fe7d0cfabc551
+#: a626227cb070430481695b7033d08037
 msgid "The version in which the function is planned to be removed. This should be in the format ``major.minor(.patch)``, where the patch version is optional."
 msgstr ""
 
 #: ../../../discord/utils.py:docstring of discord.utils.deprecated:16
 #: ../../../discord/utils.py:docstring of discord.utils.warn_deprecated:19
 #: f683b72936684971a741eb6883ee293c
-#: 99f204a0f2054cc1ba92951549f7fbb6
+#: f683b72936684971a741eb6883ee293c
 msgid "A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub issue/PR."
 msgstr ""
 
 #: ../../../discord/utils.py:docstring of discord.utils.deprecated:20
 #: ../../../discord/utils.py:docstring of discord.utils.warn_deprecated:23
 #: c47d7142272b415fb0e9cc38033dabb9
-#: ae34e1033c72447ba27713944dacffcb
+#: c47d7142272b415fb0e9cc38033dabb9
 msgid "The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3."
 msgstr ""
 

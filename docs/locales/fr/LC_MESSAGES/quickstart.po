@@ -21,13 +21,13 @@ msgid "A Minimal Bot"
 msgstr "Un Bot Simple"
 
 msgid "Let's make a bot that responds to a specific message and walk you through it."
-msgstr "Faisons, ensemble, un Bot qui répond à un message en particulier."
+msgstr "Nous allons programmer un Bot qui répond à un message en particulier."
 
 msgid "It looks something like this:"
 msgstr "Cela devrait ressembler à ça :"
 
 msgid "Because this example utilizes message content, it requires the :attr:`Intents.message_content` privileged intent."
-msgstr "Parce que cet exemple utilise le contenu des messages, nous avons besoin de l'intention particulière :  :attr:`Intents.message_content`."
+msgstr "Puisque cet exemple utilise le contenu des messages, nous avons besoin de l'Intent privé   :attr:`Intents.message_content`."
 
 msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``discord.py`` as that'll conflict with the library."
 msgstr "Nommons ce fichier ``example_bot.py``. Assurez-vous de ne pas le nommer ``discord.py``, cela rentrera en conflit avec le nom de la bibliothèque."
@@ -36,16 +36,16 @@ msgid "There's a lot going on here, so let's walk you through it step by step:"
 msgstr "Il y a beaucoup de choses à voir et à comprendre ici, allons-y pas à pas :"
 
 msgid "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
-msgstr "La première ligne importe juste la bibliothèque, si les erreurs `ModuleNotFoundError` ou `ImportError` apparaissent alors retournez à la section :ref:`installing` et assurez-vous d'avoir correctement installé la bibliothèque."
+msgstr "La première ligne importe juste la bibliothèque. Si les erreurs `ModuleNotFoundError` ou `ImportError` apparaissent alors retournez à la section :ref:`installing` et assurez-vous d'avoir correctement installé la bibliothèque."
 
 msgid "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
 msgstr "Ensuite, nous créons une instance de :class:`Client` . Ce client est notre connexion à Discord."
 
 msgid "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
-msgstr "Après cela, nous utilisons le décorateur :meth:`Client.event` pour enregistrer un événement. Il y a de nombreux événements disponibles dans cette bibliothèque. Comme la bibliothèque est asynchrone, nous programmons avec des \"rappels\"."
+msgstr "Après cela, nous utilisons le décorateur :meth:`Client.event` pour enregistrer un événement. Il y a de nombreux événements disponibles dans cette bibliothèque. Comme la bibliothèque est asynchrone, nous programmons avec des \"fonctions de rappel\"."
 
 msgid "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."
-msgstr "Un rappel est une fonction appelée quand un événement se produit. Dans notre cas, l'événement :func:`on_ready` est appelé quand le bot a fini de se connecter et de se paramétrer donc quand il est prêt à fonctionner. Tandis que l'événement :func:`on_message` est appelé quand le bot a reçu un message."
+msgstr "Une fonction de rappel est appelée quand un événement se produit. Dans notre cas, l'événement :func:`on_ready` est appelé quand le bot a fini de se connecter et de se paramétrer, donc quand il est prêt à fonctionner. Tandis que l'événement :func:`on_message` est appelé quand le bot a reçu un message."
 
 msgid "Since the :func:`on_message` event triggers for *every* message received, we have to make sure that we ignore messages from ourselves. We do this by checking if the :attr:`Message.author` is the same as the :attr:`Client.user`."
 msgstr "Sachant que l'événement :func:`on_message` est actionné pour *tous* les messages reçus, nous devons nous assurer d'ignorer nos propres messages. On fait cela en vérifiant que le :attr:`Message.author` et le :attr:`Client.user` ne sont pas les mêmes."
@@ -84,7 +84,7 @@ msgid "Next, we create an instance of :class:`.Bot`. This is different from :cla
 msgstr "Ensuite, nous créons une instance de :class:`Bot`. Il diffère de :class:`Client`, puisqu'il supporte la création de commandes slashs ainsi que plein d'autres fonctionnalités tout en héritant des fonctionnalités de :class:`Client`."
 
 msgid "We then use the :meth:`.Bot.slash_command` decorator to register a new slash command. The ``guild_ids`` attribute contains a list of guilds where this command will be active. If you omit it, the command will be globally available, and may take up to an hour to register."
-msgstr "Puis, nous utilisons le décorateur :meth:`Bot.slash_command` pour enregistrer une nouvelle commande slash. L'attribut ``guilds_ids`` contient une liste de serveur discord où la commande sera fonctionnelle. Si vous ne le mettez pas, les commandes seront globalement actives (fonctionnelles sur tous les serveurs), et cela risque de prendre une heure à s'enregistrer."
+msgstr "Puis, nous utilisons le décorateur :meth:`Bot.slash_command` pour enregistrer une nouvelle commande slash. L'attribut ``guilds_ids`` contient une liste de serveur discord où la commande sera fonctionnelle. Si vous ne le mettez pas, les commandes seront globalement actives (fonctionnelles sur tous les serveurs), et elles pourront prendre jusqu'à une heure à s'enregistrer."
 
 msgid "Afterwards, we trigger a response to the slash command in the form of a text reply. Please note that all slash commands must have some form of response, otherwise they will fail."
 msgstr "Après cela, nous répondons à la commande slash sous la forme d'un message textuel. Notez que toutes les commandes slashs doivent avoir une forme de réponse, sinon elles échoueront."

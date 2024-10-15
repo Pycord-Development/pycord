@@ -120,7 +120,7 @@ msgid "A decorator that converts the provided method into a Command, adds it to 
 msgstr "A decorator that converts the provided method into a Command, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid "Callable[..., :class:`Command`]"
 msgstr "Callable[..., :class:`Command`]"
