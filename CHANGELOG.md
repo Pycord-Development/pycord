@@ -52,8 +52,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
 - ⚠️ **Removed support for Python 3.8.**
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
-- Changed the error message that appears when attempting to add a subcommand group to a
-  subcommand group. ([#2275](https://github.com/Pycord-Development/pycord/pull/2275))
 - Replaced audioop (deprecated module) implementation of `PCMVolumeTransformer.read`
   method with a pure Python equivalent.
   ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
