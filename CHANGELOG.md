@@ -58,6 +58,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
 - `Emoji` has been renamed to `GuildEmoji`.
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
+- Replaced audioop (deprecated module) implementation of `PCMVolumeTransformer.read`
+  method with a pure Python equivalent.
+  ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
 
 ### Deprecated
 
