@@ -22,6 +22,10 @@ These changes are available on the `master` branch, but have not yet been releas
   `tags`. ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 - Added `Member.guild_banner` and `Member.display_banner` properties.
   ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
+- Added support for Application Emojis.
+  ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
+- Added `cache_app_emojis` parameter to `Client`.
+  ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Added `elapsed` method to `VoiceClient`.
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
@@ -52,6 +56,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))
 - ⚠️ **Removed support for Python 3.8.**
   ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))
+- `Emoji` has been renamed to `GuildEmoji`.
+  ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Replaced audioop (deprecated module) implementation of `PCMVolumeTransformer.read`
   method with a pure Python equivalent.
   ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
@@ -60,6 +66,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Deprecated `AppInfo.summary` in favor of `AppInfo.description`.
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
+- Deprecated `Emoji` in favor of `GuildEmoji`
+  ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 
 ## [2.6.1] - 2024-09-15
 
