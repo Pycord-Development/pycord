@@ -48,6 +48,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
 - Fixed commands with `BucketType.cagegory` cooldown causing issues in private channels.
   ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
+- Fixed `SlashCommand`'s `ctx` parameter couldn't be `Union` type.
+  ([#2611](https://github.com/Pycord-Development/pycord/pull/2611))
 
 ### Changed
 
