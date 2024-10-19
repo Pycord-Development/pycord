@@ -510,7 +510,7 @@ msgstr ""
 #: 7e644a647eaa4981aad624c207683f5a discord.ext.tasks.loop:36 of
 msgid ""
 "The loop to use to register the task, if not given defaults to "
-":func:`asyncio.get_event_loop`."
+":func:`asyncio.new_event_loop`."
 msgstr ""
 
 #: 1b6f0ce5942646378838dbe0ab4fe0a0 discord.ext.tasks.loop:41 of

@@ -62,12 +62,11 @@ class Modal:
         self._title = title
         self._children: list[InputText] = list(children)
         self._weights = _ModalWeights(self._children)
-        loop = asyncio.get_running_loop()
-        self._stopped: asyncio.Future[bool] = loop.create_future()
+        self.loop = asyncio.get_running_loop()
+        self._stopped: asyncio.Future[bool] = self.loop.create_future()
         self.__cancel_callback: Callable[[Modal], None] | None = None
         self.__timeout_expiry: float | None = None
         self.__timeout_task: asyncio.Task[None] | None = None
-        self.loop = asyncio.get_event_loop()
 
     def _start_listening_from_store(self, store: ModalStore) -> None:
         self.__cancel_callback = partial(store.remove_modal)

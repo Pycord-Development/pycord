@@ -516,7 +516,7 @@ msgstr ""
 
 #: ../../../discord/ext/tasks/__init__.py:docstring of discord.ext.tasks.loop:36
 #: 7e644a647eaa4981aad624c207683f5a
-msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
+msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.new_event_loop`."
 msgstr ""
 
 #: ../../../discord/ext/tasks/__init__.py:docstring of discord.ext.tasks.loop:41

@@ -2909,7 +2909,7 @@ msgstr ""
 msgid ""
 "The :class:`asyncio.AbstractEventLoop` to use for asynchronous "
 "operations. Defaults to ``None``, in which case the default event loop is"
-" used via :func:`asyncio.get_event_loop()`."
+" used via :func:`asyncio.new_event_loop()`."
 msgstr ""
 
 #: 21cc11771cf14b8482b82ed348a0bcc9 discord.client.Client:17 of

@@ -1427,8 +1427,8 @@ msgstr "The maximum number of messages to store in the internal message cache. T
 msgid "Allow disabling the message cache and change the default size to ``1000``."
 msgstr "Allow disabling the message cache and change the default size to ``1000``."
 
-msgid "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.get_event_loop()`."
-msgstr "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.get_event_loop()`."
+msgid "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.new_event_loop()`."
+msgstr "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.new_event_loop()`."
 
 msgid "The connector to use for connection pooling."
 msgstr "The connector to use for connection pooling."

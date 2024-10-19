@@ -173,7 +173,7 @@ class HTTPClient:
         unsync_clock: bool = True,
     ) -> None:
         self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
+            asyncio.new_event_loop() if loop is None else loop
         )
         self.connector = connector
         self.__session: aiohttp.ClientSession = MISSING  # filled in static_login

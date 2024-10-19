@@ -272,8 +272,8 @@ msgstr "The number of loops to do, ``None`` if it should be an infinite loop."
 msgid "Whether to handle errors and restart the task using an exponential back-off algorithm similar to the one used in :meth:`discord.Client.connect`."
 msgstr "Whether to handle errors and restart the task using an exponential back-off algorithm similar to the one used in :meth:`discord.Client.connect`."
 
-msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
-msgstr "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
+msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.new_event_loop`."
+msgstr "The loop to use to register the task, if not given defaults to :func:`asyncio.new_event_loop`."
 
 msgid "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."
 msgstr "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."

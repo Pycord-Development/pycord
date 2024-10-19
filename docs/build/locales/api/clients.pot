@@ -3706,7 +3706,7 @@ msgstr ""
 
 #: ../../../discord/client.py:docstring of discord.client.Client:13
 #: 6c88dd4b014e4fd68019bf91e0e79449
-msgid "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.get_event_loop()`."
+msgid "The :class:`asyncio.AbstractEventLoop` to use for asynchronous operations. Defaults to ``None``, in which case the default event loop is used via :func:`asyncio.new_event_loop()`."
 msgstr ""
 
 #: ../../../discord/client.py:docstring of discord.client.Client:17

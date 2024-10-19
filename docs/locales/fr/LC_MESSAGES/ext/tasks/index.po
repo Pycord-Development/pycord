@@ -272,8 +272,8 @@ msgstr "Le nombre de boucles à faire, ``None`` si elle doit être une boucle in
 msgid "Whether to handle errors and restart the task using an exponential back-off algorithm similar to the one used in :meth:`discord.Client.connect`."
 msgstr "Si vous voulez gérer les erreurs et redémarrer la tâche en utilisant un algorithme de back-off exponentiel similaire à celui utilisé dans :meth:`discord.Client.connect`."
 
-msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.get_event_loop`."
-msgstr "La boucle à utiliser pour enregistrer la tâche, si elle n'est pas donnée par défaut à :func:`asyncio.get_event_loop`."
+msgid "The loop to use to register the task, if not given defaults to :func:`asyncio.new_event_loop`."
+msgstr "La boucle à utiliser pour enregistrer la tâche, si elle n'est pas donnée par défaut à :func:`asyncio.new_event_loop`."
 
 msgid "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."
 msgstr "La fonction n'était pas une coroutine, une valeur invalide a été passée pour le paramètre ``time``, ou le paramètre ``time`` a été passé en conjonction avec des paramètres de temps relatifs."
