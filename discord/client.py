@@ -229,6 +229,7 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.new_event_loop() if loop is None else loop
         )
+        asyncio.set_event_loop(self.loop)
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
         )
