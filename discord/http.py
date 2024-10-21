@@ -3138,8 +3138,8 @@ class HTTPClient:
         return self.request(Route("GET", "/oauth2/applications/@me"))
 
     def get_application(
-            self, application_id: Snowflake,
-            /) -> Response[appinfo.PartialAppInfo]:
+        self, application_id: Snowflake, /
+    ) -> Response[appinfo.PartialAppInfo]:
         return self.request(
             Route(
                 "GET",

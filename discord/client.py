@@ -1521,7 +1521,9 @@ class Client:
 
         All parameters are optional.
         """
-        return GuildIterator(self, limit=limit, before=before, after=after, with_counts=with_counts)
+        return GuildIterator(
+            self, limit=limit, before=before, after=after, with_counts=with_counts
+        )
 
     async def fetch_template(self, code: Template | str) -> Template:
         """|coro|
@@ -1841,8 +1843,8 @@ class Client:
         return User(state=self._connection, data=data)
 
     async def fetch_channel(
-            self, channel_id: int,
-            /) -> GuildChannel | PrivateChannel | Thread:
+        self, channel_id: int, /
+    ) -> GuildChannel | PrivateChannel | Thread:
         """|coro|
 
         Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or :class:`.Thread` with the specified ID.

@@ -660,7 +660,9 @@ class GuildIterator(_AsyncIterator["Guild"]):
     async def _retrieve_guilds_before_strategy(self, retrieve):
         """Retrieve guilds using before parameter."""
         before = self.before.id if self.before else None
-        data: list[GuildPayload] = await self.get_guilds(retrieve, before=before, with_counts=self.with_counts)
+        data: list[GuildPayload] = await self.get_guilds(
+            retrieve, before=before, with_counts=self.with_counts
+        )
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -670,7 +672,9 @@ class GuildIterator(_AsyncIterator["Guild"]):
     async def _retrieve_guilds_after_strategy(self, retrieve):
         """Retrieve guilds using after parameter."""
         after = self.after.id if self.after else None
-        data: list[GuildPayload] = await self.get_guilds(retrieve, after=after, with_counts=self.with_counts)
+        data: list[GuildPayload] = await self.get_guilds(
+            retrieve, after=after, with_counts=self.with_counts
+        )
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
