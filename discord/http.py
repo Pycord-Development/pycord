@@ -1456,7 +1456,7 @@ class HTTPClient:
         if after:
             params["after"] = after
         if with_counts:
-            params["with_counts"] = with_counts
+            params["with_counts"] = int(with_counts)
 
         return self.request(Route("GET", "/users/@me/guilds"), params=params)
 
