@@ -1462,6 +1462,7 @@ class Client:
         limit: int | None = 100,
         before: SnowflakeTime = None,
         after: SnowflakeTime = None,
+        with_counts: bool = False,
     ) -> GuildIterator:
         """Retrieves an :class:`.AsyncIterator` that enables receiving your guilds.
 
@@ -1489,6 +1490,10 @@ class Client:
             Retrieve guilds after this date or object.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
+        with_counts: Optional[:class:`bool`]
+            Whether to include count information in the guilds. This fills the
+            :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
+            fields.
 
         Yields
         ------
@@ -1835,8 +1840,8 @@ class Client:
         return User(state=self._connection, data=data)
 
     async def fetch_channel(
-        self, channel_id: int, /
-    ) -> GuildChannel | PrivateChannel | Thread:
+            self, channel_id: int,
+            /) -> GuildChannel | PrivateChannel | Thread:
         """|coro|
 
         Retrieves a :class:`.abc.GuildChannel`, :class:`.abc.PrivateChannel`, or :class:`.Thread` with the specified ID.
