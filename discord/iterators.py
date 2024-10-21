@@ -585,9 +585,14 @@ class GuildIterator(_AsyncIterator["Guild"]):
         Object before which all guilds must be.
     after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
         Object after which all guilds must be.
+    with_counts: Optional[:class:`bool`]
+        Whether to include count information in the guilds. This fills the
+        :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
+        fields.
+        Defaults to ``True``.
     """
 
-    def __init__(self, bot, limit, before=None, after=None, with_counts=False):
+    def __init__(self, bot, limit, before=None, after=None, with_counts=True):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
         if isinstance(after, datetime.datetime):

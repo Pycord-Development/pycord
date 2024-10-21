@@ -1445,7 +1445,7 @@ class HTTPClient:
         limit: int,
         before: Snowflake | None = None,
         after: Snowflake | None = None,
-        with_counts: bool = False,
+        with_counts: bool = True,
     ) -> Response[list[guild.Guild]]:
         params: dict[str, Any] = {
             "limit": limit,

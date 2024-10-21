@@ -1462,7 +1462,7 @@ class Client:
         limit: int | None = 100,
         before: SnowflakeTime = None,
         after: SnowflakeTime = None,
-        with_counts: bool = False,
+        with_counts: bool = True,
     ) -> GuildIterator:
         """Retrieves an :class:`.AsyncIterator` that enables receiving your guilds.
 
@@ -1494,6 +1494,7 @@ class Client:
             Whether to include count information in the guilds. This fills the
             :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
             fields.
+            Defaults to ``True``.
 
         Yields
         ------
@@ -1520,7 +1521,7 @@ class Client:
 
         All parameters are optional.
         """
-        return GuildIterator(self, limit=limit, before=before, after=after)
+        return GuildIterator(self, limit=limit, before=before, after=after, with_counts=with_counts)
 
     async def fetch_template(self, code: Template | str) -> Template:
         """|coro|
