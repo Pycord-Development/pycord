@@ -132,7 +132,7 @@ msgid "A partial :class:`Webhook`. A partial webhook is just a webhook object wi
 msgstr "A partial :class:`Webhook`. A partial webhook is just a webhook object with an ID and a token."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid ":class:`Webhook`"
 msgstr ":class:`Webhook`"

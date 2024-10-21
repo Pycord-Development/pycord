@@ -30,7 +30,7 @@ msgid "In order to make development easier and also to allow for our dependencie
 msgstr "In order to make development easier and also to allow for our dependencies to upgrade to allow usage of 3.7 or higher, the library had to remove support for Python versions lower than 3.5.3, which essentially means that **support for Python 3.4 is dropped**."
 
 msgid "Major Model Changes"
-msgstr "Changements majeurs du modèle"
+msgstr "Changements majeurs des modèles"
 
 msgid "Below are major model changes that have happened in v1.0"
 msgstr "Below are major model changes that have happened in v1.0"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2024-10-11 09:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2153,7 +2153,7 @@ msgstr ""
 
 #: ../../old_changelog.rst:628
 #: a2a25fd5ddf54ff08304c4b8b0813b1c
-msgid "|commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, :dpy-issue:`2374`)"
+msgid "|commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, 2374)"
 msgstr ""
 
 #: ../../old_changelog.rst:629
