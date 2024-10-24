@@ -250,7 +250,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         "Voice" permissions from the official Discord UI set to ``True``.
         """
-        return cls(0b1000000001000000000000011111100000000001100000000)
+        return cls(0b1001001001000000000000011111100000000001100000000)
 
     @classmethod
     def stage(cls: type[P]) -> P:
@@ -611,6 +611,22 @@ class Permissions(BaseFlags):
         return 1 << 40
 
     @flag_value
+    def use_soundboard(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can use the soundboard in a voice channel.
+
+        .. versionadded:: 2.7
+        """
+        return 1 << 42
+
+    @flag_value
+    def use_external_sounds(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can use external soundboard sounds in a voice channel.
+
+        .. versionadded:: 2.7
+        """
+        return 1 << 45
+
+    @flag_value
     def send_voice_messages(self) -> int:
         """:class:`bool`: Returns ``True`` if a member can send voice messages.
 
@@ -762,6 +778,8 @@ class PermissionOverwrite:
         use_external_stickers: bool | None
         start_embedded_activities: bool | None
         moderate_members: bool | None
+        use_soundboard: bool | None
+        use_external_sounds: bool | None
         send_voice_messages: bool | None
         set_voice_channel_status: bool | None
         send_polls: bool | None
