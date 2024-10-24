@@ -565,9 +565,7 @@ class Guild(Hashable):
             self._update_voice_state(obj, int(obj["channel_id"]))
 
         for sound in guild.get("soundboard_sounds", []):
-            sound = SoundboardSound(
-                state=state, http=state.http, data=sound, guild=self
-            )
+            sound = SoundboardSound(state=state, http=state.http, data=sound)
             self._add_sound(sound)
 
     def _add_sound(self, sound: SoundboardSound) -> None:
@@ -577,12 +575,33 @@ class Guild(Hashable):
     def _remove_sound(self, sound_id: int) -> None:
         self._sounds.pop(sound_id, None)
 
+    async def fetch_sounds(self) -> list[SoundboardSound]:
+        """|coro|
+        Fetches all the soundboard sounds in the guild.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        List[:class:`SoundboardSound`]
+            The sounds in the guild.
+        """
+        data = await self._state.http.get_all_guild_sounds(self.id)
+        return [
+            SoundboardSound(
+                state=self._state,
+                http=self._state.http,
+                data=sound,
+            )
+            for sound in data["items"]
+        ]
+
     async def create_sound(
         self,
         name: str,
         sound: bytes,
         volume: float = 1.0,
-        emoji: PartialEmoji | Emoji | str | None = None,
+        emoji: PartialEmoji | GuildEmoji | str | None = None,
         reason: str | None = None,
     ):
         """|coro|
@@ -600,7 +619,7 @@ class Guild(Hashable):
             Only MP3 sound files that don't exceed the duration of 5.2s are supported.
         volume: :class:`float`
             The volume of the sound. Defaults to 1.0.
-        emoji: Union[:class:`PartialEmoji`, :class:`Emoji`, :class:`str`]
+        emoji: Union[:class:`PartialEmoji`, :class:`GuildEmoji`, :class:`str`]
             The emoji of the sound.
         reason: Optional[:class:`str`]
             The reason for creating this sound. Shows up on the audit log.
@@ -640,13 +659,13 @@ class Guild(Hashable):
                 else:
                     payload["emoji_id"] = partial_emoji.id
 
-        data = await self._state.http.create_sound(self.id, reason=reason, **payload)
+        data = await self._state.http.create_guild_sound(
+            self.id, reason=reason, **payload
+        )
         return SoundboardSound(
             state=self._state,
             http=self._state.http,
             data=data,
-            guild=self,
-            owner_id=self._state.self_id,
         )
 
     # TODO: refactor/remove?

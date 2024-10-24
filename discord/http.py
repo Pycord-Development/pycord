@@ -3191,10 +3191,12 @@ class HTTPClient:
     def get_default_sounds(self):
         return self.request(Route("GET", "/soundboard-default-sounds"))
 
-    def create_sound(self, guild_id: Snowflake, reason: str | None, **payload):
+    def create_guild_sound(
+        self, guild_id: Snowflake, reason: str | None, **payload
+    ) -> Response[SoundboardSoundPayload]:
         keys = (
             "name",
-            "suond",
+            "sound",
             "volume",
             "emoji_id",
             "emoji_name",
@@ -3206,6 +3208,13 @@ class HTTPClient:
             Route("POST", "/guilds/{guild_id}/soundboard-sounds", guild_id=guild_id),
             json=payload,
             reason=reason,
+        )
+
+    def get_all_guild_sounds(
+        self, guild_id: Snowflake
+    ) -> Response[list[SoundboardSoundPayload]]:
+        return self.request(
+            Route("GET", "/guilds/{guild_id}/soundboard-sounds", guild_id=guild_id)
         )
 
     def edit_sound(
