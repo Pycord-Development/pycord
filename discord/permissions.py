@@ -611,6 +611,14 @@ class Permissions(BaseFlags):
         return 1 << 40
 
     @flag_value
+    def view_creator_monetization_analytics(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can view creator monetization (role subscription) analytics.
+
+        .. versionadded:: 2.7
+        """
+        return 1 << 41
+
+    @flag_value
     def send_voice_messages(self) -> int:
         """:class:`bool`: Returns ``True`` if a member can send voice messages.
 
