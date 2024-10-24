@@ -46,8 +46,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Guild.create_test_entitlement()` and `User.create_test_entitlement()` using the
   guild/user ID instead of the application ID.
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
-- Fixed `BucketType.category` cooldown commands not functioning correctly in private channels.
-  ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
+- Fixed `BucketType.category` cooldown commands not functioning correctly in private
+  channels. ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
 
 ### Changed
 
