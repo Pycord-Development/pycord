@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from .._typed_dict import NotRequired, TypedDict
+from typing_extensions import NotRequired, TypedDict
 
 ApplicationRoleConnectionMetadataType = Literal[1, 2, 3, 4, 5, 6, 7, 8]
 
