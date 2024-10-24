@@ -191,6 +191,7 @@ class Permissions(BaseFlags):
         - :attr:`manage_emojis`
         - :attr:`view_audit_log`
         - :attr:`view_guild_insights`
+        - :attr:`view_creator_monetization_analytics`
         - :attr:`manage_guild`
         - :attr:`change_nickname`
         - :attr:`manage_nicknames`
@@ -218,8 +219,10 @@ class Permissions(BaseFlags):
            permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`,
            :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are
            no longer part of the general permissions.
+        .. versionchanged:: 2.7
+           Added :attr:`view_creator_monetization_analytics` permission.
         """
-        return cls(0b01110000000010000000010010110000)
+        return cls(0b100000000001110000000010000000010010110000)
 
     @classmethod
     def membership(cls: type[P]) -> P:
@@ -609,6 +612,14 @@ class Permissions(BaseFlags):
         .. versionadded:: 2.0
         """
         return 1 << 40
+
+    @flag_value
+    def view_creator_monetization_analytics(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can view creator monetization (role subscription) analytics.
+
+        .. versionadded:: 2.7
+        """
+        return 1 << 41
 
     @flag_value
     def use_soundboard(self) -> int:
