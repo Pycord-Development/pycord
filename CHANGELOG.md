@@ -30,6 +30,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added missing soundboard-related voice channel permissions:
+  `Permissions.use_soundboard`, `Permissions.use_external_sounds`, and
+  [VIEW_CREATOR_MONETIZATION_ANALYTICS](https://discord.com/developers/docs/topics/permissions#:~:text=VIEW_CREATOR_MONETIZATION_ANALYTICS)
+  permission: `Permissions.view_creator_monetization_analytics`
+  ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
 
 ### Fixed
 
