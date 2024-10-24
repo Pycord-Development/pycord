@@ -2293,7 +2293,7 @@ class Client:
     def sounds(self) -> list[SoundboardSound]:
         """A list of all the sounds the bot can see.
 
-        .. versionadded:: 2.4
+        .. versionadded:: 2.7
         """
         return self._connection.sounds
 
@@ -2302,7 +2302,7 @@ class Client:
 
         Fetches the bot's default sounds.
 
-        .. versionadded:: 2.4
+        .. versionadded:: 2.7
 
         Returns
         -------
