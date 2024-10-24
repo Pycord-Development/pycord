@@ -63,6 +63,10 @@ class File:
         The description of a file, used by Discord to display alternative text on images.
     spoiler: :class:`bool`
         Whether the attachment is a spoiler.
+    waveform: Optional[:class:`str`]
+        The base64 encoded bytearray representing a sampled waveform. Currently only for voice messages
+    duration_secs: Optional[:class:`float`]
+        The duration of the audio file. Currently only for voice messages
     """
 
     __slots__ = (
@@ -73,6 +77,8 @@ class File:
         "_owner",
         "_closer",
         "description",
+        "waveform",
+        "duration_secs",
     )
 
     if TYPE_CHECKING:
@@ -88,7 +94,10 @@ class File:
         *,
         description: str | None = None,
         spoiler: bool = False,
+        waveform: str | None = None,
+        duration_secs: float | None = None,
     ):
+
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
                 raise ValueError(f"File buffer {fp!r} must be seekable and readable")
@@ -126,6 +135,8 @@ class File:
             self.filename is not None and self.filename.startswith("SPOILER_")
         )
         self.description = description
+        self.waveform = waveform
+        self.duration_secs = duration_secs
 
     def reset(self, *, seek: int | bool = True) -> None:
         # The `seek` parameter is needed because

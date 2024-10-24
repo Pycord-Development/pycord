@@ -410,9 +410,36 @@ class HTTPClient:
     # login management
 
     async def static_login(self, token: str) -> user.User:
+        # TODO: Remove This When Testing Is Done
+        import logging
+
+        async def on_request_start(
+            session, context, params: aiohttp.TraceRequestStartParams
+        ):
+            # breakpoint()
+            logging.getLogger("aiohttp.client").debug(
+                f"Starting request <{params}> <{session}> <{context}>"
+            )
+
+        async def on_request_chunk_sent(
+            session, context, params: aiohttp.TraceRequestChunkSentParams
+        ):
+            with open("output.txt", "a") as file:
+                if byte := str(params.chunk).find(r"\x", 100) != -1:
+                    file.write(str(params.chunk)[:byte] + "\n")
+                else:
+                    file.write(str(params.chunk) + "\n")
+            # logging.getLogger('aiohttp.client').debug(f'Sent Chunk <{params}>')
+
+        trace_config = aiohttp.TraceConfig()
+        trace_config.on_request_start.append(on_request_start)
+        trace_config.on_request_chunk_sent.append(on_request_chunk_sent)
+
         # Necessary to get aiohttp to stop complaining about session creation
         self.__session = aiohttp.ClientSession(
-            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
+            connector=self.connector,
+            ws_response_class=DiscordClientWebSocketResponse,
+            trace_configs=[trace_config],
         )
         old_token = self.token
         self.token = token
@@ -572,6 +599,8 @@ class HTTPClient:
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
+                    "waveform": file.waveform,
+                    "duration_secs": file.duration_secs,
                 }
             )
             form.append(
@@ -638,6 +667,9 @@ class HTTPClient:
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
+                    # TODO: Make Editing Work
+                    "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
+                    "duration_secs": 60.0,
                 }
             )
             form.append(
@@ -645,7 +677,7 @@ class HTTPClient:
                     "name": f"files[{index}]",
                     "value": file.fp,
                     "filename": file.filename,
-                    "content_type": "application/octet-stream",
+                    "content_type": "audio/wav",
                 }
             )
         if "attachments" not in payload:
