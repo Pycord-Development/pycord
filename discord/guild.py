@@ -131,6 +131,7 @@ class BanEntry(NamedTuple):
 class _GuildLimit(NamedTuple):
     emoji: int
     stickers: int
+    soundboard: int
     bitrate: float
     filesize: int
 
@@ -291,11 +292,21 @@ class Guild(Hashable):
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
-        None: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=26214400),
-        0: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=26214400),
-        1: _GuildLimit(emoji=100, stickers=15, bitrate=128e3, filesize=26214400),
-        2: _GuildLimit(emoji=150, stickers=30, bitrate=256e3, filesize=52428800),
-        3: _GuildLimit(emoji=250, stickers=60, bitrate=384e3, filesize=104857600),
+        None: _GuildLimit(
+            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=26214400
+        ),
+        0: _GuildLimit(
+            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=26214400
+        ),
+        1: _GuildLimit(
+            emoji=100, stickers=15, soundboard=24, bitrate=128e3, filesize=26214400
+        ),
+        2: _GuildLimit(
+            emoji=150, stickers=30, soundboard=36, bitrate=256e3, filesize=52428800
+        ),
+        3: _GuildLimit(
+            emoji=250, stickers=60, soundboard=48, bitrate=384e3, filesize=104857600
+        ),
     }
 
     def __init__(self, *, data: GuildPayload, state: ConnectionState):
@@ -923,6 +934,17 @@ class Guild(Hashable):
         more_stickers = 60 if "MORE_STICKERS" in self.features else 0
         return max(
             more_stickers, self._PREMIUM_GUILD_LIMITS[self.premium_tier].stickers
+        )
+
+    @property
+    def soundboard_limit(self) -> int:
+        """The maximum number of soundboard slots this guild has.
+
+        .. versionadded:: 2.7
+        """
+        more_soundboard = 48 if "MORE_SOUNDBOARD" in self.features else 0
+        return max(
+            more_soundboard, self._PREMIUM_GUILD_LIMITS[self.premium_tier].soundboard
         )
 
     @property
