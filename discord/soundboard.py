@@ -61,6 +61,8 @@ class PartialSoundboardSound(Hashable):
         The sound's volume.
     emoji: :class:`PartialEmoji`
         The sound's emoji.
+
+    .. versionadded:: 2.7
     """
 
     __slots__ = ("id", "volume", "emoji", "_http", "_state")
@@ -127,13 +129,16 @@ class SoundboardSound(PartialSoundboardSound):
     name: :class:`str`
         The sound's name.
     available: :class:`bool`
-        Whether the sound is available.
+        Whether the sound is available. Could be ``False`` if the sound is not available.
+        This happens for example when the guild lost the boost level required to use the sound.
     emoji: :class:`PartialEmoji`
         The sound's emoji.
-    guild: :class:`Guild`
-        The guild the sound belongs to.
-    owner: :class:`Member`
-        The sound's owner.
+    guild: :class:`Guild` | :class:`None`
+        The guild the sound belongs to. Could be ``None`` if the sound is a default sound.
+    owner: :class:`User`
+        The sound's owner. Could be ``None`` if the sound is a default sound.
+
+    .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -195,6 +200,8 @@ class SoundboardSound(PartialSoundboardSound):
     ) -> Coroutine[Any, Any, SoundboardSound]:
         """Edits the sound.
 
+        .. versionadded:: 2.7
+
         Parameters
         ----------
         name: :class:`str`
@@ -244,6 +251,8 @@ class SoundboardSound(PartialSoundboardSound):
 
     def delete(self, *, reason: str | None = None) -> Coroutine[Any, Any, None]:
         """Deletes the sound.
+
+        .. versionadded:: 2.7
 
         Parameters
         ----------

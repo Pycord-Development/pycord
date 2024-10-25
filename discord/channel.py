@@ -3266,6 +3266,9 @@ class VoiceChannelEffectSendEvent:
 
     .. versionadded:: 2.4
 
+    .. versionchanged:: 2.7
+       Added the `sound` attribute.
+
     Attributes
     ----------
     animation_type: :class:`int`
