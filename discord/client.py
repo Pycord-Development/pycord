@@ -1491,7 +1491,7 @@ class Client:
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
         with_counts: :class:`bool`
-            Whether to include count information in the guilds. This fills the
+            Whether to include member count information in guilds. This fills the
             :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
             fields.
             Defaults to ``True``.
