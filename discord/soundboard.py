@@ -27,10 +27,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Coroutine
 
-from typing_extensions import override, reveal_type
+from typing_extensions import override
 
 from .asset import Asset
-from .emoji import PartialEmoji
+from .emoji import GuildEmoji, PartialEmoji, _EmojiTag
 from .mixins import Hashable
 from .types.channel import (
     VoiceChannelEffectSendEvent as VoiceChannelEffectSendEventPayload,
@@ -185,7 +185,76 @@ class SoundboardSound(PartialSoundboardSound):
         """:class:`bool`: Whether the sound is a default sound."""
         return self.guild_id is None
 
+    def edit(
+        self,
+        *,
+        name: str | None = None,
+        volume: float | None = None,
+        emoji: PartialEmoji | str | None = None,
+        reason: str | None = None,
+    ) -> Coroutine[Any, Any, SoundboardSound]:
+        """Edits the sound.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new name of the sound.
+        volume: :class:`float`
+            The new volume of the sound.
+        emoji: Union[:class:`PartialEmoji`, :class:`str`]
+            The new emoji of the sound.
+        reason: :class:`str`
+            The reason for editing the sound. Shows up in the audit log.
+
+        Returns
+        -------
+        :class:`SoundboardSound`
+            The edited sound.
+
+        Raises
+        ------
+        :exc:`ValueError`
+            Editing a default sound is not allowed.
+        """
+        if self.is_default_sound:
+            raise ValueError("Cannot edit a default sound.")
+        payload: dict[str, Any] = {
+            "name": name,
+            "volume": volume,
+            "emoji_id": None,
+            "emoji_name": None,
+        }
+        if emoji is not None:
+            if isinstance(emoji, _EmojiTag):
+                partial_emoji = emoji._to_partial()
+            elif isinstance(emoji, str):
+                partial_emoji = PartialEmoji.from_str(emoji)
+            else:
+                partial_emoji = None
+
+        if partial_emoji is not None:
+            if partial_emoji.id is None:
+                payload["emoji_name"] = partial_emoji.name
+            else:
+                payload["emoji_id"] = partial_emoji.id
+
+        return self._http.edit_guild_sound(
+            self.guild_id, self.id, reason=reason, **payload
+        )
+
     def delete(self, *, reason: str | None = None) -> Coroutine[Any, Any, None]:
+        """Deletes the sound.
+
+        Parameters
+        ----------
+        reason: :class:`str`
+            The reason for deleting the sound. Shows up in the audit log.
+
+        Raises
+        ------
+        :exc:`ValueError`
+            Deleting a default sound is not allowed.
+        """
         if self.is_default_sound:
             raise ValueError("Cannot delete a default sound.")
         return self._http.delete_sound(self, reason=reason)

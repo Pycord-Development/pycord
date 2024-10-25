@@ -3229,7 +3229,7 @@ class HTTPClient:
             )
         )
 
-    def edit_sound(
+    def edit_guild_sound(
         self, guild_id: Snowflake, sound_Id: Snowflake, *, reason: str | None, **payload
     ):
         keys = (
