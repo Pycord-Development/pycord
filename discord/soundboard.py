@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING, Any, Coroutine
 from typing_extensions import override
 
 from .asset import Asset
-from .emoji import GuildEmoji, PartialEmoji, _EmojiTag
+from .emoji import PartialEmoji, _EmojiTag
 from .mixins import Hashable
 from .types.channel import (
     VoiceChannelEffectSendEvent as VoiceChannelEffectSendEventPayload,
@@ -53,16 +53,16 @@ __all__ = (
 class PartialSoundboardSound(Hashable):
     """A partial soundboard sound.
 
+    .. versionadded:: 2.7
+
     Attributes
     ----------
     id: :class:`int`
         The sound's ID.
     volume: :class:`float`
         The sound's volume.
-    emoji: :class:`PartialEmoji`
-        The sound's emoji.
-
-    .. versionadded:: 2.7
+    emoji: :class:`PartialEmoji` | :class:`None`
+        The sound's emoji. Could be ``None`` if the sound has no emoji.
     """
 
     __slots__ = ("id", "volume", "emoji", "_http", "_state")
@@ -84,11 +84,14 @@ class PartialSoundboardSound(Hashable):
         self.volume = (
             float(data.get("volume", 0) or data.get("sound_volume", 0)) or None
         )
+        self.emoji = None
         if raw_emoji := data.get(
             "emoji"
         ):  # From gateway event (VoiceChannelEffectSendEventPayload)
             self.emoji = PartialEmoji.from_dict(raw_emoji)
-        else:  # From HTTP response (SoundboardSoundPayload)
+        elif data.get("emoji_name") or data.get(
+            "emoji_id"
+        ):  # From HTTP response (SoundboardSoundPayload)
             self.emoji = PartialEmoji(
                 name=data.get("emoji_name"),
                 id=int(data.get("emoji_id", 0) or 0) or None,
@@ -120,25 +123,25 @@ class PartialSoundboardSound(Hashable):
 class SoundboardSound(PartialSoundboardSound):
     """Represents a soundboard sound.
 
+    .. versionadded:: 2.7
+
     Attributes
     ----------
     id: :class:`int`
         The sound's ID.
     volume: :class:`float`
         The sound's volume.
+    emoji: :class:`PartialEmoji` | :class:`None`
+        The sound's emoji. Could be ``None`` if the sound has no emoji.
     name: :class:`str`
         The sound's name.
     available: :class:`bool`
         Whether the sound is available. Could be ``False`` if the sound is not available.
         This happens for example when the guild lost the boost level required to use the sound.
-    emoji: :class:`PartialEmoji`
-        The sound's emoji.
-    guild: :class:`Guild` | :class:`None`
-        The guild the sound belongs to. Could be ``None`` if the sound is a default sound.
-    owner: :class:`User`
+    guild_id: :class:`int` | :class:`None`
+        The ID of the guild the sound belongs to. Could be :class:`None` if the sound is a default sound.
+    user: :class:`User` | :class:`None`
         The sound's owner. Could be ``None`` if the sound is a default sound.
-
-    .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -172,11 +175,7 @@ class SoundboardSound(PartialSoundboardSound):
 
     @cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
-        """:class:`Guild`: The guild the sound belongs to.
-
-        The :class:`Guild` object representing the guild the sound belongs to.
-        .. versionadded:: 2.7
-        """
+        """:class:`Guild` | :class:`None` The guild the sound belongs to. Could be :class:`None` if the sound is a default sound."""
         return self._state._get_guild(self.guild_id) if self.guild_id else None
 
     @override

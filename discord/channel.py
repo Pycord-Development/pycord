@@ -77,7 +77,6 @@ __all__ = (
     "PartialMessageable",
     "ForumChannel",
     "ForumTag",
-    # "VoiceChannelEffect",
     "VoiceChannelEffectSendEvent",
 )
 
@@ -3254,6 +3253,11 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
 
 
 class VoiceChannelEffectAnimation(NamedTuple):
+    """Represents an animation that can be sent to a voice channel.
+
+    .. versionadded:: 2.7
+    """
+
     id: int
     type: VoiceChannelEffectAnimationType
 
@@ -3264,10 +3268,7 @@ class VoiceChannelSoundEffect(PartialSoundboardSound): ...
 class VoiceChannelEffectSendEvent:
     """Represents the payload for an :func:`on_voice_channel_effect_send`
 
-    .. versionadded:: 2.4
-
-    .. versionchanged:: 2.7
-       Added the `sound` attribute.
+    .. versionadded:: 2.7
 
     Attributes
     ----------

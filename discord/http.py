@@ -3230,7 +3230,7 @@ class HTTPClient:
         )
 
     def edit_guild_sound(
-        self, guild_id: Snowflake, sound_Id: Snowflake, *, reason: str | None, **payload
+        self, guild_id: Snowflake, sound_id: Snowflake, *, reason: str | None, **payload
     ):
         keys = (
             "name",
@@ -3246,14 +3246,14 @@ class HTTPClient:
                 "PATCH",
                 "/guilds/{guild_id}/soundboard-sounds/{sound_id}",
                 guild_id=guild_id,
-                sound_id=sound_Id,
+                sound_id=sound_id,
             ),
             json=payload,
             reason=reason,
         )
 
     def send_soundboard_sound(
-        self, chanel_id: int, sound: PartialSoundboardSound
+        self, channel_id: int, sound: PartialSoundboardSound
     ) -> None:
         payload = {
             "sound_id": sound.id,
@@ -3265,7 +3265,7 @@ class HTTPClient:
             Route(
                 "POST",
                 "/channels/{channel_id}/send-soundboard-sound",
-                channel_id=chanel_id,
+                channel_id=channel_id,
             ),
             json=payload,
         )

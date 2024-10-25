@@ -821,7 +821,7 @@ class Guild(Hashable):
     def sounds(self) -> list[SoundboardSound]:
         """A list of soundboard sounds that belong to this guild.
 
-        .. versionadded:: 2.5
+        .. versionadded:: 2.7
 
         This is sorted by the position and are in UI order from top to bottom.
         """
@@ -4315,6 +4315,8 @@ class Guild(Hashable):
 
     def get_sound(self, sound_id: int):
         """Returns a sound with the given ID.
+
+        .. versionadded :: 2.7
 
         Parameters
         ----------

@@ -2004,7 +2004,6 @@ class ConnectionState:
         return Message(state=self, channel=channel, data=data)
 
     def parse_voice_channel_effect_send(self, data) -> None:
-        __import__("json")
         if sound_id := int(data.get("sound_id", 0)):
             sound = self._get_sound(sound_id)
             if sound is None:

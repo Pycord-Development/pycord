@@ -2275,7 +2275,7 @@ class Client:
     def get_sound(self, sound_id: int) -> SoundboardSound | None:
         """Gets a :class:`.Sound` from the bot's sound cache.
 
-        .. versionadded:: 2.4
+        .. versionadded:: 2.7
 
         Parameters
         ----------
