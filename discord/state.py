@@ -2030,7 +2030,7 @@ class ConnectionState:
     async def _add_default_sounds(self):
         default_sounds = await self.http.get_default_sounds()
         for default_sound in default_sounds:
-            sound = SoundboardSound(http=self.http, data=default_sound)
+            sound = SoundboardSound(state=self, http=self.http, data=default_sound)
             self._add_sound(sound)
 
     def _add_sound(self, sound: SoundboardSound):
