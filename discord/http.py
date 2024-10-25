@@ -45,6 +45,7 @@ from .errors import (
     NotFound,
 )
 from .gateway import DiscordClientWebSocketResponse
+from .soundboard import PartialSoundboardSound, SoundboardSound
 from .utils import MISSING, warn_deprecated
 
 _log = logging.getLogger(__name__)
@@ -54,7 +55,6 @@ if TYPE_CHECKING:
 
     from .enums import AuditLogAction, InteractionResponseType
     from .file import File
-    from .soundboard import SoundboardSound
     from .types import (
         appinfo,
         application_role_connection,
@@ -3250,4 +3250,22 @@ class HTTPClient:
             ),
             json=payload,
             reason=reason,
+        )
+
+    def send_soundboard_sound(
+        self, chanel_id: int, sound: PartialSoundboardSound
+    ) -> None:
+        payload = {
+            "sound_id": sound.id,
+        }
+        if isinstance(sound, SoundboardSound) and not sound.is_default_sound:
+            payload["source_guild_id"] = sound.guild_id
+
+        return self.request(
+            Route(
+                "POST",
+                "/channels/{channel_id}/send-soundboard-sound",
+                channel_id=chanel_id,
+            ),
+            json=payload,
         )

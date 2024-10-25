@@ -2014,6 +2014,25 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """
         await self._state.http.set_voice_channel_status(self.id, status, reason=reason)
 
+    async def send_soundboard_sound(self, sound: PartialSoundboardSound) -> None:
+        """|coro|
+
+        Sends a soundboard sound to the voice channel.
+
+        Parameters
+        ----------
+        sound: :class:`PartialSoundboardSound`
+            The soundboard sound to send.
+
+        Raises
+        ------
+        Forbidden
+            You do not have proper permissions to send the soundboard sound.
+        HTTPException
+            Sending the soundboard sound failed.
+        """
+        await self._state.http.send_soundboard_sound(self.id, sound)
+
 
 class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     """Represents a Discord guild stage channel.
