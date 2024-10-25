@@ -66,7 +66,7 @@ from .poll import Poll, PollAnswerCount
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent
-from .soundboard import DefaultSoundboardSound, PartialSoundboardSound, SoundboardSound
+from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
@@ -2030,7 +2030,7 @@ class ConnectionState:
     async def _add_default_sounds(self):
         default_sounds = await self.http.get_default_sounds()
         for default_sound in default_sounds:
-            sound = DefaultSoundboardSound(http=self.http, data=default_sound)
+            sound = SoundboardSound(http=self.http, data=default_sound)
             self._add_sound(sound)
 
     def _add_sound(self, sound: SoundboardSound):

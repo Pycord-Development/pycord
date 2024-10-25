@@ -53,7 +53,7 @@ from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
 from .monetization import SKU, Entitlement
 from .object import Object
-from .soundboard import DefaultSoundboardSound
+from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
@@ -2310,4 +2310,7 @@ class Client:
             The bot's default sounds.
         """
         data = await self._connection.http.get_default_sounds()
-        return [DefaultSoundboardSound(self.http, s) for s in data]
+        return [
+            SoundboardSound(http=self.http, state=self._connection, data=s)
+            for s in data
+        ]

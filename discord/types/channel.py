@@ -188,8 +188,8 @@ class VoiceChannelEffectSendEvent(TypedDict):
     channel_id: Snowflake
     guild_id: Snowflake
     user_id: Snowflake
-    sound_id: Snowflake | int
-    sound_volume: float
-    emoji: PartialEmoji | None
-    animation_type: int
-    animation_id: Snowflake
+    emoji: NotRequired[PartialEmoji | None]
+    animation_type: NotRequired[int | None]
+    animation_id: NotRequired[int]
+    sound_id: NotRequired[Snowflake | int]
+    sound_volume: NotRequired[float]

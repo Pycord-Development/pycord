@@ -25,9 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Coroutine
 
-from typing_extensions import reveal_type
+from typing_extensions import override, reveal_type
 
 from .asset import Asset
 from .emoji import PartialEmoji
@@ -35,21 +35,18 @@ from .mixins import Hashable
 from .types.channel import (
     VoiceChannelEffectSendEvent as VoiceChannelEffectSendEventPayload,
 )
-from .types.soundboard import PartialSoundboardSound as PartialSoundboardSoundPayload
 from .types.soundboard import SoundboardSound as SoundboardSoundPayload
 from .utils import cached_slot_property
 
 if TYPE_CHECKING:
     from .guild import Guild
     from .http import HTTPClient
-    from .member import Member
     from .state import ConnectionState
 
 
 __all__ = (
     "PartialSoundboardSound",
     "SoundboardSound",
-    "DefaultSoundboardSound",
 )
 
 
@@ -66,22 +63,45 @@ class PartialSoundboardSound(Hashable):
         The sound's emoji.
     """
 
-    __slots__ = ("id", "volume", "emoji", "_http", "emoji")
+    __slots__ = ("id", "volume", "emoji", "_http")
 
     def __init__(
         self,
-        data: PartialSoundboardSoundPayload | VoiceChannelEffectSendEventPayload,
+        data: SoundboardSoundPayload | VoiceChannelEffectSendEventPayload,
         http: HTTPClient,
     ):
         self._http = http
         self._from_data(data)
 
-    def __eq__(self, other: PartialSoundboardSound) -> bool:
+    def _from_data(
+        self, data: SoundboardSoundPayload | VoiceChannelEffectSendEventPayload
+    ) -> None:
+        self.id = int(data.get("sound_id", 0))
+        self.volume = (
+            float(data.get("volume", 0) or data.get("sound_volume", 0)) or None
+        )
+        if raw_emoji := data.get(
+            "emoji"
+        ):  # From gateway event (VoiceChannelEffectSendEventPayload)
+            self.emoji = PartialEmoji.from_dict(raw_emoji)
+        else:  # From HTTP response (SoundboardSoundPayload)
+            self.emoji = PartialEmoji(
+                name=data.get("emoji_name"),
+                id=int(data.get("emoji_id", 0) or 0) or None,
+            )
+
+    @override
+    def __eq__(
+        self, other: PartialSoundboardSound
+    ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         if isinstance(other, self, __class__):
             return self.id == other.id
         return NotImplemented
 
-    def __ne__(self, other: PartialSoundboardSound) -> bool:
+    @override
+    def __ne__(
+        self, other: PartialSoundboardSound
+    ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         return not self.__eq__(other)
 
     @property
@@ -89,22 +109,8 @@ class PartialSoundboardSound(Hashable):
         """:class:`Asset`: Returns the sound's file."""
         return Asset._from_soundboard_sound(self, sound_id=self.id)
 
-    def _from_data(
-        self, data: PartialSoundboardSoundPayload | VoiceChannelEffectSendEventPayload
-    ) -> None:
-        self.id = int(data["sound_id"])
-        self.volume = float(data.get("volume", 0)) or data.get("sound_volume")
-        if raw_emoji := data.get(
-            "emoji"
-        ):  # From gateway event (VoiceChannelEffectSendEventPayload)
-            self.emoji = PartialEmoji.from_dict(raw_emoji)
-        elif emoji_id := data.get(
-            "emoji_id", 0
-        ):  # From HTTP response (PartialSoundboardSoundPayload)
-            self.emoji = PartialEmoji(
-                name=data.get("emoji_name"),
-                id=int(emoji_id) or None,
-            )
+    def __repr__(self) -> str:
+        return f"<PartialSoundboardSound id={self.id} volume={self.volume} emoji={self.emoji!r}>"
 
 
 class SoundboardSound(PartialSoundboardSound):
@@ -129,17 +135,12 @@ class SoundboardSound(PartialSoundboardSound):
     """
 
     __slots__ = (
-        "id",
-        "volume",
         "name",
         "available",
-        "emoji",
         "guild_id",
-        "_cs_guild",
         "user",
-        "_http",
+        "_cs_guild",
         "_state",
-        "emoji",
     )
 
     def __init__(
@@ -152,59 +153,42 @@ class SoundboardSound(PartialSoundboardSound):
         self._state = state
         super().__init__(data, http)
 
-    def _from_data(self, data: SoundboardSoundPayload) -> None:
+    @override
+    def _from_data(
+        self, data: SoundboardSoundPayload
+    ) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
         super()._from_data(data)
         self.name = data["name"]
         self.available: bool = data["available"]
-        self.guild_id = int(data["guild_id"])
+        self.guild_id = int(data.get("guild_id", 0) or 0) or None
         user = data.get("user")
-
         self.user = self._state.store_user(user) if user else None
 
     @cached_slot_property("_cs_guild")
-    def guild(self) -> Guild:
+    def guild(self) -> Guild | None:
         """:class:`Guild`: The guild the sound belongs to.
 
         The :class:`Guild` object representing the guild the sound belongs to.
         .. versionadded:: 2.7
         """
-        return self._state._get_guild(self.guild_id)
+        return self._state._get_guild(self.guild_id) if self.guild_id else None
 
-    def __eq__(self, other: SoundboardSound) -> bool:
+    @override
+    def __eq__(
+        self, other: SoundboardSound
+    ) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         return isinstance(other, SoundboardSound) and self.__dict__ == other.__dict__
 
-    def delete(self):
-        return self._http.delete_sound(self)
+    @property
+    def is_default_sound(self) -> bool:
+        """:class:`bool`: Whether the sound is a default sound."""
+        return self.guild_id is None
 
-    def _update(self, data: PartialSoundboardSound) -> None:
-        super()._update(data)
-        self.name = data["name"]
-        self.available = bool(data.get("available", True))
+    def delete(self, *, reason: str | None = None) -> Coroutine[Any, Any, None]:
+        if self.is_default_sound:
+            raise ValueError("Cannot delete a default sound.")
+        return self._http.delete_sound(self, reason=reason)
 
-
-class DefaultSoundboardSound(PartialSoundboardSound):
-    """Represents a default soundboard sound.
-
-    Attributes
-    ----------
-    id: :class:`int`
-        The sound's ID.
-    volume: :class:`float`
-        The sound's volume.
-    name: :class:`str`
-        The sound's name.
-    emoji: :class:`PartialEmoji`
-        The sound's emoji.
-    """
-
-    __slots__ = ("id", "volume", "name", "emoji", "_http")
-
-    def __init__(self, *, http: HTTPClient, data: SoundboardSoundPayload) -> None:
-        super().__init__(data, http)
-        self.name = data["name"]
-
-    def __eq__(self, other: DefaultSoundboardSound) -> bool:
-        return (
-            isinstance(other, DefaultSoundboardSound)
-            and self.__dict__ == other.__dict__
-        )
+    @override
+    def __repr__(self) -> str:
+        return f"<SoundboardSound id={self.id} name={self.name!r} volume={self.volume} emoji={self.emoji!r} guild={self.guild!r} user={self.user!r} available={self.available} default={self.is_default_sound}>"

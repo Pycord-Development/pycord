@@ -23,24 +23,21 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import Optional, TypedDict, Union
+from __future__ import annotations
+
+from typing_extensions import NotRequired, TypedDict
+
+from discord.types.user import User
 
 from .snowflake import Snowflake
 
 
-class PartialSoundboardSound(TypedDict):
-    sound_id: Union[Snowflake, int]
-    emoji_name: Optional[str]
-    emoji_id: Optional[Snowflake]
+class SoundboardSound(TypedDict):
+    name: str
+    sound_id: Snowflake | int
     volume: float
-
-
-class SoundboardSound(PartialSoundboardSound):
-    user_id: Snowflake
-    name: str
-    guild_id: Snowflake
+    emoji_name: str | None
+    emoji_id: Snowflake | None
+    guild_id: NotRequired[Snowflake]
+    user: NotRequired[User]
     available: bool
-
-
-class DefaultSoundboardSound(PartialSoundboardSound):
-    name: str
