@@ -596,6 +596,29 @@ class Guild(Hashable):
             for sound in data["items"]
         ]
 
+    async def fetch_sound(self, sound_id: int) -> SoundboardSound:
+        """|coro|
+        Fetches a soundboard sound in the guild.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        sound_id: :class:`int`
+            The ID of the sound.
+
+        Returns
+        -------
+        :class:`SoundboardSound`
+            The sound.
+        """
+        data = await self._state.http.get_guild_sound(self.id, sound_id)
+        return SoundboardSound(
+            state=self._state,
+            http=self._state.http,
+            data=data,
+        )
+
     async def create_sound(
         self,
         name: str,

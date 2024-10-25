@@ -3217,6 +3217,18 @@ class HTTPClient:
             Route("GET", "/guilds/{guild_id}/soundboard-sounds", guild_id=guild_id)
         )
 
+    def get_guild_sound(
+        self, guild_id: Snowflake, sound_id: Snowflake
+    ) -> Response[SoundboardSoundPayload]:
+        return self.request(
+            Route(
+                "GET",
+                "/guilds/{guild_id}/soundboard-sounds/{sound_id}",
+                guild_id=guild_id,
+                sound_id=sound_id,
+            )
+        )
+
     def edit_sound(
         self, guild_id: Snowflake, sound_Id: Snowflake, *, reason: str | None, **payload
     ):
