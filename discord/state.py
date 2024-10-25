@@ -2008,7 +2008,7 @@ class ConnectionState:
         if sound_id := int(data.get("sound_id", 0)):
             sound = self._get_sound(sound_id)
             if sound is None:
-                sound = PartialSoundboardSound(data, self.http)
+                sound = PartialSoundboardSound(data, self, self.http)
             raw = VoiceChannelEffectSendEvent(data, self, sound)
         else:
             raw = VoiceChannelEffectSendEvent(data, self, None)

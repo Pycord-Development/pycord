@@ -63,14 +63,16 @@ class PartialSoundboardSound(Hashable):
         The sound's emoji.
     """
 
-    __slots__ = ("id", "volume", "emoji", "_http")
+    __slots__ = ("id", "volume", "emoji", "_http", "_state")
 
     def __init__(
         self,
         data: SoundboardSoundPayload | VoiceChannelEffectSendEventPayload,
+        state: ConnectionState,
         http: HTTPClient,
     ):
         self._http = http
+        self._state = state
         self._from_data(data)
 
     def _from_data(
@@ -107,7 +109,7 @@ class PartialSoundboardSound(Hashable):
     @property
     def file(self) -> Asset:
         """:class:`Asset`: Returns the sound's file."""
-        return Asset._from_soundboard_sound(self, sound_id=self.id)
+        return Asset._from_soundboard_sound(self._state, sound_id=self.id)
 
     def __repr__(self) -> str:
         return f"<PartialSoundboardSound id={self.id} volume={self.volume} emoji={self.emoji!r}>"
@@ -150,8 +152,7 @@ class SoundboardSound(PartialSoundboardSound):
         http: HTTPClient,
         data: SoundboardSoundPayload,
     ) -> None:
-        self._state = state
-        super().__init__(data, http)
+        super().__init__(data, state, http)
 
     @override
     def _from_data(
