@@ -30,6 +30,15 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added soundboard support :tada:
+  - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
+    `SoundboardSound.edit()`, and `SoundboardSound.delete()`
+  - Access Discord's default sounds with `Client.fetch_default_sounds()`
+  - Play sounds in voice channels with `VoiceChannel.send_soundboard_sound()`
+  - New `on_voice_channel_effect_send` event for sound and emoji effects
+  - Soundboard limits based on guild premium tier (8-48 slots) in
+    `Guild.soundboard_limit`
+    ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
 
 ### Fixed
 
