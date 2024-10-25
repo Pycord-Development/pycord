@@ -586,7 +586,7 @@ class GuildIterator(_AsyncIterator["Guild"]):
     after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
         Object after which all guilds must be.
     with_counts: :class:`bool`
-        Whether to include count information in the guilds. This fills the
+        Whether to include member count information in guilds. This fills the
         :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
         fields.
         Defaults to ``True``.
