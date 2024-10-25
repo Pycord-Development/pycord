@@ -30,8 +30,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
-- Added `store_poll` method to `Webhook._WebhookState`.
-  ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
 
 ### Fixed
 
@@ -50,6 +48,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
 - Fixed `BucketType.category` cooldown commands not functioning correctly in private
   channels. ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
+- Fixed `Webhook._WebhookState` missing `store_poll` method.
+  ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
 
 ### Changed
 
