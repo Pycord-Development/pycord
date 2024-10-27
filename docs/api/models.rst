@@ -388,9 +388,15 @@ Interactions
 Emoji
 -----
 
-.. attributetable:: Emoji
+.. attributetable:: GuildEmoji
 
-.. autoclass:: Emoji()
+.. autoclass:: GuildEmoji()
+    :members:
+    :inherited-members:
+
+.. attributetable:: AppEmoji
+
+.. autoclass:: AppEmoji()
     :members:
     :inherited-members:
 

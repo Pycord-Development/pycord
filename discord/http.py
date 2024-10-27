@@ -1878,6 +1878,75 @@ class HTTPClient:
         )
         return self.request(r, json=payload, reason=reason)
 
+    def get_all_application_emojis(
+        self, application_id: Snowflake
+    ) -> Response[list[emoji.Emoji]]:
+        return self.request(
+            Route(
+                "GET",
+                "/applications/{application_id}/emojis",
+                application_id=application_id,
+            )
+        )
+
+    def get_application_emoji(
+        self, application_id: Snowflake, emoji_id: Snowflake
+    ) -> Response[emoji.Emoji]:
+        return self.request(
+            Route(
+                "GET",
+                "/applications/{application_id}/emojis/{emoji_id}",
+                application_id=application_id,
+                emoji_id=emoji_id,
+            )
+        )
+
+    def create_application_emoji(
+        self,
+        application_id: Snowflake,
+        name: str,
+        image: bytes,
+    ) -> Response[emoji.Emoji]:
+        payload = {
+            "name": name,
+            "image": image,
+        }
+
+        r = Route(
+            "POST",
+            "/applications/{application_id}/emojis",
+            application_id=application_id,
+        )
+        return self.request(r, json=payload)
+
+    def delete_application_emoji(
+        self,
+        application_id: Snowflake,
+        emoji_id: Snowflake,
+    ) -> Response[None]:
+        r = Route(
+            "DELETE",
+            "/applications/{application_id}/emojis/{emoji_id}",
+            application_id=application_id,
+            emoji_id=emoji_id,
+        )
+        return self.request(r)
+
+    def edit_application_emoji(
+        self,
+        application_id: Snowflake,
+        emoji_id: Snowflake,
+        *,
+        payload: dict[str, Any],
+    ) -> Response[emoji.Emoji]:
+        r = Route(
+            "PATCH",
+            "/applications/{application_id}/emojis/{emoji_id}",
+            application_id=application_id,
+            emoji_id=emoji_id,
+        )
+        return self.request(r, json=payload)
+
     def get_all_integrations(
         self, guild_id: Snowflake
     ) -> Response[list[integration.Integration]]:
