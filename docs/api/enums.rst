@@ -1190,7 +1190,7 @@ of :class:`enum.Enum`.
         An emoji was created.
 
         When this is the action, the type of :attr:`~AuditLogEntry.target` is
-        the :class:`Emoji` or :class:`Object` with the emoji ID.
+        the :class:`GuildEmoji` or :class:`Object` with the emoji ID.
 
         Possible attributes for :class:`AuditLogDiff`:
 
@@ -1201,7 +1201,7 @@ of :class:`enum.Enum`.
         An emoji was updated. This triggers when the name has changed.
 
         When this is the action, the type of :attr:`~AuditLogEntry.target` is
-        the :class:`Emoji` or :class:`Object` with the emoji ID.
+        the :class:`GuildEmoji` or :class:`Object` with the emoji ID.
 
         Possible attributes for :class:`AuditLogDiff`:
 

@@ -636,7 +636,9 @@ class User(BaseUser, discord.abc.Messageable):
             "owner_id": self.id,
             "owner_type": 2,
         }
-        data = await self._state.http.create_test_entitlement(self.id, payload)
+        data = await self._state.http.create_test_entitlement(
+            self._state.application_id, payload
+        )
         return Entitlement(data=data, state=self._state)
 
     def entitlements(
