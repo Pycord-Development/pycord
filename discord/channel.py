@@ -3285,7 +3285,7 @@ class VoiceChannelEffectSendEvent:
     channel: :class:`VoiceChannel`
         The voice channel that the sound is being sent in.
     data: :class:`dict`
-        The raw data sent by the gateway([#6025](https://github.com/discord/discord-api-docs/pull/6025)).
+        The raw data sent by the gateway.
     """
 
     __slots__ = (
