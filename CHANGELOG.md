@@ -48,6 +48,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
 - Fixed `BucketType.category` cooldown commands not functioning correctly in private
   channels. ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
+  Fixed `TypeError` when passing `skus` argument with a SKU list in `entitlements()` method.
+  ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
 
 ### Changed
 
