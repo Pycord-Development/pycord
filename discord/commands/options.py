@@ -45,6 +45,7 @@ from ..enums import SlashCommandOptionType
 from ..utils import MISSING, basic_autocomplete
 
 if TYPE_CHECKING:
+    from ..commands import ApplicationContext
     from ..ext.commands import Converter
     from ..member import Member
     from ..message import Attachment
@@ -226,6 +227,13 @@ class Option:
             self.input_type = input_type
         else:
             from ..ext.commands import Converter
+
+            if isinstance(input_type, tuple) and any(
+                issubclass(op, ApplicationContext) for op in input_type
+            ):
+                input_type = next(
+                    op for op in input_type if issubclass(op, ApplicationContext)
+                )
 
             if (
                 isinstance(input_type, Converter)
