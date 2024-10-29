@@ -588,9 +588,16 @@ class DiscordWebSocket:
     def _can_handle_close(self):
         code = self._close_code or self.socket.close_code
         is_improper_close = self._close_code is None and self.socket.close_code == 1000
-        return is_improper_close or code not in (1000, 4004, 4010, 4011, 4012, 4013, 4014)
-    
-    
+        return is_improper_close or code not in (
+            1000,
+            4004,
+            4010,
+            4011,
+            4012,
+            4013,
+            4014,
+        )
+
     async def poll_event(self):
         """Polls for a DISPATCH event and handles the general gateway loop.
 
