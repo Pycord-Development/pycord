@@ -50,8 +50,8 @@ These changes are available on the `master` branch, but have not yet been releas
   channels. ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
 - Fixed `SlashCommand`'s `ctx` parameter couldn't be `Union` type.
   ([#2611](https://github.com/Pycord-Development/pycord/pull/2611))
-- Fixed `TypeError` when passing `skus` argument with a SKU list in `entitlements()`
-  method. ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
+- Fixed `TypeError` when passing `skus` parameter in `Client.entitlements()`. 
+  ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
 
 ### Changed
 
