@@ -48,6 +48,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
 - Fixed `BucketType.category` cooldown commands not functioning correctly in private
   channels. ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
+- Fixed `SlashCommand`'s `ctx` parameter couldn't be `Union` type.
+  ([#2611](https://github.com/Pycord-Development/pycord/pull/2611))
+- Fixed `TypeError` when passing `skus` parameter in `Client.entitlements()`.
+  ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
 - Fixed `Webhook._WebhookState` missing `store_poll` method.
   ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
 
