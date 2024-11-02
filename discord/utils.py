@@ -56,7 +56,6 @@ from typing import (
     Iterator,
     Literal,
     Mapping,
-    NewType,
     Protocol,
     Sequence,
     TypeVar,
