@@ -151,7 +151,7 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = NewType("cached_property", property)
+    cached_property = functools.cached_property
 
     P = ParamSpec("P")
 
