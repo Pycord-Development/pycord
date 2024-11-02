@@ -52,7 +52,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2611](https://github.com/Pycord-Development/pycord/pull/2611))
 - Fixed `TypeError` when passing `skus` parameter in `Client.entitlements()`.
   ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
-- Fixed type annotations for attributes of `context`
++ Fixed type annotations of cached properties
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
 
 ### Changed
