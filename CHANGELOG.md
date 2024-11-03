@@ -32,7 +32,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
 - Added missing permissions: `Permissions.use_soundboard`,
   `Permissions.use_external_sounds` and
-  `Permissions.view_creator_monetization_analytics`
+  `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
 
 ### Fixed
