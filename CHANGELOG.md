@@ -44,7 +44,7 @@ These changes are available on the `master` branch, but have not yet been releas
   - New `on_voice_channel_effect_send` event for sound and emoji effects
   - Soundboard limits based on guild premium tier (8-48 slots) in
     `Guild.soundboard_limit`
-  ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
+    ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
 
 ### Fixed
 
