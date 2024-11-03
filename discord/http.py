@@ -1447,6 +1447,7 @@ class HTTPClient:
         limit: int,
         before: Snowflake | None = None,
         after: Snowflake | None = None,
+        with_counts: bool = True,
     ) -> Response[list[guild.Guild]]:
         params: dict[str, Any] = {
             "limit": limit,
@@ -1456,6 +1457,8 @@ class HTTPClient:
             params["before"] = before
         if after:
             params["after"] = after
+        if with_counts:
+            params["with_counts"] = int(with_counts)
 
         return self.request(Route("GET", "/users/@me/guilds"), params=params)
 
