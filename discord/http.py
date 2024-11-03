@@ -3015,7 +3015,7 @@ class HTTPClient:
         if user_id is not None:
             params["user_id"] = user_id
         if sku_ids is not None:
-            params["sku_ids"] = ",".join(sku_ids)
+            params["sku_ids"] = ",".join(str(sku_id) for sku_id in sku_ids)
         if before is not None:
             params["before"] = before
         if after is not None:
