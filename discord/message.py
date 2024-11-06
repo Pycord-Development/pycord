@@ -45,7 +45,7 @@ from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
 from .embeds import Embed
-from .emoji import Emoji
+from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, MessageReferenceType, MessageType, try_enum
 from .errors import InvalidArgument
 from .file import File
@@ -95,7 +95,7 @@ if TYPE_CHECKING:
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
-    EmojiInputType = Union[Emoji, PartialEmoji, str]
+    EmojiInputType = Union[GuildEmoji, AppEmoji, PartialEmoji, str]
 
 __all__ = (
     "Attachment",
@@ -112,7 +112,7 @@ def convert_emoji_reaction(emoji):
     if isinstance(emoji, Reaction):
         emoji = emoji.emoji
 
-    if isinstance(emoji, Emoji):
+    if isinstance(emoji, (GuildEmoji, AppEmoji)):
         return f"{emoji.name}:{emoji.id}"
     if isinstance(emoji, PartialEmoji):
         return emoji._as_reaction()
@@ -122,7 +122,7 @@ def convert_emoji_reaction(emoji):
         return emoji.strip("<>")
 
     raise InvalidArgument(
-        "emoji argument must be str, Emoji, or Reaction not"
+        "emoji argument must be str, GuildEmoji, AppEmoji, or Reaction not"
         f" {emoji.__class__.__name__}."
     )
 
@@ -1870,7 +1870,7 @@ class Message(Hashable):
 
         Add a reaction to the message.
 
-        The emoji may be a unicode emoji or a custom guild :class:`Emoji`.
+        The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`.
 
         You must have the :attr:`~Permissions.read_message_history` permission
         to use this. If nobody else has reacted to the message using this
@@ -1878,7 +1878,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`Emoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
             The emoji to react with.
 
         Raises
@@ -1903,7 +1903,7 @@ class Message(Hashable):
 
         Remove a reaction by the member from the message.
 
-        The emoji may be a unicode emoji or a custom guild :class:`Emoji`.
+        The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`.
 
         If the reaction is not your own (i.e. ``member`` parameter is not you) then
         the :attr:`~Permissions.manage_messages` permission is needed.
@@ -1913,7 +1913,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`Emoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
             The emoji to remove.
         member: :class:`abc.Snowflake`
             The member for which to remove the reaction.
@@ -1944,7 +1944,7 @@ class Message(Hashable):
 
         Clears a specific reaction from the message.
 
-        The emoji may be a unicode emoji or a custom guild :class:`Emoji`.
+        The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`.
 
         You need the :attr:`~Permissions.manage_messages` permission to use this.
 
@@ -1952,7 +1952,7 @@ class Message(Hashable):
 
         Parameters
         ----------
-        emoji: Union[:class:`Emoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
+        emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
             The emoji to clear.
 
         Raises
