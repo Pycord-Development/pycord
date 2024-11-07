@@ -230,13 +230,12 @@ class SoundboardSound(PartialSoundboardSound):
             "emoji_id": None,
             "emoji_name": None,
         }
+        partial_emoji = None
         if emoji is not None:
             if isinstance(emoji, _EmojiTag):
                 partial_emoji = emoji._to_partial()
             elif isinstance(emoji, str):
                 partial_emoji = PartialEmoji.from_str(emoji)
-            else:
-                partial_emoji = None
 
         if partial_emoji is not None:
             if partial_emoji.id is None:
