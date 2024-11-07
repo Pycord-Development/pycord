@@ -4313,7 +4313,7 @@ class Guild(Hashable):
             exclude_ended=exclude_ended,
         )
 
-    def get_sound(self, sound_id: int):
+    def get_sound(self, sound_id: int) -> Soundboard | None:
         """Returns a sound with the given ID.
 
         .. versionadded :: 2.7
@@ -4325,7 +4325,7 @@ class Guild(Hashable):
 
         Returns
         -------
-        Optional[:class:`Sound`]
+        Optional[:class:`SoundboardSound`]
             The sound or ``None`` if not found.
         """
         return self._sounds.get(sound_id)
