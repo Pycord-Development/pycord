@@ -1388,3 +1388,65 @@ Voice Channel Effects
 
     :param event: The voice channel effect event.
     :type event: :class:`VoiceChannelEffectSendEvent`
+
+Soundboard Sound
+----------------
+.. function:: on_soundboard_sounds_update(before, after)
+
+    Called when multiple guild soundboard sounds are updated at once and they were all already in the cache.
+    This is called for example when a guild looses a boost level and some sounds become unavailable.
+
+    .. versionadded:: 2.7
+
+    :param before: The soundboard sounds prior to being updated.
+    :type before: List[:class:`SoundboardSound`]
+    :param after: The soundboard sounds after being updated.
+    :type after: List[:class:`SoundboardSound`]
+
+.. function:: on_raw_soundboard_sounds_update(after)
+
+    Called when multiple guild soundboard sounds are updated at once.
+    This is called for example when a guild looses a boost level and some sounds become unavailable.
+
+    .. versionadded:: 2.7
+
+    :param after: The soundboard sounds after being updated.
+    :type after: List[:class:`SoundboardSound`]
+
+.. function:: on_soundboard_sound_update(before, after)
+
+    Called when a soundboard sound is updated and it was already in the cache.
+
+    .. versionadded:: 2.7
+
+    :param before: The soundboard sound prior to being updated.
+    :type before: :class:`Soundboard
+    :param after: The soundboard sound after being updated.
+    :type after: :class:`Soundboard
+
+.. function:: on_raw_soundboard_sound_update(after)
+
+        Called when a soundboard sound is updated.
+
+        .. versionadded:: 2.7
+
+        :param after: The soundboard sound after being updated.
+        :type after: :class:`SoundboardSound`
+
+.. function:: on_soundboard_sound_delete(sound)
+
+        Called when a soundboard sound is deleted.
+
+        .. versionadded:: 2.7
+
+        :param sound: The soundboard sound that was deleted.
+        :type sound: :class:`SoundboardSound`
+
+.. function:: on_soundboard_sound_create(sound)
+
+        Called when a soundboard sound is created.
+
+        .. versionadded:: 2.7
+
+        :param sound: The soundboard sound that was created.
+        :type sound: :class:`SoundboardSound`
