@@ -33,6 +33,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added new role tags `subscription_listing_id`, `guild_connections` and
   `available_for_purchase`.
   ([#2606](https://github.com/Pycord-Development/pycord/pull/2606))
+- Added missing `with_counts` parameter to `fetch_guilds` method.
+  ([#2615](https://github.com/Pycord-Development/pycord/pull/2615))
+- Added missing permissions: `Permissions.use_soundboard`,
+  `Permissions.use_external_sounds` and
+  `Permissions.view_creator_monetization_analytics`.
+  ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
 
 ### Fixed
 
