@@ -87,6 +87,7 @@ __all__ = (
     "RawAuditLogEntryEvent",
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
+    "RawSoundboardSoundDeleteEvent",
 )
 
 
@@ -847,3 +848,14 @@ class RawMessagePollVoteEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+
+class RawSoundboardSoundDeleteEvent(_RawReprMixin):
+    """Represents the payload for a :func:`on_raw_soundboard_sound_delete`"""
+
+    __slots__ = ("sound_id", "guild_id", "data")
+
+    def __init__(self, data: PartialSoundboardSound) -> None:
+        self.sound_id: int = int(data["sound_id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.data: PartialSoundboardSound = data

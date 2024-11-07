@@ -626,7 +626,7 @@ class Guild(Hashable):
         volume: float = 1.0,
         emoji: PartialEmoji | GuildEmoji | str | None = None,
         reason: str | None = None,
-    ):
+    ) -> SoundboardSound:
         """|coro|
         Creates a :class:`SoundboardSound` in the guild.
         You must have :attr:`Permissions.manage_expressions` permission to use this.

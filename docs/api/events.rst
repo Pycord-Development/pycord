@@ -1442,6 +1442,15 @@ Soundboard Sound
         :param sound: The soundboard sound that was deleted.
         :type sound: :class:`SoundboardSound`
 
+.. function:: on_raw_soundboard_sound_delete(payload)
+
+        Called when a soundboard sound is deleted.
+
+        .. versionadded:: 2.7
+
+        :param payload: The raw event payload data.
+        :type payload: :class:`RawSoundboardSoundDeleteEvent`
+
 .. function:: on_soundboard_sound_create(sound)
 
         Called when a soundboard sound is created.

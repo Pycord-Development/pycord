@@ -87,7 +87,7 @@ if TYPE_CHECKING:
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
     from .types.poll import Poll as PollPayload
-    from .types.soundboard import SounboardSound as SoundboardSoundPayload
+    from .types.soundboard import SoundboardSoundDeletePayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
     from .voice_client import VoiceClient
@@ -2061,17 +2061,20 @@ class ConnectionState:
         if sound is not None:
             self._remove_sound(sound)
             self.dispatch("soundboard_sound_delete", sound)
+        self.dispatch(
+            "raw_soundboard_sound_delete", RawSoundboardSoundDeleteEvent(data)
+        )
 
-    async def _add_default_sounds(self):
+    async def _add_default_sounds(self) -> None:
         default_sounds = await self.http.get_default_sounds()
         for default_sound in default_sounds:
             sound = SoundboardSound(state=self, http=self.http, data=default_sound)
             self._add_sound(sound)
 
-    def _add_sound(self, sound: SoundboardSound):
+    def _add_sound(self, sound: SoundboardSound) -> None:
         self._sounds[sound.id] = sound
 
-    def _remove_sound(self, sound: SoundboardSound):
+    def _remove_sound(self, sound: SoundboardSound) -> None:
         self._sounds.pop(sound.id, None)
 
     @property
