@@ -87,7 +87,6 @@ if TYPE_CHECKING:
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
     from .types.poll import Poll as PollPayload
-    from .types.soundboard import SoundboardSoundDeletePayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
     from .voice_client import VoiceClient
