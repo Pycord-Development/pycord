@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import contextlib
 import datetime
 from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, overload
 
@@ -65,6 +66,7 @@ __all__ = (
     "GroupChannel",
     "PartialMessageable",
     "ForumChannel",
+    "MediaChannel",
     "ForumTag",
 )
 
@@ -853,7 +855,6 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         HTTPException
             Editing the channel failed.
         """
-
         payload = await self._edit(options, reason=reason)
         if payload is not None:
             # the payload will always be the proper channel payload
@@ -1056,7 +1057,7 @@ class ForumChannel(_TextChannel):
 
     @property
     def requires_tag(self) -> bool:
-        """Whether a tag is required to be specified when creating a thread in this forum channel.
+        """Whether a tag is required to be specified when creating a thread in this forum or media channel.
 
         Tags are specified in :attr:`applied_tags`.
 
@@ -1169,6 +1170,10 @@ class ForumChannel(_TextChannel):
         HTTPException
             Editing the channel failed.
         """
+        with contextlib.suppress(KeyError):
+            require_tag = options.pop("require_tag")
+            options["flags"] = ChannelFlags._from_value(self.flags.value)
+            options["flags"].require_tag = require_tag
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
@@ -1349,6 +1354,213 @@ class ForumChannel(_TextChannel):
         if delete_message_after is not None:
             await msg.delete(delay=delete_message_after)
         return ret
+
+
+class MediaChannel(ForumChannel):
+    """Represents a Discord media channel.
+
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two channels are equal.
+
+        .. describe:: x != y
+
+            Checks if two channels are not equal.
+
+        .. describe:: hash(x)
+
+            Returns the channel's hash.
+
+        .. describe:: str(x)
+
+            Returns the channel's name.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The channel name.
+    guild: :class:`Guild`
+        The guild the channel belongs to.
+    id: :class:`int`
+        The channel ID.
+    category_id: Optional[:class:`int`]
+        The category channel ID this channel belongs to, if applicable.
+    topic: Optional[:class:`str`]
+        The channel's topic. ``None`` if it doesn't exist.
+
+        .. note::
+
+            :attr:`guidelines` exists as an alternative to this attribute.
+    position: Optional[:class:`int`]
+        The position in the channel list. This is a number that starts at 0. e.g. the
+        top channel is position 0. Can be ``None`` if the channel was received in an interaction.
+    last_message_id: Optional[:class:`int`]
+        The last message ID of the message sent to this channel. It may
+        *not* point to an existing or valid message.
+    slowmode_delay: :class:`int`
+        The number of seconds a member must wait between sending messages
+        in this channel. A value of `0` denotes that it is disabled.
+        Bots and users with :attr:`~Permissions.manage_channels` or
+        :attr:`~Permissions.manage_messages` bypass slowmode.
+    nsfw: :class:`bool`
+        If the channel is marked as "not safe for work".
+
+        .. note::
+
+            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
+    default_auto_archive_duration: :class:`int`
+        The default auto archive duration in minutes for threads created in this channel.
+
+        .. versionadded:: 2.0
+    flags: :class:`ChannelFlags`
+        Extra features of the channel.
+
+        .. versionadded:: 2.0
+    available_tags: List[:class:`ForumTag`]
+        The set of tags that can be used in a forum channel.
+
+        .. versionadded:: 2.3
+    default_sort_order: Optional[:class:`SortOrder`]
+        The default sort order type used to order posts in this channel.
+
+        .. versionadded:: 2.3
+    default_thread_slowmode_delay: Optional[:class:`int`]
+        The initial slowmode delay to set on newly created threads in this channel.
+
+        .. versionadded:: 2.3
+    default_reaction_emoji: Optional[:class:`str` | :class:`discord.GuildEmoji`]
+        The default forum reaction emoji.
+
+        .. versionadded:: 2.5
+    """
+
+    @property
+    def hides_media_download_options(self):
+        """Whether media download options are be hidden in this media channel.
+
+        .. versionadded:: 2.7
+        """
+        return self.flags.hide_media_download_options
+
+    @overload
+    async def edit(
+        self,
+        *,
+        reason: str | None = ...,
+        name: str = ...,
+        topic: str = ...,
+        position: int = ...,
+        nsfw: bool = ...,
+        sync_permissions: bool = ...,
+        category: CategoryChannel | None = ...,
+        slowmode_delay: int = ...,
+        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_thread_slowmode_delay: int = ...,
+        default_sort_order: SortOrder = ...,
+        default_reaction_emoji: GuildEmoji | int | str | None = ...,
+        available_tags: list[ForumTag] = ...,
+        require_tag: bool = ...,
+        hide_media_download_options: bool = ...,
+        overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
+    ) -> ForumChannel | None: ...
+
+    async def edit(self, *, reason=None, **options):
+        """|coro|
+
+        Edits the channel.
+
+        You must have the :attr:`~Permissions.manage_channels` permission to
+        use this.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The new channel name.
+        topic: :class:`str`
+            The new channel's topic.
+        position: :class:`int`
+            The new channel's position.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+        sync_permissions: :class:`bool`
+            Whether to sync permissions with the channel's new or pre-existing
+            category. Defaults to ``False``.
+        category: Optional[:class:`CategoryChannel`]
+            The new category for this channel. Can be ``None`` to remove the
+            category.
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
+        reason: Optional[:class:`str`]
+            The reason for editing this channel. Shows up on the audit log.
+        overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
+            The overwrites to apply to channel permissions. Useful for creating secret channels.
+        default_auto_archive_duration: :class:`int`
+            The new default auto archive duration in minutes for threads created in this channel.
+            Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+        default_thread_slowmode_delay: :class:`int`
+            The new default slowmode delay in seconds for threads created in this channel.
+
+            .. versionadded:: 2.3
+        default_sort_order: Optional[:class:`SortOrder`]
+            The default sort order type to use to order posts in this channel.
+
+            .. versionadded:: 2.3
+        default_reaction_emoji: Optional[:class:`discord.GuildEmoji` | :class:`int` | :class:`str`]
+            The default reaction emoji.
+            Can be a unicode emoji or a custom emoji in the forms:
+            :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+
+            .. versionadded:: 2.5
+        available_tags: List[:class:`ForumTag`]
+            The set of tags that can be used in this channel. Must be less than `20`.
+
+            .. versionadded:: 2.3
+        require_tag: :class:`bool`
+            Whether a tag should be required to be specified when creating a thread in this channel.
+
+            .. versionadded:: 2.3
+        hide_media_download_options: :class:`bool`
+            Whether media download options should be hidden in this media channel.
+
+            .. versionadded:: 2.7
+
+        Returns
+        -------
+        Optional[:class:`.MediaChannel`]
+            The newly edited media channel. If the edit was only positional
+            then ``None`` is returned instead.
+
+        Raises
+        ------
+        InvalidArgument
+            If position is less than 0 or greater than the number of channels, or if
+            the permission overwrite information is not in proper form.
+        Forbidden
+            You do not have permissions to edit the channel.
+        HTTPException
+            Editing the channel failed.
+        """
+        with contextlib.suppress(KeyError):
+            require_tag = options.pop("require_tag")
+            options["flags"] = options.get("flags") or ChannelFlags._from_value(
+                self.flags.value
+            )
+            options["flags"].require_tag = require_tag
+
+        with contextlib.suppress(KeyError):
+            hide_media_download_options = options.pop("hide_media_download_options")
+            options["flags"] = options.get("flags") or ChannelFlags._from_value(
+                self.flags.value
+            )
+            options["flags"].hide_media_download_options = hide_media_download_options
+
+        payload = await self._edit(options, reason=reason)
+        if payload is not None:
+            # the payload will always be the proper channel payload
+            return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
 
 class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hashable):
@@ -3234,8 +3446,10 @@ def _guild_channel_factory(channel_type: int):
         return StageChannel, value
     elif value is ChannelType.directory:
         return None, value  # todo: Add DirectoryChannel when applicable
-    elif value is ChannelType.forum or value is ChannelType.media:
+    elif value is ChannelType.forum:
         return ForumChannel, value
+    elif value is ChannelType.media:
+        return MediaChannel, value
     else:
         return None, value
 
