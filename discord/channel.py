@@ -1357,7 +1357,7 @@ class ForumChannel(_TextChannel):
 
 
 class MediaChannel(ForumChannel):
-    """Represents a Discord media channel.
+    """Represents a Discord media channel. Subclass of :class:`ForumChannel`.
 
     .. container:: operations
 
