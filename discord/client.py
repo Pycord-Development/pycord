@@ -751,10 +751,13 @@ class Client:
         # Update the loop to get the running one in case the one set is MISSING
         if self.loop is MISSING:
             self.loop = asyncio.get_event_loop()
+            self.http.loop = self.loop
+            self._connection.loop = self.loop
+
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
-    def run(self, *args: Any, **kwargs: Any) -> None:
+    def run(self, token: str, *, reconnect: bool = True) -> None:
         """A blocking call that abstracts away the event loop
         initialisation from you.
 
@@ -765,12 +768,17 @@ class Client:
         Roughly Equivalent to: ::
 
             try:
-                loop.run_until_complete(start(*args, **kwargs))
+                asyncio.run(start(token))
             except KeyboardInterrupt:
-                loop.run_until_complete(close())
-                # cancel all tasks lingering
-            finally:
-                loop.close()
+                return
+
+        Parameters
+        ----------
+        token: :class:`str`
+            The authentication token. Do not prefix this token with anything as the library will do it for you.
+        reconnect: :class:`bool`
+            If we should attempt reconnecting to the gateway, either due to internet failure or a specific failure on Discord's part.
+            Certain disconnects that lead to bad state will not be handled (such as invalid sharding payloads or bad tokens).
 
         .. warning::
 
@@ -781,7 +789,7 @@ class Client:
 
         async def runner():
             try:
-                await self.start(*args, **kwargs)
+                await self.start(token, reconnect=reconnect)
             finally:
                 if not self.is_closed():
                     await self.close()
@@ -794,9 +802,11 @@ class Client:
         try:
             run(runner())
         finally:
+            # Ensure the bot is closed
             if not self.is_closed():
                 self.loop.run_until_complete(self.close())
 
+        _log.info('Cleaning up tasks.')
         _cleanup_loop(self.loop)
 
     # properties
