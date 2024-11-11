@@ -60,7 +60,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
 - Fixed `AttributeError` when sending polls with `PartialWebook`.
   ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
-- Fixed Async I/O errors that could be raised when using `Client.run` ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
+- Fixed Async I/O errors that could be raised when using `Client.run`
+  ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
 
 ### Changed
 
