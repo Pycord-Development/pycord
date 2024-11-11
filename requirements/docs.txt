@@ -6,6 +6,6 @@ sphinxext-opengraph==0.9.1
 sphinx-copybutton==0.5.2
 furo==2024.8.6
 sphinx-autodoc-typehints==2.2.3
-sphinx-intl==2.2.0
+sphinx-intl==2.3.0
 typing_extensions==4.12.2
 levenshtein==0.26.1
