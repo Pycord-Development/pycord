@@ -748,6 +748,9 @@ class Client:
         TypeError
             An unexpected keyword argument was received.
         """
+        # Update the loop to get the running one in case the one set is MISSING
+        if self.loop is MISSING:
+            self.loop = asyncio.get_event_loop()
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
@@ -777,8 +780,6 @@ class Client:
         """
 
         async def runner():
-            # Update the bot loop to replace MISSING
-            self.loop = asyncio.get_event_loop()
             try:
                 await self.start(*args, **kwargs)
             finally:
