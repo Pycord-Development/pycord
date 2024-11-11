@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import signal
 import sys
 import traceback
 from types import TracebackType
@@ -221,14 +220,12 @@ class Client:
     def __init__(
         self,
         *,
-        loop: asyncio.AbstractEventLoop | None = None,
+        loop: asyncio.AbstractEventLoop = MISSING,
         **options: Any,
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
-        )
+        self.loop: asyncio.AbstractEventLoop = loop
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
         )
@@ -780,16 +777,26 @@ class Client:
         """
 
         async def runner():
+            # Update the bot loop to replace MISSING
+            self.loop = asyncio.get_event_loop()
             try:
                 await self.start(*args, **kwargs)
             finally:
                 if not self.is_closed():
                     await self.close()
 
+        run = asyncio.run
+
+        if self.loop is not MISSING:
+            run = self.loop.run_until_complete
+
         try:
-            asyncio.run(runner())
-        except KeyboardInterrupt:
-            return
+            run(runner())
+        finally:
+            if not self.is_closed():
+                self.loop.run_until_complete(self.close())
+
+        _cleanup_loop(self.loop)
 
     # properties
 
