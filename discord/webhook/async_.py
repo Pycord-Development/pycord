@@ -803,6 +803,12 @@ class _WebhookState:
         # state parameter is artificial
         return BaseUser(state=self, data=data)  # type: ignore
 
+    def store_poll(self, poll: Poll, message_id: int):
+        if self._parent is not None:
+            return self._parent.store_poll(poll, message_id)
+        # state parameter is artificial
+        return None
+
     @property
     def http(self):
         if self._parent is not None:

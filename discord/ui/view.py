@@ -126,7 +126,7 @@ class View:
     *items: :class:`Item`
         The initial items attached to this view.
     timeout: Optional[:class:`float`]
-        Timeout in seconds from last interaction with the UI before no longer accepting input.
+        Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
 
     Attributes
