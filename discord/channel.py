@@ -1377,6 +1377,8 @@ class MediaChannel(ForumChannel):
 
             Returns the channel's name.
 
+        .. versionadded:: 2.7
+
     Attributes
     ----------
     name: :class:`str`
@@ -1413,35 +1415,25 @@ class MediaChannel(ForumChannel):
     default_auto_archive_duration: :class:`int`
         The default auto archive duration in minutes for threads created in this channel.
 
-        .. versionadded:: 2.0
     flags: :class:`ChannelFlags`
         Extra features of the channel.
 
-        .. versionadded:: 2.0
     available_tags: List[:class:`ForumTag`]
         The set of tags that can be used in a forum channel.
 
-        .. versionadded:: 2.3
     default_sort_order: Optional[:class:`SortOrder`]
         The default sort order type used to order posts in this channel.
 
-        .. versionadded:: 2.3
     default_thread_slowmode_delay: Optional[:class:`int`]
         The initial slowmode delay to set on newly created threads in this channel.
 
-        .. versionadded:: 2.3
     default_reaction_emoji: Optional[:class:`str` | :class:`discord.GuildEmoji`]
         The default forum reaction emoji.
-
-        .. versionadded:: 2.5
     """
 
     @property
-    def hides_media_download_options(self):
-        """Whether media download options are be hidden in this media channel.
-
-        .. versionadded:: 2.7
-        """
+    def hides_media_download_options(self) -> bool:
+        """Whether media download options are be hidden in this media channel."""
         return self.flags.hide_media_download_options
 
     @overload
@@ -1503,29 +1495,22 @@ class MediaChannel(ForumChannel):
         default_thread_slowmode_delay: :class:`int`
             The new default slowmode delay in seconds for threads created in this channel.
 
-            .. versionadded:: 2.3
         default_sort_order: Optional[:class:`SortOrder`]
             The default sort order type to use to order posts in this channel.
 
-            .. versionadded:: 2.3
         default_reaction_emoji: Optional[:class:`discord.GuildEmoji` | :class:`int` | :class:`str`]
             The default reaction emoji.
             Can be a unicode emoji or a custom emoji in the forms:
             :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
 
-            .. versionadded:: 2.5
         available_tags: List[:class:`ForumTag`]
             The set of tags that can be used in this channel. Must be less than `20`.
 
-            .. versionadded:: 2.3
         require_tag: :class:`bool`
             Whether a tag should be required to be specified when creating a thread in this channel.
 
-            .. versionadded:: 2.3
         hide_media_download_options: :class:`bool`
             Whether media download options should be hidden in this media channel.
-
-            .. versionadded:: 2.7
 
         Returns
         -------

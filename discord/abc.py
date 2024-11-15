@@ -416,9 +416,7 @@ class GuildChannel:
             )
         except KeyError:
             pass
-        if options.get("flags") and not isinstance(
-            options["flags"], int
-        ):  # it shouldn't be an int but just in case
+        if options.get("flags"):
             options["flags"] = options["flags"].value
         try:
             options["available_tags"] = [
