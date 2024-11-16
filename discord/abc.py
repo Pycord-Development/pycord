@@ -416,8 +416,12 @@ class GuildChannel:
             )
         except KeyError:
             pass
-        if options.get("flags"):
-            options["flags"] = options["flags"].value
+
+        try:
+            options["flags"] = options.pop("flags").value
+        except KeyError:
+            pass
+
         try:
             options["available_tags"] = [
                 tag.to_dict() for tag in options.pop("available_tags")
