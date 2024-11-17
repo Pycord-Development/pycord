@@ -58,6 +58,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2611](https://github.com/Pycord-Development/pycord/pull/2611))
 - Fixed `TypeError` when passing `skus` parameter in `Client.entitlements()`.
   ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
+- Fixed `AttributeError` when sending polls with `PartialWebook`.
+  ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
+- Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed
+  apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 
 ### Changed
 
