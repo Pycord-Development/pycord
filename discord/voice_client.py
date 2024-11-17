@@ -271,6 +271,7 @@ class VoiceClient(VoiceProtocol):
         "xsalsa20_poly1305_lite",
         "xsalsa20_poly1305_suffix",
         "xsalsa20_poly1305",
+        "aead_xchacha20_poly1305_rtpsize",
     )
 
     @property
@@ -565,6 +566,7 @@ class VoiceClient(VoiceProtocol):
         return encrypt_packet(header, data)
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data) -> bytes:
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         nonce = bytearray(24)
         nonce[:12] = header
@@ -572,12 +574,14 @@ class VoiceClient(VoiceProtocol):
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext
 
     def _encrypt_xsalsa20_poly1305_suffix(self, header: bytes, data) -> bytes:
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         nonce = nacl.utils.random(nacl.secret.SecretBox.NONCE_SIZE)
 
         return header + box.encrypt(bytes(data), nonce).ciphertext + nonce
 
     def _encrypt_xsalsa20_poly1305_lite(self, header: bytes, data) -> bytes:
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         nonce = bytearray(24)
 
@@ -586,7 +590,18 @@ class VoiceClient(VoiceProtocol):
 
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext + nonce[:4]
 
+    def _encrypt_aead_xchacha20_poly1305_rtpsize(self, header: bytes, data) -> bytes:
+        # Required as of Nov 18 2024
+        box = nacl.secret.Aead(bytes(self.secret_key))
+        nonce = bytearray(24)
+
+        nonce[:4] = struct.pack('>I', self._lite_nonce)
+        self.checked_add('_lite_nonce', 1, 4294967295)
+
+        return header + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext + nonce[:4]
+
     def _decrypt_xsalsa20_poly1305(self, header, data):
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
 
         nonce = bytearray(24)
@@ -595,6 +610,7 @@ class VoiceClient(VoiceProtocol):
         return self.strip_header_ext(box.decrypt(bytes(data), bytes(nonce)))
 
     def _decrypt_xsalsa20_poly1305_suffix(self, header, data):
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
 
         nonce_size = nacl.secret.SecretBox.NONCE_SIZE
@@ -603,6 +619,7 @@ class VoiceClient(VoiceProtocol):
         return self.strip_header_ext(box.decrypt(bytes(data[:-nonce_size]), nonce))
 
     def _decrypt_xsalsa20_poly1305_lite(self, header, data):
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
 
         nonce = bytearray(24)
@@ -610,6 +627,16 @@ class VoiceClient(VoiceProtocol):
         data = data[:-4]
 
         return self.strip_header_ext(box.decrypt(bytes(data), bytes(nonce)))
+
+    def _decrypt_aead_xchacha20_poly1305_rtpsize(self, header, data):
+        # Required as of Nov 18 2024
+        box = nacl.secret.Aead(bytes(self.secret_key))
+
+        nonce = bytearray(24)
+        nonce[:4] = data[-4:]
+        data = data[:-4]
+
+        return self.strip_header_ext(box.decrypt(bytes(data), bytes(header), bytes(nonce)))
 
     @staticmethod
     def strip_header_ext(data):
