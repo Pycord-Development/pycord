@@ -775,7 +775,8 @@ class Client:
         Parameters
         ----------
         token: :class:`str`
-            The authentication token. Do not prefix this token with anything as the library will do it for you.
+            The authentication token. Do not prefix this token with
+            anything as the library will do it for you.
         reconnect: :class:`bool`
             If we should attempt reconnecting to the gateway, either due to internet
             failure or a specific failure on Discord's part. Certain
