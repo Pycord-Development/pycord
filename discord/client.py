@@ -777,8 +777,10 @@ class Client:
         token: :class:`str`
             The authentication token. Do not prefix this token with anything as the library will do it for you.
         reconnect: :class:`bool`
-            If we should attempt reconnecting to the gateway, either due to internet failure or a specific failure on Discord's part.
-            Certain disconnects that lead to bad state will not be handled (such as invalid sharding payloads or bad tokens).
+            If we should attempt reconnecting to the gateway, either due to internet
+            failure or a specific failure on Discord's part. Certain
+            disconnects that lead to bad state will not be handled (such as
+            invalid sharding payloads or bad tokens).
 
         .. warning::
 
