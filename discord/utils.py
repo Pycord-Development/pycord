@@ -29,7 +29,6 @@ import array
 import asyncio
 import collections.abc
 import datetime
-import functools
 import itertools
 import json
 import re
@@ -63,6 +62,8 @@ from typing import (
     Union,
     overload,
 )
+
+from typing_extensions import deprecated as _typing_deprecated
 
 from .errors import HTTPException, InvalidArgument
 
@@ -290,6 +291,50 @@ def copy_doc(original: Callable) -> Callable[[T], T]:
     return decorator
 
 
+def _get_deprecated_message(
+    name: str,
+    instead: str | None = None,
+    since: str | None = None,
+    removed: str | None = None,
+    reference: str | None = None,
+) -> str:
+    """
+    Helper function to generate a deprecation message.
+
+    Parameters
+    ----------
+    name: :class:`str`
+        The name of the deprecated function.
+    instead: Optional[:class:`str`]
+        A recommended alternative to the function.
+    since: Optional[:class:`str`]
+        The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
+        the patch version is optional.
+    removed: Optional[:class:`str`]
+        The version in which the function is planned to be removed. This should be in the format
+        ``major.minor(.patch)``, where the patch version is optional.
+    reference: Optional[:class:`str`]
+        A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
+        issue/PR.
+
+    Returns
+    -------
+    :class:`str`
+        The deprecation message.
+    """
+    message = f"{name} is deprecated"
+    if since:
+        message += f" since version {since}"
+    if removed:
+        message += f" and will be removed in version {removed}"
+    if instead:
+        message += f", consider using {instead} instead"
+    message += "."
+    if reference:
+        message += f" See {reference} for more information."
+    return message
+
+
 def warn_deprecated(
     name: str,
     instead: str | None = None,
@@ -320,17 +365,7 @@ def warn_deprecated(
         The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     """
     warnings.simplefilter("always", DeprecationWarning)  # turn off filter
-    message = f"{name} is deprecated"
-    if since:
-        message += f" since version {since}"
-    if removed:
-        message += f" and will be removed in version {removed}"
-    if instead:
-        message += f", consider using {instead} instead"
-    message += "."
-    if reference:
-        message += f" See {reference} for more information."
-
+    message = _get_deprecated_message(name, instead, since, removed, reference)
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
     warnings.simplefilter("default", DeprecationWarning)  # reset filter
 
@@ -340,12 +375,11 @@ def deprecated(
     since: str | None = None,
     removed: str | None = None,
     reference: str | None = None,
-    stacklevel: int = 3,
+    stacklevel: int = 1,
     *,
     use_qualname: bool = True,
-) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
-    """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
-    the decorated function is called.
+) -> _typing_deprecated:
+    """A decorator implementation of :func:`typing.deprecated` that allows for more detailed deprecation messages.
 
     Parameters
     ----------
@@ -361,27 +395,25 @@ def deprecated(
         A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
         issue/PR.
     stacklevel: :class:`int`
-        The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
+        The stacklevel kwarg passed to :func:`typing.deprecated`. Defaults to 1.
     use_qualname: :class:`bool`
         Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of
         the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__
         will display as ``login``. Defaults to ``True``.
     """
 
-    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
-        @functools.wraps(func)
-        def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
-            warn_deprecated(
-                name=func.__qualname__ if use_qualname else func.__name__,
-                instead=instead,
-                since=since,
-                removed=removed,
-                reference=reference,
-                stacklevel=stacklevel,
-            )
-            return func(*args, **kwargs)
-
-        return decorated
+    def actual_decorator(func: T) -> T:
+        return _typing_deprecated(
+            _get_deprecated_message(
+                func.__qualname__ if use_qualname else func.__name__,
+                instead,
+                since,
+                removed,
+                reference,
+            ),
+            stacklevel=stacklevel,  # this seems to work
+            category=DeprecationWarning,
+        )(func)
 
     return actual_decorator
 
