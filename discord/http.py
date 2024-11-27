@@ -44,6 +44,7 @@ from .errors import (
     LoginFailure,
     NotFound,
 )
+from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .utils import MISSING, warn_deprecated
 
@@ -594,15 +595,17 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
+            attachment_info = {
                     "id": index,
                     "filename": file.filename,
                     "description": file.description,
-                    "waveform": file.waveform,
-                    "duration_secs": file.duration_secs,
                 }
-            )
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -662,22 +665,23 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                    # TODO: Make Editing Work
-                    "waveform": "37WKcJ6jlLSVnaabsbeip4KPmHJXUUEbExgFJE8J7iNPFggpKQkTNl95dobFqqe2tKubnbSTX3yLVVBFS4iqd4dbKmFvMChwfVRKfWFYWRpLaV9jlYtKWWZde6mtnYiDlGNUgmFAWWdRXGNsf2NBYnNcS1uDjm+qwK2urKe8uKqjZ2KGSjtbLUpTO0iDYSBSg6CzCk1LNDVAZnOAvNiUkLu8r8vPnFw6bXZbbXcn0vUU8q2q38Olyfb0y7OhlnV9u6N4zuAH9uI=",
-                    "duration_secs": 60.0,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
                     "value": file.fp,
                     "filename": file.filename,
-                    "content_type": "audio/wav",
+                    "content_type": "application/octet-stream",
                 }
             )
         if "attachments" not in payload:

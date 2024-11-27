@@ -37,7 +37,7 @@ from .enums import (
     try_enum,
 )
 from .errors import ClientException, InteractionResponded, InvalidArgument
-from .file import File
+from .file import File, VoiceMessage
 from .flags import MessageFlags
 from .guild import Guild
 from .member import Member
@@ -840,7 +840,6 @@ class InteractionResponse:
         files: list[File] = None,
         poll: Poll = None,
         delete_after: float = None,
-        voice_message: bool = False,
     ) -> Interaction:
         """|coro|
 
@@ -878,10 +877,6 @@ class InteractionResponse:
             The poll to send.
 
             .. versionadded:: 2.6
-        voice_message: :class:`bool`
-            If the file should be treated as a voice message.
-
-            .. versionadded:: 2.7
 
         Returns
         -------
@@ -920,10 +915,7 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        if ephemeral:
-            payload["flags"] = 64
-        if voice_message:
-            payload["flags"] = payload.setdefault("flags", 0) + 8192
+        flags = MessageFlags(ephemeral=ephemeral)
 
         if view is not None:
             payload["components"] = view.to_components()
@@ -960,6 +952,11 @@ class InteractionResponse:
                 )
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
+
+            if any(isinstance(file, VoiceMessage) for file in files):
+                flags = flags + MessageFlags(is_voice_message=True)
+
+        payload["flags"] = flags.value
 
         parent = self._parent
         adapter = async_context.get()
