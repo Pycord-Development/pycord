@@ -29,7 +29,10 @@ import io
 import os
 from typing import TYPE_CHECKING
 
-__all__ = ("File", "VoiceMessage", )
+__all__ = (
+    "File",
+    "VoiceMessage",
+)
 
 
 class File:
@@ -157,7 +160,7 @@ class VoiceMessage(File):
         multiple requests.
 
     Attributes
-    -----------
+    ----------
     fp: Union[:class:`os.PathLike`, :class:`io.BufferedIOBase`]
         A audio file-like object opened in binary mode and read mode
         or a filename representing a file in the hard drive to
@@ -189,13 +192,14 @@ class VoiceMessage(File):
         "duration_secs",
     )
 
-    def __init__(self,
+    def __init__(
+        self,
         fp: str | bytes | os.PathLike | io.BufferedIOBase,
         # filename: str | None = None,
         waveform: str = "",
         duration_secs: float = 0.0,
-        **kwargs
-        ):
+        **kwargs,
+    ):
         super().__init__(fp, **kwargs)
         self.waveform = waveform
         self.duration_secs = duration_secs

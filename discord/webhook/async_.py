@@ -666,7 +666,8 @@ def handle_message_parameters(
         payload["username"] = username
 
     flags = MessageFlags(
-        suppress_embeds=suppress, ephemeral=ephemeral,
+        suppress_embeds=suppress,
+        ephemeral=ephemeral,
     )
 
     if applied_tags is not MISSING:

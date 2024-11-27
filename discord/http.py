@@ -596,10 +596,10 @@ class HTTPClient:
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
             attachment_info = {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
             if isinstance(file, VoiceMessage):
                 attachment_info.update(
                     waveform=file.waveform,
