@@ -319,6 +319,29 @@ class Interaction:
         """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
 
+    @utils.cached_slot_property("_cs_channel")
+    @utils.deprecated("Interaction.channel", "2.7")
+    def cached_channel(self) -> InteractionChannel | None:
+        """The cached channel the interaction was sent from.
+        DM channels are not resolved. These are :class:`PartialMessageable` instead.
+
+        .. deprecated:: 2.7
+        """
+        guild = self.guild
+        channel = guild and guild._resolve_channel(self.channel_id)
+        if channel is None:
+            if self.channel_id is not None:
+                type = (
+                    ChannelType.text
+                    if self.guild_id is not None
+                    else ChannelType.private
+                )
+                return PartialMessageable(
+                    state=self._state, id=self.channel_id, type=type
+                )
+            return None
+        return channel
+
     @property
     def permissions(self) -> Permissions:
         """The resolved permissions of the member in the channel, including overwrites.
