@@ -42,7 +42,7 @@ from .application_role_connection import ApplicationRoleConnectionMetadata
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
 from .emoji import AppEmoji, GuildEmoji
-from .enums import ChannelType, Status
+from .enums import ChannelType, ContentFilter, NotificationLevel, Status, VerificationLevel
 from .errors import *
 from .flags import ApplicationFlags, Intents
 from .gateway import *
@@ -51,7 +51,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
-from .monetization import SKU, Entitlement
+from .monetization import SKU
 from .object import Object
 from .stage_instance import StageInstance
 from .state import ConnectionState
@@ -64,6 +64,7 @@ from .utils import MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
+from .guild_builder import GuildBuilder
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
@@ -1592,18 +1593,26 @@ class Client:
         data = await self.http.get_guild(guild_id, with_counts=with_counts)
         return Guild(data=data, state=self._connection)
 
-    async def create_guild(
+    def create_guild(
         self,
         *,
         name: str,
         icon: bytes = MISSING,
         code: str = MISSING,
-    ) -> Guild:
+        verification_level: VerificationLevel = MISSING,
+        content_filter: ContentFilter = MISSING,
+        notification_level: NotificationLevel = MISSING,
+        afk_timeout: int = MISSING,
+    ) -> GuildBuilder:
         """|coro|
 
         Creates a :class:`.Guild`.
 
         Bot accounts in more than 10 guilds are not allowed to create guilds.
+
+        .. versionchanged:: 2.7
+
+            This now returns :class:`GuildBuilder` instead of :class:`Guild`
 
         Parameters
         ----------
@@ -1616,30 +1625,43 @@ class Client:
             The code for a template to create the guild with.
 
             .. versionadded:: 1.4
+        verification_level: :class:`VerificationLevel`
+            The verification level.
+
+            .. versionadded:: 2.7
+        content_filter: :class:`ContentFilter`
+            The explicit content filter level.
+
+            .. versionadded:: 2.7
+        notification_level: :class:`NotificationLevel`
+            The default message notification level.
+
+            .. versionadded:: 2.7
+        afk_timeout: :class:`int`
+            The afk timeout in seconds.
+
+            .. versionadded:: 2.7
 
         Returns
         -------
-        :class:`.Guild`
-            The guild created. This is not the same guild that is
-            added to cache.
-
-        Raises
-        ------
-        :exc:`HTTPException`
-            Guild creation failed.
-        :exc:`InvalidArgument`
-            Invalid icon image format given. Must be PNG or JPG.
+        :class:`GuildBuilder`
+            The guild builder, which allows you to customize more your guild before creating it.
         """
-        if icon is not MISSING:
-            icon_base64 = utils._bytes_to_base64_data(icon)
-        else:
-            icon_base64 = None
+        if code is MISSING:
+            code = None  # type: ignore
 
-        if code:
-            data = await self.http.create_from_template(code, name, icon_base64)
-        else:
-            data = await self.http.create_guild(name, icon_base64)
-        return Guild(data=data, state=self._connection)
+        metadata = {}
+
+        if verification_level is not MISSING:
+            metadata['verification_level'] = verification_level.value
+        if content_filter is not MISSING:
+            metadata['explicit_content_filter'] = content_filter.value
+        if notification_level is not MISSING:
+            metadata['default_message_notifications'] = notification_level.value
+        if afk_timeout is not MISSING:
+            metadata['afk_timeout'] = afk_timeout
+
+        return GuildBuilder(state=self._connection, name=name, icon=icon, code=code, metadata=metadata)
 
     async def fetch_stage_instance(self, channel_id: int, /) -> StageInstance:
         """|coro|

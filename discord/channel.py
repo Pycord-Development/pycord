@@ -66,6 +66,7 @@ __all__ = (
     "PartialMessageable",
     "ForumChannel",
     "ForumTag",
+    "GuildCreateChannel",
 )
 
 if TYPE_CHECKING:
