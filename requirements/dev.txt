@@ -7,5 +7,5 @@ mypy~=1.13.0
 coverage~=7.6
 pre-commit==4.0.1
 codespell==2.3.0
-bandit==1.7.10
+bandit==1.8.0
 flake8==7.1.1
