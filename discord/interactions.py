@@ -320,7 +320,7 @@ class Interaction:
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
-    @utils.deprecated("Interaction.channel", "2.7")
+    @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
     def cached_channel(self) -> InteractionChannel | None:
         """The cached channel the interaction was sent from.
         DM channels are not resolved. These are :class:`PartialMessageable` instead.
