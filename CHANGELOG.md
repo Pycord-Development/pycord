@@ -62,6 +62,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
 - Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
+- Fixed `Interaction.channel` was malformed.
+  ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
 
 ### Changed
 
