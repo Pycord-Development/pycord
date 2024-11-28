@@ -32,6 +32,7 @@ import re
 from typing import TYPE_CHECKING
 
 import discord.utils
+from discord.ext import bridge
 
 from .core import Command, Group
 from .errors import CommandError
@@ -582,7 +583,9 @@ class HelpCommand:
         prefix_commands = [
             command
             for command in commands
-            if not isinstance(command, discord.commands.ApplicationCommand)
+            if not isinstance(
+                command, (discord.commands.ApplicationCommand, bridge.BridgeExtCommand)
+            )
         ]
         iterator = (
             prefix_commands
