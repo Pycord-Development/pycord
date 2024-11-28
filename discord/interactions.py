@@ -121,8 +121,6 @@ class Interaction:
         The guild ID the interaction was sent from.
     channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]
         The channel the interaction was sent from.
-
-        Note that due to a Discord limitation, DM channels are not resolved since there is no data to complete them. These are :class:`PartialMessageable` instead.
     channel_id: Optional[:class:`int`]
         The ID of the channel the interaction was sent from.
     application_id: :class:`int`
