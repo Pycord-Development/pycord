@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import signal
 import sys
 import traceback
 from types import TracebackType
@@ -221,14 +220,12 @@ class Client:
     def __init__(
         self,
         *,
-        loop: asyncio.AbstractEventLoop | None = None,
+        loop: asyncio.AbstractEventLoop = MISSING,
         **options: Any,
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
-        )
+        self.loop: asyncio.AbstractEventLoop = loop
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
         )
@@ -752,10 +749,16 @@ class Client:
         TypeError
             An unexpected keyword argument was received.
         """
+        # Update the loop to get the running one in case the one set is MISSING
+        if self.loop is MISSING:
+            self.loop = asyncio.get_event_loop()
+            self.http.loop = self.loop
+            self._connection.loop = self.loop
+
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
-    def run(self, *args: Any, **kwargs: Any) -> None:
+    def run(self, token: str, *, reconnect: bool = True) -> None:
         """A blocking call that abstracts away the event loop
         initialisation from you.
 
@@ -766,12 +769,20 @@ class Client:
         Roughly Equivalent to: ::
 
             try:
-                loop.run_until_complete(start(*args, **kwargs))
+                asyncio.run(start(token))
             except KeyboardInterrupt:
-                loop.run_until_complete(close())
-                # cancel all tasks lingering
-            finally:
-                loop.close()
+                return
+
+        Parameters
+        ----------
+        token: :class:`str`
+            The authentication token. Do not prefix this token with
+            anything as the library will do it for you.
+        reconnect: :class:`bool`
+            If we should attempt reconnecting to the gateway, either due to internet
+            failure or a specific failure on Discord's part. Certain
+            disconnects that lead to bad state will not be handled (such as
+            invalid sharding payloads or bad tokens).
 
         .. warning::
 
@@ -779,41 +790,28 @@ class Client:
             is blocking. That means that registration of events or anything being
             called after this function call will not execute until it returns.
         """
-        loop = self.loop
-
-        try:
-            loop.add_signal_handler(signal.SIGINT, loop.stop)
-            loop.add_signal_handler(signal.SIGTERM, loop.stop)
-        except (NotImplementedError, RuntimeError):
-            pass
 
         async def runner():
             try:
-                await self.start(*args, **kwargs)
+                await self.start(token, reconnect=reconnect)
             finally:
                 if not self.is_closed():
                     await self.close()
 
-        def stop_loop_on_completion(f):
-            loop.stop()
+        run = asyncio.run
 
-        future = asyncio.ensure_future(runner(), loop=loop)
-        future.add_done_callback(stop_loop_on_completion)
+        if self.loop is not MISSING:
+            run = self.loop.run_until_complete
+
         try:
-            loop.run_forever()
-        except KeyboardInterrupt:
-            _log.info("Received signal to terminate bot and event loop.")
+            run(runner())
         finally:
-            future.remove_done_callback(stop_loop_on_completion)
-            _log.info("Cleaning up tasks.")
-            _cleanup_loop(loop)
+            # Ensure the bot is closed
+            if not self.is_closed():
+                self.loop.run_until_complete(self.close())
 
-        if not future.cancelled():
-            try:
-                return future.result()
-            except KeyboardInterrupt:
-                # I am unsure why this gets raised here but suppress it anyway
-                return None
+        _log.info("Cleaning up tasks.")
+        _cleanup_loop(self.loop)
 
     # properties
 
