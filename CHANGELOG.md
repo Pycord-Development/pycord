@@ -62,6 +62,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
 - Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
+- Fixed error when responding normally with a `Paginator` to an ephemerally deferred
+  interaction. ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))
 
 ### Changed
 
