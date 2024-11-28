@@ -119,8 +119,10 @@ class Interaction:
         The interaction type.
     guild_id: Optional[:class:`int`]
         The guild ID the interaction was sent from.
-    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]
+    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]
         The channel the interaction was sent from.
+
+        Note that due to a Discord limitation, DM channels are not resolved since there is no data to complete them. These are :class:`PartialMessageable` instead.
     channel_id: Optional[:class:`int`]
         The ID of the channel the interaction was sent from.
     application_id: :class:`int`
@@ -261,20 +263,32 @@ class Interaction:
             except KeyError:
                 pass
 
-        if channel := data.get("channel"):
-            if (ch_type := channel.get("type")) is not None:
-                factory, ch_type = _threaded_channel_factory(ch_type)
+        channel = data.get("channel")
+        data_ch_type: int | None = None
+        if channel:
+            data_ch_type = channel.get("type")
 
-                if ch_type in (ChannelType.group, ChannelType.private):
-                    self.channel = factory(
-                        me=self.user, data=channel, state=self._state
-                    )
-                elif self.guild:
-                    self.channel = factory(
-                        guild=self.guild, state=self._state, data=channel
-                    )
-        else:
-            self.channel = self.cached_channel
+        if data_ch_type is not None:
+            factory, ch_type = _threaded_channel_factory(data_ch_type)
+            if ch_type in (ChannelType.group, ChannelType.private):
+                self.channel = factory(me=self.user, data=channel, state=self._state)
+            elif self.guild:
+                self.channel = self.guild._resolve_channel(self.channel_id) or factory(
+                    guild=self.guild, state=self._state, data=channel
+                )
+
+        if self.channel is None and self.guild:
+            self.channel = self.guild._resolve_channel(self.channel_id)
+        if self.channel is None:
+            if self.channel_id is not None:
+                ch_type = (
+                    ChannelType.text
+                    if self.guild_id is not None
+                    else ChannelType.private
+                )
+                return PartialMessageable(
+                    state=self._state, id=self.channel_id, type=ch_type
+                )
 
         self._channel_data = channel
 
@@ -304,29 +318,6 @@ class Interaction:
     def is_component(self) -> bool:
         """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
-
-    @utils.cached_slot_property("_cs_channel")
-    def cached_channel(self) -> InteractionChannel | None:
-        """The channel the
-        interaction was sent from.
-
-        Note that due to a Discord limitation, DM channels are not resolved since there is
-        no data to complete them. These are :class:`PartialMessageable` instead.
-        """
-        guild = self.guild
-        channel = guild and guild._resolve_channel(self.channel_id)
-        if channel is None:
-            if self.channel_id is not None:
-                type = (
-                    ChannelType.text
-                    if self.guild_id is not None
-                    else ChannelType.private
-                )
-                return PartialMessageable(
-                    state=self._state, id=self.channel_id, type=type
-                )
-            return None
-        return channel
 
     @property
     def permissions(self) -> Permissions:
