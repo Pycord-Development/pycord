@@ -195,14 +195,14 @@ class GuildBuilder:
         user_limit: int = ...,
         slowmode_delay: int = ...,
         rtc_region: VoiceRegion = ...,
-    ) -> GuildBuilderChannel:
-        ...
+    ) -> GuildBuilderChannel: ...
 
     @overload
     def add_channel(
-        self, channel: GuildBuilderChannel, /,
-    ) -> GuildBuilderChannel:
-        ...
+        self,
+        channel: GuildBuilderChannel,
+        /,
+    ) -> GuildBuilderChannel: ...
 
     def add_channel(
         self,
@@ -258,12 +258,21 @@ class GuildBuilder:
         if channel is None and name is MISSING and type is MISSING:
             raise ValueError('You must either provide "channel" or "name" and "type".')
         elif channel is not None and (name is not MISSING or type is not MISSING):
-            raise ValueError('"name" and "type" are not allowed if "channel" is provided.')
-        elif channel is None and ((name is MISSING and topic is not MISSING) or (name is not MISSING and type is MISSING)):
-            raise ValueError('"name" and "type" are required arguments if "channel" is not provided.')
+            raise ValueError(
+                '"name" and "type" are not allowed if "channel" is provided.'
+            )
+        elif channel is None and (
+            (name is MISSING and topic is not MISSING)
+            or (name is not MISSING and type is MISSING)
+        ):
+            raise ValueError(
+                '"name" and "type" are required arguments if "channel" is not provided.'
+            )
         elif channel is not None and name is MISSING and type is MISSING:
             if channel.id in self._channels:
-                raise ValueError(f'A channel with ID {channel.id} already exists, make sure IDs are unique.')
+                raise ValueError(
+                    f"A channel with ID {channel.id} already exists, make sure IDs are unique."
+                )
 
             self._channels[channel.id] = channel
             return channel
@@ -510,19 +519,19 @@ class GuildBuilderChannel:
             metadata["overwrites"] = overwrites
         if bitrate is not MISSING:
             if self.type not in (ChannelType.voice, ChannelType.stage_voice):
-                raise ValueError('cannot set a bitrate to a non-voice channel')
+                raise ValueError("cannot set a bitrate to a non-voice channel")
 
             metadata["bitrate"] = bitrate
         if user_limit is not MISSING:
             if self.type not in (ChannelType.voice, ChannelType.stage_voice):
-                raise ValueError('cannot set a user_limit to a non-voice channel')
+                raise ValueError("cannot set a user_limit to a non-voice channel")
 
             metadata["user_limit"] = user_limit
         if slowmode_delay is not MISSING and slowmode_delay != 0:
             metadata["rate_limit_per_user"] = slowmode_delay
         if rtc_region is not MISSING:
             if self.type not in (ChannelType.voice, ChannelType.stage_voice):
-                raise ValueError('cannot set a rtc_region to a non-voice channel')
+                raise ValueError("cannot set a rtc_region to a non-voice channel")
 
             metadata["rtc_region"] = rtc_region
 
