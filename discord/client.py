@@ -1649,7 +1649,7 @@ class Client:
 
         Returns
         -------
-        :class:`Guild`
+        :class:`.Guild`
             The guild created. This is not the same guild that is
             added to cache.
         """
