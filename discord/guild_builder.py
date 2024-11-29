@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Coroutine
+from typing import TYPE_CHECKING, Any, Coroutine, Generator, overload
 
 from . import utils
 from .abc import Snowflake
@@ -57,6 +57,17 @@ class GuildBuilder:
     properties before creating it.
 
     .. versionadded:: 2.7
+
+    .. container:: operations
+
+        .. describe:: await x
+
+            Creates the guild and returns a :class:`Guild` object.
+
+        .. describe:: x()
+
+            Returns a :ref:`coroutine <coroutine>` that, when awaited,
+            returns the new :class:`Guild` object.
 
     Attributes
     ----------
@@ -135,8 +146,8 @@ class GuildBuilder:
         data = await http.create_guild(payload)
         return Guild(data=data, state=self._state)
 
-    async def __await__(self) -> Guild:
-        return await self._do_create()
+    def __await__(self) -> Generator[Any, Any, Guild]:
+        return self._do_create().__await__()
 
     def __call__(self) -> Coroutine[Any, Any, Guild]:
         return self._do_create()
@@ -169,24 +180,57 @@ class GuildBuilder:
         """Optional[:class:`bytes`]: Returns the icon of the guild that is going to be created."""
         return self._icon if self._icon is not MISSING else None
 
+    @overload
     def add_channel(
         self,
+        /,
+        *,
         name: str,
         type: ChannelType,
+        topic: str | None = None,
+        overwrites: dict[Snowflake, PermissionOverwrite] = ...,
+        nsfw: bool = ...,
+        category_id: int | None = None,
+        bitrate: int = ...,
+        user_limit: int = ...,
+        slowmode_delay: int = ...,
+        rtc_region: VoiceRegion = ...,
+    ) -> GuildBuilderChannel:
+        ...
+
+    @overload
+    def add_channel(
+        self, channel: GuildBuilderChannel, /,
+    ) -> GuildBuilderChannel:
+        ...
+
+    def add_channel(
+        self,
+        channel: GuildBuilderChannel | None = None,
+        /,
         *,
+        name: str = MISSING,
+        type: ChannelType = MISSING,
         topic: str | None = None,
         overwrites: dict[Snowflake, PermissionOverwrite] = MISSING,
         nsfw: bool = MISSING,
         category_id: int | None = None,
+        bitrate: int = MISSING,
+        user_limit: int = MISSING,
+        slowmode_delay: int = MISSING,
+        rtc_region: VoiceRegion = MISSING,
     ) -> GuildBuilderChannel:
         """Adds a channel to the current guild.
 
         Parameters
         ----------
+        channel: :class:`GuildBuilderChannel`
+            The constructed channel object to add. If not provided you must provide
+            ``name`` and ``type``, and optionally any other parameter.
         name: :class:`str`
-            The channel name.
+            The channel name. This is required if ``channel`` is not provided.
         type: :class:`ChannelType`
-            The channel type.
+            The channel type. This is required if ``channel`` is not provided.
         topic: Optional[:class:`str`]
             The channel topic.
         overwrites: Dict[:class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
@@ -195,6 +239,15 @@ class GuildBuilder:
             Whether the channel is NSFW flagged.
         category_id: Optional[:class:`int`]
             The category placeholder ID this channel belongs to.
+        bitrate: :class:`int`
+        The channel bitrate.
+        user_limit: :class:`int`
+            The channel limit for number of members that can be connected on the channel.
+        slowmode_delay: :class:`int`
+            The number of seconds a member must wait between sending messages in this channel.
+            A value of ``0`` denotes that it is disabled.
+        rtc_region: :class:`VoiceRegion`
+            The channel voice region.
 
         Returns
         -------
@@ -202,12 +255,20 @@ class GuildBuilder:
             The channel.
         """
 
+        if channel is None and name is MISSING and type is MISSING:
+            raise ValueError('You must either provide "channel" or "name" and "type".')
+        elif channel is not None and (name is not MISSING or type is not MISSING):
+            raise ValueError('"name" and "type" are not allowed if "channel" is provided.')
+        elif channel is None and ((name is MISSING and topic is not MISSING) or (name is not MISSING and type is MISSING)):
+            raise ValueError('"name" and "type" are required arguments if "channel" is not provided.')
+        elif channel is not None and name is MISSING and type is MISSING:
+            if channel.id in self._channels:
+                raise ValueError(f'A channel with ID {channel.id} already exists, make sure IDs are unique.')
+
+            self._channels[channel.id] = channel
+            return channel
+
         id = len(self._channels) + 1
-        metadata = {}
-
-        if overwrites is not MISSING:
-            metadata["overwrites"] = overwrites
-
         channel = self._channels[id] = GuildBuilderChannel(
             id=id,
             name=name,
@@ -215,7 +276,11 @@ class GuildBuilder:
             topic=topic,
             nsfw=nsfw,
             category_id=category_id,
-            metadata=metadata,
+            overwrites=overwrites,
+            bitrate=bitrate,
+            user_limit=user_limit,
+            slowmode_delay=slowmode_delay,
+            rtc_region=rtc_region,
         )
         return channel
 
@@ -224,12 +289,37 @@ class GuildBuilder:
             id=0,
             name="everyone",
             hoisted=True,
-            position=0,
             mentionable=True,
             permissions=Permissions.text(),
             colour=Colour(0),
             icon=None,
         )
+
+    def get_role(self, id: int, /) -> GuildBuilderRole | None:
+        """Returns the role with the provided id.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the role. If this is ``0`` it will return the default
+            role.
+
+            .. note::
+
+                If you want to edit the default role you should use :meth:`.edit_default_role_permissions`
+                instead.
+
+        Returns
+        -------
+        Optional[:class:`GuildBuilderRole`]
+            The found role, or ``None``.
+        """
+        if id == 0:
+            default_role = self._roles.get(id)
+            if not default_role:
+                default_role = self._roles[0] = self._create_default_role()
+            return default_role
+        return self._roles.get(id)
 
     def edit_default_role_permissions(
         self,
@@ -269,7 +359,6 @@ class GuildBuilder:
         *,
         permissions: Permissions = MISSING,
         hoisted: bool = False,
-        position: int = MISSING,
         mentionable: bool = True,
         colour: Colour | None = MISSING,
         color: Color | None = MISSING,
@@ -287,8 +376,6 @@ class GuildBuilder:
         hoisted: :class:`bool`
             Whether the role members are displayed separately in the sidebar.
             Defaults to ``False``.
-        position: :class:`int`
-            The role position.
         mentionable: :class:`bool`
             Whether everyone can mention this role. Defaults to ``True``.
         colour: :class:`Colour`
@@ -323,14 +410,11 @@ class GuildBuilder:
 
         if permissions is MISSING:
             permissions = self._roles[0].permissions
-        if position is MISSING:
-            position = id
 
         role = self._roles[id] = GuildBuilderRole(
             id=id,
             name=name,
             hoisted=hoisted,
-            position=position,
             mentionable=mentionable,
             permissions=permissions,
             colour=resolved_colour,
@@ -344,6 +428,33 @@ class GuildBuilderChannel:
     """Represents a :class:`GuildBuilder` channel.
 
     .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    id: :class:`int`
+        The placeholder channel ID.
+    name: :class:`str`
+        The channel name.
+    type: :class:`ChannelType`
+        The channel type.
+    topic: Optional[:class:`str`]
+        The channel topic.
+    nsfw: :class:`bool`
+        Whether this channel is NSFW flagged. Defaults to ``False``.
+    category_id: Optional[:class:`int`]
+        The category placeholder ID this channel belongs to.
+    overwrites: Dict[:class:`~discord.abc.Snowflake`, :class:`PermissionOverwrite`]
+        The overwrites of this channel. The keys are expected to be roles placholder IDs and
+        will be treated as it.
+    bitrate: :class:`int`
+        The channel bitrate.
+    user_limit: :class:`int`
+        The channel limit for number of members that can be connected on the channel.
+    slowmode_delay: :class:`int`
+        The number of seconds a member must wait between sending messages in this channel.
+        A value of ``0`` denotes that it is disabled.
+    rtc_region: :class:`VoiceRegion`
+        The channel voice region.
 
     Attributes
     ----------
@@ -377,9 +488,14 @@ class GuildBuilderChannel:
         name: str,
         type: ChannelType,
         topic: str | None,
-        nsfw: bool,
-        category_id: int | None,
-        metadata: dict[str, Any],
+        *,
+        nsfw: bool = False,
+        category_id: int | None = None,
+        overwrites: dict[Snowflake, PermissionOverwrite] = MISSING,
+        bitrate: int = MISSING,
+        user_limit: int = MISSING,
+        slowmode_delay: int = MISSING,
+        rtc_region: VoiceRegion = MISSING,
     ) -> None:
         self.id: int = id
         self.name: str = name
@@ -387,6 +503,29 @@ class GuildBuilderChannel:
         self.topic: str | None = topic
         self.nsfw: bool = nsfw
         self.category_id: int | None = category_id
+
+        metadata = {}
+
+        if overwrites is not MISSING:
+            metadata["overwrites"] = overwrites
+        if bitrate is not MISSING:
+            if self.type not in (ChannelType.voice, ChannelType.stage_voice):
+                raise ValueError('cannot set a bitrate to a non-voice channel')
+
+            metadata["bitrate"] = bitrate
+        if user_limit is not MISSING:
+            if self.type not in (ChannelType.voice, ChannelType.stage_voice):
+                raise ValueError('cannot set a user_limit to a non-voice channel')
+
+            metadata["user_limit"] = user_limit
+        if slowmode_delay is not MISSING and slowmode_delay != 0:
+            metadata["rate_limit_per_user"] = slowmode_delay
+        if rtc_region is not MISSING:
+            if self.type not in (ChannelType.voice, ChannelType.stage_voice):
+                raise ValueError('cannot set a rtc_region to a non-voice channel')
+
+            metadata["rtc_region"] = rtc_region
+
         self._metadata: dict[str, Any] = metadata
 
     @property
@@ -438,7 +577,7 @@ class GuildBuilderChannel:
         if value is not None:
             self._metadata["user_limit"] = value
         else:
-            self._metadata.pop("bitrate", None)
+            self._metadata.pop("user_limit", None)
 
     @property
     def slowmode_delay(self) -> int:
@@ -531,48 +670,53 @@ class GuildBuilderRole:
         The role name.
     hoisted: :class:`bool`
         Whether the role is hoisted.
-    position: :class:`int`
-        The role position.
     mentionable: :class:`bool`
         Whether the role is mentionable.
     permissions: :class:`Permissions`
         The permissions of this role.
     icon: Optional[:class:`bytes`]
         The emoji icon.
+    default: Optional[:class:`bool`]
+        Whether this role is the default role. If ``None`` it is autocalculated.
+
+        .. note::
+
+            If a role is the default one, **you can only edit the permissions**.
     """
 
     __slots__ = (
         "id",
         "name",
         "hoisted",
-        "position",
         "mentionable",
         "permissions",
         "_colour",
         "icon",
         "_unicode_emoji",
+        "default",
     )
 
+    # TODO: edit __init__ to allow users to create the object without requiring GuildBuilder.add_role
     def __init__(
         self,
         id: int,
         name: str,
         hoisted: bool,
-        position: int,
         mentionable: bool,
         permissions: Permissions,
         colour: Colour,
         icon: bytes | None,
+        default: bool | None = None,
     ) -> None:
         self.id: int = id
         self.name: str = name
         self.hoisted: bool = hoisted
-        self.position: int = position
         self.mentionable: bool = mentionable
         self.permissions: Permissions = permissions
         self._colour: int = colour.value
         self.icon: bytes | None = icon
         self._unicode_emoji: str | None = None
+        self.default: bool | None = default
 
     @property
     def colour(self) -> Colour:
@@ -625,7 +769,6 @@ class GuildBuilderRole:
             "color": self._colour,
             "mentionable": self.mentionable,
             "permissions": str(self.permissions.value),
-            "position": self.position,
             "icon": (
                 utils._bytes_to_base64_data(self.icon)
                 if self.icon is not None

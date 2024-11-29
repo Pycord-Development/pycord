@@ -1600,26 +1600,24 @@ class Client:
         data = await self.http.get_guild(guild_id, with_counts=with_counts)
         return Guild(data=data, state=self._connection)
 
-    def create_guild(
+    async def create_guild(
         self,
         *,
         name: str,
-        icon: bytes = MISSING,
+        icon: bytes | None = MISSING,
         code: str = MISSING,
         verification_level: VerificationLevel = MISSING,
         content_filter: ContentFilter = MISSING,
         notification_level: NotificationLevel = MISSING,
         afk_timeout: int = MISSING,
-    ) -> GuildBuilder:
+    ) -> Guild:
         """|coro|
 
         Creates a :class:`.Guild`.
 
         Bot accounts in more than 10 guilds are not allowed to create guilds.
 
-        .. versionchanged:: 2.7
-
-            This now returns :class:`GuildBuilder` instead of :class:`Guild`
+        Also see :meth:`.Client.build_guild`.
 
         Parameters
         ----------
@@ -1651,8 +1649,9 @@ class Client:
 
         Returns
         -------
-        :class:`GuildBuilder`
-            The guild builder, which allows you to customize more your guild before creating it.
+        :class:`Guild`
+            The guild created. This is not the same guild that is
+            added to cache.
         """
         if code is MISSING:
             code = None  # type: ignore
@@ -1668,8 +1667,70 @@ class Client:
         if afk_timeout is not MISSING:
             metadata["afk_timeout"] = afk_timeout
 
+        # TODO: remove support of passing ``None`` to ``icon``.
+        if icon is None:
+            icon = MISSING
+
+        builder = GuildBuilder(
+            state=self._connection, name=name, icon=icon, code=code, metadata=metadata  # type: ignore
+        )
+        return await builder
+
+    def build_guild(
+        self,
+        *,
+        name: str,
+        icon: bytes = MISSING,
+        verification_level: VerificationLevel = MISSING,
+        content_filter: ContentFilter = MISSING,
+        notification_level: NotificationLevel = MISSING,
+        afk_timeout: int = MISSING,
+    ) -> GuildBuilder:
+        """Creates a :class:`.GuildBuilder` object to create a guild.
+
+        Also see :meth:`.Client.create_guild`.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The guild name.
+        icon: :class:`bytes`
+            The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit`
+            for more details on what is expected.
+        verification_level: :class:`VerificationLevel`
+            The verification level.
+        content_filter: :class:`ContentFilter`
+            The explicit content filter level.
+        notification_level: :class:`NotificationLevel`
+            The defualt message notification level.
+        afk_timeout: :class:`int`
+            The afk timeout in seconds.
+
+        Returns
+        -------
+        :class:`GuildBuilder`
+            The guild builder to create the new guild.
+        """
+
+        metadata = {}
+
+        if verification_level is not MISSING:
+            metadata["verification_level"] = verification_level.value
+        if content_filter is not MISSING:
+            metadata["explicit_content_filter"] = content_filter.value
+        if notification_level is not MISSING:
+            metadata["default_message_notifications"] = notification_level.value
+        if afk_timeout is not MISSING:
+            metadata["afk_timeout"] = afk_timeout
+
         return GuildBuilder(
-            state=self._connection, name=name, icon=icon, code=code, metadata=metadata
+            state=self._connection,
+            name=name,
+            icon=icon,
+            code=None,
+            metadata=metadata,
         )
 
     async def fetch_stage_instance(self, channel_id: int, /) -> StageInstance:
