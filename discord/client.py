@@ -42,11 +42,18 @@ from .application_role_connection import ApplicationRoleConnectionMetadata
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
 from .emoji import AppEmoji, GuildEmoji
-from .enums import ChannelType, ContentFilter, NotificationLevel, Status, VerificationLevel
+from .enums import (
+    ChannelType,
+    ContentFilter,
+    NotificationLevel,
+    Status,
+    VerificationLevel,
+)
 from .errors import *
 from .flags import ApplicationFlags, Intents
 from .gateway import *
 from .guild import Guild
+from .guild_builder import GuildBuilder
 from .http import HTTPClient
 from .invite import Invite
 from .iterators import EntitlementIterator, GuildIterator
@@ -64,7 +71,6 @@ from .utils import MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
-from .guild_builder import GuildBuilder
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
@@ -1653,15 +1659,17 @@ class Client:
         metadata = {}
 
         if verification_level is not MISSING:
-            metadata['verification_level'] = verification_level.value
+            metadata["verification_level"] = verification_level.value
         if content_filter is not MISSING:
-            metadata['explicit_content_filter'] = content_filter.value
+            metadata["explicit_content_filter"] = content_filter.value
         if notification_level is not MISSING:
-            metadata['default_message_notifications'] = notification_level.value
+            metadata["default_message_notifications"] = notification_level.value
         if afk_timeout is not MISSING:
-            metadata['afk_timeout'] = afk_timeout
+            metadata["afk_timeout"] = afk_timeout
 
-        return GuildBuilder(state=self._connection, name=name, icon=icon, code=code, metadata=metadata)
+        return GuildBuilder(
+            state=self._connection, name=name, icon=icon, code=code, metadata=metadata
+        )
 
     async def fetch_stage_instance(self, channel_id: int, /) -> StageInstance:
         """|coro|

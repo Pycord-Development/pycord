@@ -22,19 +22,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
-from typing import Any, TYPE_CHECKING, Coroutine
+from typing import TYPE_CHECKING, Any, Coroutine
 
-from .colour import Colour, Color
-from .emoji import Emoji, PartialEmoji
-from .state import ConnectionState
 from . import utils
-from .guild import Guild
-from .enums import ChannelType, VoiceRegion
 from .abc import Snowflake
-from .permissions import PermissionOverwrite, Permissions
+from .colour import Color, Colour
+from .emoji import Emoji, PartialEmoji
+from .enums import ChannelType, VoiceRegion
 from .flags import SystemChannelFlags
+from .guild import Guild
+from .permissions import PermissionOverwrite, Permissions
+from .state import ConnectionState
 
 if TYPE_CHECKING:
     from .types.guild import GuildCreate as GuildCreatePayload
@@ -71,19 +72,27 @@ class GuildBuilder:
     """
 
     __slots__ = (
-        '_state',
-        '_name',
-        '_icon',
-        '_channels',
-        '_roles',
-        '_metadata',
-        'afk_channel_id',
-        'system_channel_id',
-        'system_channel_flags',
-        'code',
+        "_state",
+        "_name",
+        "_icon",
+        "_channels",
+        "_roles",
+        "_metadata",
+        "afk_channel_id",
+        "system_channel_id",
+        "system_channel_flags",
+        "code",
     )
 
-    def __init__(self, *, state: ConnectionState, name: str, icon: bytes, code: str | None, metadata: dict[str, Any]) -> None:
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        name: str,
+        icon: bytes,
+        code: str | None,
+        metadata: dict[str, Any],
+    ) -> None:
         self._state: ConnectionState = state
         self._name: str = name
         self._icon: bytes = icon
@@ -106,22 +115,22 @@ class GuildBuilder:
             return Guild(data=data, state=self._state)
 
         payload: GuildCreatePayload = {
-            'name': self.name,
+            "name": self.name,
         }
         payload.update(self._metadata)  # type: ignore
 
         if self._icon is not MISSING:
-            payload['icon'] = utils._bytes_to_base64_data(self._icon)
+            payload["icon"] = utils._bytes_to_base64_data(self._icon)
         if self._channels is not MISSING:
-            payload['channels'] = [ch.to_dict() for ch in self._channels.values()]
+            payload["channels"] = [ch.to_dict() for ch in self._channels.values()]
         if self._roles is not MISSING:
-            payload['roles'] = [role.to_dict() for role in self._roles.values()]
+            payload["roles"] = [role.to_dict() for role in self._roles.values()]
         if self.afk_channel_id is not None:
-            payload['afk_channel_id'] = self.afk_channel_id
+            payload["afk_channel_id"] = self.afk_channel_id
         if self.system_channel_id is not None:
-            payload['system_channel_id'] = self.system_channel_id
+            payload["system_channel_id"] = self.system_channel_id
         if self.system_channel_flags is not None:
-            payload['system_channel_flags'] = self.system_channel_flags.value
+            payload["system_channel_flags"] = self.system_channel_flags.value
 
         data = await http.create_guild(payload)
         return Guild(data=data, state=self._state)
@@ -197,7 +206,7 @@ class GuildBuilder:
         metadata = {}
 
         if overwrites is not MISSING:
-            metadata['overwrites'] = overwrites
+            metadata["overwrites"] = overwrites
 
         channel = self._channels[id] = GuildBuilderChannel(
             id=id,
@@ -213,7 +222,7 @@ class GuildBuilder:
     def _create_default_role(self) -> GuildBuilderRole:
         return GuildBuilderRole(
             id=0,
-            name='everyone',
+            name="everyone",
             hoisted=True,
             position=0,
             mentionable=True,
@@ -305,7 +314,7 @@ class GuildBuilder:
         id = len(self._roles) + 1
 
         if colour is not MISSING and color is not MISSING:
-            raise TypeError('Cannot provide both colour and color')
+            raise TypeError("Cannot provide both colour and color")
 
         resolved_colour = colour if colour is not MISSING else color
 
@@ -331,7 +340,6 @@ class GuildBuilder:
         return role
 
 
-
 class GuildBuilderChannel:
     """Represents a :class:`GuildBuilder` channel.
 
@@ -354,13 +362,13 @@ class GuildBuilderChannel:
     """
 
     __slots__ = (
-        'id',
-        'name',
-        'type',
-        'topic',
-        'nsfw',
-        'category_id',
-        '_metadata',
+        "id",
+        "name",
+        "type",
+        "topic",
+        "nsfw",
+        "category_id",
+        "_metadata",
     )
 
     def __init__(
@@ -372,7 +380,7 @@ class GuildBuilderChannel:
         nsfw: bool,
         category_id: int | None,
         metadata: dict[str, Any],
-        ) -> None:
+    ) -> None:
         self.id: int = id
         self.name: str = name
         self.type: ChannelType = type
@@ -383,16 +391,15 @@ class GuildBuilderChannel:
 
     @property
     def overwrites(self) -> dict[Snowflake, PermissionOverwrite]:
-        """Dict[:class:`Object`, :class:`PermissionOverwrite`]: Returns this channel's role overwrites.
-        """
-        return self._metadata.get('overwrites', {})
+        """Dict[:class:`Object`, :class:`PermissionOverwrite`]: Returns this channel's role overwrites."""
+        return self._metadata.get("overwrites", {})
 
     @overwrites.setter
     def overwrites(self, ow: dict[Snowflake, PermissionOverwrite] | None) -> None:
         if ow is not None:
-            self._metadata['ovewrites'] = ow
+            self._metadata["ovewrites"] = ow
         else:
-            self._metadata.pop('overwrites', None)
+            self._metadata.pop("overwrites", None)
 
     @property
     def bitrate(self) -> int | None:
@@ -401,17 +408,17 @@ class GuildBuilderChannel:
         This will return ``None`` if :attr:`GuildBuilderChannel.type` is not
         :attr:`ChannelType.voice` or :attr:`ChannelType.stage_voice`.
         """
-        return self._metadata.get('bitrate')
+        return self._metadata.get("bitrate")
 
     @bitrate.setter
     def bitrate(self, value: int | None) -> None:
         if self.type not in (ChannelType.voice, ChannelType.stage_voice):
-            raise ValueError('cannot set a bitrate to a non-voice channel')
+            raise ValueError("cannot set a bitrate to a non-voice channel")
 
         if value is not None:
-            self._metadata['bitrate'] = value
+            self._metadata["bitrate"] = value
         else:
-            self._metadata.pop('bitrate', None)
+            self._metadata.pop("bitrate", None)
 
     @property
     def user_limit(self) -> int | None:
@@ -421,31 +428,31 @@ class GuildBuilderChannel:
         This will return ``None`` if :attr:`GuildBuilderChannel.type` is not
         :attr:`ChannelType.voice` or :attr:`ChannelType.stage_voice`.
         """
-        return self._metadata.get('user_limit')
+        return self._metadata.get("user_limit")
 
     @user_limit.setter
     def user_limit(self, value: int | None) -> None:
         if self.type not in (ChannelType.voice, ChannelType.stage_voice):
-            raise ValueError('cannot set a user_limit to a non-voice channel')
+            raise ValueError("cannot set a user_limit to a non-voice channel")
 
         if value is not None:
-            self._metadata['user_limit'] = value
+            self._metadata["user_limit"] = value
         else:
-            self._metadata.pop('bitrate', None)
+            self._metadata.pop("bitrate", None)
 
     @property
     def slowmode_delay(self) -> int:
         """:class:`int`: The number of seconds a member must wait between sending messages
         in this channel. A value of ``0`` denotes that it is disabled.
         """
-        return self._metadata.get('rate_limit_per_user', 0)
+        return self._metadata.get("rate_limit_per_user", 0)
 
     @slowmode_delay.setter
     def slowmode_delay(self, value: int | None) -> None:
         if value is not None and value != 0:
-            self._metadata['rate_limit_per_user'] = value
+            self._metadata["rate_limit_per_user"] = value
         else:
-            self._metadata.pop('rate_limit_per_user', None)
+            self._metadata.pop("rate_limit_per_user", None)
 
     @property
     def rtc_region(self) -> VoiceRegion | None:
@@ -454,28 +461,30 @@ class GuildBuilderChannel:
         This will return ``None`` if :attr:`GuildBuilderChannel.type` is not
         :attr:`ChannelType.voice` or :attr:`ChannelType.stage_voice`.
         """
-        return self._metadata.get('rtc_region')
+        return self._metadata.get("rtc_region")
 
     @rtc_region.setter
     def rtc_region(self, region: VoiceRegion | None) -> None:
         if self.type not in (ChannelType.voice, ChannelType.stage_voice):
-            raise ValueError('cannot set rtc_region to a non-voice channel')
+            raise ValueError("cannot set rtc_region to a non-voice channel")
 
         if region is not None:
-            self._metadata['rtc_region'] = region
+            self._metadata["rtc_region"] = region
         else:
-            self._metadata.pop('rtc_region', None)
+            self._metadata.pop("rtc_region", None)
 
     def to_dict(self) -> dict[str, Any]:
         payload = {
-            'id': str(self.id),
-            'name': self.name,
-            'type': self.type.value,
-            'nsfw': self.nsfw,
-            'topic': self.topic,
+            "id": str(self.id),
+            "name": self.name,
+            "type": self.type.value,
+            "nsfw": self.nsfw,
+            "topic": self.topic,
         }
 
-        overwrites: dict[Snowflake, PermissionOverwrite] | None = self._metadata.get('overwrites', None)
+        overwrites: dict[Snowflake, PermissionOverwrite] | None = self._metadata.get(
+            "overwrites", None
+        )
         if overwrites is not None:
             pairs = []
 
@@ -483,26 +492,26 @@ class GuildBuilderChannel:
                 allowed, denied = ow.pair()
                 pairs.append(
                     {
-                        'target': target.id,
-                        'type': 0,  # role,
-                        'allow': allowed.value,
-                        'deny': denied.value,
+                        "target": target.id,
+                        "type": 0,  # role,
+                        "allow": allowed.value,
+                        "deny": denied.value,
                     },
                 )
 
-            payload['permission_overwrites'] = pairs
+            payload["permission_overwrites"] = pairs
 
-        if bitrate := self._metadata.get('bitrate'):
-            payload['bitrate'] = bitrate
+        if bitrate := self._metadata.get("bitrate"):
+            payload["bitrate"] = bitrate
 
-        if user_limit := self._metadata.get('user_limit'):
-            payload['user_limit'] = user_limit
+        if user_limit := self._metadata.get("user_limit"):
+            payload["user_limit"] = user_limit
 
-        if slowmode := self._metadata.get('rate_limit_per_user'):
-            payload['rate_limit_per_user'] = slowmode
+        if slowmode := self._metadata.get("rate_limit_per_user"):
+            payload["rate_limit_per_user"] = slowmode
 
-        if rtc_region := self._metadata.get('rtc_region'):
-            payload['rtc_region'] = rtc_region.value
+        if rtc_region := self._metadata.get("rtc_region"):
+            payload["rtc_region"] = rtc_region.value
 
         # TODO: add more fields
 
@@ -533,15 +542,15 @@ class GuildBuilderRole:
     """
 
     __slots__ = (
-        'id',
-        'name',
-        'hoisted',
-        'position',
-        'mentionable',
-        'permissions',
-        '_colour',
-        'icon',
-        '_unicode_emoji',
+        "id",
+        "name",
+        "hoisted",
+        "position",
+        "mentionable",
+        "permissions",
+        "_colour",
+        "icon",
+        "_unicode_emoji",
     )
 
     def __init__(
@@ -604,18 +613,24 @@ class GuildBuilderRole:
         elif isinstance(value, (PartialEmoji, Emoji)):
             self._unicode_emoji = str(value)
         else:
-            raise TypeError(f'expected a str, PartialEmoji, Emoji or None, not {value.__class__.__name__}')
+            raise TypeError(
+                f"expected a str, PartialEmoji, Emoji or None, not {value.__class__.__name__}"
+            )
 
     def to_dict(self) -> RolePayload:
         payload: RolePayload = {
-            'id': str(self.id),
-            'name': self.name,
-            'hoist': self.hoisted,
-            'color': self._colour,
-            'mentionable': self.mentionable,
-            'permissions': str(self.permissions.value),
-            'position': self.position,
-            'icon': utils._bytes_to_base64_data(self.icon) if self.icon is not None else None,
-            'unicode_emoji': self._unicode_emoji,
+            "id": str(self.id),
+            "name": self.name,
+            "hoist": self.hoisted,
+            "color": self._colour,
+            "mentionable": self.mentionable,
+            "permissions": str(self.permissions.value),
+            "position": self.position,
+            "icon": (
+                utils._bytes_to_base64_data(self.icon)
+                if self.icon is not None
+                else None
+            ),
+            "unicode_emoji": self._unicode_emoji,
         }  # type: ignore
         return payload

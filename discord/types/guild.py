@@ -25,11 +25,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Any
+from typing import Any, Literal
 
 from .._typed_dict import NotRequired, Required, TypedDict
 from .activity import PartialPresenceUpdate
-from .channel import GuildChannel
+from .channel import GuildChannel, PartialChannel
 from .emoji import Emoji
 from .member import Member
 from .role import Role
@@ -39,7 +39,6 @@ from .threads import Thread
 from .user import User
 from .voice import GuildVoiceState
 from .welcome_screen import WelcomeScreen
-from .channel import PartialChannel
 
 
 class Ban(TypedDict):

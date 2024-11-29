@@ -45,6 +45,7 @@ from .errors import *
 from .file import *
 from .flags import *
 from .guild import *
+from .guild_builder import *
 from .http import *
 from .integrations import *
 from .interactions import *
@@ -74,6 +75,5 @@ from .voice_client import *
 from .webhook import *
 from .welcome_screen import *
 from .widget import *
-from .guild_builder import *
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())
