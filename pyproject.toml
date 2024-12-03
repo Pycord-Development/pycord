@@ -68,7 +68,7 @@ voice = {file = "requirements/voice.txt"}
 [tool.setuptools_scm]
 
 [tool.black]
-target-version = ['py39', 'py310', 'py311', 'py312']
+target-version = ['py39', 'py310', 'py311', 'py312', 'py313']
 
 [tool.isort]
 profile = "black"
