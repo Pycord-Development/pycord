@@ -25,11 +25,11 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from .._typed_dict import NotRequired, Required, TypedDict
 from .activity import PartialPresenceUpdate
-from .channel import GuildChannel
+from .channel import GuildChannel, PartialChannel
 from .emoji import Emoji
 from .member import Member
 from .role import Role
@@ -190,3 +190,17 @@ class GuildMFAModify(TypedDict):
 class GuildBulkBan(TypedDict):
     banned_users: list[Snowflake]
     failed_users: list[Snowflake]
+
+
+class GuildCreate(TypedDict):
+    name: str
+    icon: NotRequired[str]
+    verification_level: NotRequired[VerificationLevel]
+    default_message_notifications: NotRequired[DefaultMessageNotificationLevel]
+    explicit_content_filter: NotRequired[ExplicitContentFilterLevel]
+    roles: NotRequired[list[Role]]
+    channels: NotRequired[list[dict[str, Any]]]
+    afk_channel_id: NotRequired[Snowflake]
+    afk_timeout: NotRequired[int]
+    system_channel_id: NotRequired[Snowflake]
+    system_channel_flags: NotRequired[int]

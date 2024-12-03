@@ -45,6 +45,7 @@ from .errors import *
 from .file import *
 from .flags import *
 from .guild import *
+from .guild_builder import *
 from .http import *
 from .integrations import *
 from .interactions import *

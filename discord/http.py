@@ -1476,13 +1476,7 @@ class HTTPClient:
     def delete_guild(self, guild_id: Snowflake) -> Response[None]:
         return self.request(Route("DELETE", "/guilds/{guild_id}", guild_id=guild_id))
 
-    def create_guild(self, name: str, icon: str | None) -> Response[guild.Guild]:
-        payload = {
-            "name": name,
-        }
-        if icon:
-            payload["icon"] = icon
-
+    def create_guild(self, payload: guild.GuildCreate) -> Response[guild.Guild]:
         return self.request(Route("POST", "/guilds"), json=payload)
 
     def edit_guild(
