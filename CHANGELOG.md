@@ -30,6 +30,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added missing `with_counts` parameter to `fetch_guilds` method.
+  ([#2615](https://github.com/Pycord-Development/pycord/pull/2615))
+- Added missing permissions: `Permissions.use_soundboard`,
+  `Permissions.use_external_sounds` and
+  `Permissions.view_creator_monetization_analytics`.
+  ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
 
 ### Fixed
 
@@ -48,6 +54,16 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2595](https://github.com/Pycord-Development/pycord/pull/2595))
 - Fixed `BucketType.category` cooldown commands not functioning correctly in private
   channels. ([#2603](https://github.com/Pycord-Development/pycord/pull/2603))
+- Fixed `SlashCommand`'s `ctx` parameter couldn't be `Union` type.
+  ([#2611](https://github.com/Pycord-Development/pycord/pull/2611))
+- Fixed `TypeError` when passing `skus` parameter in `Client.entitlements()`.
+  ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
+- Fixed `AttributeError` when sending polls with `PartialWebook`.
+  ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
+- Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed
+  apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
+- Fixed type annotations of cached properties.
+  ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
 
 ### Changed
 
