@@ -12,25 +12,25 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Version Guarantees"
-msgstr "Garanties quant au versionnement"
+msgstr "Garanties quant au versionnage"
 
 msgid "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
 msgstr "La bibliothèque suit le `principe de versionnage sémantique <https://semver.org/>`_, ce qui signifie que la version majeure est mise à jour à chaque changement incompatible de l'API. Cependant, en raison de l'absence de garanties du côté de Discord concernant les changements incompatibles, ainsi que de la nature assez dynamique de Python, il peut être difficile de discerner ce qui peut être considéré comme un changement incompatible et ce qui ne l'est pas."
 
 msgid "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
-msgstr "La première chose à garder à l'esprit est que les changements incompatibles ne s'appliquent qu'aux **fonctions et classes documentées publiquement**. Si elles ne figurent pas dans la documentation ici, elles ne font pas partie de l'API publique et sont donc susceptibles de changer. Cela inclut les attributs commençant par un underscore ou les fonctions sans underscore qui ne sont pas documentées."
+msgstr "La première chose à garder à l'esprit est que les changements incompatibles ne s'appliquent qu'aux **fonctions et classes documentées publiquement**. Si elles ne figurent pas dans la documentation ici, elles ne font pas partie de l'API publique et sont donc susceptibles de changer. Cela inclut les attributs commençant par un tiret bas ou les fonctions avec ou sans tiret bas qui ne sont pas documentées."
 
 msgid "The examples below are non-exhaustive."
-msgstr "Les exemples ci-dessous ne sont pas exhaustifs."
+msgstr "Les exemples ci-dessous sont non exhaustifs."
 
 msgid "Examples of Breaking Changes"
 msgstr "Exemples de changements incompatibles"
 
 msgid "Changing the default parameter value to something else."
-msgstr "Modifier la valeur par défaut d'un paramètre pour autre chose."
+msgstr "Modifier la valeur par défaut d'un paramètre à autre chose."
 
 msgid "Renaming a function without an alias to an old function."
-msgstr "Renommer une fonction sans alias vers une ancienne fonction."
+msgstr "Renommer une fonction sans ajouter alias vers une ancienne fonction."
 
 msgid "Adding or removing parameters to an event."
 msgstr "Ajouter ou supprimer des paramètres à un événement."
@@ -39,7 +39,7 @@ msgid "Examples of Non-Breaking Changes"
 msgstr "Exemples de changements non incompatibles"
 
 msgid "Adding or removing private underscored attributes."
-msgstr "Ajouter ou supprimer des attributs privés avec un underscore."
+msgstr "Ajouter ou supprimer des attributs privés avec un tiret bas."
 
 msgid "Adding an element into the ``__slots__`` of a data class."
 msgstr "Ajouter un élément dans les ``__slots__`` d'une classe de données."

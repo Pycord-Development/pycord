@@ -78,7 +78,7 @@ msgid "Disconnects this voice client from voice."
 msgstr "Disconnects this voice client from voice."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
