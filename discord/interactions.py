@@ -360,6 +360,26 @@ class Interaction:
         }
         return Webhook.from_state(data=payload, state=self._state)
 
+    def is_guild_integration(self) -> bool:
+        """:class:`bool`: Returns ``True`` if the interaction is a guild integration.
+
+        .. versionadded:: 2.7
+        """
+        if self.guild_id:
+            return self.authorizing_integration_owners.guild_id == self.guild_id
+        return False
+
+    def is_user_integration(self) -> bool:
+        """:class:`bool`: Returns ``True`` if the interaction is a user integration.
+
+        .. versionadded:: 2.7
+        """
+        if self.user:
+            return self.authorizing_integration_owners.user_id == self.user.id
+
+        # This return should not be called but making sure it returns the expected value
+        return False
+
     async def original_response(self) -> InteractionMessage:
         """|coro|
 
