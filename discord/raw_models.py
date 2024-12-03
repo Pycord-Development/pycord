@@ -29,7 +29,13 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
+from .enums import (
+    AuditLogAction,
+    ChannelType,
+    ReactionType,
+    VoiceChannelEffectAnimationType,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -37,6 +43,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
+    from .soundboard import PartialSoundboardSound, SoundboardSound
     from .state import ConnectionState
     from .threads import Thread
     from .types.raw_models import AuditLogEntryEvent
@@ -56,8 +63,9 @@ if TYPE_CHECKING:
         ThreadMembersUpdateEvent,
         ThreadUpdateEvent,
         TypingEvent,
-        VoiceChannelStatusUpdateEvent,
     )
+    from .types.raw_models import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.raw_models import VoiceChannelStatusUpdateEvent
     from .user import User
 
 
@@ -79,6 +87,7 @@ __all__ = (
     "RawAuditLogEntryEvent",
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
+    "RawSoundboardSoundDeleteEvent",
 )
 
 
@@ -839,3 +848,14 @@ class RawMessagePollVoteEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+
+class RawSoundboardSoundDeleteEvent(_RawReprMixin):
+    """Represents the payload for a :func:`on_raw_soundboard_sound_delete`"""
+
+    __slots__ = ("sound_id", "guild_id", "data")
+
+    def __init__(self, data: PartialSoundboardSound) -> None:
+        self.sound_id: int = int(data["sound_id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.data: PartialSoundboardSound = data
