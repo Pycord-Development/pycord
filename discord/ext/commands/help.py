@@ -571,6 +571,8 @@ class HelpCommand:
             An optional key function to pass to :func:`py:sorted` that
             takes a :class:`Command` as its sole parameter. If ``sort`` is
             passed as ``True`` then this will default as the command name.
+        exclude: Optional[Tuple[Any, ...]]
+            A tuple of command types to exclude from the filter.
 
         Returns
         -------
