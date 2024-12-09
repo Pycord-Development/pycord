@@ -581,7 +581,9 @@ class DiscordWebSocket:
 
     @property
     def latency(self) -> float:
-        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."""
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no heartbeat
+        has been received yet this returns ``float('inf')``.
+        """
         heartbeat = self._keep_alive
         return float("inf") if heartbeat is None else heartbeat.latency
 
