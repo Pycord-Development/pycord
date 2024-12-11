@@ -821,8 +821,8 @@ class Client:
             if not self.is_closed():
                 self.loop.run_until_complete(self.close())
 
-                _log.info("Cleaning up tasks.")
-                _cleanup_loop(self.loop)
+        _log.info("Cleaning up tasks.")
+        _cleanup_loop(self.loop)
 
     # properties
 
