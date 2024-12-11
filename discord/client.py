@@ -121,6 +121,12 @@ class Client:
 
     A number of options can be passed to the :class:`Client`.
 
+    .. container:: operations
+
+        .. describe:: async with x
+
+            Asynchronously initializes the client.
+
     Parameters
     -----------
     max_messages: Optional[:class:`int`]
