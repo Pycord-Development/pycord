@@ -267,10 +267,20 @@ class Client:
         self._tasks = set()
 
     async def __aenter__(self) -> Client:
-        loop = asyncio.get_running_loop()
-        self.loop = loop
-        self.http.loop = loop
-        self._connection.loop = loop
+        if self.loop is MISSING:
+            try:
+                self.loop = asyncio.get_running_loop()
+            except RuntimeError:
+                # No event loop was found, this should not happen
+                # because entering on this context manager means a
+                # loop is already active, but we need to handle it
+                # anyways just to prevent future errors.
+
+                # Maybe handle different system event loop policies?
+                self.loop = asyncio.new_event_loop()
+
+        self.http.loop = self.loop
+        self._connection.loop = self.loop
 
         self._ready = asyncio.Event()
 
@@ -749,11 +759,6 @@ class Client:
             An unexpected keyword argument was received.
         """
         # Update the loop to get the running one in case the one set is MISSING
-        if self.loop is MISSING:
-            self.loop = asyncio.get_event_loop()
-            self.http.loop = self.loop
-            self._connection.loop = self.loop
-
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
@@ -791,11 +796,8 @@ class Client:
         """
 
         async def runner():
-            try:
-                await self.start(token, reconnect=reconnect)
-            finally:
-                if not self.is_closed():
-                    await self.close()
+            async with self:
+                await self.start(token=token, reconnect=reconnect)
 
         run = asyncio.run
 
