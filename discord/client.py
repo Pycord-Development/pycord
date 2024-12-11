@@ -259,7 +259,8 @@ class Client:
         self._enable_debug_events: bool = options.pop("enable_debug_events", False)
         self._connection: ConnectionState = self._get_state(**options)
         self._connection.shard_count = self.shard_count
-        self._closed: bool = False
+        self._closed: asyncio.Event = asyncio.Event()
+        self._closing_task: asyncio.Lock = asyncio.Lock()
         self._ready: asyncio.Event = asyncio.Event()
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
@@ -289,6 +290,7 @@ class Client:
         self._connection.loop = self.loop
 
         self._ready = asyncio.Event()
+        self._closed = asyncio.Event()
 
         return self
 
@@ -725,23 +727,24 @@ class Client:
 
         Closes the connection to Discord.
         """
-        if self._closed:
+        if self.is_closed():
             return
 
-        await self.http.close()
-        self._closed = True
+        async with self._closing_task:
+            await self.http.close()
 
-        for voice in self.voice_clients:
-            try:
-                await voice.disconnect(force=True)
-            except Exception:
-                # if an error happens during disconnects, disregard it.
-                pass
+            for voice in self.voice_clients:
+                try:
+                    await voice.disconnect(force=True)
+                except Exception:
+                    # if an error happens during disconnects, disregard it.
+                    pass
 
-        if self.ws is not None and self.ws.open:
-            await self.ws.close(code=1000)
+            if self.ws is not None and self.ws.open:
+                await self.ws.close(code=1000)
 
-        self._ready.clear()
+            self._ready.clear()
+            self._closed.set()
 
     def clear(self) -> None:
         """Clears the internal state of the bot.
@@ -818,14 +821,14 @@ class Client:
             if not self.is_closed():
                 self.loop.run_until_complete(self.close())
 
-        _log.info("Cleaning up tasks.")
-        _cleanup_loop(self.loop)
+                _log.info("Cleaning up tasks.")
+                _cleanup_loop(self.loop)
 
     # properties
 
     def is_closed(self) -> bool:
         """Indicates if the WebSocket connection is closed."""
-        return self._closed
+        return self._closed.is_set()
 
     @property
     def activity(self) -> ActivityTypes | None:
