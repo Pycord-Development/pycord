@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-bot = discord.Bot(intents=discord.Intents.all())
+bot = discord.Bot()
 
 
 class SoundboardCog(discord.Cog):

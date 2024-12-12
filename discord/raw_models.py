@@ -851,7 +851,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
 
 
 class RawSoundboardSoundDeleteEvent(_RawReprMixin):
-    """Represents the payload for a :func:`on_raw_soundboard_sound_delete`"""
+    """Represents the payload for an :func:`on_raw_soundboard_sound_delete`"""
 
     __slots__ = ("sound_id", "guild_id", "data")
 

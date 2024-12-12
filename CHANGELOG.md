@@ -36,10 +36,10 @@ These changes are available on the `master` branch, but have not yet been releas
   `Permissions.use_external_sounds` and
   `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
-- Added soundboard features:
+- Added the following soundboard related features:
   - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
     `SoundboardSound.edit()`, and `SoundboardSound.delete()`.
-  - Access Discord's default sounds with `Client.fetch_default_sounds()`.
+  - Access Discord default sounds with `Client.fetch_default_sounds()`.
   - Play sounds in voice channels with `VoiceChannel.send_soundboard_sound()`.
   - New `on_voice_channel_effect_send` event for sound and emoji effects.
   - Soundboard limits based on guild premium tier (8-48 slots) in

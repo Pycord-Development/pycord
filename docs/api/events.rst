@@ -1394,7 +1394,7 @@ Soundboard Sound
 .. function:: on_soundboard_sounds_update(before, after)
 
     Called when multiple guild soundboard sounds are updated at once and they were all already in the cache.
-    This is called for example when a guild looses a boost level and some sounds become unavailable.
+    This is called, for example, when a guild loses a boost level and some sounds become unavailable.
 
     .. versionadded:: 2.7
 
@@ -1406,7 +1406,7 @@ Soundboard Sound
 .. function:: on_raw_soundboard_sounds_update(after)
 
     Called when multiple guild soundboard sounds are updated at once.
-    This is called for example when a guild looses a boost level and some sounds become unavailable.
+    This is called, for example, when a guild loses a boost level and some sounds become unavailable.
 
     .. versionadded:: 2.7
 

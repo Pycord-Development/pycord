@@ -3277,13 +3277,13 @@ class VoiceChannelEffectSendEvent:
     animation_id: :class:`int`
         The ID of the animation that is being sent.
     sound: Optional[:class:`SoundboardSound`]
-        The sound that is being sent, might be None if the effect is not a sound effect.
+        The sound that is being sent, could be ``None`` if the effect is not a sound effect.
     guild: :class:`Guild`
-        The guild that the sound is being sent in.
+        The guild in which the sound is being sent.
     user: :class:`Member`
-        The member that is sending the sound.
+        The member that sent the sound.
     channel: :class:`VoiceChannel`
-        The voice channel that the sound is being sent in.
+        The voice channel in which the sound is being sent.
     data: :class:`dict`
         The raw data sent by the gateway.
     """

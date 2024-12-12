@@ -137,9 +137,9 @@ class SoundboardSound(PartialSoundboardSound):
         The sound's name.
     available: :class:`bool`
         Whether the sound is available. Could be ``False`` if the sound is not available.
-        This happens for example when the guild lost the boost level required to use the sound.
+        This is the case, for example, when the guild loses the boost level required to use the sound.
     guild_id: :class:`int` | :class:`None`
-        The ID of the guild the sound belongs to. Could be :class:`None` if the sound is a default sound.
+        The ID of the guild to which the sound belongs. Could be :class:`None` if the sound is a default sound.
     user: :class:`User` | :class:`None`
         The sound's owner. Could be ``None`` if the sound is a default sound.
     """
