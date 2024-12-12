@@ -27,7 +27,7 @@ from __future__ import annotations
 import inspect
 import logging
 from enum import Enum
-from typing import TYPE_CHECKING, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Callable, Literal, Optional, Type, Union
 
 from ..abc import GuildChannel, Mentionable
 from ..channel import (
@@ -272,6 +272,7 @@ class Option:
         )
         self.default = kwargs.pop("default", None)
 
+        self._autocomplete: Callable[[Any], Any, Any] | None = None
         self.autocomplete = kwargs.pop("autocomplete", None)
         if len(enum_choices) > 25:
             self.choices: list[OptionChoice] = []
@@ -389,6 +390,27 @@ class Option:
 
     def __repr__(self):
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
+
+    @property
+    def autocomplete(self) -> Callable[[Any], Any, Any] | None:
+        return self._autocomplete
+
+    @autocomplete.setter
+    def autocomplete(self, value: Callable[[Any], Any, Any] | None) -> None:
+        self._autocomplete = value
+        # this is done here so it does not have to be computed every time the autocomplete is invoked
+        if self._autocomplete is not None:
+            self._autocomplete._is_instance_method = (
+                sum(
+                    1
+                    for param in inspect.signature(
+                        self.autocomplete
+                    ).parameters.values()
+                    if param.default == param.empty
+                    and param.kind not in (param.VAR_POSITIONAL, param.VAR_KEYWORD)
+                )
+                == 2
+            )
 
 
 class OptionChoice:
