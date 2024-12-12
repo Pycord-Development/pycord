@@ -345,6 +345,22 @@ class ApplicationContext(discord.abc.Messageable):
 
         return self.command.cog
 
+    def is_guild_integration(self) -> bool:
+        """:class:`bool`: Checks if the invoked command is guild-installed.
+        This is a shortcut for :meth:`Interaction.is_guild_integration`.
+
+        .. versionadded:: 2.7
+        """
+        return self.interaction.is_guild_integration()
+
+    def is_user_integration(self) -> bool:
+        """:class:`bool`: Checks if the invoked command is user-installed.
+        This is a shortcut for :meth:`Interaction.is_user_integration`.
+
+        .. versionadded:: 2.7
+        """
+        return self.interaction.is_user_integration()
+
 
 class AutocompleteContext:
     """Represents context for a slash command's option autocomplete.
