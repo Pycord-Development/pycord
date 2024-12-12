@@ -118,7 +118,7 @@ class RoleTags:
         """Whether the role is available for purchase.
 
         Returns ``True`` if the role is available for purchase,
-        ``False`` if it is not or if the role is not linked to a guild subscription.
+        ``False`` if it is not available for purchase or if the role is not linked to a guild subscription.
 
         .. versionadded:: 2.7
         """
@@ -207,7 +207,7 @@ class Role(Hashable):
         Indicates if the role is managed by the guild.
         This is true if any of :meth:`Role.is_integration`, :meth:`Role.is_premium_subscriber`,
         :meth:`Role.is_bot_managed` or :meth:`Role.is_guild_connections_role`
-        are ``True``.
+        is ``True``.
     mentionable: :class:`bool`
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
@@ -349,7 +349,7 @@ class Role(Hashable):
         """Whether the role is available for purchase.
 
         Returns ``True`` if the role is available for purchase,
-        ``False`` if it is not or if the role is not linked to a guild subscription.
+        ``False`` if it is not available for purchase or if the role is not linked to a guild subscription.
 
         .. versionadded:: 2.7
         """
