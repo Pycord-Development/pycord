@@ -27,7 +27,7 @@ from __future__ import annotations
 import inspect
 import logging
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Iterable, Literal, Optional, Type, Union
 
 from ..abc import GuildChannel, Mentionable
 from ..channel import (
@@ -39,7 +39,7 @@ from ..channel import (
     Thread,
     VoiceChannel,
 )
-from ..commands import ApplicationContext
+from ..commands import ApplicationContext, AutocompleteContext
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
@@ -111,6 +111,11 @@ class ThreadOption:
         self._type = type_map[thread_type]
 
 
+AutocompleteReturnType = Union[
+    Iterable["OptionChoice"], Iterable[str], Iterable[int], Iterable[float]
+]
+
+
 class Option:
     """Represents a selectable option for a slash command.
 
@@ -146,15 +151,6 @@ class Option:
     max_length: Optional[:class:`int`]
         The maximum length of the string that can be entered. Must be between 1 and 6000 (inclusive).
         Only applies to Options with an :attr:`input_type` of :class:`str`.
-    autocomplete: Optional[Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]]
-        The autocomplete handler for the option. Accepts a callable (sync or async)
-        that takes a single argument of :class:`AutocompleteContext`.
-        The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
-        Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
-
-        .. note::
-
-            Does not validate the input value against the autocomplete results.
     channel_types: list[:class:`discord.ChannelType`] | None
         A list of channel types that can be selected in this option.
         Only applies to Options with an :attr:`input_type` of :class:`discord.SlashCommandOptionType.channel`.
@@ -272,7 +268,7 @@ class Option:
         )
         self.default = kwargs.pop("default", None)
 
-        self._autocomplete: Callable[[Any], Any, Any] | None = None
+        self._autocomplete = None
         self.autocomplete = kwargs.pop("autocomplete", None)
         if len(enum_choices) > 25:
             self.choices: list[OptionChoice] = []
@@ -392,11 +388,31 @@ class Option:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     @property
-    def autocomplete(self) -> Callable[[Any], Any, Any] | None:
+    def autocomplete(self):
         return self._autocomplete
 
     @autocomplete.setter
-    def autocomplete(self, value: Callable[[Any], Any, Any] | None) -> None:
+    def autocomplete(self, value) -> None:
+        """
+        The autocomplete handler for the option. Accepts a callable (sync or async)
+        that takes a single required argument of :class:`AutocompleteContext`.
+        The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
+        Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
+
+        Parameters
+        ----------
+        value: Union[
+            Callable[[Self, AutocompleteContext, Any], AutocompleteReturnType],
+            Callable[[AutocompleteContext, Any], AutocompleteReturnType],
+            Callable[[Self, AutocompleteContext, Any], Awaitable[AutocompleteReturnType]],
+            Callable[[AutocompleteContext, Any], Awaitable[AutocompleteReturnType]],
+        ]
+
+        .. versionchanged:: 2.7
+
+        .. note::
+            Does not validate the input value against the autocomplete results.
+        """
         self._autocomplete = value
         # this is done here so it does not have to be computed every time the autocomplete is invoked
         if self._autocomplete is not None:
