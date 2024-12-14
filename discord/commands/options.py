@@ -389,23 +389,20 @@ class Option:
 
     @property
     def autocomplete(self):
-        return self._autocomplete
-
-    @autocomplete.setter
-    def autocomplete(self, value) -> None:
         """
         The autocomplete handler for the option. Accepts a callable (sync or async)
         that takes a single required argument of :class:`AutocompleteContext`.
         The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
         Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
 
-        Parameters
-        ----------
-        value: Union[
+        Returns
+        -------
+        Union[
             Callable[[Self, AutocompleteContext, Any], AutocompleteReturnType],
             Callable[[AutocompleteContext, Any], AutocompleteReturnType],
             Callable[[Self, AutocompleteContext, Any], Awaitable[AutocompleteReturnType]],
             Callable[[AutocompleteContext, Any], Awaitable[AutocompleteReturnType]],
+            None
         ]
 
         .. versionchanged:: 2.7
@@ -413,6 +410,10 @@ class Option:
         .. note::
             Does not validate the input value against the autocomplete results.
         """
+        return self._autocomplete
+
+    @autocomplete.setter
+    def autocomplete(self, value) -> None:
         self._autocomplete = value
         # this is done here so it does not have to be computed every time the autocomplete is invoked
         if self._autocomplete is not None:
