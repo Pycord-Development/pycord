@@ -27,27 +27,21 @@ async def food_autocomplete(
 
 class FoodCog(commands.Cog):
     @commands.slash_command(name="fruit")
-    async def get_fruit(
-        self,
-        ctx: discord.ApplicationContext,
-        choice: discord.Option(
-            str,
-            "Pick a fruit",
-            autocomplete=partial(food_autocomplete, food_type="fruit"),
-        ),
-    ):
+    @discord.option(
+        "choice",
+        "Pick a fruit",
+        autocomplete=partial(food_autocomplete, food_type="fruit"),
+    )
+    async def get_fruit(self, ctx: discord.ApplicationContext, choice: str):
         await ctx.respond(f"You picked: {choice}")
 
     @commands.slash_command(name="vegetable")
-    async def get_vegetable(
-        self,
-        ctx: discord.ApplicationContext,
-        choice: discord.Option(
-            str,
-            "Pick a vegetable",
-            autocomplete=partial(food_autocomplete, food_type="vegetable"),
-        ),
-    ):
+    @discord.option(
+        "choice",
+        "Pick a vegetable",
+        autocomplete=partial(food_autocomplete, food_type="vegetable"),
+    )
+    async def get_vegetable(self, ctx: discord.ApplicationContext, choice: str):
         await ctx.respond(f"You picked: {choice}")
 
 
