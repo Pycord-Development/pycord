@@ -26,8 +26,9 @@ from __future__ import annotations
 
 import inspect
 import logging
+from collections.abc import Awaitable, Callable, Iterable
 from enum import Enum
-from typing import TYPE_CHECKING, Iterable, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Literal, Optional, Type, TypeVar, Union
 
 from ..abc import GuildChannel, Mentionable
 from ..channel import (
@@ -46,6 +47,7 @@ from ..enums import SlashCommandOptionType
 from ..utils import MISSING, basic_autocomplete
 
 if TYPE_CHECKING:
+    from ..cog import Cog
     from ..ext.commands import Converter
     from ..member import Member
     from ..message import Attachment
@@ -70,6 +72,25 @@ if TYPE_CHECKING:
         Type[Enum],
         Type[DiscordEnum],
     ]
+
+    AutocompleteReturnType = Union[
+        Iterable["OptionChoice"], Iterable[str], Iterable[int], Iterable[float]
+    ]
+    T = TypeVar("T", bound=AutocompleteReturnType)
+    MaybeAwaitable = Union[T, Awaitable[T]]
+    AutocompleteFunction = Union[
+        Callable[[AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]],
+        Callable[[Cog, AutocompleteContext], MaybeAwaitable[AutocompleteReturnType]],
+        Callable[
+            [AutocompleteContext, Any],  # pyright: ignore [reportExplicitAny]
+            MaybeAwaitable[AutocompleteReturnType],
+        ],
+        Callable[
+            [Cog, AutocompleteContext, Any],  # pyright: ignore [reportExplicitAny]
+            MaybeAwaitable[AutocompleteReturnType],
+        ],
+    ]
+
 
 __all__ = (
     "ThreadOption",
@@ -109,11 +130,6 @@ class ThreadOption:
             "news": ChannelType.news_thread,
         }
         self._type = type_map[thread_type]
-
-
-AutocompleteReturnType = Union[
-    Iterable["OptionChoice"], Iterable[str], Iterable[int], Iterable[float]
-]
 
 
 class Option:
@@ -268,7 +284,7 @@ class Option:
         )
         self.default = kwargs.pop("default", None)
 
-        self._autocomplete = None
+        self._autocomplete: AutocompleteFunction | None = None
         self.autocomplete = kwargs.pop("autocomplete", None)
         if len(enum_choices) > 25:
             self.choices: list[OptionChoice] = []
@@ -388,22 +404,17 @@ class Option:
         return f"<discord.commands.{self.__class__.__name__} name={self.name}>"
 
     @property
-    def autocomplete(self):
+    def autocomplete(self) -> AutocompleteFunction | None:
         """
         The autocomplete handler for the option. Accepts a callable (sync or async)
-        that takes a single required argument of :class:`AutocompleteContext`.
+        that takes a single required argument of :class:`AutocompleteContext` or two arguments
+        of :class:`discord.Cog` (being the command's cog) and :class:`AutocompleteContext`.
         The callable must return an iterable of :class:`str` or :class:`OptionChoice`.
         Alternatively, :func:`discord.utils.basic_autocomplete` may be used in place of the callable.
 
         Returns
         -------
-        Union[
-            Callable[[Self, AutocompleteContext, Any], AutocompleteReturnType],
-            Callable[[AutocompleteContext, Any], AutocompleteReturnType],
-            Callable[[Self, AutocompleteContext, Any], Awaitable[AutocompleteReturnType]],
-            Callable[[AutocompleteContext, Any], Awaitable[AutocompleteReturnType]],
-            None
-        ]
+            Optional[AutocompleteFunction]
 
         .. versionchanged:: 2.7
 
@@ -413,17 +424,17 @@ class Option:
         return self._autocomplete
 
     @autocomplete.setter
-    def autocomplete(self, value) -> None:
+    def autocomplete(self, value: AutocompleteFunction | None) -> None:
         self._autocomplete = value
         # this is done here so it does not have to be computed every time the autocomplete is invoked
         if self._autocomplete is not None:
-            self._autocomplete._is_instance_method = (
+            self._autocomplete._is_instance_method = (  # pyright: ignore [reportFunctionMemberAccess]
                 sum(
                     1
                     for param in inspect.signature(
-                        self.autocomplete
+                        self._autocomplete
                     ).parameters.values()
-                    if param.default == param.empty
+                    if param.default == param.empty  # pyright: ignore[reportAny]
                     and param.kind not in (param.VAR_POSITIONAL, param.VAR_KEYWORD)
                 )
                 == 2
