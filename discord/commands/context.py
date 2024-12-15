@@ -345,21 +345,35 @@ class ApplicationContext(discord.abc.Messageable):
 
         return self.command.cog
 
-    def is_guild_integration(self) -> bool:
+    def is_guild_authorised(self) -> bool:
         """:class:`bool`: Checks if the invoked command is guild-installed.
-        This is a shortcut for :meth:`Interaction.is_guild_integration`.
+        This is a shortcut for :meth:`Interaction.is_guild_authorised`.
 
         .. versionadded:: 2.7
         """
-        return self.interaction.is_guild_integration()
+        return self.interaction.is_guild_authorised()
 
-    def is_user_integration(self) -> bool:
+    def is_user_authorised(self) -> bool:
         """:class:`bool`: Checks if the invoked command is user-installed.
-        This is a shortcut for :meth:`Interaction.is_user_integration`.
+        This is a shortcut for :meth:`Interaction.is_user_authorised`.
 
         .. versionadded:: 2.7
         """
-        return self.interaction.is_user_integration()
+        return self.interaction.is_user_authorised()
+
+    def is_guild_authorized(self) -> bool:
+        """:class:`bool`: An alias for :meth:`.is_guild_authorised`.
+
+        .. versionadded:: 2.7
+        """
+        return self.is_guild_authorised()
+
+    def is_user_authorized(self) -> bool:
+        """:class:`bool`: An alias for :meth:`.is_user_authorised`.
+
+        .. versionadded:: 2.7
+        """
+        return self.is_user_authorised()
 
 
 class AutocompleteContext:

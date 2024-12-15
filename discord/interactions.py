@@ -360,8 +360,10 @@ class Interaction:
         }
         return Webhook.from_state(data=payload, state=self._state)
 
-    def is_guild_integration(self) -> bool:
-        """:class:`bool`: Checks if the interaction is a guild integration.
+    def is_guild_authorised(self) -> bool:
+        """:class:`bool`: Checks if the interaction is guild authorised.
+
+        There is an alias for this called :meth:`.is_guild_authorized`.
 
         .. versionadded:: 2.7
         """
@@ -369,8 +371,10 @@ class Interaction:
             return self.authorizing_integration_owners.guild_id == self.guild_id
         return False
 
-    def is_user_integration(self) -> bool:
-        """:class:`bool`: Checks if the interaction is a user integration.
+    def is_user_authorised(self) -> bool:
+        """:class:`bool`: Checks if the interaction is user authorised.
+
+        There is an alias for this called :meth:`.is_user_authorized`.
 
         .. versionadded:: 2.7
         """
@@ -379,6 +383,24 @@ class Interaction:
 
         # This return should not be called but to make sure it returns the expected value
         return False
+
+    def is_guild_authorized(self) -> bool:
+        """:class:`bool`: Checks if the interaction is guild authorized.
+
+        There is an alias for this called :meth:`.is_guild_authorised`.
+
+        .. versionadded:: 2.7
+        """
+        return self.is_guild_authorised()
+
+    def is_user_authorized(self) -> bool:
+        """:class:`bool`: Checks if the interaction is user authorized.
+
+        There is an alias for this called :meth:`.is_user_authorised`.
+
+        .. versionadded:: 2.7
+        """
+        return self.is_user_authorised()
 
     async def original_response(self) -> InteractionMessage:
         """|coro|
