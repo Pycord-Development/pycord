@@ -1998,6 +1998,14 @@ class Message(Hashable):
         return data
 
     def to_dict(self) -> MessagePayload:
+        """Converts this message object into a dict.
+
+        Returns
+        -------
+        :class:`~discord.MessagePayload`
+            A dictionary of :class:`str` message keys bound to the respective value.
+        """
+
         return self.data
 
 
