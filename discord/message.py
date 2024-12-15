@@ -954,6 +954,9 @@ class Message(Hashable):
             f" author={self.author!r} flags={self.flags!r}>"
         )
 
+    def __dict__(self) -> MessagePayload:
+        return self.to_dict()
+
     def _try_patch(self, data, key, transform=None) -> None:
         try:
             value = data[key]
