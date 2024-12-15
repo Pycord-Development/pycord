@@ -785,11 +785,15 @@ class Message(Hashable):
         The call information associated with this message, if applicable.
 
         .. versionadded:: 2.6
+    data: :class:`MessagePayload`
+        The data payload that was received to create this message.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
         "_state",
-        "_data",
+        "data",
         "_edited_timestamp",
         "_cs_channel_mentions",
         "_cs_raw_mentions",
@@ -843,7 +847,7 @@ class Message(Hashable):
         data: MessagePayload,
     ):
         self._state: ConnectionState = state
-        self._data: MessagePayload = data
+        self.data: MessagePayload = data
         self.id: int = int(data["id"])
         self.webhook_id: int | None = utils._get_as_snowflake(data, "webhook_id")
         self.reactions: list[Reaction] = [
@@ -1994,7 +1998,7 @@ class Message(Hashable):
         return data
 
     def to_dict(self) -> MessagePayload:
-        return self._data
+        return self.data
 
 
 class PartialMessage(Hashable):
