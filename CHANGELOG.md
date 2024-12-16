@@ -66,7 +66,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
 - Fixed malformed properties in `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
- 
+
 ### Changed
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of
