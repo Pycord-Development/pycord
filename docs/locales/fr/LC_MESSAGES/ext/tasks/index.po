@@ -24,13 +24,13 @@ msgid "What do I do if the internet goes out?"
 msgstr "Que faire si la connexion Internet est interrompue ?"
 
 msgid "What is the maximum number of seconds I can sleep anyway?"
-msgstr "Quelle est la durée maximale en secondes pendant laquelle je peux dormir de toute façon ?"
+msgstr "Quelle est la durée maximale en secondes pendant laquelle je peux attendre avant d'annuler l'exécution ?"
 
 msgid "The goal of this Pycord extension is to abstract all these worries away from you."
 msgstr "L'objectif de cette extension Pycord est d'abstraire toutes ces préoccupations pour vous."
 
 msgid "Recipes"
-msgstr "Recettes"
+msgstr "Exemples"
 
 msgid "A simple background task in a :class:`~discord.ext.commands.Cog`:"
 msgstr "Une tâche en arrière-plan simple dans un :class:`~discord.ext.commands.Cog` :"
@@ -51,7 +51,7 @@ msgid "API Reference"
 msgstr "Référence de l'API"
 
 msgid "A background task helper that abstracts the loop and reconnection logic for you."
-msgstr "Un utilitaire de tâche en arrière-plan qui abstrait pour vous la logique de boucle et de reconnexion."
+msgstr "Un utilitaire pour les tâches en arrière-plan qui abstrait pour vous la logique de boucle et de reconnexion."
 
 msgid "The main interface to create this is through :func:`loop`."
 msgstr "L'interface principale pour créer ceci est à travers :func:`loop`."
@@ -72,13 +72,13 @@ msgid "The coroutine to register after the loop finishes."
 msgstr "La coroutine à enregistrer après la fin de la boucle."
 
 msgid "Raises"
-msgstr "Lève"
+msgstr "Lève les exceptions suivantes"
 
 msgid "The function was not a coroutine."
 msgstr "La fonction n'était pas une coroutine."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`\\`\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\`\\~typing.Callable\\`\\\\\\\\\\\\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\:\\`\\~typing.Awaitable\\`\\\\\\ \\\\[\\:py\\:data\\:\\:\\:\\`\\~typing.Any\\]\\)\\`"
@@ -102,22 +102,22 @@ msgid "By default, this prints to :data:`sys.stderr` however it could be overrid
 msgstr "Par défaut, cela imprime dans :data:`sys.stderr`, mais cela peut être remplacé par une autre implémentation."
 
 msgid "The coroutine to register in the event of an unhandled exception."
-msgstr "La coroutine à inscrire en cas d'exception non gérée."
+msgstr "La coroutine à exécuter en cas d'exception non gérée."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`ET\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:class\\:\\`BaseException\\`\\]\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`\\`\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\`\\~typing.Callable\\`\\\\\\\\\\\\\\\\[\\:py\\:data\\:\\`...\\\\`\\, \\:py\\:class\\:\\:\\`\\~typing.Awaitable\\`\\\\\\ \\\\[\\:py\\:data\\:\\:\\:\\`\\~typing.Any\\]\\)\\`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`ET\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:class\\:\\`BaseException\\`\\]\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)`"
 
 msgid "Read-only value for the number of seconds between each iteration. ``None`` if an explicit ``time`` value was passed instead."
-msgstr "Valeur en lecture seule pour le nombre de secondes entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
+msgstr "Valeur en lecture seule représentant le nombre de secondes entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
 
 msgid "Read-only value for the number of minutes between each iteration. ``None`` if an explicit ``time`` value was passed instead."
-msgstr "Valeur en lecture seule pour le nombre de minutes entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
+msgstr "Valeur en lecture seule représentant pour le nombre de minutes entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
 
 msgid "Read-only value for the number of hours between each iteration. ``None`` if an explicit ``time`` value was passed instead."
-msgstr "Valeur en lecture seule pour le nombre d'heures entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
+msgstr "Valeur en lecture seule représentant pour le nombre d'heures entre chaque itération. ``None`` si une valeur ``time`` explicite a été passée à la place."
 
 msgid "Read-only list for the exact times this loop runs at. ``None`` if relative times were passed instead."
-msgstr "Liste en lecture seule du temps exacte auxquelles cette boucle s'exécute. ``None`` si du temps relatifs a été passées a la place."
+msgstr "Liste en lecture seule des temps exacts auxquels cette boucle s'exécute. ``None`` si du temps relatifs a été passées a la place."
 
 msgid "The current iteration of the loop."
 msgstr "L'itération actuelle de la boucle."
@@ -129,7 +129,7 @@ msgid "|coro|"
 msgstr "|coro|"
 
 msgid "Calls the internal callback that the task holds."
-msgstr "Appelle le rappel interne que la tâche détient."
+msgstr "Appelle la fonction de rappel interne que la tâche détient."
 
 msgid "The arguments to use."
 msgstr "Les arguments à utiliser."
@@ -156,7 +156,7 @@ msgid ":class:`asyncio.Task`"
 msgstr ":class:`asyncio.Task`"
 
 msgid "Gracefully stops the task from running."
-msgstr "Empêche la tâche de s'exécuter."
+msgstr "Empêche la tâche de s'exécuter proprement."
 
 msgid "Unlike :meth:`cancel`\\, this allows the task to finish its current iteration before gracefully exiting. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr "Contrairement à :meth:`cancel`\\, cela permet à la tâche de terminer son itération actuelle avant de se terminer. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
@@ -276,7 +276,7 @@ msgid "The loop to use to register the task, if not given defaults to :func:`asy
 msgstr "La boucle à utiliser pour enregistrer la tâche, si elle n'est pas donnée par défaut à :func:`asyncio.get_event_loop`."
 
 msgid "The function was not a coroutine, an invalid value for the ``time`` parameter was passed,     or ``time`` parameter was passed in conjunction with relative time parameters."
-msgstr "La fonction n'était pas une coroutine, une valeur invalide a été passée pour le paramètre ``time``, ou le paramètre ``time`` a été passé en conjonction avec des paramètres de temps relatifs."
+msgstr "La fonction n'est pas une coroutine, une valeur invalide a été passée pour le paramètre ``time``, ou le paramètre ``time`` a été passé en conjonction avec des paramètres de temps relatifs."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\, \\:py\\:class\\:\\`\\~discord.ext.tasks.Loop\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\]`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\, \\:py\\:class\\:\\`\\~discord.ext.tasks.Loop\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`LF\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:class\\:\\`\\~typing.Awaitable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\]\\)\\]\\]`"
