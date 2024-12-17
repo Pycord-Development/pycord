@@ -1663,6 +1663,9 @@ class Guild(Hashable):
         public_updates_channel: TextChannel | None = MISSING,
         premium_progress_bar_enabled: bool = MISSING,
         disable_invites: bool = MISSING,
+        discoverable: bool = MISSING,
+        raid_alerts: bool = MISSING,
+        enable_activity_feed: bool = MISSING,
     ) -> Guild:
         r"""|coro|
 
@@ -1740,6 +1743,12 @@ class Guild(Hashable):
             Whether the guild should have premium progress bar enabled.
         disable_invites: :class:`bool`
             Whether the guild should have server invites enabled or disabled.
+        discoverable: :class:`bool`
+            Whether the guild should be discoverable in the discord discover tab.
+        raid_alerts: :class:`bool`
+            Whether activity alerts for the guild should be enabled.
+        enable_activity_feed: Optional[:class:`bool`]
+            Whether the guild's user activity feed should be enabled.
         reason: Optional[:class:`str`]
             The reason for editing this guild. Shows up on the audit log.
 
@@ -1861,8 +1870,13 @@ class Guild(Hashable):
 
             fields["system_channel_flags"] = system_channel_flags.value
 
+        if premium_progress_bar_enabled is not MISSING:
+            fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
+
+        # feature flags
+
         if community is not MISSING:
-            features = self.features.copy()
+            features: list[str] = fields.get("features", self.features.copy())
             if community:
                 if (
                     "rules_channel_id" in fields
@@ -1885,17 +1899,51 @@ class Guild(Hashable):
 
             fields["features"] = features
 
-        if premium_progress_bar_enabled is not MISSING:
-            fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
-
         if disable_invites is not MISSING:
-            features = self.features.copy()
+            features = fields.get("features", self.features.copy())
             if disable_invites:
-                if not "INVITES_DISABLED" in features:
+                if "INVITES_DISABLED" not in features:
                     features.append("INVITES_DISABLED")
             else:
                 if "INVITES_DISABLED" in features:
                     features.remove("INVITES_DISABLED")
+
+            fields["features"] = features
+
+        if discoverable is not MISSING:
+            features = fields.get("features", self.features.copy())
+            if discoverable:
+                if "DISCOVERABLE" not in features:
+                    features.append("DISCOVERABLE")
+            else:
+                if "DISCOVERABLE" in features:
+                    features.remove("DISCOVERABLE")
+
+            fields["features"] = features
+
+        if raid_alerts is not MISSING:
+            features = fields.get("features", self.features.copy())
+            if raid_alerts:
+                if "RAID_ALERTS_DISABLED" in features:
+                    features.remove("RAID_ALERTS_DISABLED")
+            else:
+                if "RAID_ALERTS_DISABLED" not in features:
+                    features.append("RAID_ALERTS_DISABLED")
+
+            fields["features"] = features
+
+        if enable_activity_feed is not MISSING:
+            features = fields.get("features", self.features.copy())
+            if enable_activity_feed:
+                if "ACTIVITY_FEED_ENABLED_BY_USER" not in features:
+                    features.append("ACTIVITY_FEED_ENABLED_BY_USER")
+                if "ACTIVITY_FEED_DISABLED_BY_USER" in features:
+                    features.remove("ACTIVITY_FEED_DISABLED_BY_USER")
+            else:
+                if "ACTIVITY_FEED_ENABLED_BY_USER" in features:
+                    features.remove("ACTIVITY_FEED_ENABLED_BY_USER")
+                if "ACTIVITY_FEED_DISABLED_BY_USER" not in features:
+                    features.append("ACTIVITY_FEED_DISABLED_BY_USER")
 
             fields["features"] = features
 
