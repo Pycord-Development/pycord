@@ -785,7 +785,7 @@ class Message(Hashable):
         The call information associated with this message, if applicable.
 
         .. versionadded:: 2.6
-    data: :class:`MessagePayload`
+    data: :class:`dict`
         The data payload that was received to create this message.
 
         .. versionadded:: 2.7
