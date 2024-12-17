@@ -32,7 +32,7 @@ class SoundboardCog(discord.Cog):
 
     @discord.slash_command()
     async def list_sounds(self, ctx: discord.ApplicationContext):
-        """Lists all available sounds in the guild."""
+        """Lists all the available sounds in the guild."""
         await ctx.defer()
 
         # Fetch both default and guild-specific sounds
@@ -98,7 +98,7 @@ class SoundboardCog(discord.Cog):
         new_emoji: str | None = None,
         new_volume: float | None = None,
     ):
-        """Edit an existing sound in the guild's soundboard."""
+        """Edits an existing sound in the guild's soundboard."""
         await ctx.defer()
 
         # Find the sound by name

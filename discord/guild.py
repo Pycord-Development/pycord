@@ -639,7 +639,7 @@ class Guild(Hashable):
             The name of the sound.
         sound: :class:`bytes`
             The :term:`py:bytes-like object` representing the sound data.
-            Only MP3 sound files that don't exceed the duration of 5.2s are supported.
+            Only MP3 sound files that are less than 5.2 seconds long are supported.
         volume: :class:`float`
             The volume of the sound. Defaults to 1.0.
         emoji: Union[:class:`PartialEmoji`, :class:`GuildEmoji`, :class:`str`]

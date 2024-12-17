@@ -3266,7 +3266,7 @@ class VoiceChannelSoundEffect(PartialSoundboardSound): ...
 
 
 class VoiceChannelEffectSendEvent:
-    """Represents the payload for an :func:`on_voice_channel_effect_send`
+    """Represents the payload for an :func:`on_voice_channel_effect_send`.
 
     .. versionadded:: 2.7
 

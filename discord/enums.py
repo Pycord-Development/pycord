@@ -1056,7 +1056,7 @@ class PollLayoutType(Enum):
 
 
 class VoiceChannelEffectAnimationType(Enum):
-    """Voice channel effect animation type
+    """Voice channel effect animation type.
 
     .. versionadded:: 2.7
     """

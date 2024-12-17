@@ -36,7 +36,7 @@ These changes are available on the `master` branch, but have not yet been releas
   `Permissions.use_external_sounds` and
   `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
-- Added the following soundboard related features:
+- Added the following soundboard-related features:
   - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
     `SoundboardSound.edit()`, and `SoundboardSound.delete()`.
   - Access Discord default sounds with `Client.fetch_default_sounds()`.
