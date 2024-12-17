@@ -36,6 +36,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `Permissions.use_external_sounds` and
   `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
+- Add missing `Guild` feature flags and `Guild.edit` parameters.
+  ([#2672](https://github.com/Pycord-Development/pycord/pull/2672))
 
 ### Fixed
 
