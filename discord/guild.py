@@ -676,6 +676,11 @@ class Guild(Hashable):
         r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
+    @property
+    def activity_feed_enabled(self) -> bool:
+        """Returns ``True`` if the guild has the activity feed enabled."""
+        return "ACTIVITY_FEED_DISABLED_BY_USER" not in self.features
+
     def by_category(self) -> list[ByCategoryItem]:
         """Returns every :class:`CategoryChannel` and their associated channels.
 
