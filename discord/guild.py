@@ -681,6 +681,14 @@ class Guild(Hashable):
         """Returns ``True`` if the guild has the activity feed enabled."""
         return "ACTIVITY_FEED_DISABLED_BY_USER" not in self.features
 
+    @property
+    def invites_disabled(self) -> bool:
+        """Returns ``True`` if the guild has invites disabled.
+
+        This corresponds to the invites being paused under the server's Security Actions
+        """
+        return "INVITES_DISABLED" in self.features
+
     def by_category(self) -> list[ByCategoryItem]:
         """Returns every :class:`CategoryChannel` and their associated channels.
 
@@ -1748,6 +1756,8 @@ class Guild(Hashable):
             Whether the guild should have premium progress bar enabled.
         disable_invites: :class:`bool`
             Whether the guild should have server invites enabled or disabled.
+
+            This corresponds to pausing the invites under the server's Security Actions
         discoverable: :class:`bool`
             Whether the guild should be discoverable in the discord discover tab.
         raid_alerts: :class:`bool`
