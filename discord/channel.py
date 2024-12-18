@@ -1433,7 +1433,7 @@ class MediaChannel(ForumChannel):
 
     @property
     def hides_media_download_options(self) -> bool:
-        """Whether media download options are be hidden in this media channel."""
+        """Whether media download options are hidden in this media channel."""
         return self.flags.hide_media_download_options
 
     @overload
@@ -1501,7 +1501,7 @@ class MediaChannel(ForumChannel):
         default_reaction_emoji: Optional[:class:`discord.GuildEmoji` | :class:`int` | :class:`str`]
             The default reaction emoji.
             Can be a unicode emoji or a custom emoji in the forms:
-            :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+            :class:`GuildEmoji`, snowflake ID, string representation (e.g., '<a:emoji_name:emoji_id>').
 
         available_tags: List[:class:`ForumTag`]
             The set of tags that can be used in this channel. Must be less than `20`.
