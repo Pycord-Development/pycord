@@ -58,6 +58,8 @@ VerificationLevel = Literal[0, 1, 2, 3, 4]
 NSFWLevel = Literal[0, 1, 2, 3]
 PremiumTier = Literal[0, 1, 2, 3]
 GuildFeature = Literal[
+    "ACTIVITY_FEED_DISABLED_BY_USER",
+    "ACTIVITY_FEED_ENABLED_BY_USER",
     "ANIMATED_BANNER",
     "ANIMATED_ICON",
     "APPLICATION_COMMAND_PERMISSIONS_V2",
@@ -87,6 +89,7 @@ GuildFeature = Literal[
     "PREVIEW_ENABLED",
     "ROLE_ICONS",
     "ROLE_SUBSCRIPTIONS_ENABLED",
+    "RAID_ALERTS_DISABLED",
     "SEVEN_DAY_THREAD_ARCHIVE",
     "TEXT_IN_VOICE_ENABLED",
     "THREAD_DEFAULT_AUTO_ARCHIVE_DURATION",
