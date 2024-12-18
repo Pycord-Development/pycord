@@ -349,6 +349,8 @@ class ApplicationContext(discord.abc.Messageable):
         """:class:`bool`: Checks if the invoked command is guild-installed.
         This is a shortcut for :meth:`Interaction.is_guild_authorised`.
 
+        There is an alias for this called :meth:`.is_guild_authorized`.
+
         .. versionadded:: 2.7
         """
         return self.interaction.is_guild_authorised()
@@ -356,6 +358,8 @@ class ApplicationContext(discord.abc.Messageable):
     def is_user_authorised(self) -> bool:
         """:class:`bool`: Checks if the invoked command is user-installed.
         This is a shortcut for :meth:`Interaction.is_user_authorised`.
+
+        There is an alias for this called :meth:`.is_user_authorized`.
 
         .. versionadded:: 2.7
         """
