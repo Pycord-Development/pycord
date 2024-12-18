@@ -2500,3 +2500,17 @@ of :class:`enum.Enum`.
     .. attribute:: private_channel
 
         The interaction is in a private DM or group DM channel.
+
+.. class:: VoiceChannelEffectAnimationType
+
+    Represents the type of animation for a voice channel effect.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: premium
+
+        The animation is a premium effect.
+
+    .. attribute:: basic
+
+        The animation is a basic effect.
