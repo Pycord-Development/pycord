@@ -33,7 +33,7 @@ class FoodCog(commands.Cog):
         autocomplete=partial(food_autocomplete, food_type="fruit"),
     )
     async def get_fruit(self, ctx: discord.ApplicationContext, choice: str):
-        await ctx.respond(f"You picked: {choice}")
+        await ctx.respond(f'You picked "{choice}"')
 
     @commands.slash_command(name="vegetable")
     @discord.option(
@@ -42,7 +42,7 @@ class FoodCog(commands.Cog):
         autocomplete=partial(food_autocomplete, food_type="vegetable"),
     )
     async def get_vegetable(self, ctx: discord.ApplicationContext, choice: str):
-        await ctx.respond(f"You picked: {choice}")
+        await ctx.respond(f'You picked "{choice}"')
 
 
 bot.add_cog(FoodCog())
