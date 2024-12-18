@@ -48,7 +48,7 @@ msgid "A decorator that converts the provided method into an :class:`.BridgeComm
 msgstr "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid "Callable[..., :class:`BridgeCommand`]"
 msgstr "Callable[..., :class:`BridgeCommand`]"

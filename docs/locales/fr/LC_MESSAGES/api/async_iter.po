@@ -69,7 +69,7 @@ msgid "A list of every element in the async iterator."
 msgstr "A list of every element in the async iterator."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid "Collects items into chunks of up to a given maximum size. Another :class:`AsyncIterator` is returned which collects items into :class:`list`\\s of a given size. The maximum chunk size must be a positive integer."
 msgstr "Collects items into chunks of up to a given maximum size. Another :class:`AsyncIterator` is returned which collects items into :class:`list`\\s of a given size. The maximum chunk size must be a positive integer."
