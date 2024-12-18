@@ -110,14 +110,14 @@ class RoleTags:
 
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
-        integrations such as Twitch or trough guild subscriptions.
+        integrations such as Twitch or through guild subscriptions.
         """
         return self.integration_id is not None
 
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
 
-        Returns ``True`` if the role is available for purchase,
+        Returns ``True`` if the role is available for purchase, and
         ``False`` if it is not available for purchase or if the role is not linked to a guild subscription.
 
         .. versionadded:: 2.7
@@ -327,7 +327,7 @@ class Role(Hashable):
 
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
-        integrations such as Twitch or trough guild subscriptions.
+        integrations such as Twitch or through guild subscriptions.
 
         .. versionadded:: 1.6
         """
@@ -348,7 +348,7 @@ class Role(Hashable):
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
 
-        Returns ``True`` if the role is available for purchase,
+        Returns ``True`` if the role is available for purchase, and
         ``False`` if it is not available for purchase or if the role is not linked to a guild subscription.
 
         .. versionadded:: 2.7
