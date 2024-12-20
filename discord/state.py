@@ -684,9 +684,9 @@ class ConnectionState:
         self.dispatch("connect")
         self._ready_task = asyncio.create_task(self._delay_ready())
 
-    parse_ready._supports_model = (
+    parse_ready._supports_model = (  # pyright: ignore [reportFunctionMemberAccess]
         models.gateway.Ready
-    )  # pyright: ignore [reportFunctionMemberAccess]
+    )
 
     def parse_resumed(self, data) -> None:
         self.dispatch("resumed")

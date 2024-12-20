@@ -94,7 +94,7 @@ if TYPE_CHECKING:
     Response = Coroutine[Any, Any, T]  # pyright: ignore [reportExplicitAny]
 
 API_VERSION: int = 10
-BM = TypeVar("BM", bound=type["BaseModel"])
+BM = TypeVar("BM", bound="BaseModel")
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str:
@@ -227,7 +227,7 @@ class HTTPClient:
         *,
         files: Sequence[File] | None = None,
         form: Iterable[dict[str, Any]] | None = None,
-        model: None = None,
+        model: None,
         **kwargs: Any,
     ) -> Any: ...
 
@@ -238,16 +238,17 @@ class HTTPClient:
         *,
         files: None = ...,
         form: None = ...,
-        model: BM,
+        model: type[BM],
         **kwargs: Any,
     ) -> BM: ...
+
     async def request(
         self,
         route: Route,
         *,
         files: Sequence[File] | None = None,
         form: Iterable[dict[str, Any]] | None = None,
-        model: BM | None = None,
+        model: type[BM] | None = None,
         **kwargs: Any,
     ) -> Any | BM:
         bucket = route.bucket
@@ -347,8 +348,8 @@ class HTTPClient:
                             _log.debug("%s %s has received %s", method, url, data)
                             if model:
                                 return model(
-                                    **data
-                                )  # pyright: ignore [reportCallIssue]
+                                    **data  # pyright: ignore [reportCallIssue]
+                                )
                             return data
 
                         # we are being rate limited
