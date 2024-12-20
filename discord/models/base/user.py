@@ -4,8 +4,8 @@ from enum import IntEnum
 
 from pydantic import BaseModel
 
-from .types import MISSING, Color, Locale, MissingSentinel, Snowflake, UserID
-from .types.flags import UserFlags
+from ..types import MISSING, Color, Locale, MissingSentinel, Snowflake, UserID
+from ..types.flags import UserFlags
 
 
 class PremiumType(IntEnum):

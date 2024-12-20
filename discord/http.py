@@ -1648,14 +1648,15 @@ class HTTPClient:
             Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id), params=params
         )
 
-    def get_ban(self, user_id: Snowflake, guild_id: Snowflake) -> Response[guild.Ban]:
+    def get_ban(self, user_id: Snowflake, guild_id: Snowflake) -> Response[models.Ban]:
         return self.request(
             Route(
                 "GET",
                 "/guilds/{guild_id}/bans/{user_id}",
                 guild_id=guild_id,
                 user_id=user_id,
-            )
+            ),
+            model=models.Ban,
         )
 
     def get_vanity_code(self, guild_id: Snowflake) -> Response[invite.VanityInvite]:

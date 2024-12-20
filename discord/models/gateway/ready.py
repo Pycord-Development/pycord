@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 
-from ..guild import Guild, UnavailableGuild
+from ..base import Guild, UnavailableGuild, User
 from ..types.utils import MISSING, MissingSentinel
-from ..user import User
 from .base import GatewayEvent
 
 

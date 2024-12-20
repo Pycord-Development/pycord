@@ -4,7 +4,7 @@ from enum import IntEnum
 
 from pydantic import BaseModel
 
-from .types import MISSING, GuildID, MissingSentinel, Snowflake, StickerID
+from ..types import MISSING, GuildID, MissingSentinel, Snowflake, StickerID
 from .user import User
 
 

@@ -11,7 +11,7 @@ from pydantic import (
 )
 from typing_extensions import Annotated
 
-from discord.models.types import (
+from ..types import (
     MISSING,
     Color,
     MissingSentinel,

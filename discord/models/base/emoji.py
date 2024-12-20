@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
-from .types import MISSING, EmojiID, MissingSentinel, RoleID
+from ..types import MISSING, EmojiID, MissingSentinel, RoleID
 from .user import User
 
 

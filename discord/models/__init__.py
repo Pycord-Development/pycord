@@ -1,12 +1,18 @@
-from . import gateway, types
-from .emoji import Emoji
-from .guild import Guild, UnavailableGuild
-from .role import Role
-from .sticker import Sticker
-from .types.utils import MISSING
-from .user import AvatarDecorationData, User
+from discord.models.base.role import Role
 
-__all__ = [
+from . import gateway, types
+from .base import (
+    AvatarDecorationData,
+    Ban,
+    Emoji,
+    Guild,
+    Sticker,
+    UnavailableGuild,
+    User,
+)
+from .types.utils import MISSING
+
+__all__ = (
     "Emoji",
     "Guild",
     "UnavailableGuild",
@@ -17,4 +23,5 @@ __all__ = [
     "MISSING",
     "AvatarDecorationData",
     "gateway",
-]
+    "Ban",
+)
