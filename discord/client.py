@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence,
 
 import aiohttp
 
-from . import utils
+from . import models, utils
 from .activity import ActivityTypes, BaseActivity, create_activity
 from .appinfo import AppInfo, PartialAppInfo
 from .application_role_connection import ApplicationRoleConnectionMetadata
@@ -1840,7 +1840,7 @@ class Client:
         :exc:`HTTPException`
             Fetching the user failed.
         """
-        data = await self.http.get_user(user_id)
+        data: models.User = await self.http.get_user(user_id)
         return User(state=self._connection, data=data)
 
     async def fetch_channel(

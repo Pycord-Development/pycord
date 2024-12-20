@@ -43,7 +43,7 @@ from typing import (
     Union,
 )
 
-from . import utils
+from . import models, utils
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
@@ -657,18 +657,18 @@ class ConnectionState:
         finally:
             self._ready_task = None
 
-    def parse_ready(self, data) -> None:
+    def parse_ready(self, data: models.gateway.ReadyData) -> None:
         if self._ready_task is not None:
             self._ready_task.cancel()
 
         self._ready_state = asyncio.Queue()
         self.clear(views=False)
-        self.user = ClientUser(state=self, data=data["user"])
-        self.store_user(data["user"])
+        self.user = ClientUser(state=self, data=data.user)
+        self.store_user(data.user)  # TODO Rewrite cache to use model_dump
 
         if self.application_id is None:
             try:
-                application = data["application"]
+                application = data.application
             except KeyError:
                 pass
             else:
@@ -676,11 +676,17 @@ class ConnectionState:
                 # flags will always be present here
                 self.application_flags = ApplicationFlags._from_value(application["flags"])  # type: ignore
 
-        for guild_data in data["guilds"]:
-            self._add_guild_from_data(guild_data)
+        for guild_data in data.guilds:
+            self._add_guild_from_data(
+                guild_data.model_dump()
+            )  # TODO Rewrite cache to support Pydantic
 
         self.dispatch("connect")
         self._ready_task = asyncio.create_task(self._delay_ready())
+
+    parse_ready._supports_model = (
+        models.gateway.Ready
+    )  # pyright: ignore [reportFunctionMemberAccess]
 
     def parse_resumed(self, data) -> None:
         self.dispatch("resumed")

@@ -35,8 +35,12 @@ import time
 import traceback
 import zlib
 from collections import deque, namedtuple
+from typing import Any
 
 import aiohttp
+from pydantic import BaseModel
+
+from discord import models
 
 from . import utils
 from .activity import BaseActivity
@@ -548,11 +552,20 @@ class DiscordWebSocket:
             )
 
         try:
-            func = self._discord_parsers[event]
+            func: Any = self._discord_parsers[event]
         except KeyError:
             _log.debug("Unknown event %s.", event)
         else:
-            func(data)
+            if hasattr(func, "_supports_model") and issubclass(
+                func._supports_model, models.gateway.GatewayEvent
+            ):
+                func(
+                    func._supports_model(
+                        **msg
+                    ).d  # pyright: ignore [reportUnknownMemberType, reportAttributeAccessIssue]
+                )
+            else:
+                func(data)
 
         # remove the dispatched listeners
         removed = []
