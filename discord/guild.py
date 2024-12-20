@@ -40,7 +40,7 @@ from typing import (
     overload,
 )
 
-from . import abc, utils
+from . import abc, models, utils
 from .asset import Asset
 from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
 from .channel import *
@@ -2114,9 +2114,9 @@ class Guild(Hashable):
         HTTPException
             An error occurred while fetching the information.
         """
-        data: BanPayload = await self._state.http.get_ban(user.id, self.id)
+        data: models.Ban = await self._state.http.get_ban(user.id, self.id)
         return BanEntry(
-            user=User(state=self._state, data=data["user"]), reason=data["reason"]
+            user=User(state=self._state, data=data.user), reason=data.reason
         )
 
     async def fetch_channel(self, channel_id: int, /) -> GuildChannel | Thread:

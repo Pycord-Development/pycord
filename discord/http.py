@@ -33,8 +33,9 @@ from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
 from urllib.parse import quote as _uriquote
 
 import aiohttp
+from typing_extensions import overload
 
-from . import __version__, utils
+from . import __version__, models, utils
 from .errors import (
     DiscordServerError,
     Forbidden,
@@ -51,6 +52,8 @@ _log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from types import TracebackType
+
+    from pydantic import BaseModel
 
     from .enums import AuditLogAction, InteractionResponseType
     from .file import File
@@ -87,9 +90,11 @@ if TYPE_CHECKING:
     T = TypeVar("T")
     BE = TypeVar("BE", bound=BaseException)
     MU = TypeVar("MU", bound="MaybeUnlock")
-    Response = Coroutine[Any, Any, T]
+
+    Response = Coroutine[Any, Any, T]  # pyright: ignore [reportExplicitAny]
 
 API_VERSION: int = 10
+BM = TypeVar("BM", bound="BaseModel")
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str:
@@ -157,7 +162,7 @@ class MaybeUnlock:
 
 # For some reason, the Discord voice websocket expects this header to be
 # completely lowercase while aiohttp respects spec and does it as case-insensitive
-aiohttp.hdrs.WEBSOCKET = "websocket"  # type: ignore
+aiohttp.hdrs.WEBSOCKET = "websocket"  # type: ignore # pyright: ignore [reportAttributeAccessIssue]
 
 
 class HTTPClient:
@@ -215,14 +220,37 @@ class HTTPClient:
 
         return await self.__session.ws_connect(url, **kwargs)
 
+    @overload
     async def request(
         self,
         route: Route,
         *,
         files: Sequence[File] | None = None,
         form: Iterable[dict[str, Any]] | None = None,
+        model: None,
         **kwargs: Any,
-    ) -> Any:
+    ) -> Any: ...
+
+    @overload
+    async def request(
+        self,
+        route: Route,
+        *,
+        files: None = ...,
+        form: None = ...,
+        model: type[BM],
+        **kwargs: Any,
+    ) -> BM: ...
+
+    async def request(
+        self,
+        route: Route,
+        *,
+        files: Sequence[File] | None = None,
+        form: Iterable[dict[str, Any]] | None = None,
+        model: type[BM] | None = None,
+        **kwargs: Any,
+    ) -> Any | BM:
         bucket = route.bucket
         method = route.method
         url = route.url
@@ -318,6 +346,10 @@ class HTTPClient:
                         # the request was successful so just return the text/json
                         if 300 > response.status >= 200:
                             _log.debug("%s %s has received %s", method, url, data)
+                            if model:
+                                return model(
+                                    **data  # pyright: ignore [reportCallIssue]
+                                )
                             return data
 
                         # we are being rate limited
@@ -409,7 +441,7 @@ class HTTPClient:
 
     # login management
 
-    async def static_login(self, token: str) -> user.User:
+    async def static_login(self, token: str) -> models.User:
         # Necessary to get aiohttp to stop complaining about session creation
         self.__session = aiohttp.ClientSession(
             connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
@@ -418,7 +450,7 @@ class HTTPClient:
         self.token = token
 
         try:
-            data = await self.request(Route("GET", "/users/@me"))
+            data = await self.request(Route("GET", "/users/@me"), model=models.User)
         except HTTPException as exc:
             self.token = old_token
             if exc.status == 401:
@@ -1616,14 +1648,15 @@ class HTTPClient:
             Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id), params=params
         )
 
-    def get_ban(self, user_id: Snowflake, guild_id: Snowflake) -> Response[guild.Ban]:
+    def get_ban(self, user_id: Snowflake, guild_id: Snowflake) -> Response[models.Ban]:
         return self.request(
             Route(
                 "GET",
                 "/guilds/{guild_id}/bans/{user_id}",
                 guild_id=guild_id,
                 user_id=user_id,
-            )
+            ),
+            model=models.Ban,
         )
 
     def get_vanity_code(self, guild_id: Snowflake) -> Response[invite.VanityInvite]:
@@ -3173,5 +3206,7 @@ class HTTPClient:
             value = "{0}?encoding={1}&v={2}"
         return data["shards"], value.format(data["url"], encoding, API_VERSION)
 
-    def get_user(self, user_id: Snowflake) -> Response[user.User]:
-        return self.request(Route("GET", "/users/{user_id}", user_id=user_id))
+    def get_user(self, user_id: Snowflake) -> Response[models.User]:
+        return self.request(
+            Route("GET", "/users/{user_id}", user_id=user_id), model=models.User
+        )
