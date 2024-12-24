@@ -27,8 +27,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, TypeVar
 
+from typing_extensions import override
+
 import discord.abc
 
+from . import models
 from .asset import Asset
 from .colour import Colour
 from .flags import PublicUserFlags
@@ -58,12 +61,12 @@ BU = TypeVar("BU", bound="BaseUser")
 
 
 class _UserTag:
-    __slots__ = ()
+    __slots__ = ()  # pyright: ignore [reportUnannotatedClassAttribute]
     id: int
 
 
 class BaseUser(_UserTag):
-    __slots__ = (
+    __slots__ = (  # pyright: ignore [reportUnannotatedClassAttribute]
         "name",
         "id",
         "discriminator",
@@ -88,16 +91,15 @@ class BaseUser(_UserTag):
         _state: ConnectionState
         _avatar: str | None
         _banner: str | None
-        _accent_colour: int | None
-        _avatar_decoration: dict | None
-        _public_flags: int
+        _accent_colour: models.types.Color | None
+        _avatar_decoration: models.AvatarDecorationData | None
+        _public_flags: models.types.UserFlags | None
 
-    def __init__(
-        self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
-    ) -> None:
+    def __init__(self, *, state: ConnectionState, data: models.User) -> None:
         self._state = state
         self._update(data)
 
+    @override
     def __repr__(self) -> str:
         if self.is_migrated:
             if self.global_name is not None:
@@ -117,6 +119,7 @@ class BaseUser(_UserTag):
             f" bot={self.bot} system={self.system}>"
         )
 
+    @override
     def __str__(self) -> str:
         return (
             f"{self.name}#{self.discriminator}"
@@ -128,24 +131,36 @@ class BaseUser(_UserTag):
             )
         )
 
+    @override
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, _UserTag) and other.id == self.id
 
+    @override
     def __hash__(self) -> int:
         return self.id >> 22
 
-    def _update(self, data: UserPayload) -> None:
-        self.name = data["username"]
-        self.id = int(data["id"])
-        self.discriminator = data["discriminator"]
-        self.global_name = data.get("global_name", None) or None
-        self._avatar = data["avatar"]
-        self._banner = data.get("banner", None)
-        self._accent_colour = data.get("accent_color", None)
-        self._avatar_decoration = data.get("avatar_decoration_data", None)
-        self._public_flags = data.get("public_flags", 0)
-        self.bot = data.get("bot", False)
-        self.system = data.get("system", False)
+    def _update(self, data: models.User) -> None:
+        self.name = data.username
+        self.id = data.id
+        self.discriminator = data.discriminator
+        self.global_name = data.global_name
+        self._avatar = data.avatar
+        self._banner = data.banner if data.banner is not models.MISSING else None
+        self._accent_colour = (
+            data.accent_color if data.accent_color is not models.MISSING else None
+        )
+        self._avatar_decoration = (
+            data.avatar_decoration_data
+            if data.avatar_decoration_data is not models.MISSING
+            else None
+        )
+        self._public_flags = (
+            data.public_flags
+            if data.public_flags is not models.MISSING
+            else models.types.UserFlags.none()
+        )
+        self.bot = data.bot if data.bot is not models.MISSING else False
+        self.system = data.system if data.system is not models.MISSING else False
 
     @classmethod
     def _copy(cls: type[BU], user: BU) -> BU:
@@ -206,7 +221,9 @@ class BaseUser(_UserTag):
         """
         eq = (self.id >> 22) if self.is_migrated else int(self.discriminator)
         perc = 6 if self.is_migrated else 5
-        return Asset._from_default_avatar(self._state, eq % perc)
+        return Asset._from_default_avatar(
+            self._state, eq % perc
+        )  # pyright: ignore [reportPrivateUsage]
 
     @property
     def display_avatar(self) -> Asset:
@@ -229,7 +246,9 @@ class BaseUser(_UserTag):
         """
         if self._banner is None:
             return None
-        return Asset._from_user_banner(self._state, self.id, self._banner)
+        return Asset._from_user_banner(
+            self._state, self.id, self._banner
+        )  # pyright: ignore [reportPrivateUsage]
 
     @property
     def avatar_decoration(self) -> Asset | None:
@@ -239,8 +258,8 @@ class BaseUser(_UserTag):
         """
         if self._avatar_decoration is None:
             return None
-        return Asset._from_avatar_decoration(
-            self._state, self.id, self._avatar_decoration.get("asset")
+        return Asset._from_avatar_decoration(  # pyright: ignore [reportPrivateUsage]
+            self._state, self.id, self._avatar_decoration.asset
         )
 
     @property
@@ -387,17 +406,24 @@ class ClientUser(BaseUser):
         Specifies if the user has MFA turned on and working.
     """
 
-    __slots__ = ("locale", "_flags", "verified", "mfa_enabled", "__weakref__")
+    __slots__ = (
+        "locale",
+        "_flags",
+        "verified",
+        "mfa_enabled",
+        "__weakref__",
+    )  # pyright: ignore [reportUnannotatedClassAttribute]
 
     if TYPE_CHECKING:
         verified: bool
-        locale: str | None
+        locale: models.types.Locale | None
         mfa_enabled: bool
-        _flags: int
+        _flags: models.types.UserFlags
 
-    def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
+    def __init__(self, *, state: ConnectionState, data: models.User) -> None:
         super().__init__(state=state, data=data)
 
+    @override
     def __repr__(self) -> str:
         if self.is_migrated:
             if self.global_name is not None:
@@ -417,13 +443,20 @@ class ClientUser(BaseUser):
             f" bot={self.bot} verified={self.verified} mfa_enabled={self.mfa_enabled}>"
         )
 
-    def _update(self, data: UserPayload) -> None:
+    @override
+    def _update(self, data: models.User) -> None:
         super()._update(data)
         # There's actually an Optional[str] phone field as well, but I won't use it
-        self.verified = data.get("verified", False)
-        self.locale = data.get("locale")
-        self._flags = data.get("flags", 0)
-        self.mfa_enabled = data.get("mfa_enabled", False)
+        self.verified = data.verified if data.verified is not models.MISSING else False
+        self.locale = data.locale if data.locale is not models.MISSING else None
+        self._flags = (
+            data.flags
+            if data.flags is not models.MISSING
+            else models.types.UserFlags.none()
+        )
+        self.mfa_enabled = (
+            data.mfa_enabled if data.mfa_enabled is not models.MISSING else False
+        )
 
     # TODO: Username might not be able to edit anymore.
     async def edit(
@@ -538,7 +571,9 @@ class User(BaseUser, discord.abc.Messageable):
 
     __slots__ = ("_stored",)
 
-    def __init__(self, *, state: ConnectionState, data: UserPayload) -> None:
+    def __init__(self, *, state: ConnectionState, data: models.User) -> None:
+        if isinstance(data, dict):
+            data = models.User(**data)
         super().__init__(state=state, data=data)
         self._stored: bool = False
 
