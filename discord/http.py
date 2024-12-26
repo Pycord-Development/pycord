@@ -33,7 +33,8 @@ from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
 from urllib.parse import quote as _uriquote
 
 import aiohttp
-from typing_extensions import overload
+from pydantic import BaseModel, TypeAdapter
+from typing_extensions import overload, reveal_type
 
 from . import __version__, models, utils
 from .errors import (
@@ -52,8 +53,6 @@ _log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from types import TracebackType
-
-    from pydantic import BaseModel
 
     from .enums import AuditLogAction, InteractionResponseType
     from .file import File
@@ -94,7 +93,8 @@ if TYPE_CHECKING:
     Response = Coroutine[Any, Any, T]  # pyright: ignore [reportExplicitAny]
 
 API_VERSION: int = 10
-BM = TypeVar("BM", bound="BaseModel")
+TP = TypeVar("TP")
+BM = TypeVar("BM", bound=BaseModel)
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str:
@@ -242,15 +242,26 @@ class HTTPClient:
         **kwargs: Any,
     ) -> BM: ...
 
+    @overload
+    async def request(
+        self,
+        route: Route,
+        *,
+        files: None = ...,
+        form: None = ...,
+        model: TypeAdapter[TP],
+        **kwargs: Any,
+    ) -> TP: ...
+
     async def request(
         self,
         route: Route,
         *,
         files: Sequence[File] | None = None,
         form: Iterable[dict[str, Any]] | None = None,
-        model: type[BM] | None = None,
+        model: type[BM] | TypeAdapter[TP] | None = None,
         **kwargs: Any,
-    ) -> Any | BM:
+    ) -> Any | BM | TP:
         bucket = route.bucket
         method = route.method
         url = route.url
@@ -347,9 +358,12 @@ class HTTPClient:
                         if 300 > response.status >= 200:
                             _log.debug("%s %s has received %s", method, url, data)
                             if model:
-                                return model(
-                                    **data  # pyright: ignore [reportCallIssue]
-                                )
+                                if isinstance(model, TypeAdapter):
+                                    return model.validate_python(
+                                        data
+                                    )  # pyright: ignore [reportUnknownVariableType]
+                                return model.model_validate(data)
+
                             return data
 
                         # we are being rate limited
@@ -1630,11 +1644,11 @@ class HTTPClient:
 
     def get_bans(
         self,
-        guild_id: Snowflake,
+        guild_id: models.Snowflake,
         limit: int | None = None,
-        before: Snowflake | None = None,
-        after: Snowflake | None = None,
-    ) -> Response[list[guild.Ban]]:
+        before: models.Snowflake | None = None,
+        after: models.Snowflake | None = None,
+    ) -> Response[list[models.Ban]]:
         params: dict[str, int | Snowflake] = {}
 
         if limit is not None:
@@ -1645,10 +1659,14 @@ class HTTPClient:
             params["after"] = after
 
         return self.request(
-            Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id), params=params
+            Route("GET", "/guilds/{guild_id}/bans", guild_id=guild_id),
+            params=params,
+            model=TypeAdapter(list[models.Ban]),
         )
 
-    def get_ban(self, user_id: Snowflake, guild_id: Snowflake) -> Response[models.Ban]:
+    def get_ban(
+        self, user_id: models.Snowflake, guild_id: models.Snowflake
+    ) -> Response[models.Ban]:
         return self.request(
             Route(
                 "GET",

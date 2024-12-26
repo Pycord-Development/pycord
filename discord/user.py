@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from typing_extensions import override
@@ -574,6 +575,12 @@ class User(BaseUser, discord.abc.Messageable):
     def __init__(self, *, state: ConnectionState, data: models.User) -> None:
         if isinstance(data, dict):
             data = models.User(**data)
+            warnings.warn(
+                "Passing a dict to User is deprecated and will be removed in a future version.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+
         super().__init__(state=state, data=data)
         self._stored: bool = False
 

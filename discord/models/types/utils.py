@@ -1,4 +1,4 @@
-from typing_extensions import TypeAlias, final, override
+from typing_extensions import TypeAlias, final
 
 
 @final

@@ -13,8 +13,8 @@ BF = TypeVar("BF", bound="BaseFlags")
 
 class flag_value:
     def __init__(
-        self, func: Callable[[Any], int]
-    ):  # pyright: ignore [reportExplicitAny]
+        self, func: Callable[[Any], int]  # pyright: ignore [reportExplicitAny]
+    ):
         self.flag: int = func(None)
         self.__doc__ = func.__doc__
 

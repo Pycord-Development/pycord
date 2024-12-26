@@ -38,6 +38,9 @@ from typing import (
     Union,
 )
 
+from typing_extensions import Final, override, reveal_type
+
+from . import models
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .monetization import Entitlement
@@ -57,9 +60,11 @@ __all__ = (
 if TYPE_CHECKING:
     from .abc import Snowflake
     from .guild import BanEntry, Guild
+    from .http import HTTPClient
     from .member import Member
     from .message import Message
     from .scheduled_events import ScheduledEvent
+    from .state import ConnectionState
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
@@ -737,16 +742,26 @@ class MemberIterator(_AsyncIterator["Member"]):
 
 
 class BanIterator(_AsyncIterator["BanEntry"]):
-    def __init__(self, guild, limit=None, before=None, after=None):
-        self.guild = guild
-        self.limit = limit
-        self.after = after
-        self.before = before
+    def __init__(
+        self,
+        guild: Guild,
+        limit: int | None = None,
+        before: models.Snowflake | None = None,
+        after: models.Snowflake | None = None,
+    ):
+        self.guild: Guild = guild
+        self.limit: int | None = limit
+        self.after: models.Snowflake | None = after
+        self.before: models.Snowflake | None = before
+        self.retrieve: int = 0
 
-        self.state = self.guild._state
-        self.get_bans = self.state.http.get_bans
-        self.bans = asyncio.Queue()
+        self.state: ConnectionState = (
+            self.guild._state
+        )  # pyright: ignore [reportPrivateUsage]
+        self.get_bans: Final = self.state.http.get_bans
+        self.bans: asyncio.Queue[BanEntry] = asyncio.Queue()
 
+    @override
     async def next(self) -> BanEntry:
         if self.bans.empty():
             await self.fill_bans()
@@ -757,20 +772,20 @@ class BanIterator(_AsyncIterator["BanEntry"]):
             raise NoMoreItems()
 
     def _get_retrieve(self):
-        l = self.limit
-        if l is None or l > 1000:
-            r = 1000
+        if self.limit is None or self.limit > 1000:
+            self.retrieve = 1000
         else:
-            r = l
-        self.retrieve = r
-        return r > 0
+            self.retrieve = self.limit
+        return self.retrieve > 0
 
     async def fill_bans(self):
         if not self._get_retrieve():
             return
-        before = self.before.id if self.before else None
-        after = self.after.id if self.after else None
-        data = await self.get_bans(self.guild.id, self.retrieve, before, after)
+        before: models.Snowflake | None = self.before if self.before else None
+        after: models.Snowflake | None = self.after if self.after else None
+        data = await self.get_bans(
+            models.Snowflake(self.guild.id), self.retrieve, before, after
+        )
         if not data:
             # no data, terminate
             return
@@ -780,18 +795,16 @@ class BanIterator(_AsyncIterator["BanEntry"]):
         if len(data) < 1000:
             self.limit = 0  # terminate loop
 
-        self.after = Object(id=int(data[-1]["user"]["id"]))
+        self.after = data[-1].user.id
 
         for element in reversed(data):
             await self.bans.put(self.create_ban(element))
 
-    def create_ban(self, data):
+    def create_ban(self, data: models.Ban) -> BanEntry:
         from .guild import BanEntry
         from .user import User
 
-        return BanEntry(
-            reason=data["reason"], user=User(state=self.state, data=data["user"])
-        )
+        return BanEntry(reason=data.reason, user=User(state=self.state, data=data.user))
 
 
 class ArchivedThreadIterator(_AsyncIterator["Thread"]):

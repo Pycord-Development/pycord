@@ -43,6 +43,10 @@ class Snowflake(int):
         """Returns the increment count."""
         return self & 0xFFF
 
+    @property
+    def id(self) -> int:
+        return int(self)
+
     @classmethod
     def __get_pydantic_core_schema__(
         cls,

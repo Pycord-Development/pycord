@@ -10,6 +10,7 @@ from .base import (
     UnavailableGuild,
     User,
 )
+from .types import Snowflake
 from .types.utils import MISSING
 
 __all__ = (
@@ -24,4 +25,5 @@ __all__ = (
     "AvatarDecorationData",
     "gateway",
     "Ban",
+    "Snowflake",
 )
