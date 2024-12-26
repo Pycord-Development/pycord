@@ -414,7 +414,7 @@ class Option:
 
         Returns
         -------
-            Optional[AutocompleteFunction]
+        Optional[AutocompleteFunction]
 
         .. versionchanged:: 2.7
 
