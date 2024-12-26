@@ -527,9 +527,7 @@ class AsyncWebhookAdapter:
                     "content_type": "application/octet-stream",
                 }
             )
-        if files and any(isinstance(f, VoiceMessage) for f in files):
-            payload["flags"] = MessageFlags(is_voice_message=True).value
-        payload["attachments"] = attachments
+        payload["data"]["attachments"] = attachments
         form[0]["value"] = utils._to_json(payload)
 
         route = Route(
