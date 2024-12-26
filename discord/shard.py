@@ -294,7 +294,9 @@ class ShardInfo:
 
     @property
     def latency(self) -> float:
-        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."""
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard. If no heartbeat
+        has been received yet this returns ``float('inf')``.
+        """
         return self._parent.ws.latency
 
     def is_ws_ratelimited(self) -> bool:
