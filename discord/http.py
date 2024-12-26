@@ -411,36 +411,10 @@ class HTTPClient:
     # login management
 
     async def static_login(self, token: str) -> user.User:
-        # TODO: Remove This When Testing Is Done
-        import logging
-
-        async def on_request_start(
-            session, context, params: aiohttp.TraceRequestStartParams
-        ):
-            # breakpoint()
-            logging.getLogger("aiohttp.client").debug(
-                f"Starting request <{params}> <{session}> <{context}>"
-            )
-
-        async def on_request_chunk_sent(
-            session, context, params: aiohttp.TraceRequestChunkSentParams
-        ):
-            with open("output.txt", "a") as file:
-                if byte := str(params.chunk).find(r"\x", 100) != -1:
-                    file.write(str(params.chunk)[:byte] + "\n")
-                else:
-                    file.write(str(params.chunk) + "\n")
-            # logging.getLogger('aiohttp.client').debug(f'Sent Chunk <{params}>')
-
-        trace_config = aiohttp.TraceConfig()
-        trace_config.on_request_start.append(on_request_start)
-        trace_config.on_request_chunk_sent.append(on_request_chunk_sent)
 
         # Necessary to get aiohttp to stop complaining about session creation
         self.__session = aiohttp.ClientSession(
-            connector=self.connector,
-            ws_response_class=DiscordClientWebSocketResponse,
-            trace_configs=[trace_config],
+            connector=self.connector, ws_response_class=DiscordClientWebSocketResponse
         )
         old_token = self.token
         self.token = token
