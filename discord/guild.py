@@ -676,19 +676,6 @@ class Guild(Hashable):
         r.sort(key=lambda c: (c.position or -1, c.id))
         return r
 
-    @property
-    def activity_feed_enabled(self) -> bool:
-        """Returns ``True`` if the guild has the activity feed enabled."""
-        return "ACTIVITY_FEED_DISABLED_BY_USER" not in self.features
-
-    @property
-    def invites_disabled(self) -> bool:
-        """Returns ``True`` if the guild has invites disabled.
-
-        This corresponds to the invites being paused under the server's Security Actions
-        """
-        return "INVITES_DISABLED" in self.features
-
     def by_category(self) -> list[ByCategoryItem]:
         """Returns every :class:`CategoryChannel` and their associated channels.
 
@@ -1756,13 +1743,11 @@ class Guild(Hashable):
             Whether the guild should have premium progress bar enabled.
         disable_invites: :class:`bool`
             Whether the guild should have server invites enabled or disabled.
-
-            This corresponds to pausing the invites under the server's Security Actions
         discoverable: :class:`bool`
-            Whether the guild should be discoverable in the discord discover tab.
+            Whether the guild should be discoverable in the discover tab.
         raid_alerts: :class:`bool`
             Whether activity alerts for the guild should be enabled.
-        enable_activity_feed: Optional[:class:`bool`]
+        enable_activity_feed: class:`bool`
             Whether the guild's user activity feed should be enabled.
         reason: Optional[:class:`str`]
             The reason for editing this guild. Shows up on the audit log.
@@ -1887,8 +1872,6 @@ class Guild(Hashable):
 
         if premium_progress_bar_enabled is not MISSING:
             fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
-
-        # feature flags
 
         if community is not MISSING:
             features: list[str] = fields.get("features", self.features.copy())
