@@ -64,6 +64,8 @@ These changes are available on the `master` branch, but have not yet been releas
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
+- Fixed `BridgeCommand` duplicate in default help command.
+  ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))
 
 ### Changed
 
