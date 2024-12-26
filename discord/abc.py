@@ -1623,7 +1623,9 @@ class Messageable:
                 raise InvalidArgument("files parameter must be a list of File")
 
         if files is not None:
-            flags = flags + MessageFlags(is_voice_message=any(isinstance(f, VoiceMessage) for f in files))
+            flags = flags + MessageFlags(
+                is_voice_message=any(isinstance(f, VoiceMessage) for f in files)
+            )
             try:
                 data = await state.http.send_files(
                     channel.id,
