@@ -196,6 +196,7 @@ class VoiceMessage(File):
         self,
         fp: str | bytes | os.PathLike | io.BufferedIOBase,
         filename: str | None = None,
+        *,
         waveform: str = "",
         duration_secs: float = 0.0,
         **kwargs,
