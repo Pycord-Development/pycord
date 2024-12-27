@@ -156,7 +156,7 @@ class VoiceMessage(File):
 
     .. note::
 
-        Just like File objects VoiceMessage objects are single use and are not meant to be reused in
+        Similar to File objects, VoiceMessage objects are single use and are not meant to be reused in
         multiple requests.
 
     Attributes
@@ -182,9 +182,9 @@ class VoiceMessage(File):
     spoiler: :class:`bool`
         Whether the attachment is a spoiler.
     waveform: Optional[:class:`str`]
-        The base64 encoded bytearray representing a sampled waveform. Currently only for voice messages
+        The base64 encoded bytearray representing a sampled waveform.
     duration_secs: Optional[:class:`float`]
-        The duration of the audio file. Currently only for voice messages
+        The duration of the voice message.
     """
 
     __slots__ = (
