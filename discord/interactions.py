@@ -268,10 +268,6 @@ class Interaction:
             factory, ch_type = _threaded_channel_factory(data_ch_type)
             if ch_type in (ChannelType.group, ChannelType.private):
                 self.channel = factory(me=self.user, data=channel, state=self._state)
-            elif self.guild:
-                self.channel = self.guild._resolve_channel(self.channel_id) or factory(
-                    guild=self.guild, state=self._state, data=channel
-                )
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
