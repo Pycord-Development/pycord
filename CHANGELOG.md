@@ -22,6 +22,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `tags`. ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 - Added `Member.guild_banner` and `Member.display_banner` properties.
   ([#2556](https://github.com/Pycord-Development/pycord/pull/2556))
+- Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
+  ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 
 ### Fixed
 
@@ -31,6 +33,8 @@ These changes are available on the `master` branch, but have not yet been releas
   documentation. ([#2581](https://github.com/Pycord-Development/pycord/pull/2581))
 - Fixed a possible bug where audio would play too fast at the beginning of audio files.
   ([#2584](https://github.com/Pycord-Development/pycord/pull/2584))
+- Fixed attachment metadata being set incorrectly in interaction responses causing it to be ignored.
+  ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 
 ### Changed
 
