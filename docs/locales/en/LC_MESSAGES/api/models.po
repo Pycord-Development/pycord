@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 23:44+0000\n"
+"POT-Creation-Date: 2024-10-11 09:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -81,50 +81,26 @@ msgstr ""
 
 #: ../../api/models.rst 021c63b182bb4e81a6b50633e6be8d94
 #: 0c17b7715600433fac4d35bf0017e7b7 1000e6e5e6224041a432ab22340c6a22
-#: 12d301f98b5e48a3873512211a277fb8 185fb682d8514ac8aac5a55b2bb0b3dc
-#: 18a8b12540854ba4bd1ccf6a3faf2044 1d83346277d643b291dca0b949e3b058
-#: 2a4d60ac337a46c0bed1bc26c226038f 2ad70d3718a4499cb9197f85eb4abf87
-#: 2bb5fe9dcfdc4277aedd1b8cac88e88f 2c7f28585a7445caa3375c657bfa10fe
-#: 3993991579084341a58ae9581980d8f2 41f3ff189d5746b3b37769fc2f8e683d
-#: 47cf29f45d094211a6159f29fd08d82d 483e8acc9cae4b48aaaa0566e32bbf6c
-#: 4ad270a9f286434ea4210e41b4d84a2b 4cd55485c5ec409cb04d2efb51172d09
-#: 4e3426bccb324f8ca84175605fe88d97 67deeae9eedb44cc97fa9c9c32d8fb7f
-#: 6836891e883c423481ebac9ffd750fa1 728aa08043a64adda19d956c6ff44128
-#: 7b1c6d12b4a842a997b5465a8ddbb287 7c47ce6d35854eabae233cb4388c1b7c
-#: 7cc43cf3dd184cd686b8bf1ec6c776c2 7cde32a58ded4bc89d170ba90e584f79
-#: 7db2c31f6b6b4368877cec63b61d725c 7eeef0117d73468bbf069e0735089439
-#: 8183ff58df9b4e73bc33a30fb382eb7b 81e36a1bf1c14fe2a37b210df30a3427
-#: 82c457d86c2142bcab50d8842bda9063 8358e6376bbf4ed99e959db533fd3e82
-#: 868a9098949744cf9fcf7c6f42e516f7 883bef32346f462e98c0bdec679b1efc
-#: 8bfaf5d7e1804eb5bf58cca632c716c2 8df6ae442263404b9f2b7ed7ae19f057
-#: 8fa9dbf39d3e4d458673e6e35abcb4c9 92bc5070285c4eb9b08cec9bafd803a0
-#: 978731b4ff544335acfad6f762b91b3e 9b463aa7bf23454dbdca8aa23cc8539b
-#: 9b83c72d2fe047bf93dffa69af7efd07 9d168ece95784b269773220dae484295
-#: a226e4fd036c4e87a2f9e3ab17fc1ca1 a24c93013f654f39aec619169aee3ffd
-#: a3bb38861f7d4b6f9fc2cde50a4f6e90 a70491d545954835a7ba3ee88e35ab11
-#: a7ad261a3e4e408fae23d5a5d4336802 abffcbc2c62646a59bd6a3492faaf76c
-#: ad6aee1e9b0642d4a2598a8a947336f6 ae50dcfdf19047f39c36d0c0cb946484
+#: 12d301f98b5e48a3873512211a277fb8 2a4d60ac337a46c0bed1bc26c226038f
+#: 2c7f28585a7445caa3375c657bfa10fe 47cf29f45d094211a6159f29fd08d82d
+#: 6836891e883c423481ebac9ffd750fa1 7c47ce6d35854eabae233cb4388c1b7c
+#: 7cc43cf3dd184cd686b8bf1ec6c776c2 7eeef0117d73468bbf069e0735089439
+#: 8183ff58df9b4e73bc33a30fb382eb7b 868a9098949744cf9fcf7c6f42e516f7
+#: 883bef32346f462e98c0bdec679b1efc 9b463aa7bf23454dbdca8aa23cc8539b
+#: 9d168ece95784b269773220dae484295 a24c93013f654f39aec619169aee3ffd
 #: b168fffcce71401eb693e9e18b66c905 b22c89b9409f45538c044c97893adb19
-#: b4903e4b445749fc8bb0e9ed08704b46 b5873e6ce92f4f3ab50f63c347178ee1
-#: bb58123a93434a7d923686db2691d9bf bce09d4f70644d45949114525a9e232f
-#: be92e79b8562492497e0d816d28b3038 c2cf03ff152a4746a445c6e09c4ecf4d
-#: c46eadcf6cc141368f08bb53bfa5ea54 c4b82d4c337b48fb8cecced3bfaea55a
+#: bb58123a93434a7d923686db2691d9bf be92e79b8562492497e0d816d28b3038
+#: c2cf03ff152a4746a445c6e09c4ecf4d c46eadcf6cc141368f08bb53bfa5ea54
 #: c7ef03b91163401782f9a92f6ce2c03d c831fa537f414a13a0b6020ed358e961
-#: cb7c79b0236c445790339b76b58e96f0 cf2ef7aba94a4080be66ea0480c20921
-#: cfa8cd151dec4643af4fb785fc99556c d2e07740ec32449eb410f0bdef8452b3
-#: d490697a012c42d5bbf554978ed73d0e d4e42741de964a12b603dfbee3a9228f
-#: db10503e23c74cc18f50099e14cc0893 de160c5eabbc4424aa90922d81f49f99
-#: df2fb0faeb9443da8ba9f844182584ef df9374bb269a4de2a914a52d64365053
-#: discord.abc.Messageable.history discord.channel.StageChannel.purge
-#: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
-#: discord.guild.Guild.audit_logs discord.guild.Guild.bans
-#: discord.guild.Guild.fetch_members discord.reaction.Reaction.users
+#: cf2ef7aba94a4080be66ea0480c20921 d2e07740ec32449eb410f0bdef8452b3
+#: de160c5eabbc4424aa90922d81f49f99 discord.abc.Messageable.history
+#: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
+#: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
+#: discord.guild.Guild.bans discord.guild.Guild.fetch_members
+#: discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.threads.Thread.purge e4bba7ea10be4e9ea126e3aa6e9ad74a
-#: e898e44df463451c9ed547af0b4667fd efe3e572d3bb42b9a47d27498a8b1ecc
-#: f0fe6c67049d4b96a437cd6ff3a5018d f9d7b016a79b4441b05cde2a98ff2f73
-#: faad64e33270420d9540268e1052426c fd2871dc9d2b437eaf077d906752bc0a
-#: fe151c499f3f4ed9af0da6bfd29cd5c4 of
+#: faad64e33270420d9540268e1052426c of
 msgid "Parameters"
 msgstr ""
 
@@ -141,65 +117,34 @@ msgid "Returns whether the asset is animated."
 msgstr ""
 
 #: ../../api/models.rst 0309d5bc75b4441c897a10094b96ac4a
-#: 0640e492b57342b5a13994bcb5450a85 077c7293671b47aea1ead298192db654
-#: 0979548eb8314965a4232b002d6d8f8e 0ad9dd6e25d24167a508024ae35d87da
-#: 0c09c04ca6c24f37b7befefc1e27c108 0e77fecc1b154fdaae5ecd7437e07fea
-#: 0ffde691430f49ef890254f0b87e9c2e 16749d2b71db4335acddc773be0d2f0a
-#: 18b90031dfc547088813e057a56401c1 19a35a7ed51a4b99a8041f75cf8e58a3
-#: 19c515ba3ce24f398e966d395a7bab86 1c5c8239784e471dba566d1b92b2a5e5
-#: 21bbe3bfdbc446d695ba06c20c373f85 21ff3a60e1e84c648ce0a5d9aea70700
-#: 22c035014b65406b969da9bfa17929bc 254810d5159c4a7ab7e45312a75c3188
-#: 261deaa002874837a2c0c7f43b420d08 2862e3ccc6274017a74b9196f3154985
-#: 2907f41b9a254a10a732581db38bb3a9 2a1ad31a3f764795a2fb39aff9873758
-#: 350fcc488876465bad13a5796135bdf2 356bef769b5f47b4987d39eb1a7db4b6
-#: 3670d238b65946fc85955a7f42fa1a37 3744d240485643bfaaeedd4801535130
-#: 3a7e19ad0efc41afb60748ca5ec7ce49 3bc24b485df54ccc86aaa73edfdda00d
-#: 3bc86514262a4b3c8dfa0832fd887a71 407ca03640e945a485ddf6039c4290d7
-#: 4558c796153c4ef68dcf70075672fb40 4bd018c62f114816b1848122761f0c79
+#: 0640e492b57342b5a13994bcb5450a85 0ad9dd6e25d24167a508024ae35d87da
+#: 0c09c04ca6c24f37b7befefc1e27c108 16749d2b71db4335acddc773be0d2f0a
+#: 19c515ba3ce24f398e966d395a7bab86 261deaa002874837a2c0c7f43b420d08
+#: 2862e3ccc6274017a74b9196f3154985 350fcc488876465bad13a5796135bdf2
+#: 407ca03640e945a485ddf6039c4290d7 4bd018c62f114816b1848122761f0c79
 #: 4f8209b09da140ffa3202f93b7b6bf97 506e955535214cac83087478241a0b1b
-#: 522f4898e55c4556a060f6a8f63bdcd5 5369cb3951f140f7b332ad63eaca1069
-#: 536e3251a836422fac526839f75dc3c3 553cad25175b446fbcdab20da396f524
-#: 55412074b3c0457a928ba79d2886ef21 566bc6bb24784bc5970599ef1e8770c6
-#: 589587890ebd4f478c62b58dd26d5671 5987f3ee200f4d81a08e1d344e30d1d7
-#: 5aa46d39cf93485795e2b3966ca802e2 5bc8d4fec7fe4a3da55954a965a3c166
-#: 5bd361d0404c4498a423491718158f86 6000f7ba9ba8448589288c9e491da658
-#: 61b6dd6513944110a133c7efb3bc0cdc 64bddacb4cac4f82a67a58222d50d578
+#: 522f4898e55c4556a060f6a8f63bdcd5 536e3251a836422fac526839f75dc3c3
+#: 5987f3ee200f4d81a08e1d344e30d1d7 5aa46d39cf93485795e2b3966ca802e2
 #: 668a7f8b61594196a848b31c1eb2f132 6a593fc9f66142829114c6c0fed61c9b
-#: 6f73c53cb70247089d507722c9903f3e 77ceaeb103b7476c86ce358d994b966c
-#: 79440ec28ea74d52b17263e296d3409e 86bfec4746ab4883a54583e29dafe33d
-#: 872e315e148e4e858f69d56dc0ace95e 8b037c2dd39d43d7bab7234b9974ee26
-#: 8cf23c67e6aa4a318dc9702fd590e1f8 8f074c462f05439087eaf38bdcbde36a
-#: 8f1345380b4e4342a090f0d5cd984869 9b83d663436b4b1385978a81a84e11d8
-#: 9c5c89e0d0874a8691ae9c0e0face8be 9fbc068a17a84765ab1cdd7a4092661d
-#: a19f99d9ba494816a26f530dcd4d3024 a35fe165deb2481da568d709dae266c2
-#: a491af9434bd4ae6b7adaf96a9ca0ef7 a57d083bbea64801a7d65f69c25a92fc
-#: a6245e82802e4b7193ce9a3c9ae5b2ad aa0eaae63db44458a10fa9b1b74828fe
-#: ab64e8b5946049a2b1cf13bb6b63fe97 ac441bf274914d2f9dc6f264613f0faf
-#: adbc4a22ca1c4ac8959bac23ec4839d3 b4bd8df1935644ce9c0489c8542cd1af
-#: b91691d031fa405b8a1d7c7a5d684d4b bac9870e0e33411ba53fb5c16935ecb0
-#: bd10cae6ed2b4708a5a0c0f4dda84951 c106589d8eff4543b272782e24ad92c8
+#: 86bfec4746ab4883a54583e29dafe33d 8f1345380b4e4342a090f0d5cd984869
+#: 9fbc068a17a84765ab1cdd7a4092661d a19f99d9ba494816a26f530dcd4d3024
+#: b4bd8df1935644ce9c0489c8542cd1af bac9870e0e33411ba53fb5c16935ecb0
 #: c6a7d99157e3423285c53b00b65eef1b ca57d95ea26c4194994d202c3ff3ec2a
 #: cbcd88ced77f4597bfb0d4fd48bf4f58 cd8afe5f874a4ed893d57cd0f29bb9a6
-#: cdf62d9b674847e39744c3e80c1fb9ea d261c751d34446d5890e6fe388663db9
-#: d3570283753343cdba2a6758d688bef4 d3a9ecd345b9437a900862749bb1d523
-#: d90d732a2bb845569dedb27e471e7f93 da0e818d0fef430fbadf33a4e57ea595
-#: dbf4e8a592f049df9c417ab8b3d39404 dda4d63fbd664297808f901fc4957b29
-#: discord.abc.Messageable.history discord.channel.StageChannel.purge
-#: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
-#: discord.guild.Guild.audit_logs discord.guild.Guild.bans
-#: discord.guild.Guild.fetch_members discord.reaction.Reaction.users
+#: dda4d63fbd664297808f901fc4957b29 discord.abc.Messageable.history
+#: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
+#: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
+#: discord.guild.Guild.bans discord.guild.Guild.fetch_members
+#: discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.threads.Thread.purge e819402188e744ca884c8ba6b1a852d5
-#: ed9005f2cb1d47fb862b4be05f63997a f31cbc6d18c4492d8d39476d33e60215
-#: f32707707ee74b6dbff49ed14a238389 f5fb05070ebd4d488d1b462e0470b4c1
-#: f6f36e6c6c81482582ab35769ad90599 f852538e23ea4d0f954a427289c543f3
-#: fc37f43ede9d48f9949589a404c7024f of
+#: f31cbc6d18c4492d8d39476d33e60215 of
 msgid "Return type"
 msgstr ""
 
 #: 1264fee836bb466f89b4f893c7bf697a 1fad9e42f9844177a0e09f9e5f6e4592
-#: b3d373e32ad24fc09945543962ca1e3a d5f84379d77d42a0860bc6eab1204514
-#: discord.asset.Asset.is_animated:4 discord.channel.CategoryChannel.is_nsfw:4
+#: b3d373e32ad24fc09945543962ca1e3a discord.asset.Asset.is_animated:4
+#: discord.channel.CategoryChannel.is_nsfw:4
 #: discord.channel.StageChannel.is_nsfw:4 discord.channel.TextChannel.is_news:4
 #: discord.channel.VoiceChannel.is_nsfw:4
 #: discord.channel._TextChannel.is_nsfw:4
@@ -239,41 +184,21 @@ msgid ""
 "either 'webp', 'jpeg', 'jpg', or 'png'."
 msgstr ""
 
-#: ../../api/models.rst 083c074a6726498a8b6a44b2c0390d7b
-#: 0996753e5e124f77b30e61a42df820c1 0a5c812ff0c04eea82c6fa3bb63067e0
-#: 0ec6d9b2e0264d87852ba95d863dd39d 0edeaf6b803640c28054b2e619ddd802
-#: 18d5b6a744724d3a83612d2d141e79a6 1d273c9af8b04078a7f814a612b7af22
-#: 2357c289d156430aa3fc97424d2c388b 25f5699c89f544419e402558052f5325
-#: 2607b77d823943a39c83436bd083804e 27c881e4f9d54dbc8ab1466442f08633
-#: 27f96ff5ae5b4e83ab6648c6154d02e1 2e2ac69c07864724996d15ad04f08e14
-#: 2f6d4fffa6184f9780a0a1f424fb7cfe 35d53beb4f25480bb67fe4c3813e33e5
-#: 362375f37b194a349214ed5fc7c0f203 3d661899f6cf48ebbebdc8e59ef6f6ec
-#: 4065753368ca48ba9303ab80be7280d6 433e78d93a284222b29b7c5c27f30975
-#: 43c1656cdb8c46c3a79e2da9fcc17b2b 46a0aa1454ae417e88e6b3cd870b72f5
-#: 4db57c6eb2ff45e683de729c56067875 51d0460ea52747fe85f7df2cb0591858
-#: 57f07e810e7a4586855dc28481b0158a 5a4bb964168c4d4bb38a489fc597be24
-#: 5b085ed69fe04b72a038408f1694f8b7 5b7671b931944b139d39fd1e649e4371
-#: 647c16affa9946b1954e30a98d48817e 6653c72cfad749238708f3ebe0122142
-#: 68305bc3e2184fd09fe9642896bc9d34 6ac49508d1c143e2a64cce304a570b5e
-#: 6ad8863060a441e4b4dc968c529722e7 74b5a057233e4cb5a1231cfc2ec593e2
-#: 750f91e4b5294b2eb91a6c4fd068c0e2 76becbf11cbf44e694d2b1ae7e64f923
-#: 8283e51b1c044e2fb9250dd199dcac71 83705baf8a864eec9f13163564e7cf6f
-#: 847dccc772424a3faf88bddcb661386d 86821b65aab74584ad8c55849a601d14
-#: 8aa9e45ae0fe4b84b38aee62c912c235 8e51aa1f2ed94e2094249f3044a9d198
-#: 96cc6a6f1f9d4894a37e737d95105b43 9f2285651c4f433f8b1c16881926f0bb
-#: 9f601fe77c824a16b0956178e383143e ac01e19d8d404b5dae571c9d27da19cb
-#: b2f1da5ff55c4a3b9346d3b6e1f1adaf b6c1b4114fb543e195c94aa432fe159c
-#: b739480c9c6f4adf8e1e3c3933784bc3 b86abad0dc784bcfbc12f4c84d1fa742
-#: bab7da69a6be495781382e54dbaca4de c9b9dc712a914abf8f2219351eeff240
-#: d158caf1186e48c8a38e8020bc046db6 d36b0236b9ea4776a7e6b378e9e2d52a
-#: d49a124f37e64f348e59d79ea1e601dc d5a133945e874db9945b37883aaded27
-#: d8969dd93df444019b67ca16bb4ef691 da72630aca084d3aaeafd45ebb6e90e2
-#: dfd2a44a017442e29804dc590d1e49d5 discord.channel.StageChannel.purge
+#: ../../api/models.rst 0996753e5e124f77b30e61a42df820c1
+#: 0a5c812ff0c04eea82c6fa3bb63067e0 0edeaf6b803640c28054b2e619ddd802
+#: 1d273c9af8b04078a7f814a612b7af22 25f5699c89f544419e402558052f5325
+#: 27f96ff5ae5b4e83ab6648c6154d02e1 362375f37b194a349214ed5fc7c0f203
+#: 433e78d93a284222b29b7c5c27f30975 4db57c6eb2ff45e683de729c56067875
+#: 51d0460ea52747fe85f7df2cb0591858 57f07e810e7a4586855dc28481b0158a
+#: 5b7671b931944b139d39fd1e649e4371 647c16affa9946b1954e30a98d48817e
+#: 76becbf11cbf44e694d2b1ae7e64f923 83705baf8a864eec9f13163564e7cf6f
+#: 86821b65aab74584ad8c55849a601d14 9f601fe77c824a16b0956178e383143e
+#: b2f1da5ff55c4a3b9346d3b6e1f1adaf c9b9dc712a914abf8f2219351eeff240
+#: d158caf1186e48c8a38e8020bc046db6 d49a124f37e64f348e59d79ea1e601dc
+#: d8969dd93df444019b67ca16bb4ef691 discord.channel.StageChannel.purge
 #: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
-#: discord.threads.Thread.purge e081836ae6504e498ac8f7e7f304807e
-#: e79560eeaad2454da4385f06e2aaee39 ecd9fdca3e544014953f89c1e94c68f0
-#: f66ddfebd98a4697bb828487d4a14e10 f6f28fef35e44b52b7f0d8b8d69516ea
-#: f88c908a6f4c41fabacd70ad58cdf52a fdf7e9a3108d4be18ba445ce61cb75c8 of
+#: discord.threads.Thread.purge ecd9fdca3e544014953f89c1e94c68f0
+#: f88c908a6f4c41fabacd70ad58cdf52a of
 msgid "Returns"
 msgstr ""
 
@@ -289,50 +214,24 @@ msgstr ""
 msgid ":class:`Asset`"
 msgstr ""
 
-#: ../../api/models.rst 017b475bd4664867bb6949ff019b5617
-#: 05260df1bd954c5caa25ff09f602f59d 08e736d0ebcb4f969f5b6c1e9b37778c
-#: 0b506a02f13c4c2aa4ee74fe7426251a 113a72e344ba44e589ab4850f4e526d2
-#: 12909ab179ae4ae984212487c8121eb8 141f4b3b829f443c9e0e95b059139f3c
-#: 17544644f3174233b360da2c7fc321de 1c6dc455287548f2ab99194beb45b232
-#: 1f953a100c764d178b276431e62b1992 22006d01559c4c56acdb79d7f1ed738f
-#: 22e7624f7c8a4117a3d3744545d2dcf3 2472859665d2470bb065bfc0b93027e1
-#: 267de63306354febb545e6ce928be1e6 26bd87134fbb4581a4f394d41b894084
-#: 2d288ac0eca6428fa8068b8aeb74e498 3902ae0d9db246adb81666c177be7db2
-#: 393c0085e60b406e91fa74316710ca6c 3c681436fcb64600ad5b441e2331589b
-#: 3df56f6e1f9a4a4999cbaaf11a1cd473 3f8de618dccb440bae0e587fb00cbbca
-#: 44b8d1766516447fb8c88325249d39b0 46cf6a58d072411e85e96d08a4ce189e
-#: 479fe8e8503a4eeda03033937fea8178 47f45e0b2e5f442790500ab0a1cb7ae5
-#: 4b0ae9cfa8734a47aec5bc961bf7d8ea 5298538313c0410689ffa672c5266090
-#: 530048b485b64e259d50b0528f5a980e 55e5647b51fa4afb899876de7b44a51e
-#: 5c03c74134e3491dba9c9a283a2eb3ef 612731b71d164a1d85b70ee0e6acd7f7
-#: 63b00c35f848405e9fea923d03fa7759 699b6b4ff6544f7faeeb9f52f295dba8
-#: 6a70eeb5c346446eaa451b8a82fa36f0 6b49644c0a984cefa8ad37bd37e25c6c
+#: ../../api/models.rst 05260df1bd954c5caa25ff09f602f59d
+#: 08e736d0ebcb4f969f5b6c1e9b37778c 2472859665d2470bb065bfc0b93027e1
+#: 3c681436fcb64600ad5b441e2331589b 3df56f6e1f9a4a4999cbaaf11a1cd473
+#: 44b8d1766516447fb8c88325249d39b0 5298538313c0410689ffa672c5266090
+#: 699b6b4ff6544f7faeeb9f52f295dba8 6b49644c0a984cefa8ad37bd37e25c6c
 #: 6c88abffe12448c7999d0268dd98391d 6e2bbeaa9dbf4d0095fcab664be6f5ad
-#: 6f0007dd2faf4406952fee24462ad0ef 6f136f8c5e6d4b7088fce1fed9753458
-#: 73980af6f86141cf98c79c7088e50c86 8448a10ed39946c9814070a5a8747f5b
-#: 8cd7d37a539b4df8a6a38d86b91a57ca 911a2045702c4b5da52b8d43e124cdf3
-#: 932053c3e0c04333bbe3132b2cc918f0 936a55c4d73045b7a97b48add3bbba31
-#: 949c13f67593491fb341a58620388b86 97d2c307e17a4aa98bf80c3816b2023f
-#: 9ed8c6957e594b989803867465b0832b a093e145386d4741a3c32f63e3d1b3b7
-#: a747b811291345929a132043b534d8f7 a78381ea68c5462ca57f748f4891aaeb
-#: ab281ddb680842b9a168aa9d9d1142c8 ac17053a86f84471be8fbb3466c02f59
-#: acf65750771442a785e04917545d20bc b2dbee1368ee427fad1bc38199801dfd
-#: b59762528dc74f0fa3c39634bbc7b257 b8530b14839d4c8c8d553f5ecd20f041
-#: b879e907e15d4b709a7c4fb7e4e46856 c2ea625207034985b0c360f2a82bcb33
-#: c68960e6aa504d848baa9d228f79b622 c793135c62ea436aad956d5fa0129ef6
-#: ca68861e26e843c79b39454f02ce4bdb cca081068ed54c418626a8f0830289cc
-#: d64c9fbd67f44db186cc840553acf9c2 d80bc37cab244a838dc6b22f210108fd
-#: dd7eff5537e64034b184274723af6237 df047e2a4b19450294fe199cbece81dc
-#: discord.abc.Messageable.history discord.channel.StageChannel.purge
-#: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
-#: discord.guild.Guild.audit_logs discord.guild.Guild.bans
-#: discord.guild.Guild.fetch_members discord.reaction.Reaction.users
+#: 6f136f8c5e6d4b7088fce1fed9753458 8448a10ed39946c9814070a5a8747f5b
+#: a093e145386d4741a3c32f63e3d1b3b7 a747b811291345929a132043b534d8f7
+#: acf65750771442a785e04917545d20bc b8530b14839d4c8c8d553f5ecd20f041
+#: c2ea625207034985b0c360f2a82bcb33 c68960e6aa504d848baa9d228f79b622
+#: d80bc37cab244a838dc6b22f210108fd discord.abc.Messageable.history
+#: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
+#: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
+#: discord.guild.Guild.bans discord.guild.Guild.fetch_members
+#: discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.threads.Thread.purge e0eacc7163104667a12355c978c322ca
-#: eb9ad7bc68144f10904406488bd7ae24 ec0331f905e2441fab9824d1f8c4963c
-#: f540cbb4fa004ee6bea4303f94a62480 f56f39ec6cb24f81ae8f8d24412d450e
-#: f5bccbd888d048908de44bba82b6968a f65abbd1f6c1479e933a7e770f0b0b9d
-#: fb448fea1e4d411da17ac96ac8102a8e fb44d6093f9241de967bd1a6a92c87d8
+#: f5bccbd888d048908de44bba82b6968a fb44d6093f9241de967bd1a6a92c87d8
 #: fb7a0c154ac948c6bb5db13e5ec9280f of
 msgid "Raises"
 msgstr ""
@@ -386,41 +285,17 @@ msgstr ""
 msgid "The asset had an invalid format."
 msgstr ""
 
-#: 0370e808c57d45af969bace394918843 066b403845fe4067a93eb4cd4de9e874
-#: 0ca18e9a7adf4b6f9bfcce46aa9e3c6f 0cae40f9ce954ec9b15b77889eac1aa0
-#: 160d2bd81c0b42bdbab49cfa35cacd7c 16bc1d11ba1242fcaaa2d5f3a231382b
-#: 16f0ba84894943f1aef0558e371df7b3 2074d7f99a844507a10fe0536d71e67f
-#: 24480af3fa9148cdaabce5cd5523cf8f 35d10e85e986443a9e0a1f97dcac92c0
-#: 3b9f5473c35c4f9db28d3a986789472f 3db17b50b5c94a2e910ca4e66e1a92d6
-#: 3e7128aea19b401893ffdc27d203a3b0 3edfe5a70b18415b911ba5439cc5a95c
-#: 463e5fcc76984461a559231b6cd6dd11 5b3163ea99564932af894f02711d4317
-#: 5d4f482bbf7846e59a2374c6ee3eb3ad 5ef60e9b21b84048b0fe6334289f0abd
-#: 69a188049ab64f7ca4accf2252dc85f9 6ba495235f7645788ad7dded9e4cbc17
-#: 6ca83568bdad40798ecbdd6239c77a81 6e5bcc4045eb45ee9cc11a3a33632917
-#: 6eb05241c80d4ae3b044eb9161b223e3 704cb3891c8f40fd82c41a6e73d45468
-#: 722b6b94854649b2b6cd0bcdec84d94a 7932b3a1df6e44acacdc6ef4e6344229
-#: 7ad00ffb5bab447ca72c6844703a96e9 7db62c34d00146b596edf2b23276ac74
-#: 7fb30cd7713242d68f44b6b6ebcef3fb 7fb6be439be4482eb842382bddf0eb36
-#: 7ffdf73db5ab488e9b51b597babc8b61 80f4a463d8554a85a5f20b7b8a2e22e2
-#: 81253fd018124062b2e6978ba7f46e1c 867ac713660943d69dbd98f2164d01b6
-#: 87c91af97b574208ae3fed3ce8222bd1 8c5c8dd3ede749a19ce6044fa98822d2
-#: 910794dd47a748b5b041934ea50a6337 960b97e779684aedae87fb6801d55474
-#: 97d7c3ed4fdb465b963224edb1f96c40 99adafd0bce74bca994af7d097e50577
-#: 9a10b90385b0491d98530df90fe54977 a006e586ea96435888e9470ed4c69990
+#: 0ca18e9a7adf4b6f9bfcce46aa9e3c6f 16bc1d11ba1242fcaaa2d5f3a231382b
+#: 3db17b50b5c94a2e910ca4e66e1a92d6 5d4f482bbf7846e59a2374c6ee3eb3ad
+#: 6ca83568bdad40798ecbdd6239c77a81 704cb3891c8f40fd82c41a6e73d45468
+#: 7ad00ffb5bab447ca72c6844703a96e9 81253fd018124062b2e6978ba7f46e1c
+#: 867ac713660943d69dbd98f2164d01b6 97d7c3ed4fdb465b963224edb1f96c40
 #: a228bf8cd1194556b2d999730fc00b47 a5c07649e5ae469886fe90f590944332
-#: a7d1faaa3453418aa9971cf314037c1b aca413eb20544eddbf028107ebe44fe0
-#: adee786460914fdcb477594f45acb37a b1382f4fb77344589f6d0af222d4038d
-#: b417d4f6381b47c98b155db7cd64c5fb b41df4171ce3487289ea11713cb69daf
-#: b4e8c615fe5343b683b8b0ad945cd4a1 b61fb94b7fd5463b98f5c4cba114eb44
-#: b7eba1a9a94b4abca974be4cda3b9439 bf7d7300665a42d4b2d8623f113713f2
-#: c126483eaf8f483ea012ef62bb4ca9a5 c475e3a182784df084eb336605c7944c
-#: c62fb81bdab94beba442b9b30c439099 c812fd05fc964c57aabd04b4b16b89e6
-#: c98a9314dab44cf1bfa78489978e74c7 cb531c728a4e4ebe841b5d629b87de49
-#: cbea66b66f524924bc315334fd17e07a d81d01d2bf864f69be7d59be99c53415
-#: def68b192c7147ba9f95cf729e534f29 discord.abc.Connectable.connect:1
-#: discord.abc.GuildChannel.create_invite:1 discord.abc.GuildChannel.delete:1
-#: discord.abc.GuildChannel.invites:1 discord.abc.GuildChannel.move:1
-#: discord.abc.GuildChannel.set_permissions:1
+#: b41df4171ce3487289ea11713cb69daf b7eba1a9a94b4abca974be4cda3b9439
+#: bf7d7300665a42d4b2d8623f113713f2 c126483eaf8f483ea012ef62bb4ca9a5
+#: discord.abc.Connectable.connect:1 discord.abc.GuildChannel.create_invite:1
+#: discord.abc.GuildChannel.delete:1 discord.abc.GuildChannel.invites:1
+#: discord.abc.GuildChannel.move:1 discord.abc.GuildChannel.set_permissions:1
 #: discord.abc.Messageable.fetch_message:1 discord.abc.Messageable.pins:1
 #: discord.abc.Messageable.send:1 discord.abc.Messageable.trigger_typing:1
 #: discord.asset.AssetMixin.read:1 discord.asset.AssetMixin.save:1
@@ -545,9 +420,7 @@ msgstr ""
 #: discord.user.User.create_dm:1 discord.user.User.create_test_entitlement:1
 #: discord.welcome_screen.WelcomeScreen.edit:1
 #: discord.widget.Widget.fetch_invite:1 e36857d00d4a4b03a1a0dde15176d0f7
-#: e4db3b2aeb53457297109bc676433dbe e9daf36896ce457cbddfeb00139760dd
-#: f18f5ee8a1464b5bad7b9626fb8800ed f6c37e86f96f473a8d467748569b3925
-#: ff88a521f3414956bb0ae0fb0241dcbc of
+#: e9daf36896ce457cbddfeb00139760dd ff88a521f3414956bb0ae0fb0241dcbc of
 msgid "|coro|"
 msgstr ""
 
@@ -617,18 +490,11 @@ msgstr ""
 msgid "The number of bytes written."
 msgstr ""
 
-#: 09a9130eef2f4e5f97bee108b1b2125c 1495a50b4ab8413cad396ce6b79fc8c7
-#: 212de6faa7504807a9cf8215d8063c5f 271a7d1b5dc64585a8287a2229b96d39
-#: 42faf5a34414420fa7c8b306f914946c 4e73e268d0bc4f3b9f9926548f91bef1
-#: 5191b22157d04bf4bc0a54a5f2b92103 5f353ab23d4e42d19a2257f9ead36a65
-#: 60c6d421be604ba494cc3d95066a7282 629d14726075491d8b2353e9951aced7
+#: 42faf5a34414420fa7c8b306f914946c 5191b22157d04bf4bc0a54a5f2b92103
+#: 5f353ab23d4e42d19a2257f9ead36a65 60c6d421be604ba494cc3d95066a7282
 #: 66016977cc094ded920608f03478efe9 6b01df183fb34aff8d8ff8f39fcd123f
-#: 6b195ebe2b3f42baa97cb2ab411e7e1a 890c84de21ba4d91a8b26637510d4407
 #: 940c35d806714f3490c1706f2b5e9387 a29ea8b8246a43af9b40003208bbc391
-#: a5de6e34f3a84becb10665499bedb572 aa8742356cbc4c489cc800a7eb9d42f8
-#: b50d54ba08564b4f9b2be822321beec8 bc403ebbeb184ea2bda7548155852630
-#: ca35a42f7bd740a59fa89b4d31894909 cf2159859c6247b487751085c8eca2ab
-#: d69750ecda48449186ede1be30a7b7d1 discord.asset.AssetMixin.save:16
+#: cf2159859c6247b487751085c8eca2ab discord.asset.AssetMixin.save:16
 #: discord.automod.AutoModActionMetadata:12 discord.automod.AutoModRule:27
 #: discord.automod.AutoModRule:39 discord.automod.AutoModTriggerMetadata:60
 #: discord.channel.CategoryChannel:39 discord.channel.DMChannel:39
@@ -828,69 +694,37 @@ msgstr ""
 msgid "Indicates if the user is currently deafened by the guild."
 msgstr ""
 
-#: ../../api/models.rst ../../docstring 00d1af14de6d4547ac426408cfb3330e
-#: 022d0104c2db48bc9630f70a4304365e 02722029b4644ccbb2826596fdd7d4f2
-#: 03a5eb78e95e41108576c4db355fe914 03e71a7ef3c74ac7aeab4c072e40f78d
-#: 0543f30da3e5475c9bd5eb027436314e 05e0203dbd8649cd8585fca15c617da7
-#: 06df0be9e38d4672b7997b4b6bed681c 08e3e9c93f0b4183ba0461cac59169eb
-#: 095f7ca30ce74014962ea2b3236a9c3a 09e3beef264a4814a23c023bad7967f1
-#: 09eec61105ed4161b45e3ffdafd48bb1 0bc6ed7330724dd5990afe78502410f7
+#: ../../api/models.rst ../../docstring 022d0104c2db48bc9630f70a4304365e
+#: 02722029b4644ccbb2826596fdd7d4f2 03a5eb78e95e41108576c4db355fe914
+#: 03e71a7ef3c74ac7aeab4c072e40f78d 06df0be9e38d4672b7997b4b6bed681c
+#: 095f7ca30ce74014962ea2b3236a9c3a 09eec61105ed4161b45e3ffdafd48bb1
 #: 0d3d1607e68844609eed1db5d315d17c 0d7fa3aefcb74cbda495ff8a7ba6fbc6
-#: 11b797ca46964705b194c18b4a73a447 176e4886bf9f4105b2c77ab49bff6956
-#: 19f362c6d92d48a38052a262699789de 1a47b03bc43541c8ac4ed7daa9ca1088
-#: 1a5fb7ddf3a7455ea4289176cdc0aff8 1b2606ff5e8b4524989753c9ad467b97
-#: 1bdb2cabcf67495ebdc667608c720a06 1f9651133d7a430f8a24b9a645ada2ce
-#: 21faf240333d4ce2bf3365f28aace9c3 22065b2145c345fcbc326d89075ec35b
-#: 220cdabc3311432b998e5c424c465750 22ac68d587fe4abc9f96441f06046dd9
-#: 27158b656eca4afe88f99efb05ccb80e 272747f7539542f3b8a44148c72e26ea
+#: 176e4886bf9f4105b2c77ab49bff6956 1b2606ff5e8b4524989753c9ad467b97
+#: 1bdb2cabcf67495ebdc667608c720a06 22065b2145c345fcbc326d89075ec35b
+#: 22ac68d587fe4abc9f96441f06046dd9 272747f7539542f3b8a44148c72e26ea
 #: 2a608fc04cba49d98e1f1ddaeb64d63c 2cfabf5b7fef435e84dfb3fc2787f1ac
-#: 2e73b3fbe6374c54a25603c479a50d5b 301f746397184c208e2c02257b8dddbc
 #: 338106e55c8240eab14065502b864dfc 35a8b82808b8453db119ab7ba0ebcdd1
-#: 364abd3036f54f50916f10f4efd58771 38411a48b02d428999e9c0ecf39097ae
-#: 38452ae8461d43858b5eedf649345464 39b4f683f3684b8cb1b34e32eea8ac7c
-#: 39e122018c1842f396b368886b48e775 3f61e1f35e8e409586a1c02b6434c7ad
-#: 40e0a342c08347f4a56b1ca567727562 440f85a803964393857b04290988e1dc
-#: 445c00ebbc034cf592fd52d5d03e6cd2 46bc1c63dd9e4910a17146639aada31f
 #: 495f29871fc9457e9d2309a9a716f0d5 4ab61677a7bb4b46a38295c13b89b84c
-#: 4ca295d01b0b49c58f92e474e0ed1fc7 4dee2a1342b24edcbb70f7c373b370a3
-#: 4e47f55a759e4da2818894aa503b7ee5 4e9a5a92ba97487c98c0e80a7c1da703
-#: 4ff0756fe2ff475e9426ecf6e42de593 597e2c7023454f9bae54cdbdb61770d9
-#: 5c87aebcd49e483a94cadb1a64305abf 5d2422bd8d6c40aaa09875550353f8d8
-#: 614ea7004bc04ea0b4e031051f813524 6356776abd8f454aab1e3ef10a9b60ba
-#: 655791b8ec334318a71371e38c2748ad 65592515d2344a05a46a09f7c2971220
-#: 65673938e9ab431fb0c36fba6144e5e1 65b623a6ad5942158f94d51716ea4f68
-#: 69cefcf03e884ac7b5fc11b7d1d29cf3 6d42276c22a945b28406f8e09ad56b0f
-#: 6d94e4d6b4274516b6b9f993418424ab 6f14d3ecd2f343f7bb7a86e1056f87e5
-#: 6f42d562ae7947699c87a27afae00ca2 72133300fc0e4ceabfa5d18acd4f5a9c
-#: 7693963e34644ca1bd2effa6f88d8b9e 77b5c1a970774a8ebeabdf892fe59af6
-#: 784be10dac3d459faa6de5dc766fca6b 78e960b05b6f460ca4e148d0b59efded
+#: 4dee2a1342b24edcbb70f7c373b370a3 4e47f55a759e4da2818894aa503b7ee5
+#: 5d2422bd8d6c40aaa09875550353f8d8 614ea7004bc04ea0b4e031051f813524
+#: 655791b8ec334318a71371e38c2748ad 69cefcf03e884ac7b5fc11b7d1d29cf3
+#: 6d94e4d6b4274516b6b9f993418424ab 7693963e34644ca1bd2effa6f88d8b9e
+#: 77b5c1a970774a8ebeabdf892fe59af6 784be10dac3d459faa6de5dc766fca6b
 #: 7a27fafabfe045e1830b6e6d3c6728b6 7c45525c2a804ee983410a85d2856c72
-#: 7e3d3537787f4909a3f533956a0b2114 8011afda364b4ad79ae0165dd6b60d40
-#: 82e604d0bafb4db995460f2cd17d033d 8387e2278a404919af843b93e8115ab7
-#: 88b635d0d40c4f37a563725261f1c623 8e36b6cc07aa42da819389f7b2caa577
-#: 8fd99964bc5f4c75b99e76cd55db8f3f 9173191c27e6484794007b6452c643b8
-#: 95a4a27c7cc446feb8ade2dd0ed19a75 977d255a45434383aa099d0cffd1a8f2
-#: 9807910de97640019833188504fba5e2 997c9a6bf9f841e1a23ee87e07dc133a
-#: 998a56ee903a43baa0dcd25155351a0b 999d70ebdc004054bed7337133d7badb
+#: 7e3d3537787f4909a3f533956a0b2114 8387e2278a404919af843b93e8115ab7
+#: 9173191c27e6484794007b6452c643b8 998a56ee903a43baa0dcd25155351a0b
 #: 9cfa3c015b574cc9879d457ec5fb2607 9f597ce69b054fe48d2922e85db0c3af
 #: a79f925772d5431288f420c483672dff a7eb34de6a7544ba80ac451d76e97de2
 #: a854241a48da4657ac4191293b46900d a90d060620ea4f589990c3d137e2fd63
 #: ab173d33d46744e6a0cb8b961e49e23d abb9957168004deb9b0b16726211ec29
-#: ad846a914f534e62aa1a0fa410b7ffb3 ae93341707b647f7ac229290218e5ebd
-#: b2584d98803a488da58a6cfeeb4ff514 b337c6dc8c414befa7850e212ce7d7eb
-#: b89ba10007ff47f0a80093f54be43e16 b8c22f4bd1b345eaa7b1ed351b8b599e
-#: b9452c8cf7c2467e9e6c1b7e509554ca b99c99a9aae44872b07a6e5714355931
-#: ba3676ed311e42e99fd2a599b2467dba bc3aa6d4529e45068a1e542de6b4fb17
-#: bee43d44de1540dd8308d7840112e7ea bf0d57cc45cc4633bb0cc7df070c4418
-#: c036b2d5a57e4a3d89c4ac92c77e08bf c265aacd65f544b7b53d69cd86c1a6c9
-#: c6917a192f01402aabd064ec968591dd c73d884c4f3f47b3882953a0d0b64d00
-#: c776312038584368bc9ecec0c0ad8dbf c9fabdb2315b487abfb348c35ed9aeb0
-#: cd2df1c929cd456f8d9d8bf26bf9301d cd84f3ab22b34b47b43cca8064efcc1e
-#: cf8df1038cd14c499b0f1e011403c79c d1bbad3b31bd49bfaea28fbc02d6c4ab
-#: d20c90ab1d3b4e78a4b1fdb0230e5cee d4b6e88a914c4f039e215ddeec921bd5
-#: d5c8ea805b224e0e93e2aaefc85d438b d7244d7c36304984b34b1f7bc9f77171
-#: da073de05b9e4f528d3dc81a9e6ac777 de6c29b7c5de48cfbe3371df25e2e2ce
-#: discord.AuthorizingIntegrationOwners.guild
+#: ad846a914f534e62aa1a0fa410b7ffb3 b2584d98803a488da58a6cfeeb4ff514
+#: b337c6dc8c414befa7850e212ce7d7eb b89ba10007ff47f0a80093f54be43e16
+#: b99c99a9aae44872b07a6e5714355931 ba3676ed311e42e99fd2a599b2467dba
+#: bc3aa6d4529e45068a1e542de6b4fb17 bee43d44de1540dd8308d7840112e7ea
+#: bf0d57cc45cc4633bb0cc7df070c4418 c265aacd65f544b7b53d69cd86c1a6c9
+#: c776312038584368bc9ecec0c0ad8dbf d1bbad3b31bd49bfaea28fbc02d6c4ab
+#: d4b6e88a914c4f039e215ddeec921bd5 d7244d7c36304984b34b1f7bc9f77171
+#: da073de05b9e4f528d3dc81a9e6ac777 discord.AuthorizingIntegrationOwners.guild
 #: discord.AuthorizingIntegrationOwners.user
 #: discord.InteractionMetadata.interacted_message
 #: discord.InteractionMetadata.original_response_message discord.SKU.url
@@ -945,41 +779,33 @@ msgstr ""
 #: discord.welcome_screen.WelcomeScreen
 #: discord.welcome_screen.WelcomeScreenChannel discord.widget.Widget
 #: discord.widget.WidgetChannel discord.widget.WidgetMember
-#: e107404ea2c94a5aaa45cbcc63c9130c e18c8d576865486dbf7e1e5055f5ce7c
-#: e4ebc8ba68aa48d1ad1e4703697409ce ea38f3e356fa4161b8de01801d95f3b6
-#: ea5702097679494cbc117ca53b79b9d1 eb97cfb2bf1c4e2c98573c7e3bbd8c4a
-#: ebfd2a17c7c64a649b40a97c0397f08d ec2d1bea39794ebcbef93b57b9de6d67
-#: ee3b3590bdcd478e9bf22ad66c97f6cb f2e4b8b8137d40a2bebbf3bc5de39968
-#: f32c17be6b6e42cbbcc690990b864b62 f40b4138a7f643cdad4ff34785e7a1a6
-#: f619d28bcac54b87b9826c65caaa95d4 f893de4cfff14b6fad708001d112c886
-#: f8d9a7bee8654e418338d5153f0346e0 fc1703444c8e43aeb6b207c0f0770564
-#: fd31d6e51ff848fbaa774b695fb45f96 fdd925840fb24e89b0f94205c0acc9fb
-#: ff120de4acd049acb1bd45f48960e558 of
+#: e18c8d576865486dbf7e1e5055f5ce7c e4ebc8ba68aa48d1ad1e4703697409ce
+#: ea5702097679494cbc117ca53b79b9d1 ebfd2a17c7c64a649b40a97c0397f08d
+#: f40b4138a7f643cdad4ff34785e7a1a6 f619d28bcac54b87b9826c65caaa95d4
+#: f893de4cfff14b6fad708001d112c886 f8d9a7bee8654e418338d5153f0346e0
+#: fc1703444c8e43aeb6b207c0f0770564 fd31d6e51ff848fbaa774b695fb45f96
+#: fdd925840fb24e89b0f94205c0acc9fb of
 msgid "type"
 msgstr ""
 
-#: 086298bde6d3427996bb79be49ab9aec 0fc3be486f3b423da7bc607b592c9e7c
-#: 105352a161e5411ba6f61e2fc15386f2 1073ecfb4a744835bbfaeda3378c9886
-#: 11c2f9ea736642a693a9574bc0b22721 12dadc55d4ba4391961b514f8a8f42cb
-#: 200ce5183d284487b83477bba2b7c24f 21d89e71e8b84b7ea2afdb3b82c26c07
-#: 24c8e520b8a64e1b985739e53ed463bc 3033e6f13ed54783b7677f34108bf609
-#: 4003d244e62a42b7ab7815a5cfe25417 55766eb1c16d48b9a0c2abbf506e9b9e
-#: 5fa3865947e547d3861918f336602cc1 60abce50c46249439a7420028aa5b862
-#: 672f9b3780724032b26e6627e52d3591 6afc41742da04070adb35652a57c9da3
+#: 086298bde6d3427996bb79be49ab9aec 105352a161e5411ba6f61e2fc15386f2
+#: 1073ecfb4a744835bbfaeda3378c9886 11c2f9ea736642a693a9574bc0b22721
+#: 12dadc55d4ba4391961b514f8a8f42cb 200ce5183d284487b83477bba2b7c24f
+#: 3033e6f13ed54783b7677f34108bf609 4003d244e62a42b7ab7815a5cfe25417
+#: 55766eb1c16d48b9a0c2abbf506e9b9e 5fa3865947e547d3861918f336602cc1
+#: 60abce50c46249439a7420028aa5b862 6afc41742da04070adb35652a57c9da3
 #: 789166acd786435a96c38745c7816111 7e4e194346944a07bc961f3e35ff72bd
-#: 8dd5694c8ba7416c96e14265ef887819 91ee58c33d2848ed8446bec74e5c8c94
-#: 94f78f94eef14c5eab8e517a73ffd096 975fd0fa469044a8a9710bc449dee9bc
-#: 9c07a12592d74668bddd9fa2ad17b925 ae2156faa6f64461abb53909ccabe94a
-#: aed4fc542c3c49dd9f4ffe40e456a225 afe0c59747ee4a43b812d58594001451
-#: c0f57792bcc94fe6a59671a5e2fb01b3 c553482c64d74d31a199dacf7d704993
-#: df0105c172b14940b0ce5d8fb044beee discord.abc.Messageable.can_send:4
-#: discord.automod.AutoModRule:69 discord.channel.CategoryChannel:56
-#: discord.channel.ForumChannel:86 discord.channel.TextChannel:82
-#: discord.components.Button:35 discord.components.SelectMenu:70
-#: discord.emoji.Emoji:45 discord.emoji.Emoji:51 discord.emoji.Emoji:57
-#: discord.emoji.Emoji:69 discord.guild.Guild:65 discord.guild.Guild:81
-#: discord.guild.Guild:166 discord.integrations.BotIntegration:33
-#: discord.integrations.Integration:33
+#: 91ee58c33d2848ed8446bec74e5c8c94 94f78f94eef14c5eab8e517a73ffd096
+#: 975fd0fa469044a8a9710bc449dee9bc 9c07a12592d74668bddd9fa2ad17b925
+#: ae2156faa6f64461abb53909ccabe94a c0f57792bcc94fe6a59671a5e2fb01b3
+#: c553482c64d74d31a199dacf7d704993 df0105c172b14940b0ce5d8fb044beee
+#: discord.abc.Messageable.can_send:4 discord.automod.AutoModRule:69
+#: discord.channel.CategoryChannel:56 discord.channel.ForumChannel:86
+#: discord.channel.TextChannel:82 discord.components.Button:35
+#: discord.components.SelectMenu:70 discord.emoji.Emoji:45
+#: discord.emoji.Emoji:51 discord.emoji.Emoji:57 discord.emoji.Emoji:69
+#: discord.guild.Guild:65 discord.guild.Guild:81 discord.guild.Guild:166
+#: discord.integrations.BotIntegration:33 discord.integrations.Integration:33
 #: discord.integrations.StreamIntegration:33
 #: discord.integrations.StreamIntegration:39 discord.invite.Invite:71
 #: discord.invite.Invite:84 discord.member.Member:62
@@ -1005,8 +831,7 @@ msgstr ""
 #: discord.user.ClientUser:55 discord.user.ClientUser:63
 #: discord.user.ClientUser:69 discord.user.ClientUser:81 discord.user.User:55
 #: discord.user.User:61 discord.widget.WidgetMember:43
-#: e0e606cdfb3344ea9a2910bb9d83e6de ef47610b7fd44937a5ef4143f95f5fc0
-#: f89aa2fc767048f9b9414df39ccb147b ffb3dc1bff1343b9a69bd7bd94289cef of
+#: e0e606cdfb3344ea9a2910bb9d83e6de ef47610b7fd44937a5ef4143f95f5fc0 of
 msgid ":class:`bool`"
 msgstr ""
 
@@ -1218,9 +1043,7 @@ msgid ""
 "``True`` if ``after`` is specified, otherwise ``False``."
 msgstr ""
 
-#: 004531da24fb489bb78e99a15ce76ef7 2227a40f1a6346e1a0dbe7f890162ed3
-#: 27a00c698a184861a3e79a26f6bebd2e 54460f7075c6462b90bb377d32ddffe4
-#: 5fdbbfc37c264fbdac887a1d265d4d0d 978ec7ef1794400e84a2dba4651a187b
+#: 27a00c698a184861a3e79a26f6bebd2e 978ec7ef1794400e84a2dba4651a187b
 #: a56a4e26f11646db9973fb9a82041c86 c7f12b2d61ff4ddeac3d4e82b620a453
 #: discord.abc.Messageable.history
 #: discord.channel._TextChannel.archived_threads discord.guild.Guild.audit_logs
@@ -1253,11 +1076,8 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.HistoryIterator\\``"
 msgstr ""
 
-#: 25bd697769214744832fa1612bc8518a 48f6a2450ed6433da0a303deb56d0dd7
-#: 5bbda7c77f3240319cda935ecec72876 7b71c6405b814333af85829dd3f29d30
-#: 966fbbaa61a846aa9b633dbfc1ee5c60 ad7ad919296e43aa91303b7877fb6571
-#: b5677759b9d043b6805db7ae8a3ad143 bc6b48a124404bd1892f9edada1a6b58
-#: discord.abc.GuildChannel.set_permissions:25
+#: 25bd697769214744832fa1612bc8518a 966fbbaa61a846aa9b633dbfc1ee5c60
+#: ad7ad919296e43aa91303b7877fb6571 discord.abc.GuildChannel.set_permissions:25
 #: discord.abc.Messageable.history:39 discord.channel.StageChannel.purge:48
 #: discord.channel.VoiceChannel.purge:48 discord.channel._TextChannel.purge:48
 #: discord.guild.Guild.audit_logs:35 discord.guild.Guild.bans:35
@@ -1265,30 +1085,28 @@ msgstr ""
 #: discord.guild.Guild.create_text_channel:56
 #: discord.guild.Guild.fetch_members:29 discord.reaction.Reaction.users:27
 #: discord.scheduled_events.ScheduledEvent.subscribers:38
-#: discord.threads.Thread.purge:48 ed1cdd19826443bcafb0987ebb091e42 of
+#: discord.threads.Thread.purge:48 of
 msgid "Examples"
 msgstr ""
 
-#: 01e7cb99a36b47abbce9830768f0aaa7 51b8dfbb15bb43ef95c144c7a5d3f6ba
-#: 745ca57186c14e1785a2e80ce870df80 7a9234e954ec4317a5a562863b521268
+#: 51b8dfbb15bb43ef95c144c7a5d3f6ba 745ca57186c14e1785a2e80ce870df80
 #: discord.abc.Messageable.history:40 discord.guild.Guild.bans:36
 #: discord.guild.Guild.fetch_members:30 discord.reaction.Reaction.users:28
 #: discord.scheduled_events.ScheduledEvent.subscribers:39
-#: edbc71da771842d3aea9af593db2f036 f95b2fa403dc4f92a794b30158d2f431 of
+#: f95b2fa403dc4f92a794b30158d2f431 of
 msgid "Usage ::"
 msgstr ""
 
 #: 154df22c3326437ebd9a4d0421852b9e 976781fce2904a7ea929a7f179bad61a
-#: ab788cd1146c42759b597d948a21f602 d3f3a3b667f54db189761cb1f7a9880c
-#: discord.abc.Messageable.history:47 discord.reaction.Reaction.users:34
+#: ab788cd1146c42759b597d948a21f602 discord.abc.Messageable.history:47
+#: discord.reaction.Reaction.users:34
 #: discord.scheduled_events.ScheduledEvent.subscribers:44 of
 msgid "Flattening into a list: ::"
 msgstr ""
 
 #: 4e0136f8359346d6ae9e6d3eb61aa0d7 ace68b84a7ee43cbb3d166231f224751
-#: bd8f03a7a627458e993b3312ffe4d046 discord.abc.Messageable.history:52
-#: discord.guild.Guild.bans:16 discord.guild.Guild.fetch_members:10
-#: discord.member.Member.edit:35 eac891cd3dbd47dc9b8fe4be3f905b5b
+#: discord.abc.Messageable.history:52 discord.guild.Guild.bans:16
+#: discord.guild.Guild.fetch_members:10 discord.member.Member.edit:35
 #: f55d483d8f7243539066e1a0a2e89189 of
 msgid "All parameters are optional."
 msgstr ""
@@ -1547,22 +1365,22 @@ msgid "The poll to send."
 msgstr ""
 
 #: 3a4f436feb9b4de4a168d2d5a14fbb8d 4e9295f65811429bad49c668d0b4d63c
-#: 529869019b26467eabd9b22c54f8a337 5ef39d889467448fa24ecf26ae56b3e5
-#: discord.abc.Messageable.send:99 discord.message.Message.reply:8 of
+#: 529869019b26467eabd9b22c54f8a337 discord.abc.Messageable.send:99
+#: discord.message.Message.reply:8 of
 msgid "The message that was sent."
 msgstr ""
 
-#: 27d01e18735f42969e57b866ee44ac34 4fd022a21beb4f86a7a42bb8fc34934c
-#: 88c91e15b9a246d7ba6c0a0c4a8cd3ca discord.abc.Messageable.send:102
+#: 27d01e18735f42969e57b866ee44ac34 88c91e15b9a246d7ba6c0a0c4a8cd3ca
+#: discord.abc.Messageable.send:102
 #: discord.interactions.InteractionResponse.premium_required:11
 #: discord.interactions.InteractionResponse.send_message:50
 #: discord.message.Message.reply:11 e115079242b5446f93fb52a4a2929591 of
 msgid "Sending the message failed."
 msgstr ""
 
-#: 11607a716ca841198785219e0ca22b26 4505f54833d2487e9273977980d743f3
-#: 653f7d3602144d8e976bf3697fca85f6 ae8d9e25950748d7b741fcc4d782933b
-#: discord.abc.Messageable.send:103 discord.message.Message.reply:12 of
+#: 11607a716ca841198785219e0ca22b26 653f7d3602144d8e976bf3697fca85f6
+#: ae8d9e25950748d7b741fcc4d782933b discord.abc.Messageable.send:103
+#: discord.message.Message.reply:12 of
 msgid "You do not have the proper permissions to send the message."
 msgstr ""
 
@@ -1588,17 +1406,10 @@ msgid ""
 "sent."
 msgstr ""
 
-#: 14645c52282b4897948d349951d1024a 27bc06838ac848c3b0fe0336815bbeac
-#: 2ee40ebde871468f8f6de6897dac9c7d 3666c2339d0a49e19d24271c3bcba8bd
-#: 38872441954a4937b4adbe036302e6e8 75890795eb3141649ba62f2337421e6d
-#: 782f366e5ed847f6bf6c788c4f1925ff 86bbc2437e30463eba135081562d8883
-#: 93aac34c639a47d9b97c351311f4762b 9b0abd1a428341979fb585f00a3923ac
-#: 9b4d5894f2f7434e8f7a6db8d32e038b 9ee6181f007c4587958af0e67b61b634
-#: a3c36d216f0b40c9a7c15665a87b7ddb ae96e1efcd9d40988c62cd01273b26ea
-#: c79512090a914dba8ab3fa21fd75cc6e cc254c16841e4da597b2cb03121e72a8
-#: ce4e0e456b5b4d0cba2b85d163688001 d6e84ae4d1504d90b0e567c3f8d16ffa
-#: d91143a7220f4b34bf74155cb8ae8be8 discord.abc.GuildChannel.delete:16
-#: discord.abc.GuildChannel.move:51 discord.abc.Messageable.trigger_typing:8
+#: 27bc06838ac848c3b0fe0336815bbeac 75890795eb3141649ba62f2337421e6d
+#: 86bbc2437e30463eba135081562d8883 9b4d5894f2f7434e8f7a6db8d32e038b
+#: discord.abc.GuildChannel.delete:16 discord.abc.GuildChannel.move:51
+#: discord.abc.Messageable.trigger_typing:8
 #: discord.automod.AutoModRule.delete:12 discord.channel.GroupChannel.leave:10
 #: discord.channel.StageChannel.delete_messages:28
 #: discord.channel.VoiceChannel.delete_messages:28
@@ -1638,8 +1449,7 @@ msgstr ""
 #: discord.stage_instance.StageInstance.delete:15
 #: discord.stage_instance.StageInstance.edit:22
 #: discord.sticker.GuildSticker.delete:15
-#: discord.threads.Thread.delete_messages:30 f0af5aeed9c64f9682895d74ab8d663f
-#: of
+#: discord.threads.Thread.delete_messages:30 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
@@ -1756,18 +1566,16 @@ msgid "The user's username."
 msgstr ""
 
 #: 23e632a55bcf4949b35edf2b13661d83 34f8a3e93d424eff88254983dd3736a7
-#: 3a3a7e1226884523b0ba2364ba0ceaf7 3f94ada44c5a4e4f96a478f2eba12ba9
-#: 67c2d7ad9e4f432590e0941a54d9e9be 6ab9e38fee2f4f6cb94faa9a8b05a91c
-#: 829531878901473f909b329033e932a3 8cdd313032d24f41a003933efa33756e
-#: 9301fc895bdf4d5781a1ffa99a0ed169 956a1abeaf574fbfba3816ea1bfa1d1b
+#: 3a3a7e1226884523b0ba2364ba0ceaf7 67c2d7ad9e4f432590e0941a54d9e9be
+#: 6ab9e38fee2f4f6cb94faa9a8b05a91c 829531878901473f909b329033e932a3
+#: 8cdd313032d24f41a003933efa33756e 956a1abeaf574fbfba3816ea1bfa1d1b
 #: b181e837ebe24f42aed74532d371c2d6 cd70408c99084152b7be0bcf7f009b7e
-#: d0d100cfdca84ec6bd94d1435523e5fb d8bb4e332f9e4288aa8952e99c0043df
-#: discord.SKU.url:3 discord.automod.AutoModActionMetadata:27
-#: discord.automod.AutoModRule:33 discord.channel.CategoryChannel:27
-#: discord.channel.ForumChannel:25 discord.channel.StageChannel:27
-#: discord.channel.TextChannel:25 discord.channel.VoiceChannel:25
-#: discord.emoji.Emoji:33 discord.guild.Guild:27
-#: discord.integrations.BotIntegration:15
+#: d8bb4e332f9e4288aa8952e99c0043df discord.SKU.url:3
+#: discord.automod.AutoModActionMetadata:27 discord.automod.AutoModRule:33
+#: discord.channel.CategoryChannel:27 discord.channel.ForumChannel:25
+#: discord.channel.StageChannel:27 discord.channel.TextChannel:25
+#: discord.channel.VoiceChannel:25 discord.emoji.Emoji:33
+#: discord.guild.Guild:27 discord.integrations.BotIntegration:15
 #: discord.integrations.BotIntegration:27 discord.integrations.Integration:15
 #: discord.integrations.Integration:27
 #: discord.integrations.IntegrationAccount:9
@@ -1808,8 +1616,7 @@ msgstr ""
 #: discord.welcome_screen.WelcomeScreen:9
 #: discord.welcome_screen.WelcomeScreenChannel:15 discord.widget.Widget:27
 #: discord.widget.WidgetChannel:31 discord.widget.WidgetMember:31
-#: discord.widget.WidgetMember:37 e3867aa2a5734ede9dfd2b008ef82ff6
-#: f4cb9643a4f54f8986a504914866acdd of
+#: discord.widget.WidgetMember:37 e3867aa2a5734ede9dfd2b008ef82ff6 of
 msgid ":class:`str`"
 msgstr ""
 
@@ -1854,9 +1661,8 @@ msgstr ""
 msgid "The IETF language tag used to identify the language the user is using."
 msgstr ""
 
-#: ../../api/models.rst:140 304736d9c87440b1b4d8f573adc7def8
-#: 7a2d9ca6781d4f33b2f9fa33a78e4bcc 7c77b2ea3750497e96dc19203a13f276
-#: 9c465eb7704a47f9811d7160f3bd5935 cb5ae2be4f6d4d089f1885ce659a538d
+#: ../../api/models.rst:140 7a2d9ca6781d4f33b2f9fa33a78e4bcc
+#: 7c77b2ea3750497e96dc19203a13f276 9c465eb7704a47f9811d7160f3bd5935
 #: cdc5ce07494d46818ca2ced81397e2b3 dc1d35b84de04aa694c7b09e76c9f5ab
 #: discord.channel.ForumChannel:53 discord.channel.GroupChannel:57
 #: discord.channel.StageChannel:45 discord.channel.TextChannel:49
@@ -2316,11 +2122,8 @@ msgstr ""
 msgid "The attachment's height, in pixels. Only applicable to images and videos."
 msgstr ""
 
-#: 16aa462320ca4ecfbe0d2390f73def67 310192c648264bc086b55a67115104f5
 #: 32bfaad9dc0e42aba5a769f9c2139168 4eda47990854400088b81bf7ad06b60b
-#: 62e39fcf170c47679b6cd7bf3c126f84 861419498d894bd392b618fafce8f153
-#: 8a0504dbcaec4f5ca2890730091a5b6a a53dd3b06e6747ce830d157361089b45
-#: cc7340cf856c432a8a37d01487f45c4c discord.Thread.category_id:4
+#: 8a0504dbcaec4f5ca2890730091a5b6a discord.Thread.category_id:4
 #: discord.channel.CategoryChannel:46 discord.channel.ForumChannel:43
 #: discord.channel.ForumChannel:60 discord.channel.ForumChannel:67
 #: discord.channel.ForumChannel:126 discord.channel.StageChannel:51
@@ -2649,8 +2452,8 @@ msgid ""
 "private message then the list is always empty."
 msgstr ""
 
-#: 88c4c524c78a4857b913ca8d5973f08d 9e75c40ee9b4463aadc399e8db6f6389
-#: a4e4f174c60443c0afb51e724da832d1 discord.guild.Guild.edit_role_positions:31
+#: 9e75c40ee9b4463aadc399e8db6f6389 a4e4f174c60443c0afb51e724da832d1
+#: discord.guild.Guild.edit_role_positions:31
 #: discord.guild.Guild.fetch_roles:12 discord.message.Message:113 of
 msgid "List[:class:`Role`]"
 msgstr ""
@@ -2803,9 +2606,9 @@ msgstr ""
 msgid "The thread created from this message, if applicable."
 msgstr ""
 
-#: 2654a66e65374bf188f55b35405bed50 aac45b2defac480591d4ff80dd368aa8
-#: d8d7b5cabb804112945544dd9fce00a3 discord.channel._TextChannel.get_thread:10
-#: discord.guild.Guild.get_thread:10 discord.message.Message:226 of
+#: aac45b2defac480591d4ff80dd368aa8 d8d7b5cabb804112945544dd9fce00a3
+#: discord.channel._TextChannel.get_thread:10 discord.guild.Guild.get_thread:10
+#: discord.message.Message:226 of
 msgid "Optional[:class:`Thread`]"
 msgstr ""
 
@@ -3046,28 +2849,32 @@ msgid ""
 "the view is removed."
 msgstr ""
 
-#: 332dbf07fc3c4518af8fb62bff79dcac 67b05d01e4534778912bcc2bc182d711
+#: 6f8b6217053e47479783af39a2aff1f6 discord.message.Message.edit:60 of
+msgid "The message was not found."
+msgstr ""
+
+#: 332dbf07fc3c4518af8fb62bff79dcac
 #: discord.interactions.Interaction.edit_original_message:6
 #: discord.interactions.Interaction.edit_original_response:52
 #: discord.interactions.InteractionMessage.edit:46
 #: discord.interactions.InteractionResponse.edit_message:48
-#: discord.message.Message.edit:60 of
+#: discord.message.Message.edit:61 of
 msgid "Editing the message failed."
 msgstr ""
 
-#: 8f9e1ea8a2e340cd84961e1002372225 discord.message.Message.edit:61 of
+#: 8f9e1ea8a2e340cd84961e1002372225 discord.message.Message.edit:62 of
 msgid ""
 "Tried to suppress a message without permissions or     edited a message's"
 " content or embed that isn't yours."
 msgstr ""
 
-#: d13f7e34dd204807a23d8f242e6cfd40 discord.message.Message.edit:62 of
+#: d13f7e34dd204807a23d8f242e6cfd40 discord.message.Message.edit:63 of
 msgid ""
 "You specified both ``embed`` and ``embeds``,     specified both ``file`` "
 "and ``files``, or either``file``     or ``files`` were of the wrong type."
 msgstr ""
 
-#: 7810feb6286743e1815a8c05a3a7c021 discord.message.Message.edit:64 of
+#: 7810feb6286743e1815a8c05a3a7c021 discord.message.Message.edit:65 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.message.Message\\``"
 msgstr ""
 
@@ -3099,8 +2906,8 @@ msgstr ""
 msgid "Pins the message."
 msgstr ""
 
-#: 26202505ba6947e586039e2c754bf8ae 63843b42e1924b479832a6a8a7e48618
-#: discord.message.Message.pin:5 discord.message.Message.unpin:5 of
+#: 26202505ba6947e586039e2c754bf8ae discord.message.Message.pin:5
+#: discord.message.Message.unpin:5 of
 msgid ""
 "You must have the :attr:`~Permissions.manage_messages` permission to do "
 "this in a non-private channel context."
@@ -3120,8 +2927,8 @@ msgstr ""
 msgid "You do not have permissions to pin the message."
 msgstr ""
 
-#: 0d21afec7d6044b798fba0b60322f7a2 4533dbcb39de41998e7511a51a37bb11
-#: discord.message.Message.pin:15 discord.message.Message.unpin:15 of
+#: 4533dbcb39de41998e7511a51a37bb11 discord.message.Message.pin:15
+#: discord.message.Message.unpin:15 of
 msgid "The message or channel was not found or deleted."
 msgstr ""
 
@@ -3157,8 +2964,7 @@ msgstr ""
 msgid "Add a reaction to the message."
 msgstr ""
 
-#: 1aa5ee02625744fb8125add13b1e3df3 bd657fd6ab1340feb3c8e0ed695a8135
-#: d66a572a4fa74e52addeaad952d58e89 discord.message.Message.add_reaction:5
+#: 1aa5ee02625744fb8125add13b1e3df3 discord.message.Message.add_reaction:5
 #: discord.message.Message.clear_reaction:5
 #: discord.message.Message.remove_reaction:5 of
 msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
@@ -3183,15 +2989,13 @@ msgstr ""
 msgid "You do not have the proper permissions to react to the message."
 msgstr ""
 
-#: 2ffd54e393ab406ea54fc4e98a266593 8dd42a82528e498f8b2686102872ac6f
-#: b88c13ed83e5418a9170adff1a0e3523 discord.message.Message.add_reaction:17
+#: 2ffd54e393ab406ea54fc4e98a266593 discord.message.Message.add_reaction:17
 #: discord.message.Message.clear_reaction:17 discord.reaction.Reaction.clear:13
 #: of
 msgid "The emoji you specified was not found."
 msgstr ""
 
-#: 0505095b173e48159d4b6dcc1f0f7cd3 09176183d3c048e581fe6e2b9983e4bd
-#: 3c7d18a165c749cda738792a0312f453 422c7b0521e54a28afe1e65e6a49e3ec
+#: 09176183d3c048e581fe6e2b9983e4bd 422c7b0521e54a28afe1e65e6a49e3ec
 #: discord.message.Message.add_reaction:18
 #: discord.message.Message.clear_reaction:18
 #: discord.message.Message.remove_reaction:23
@@ -3228,13 +3032,12 @@ msgstr ""
 msgid "The member for which to remove the reaction."
 msgstr ""
 
-#: 662ed5086e76494795de8ea9d5bca33f 9941fe595096404386307faed343ca19
-#: discord.message.Message.remove_reaction:20
+#: 9941fe595096404386307faed343ca19 discord.message.Message.remove_reaction:20
 #: discord.reaction.Reaction.remove:15 of
 msgid "Removing the reaction failed."
 msgstr ""
 
-#: 7f2bc964d6354e959e7a3a4c5cb754c2 discord.message.Message.remove_reaction:21
+#: discord.message.Message.remove_reaction:21
 #: discord.reaction.Reaction.remove:16 e41740887bbf483fb11ce6d383c6c9ab of
 msgid "You do not have the proper permissions to remove the reaction."
 msgstr ""
@@ -3248,8 +3051,7 @@ msgstr ""
 msgid "Clears a specific reaction from the message."
 msgstr ""
 
-#: 4ca4c4f14828485bbc6d2656a2bfce2a b31e5a12186248189a19328b932b85ff
-#: discord.message.Message.clear_reaction:7
+#: b31e5a12186248189a19328b932b85ff discord.message.Message.clear_reaction:7
 #: discord.message.Message.clear_reactions:5 of
 msgid "You need the :attr:`~Permissions.manage_messages` permission to use this."
 msgstr ""
@@ -3259,14 +3061,13 @@ msgstr ""
 msgid "The emoji to clear."
 msgstr ""
 
-#: 2233857fffb7482cb227cf18ee71a104 discord.message.Message.clear_reaction:15
-#: discord.reaction.Reaction.clear:11 e8b551eb942b41679802a74c35e331c1 of
+#: discord.message.Message.clear_reaction:15 discord.reaction.Reaction.clear:11
+#: e8b551eb942b41679802a74c35e331c1 of
 msgid "Clearing the reaction failed."
 msgstr ""
 
-#: 02e12cad95884ce09602f895440c1f7c 2c0573085ea84c958bc40240ec04a71a
-#: discord.message.Message.clear_reaction:16 discord.reaction.Reaction.clear:12
-#: of
+#: 2c0573085ea84c958bc40240ec04a71a discord.message.Message.clear_reaction:16
+#: discord.reaction.Reaction.clear:12 of
 msgid "You do not have the proper permissions to clear the reaction."
 msgstr ""
 
@@ -3299,14 +3100,14 @@ msgstr ""
 msgid "The channel this message belongs in must be a :class:`TextChannel`."
 msgstr ""
 
-#: b76d73bb2eec453fa791730f2896373e c412555942314e6abb96db9bca6ed6c0
+#: b76d73bb2eec453fa791730f2896373e
 #: discord.channel.ForumChannel.create_thread:11
 #: discord.channel.TextChannel.create_thread:11
 #: discord.message.Message.create_thread:13 of
 msgid "The name of the thread."
 msgstr ""
 
-#: 30e22d15e90d4423afb572096bc361de d4ed5bbfc3cd43088a3b6e8715f45654
+#: d4ed5bbfc3cd43088a3b6e8715f45654
 #: discord.channel.ForumChannel.create_thread:53
 #: discord.channel.TextChannel.create_thread:19
 #: discord.message.Message.create_thread:16 of
@@ -3316,8 +3117,8 @@ msgid ""
 "is used."
 msgstr ""
 
-#: 181f2f80fc1c44fd9bed109ac89f141e 8e3b3a9d19ac4812927782e4fa09edfe
-#: discord.message.Message.create_thread:20 discord.threads.Thread.edit:30 of
+#: 8e3b3a9d19ac4812927782e4fa09edfe discord.message.Message.create_thread:20
+#: discord.threads.Thread.edit:30 of
 msgid ""
 "Specifies the slowmode rate limit for user in this thread, in seconds. A "
 "value of ``0`` disables slowmode. The maximum value possible is "
@@ -3334,7 +3135,7 @@ msgstr ""
 msgid ":class:`.Thread`"
 msgstr ""
 
-#: 1edc4b26a7b14e7ebc76ed185b7258dd ac637d19fb1d403d95c9d2561056cdc5
+#: ac637d19fb1d403d95c9d2561056cdc5
 #: discord.channel.ForumChannel.create_thread:70
 #: discord.channel.TextChannel.create_thread:42
 #: discord.message.Message.create_thread:27 of
@@ -3447,8 +3248,8 @@ msgstr ""
 msgid "Represents a reaction to a message."
 msgstr ""
 
-#: 60bb87648d9040c3bdc1881005a683a5 6b17d7197c824dbf9b1b9f5555dda822
-#: discord.invite.Invite:3 discord.reaction.Reaction:3 of
+#: 6b17d7197c824dbf9b1b9f5555dda822 discord.invite.Invite:3
+#: discord.reaction.Reaction:3 of
 msgid ""
 "Depending on the way this object was created, some of the attributes can "
 "have a value of ``None``."
@@ -3477,9 +3278,8 @@ msgstr ""
 msgid "The reaction emoji. May be a custom emoji, or a unicode emoji."
 msgstr ""
 
-#: 4bde8fe9c1b843e1ac8e64327c6fa644 d0fdab02f7ff4c81b105f060099ea6dd
-#: discord.reaction.Reaction:30 discord.welcome_screen.WelcomeScreenChannel:21
-#: of
+#: d0fdab02f7ff4c81b105f060099ea6dd discord.reaction.Reaction:30
+#: discord.welcome_screen.WelcomeScreenChannel:21 of
 msgid "Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]"
 msgstr ""
 
@@ -3499,7 +3299,7 @@ msgstr ""
 msgid "Message this reaction is for."
 msgstr ""
 
-#: 5190e5726035489ba22258b7e607d443 d9ad7a2be3b24ac686dda32d9c316fc8
+#: 5190e5726035489ba22258b7e607d443
 #: discord.raw_models.RawReactionActionEvent:54 discord.reaction.Reaction:58 of
 msgid "Whether this reaction is a burst (super) reaction."
 msgstr ""
@@ -3550,8 +3350,8 @@ msgstr ""
 msgid "Getting super reactors: ::"
 msgstr ""
 
-#: 0fc3e29d13884d05af4fd7829184073f 859ad1f6d6fe4419a6e0d7429d714a1c
-#: discord.Reaction.burst_colors:1 discord.Reaction.burst_colours:1 of
+#: 859ad1f6d6fe4419a6e0d7429d714a1c discord.Reaction.burst_colors:1
+#: discord.Reaction.burst_colours:1 of
 msgid "Returns a list possible :class:`Colour` this super reaction can be."
 msgstr ""
 
@@ -3687,7 +3487,7 @@ msgid "The ID of the user that owns this entitlement."
 msgstr ""
 
 #: 6cb0d709a1ce4db0ac68dcdb6166f2fc discord.monetization.Entitlement:27
-#: discord.monetization.Entitlement:57 eb3c7861a13a491ea908638d3b775c62 of
+#: discord.monetization.Entitlement:57 of
 msgid "Union[:class:`int`, :class:`MISSING`]"
 msgstr ""
 
@@ -3707,8 +3507,8 @@ msgstr ""
 msgid "When the entitlement starts."
 msgstr ""
 
-#: 7d2c5e5d21084616a225b5b35ea056dc c2010b24b8dd4c6d88d0ecd78719e628
-#: discord.monetization.Entitlement:45 discord.monetization.Entitlement:51 of
+#: c2010b24b8dd4c6d88d0ecd78719e628 discord.monetization.Entitlement:45
+#: discord.monetization.Entitlement:51 of
 msgid "Union[:class:`datetime.datetime`, :class:`MISSING`]"
 msgstr ""
 
@@ -3827,8 +3627,8 @@ msgstr ""
 msgid "Optional[:class:`VoiceChannel`]"
 msgstr ""
 
-#: 0ea13064f858406d9a644970bab4738b 882f2ffccbb54152b08a3a1c84128add
-#: discord.guild.Guild:57 discord.widget.Widget:19 of
+#: 0ea13064f858406d9a644970bab4738b discord.guild.Guild:57
+#: discord.widget.Widget:19 of
 msgid "The guild's ID."
 msgstr ""
 
@@ -3885,8 +3685,8 @@ msgstr ""
 msgid "The guild's verification level."
 msgstr ""
 
-#: 30f9afd8d244416dbcacd423e52553d9 discord.guild.Guild:125
-#: discord.invite.PartialInviteGuild:40 fc441b8a398a45528430a0b152144c74 of
+#: discord.guild.Guild:125 discord.invite.PartialInviteGuild:40
+#: fc441b8a398a45528430a0b152144c74 of
 msgid ":class:`VerificationLevel`"
 msgstr ""
 
@@ -3914,8 +3714,7 @@ msgid ""
 "=readme-ov-file#guild-feature-glossary>`_."
 msgstr ""
 
-#: 1062d87a1499437b8d0fad52243a2c42 402fe8591df646adab6f23b2f9d9081b
-#: discord.automod.AutoModTriggerMetadata:29
+#: 1062d87a1499437b8d0fad52243a2c42 discord.automod.AutoModTriggerMetadata:29
 #: discord.automod.AutoModTriggerMetadata:38
 #: discord.automod.AutoModTriggerMetadata:52 discord.guild.Guild:145
 #: discord.invite.PartialInviteGuild:46 discord.sticker.StandardSticker:53 of
@@ -3999,9 +3798,8 @@ msgstr ""
 msgid "The members intent is not enabled."
 msgstr ""
 
-#: 077d9bc4af6441c6a5ed391c7ac1e1d2 5641b671700a4bf3b21a2239f64e9cd8
-#: discord.guild.Guild.fetch_members:25 discord.guild.Guild.search_members:19
-#: of
+#: 077d9bc4af6441c6a5ed391c7ac1e1d2 discord.guild.Guild.fetch_members:25
+#: discord.guild.Guild.search_members:19 of
 msgid "Getting the members failed."
 msgstr ""
 
@@ -4009,8 +3807,8 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MemberIterator\\``"
 msgstr ""
 
-#: 081c6429caa04e0a8c5e5dbf3e7662c7 4c5a13c5676c44cc86de248b93dd8baa
-#: discord.guild.Guild.bans:41 discord.guild.Guild.fetch_members:35 of
+#: 081c6429caa04e0a8c5e5dbf3e7662c7 discord.guild.Guild.bans:41
+#: discord.guild.Guild.fetch_members:35 of
 msgid "Flattening into a list ::"
 msgstr ""
 
@@ -4113,8 +3911,6 @@ msgstr ""
 msgid "A list of voice channels that belong to this guild."
 msgstr ""
 
-#: 373e876152f148038089f956a932f20c 3b767c7eca7b4c108c0b8a1ec2392e54
-#: 8cd16538342347349db85c45c4048567 92654e54cec845f2b651b5237c632afb
 #: discord.Guild.categories:3 discord.Guild.forum_channels:5
 #: discord.Guild.stage_channels:5 discord.Guild.text_channels:3
 #: discord.Guild.voice_channels:3 f180923c6bfe4725a27df0027fcc0aab of
@@ -4176,10 +3972,7 @@ msgstr ""
 msgid "Returns a channel or thread with the given ID."
 msgstr ""
 
-#: 3a1180e1deb44b6a8374aee179bde960 4f51145163c24784940599506be8b039
-#: 56c6c525daa045cca9d6990eb2a7785c 6fb31e7daaac48ecb8ae0f2ad021074f
-#: 8e5457f352a34ed48d5a54f0cc4bd840 9b4160356f9649e1a8abcfdaf94ea03a
-#: b9a5cb9dcc2a445e84a4df4707c5497a discord.channel._TextChannel.get_thread:6
+#: 3a1180e1deb44b6a8374aee179bde960 discord.channel._TextChannel.get_thread:6
 #: discord.guild.Guild.get_channel:8
 #: discord.guild.Guild.get_channel_or_thread:6 discord.guild.Guild.get_member:4
 #: discord.guild.Guild.get_role:4 discord.guild.Guild.get_scheduled_event:4
@@ -4214,15 +4007,13 @@ msgstr ""
 msgid "Optional[:class:`.abc.GuildChannel`]"
 msgstr ""
 
-#: 063021b717da4ac1bbe2b9d24f4e77a8 6756f4807ebc43bb9fcd4ade90cb9a0c
-#: discord.channel._TextChannel.get_thread:1 discord.guild.Guild.get_thread:1
-#: of
+#: 6756f4807ebc43bb9fcd4ade90cb9a0c discord.channel._TextChannel.get_thread:1
+#: discord.guild.Guild.get_thread:1 of
 msgid "Returns a thread with the given ID."
 msgstr ""
 
-#: 0b52a378783845b9a553efe578dab819 2b49c4d121db43b194ffa1bfff78a702
-#: discord.channel._TextChannel.get_thread:9 discord.guild.Guild.get_thread:9
-#: of
+#: 0b52a378783845b9a553efe578dab819 discord.channel._TextChannel.get_thread:9
+#: discord.guild.Guild.get_thread:9 of
 msgid "The returned thread or ``None`` if not found."
 msgstr ""
 
@@ -4230,8 +4021,7 @@ msgstr ""
 msgid "Returns the guild's channel used for system messages."
 msgstr ""
 
-#: 2ae6c126f58341fc988bfa1804274039 9e3d2735e47a433f876420b2db8a5da2
-#: a64c2c61a8224e0bb4226e11ef4994a6 discord.Guild.public_updates_channel:5
+#: 9e3d2735e47a433f876420b2db8a5da2 discord.Guild.public_updates_channel:5
 #: discord.Guild.rules_channel:4 discord.Guild.system_channel:3 of
 msgid "If no channel is set, then this returns ``None``."
 msgstr ""
@@ -4280,12 +4070,10 @@ msgstr ""
 msgid "The member or ``None`` if not found."
 msgstr ""
 
-#: 3dd36482d6584e0caa30ff04b7f88ac2 discord.guild.Guild.get_member:8
-#: discord.guild.Guild.get_member_named:21
+#: discord.guild.Guild.get_member:8 discord.guild.Guild.get_member_named:21
 #: discord.raw_models.AutoModActionExecutionEvent:47
 #: discord.raw_models.RawReactionActionEvent:40
-#: discord.raw_models.RawTypingEvent:33 e66d8f3d8faf4bf1b19074324f7b4f06
-#: ea5ce4db5209427392e12d73651f271b of
+#: discord.raw_models.RawTypingEvent:33 ea5ce4db5209427392e12d73651f271b of
 msgid "Optional[:class:`Member`]"
 msgstr ""
 
@@ -4309,8 +4097,8 @@ msgstr ""
 msgid "The role or ``None`` if not found."
 msgstr ""
 
-#: 49faa26614694f83a8a1031e5b037fc0 a59751e769344c159a35d97d289207ab
-#: discord.guild.Guild.get_role:8 discord.member.Member.get_role:10 of
+#: 49faa26614694f83a8a1031e5b037fc0 discord.guild.Guild.get_role:8
+#: discord.member.Member.get_role:10 of
 msgid "Optional[:class:`Role`]"
 msgstr ""
 
@@ -4349,19 +4137,18 @@ msgstr ""
 msgid "The member that owns the guild."
 msgstr ""
 
-#: 9edfce4f13344022a20bc5d74a5618f8 d8382b4b46e949acbd18ad7290999e60
-#: discord.Guild.icon:1 discord.PartialInviteGuild.icon:1
-#: discord.PartialWebhookGuild.icon:1 of
+#: 9edfce4f13344022a20bc5d74a5618f8 discord.Guild.icon:1
+#: discord.PartialInviteGuild.icon:1 discord.PartialWebhookGuild.icon:1 of
 msgid "Returns the guild's icon asset, if available."
 msgstr ""
 
-#: 79b98460de4a45918567ea4ed97db67b cdc6de4d93d84126981872de7ddfd9e4
-#: discord.Guild.banner:1 discord.PartialInviteGuild.banner:1 of
+#: 79b98460de4a45918567ea4ed97db67b discord.Guild.banner:1
+#: discord.PartialInviteGuild.banner:1 of
 msgid "Returns the guild's banner asset, if available."
 msgstr ""
 
-#: 1503595c1aad4549a6988e6597add1bd 617b62d85d634607ba8b35af07a4aed2
-#: discord.Guild.splash:1 discord.PartialInviteGuild.splash:1 of
+#: 1503595c1aad4549a6988e6597add1bd discord.Guild.splash:1
+#: discord.PartialInviteGuild.splash:1 of
 msgid "Returns the guild's invite splash asset, if available."
 msgstr ""
 
@@ -4399,8 +4186,8 @@ msgstr ""
 msgid "Returns the shard ID for this guild if applicable."
 msgstr ""
 
-#: 2a63da98f7714298bd86c262529e96fc 98a9abb4d99d4af6a1bc90dead64714b
-#: discord.Guild.created_at:1 discord.PartialInviteGuild.created_at:1 of
+#: 98a9abb4d99d4af6a1bc90dead64714b discord.Guild.created_at:1
+#: discord.PartialInviteGuild.created_at:1 of
 msgid "Returns the guild's creation time in UTC."
 msgstr ""
 
@@ -4447,16 +4234,14 @@ msgstr ""
 msgid "Creates a :class:`TextChannel` for the guild."
 msgstr ""
 
-#: 7ccbcfbc7c0245ebaf80c63fa46ca066 d15d11b0f7884cfa9ce8b8e10b0f0081
-#: discord.guild.Guild.create_forum_channel:5
+#: d15d11b0f7884cfa9ce8b8e10b0f0081 discord.guild.Guild.create_forum_channel:5
 #: discord.guild.Guild.create_text_channel:5 of
 msgid ""
 "Note that you need the :attr:`~Permissions.manage_channels` permission to"
 " create the channel."
 msgstr ""
 
-#: 0826bc86fc6844d7bd523a337d246ef2 59dc80266fe441d8a613d4b177b2519c
-#: discord.guild.Guild.create_forum_channel:8
+#: 0826bc86fc6844d7bd523a337d246ef2 discord.guild.Guild.create_forum_channel:8
 #: discord.guild.Guild.create_text_channel:8 of
 msgid ""
 "The ``overwrites`` parameter can be used to create a 'secret' channel "
@@ -4474,30 +4259,24 @@ msgid ""
 "channel in the channel list."
 msgstr ""
 
-#: 1609f6ef955b46daa8feab89aed3f130 3caddaa8be9748a0b5c7e2b6d20702cd
-#: 436aeddd681b4340bb158dac6a294899 baa4ae0af73d42ccbd4f2ab5592b2b5b
-#: discord.guild.Guild.create_forum_channel:20
+#: baa4ae0af73d42ccbd4f2ab5592b2b5b discord.guild.Guild.create_forum_channel:20
 #: discord.guild.Guild.create_stage_channel:8
 #: discord.guild.Guild.create_text_channel:20
 #: discord.guild.Guild.create_voice_channel:6 discord.widget.WidgetChannel:29
-#: f04ba645478941639f2375ddc8661948 of
+#: of
 msgid "The channel's name."
 msgstr ""
 
-#: 0c2adeba36d84af9aeff4fd8ffa5d7a7 3790b49ca326407bacd99677d85e7ca1
 #: d061fcc33b574ffba76bef2a087460c8 discord.guild.Guild.create_forum_channel:23
 #: discord.guild.Guild.create_stage_channel:14
 #: discord.guild.Guild.create_text_channel:23
-#: discord.guild.Guild.create_voice_channel:9 e755d7a964c3468b8f7905f13a5ce264
-#: of
+#: discord.guild.Guild.create_voice_channel:9 of
 msgid ""
 "The overwrites to apply to the channel. Useful for creating secret "
 "channels."
 msgstr ""
 
-#: 1edd8ba28a214a2689b68c958b267c2f 6f4ba6a61d134a19a4351fe041cd967f
-#: 9d06515f3f7641b09dbaf639bb7e6587 d1087d9122e94791b0aa20790b0e668a
-#: discord.guild.Guild.create_forum_channel:26
+#: d1087d9122e94791b0aa20790b0e668a discord.guild.Guild.create_forum_channel:26
 #: discord.guild.Guild.create_stage_channel:17
 #: discord.guild.Guild.create_text_channel:26
 #: discord.guild.Guild.create_voice_channel:12 of
@@ -4506,9 +4285,7 @@ msgid ""
 "will be automatically synced to category if no overwrites are provided."
 msgstr ""
 
-#: 0848ff8e94324c9db997de2a3c123e40 53e9a8d1ef7c486db9167ae9c78bb56c
-#: c9a5417638814f06a3b018b6aa0838d6 ccdf540d4f874713bd55b15253bc98d8
-#: discord.guild.Guild.create_forum_channel:31
+#: 0848ff8e94324c9db997de2a3c123e40 discord.guild.Guild.create_forum_channel:31
 #: discord.guild.Guild.create_stage_channel:22
 #: discord.guild.Guild.create_text_channel:31
 #: discord.guild.Guild.create_voice_channel:17 of
@@ -4517,24 +4294,21 @@ msgid ""
 " the top channel is position 0."
 msgstr ""
 
-#: 2bc1d86a3c9d4ed2bcdcafe7083bdbca 445e7ca3ca40409399381cc3fa66c395
-#: b12af80947024bd196b707459a1c7ab1 b2201c903bb4444c92177c8cff398d07
-#: discord.channel.ForumChannel.edit:10 discord.channel.TextChannel.edit:19
+#: b12af80947024bd196b707459a1c7ab1 discord.channel.ForumChannel.edit:10
+#: discord.channel.TextChannel.edit:19
 #: discord.guild.Guild.create_forum_channel:35
 #: discord.guild.Guild.create_stage_channel:11
 #: discord.guild.Guild.create_text_channel:35 of
 msgid "The new channel's topic."
 msgstr ""
 
-#: 04bb9a8b4c6a47a8ab232c8d41007089 9e9dd9425b054fcfb714c7318b17daaa
-#: discord.guild.Guild.create_forum_channel:38
+#: 9e9dd9425b054fcfb714c7318b17daaa discord.guild.Guild.create_forum_channel:38
 #: discord.guild.Guild.create_text_channel:38 of
 msgid ""
 "Specifies the slowmode rate limit for user in this channel, in seconds. "
 "The maximum value possible is `21600`."
 msgstr ""
 
-#: 158f4a82c5184ed186f0c45d5ca5b0d7 5249f14b4df34180913d70dc0424dff8
 #: 6e0e5f25fba64a62b1ac7c005cb3c4aa discord.channel.ForumChannel.edit:14
 #: discord.channel.TextChannel.edit:23
 #: discord.guild.Guild.create_forum_channel:42
@@ -4542,18 +4316,14 @@ msgstr ""
 msgid "To mark the channel as NSFW or not."
 msgstr ""
 
-#: 017d65bacf3b4bfbbd241ed984235147 2a5da0498eb4468e95bc376c2e663bb2
-#: 9adb04fec50a471792f88440104c745e c4783994e88f4aeb9f00f605dc7aac4b
-#: discord.guild.Guild.create_forum_channel:45
+#: 9adb04fec50a471792f88440104c745e discord.guild.Guild.create_forum_channel:45
 #: discord.guild.Guild.create_stage_channel:26
 #: discord.guild.Guild.create_text_channel:45
 #: discord.guild.Guild.create_voice_channel:38 of
 msgid "The reason for creating this channel. Shows up on the audit log."
 msgstr ""
 
-#: 04c22cfc54c044df8a63b0d3dbd206b3 10f333753a3f485ab9e166f5fa769198
-#: 1cd37bb095e24c0cb549434848340622 33ff9c9a82b64c10a83c4add616fdc82
-#: 62cd93ababdf4cfd9cce9f1a801e775d a47b33dd7e3e423bbc5cb05c12895fc7
+#: 33ff9c9a82b64c10a83c4add616fdc82
 #: discord.channel.CategoryChannel.create_forum_channel:7
 #: discord.channel.CategoryChannel.create_stage_channel:7
 #: discord.channel.CategoryChannel.create_text_channel:5
@@ -4562,47 +4332,38 @@ msgstr ""
 #: discord.guild.Guild.create_forum_channel:55
 #: discord.guild.Guild.create_stage_channel:29
 #: discord.guild.Guild.create_text_channel:48
-#: discord.guild.Guild.create_voice_channel:41 fde12a59435846c39cb0f10c1e144e14
-#: of
+#: discord.guild.Guild.create_voice_channel:41 of
 msgid "The channel that was just created."
 msgstr ""
 
-#: 809a9a177767412ea6242641e68be16f 8b6a84cc25c349419c31de47c2303d96
+#: 8b6a84cc25c349419c31de47c2303d96
 #: discord.channel.CategoryChannel.create_text_channel:6
 #: discord.guild.Guild.create_text_channel:49 of
 msgid ":class:`TextChannel`"
 msgstr ""
 
-#: 0114eb9f7deb4dadaa52b41a0ecda85d 4add16d398aa4f518bf3f72e29c63eb3
-#: 58e3a614336b400e90a85ec0941087e2 7e15a4a056c44b6aa411b98f9832c52d
-#: c80ea61f690a43b1b33e04f5455833b6 c9655e17e69d47da801e88fca3d16f86
-#: discord.channel.CategoryChannel.clone:22
+#: 4add16d398aa4f518bf3f72e29c63eb3 discord.channel.CategoryChannel.clone:22
 #: discord.channel.StageChannel.clone:22 discord.channel.VoiceChannel.clone:22
 #: discord.channel._TextChannel.clone:22 discord.guild.Guild.create_category:13
 #: discord.guild.Guild.create_forum_channel:58
 #: discord.guild.Guild.create_stage_channel:32
 #: discord.guild.Guild.create_text_channel:51
-#: discord.guild.Guild.create_voice_channel:44 f8709c4a529b4bdf9a369a9e4fb45a7e
-#: of
+#: discord.guild.Guild.create_voice_channel:44 of
 msgid "You do not have the proper permissions to create this channel."
 msgstr ""
 
-#: 45065f4fa65d4bd8baf39aa0a4aae98e 6000a8b302d348b6bcc347bfd2d4a1ca
-#: a152e92313ea4bb89cecd1b6400cdbc6 abfcf22ceae94b8ba266c29a2fa8ba6c
 #: c9330770911546dd87b510a3ebe4cb6e discord.channel.CategoryChannel.clone:23
 #: discord.channel.StageChannel.clone:23 discord.channel.VoiceChannel.clone:23
 #: discord.channel._TextChannel.clone:23 discord.guild.Guild.create_category:14
 #: discord.guild.Guild.create_forum_channel:59
 #: discord.guild.Guild.create_stage_channel:33
 #: discord.guild.Guild.create_text_channel:52
-#: discord.guild.Guild.create_voice_channel:45 e3fbf7d8bf344cd0b81613c462bf5066
-#: ff2795e7198d4a86b02989a21cf39afa of
+#: discord.guild.Guild.create_voice_channel:45 of
 msgid "Creating the channel failed."
 msgstr ""
 
-#: 0b663ebdee664572bfd1ee200898c6c4 18e2b63aff2d4d938974528b742d4c88
-#: 353e85d3c97d4d3f976c9a308e8dcd37 7bf63611242a4cdc9df3378f7c4b7143
-#: 83ae3be9003e4fc1af548a97fff9850d discord.guild.Guild.create_category:15
+#: 0b663ebdee664572bfd1ee200898c6c4 7bf63611242a4cdc9df3378f7c4b7143
+#: discord.guild.Guild.create_category:15
 #: discord.guild.Guild.create_stage_channel:34
 #: discord.guild.Guild.create_text_channel:53
 #: discord.guild.Guild.create_voice_channel:46 of
@@ -4610,13 +4371,11 @@ msgid "The permission overwrite information is not in proper form."
 msgstr ""
 
 #: 7df77a377a454968b06f3a9737d86455 discord.guild.Guild.create_forum_channel:64
-#: discord.guild.Guild.create_text_channel:57 f84b5551f533496385cc0f08cdb31bcf
-#: of
+#: discord.guild.Guild.create_text_channel:57 of
 msgid "Creating a basic channel:"
 msgstr ""
 
-#: aad25d44f07241feb96ce590433a0d06 d02100cc73e84244915ea5042b7d93b7
-#: discord.guild.Guild.create_forum_channel:70
+#: d02100cc73e84244915ea5042b7d93b7 discord.guild.Guild.create_forum_channel:70
 #: discord.guild.Guild.create_text_channel:63 of
 msgid "Creating a \"secret\" channel:"
 msgstr ""
@@ -4630,13 +4389,12 @@ msgstr ""
 
 #: da6c567358d2457a8328b9419aba1b0c discord.channel.StageChannel:62
 #: discord.channel.VoiceChannel:54 discord.guild.Guild.create_voice_channel:21
-#: e4a529edf2a7427d9f0d448e950c5a3d of
+#: of
 msgid "The channel's preferred audio bitrate in bits per second."
 msgstr ""
 
-#: 61e6218add924882b4544d4f65fe3038 b45a714586514aa199c2aa4f8fd70cfc
-#: discord.channel.VoiceChannel:60 discord.guild.Guild.create_voice_channel:24
-#: of
+#: 61e6218add924882b4544d4f65fe3038 discord.channel.VoiceChannel:60
+#: discord.guild.Guild.create_voice_channel:24 of
 msgid "The channel's limit for number of members that can be in a voice channel."
 msgstr ""
 
@@ -4648,16 +4406,14 @@ msgid ""
 "1.7"
 msgstr ""
 
-#: a012c67cbf8c4c758c6232633b5b90b4 ae62841317554b39b2c03b27fb66f7c4
-#: discord.channel.VoiceChannel:66 discord.guild.Guild.create_voice_channel:27
-#: of
+#: a012c67cbf8c4c758c6232633b5b90b4 discord.channel.VoiceChannel:66
+#: discord.guild.Guild.create_voice_channel:27 of
 msgid ""
 "The region for the voice channel's voice communication. A value of "
 "``None`` indicates automatic voice region detection."
 msgstr ""
 
-#: 143d16193a8a48bca8f44b6c8f8b294c 198ebaf4f6584b8abd4208269d8a7f60
-#: discord.channel.VoiceChannel.edit:38
+#: 143d16193a8a48bca8f44b6c8f8b294c discord.channel.VoiceChannel.edit:38
 #: discord.guild.Guild.create_voice_channel:33 of
 msgid ""
 "The camera video quality for the voice channel's participants.  .. "
@@ -4666,12 +4422,11 @@ msgstr ""
 
 #: 41726a9352834d8eb39464ddde36de96 discord.channel.VoiceChannel:75
 #: discord.channel.VoiceChannel.edit:38
-#: discord.guild.Guild.create_voice_channel:33 f81dfca9eaf142aabf6243ffebb15d3a
-#: of
+#: discord.guild.Guild.create_voice_channel:33 of
 msgid "The camera video quality for the voice channel's participants."
 msgstr ""
 
-#: 882663e87fa341189dff841fac58e4ba c5cb71ee58114ad9a77c365f6c9176be
+#: c5cb71ee58114ad9a77c365f6c9176be
 #: discord.channel.CategoryChannel.create_voice_channel:6
 #: discord.guild.Guild.create_voice_channel:42 of
 msgid ":class:`VoiceChannel`"
@@ -4684,7 +4439,7 @@ msgid ""
 ":class:`StageChannel` instead."
 msgstr ""
 
-#: 3682e80e1aff4ac38504209bf3c75b67 c125cd5cd18a4cc9bc46d5d9206d57e7
+#: c125cd5cd18a4cc9bc46d5d9206d57e7
 #: discord.channel.CategoryChannel.create_stage_channel:8
 #: discord.guild.Guild.create_stage_channel:30 of
 msgid ":class:`StageChannel`"
@@ -4712,8 +4467,7 @@ msgid ""
 "'<a:emoji_name:emoji_id>').  .. versionadded:: v2.5"
 msgstr ""
 
-#: 674bb951bf6f4615bdd90432ab644f2c acba40fd9b99460bb43889ba61c943d4
-#: discord.channel.ForumChannel.edit:41
+#: acba40fd9b99460bb43889ba61c943d4 discord.channel.ForumChannel.edit:41
 #: discord.guild.Guild.create_forum_channel:48 of
 msgid ""
 "The default reaction emoji. Can be a unicode emoji or a custom emoji in "
@@ -4721,7 +4475,7 @@ msgid ""
 "'<a:emoji_name:emoji_id>')."
 msgstr ""
 
-#: 18dbe7f3736a46b086fab0dc3f51122f 40f5253a0a994369be22ef233358809c
+#: 40f5253a0a994369be22ef233358809c
 #: discord.channel.CategoryChannel.create_forum_channel:8
 #: discord.guild.Guild.create_forum_channel:56 of
 msgid ":class:`ForumChannel`"
@@ -4732,22 +4486,19 @@ msgstr ""
 msgid "The argument is not in proper form."
 msgstr ""
 
-#: 79a4e988b37d4e64afe1d69afb920ca7 9bdb1e626e5b4c1f9dad1bb9f2df7372
-#: discord.guild.Guild.create_category:3 of
+#: 79a4e988b37d4e64afe1d69afb920ca7 discord.guild.Guild.create_category:3 of
 msgid ""
 "Same as :meth:`create_text_channel` except makes a "
 ":class:`CategoryChannel` instead."
 msgstr ""
 
-#: 716d3c3986d448ba8bbae24d3a927b3d 9100aed34bd14af28745ceddb65aeb80
-#: discord.guild.Guild.create_category:7 of
+#: 716d3c3986d448ba8bbae24d3a927b3d discord.guild.Guild.create_category:7 of
 msgid ""
 "The ``category`` parameter is not supported in this function since "
 "categories cannot have categories."
 msgstr ""
 
-#: 27c0ba54755f4232854c7bb1e836306b 5f28803b6126460f925f168cd21164cd
-#: discord.guild.Guild.create_category:11 of
+#: 27c0ba54755f4232854c7bb1e836306b discord.guild.Guild.create_category:11 of
 msgid ":class:`CategoryChannel`"
 msgstr ""
 
@@ -4794,8 +4545,8 @@ msgid "The reason to show up in the audit log."
 msgstr ""
 
 #: 0401bd2a8e2641b4b33a27e26bec88b9 6a5a47ad973940209028891e87d59314
-#: 6e383a0f60374e1792867357bb73d27a 845342df7f694a18b74e63bd8283fbf9
-#: discord.automod.AutoModRule.delete:10 discord.automod.AutoModRule.edit:35
+#: 845342df7f694a18b74e63bd8283fbf9 discord.automod.AutoModRule.delete:10
+#: discord.automod.AutoModRule.edit:35
 #: discord.guild.Guild.create_scheduled_event:35
 #: discord.guild.Guild.set_mfa_required:13 discord.member.Member.edit:84
 #: discord.member.Member.request_to_speak:17
@@ -4959,9 +4710,8 @@ msgstr ""
 msgid "You do not have permissions to edit the guild."
 msgstr ""
 
-#: 3d2005f11a794335a10c47ceb9494569 7026e8922b26447f903df8f0411dae38
-#: discord.guild.Guild.edit:100 discord.integrations.StreamIntegration.edit:19
-#: of
+#: 7026e8922b26447f903df8f0411dae38 discord.guild.Guild.edit:100
+#: discord.integrations.StreamIntegration.edit:19 of
 msgid "Editing the guild failed."
 msgstr ""
 
@@ -4978,11 +4728,11 @@ msgid ""
 "mentioned in :meth:`Client.fetch_guild` and may not have full data."
 msgstr ""
 
-#: 276f56a64f5843658e8be434f64806d5 9c735f0e65834a429826e96e1cd0e8e1
-#: discord.channel.CategoryChannel:33 discord.channel.ForumChannel:31
-#: discord.channel.StageChannel:33 discord.channel.TextChannel:31
-#: discord.channel.VoiceChannel:31 discord.guild.Guild.edit:105
-#: discord.integrations.BotIntegration:21 discord.integrations.Integration:21
+#: 276f56a64f5843658e8be434f64806d5 discord.channel.CategoryChannel:33
+#: discord.channel.ForumChannel:31 discord.channel.StageChannel:33
+#: discord.channel.TextChannel:31 discord.channel.VoiceChannel:31
+#: discord.guild.Guild.edit:105 discord.integrations.BotIntegration:21
+#: discord.integrations.Integration:21
 #: discord.integrations.StreamIntegration:21 discord.member.Member:48
 #: discord.role.Role:53 discord.scheduled_events.ScheduledEvent:27
 #: discord.stage_instance.StageInstance:29 discord.template.Template:52
@@ -5059,15 +4809,14 @@ msgstr ""
 msgid "The maximum number of members to retrieve, up to 1000."
 msgstr ""
 
-#: 92f75e3a49844fddaa6a5089964c0135 accd314ed7a443a092b37ec3dd0d8643
-#: discord.guild.Guild.query_members:33 discord.guild.Guild.search_members:16
-#: of
+#: 92f75e3a49844fddaa6a5089964c0135 discord.guild.Guild.query_members:33
+#: discord.guild.Guild.search_members:16 of
 msgid "The list of members that have matched the query."
 msgstr ""
 
 #: 12afd1d7c7e440c880a4b51741d666bd 4ab8c0068b7244b3a7274cfc050aaa1f
-#: d1bc4b075a1f4d74beb00c7b12f21914 discord.guild.Guild.query_members:34
-#: discord.guild.Guild.search_members:17 discord.widget.Widget:47 of
+#: discord.guild.Guild.query_members:34 discord.guild.Guild.search_members:17
+#: discord.widget.Widget:47 of
 msgid "List[:class:`Member`]"
 msgstr ""
 
@@ -5123,10 +4872,9 @@ msgstr ""
 msgid ":class:`BanEntry`"
 msgstr ""
 
-#: 53af8ec9a63546c58412a8f4710b321d 73cd4a54b33f468fbd6598ae6039b5ad
-#: 9c4c94aac34c4e5daa5dec9015f1399e discord.abc.GuildChannel.invites:10
+#: 73cd4a54b33f468fbd6598ae6039b5ad discord.abc.GuildChannel.invites:10
 #: discord.guild.Guild.bans:30 discord.guild.Guild.fetch_ban:15
-#: discord.guild.Guild.invites:11 fc14665c6b8c42f7b2021236fbe289a1 of
+#: discord.guild.Guild.invites:11 of
 msgid "You do not have proper permissions to get the information."
 msgstr ""
 
@@ -5134,10 +4882,9 @@ msgstr ""
 msgid "This user is not banned."
 msgstr ""
 
-#: a18ed0d4d7704b9ea30fe7d2b8d050b0 dd2d4279f4094eb185c46164537534df
 #: discord.abc.GuildChannel.invites:11 discord.guild.Guild.bans:31
 #: discord.guild.Guild.fetch_ban:17 discord.guild.Guild.invites:12
-#: e91a22a8592f4d83adfff9b890100c70 f604401cde9a47eeb37838e3eefdad3d of
+#: e91a22a8592f4d83adfff9b890100c70 of
 msgid "An error occurred while fetching the information."
 msgstr ""
 
@@ -5253,14 +5000,13 @@ msgstr ""
 msgid "The ``roles`` keyword-only parameter was added."
 msgstr ""
 
-#: 0fd3894014d744e3a1de5dc175707f11 a6643b5e6f8548d2adfc203bbb424b8c
+#: 0fd3894014d744e3a1de5dc175707f11
 #: discord.guild.Guild.estimate_pruned_members:8
 #: discord.guild.Guild.prune_members:20 of
 msgid "The number of days before counting as inactive."
 msgstr ""
 
-#: 3224d7c321cc4c78b44b8fc4932f2b89 6211cc2aa291498796952ffa64eee7c9
-#: discord.abc.GuildChannel.set_permissions:53
+#: 3224d7c321cc4c78b44b8fc4932f2b89 discord.abc.GuildChannel.set_permissions:53
 #: discord.guild.Guild.prune_members:23 discord.guild.Guild.unban:14
 #: discord.member.Member.move_to:18 discord.member.Member.remove_timeout:11
 #: discord.member.Member.timeout:11 discord.member.Member.timeout_for:13 of
@@ -5282,7 +5028,7 @@ msgid ""
 " excluded."
 msgstr ""
 
-#: 5aa6ae18b0af4102b10a032b1b6a7e8f 913056eb50fa459dbf010b7884d25537
+#: 5aa6ae18b0af4102b10a032b1b6a7e8f
 #: discord.guild.Guild.estimate_pruned_members:20
 #: discord.guild.Guild.prune_members:36 of
 msgid "You do not have permissions to prune members."
@@ -5328,7 +5074,7 @@ msgstr ""
 msgid "Gets the list of webhooks from this guild."
 msgstr ""
 
-#: 81f00aa66a804c659436513d84f58331 a41a818bb60d4197af2cfa72219eee39
+#: a41a818bb60d4197af2cfa72219eee39
 #: discord.channel.StageChannel.create_webhook:5
 #: discord.channel.StageChannel.webhooks:5
 #: discord.channel.VoiceChannel.create_webhook:5
@@ -5342,15 +5088,13 @@ msgstr ""
 msgid "The webhooks for this guild."
 msgstr ""
 
-#: 7253240c20004a45b527af391c6c7fae 99e2ef5f06e840b49beef674316afa93
-#: discord.channel.StageChannel.webhooks:8
+#: 7253240c20004a45b527af391c6c7fae discord.channel.StageChannel.webhooks:8
 #: discord.channel.VoiceChannel.webhooks:8
 #: discord.channel._TextChannel.webhooks:8 discord.guild.Guild.webhooks:8 of
 msgid "List[:class:`Webhook`]"
 msgstr ""
 
-#: a35aad3bdf6a4eab97d658e6525ce10a cfc0d35c673d41278b8b1cd4581fee83
-#: discord.channel.StageChannel.webhooks:10
+#: cfc0d35c673d41278b8b1cd4581fee83 discord.channel.StageChannel.webhooks:10
 #: discord.channel.VoiceChannel.webhooks:10
 #: discord.channel._TextChannel.webhooks:10 discord.guild.Guild.webhooks:10 of
 msgid "You don't have permissions to get the webhooks."
@@ -5400,8 +5144,8 @@ msgid ""
 "this information."
 msgstr ""
 
-#: 74f1849dc85b465e874fdcba96c50071 b4eb1b6da60540cd89dedf2329be357a
-#: discord.abc.GuildChannel.invites:7 discord.guild.Guild.invites:8 of
+#: b4eb1b6da60540cd89dedf2329be357a discord.abc.GuildChannel.invites:7
+#: discord.guild.Guild.invites:8 of
 msgid "The list of invites that are currently active."
 msgstr ""
 
@@ -5413,9 +5157,7 @@ msgstr ""
 msgid "Creates a template for the guild."
 msgstr ""
 
-#: a582a220595b498096d03893062a9df0 adfb039ef6d545d6aa4a65fee758b611
-#: b248bb63d2404648aa22ca648a5d0ca8 d99eae95a87a4b7f913ecc5a4c7ca6d6
-#: discord.guild.Guild.create_integration:5
+#: b248bb63d2404648aa22ca648a5d0ca8 discord.guild.Guild.create_integration:5
 #: discord.guild.Guild.create_template:5 discord.guild.Guild.integrations:5
 #: discord.integrations.Integration.delete:5
 #: discord.integrations.StreamIntegration.edit:5
@@ -5423,13 +5165,13 @@ msgstr ""
 msgid "You must have the :attr:`~Permissions.manage_guild` permission to do this."
 msgstr ""
 
-#: 6573de58430a435fb453dcffcad5c318 8a02d4ac608d419788e95d560d214721
-#: discord.guild.Guild.create_template:11 discord.template.Template:19 of
+#: 8a02d4ac608d419788e95d560d214721 discord.guild.Guild.create_template:11
+#: discord.template.Template:19 of
 msgid "The name of the template."
 msgstr ""
 
-#: 29ab765f02d240d882a315f3e85185da d305a169d2574be8813ea5e8a02a9756
-#: discord.guild.Guild.create_template:14 discord.template.Template:25 of
+#: d305a169d2574be8813ea5e8a02a9756 discord.guild.Guild.create_template:14
+#: discord.template.Template:25 of
 msgid "The description of the template."
 msgstr ""
 
@@ -5446,15 +5188,13 @@ msgstr ""
 msgid "The integration type (e.g. Twitch)."
 msgstr ""
 
-#: 1346001cfed24b21b072ef9856fdbdae 944b63c7272645ac8e3cb2e3e21563fe
-#: discord.guild.Guild.create_integration:14
+#: 1346001cfed24b21b072ef9856fdbdae discord.guild.Guild.create_integration:14
 #: discord.integrations.BotIntegration:7 discord.integrations.Integration:7
 #: discord.integrations.StreamIntegration:7 of
 msgid "The integration ID."
 msgstr ""
 
-#: b2080ec5a9504c288adff5bb581385d4 d113a7909c6d4a71bf31959da1ae369d
-#: discord.guild.Guild.create_integration:17
+#: b2080ec5a9504c288adff5bb581385d4 discord.guild.Guild.create_integration:17
 #: discord.guild.Guild.integrations:13 of
 msgid "You do not have permission to create the integration."
 msgstr ""
@@ -5517,12 +5257,11 @@ msgid "The sticker's ID."
 msgstr ""
 
 #: 2e5e5cb4083b4d768bb3ca349cd4cc41 discord.guild.Guild.fetch_sticker:16
-#: discord.sticker.StickerItem.fetch:5 ee33114d35c04bba9e3a60b0daace838 of
+#: discord.sticker.StickerItem.fetch:5 of
 msgid "The retrieved sticker."
 msgstr ""
 
-#: 0ef37b2e6d2e442fb19065b7614a9b0d 2802fcb7a86b474589f5c11ccebdfc55
-#: ae85608176334c78a30d747892aebbd0 discord.guild.Guild.create_sticker:27
+#: 2802fcb7a86b474589f5c11ccebdfc55 discord.guild.Guild.create_sticker:27
 #: discord.guild.Guild.fetch_sticker:17 discord.sticker.GuildSticker.edit:19 of
 msgid ":class:`GuildSticker`"
 msgstr ""
@@ -5539,8 +5278,7 @@ msgstr ""
 msgid "Creates a :class:`Sticker` for the guild."
 msgstr ""
 
-#: 19d83ba9c2b64a40a0d99a566e2f1570 b08f600f8fb24a939877a9f21c67b6b9
-#: d9bcd31ba9c8417eaebec2098f4a6866 discord.guild.Guild.create_sticker:5
+#: 19d83ba9c2b64a40a0d99a566e2f1570 discord.guild.Guild.create_sticker:5
 #: discord.guild.Guild.delete_sticker:5 discord.sticker.GuildSticker.delete:5
 #: of
 msgid ""
@@ -5556,9 +5294,8 @@ msgstr ""
 msgid "The sticker's description. If used, must be 2 to 100 characters."
 msgstr ""
 
-#: d1d3341da8154cc6b4378671085d6876 da50ce0daeb14bac9177688a530a501f
-#: discord.guild.Guild.create_sticker:17 discord.sticker.GuildSticker.edit:12
-#: of
+#: d1d3341da8154cc6b4378671085d6876 discord.guild.Guild.create_sticker:17
+#: discord.sticker.GuildSticker.edit:12 of
 msgid "The name of a unicode emoji that represents the sticker's expression."
 msgstr ""
 
@@ -5587,7 +5324,7 @@ msgid "The parameters for the sticker are not correctly formatted."
 msgstr ""
 
 #: bcb585d0888b47c5aa7e11bd76e69153 discord.guild.Guild.delete_sticker:3
-#: discord.sticker.GuildSticker.delete:3 e42fb4e9e6cd462899cde8b8f13f183e of
+#: discord.sticker.GuildSticker.delete:3 of
 msgid "Deletes the custom :class:`Sticker` from the guild."
 msgstr ""
 
@@ -5596,18 +5333,17 @@ msgid "The sticker you are deleting."
 msgstr ""
 
 #: discord.guild.Guild.delete_sticker:14 discord.sticker.GuildSticker.delete:9
-#: eb21701dec21455885321861a71e8a93 f7a4f3ca9f0840278988c57b3e1584ba of
+#: f7a4f3ca9f0840278988c57b3e1584ba of
 msgid "The reason for deleting this sticker. Shows up on the audit log."
 msgstr ""
 
 #: 57b98898cf2b4745af78f85b0f783f43 discord.guild.Guild.delete_sticker:17
-#: discord.sticker.GuildSticker.delete:12 f882c67f674f47e397cfa9cbd16ed37e of
+#: discord.sticker.GuildSticker.delete:12 of
 msgid "You are not allowed to delete stickers."
 msgstr ""
 
-#: 854d757ca8b241ebab7c4cacf7bcec8c b1d13694e29548c2b31bf65409c39404
-#: discord.guild.Guild.delete_sticker:18 discord.sticker.GuildSticker.delete:13
-#: of
+#: b1d13694e29548c2b31bf65409c39404 discord.guild.Guild.delete_sticker:18
+#: discord.sticker.GuildSticker.delete:13 of
 msgid "An error occurred deleting the sticker."
 msgstr ""
 
@@ -5643,8 +5379,8 @@ msgid ""
 ":attr:`emojis` instead."
 msgstr ""
 
-#: 04438e1da08e48938f42dbf2de330ba9 53a1817de08548d2a68fbe1e43614c15
-#: discord.emoji.Emoji:37 discord.guild.Guild.fetch_emoji:11 of
+#: 53a1817de08548d2a68fbe1e43614c15 discord.emoji.Emoji:37
+#: discord.guild.Guild.fetch_emoji:11 of
 msgid "The emoji's ID."
 msgstr ""
 
@@ -5653,8 +5389,7 @@ msgid "The retrieved emoji."
 msgstr ""
 
 #: 1eb1e8a92e454d7bbee3b5e9541f84fd 37a41037481642b78fafaee019f75015
-#: 399573321d6c4868983d0d4e6e50494d discord.emoji.Emoji.edit:25
-#: discord.guild.Guild.create_custom_emoji:29
+#: discord.emoji.Emoji.edit:25 discord.guild.Guild.create_custom_emoji:29
 #: discord.guild.Guild.fetch_emoji:15 of
 msgid ":class:`Emoji`"
 msgstr ""
@@ -5731,8 +5466,7 @@ msgid "Deletes the custom :class:`Emoji` from the guild."
 msgstr ""
 
 #: discord.emoji.Emoji.delete:5 discord.emoji.Emoji.edit:5
-#: discord.guild.Guild.delete_emoji:5 fb90b1ef5ff84a2fa79294890e940a4e
-#: ff6de30aac954fea9e2f208059f9cb4c of
+#: discord.guild.Guild.delete_emoji:5 ff6de30aac954fea9e2f208059f9cb4c of
 msgid "You must have :attr:`~Permissions.manage_emojis` permission to do this."
 msgstr ""
 
@@ -5740,18 +5474,18 @@ msgstr ""
 msgid "The emoji you are deleting."
 msgstr ""
 
-#: 678beeb23b2d4987b952b0071cc7e655 83fa5c76aa45496c8a174a7aba164212
-#: discord.emoji.Emoji.delete:9 discord.guild.Guild.delete_emoji:12 of
+#: 678beeb23b2d4987b952b0071cc7e655 discord.emoji.Emoji.delete:9
+#: discord.guild.Guild.delete_emoji:12 of
 msgid "The reason for deleting this emoji. Shows up on the audit log."
 msgstr ""
 
-#: 06192bc5820542e09a610656abe007be d87322ed656a4631bd9fa98caa580e08
-#: discord.emoji.Emoji.delete:12 discord.guild.Guild.delete_emoji:15 of
+#: d87322ed656a4631bd9fa98caa580e08 discord.emoji.Emoji.delete:12
+#: discord.guild.Guild.delete_emoji:15 of
 msgid "You are not allowed to delete emojis."
 msgstr ""
 
-#: 595f6eee2e13488f8569abd8053aeeb1 dd8fe40fffc947b8adf8f1e9fdfa8d16
-#: discord.emoji.Emoji.delete:13 discord.guild.Guild.delete_emoji:16 of
+#: 595f6eee2e13488f8569abd8053aeeb1 discord.emoji.Emoji.delete:13
+#: discord.guild.Guild.delete_emoji:16 of
 msgid "An error occurred deleting the emoji."
 msgstr ""
 

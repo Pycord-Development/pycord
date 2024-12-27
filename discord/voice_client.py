@@ -40,6 +40,7 @@ Some documentation to refer to:
 from __future__ import annotations
 
 import asyncio
+import datetime
 import logging
 import select
 import socket
@@ -988,3 +989,9 @@ class VoiceClient(VoiceProtocol):
             )
 
         self.checked_add("timestamp", opus.Encoder.SAMPLES_PER_FRAME, 4294967295)
+
+    def elapsed(self) -> datetime.timedelta:
+        """Returns the elapsed time of the playing audio."""
+        if self._player:
+            return datetime.timedelta(milliseconds=self._player.played_frames() * 20)
+        return datetime.timedelta()

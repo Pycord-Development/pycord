@@ -49,7 +49,7 @@ from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
 from .channel import *
 from .channel import _channel_factory
-from .emoji import Emoji
+from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, InteractionType, ScheduledEventStatus, Status, try_enum
 from .flags import ApplicationFlags, Intents, MemberCacheFlags
 from .guild import Guild
@@ -251,6 +251,8 @@ class ConnectionState:
             self.store_user = self.create_user  # type: ignore
             self.deref_user = self.deref_user_no_intents  # type: ignore
 
+        self.cache_app_emojis: bool = options.get("cache_app_emojis", False)
+
         self.parsers = parsers = {}
         for attr, func in inspect.getmembers(self):
             if attr.startswith("parse_"):
@@ -273,7 +275,7 @@ class ConnectionState:
         # using __del__. Testing this for memory leaks led to no discernible leaks,
         # though more testing will have to be done.
         self._users: dict[int, User] = {}
-        self._emojis: dict[int, Emoji] = {}
+        self._emojis: dict[int, (GuildEmoji, AppEmoji)] = {}
         self._stickers: dict[int, GuildSticker] = {}
         self._guilds: dict[int, Guild] = {}
         self._polls: dict[int, Poll] = {}
@@ -374,10 +376,20 @@ class ConnectionState:
         # the keys of self._users are ints
         return self._users.get(id)  # type: ignore
 
-    def store_emoji(self, guild: Guild, data: EmojiPayload) -> Emoji:
+    def store_emoji(self, guild: Guild, data: EmojiPayload) -> GuildEmoji:
         # the id will be present here
         emoji_id = int(data["id"])  # type: ignore
-        self._emojis[emoji_id] = emoji = Emoji(guild=guild, state=self, data=data)
+        self._emojis[emoji_id] = emoji = GuildEmoji(guild=guild, state=self, data=data)
+        return emoji
+
+    def maybe_store_app_emoji(
+        self, application_id: int, data: EmojiPayload
+    ) -> AppEmoji:
+        # the id will be present here
+        emoji = AppEmoji(application_id=application_id, state=self, data=data)
+        if self.cache_app_emojis:
+            emoji_id = int(data["id"])  # type: ignore
+            self._emojis[emoji_id] = emoji
         return emoji
 
     def store_sticker(self, guild: Guild, data: GuildStickerPayload) -> GuildSticker:
@@ -413,7 +425,7 @@ class ConnectionState:
         self._guilds.pop(guild.id, None)
 
         for emoji in guild.emojis:
-            self._emojis.pop(emoji.id, None)
+            self._remove_emoji(emoji)
 
         for sticker in guild.stickers:
             self._stickers.pop(sticker.id, None)
@@ -421,16 +433,19 @@ class ConnectionState:
         del guild
 
     @property
-    def emojis(self) -> list[Emoji]:
+    def emojis(self) -> list[GuildEmoji | AppEmoji]:
         return list(self._emojis.values())
 
     @property
     def stickers(self) -> list[GuildSticker]:
         return list(self._stickers.values())
 
-    def get_emoji(self, emoji_id: int | None) -> Emoji | None:
+    def get_emoji(self, emoji_id: int | None) -> GuildEmoji | AppEmoji | None:
         # the keys of self._emojis are ints
         return self._emojis.get(emoji_id)  # type: ignore
+
+    def _remove_emoji(self, emoji: GuildEmoji | AppEmoji) -> None:
+        self._emojis.pop(emoji.id, None)
 
     def get_sticker(self, sticker_id: int | None) -> GuildSticker | None:
         # the keys of self._stickers are ints
@@ -587,6 +602,11 @@ class ConnectionState:
             raise
 
     async def _delay_ready(self) -> None:
+
+        if self.cache_app_emojis and self.application_id:
+            data = await self.http.get_all_application_emojis(self.application_id)
+            for e in data.get("items", []):
+                self.maybe_store_app_emoji(self.application_id, e)
         try:
             states = []
             while True:
@@ -1932,7 +1952,7 @@ class ConnectionState:
             return channel.guild.get_member(user_id)
         return self.get_user(user_id)
 
-    def get_reaction_emoji(self, data) -> Emoji | PartialEmoji:
+    def get_reaction_emoji(self, data) -> GuildEmoji | AppEmoji | PartialEmoji:
         emoji_id = utils._get_as_snowflake(data, "id")
 
         if not emoji_id:
@@ -1948,7 +1968,9 @@ class ConnectionState:
                 name=data["name"],
             )
 
-    def _upgrade_partial_emoji(self, emoji: PartialEmoji) -> Emoji | PartialEmoji | str:
+    def _upgrade_partial_emoji(
+        self, emoji: PartialEmoji
+    ) -> GuildEmoji | AppEmoji | PartialEmoji | str:
         emoji_id = emoji.id
         if not emoji_id:
             return emoji.name
@@ -2085,6 +2107,11 @@ class AutoShardedConnectionState(ConnectionState):
                     self.dispatch("guild_join", guild)
 
             self.dispatch("shard_ready", shard_id)
+
+        if self.cache_app_emojis and self.application_id:
+            data = await self.http.get_all_application_emojis(self.application_id)
+            for e in data.get("items", []):
+                self.maybe_store_app_emoji(self.application_id, e)
 
         # remove the state
         try:

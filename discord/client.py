@@ -41,7 +41,7 @@ from .appinfo import AppInfo, PartialAppInfo
 from .application_role_connection import ApplicationRoleConnectionMetadata
 from .backoff import ExponentialBackoff
 from .channel import PartialMessageable, _threaded_channel_factory
-from .emoji import Emoji
+from .emoji import AppEmoji, GuildEmoji
 from .enums import ChannelType, Status
 from .errors import *
 from .flags import ApplicationFlags, Intents
@@ -199,6 +199,16 @@ class Client:
         To enable these events, this must be set to ``True``. Defaults to ``False``.
 
         .. versionadded:: 2.0
+    cache_app_emojis: :class:`bool`
+        Whether to automatically fetch and cache the application's emojis on startup and when fetching. Defaults to ``False``.
+
+        .. warning::
+
+            There are no events related to application emojis - if any are created/deleted on the
+            Developer Dashboard while the client is running, the cache will not be updated until you manually
+            run :func:`fetch_emojis`.
+
+        .. versionadded:: 2.7
 
     Attributes
     -----------
@@ -300,7 +310,8 @@ class Client:
 
     @property
     def latency(self) -> float:
-        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket
+        is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``.
 
         This could be referred to as the Discord WebSocket protocol latency.
         """
@@ -330,9 +341,29 @@ class Client:
         return self._connection.guilds
 
     @property
-    def emojis(self) -> list[Emoji]:
-        """The emojis that the connected client has."""
+    def emojis(self) -> list[GuildEmoji | AppEmoji]:
+        """The emojis that the connected client has.
+
+        .. note::
+
+            This only includes the application's emojis if `cache_app_emojis` is ``True``.
+        """
         return self._connection.emojis
+
+    @property
+    def guild_emojis(self) -> list[GuildEmoji]:
+        """The :class:`~discord.GuildEmoji` that the connected client has."""
+        return [e for e in self.emojis if isinstance(e, GuildEmoji)]
+
+    @property
+    def app_emojis(self) -> list[AppEmoji]:
+        """The :class:`~discord.AppEmoji` that the connected client has.
+
+        .. note::
+
+            This is only available if `cache_app_emojis` is ``True``.
+        """
+        return [e for e in self.emojis if isinstance(e, AppEmoji)]
 
     @property
     def stickers(self) -> list[GuildSticker]:
@@ -684,6 +715,7 @@ class Client:
         if self._closed:
             return
 
+        await self.http.close()
         self._closed = True
 
         for voice in self.voice_clients:
@@ -696,7 +728,6 @@ class Client:
         if self.ws is not None and self.ws.open:
             await self.ws.close(code=1000)
 
-        await self.http.close()
         self._ready.clear()
 
     def clear(self) -> None:
@@ -994,7 +1025,7 @@ class Client:
         """
         return self._connection.get_user(id)
 
-    def get_emoji(self, id: int, /) -> Emoji | None:
+    def get_emoji(self, id: int, /) -> GuildEmoji | AppEmoji | None:
         """Returns an emoji with the given ID.
 
         Parameters
@@ -1004,7 +1035,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`.Emoji`]
+        Optional[:class:`.GuildEmoji` | :class:`.AppEmoji`]
             The custom emoji or ``None`` if not found.
         """
         return self._connection.get_emoji(id)
@@ -1432,6 +1463,7 @@ class Client:
         limit: int | None = 100,
         before: SnowflakeTime = None,
         after: SnowflakeTime = None,
+        with_counts: bool = True,
     ) -> GuildIterator:
         """Retrieves an :class:`.AsyncIterator` that enables receiving your guilds.
 
@@ -1459,6 +1491,11 @@ class Client:
             Retrieve guilds after this date or object.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
+        with_counts: :class:`bool`
+            Whether to include member count information in guilds. This fills the
+            :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
+            fields.
+            Defaults to ``True``.
 
         Yields
         ------
@@ -1485,7 +1522,9 @@ class Client:
 
         All parameters are optional.
         """
-        return GuildIterator(self, limit=limit, before=before, after=after)
+        return GuildIterator(
+            self, limit=limit, before=before, after=after, with_counts=with_counts
+        )
 
     async def fetch_template(self, code: Template | str) -> Template:
         """|coro|
@@ -2130,3 +2169,112 @@ class Client:
         .. versionadded:: 2.6
         """
         return f"https://discord.com/application-directory/{self.application_id}/store"
+
+    async def fetch_emojis(self) -> list[AppEmoji]:
+        r"""|coro|
+
+        Retrieves all custom :class:`AppEmoji`\s from the application.
+
+        Raises
+        ---------
+        HTTPException
+            An error occurred fetching the emojis.
+
+        Returns
+        --------
+        List[:class:`AppEmoji`]
+            The retrieved emojis.
+        """
+        data = await self._connection.http.get_all_application_emojis(
+            self.application_id
+        )
+        return [
+            self._connection.maybe_store_app_emoji(self.application_id, d)
+            for d in data["items"]
+        ]
+
+    async def fetch_emoji(self, emoji_id: int, /) -> AppEmoji:
+        """|coro|
+
+        Retrieves a custom :class:`AppEmoji` from the application.
+
+        Parameters
+        ----------
+        emoji_id: :class:`int`
+            The emoji's ID.
+
+        Returns
+        -------
+        :class:`AppEmoji`
+            The retrieved emoji.
+
+        Raises
+        ------
+        NotFound
+            The emoji requested could not be found.
+        HTTPException
+            An error occurred fetching the emoji.
+        """
+        data = await self._connection.http.get_application_emoji(
+            self.application_id, emoji_id
+        )
+        return self._connection.maybe_store_app_emoji(self.application_id, data)
+
+    async def create_emoji(
+        self,
+        *,
+        name: str,
+        image: bytes,
+    ) -> AppEmoji:
+        r"""|coro|
+
+        Creates a custom :class:`AppEmoji` for the application.
+
+        There is currently a limit of 2000 emojis per application.
+
+        Parameters
+        -----------
+        name: :class:`str`
+            The emoji name. Must be at least 2 characters.
+        image: :class:`bytes`
+            The :term:`py:bytes-like object` representing the image data to use.
+            Only JPG, PNG and GIF images are supported.
+
+        Raises
+        -------
+        HTTPException
+            An error occurred creating an emoji.
+
+        Returns
+        --------
+        :class:`AppEmoji`
+            The created emoji.
+        """
+
+        img = utils._bytes_to_base64_data(image)
+        data = await self._connection.http.create_application_emoji(
+            self.application_id, name, img
+        )
+        return self._connection.maybe_store_app_emoji(self.application_id, data)
+
+    async def delete_emoji(self, emoji: Snowflake) -> None:
+        """|coro|
+
+        Deletes the custom :class:`AppEmoji` from the application.
+
+        Parameters
+        ----------
+        emoji: :class:`abc.Snowflake`
+            The emoji you are deleting.
+
+        Raises
+        ------
+        HTTPException
+            An error occurred deleting the emoji.
+        """
+
+        await self._connection.http.delete_application_emoji(
+            self.application_id, emoji.id
+        )
+        if self._connection.cache_app_emojis and self._connection.get_emoji(emoji.id):
+            self._connection.remove_emoji(emoji)

@@ -1454,6 +1454,7 @@ class HTTPClient:
         limit: int,
         before: Snowflake | None = None,
         after: Snowflake | None = None,
+        with_counts: bool = True,
     ) -> Response[list[guild.Guild]]:
         params: dict[str, Any] = {
             "limit": limit,
@@ -1463,6 +1464,8 @@ class HTTPClient:
             params["before"] = before
         if after:
             params["after"] = after
+        if with_counts:
+            params["with_counts"] = int(with_counts)
 
         return self.request(Route("GET", "/users/@me/guilds"), params=params)
 
@@ -1886,6 +1889,75 @@ class HTTPClient:
             emoji_id=emoji_id,
         )
         return self.request(r, json=payload, reason=reason)
+
+    def get_all_application_emojis(
+        self, application_id: Snowflake
+    ) -> Response[list[emoji.Emoji]]:
+        return self.request(
+            Route(
+                "GET",
+                "/applications/{application_id}/emojis",
+                application_id=application_id,
+            )
+        )
+
+    def get_application_emoji(
+        self, application_id: Snowflake, emoji_id: Snowflake
+    ) -> Response[emoji.Emoji]:
+        return self.request(
+            Route(
+                "GET",
+                "/applications/{application_id}/emojis/{emoji_id}",
+                application_id=application_id,
+                emoji_id=emoji_id,
+            )
+        )
+
+    def create_application_emoji(
+        self,
+        application_id: Snowflake,
+        name: str,
+        image: bytes,
+    ) -> Response[emoji.Emoji]:
+        payload = {
+            "name": name,
+            "image": image,
+        }
+
+        r = Route(
+            "POST",
+            "/applications/{application_id}/emojis",
+            application_id=application_id,
+        )
+        return self.request(r, json=payload)
+
+    def delete_application_emoji(
+        self,
+        application_id: Snowflake,
+        emoji_id: Snowflake,
+    ) -> Response[None]:
+        r = Route(
+            "DELETE",
+            "/applications/{application_id}/emojis/{emoji_id}",
+            application_id=application_id,
+            emoji_id=emoji_id,
+        )
+        return self.request(r)
+
+    def edit_application_emoji(
+        self,
+        application_id: Snowflake,
+        emoji_id: Snowflake,
+        *,
+        payload: dict[str, Any],
+    ) -> Response[emoji.Emoji]:
+        r = Route(
+            "PATCH",
+            "/applications/{application_id}/emojis/{emoji_id}",
+            application_id=application_id,
+            emoji_id=emoji_id,
+        )
+        return self.request(r, json=payload)
 
     def get_all_integrations(
         self, guild_id: Snowflake
@@ -2952,7 +3024,7 @@ class HTTPClient:
         if user_id is not None:
             params["user_id"] = user_id
         if sku_ids is not None:
-            params["sku_ids"] = ",".join(sku_ids)
+            params["sku_ids"] = ",".join(str(sku_id) for sku_id in sku_ids)
         if before is not None:
             params["before"] = before
         if after is not None:

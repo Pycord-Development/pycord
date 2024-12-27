@@ -56,7 +56,6 @@ from typing import (
     Iterator,
     Literal,
     Mapping,
-    NewType,
     Protocol,
     Sequence,
     TypeVar,
@@ -151,7 +150,7 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = NewType("cached_property", property)
+    cached_property = property
 
     P = ParamSpec("P")
 
@@ -1306,9 +1305,12 @@ V = Union[Iterable[OptionChoice], Iterable[str], Iterable[int], Iterable[float]]
 AV = Awaitable[V]
 Values = Union[V, Callable[[AutocompleteContext], Union[V, AV]], AV]
 AutocompleteFunc = Callable[[AutocompleteContext], AV]
+FilterFunc = Callable[[AutocompleteContext, Any], Union[bool, Awaitable[bool]]]
 
 
-def basic_autocomplete(values: Values) -> AutocompleteFunc:
+def basic_autocomplete(
+    values: Values, *, filter: FilterFunc | None = None
+) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
     callable, it will be called with the AutocompleteContext.
@@ -1320,18 +1322,21 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
     values: Union[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Callable[[:class:`.AutocompleteContext`], Union[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]], Awaitable[Union[Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a
         single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`.
+    filter: Optional[Callable[[:class:`.AutocompleteContext`, Any], Union[:class:`bool`, Awaitable[:class:`bool`]]]]
+        An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments:
+        the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.
+
+        .. versionadded:: 2.7
 
     Returns
     -------
     Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]
         A wrapped callback for the autocomplete.
 
-    Note
-    ----
-    Autocomplete cannot be used for options that have specified choices.
+    Examples
+    --------
 
-    Example
-    -------
+    Basic usage:
 
     .. code-block:: python3
 
@@ -1344,7 +1349,17 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
 
         Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
 
+    With filter parameter:
+
+    .. code-block:: python3
+
+        Option(str, "color", autocomplete=basic_autocomplete(("red", "green", "blue"), filter=lambda c, i: str(c.value or "") in i))
+
     .. versionadded:: 2.0
+
+    Note
+    ----
+    Autocomplete cannot be used for options that have specified choices.
     """
 
     async def autocomplete_callback(ctx: AutocompleteContext) -> V:
@@ -1355,11 +1370,23 @@ def basic_autocomplete(values: Values) -> AutocompleteFunc:
         if asyncio.iscoroutine(_values):
             _values = await _values
 
-        def check(item: Any) -> bool:
-            item = getattr(item, "name", item)
-            return str(item).lower().startswith(str(ctx.value or "").lower())
+        if filter is None:
 
-        gen = (val for val in _values if check(val))
+            def _filter(ctx: AutocompleteContext, item: Any) -> bool:
+                item = getattr(item, "name", item)
+                return str(item).lower().startswith(str(ctx.value or "").lower())
+
+            gen = (val for val in _values if _filter(ctx, val))
+
+        elif asyncio.iscoroutinefunction(filter):
+            gen = (val for val in _values if await filter(ctx, val))
+
+        elif callable(filter):
+            gen = (val for val in _values if filter(ctx, val))
+
+        else:
+            raise TypeError("``filter`` must be callable.")
+
         return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback

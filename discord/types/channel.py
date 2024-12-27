@@ -44,7 +44,7 @@ class PermissionOverwrite(TypedDict):
     deny: str
 
 
-ChannelType = Literal[0, 1, 2, 3, 4, 5, 10, 11, 12, 13]
+ChannelType = Literal[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16]
 
 
 class _BaseChannel(TypedDict):
