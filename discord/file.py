@@ -195,11 +195,11 @@ class VoiceMessage(File):
     def __init__(
         self,
         fp: str | bytes | os.PathLike | io.BufferedIOBase,
-        # filename: str | None = None,
+        filename: str | None = None,
         waveform: str = "",
         duration_secs: float = 0.0,
         **kwargs,
     ):
-        super().__init__(fp, **kwargs)
+        super().__init__(fp, filename, **kwargs)
         self.waveform = waveform
         self.duration_secs = duration_secs
