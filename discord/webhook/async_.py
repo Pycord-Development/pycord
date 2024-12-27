@@ -522,7 +522,7 @@ class AsyncWebhookAdapter:
                     "content_type": "application/octet-stream",
                 }
             )
-        payload["attachments"] = attachments
+        payload["data"]["attachments"] = attachments
         form[0]["value"] = utils._to_json(payload)
 
         route = Route(
