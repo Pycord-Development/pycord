@@ -66,8 +66,6 @@ These changes are available on the `master` branch, but have not yet been releas
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
-- Fixed attachment metadata being set incorrectly in interaction responses causing it to
-  be ignored. ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 
 ### Changed
 
