@@ -262,9 +262,7 @@ class Interaction:
                 pass
 
         channel = data.get("channel")
-        data_ch_type: int | None = None
-        if channel:
-            data_ch_type = channel.get("type")
+        data_ch_type: int | None = channel.get("type") if channel else None
 
         if data_ch_type is not None:
             factory, ch_type = _threaded_channel_factory(data_ch_type)
@@ -277,16 +275,13 @@ class Interaction:
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
-        if self.channel is None:
-            if self.channel_id is not None:
-                ch_type = (
-                    ChannelType.text
-                    if self.guild_id is not None
-                    else ChannelType.private
-                )
-                return PartialMessageable(
-                    state=self._state, id=self.channel_id, type=ch_type
-                )
+        if self.channel is None and self.channel_id is not None:
+            ch_type = (
+                ChannelType.text if self.guild_id is not None else ChannelType.private
+            )
+            return PartialMessageable(
+                state=self._state, id=self.channel_id, type=ch_type
+            )
 
         self._channel_data = channel
 
