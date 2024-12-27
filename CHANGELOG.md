@@ -64,8 +64,11 @@ These changes are available on the `master` branch, but have not yet been releas
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
-- Fixed attachment metadata being set incorrectly in interaction responses causing it to
-  be ignored. ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
+- Fixed an error when responding non-ephemerally with a `Paginator` to an ephemerally
+  deferred interaction.
+  ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))
+- Fixed attachment metadata being set incorrectly in interaction responses causing the metadata to
+  be ignored by Discord. ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
 
 ### Changed
 
