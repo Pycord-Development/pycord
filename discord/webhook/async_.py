@@ -502,10 +502,7 @@ class AsyncWebhookAdapter:
             "type": type,
         }
 
-        if data is not None:
-            payload["data"] = data
-        else:
-            payload["data"] = {}
+        payload["data"] = data if data is not None else {}
         form = [{"name": "payload_json"}]
         attachments = []
         files = files or []
