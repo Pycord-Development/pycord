@@ -503,6 +503,8 @@ class AsyncWebhookAdapter:
 
         if data is not None:
             payload["data"] = data
+        else:
+            payload["data"] = {}
         form = [{"name": "payload_json"}]
         attachments = []
         files = files or []
@@ -522,7 +524,8 @@ class AsyncWebhookAdapter:
                     "content_type": "application/octet-stream",
                 }
             )
-        payload["data"]["attachments"] = attachments
+        if attachments:
+            payload["data"]["attachments"] = attachments
         form[0]["value"] = utils._to_json(payload)
 
         route = Route(
