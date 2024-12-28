@@ -38,6 +38,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
 - Added helper methods to determine the authorizing party of an `Interaction`.
   ([#2659](https://github.com/Pycord-Development/pycord/pull/2659))
+- Added the ability to use functions with any number of optional arguments and functions
+  returning an awaitable as `Option.autocomplete`.
+  ([#2669](https://github.com/Pycord-Development/pycord/pull/2669))
 
 ### Fixed
 
