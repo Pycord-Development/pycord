@@ -47,6 +47,7 @@ from ..errors import (
     InvalidArgument,
     NotFound,
 )
+from ..file import VoiceMessage
 from ..flags import MessageFlags
 from ..http import Route
 from ..message import Attachment, Message
@@ -509,13 +510,17 @@ class AsyncWebhookAdapter:
         attachments = []
         files = files or []
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -661,8 +666,10 @@ def handle_message_parameters(
     if username:
         payload["username"] = username
 
-    flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
-    payload["flags"] = flags.value
+    flags = MessageFlags(
+        suppress_embeds=suppress,
+        ephemeral=ephemeral,
+    )
 
     if applied_tags is not MISSING:
         payload["applied_tags"] = applied_tags
@@ -683,6 +690,7 @@ def handle_message_parameters(
         files = [file]
 
     if files:
+        voice_message = False
         for index, file in enumerate(files):
             multipart_files.append(
                 {
@@ -692,16 +700,25 @@ def handle_message_parameters(
                     "content_type": "application/octet-stream",
                 }
             )
-            _attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                voice_message = True
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            _attachments.append(attachment_info)
+        if voice_message:
+            flags = flags + MessageFlags(is_voice_message=True)
 
     if _attachments:
         payload["attachments"] = _attachments
+
+    payload["flags"] = flags.value
 
     if multipart_files:
         multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
