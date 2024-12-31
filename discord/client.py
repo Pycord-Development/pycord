@@ -1261,7 +1261,7 @@ class Client:
         TypeError
             The ``func`` parameter is not a coroutine function.
         ValueError
-            The ``name`` (event name) does not start with 'on_'
+            The ``name`` (event name) does not start with ``on_``
 
         Example
         -------
@@ -1325,7 +1325,7 @@ class Client:
         TypeError
             The function being listened to is not a coroutine.
         ValueError
-            The ``name`` (event name) does not start with 'on_'
+            The ``name`` (event name) does not start with ``on_``
 
         Example
         -------
