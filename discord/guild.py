@@ -293,19 +293,19 @@ class Guild(Hashable):
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
         None: _GuildLimit(
-            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=26214400
+            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=10_485_760
         ),
         0: _GuildLimit(
-            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=26214400
+            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=10_485_760
         ),
         1: _GuildLimit(
-            emoji=100, stickers=15, soundboard=24, bitrate=128e3, filesize=26214400
+            emoji=100, stickers=15, soundboard=24, bitrate=128e3, filesize=10_485_760
         ),
         2: _GuildLimit(
-            emoji=150, stickers=30, soundboard=36, bitrate=256e3, filesize=52428800
+            emoji=150, stickers=30, soundboard=36, bitrate=256e3, filesize=52_428_800
         ),
         3: _GuildLimit(
-            emoji=250, stickers=60, soundboard=48, bitrate=384e3, filesize=104857600
+            emoji=250, stickers=60, soundboard=48, bitrate=384e3, filesize=104_857_600
         ),
     }
 

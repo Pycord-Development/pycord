@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2024-10-11 09:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: ../../api/voice.rst:4 d7b0a6618d484ba1b7adda020e2d5f7c
 msgid "Voice Related"
@@ -87,15 +87,9 @@ msgid ""
 "audio."
 msgstr ""
 
-#: ../../api/voice.rst 097916a2827d4169afabc5b5f61c309f
-#: 0a1db135ede34233a02cc2111512a49f 2456beac41954a5e95e27b81e6120484
-#: 52330df6b9d74b889c44ecd31ad0bc37 5abdb5e4ddf34de2babfca2950a76dd4
-#: 6475a382392d403e94c6c2d0e49e5aaa 69d41da7ec2e48caa0398ba00f33e5fd
-#: 71a09c9337f54d45b2723985acaf9fd5 771c2db901254eee9b8b03d63009dc7c
-#: 77a01818697c49a09c752278468a1f99 7f35660d885a4fcebc23c4570f774ee8
-#: 95bd3ccff86b423f850c85a5c16d83be ac4f165d6599452db25226ff0a7e7d7f
-#: b0cff60b27144f489fb963f023b9288d b660228e1b894281802c261ae32d2654
-#: b9921e9cbf8f4e13b9611c85e2c50035 discord.player.FFmpegOpusAudio.from_probe
+#: ../../api/voice.rst 5abdb5e4ddf34de2babfca2950a76dd4
+#: 771c2db901254eee9b8b03d63009dc7c ac4f165d6599452db25226ff0a7e7d7f
+#: b660228e1b894281802c261ae32d2654 discord.player.FFmpegOpusAudio.from_probe
 #: e4c505fd25a34b1aaf027a23ce478576 f4deaf0307e544339f4fcaac7b0558bc
 #: fab43f55cb8d46c18309ff5fddc61816 fb01f37a3ce2458bb7237088803d269a of
 msgid "Parameters"
@@ -123,11 +117,8 @@ msgstr ""
 msgid "Average of most recent 20 HEARTBEAT latencies in seconds."
 msgstr ""
 
-#: 0124a63448a04d09bceabbe0a56e9ad4 036633cf1fdc42ba93a48b21ba9acb09
-#: 15f431251e504476916f5401b3eabcf0 21a0e341554c4244a49b0b723301f8fc
-#: 2b2f5a6a6de94ee699bb6965bf262bd0 386aa5eafc2b4c1b83f7f87bd8c9c87b
-#: b4b9fb6ef0894b0b95bc06faa3e8c620 cca2eef9de4c41988818f576564c4e3a
-#: discord.player.FFmpegOpusAudio.from_probe:1
+#: 0124a63448a04d09bceabbe0a56e9ad4 2b2f5a6a6de94ee699bb6965bf262bd0
+#: cca2eef9de4c41988818f576564c4e3a discord.player.FFmpegOpusAudio.from_probe:1
 #: discord.player.FFmpegOpusAudio.probe:1
 #: discord.voice_client.VoiceClient.disconnect:1
 #: discord.voice_client.VoiceClient.move_to:1
@@ -145,31 +136,20 @@ msgstr ""
 
 #: ../../api/voice.rst 0683fdfd1bb2405aa95b2b4b2c0bbd1a
 #: 06d93b1e976b437e847218ce968f0293 07b51b94b0f44720be2a13ca0086ab66
-#: 11a61da9e14a4eac83035d9762df668a 170782bc8dac49cf85c15f8bd820fdce
-#: 1e6cefcdd84e40e9a18bfcce7bb99d64 221f54b949984748ab0ba4335a5489d0
 #: 234ab6e89ed44bf299fd9a9b6c03740e 2646ac699d59498f8a95fbdc8a0d9239
-#: 3151fce786ad4f619809a9c3b0f9280f 4da06b8539464fd7914552d93cc91452
-#: 4ff780af4f2d4047832ca6fd2fb69c1d 52372051be784eec985737e4b1a63e48
-#: 58475ca4bf0f412399121be3c74b7050 6e566ab77b634a078605db6e2267b8e7
-#: 6fbacc9e2b784528a38eaa2d676bbddd 842f6f1f3a3c4b6fbcea7bd6791fd09e
-#: 8771b3930fbe4b44b28b7e32de6036ca a0e56fae902348afaa3d88522fc6a165
-#: b3d3d728afd3400c96992e02f0d272f7 c79a00961d4842a8acb4b23dd0a780d1
-#: c9d8428298034204a7ab4ea957d0f6e1 d3ee0127c9a94ee183118b00b3885b54
-#: d880fe4362264a78b055f8853042db4d discord.player.FFmpegOpusAudio.from_probe
-#: ea83c92fc5ad425f90ecc0e31baf3f2f ee9592f37b57465499c3033adfcf68f4
-#: f2a653c8141d46fdbe33cb351ba19af8 f2b636d7a9e24d8e8b49f78d1b2e4900
-#: fa5bcb9db5c84928996fa5c02addb075 feb84d9eed6c4e908e12e23157aa4670 of
+#: 3151fce786ad4f619809a9c3b0f9280f 4ff780af4f2d4047832ca6fd2fb69c1d
+#: 58475ca4bf0f412399121be3c74b7050 842f6f1f3a3c4b6fbcea7bd6791fd09e
+#: 8771b3930fbe4b44b28b7e32de6036ca d880fe4362264a78b055f8853042db4d
+#: discord.player.FFmpegOpusAudio.from_probe ea83c92fc5ad425f90ecc0e31baf3f2f
+#: f2b636d7a9e24d8e8b49f78d1b2e4900 fa5bcb9db5c84928996fa5c02addb075 of
 msgid "Return type"
 msgstr ""
 
-#: 0ebe6629f33548aca669b37b29a40845 27ab56fb42554bcb96724dbd580097da
-#: 2f5356a8850141ef89065109e7ae2978 4ab12054d12a4439898aeda79a0ffa04
-#: 61534759588043399e891c911b5f3db3 6a64640d3165434a8b13b147a92f5bec
-#: 729b005c366f4f4c822b8bc5e2c466e6 72a72023fec44b2b8eafea45739fe0d3
-#: 785db422570a4def861b61e7bb64a738 9a9bff1263ae418c8ae68c2e23e0b3f7
-#: ae57b387bc984feab8f549402dd26036 b914d46b053b4af4a12e99411ae4111f
-#: b9398b8c3baf4badaaaf3efe5a013c04 discord.opus.load_opus:34
-#: discord.player.AudioSource.cleanup:7 discord.player.FFmpegAudio.cleanup:7
+#: 27ab56fb42554bcb96724dbd580097da 2f5356a8850141ef89065109e7ae2978
+#: 729b005c366f4f4c822b8bc5e2c466e6 785db422570a4def861b61e7bb64a738
+#: ae57b387bc984feab8f549402dd26036 b9398b8c3baf4badaaaf3efe5a013c04
+#: discord.opus.load_opus:34 discord.player.AudioSource.cleanup:7
+#: discord.player.FFmpegAudio.cleanup:7
 #: discord.player.PCMVolumeTransformer.cleanup:7
 #: discord.voice_client.VoiceClient.disconnect:7
 #: discord.voice_client.VoiceClient.move_to:9
@@ -182,7 +162,7 @@ msgstr ""
 #: discord.voice_client.VoiceProtocol.disconnect:11
 #: discord.voice_client.VoiceProtocol.on_voice_server_update:14
 #: discord.voice_client.VoiceProtocol.on_voice_state_update:14
-#: e232bb429cf140b3819b63938f75afaa fc569a544ec14408a5b129a075fe4692 of
+#: fc569a544ec14408a5b129a075fe4692 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
@@ -201,8 +181,7 @@ msgstr ""
 msgid "Indicates if the voice client is connected to voice."
 msgstr ""
 
-#: 28146b1e321f4406b70404110817a8d4 28552688575c4203b74fcd559f72956d
-#: 3b701c385cb547a6a11c23abdb4d3c10 53c368e1a52442cf8c4569c2730cb2b6
+#: 28146b1e321f4406b70404110817a8d4 3b701c385cb547a6a11c23abdb4d3c10
 #: 767c2c6c49084e0caa82953c0237857d 93a9aeb391524022b9bfb3b3a425106b
 #: discord.player.AudioSource.is_opus:4
 #: discord.player.FFmpegOpusAudio.is_opus:4
@@ -261,10 +240,8 @@ msgid "If False, None is returned and the function does not block."
 msgstr ""
 
 #: ../../api/voice.rst 07b869f2652f4453880532931e0146b8
-#: 1a1842ba50904c8e90560e0e2311f5e2 1b7d21b2367044c79adb064f19e07f07
-#: 3876e4149e7941698b0637877bbf309a 4a531e0220044095ab49b23d02bed1e5
-#: 5b7803a2e1d247959c819a77e6831756 7e5e1c4e93574828be02e609a6ff2ef5
-#: 97e4eeebc8584766b8472cc2fb858209 cecb7dc4cdef46e082ef7c10e8821e55
+#: 1a1842ba50904c8e90560e0e2311f5e2 3876e4149e7941698b0637877bbf309a
+#: 4a531e0220044095ab49b23d02bed1e5 5b7803a2e1d247959c819a77e6831756
 #: d007fcbd8757434b91652320071c7a09 discord.player.FFmpegOpusAudio.from_probe
 #: of
 msgid "Raises"
@@ -433,6 +410,16 @@ msgstr ""
 msgid "Encoding the data failed."
 msgstr ""
 
+#: 1b31cd5b6fa44ef8b1ed95d966efcddf discord.voice_client.VoiceClient.elapsed:1
+#: of
+msgid "Returns the elapsed time of the playing audio."
+msgstr ""
+
+#: 3b701c385cb547a6a11c23abdb4d3c10 discord.voice_client.VoiceClient.elapsed:4
+#: of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~datetime.timedelta\\``"
+msgstr ""
+
 #: discord.voice_client.VoiceProtocol:1 f2844a86f9fd4343a918929c51912b97 of
 msgid "A class that represents the Discord voice protocol."
 msgstr ""
@@ -591,38 +578,27 @@ msgstr ""
 msgid "The audio source reads are done in a separate thread."
 msgstr ""
 
-#: 43f562d474ac4f259f5972023ab8ed5e 675add47c72f4f398833a67d9f40191d
-#: 67765f2befd54922806d108acabf11dc 9da1fbf002de4b63875e3031da399d50
-#: discord.player.AudioSource.read:1 discord.player.FFmpegOpusAudio.read:1
-#: discord.player.FFmpegPCMAudio.read:1 discord.player.PCMAudio.read:1
-#: discord.player.PCMVolumeTransformer.read:1 e8e10259edc64c879644f1a9b201db6e
-#: of
+#: 43f562d474ac4f259f5972023ab8ed5e discord.player.AudioSource.read:1
+#: discord.player.FFmpegOpusAudio.read:1 discord.player.FFmpegPCMAudio.read:1
+#: discord.player.PCMAudio.read:1 discord.player.PCMVolumeTransformer.read:1 of
 msgid "Reads 20ms worth of audio."
 msgstr ""
 
-#: 2b98519b39494c03b8c9200db1d6a6cf 2d1d2696964848d29041d7ec229c47ea
-#: 58f4c65835214f0080d92cb708c5d81b 622981fd3609493ab6b287bc25e013ef
-#: discord.player.AudioSource.read:3 discord.player.FFmpegOpusAudio.read:3
-#: discord.player.FFmpegPCMAudio.read:3 discord.player.PCMAudio.read:3
-#: discord.player.PCMVolumeTransformer.read:3 e3a40f1afe8b4883b1c536cf435e7293
-#: of
+#: 622981fd3609493ab6b287bc25e013ef discord.player.AudioSource.read:3
+#: discord.player.FFmpegOpusAudio.read:3 discord.player.FFmpegPCMAudio.read:3
+#: discord.player.PCMAudio.read:3 discord.player.PCMVolumeTransformer.read:3 of
 msgid "Subclasses must implement this."
 msgstr ""
 
-#: 028b3a5cfc9d4c03be777fa025bbe90e 328fd72ba7f5414bbe2da58a9d00b5df
-#: 491f29403af749d29f65817e991ad0d8 b76c8c55963741aab1253004def750a9
-#: discord.player.AudioSource.read:5 discord.player.FFmpegOpusAudio.read:5
-#: discord.player.FFmpegPCMAudio.read:5 discord.player.PCMAudio.read:5
-#: discord.player.PCMVolumeTransformer.read:5 ef4ae5ce12c34064887e8328ae00b0a7
-#: of
+#: 328fd72ba7f5414bbe2da58a9d00b5df discord.player.AudioSource.read:5
+#: discord.player.FFmpegOpusAudio.read:5 discord.player.FFmpegPCMAudio.read:5
+#: discord.player.PCMAudio.read:5 discord.player.PCMVolumeTransformer.read:5 of
 msgid ""
 "If the audio is complete, then returning an empty :term:`py:bytes-like "
 "object` to signal this is the way to do so."
 msgstr ""
 
-#: 48d370c95fa84a8d9de06c098830922e 810791910e94420d82963ba06eef394b
-#: 88f35ac8d9da447cb483a6b809e12c79 a029ad04c1064ffda7caf9582997d2d0
-#: ce3e1975fc974db2a114fe56549b6bc1 discord.player.AudioSource.read:8
+#: a029ad04c1064ffda7caf9582997d2d0 discord.player.AudioSource.read:8
 #: discord.player.FFmpegOpusAudio.read:8 discord.player.FFmpegPCMAudio.read:8
 #: discord.player.PCMAudio.read:8 discord.player.PCMVolumeTransformer.read:8 of
 msgid ""
@@ -632,48 +608,38 @@ msgid ""
 "worth of audio)."
 msgstr ""
 
-#: ../../api/voice.rst 0a9acaf5f7ce499198d57d6632bf9596
-#: 2f7252b244004532b0e908a77d38f6b8 6d76efb6ea404cfc981cd37f90e8a27a
-#: a5945b62e8394839b7db89093a2c291d a6c6108c14654afc85fa299bd2e2d9d9
-#: d96374d07b1e4b93abdc3984aa2338a8 d98c0854b3da4474b294f6d01aa940ab
-#: dee8f0cd7c114339a6b21b0ebfe53d19 discord.player.FFmpegOpusAudio.from_probe
-#: of
+#: ../../api/voice.rst 6d76efb6ea404cfc981cd37f90e8a27a
+#: discord.player.FFmpegOpusAudio.from_probe of
 msgid "Returns"
 msgstr ""
 
-#: 0e2bd56840a142639a45c2d166f1fce2 371829d959f044f3ab0a82196195c124
-#: 799b9590449a4eddb9fa665c3767dff4 aa1dffcc093e4cd4a6794116ff9b5c9a
-#: d98131655fe1461c83ac202b820ea844 discord.player.AudioSource.read:13
+#: 799b9590449a4eddb9fa665c3767dff4 discord.player.AudioSource.read:13
 #: discord.player.FFmpegOpusAudio.read:13 discord.player.FFmpegPCMAudio.read:13
 #: discord.player.PCMAudio.read:13 discord.player.PCMVolumeTransformer.read:13
 #: of
 msgid "A bytes like object that represents the PCM or Opus data."
 msgstr ""
 
-#: 22df61c5286d495faaeabfccc2cfebb1 2305960da46f48f6a95b6593d34c1aac
-#: c886363fbf8a470a99ad6a99bc3760a8 discord.player.AudioSource.read:14
-#: discord.player.FFmpegOpusAudio.read:14 discord.player.FFmpegPCMAudio.read:14
-#: discord.player.PCMAudio.read:14 discord.player.PCMVolumeTransformer.read:14
-#: edb97626a1724e93b55584e44a7e4a44 febad82c34014a1f9680a5e84ccb5ccc of
+#: discord.player.AudioSource.read:14 discord.player.FFmpegOpusAudio.read:14
+#: discord.player.FFmpegPCMAudio.read:14 discord.player.PCMAudio.read:14
+#: discord.player.PCMVolumeTransformer.read:14 febad82c34014a1f9680a5e84ccb5ccc
+#: of
 msgid ":class:`bytes`"
 msgstr ""
 
-#: 441627e81b294f4e9712c623a70d3e00 6d11292606384b7aa2726296be6efa43
-#: discord.player.AudioSource.is_opus:1
+#: 6d11292606384b7aa2726296be6efa43 discord.player.AudioSource.is_opus:1
 #: discord.player.FFmpegOpusAudio.is_opus:1
-#: discord.player.FFmpegPCMAudio.is_opus:1 f933a708c92045868a9caa15f8015d92 of
+#: discord.player.FFmpegPCMAudio.is_opus:1 of
 msgid "Checks if the audio source is already encoded in Opus."
 msgstr ""
 
-#: 29e9300bf3e24bcfb0045c59fbaf93ac a6544280b0d94cf092b8461e4608eee8
-#: bbac2762b28c49e18fe322f9591280b4 discord.player.AudioSource.cleanup:1
+#: 29e9300bf3e24bcfb0045c59fbaf93ac discord.player.AudioSource.cleanup:1
 #: discord.player.FFmpegAudio.cleanup:1
 #: discord.player.PCMVolumeTransformer.cleanup:1 of
 msgid "Called when clean-up is needed to be done."
 msgstr ""
 
-#: 1b31cd5b6fa44ef8b1ed95d966efcddf 557038e96505404694c861b87a5076af
-#: 6d8eb37aadee4ea8ad39f10c48e9956f discord.player.AudioSource.cleanup:3
+#: 1b31cd5b6fa44ef8b1ed95d966efcddf discord.player.AudioSource.cleanup:3
 #: discord.player.FFmpegAudio.cleanup:3
 #: discord.player.PCMVolumeTransformer.cleanup:3 of
 msgid ""
@@ -704,8 +670,8 @@ msgid ""
 " this."
 msgstr ""
 
-#: 2b8ab32191da45798a3bea06b09cad1e 6bfee17debc94240a86d9d31ee71e75a
-#: discord.player.FFmpegOpusAudio:1 discord.player.FFmpegPCMAudio:1 of
+#: 2b8ab32191da45798a3bea06b09cad1e discord.player.FFmpegOpusAudio:1
+#: discord.player.FFmpegPCMAudio:1 of
 msgid "An audio source from FFmpeg (or AVConv)."
 msgstr ""
 
@@ -713,8 +679,8 @@ msgstr ""
 msgid "This launches a sub-process to a specific input file given."
 msgstr ""
 
-#: 40161dae93a5444592d3b38086c0bbd5 91b78b16596942698136b40beb390887
-#: discord.player.FFmpegOpusAudio:18 discord.player.FFmpegPCMAudio:7 of
+#: 91b78b16596942698136b40beb390887 discord.player.FFmpegOpusAudio:18
+#: discord.player.FFmpegPCMAudio:7 of
 msgid ""
 "You must have the ffmpeg or avconv executable in your path environment "
 "variable in order for this to work."
@@ -727,37 +693,37 @@ msgid ""
 "ffmpeg."
 msgstr ""
 
-#: b18d98307af54783b5509b299f373832 discord.player.FFmpegOpusAudio:43
-#: discord.player.FFmpegPCMAudio:16 ee979d778a514578afa221436f337ae6 of
+#: b18d98307af54783b5509b299f373832 discord.player.FFmpegOpusAudio:44
+#: discord.player.FFmpegPCMAudio:16 of
 msgid "The executable name (and path) to use. Defaults to ``ffmpeg``."
 msgstr ""
 
-#: 21ce334995aa4931bcc3071260ba9289 discord.player.FFmpegOpusAudio:46
-#: discord.player.FFmpegPCMAudio:19 f5acb595a683400e9c9246fb48d1b253 of
+#: discord.player.FFmpegOpusAudio:47 discord.player.FFmpegPCMAudio:19
+#: f5acb595a683400e9c9246fb48d1b253 of
 msgid ""
 "If ``True``, denotes that ``source`` parameter will be passed to the "
 "stdin of ffmpeg. Defaults to ``False``."
 msgstr ""
 
-#: 374ca46ede85471e8c4796af9955f286 discord.player.FFmpegOpusAudio:50
-#: discord.player.FFmpegPCMAudio:23 ef5575dc64624e11a2c1919f793f55d6 of
+#: discord.player.FFmpegOpusAudio:51 discord.player.FFmpegPCMAudio:23
+#: ef5575dc64624e11a2c1919f793f55d6 of
 msgid ""
 "A file-like object to pass to the Popen constructor. Could also be an "
 "instance of ``subprocess.PIPE``."
 msgstr ""
 
-#: 452e450be3f544b7bbb5e50227089276 66021a8ed46e44e0ad3a8d872261a124
-#: discord.player.FFmpegOpusAudio:54 discord.player.FFmpegPCMAudio:27 of
+#: 452e450be3f544b7bbb5e50227089276 discord.player.FFmpegOpusAudio:55
+#: discord.player.FFmpegPCMAudio:27 of
 msgid "Extra command line arguments to pass to ffmpeg before the ``-i`` flag."
 msgstr ""
 
-#: 79971e5fc9e6447cb18c13317097b842 b8cd968276cf470896aa34aaa8858222
-#: discord.player.FFmpegOpusAudio:57 discord.player.FFmpegPCMAudio:30 of
+#: b8cd968276cf470896aa34aaa8858222 discord.player.FFmpegOpusAudio:58
+#: discord.player.FFmpegPCMAudio:30 of
 msgid "Extra command line arguments to pass to ffmpeg after the ``-i`` flag."
 msgstr ""
 
-#: 732d7e069def4da7a6802b95b9c16ff7 cfe616123f1744e89d7e549cdae8baa1
-#: discord.player.FFmpegOpusAudio:60 discord.player.FFmpegPCMAudio:33 of
+#: 732d7e069def4da7a6802b95b9c16ff7 discord.player.FFmpegOpusAudio:61
+#: discord.player.FFmpegPCMAudio:33 of
 msgid "The subprocess failed to be created."
 msgstr ""
 
@@ -796,12 +762,13 @@ msgid ""
 "The codec to use to encode the audio data.  Normally this would be just "
 "``libopus``, but is used by :meth:`FFmpegOpusAudio.from_probe` to "
 "opportunistically skip pointlessly re-encoding Opus audio data by passing"
-" ``copy`` as the codec value.  Any values other than ``copy``, ``opus``, "
-"or ``libopus`` will be considered ``libopus``.  Defaults to ``libopus``."
-"  .. warning::      Do not provide this parameter unless you are certain "
-"that the audio input is     already Opus encoded.  For typical use "
-":meth:`FFmpegOpusAudio.from_probe`     should be used to determine the "
-"proper value for this parameter."
+" ``copy`` as the codec value.  Any values other than ``copy``, or "
+"``libopus`` will be considered ``libopus``. ``opus`` will also be "
+"considered ``libopus`` since the ``opus`` encoder is still in "
+"development. Defaults to ``libopus``.  .. warning::      Do not provide "
+"this parameter unless you are certain that the audio input is     already"
+" Opus encoded.  For typical use :meth:`FFmpegOpusAudio.from_probe`     "
+"should be used to determine the proper value for this parameter."
 msgstr ""
 
 #: c802b41b6d7c4883b9a394014bcc25c0 discord.player.FFmpegOpusAudio:30 of
@@ -809,11 +776,13 @@ msgid ""
 "The codec to use to encode the audio data.  Normally this would be just "
 "``libopus``, but is used by :meth:`FFmpegOpusAudio.from_probe` to "
 "opportunistically skip pointlessly re-encoding Opus audio data by passing"
-" ``copy`` as the codec value.  Any values other than ``copy``, ``opus``, "
-"or ``libopus`` will be considered ``libopus``.  Defaults to ``libopus``."
+" ``copy`` as the codec value.  Any values other than ``copy``, or "
+"``libopus`` will be considered ``libopus``. ``opus`` will also be "
+"considered ``libopus`` since the ``opus`` encoder is still in "
+"development. Defaults to ``libopus``."
 msgstr ""
 
-#: 09a411b1eaf34bc69f3bfbeb340af7d3 discord.player.FFmpegOpusAudio:38 of
+#: 09a411b1eaf34bc69f3bfbeb340af7d3 discord.player.FFmpegOpusAudio:39 of
 msgid ""
 "Do not provide this parameter unless you are certain that the audio input"
 " is already Opus encoded.  For typical use "
@@ -861,7 +830,7 @@ msgstr ""
 msgid ":class:`FFmpegOpusAudio`"
 msgstr ""
 
-#: 3053ad3525814d9b9594f43d09f6897f db6a307d1e144376a9adfd32cd860429
+#: 3053ad3525814d9b9594f43d09f6897f
 #: discord.player.FFmpegOpusAudio.from_probe:22
 #: discord.player.FFmpegOpusAudio.probe:16 of
 msgid "Invalid probe method, must be ``'native'`` or ``'fallback'``."
@@ -1022,4 +991,36 @@ msgstr ""
 #: 7e7adaac9a18484590ca895cd62bf0f4 discord.opus.is_loaded:7 of
 msgid ":class:`bool`"
 msgstr ""
+
+#~ msgid ""
+#~ "The codec to use to encode the "
+#~ "audio data.  Normally this would be "
+#~ "just ``libopus``, but is used by "
+#~ ":meth:`FFmpegOpusAudio.from_probe` to opportunistically"
+#~ " skip pointlessly re-encoding Opus "
+#~ "audio data by passing ``copy`` as "
+#~ "the codec value.  Any values other "
+#~ "than ``copy``, ``opus``, or ``libopus`` "
+#~ "will be considered ``libopus``.  Defaults "
+#~ "to ``libopus``.  .. warning::      Do "
+#~ "not provide this parameter unless you"
+#~ " are certain that the audio input "
+#~ "is     already Opus encoded.  For "
+#~ "typical use :meth:`FFmpegOpusAudio.from_probe`     "
+#~ "should be used to determine the "
+#~ "proper value for this parameter."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The codec to use to encode the "
+#~ "audio data.  Normally this would be "
+#~ "just ``libopus``, but is used by "
+#~ ":meth:`FFmpegOpusAudio.from_probe` to opportunistically"
+#~ " skip pointlessly re-encoding Opus "
+#~ "audio data by passing ``copy`` as "
+#~ "the codec value.  Any values other "
+#~ "than ``copy``, ``opus``, or ``libopus`` "
+#~ "will be considered ``libopus``.  Defaults "
+#~ "to ``libopus``."
+#~ msgstr ""
 
