@@ -1875,8 +1875,6 @@ class Guild(Hashable):
 
         features: list[GuildFeature] = self.features.copy()
 
-        features_modified: bool = False
-
         if community is not MISSING:
             if community:
                 if (
@@ -1896,7 +1894,6 @@ class Guild(Hashable):
                     if "public_updates_channel_id" in fields:
                         fields["public_updates_channel_id"] = None
                     features.remove("COMMUNITY")
-            features_modified = True
 
         if disable_invites is not MISSING:
             if disable_invites:
@@ -1905,7 +1902,6 @@ class Guild(Hashable):
             else:
                 if "INVITES_DISABLED" in features:
                     features.remove("INVITES_DISABLED")
-            features_modified = True
 
         if discoverable is not MISSING:
             if discoverable:
@@ -1914,7 +1910,6 @@ class Guild(Hashable):
             else:
                 if "DISCOVERABLE" in features:
                     features.remove("DISCOVERABLE")
-            features_modified = True
 
         if raid_alerts is not MISSING:
             if raid_alerts:
@@ -1923,7 +1918,6 @@ class Guild(Hashable):
             else:
                 if "RAID_ALERTS_DISABLED" not in features:
                     features.append("RAID_ALERTS_DISABLED")
-            features_modified = True
 
         if enable_activity_feed is not MISSING:
             if enable_activity_feed:
@@ -1936,9 +1930,8 @@ class Guild(Hashable):
                     features.remove("ACTIVITY_FEED_ENABLED_BY_USER")
                 if "ACTIVITY_FEED_DISABLED_BY_USER" not in features:
                     features.append("ACTIVITY_FEED_DISABLED_BY_USER")
-            features_modified = True
 
-        if features_modified:
+        if self.features != features:
             fields["features"] = features
 
         data = await http.edit_guild(self.id, reason=reason, **fields)
