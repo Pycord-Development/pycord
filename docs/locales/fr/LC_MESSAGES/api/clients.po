@@ -84,7 +84,7 @@ msgid "A decorator that converts the provided method into an :class:`.Applicatio
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, adds it to the bot, then returns it."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid "Callable[..., :class:`ApplicationCommand`]"
 msgstr "Callable[..., :class:`ApplicationCommand`]"

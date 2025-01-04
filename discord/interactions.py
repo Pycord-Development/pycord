@@ -37,7 +37,7 @@ from .enums import (
     try_enum,
 )
 from .errors import ClientException, InteractionResponded, InvalidArgument
-from .file import File
+from .file import File, VoiceMessage
 from .flags import MessageFlags
 from .guild import Guild
 from .member import Member
@@ -359,6 +359,48 @@ class Interaction:
             "token": self.token,
         }
         return Webhook.from_state(data=payload, state=self._state)
+
+    def is_guild_authorised(self) -> bool:
+        """:class:`bool`: Checks if the interaction is guild authorised.
+
+        There is an alias for this called :meth:`.is_guild_authorized`.
+
+        .. versionadded:: 2.7
+        """
+        if self.guild_id:
+            return self.authorizing_integration_owners.guild_id == self.guild_id
+        return False
+
+    def is_user_authorised(self) -> bool:
+        """:class:`bool`: Checks if the interaction is user authorised.
+
+        There is an alias for this called :meth:`.is_user_authorized`.
+
+        .. versionadded:: 2.7
+        """
+        if self.user:
+            return self.authorizing_integration_owners.user_id == self.user.id
+
+        # This return should not be called but to make sure it returns the expected value
+        return False
+
+    def is_guild_authorized(self) -> bool:
+        """:class:`bool`: Checks if the interaction is guild authorized.
+
+        There is an alias for this called :meth:`.is_guild_authorised`.
+
+        .. versionadded:: 2.7
+        """
+        return self.is_guild_authorised()
+
+    def is_user_authorized(self) -> bool:
+        """:class:`bool`: Checks if the interaction is user authorized.
+
+        There is an alias for this called :meth:`.is_user_authorised`.
+
+        .. versionadded:: 2.7
+        """
+        return self.is_user_authorised()
 
     async def original_response(self) -> InteractionMessage:
         """|coro|
@@ -915,8 +957,7 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        if ephemeral:
-            payload["flags"] = 64
+        flags = MessageFlags(ephemeral=ephemeral)
 
         if view is not None:
             payload["components"] = view.to_components()
@@ -953,6 +994,11 @@ class InteractionResponse:
                 )
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
+
+            if any(isinstance(file, VoiceMessage) for file in files):
+                flags = flags + MessageFlags(is_voice_message=True)
+
+        payload["flags"] = flags.value
 
         parent = self._parent
         adapter = async_context.get()
