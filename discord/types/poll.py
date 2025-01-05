@@ -26,7 +26,8 @@ from __future__ import annotations
 
 from typing import Literal, TypedDict
 
-from .._typed_dict import NotRequired
+from typing_extensions import NotRequired
+
 from .emoji import Emoji
 
 PollLayoutType = Literal[1]
