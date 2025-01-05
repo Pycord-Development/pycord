@@ -64,6 +64,7 @@ if TYPE_CHECKING:
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
+    from .types.monetization import Entitlement as EntitlementPayload
     from .types.threads import Thread as ThreadPayload
     from .types.user import PartialUser as PartialUserPayload
     from .user import User
@@ -584,9 +585,14 @@ class GuildIterator(_AsyncIterator["Guild"]):
         Object before which all guilds must be.
     after: Optional[Union[:class:`abc.Snowflake`, :class:`datetime.datetime`]]
         Object after which all guilds must be.
+    with_counts: :class:`bool`
+        Whether to include member count information in guilds. This fills the
+        :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
+        fields.
+        Defaults to ``True``.
     """
 
-    def __init__(self, bot, limit, before=None, after=None):
+    def __init__(self, bot, limit, before=None, after=None, with_counts=True):
         if isinstance(before, datetime.datetime):
             before = Object(id=time_snowflake(before, high=False))
         if isinstance(after, datetime.datetime):
@@ -596,6 +602,7 @@ class GuildIterator(_AsyncIterator["Guild"]):
         self.limit = limit
         self.before = before
         self.after = after
+        self.with_counts = with_counts
 
         self._filter = None
 
@@ -653,7 +660,9 @@ class GuildIterator(_AsyncIterator["Guild"]):
     async def _retrieve_guilds_before_strategy(self, retrieve):
         """Retrieve guilds using before parameter."""
         before = self.before.id if self.before else None
-        data: list[GuildPayload] = await self.get_guilds(retrieve, before=before)
+        data: list[GuildPayload] = await self.get_guilds(
+            retrieve, before=before, with_counts=self.with_counts
+        )
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -663,7 +672,9 @@ class GuildIterator(_AsyncIterator["Guild"]):
     async def _retrieve_guilds_after_strategy(self, retrieve):
         """Retrieve guilds using after parameter."""
         after = self.after.id if self.after else None
-        data: list[GuildPayload] = await self.get_guilds(retrieve, after=after)
+        data: list[GuildPayload] = await self.get_guilds(
+            retrieve, after=after, with_counts=self.with_counts
+        )
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -988,11 +999,21 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.guild_id = guild_id
         self.exclude_ended = exclude_ended
 
+        self._filter = None
+
+        if self.before and self.after:
+            self._retrieve_entitlements = self._retrieve_entitlements_before_strategy
+            self._filter = lambda e: int(e["id"]) > self.after.id
+        elif self.after:
+            self._retrieve_entitlements = self._retrieve_entitlements_after_strategy
+        else:
+            self._retrieve_entitlements = self._retrieve_entitlements_before_strategy
+
         self.state = state
         self.get_entitlements = state.http.list_entitlements
         self.entitlements = asyncio.Queue()
 
-    async def next(self) -> BanEntry:
+    async def next(self) -> Entitlement:
         if self.entitlements.empty():
             await self.fill_entitlements()
 
@@ -1014,30 +1035,57 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         if not self._get_retrieve():
             return
 
+        data = await self._retrieve_entitlements(self.retrieve)
+
+        if self._filter:
+            data = list(filter(self._filter, data))
+
+        if len(data) < 100:
+            self.limit = 0  # terminate loop
+
+        for element in data:
+            await self.entitlements.put(Entitlement(data=element, state=self.state))
+
+    async def _retrieve_entitlements(self, retrieve) -> list[Entitlement]:
+        """Retrieve entitlements and update next parameters."""
+        raise NotImplementedError
+
+    async def _retrieve_entitlements_before_strategy(
+        self, retrieve: int
+    ) -> list[EntitlementPayload]:
+        """Retrieve entitlements using before parameter."""
         before = self.before.id if self.before else None
-        after = self.after.id if self.after else None
         data = await self.get_entitlements(
             self.state.application_id,
             before=before,
-            after=after,
-            limit=self.retrieve,
+            limit=retrieve,
             user_id=self.user_id,
             guild_id=self.guild_id,
             sku_ids=self.sku_ids,
             exclude_ended=self.exclude_ended,
         )
+        if data:
+            if self.limit is not None:
+                self.limit -= retrieve
+            self.before = Object(id=int(data[-1]["id"]))
+        return data
 
-        if not data:
-            # no data, terminate
-            return
-
-        if self.limit:
-            self.limit -= self.retrieve
-
-        if len(data) < 100:
-            self.limit = 0  # terminate loop
-
-        self.after = Object(id=int(data[-1]["id"]))
-
-        for element in reversed(data):
-            await self.entitlements.put(Entitlement(data=element, state=self.state))
+    async def _retrieve_entitlements_after_strategy(
+        self, retrieve: int
+    ) -> list[EntitlementPayload]:
+        """Retrieve entitlements using after parameter."""
+        after = self.after.id if self.after else None
+        data = await self.get_entitlements(
+            self.state.application_id,
+            after=after,
+            limit=retrieve,
+            user_id=self.user_id,
+            guild_id=self.guild_id,
+            sku_ids=self.sku_ids,
+            exclude_ended=self.exclude_ended,
+        )
+        if data:
+            if self.limit is not None:
+                self.limit -= retrieve
+            self.after = Object(id=int(data[-1]["id"]))
+        return data

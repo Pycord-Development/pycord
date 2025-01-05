@@ -144,7 +144,7 @@ msgid "The URL of the webhook."
 msgstr "The URL of the webhook."
 
 msgid "Raises"
-msgstr "Verursacht"
+msgstr "Raises"
 
 msgid "The URL is invalid."
 msgstr "The URL is invalid."

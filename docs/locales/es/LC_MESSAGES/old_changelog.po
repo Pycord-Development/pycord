@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Changelog"
-msgstr "Registro de cambios"
+msgstr "Changelog"
 
 msgid "This page keeps a detailed human-friendly rendering of what's new and changed in specific versions."
 msgstr "This page keeps a detailed human-friendly rendering of what's new and changed in specific versions."
@@ -27,10 +27,10 @@ msgid "Fully deprecated/removed store channels"
 msgstr "Fully deprecated/removed store channels"
 
 msgid "Buttons and Select Menus"
-msgstr "Botones y menús seleccionables"
+msgstr "Buttons and Select Menus"
 
 msgid "Slash commands, User commands, and Message commands (:issue:`31`)"
-msgstr "Comandos de barra, comandos de usuario y comandos de mensaje (:issue:`31`)"
+msgstr "Slash commands, User commands, and Message commands (:issue:`31`)"
 
 msgid "Message Content privileged intent (:issue:`332`)"
 msgstr "Message Content privileged intent (:issue:`332`)"
@@ -120,7 +120,7 @@ msgid "v1.7.3"
 msgstr "v1.7.3"
 
 msgid "Bug Fixes"
-msgstr "Corrección de errores"
+msgstr "Bug Fixes"
 
 msgid "Fix a crash involving guild uploaded stickers"
 msgstr "Fix a crash involving guild uploaded stickers"
@@ -150,13 +150,13 @@ msgid "v1.7.0"
 msgstr "v1.7.0"
 
 msgid "This version is mainly for improvements and bug fixes. This is more than likely the last major version in the 1.x series. Work after this will be spent on v2.0. As a result, **this is the last version to support Python 3.5**. Likewise, **this is the last version to support user bots**."
-msgstr "Esta versión es principalmente para mejoras y correcciones de errores. Esta es más que probable la última versión importante de la serie 1.x. El trabajo después de esto se usará en v2. Como resultado, **esta es la última versión que soporta Python 3.5**. Del mismo modo, **esta es la última versión que soporta los bots de usuario**."
+msgstr "This version is mainly for improvements and bug fixes. This is more than likely the last major version in the 1.x series. Work after this will be spent on v2.0. As a result, **this is the last version to support Python 3.5**. Likewise, **this is the last version to support user bots**."
 
 msgid "Development of v2.0 will have breaking changes and support for newer API features."
 msgstr "Development of v2.0 will have breaking changes and support for newer API features."
 
 msgid "New Features"
-msgstr "Nuevas características"
+msgstr "New Features"
 
 msgid "Add support for stage channels via :class:`StageChannel` (:dpy-issue:`6602`, :dpy-issue:`6608`)"
 msgstr "Add support for stage channels via :class:`StageChannel` (:dpy-issue:`6602`, :dpy-issue:`6608`)"
@@ -981,7 +981,7 @@ msgid "Fix fetching invites in guilds that the user is not in."
 msgstr "Fix fetching invites in guilds that the user is not in."
 
 msgid "Fix the channel returned from :meth:`Client.fetch_channel` raising when sending messages. (:dpy-issue:`2531`)"
-msgstr "Corregir que el canal devuelto desde :meth:`Client.fetch_channel` lance un error al enviar mensajes. (:dpy-issue:`2531`)"
+msgstr "Fix the channel returned from :meth:`Client.fetch_channel` raising when sending messages. (:dpy-issue:`2531`)"
 
 msgid "Fix compatibility warnings when using the Python 3.9 alpha."
 msgstr "Fix compatibility warnings when using the Python 3.9 alpha."
@@ -1161,7 +1161,7 @@ msgid "|commands| Add support for calling a :class:`~.ext.commands.Command` as a
 msgstr "|commands| Add support for calling a :class:`~.ext.commands.Command` as a regular function."
 
 msgid "|tasks| :meth:`Loop.add_exception_type <.ext.tasks.Loop.add_exception_type>` now allows multiple exceptions to be set. (:dpy-issue:`2333`)"
-msgstr "|tasks| :meth:`Loop.add_exception_type <.ext.tasks.Loop.add_exception_type>` ahora permite establecer múltiples excepciones. (:dpy-issue:`2333`)"
+msgstr "|tasks| :meth:`Loop.add_exception_type <.ext.tasks.Loop.add_exception_type>` now allows multiple exceptions to be set. (:dpy-issue:`2333`)"
 
 msgid "|tasks| Add :attr:`Loop.next_iteration <.ext.tasks.Loop.next_iteration>` property. (:dpy-issue:`2305`)"
 msgstr "|tasks| Add :attr:`Loop.next_iteration <.ext.tasks.Loop.next_iteration>` property. (:dpy-issue:`2305`)"
@@ -1317,7 +1317,7 @@ msgid "Raise the max encoder bitrate to 512kbps to account for nitro boosting. (
 msgstr "Raise the max encoder bitrate to 512kbps to account for nitro boosting. (:dpy-issue:`2232`)"
 
 msgid "Properly propagate exceptions in :meth:`Client.run`. (:dpy-issue:`2237`)"
-msgstr "Propagar correctamente las excepciones en :meth:`Client.run`. (:dpy-issue:`2237`)"
+msgstr "Properly propagate exceptions in :meth:`Client.run`. (:dpy-issue:`2237`)"
 
 msgid "|commands| Ensure cooldowns are properly copied when used in cog level ``command_attrs``."
 msgstr "|commands| Ensure cooldowns are properly copied when used in cog level ``command_attrs``."
@@ -1563,7 +1563,7 @@ msgid "Improve the performance of internal enum creation in the library by about
 msgstr "Improve the performance of internal enum creation in the library by about 5x."
 
 msgid "Make the output of ``python -m discord --version`` a bit more useful."
-msgstr "Hace que la salida de ``python -m discord --version`` sea un poco más útil."
+msgstr "Make the output of ``python -m discord --version`` a bit more useful."
 
 msgid "The loop cleanup facility has been rewritten again."
 msgstr "The loop cleanup facility has been rewritten again."

@@ -12,52 +12,52 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Application Commands"
-msgstr "Команды приложения"
+msgstr "Application Commands"
 
 msgid "Command Permission Decorators"
-msgstr "Декораторы разрешений команд"
+msgstr "Command Permission Decorators"
 
 msgid "A decorator that limits the usage of an application command to members with certain permissions."
-msgstr "Декоратор, который ограничивает использование команды приложения для участников с определенными правами."
+msgstr "A decorator that limits the usage of an application command to members with certain permissions."
 
 msgid "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
-msgstr "Передаваемые разрешения должны совпадать со свойствами :class:`.discord.Permissions`."
+msgstr "The permissions passed in must be exactly like the properties shown under :class:`.discord.Permissions`."
 
 msgid "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
-msgstr "Эти разрешения могут быть изменены администраторами сервера для каждой гильдии. Как таковые, они являются лишь \"значениями по умолчанию\", как следует из названия. Если вы хотите убедиться, что пользователь **всегда** имеет указанные права независимо от этого, вам следует использовать внутреннюю проверку, такую как :func:`~.ext.commands.has_permissions`."
+msgstr "These permissions can be updated by server administrators per-guild. As such, these are only \"defaults\", as the name suggests. If you want to make sure that a user **always** has the specified permissions regardless, you should use an internal check such as :func:`~.ext.commands.has_permissions`."
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "An argument list of permissions to check for."
-msgstr "Список аргументов для проверки разрешений."
+msgstr "An argument list of permissions to check for."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\``"
 
 msgid "Example"
-msgstr "Пример"
+msgstr "Example"
 
 msgid "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
-msgstr "Декоратор, ограничивающий использование команды приложения контекстом гильдии. Команда не может быть использована в каналах личных сообщений."
+msgstr "A decorator that limits the usage of an application command to guild contexts. The command won't be able to be used in private message channels."
 
 msgid "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
-msgstr "Декоратор, ограничивающий использование команды приложения каналами и пользователями 18+. В гильдиях команда может быть использована только в каналах, помеченных как NSFW. В личных сообщениях пользователи должны разрешить использование команд с возрастными ограничениями через настройки приватности."
+msgstr "A decorator that limits the usage of an application command to 18+ channels and users. In guilds, the command will only be able to be used in channels marked as NSFW. In DMs, users must have opted into age-restricted commands via privacy settings."
 
 msgid "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
-msgstr "Обратите внимание, что приложения, предназначенные для размещения в Каталоге Приложений, не могут содержать NSFW-команды."
+msgstr "Note that apps intending to be listed in the App Directory cannot have NSFW commands."
 
 msgid "Commands"
-msgstr "Команды"
+msgstr "Commands"
 
 msgid "Shortcut Decorators"
-msgstr "Короткие декораторы"
+msgstr "Shortcut Decorators"
 
 msgid "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
-msgstr "Идентификатор (ключ): Декоратор, которые превращает функцию в класс :class:`.ApplicationCommand`. Если быть более конкретным, то обычно в один из классов :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. Точный класс зависит от ``cls`` параметра. По-умолчанию, атрибут ``description`` принимается автоматически с docsting функции и \"очищается\" через ``inspect.cleandoc``. Если docstring является ``bytes``, то он перекодируется в :class:`str` с помощью UTF-8 кодирования. Атрибут ``name`` также по-умолчанию принимает значение неименного названия функции."
+msgstr "A decorator that transforms a function into an :class:`.ApplicationCommand`. More specifically, usually one of :class:`.SlashCommand`, :class:`.UserCommand`, or :class:`.MessageCommand`. The exact class depends on the ``cls`` parameter. By default, the ``description`` attribute is received automatically from the docstring of the function and is cleaned up with the use of ``inspect.cleandoc``. If the docstring is ``bytes``, then it is decoded into :class:`str` using utf-8 encoding. The ``name`` attribute also defaults to the function name unchanged."
 
 msgid "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
 msgstr "The class to construct with. By default, this is :class:`.SlashCommand`. You usually do not change this."
@@ -66,7 +66,7 @@ msgid "Keyword arguments to pass into the construction of the class denoted by `
 msgstr "Keyword arguments to pass into the construction of the class denoted by ``cls``."
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
 msgstr "A decorator that converts the provided method into an :class:`.ApplicationCommand`, or subclass of it."
@@ -75,7 +75,7 @@ msgid "Callable[..., :class:`.ApplicationCommand`]"
 msgstr "Callable[..., :class:`.ApplicationCommand`]"
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "If the function is not a coroutine or is already a command."
 msgstr "If the function is not a coroutine or is already a command."
@@ -117,7 +117,7 @@ msgid "Callable[..., :class:`.MessageCommand`]"
 msgstr "Callable[..., :class:`.MessageCommand`]"
 
 msgid "Objects"
-msgstr "Объекты"
+msgstr "Objects"
 
 msgid "Checks whether the command is currently on cooldown."
 msgstr "Checks whether the command is currently on cooldown."
@@ -210,16 +210,16 @@ msgid "This is the root parent ID. For example, in ``/one two three`` the qualif
 msgstr "This is the root parent ID. For example, in ``/one two three`` the qualified ID would return ``one.id``."
 
 msgid "A class that implements the protocol for a slash command."
-msgstr "Класс, который реализует протокол для slash-команды."
+msgstr "A class that implements the protocol for a slash command."
 
 msgid "These are not created manually, instead they are created via the decorator or functional interface."
-msgstr "Они не создаются вручную, вместо этого они автоматически создаются с помощью декоратора или функционального интерфейса."
+msgstr "These are not created manually, instead they are created via the decorator or functional interface."
 
 msgid "The name of the command."
-msgstr "Название команды."
+msgstr "The name of the command."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -357,7 +357,7 @@ msgid "An iterator that recursively walks through all slash commands and groups 
 msgstr "An iterator that recursively walks through all slash commands and groups in this group."
 
 msgid "Yields"
-msgstr "Выход"
+msgstr "Yields"
 
 msgid ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
 msgstr ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
@@ -393,7 +393,7 @@ msgid ":class:`MessageCommand`"
 msgstr ":class:`MessageCommand`"
 
 msgid "Options"
-msgstr "Опции"
+msgstr "Options"
 
 msgid "A decorator that can be used instead of typehinting :class:`.Option`."
 msgstr "A decorator that can be used instead of typehinting :class:`.Option`."
@@ -471,10 +471,10 @@ msgid "The description localizations for this option. The values of this should 
 msgstr "The description localizations for this option. The values of this should be ``\"locale\": \"description\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
 
 msgid "Examples"
-msgstr "Примеры"
+msgstr "Examples"
 
 msgid "Basic usage: ::"
-msgstr "Базовое использование: ::"
+msgstr "Basic usage: ::"
 
 msgid "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."
 msgstr "Represents a class that can be passed as the ``input_type`` for an :class:`Option` class."

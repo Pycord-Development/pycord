@@ -13,6 +13,11 @@ Application Info
 .. autoclass:: PartialAppInfo()
     :members:
 
+.. attributetable:: AppInstallParams
+
+.. autoclass:: AppInstallParams()
+    :members:
+
 .. attributetable:: Team
 
 .. autoclass:: Team()

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2024-09-06 23:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: ../../api/application_info.rst:4 74cc9bfd5756481fb562646a5aa70d5d
 msgid "Application Info"
@@ -32,33 +32,26 @@ msgstr ""
 msgid "The application ID."
 msgstr ""
 
-#: 013f2f903b8043b7ab1845f5f84bbe26 0674149be2a944ca999ae49f5e601996
-#: 069b37b065144aebb132d31f645d12c2 0af3be474a06423e977f2b441f84cd59
+#: 0674149be2a944ca999ae49f5e601996 0af3be474a06423e977f2b441f84cd59
 #: 0beb967a69ef45ceb7763eeb3dc4c123 181b416bd32a4c09a0a558bccc6edb1f
 #: 19576e9482234cf2aa10aee0803837ee 2025f53e11bd4695875937f126fc3d5d
-#: 21b80740c5a44c28902b1147c2097f18 29b3cee3bbe84611b068b6b259bd0580
-#: 385296ec5bd14426bc90f124bd4e133c 3f5abcc229fc4eedbbd75cd841d5ffe6
-#: 4a30598bc54c4a3aab96264ecd6d8ee9 5457fab930b0423aae0f654e0c5c4636
-#: 56e392ad0d3243deaf3e3cb944f6c042 57950b71f84747a1934ec1e67a3b0da6
-#: 6fc93b77dea445ffa9533c19add272e3 703da5fbb2b64cfabeb8bb91296bf423
-#: 7528d93cc1f84431b0810b651a652439 7b68c801a7ec4e5789d94ebd2f9141cd
-#: 8a2bdc95647948cfb921dc46c63ab9c0 8a71354038764ef894e1dcc7d9fecd94
-#: 92ed3996583c43d59eac823d7dfd43b6 987d58c35c3e4c338a33f6a2fdf5a7ca
-#: 9f0fc6db0cfd4bc9b00d2518bd3f98a2 a92646588c9f4cc0ae6e61772d477ab2
-#: bf705be8aecf4e6b9dc48e2f7600a388 cfb243f065514d19b860b62d1ccaa127
-#: d393db4b36b34bf8b9ccacec2284d786 de414c3332244706ae4557f3a87dfe8c
-#: discord.appinfo.AppInfo discord.appinfo.PartialAppInfo discord.team.Team
-#: discord.team.TeamMember e3a96ae485014a2fb9be751474f5fcc2
-#: e5ba1ed92fc74de5a6950d97e6ff1a88 e8d765c6eae84e9fb157dae64cad6d74
-#: eb9e87675d7448bd9c87c88d4a1120fa f36425ac77184829b251c51ecf9fb3bf of
+#: 21b80740c5a44c28902b1147c2097f18 385296ec5bd14426bc90f124bd4e133c
+#: 3f5abcc229fc4eedbbd75cd841d5ffe6 703da5fbb2b64cfabeb8bb91296bf423
+#: 7528d93cc1f84431b0810b651a652439 8a2bdc95647948cfb921dc46c63ab9c0
+#: 8a71354038764ef894e1dcc7d9fecd94 92ed3996583c43d59eac823d7dfd43b6
+#: 987d58c35c3e4c338a33f6a2fdf5a7ca 9f0fc6db0cfd4bc9b00d2518bd3f98a2
+#: a92646588c9f4cc0ae6e61772d477ab2 bf705be8aecf4e6b9dc48e2f7600a388
+#: cfb243f065514d19b860b62d1ccaa127 d393db4b36b34bf8b9ccacec2284d786
+#: discord.appinfo.AppInfo discord.appinfo.AppInstallParams
+#: discord.appinfo.PartialAppInfo discord.team.Team discord.team.TeamMember
+#: e3a96ae485014a2fb9be751474f5fcc2 e5ba1ed92fc74de5a6950d97e6ff1a88
+#: e8d765c6eae84e9fb157dae64cad6d74 eb9e87675d7448bd9c87c88d4a1120fa of
 msgid "type"
 msgstr ""
 
-#: 28dcab5434c6413fb97f42588f4f39ea 3f80eef1cfd346a9bd2e6c43cc081baf
-#: 457812db4b314881a926ee03e86a9898 9e634374a91345b49183cdc6fd9e24f2
+#: 28dcab5434c6413fb97f42588f4f39ea 9e634374a91345b49183cdc6fd9e24f2
 #: discord.appinfo.AppInfo:7 discord.appinfo.PartialAppInfo:9
-#: discord.team.Team:7 discord.team.Team:19 discord.team.TeamMember:33
-#: fcbc9af0bba843ee8657a882e3a09cd3 of
+#: discord.team.Team:7 discord.team.Team:19 discord.team.TeamMember:33 of
 msgid ":class:`int`"
 msgstr ""
 
@@ -67,14 +60,10 @@ msgstr ""
 msgid "The application name."
 msgstr ""
 
-#: 0c48a2fb50114deea8bd0f6949c2c9c2 2cdaedee07e34da18f8d4c3a51981a4e
-#: 326981a57a1e457e8b448cfcfc2ee4a3 3f30e80dd97841a5b80cbc2f3b87cacd
-#: 5d459ea63fdb4d3cac7c675933be4037 5db2364da5be4f2281478dcf2be04e23
-#: 979cc869319543979b872a000e8ffe54 a324d24a8b594416aacdaafb5e674459
-#: b18f16bc10504511852b2d398c7332ef b643514396354533a6acfa1127ad419f
-#: dca178caa46944bd96eacce75e750097 discord.appinfo.AppInfo:13
-#: discord.appinfo.AppInfo:33 discord.appinfo.AppInfo:62
-#: discord.appinfo.AppInfo:71 discord.appinfo.PartialAppInfo:15
+#: 3f30e80dd97841a5b80cbc2f3b87cacd 5d459ea63fdb4d3cac7c675933be4037
+#: a324d24a8b594416aacdaafb5e674459 b643514396354533a6acfa1127ad419f
+#: discord.appinfo.AppInfo:13 discord.appinfo.AppInfo:33
+#: discord.appinfo.AppInfo:62 discord.appinfo.PartialAppInfo:15
 #: discord.appinfo.PartialAppInfo:21 discord.appinfo.PartialAppInfo:34
 #: discord.appinfo.PartialAppInfo:41 discord.team.Team:13
 #: discord.team.TeamMember:27 discord.team.TeamMember:43
@@ -127,75 +116,112 @@ msgid "A list of RPC origin URLs, if RPC is enabled."
 msgstr ""
 
 #: 7b9060949a424ef68146ea7243a6ae14 discord.appinfo.AppInfo:53
+#: discord.appinfo.AppInfo:130 discord.appinfo.AppInfo:164
 #: discord.appinfo.PartialAppInfo:27 fe8d034329534fc9a8b8e5226e7009cf of
 msgid "Optional[List[:class:`str`]]"
 msgstr ""
 
-#: 0a1ea5c4c37743259ba5f6ce858d1720 2e7625a1090a480e841f2bbf9c2de937
-#: discord.appinfo.AppInfo:57 discord.appinfo.PartialAppInfo:31 of
-msgid ""
-"If this application is a game sold on Discord, this field will be the "
-"summary field for the store page of its primary SKU."
-msgstr ""
-
-#: 25824f9683ad4427b8de0c38d4051a04 c3de806ffd2541109c481affee79c8f8
-#: discord.appinfo.AppInfo:66 discord.appinfo.PartialAppInfo:38 of
+#: 25824f9683ad4427b8de0c38d4051a04 discord.appinfo.AppInfo:57
+#: discord.appinfo.PartialAppInfo:38 of
 msgid ""
 "The hex encoded key for verification in interactions and the GameSDK's "
 "`GetTicket <https://discord.com/developers/docs/game-"
 "sdk/applications#getticket>`_."
 msgstr ""
 
-#: b4b25b0e55f0433e83562bdd22959cd2 discord.appinfo.AppInfo:75 of
+#: b4b25b0e55f0433e83562bdd22959cd2 discord.appinfo.AppInfo:66 of
 msgid ""
 "If this application is a game sold on Discord, this field will be the "
 "guild to which it has been linked to."
 msgstr ""
 
-#: d542b7fb344647adabfa084a333ae9c1 discord.appinfo.AppInfo:80
-#: discord.appinfo.AppInfo:90 ecff4b129f4f45509cc190e1a82c3ce6 of
+#: d542b7fb344647adabfa084a333ae9c1 discord.appinfo.AppInfo:71
+#: discord.appinfo.AppInfo:81 discord.appinfo.AppInfo:114
+#: discord.appinfo.AppInfo:122 ecff4b129f4f45509cc190e1a82c3ce6 of
 msgid "Optional[:class:`int`]"
 msgstr ""
 
-#: a16580ffeec747d596b4e9077fe2b2e3 discord.appinfo.AppInfo:84 of
+#: a16580ffeec747d596b4e9077fe2b2e3 discord.appinfo.AppInfo:75 of
 msgid ""
 "If this application is a game sold on Discord, this field will be the id "
 "of the \"Game SKU\" that is created, if it exists."
 msgstr ""
 
-#: 3ea1bf80312b4ed6b5c59a1c5e7dc3c8 discord.appinfo.AppInfo:94 of
+#: 3ea1bf80312b4ed6b5c59a1c5e7dc3c8 discord.appinfo.AppInfo:85 of
 msgid ""
 "If this application is a game sold on Discord, this field will be the URL"
 " slug that links to the store page."
 msgstr ""
 
-#: 14554aaaeafc4c07887d3af848a4648f 3e73e9e7460e4b319ed0f37536125521
-#: 5c5f38add34f465c92bc538636bdadd7 9157f2f39f01457387245ac79a958496
-#: d284414d044b4587b7bb242d9468f4c1 d8ea2bd900a0489684084903b6c36dde
-#: discord.appinfo.AppInfo:99 discord.appinfo.AppInfo:107
-#: discord.appinfo.AppInfo:115 discord.appinfo.PartialAppInfo:47
+#: 5c5f38add34f465c92bc538636bdadd7 d284414d044b4587b7bb242d9468f4c1
+#: d8ea2bd900a0489684084903b6c36dde discord.appinfo.AppInfo:90
+#: discord.appinfo.AppInfo:98 discord.appinfo.AppInfo:106
+#: discord.appinfo.AppInfo:138 discord.appinfo.AppInfo:146
+#: discord.appinfo.AppInfo:172 discord.appinfo.PartialAppInfo:47
 #: discord.appinfo.PartialAppInfo:53 discord.team.TeamMember:57 of
 msgid "Optional[:class:`str`]"
 msgstr ""
 
-#: 2acfd418ba5246fcb21ef2b3596edbe6 732e1ba0b3de4383a9ef9b83cf245d73
-#: discord.appinfo.AppInfo:103 discord.appinfo.PartialAppInfo:45 of
+#: 732e1ba0b3de4383a9ef9b83cf245d73 discord.appinfo.AppInfo:94
+#: discord.appinfo.PartialAppInfo:45 of
 msgid "The application's terms of service URL, if set."
 msgstr ""
 
-#: 645cd576ee2c4680b5a56d946d532840 658b05ab5b334ae1bb899028050da520
-#: discord.appinfo.AppInfo:111 discord.appinfo.PartialAppInfo:51 of
+#: 645cd576ee2c4680b5a56d946d532840 discord.appinfo.AppInfo:102
+#: discord.appinfo.PartialAppInfo:51 of
 msgid "The application's privacy policy URL, if set."
 msgstr ""
 
-#: ../../api/application_info.rst 0205a0d7e3004bae839d1cc65a73e96a
-#: 7c5cc8a7f2c5408bbe7c6be139abb163 c7cec794944443f5ba534b9bd63acbb7
-#: e7d8765c380a4c9eb0944c511eed77ab
+#: adf3fb5776fd41fda256044bd2576a3e discord.appinfo.AppInfo:110 of
+msgid "The approximate count of guilds to which the app has been added, if any."
+msgstr ""
+
+#: discord.appinfo.AppInfo:118 f8b4071dc3dd4a9fab0619d91537fe11 of
+msgid "The approximate count of users who have installed the application, if any."
+msgstr ""
+
+#: 022bcf33c194457593a47061acf91c6f discord.appinfo.AppInfo:126 of
+msgid "The list of redirect URIs for the application, if set."
+msgstr ""
+
+#: 3c57fdc17dbb4950a36effe20e3075fd discord.appinfo.AppInfo:134 of
+msgid "The interactions endpoint URL for the application, if set."
+msgstr ""
+
+#: af795468cfe54b3985aa6a584ecd3df5 discord.appinfo.AppInfo:142 of
+msgid "The role connection verification URL for the application, if set."
+msgstr ""
+
+#: 15be78fe305447a791fe15f66d24a448 discord.appinfo.AppInfo:150 of
+msgid ""
+"The settings for the application's default in-app authorization link, if "
+"set."
+msgstr ""
+
+#: discord.appinfo.AppInfo:154 fe8d034329534fc9a8b8e5226e7009cf of
+msgid "Optional[List[:class:`AppInstallParams`]]"
+msgstr ""
+
+#: 5aa4818e6fc94ae8b07e18b6166583ec discord.appinfo.AppInfo:158 of
+msgid ""
+"The list of tags describing the content and functionality of the app, if "
+"set."
+msgstr ""
+
+#: 6247ad0381374a3d8b72aad9bc74ac79 discord.appinfo.AppInfo:160 of
+msgid "Maximium of 5 tags."
+msgstr ""
+
+#: 2e43d10963c04c7882079894d1dd2197 discord.appinfo.AppInfo:168 of
+msgid "The default custom authorization URL for the application, if set."
+msgstr ""
+
+#: ../../api/application_info.rst e7d8765c380a4c9eb0944c511eed77ab
 msgid "Parameters"
 msgstr ""
 
-#: 0ff389dd282443c0a171af3d78775fa8 bff94f7e897b4f60867da6300aa80604
-#: discord.AppInfo.icon:1 discord.PartialAppInfo.icon:1 of
+#: bff94f7e897b4f60867da6300aa80604 discord.AppInfo.icon:1
+#: discord.PartialAppInfo.icon:1 of
 msgid "Retrieves the application's icon asset, if any."
 msgstr ""
 
@@ -213,10 +239,43 @@ msgid ""
 "guild to which it has been linked."
 msgstr ""
 
+#: 2e7625a1090a480e841f2bbf9c2de937 discord.AppInfo.summary:1
+#: discord.appinfo.PartialAppInfo:31 of
+msgid ""
+"If this application is a game sold on Discord, this field will be the "
+"summary field for the store page of its primary SKU."
+msgstr ""
+
+#: 8a24fea123be49278e938d6a56b56fa7 discord.AppInfo.summary:4 of
+msgid "It currently returns an empty string."
+msgstr ""
+
 #: discord.appinfo.PartialAppInfo:1 f36a0f6452e24fdc8ed50b109685437f of
 msgid ""
 "Represents a partial AppInfo given by "
 ":func:`~discord.abc.GuildChannel.create_invite`"
+msgstr ""
+
+#: discord.appinfo.AppInstallParams:1 e869493a8e3a40ee84113fecf945de45 of
+msgid ""
+"Represents the settings for the custom authorization URL of an "
+"application."
+msgstr ""
+
+#: dfec489acaf44259a32930cf192d8d29 discord.appinfo.AppInstallParams:7 of
+msgid "The list of OAuth2 scopes for adding the application to a guild."
+msgstr ""
+
+#: 5c5f38add34f465c92bc538636bdadd7 discord.appinfo.AppInstallParams:9 of
+msgid "List[:class:`str`]"
+msgstr ""
+
+#: 5d0bdf97472648cf98f816e2d62e4726 discord.appinfo.AppInstallParams:13 of
+msgid "The permissions to request for the bot role in the guild."
+msgstr ""
+
+#: d7cc240edc334834aedd925553167159 discord.appinfo.AppInstallParams:15 of
+msgid ":class:`Permissions`"
 msgstr ""
 
 #: 11145d31bf024c7bab80025c64b7c96e discord.team.Team:1 of

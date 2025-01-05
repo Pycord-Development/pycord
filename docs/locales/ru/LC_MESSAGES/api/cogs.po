@@ -12,175 +12,175 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Cogs"
-msgstr "Коги"
+msgstr "Cogs"
 
 msgid "The base class that all cogs must inherit from."
-msgstr "Базовый класс, от которого должны наследоваться все коги."
+msgstr "The base class that all cogs must inherit from."
 
 msgid "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
-msgstr "Ког - это набор команд, слушателей и необязательных состояний, которые помогают сгруппировать команды. Более подробную информацию о них можно найти на странице :ref:`ext_commands_cogs`."
+msgstr "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
 
 msgid "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
-msgstr "При наследовании от этого класса опции, указанные в :class:`CogMeta`, одинаково актуальны и здесь."
+msgstr "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
 
 msgid "Returns"
-msgstr "Возвращает"
+msgstr "Returns"
 
 msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
-msgstr ":class:`list` включающий в себя :class:`.ApplicationCommand`\\ы которые определены внутри этого кога.  .. note::      Сюда не входят подкоманды."
+msgstr "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
 
 msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog."
-msgstr ":class:`list` включающий в себя :class:`.ApplicationCommand`\\ы которые определены внутри этого кога."
+msgstr "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog."
 
 msgid "This does not include subcommands."
-msgstr "Сюда не входят подкоманды."
+msgstr "This does not include subcommands."
 
 msgid "Return type"
-msgstr "Тип возврата"
+msgstr "Return type"
 
 msgid "List[:class:`.ApplicationCommand`]"
 msgstr "List[:class:`.ApplicationCommand`]"
 
 msgid "Returns the cog's specified name, not the class name."
-msgstr "Возвращает указанное имя кога, а не имя класса."
+msgstr "Returns the cog's specified name, not the class name."
 
 msgid "Returns the cog's description, typically the cleaned docstring."
-msgstr "Возвращает описание когда, обычно очищенный docstring."
+msgstr "Returns the cog's description, typically the cleaned docstring."
 
 msgid "An iterator that recursively walks through this cog's commands and subcommands."
-msgstr "Итератор, который рекурсивно перебирает команды и подкоманды этого кога."
+msgstr "An iterator that recursively walks through this cog's commands and subcommands."
 
 msgid "Yields"
-msgstr "Выход"
+msgstr "Yields"
 
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
-msgstr "Union[:class:`.Command`, :class:`.Group`] -- Команда или группа из кога."
+msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 
 msgid "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."
-msgstr "Возвращает :class:`list` (имя, функция) слушателей, которые определены в этом коге."
+msgstr "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."
 
 msgid "The listeners defined in this cog."
-msgstr "Слушатели, определенные в этом коге."
+msgstr "The listeners defined in this cog."
 
 msgid "List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]"
 msgstr "List[Tuple[:class:`str`, :ref:`coroutine <coroutine>`]]"
 
 msgid "A decorator that marks a function as a listener."
-msgstr "Декоратор, который помечает функцию как слушателя."
+msgstr "A decorator that marks a function as a listener."
 
 msgid "This is the cog equivalent of :meth:`.Bot.listen`."
-msgstr "Это эквивалентно :meth:`.Bot.listen`."
+msgstr "This is the cog equivalent of :meth:`.Bot.listen`."
 
 msgid "Parameters"
-msgstr "Параметры"
+msgstr "Parameters"
 
 msgid "The name of the event being listened to. If not provided, it defaults to the function's name."
-msgstr "Имя прослушиваемого события. Если оно не указано, то по умолчанию используется имя функции."
+msgstr "The name of the event being listened to. If not provided, it defaults to the function's name."
 
 msgid "If this listener should only be called once after each cog load. Defaults to false."
-msgstr "Если этот слушатель должен вызываться только один раз после каждой загрузки кога."
+msgstr "If this listener should only be called once after each cog load. Defaults to false."
 
 msgid "Raises"
-msgstr "Вызывает"
+msgstr "Raises"
 
 msgid "The function is not a coroutine function or a string was not passed as     the name."
-msgstr "Функция не является короутинной функцией или в качестве имени не была передана строка."
+msgstr "The function is not a coroutine function or a string was not passed as     the name."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FuncT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FuncT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\)\\]`"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FuncT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\)\\]\\, \\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`FuncT\\`\\`\\, bound\\= \\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ \\\\\\[\\:py\\:data\\:\\`...\\<Ellipsis\\>\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\)\\]`"
 
 msgid "Checks whether the cog has an error handler. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Проверяет, есть ли у кога обработчик ошибок. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Checks whether the cog has an error handler. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "A special method that is called when the cog gets removed."
-msgstr "Специальный метод, который вызывается, когда ког удаляется."
+msgstr "A special method that is called when the cog gets removed."
 
 msgid "This function **cannot** be a coroutine. It must be a regular function."
-msgstr "Эта функция **не может** быть короутиной. Она должна быть обычной функцией."
+msgstr "This function **cannot** be a coroutine. It must be a regular function."
 
 msgid "Subclasses must replace this if they want special unloading behaviour."
-msgstr "Подклассы должны заменить ее, если им нужно особое поведение при выгрузке кога."
+msgstr "Subclasses must replace this if they want special unloading behaviour."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 
 msgid "A special method that registers as a :meth:`.Bot.check_once` check."
-msgstr "Специальный метод, который регистрируется как проверка :meth:`.Bot.check_once`."
+msgstr "A special method that registers as a :meth:`.Bot.check_once` check."
 
 msgid "This function **can** be a coroutine and must take a sole parameter, ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`."
-msgstr "Эта функция **может** быть короутиной и должна принимать единственный параметр, ``ctx``, представляющий собой :class:`.Context` или :class:`.ApplicationContext`."
+msgstr "This function **can** be a coroutine and must take a sole parameter, ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`."
 
 msgid "The invocation context."
-msgstr "Контекст вызова."
+msgstr "The invocation context."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "A special method that registers as a :meth:`.Bot.check` check."
-msgstr "Специальный метод, который регистрируется как проверка:meth:`.Bot.check`."
+msgstr "A special method that registers as a :meth:`.Bot.check` check."
 
 msgid "A special method that registers as a :func:`~discord.ext.commands.check` for every command and subcommand in this cog."
-msgstr "Специальный метод, который регистрируется как :func:`~discord.ext.commands.check` для каждой команды и подкоманды в этом коге."
+msgstr "A special method that registers as a :func:`~discord.ext.commands.check` for every command and subcommand in this cog."
 
 msgid "A special method that is called whenever an error is dispatched inside this cog."
-msgstr "Специальный метод, который вызывается всякий раз, когда внутри этого кога происходит ошибка."
+msgstr "A special method that is called whenever an error is dispatched inside this cog."
 
 msgid "This is similar to :func:`.on_command_error` except only applying to the commands inside this cog."
-msgstr "Это похоже на :func:`.on_command_error`, только применяется к командам внутри этого кога."
+msgstr "This is similar to :func:`.on_command_error` except only applying to the commands inside this cog."
 
 msgid "This **must** be a coroutine."
-msgstr "Это **должно** быть короутиной."
+msgstr "This **must** be a coroutine."
 
 msgid "The invocation context where the error happened."
-msgstr "Контекст вызова, в котором произошла ошибка."
+msgstr "The invocation context where the error happened."
 
 msgid "The error that happened."
-msgstr "Ошибка, которая произошла."
+msgstr "The error that happened."
 
 msgid "A special method that acts as a cog local pre-invoke hook."
-msgstr "Специальный метод, который действует как локальный хук кога предварительного вызова."
+msgstr "A special method that acts as a cog local pre-invoke hook."
 
 msgid "This is similar to :meth:`.ApplicationCommand.before_invoke`."
-msgstr "Это похоже на :meth:`.ApplicationCommand.before_invoke`."
+msgstr "This is similar to :meth:`.ApplicationCommand.before_invoke`."
 
 msgid "A special method that acts as a cog local post-invoke hook."
-msgstr "Специальный метод, который действует как локальный хук кога после вызова."
+msgstr "A special method that acts as a cog local post-invoke hook."
 
 msgid "This is similar to :meth:`.ApplicationCommand.after_invoke`."
-msgstr "Это похоже на :meth:`.ApplicationCommand.after_invoke`."
+msgstr "This is similar to :meth:`.ApplicationCommand.after_invoke`."
 
 msgid "A metaclass for defining a cog."
-msgstr "Метакласс для определения кога."
+msgstr "A metaclass for defining a cog."
 
 msgid "Note that you should probably not use this directly. It is exposed purely for documentation purposes along with making custom metaclasses to intermix with other metaclasses such as the :class:`abc.ABCMeta` metaclass."
-msgstr "Обратите внимание, что вам, вероятно, не следует использовать его напрямую. Он используется исключительно в целях документации, а также для создания пользовательских метаклассов для смешивания с другими метаклассами, такими как метакласс :class:`abc.ABCMeta`."
+msgstr "Note that you should probably not use this directly. It is exposed purely for documentation purposes along with making custom metaclasses to intermix with other metaclasses such as the :class:`abc.ABCMeta` metaclass."
 
 msgid "For example, to create an abstract cog mixin class, the following would be done."
-msgstr "Например, чтобы создать абстрактный класс cog mixin, нужно сделать следующее."
+msgstr "For example, to create an abstract cog mixin class, the following would be done."
 
 msgid "When passing an attribute of a metaclass that is documented below, note that you must pass it as a keyword-only argument to the class creation like the following example:"
-msgstr "При передаче атрибута метакласса, который документирован ниже, обратите внимание, что вы должны передавать его как аргумент создания класса, содержащий только ключевое слово, как показано в следующем примере:"
+msgstr "When passing an attribute of a metaclass that is documented below, note that you must pass it as a keyword-only argument to the class creation like the following example:"
 
 msgid "The cog name. By default, it is the name of the class with no modification."
-msgstr "Имя кога. По умолчанию это имя класса без изменений."
+msgstr "The cog name. By default, it is the name of the class with no modification."
 
 msgid "type"
-msgstr "тип"
+msgstr "type"
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The cog description. By default, it is the cleaned docstring of the class."
-msgstr "Описание кога. По умолчанию это очищенный docstring класса."
+msgstr "The cog description. By default, it is the cleaned docstring of the class."
 
 msgid "A list of attributes to apply to every command inside this cog. The dictionary is passed into the :class:`Command` options at ``__init__``. If you specify attributes inside the command attribute in the class, it will override the one specified inside this attribute. For example:"
-msgstr "Список атрибутов, применяемых к каждой команде внутри этого кога. Словарь передается в опции :class:`Command`` при ``__init__``. Если вы укажете атрибуты внутри атрибута command в классе, то он будет переопределять тот, который указан внутри этого атрибута. Например:"
+msgstr "A list of attributes to apply to every command inside this cog. The dictionary is passed into the :class:`Command` options at ``__init__``. If you specify attributes inside the command attribute in the class, it will override the one specified inside this attribute. For example:"
 
 msgid ":class:`dict`"
 msgstr ":class:`dict`"
 
 msgid "A shortcut to :attr:`.command_attrs`, what ``guild_ids`` should all application commands have in the cog. You can override this by setting ``guild_ids`` per command."
-msgstr "Сокращение для :attr:`.command_attrs`, какие ``guild_ids`` должны быть у всех команд приложения в cog. Вы можете переопределить это, установив ``guild_ids`` для каждой команды."
+msgstr "A shortcut to :attr:`.command_attrs`, what ``guild_ids`` should all application commands have in the cog. You can override this by setting ``guild_ids`` per command."
 
 msgid "Optional[List[:class:`int`]]"
 msgstr "Optional[List[:class:`int`]]"

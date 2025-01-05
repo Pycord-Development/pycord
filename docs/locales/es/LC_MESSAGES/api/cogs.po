@@ -51,7 +51,7 @@ msgid "An iterator that recursively walks through this cog's commands and subcom
 msgstr "An iterator that recursively walks through this cog's commands and subcommands."
 
 msgid "Yields"
-msgstr "Genera"
+msgstr "Yields"
 
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
@@ -81,7 +81,7 @@ msgid "If this listener should only be called once after each cog load. Defaults
 msgstr "If this listener should only be called once after each cog load. Defaults to false."
 
 msgid "Raises"
-msgstr "Errores"
+msgstr "Raises"
 
 msgid "The function is not a coroutine function or a string was not passed as     the name."
 msgstr "The function is not a coroutine function or a string was not passed as     the name."
@@ -111,7 +111,7 @@ msgid "This function **can** be a coroutine and must take a sole parameter, ``ct
 msgstr "This function **can** be a coroutine and must take a sole parameter, ``ctx``, to represent the :class:`.Context` or :class:`.ApplicationContext`."
 
 msgid "The invocation context."
-msgstr "El contexto de invocación."
+msgstr "The invocation context."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"

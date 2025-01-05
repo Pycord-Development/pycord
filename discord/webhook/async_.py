@@ -47,6 +47,7 @@ from ..errors import (
     InvalidArgument,
     NotFound,
 )
+from ..file import VoiceMessage
 from ..flags import MessageFlags
 from ..http import Route
 from ..message import Attachment, Message
@@ -501,19 +502,22 @@ class AsyncWebhookAdapter:
             "type": type,
         }
 
-        if data is not None:
-            payload["data"] = data
+        payload["data"] = data if data is not None else {}
         form = [{"name": "payload_json"}]
         attachments = []
         files = files or []
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -522,7 +526,8 @@ class AsyncWebhookAdapter:
                     "content_type": "application/octet-stream",
                 }
             )
-        payload["attachments"] = attachments
+        if attachments:
+            payload["data"]["attachments"] = attachments
         form[0]["value"] = utils._to_json(payload)
 
         route = Route(
@@ -644,8 +649,9 @@ def handle_message_parameters(
         payload["embeds"] = [] if embed is None else [embed.to_dict()]
     if content is not MISSING:
         payload["content"] = str(content) if content is not None else None
+    _attachments = []
     if attachments is not MISSING:
-        payload["attachments"] = [a.to_dict() for a in attachments]
+        _attachments = [a.to_dict() for a in attachments]
 
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
@@ -657,8 +663,10 @@ def handle_message_parameters(
     if username:
         payload["username"] = username
 
-    flags = MessageFlags(suppress_embeds=suppress, ephemeral=ephemeral)
-    payload["flags"] = flags.value
+    flags = MessageFlags(
+        suppress_embeds=suppress,
+        ephemeral=ephemeral,
+    )
 
     if applied_tags is not MISSING:
         payload["applied_tags"] = applied_tags
@@ -674,32 +682,45 @@ def handle_message_parameters(
         payload["allowed_mentions"] = previous_allowed_mentions.to_dict()
 
     multipart = []
+    multipart_files = []
     if file is not MISSING:
         files = [file]
 
     if files:
-        multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
-        payload = None
-        if len(files) == 1:
-            file = files[0]
-            multipart.append(
+        voice_message = False
+        for index, file in enumerate(files):
+            multipart_files.append(
                 {
-                    "name": "file",
+                    "name": f"files[{index}]",
                     "value": file.fp,
                     "filename": file.filename,
                     "content_type": "application/octet-stream",
                 }
             )
-        else:
-            for index, file in enumerate(files):
-                multipart.append(
-                    {
-                        "name": f"file{index}",
-                        "value": file.fp,
-                        "filename": file.filename,
-                        "content_type": "application/octet-stream",
-                    }
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                voice_message = True
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
                 )
+            _attachments.append(attachment_info)
+        if voice_message:
+            flags = flags + MessageFlags(is_voice_message=True)
+
+    if _attachments:
+        payload["attachments"] = _attachments
+
+    payload["flags"] = flags.value
+
+    if multipart_files:
+        multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
+        payload = None
+        multipart += multipart_files
 
     return ExecuteWebhookParameters(payload=payload, multipart=multipart, files=files)
 
@@ -798,6 +819,12 @@ class _WebhookState:
     def create_user(self, data):
         # state parameter is artificial
         return BaseUser(state=self, data=data)  # type: ignore
+
+    def store_poll(self, poll: Poll, message_id: int):
+        if self._parent is not None:
+            return self._parent.store_poll(poll, message_id)
+        # state parameter is artificial
+        return None
 
     @property
     def http(self):

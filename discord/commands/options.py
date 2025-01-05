@@ -39,6 +39,7 @@ from ..channel import (
     Thread,
     VoiceChannel,
 )
+from ..commands import ApplicationContext
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
@@ -198,7 +199,7 @@ class Option:
         enum_choices = []
         input_type_is_class = isinstance(input_type, type)
         if input_type_is_class and issubclass(input_type, (Enum, DiscordEnum)):
-            if description is None:
+            if description is None and input_type.__doc__ is not None:
                 description = inspect.cleandoc(input_type.__doc__)
                 if description and len(description) > 100:
                     description = description[:97] + "..."
@@ -209,7 +210,9 @@ class Option:
                     )
             enum_choices = [OptionChoice(e.name, e.value) for e in input_type]
             value_class = enum_choices[0].value.__class__
-            if all(isinstance(elem.value, value_class) for elem in enum_choices):
+            if value_class in SlashCommandOptionType.__members__ and all(
+                isinstance(elem.value, value_class) for elem in enum_choices
+            ):
                 input_type = SlashCommandOptionType.from_datatype(
                     enum_choices[0].value.__class__
                 )
@@ -224,6 +227,13 @@ class Option:
             self.input_type = input_type
         else:
             from ..ext.commands import Converter
+
+            if isinstance(input_type, tuple) and any(
+                issubclass(op, ApplicationContext) for op in input_type
+            ):
+                input_type = next(
+                    op for op in input_type if issubclass(op, ApplicationContext)
+                )
 
             if (
                 isinstance(input_type, Converter)

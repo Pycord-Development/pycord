@@ -36,7 +36,7 @@ msgid "This does not include subcommands."
 msgstr "This does not include subcommands."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid "List[:class:`.ApplicationCommand`]"
 msgstr "List[:class:`.ApplicationCommand`]"

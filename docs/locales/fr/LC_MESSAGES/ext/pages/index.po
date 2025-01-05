@@ -18,7 +18,7 @@ msgid "This module provides an easy pagination system with buttons, page groups,
 msgstr "Ce module fournit un système de pagination simple avec des boutons, des groupes de pages, et un support pour des vues customisées."
 
 msgid "Example usage in a cog:"
-msgstr "Usage d'exemple dans un cog:"
+msgstr "Example usage in a cog:"
 
 msgid "API Reference"
 msgstr "Référence de l'API"
@@ -42,10 +42,10 @@ msgid "The embeds of the page. Corresponds to the :class:`discord.Message.embeds
 msgstr "Les embeds de la page. Correspond à l'attribut :class:`discord.Message.embeds`."
 
 msgid "A list of local files to be shown with the page."
-msgstr "Une liste de fichier locaux affichés sur la page."
+msgstr "Une liste de fichiers locaux affichés sur la page."
 
 msgid "The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator."
-msgstr "La vue customisée affichée lorsque la page est visible. Passe outre l'attribut `custom_view` du paginateur principal."
+msgstr "The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator."
 
 msgid "|coro|"
 msgstr "|coro|"
@@ -60,7 +60,7 @@ msgid "Updates :class:`discord.File` objects so that they can be sent multiple t
 msgstr "Met à jour l'objet :class:`discord.File` pour pouvoir les envoyer plusieurs fois. Ceci est appelé en interne à chaque fois qu'une page est envoyée."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"

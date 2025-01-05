@@ -24,7 +24,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from .._typed_dict import NotRequired, TypedDict
+from typing_extensions import NotRequired, TypedDict
+
 from .snowflake import Snowflake
 
 AutoModTriggerType = Literal[1, 2, 3, 4, 5]

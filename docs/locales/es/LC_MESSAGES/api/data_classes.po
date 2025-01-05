@@ -966,7 +966,7 @@ msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr "The reason for deleting the message. Shows up on the audit log."
 
 msgid "Raises"
-msgstr "Errores"
+msgstr "Raises"
 
 msgid "You do not have proper permissions to delete the message."
 msgstr "You do not have proper permissions to delete the message."
@@ -1719,7 +1719,7 @@ msgid "For pagination, answers are sorted by member."
 msgstr "For pagination, answers are sorted by member."
 
 msgid "Yields"
-msgstr "Genera"
+msgstr "Yields"
 
 msgid "Union[:class:`User`, :class:`Member`] -- The member (if retrievable) or the user that has voted with this answer. The case where it can be a :class:`Member` is in a guild message context. Sometimes it can be a :class:`User` if the member has left the guild."
 msgstr "Union[:class:`User`, :class:`Member`] -- The member (if retrievable) or the user that has voted with this answer. The case where it can be a :class:`Member` is in a guild message context. Sometimes it can be a :class:`User` if the member has left the guild."
@@ -1827,10 +1827,10 @@ msgid "Wraps up the Discord Application flags."
 msgstr "Wraps up the Discord Application flags."
 
 msgid "Checks if two ApplicationFlags are equal."
-msgstr "Comprueba si dos ApplicationFlags son iguales."
+msgstr "Checks if two ApplicationFlags are equal."
 
 msgid "Checks if two ApplicationFlags are not equal."
-msgstr "Comprueba si dos ApplicationFlags no son iguales."
+msgstr "Checks if two ApplicationFlags are not equal."
 
 msgid "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs. Note that aliases are not shown."
 msgstr "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for example, constructed as a dict or a list of pairs. Note that aliases are not shown."
@@ -1959,10 +1959,10 @@ msgid "Wraps up the Discord User Public flags."
 msgstr "Wraps up the Discord User Public flags."
 
 msgid "Checks if two PublicUserFlags are equal."
-msgstr "Comprueba si dos PublicUserFlags son iguales."
+msgstr "Checks if two PublicUserFlags are equal."
 
 msgid "Checks if two PublicUserFlags are not equal."
-msgstr "Comprueba si dos PublicUserFlags no son iguales."
+msgstr "Checks if two PublicUserFlags are not equal."
 
 msgid "Returns ``True`` if the user is a Discord Employee."
 msgstr "Returns ``True`` if the user is a Discord Employee."
@@ -2028,10 +2028,10 @@ msgid "Wraps up the Discord Channel flags."
 msgstr "Wraps up the Discord Channel flags."
 
 msgid "Checks if two ChannelFlags are equal."
-msgstr "Comprueba si dos ChannelFlags son iguales."
+msgstr "Checks if two ChannelFlags are equal."
 
 msgid "Checks if two ChannelFlags are not equal."
-msgstr "Comprueba si dos ChannelFlags no son iguales."
+msgstr "Checks if two ChannelFlags are not equal."
 
 msgid "Returns ``True`` if the thread is pinned to the top of its parent forum channel."
 msgstr "Returns ``True`` if the thread is pinned to the top of its parent forum channel."
@@ -2043,10 +2043,10 @@ msgid "Wraps up the Discord SKU flags."
 msgstr "Wraps up the Discord SKU flags."
 
 msgid "Checks if two SKUFlags are equal."
-msgstr "Comprueba si dos SKUFlags son iguales."
+msgstr "Checks if two SKUFlags are equal."
 
 msgid "Checks if two SKUFlags are not equal."
-msgstr "Comprueba si dos SKUFlags no son iguales."
+msgstr "Checks if two SKUFlags are not equal."
 
 msgid "Returns ``True`` if the SKU is available for purchase."
 msgstr "Returns ``True`` if the SKU is available for purchase."
@@ -2061,10 +2061,10 @@ msgid "Wraps up the Discord Member flags."
 msgstr "Wraps up the Discord Member flags."
 
 msgid "Checks if two MemberFlags are equal."
-msgstr "Comprueba si dos MemberFlags son iguales."
+msgstr "Checks if two MemberFlags are equal."
 
 msgid "Checks if two MemberFlags are not equal."
-msgstr "Comprueba si dos MemberFlags no son iguales."
+msgstr "Checks if two MemberFlags are not equal."
 
 msgid "Returns ``True`` if the member left and rejoined the guild."
 msgstr "Returns ``True`` if the member left and rejoined the guild."
@@ -2085,10 +2085,10 @@ msgid "Wraps up the Discord Role flags."
 msgstr "Wraps up the Discord Role flags."
 
 msgid "Checks if two RoleFlags are equal."
-msgstr "Comprueba si dos RoleFlags son iguales."
+msgstr "Checks if two RoleFlags are equal."
 
 msgid "Checks if two RoleFlags are not equal."
-msgstr "Comprueba si dos RoleFlags no son iguales."
+msgstr "Checks if two RoleFlags are not equal."
 
 msgid "Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`."
 msgstr "Returns ``True`` if the role is selectable in one of the guild's :class:`~discord.OnboardingPrompt`."
@@ -2103,10 +2103,10 @@ msgid "There is an alias for this called Color."
 msgstr "There is an alias for this called Color."
 
 msgid "Checks if two colours are equal."
-msgstr "Comprueba si dos colores son iguales."
+msgstr "Checks if two colours are equal."
 
 msgid "Checks if two colours are not equal."
-msgstr "Comprueba si dos colores no son iguales."
+msgstr "Checks if two colours are not equal."
 
 msgid "Return the colour's hash."
 msgstr "Return the colour's hash."
@@ -2262,13 +2262,13 @@ msgid "The theme colour to apply, must be one of \"dark\", \"light\", or \"amole
 msgstr "The theme colour to apply, must be one of \"dark\", \"light\", or \"amoled\"."
 
 msgid "Activity"
-msgstr "Actividad"
+msgstr "Activity"
 
 msgid "Represents an activity in Discord."
-msgstr "Representa una actividad en Discord."
+msgstr "Represents an activity in Discord."
 
 msgid "This could be an activity such as streaming, playing, listening or watching."
-msgstr "Esto podría ser una actividad como transmitiendo, jugando, escuchando o viendo."
+msgstr "This could be an activity such as streaming, playing, listening or watching."
 
 msgid "For memory optimisation purposes, some activities are offered in slimmed down versions:"
 msgstr "For memory optimisation purposes, some activities are offered in slimmed down versions:"
@@ -2406,10 +2406,10 @@ msgid "This is typically displayed via **Playing** on the official Discord clien
 msgstr "This is typically displayed via **Playing** on the official Discord client."
 
 msgid "Checks if two games are equal."
-msgstr "Comprueba si dos juegos son iguales."
+msgstr "Checks if two games are equal."
 
 msgid "Checks if two games are not equal."
-msgstr "Comprueba si dos juegos no son iguales."
+msgstr "Checks if two games are not equal."
 
 msgid "Returns the game's hash."
 msgstr "Returns the game's hash."
@@ -2439,10 +2439,10 @@ msgid "This is typically displayed via **Streaming** on the official Discord cli
 msgstr "This is typically displayed via **Streaming** on the official Discord client."
 
 msgid "Checks if two streams are equal."
-msgstr "Comprueba si dos transmisiones son iguales."
+msgstr "Checks if two streams are equal."
 
 msgid "Checks if two streams are not equal."
-msgstr "Comprueba si dos transmisiones no son iguales."
+msgstr "Checks if two streams are not equal."
 
 msgid "Returns the stream's hash."
 msgstr "Returns the stream's hash."
@@ -2463,7 +2463,7 @@ msgid "The game being streamed."
 msgstr "The game being streamed."
 
 msgid "The stream's URL."
-msgstr "El URL de la transmisión."
+msgstr "The stream's URL."
 
 msgid "A dictionary comprised of similar keys than those in :attr:`Activity.assets`."
 msgstr "A dictionary comprised of similar keys than those in :attr:`Activity.assets`."
@@ -2481,7 +2481,7 @@ msgid "Represents a Custom activity from Discord."
 msgstr "Represents a Custom activity from Discord."
 
 msgid "Checks if two activities are equal."
-msgstr "Comprueba si dos actividades son iguales."
+msgstr "Checks if two activities are equal."
 
 msgid "Checks if two activities are not equal."
 msgstr "Checks if two activities are not equal."

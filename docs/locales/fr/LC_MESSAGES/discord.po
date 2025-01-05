@@ -18,58 +18,58 @@ msgid "In order to work with the library and the Discord API in general, we must
 msgstr "Dans le but de travailler avec la bibliothèque et l'API de Discord en général, nous devons d'abord créer un compte de Bot Discord."
 
 msgid "Creating a Bot account is a pretty straightforward process."
-msgstr "Créer un compte de Bot est un processus plutôt direct."
+msgstr "Créer un compte de Bot est un processus plutôt simple."
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
-msgstr "Assurez-vous d'être connecté au `site de Discord <https://discord.com>`."
+msgstr "Assurez-vous d'être connecté au `site Discord <https://discord.com>`."
 
 msgid "Navigate to the `application page <https://discord.com/developers/applications>`_"
 msgstr "Allez sur la `page application <https://discord.com/developpers/applications>`_"
 
 msgid "Click on the \"New Application\" button."
-msgstr "Cliquez sur le bouton \"New Application\". (Il n'est pas traduit malheureusement)."
+msgstr "Cliquez sur le bouton « New Application »."
 
 msgid "The new application button."
-msgstr "Le bouton nouvelle application."
+msgstr "Le bouton « New Application »."
 
 msgid "Give the application a name and click \"Create\"."
-msgstr "Donnez un nom à votre application et cliquez sur \"Create\"."
+msgstr "Donnez un nom à votre application et cliquez sur « Create »."
 
 msgid "The new application form filled in."
 msgstr "Le formulaire de création de nouvelle application rempli."
 
 msgid "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
-msgstr "Créez un Utilisateur Bot en allant dans l'onglet \"Bot\" sur la gauche et en cliquant sur \"Add Bot\"."
+msgstr "Create a Bot User by navigating to the \"Bot\" tab and clicking \"Add Bot\"."
 
 msgid "Click \"Yes, do it!\" to continue."
-msgstr "Cliquez sur \"Yes, do it!\" pour continuer."
+msgstr "Click \"Yes, do it!\" to continue."
 
 msgid "The Add Bot button."
-msgstr "Le bouton d'ajout de Bot à l'application."
+msgstr "Le bouton d'ajout de Bot."
 
 msgid "Make sure that **Public Bot** is ticked if you want others to invite your bot."
-msgstr "Assurez-vous que **Public Bot** est coché."
+msgstr "Assurez-vous que **Public Bot** est coché si vous souhaitez que d'autres personnes puissent inviter votre bot."
 
 msgid "You should also make sure that **Require OAuth2 Code Grant** is unchecked unless you are developing a service that needs it. If you're unsure, then **leave it unchecked**."
-msgstr "Vous devriez également vous assurer que **Require OAuth2 Code Grant** est décoché sauf si vous développez un service qui le nécessite. Si vous n'êtes pas sûr, **laissez le décoché**."
+msgstr "Vous devriez également vous assurer que la case **Require OAuth2 Code Grant** est décochée, sauf si vous développez un service qui le nécessite. Si vous n'êtes pas sûr, **laissez la case décochée**."
 
 msgid "How the Bot User options should look like for most people."
-msgstr "A quoi les options du Bot devraient ressembler pour la plupart des gens."
+msgstr "A quoi les paramètres du Bot devraient ressembler pour la plupart des gens."
 
 msgid "Copy the token using the \"Copy\" button."
-msgstr "Copiez le jeton d'authentification (\"token\" en anglais) en utilisant le bouton \"Copy\"."
+msgstr "Copy the token using the \"Copy\" button."
 
 msgid "**This is not the Client Secret at the General Information page.**"
-msgstr "**Ce n'est pas le code secret du client à la page \"General Information\".**"
+msgstr "**This is not the Client Secret at the General Information page.**"
 
 msgid "It should be worth noting that this token is essentially your bot's password. You should **never** share this with someone else. In doing so, someone can log in to your bot and do malicious things, such as leaving servers, ban all members inside a server, or pinging everyone maliciously."
-msgstr "Il peut être intéressant de noter que ce jeton d'authentification représente le mot de passe de votre Bot. Vous ne devez **jamais** le partager à quelqu'un d'autre.\\nEn le faisant, une personne pourrait se connecter à votre bot et faire des choses malveillantes, comme quitter des serveurs, bannir tous les membres d'un serveur ou encore mentionner tout le monde."
+msgstr "It should be worth noting that this token is essentially your bot's password. You should **never** share this with someone else. In doing so, someone can log in to your bot and do malicious things, such as leaving servers, ban all members inside a server, or pinging everyone maliciously."
 
 msgid "The possibilities are endless, so **do not share this token.**"
-msgstr "Les possibilités sont infinies, donc **ne partagez pas votre jeton d'authentification.**"
+msgstr "The possibilities are endless, so **do not share this token.**"
 
 msgid "If you accidentally leaked your token, click the \"Regenerate\" button as soon as possible. This revokes your old token and re-generates a new one. Now you need to use the new token to login."
-msgstr "Si vous faites fuiter votre jeton accidentellement, cliquez sur le bouton \"Regenerate\" le plus rapidement possible. Cela supprime votre ancien jeton et en régénère un nouveau. Après cela, vous devrez utiliser ce nouveau token pour vous connecter."
+msgstr "If you accidentally leaked your token, click the \"Regenerate\" button as soon as possible. This revokes your old token and re-generates a new one. Now you need to use the new token to login."
 
 msgid "And that's it. You now have a bot account and you can login with that token."
 msgstr "Et c'est tout. Vous avez maintenant un compte de Bot et vous pouvez vous y connecter avec le jeton d'authentification."
@@ -78,10 +78,10 @@ msgid "Inviting Your Bot"
 msgstr "Inviter Son Bot"
 
 msgid "So you've made a Bot User but it's not actually in any server."
-msgstr "Donc vous avez créé votre utilisateur Bot mais il n'est pas sur votre serveur."
+msgstr "Vous avez créé votre utilisateur Bot mais il n'est pas sur votre serveur."
 
 msgid "If you want to invite your bot you must create an invite URL for it."
-msgstr "Si vous voulez inviter votre bot, vous devez créer un lien d'invitation pour ça."
+msgstr "Si vous voulez inviter votre bot, vous devez créer un lien d'invitation."
 
 msgid "Click on your bot's page."
 msgstr "Cliquez sur la page du Bot."
@@ -111,7 +111,7 @@ msgid "The permission checkboxes with some permissions checked."
 msgstr "Les cases à cocher des permissions avec quelques permissions cochées."
 
 msgid "Now the resulting URL can be used to add your bot to a server. Copy and paste the URL into your browser, choose a server to invite the bot to, and click \"Authorize\"."
-msgstr "Le lien résultant peut être utilisé pour ajouter votre bot à votre serveur. Copiez et collez le lien dans votre navigateur internet, choisissez le serveur sur lequel inviter votre bot et cliquez sur \"Authorize\"."
+msgstr "Le lien résultant peut être utilisé pour ajouter votre bot à votre serveur. Copiez et collez le lien dans votre navigateur internet, choisissez le serveur sur lequel inviter votre bot et cliquez sur \"Autoriser\"."
 
 msgid "The person adding the bot needs \"Manage Server\" permissions to do so."
 msgstr "La personne qui souhaite inviter le bot sur un serveur a besoin de la permission \"Gérer le serveur\" pour le faire."

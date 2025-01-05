@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2024-09-06 23:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.16.0\n"
 
 #: ../../api/data_classes.rst:6 0a78c32f65ce438ea508fc4e400c8264
 msgid "Data Classes"
@@ -82,107 +82,27 @@ msgstr ""
 msgid "The ID of the object."
 msgstr ""
 
-#: ../../docstring 0027d21072434bfa9e61d89eee793b74
-#: 00f26016f3584690aa670c82b9a5859b 017c522c652a4d67ab5ac50853446afe
-#: 022ca6f62fc649d3babfa503e9a7527d 043d80143f22400a9ba620fdc1e586d2
-#: 048431dee73842e5bd9ca06ff90e1dbe 05321a535c4c45878a4699ee78074aa7
-#: 05da6f86d3624c0a86d06e07ee5b9739 07a6ab3ef7b647039bcefeda19b570d7
-#: 08768f5478d74bdeb612abbc25639f61 0945efcada3240758eff2c695d616f32
-#: 099970931aba478bba9567bc704393c2 0a9f06d333124df0aae9049074965a81
-#: 0aeb9fea9e4b43018632dd93355598fb 0b40818e61f54a5582905e47a1d6250f
-#: 0b6bdc9f79764717a733eb7a5958f520 0ba8abd38afb4d208cbc471b1d0baa5e
-#: 0bf3ec53a297426586cf6b3cb0778b5a 0d8cf03e305c441a937b9d418b558488
-#: 0ddf6e0aaae6472b96fc96294db31540 0eb247412406436aae61c444b85363ff
-#: 0ecab01b15ff4d47b40b2a8be16df0c6 0ecc83fddd52488c8b20b391ba65d910
-#: 10706bbef0c04fe0bc85c95ac3cdaa67 111c1eda67474a449b1909c91057e284
-#: 1180d8806e44448a950abd6a27750256 12bac957584c4f3e9957c3790d8bc79c
-#: 12ec5971f73e44f688e72c2364359c69 1331bedc359c4d66b2dc832b80857c7b
-#: 1419271a3d5f42278de143f56178094f 1557320e46934c6a890023f36203c96d
-#: 16385f6ea6d544509a9522555b6ca0a5 1a0161b887e24cc6a04167fb3a4a8430
-#: 1a775dc0fb7642548830259dbf8bb1da 1b41ad05a49849278911c3e2f57c8e5d
-#: 1bafc5d20837463b8bbc4817a17f0357 1e0194c8d7b14abf9a7594a7582afdd5
-#: 21d56bd8eba94c109183479433f1c1ce 22b9337396a04120a50a769ba7783e2e
-#: 240d3aad39f04f92b476f6ba0e75007f 25b5b26a8bc4446a988bd4a715341cb6
-#: 26fa04a7c16747f393e849a185038a09 271938fe17eb404383186cc86601c0b0
-#: 2842d4409acc41a2964ac2c83972b347 291ea60547144b76a516449bd79c0605
-#: 2b83bce111824301be1bc7186f0650a3 2c2036c4592148828c26aec640f43214
-#: 2d21f8f6b54f4bfbab94c7cae58e1668 2d431f876ab54a9ba881a6e21b29e517
-#: 2e52408878da47499d6d1b5bc5702d5e 2e76e331bdfd4f218c53e1e81dbcb57c
-#: 2f34a73afd054f428b94b075a4815efd 2f7adaa34ac442e5981bc3551e6ee304
-#: 3042f41661384453bca6bed5ee606ddf 308a58630c4e48c2acc2d2a709e660fd
-#: 30de2897525b406083d3f48b5a1418db 30e2db665ac648c6b407f4a5a22236ce
-#: 32523893e76240f6a5dcf0396ab262f2 3307d1f7b7ab4197a9b47b19d00c6ae2
-#: 332116481489472fa0379be9d3ee5183 334db0f3a4d044baa2e9a527992babca
-#: 343b6b213d60480795e500e07999b199 36493d01dd6c4fe0a9611cb90ef7adde
-#: 37389512c06c42c1b0ba531669e662b5 387e582afe6e4f83afbaf4741f01bda9
-#: 3a4cc3c7a2f44c42ba01f6c327bcfe60 3b41f6a4357346aebbe6be7211a1dc74
-#: 3cde02c1afdd471284767db5f3c67801 438654536c164cb68505e44afa66afd0
-#: 45420bc3f5e249dd8ef820bdb4863ddc 46bc6a8a94a5418fae057a531eb63d60
-#: 479d10110b8c42eeaf3cbfc246115ff5 48792da9ab7c45cfb04b9501aefaab99
-#: 48f66793b20640df8197df7d2cb16b1f 4964a5a57dd74f9d9819784be3f86598
-#: 4aaa6c7ef78c4e7f8fcc3c912b436465 4afe29e6fc734eacbe036bafac23ad5d
-#: 4cd59366d6f8480b97e02cdd4983abfa 514450299aae4f7ea80762039024ff92
-#: 530e6956dbfa465a8855e5b8b2e6529f 53af18c9683b4c58bae9c43b379fe6ed
-#: 541c27115cc14fe784c01a55df4a0ef9 54d86a1d1b3d4c87b667471e1a7d424f
-#: 555008a862ee4c4a8619976bbbc41f9f 56a7cb0b34d64a34a523e5914f8b3ebd
-#: 586abb76849443ca9374c8c01388153c 595754fd5f71410ba598bb7ea51c785e
-#: 5d194e2b41154c9abe702d59bd5d87b8 5d20cdf35cf44064b8c208f270ffa578
-#: 5e68d38f10854702af0a477a1252267e 5ef83e4ad25b4553bd0adc06b645a44c
-#: 61890c35ddda470c8f8bf066002e5147 622811c4e3f2492dbc3d8ff2e4860426
-#: 625201c3305e497b92e683def6b3dc90 63b5b77cc34a4447970ce8a9d903d592
-#: 6564a1c5b0c945989e70dc6792bd0af6 656fc65fd9154011826827291c6d9954
-#: 66c04714eec14cbfb557be1d0dcde66c 674e78410f3641199148d66412633ac2
-#: 676bf364d0374102b25a4ec18025fc50 68c6db8617d6400e9bd966b1c76a6bfe
-#: 6a0938ead71746dca43216b8b77e6b97 6b70cb17e1624835a9cfb9147b58ae22
+#: ../../docstring 022ca6f62fc649d3babfa503e9a7527d
+#: 07a6ab3ef7b647039bcefeda19b570d7 0945efcada3240758eff2c695d616f32
+#: 0a9f06d333124df0aae9049074965a81 0b6bdc9f79764717a733eb7a5958f520
+#: 0ba8abd38afb4d208cbc471b1d0baa5e 0d8cf03e305c441a937b9d418b558488
+#: 10706bbef0c04fe0bc85c95ac3cdaa67 1b41ad05a49849278911c3e2f57c8e5d
+#: 240d3aad39f04f92b476f6ba0e75007f 2842d4409acc41a2964ac2c83972b347
+#: 2d431f876ab54a9ba881a6e21b29e517 308a58630c4e48c2acc2d2a709e660fd
+#: 37389512c06c42c1b0ba531669e662b5 3cde02c1afdd471284767db5f3c67801
+#: 45420bc3f5e249dd8ef820bdb4863ddc 530e6956dbfa465a8855e5b8b2e6529f
+#: 54d86a1d1b3d4c87b667471e1a7d424f 5d194e2b41154c9abe702d59bd5d87b8
+#: 5d20cdf35cf44064b8c208f270ffa578 674e78410f3641199148d66412633ac2
 #: 6c4d566dbc03451c823e41e2f0cb5dd1 6db56029d8d0485abf50e5258830aff5
-#: 6e2e7aa2a7c449a99e8f05fdfee3dc1a 6e78c347124a437e9ce2a1706b8ce448
-#: 6ed6d4bd70d0408184e676502aac83e5 7051f41b9adf4c449a90b92631a80a5a
-#: 72021dfa95f04d84bfd284cd76184bd1 72152fd7671841849eb30091200777b4
-#: 723831052aca4c2d94163331d498fab4 72ff8ae688734fdda42a75fb9f1fee05
+#: 6e2e7aa2a7c449a99e8f05fdfee3dc1a 723831052aca4c2d94163331d498fab4
 #: 74d5fdba4b784f47b2373e8c543a62b3 756b428ff3f9484e91ab6d231993be61
-#: 75bc3fd6afbb4053bf194d13f0323b9b 766a1958bce742a6ae274cabddceed7f
-#: 78f9fbbbafee4ccf8c3151ee86646c9a 795531d790ae4bdc887f572380fd782b
-#: 7abb32cd5e7e492c80ed486b5d715766 7adf58b2850b4c3cace6e0f8c3b25774
-#: 7b8f6406ec4642e1b314cd0218e208e0 7c47ec299942443c9cfde05c7168bf78
-#: 7c915d1ae03a40fa85a9285d4169001f 8011db96a73b497495b8da7fd21bc04e
-#: 80c538be47764e71bee2f99f7603a06c 80e1f7f7c0354419a83fc52ceccb883a
-#: 80ff436f0cb246d2a3649bad2f9256fe 82b721e671494d2e9171a84d62924a8d
-#: 83632daae24b47c8b698763bdf3d970f 83eaedf9ccb0402188314be4eba4c1b8
-#: 859d68d0649d49978f9dc52e463ae367 85bf5d043cd7481586a27becb5aedf53
-#: 86b83d3855a7410dab8d07a852997d06 87883d8c38954e08bd11c89f8bb6119a
-#: 8794d260d15f462586696cc249b31753 8922f30652e341778ca2679fd2df842e
-#: 898502a307924edf9655f71595e0fa33 8a712d7011784f359c71e028262ffa21
-#: 8be37fddfa53406d885f46e06939fc7f 8c797ff669bb4b16957fe833875ea5a3
-#: 900bf8ad7d29465bad123cb63dc1fbf4 91034680d87d4e769f7024802b245184
-#: 93af319c1cb04baeb24e35eb309888dd 94239fae42574c6d9741db20ce182778
-#: 94c25f717b2e4ce5a49b7c037e2974af 95e6b772d9f5492787b72ae79a2f21ba
-#: 97e0ed99fe2a4484884c6f02b14cae42 98d087b2fc6d43f5bcdbb5034fcd2874
-#: 9ad59de1bb9b43ebafec2daa003c4857 9bc030383d614fe099c3ddb3ae665975
-#: 9db5d6351c654f458dd1a805c1987d3b 9db63304033a4c4fb87c0c59513b7b37
-#: 9ec1e7635e9347fca8e8ad13fed75c35 a0051f3395e145e995fa38feaacbd40e
-#: a290fc40d1504ecabe2c6f9e4cdff828 a46eb1f855fb4090ae3ff3bc5c41e78b
-#: a54607940629492b9c1c03727ac4de4e a5ec3f2a185146be9694cb852efcca32
-#: a6d5b3337e5a46ed85bc3cba26d926b5 a9e8a6883b98446b9ecb71f7efd7ab86
-#: aaea374fdeaa44cf959653df9872fafd aaf8f62bd9b44447b3797e662e88eb03
-#: ad2ad0201f5341458331f79ea7fe24dc ad37d95cc3f34217b6c368e1612c2f3f
-#: adce858a33fc41628e451f18a9f95675 ae2a7e3a8981408f8a71d54d1023d5e1
-#: af2b5a1b3db74038a31df759ea7c8813 b32eba777e2e4177bb2b6337a6d87d36
-#: b37b5a4488414c429f152387e580e715 b8c8632698164b6b9005afa8ffaeaebf
-#: b919c311805e4679941d0fb5b06c640c ba1f9984b24c45e6af8b1227166a8400
-#: babe4dc2b2794de0848f10412ef200d2 c0243d1d2d6547679342e9e9035b4217
+#: 8011db96a73b497495b8da7fd21bc04e 80c538be47764e71bee2f99f7603a06c
+#: 83632daae24b47c8b698763bdf3d970f 859d68d0649d49978f9dc52e463ae367
+#: 95e6b772d9f5492787b72ae79a2f21ba af2b5a1b3db74038a31df759ea7c8813
 #: c06aab6000c143bc9084e6898cd79330 c0b5a0d23eb144df849ae21e56e1c8cf
-#: c3578a055cfd45d49e0697ee5d75fc92 c58374562b1b4347bea43d0c8067b178
-#: cb21bc80f4714ee38c11bb9ff9f431ea cbd54ccdf75b4d3b988323c93d86d554
-#: cc8a86aad230448e9817fe2ee74eac67 cc9e190084d249f0956e2fff9d7ca49c
-#: ccc9fa8f40104a339b6f6da0358ceeb3 cef5d936d9bd4a4884cb8c8a7445c286
-#: cf4ebf89a0534e4daa26dc605e0dd572 d04be24516744c6cb0d8a75985d21242
-#: d075a73e2a544d97b54c03da5b2cddc3 d2cea2df05de4fcf810c8ac9ac4dd1de
-#: d2ddb3d0f55643a4b4e708853773a4ee d34962ba11bb42489f42a95c966ad7ab
-#: d658a315c6b74568a6988f7cbfd0bfd5 dc0311d967bf4174973034b392f372b7
-#: dc34343c5bdb4fdb935aa8f4b1ca285b dc73ce8570d3470f9b10f8567b0faebc
-#: dd9ec6d74605486896f5fc9ee837ed06 ddc3bbe85be94de08cc58708dd67bfab
-#: df0fb4b2f1aa45beb6b6920a8e335e0c df9a04ac7fcd49f6a4af42061ce2a224
-#: discord.ApplicationFlags.active discord.ApplicationFlags.app_commands_badge
+#: d04be24516744c6cb0d8a75985d21242 d658a315c6b74568a6988f7cbfd0bfd5
+#: df0fb4b2f1aa45beb6b6920a8e335e0c discord.ApplicationFlags.active
+#: discord.ApplicationFlags.app_commands_badge
 #: discord.ApplicationFlags.application_auto_moderation_rule_create_badge
 #: discord.ApplicationFlags.embedded
 #: discord.ApplicationFlags.gateway_guild_members
@@ -289,38 +209,16 @@ msgstr ""
 #: discord.object.Object discord.permissions.Permissions discord.poll.Poll
 #: discord.poll.PollAnswer discord.poll.PollAnswerCount discord.poll.PollMedia
 #: discord.poll.PollResults discord.shard.ShardInfo
-#: e0638cabbb314a708cce6a711c54277d e0a778d68fae40dc8d7261caefcefe8d
-#: e10a63e1deab42fe8c6fcd7d8932ba7d e18aa45ec854422f83b67d44e8093129
-#: e1e21cd951014bb881f6c9020ef6b249 e1e66fbf26414961ba921c6f81963dde
-#: e4011bea52634c7ba64aef6135dffbd2 e469c94fb75444e1a2f5591e8ca7b20d
-#: e4b22c7d25c6474db104695dcfa33389 e558da29e7b940b391be5188af924e25
-#: e6bfdc42ce134a04bfb90118a9947aa3 e844742addea41dd90103acb9655f516
-#: e87327aef4154502a8aa1c5a3dfb2470 e953b549534146b28f2750fa2adf3324
-#: ea47348b77604cd6bf327c57b7ff3d6d eb490dc96ae7456190afa1256c795173
-#: ec11ab01f4b74ee3affaaf3d4750fee0 ee65277801b647d4925e916e6c34f224
-#: f03cfac3b21b4c87b722760675402972 f0b2856588244fd3a2765809b32eff21
-#: f15f5916f3c44904946502c7f1bc41b0 f174cb4e779e4eda866b2c452a23bc39
-#: f1abdb91350a4b6fa35df6a03223f4ed f2c8b1fc5b0349b3b47cf0bf7adfa959
-#: f35cb50cb1074b16bba2d35a545a9434 f401a12fd0b344c093abd03eb957c407
-#: f4b5a29e047f49c391e8f8314e7befd1 f5098309919d408187f82e02e6104de1
-#: f56dc653e11247878aaaabfbcf24e3eb f6bdf44383bc46b4a7d3e1b85a41b295
-#: f91c1bed2eef4c1989dcfbdf50a1a3e5 f9d805bdde9049048627bddffe19f7fb
-#: fad24603226046c29774b4a23e166fe0 fb4ac4db321c4be3a323d2ba4ba33e4e
+#: e4011bea52634c7ba64aef6135dffbd2 e6bfdc42ce134a04bfb90118a9947aa3
+#: ea47348b77604cd6bf327c57b7ff3d6d f15f5916f3c44904946502c7f1bc41b0
+#: f2c8b1fc5b0349b3b47cf0bf7adfa959 f4b5a29e047f49c391e8f8314e7befd1
 #: ffb6921ba007446f9ef96812b7f54ea6 of
 msgid "type"
 msgstr ""
 
-#: 0a3305279543462d880226cdad446ec5 218c437278cb406297008929bd5a0ba5
-#: 42d8d38cc1c44c92ab537f362783eacd 45f1615d0fc24023b49ded37964706cf
-#: 47963b10a3744670a53e06986a02d383 52a0667bcce74d4a99ae7e4cdf857c36
-#: 6674934795ef4e7c9fb97e9e9883e91e 6c2d449763d548c3853211f24df2de8a
-#: 7773bc4ea03b45bc9e2c191bc74c4615 787271a8ad0043a4b44cc5a717c8b26b
-#: 7f6fae16d09e4c24a3831192db9f7b69 83ced52f44bb4a1c95f0962207ce50dc
-#: 8ad759d221664ccfb289a4e043067be1 964db6a3fdd44cdfaa6651e0da067ab6
-#: 9ab47f660f9d45839555ecd57c543291 a1cab8f5ea764dceb240e919bf6fc164
-#: a224f31b1e4e4be3b6be1f3c00e8dae7 b0a2bb9f3648423fa099420af4cdce91
-#: bf46c96b2d1e4d83b3de8317b10ed6b9 cc58c7455c6949e9af4aa545ac3f3363
-#: db080e1a2b944e0fb7defe029a83fea9 discord.colour.Colour:32
+#: 0a3305279543462d880226cdad446ec5 47963b10a3744670a53e06986a02d383
+#: 6674934795ef4e7c9fb97e9e9883e91e 787271a8ad0043a4b44cc5a717c8b26b
+#: 83ced52f44bb4a1c95f0962207ce50dc discord.colour.Colour:32
 #: discord.embeds.EmbedMedia:22 discord.embeds.EmbedMedia:28
 #: discord.flags.ApplicationFlags:42 discord.flags.AttachmentFlags:42
 #: discord.flags.ChannelFlags:42 discord.flags.Intents:52
@@ -328,55 +226,20 @@ msgstr ""
 #: discord.flags.MessageFlags:44 discord.flags.PublicUserFlags:43
 #: discord.flags.RoleFlags:43 discord.flags.SKUFlags:42
 #: discord.flags.SystemChannelFlags:47 discord.message.MessageReference:18
-#: discord.message.PartialMessage:41 discord.object.Object:32
+#: discord.message.PartialMessage:42 discord.object.Object:32
 #: discord.permissions.Permissions:62 discord.poll.Poll:21
 #: discord.poll.PollAnswer:10 discord.poll.PollAnswerCount:10
 #: discord.poll.PollAnswerCount:16 discord.poll.PollResults.total_votes:4
-#: discord.shard.ShardInfo:12 ebadae496ec1449eb4ea02cf169791ba
-#: f50f1b6c260e43d7b16bf05da41e75e5 fe60f825ecaf4d3799c29560a2ed399c of
+#: discord.shard.ShardInfo:12 of
 msgid ":class:`int`"
 msgstr ""
 
-#: ../../api/data_classes.rst 014ae19c517c48f6a091a28d69a8b3a5
-#: 027c0054d7d548f1b4bc8c8c8c43f495 02e6b4f375dc4103b249b4debb40ead3
-#: 0416378d9e5d457091e35bbf5041c0fa 0dda19c3dbad40db9bd17f8f9c95b6d8
-#: 11779101e95d4758a5b7e2141370db3c 17d3622dc479450a9951e9f01f4e961e
-#: 184002a4004741bfbee0e804836d09aa 198e7587528c44e896b664ecb8476b54
-#: 1a930f661aa84f6dbe32081784400b6b 1c5920924a154135bf274bd93de64901
-#: 1ef3bdca0a5e4973b00c7edc461c73b9 233276ef38364b66a3994072054270b2
-#: 2ad46d0c58ac40e58256e159dad0f520 2b9e9159682349eca87ed0a14bbc509d
-#: 2f58fb32e82f4b27b0e083777aa0101f 349f89275e3c4309adc923dff891ba65
-#: 409871af4d0049db9007b8fe36fb61eb 41838a50196b4f6281147969c43977d0
-#: 42d656cfc6fa4a4884e3d98e1f836b7d 4379a2c0216641db849a6a1f717afc5e
-#: 4bc9514dda874f0699ae982d41153a3a 4fda4bfd2da54d8dbad0defab5f3bca9
-#: 520bcd5daf714096a5711596aba0925e 56c138e55f804de48d4b011ead54a11b
-#: 5d804aa2f2294f5a825b41b27e50f690 5e6520a34ccf48d6a972696414029f56
-#: 5f14c630c24a475d91e0fb178bb5437c 62c0635de0e14e85b11eb228a093d50b
-#: 655139ace0cc4b5c98ad98015e93ab4b 6ae6e43ff75e4d2295f3c6e8013e8400
-#: 6b1cf7375d8a460e98fd83de29699b4c 6c53c2fe1d1142bca2fb55a07f4c83e8
-#: 6d68ababab8f4e51b1a2f08e47eaba29 73eae0b22fa84a4d9434043893740779
-#: 761d91a52337462a9dd313c632089619 77b3782ffd11488d92b177c4dd03210c
-#: 78e9e8f3dc1c42f09b8e0d1c62f9f9ed 7935cfc62ff049abbeb4e9a2086e6d8c
-#: 799421617bbd4e5889e222fc2c9c9aca 7ace093568484906a6c5f5957314d74e
-#: 853c9381504f48b593ba954d0afb178f 876b2ac7229145b4afc3b5a3551e1248
-#: 89319c51dbb4429689c6f91effe4cb08 89e6520d4ff047f18dee15ce511b202d
-#: 8b31f76dc94f4072b4d58fdd18c1a585 8bed657aae5f41c0838455b3bf39cb02
-#: 8cbbbb351bae4d87a5d58d835b3cd502 8fd51c9c6f6441cb89dcf33a3e22661e
-#: 9510d18349da4e9ea1e3032fb0fff282 966eda34cf1540898516b9b10f19bc8e
-#: 96fb28de02194c4f82a850f49c3eb83c 970a3e82e49e47f896bb44c4dbe65093
-#: 9e240c0ff8c14c89bf512a5f72030139 a5a5caa1bed843399e2325b7cb8f7cff
-#: a866a6682a3e428ea5d9bbb0c4ce4499 b36792625cd14959aef6825b394d7e65
-#: b5ea8629223b4b5b93a1742e5a53077e bc227baf3a35408b8f5380ffa74958b7
-#: bc29a932226d4238a4d291dedc2e59ac bc7c7c91b3c04defa0f30580aa3e581d
-#: bebd95e10a7f4a0a86c37b4b3b2930bb c0113e3af80a44488f7b96ebda8e2c90
-#: c06664f32316496988303b5793e859d4 c4046998e69c412b8ac97d13a888cb04
-#: c4ffc614443a4b038c39c18da2d3ca3e c8497c344721448497b3654a1602f755
-#: d31e3910fa984089ae93db3f29751211 d463224bd212438b803261a9fa1b966a
-#: d84515d0f9cc49bc809bbf957eb655a7 d8d4b29cd6174ed69807f5d8527a8500
+#: ../../api/data_classes.rst 17d3622dc479450a9951e9f01f4e961e
+#: 41838a50196b4f6281147969c43977d0 62c0635de0e14e85b11eb228a093d50b
+#: 89e6520d4ff047f18dee15ce511b202d b5ea8629223b4b5b93a1742e5a53077e
+#: bc227baf3a35408b8f5380ffa74958b7 d463224bd212438b803261a9fa1b966a
 #: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters
-#: e10fd84d147f4b71b2d38959065e253c ed60de7fca634eb19790777106f69830
-#: f87cff025dd245aaa035cf395d41e256 f8e00c5b3337461f956fbbd25e02ae62
-#: f920935e9ce4486095fa73daf51d998d fd587e8eeb714f238cef948388b6cc39 of
+#: e10fd84d147f4b71b2d38959065e253c ed60de7fca634eb19790777106f69830 of
 msgid "Parameters"
 msgstr ""
 
@@ -410,28 +273,18 @@ msgid ""
 "100 characters."
 msgstr ""
 
-#: 05be8ec42ca842988501f59cc34e4060 096b0456bb834dccb91c5d2c026df8af
-#: 281a5156098641b885203455b0eefbfb 3067ff3abcb343c69e5f3b774b1707b4
-#: 3450345a2d7c45aea36065249b69db89 3db498623a9941f1b44ae0582b1cef87
-#: 3e01ff84653e46bc82c16d9c2295c154 3e43a1357be14fee8928f846d8d55f5b
-#: 41859130077947c28a61896fdd0d7930 423345f4c1fd41c8ac177257fe9d734b
-#: 537df26e27624f61be7e52e144e4889a 6523dfc5793c46f3a29b311bd08e2f6b
-#: 6d1a5a95476049769c793bf45d8edc94 711d883481334e1589f08b99598207c9
-#: 857cc0236e5240ca8abdd3b1e5be2ced 8c3c40fe88bd4eeea7eb22c62cee063b
-#: 954985a9ab0a4c4985decf0c2f332027 bf029a45ccb14764ab8bb9e4b6849d2a
-#: c40fe8ce55c74105ba994f640e69d85d discord.activity.Game:31
-#: discord.activity.Streaming:55 discord.components.SelectOption:12
-#: discord.components.SelectOption:20 discord.embeds.Embed:25
-#: discord.embeds.Embed:34 discord.embeds.Embed:42 discord.embeds.Embed:49
-#: discord.embeds.EmbedAuthor:9 discord.embeds.EmbedAuthor:15
-#: discord.embeds.EmbedAuthor:21 discord.embeds.EmbedAuthor:27
-#: discord.embeds.EmbedField:9 discord.embeds.EmbedField:15
-#: discord.embeds.EmbedFooter:9 discord.embeds.EmbedFooter:15
-#: discord.embeds.EmbedFooter:21 discord.embeds.EmbedMedia:10
-#: discord.embeds.EmbedMedia:16 discord.embeds.EmbedProvider:9
-#: discord.embeds.EmbedProvider:15 discord.poll.PollMedia:9
-#: e33efd7125ad4ac3a80b14823659d414 f059507051fd483ba9758c6261782f9a
-#: fc861202507f4454976c8563dc3bc383 of
+#: 05be8ec42ca842988501f59cc34e4060 bf029a45ccb14764ab8bb9e4b6849d2a
+#: discord.activity.Game:31 discord.activity.Streaming:55
+#: discord.components.SelectOption:12 discord.components.SelectOption:20
+#: discord.embeds.Embed:25 discord.embeds.Embed:34 discord.embeds.Embed:42
+#: discord.embeds.Embed:49 discord.embeds.EmbedAuthor:9
+#: discord.embeds.EmbedAuthor:15 discord.embeds.EmbedAuthor:21
+#: discord.embeds.EmbedAuthor:27 discord.embeds.EmbedField:9
+#: discord.embeds.EmbedField:15 discord.embeds.EmbedFooter:9
+#: discord.embeds.EmbedFooter:15 discord.embeds.EmbedFooter:21
+#: discord.embeds.EmbedMedia:10 discord.embeds.EmbedMedia:16
+#: discord.embeds.EmbedProvider:9 discord.embeds.EmbedProvider:15
+#: discord.poll.PollMedia:9 fc861202507f4454976c8563dc3bc383 of
 msgid ":class:`str`"
 msgstr ""
 
@@ -448,19 +301,14 @@ msgid ""
 "characters."
 msgstr ""
 
-#: 1829644e9c8741b9ab3d3326ded2df0a 1967cc9d9cd34c6bb77c73b4199a36ee
-#: 2e97d4cb22bf4a44adf997fe1db3bec1 3963803bd3104b1f89165daeab20d80a
-#: 50e2086678c1489a971f1fcf606cd6e5 510dcfdc61e84b5181227d4074373a12
-#: 5e3a41afb3fe4f0bac828fa0417c1316 761f0704bea54d919239e0ee7f1ea028
-#: 94c28ca6a1b143378f64a5bd86011098 9bd8c36d03f641e19b38a882dc4fed9c
+#: 1829644e9c8741b9ab3d3326ded2df0a 3963803bd3104b1f89165daeab20d80a
 #: discord.activity.Activity:22 discord.activity.Activity:28
 #: discord.activity.Activity:40 discord.activity.Activity:46
 #: discord.activity.CustomActivity:27 discord.activity.CustomActivity:39
 #: discord.activity.Streaming:29 discord.activity.Streaming:35
 #: discord.activity.Streaming:41 discord.activity.Streaming:49
 #: discord.components.SelectOption:27 discord.file.File:30 discord.file.File:36
-#: ea836c1ad5a24a3382168e4163dee891 eee38b56d2064a69a28a365348ff00ed
-#: ef4f169f372d46c294753d8d5a1645c6 of
+#: of
 msgid "Optional[:class:`str`]"
 msgstr ""
 
@@ -468,74 +316,21 @@ msgstr ""
 msgid "Whether this option is selected by default."
 msgstr ""
 
-#: ../../docstring 023b074f6dcc475aaedb6de917072aa8
-#: 0247ccb90f19434d8a129062c64a5350 034f5658560a46a48f6392d1a929bbd7
-#: 03f300f26d4f48cc80fc6e3c2c2b8167 0651aa5d20564cebb93686571eb89c48
-#: 076a5dc819bb4d61a71105b78c5f629e 092d7225823a46539e6ad30d68510c92
-#: 0b09a80336504ab7b84d69f7be65a5cd 0f1f4d85b25e469a8c1812a92bddce73
-#: 122490a7d22d4194a59c8d99024f3d9e 1449086c7f6c4aad9397ad61d8f218cc
-#: 161aa3465ff54b8eabe605b3e1effc75 162c695ca8d04419bce81c1a3bb4c8b8
-#: 190f26e90b9048b1bf7c43e5cd74d5bb 19c9f164d2ea4e789cfb9d3c03244612
-#: 1a37d672246848f6a0249253c9890e56 1bd2fe7cfa7442648f6b9c5bd3d60b3e
-#: 1c9bcfbfabcf4447af13173772e0dba3 1dcb47205d9b4d9d93acc731ff22f461
-#: 2725eeabea9049eb875dce03f04a7bca 29e0dee80c71488eac966d6f67bc6a71
-#: 2ab8e4f04a324d009555d2adfcecc01d 2aee005c87ce4271a2ddb02d70d12f81
-#: 2aee586b807140b48f9c2a5a4b4d8104 2af265ceab234800996540fb35919f2b
-#: 2c1c87d5592e4e8ba6d282a4981aaf31 2f7d7697272d431bb5a00f740d81976f
-#: 326278ce171e46fb892074ec17d63e86 32c5e0be39294e89ac978f1190338f88
-#: 3461eb669bf74f97b82aada9d35a05ef 3526974cff1b4c1ab4f5b2f5a77f8dc9
-#: 363d37055c0346b285efda529d86c341 3807f6c7d5544fa38429251c6b27a1bd
-#: 3b338693ce4d45c0ba0de9941e7f24d7 406a8d0c253648168d9be8ec1ccf39a6
-#: 42237f252bd849e39e6cd944b145593c 42d8ce81f67d4027b1b5acc76994d83d
-#: 436e92527607479788d3e44c4084edfd 467fa3befa1e427284239c30608436c8
-#: 46fa3239adde4e4e8c329454531c38d3 476538d265a44bde8323907d4baaf749
-#: 48ab8977271645c891958208058f6d8d 4925fccfa0a940c8a56591683e21bb9b
-#: 49614854fc634c1da9e0a5242ae3654d 4a064daa74db47bca9ed367d70b88ee5
-#: 4dd9121233c4470796f3ada6268840c6 53edbcaedf584bf2b660455f286ed8f2
-#: 5cb5038316504e80891ad677e4e02597 5d3cf6ddc99b4ab08bfbce020e2d455b
-#: 5d5436062ab84738854040a158cf9060 5e77c1cbf15f4edbace963555bada8f4
-#: 5f48402cb5f24aa28389ee0ef8f3a2b4 61feeb01ad604206ad1316409f3bd8f4
-#: 626710d925434b149242cde63bfeb22f 6494cc79677747158ced06008fb51592
-#: 655b339bafc8433e9aaab4de0ce88be5 665ac6dbc44d4748909806eb00b2ac05
-#: 690f9c0ef7474dc8ac7288893440d38e 69c1c9cd77344dcebca1df3767348cb0
-#: 6add0d50f83a491c89f74947a5d5fde2 6c879743725140748a66b6fcbf2125d9
-#: 6eb0ddd4b88044a4be85e9ee845f260c 6fd5a66516d5472b995ad2814765f96b
-#: 70a9356820d346c28761cc3bcd939082 7186fd1920ad48c08b8c0b576bf3e70b
-#: 7423abc3cc524d34a8f85edbe0dc35c9 76f776d31f5941ec93f87361437a6426
-#: 77df8813440c49ac81b72e95c3b7c0ba 77ec92f62db14901a099b1dd6847dc2c
-#: 793013028d4c45c3bad83018dbcb3e85 7951821ffae049fbba272a2ed6671a72
-#: 7cdf2f906ed044deb6012048150da019 7d892157a7e147d1bd2af8a780e5692e
-#: 7ff8f88daaf64e81ae8e54a9a098fba8 80764aae9c40480b9b76e57c0fa3c330
-#: 80c7ced8fb0f47a0b7a46c954fa4015a 8131de1784d84c66a45d155df88cf3cd
-#: 835524acb4754da58a00724f6d775a60 837f69b4581c4526b1073d76f872d646
-#: 86f128d4812b45b7b0e9ae03e97d4c4f 89227920430342b4830b7859636aa3a2
-#: 8b13ad081fb949e7830bf07869b61edd 8dc9c1ba4283454196f34e1b5a8dcd23
-#: 8ea3e2f43d9d4b9ab461e36850149f80 8fc286dafb864e5abcdfdee1229827be
-#: 94863b353ddb4c0a86f4c849f057b4c4 97e4820420da426a91acebda9917aa78
-#: 9a6ea5dedf494f51beaae3ba322d26aa 9b63d6e44d5e4c33b9e34ccc11e0ba80
-#: 9d6fb769a9164e198a6cff642894fb4a 9f242b4e5a7b4a62bc2e197d63251af6
-#: 9f6d4562beb544e18ea933bd743d02ce 9fae5284d071415d99bfd9627416e8e1
-#: a152e7388fb74304b5b204311d8c69f6 a1a7cfe5e59a4d34b6c36e5fde156571
-#: a2010c59e68c46a595ffdc18774dde28 a42e3115b05a47369cbad4a740e55491
-#: a4a15f7bc8854748b1f35cab781c3800 a5e8a437dc3b4f94a3178f00d7c9d155
-#: a5f1a0069169465c8d1270fc161a67fc a7a76ff28aa948308356069f92acac65
-#: ae44222339b04401be8bde84be82516c af8bb8d770714397a8f54c213dc2b314
-#: b152bbcee768493eaedb1704b92055be b216ba49be9c4832ac97472573d6dfe0
-#: b65935e7a9214a36aba1ec7fc7c90e2a b764452d56d243c893e4d68cdb3c6137
-#: b837aa3edd694fae88479c54257fed5a b867201474f6458ea1a34e8900f3302f
-#: b9f49cf9cee747048835891d1c7f70f5 bb6d7c6bef1d4675a76364fede37bd52
-#: c410cb2f89ab45d397cc1b7badbbe508 c447a62b257047c3a3c1df7a3c2e118f
-#: c474d91dc2a74a2bade27b8e590f259e c4889ac5eabe4140930118f248a3057f
-#: c497bc48b58c40beb6b6fc4ffdd06665 c66087222b144b77bfe3590882bb094c
-#: c791b3848a844b35bfb80f4439dc5a01 cc84bf53b0c242f7a0311a9dd1c26fb4
-#: cce37d0670ed4b9ba0723d47ed47c1aa ced24460a70040d8b61a4ad0d6c78aed
-#: d04bb5288b9d41d198e609fb372cfe93 d1acd97d1a0c409391049a5a1d16ff91
-#: d2cee1703cd04080aef304e39920587c d3d0d745f2644c41835f5e98e84b7006
-#: d3e2998a315943a78d50932f49737de1 d3e8a88ffd394c98aec38cc3b1771e64
-#: d45426a29b06438e91f2dd515ab9a26b d50186c464354e00bb33065cbbc894ca
-#: d619b3bad7d841cd80080a4c2d773774 d680e30842684d46aeb5e7266f19a395
-#: dbd0089e6f584131992add921e3b9d9f dbe6dcd54bae403aba9e49856575cf7e
-#: de32e7bc824e4625b555783be6ba8ce5 discord.ApplicationFlags.active:6
+#: ../../docstring 034f5658560a46a48f6392d1a929bbd7
+#: 161aa3465ff54b8eabe605b3e1effc75 1bd2fe7cfa7442648f6b9c5bd3d60b3e
+#: 1c9bcfbfabcf4447af13173772e0dba3 2c1c87d5592e4e8ba6d282a4981aaf31
+#: 326278ce171e46fb892074ec17d63e86 3461eb669bf74f97b82aada9d35a05ef
+#: 46fa3239adde4e4e8c329454531c38d3 4925fccfa0a940c8a56591683e21bb9b
+#: 5e77c1cbf15f4edbace963555bada8f4 655b339bafc8433e9aaab4de0ce88be5
+#: 7186fd1920ad48c08b8c0b576bf3e70b 7423abc3cc524d34a8f85edbe0dc35c9
+#: 77ec92f62db14901a099b1dd6847dc2c 7cdf2f906ed044deb6012048150da019
+#: 7ff8f88daaf64e81ae8e54a9a098fba8 8131de1784d84c66a45d155df88cf3cd
+#: 8b13ad081fb949e7830bf07869b61edd 97e4820420da426a91acebda9917aa78
+#: a1a7cfe5e59a4d34b6c36e5fde156571 ae44222339b04401be8bde84be82516c
+#: b152bbcee768493eaedb1704b92055be b65935e7a9214a36aba1ec7fc7c90e2a
+#: b9f49cf9cee747048835891d1c7f70f5 c66087222b144b77bfe3590882bb094c
+#: ced24460a70040d8b61a4ad0d6c78aed d45426a29b06438e91f2dd515ab9a26b
+#: d50186c464354e00bb33065cbbc894ca discord.ApplicationFlags.active:6
 #: discord.ApplicationFlags.app_commands_badge:6
 #: discord.ApplicationFlags.application_auto_moderation_rule_create_badge:5
 #: discord.ApplicationFlags.embedded:3
@@ -639,14 +434,7 @@ msgstr ""
 #: discord.permissions.PermissionOverwrite.is_empty:7 discord.poll.Poll:27
 #: discord.poll.PollAnswerCount:22 discord.poll.PollResults:9
 #: e1c1e64874eb4dc4b81588e9d084845b e29fe4fdd9ad421295dee23fa82019b0
-#: e6f793a644584273a72f59802880d75c e700b67c24d5472ead55cb0b5d2e0835
-#: eb55ec8b22124dcfaacb2eb8b8bb591d ee15e6047a974fc09fd0a0412365c33b
-#: ef82d5719c90468a84b53b1224cd4af9 efda05937885451f9831ea5529ba0e2f
-#: f2a5f2887dcb45bfb3ec1a4a0aeb18d8 f51ab36a12a943beb7fc8942c99a282c
-#: f5a5a905c4504e61bf130fe20dbfe27b f6ad042f32ec46c194b5c763d53cf7e1
-#: f7a80bc28079420089d9b9111a52df94 fa8195689b3b4391815a0cab9a5d8cea
-#: fad82c79ee1346dd85866634c55a3a8e fd0416821f8645499fe1297e36e91209
-#: fd16e79e95744fbbb4d1bb67b2d04fbe of
+#: f2a5f2887dcb45bfb3ec1a4a0aeb18d8 fd16e79e95744fbbb4d1bb67b2d04fbe of
 msgid ":class:`bool`"
 msgstr ""
 
@@ -665,9 +453,9 @@ msgid ""
 "were regular bools."
 msgstr ""
 
-#: 0b557071c13d48c5a7e58fdc6a34e621 99d045cffa884713a159060bf7b59130
-#: c7ccca30986e43fd8e10beb3bd9d8656 discord.flags.Intents:7
-#: discord.flags.MemberCacheFlags:12 discord.flags.SystemChannelFlags:7 of
+#: 99d045cffa884713a159060bf7b59130 c7ccca30986e43fd8e10beb3bd9d8656
+#: discord.flags.Intents:7 discord.flags.MemberCacheFlags:12
+#: discord.flags.SystemChannelFlags:7 of
 msgid ""
 "To construct an object you can pass keyword arguments denoting the flags "
 "to enable or disable."
@@ -680,108 +468,81 @@ msgid ""
 "keyword argument of :class:`Client`."
 msgstr ""
 
-#: 1a8b4fa6c67a4abc8033674858b4091b 2723da96d9724f13aedb5348870ab7f6
-#: 37eef6fe663748f5a467a28180bb7c4e 4e9fe61ccd1549e88739285bf3dafd88
-#: d4c9f26ee3034866a99c0283e4e8e99b discord.flags.AttachmentFlags:7
-#: discord.flags.Intents:20 discord.flags.MemberCacheFlags:23
-#: discord.flags.MessageFlags:9 discord.flags.SystemChannelFlags:14 of
+#: 2723da96d9724f13aedb5348870ab7f6 4e9fe61ccd1549e88739285bf3dafd88
+#: discord.flags.AttachmentFlags:7 discord.flags.Intents:20
+#: discord.flags.MemberCacheFlags:23 discord.flags.MessageFlags:9
+#: discord.flags.SystemChannelFlags:14 of
 msgid "Checks if two flags are equal."
 msgstr ""
 
-#: 4a6e6320ca45428484440c717f1649f8 b6e33c093a6446c4b0db0d86d7eea46a
-#: c5b62a3820524bdaa7ffdc764a11c059 d14f8b7592484b0eb15cca8f8ca4ef10
-#: d5ead74a64c54423968ede7480f5cbff discord.flags.AttachmentFlags:10
-#: discord.flags.Intents:23 discord.flags.MemberCacheFlags:26
-#: discord.flags.MessageFlags:12 discord.flags.SystemChannelFlags:17 of
+#: b6e33c093a6446c4b0db0d86d7eea46a c5b62a3820524bdaa7ffdc764a11c059
+#: discord.flags.AttachmentFlags:10 discord.flags.Intents:23
+#: discord.flags.MemberCacheFlags:26 discord.flags.MessageFlags:12
+#: discord.flags.SystemChannelFlags:17 of
 msgid "Checks if two flags are not equal."
 msgstr ""
 
-#: 0bd6187917144dd29d57b86f7c0403e5 4a7bc86e9a3e46b383554e861e976458
-#: 536d410ff4b44e62b2cb302b665c4e82 600184aa266d4be4a9cac9e2c503772d
-#: 6c411abccd8f4ee9959930568c9c5580 7acf69cc8dab45ada3bd3689889c1cef
-#: 96999cf3481f408f8cf281d177168157 99e7c28f52d74d25af242acc5a200eaa
-#: 9ff0a5610aab4a38beedf650deabf91a discord.flags.ApplicationFlags:13
+#: 0bd6187917144dd29d57b86f7c0403e5 discord.flags.ApplicationFlags:13
 #: discord.flags.AttachmentFlags:13 discord.flags.ChannelFlags:13
 #: discord.flags.Intents:26 discord.flags.MemberCacheFlags:29
 #: discord.flags.MemberFlags:13 discord.flags.MessageFlags:15
 #: discord.flags.PublicUserFlags:13 discord.flags.RoleFlags:13
 #: discord.flags.SKUFlags:13 discord.flags.SystemChannelFlags:20
-#: f96e957c78734f899f6a8cabbcd6e80f f9b86c4a425e45a5911c00182e4fa2aa of
+#: f96e957c78734f899f6a8cabbcd6e80f of
 msgid "Adds two flags together. Equivalent to ``x | y``."
 msgstr ""
 
-#: 04def519eb6a4b058b20fb82fdda5fa5 0c17b2ad55124b1aaae336d3932a00a5
-#: 1cc0f99d2ad34188a3d109ca5ea135bd 1db16f9be5fc449c9e597b190d069225
-#: 2bae9b53c632492f8e853a3b968e0de9 6be54360e9b54949ad40dd56f95df40c
-#: 967c26af9efa4f7daef0c955d8a3bb61 b17adea6a0ad4408ba556b1a6ce02616
-#: d24e2a10464947f5a867e78d79b60ce5 d9704b07696540d8a7df9809930a034e
+#: 0c17b2ad55124b1aaae336d3932a00a5 1cc0f99d2ad34188a3d109ca5ea135bd
 #: discord.flags.ApplicationFlags:16 discord.flags.AttachmentFlags:16
 #: discord.flags.ChannelFlags:16 discord.flags.Intents:29
 #: discord.flags.MemberCacheFlags:32 discord.flags.MemberFlags:16
 #: discord.flags.MessageFlags:18 discord.flags.PublicUserFlags:16
 #: discord.flags.RoleFlags:16 discord.flags.SKUFlags:16
-#: discord.flags.SystemChannelFlags:23 ef0c39b25c534ad0b56743b97271d559 of
+#: discord.flags.SystemChannelFlags:23 of
 msgid "Subtracts two flags from each other."
 msgstr ""
 
-#: 1b50b9b1854f46caa3ac7f4be9a6d214 1deb812bea3d41b7a704ac10ef1cc2c5
-#: 2bd00e79cff94fcc87d879a4bdd8a62a 30a0f7905d6c4d359df077d3050acbe4
-#: 35910a0af5ad45be97b47bc5589af9d4 61e73664161a4b14a3c004fb9675681f
-#: 8682d8d121804ca78190744b3a59c4d3 b605361bd020421aabe67ea65920a40d
-#: c0b47343720c41e9ae082737e6c14a21 dc44aea0eb8843ec89427b68ed42e355
+#: 8682d8d121804ca78190744b3a59c4d3 dc44aea0eb8843ec89427b68ed42e355
 #: discord.flags.ApplicationFlags:19 discord.flags.AttachmentFlags:19
 #: discord.flags.ChannelFlags:19 discord.flags.Intents:32
 #: discord.flags.MemberCacheFlags:35 discord.flags.MemberFlags:19
 #: discord.flags.MessageFlags:21 discord.flags.PublicUserFlags:19
 #: discord.flags.RoleFlags:19 discord.flags.SKUFlags:19
-#: discord.flags.SystemChannelFlags:26 e446c2c129c9432387763bfccabd52e8 of
+#: discord.flags.SystemChannelFlags:26 of
 msgid "Returns the union of two flags. Equivalent to ``x + y``."
 msgstr ""
 
-#: 0cb04326bebe4bc8a317558219f5d362 164db2030286448b9bcc9ef182ddaae9
 #: 1958adb42308499f8545a94033c83764 1aa74630c59244a680d6c45bac4a40d4
-#: 389c01ecd70a44eeb7a0a7f77ebec292 518e13808efd452985312250a3be537a
-#: 6e3e56ce5b904a99a28eee41182bc2f9 79031e8947e54a9bab1a040c4ada6e20
-#: a85b1ce443654d889b7e274a16471b91 dc76f0f183a044919897aec3d7a052cf
 #: discord.flags.ApplicationFlags:22 discord.flags.AttachmentFlags:22
 #: discord.flags.ChannelFlags:22 discord.flags.Intents:35
 #: discord.flags.MemberCacheFlags:38 discord.flags.MemberFlags:22
 #: discord.flags.MessageFlags:24 discord.flags.PublicUserFlags:22
 #: discord.flags.RoleFlags:22 discord.flags.SKUFlags:22
-#: discord.flags.SystemChannelFlags:29 e93c4ec263eb412b8884fb8192f8abe9 of
+#: discord.flags.SystemChannelFlags:29 of
 msgid "Returns the intersection of two flags."
 msgstr ""
 
-#: 0c0d4ae9593340cc9d83a5f1bf9ae314 15bd1793902549d2a41ed2bfb2086490
-#: 280657c255fc426c82da64bb59d9bac5 3f25fb08cab5411e97b911287fb3d991
-#: 45183bd6b34a4d5da0a272b2a6453c51 661a5fa542f2402ba484b264d8a7d30b
-#: b3f48189e9624c5ea9fa8ac032fbbbd4 b6494a4476ad4232801ba36d88cd2ee1
-#: db93366459a84bac9ca1791083bd8951 discord.flags.ApplicationFlags:25
-#: discord.flags.AttachmentFlags:25 discord.flags.ChannelFlags:25
-#: discord.flags.Intents:38 discord.flags.MemberCacheFlags:41
-#: discord.flags.MemberFlags:25 discord.flags.MessageFlags:27
-#: discord.flags.PublicUserFlags:25 discord.flags.RoleFlags:25
-#: discord.flags.SKUFlags:25 discord.flags.SystemChannelFlags:32
-#: eb4cf8c6e63540168709d72324f0366e f9037c859c954437bbc5c80837992535 of
+#: 0c0d4ae9593340cc9d83a5f1bf9ae314 3f25fb08cab5411e97b911287fb3d991
+#: discord.flags.ApplicationFlags:25 discord.flags.AttachmentFlags:25
+#: discord.flags.ChannelFlags:25 discord.flags.Intents:38
+#: discord.flags.MemberCacheFlags:41 discord.flags.MemberFlags:25
+#: discord.flags.MessageFlags:27 discord.flags.PublicUserFlags:25
+#: discord.flags.RoleFlags:25 discord.flags.SKUFlags:25
+#: discord.flags.SystemChannelFlags:32 of
 msgid "Returns the inverse of a flag."
 msgstr ""
 
-#: 0609571c784a441a96024b34656f7620 115cbdc73ead48389591b9c18de16c6e
-#: 5055ec460c1c405295c113b871a1381d 5401a57492744f82a7f454408fe09e91
-#: 6426f88037df4e09a30eb9bbfab4b783 6bae8aa57db74ad4acf90f088dc01e24
-#: 7834e6013f2d4c78b5486bf043f2ab70 b7238e0512bc43f1b8b7acd85781e817
-#: bf894e7c254f4d37873c682274464eed cd38184237914f6c802d8fd54c02a106
+#: 115cbdc73ead48389591b9c18de16c6e cd38184237914f6c802d8fd54c02a106
 #: discord.flags.ApplicationFlags:28 discord.flags.AttachmentFlags:28
 #: discord.flags.ChannelFlags:28 discord.flags.Intents:41
 #: discord.flags.MemberCacheFlags:44 discord.flags.MemberFlags:28
 #: discord.flags.MessageFlags:30 discord.flags.PublicUserFlags:28
 #: discord.flags.RoleFlags:28 discord.flags.SKUFlags:28
-#: discord.flags.SystemChannelFlags:35 ee74cb95a3e6465e945cd8383fffbc5a of
+#: discord.flags.SystemChannelFlags:35 of
 msgid "Return the flag's hash."
 msgstr ""
 
-#: 7204b8ea3a9241949e0f987e6f8c8665 a3fc9e2feee540e5bfa91a1861fa07d9
-#: a99a094ce4fa417f968709af699b5323 c5d1a453a88e423c95d5bef1be4d1cba
+#: 7204b8ea3a9241949e0f987e6f8c8665 a99a094ce4fa417f968709af699b5323
 #: discord.flags.Intents:44 discord.flags.MemberCacheFlags:47
 #: discord.flags.MessageFlags:33 discord.flags.SystemChannelFlags:38 of
 msgid ""
@@ -789,13 +550,11 @@ msgid ""
 " example, constructed as a dict or a list of pairs."
 msgstr ""
 
-#: 243973eb1c774a339bf71cc0d1528cb8 82101dd125534b129f6f38b3b3ed2e27
-#: 9e99e32bc296475598552fd9c39806ff aed0ec598f5542f5b45aed4d7c5c0eb2
-#: discord.flags.ApplicationFlags:39 discord.flags.AttachmentFlags:39
-#: discord.flags.ChannelFlags:39 discord.flags.Intents:49
-#: discord.flags.MemberCacheFlags:52 discord.flags.MemberFlags:39
-#: discord.flags.SKUFlags:39 e4d3c97d2ab942eaa92a7853a7594bde
-#: f54fefdc28274d45b023ba51349e495a f9e23965620b47329a2c2bdeffd4efa9 of
+#: 82101dd125534b129f6f38b3b3ed2e27 discord.flags.ApplicationFlags:39
+#: discord.flags.AttachmentFlags:39 discord.flags.ChannelFlags:39
+#: discord.flags.Intents:49 discord.flags.MemberCacheFlags:52
+#: discord.flags.MemberFlags:39 discord.flags.SKUFlags:39
+#: f54fefdc28274d45b023ba51349e495a of
 msgid ""
 "The raw value. You should query flags via the properties rather than "
 "using this raw value."
@@ -805,56 +564,12 @@ msgstr ""
 msgid "A factory method that creates a :class:`Intents` with everything enabled."
 msgstr ""
 
-#: ../../api/data_classes.rst 018c91d8de2d44fb8c1e07be2f4b85b4
-#: 06117d4991d64482ab3bd74ddd051afa 07328e258a764337ad1d20246d4de5e5
-#: 0abca367d0ad4c83bf2be1d6479c0e42 14839b1adc274194849e223dfecbf767
-#: 17094165c2494d80b071c53f905935de 19685e0d184143a69ab86dc3156e0010
-#: 1c86a0a466e2418eb0bbb7dc78feb4ee 1d74298fd0f54d7b9e5eba315105ea1a
-#: 1e3cd1e307fc4f35a7f349aa1b301d3a 1e56debdc10b44a6bb24a812e5f497c2
-#: 1fad171fac2f4401bf377bab91994567 254aef600d254d609dfdd46369fb0d2b
-#: 26181a33b1bb4438a0440db9626c9bb5 26dce303105f4829a233716320aafb05
-#: 27763036636f49f8ba292a51ef43814f 2a6fff9cfbc140eea62eb86587d99e12
-#: 2aaf29a75ce048e59ab4aa068f89270e 2c65699780f042bda30498eb6d195ca1
-#: 2d239c1f1f394abf9e55e91084d6ee2b 2ee9c2cace5642d3931879b57e907e72
-#: 312b769c32484244b31414353619d0d7 32eeeab27c3049c7ad3eae9dfe659ba5
-#: 3495b127e59d4114bd73f48eac001314 387a935c6db343558a4e1062dc05e80b
-#: 396ad73a54a549d7a99a683064978e42 3a69766c2ab349738d5ae59cbd70517b
-#: 3bba9a9cb8364b83a168aeda565e9bbf 3d9d7f31e3fd426c91b7da7fe211b099
-#: 4790b1ca1e4a463b87fbaa89365cc98f 498037cacf4048e089db179d1327f791
-#: 4bd94c41e47a4ffc9c405bf096ea26a1 4cec06d96aa540ca837c06faf1eda4aa
-#: 4f8a95b52be345b49db26caa9e217288 51366ed9bee64aaaa2b92292cb55270b
-#: 538e1f063fc8484f8a27b9878a4a62fc 5b0a938f23c34aacb67b50d378235ee6
-#: 5cb95d726813471badb438677b0cb5dd 5e2ae90ede484700a92163b7fc20a0da
-#: 5e36e0ef9c2346a7a1546820ec8d79a1 63612e7eed6644a4a09f372f5500c2d4
-#: 66c338f8eef24506af329d3a60d1c101 675a31c9def246cfaa6ace261bcb2315
-#: 68da8bcf838141efbb2d63bfdbf3572c 6a7ef6edee394706920fde8b84c60bd8
-#: 6c52ec89bc324d688a1ea93936659b0f 7570e3a535c542c48a495aa5980e09e6
-#: 787d35658563443da4d353a110a5a813 7afd0d20cf2940e4a0493121eb555c29
-#: 7b318a51369544c494bf5cd1aa7c949f 7d4265b55f914cb1b296509d8ca752db
-#: 7d571a8abadd449aab1878522512f792 818835fd40bd4a03b5196193a62b5790
-#: 841dbe564995451db0cb4d1a7399578a 89a32233bbc842bda5f1f44ede1f6456
-#: 90db003fe96e42e09518caf869a4b570 9a7a96d8bc9045a6a38b969595e5a865
-#: 9c5183de166e4c9a8d8dcd809e1f9c1c a01e30e75f11408887933e9c9d2f1ca6
-#: a0de128104b34095a69b96da3e8ab96f a5936942c3d546cd80cc6ab556260da5
-#: a96b24b511dc4ba5a76631835e74c7d7 ab27ed89866b4c8aaae389246af4c20e
-#: aebd9405f26c42e39bec901116ba5b2f b32687e080a44a9aa9c007d9d36fb9a4
-#: b480463323664ccbaa6f6a48358e47e1 b54140a3dcb74784a6a01c92208cbe0f
-#: b587555169654b00af22255c66e6b2c7 ba8d35102a9c47c690e7f4c7d1c4994f
-#: bb23da17d5e149f88b160898fe8bdd10 bbc492444f0b4fe79fafdff6bc4fee6d
-#: c30f6974606d470aa0c4caba098ab9ef c64aba3dde4f43ada43550b1f0d7569f
-#: c6a4b3316cf54cc8b892899ad5d003cb cc0a84fc6ab7497da8ddc0e8e477ed17
-#: cc754cf4cc644e4f9e32e1040e29eafa cf2dfef29e444d13ac54d2dbe84fa015
-#: d091f04d4dc74d3e8799d21bf9ce3935 d0dbbee81aef4bfdb4d91c6695d303eb
-#: d1d8003b2d454b49a81a3a0eff5f0ae7 d29db1ddddd7435592df3d94b6613ffe
-#: d2e3360593294133b0a4335cd58c7f07 d4dd570edf684cd8a0dc32ee303deb96
-#: d77fcecfec2c42d0b9a359a602118c22 d91ea57cfc7248859c473d1d1dd8227c
-#: dc057d79db7c46fd888e337e59985244 discord.poll.Poll.add_answer
-#: discord.poll.PollAnswer.voters e03a07b2659e460c969522e4e68a4aca
-#: e2fdd28aa9d94cd6a7b99951ffa2dd7f e41a9aa4658247fbbfd17b70847fcb80
-#: e5367cb1eb2347b5a4cd991d510a723d e68b169f549c4791bda81c9443d228a3
-#: ebea6eab9d354d4c8a5c3ad9d5529507 f2fe81d38e43437a9239f1af97b0cac6
-#: f358a7bf6a014c41988b485dc82c34a5 f71c24b693804fc1b300f4a07178b6de
-#: fc25eaf76a77420495b5c4d93cb33f06 of
+#: ../../api/data_classes.rst 06117d4991d64482ab3bd74ddd051afa
+#: 2a6fff9cfbc140eea62eb86587d99e12 2aaf29a75ce048e59ab4aa068f89270e
+#: 2c65699780f042bda30498eb6d195ca1 387a935c6db343558a4e1062dc05e80b
+#: 3a69766c2ab349738d5ae59cbd70517b 3d9d7f31e3fd426c91b7da7fe211b099
+#: 4cec06d96aa540ca837c06faf1eda4aa 7afd0d20cf2940e4a0493121eb555c29
+#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters of
 msgid "Return type"
 msgstr ""
 
@@ -1374,8 +1089,7 @@ msgstr ""
 
 #: ../../docstring 131678d976fa4452a3c6274c4a114015
 #: 3a20c463f48c465d92f7b983f9414c0f 4cc0d56ddc4341339bbabe226cfff4ea
-#: 699d3aec6d4142f285dafede7e7eea19 6f70df5e3a324290889232d0395e7f0f
-#: b305f440e0f448fbb7b9f3cd38300788 discord.Intents.dm_messages:15
+#: 6f70df5e3a324290889232d0395e7f0f discord.Intents.dm_messages:15
 #: discord.Intents.guild_messages:15 discord.Intents.messages:15
 #: discord.message.PartialMessage.end_poll:8
 #: discord.message.PartialMessage.fetch:6 discord.poll.Poll.end:5 of
@@ -1997,11 +1711,11 @@ msgid ""
 "not started yet."
 msgstr ""
 
-#: 306bba96ba0e4d9dba84deee5cfa1ca4 49c4c30c182d4a029b0c433682a7412d
-#: 8162371196bd4d3698a8c759ead84e30 838cbbf586be4eb48c92fc8e4c675bad
-#: c99851f342584595848427fb38375fa3 discord.activity.Activity:16
-#: discord.message.MessageReference:12 discord.message.MessageReference:24
-#: discord.poll.Poll.total_votes:4 discord.shard.ShardInfo:18 of
+#: 49c4c30c182d4a029b0c433682a7412d 8162371196bd4d3698a8c759ead84e30
+#: 838cbbf586be4eb48c92fc8e4c675bad c99851f342584595848427fb38375fa3
+#: discord.activity.Activity:16 discord.message.MessageReference:12
+#: discord.message.MessageReference:24 discord.poll.Poll.total_votes:4
+#: discord.shard.ShardInfo:18 of
 msgid "Optional[:class:`int`]"
 msgstr ""
 
@@ -2009,23 +1723,17 @@ msgstr ""
 msgid "Whether the shard connection is currently closed."
 msgstr ""
 
-#: 1deab10c0cf44d5ebef1094734d407fa 2dc3cf8651e14433bd3ee820059d76b7
 #: 58d0f572132547b7a1dbaf2927806124 9aca5fcb17de43ee849174bf0bd5a3f7
 #: discord.permissions.Permissions.is_strict_subset:5
 #: discord.permissions.Permissions.is_strict_superset:5
 #: discord.permissions.Permissions.is_subset:5
 #: discord.permissions.Permissions.is_superset:5
-#: discord.shard.ShardInfo.is_closed:4 e5cf537b04f84783b85321de221b27f6 of
+#: discord.shard.ShardInfo.is_closed:4 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: 15f434b61dcf47238188f7d6b255820a 16beb5731b34440e8311de7df97d1025
-#: 1ffa892166a146ab84fff747181eebec 2d31939098494f0489e8a053303107d7
-#: 336386f348c2475b83c479b3376548af 4e0e1cc8c5664c3ab71e2a4949beb87d
-#: 5cab9ecf969d4d50b56f61b44621fee5 61d3fe2200f04894857f7a6b254fed20
-#: 7904d64bf9a04967826e310fa4258216 7b6aba613fd1494aa813bfbe67e79186
-#: a7e196aad6d0488bbb6dfd22ae6c3e4a bd84eac564274ac59010340e2b47be29
-#: be8ac68790a24964b952943c8f2574ab d76e286c35dc413d96b79e5d9b3d1542
+#: 2d31939098494f0489e8a053303107d7 336386f348c2475b83c479b3376548af
+#: 61d3fe2200f04894857f7a6b254fed20 7b6aba613fd1494aa813bfbe67e79186
 #: discord.message.Message.add_reaction:1
 #: discord.message.Message.clear_reaction:1
 #: discord.message.Message.clear_reactions:1 discord.message.Message.delete:1
@@ -2034,8 +1742,7 @@ msgstr ""
 #: discord.message.Message.unpin:1 discord.message.PartialMessage.edit:1
 #: discord.message.PartialMessage.end_poll:1
 #: discord.message.PartialMessage.fetch:1 discord.shard.ShardInfo.connect:1
-#: discord.shard.ShardInfo.disconnect:1 discord.shard.ShardInfo.reconnect:1
-#: ec3829e4ac7245a9bc417ee15abd489d of
+#: discord.shard.ShardInfo.disconnect:1 discord.shard.ShardInfo.reconnect:1 of
 msgid "|coro|"
 msgstr ""
 
@@ -2049,14 +1756,8 @@ msgstr ""
 msgid "If the shard is already disconnected this does nothing."
 msgstr ""
 
-#: 03c34a924dbb41ec8f7fe9a174a9d9cf 0b0b991b79bd439e82711767a57a444e
-#: 107317f6166244bcbb972d7a0b7987ad 2aeb0522710e4223920fd1c621bb6bb9
-#: 4515407fc92b4f5e9acbf4ca0d5a5b35 47e54663a6ce4eb397362807481c17fc
-#: 6111789b40ca4cc5bced0bd6c6a2582f 682dc42cdccd42f3a7f85235164dfb67
-#: 6ab82dd262114586ae1460ec0ef8949f 73f0e5de3dd34858ad6d28ee536f2960
-#: 9043897745234dccbdf21447a70af025 937a7163bad44cc0b251d6ab47e83b23
-#: aa62b139c3de4bb487cc42c48c0547a2 b85a83f1bf7745d4aae3e7ee2f39e4c5
-#: be32cd449b9d48dca13b42cef8b4e1cd d7fb8138b116469782b8128fe3a65e97
+#: 2aeb0522710e4223920fd1c621bb6bb9 682dc42cdccd42f3a7f85235164dfb67
+#: 6ab82dd262114586ae1460ec0ef8949f 937a7163bad44cc0b251d6ab47e83b23
 #: discord.embeds.Embed.append_field:9 discord.embeds.Embed.clear_fields:4
 #: discord.embeds.Embed.remove_field:15 discord.message.Message.add_reaction:20
 #: discord.message.Message.clear_reaction:20
@@ -2228,15 +1929,8 @@ msgid ""
 "not fetch the message.  .. versionadded:: 1.7"
 msgstr ""
 
-#: ../../api/data_classes.rst 08dd3fc02d4d4132b443ec7913195e42
-#: 16d279861a2b43879ebd8b1f71a20671 2b0ecd4f873f466896142c355a524794
-#: 3ab4f060db814ac395725738d928b330 408145cd8b124a1a943e0057aa577f8f
-#: 498bb8a0a5f142ddb8d32e95d62b1353 4ac61a3e497b4be5b871c0baafde13b8
-#: 5703a79f19c24ee7ad4eee5189719603 586a1eb31a564018bd9939a7ecea9ee4
-#: 70e99411e23d43eb8585dc43417efafa 98e4167f953b40db851724e2c969cbc6
-#: a1884408c24545a5ba907abd17fdcdb0 a2b5d900b9d54e2fa60473a890b42ec3
-#: a6ca5a3fecf44fb48027d663e2bec807 bc20f49f7ead49829d985ac83adc6d24
-#: ec698da13c7a4164a882b6d5a0868fe2 f298076f2da34bc6b0148276f66f26f5
+#: ../../api/data_classes.rst ec698da13c7a4164a882b6d5a0868fe2
+#: f298076f2da34bc6b0148276f66f26f5
 msgid "Returns"
 msgstr ""
 
@@ -2309,33 +2003,38 @@ msgstr ""
 msgid ":meth:`StageChannel.get_partial_message`"
 msgstr ""
 
-#: 58c599d04d364692bdb6b88fd2ec7d02 discord.message.PartialMessage:13 of
+#: 78d000ebd1274ceb8a1d38bc04d2d20b discord.message.PartialMessage:12 of
+msgid ":meth:`PartialMessageable.get_partial_message`"
+msgstr ""
+
+#: 58c599d04d364692bdb6b88fd2ec7d02 discord.message.PartialMessage:14 of
 msgid "Note that this class is trimmed down and has no rich attributes."
 msgstr ""
 
-#: discord.message.PartialMessage:21 e4ba7e0b8bc44daf89cca61ef932b4c7 of
+#: discord.message.PartialMessage:22 e4ba7e0b8bc44daf89cca61ef932b4c7 of
 msgid "Checks if two partial messages are equal."
 msgstr ""
 
-#: 1e92d468fde74a73a1982f62f77caec3 discord.message.PartialMessage:25 of
+#: 1e92d468fde74a73a1982f62f77caec3 discord.message.PartialMessage:26 of
 msgid "Checks if two partial messages are not equal."
 msgstr ""
 
-#: c75d297174c040c291921a55c84aff50 discord.message.PartialMessage:29 of
+#: c75d297174c040c291921a55c84aff50 discord.message.PartialMessage:30 of
 msgid "Returns the partial message's hash."
 msgstr ""
 
-#: d6f75811b37446e4b8273a6368b9898b discord.message.PartialMessage:33 of
+#: d6f75811b37446e4b8273a6368b9898b discord.message.PartialMessage:34 of
 msgid "The channel associated with this partial message."
 msgstr ""
 
-#: 541a020405794893b204059d68dab197 discord.message.PartialMessage:35 of
+#: 541a020405794893b204059d68dab197 discord.message.PartialMessage:36 of
 msgid ""
 "Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, "
-":class:`VoiceChannel`, :class:`StageChannel`]"
+":class:`VoiceChannel`, :class:`StageChannel`, "
+":class:`PartialMessageable`]"
 msgstr ""
 
-#: 31d02f342df640338bf76f95cf441475 discord.message.PartialMessage:39 of
+#: 31d02f342df640338bf76f95cf441475 discord.message.PartialMessage:40 of
 msgid "The message ID."
 msgstr ""
 
@@ -2368,16 +2067,8 @@ msgstr ""
 msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr ""
 
-#: ../../api/data_classes.rst 001d916f982d476587eff1e2d1c63951
-#: 05030101a7454efa870fadc0be85a462 14bfab826896452aadf027274a181303
-#: 1c16b408f5a7485cab09255b21d90265 1cfce800ac9e4c86b506aa60387df0f7
-#: 439ecd14c2de4107bd7654a744f764bf 4f08a853300046d4bbf1ee5f8b7f4e4d
-#: 564b493c7da74b0a8b0026dc729e05e4 6cbbec69370949ccbac38a5efae1e204
-#: 768fc20ca68246c5b11a6405bf2756fa 8d21aa75650245c2a03c5f3d921b44ac
-#: 97084ae06e884aa1935379014827d625 c413c5187bd34cee97e7cafc673a6e3d
-#: d2961414192743948ccc68022cf9c4f6 d8a03160266345a28c22c0fe64f3d142
-#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters
-#: ef42ed394a5e4e55bda1280fd319c154 of
+#: ../../api/data_classes.rst 564b493c7da74b0a8b0026dc729e05e4
+#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters of
 msgid "Raises"
 msgstr ""
 
@@ -2422,7 +2113,7 @@ msgid "Pins the message."
 msgstr ""
 
 #: daa1cb3817894aabbb0ea1a18b81421d discord.message.Message.pin:5
-#: discord.message.Message.unpin:5 e669bf32b9aa44df8063d09c8e64a2e5 of
+#: discord.message.Message.unpin:5 of
 msgid ""
 "You must have the :attr:`~Permissions.manage_messages` permission to do "
 "this in a non-private channel context."
@@ -2442,8 +2133,8 @@ msgstr ""
 msgid "You do not have permissions to pin the message."
 msgstr ""
 
-#: 4e6cc76945ec425e943e976a2f9d8bb4 a926f86ace9a4194a00a466364e85741
-#: discord.message.Message.pin:15 discord.message.Message.unpin:15 of
+#: a926f86ace9a4194a00a466364e85741 discord.message.Message.pin:15
+#: discord.message.Message.unpin:15 of
 msgid "The message or channel was not found or deleted."
 msgstr ""
 
@@ -2479,7 +2170,6 @@ msgstr ""
 msgid "Add a reaction to the message."
 msgstr ""
 
-#: 6aaade68242548778bfe30d6bd5f2054 930dd30804944c798a46e9e5262d96a5
 #: cd02277db89943ed9ee4591e8af3275f discord.message.Message.add_reaction:5
 #: discord.message.Message.clear_reaction:5
 #: discord.message.Message.remove_reaction:5 of
@@ -2505,14 +2195,12 @@ msgstr ""
 msgid "You do not have the proper permissions to react to the message."
 msgstr ""
 
-#: 24789512dcfa4dc7a9d9830235001bee d954e7e116e24bf7bccda076d7755919
-#: discord.message.Message.add_reaction:17
+#: d954e7e116e24bf7bccda076d7755919 discord.message.Message.add_reaction:17
 #: discord.message.Message.clear_reaction:17 of
 msgid "The emoji you specified was not found."
 msgstr ""
 
-#: 5c4cc2b758fc41c6b650e94c29df70a7 a9d58618744d49d091a6d2b675548b3d
-#: cd73f7beb7df43e686a7bf966e4acb62 discord.message.Message.add_reaction:18
+#: 5c4cc2b758fc41c6b650e94c29df70a7 discord.message.Message.add_reaction:18
 #: discord.message.Message.clear_reaction:18
 #: discord.message.Message.remove_reaction:23 of
 msgid "The emoji parameter is invalid."
@@ -2566,8 +2254,7 @@ msgstr ""
 msgid "Clears a specific reaction from the message."
 msgstr ""
 
-#: 38f537d2e0d04d0d9166dcd09ff8e8e2 4b5bd7feaad94acd9247e5ea152d72f3
-#: discord.message.Message.clear_reaction:7
+#: 4b5bd7feaad94acd9247e5ea152d72f3 discord.message.Message.clear_reaction:7
 #: discord.message.Message.clear_reactions:5 of
 msgid "You need the :attr:`~Permissions.manage_messages` permission to use this."
 msgstr ""
@@ -2673,8 +2360,7 @@ msgstr ""
 msgid "The full message."
 msgstr ""
 
-#: 63ddd6f4054a4187bf9397afe4e430c8 6ebb0104593e4409a625fbd4bb27bbe8
-#: discord.message.PartialMessage.edit:43
+#: 63ddd6f4054a4187bf9397afe4e430c8 discord.message.PartialMessage.edit:43
 #: discord.message.PartialMessage.fetch:8 of
 msgid "The message was not found."
 msgstr ""
@@ -2782,18 +2468,18 @@ msgid ""
 "the poll's owner."
 msgstr ""
 
-#: 4384eb6dd74c4277bc507b455314f30a b828ac93f2b644249f4d15ad9f202ebe
-#: discord.message.PartialMessage.end_poll:7 discord.poll.Poll.end:4 of
+#: 4384eb6dd74c4277bc507b455314f30a discord.message.PartialMessage.end_poll:7
+#: discord.poll.Poll.end:4 of
 msgid "The updated message."
 msgstr ""
 
-#: 6688c9001e7746ebbeb01ce1f0aa311d 9b78896bdd1940dc98776babef0a485e
-#: discord.message.PartialMessage.end_poll:10 discord.poll.Poll.end:7 of
+#: 6688c9001e7746ebbeb01ce1f0aa311d discord.message.PartialMessage.end_poll:10
+#: discord.poll.Poll.end:7 of
 msgid "You do not have permissions to end this poll."
 msgstr ""
 
-#: 90c6425cdab34723ac7939316ba8e7b9 b37776026e034126b3472d2808f616f6
-#: discord.message.PartialMessage.end_poll:11 discord.poll.Poll.end:8 of
+#: 90c6425cdab34723ac7939316ba8e7b9 discord.message.PartialMessage.end_poll:11
+#: discord.poll.Poll.end:8 of
 msgid "Ending this poll failed."
 msgstr ""
 
@@ -2922,8 +2608,8 @@ msgid ""
 " that Discord expects it to be in."
 msgstr ""
 
-#: 11c5c5487f8c48a3954a882ef0c81c3c b794b160b2254aa5a8f826cfad55b96d
-#: discord.embeds.Embed.from_dict:4 discord.embeds.EmbedField.from_dict:4 of
+#: 11c5c5487f8c48a3954a882ef0c81c3c discord.embeds.Embed.from_dict:4
+#: discord.embeds.EmbedField.from_dict:4 of
 msgid ""
 "You can find out about this format in the `official Discord "
 "documentation`__."
@@ -2966,16 +2652,12 @@ msgstr ""
 msgid "Sets the footer for the embed content."
 msgstr ""
 
-#: 11d661c1c9024782b0ae71fec225dee1 472e69cfec074712ba341e65b8fecb6e
-#: 5e115a7dcc4d41ef885d8f6ab870c044 6b8ade2d914540eeb3eebb13e54555c0
-#: a187bf38f5e4436d814307b90bb1f8fa aba36e4c6c5245cdacf85b3080dc1f03
-#: discord.embeds.Embed.remove_author:3 discord.embeds.Embed.remove_footer:3
-#: discord.embeds.Embed.remove_image:3 discord.embeds.Embed.remove_thumbnail:3
-#: discord.embeds.Embed.set_author:3 discord.embeds.Embed.set_field_at:5
-#: discord.embeds.Embed.set_footer:3 discord.embeds.Embed.set_image:3
-#: discord.embeds.Embed.set_thumbnail:3 discord.poll.Poll.add_answer:3
-#: e7943ab0533445e4a89b57901f95db90 e85cbbbb24ac42cfb9d6361a2f4f7d4a
-#: f371e938c3da4bd0bf5a06d81e305042 f7eb45567f4243d9a03d2b2166006a41 of
+#: 472e69cfec074712ba341e65b8fecb6e discord.embeds.Embed.remove_author:3
+#: discord.embeds.Embed.remove_footer:3 discord.embeds.Embed.remove_image:3
+#: discord.embeds.Embed.remove_thumbnail:3 discord.embeds.Embed.set_author:3
+#: discord.embeds.Embed.set_field_at:5 discord.embeds.Embed.set_footer:3
+#: discord.embeds.Embed.set_image:3 discord.embeds.Embed.set_thumbnail:3
+#: discord.poll.Poll.add_answer:3 of
 msgid ""
 "This function returns the class instance to allow for fluent-style "
 "chaining."
@@ -2989,18 +2671,13 @@ msgstr ""
 msgid "The URL of the footer icon. Only HTTP(S) is supported."
 msgstr ""
 
-#: 1d629c4e96d0404e8b98ab6051e348cd 30e85322be3f4cec844d262906d911fa
-#: 4523234d8da84deea0fe2b7a2a9cf80c 4f220172b63b439ea70e6352b36cb599
-#: 670ce1a77ea64456afc2146913f95675 7e2ff18f093a480eb4f4289bcae47d78
-#: 822c625fad7d4f2383d95bccdb25bb66 aa755fbb4e0e47aeade77ce173ee8494
-#: b7211db489424ecfbf3e000b3504ad97 discord.embeds.Embed.add_field:20
+#: 670ce1a77ea64456afc2146913f95675 discord.embeds.Embed.add_field:20
 #: discord.embeds.Embed.insert_field_at:25
 #: discord.embeds.Embed.remove_author:10 discord.embeds.Embed.remove_footer:10
 #: discord.embeds.Embed.remove_image:10
 #: discord.embeds.Embed.remove_thumbnail:10 discord.embeds.Embed.set_author:19
 #: discord.embeds.Embed.set_field_at:27 discord.embeds.Embed.set_footer:16
-#: discord.embeds.Embed.set_image:15 discord.embeds.Embed.set_thumbnail:15
-#: ebbc091611cc4e63bb8e7fa5a765ccfc edeff772ff814c03b6e4ddf1a7a92b81 of
+#: discord.embeds.Embed.set_image:15 discord.embeds.Embed.set_thumbnail:15 of
 msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
 " \\\\\\(\\`\\`E\\`\\`\\, bound\\= Embed\\)`"
@@ -3014,28 +2691,28 @@ msgstr ""
 msgid "Returns an :class:`EmbedMedia` denoting the image contents."
 msgstr ""
 
-#: 5233314d723247fcb2a902aec419af06 d81411e68d0f4d6f9518289513f8a904
-#: discord.Embed.image:3 discord.Embed.thumbnail:3 of
+#: d81411e68d0f4d6f9518289513f8a904 discord.Embed.image:3
+#: discord.Embed.thumbnail:3 of
 msgid "Attributes you can access are:"
 msgstr ""
 
 #: cffb7b3b2793415b9fa8247a91357837 discord.Embed.image:5
-#: discord.Embed.thumbnail:5 e581fbefd11c4ff1b5c0d70b5f03cf1b of
+#: discord.Embed.thumbnail:5 of
 msgid "``url``"
 msgstr ""
 
-#: 13fd27b8d0d04af2becf8c49e0a8e6e0 discord.Embed.image:6
-#: discord.Embed.thumbnail:6 ee9b344e994943acb62237fa811574d1 of
+#: discord.Embed.image:6 discord.Embed.thumbnail:6
+#: ee9b344e994943acb62237fa811574d1 of
 msgid "``proxy_url``"
 msgstr ""
 
-#: b72ba3cc26404e28b1075b704cb14550 d7c79cd75ab343a0bc84db8a7a6e4c61
-#: discord.Embed.image:7 discord.Embed.thumbnail:7 of
+#: b72ba3cc26404e28b1075b704cb14550 discord.Embed.image:7
+#: discord.Embed.thumbnail:7 of
 msgid "``width``"
 msgstr ""
 
-#: 42876d8ef6ea4994937d5f34b5842991 b8a6a508837443ba95e9285eeb489453
-#: discord.Embed.image:8 discord.Embed.thumbnail:8 of
+#: b8a6a508837443ba95e9285eeb489453 discord.Embed.image:8
+#: discord.Embed.thumbnail:8 of
 msgid "``height``"
 msgstr ""
 
@@ -3177,31 +2854,28 @@ msgstr ""
 msgid "Adds a field to the embed object."
 msgstr ""
 
-#: 7220787fdc3d4e79a1e9f6edbbf53f9e 87ad0ce020044d25a671b1e53ff2a758
-#: discord.embeds.Embed.add_field:3 discord.embeds.Embed.insert_field_at:3 of
+#: 87ad0ce020044d25a671b1e53ff2a758 discord.embeds.Embed.add_field:3
+#: discord.embeds.Embed.insert_field_at:3 of
 msgid ""
 "This function returns the class instance to allow for fluent-style "
 "chaining. There must be 25 fields or fewer."
 msgstr ""
 
-#: a34ba6d39a9e4141b1c148747432c72e c789b835bf5a431583ac9ba7139a8a18
-#: cff9612f942c4f6daf2141e7197ca7ba discord.embeds.Embed.add_field:7
+#: c789b835bf5a431583ac9ba7139a8a18 discord.embeds.Embed.add_field:7
 #: discord.embeds.Embed.insert_field_at:12 discord.embeds.Embed.set_field_at:12
 #: of
 msgid "The name of the field. Must be 256 characters or fewer."
 msgstr ""
 
-#: 04c5393ea40648e9815424cd1a4e9936 43af5dd6ae4045f9b21924d69672625c
-#: aef5c60863f84b8a9f859c4f310e4bb7 discord.embeds.Embed.add_field:11
+#: 43af5dd6ae4045f9b21924d69672625c discord.embeds.Embed.add_field:11
 #: discord.embeds.Embed.insert_field_at:16 discord.embeds.Embed.set_field_at:16
 #: of
 msgid "The value of the field. Must be 1024 characters or fewer."
 msgstr ""
 
-#: 27bca6852c6c4bbcbccf8a7511abb223 8873c3d93b1140ecb68918d2fe44630e
-#: 95e2da8dc1bf4107aa8e6e89e77ef60c b5d7893fdbdd4d49ab24e2d9ea4133dc
-#: discord.embeds.Embed.add_field:15 discord.embeds.Embed.insert_field_at:20
-#: discord.embeds.Embed.set_field_at:20 discord.embeds.EmbedField:19 of
+#: 8873c3d93b1140ecb68918d2fe44630e discord.embeds.Embed.add_field:15
+#: discord.embeds.Embed.insert_field_at:20 discord.embeds.Embed.set_field_at:20
+#: discord.embeds.EmbedField:19 of
 msgid "Whether the field should be displayed inline."
 msgstr ""
 
@@ -3494,8 +3168,8 @@ msgstr ""
 msgid "The answer text. Maximum 55 characters."
 msgstr ""
 
-#: 1a9558843dca496cb958afb3adb20a4d 63316a76bc504816bc44704a1b64facb
-#: discord.poll.Poll.add_answer:10 discord.poll.PollMedia:13 of
+#: 1a9558843dca496cb958afb3adb20a4d discord.poll.Poll.add_answer:10
+#: discord.poll.PollMedia:13 of
 msgid "The answer's emoji."
 msgstr ""
 
@@ -3511,8 +3185,8 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.poll.Poll\\``"
 msgstr ""
 
-#: 6f68ef5ec3e74617904ff7282a027368 discord.poll.Poll.add_answer:18
-#: discord.poll.PollAnswer.voters:26 e3ed22fcc48e492ba655a324fd22c8ab of
+#: discord.poll.Poll.add_answer:18 discord.poll.PollAnswer.voters:26
+#: e3ed22fcc48e492ba655a324fd22c8ab of
 msgid "Examples"
 msgstr ""
 
@@ -3530,8 +3204,8 @@ msgid ""
 "poll's owner. Shortcut to :meth:`Message.end_poll`"
 msgstr ""
 
-#: 24e8c80c8d0447db8874363746ed8a94 a64df6f6aa664e17aca4891da237f9de
-#: discord.poll.Poll.end:9 discord.poll.PollAnswer.voters:22 of
+#: a64df6f6aa664e17aca4891da237f9de discord.poll.Poll.end:9
+#: discord.poll.PollAnswer.voters:22 of
 msgid "This poll wasn't recieved from a message."
 msgstr ""
 
@@ -3553,8 +3227,8 @@ msgstr ""
 msgid "Represents a poll answer object."
 msgstr ""
 
-#: 9f2c742e2ea94dfaa11d80510e61f651 discord.poll.PollAnswer:7
-#: discord.poll.PollAnswerCount:7 e709c6027c5e46c8bf07a344edadf14c of
+#: discord.poll.PollAnswer:7 discord.poll.PollAnswerCount:7
+#: e709c6027c5e46c8bf07a344edadf14c of
 msgid ""
 "The answer's ID. It currently starts at ``1`` for the first answer, then "
 "goes up sequentially. It may not be reliable to depend on this."
@@ -3705,9 +3379,8 @@ msgid ""
 " enabled."
 msgstr ""
 
-#: 8bb674b4b37b49d39b2e4c552f123f11 d5a644216f01444cafdf7ea6b7f82ade
-#: discord.flags.MemberCacheFlags.all:4 discord.flags.MemberCacheFlags.none:4
-#: of
+#: 8bb674b4b37b49d39b2e4c552f123f11 discord.flags.MemberCacheFlags.all:4
+#: discord.flags.MemberCacheFlags.none:4 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.flags.MemberCacheFlags\\``"
 msgstr ""
 
@@ -3795,10 +3468,7 @@ msgstr ""
 msgid "Checks if two ApplicationFlags are not equal."
 msgstr ""
 
-#: 0a60c529aef34b0f843083188ef95076 3851f49fd12d49ba93ddefde1a9b5c8b
-#: 67af1123860e496b9f91f7c3a519b19d a304b06eed3747b49d620309937f6449
-#: c651c6e72da941cc8ce3ba6493f9457a ca37502959d045a1a78f4a4f650ae145
-#: ca796b1eb1d54d3cb7da0e9f2810c897 discord.flags.ApplicationFlags:31
+#: 3851f49fd12d49ba93ddefde1a9b5c8b discord.flags.ApplicationFlags:31
 #: discord.flags.AttachmentFlags:31 discord.flags.ChannelFlags:31
 #: discord.flags.MemberFlags:31 discord.flags.PublicUserFlags:31
 #: discord.flags.RoleFlags:31 discord.flags.SKUFlags:31 of
@@ -3856,8 +3526,7 @@ msgid ""
 "members information over the gateway."
 msgstr ""
 
-#: ../../docstring 31ebe53678724d59ba3d2e8b26c87434
-#: 800775621ea646a5ab3d7aa7241a312f
+#: ../../docstring 800775621ea646a5ab3d7aa7241a312f
 #: discord.ApplicationFlags.gateway_message_content_limited:1
 #: discord.ApplicationFlags.verification_pending_guild_limit:1 of
 msgid ""
@@ -3903,10 +3572,9 @@ msgid ""
 "were regular bools. This allows you to edit the system flags easily."
 msgstr ""
 
-#: 0773bc0d7cea46738c462ab180eb4376 3bc2d187867445d89d6f41da9143802d
-#: a9111ef7cd2e4cd2b8a89c78d2cc659b d854e922bf584117a013f976c9b28415
-#: discord.flags.MessageFlags:40 discord.flags.PublicUserFlags:39
-#: discord.flags.RoleFlags:39 discord.flags.SystemChannelFlags:43 of
+#: d854e922bf584117a013f976c9b28415 discord.flags.MessageFlags:40
+#: discord.flags.PublicUserFlags:39 discord.flags.RoleFlags:39
+#: discord.flags.SystemChannelFlags:43 of
 msgid ""
 "The raw value. This value is a bit array field of a 53-bit integer "
 "representing the currently available flags. You should query flags via "
@@ -4330,36 +3998,21 @@ msgstr ""
 msgid "Constructs a :class:`Colour` from an RGB tuple."
 msgstr ""
 
-#: 0022122c9e014d80bdba2c7242d14b0d 0572585aec68476682668d005a3c3b4f
-#: 18725c88d25843da82b566cb3a8f3036 19fc169b9416480e882b919b0742175d
-#: 1f1f5a340a3e49b39fe7b02f95bee2f3 1fb0f45cd10f4a879ef681cd0e30a6f8
-#: 2a8b69d9fe7a4767a063694e52574666 3d4d3ff243c84a55bc04205123b67b39
-#: 3fc050a5e3044581aa771d20a3d46918 70c2b6d36c974405a2993422c01a46e6
-#: 71634e4f447f4c7b9932135a1faab921 71e9bd4b899443e790bfcfd96649e61f
-#: 7290c848640c4bd8a711f58adeba46ba 7c802b0e0ade49a0ad9db95004131d09
-#: 7eb434a46fbf4f9d9bcce3907582bab4 887b7f088a2c4a9fbf171b9e8859b231
-#: 93dfad5707f44dee856d0860ac006d26 9971e2da3aa24d2d8f60f8204978647f
-#: 9df700b3893c46438945f72e379b4389 a0f8ca655ace4281904460b701a12e9d
-#: a2d931976a37445db9c7dac8fc4c37c8 a9dac317daa24c98a06048d6cfac090a
-#: b0256725035e47adb1a721139a023589 bb37ef13a9cd40c6905b63bd95934775
-#: bca9c6fc15464f518561bfcc5f8581b3 d4d35ebcf0b04ec0b10ea85dac563c99
-#: d520111c73814623bce25249a90ec7a6 d83056fdd5b44d139964d8d931d522e7
-#: d9cd83bb22d447d18190b1aa9892abfd da75f800e2e742068b927f529196aee3
-#: discord.colour.Colour.blue:4 discord.colour.Colour.blurple:4
-#: discord.colour.Colour.dark_blue:4 discord.colour.Colour.dark_gold:4
-#: discord.colour.Colour.dark_green:4 discord.colour.Colour.dark_grey:4
-#: discord.colour.Colour.dark_magenta:4 discord.colour.Colour.dark_orange:4
-#: discord.colour.Colour.dark_purple:4 discord.colour.Colour.dark_red:4
-#: discord.colour.Colour.dark_teal:4 discord.colour.Colour.darker_grey:4
-#: discord.colour.Colour.default:4 discord.colour.Colour.embed_background:14
-#: discord.colour.Colour.from_hsv:9 discord.colour.Colour.from_rgb:9
-#: discord.colour.Colour.gold:4 discord.colour.Colour.green:4
-#: discord.colour.Colour.greyple:4 discord.colour.Colour.light_grey:4
-#: discord.colour.Colour.lighter_grey:4 discord.colour.Colour.magenta:4
-#: discord.colour.Colour.og_blurple:4 discord.colour.Colour.orange:4
-#: discord.colour.Colour.purple:4 discord.colour.Colour.random:16
-#: discord.colour.Colour.red:4 discord.colour.Colour.teal:4
-#: ea647fa805ce44729fd1e8dfe31d938a ee743564f21844d5adbcfd588a644aa9 of
+#: a0f8ca655ace4281904460b701a12e9d discord.colour.Colour.blue:4
+#: discord.colour.Colour.blurple:4 discord.colour.Colour.dark_blue:4
+#: discord.colour.Colour.dark_gold:4 discord.colour.Colour.dark_green:4
+#: discord.colour.Colour.dark_grey:4 discord.colour.Colour.dark_magenta:4
+#: discord.colour.Colour.dark_orange:4 discord.colour.Colour.dark_purple:4
+#: discord.colour.Colour.dark_red:4 discord.colour.Colour.dark_teal:4
+#: discord.colour.Colour.darker_grey:4 discord.colour.Colour.default:4
+#: discord.colour.Colour.embed_background:14 discord.colour.Colour.from_hsv:9
+#: discord.colour.Colour.from_rgb:9 discord.colour.Colour.gold:4
+#: discord.colour.Colour.green:4 discord.colour.Colour.greyple:4
+#: discord.colour.Colour.light_grey:4 discord.colour.Colour.lighter_grey:4
+#: discord.colour.Colour.magenta:4 discord.colour.Colour.og_blurple:4
+#: discord.colour.Colour.orange:4 discord.colour.Colour.purple:4
+#: discord.colour.Colour.random:16 discord.colour.Colour.red:4
+#: discord.colour.Colour.teal:4 of
 msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
 " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
@@ -4507,29 +4160,25 @@ msgid ""
 "``0x992d22``."
 msgstr ""
 
-#: 5e27ef808d91425e970ae6662337c2b5 8044758a0db84cdf863db1e689e0be67
-#: discord.colour.Colour.lighter_grey:1 of
+#: 5e27ef808d91425e970ae6662337c2b5 discord.colour.Colour.lighter_grey:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
 "``0x95a5a6``."
 msgstr ""
 
-#: 20eb2a0175154749974a5ddcaea1c505 c0f6998838a94278abf17afb257fb664
-#: discord.colour.Colour.dark_grey:1 of
+#: 20eb2a0175154749974a5ddcaea1c505 discord.colour.Colour.dark_grey:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
 "``0x607d8b``."
 msgstr ""
 
-#: c72d480b7c9149d6ac778be8a1432ded discord.colour.Colour.light_grey:1
-#: fc5d0c4ec9b1403c86dccd73eab9cabf of
+#: c72d480b7c9149d6ac778be8a1432ded discord.colour.Colour.light_grey:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
 "``0x979c9f``."
 msgstr ""
 
-#: 22102a11a6cf40308bc89b14cfb7ba4c 6f66401bfb6b462090fc239b5f121de9
-#: discord.colour.Colour.darker_grey:1 of
+#: 6f66401bfb6b462090fc239b5f121de9 discord.colour.Colour.darker_grey:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
 "``0x546e7a``."
@@ -4631,13 +4280,13 @@ msgid ""
 "down versions:"
 msgstr ""
 
-#: a28d0d7a3af749fc815dcf126213541e bd8eef39e9e8469488008ac99a754b70
-#: discord.activity.Activity:9 discord.activity.BaseActivity:7 of
+#: bd8eef39e9e8469488008ac99a754b70 discord.activity.Activity:9
+#: discord.activity.BaseActivity:7 of
 msgid ":class:`Game`"
 msgstr ""
 
-#: 0732538ae1554ce7ad874746d8e04836 5304d830379f4e10b5bf07f5239cc960
-#: discord.activity.Activity:10 discord.activity.BaseActivity:8 of
+#: 5304d830379f4e10b5bf07f5239cc960 discord.activity.Activity:10
+#: discord.activity.BaseActivity:8 of
 msgid ":class:`Streaming`"
 msgstr ""
 
@@ -4716,7 +4365,7 @@ msgid ""
 msgstr ""
 
 #: 5eba8079bdca4d1ebd1953ae49348f0f discord.activity.Activity:69
-#: discord.activity.Streaming:61 e41a8f1a9a474c699e2ae5b09b9eb767 of
+#: discord.activity.Streaming:61 of
 msgid "Dict[:class:`str`, :class:`str`]"
 msgstr ""
 
@@ -4769,8 +4418,8 @@ msgstr ""
 msgid "The emoji that belongs to this activity."
 msgstr ""
 
-#: b84d01ced9aa4d4d87d8a0ebe947641d ca906f7c1a2449a5bc24eb1ec94888eb
-#: discord.activity.Activity:101 discord.activity.CustomActivity:33 of
+#: b84d01ced9aa4d4d87d8a0ebe947641d discord.activity.Activity:101
+#: discord.activity.CustomActivity:33 of
 msgid "Optional[:class:`PartialEmoji`]"
 msgstr ""
 
@@ -4867,8 +4516,8 @@ msgstr ""
 msgid "The game's name."
 msgstr ""
 
-#: 00b6990c11bc4f928db940ba5015af05 3a36f0b58a4a4e7cb9f8dc2cc6aa1d94
-#: discord.Game.type:1 discord.Streaming.type:1 of
+#: 3a36f0b58a4a4e7cb9f8dc2cc6aa1d94 discord.Game.type:1
+#: discord.Streaming.type:1 of
 msgid "Returns the game's type. This is for compatibility with :class:`Activity`."
 msgstr ""
 
@@ -5064,7 +4713,7 @@ msgstr ""
 msgid "Return the permission's hash."
 msgstr ""
 
-#: 35af40a9ec964fb48c18bbdfc01bf75d discord.permissions.PermissionOverwrite:22
+#: discord.permissions.PermissionOverwrite:22
 #: discord.permissions.Permissions:52 ee479ed5d50d4b20aebb43ef531f5610 of
 msgid ""
 "Returns an iterator of ``(perm, value)`` pairs. This allows it to be, for"
@@ -5109,8 +4758,7 @@ msgid ""
 " set to ``False``."
 msgstr ""
 
-#: 1fba130190d641938864033a7f9fa35d 6588456a9f9f4f36bb455aa4108df274
-#: d21bdd4bb92840a2b3de85597be27a98 discord.permissions.Permissions.all:5
+#: 1fba130190d641938864033a7f9fa35d discord.permissions.Permissions.all:5
 #: discord.permissions.Permissions.none:5
 #: discord.permissions.Permissions.voice:5 of
 msgid ""
@@ -5284,7 +4932,6 @@ msgstr ""
 msgid "Bulk updates this permission object."
 msgstr ""
 
-#: 6287598599254ef6bf071e4b261f44e5
 #: discord.permissions.PermissionOverwrite.update:3
 #: discord.permissions.Permissions.update:3 ffc0d79e5c0e49a5afdaa65646082f76 of
 msgid ""
@@ -5734,4 +5381,10 @@ msgid ""
 "<https://discord.com/developers/docs/reference#locales>`_ for a list of "
 "valid locales."
 msgstr ""
+
+#~ msgid ""
+#~ "Union[:class:`TextChannel`, :class:`Thread`, "
+#~ ":class:`DMChannel`, :class:`VoiceChannel`, "
+#~ ":class:`StageChannel`]"
+#~ msgstr ""
 
