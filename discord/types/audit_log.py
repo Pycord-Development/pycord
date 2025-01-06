@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from .._typed_dict import NotRequired, TypedDict
+from typing_extensions import NotRequired, TypedDict
+
 from .automod import AutoModRule
 from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
 from .guild import (

@@ -36,6 +36,12 @@ These changes are available on the `master` branch, but have not yet been releas
   `Permissions.use_external_sounds`, and
   `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
+- Added `Message._raw_data` attribute.
+  ([#2670](https://github.com/Pycord-Development/pycord/pull/2670))
+- Added helper methods to determine the authorizing party of an `Interaction`.
+  ([#2659](https://github.com/Pycord-Development/pycord/pull/2659))
+- Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
+  ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Add missing `Guild` feature flags and `Guild.edit` parameters.
   ([#2672](https://github.com/Pycord-Development/pycord/pull/2672))
 
@@ -66,6 +72,12 @@ These changes are available on the `master` branch, but have not yet been releas
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
+- Fixed an error when responding non-ephemerally with a `Paginator` to an ephemerally
+  deferred interaction.
+  ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))
+- Fixed attachment metadata being set incorrectly in interaction responses causing the
+  metadata to be ignored by Discord.
+  ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
 
 ### Changed
 
@@ -79,7 +91,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Replaced audioop (deprecated module) implementation of `PCMVolumeTransformer.read`
   method with a pure Python equivalent.
   ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
-- Updated `Guild.filesize_limit` to 10 Mb instead of 25 Mb following Discord's API
+- Updated `Guild.filesize_limit` to 10 MB instead of 25 MB following Discord's API
   changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))
 
 ### Deprecated

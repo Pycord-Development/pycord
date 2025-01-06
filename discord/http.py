@@ -44,6 +44,7 @@ from .errors import (
     LoginFailure,
     NotFound,
 )
+from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .utils import MISSING, warn_deprecated
 
@@ -567,13 +568,17 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -633,13 +638,17 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
