@@ -621,7 +621,7 @@ class Guild(Hashable):
         Creates a :class:`SoundboardSound` in the guild.
         You must have :attr:`Permissions.manage_expressions` permission to use this.
 
-        .. versionadded:: 2.4
+        .. versionadded:: 2.7
 
         Parameters
         ----------
@@ -632,7 +632,7 @@ class Guild(Hashable):
             Only MP3 sound files that are less than 5.2 seconds long are supported.
         volume: :class:`float`
             The volume of the sound. Defaults to 1.0.
-        emoji: Union[:class:`PartialEmoji`, :class:`GuildEmoji`, :class:`str`]
+        emoji: Optional[Union[:class:`PartialEmoji`, :class:`GuildEmoji`, :class:`str`]]
             The emoji of the sound.
         reason: Optional[:class:`str`]
             The reason for creating this sound. Shows up on the audit log.

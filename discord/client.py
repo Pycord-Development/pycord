@@ -2293,8 +2293,8 @@ class Client:
 
         Returns
         -------
-        :class:`.Sound`
-            The sound from the ID.
+        Optional[:class:`.SoundboardSound`]
+            The sound with the given ID.
         """
         return self._connection._get_sound(sound_id)
 
@@ -2315,7 +2315,7 @@ class Client:
 
         Returns
         -------
-        List[:class:`.Sound`]
+        List[:class:`.SoundboardSound`]
             The bot's default sounds.
         """
         data = await self._connection.http.get_default_sounds()

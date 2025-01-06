@@ -1,7 +1,6 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -203,13 +202,13 @@ class SoundboardSound(PartialSoundboardSound):
 
         Parameters
         ----------
-        name: :class:`str`
+        name: Optional[:class:`str`]
             The new name of the sound.
-        volume: :class:`float`
+        volume: Optional[:class:`float`]
             The new volume of the sound.
-        emoji: Union[:class:`PartialEmoji`, :class:`str`]
+        emoji: Optional[Union[:class:`PartialEmoji`, :class:`str`]]
             The new emoji of the sound.
-        reason: :class:`str`
+        reason: Optional[:class:`str`]
             The reason for editing the sound. Shows up in the audit log.
 
         Returns
@@ -254,7 +253,7 @@ class SoundboardSound(PartialSoundboardSound):
 
         Parameters
         ----------
-        reason: :class:`str`
+        reason: Optional[:class:`str`]
             The reason for deleting the sound. Shows up in the audit log.
 
         Raises
