@@ -89,7 +89,7 @@ class RoleTags:
         self.subscription_listing_id: int | None = _get_as_snowflake(
             data, "subscription_listing_id"
         )
-        # NOTE: The API returns "null" for this if the following tags True, and doesn't return them at all if False.
+        # NOTE: The API returns "null" for each of the following tags if they are True, and omits them if False.
         # However, "null" corresponds to None.
         # This is different from other fields where "null" means "not there".
         # So in this case, a value of None is the same as True.
@@ -118,7 +118,8 @@ class RoleTags:
         """Whether the role is available for purchase.
 
         Returns ``True`` if the role is available for purchase, and
-        ``False`` if it is not available for purchase or if the role is not linked to a guild subscription.
+        ``False`` if it is not available for purchase or if the role
+        is not linked to a guild subscription.
 
         .. versionadded:: 2.7
         """
@@ -349,7 +350,8 @@ class Role(Hashable):
         """Whether the role is available for purchase.
 
         Returns ``True`` if the role is available for purchase, and
-        ``False`` if it is not available for purchase or if the role is not linked to a guild subscription.
+        ``False`` if it is not available for purchase or if the
+        role is not linked to a guild subscription.
 
         .. versionadded:: 2.7
         """
