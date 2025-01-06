@@ -1664,7 +1664,7 @@ class Guild(Hashable):
         premium_progress_bar_enabled: bool = MISSING,
         disable_invites: bool = MISSING,
         discoverable: bool = MISSING,
-        raid_alerts: bool = MISSING,
+        enable_raid_alerts: bool = MISSING,
         enable_activity_feed: bool = MISSING,
     ) -> Guild:
         r"""|coro|
@@ -1745,7 +1745,7 @@ class Guild(Hashable):
             Whether the guild should have server invites enabled or disabled.
         discoverable: :class:`bool`
             Whether the guild should be discoverable in the discover tab.
-        raid_alerts: :class:`bool`
+        enable_raid_alerts: :class:`bool`
             Whether activity alerts for the guild should be enabled.
         enable_activity_feed: class:`bool`
             Whether the guild's user activity feed should be enabled.
