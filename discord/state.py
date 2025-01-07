@@ -352,6 +352,11 @@ class ConnectionState:
         """
         if not isinstance(value, Intents):
             raise TypeError(f"Intents must be of type Intents not {value.__class__!r}")
+        ws = self._get_websocket()
+        if ws and ws.open:
+            raise AttributeError(
+                "Cannot change intents after the connection is established."
+            )
         self._intents.value = value.value
 
     @property

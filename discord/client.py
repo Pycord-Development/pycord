@@ -908,7 +908,9 @@ class Client:
                 f"Intents must be an instance of Intents not {value.__class__!r}"
             )
         if self._was_connected:
-            raise ClientException("Cannot change intents on a running client.")
+            raise AttributeError(
+                "Cannot change intents after the connection is established."
+            )
         self._connection.intents = value
 
     # helpers/getters

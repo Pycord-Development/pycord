@@ -94,8 +94,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
 - Updated `Guild.filesize_limit` to 10 MB instead of 25 MB following Discord's API
   changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))
-- Made `Client.intents` writable as long as the client wasn't started.
-  ([#2687](https://github.com/Pycord-Development/pycord/pull/2687))
+- Made `Client.intents` and `ConnectionState.intents` writable as long as the client
+  wasn't started. ([#2687](https://github.com/Pycord-Development/pycord/pull/2687))
 
 ### Deprecated
 
