@@ -901,7 +901,8 @@ class Client:
         ------
         TypeError
             The value is not an instance of Intents.
-        R
+        AttributeError
+            The intents cannot be changed after the connection is established.
         """
         if not isinstance(value, Intents):
             raise TypeError(

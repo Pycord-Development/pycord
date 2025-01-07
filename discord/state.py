@@ -349,6 +349,8 @@ class ConnectionState:
         ------
         TypeError
             The value passed is not of type :class:`Intents`.
+        AttributeError
+            The intents cannot be changed after the connection is established.
         """
         if not isinstance(value, Intents):
             raise TypeError(f"Intents must be of type Intents not {value.__class__!r}")
