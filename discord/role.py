@@ -60,6 +60,10 @@ class RoleTags:
     While this can be accessed, a useful interface is also provided in the
     :class:`Role` and :class:`Guild` classes as well.
 
+    Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
+    We aim to improve the documentation / introduce new attributes in future.
+    For the meantime read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work.
+
     .. versionadded:: 1.6
 
     Attributes
