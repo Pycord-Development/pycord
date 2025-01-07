@@ -68,22 +68,37 @@ class RoleTags:
         The bot's user ID that manages this role.
     integration_id: Optional[:class:`int`]
         The integration ID that manages the role.
+    subscription_listing_id: Optional[:class:`int`]
+        The subscription SKU and listing ID of the role.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
         "bot_id",
         "integration_id",
+        "subscription_listing_id",
         "_premium_subscriber",
+        "_available_for_purchase",
+        "_guild_connections",
     )
 
     def __init__(self, data: RoleTagPayload):
         self.bot_id: int | None = _get_as_snowflake(data, "bot_id")
         self.integration_id: int | None = _get_as_snowflake(data, "integration_id")
-        # NOTE: The API returns "null" for this if it's valid, which corresponds to None.
+        self.subscription_listing_id: int | None = _get_as_snowflake(
+            data, "subscription_listing_id"
+        )
+        # NOTE: The API returns "null" for each of the following tags if they are True, and omits them if False.
+        # However, "null" corresponds to None.
         # This is different from other fields where "null" means "not there".
         # So in this case, a value of None is the same as True.
         # Which means we would need a different sentinel.
         self._premium_subscriber: Any | None = data.get("premium_subscriber", MISSING)
+        self._available_for_purchase: Any | None = data.get(
+            "available_for_purchase", MISSING
+        )
+        self._guild_connections: Any | None = data.get("guild_connections", MISSING)
 
     def is_bot_managed(self) -> bool:
         """Whether the role is associated with a bot."""
@@ -94,13 +109,36 @@ class RoleTags:
         return self._premium_subscriber is None
 
     def is_integration(self) -> bool:
-        """Whether the role is managed by an integration."""
+        """Whether the guild manages the role through some form of
+        integrations such as Twitch or through guild subscriptions.
+        """
         return self.integration_id is not None
+
+    def is_available_for_purchase(self) -> bool:
+        """Whether the role is available for purchase.
+
+        Returns ``True`` if the role is available for purchase, and
+        ``False`` if it is not available for purchase or if the role
+        is not linked to a guild subscription.
+
+        .. versionadded:: 2.7
+        """
+        return self._available_for_purchase is None
+
+    def is_guild_connections_role(self) -> bool:
+        """Whether the role is a guild connections role.
+
+        .. versionadded:: 2.7
+        """
+        return self._guild_connections is None
 
     def __repr__(self) -> str:
         return (
             f"<RoleTags bot_id={self.bot_id} integration_id={self.integration_id} "
-            f"premium_subscriber={self.is_premium_subscriber()}>"
+            f"subscription_listing_id={self.subscription_listing_id} "
+            f"premium_subscriber={self.is_premium_subscriber()} "
+            f"available_for_purchase={self.is_available_for_purchase()} "
+            f"guild_connections={self.is_guild_connections_role()}>"
         )
 
 
@@ -167,8 +205,10 @@ class Role(Hashable):
             operators on the role objects themselves.
 
     managed: :class:`bool`
-        Indicates if the role is managed by the guild through some form of
-        integrations such as Twitch.
+        Indicates if the role is managed by the guild.
+        This is true if any of :meth:`Role.is_integration`, :meth:`Role.is_premium_subscriber`,
+        :meth:`Role.is_bot_managed` or :meth:`Role.is_guild_connections_role`
+        is ``True``.
     mentionable: :class:`bool`
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
@@ -287,7 +327,8 @@ class Role(Hashable):
         return self.tags is not None and self.tags.is_premium_subscriber()
 
     def is_integration(self) -> bool:
-        """Whether the role is managed by an integration.
+        """Whether the guild manages the role through some form of
+        integrations such as Twitch or through guild subscriptions.
 
         .. versionadded:: 1.6
         """
@@ -304,6 +345,24 @@ class Role(Hashable):
             and not self.managed
             and (me.top_role > self or me.id == self.guild.owner_id)
         )
+
+    def is_available_for_purchase(self) -> bool:
+        """Whether the role is available for purchase.
+
+        Returns ``True`` if the role is available for purchase, and
+        ``False`` if it is not available for purchase or if the
+        role is not linked to a guild subscription.
+
+        .. versionadded:: 2.7
+        """
+        return self.tags is not None and self.tags.is_available_for_purchase()
+
+    def is_guild_connections_role(self) -> bool:
+        """Whether the role is a guild connections role.
+
+        .. versionadded:: 2.7
+        """
+        return self.tags is not None and self.tags.is_guild_connections_role()
 
     @property
     def permissions(self) -> Permissions:
