@@ -257,6 +257,7 @@ class Client:
         self._connection: ConnectionState = self._get_state(**options)
         self._connection.shard_count = self.shard_count
         self._closed: bool = False
+        self._was_connected: bool = False
         self._ready: asyncio.Event = asyncio.Event()
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
@@ -639,6 +640,7 @@ class Client:
             "initial": True,
             "shard_id": self.shard_id,
         }
+        self._was_connected = True
         while not self.is_closed():
             try:
                 coro = DiscordWebSocket.from_client(self, **ws_params)
@@ -884,6 +886,30 @@ class Client:
         .. versionadded:: 1.5
         """
         return self._connection.intents
+
+    @intents.setter
+    def intents(self, value: Any) -> None:  # pyright: ignore [reportExplicitAny]
+        """
+        Set the intents for this Client.
+
+        Parameters
+        ----------
+        value: :class:`Intents`
+            The intents to set for this Client.
+
+        Raises
+        ------
+        TypeError
+            The value is not an instance of Intents.
+        R
+        """
+        if not isinstance(value, Intents):
+            raise TypeError(
+                f"Intents must be an instance of Intents not {value.__class__!r}"
+            )
+        if self._was_connected:
+            raise ClientException("Cannot change intents on a running client.")
+        self._connection.intents = value
 
     # helpers/getters
 

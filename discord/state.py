@@ -334,6 +334,26 @@ class ConnectionState:
         ret.value = self._intents.value
         return ret
 
+    @intents.setter
+    def intents(self, value: Any) -> None:  # pyright: ignore [reportExplicitAny]
+        """
+        Set the intents for the connection. This can only be set before the connection is
+        started or else the connection will crash.
+
+        Parameters
+        ----------
+        value: :class:`Intents`
+            The intents to use for the connection.
+
+        Raises
+        ------
+        TypeError
+            The value passed is not of type :class:`Intents`.
+        """
+        if not isinstance(value, Intents):
+            raise TypeError(f"Intents must be of type Intents not {value.__class__!r}")
+        self._intents.value = value.value
+
     @property
     def voice_clients(self) -> list[VoiceClient]:
         return list(self._voice_clients.values())
