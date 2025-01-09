@@ -1,0 +1,189 @@
+name: "Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: "Version number to release (e.g., 1.2.3, 1.2.3-rc1, 1.2.0)"
+        required: true
+
+permissions: write-all
+
+jobs:
+  safety_check:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - name: "Security Check"
+        uses: Aiko-IT-Systems/execute-whitelist-action@v1.0.0
+        with:
+          whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  pre_config:
+    needs: [safety_check]
+    outputs:
+      branch_name: ${{ steps.determine_vars.outputs.branch_name }}
+      is_rc: ${{ steps.determine_vars.outputs.is_rc }}
+      version: ${{ steps.determine_vars.outputs.version }}
+      previous_tag: ${{ steps.determine_vars.outputs.previous_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Determine Push Branch"
+        id: determine_vars
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          echo "previous_tag=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
+          if [[ $VERSION =~ -rc ]]; then
+            MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
+            echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
+            echo "is_rc=true" >> $GITHUB_OUTPUT
+          elif [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
+            echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
+            echo "is_rc=false" >> $GITHUB_OUTPUT
+          else
+            MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
+            echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
+            echo "is_rc=false" >> $GITHUB_OUTPUT
+          fi
+
+  lib_release:
+    needs: [safety_check,pre_config]
+    runs-on: ubuntu-latest
+    environment: release
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Release Pycord"
+        id: pycord-release
+        uses: Aiko-IT-Systems/pycord-lib-release-action@v1.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pypi-token: ${{ secrets.PYPI_TOKEN }}
+          version-branch-name: ${{ needs.pre_config.outputs.branch_name }}
+          ref: ${{ github.ref_name }}
+          repository: ${{ github.repository }}
+          python-version: "3.12"
+          release-requirements: "requirements/_release.txt"
+          version: ${{ needs.pre_config.outputs.version }}
+          is-rc: ${{ needs.pre_config.outputs.is_rc }}
+          pypi-package: "py-cord"
+
+      - name: "Echo release url"
+        run: echo "${{ steps.pycord-release.outputs.gh-release }}"
+
+  docs_release:
+    runs-on: ubuntu-latest
+    needs: [lib_release,pre_config]
+    if: needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '.0-rc1'))
+    environment: release
+    steps:
+      - name: "Sync Versions on Read the Docs"
+        run: |
+          curl --location --request POST 'https://readthedocs.org/api/v3/projects/pycord/sync-versions/' \
+          --header 'Content-Type: application/json' \
+          --header "Authorization: Token ${{ secrets.READTHEDOCS_TOKEN }}"
+
+      - name: "Activate and Show Version on Read the Docs"
+        run: |
+          VERSION=${{ needs.pre_config.outputs.version }}
+          MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
+          PATCH_VERSION=${VERSION##*.}
+          if [[ $PATCH_VERSION =~ ^[0-9]+$ ]]; then
+            DOCS_VERSION="v$VERSION"
+          else
+            DOCS_VERSION="v$MAJOR_MINOR_VERSION.x"
+          fi
+          curl --location --request PATCH "https://readthedocs.org/api/v3/projects/pycord/versions/$DOCS_VERSION/" \
+          --header 'Content-Type: application/json' \
+          --header "Authorization: Token ${{ secrets.READTHEDOCS_TOKEN }}" \
+          --data '{
+              "active": true,
+              "hidden": false
+          }'
+
+  inform_discord:
+    runs-on: ubuntu-latest
+    needs: [lib_release,docs_release,close_milestone,pre_config]
+    environment: release
+    steps:
+      - name: "Notify Discord"
+        run: |
+          VERSION=${{ needs.pre_config.outputs.version }}
+          MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
+          DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
+          GITHUB_COMPARE_URL="<https://github.com/Pycord-Development/pycord/compare/${{ needs.pre_config.outputs.previous_tag }}...v$VERSION>"
+          GITHUB_RELEASE_URL="<https://github.com/Pycord-Development/pycord/releases/tag/v$VERSION>"
+          PYPI_RELEASE_URL="<https://pypi.org/project/py-cord/$VERSION/>"
+          ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} is out!\n\n"
+          ANNOUNCEMENT="${ANNOUNCEMENT}[@everyone]\n\n"
+          ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
+          ANNOUNCEMENT="${ANNOUNCEMENT}Feel free to take a look at the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL) and the [PyPI release page]($PYPI_RELEASE_URL).\n\n"
+          ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "{\"content\":\"$ANNOUNCEMENT\"}" \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  determine_milestone_id:
+    runs-on: ubuntu-latest
+    needs: [lib_release,pre_config]
+    if: ${{ !contains(needs.pre_config.outputs.version, '-') && endsWith(needs.pre_config.outputs.version, '.0') }}
+    outputs:
+      old_milestone_version: ${{ steps.extract_version.outputs.old_milestone_version }}
+      new_milestone_version: ${{ steps.extract_version.outputs.new_milestone_version }}
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    environment: release
+    steps:
+      - name: "Extract Milestone Version"
+        id: extract_version
+        run: |
+          gh extension install valeriobelli/gh-milestone
+          VERSION=${{ needs.pre_config.outputs.version }}
+          OLD_MILESTONE_VERSION=$(gh milestone list --query "v2.7" | grep "#" | awk '{print $2}')
+          NEW_MILESTONE_VERSION="v$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')"
+          echo "old_milestone_version=$OLD_MILESTONE_VERSION" >> $GITHUB_OUTPUT
+          echo "new_milestone_version=$NEW_MILESTONE_VERSION" >> $GITHUB_OUTPUT
+
+  close_milestone:
+    runs-on: ubuntu-latest
+    needs: [determine_milestone_id,pre_config]
+    if: ${{ !contains(needs.pre_config.outputs.version, '-') && endsWith(needs.pre_config.outputs.version, '.0') }}
+    environment: release
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: "Close Milestone"
+        run: |
+          gh extension install valeriobelli/gh-milestone
+          OLD_MILESTONE_ID=$(gh milestone list --query "${{ needs.determine_milestone_id.outputs.old_milestone_version }}" | grep "#" | cut -d' ' -f2 | cut -d '#' -f2)
+          gh milestone edit $OLD_MILESTONE_ID --state closed
+
+      - name: "Create New Milestone"
+        run: |
+          gh extension install valeriobelli/gh-milestone
+          gh milestone create "${{ needs.determine_milestone_id.outputs.new_milestone_version }}"

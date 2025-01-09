@@ -32,7 +32,7 @@ import discord.abc
 
 from . import utils
 from .asset import Asset
-from .emoji import Emoji
+from .emoji import GuildEmoji
 from .enums import (
     ChannelType,
     EmbeddedActivity,
@@ -143,7 +143,7 @@ class ForumTag(Hashable):
             self.emoji = PartialEmoji.from_str(emoji)
         else:
             raise TypeError(
-                "emoji must be a Emoji, PartialEmoji, or str and not"
+                "emoji must be a GuildEmoji, PartialEmoji, or str and not"
                 f" {emoji.__class__!r}"
             )
 
@@ -1018,7 +1018,7 @@ class ForumChannel(_TextChannel):
         The initial slowmode delay to set on newly created threads in this channel.
 
         .. versionadded:: 2.3
-    default_reaction_emoji: Optional[:class:`str` | :class:`discord.Emoji`]
+    default_reaction_emoji: Optional[:class:`str` | :class:`discord.GuildEmoji`]
         The default forum reaction emoji.
 
         .. versionadded:: 2.5
@@ -1036,6 +1036,9 @@ class ForumChannel(_TextChannel):
             for tag in (data.get("available_tags") or [])
         ]
         self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
+        if self.default_sort_order is not None:
+            self.default_sort_order = try_enum(SortOrder, self.default_sort_order)
+
         reaction_emoji_ctx: dict = data.get("default_reaction_emoji")
         if reaction_emoji_ctx is not None:
             emoji_name = reaction_emoji_ctx.get("emoji_name")
@@ -1084,7 +1087,7 @@ class ForumChannel(_TextChannel):
         default_auto_archive_duration: ThreadArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
-        default_reaction_emoji: Emoji | int | str | None = ...,
+        default_reaction_emoji: GuildEmoji | int | str | None = ...,
         available_tags: list[ForumTag] = ...,
         require_tag: bool = ...,
         overwrites: Mapping[Role | Member | Snowflake, PermissionOverwrite] = ...,
@@ -1135,10 +1138,10 @@ class ForumChannel(_TextChannel):
             The default sort order type to use to order posts in this channel.
 
             .. versionadded:: 2.3
-        default_reaction_emoji: Optional[:class:`discord.Emoji` | :class:`int` | :class:`str`]
+        default_reaction_emoji: Optional[:class:`discord.GuildEmoji` | :class:`int` | :class:`str`]
             The default reaction emoji.
             Can be a unicode emoji or a custom emoji in the forms:
-            :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
+            :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
 
             .. versionadded:: 2.5
         available_tags: List[:class:`ForumTag`]

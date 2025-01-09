@@ -1,0 +1,30 @@
+name: "Auto Approve"
+
+on: [pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: write-all
+
+jobs:
+  auto-approve:
+    runs-on: ubuntu-latest
+    if:
+      ${{ github.actor == 'dependabot[bot]' || github.actor == 'crowdin-bot' ||
+      github.actor == 'Crowdin Bot' || github.actor_id == 106019021 || github.actor_id
+      == 58779643 }}
+    continue-on-error: true
+    steps:
+      - name: "Auto Approve"
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: "Enable Auto Merge"
+        if: ${{ always() }}
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

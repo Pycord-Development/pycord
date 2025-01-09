@@ -12,70 +12,70 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Enumerations"
-msgstr "Enumerazioni"
+msgstr "Enumerations"
 
 msgid "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
-msgstr "L'API fornisce alcune enumerazioni per alcuni tipi di stringhe per evitare che l'API venga digitata con stringa nel caso in cui le stringhe cambiino in futuro."
+msgstr "The API provides some enumerations for certain types of strings to avoid the API from being stringly typed in case the strings change in the future."
 
 msgid "All enumerations are subclasses of an internal class which mimics the behaviour of :class:`enum.Enum`."
-msgstr "Tutte le enumerazioni sono sottoclassi di una classe interna che imita il comportamento di :class:`enum.Enum`."
+msgstr "All enumerations are subclasses of an internal class which mimics the behaviour of :class:`enum.Enum`."
 
 msgid "Specifies the input type of an option."
-msgstr "Specifica il tipo di input di un'opzione."
+msgstr "Specifies the input type of an option."
 
 msgid "A slash subcommand."
-msgstr "Un sottocomando slash."
+msgstr "A slash subcommand."
 
 msgid "A slash command group."
-msgstr "Un gruppo di comando slash."
+msgstr "A slash command group."
 
 msgid "A string."
-msgstr "Una stringa."
+msgstr "A string."
 
 msgid "An integer between -2⁵³ and 2⁵³."
-msgstr "Un numero intero compreso tra -253 e 253."
+msgstr "An integer between -2⁵³ and 2⁵³."
 
 msgid "IDs, such as 881224361015672863, are often too big for this input type."
-msgstr "Gli ID, come 881224361015672863, sono spesso troppo grandi per questo tipo di input."
+msgstr "IDs, such as 881224361015672863, are often too big for this input type."
 
 msgid "A boolean."
 msgstr "A boolean."
 
 msgid "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
-msgstr "Un utente dal canale corrente. Questo verrà convertito in un'istanza di :class:`.User` in canali privati, altrimenti :class:`.Member`"
+msgstr "A user from the current channel. This will be converted to an instance of :class:`.User` in private channels, else :class:`.Member`"
 
 msgid "A channel from the current guild."
-msgstr "Un canale dalla gilda corrente."
+msgstr "A channel from the current guild."
 
 msgid "A role from the current guild."
-msgstr "Un ruolo dalla gilda attuale."
+msgstr "A role from the current guild."
 
 msgid "A mentionable (user or role)."
-msgstr "Un accennato (utente o ruolo)."
+msgstr "A mentionable (user or role)."
 
 msgid "A floating-point number between -2⁵³ and 2⁵³."
-msgstr "Un numero in virgola mobile compreso tra -253 e 253."
+msgstr "A floating-point number between -2⁵³ and 2⁵³."
 
 msgid "An attachment."
-msgstr "Un allegato."
+msgstr "An attachment."
 
 msgid "Specifies the type of channel."
-msgstr "Specifica il tipo di canale."
+msgstr "Specifies the type of channel."
 
 msgid "A text channel."
-msgstr "Un canale di testo."
+msgstr "A text channel."
 
 msgid "A voice channel."
-msgstr "Un canale vocale."
+msgstr "A voice channel."
 
 msgid "A private text channel. Also called a direct message."
-msgstr "Un canale di testo privato. Chiamato anche un messaggio diretto."
+msgstr "A private text channel. Also called a direct message."
 
 msgid "A private group text channel."
-msgstr "Un canale di testo di gruppo privato."
+msgstr "A private group text channel."
 
 msgid "A category channel."
-msgstr "Un canale di categoria."
+msgstr "A category channel."
 
 msgid "A guild news channel."
 msgstr "A guild news channel."
@@ -308,14 +308,14 @@ msgstr "Represents Discord pinging to see if the interaction response server is 
 msgid "Represents a slash command interaction."
 msgstr "Represents a slash command interaction."
 
-msgid "Represents a component based interaction, i.e. using the Discord Bot UI Kit."
-msgstr "Represents a component based interaction, i.e. using the Discord Bot UI Kit."
+msgid "Represents a component-based interaction, i.e. using the Discord Bot UI Kit."
+msgstr "Represents a component-based interaction, i.e. using the Discord Bot UI Kit."
 
 msgid "Represents a autocomplete interaction for slash commands."
 msgstr "Represents a autocomplete interaction for slash commands."
 
-msgid "Represents a modal based interaction."
-msgstr "Represents a modal based interaction."
+msgid "Represents a modal-based interaction."
+msgstr "Represents a modal-based interaction."
 
 msgid "Specifies the response type for the interaction."
 msgstr "Specifies the response type for the interaction."

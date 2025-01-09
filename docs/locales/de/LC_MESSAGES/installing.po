@@ -12,13 +12,13 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Installing Pycord"
-msgstr "Installing Pycord"
+msgstr "Pycord installieren"
 
 msgid "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
-msgstr "This is the documentation for Pycord, a library for Python to aid in creating applications that utilise the Discord API."
+msgstr "Dies ist die Dokumentation für Pycord, eine Bibliothek für Python, die bei der Erstellung von Anwendungen hilft, die die Discord API verwenden."
 
 msgid "Prerequisites"
-msgstr "Prerequisites"
+msgstr "Voraussetzungen"
 
 msgid "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
 msgstr "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
@@ -30,7 +30,7 @@ msgid "For new features in upcoming versions, you will need to install the pre-r
 msgstr "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
-msgstr "For Windows users, this command should be used to install the pre-release: ::"
+msgstr "Für Windows-Benutzer sollte dieser Befehl verwendet werden, um die Betaversion zu installieren: ::"
 
 msgid "You can get the library directly from PyPI: ::"
 msgstr "You can get the library directly from PyPI: ::"
@@ -93,8 +93,8 @@ msgid "Basic Concepts"
 msgstr "Basic Concepts"
 
 msgid "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
-msgstr "Pycord revolves around the concept of :ref:`events <discord-api-events>`. An event is something you listen to and then respond to. For example, when a message happens, you will receive an event about it that you can respond to."
+msgstr "Pycord dreht sich um das Konzept von :ref:`events <discord-api-events>`. Ein Event ist etwas, auf das Sie hören und dann reagieren. Zum Beispiel, wenn eine Nachricht passiert, erhalten Sie ein Event darüber, auf das Sie reagieren können."
 
 msgid "A quick example to showcase how events work:"
-msgstr "A quick example to showcase how events work:"
+msgstr "Ein schnelles Beispiel, um zu zeigen, wie Events funktionieren:"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2024-08-13 10:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,19 +56,19 @@ msgstr ""
 #: 36bdb8c4ce3245f58c14273b19fd5d62
 #: 52bf2928121f4472b33d87c293c520da
 #: a0e267ca8cbb4cdc92ee405b3a8b5906
-#: 5d259255b5e84b158b12b09e5b5bd019
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
 #: 235625d33ce645a7b043c3677e586ff9
-#: 55f70772de854acc8d6d057cbb0f8f21
-#: eba2b806575f46e09f700eed57737af5
-#: 3f296f45a98445549b2c7d2591f5f1f4
-#: c8d2f6b424ea40b796ee426da0da3234
-#: 5114f0ba7d6e4348a888d5d514b1ce3d
-#: 1cd33b07806d4804a737dbb923dac8dc
-#: 46a50a4147eb4e77b1ae0de308cac5ee
-#: a99aebc3608649e3a2f828345d44ae45
-#: 4f780371cc9a4f03a35e177780cbf8af
-#: dc86fdded2714700a8fea517ba06c186
-#: 04736647c59b4e3a96e46449e7e5c77c
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
+#: a0e267ca8cbb4cdc92ee405b3a8b5906
 msgid "Parameters"
 msgstr ""
 
@@ -94,17 +94,16 @@ msgstr ""
 #: 466e0a2592dd47b6a53225e7c79ec12b
 #: 661e5de699854673aba3514ac463b12e
 #: 96f7f9fedd3e4084838b9340c26d3781
-#: c6ce3ac8bd3f400d9409977714e873b3
-#: b3cd8efec02a48f39bf62cd9f7a16f52
-#: 2f7e67dbd5fb4733a461196f2cd1638c
-#: 78df59c2a48944f8a606e2ddee6543ed
-#: 0ded2b5fdd0c468d9e64b4f3d0e28717
-#: b3677126abad41359049266d39e3c5f3
-#: 6ce3eb6824af47e8b995511b3f7f2e0c
-#: b4541055ead142caaa92694e4fc0c9f7
-#: 8aeb25c91c3040fa8bed102c91628748
-#: aa773a44b082442da00640cf9fba67d4
-#: 44e192c9d3194e3bb02547a3d42b06c3
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
+#: 96f7f9fedd3e4084838b9340c26d3781
 msgid "Return type"
 msgstr ""
 
@@ -180,14 +179,14 @@ msgstr ""
 #: d2b91ddf551d443299606af43f270971
 #: 3de69d0bb23d41e1bdf1fc7ec71268b0
 #: 51571b876dcd4446b30ec38ef632db2c
-#: d645c2efbd384258b09038d1ddfba557
-#: c6b8473c9c164792bf072c253e6d5b17
-#: 59772a8d35dd4ba19066115d6fd04655
-#: 0f8cfe09ee884eaeb4ff8d9250b92c2e
-#: 60ef82b3b161467ca8c71b959f5c7256
-#: 4887ed86cda545d4af57e4675837f341
-#: ac47a04b2ffc469593b1a89e7bbf4332
-#: 425335dbf316496eaa25bb00e0dc38cd
+#: 51571b876dcd4446b30ec38ef632db2c
+#: 51571b876dcd4446b30ec38ef632db2c
+#: 51571b876dcd4446b30ec38ef632db2c
+#: 51571b876dcd4446b30ec38ef632db2c
+#: 51571b876dcd4446b30ec38ef632db2c
+#: 51571b876dcd4446b30ec38ef632db2c
+#: 51571b876dcd4446b30ec38ef632db2c
+#: 51571b876dcd4446b30ec38ef632db2c
 msgid "Returns"
 msgstr ""
 
@@ -209,12 +208,12 @@ msgstr ""
 #: 31661879ced84eb38fdd4d6a898269f7
 #: 454861253a404ca6bc8c6eaaa62bc4c8
 #: da2632a415b247ba849b48310b8c9939
-#: eced035eda7548f280069c41e933df45
-#: 5e6285c20cb1466dbb2080eda4fac8c0
-#: 9f8c5a00d9b043558bd8f02405d5cd55
-#: 9ddb8f47843842f5a5e86815460c4858
-#: 7bc9e11c8bb14ad7bcc7fe5462edef3c
-#: de023a26446f4dd781831c9cdbb6b46c
+#: da2632a415b247ba849b48310b8c9939
+#: da2632a415b247ba849b48310b8c9939
+#: da2632a415b247ba849b48310b8c9939
+#: da2632a415b247ba849b48310b8c9939
+#: da2632a415b247ba849b48310b8c9939
+#: da2632a415b247ba849b48310b8c9939
 msgid "Raises"
 msgstr ""
 
@@ -327,9 +326,9 @@ msgstr ""
 #: 6c64647e98224b3580a97a6971e0460f
 #: 1d938773f96a4ec29acb39fe95a085e1
 #: 1cd0f7372eb94a76a4c4eb766a807d99
-#: 4b09f5024b9c4f79b0567a857f1c14d0
-#: f174b8a7f5a447f681b56ee23d1c4b67
-#: 281a5d91fc5f4c24808c406b99eab56b
+#: 1cd0f7372eb94a76a4c4eb766a807d99
+#: 1cd0f7372eb94a76a4c4eb766a807d99
+#: 1cd0f7372eb94a76a4c4eb766a807d99
 msgid ":class:`bool`"
 msgstr ""
 
@@ -474,7 +473,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:3
 #: 6bf0393672874d60ace4dad3aeff4e49
 #: bb14163d838f4df5be0e9d0ed62b84d9
-#: 1e29514fc1754ee5b49efc4b1e5aedc5
+#: bb14163d838f4df5be0e9d0ed62b84d9
 msgid "These are not created manually, instead they are created via the decorator or functional interface."
 msgstr ""
 
@@ -485,7 +484,7 @@ msgstr ""
 #: 67aaf53865d34b4eab081611d1af6dda
 #: ed6cdb67d88c45f4a8824353790cf8fa
 #: 3d0e2ed16525455d96c8cb1edadb5bc9
-#: 6d065097b4844f45a82be91dd3333c54
+#: 3d0e2ed16525455d96c8cb1edadb5bc9
 msgid "The name of the command."
 msgstr ""
 
@@ -528,56 +527,56 @@ msgstr ""
 #: 4f19817a7d6541e3ac62dfb873551675
 #: 32ab576baabd4da4aa50f054bac960fa
 #: f422915c4028467f9272f041e90ac356
-#: eeebdfc3417a45ddb0d2eca099679021
-#: 9ee5d52e5ef44212b63ead93ba778d30
-#: 6fef1040501d4606b401938d7b20d3d5
-#: 4305140bcdcc451380a5fa7b3337caa6
-#: 30b8f6abd3ec4a73804a20961695280d
-#: 07a65b46f9bb400c9fde6bedbdf9bece
-#: 64078dfb5b0249a18bedfec426d70ae6
-#: ba046de2b2a340e2b11beb275b5eeec1
-#: cbe094cfaf9947d080f7386a64ab0f8f
-#: 2ba74b8ff9d34c98a16b28e10a8110f4
-#: 22467c09aa194499b7098e589a5ef142
-#: 62a3c63da1b34615a2a612e8a244421b
-#: 1ece09d009324375a4d887bae80fbb7a
-#: bc9bcb492adb41a88224befa11abd930
-#: 31f250e3d8cf494a86e868b202541b7f
-#: a9c2414a2a734add8e5a36feee27284c
-#: 3afc50472809487dbad8cd85a1507406
-#: fee9ae0ea9e340a9a213db446b262306
-#: d7f61dde91fa4cd9b3e9ac395d0c992c
-#: 756ec092ebaf4907b08a46110b80862b
-#: f988ce8ce74a41a298dd7c9cfda39fe6
-#: 604c1652fc9a4088a51e4563b35b2e34
-#: 7cf2d8f67f05430a83632f519f6c85e6
-#: 3da17161fe4f4530b8f2d3c4403837d9
-#: 58526253406040d48cdc0713c4f5a8b2
-#: 329c5b14ab0044e6bdf7afc0afc258c6
-#: c92ede53dab04f138a4eb71cd9a8608c
-#: 94544fd954e94907bc9ba3c57a77854d
-#: 5875a055431f4e6aa71f8dbe92dc583a
-#: b90304d20456414b9b2a136a3e6ee88b
-#: 8550929b3b6943dc92d66e621e603469
-#: 4db87a35a7b4400d8779539f0d81b16e
-#: fbe3235893854d249eb9c229ffaf5810
-#: 87089ec1de784899891c8e09fd4485ab
-#: 4b01d85010d843feb38ae9f358216c0c
-#: f2872309127f47f9bbf393e013670fc3
-#: 1bc3b8c17a69474aa542dcea608c2f66
-#: 07a25a408c5f4cc3992a39503812870a
-#: 54808a0f595e473cb2edf69697936ddd
-#: 41190dd2cbf14e71aecd87a2cbdd81e2
-#: 4eb3385b9b584693b12218107457bc2f
-#: 6df70c21130b4412be26149fc5c81954
-#: 29b95f3a9bf0414aad9ea4c11594acf8
-#: c59f126f8bab400aa9b24e63603f4f48
-#: a1733c635ea54650a699bdf40857dc12
-#: e4b7931ef92442e08d542fc95899f60f
-#: 49bd3838ca98448287a22b876d556c69
-#: bb32c9d08d4847fa902efb10014b11b9
-#: fe7162a2110c42058980717feec7c670
-#: 225d03c6c8d64d7e807c5c34e9d083bf
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
+#: f422915c4028467f9272f041e90ac356
 msgid "type"
 msgstr ""
 
@@ -593,10 +592,10 @@ msgstr ""
 #: e1a8d5b422ad43aa838454c7a548d093
 #: e73d6cccfb5e4378b06a018f2cb3a728
 #: b2ced8f32ef84169b7d0feed3cfdffb8
-#: 29ce8f1db64644d5b6953c99b735e8fe
-#: d86932409aa94cd0bfdc89c61324010a
-#: 1b4d729c95264ac6a1ffb7c09a1e658c
-#: ba38e0e706244b9297603504db49b2d9
+#: b2ced8f32ef84169b7d0feed3cfdffb8
+#: b2ced8f32ef84169b7d0feed3cfdffb8
+#: b2ced8f32ef84169b7d0feed3cfdffb8
+#: b2ced8f32ef84169b7d0feed3cfdffb8
 msgid ":class:`str`"
 msgstr ""
 
@@ -605,7 +604,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:14
 #: d7c8826678824334acd35d914ce6d3da
 #: eb1bd96acf84423f9aeaf5c3aef8d405
-#: 2bbc3df033884fa1b46a994d242f7584
+#: eb1bd96acf84423f9aeaf5c3aef8d405
 msgid "The coroutine that is executed when the command is called."
 msgstr ""
 
@@ -614,7 +613,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:16
 #: 94656ea4509f484995757bcea3759b36
 #: 7a48bea72ed14e6ca0b55c39805de1e2
-#: 85ea2fef9d7f4c9b834f066ec737bc16
+#: 7a48bea72ed14e6ca0b55c39805de1e2
 msgid ":ref:`coroutine <coroutine>`"
 msgstr ""
 
@@ -641,7 +640,7 @@ msgstr ""
 #: d206fd0ddbb94163a1152cfc1c826c06
 #: 64a250a8f0ac40d4aecc323b2ac9a050
 #: 77e0016800534470945d60987fed7899
-#: 6a8c3daa16c14b13a92327aa2454445e
+#: 77e0016800534470945d60987fed7899
 msgid "The ids of the guilds where this command will be registered."
 msgstr ""
 
@@ -652,7 +651,7 @@ msgstr ""
 #: c586c88145e24838a7a0f08feae5b3db
 #: a8524dff9e6d4ac8a3a4b6229ad12e63
 #: 2b5abad428324601971b5a7d306bdc79
-#: 1d303cd972f14fdeaed647cb416dc65a
+#: 2b5abad428324601971b5a7d306bdc79
 msgid "Optional[List[:class:`int`]]"
 msgstr ""
 
@@ -692,7 +691,7 @@ msgstr ""
 #: 90c2f3e57f6b4b12a2db96f0229f59a6
 #: 243e82cb8df04a368273abf6f3e337e6
 #: fe40b49ec6f643979b0a4dc4f8f53c79
-#: 51661a7929c847838757391d6b95a24a
+#: fe40b49ec6f643979b0a4dc4f8f53c79
 msgid "Whether the command should only be usable inside a guild."
 msgstr ""
 
@@ -712,7 +711,7 @@ msgstr ""
 #: 3f98034506304fa5adcbcb706311be39
 #: c1b7134cf52d42c2950bd14e6152aed8
 #: 6d50a38d0a17491a8badbba7e2e94860
-#: a5ffc9fa956048978cf667d3bb43faad
+#: 6d50a38d0a17491a8badbba7e2e94860
 msgid "Whether the command should be restricted to 18+ channels and users. Apps intending to be listed in the App Directory cannot have NSFW commands."
 msgstr ""
 
@@ -725,7 +724,7 @@ msgstr ""
 #: 4093e966648f402ab9e9a3821479bc17
 #: d0cf02f6c33d40f480e6dcdfa59e5bed
 #: 59b49969a86549fe97fef27fa01c037d
-#: 3583ae818d1643f8aee392befe3b564c
+#: 59b49969a86549fe97fef27fa01c037d
 msgid "The default permissions a member needs to be able to run the command."
 msgstr ""
 
@@ -736,7 +735,7 @@ msgstr ""
 #: 128da93392f74a34b75d9da47a07e5d3
 #: c8f15213fe404ecc80f0efbad85ce25f
 #: 5fd417671e594f12bbdb4eebee581649
-#: 062cae8785054f6fbd733b6467bc9615
+#: 5fd417671e594f12bbdb4eebee581649
 msgid ":class:`~discord.Permissions`"
 msgstr ""
 
@@ -745,7 +744,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:48
 #: bd5e5e0d5f4b411c8e40eab4878085bc
 #: 5f2fbe31f5d74ba7a5419816d2ee36a0
-#: 001a7741b18e4cf6b34a196268dd8f37
+#: 5f2fbe31f5d74ba7a5419816d2ee36a0
 msgid "The cog that this command belongs to. ``None`` if there isn't one."
 msgstr ""
 
@@ -754,7 +753,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:50
 #: aa48e1fdf4ed4288b34a01330ba573c1
 #: b34d5a804a5b4cf6afadd914bfc11a59
-#: d44eb81247ab41bb857b223e14faaaba
+#: b34d5a804a5b4cf6afadd914bfc11a59
 msgid "Optional[:class:`Cog`]"
 msgstr ""
 
@@ -767,7 +766,7 @@ msgstr ""
 #: 0b88f443adf9434cab24c10d11dd4d90
 #: 1d352bc3635141cda4848e4fb7e0973e
 #: d9d5c1770b794a5aa348922c71a848cd
-#: 170a1f227d3c445fb783bc5b468fb260
+#: d9d5c1770b794a5aa348922c71a848cd
 msgid "A list of predicates that verifies if the command could be executed with the given :class:`.ApplicationContext` as the sole parameter. If an exception is necessary to be thrown to signal failure, then one inherited from :exc:`.ApplicationCommandError` should be used. Note that if the checks fail then :exc:`.CheckFailure` exception is raised to the :func:`.on_application_command_error` event."
 msgstr ""
 
@@ -778,7 +777,7 @@ msgstr ""
 #: ad45d2349ec14cf6a18c5b8b7dc2a062
 #: ec1f97a3576f474d878bf3caa4bef5f8
 #: 67af798da00f47a391dffbdf1d1b782b
-#: 21c2a433d63c44b286c1fd4099a782ed
+#: 67af798da00f47a391dffbdf1d1b782b
 msgid "List[Callable[[:class:`.ApplicationContext`], :class:`bool`]]"
 msgstr ""
 
@@ -787,7 +786,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:65
 #: 1abebabad8514274a040cb70960603ce
 #: 1942d1f115bd4ac0a990bf73d0a49126
-#: 0510239b8cb44b39b79b52f22a16159c
+#: 1942d1f115bd4ac0a990bf73d0a49126
 msgid "The cooldown applied when the command is invoked. ``None`` if the command doesn't have a cooldown."
 msgstr ""
 
@@ -796,7 +795,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:68
 #: 4403e107ddec48139ba57ac55414cb0d
 #: 58f857b842d14e26b594f8771048b67f
-#: e586cb3f8caf45a1af37de97c615659b
+#: 58f857b842d14e26b594f8771048b67f
 msgid "Optional[:class:`~discord.ext.commands.Cooldown`]"
 msgstr ""
 
@@ -810,7 +809,7 @@ msgstr ""
 #: 21ed930c27b2453195f0faa34f14457e
 #: 808dd134efa0495ea9b213fcf9b366a3
 #: 8aeea10a4b16406bb4fabc8f5e266f29
-#: 83a1ac6615bc4b0b8187940a72a2e955
+#: 8aeea10a4b16406bb4fabc8f5e266f29
 msgid "The name localizations for this command. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
 msgstr ""
 
@@ -828,10 +827,10 @@ msgstr ""
 #: 94ef4db9991241619146371c2d241eec
 #: 9fb8440c83b64b5da889a607e563f44c
 #: 7897fe9f532240669b41fd64f8d327df
-#: 290bf037573b44a4a53b7e81218fbe15
-#: 0e945616becb4bc381cf17c323759ff3
-#: 5fc064c7e15740f7a2d64997db897d50
-#: 64d6d1a8fe904e5e83b52db695e1656d
+#: 7897fe9f532240669b41fd64f8d327df
+#: 7897fe9f532240669b41fd64f8d327df
+#: 7897fe9f532240669b41fd64f8d327df
+#: 7897fe9f532240669b41fd64f8d327df
 msgid "Dict[:class:`str`, :class:`str`]"
 msgstr ""
 
@@ -859,7 +858,7 @@ msgstr ""
 #: bde9fd66a882485c806403a935a2799b
 #: 667c0fef77a5473cb31b94fd02113660
 #: 6eb640cae00c453a89aab91f7b489f5b
-#: 5b9d7f82861d4dcc8bd2fe71465061aa
+#: 6eb640cae00c453a89aab91f7b489f5b
 msgid "Set[:class:`IntegrationType`]"
 msgstr ""
 
@@ -875,7 +874,7 @@ msgstr ""
 #: 5f7622e9d98e4fa78b9fdc2edd148970
 #: e4cf9dee7685447693343bc155de82b8
 #: fca44b50de0b4821acb8f06f88efc30b
-#: d8fa88e31f634d63abb28aa971fde67d
+#: fca44b50de0b4821acb8f06f88efc30b
 msgid "Set[:class:`InteractionContextType`]"
 msgstr ""
 
@@ -884,7 +883,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand.copy:1
 #: e09041a18e2048f885c27f005740a3b7
 #: 31d87139a8b540bc9e1c77b8b1829f09
-#: 33befa53cfaa4b72af12546603aa9307
+#: 31d87139a8b540bc9e1c77b8b1829f09
 msgid "Creates a copy of this command."
 msgstr ""
 
@@ -893,7 +892,7 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand.copy:3
 #: a8105025c5e2494aa3f98b742ce48850
 #: be0630b9503f4c4fa51e83cc51cb43de
-#: 7848e836a6104ccfb683087d78355479
+#: be0630b9503f4c4fa51e83cc51cb43de
 msgid "A new instance of this command."
 msgstr ""
 
@@ -978,11 +977,6 @@ msgstr ""
 msgid ":class:`.SlashCommand` | :class:`.SlashCommandGroup` -- A nested slash command or slash command group from the group."
 msgstr ""
 
-#: ../../../discord/commands/core.py:docstring of discord.commands.core.SlashCommandGroup.walk_commands:6
-#: f6e8962cb2454c9b87070024b1c3e008
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.SlashCommand\\` \\| \\:py\\:class\\:\\`\\~discord.commands.core.SlashCommandGroup\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ""
-
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.SlashCommandGroup.copy:1
 #: 2030810b53b74013855efa8e43381af4
 msgid "Creates a copy of this command group."
@@ -1006,21 +1000,21 @@ msgstr ""
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.MessageCommand:28
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:28
 #: f5cc870407294386a12e5e92859cf1ba
-#: c7d2829643f24511968817261046a622
+#: f5cc870407294386a12e5e92859cf1ba
 msgid "Use the ``contexts`` parameter instead."
 msgstr ""
 
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.MessageCommand:79
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:79
 #: e5ac68f43e54493b955c34ffa4045d84
-#: 4cf87d23d5074594a4416310cb39d1eb
+#: e5ac68f43e54493b955c34ffa4045d84
 msgid "The installation contexts where this command is available. Unapplicable for guild commands."
 msgstr ""
 
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.MessageCommand:85
 #: ../../../discord/commands/core.py:docstring of discord.commands.core.UserCommand:85
 #: f07350db291c4c9eb79da175bcf9ccd0
-#: 35a84349ad164546b485fdaf2b34b5a9
+#: f07350db291c4c9eb79da175bcf9ccd0
 msgid "The interaction contexts where this command is available. Unapplicable for guild commands."
 msgstr ""
 
@@ -1119,9 +1113,9 @@ msgstr ""
 #: ../../../discord/commands/options.py:docstring of discord.commands.options.Option:64
 #: ../../../discord/commands/options.py:docstring of discord.commands.options.Option:71
 #: 08ccceedd6f14b3f8c7d1509b11157a9
-#: 19c584eeab5844f4bdd5cede3b82dff9
-#: f734be10dc854fdb98237d2dd1d2d70a
-#: ba574579dd45454bbcff4815dcce400a
+#: 08ccceedd6f14b3f8c7d1509b11157a9
+#: 08ccceedd6f14b3f8c7d1509b11157a9
+#: 08ccceedd6f14b3f8c7d1509b11157a9
 msgid "Optional[:class:`int`]"
 msgstr ""
 
@@ -1238,14 +1232,14 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext:10
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:9
 #: 735d3b8688e648a5aaf59912c322ab40
-#: f72ead800eaf464eaa2d03c174801e6b
+#: 735d3b8688e648a5aaf59912c322ab40
 msgid "The bot that the command belongs to."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext:12
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:11
 #: 825a171e7cc64dd2a99a0905e70528dc
-#: 36e5d14ba72f4c3598db5eec654cf4df
+#: 825a171e7cc64dd2a99a0905e70528dc
 msgid ":class:`.Bot`"
 msgstr ""
 
@@ -1259,21 +1253,21 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:17
 #: 3c66cc9483d34081a22536fa12eccf5c
 #: 38ff2d92f89246838e966fd79f106c78
-#: d97210a7cb844b6cbf68d7a6e2639509
+#: 3c66cc9483d34081a22536fa12eccf5c
 msgid ":class:`.Interaction`"
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext:22
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:21
 #: d6f68d1b5a754d4faff41bef78e15ad3
-#: 85232844f6d445569c8324f56c0188c1
+#: d6f68d1b5a754d4faff41bef78e15ad3
 msgid "The command that this context belongs to."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext:24
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:23
 #: 731cda54c14a44f4a88a9bc501f056d7
-#: dcbba37ff4d247d89bb2966c846917f2
+#: 731cda54c14a44f4a88a9bc501f056d7
 msgid ":class:`.ApplicationCommand`"
 msgstr ""
 
@@ -1285,12 +1279,12 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext.delete:1
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext.invoke:1
 #: 68f22a8232be41a3b2b45d850414330f
-#: a7ff180cdd2342b1be472e0611e39f66
-#: dd881f72b7ea41568055a12a26d5ea55
-#: dea19320f3f1413e95f68748d7da4393
-#: a4f3b03225cf48eb85af3b7be7242485
-#: 7c979807994841e39ed17fc97345a8ae
-#: 670eda9063f2465285c0609ff2fc75ed
+#: 68f22a8232be41a3b2b45d850414330f
+#: 68f22a8232be41a3b2b45d850414330f
+#: 68f22a8232be41a3b2b45d850414330f
+#: 68f22a8232be41a3b2b45d850414330f
+#: 68f22a8232be41a3b2b45d850414330f
+#: 68f22a8232be41a3b2b45d850414330f
 msgid "|coro|"
 msgstr ""
 
@@ -1372,7 +1366,7 @@ msgstr ""
 #: ../../docstring of discord.ApplicationContext.author:1
 #: ../../docstring of discord.ApplicationContext.user:1
 #: d233902b55f7474383181ef505b0deb0
-#: a7aa96575c074fdc8458ac9b62580e17
+#: d233902b55f7474383181ef505b0deb0
 msgid "Returns the user that sent this context's command. Shorthand for :attr:`.Interaction.user`."
 msgstr ""
 
@@ -1435,8 +1429,8 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_modal:10
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:53
 #: 4b936a2efdbe459c87055d540910dc3b
-#: f8cc815412b5412888cc55cb3035e45f
-#: c1943375177a4f1d8c7da6b6c9dfc83d
+#: 4b936a2efdbe459c87055d540910dc3b
+#: 4b936a2efdbe459c87055d540910dc3b
 msgid "This interaction has already been responded to before."
 msgstr ""
 
@@ -1463,28 +1457,28 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:15
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:6
 #: a23bdff51b9347ed9b843ee572eca90a
-#: 9c0345306ef9486fbd5eabc902e292fc
+#: a23bdff51b9347ed9b843ee572eca90a
 msgid "The content of the message to send."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:55
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:9
 #: 4afdc5be01c04197bb07738ff36e4ef3
-#: bd82a376ba024fc5a3f6edf1d1b0a17c
+#: 4afdc5be01c04197bb07738ff36e4ef3
 msgid "A list of embeds to send with the content. Maximum of 10. This cannot be mixed with the ``embed`` parameter."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:51
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:13
 #: e5c93968e5e54442b2c01ffb864b3784
-#: c9cc1ceb24b14397bf1eb3524bd6b2f4
+#: e5c93968e5e54442b2c01ffb864b3784
 msgid "The rich embed for the content to send. This cannot be mixed with ``embeds`` parameter."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:33
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:17
 #: 249a00f69dd7404b8a18dd990aedf15e
-#: 99735bcc9a424f849079936b45bf21ac
+#: 249a00f69dd7404b8a18dd990aedf15e
 msgid "Indicates if the message should be sent using text-to-speech."
 msgstr ""
 
@@ -1501,14 +1495,14 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.edit:33
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:28
 #: 88d5f696c2574d0fbd7638e815a9f7cd
-#: 3006118b250049cbb5c53de3464cea19
+#: 88d5f696c2574d0fbd7638e815a9f7cd
 msgid "Controls the mentions being processed in this message. See :meth:`.abc.Messageable.send` for more information."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:87
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:32
 #: 2d273ae38e5f4004b94c01caa64f2f1a
-#: 322077dfa7e04985836eae3461178967
+#: 2d273ae38e5f4004b94c01caa64f2f1a
 msgid "If provided, the number of seconds to wait in the background before deleting the message we just sent."
 msgstr ""
 
@@ -1525,14 +1519,14 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:91
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:42
 #: c95324c20b714dce8cea04b4cfa5b6eb
-#: e921d0ff68ca40b48b4c0042d25698b7
+#: c95324c20b714dce8cea04b4cfa5b6eb
 msgid "The poll to send.  .. versionadded:: 2.6"
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:91
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:42
 #: 4e6235b751b24b81bd560956f1f7cb67
-#: 43c18c14db7947fda6fe189d1fd5c607
+#: 4e6235b751b24b81bd560956f1f7cb67
 msgid "The poll to send."
 msgstr ""
 
@@ -1544,7 +1538,7 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:99
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:50
 #: 551054b03c444d50a2a60ca32e8e9f16
-#: 486fcf02f7c944ebbf9625cf330648b9
+#: 551054b03c444d50a2a60ca32e8e9f16
 msgid "Sending the message failed."
 msgstr ""
 
@@ -1557,8 +1551,8 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:103
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:52
 #: 0a737ffed25c468a8fa88b66f105c037
-#: 1572fb51bb2c43a4bb0f162fb6d6f44a
-#: 76fa35e648344516a2977045cfcfc2b2
+#: 0a737ffed25c468a8fa88b66f105c037
+#: 0a737ffed25c468a8fa88b66f105c037
 msgid "The length of ``embeds`` was invalid."
 msgstr ""
 
@@ -1610,14 +1604,14 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.edit:22
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:44
 #: 9da3c6f904e749d2a70116da7b9f91b4
-#: f694dbc86c924f11b9aced8463197b5e
+#: 9da3c6f904e749d2a70116da7b9f91b4
 msgid "The file to upload. This cannot be mixed with ``files`` parameter."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.edit:25
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:47
 #: baf2da1b3eea467899a28632a9051c98
-#: 2413f3bcbf9b438e95bccd0325d1a76b
+#: baf2da1b3eea467899a28632a9051c98
 msgid "A list of files to send with the content. This cannot be mixed with the ``file`` parameter."
 msgstr ""
 
@@ -1859,7 +1853,7 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.cog:1
 #: ../../../discord/commands/context.py:docstring of discord.AutocompleteContext.cog:1
 #: 6dda90c3ae154814a40ba59bed13deb3
-#: 46774b29ee6b4a7d9ede07c4ce25b00f
+#: 6dda90c3ae154814a40ba59bed13deb3
 msgid "Returns the cog associated with this context's command. ``None`` if it does not exist."
 msgstr ""
 

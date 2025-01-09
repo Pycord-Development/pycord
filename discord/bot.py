@@ -34,7 +34,16 @@ import logging
 import sys
 import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Coroutine, Generator, Literal, Mapping, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Literal,
+    Mapping,
+    TypeVar,
+)
 
 from .client import Client
 from .cog import CogMixin
@@ -55,6 +64,9 @@ from .shard import AutoShardedClient
 from .types import interactions
 from .user import User
 from .utils import MISSING, async_all, find, get
+
+if TYPE_CHECKING:
+    from .member import Member
 
 CoroFunc = Callable[..., Coroutine[Any, Any, Any]]
 CFT = TypeVar("CFT", bound=CoroFunc)
@@ -1407,7 +1419,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         self._after_invoke = coro
         return coro
 
-    async def is_owner(self, user: User) -> bool:
+    async def is_owner(self, user: User | Member) -> bool:
         """|coro|
 
         Checks if a :class:`~discord.User` or :class:`~discord.Member` is the owner of
@@ -1422,7 +1434,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         Parameters
         ----------
-        user: :class:`.abc.User`
+        user: Union[:class:`.abc.User`, :class:`.member.Member`]
             The user to check for.
 
         Returns

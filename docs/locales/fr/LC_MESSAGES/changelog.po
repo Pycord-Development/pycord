@@ -26,17 +26,26 @@ msgstr "[Unreleased]"
 msgid "These changes are available on the `master` branch, but have not yet been released."
 msgstr "These changes are available on the `master` branch, but have not yet been released."
 
+msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
+msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️"
+
 msgid "Changed"
 msgstr "Changed"
 
 msgid "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `ScheduledEvent.edit` to `image`. ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))"
 msgstr "Renamed `cover` property of `ScheduledEvent` and `cover` argument of `ScheduledEvent.edit` to `image`. ([#2496](https://github.com/Pycord-Development/pycord/pull/2496))"
 
-msgid "[2.6.0] - 2024-07-09"
-msgstr "[2.6.0] - 2024-07-09"
+msgid "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
+msgstr "⚠️ **This Version Removes Support For Python 3.8** ⚠️ ([#2521](https://github.com/Pycord-Development/pycord/pull/2521))"
 
 msgid "Added"
 msgstr "Added"
+
+msgid "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
+msgstr "Added `Guild.fetch_role` method. ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))"
+
+msgid "[2.6.0] - 2024-07-09"
+msgstr "[2.6.0] - 2024-07-09"
 
 msgid "Added `banner` parameter to `ClientUser.edit`. ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))"
 msgstr "Added `banner` parameter to `ClientUser.edit`. ([#2396](https://github.com/Pycord-Development/pycord/pull/2396))"
@@ -416,8 +425,8 @@ msgstr "Fixed `ScheduledEvent.creator_id` returning `str` instead of `int`. ([#2
 msgid "Fixed `_bytes_to_base64_data` not defined. ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))"
 msgstr "Fixed `_bytes_to_base64_data` not defined. ([#2185](https://github.com/Pycord-Development/pycord/pull/2185))"
 
-msgid "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`. ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))"
-msgstr "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`. ([#2164](https://github.com/Pycord-Development/pycord/pull/2164))"
+msgid "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`."
+msgstr "Fixed inaccurate `Union` type hint of `values` argument of `basic_autocomplete` to include `Iterable[OptionChoice]`."
 
 msgid "Fixed initial message inside of the create thread payload sending legacy beta payload. ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))"
 msgstr "Fixed initial message inside of the create thread payload sending legacy beta payload. ([#2191](https://github.com/Pycord-Development/pycord/pull/2191))"
@@ -770,8 +779,8 @@ msgstr "`commands.has_permissions()` check now returns `True` in DM channels. ([
 msgid "Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`. ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))"
 msgstr "Fix `VoiceChannel`/`CategoryChannel` data being invalidated on `Option._invoke`. ([#1490](https://github.com/Pycord-Development/pycord/pull/1490))"
 
-msgid "Fix type issues in options.py ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
-msgstr "Fix type issues in options.py ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
+msgid "Fix type issues in `options.py` ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
+msgstr "Fix type issues in `options.py` ([#1473](https://github.com/Pycord-Development/pycord/pull/1473))"
 
 msgid "Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent. ([#1521](https://github.com/Pycord-Development/pycord/pull/1521))"
 msgstr "Fix KeyError on AutoModActionExecution when the bot lacks the Message Content Intent. ([#1521](https://github.com/Pycord-Development/pycord/pull/1521))"

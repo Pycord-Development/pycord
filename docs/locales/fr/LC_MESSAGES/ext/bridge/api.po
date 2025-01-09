@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "API Reference"
-msgstr "API Reference"
+msgstr "Référence de l'API"
 
 msgid "The reference manual that follows details the API of Pycord's bridge command extension module."
 msgstr "The reference manual that follows details the API of Pycord's bridge command extension module."
@@ -42,13 +42,13 @@ msgid "A shortcut decorator that invokes :func:`bridge_command` and adds it to t
 msgstr "A shortcut decorator that invokes :func:`bridge_command` and adds it to the internal command list via :meth:`~.Bot.add_bridge_command`."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 msgstr "A decorator that converts the provided method into an :class:`.BridgeCommand`, adds both a slash and traditional (prefix-based) version of the command to the bot, and returns the :class:`.BridgeCommand`."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de la valeur retournée"
 
 msgid "Callable[..., :class:`BridgeCommand`]"
 msgstr "Callable[..., :class:`BridgeCommand`]"

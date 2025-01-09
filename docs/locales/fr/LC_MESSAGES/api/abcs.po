@@ -153,13 +153,13 @@ msgid "The role or user denoting whose overwrite to get."
 msgstr "The role or user denoting whose overwrite to get."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "The permission overwrites for this object."
 msgstr "The permission overwrites for this object."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de la valeur retournée"
 
 msgid ":class:`~discord.PermissionOverwrite`"
 msgstr ":class:`~discord.PermissionOverwrite`"

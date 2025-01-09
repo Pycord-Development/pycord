@@ -1,0 +1,3843 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-11 09:03+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: ../../old_changelog.rst:10 29ce2db918fb41e8a9244bde1d1b9eea
+msgid "Changelog"
+msgstr ""
+
+#: ../../old_changelog.rst:12 e7c24dc0811f4cf2b9c12cb7e77a849f
+msgid ""
+"This page keeps a detailed human-friendly rendering of what's new and "
+"changed in specific versions."
+msgstr ""
+
+#: ../../old_changelog.rst:16 111e8e373caa4879b99291201341d902
+msgid ""
+"This page is no longer maintained. For an updated changelog for version "
+"2.0+, please check out our :doc:`new changelog <changelog>` instead."
+msgstr ""
+
+#: ../../old_changelog.rst:22 f16bc17878ee42bea522f301f589b699
+msgid "v2.0.0"
+msgstr ""
+
+#: ../../old_changelog.rst:23 dccadc49e501411fa8b8937ad238fd42
+msgid "Fully deprecated/removed store channels"
+msgstr ""
+
+#: ../../old_changelog.rst:24 e29ccc70dc9440c49887a04fe64e75d5
+msgid "Buttons and Select Menus"
+msgstr ""
+
+#: ../../old_changelog.rst:25 189374785cfa485889a515a57b0ccd8c
+msgid "Slash commands, User commands, and Message commands (:issue:`31`)"
+msgstr ""
+
+#: ../../old_changelog.rst:26 8800248f6eeb4a04b6a7144853ecb6a8
+msgid "Message Content privileged intent (:issue:`332`)"
+msgstr ""
+
+#: ../../old_changelog.rst:27 2862fcc18cc746479c56e6b516ce52e3
+msgid "Voice receive API (:issue:`532`)"
+msgstr ""
+
+#: ../../old_changelog.rst:28 a2f7d6d326c54e5da6b53b8fc4745462
+msgid "discord.ext.pages (Paginators) (:issue:`589`)"
+msgstr ""
+
+#: ../../old_changelog.rst:29 447a95c2a0b3472db32b67c0da2b3723
+msgid "Input Text and Modal components (:issue:`630`)"
+msgstr ""
+
+#: ../../old_changelog.rst:30 dfe1a69b8b1d4980979a15f6fc56aed5
+msgid "Discord API version changed from 9 to 10 (:issue:`1012`)"
+msgstr ""
+
+#: ../../old_changelog.rst:31 d8255b78a1ab49d796de0c41db90f08f
+msgid "Application permissions v2 (:issue:`1129`)"
+msgstr ""
+
+#: ../../old_changelog.rst:32 c83088acf30846e183eee7cc8e4df23e
+msgid "discord.ext.bridge (slash and prefixed commands) (:issue:`1131`)"
+msgstr ""
+
+#: ../../old_changelog.rst:33 2f6cb783181d4d3ead5b64730cd3e0ad
+msgid ":meth:`Client.get_message` (:issue:`1141`)"
+msgstr ""
+
+#: ../../old_changelog.rst:34 5c4e9fb3c3d5435381e6207d1d38624f
+msgid "Application Command Localization (:issue:`1185`)"
+msgstr ""
+
+#: ../../old_changelog.rst:35 0547cd04de9a40e3a9fa833bb41194a4
+msgid "Guild Ban List Paginated (:issue:`1217`)"
+msgstr ""
+
+#: ../../old_changelog.rst:36 b0d517b727da47ac987073f3fa8d4c91
+msgid "Forum channels (:issue:`1249`)"
+msgstr ""
+
+#: ../../old_changelog.rst:37 e618021b02844ae7845cfff40f70c879
+msgid ""
+"Methods and attributes that returned :class:`TextChannel`, etc., can now "
+"return :class:`Thread`."
+msgstr ""
+
+#: ../../old_changelog.rst:38 288718c944264fbf94169e5124c6eb3d
+msgid ""
+"Attributes that returned :class:`Asset` are renamed, e.g. attributes "
+"ending with ``_url`` (i.e.: ``avatar_url``) are changed to "
+":attr:`avatar.url`. :attr:`User.avatar` returns ``None`` in case the "
+"default avatar is used."
+msgstr ""
+
+#: ../../old_changelog.rst:39 02f92fabeb084f9981cde73062908eca
+msgid ""
+":func:`on_presence_update` replaces ``on_member_update`` for updates to "
+":attr:`Member.status` and :attr:`Member.activities`."
+msgstr ""
+
+#: ../../old_changelog.rst:40 c5e3b745d4dd44078616eb00a0c6fa21
+msgid ""
+":class:`datetime.datetime` objects used in the library are now timezone-"
+"aware."
+msgstr ""
+
+#: ../../old_changelog.rst:41 582bbeed0431464f81d972fbc107665d
+msgid ""
+"Sticker changes: ``StickerType`` has been renamed to "
+":class:`StickerFormatType`, and the type of :attr:`Message.stickers` is "
+"altered. ``Sticker.preview_image``, ``Sticker.image`` and "
+"``Sticker.tags`` are removed."
+msgstr ""
+
+#: ../../old_changelog.rst:42 b3595562fbad439486d3dd882a01f055
+msgid ""
+"Webhooks are changed significantly; ``WebhookAdapter`` is removed, and "
+"synchronous requests using requests is now inside :class:`SyncWebhook`."
+msgstr ""
+
+#: ../../old_changelog.rst:43 0805e0b49bb04a6593fb829221f2e1a2
+msgid ""
+"``edit`` method no longer updates the cache and instead returns modified "
+"instance."
+msgstr ""
+
+#: ../../old_changelog.rst:44 ca53566b6b034dd3a42f4eeae20b4fe4
+msgid "User accounts (userbots) are no longer supported."
+msgstr ""
+
+#: ../../old_changelog.rst:45 4d4aed3001174c05993cbe806861b9ea
+msgid "``Client.logout`` is removed; use :meth:`Client.close` instead."
+msgstr ""
+
+#: ../../old_changelog.rst:46 ec4d6aaba5f5469f96c9db62a03308cd
+msgid "``on_private_channel_create/delete`` events are removed."
+msgstr ""
+
+#: ../../old_changelog.rst:47 f65369e1369348738cce934faf941169
+msgid ""
+"``User.permissions_in`` is removed; use "
+":meth:`abc.GuildChannel.permissions_for` instead."
+msgstr ""
+
+#: ../../old_changelog.rst:48 d4f8f3869289495db667736a1925bd92
+msgid "``Message.type`` for replies are now :attr:`MessageType.reply`."
+msgstr ""
+
+#: ../../old_changelog.rst:49 9ee436e686fb4945b6d12762588bd7ad
+msgid ""
+"``Reaction.custom_emoji`` property is changed to "
+":meth:`Reaction.is_custom_emoji` method."
+msgstr ""
+
+#: ../../old_changelog.rst:50 984193f100a74ce0bfbc5cbce8bc89fd
+msgid ""
+"``missing_perms`` attributes and arguments are renamed to "
+"``missing_permissions``."
+msgstr ""
+
+#: ../../old_changelog.rst:51 ae4168f2ccee4adebdf8328fe8fc2edf
+msgid "Many method arguments now reject :class:`None`."
+msgstr ""
+
+#: ../../old_changelog.rst:52 30c8c142c6924bcaa092b864d6d47407
+msgid ""
+"Many arguments are now specified as positional-only or keyword-only; e.g."
+" :meth:`utils.oauth_url` now takes keyword-only arguments, and methods "
+"starting with ``get_`` or ``fetch_`` take positional-only arguments."
+msgstr ""
+
+#: ../../old_changelog.rst:53 7819f1eba4b64f6c9195987b52aa38d2
+msgid ":doc:`migrating_to_v2`"
+msgstr ""
+
+#: ../../old_changelog.rst:58 3f1bdc6fe4c34020b43ac23b3b0fbe04
+msgid "v1.7.3"
+msgstr ""
+
+#: ../../old_changelog.rst:61 ../../old_changelog.rst:72
+#: ../../old_changelog.rst:84 ../../old_changelog.rst:143
+#: ../../old_changelog.rst:216 ../../old_changelog.rst:249
+#: ../../old_changelog.rst:302 ../../old_changelog.rst:336
+#: ../../old_changelog.rst:362 ../../old_changelog.rst:433
+#: ../../old_changelog.rst:484 ../../old_changelog.rst:494
+#: ../../old_changelog.rst:509 ../../old_changelog.rst:527
+#: ../../old_changelog.rst:612 ../../old_changelog.rst:663
+#: ../../old_changelog.rst:673 ../../old_changelog.rst:688
+#: ../../old_changelog.rst:702 ../../old_changelog.rst:712
+#: ../../old_changelog.rst:748 ../../old_changelog.rst:778
+#: ../../old_changelog.rst:820 ../../old_changelog.rst:860
+#: ../../old_changelog.rst:879 ../../old_changelog.rst:895
+#: ../../old_changelog.rst:915 ../../old_changelog.rst:963
+#: ../../old_changelog.rst:980 ../../old_changelog.rst:1017
+#: ../../old_changelog.rst:1053 ../../old_changelog.rst:1105
+#: ../../old_changelog.rst:1149 ../../old_changelog.rst:1215
+#: 0cfe368e06df4e1ea7c150453f89de6e 17f17608af0a43cc962fac5db9cc8ddf
+#: 23efacaa85b24de6ad0abd7fb71e2ac7 2d8a2079d07d471185fd771cd110e196
+#: 2dc4ae7f1672461b99cb21d7f4c1c44b 30d3f7fc96194b079dc989af8254ccb4
+#: 37d0810d51c84bf687249ea3a8ff8a85 50f297ce67c74677b1ee89c30fde8409
+#: 544e311820a74571b148c112223905fa 64872ef88d1e420a88cc9ff9eb89ced2
+#: 68ce32f8aabb41649fc4afa11b3f0bf1 69eb18190cd849848afb4111eb0bb649
+#: 70c3ca9bce654a929c96e04fc09b4b8e 732ef6051bcb4804a5c9e79154c78279
+#: 73fc735825794200af7a30630764db24 7817b4312a154f009dff55e432a858c7
+#: 78ed3243a842422cadbb88aaae754d02 7c148660626547308b1391067e9ced02
+#: 7cc0d22d8b2943e7aa79c455e015b3b6 81fd18a62df0458f9c29cf729ae7ca07
+#: 91bf4aa50b16483f889c8f3e912f0d24 a26c3200a835429795617d743cd8e40f
+#: a67d46ada6074351bae4038c9b1130e7 b365962e4ace4f4699a0e934d4285afc
+#: b3fa3203990f4d0c98d2c93de388634e b4afbdf7fe6e4760ad70fe8db595e132
+#: cd7f6bebae794a53828a66d9cbecafec d4257b1c63b649d2bab2777f8f87974b
+#: dceb88c2f12845d6aaba763f7a1eaa93 dec246ccbf76406dbf2f4d6fb7752d72
+#: ef3d030669fc4e67885f6989dcbda763 f94aa69bf4f9450dab1d250ecd1cbda4
+#: fa8aa6eb723f40efb4fedb376fbd320e fed539cd2e6c4e53ba4aebc61df10f3c
+msgid "Bug Fixes"
+msgstr ""
+
+#: ../../old_changelog.rst:63 6ca55db8075543e7a1b66c20b429a1cb
+msgid "Fix a crash involving guild uploaded stickers"
+msgstr ""
+
+#: ../../old_changelog.rst:64 cfd171a6935145399fbfef4808ac81de
+msgid ""
+"Fix :meth:`DMChannel.permissions_for` not having "
+":attr:`Permissions.read_messages` set."
+msgstr ""
+
+#: ../../old_changelog.rst:69 9672091320834fe6ac058962c3aa5a96
+msgid "v1.7.2"
+msgstr ""
+
+#: ../../old_changelog.rst:74 2e33f45eaf364ff6ae5897c4cb0ee8f9
+msgid ""
+"Fix ``fail_if_not_exists`` causing certain message references to not be "
+"usable within :meth:`abc.Messageable.send` and :meth:`Message.reply` "
+"(:dpy-issue:`6726`)"
+msgstr ""
+
+#: ../../old_changelog.rst:75 eef74dc0c2004dcda8ec3f727fd1dfc2
+msgid ""
+"Fix :meth:`Guild.chunk` hanging when the user left the guild. (:dpy-"
+"issue:`6730`)"
+msgstr ""
+
+#: ../../old_changelog.rst:76 bfca0f9ab910467a9a338e39d99f9a47
+msgid ""
+"Fix loop sleeping after final iteration rather than before (:dpy-"
+"issue:`6744`)"
+msgstr ""
+
+#: ../../old_changelog.rst:81 8fadc2e021cf48a5ad82411499ee4e6d
+msgid "v1.7.1"
+msgstr ""
+
+#: ../../old_changelog.rst:86 4e0d3f0a012c447b8aac2b1968b76c1c
+msgid ""
+"|commands| Fix :meth:`Cog.has_error_handler "
+"<ext.commands.Cog.has_error_handler>` not working as intended."
+msgstr ""
+
+#: ../../old_changelog.rst:91 cd1b5fa5b2ad468b86553c173d4c0494
+msgid "v1.7.0"
+msgstr ""
+
+#: ../../old_changelog.rst:93 d8d582d95ca84387aa4eea41ca4be35d
+msgid ""
+"This version is mainly for improvements and bug fixes. This is more than "
+"likely the last major version in the 1.x series. Work after this will be "
+"spent on v2.0. As a result, **this is the last version to support Python "
+"3.5**. Likewise, **this is the last version to support user bots**."
+msgstr ""
+
+#: ../../old_changelog.rst:97 f514144f70874e0aadb9bb45f85247df
+msgid ""
+"Development of v2.0 will have breaking changes and support for newer API "
+"features."
+msgstr ""
+
+#: ../../old_changelog.rst:100 ../../old_changelog.rst:179
+#: ../../old_changelog.rst:282 ../../old_changelog.rst:376
+#: ../../old_changelog.rst:546 ../../old_changelog.rst:725
+#: ../../old_changelog.rst:793 ../../old_changelog.rst:909
+#: ../../old_changelog.rst:941 ../../old_changelog.rst:974
+#: ../../old_changelog.rst:1003 ../../old_changelog.rst:1030
+#: ../../old_changelog.rst:1066 ../../old_changelog.rst:1126
+#: ../../old_changelog.rst:1172 09ef2dfc185f422f85996a6f5f33bac0
+#: 111b5503166c49049c83def274c3d777 204e63c3290b4fc88a1d943da58066ad
+#: 2199902f33d7402e943e5681ed7282b2 226e4f2fbc514dd2b1792a6a22c75007
+#: 36bcd7cd8e4e45e2b1dce6ac93ce18e4 6d540400003c4c0d9a46efb8124d5831
+#: 766d20e109394d4f9d97b5e570375d42 9b63b5b3747040e0ba5f64a7c819bcf1
+#: 9f395f70c5344ef0b711c4248d8bacb3 c2770ae1af9b4102b8a693f993b1d639
+#: d56c88d569c24dddb1487157ed9d48a2 d9f378368bb5411da040252341ae2384
+#: dc35086399e943d6ae66d4137f6c7084 e3502fe3e4524732aa20fa04e01c3807
+msgid "New Features"
+msgstr ""
+
+#: ../../old_changelog.rst:102 cedd57e50a544d078d8a0b35b0d75f6e
+msgid ""
+"Add support for stage channels via :class:`StageChannel` (:dpy-"
+"issue:`6602`, :dpy-issue:`6608`)"
+msgstr ""
+
+#: ../../old_changelog.rst:103 5e33395ddbba452f8bcf51641c54d375
+msgid ""
+"Add support for :attr:`MessageReference.fail_if_not_exists` (:dpy-"
+"issue:`6484`)"
+msgstr ""
+
+#: ../../old_changelog.rst:104 c164b7c847854e1984bbf4a5f1b51a43
+msgid ""
+"By default, if the message you're replying to doesn't exist then the API "
+"errors out. This attribute tells the Discord API that it's okay for that "
+"message to be missing."
+msgstr ""
+
+#: ../../old_changelog.rst:107 5cc73d7266f64ad2b25444b863bcadfa
+msgid "Add support for Discord's new permission serialisation scheme."
+msgstr ""
+
+#: ../../old_changelog.rst:108 ccc738ce09da485b855aa16e20ffce9a
+msgid "Add an easier way to move channels using :meth:`abc.GuildChannel.move`"
+msgstr ""
+
+#: ../../old_changelog.rst:109 812fbc4313f64e119e328a6aa76a3340
+msgid "Add :attr:`Permissions.use_slash_commands`"
+msgstr ""
+
+#: ../../old_changelog.rst:110 1fc106925a21437ab39286fc0b6bb897
+msgid "Add :attr:`Permissions.request_to_speak`"
+msgstr ""
+
+#: ../../old_changelog.rst:111 b0dda7acf89d49c9a433fa44400f873f
+msgid ""
+"Add support for voice regions in voice channels via "
+":attr:`VoiceChannel.rtc_region` (:dpy-issue:`6606`)"
+msgstr ""
+
+#: ../../old_changelog.rst:112 0814891c36484a8b9849b9383ebce5c9
+msgid "Add support for :meth:`PartialEmoji.url_as` (:dpy-issue:`6341`)"
+msgstr ""
+
+#: ../../old_changelog.rst:113 5b67e06a18144728909532871f6393a1
+msgid "Add :attr:`MessageReference.jump_url` (:dpy-issue:`6318`)"
+msgstr ""
+
+#: ../../old_changelog.rst:114 12d1cb36dec44c0f8dd00640932e0a52
+msgid "Add :attr:`File.spoiler` (:dpy-issue:`6317`)"
+msgstr ""
+
+#: ../../old_changelog.rst:115 951a213cc0d54fa8900718b4672cc823
+msgid ""
+"Add support for passing ``roles`` to "
+":meth:`Guild.estimate_pruned_members` (:dpy-issue:`6538`)"
+msgstr ""
+
+#: ../../old_changelog.rst:116 78c44b7870ef41bbb9fdc5dd63252540
+msgid ""
+"Allow callable class factories to be used in :meth:`abc.Connectable.play`"
+" (:dpy-issue:`6478`)"
+msgstr ""
+
+#: ../../old_changelog.rst:117 20f2d55d2c804b4392f6b58947c58672
+msgid ""
+"Add a way to get mutual guilds from the client's cache via "
+":attr:`User.mutual_guilds` (:dpy-issue:`2539`, :dpy-issue:`6444`)"
+msgstr ""
+
+#: ../../old_changelog.rst:118 d85f77a0ff1e4611a99dacd33f05c21f
+msgid ""
+":meth:`PartialMessage.edit` now returns a full :class:`Message` upon "
+"success (:dpy-issue:`6309`)"
+msgstr ""
+
+#: ../../old_changelog.rst:119 702f43d65ece465487575d78c419ac9e
+msgid "Add :attr:`RawMessageUpdateEvent.guild_id` (:dpy-issue:`6489`)"
+msgstr ""
+
+#: ../../old_changelog.rst:120 3ff25179def1407ebd35a3c011824c9b
+msgid ":class:`AuditLogEntry` is now hashable (:dpy-issue:`6495`)"
+msgstr ""
+
+#: ../../old_changelog.rst:121 70a052b2ab1f4520a90e01cc2826ea34
+msgid ":class:`Attachment` is now hashable"
+msgstr ""
+
+#: ../../old_changelog.rst:122 a4a3979813124537b31ee23a7b23c0df
+msgid "Add :attr:`Attachment.content_type` attribute (:dpy-issue:`6618`)"
+msgstr ""
+
+#: ../../old_changelog.rst:123 46d57515a1e54630ae1104fd543b2348
+msgid ""
+"Add support for casting :class:`Attachment` to :class:`str` to get the "
+"URL."
+msgstr ""
+
+#: ../../old_changelog.rst:124 ec59b8cf7a244b4883752824029a444c
+msgid "Add ``seed`` parameter for :class:`Colour.random` (:dpy-issue:`6562`)"
+msgstr ""
+
+#: ../../old_changelog.rst:125 031c607942bd4fc2b0c66042de6104c4
+msgid ""
+"This only seeds it for one call. If seeding for multiple calls is "
+"desirable, use :func:`random.seed`."
+msgstr ""
+
+#: ../../old_changelog.rst:127 c4a68d1e2d6543c18d128e4a66b6dc07
+msgid "Add a :func:`utils.remove_markdown` helper function (:dpy-issue:`6573`)"
+msgstr ""
+
+#: ../../old_changelog.rst:128 84fd9697528a48cc9bf3a5cb55796fb4
+msgid ""
+"Add support for passing scopes to :func:`utils.oauth_url` (:dpy-"
+"issue:`6568`)"
+msgstr ""
+
+#: ../../old_changelog.rst:129 c5d86802bf05408dadfb4255059ece4d
+msgid ""
+"|commands| Add support for ``rgb`` CSS function as a parameter to "
+":class:`ColourConverter <ext.commands.ColourConverter>` (:dpy-"
+"issue:`6374`)"
+msgstr ""
+
+#: ../../old_changelog.rst:130 78aaf837276a44d5a8800ebdbed9be31
+msgid ""
+"|commands| Add support for converting :class:`StoreChannel` via "
+":class:`StoreChannelConverter <ext.commands.StoreChannelConverter>` "
+"(:dpy-issue:`6603`)"
+msgstr ""
+
+#: ../../old_changelog.rst:131 fcf45e879b0542a29ccbda9b59901a06
+msgid ""
+"|commands| Add support for stripping whitespace after the prefix is "
+"encountered using the ``strip_after_prefix`` :class:`~ext.commands.Bot` "
+"constructor parameter."
+msgstr ""
+
+#: ../../old_changelog.rst:132 df5a21f9817d4189a91741d6b656bddb
+msgid ""
+"|commands| Add :attr:`Context.invoked_parents "
+"<ext.commands.Context.invoked_parents>` to get the aliases a command's "
+"parent was invoked with (:dpy-issue:`1874`, :dpy-issue:`6462`)"
+msgstr ""
+
+#: ../../old_changelog.rst:133 8f436e824a9a4cc5af7798836754c156
+msgid ""
+"|commands| Add a converter for :class:`PartialMessage` under "
+":class:`ext.commands.PartialMessageConverter` (:dpy-issue:`6308`)"
+msgstr ""
+
+#: ../../old_changelog.rst:134 abbd3dc8948947978de1b77d2bdac71c
+msgid ""
+"|commands| Add a converter for :class:`Guild` under "
+":class:`ext.commands.GuildConverter` (:dpy-issue:`6016`, :dpy-"
+"issue:`6365`)"
+msgstr ""
+
+#: ../../old_changelog.rst:135 e99a1068890a49c797266cc7aeb0c602
+msgid ""
+"|commands| Add :meth:`Command.has_error_handler "
+"<ext.commands.Command.has_error_handler>`"
+msgstr ""
+
+#: ../../old_changelog.rst:136 c1211e976016400fb43f0b462feceba0
+msgid ""
+"This is also adds :meth:`Cog.has_error_handler "
+"<ext.commands.Cog.has_error_handler>`"
+msgstr ""
+
+#: ../../old_changelog.rst:137 123243ed7ee84d3998310f0ca9e7b82f
+msgid ""
+"|commands| Allow callable types to act as a bucket key for cooldowns "
+"(:dpy-issue:`6563`)"
+msgstr ""
+
+#: ../../old_changelog.rst:138 636827aecb494e05a2af1ec75ec67e6a
+msgid ""
+"|commands| Add ``linesep`` keyword argument to :class:`Paginator "
+"<ext.commands.Paginator>` (:dpy-issue:`5975`)"
+msgstr ""
+
+#: ../../old_changelog.rst:139 d71729a1049043958652d4d8139727da
+msgid ""
+"|commands| Allow ``None`` to be passed to "
+":attr:`HelpCommand.verify_checks "
+"<ext.commands.HelpCommand.verify_checks>` to only verify in a guild "
+"context (:dpy-issue:`2008`, :dpy-issue:`6446`)"
+msgstr ""
+
+#: ../../old_changelog.rst:140 dc255f2941e443e2812b794838f177ee
+msgid ""
+"|commands| Allow relative paths when loading extensions via a ``package``"
+" keyword argument (:dpy-issue:`2465`, :dpy-issue:`6445`)"
+msgstr ""
+
+#: ../../old_changelog.rst:145 9332a09aee684f1298d02fdadc6fc63a
+msgid ""
+"Fix mentions not working if ``mention_author`` is passed in "
+":meth:`abc.Messageable.send` without :attr:`Client.allowed_mentions` set "
+"(:dpy-issue:`6192`, :dpy-issue:`6458`)"
+msgstr ""
+
+#: ../../old_changelog.rst:146 f531f587a2464eb798d1a5ca0712d24e
+msgid ""
+"Fix user created instances of :class:`CustomActivity` triggering an error"
+" (:dpy-issue:`4049`)"
+msgstr ""
+
+#: ../../old_changelog.rst:147 d9277f2c29684ef49943dfc37bdddddb
+msgid ""
+"Note that currently, bot users still cannot set a custom activity due to "
+"a Discord limitation."
+msgstr ""
+
+#: ../../old_changelog.rst:148 85ad21fb2f0d4fb8aa0ad92b7552cc68
+msgid ""
+"Fix :exc:`ZeroDivisionError` being raised from "
+":attr:`VoiceClient.average_latency` (:dpy-issue:`6430`, :dpy-"
+"issue:`6436`)"
+msgstr ""
+
+#: ../../old_changelog.rst:149 3dd3eed6338748a0ba5e20939c36b057
+msgid "Fix :attr:`User.public_flags` not updating upon edit (:dpy-issue:`6315`)"
+msgstr ""
+
+#: ../../old_changelog.rst:150 8c8032e680de4bd69727218940be575d
+msgid ""
+"Fix :attr:`Message.call` sometimes causing attribute errors (:dpy-"
+"issue:`6390`)"
+msgstr ""
+
+#: ../../old_changelog.rst:151 5f8a582b40ba4651ab4a3a3e6d9ff9e9
+msgid ""
+"Fix issue resending a file during request retries on newer versions of "
+"``aiohttp`` (:dpy-issue:`6531`)"
+msgstr ""
+
+#: ../../old_changelog.rst:152 a16c3deda62c491b88a435437bca2e07
+msgid "Raise an error when ``user_ids`` is empty in :meth:`Guild.query_members`"
+msgstr ""
+
+#: ../../old_changelog.rst:153 bc4a79c3f87f48aca020f9fae6411585
+msgid "Fix ``__str__`` magic method raising when a :class:`Guild` is unavailable."
+msgstr ""
+
+#: ../../old_changelog.rst:154 e435b0463f1c4ecea2f21931d11add5a
+msgid ""
+"Fix potential :exc:`AttributeError` when accessing "
+":attr:`VoiceChannel.members` (:dpy-issue:`6602`)"
+msgstr ""
+
+#: ../../old_changelog.rst:155 d2e9e738609e46fca22c4a72c38ab5b4
+msgid ""
+":class:`Embed` constructor parameters now implicitly convert to "
+":class:`str` (:dpy-issue:`6574`)"
+msgstr ""
+
+#: ../../old_changelog.rst:156 923ab0d9634f444396e27e99e4b9daed
+msgid ""
+"Ensure ``discord`` package is only run if executed as a script (:dpy-"
+"issue:`6483`)"
+msgstr ""
+
+#: ../../old_changelog.rst:157 d063f4e02f6e43c7b3116c79cfcd49d3
+msgid ""
+"|commands| Fix irrelevant commands potentially being unloaded during cog "
+"unload due to failure."
+msgstr ""
+
+#: ../../old_changelog.rst:158 83519cee41764612ac09fffed23374a2
+msgid ""
+"|commands| Fix attribute errors when setting a cog to "
+":class:`~.ext.commands.HelpCommand` (:dpy-issue:`5154`)"
+msgstr ""
+
+#: ../../old_changelog.rst:159 f0e378978cb844e1a9793bc89401d068
+msgid ""
+"|commands| Fix :attr:`Context.invoked_with "
+"<ext.commands.Context.invoked_with>` being improperly reassigned during a"
+" :meth:`~ext.commands.Context.reinvoke` (:dpy-issue:`6451`, :dpy-"
+"issue:`6462`)"
+msgstr ""
+
+#: ../../old_changelog.rst:160 ad6eaec69d6a46bf807c54cbbcd917f8
+msgid ""
+"|commands| Remove duplicates from :meth:`HelpCommand.get_bot_mapping "
+"<ext.commands.HelpCommand.get_bot_mapping>` (:dpy-issue:`6316`)"
+msgstr ""
+
+#: ../../old_changelog.rst:161 e407952e9acf4614bcddeed1888af114
+msgid ""
+"|commands| Properly handle positional-only parameters in bot command "
+"signatures (:dpy-issue:`6431`)"
+msgstr ""
+
+#: ../../old_changelog.rst:162 0890a4eebddc47a1afb61fdbe88177ed
+msgid ""
+"|commands| Group signatures now properly show up in "
+":attr:`Command.signature <ext.commands.Command.signature>` (:dpy-"
+"issue:`6529`, :dpy-issue:`6530`)"
+msgstr ""
+
+#: ../../old_changelog.rst:165 ../../old_changelog.rst:232
+#: ../../old_changelog.rst:261 ../../old_changelog.rst:317
+#: ../../old_changelog.rst:351 ../../old_changelog.rst:461
+#: ../../old_changelog.rst:533 ../../old_changelog.rst:636
+#: ../../old_changelog.rst:756 ../../old_changelog.rst:783
+#: ../../old_changelog.rst:841 2bc932f969fb46fb94ffea3585aef3b8
+#: 58b8c638cd2b4c5ba356c542a0d06f16 6033308e4fa246309f44ff2a9c62ff84
+#: 6577690b508a41508166de7f527309de 68b50c582bfe4c26a0062c99a16a67d1
+#: 7cfe8c8e4f1348d18ba5b233fa4378a3 8cd36561ec9247c3a46aab2c0bc4091e
+#: aae073b86ab64b3cbeb8991af651aacf aecfd74254fe4380a3a35c820f199656
+#: bacd8bb1f2e94851957735f5c9b966a2 c30304010e0645a58629fa474ad0b4b0
+msgid "Miscellaneous"
+msgstr ""
+
+#: ../../old_changelog.rst:167 35fffc7d076b4d19b1dd10d52e5db496
+msgid ""
+"User endpoints and all userbot related functionality has been deprecated "
+"and will be removed in the next major version of the library."
+msgstr ""
+
+#: ../../old_changelog.rst:168 df5892f7156f4180b4da7ce99de6d739
+msgid ""
+":class:`Permission` class methods were updated to match the UI of the "
+"Discord client (:dpy-issue:`6476`)"
+msgstr ""
+
+#: ../../old_changelog.rst:169 f0207d09b6d84eeaa788d0764ad4a492
+msgid ""
+"``_`` and ``-`` characters are now stripped when making a new cog using "
+"the ``discord`` package (:dpy-issue:`6313`)"
+msgstr ""
+
+#: ../../old_changelog.rst:174 0aad39ffee1d4bbda7c4079981f20f38
+msgid "v1.6.0"
+msgstr ""
+
+#: ../../old_changelog.rst:176 aade3a67e9144a09ba3a8238005289e1
+msgid "This version comes with support for replies and stickers."
+msgstr ""
+
+#: ../../old_changelog.rst:181 2928d53ef45b434c83682851acf50607
+msgid ""
+"An entirely redesigned documentation. This was the cumulation of multiple"
+" months of effort."
+msgstr ""
+
+#: ../../old_changelog.rst:182 e6f0180fcc584243988623b515be2e6c
+msgid ""
+"There's now a dark theme, feel free to navigate to the cog on the screen "
+"to change your setting, though this should be automatic."
+msgstr ""
+
+#: ../../old_changelog.rst:183 c634d09497db4b8a8dd4659697a34169
+msgid ""
+"Add support for :meth:`AppInfo.icon_url_as` and "
+":meth:`AppInfo.cover_image_url_as` (:dpy-issue:`5888`)"
+msgstr ""
+
+#: ../../old_changelog.rst:184 487e1ea4f8bb462c83de699ee87a299b
+msgid "Add :meth:`Colour.random` to get a random colour (:dpy-issue:`6067`)"
+msgstr ""
+
+#: ../../old_changelog.rst:185 68386202f673434c81178a580cfc7df5
+msgid "Add support for stickers via :class:`Sticker` (:dpy-issue:`5946`)"
+msgstr ""
+
+#: ../../old_changelog.rst:186 2aae411c84b4485a993c927cf060261e
+msgid "Add support for replying via :meth:`Message.reply` (:dpy-issue:`6061`)"
+msgstr ""
+
+#: ../../old_changelog.rst:187 1ecff6a8c9b14a77a2a81db467cbc54a
+msgid "This also comes with the :attr:`AllowedMentions.replied_user` setting."
+msgstr ""
+
+#: ../../old_changelog.rst:188 a8f0bca8b48744b69f02b6f6bd0721b5
+msgid ":meth:`abc.Messageable.send` can now accept a :class:`MessageReference`."
+msgstr ""
+
+#: ../../old_changelog.rst:189 dac39284d3074e7ba59db548b8c8b667
+msgid ":class:`MessageReference` can now be constructed by users."
+msgstr ""
+
+#: ../../old_changelog.rst:190 b0bfb30b94e14b8cb0af087bc2ad65f4
+msgid ""
+":meth:`Message.to_reference` can now convert a message to a "
+":class:`MessageReference`."
+msgstr ""
+
+#: ../../old_changelog.rst:191 6a70b57bd5924b9e877d0a0907816b13
+msgid ""
+"Add support for getting the replied to resolved message through "
+":attr:`MessageReference.resolved`."
+msgstr ""
+
+#: ../../old_changelog.rst:192 0bfb977965f54138b22dc6eb96ce906c
+msgid "Add support for role tags."
+msgstr ""
+
+#: ../../old_changelog.rst:193 285ebc4e6c36414883976c65cd507a28
+msgid ""
+":attr:`Guild.premium_subscriber_role` to get the \"Nitro Booster\" role "
+"(if available)."
+msgstr ""
+
+#: ../../old_changelog.rst:194 641dcb68af10485ab00a1a78e1357ae5
+msgid ":attr:`Guild.self_role` to get the bot's own role (if available)."
+msgstr ""
+
+#: ../../old_changelog.rst:195 e337f0d7eb544c79b188cfdb9c90a108
+msgid ":attr:`Role.tags` to get the role's tags."
+msgstr ""
+
+#: ../../old_changelog.rst:196 6a1bd9baad6444f5936d6a146af104ce
+msgid ""
+":meth:`Role.is_premium_subscriber` to check if a role is the \"Nitro "
+"Booster\" role."
+msgstr ""
+
+#: ../../old_changelog.rst:197 d1398588e32f405189c3c4d08b75d1e0
+msgid ""
+":meth:`Role.is_bot_managed` to check if a role is a bot role (i.e. the "
+"automatically created role for bots)."
+msgstr ""
+
+#: ../../old_changelog.rst:198 6818919d47d941f08e4d5cf80eb0c39c
+msgid ""
+":meth:`Role.is_integration` to check if a role is role created by an "
+"integration."
+msgstr ""
+
+#: ../../old_changelog.rst:199 534dd8b0c9d940788b6e7a54ca6e470d
+msgid ""
+"Add :meth:`Client.is_ws_ratelimited` to check if the websocket is rate "
+"limited."
+msgstr ""
+
+#: ../../old_changelog.rst:200 425063d305364db4bed18f2edd6a998c
+msgid ""
+":meth:`ShardInfo.is_ws_ratelimited` is the equivalent for checking a "
+"specific shard."
+msgstr ""
+
+#: ../../old_changelog.rst:201 e6d646912fff4191b37b21b18ea1a02e
+msgid ""
+"Add support for chunking an :class:`AsyncIterator` through "
+":meth:`AsyncIterator.chunk` (:dpy-issue:`6100`, :dpy-issue:`6082`)"
+msgstr ""
+
+#: ../../old_changelog.rst:202 6abf71b2484c48f3978fa984c29f32aa
+msgid "Add :attr:`PartialEmoji.created_at` (:dpy-issue:`6128`)"
+msgstr ""
+
+#: ../../old_changelog.rst:203 1f32cadfd4d94390a15c72ee514efffc
+msgid ""
+"Add support for editing and deleting webhook sent messages (:dpy-"
+"issue:`6058`)"
+msgstr ""
+
+#: ../../old_changelog.rst:204 5e7226bc7687467b861346aec01d6697
+msgid "This adds :class:`WebhookMessage` as well to power this behaviour."
+msgstr ""
+
+#: ../../old_changelog.rst:205 92555425255045ff8cf2e71c4ab85097
+msgid ""
+"Add :class:`PartialMessage` to allow working with a message via channel "
+"objects and just a message_id (:dpy-issue:`5905`)"
+msgstr ""
+
+#: ../../old_changelog.rst:206 41017b2db7404163ad8997334de5ce79
+msgid ""
+"This is useful if you don't want to incur an extra API call to fetch the "
+"message."
+msgstr ""
+
+#: ../../old_changelog.rst:207 6f2ececf2d9343168654fb760827432c
+msgid "Add :meth:`Emoji.url_as` (:dpy-issue:`6162`)"
+msgstr ""
+
+#: ../../old_changelog.rst:208 848cc6a5cbe640a8b408b8caefef26d6
+msgid "Add support for :attr:`Member.pending` for the membership gating feature."
+msgstr ""
+
+#: ../../old_changelog.rst:209 72d5267029d440f684998b01499a2dd6
+msgid ""
+"Allow ``colour`` parameter to take ``int`` in :meth:`Guild.create_role` "
+"(:dpy-issue:`6195`)"
+msgstr ""
+
+#: ../../old_changelog.rst:210 cdf1e096672b47babfa4df007a6ecbdc
+msgid ""
+"Add support for ``presences`` in :meth:`Guild.query_members` (:dpy-"
+"issue:`2354`)"
+msgstr ""
+
+#: ../../old_changelog.rst:211 c814ab72983c487baac039d53c38f3cc
+msgid ""
+"|commands| Add support for ``description`` keyword argument in "
+":class:`commands.Cog <ext.commands.Cog>` (:dpy-issue:`6028`)"
+msgstr ""
+
+#: ../../old_changelog.rst:212 4fb5464cd6af40b49786e2464c836abc
+msgid ""
+"|tasks| Add support for calling the wrapped coroutine as a function via "
+"``__call__``."
+msgstr ""
+
+#: ../../old_changelog.rst:218 8c04592e21c540eda4048de13a69dbdb
+msgid ""
+"Raise :exc:`DiscordServerError` when reaching 503s repeatedly (:dpy-"
+"issue:`6044`)"
+msgstr ""
+
+#: ../../old_changelog.rst:219 1529d64a898648f78bded6a62c04bd72
+msgid ""
+"Fix :exc:`AttributeError` when :meth:`Client.fetch_template` is called "
+"(:dpy-issue:`5986`)"
+msgstr ""
+
+#: ../../old_changelog.rst:220 1bd0a0d6cc5348c9baf970007cfa6a4e
+msgid ""
+"Fix errors when playing audio and moving to another channel (:dpy-"
+"issue:`5953`)"
+msgstr ""
+
+#: ../../old_changelog.rst:221 aa405cd1adec434588c8b174ee19415e
+msgid ""
+"Fix :exc:`AttributeError` when voice channels disconnect too fast (:dpy-"
+"issue:`6039`)"
+msgstr ""
+
+#: ../../old_changelog.rst:222 e2785fae147943bbbd6f758ccacbec4d
+msgid "Fix stale :class:`User` references when the members intent is off."
+msgstr ""
+
+#: ../../old_changelog.rst:223 dd9c5eeb1bb0474585b533b600c34c27
+msgid ""
+"Fix :func:`on_user_update` not dispatching in certain cases when a member"
+" is not cached but the user somehow is."
+msgstr ""
+
+#: ../../old_changelog.rst:224 a36177f33395415bae1711f1241d5ec5
+msgid ""
+"Fix :attr:`Message.author` being overwritten in certain cases during "
+"message update."
+msgstr ""
+
+#: ../../old_changelog.rst:225 d8bb7ccaaee846a1b3cba95eb5f42d86
+msgid ""
+"This would previously make it so :attr:`Message.author` is a "
+":class:`User`."
+msgstr ""
+
+#: ../../old_changelog.rst:226 69870ecc5e7c426f9336aee1b2b7a9ca
+msgid ""
+"Fix :exc:`UnboundLocalError` for editing ``public_updates_channel`` in "
+":meth:`Guild.edit` (:dpy-issue:`6093`)"
+msgstr ""
+
+#: ../../old_changelog.rst:227 100101ec2d7042c081f28dc8fac3c53c
+msgid "Fix uninitialised :attr:`CustomActivity.created_at` (:dpy-issue:`6095`)"
+msgstr ""
+
+#: ../../old_changelog.rst:228 bb1dc29025e4457d920f0baedad19d38
+msgid ""
+"|commands| Errors during cog unload no longer stops module cleanup (:dpy-"
+"issue:`6113`)"
+msgstr ""
+
+#: ../../old_changelog.rst:229 22bfaf396de14606a0a5fbc847cda53c
+msgid ""
+"|commands| Properly cleanup lingering commands when a conflicting alias "
+"is found when adding commands (:dpy-issue:`6217`)"
+msgstr ""
+
+#: ../../old_changelog.rst:234 789ccf8b8d80433e9b1f9ba299607b22
+msgid ""
+"``ffmpeg`` spawned processes no longer open a window in Windows (:dpy-"
+"issue:`6038`)"
+msgstr ""
+
+#: ../../old_changelog.rst:235 558e6607bf3946dd821afee545260471
+msgid ""
+"Update dependencies to allow the library to work on Python 3.9+ without "
+"requiring build tools. (:dpy-issue:`5984`, :dpy-issue:`5970`)"
+msgstr ""
+
+#: ../../old_changelog.rst:236 b92d50d5a8b144af9e7bdfa05dd34bd4
+msgid "Fix docstring issue leading to a SyntaxError in 3.9 (:dpy-issue:`6153`)"
+msgstr ""
+
+#: ../../old_changelog.rst:237 40dc68da0cbd455b9d0e3158d8647ccd
+msgid "Update Windows opus binaries from 1.2.1 to 1.3.1 (:dpy-issue:`6161`)"
+msgstr ""
+
+#: ../../old_changelog.rst:238 8193921eb69746278b513bd4ac55f810
+msgid ""
+"Allow :meth:`Guild.create_role` to accept :class:`int` as the ``colour`` "
+"parameter (:dpy-issue:`6195`)"
+msgstr ""
+
+#: ../../old_changelog.rst:239 cdba632c741d4ab58fc5457382e27077
+msgid ""
+"|commands| :class:`MessageConverter <ext.commands.MessageConverter>` "
+"regex got updated to support ``www.`` prefixes (:dpy-issue:`6002`)"
+msgstr ""
+
+#: ../../old_changelog.rst:240 993a265e912348678e7c93c74432847b
+msgid ""
+"|commands| :class:`UserConverter <ext.commands.UserConverter>` now "
+"fetches the API if an ID is passed and the user is not cached."
+msgstr ""
+
+#: ../../old_changelog.rst:241 4413cf4b251e40f9a00fd23913c040f9
+msgid ""
+"|commands| :func:`max_concurrency <ext.commands.max_concurrency>` is now "
+"called before cooldowns (:dpy-issue:`6172`)"
+msgstr ""
+
+#: ../../old_changelog.rst:246 303eec99716d480fb54e5a806e51a743
+msgid "v1.5.1"
+msgstr ""
+
+#: ../../old_changelog.rst:251 5494410b5e9c4b62bae3a9abb74ffbd9
+msgid ""
+"Fix :func:`utils.escape_markdown` not escaping quotes properly (:dpy-"
+"issue:`5897`)"
+msgstr ""
+
+#: ../../old_changelog.rst:252 74ce2df0dd1443b1ac401d14f6a92007
+msgid ""
+"Fix :class:`Message` not being hashable (:dpy-issue:`5901`, :dpy-"
+"issue:`5866`)"
+msgstr ""
+
+#: ../../old_changelog.rst:253 ce45479ca5c74bf1920548413322cea2
+msgid "Fix moving channels to the end of the channel list (:dpy-issue:`5923`)"
+msgstr ""
+
+#: ../../old_changelog.rst:254 4afa3f29da604adb98a6fe12f46b69cb
+msgid ""
+"Fix seemingly strange behaviour in ``__eq__`` for "
+":class:`PermissionOverwrite` (:dpy-issue:`5929`)"
+msgstr ""
+
+#: ../../old_changelog.rst:255 da46975d69d74dc3b57e29d8e97850e0
+msgid ""
+"Fix aliases showing up in ``__iter__`` for :class:`Intents` (:dpy-"
+"issue:`5945`)"
+msgstr ""
+
+#: ../../old_changelog.rst:256 b3ecbd42febb4cb9afb0fa4b7163cde4
+msgid ""
+"Fix the bot disconnecting from voice when moving them to another channel "
+"(:dpy-issue:`5904`)"
+msgstr ""
+
+#: ../../old_changelog.rst:257 63109f9ee740468d961c2f16bc142b49
+msgid ""
+"Fix attribute errors when chunking times out sometimes during delayed "
+"on_ready dispatching."
+msgstr ""
+
+#: ../../old_changelog.rst:258 29f60cb3c57041ebb2316de15cbf6a55
+msgid ""
+"Ensure that the bot's own member is not evicted from the cache (:dpy-"
+"issue:`5949`)"
+msgstr ""
+
+#: ../../old_changelog.rst:263 fd3afa10f0534576aae22fb7687e5c2c
+msgid ""
+"Members are now loaded during ``GUILD_MEMBER_UPDATE`` events if "
+":attr:`MemberCacheFlags.joined` is set. (:dpy-issue:`5930`)"
+msgstr ""
+
+#: ../../old_changelog.rst:264 008d9ba5556140e487bd230df7f70615
+msgid ""
+"|commands| :class:`MemberConverter <ext.commands.MemberConverter>` now "
+"properly lazily fetches members if not available from cache."
+msgstr ""
+
+#: ../../old_changelog.rst:265 3af3c1b8488040ab95f8bf2ea817f44b
+msgid "This is the same as having ``discord.Member`` as the type-hint."
+msgstr ""
+
+#: ../../old_changelog.rst:266 ab0d246b3d6441f0acae3214bf4f100b
+msgid ""
+":meth:`Guild.chunk` now allows concurrent calls without spamming the "
+"gateway with requests."
+msgstr ""
+
+#: ../../old_changelog.rst:271 10984e12183b4de9867d2f770baaa19b
+msgid "v1.5.0"
+msgstr ""
+
+#: ../../old_changelog.rst:273 b76c31885c704edc89d161a7e64de356
+msgid ""
+"This version came with forced breaking changes that Discord is requiring "
+"all bots to go through on October 7th. It is highly recommended to read "
+"the documentation on intents, :ref:`intents_primer`."
+msgstr ""
+
+#: ../../old_changelog.rst:276 b12a35a1a68746ea84ab39ac90ba4fe0
+msgid "API Changes"
+msgstr ""
+
+#: ../../old_changelog.rst:278 828d3ffb49484051aa3c2b5c47af7035
+msgid ""
+"Members and presences will no longer be retrieved due to an API change. "
+"See :ref:`privileged_intents` for more info."
+msgstr ""
+
+#: ../../old_changelog.rst:279 9e71a3ac992c4a76aa29bfe9012021e3
+msgid ""
+"As a consequence, fetching offline members is disabled if the members "
+"intent is not enabled."
+msgstr ""
+
+#: ../../old_changelog.rst:284 129e78967e4a4ba39e81263a7453cc12
+msgid ""
+"Support for gateway intents, passed via ``intents`` in :class:`Client` "
+"using :class:`Intents`."
+msgstr ""
+
+#: ../../old_changelog.rst:285 3c204598b5a64286b395490b196dd65d
+msgid "Add :attr:`VoiceRegion.south_korea` (:dpy-issue:`5233`)"
+msgstr ""
+
+#: ../../old_changelog.rst:286 f23df9f9d1c74ff4be6ec0280dfc6d8c
+msgid "Add support for ``__eq__`` for :class:`Message` (:dpy-issue:`5789`)"
+msgstr ""
+
+#: ../../old_changelog.rst:287 a093c6e7570e49f0a51c6dd0af367d01
+msgid "Add :meth:`Colour.dark_theme` factory method (:dpy-issue:`1584`)"
+msgstr ""
+
+#: ../../old_changelog.rst:288 e7a5419a7cd64d5b80c12db4afef1b50
+msgid ""
+"Add :meth:`AllowedMentions.none` and :meth:`AllowedMentions.all` (:dpy-"
+"issue:`5785`)"
+msgstr ""
+
+#: ../../old_changelog.rst:289 133b840b129042b09d17ec6db4dea0d6
+msgid ""
+"Add more concrete exceptions for 500 class errors under "
+":class:`DiscordServerError` (:dpy-issue:`5797`)"
+msgstr ""
+
+#: ../../old_changelog.rst:290 1df6243130b840a097e5e00f2f58157f
+msgid "Implement :class:`VoiceProtocol` to better intersect the voice flow."
+msgstr ""
+
+#: ../../old_changelog.rst:291 bc32a3280def41b18e47d984e92b5f31
+msgid "Add :meth:`Guild.chunk` to fully chunk a guild."
+msgstr ""
+
+#: ../../old_changelog.rst:292 0b9d301adb0e42deb749d5cec6ac499d
+msgid ""
+"Add :class:`MemberCacheFlags` to better control member cache. See "
+":ref:`intents_member_cache` for more info."
+msgstr ""
+
+#: ../../old_changelog.rst:293 a66430bc45f94d669eb6867563e7eb32
+msgid "Add support for :attr:`ActivityType.competing` (:dpy-issue:`5823`)"
+msgstr ""
+
+#: ../../old_changelog.rst:294 941391c0a8c94d658cc28942e5788b32
+msgid "This seems currently unused API wise."
+msgstr ""
+
+#: ../../old_changelog.rst:296 71cdcbf5761647899b9a3415af3b6697
+msgid ""
+"Add support for message references, :attr:`Message.reference` (:dpy-"
+"issue:`5754`, :dpy-issue:`5832`)"
+msgstr ""
+
+#: ../../old_changelog.rst:297 392776121e374a24b86ed73162a6f615
+msgid ""
+"Add alias for :class:`ColourConverter` under ``ColorConverter`` (:dpy-"
+"issue:`5773`)"
+msgstr ""
+
+#: ../../old_changelog.rst:298 42afab58d537482ca2c546afccc48f71
+msgid ""
+"Add alias for :attr:`PublicUserFlags.verified_bot_developer` under "
+":attr:`PublicUserFlags.early_verified_bot_developer` (:dpy-issue:`5849`)"
+msgstr ""
+
+#: ../../old_changelog.rst:299 ed8a5a80bf32438ea8c845855d6b9b90
+msgid ""
+"|commands| Add support for ``require_var_positional`` for "
+":class:`Command` (:dpy-issue:`5793`)"
+msgstr ""
+
+#: ../../old_changelog.rst:304 ../../old_changelog.rst:338
+#: 8c0934ceb78c4f1693ffe335151b2fa8 bbe23bac78ca4dd28f187968bda5eea5
+msgid "Fix issue with :meth:`Guild.by_category` not showing certain channels."
+msgstr ""
+
+#: ../../old_changelog.rst:305 ../../old_changelog.rst:339
+#: 01bd7be1c4304e208005be731ba4afd6 424cc5829d774465a38c056fef25a32b
+msgid ""
+"Fix :attr:`abc.GuildChannel.permissions_synced` always being ``False`` "
+"(:dpy-issue:`5772`)"
+msgstr ""
+
+#: ../../old_changelog.rst:306 ../../old_changelog.rst:340
+#: 5a400f231b0f431e88023cec102cc1f7 9eaaa5136a534eef8985ae7b55a07932
+msgid ""
+"Fix handling of cloudflare bans on webhook related requests (:dpy-"
+"issue:`5221`)"
+msgstr ""
+
+#: ../../old_changelog.rst:307 ../../old_changelog.rst:341
+#: 60986dddc4514d5f8439bb750827cc8a 88a01d4747cf40c680c7fe0fb9f3d1f2
+msgid ""
+"Fix cases where a keep-alive thread would ack despite already dying "
+"(:dpy-issue:`5800`)"
+msgstr ""
+
+#: ../../old_changelog.rst:308 ../../old_changelog.rst:342
+#: b0334e961f684210a4a187503f27acd1 d282047850f0430cbf53c5cc4102453e
+msgid ""
+"Fix cases where a :class:`Member` reference would be stale when cache is "
+"disabled in message events (:dpy-issue:`5819`)"
+msgstr ""
+
+#: ../../old_changelog.rst:309 ../../old_changelog.rst:343
+#: 08beeb46d8e34e25831effd28dedb269 830e4e03694c4a4d87822e6869a230a4
+msgid ""
+"Fix ``allowed_mentions`` not being sent when sending a single file (:dpy-"
+"issue:`5835`)"
+msgstr ""
+
+#: ../../old_changelog.rst:310 ../../old_changelog.rst:344
+#: 21306977bea14641b77f1a9ec1faabb6 e5b9d4e38bc14f8fbfdde8181d940040
+msgid ""
+"Fix ``overwrites`` being ignored in :meth:`abc.GuildChannel.edit` if "
+"``{}`` is passed (:dpy-issue:`5756`, :dpy-issue:`5757`)"
+msgstr ""
+
+#: ../../old_changelog.rst:311 ../../old_changelog.rst:345
+#: 16b3062f67904ff2ae561b2546794925 b96344b6c603408dab9ca02983fffb11
+msgid ""
+"|commands| Fix exceptions being raised improperly in command invoke hooks"
+" (:dpy-issue:`5799`)"
+msgstr ""
+
+#: ../../old_changelog.rst:312 ../../old_changelog.rst:346
+#: 4cd3dabc92e946b1a8eff43a8af84c68 e3ff10a00de94a0b8ca18fb076c7da9d
+msgid ""
+"|commands| Fix commands not being properly ejected during errors in a cog"
+" injection (:dpy-issue:`5804`)"
+msgstr ""
+
+#: ../../old_changelog.rst:313 ../../old_changelog.rst:347
+#: 14ffcd2aaf65405e87ca219d9dc793d1 dac3191f3dbf46fe97c6c31f9a63ce5b
+msgid "|commands| Fix cooldown timing ignoring edited timestamps."
+msgstr ""
+
+#: ../../old_changelog.rst:314 ../../old_changelog.rst:348
+#: 3c59a15f5ce145968f60fc22e8be33fc 820a6a6dd5614720bc093ab09246e0df
+msgid ""
+"|tasks| Fix tasks extending the next iteration on handled exceptions "
+"(:dpy-issue:`5762`, :dpy-issue:`5763`)"
+msgstr ""
+
+#: ../../old_changelog.rst:319 81ade28f767a448c8891d0c9f0af3fe5
+msgid "Webhook requests are now logged (:dpy-issue:`5798`)"
+msgstr ""
+
+#: ../../old_changelog.rst:320 ../../old_changelog.rst:353
+#: 09f4349738e94800b64e5fac16700400 69a6f356a382470a93a0254e1ef839fb
+msgid ""
+"Remove caching layer from :attr:`AutoShardedClient.shards`. This was "
+"causing issues if queried before launching shards."
+msgstr ""
+
+#: ../../old_changelog.rst:321 6eabb97dab2645f68a540785b651f41a
+msgid "Gateway rate limits are now handled."
+msgstr ""
+
+#: ../../old_changelog.rst:322 092d27363495423898dd836604163f0b
+msgid "Warnings logged due to missed caches are now changed to DEBUG log level."
+msgstr ""
+
+#: ../../old_changelog.rst:323 b90a6d56a2a74446a688034872c88075
+msgid "Some strings are now explicitly interned to reduce memory usage."
+msgstr ""
+
+#: ../../old_changelog.rst:324 e199778b8c4e4710ae92fe337160ea38
+msgid ""
+"Usage of namedtuples has been reduced to avoid potential breaking changes"
+" in the future (:dpy-issue:`5834`)"
+msgstr ""
+
+#: ../../old_changelog.rst:325 fd0018f1ecf249598ea84f0c89345276
+msgid ""
+"|commands| All :class:`BadArgument` exceptions from the built-in "
+"converters now raise concrete exceptions to better tell them apart (:dpy-"
+"issue:`5748`)"
+msgstr ""
+
+#: ../../old_changelog.rst:326 ../../old_changelog.rst:354
+#: 090948d9adb04e6d9f49c1bd6de23a65 4ae78861471e4898be05b97f358820b0
+msgid ""
+"|tasks| Lazily fetch the event loop to prevent surprises when changing "
+"event loop policy (:dpy-issue:`5808`)"
+msgstr ""
+
+#: ../../old_changelog.rst:331 033fe6a2b5f746c2852bb7d920ccd40d
+msgid "v1.4.2"
+msgstr ""
+
+#: ../../old_changelog.rst:333 acd09dc0788248c78f3b8710f895df5d
+msgid "This is a maintenance release with backports from :ref:`vp1p5p0`."
+msgstr ""
+
+#: ../../old_changelog.rst:359 ecd8be61f7374c9792ac2215ceeed38c
+msgid "v1.4.1"
+msgstr ""
+
+#: ../../old_changelog.rst:364 b1f8498cf82f4210a828c8ce83f34f49
+msgid ""
+"Properly terminate the connection when :meth:`Client.close` is called "
+"(:dpy-issue:`5207`)"
+msgstr ""
+
+#: ../../old_changelog.rst:365 166552fd8c854e6db3729c8ac07bf9f4
+msgid ""
+"Fix error being raised when clearing embed author or image when it was "
+"already cleared (:dpy-issue:`5210`, :dpy-issue:`5212`)"
+msgstr ""
+
+#: ../../old_changelog.rst:366 e9f4a3a3be194fedbe32bd94edfc274c
+msgid "Fix ``__path__`` to allow editable extensions (:dpy-issue:`5213`)"
+msgstr ""
+
+#: ../../old_changelog.rst:371 29499153bfa44529b388e924c3e35752
+msgid "v1.4.0"
+msgstr ""
+
+#: ../../old_changelog.rst:373 36f10aae7b534b2c917cf9e84e44e9e8
+msgid ""
+"Another version with a long development time. Features like Intents are "
+"slated to be released in a v1.5 release. Thank you for your patience!"
+msgstr ""
+
+#: ../../old_changelog.rst:378 e1aab67a429f4ce29c6f384b1e142f65
+msgid ""
+"Add support for :class:`AllowedMentions` to have more control over what "
+"gets mentioned."
+msgstr ""
+
+#: ../../old_changelog.rst:379 ad3114f5c85b4b8bbdcd4cb1d13e96a5
+msgid "This can be set globally through :attr:`Client.allowed_mentions`"
+msgstr ""
+
+#: ../../old_changelog.rst:380 d06782ffb1514f8a8d98c03346204e64
+msgid ""
+"This can also be set on a per message basis via "
+":meth:`abc.Messageable.send`"
+msgstr ""
+
+#: ../../old_changelog.rst:382 dbdf73c2aa46481789f70a7cbc01a923
+msgid ""
+":class:`AutoShardedClient` has been completely redesigned from the ground"
+" up to better suit multi-process clusters (:dpy-issue:`2654`)"
+msgstr ""
+
+#: ../../old_changelog.rst:383 96f37c68a624441e9309f88ab5f534aa
+msgid ""
+"Add :class:`ShardInfo` which allows fetching specific information about a"
+" shard."
+msgstr ""
+
+#: ../../old_changelog.rst:384 46f506fad9c648458b50eba46a1f110a
+msgid ""
+"The :class:`ShardInfo` allows for reconnecting and disconnecting of a "
+"specific shard as well."
+msgstr ""
+
+#: ../../old_changelog.rst:385 a811e1c54bd941c1b27efe7f3383bfc1
+msgid ""
+"Add :meth:`AutoShardedClient.get_shard` and "
+":attr:`AutoShardedClient.shards` to get information about shards."
+msgstr ""
+
+#: ../../old_changelog.rst:386 f5c40023553848668f6f445e7c2d024c
+msgid ""
+"Rework the entire connection flow to better facilitate the ``IDENTIFY`` "
+"rate limits."
+msgstr ""
+
+#: ../../old_changelog.rst:387 bea86a6578ae438cb36217e092c606e0
+msgid ""
+"Add a hook :meth:`Client.before_identify_hook` to have better control "
+"over what happens before an ``IDENTIFY`` is done."
+msgstr ""
+
+#: ../../old_changelog.rst:388 1964754bcbfb4fd3a7b8862154346b51
+msgid ""
+"Add more shard related events such as :func:`on_shard_connect`, "
+":func:`on_shard_disconnect` and :func:`on_shard_resumed`."
+msgstr ""
+
+#: ../../old_changelog.rst:390 b171f740fdf04ad68b61129a900ef24c
+msgid "Add support for guild templates (:dpy-issue:`2652`)"
+msgstr ""
+
+#: ../../old_changelog.rst:391 81f61496186241f2844dc1b0ff8c8c4e
+msgid "This adds :class:`Template` to read a template's information."
+msgstr ""
+
+#: ../../old_changelog.rst:392 f9851cb9d0114aabb6785ddd9e7bdb32
+msgid ""
+":meth:`Client.fetch_template` can be used to fetch a template's "
+"information from the API."
+msgstr ""
+
+#: ../../old_changelog.rst:393 97faa677b970448e86f167b5ed81de11
+msgid ""
+":meth:`Client.create_guild` can now take an optional template to base the"
+" creation from."
+msgstr ""
+
+#: ../../old_changelog.rst:394 ec29d1106c08437ca9cfce3d5d13fb3b
+msgid ""
+"Note that fetching a guild's template is currently restricted for bot "
+"accounts."
+msgstr ""
+
+#: ../../old_changelog.rst:396 c1e6e4b023734d0191da0a5c15900143
+msgid "Add support for guild integrations (:dpy-issue:`2051`, :dpy-issue:`1083`)"
+msgstr ""
+
+#: ../../old_changelog.rst:397 0e71c3d54bf64299a35f05a8e693ae24
+msgid ":class:`Integration` is used to read integration information."
+msgstr ""
+
+#: ../../old_changelog.rst:398 fc7ff73ee2af4046a4665f5fc77796e9
+msgid ""
+":class:`IntegrationAccount` is used to read integration account "
+"information."
+msgstr ""
+
+#: ../../old_changelog.rst:399 7e2eb62f1c264d6891ceb855d4591dbc
+msgid ":meth:`Guild.integrations` will fetch all integrations in a guild."
+msgstr ""
+
+#: ../../old_changelog.rst:400 bfa5a4a346624ca79e54d3642d01bb5c
+msgid ":meth:`Guild.create_integration` will create an integration."
+msgstr ""
+
+#: ../../old_changelog.rst:401 a86a823956254da4b3b49a4c51004e95
+msgid ":meth:`Integration.edit` will edit an existing integration."
+msgstr ""
+
+#: ../../old_changelog.rst:402 81278710074e4a90a19dfe08c9e09b2c
+msgid ":meth:`Integration.delete` will delete an integration."
+msgstr ""
+
+#: ../../old_changelog.rst:403 bb332103d9ad4de7896c75c4f2d1edee
+msgid ":meth:`Integration.sync` will sync an integration."
+msgstr ""
+
+#: ../../old_changelog.rst:404 f560a2e6b52c4de0929759c11f5e0979
+msgid "There is currently no support in the audit log for this."
+msgstr ""
+
+#: ../../old_changelog.rst:406 c1c8c4eae418422eb3dc6dde96d640e9
+msgid ""
+"Add an alias for :attr:`VerificationLevel.extreme` under "
+":attr:`VerificationLevel.very_high` (:dpy-issue:`2650`)"
+msgstr ""
+
+#: ../../old_changelog.rst:407 cd8a55de2dd449698d0ad31ef8ccb437
+msgid "Add various grey to gray aliases for :class:`Colour` (:dpy-issue:`5130`)"
+msgstr ""
+
+#: ../../old_changelog.rst:408 eb62216524a64245ac23e0629b972af4
+msgid ""
+"Added :attr:`VoiceClient.latency` and :attr:`VoiceClient.average_latency`"
+" (:dpy-issue:`2535`)"
+msgstr ""
+
+#: ../../old_changelog.rst:409 039a71ed6eb34a948b59d222a94b32cb
+msgid ""
+"Add ``use_cached`` and ``spoiler`` parameters to "
+":meth:`Attachment.to_file` (:dpy-issue:`2577`, :dpy-issue:`4095`)"
+msgstr ""
+
+#: ../../old_changelog.rst:410 f0bd2c690f1742bba6462fdc4463fe42
+msgid ""
+"Add ``position`` parameter support to :meth:`Guild.create_category` "
+"(:dpy-issue:`2623`)"
+msgstr ""
+
+#: ../../old_changelog.rst:411 d4758050bc2645fb8c70ea8b1afa8c3f
+msgid ""
+"Allow passing ``int`` for the colour in :meth:`Role.edit` (:dpy-"
+"issue:`4057`)"
+msgstr ""
+
+#: ../../old_changelog.rst:412 c08fbae6ca0948f18ffe72ea22e53ebd
+msgid ""
+"Add :meth:`Embed.remove_author` to clear author information from an embed"
+" (:dpy-issue:`4068`)"
+msgstr ""
+
+#: ../../old_changelog.rst:413 234a8225b8074e1f83c34d9083c5b753
+msgid ""
+"Add the ability to clear images and thumbnails in embeds using "
+":attr:`Embed.Empty` (:dpy-issue:`4053`)"
+msgstr ""
+
+#: ../../old_changelog.rst:414 f3b7e6e6b34444f4a332e9f11b67dd70
+msgid "Add :attr:`Guild.max_video_channel_users` (:dpy-issue:`4120`)"
+msgstr ""
+
+#: ../../old_changelog.rst:415 5f219d25bbce4f43a26882f4829d5cd7
+msgid "Add :attr:`Guild.public_updates_channel` (:dpy-issue:`4120`)"
+msgstr ""
+
+#: ../../old_changelog.rst:416 e473f80e237243b6b58aa6a0ace7a203
+msgid ""
+"Add ``guild_ready_timeout`` parameter to :class:`Client` and subclasses "
+"to control timeouts when the ``GUILD_CREATE`` stream takes too long "
+"(:dpy-issue:`4112`)"
+msgstr ""
+
+#: ../../old_changelog.rst:417 e769df0c96904de1a33f7a5f1c2bc25b
+msgid ""
+"Add support for public user flags via :attr:`User.public_flags` and "
+":class:`PublicUserFlags` (:dpy-issue:`3999`)"
+msgstr ""
+
+#: ../../old_changelog.rst:418 d1226b31f9d044e2bc454e19b6390d94
+msgid ""
+"Allow changing of channel types via :meth:`TextChannel.edit` to and from "
+"a news channel (:dpy-issue:`4121`)"
+msgstr ""
+
+#: ../../old_changelog.rst:419 15224824df754488b5da3a5364f6884f
+msgid ""
+"Add :meth:`Guild.edit_role_positions` to bulk edit role positions in a "
+"single API call (:dpy-issue:`2501`, :dpy-issue:`2143`)"
+msgstr ""
+
+#: ../../old_changelog.rst:420 eb43cff3360b4d93a8c0e75b17bc7914
+msgid ""
+"Add :meth:`Guild.change_voice_state` to change your voice state in a "
+"guild (:dpy-issue:`5088`)"
+msgstr ""
+
+#: ../../old_changelog.rst:421 1079cadf86634cfda77479438891a867
+msgid ""
+"Add :meth:`PartialInviteGuild.is_icon_animated` for checking if the "
+"invite guild has animated icon (:dpy-issue:`4180`, :dpy-issue:`4181`)"
+msgstr ""
+
+#: ../../old_changelog.rst:422 ca6f6d68f19e4b839a2ab54b42c82ae8
+msgid ""
+"Add :meth:`PartialInviteGuild.icon_url_as` now supports ``static_format``"
+" for consistency (:dpy-issue:`4180`, :dpy-issue:`4181`)"
+msgstr ""
+
+#: ../../old_changelog.rst:423 caf2ddceb3b048579d1d0103efe59d0b
+msgid "Add support for ``user_ids`` in :meth:`Guild.query_members`"
+msgstr ""
+
+#: ../../old_changelog.rst:424 455fce753998444894fd03d989221870
+msgid ""
+"Add support for pruning members by roles in :meth:`Guild.prune_members` "
+"(:dpy-issue:`4043`)"
+msgstr ""
+
+#: ../../old_changelog.rst:425 492a3ff96db34055ab5ef8db9d7aa0b3
+msgid ""
+"|commands| Implement :func:`~ext.commands.before_invoke` and "
+":func:`~ext.commands.after_invoke` decorators (:dpy-issue:`1986`, :dpy-"
+"issue:`2502`)"
+msgstr ""
+
+#: ../../old_changelog.rst:426 b0afabd305984420b30a41250862de60
+msgid ""
+"|commands| Add a way to retrieve ``retry_after`` from a cooldown in a "
+"command via :meth:`Command.get_cooldown_retry_after "
+"<.ext.commands.Command.get_cooldown_retry_after>` (:dpy-issue:`5195`)"
+msgstr ""
+
+#: ../../old_changelog.rst:427 e7a39d7fd6b84ef3be0cc1a9274bfb96
+msgid ""
+"|commands| Add a way to dynamically add and remove checks from a "
+":class:`HelpCommand <.ext.commands.HelpCommand>` (:dpy-issue:`5197`)"
+msgstr ""
+
+#: ../../old_changelog.rst:428 9551966f0b6b4b28b4ecb97a1451bdf5
+msgid ""
+"|tasks| Add :meth:`Loop.is_running <.ext.tasks.Loop.is_running>` method "
+"to the task objects (:dpy-issue:`2540`)"
+msgstr ""
+
+#: ../../old_changelog.rst:429 f389ab47cdfd47d798d8b37185fc49a0
+msgid ""
+"|tasks| Allow usage of custom error handlers similar to the command "
+"extensions to tasks using :meth:`Loop.error <.ext.tasks.Loop.error>` "
+"decorator (:dpy-issue:`2621`)"
+msgstr ""
+
+#: ../../old_changelog.rst:435 c36502f015ad41568692c520d61ca1ae
+msgid ""
+"Fix issue with :attr:`PartialEmoji.url` reads leading to a failure (:dpy-"
+"issue:`4015`, :dpy-issue:`4016`)"
+msgstr ""
+
+#: ../../old_changelog.rst:436 e30308967add451eb9baa32dd3f6eb23
+msgid ""
+"Allow :meth:`abc.Messageable.history` to take a limit of ``1`` even if "
+"``around`` is passed (:dpy-issue:`4019`)"
+msgstr ""
+
+#: ../../old_changelog.rst:437 61ed117064c447c7a073299cbbaa6a8b
+msgid ""
+"Fix :attr:`Guild.member_count` not updating in certain cases when a "
+"member has left the guild (:dpy-issue:`4021`)"
+msgstr ""
+
+#: ../../old_changelog.rst:438 4cc3e7b4c70e4318ad4e70383b01efdf
+msgid ""
+"Fix the type of :attr:`Object.id` not being validated. For backwards "
+"compatibility ``str`` is still allowed but is converted to ``int`` (:dpy-"
+"issue:`4002`)"
+msgstr ""
+
+#: ../../old_changelog.rst:439 3c22f73ec818468eb2d17ca5907b5134
+msgid ""
+"Fix :meth:`Guild.edit` not allowing editing of notification settings "
+"(:dpy-issue:`4074`, :dpy-issue:`4047`)"
+msgstr ""
+
+#: ../../old_changelog.rst:440 65f57a68db644466bdc9e78e24c5e0b6
+msgid ""
+"Fix crash when the guild widget contains channels that aren't in the "
+"payload (:dpy-issue:`4114`, :dpy-issue:`4115`)"
+msgstr ""
+
+#: ../../old_changelog.rst:441 bc0fef5abc41480e916541b2d5a928ea
+msgid ""
+"Close ffmpeg stdin handling from spawned processes with "
+":class:`FFmpegOpusAudio` and :class:`FFmpegPCMAudio` (:dpy-issue:`4036`)"
+msgstr ""
+
+#: ../../old_changelog.rst:442 5c8a8eb5bcb84681afae247547662292
+msgid ""
+"Fix :func:`utils.escape_markdown` not escaping masked links (:dpy-"
+"issue:`4206`, :dpy-issue:`4207`)"
+msgstr ""
+
+#: ../../old_changelog.rst:443 896991c98dbe4c8ea001881a52fe6ed2
+msgid ""
+"Fix reconnect loop due to failed handshake on region change (:dpy-"
+"issue:`4210`, :dpy-issue:`3996`)"
+msgstr ""
+
+#: ../../old_changelog.rst:444 06aba689796e43f9bd626e060d7a0c2b
+msgid ""
+"Fix :meth:`Guild.by_category` not returning empty categories (:dpy-"
+"issue:`4186`)"
+msgstr ""
+
+#: ../../old_changelog.rst:445 adf9c5dfaf5f4c1da05edc7a0c233431
+msgid "Fix certain JPEG images not being identified as JPEG (:dpy-issue:`5143`)"
+msgstr ""
+
+#: ../../old_changelog.rst:446 6251bac44c604c9892d13c7ef415983d
+msgid ""
+"Fix a crash when an incomplete guild object is used when fetching "
+"reaction information (:dpy-issue:`5181`)"
+msgstr ""
+
+#: ../../old_changelog.rst:447 114807e8b60c4ab98e3ec6e0517a08a8
+msgid ""
+"Fix a timeout issue when fetching members using "
+":meth:`Guild.query_members`"
+msgstr ""
+
+#: ../../old_changelog.rst:448 ab2cedd01cc64939aca8c9d9d1c858ea
+msgid ""
+"Fix an issue with domain resolution in voice (:dpy-issue:`5188`, :dpy-"
+"issue:`5191`)"
+msgstr ""
+
+#: ../../old_changelog.rst:449 992b675d138e40d48549f9e054fb37ad
+msgid ""
+"Fix an issue where :attr:`PartialEmoji.id` could be a string (:dpy-"
+"issue:`4153`, :dpy-issue:`4152`)"
+msgstr ""
+
+#: ../../old_changelog.rst:450 3fbabe76f198438686c278bf714d8afc
+msgid "Fix regression where :attr:`Member.activities` would not clear."
+msgstr ""
+
+#: ../../old_changelog.rst:451 0824b83c8a7141138ed5ba9133150e03
+msgid ""
+"|commands| A :exc:`TypeError` is now raised when :obj:`typing.Optional` "
+"is used within :data:`commands.Greedy <.ext.commands.Greedy>` (:dpy-"
+"issue:`2253`, :dpy-issue:`5068`)"
+msgstr ""
+
+#: ../../old_changelog.rst:452 52c5a989164a43c28b39046c79ba1e95
+msgid ""
+"|commands| :meth:`Bot.walk_commands <.ext.commands.Bot.walk_commands>` no"
+" longer yields duplicate commands due to aliases (:dpy-issue:`2591`)"
+msgstr ""
+
+#: ../../old_changelog.rst:453 cbd274196bba44189344f78bc604d638
+msgid ""
+"|commands| Fix regex characters not being escaped in "
+":attr:`HelpCommand.clean_prefix <.ext.commands.HelpCommand.clean_prefix>`"
+" (:dpy-issue:`4058`, :dpy-issue:`4071`)"
+msgstr ""
+
+#: ../../old_changelog.rst:454 ee1c0df31a834546bb907abe74310265
+msgid ""
+"|commands| Fix :meth:`Bot.get_command <.ext.commands.Bot.get_command>` "
+"from raising errors when a name only has whitespace (:dpy-issue:`5124`)"
+msgstr ""
+
+#: ../../old_changelog.rst:455 21062660552d482e9794d4b19d8a22c0
+msgid ""
+"|commands| Fix issue with :attr:`Context.subcommand_passed "
+"<.ext.commands.Context.subcommand_passed>` not functioning as expected "
+"(:dpy-issue:`5198`)"
+msgstr ""
+
+#: ../../old_changelog.rst:456 5068af443e1344bfb7cb3ae05aa9a7ee
+msgid ""
+"|tasks| Task objects are no longer stored globally so two class instances"
+" can now start two separate tasks (:dpy-issue:`2294`)"
+msgstr ""
+
+#: ../../old_changelog.rst:457 6730fbacf35b42fda9028f1908c9e62d
+msgid ""
+"|tasks| Allow cancelling the loop within :meth:`before_loop "
+"<.ext.tasks.Loop.before_loop>` (:dpy-issue:`4082`)"
+msgstr ""
+
+#: ../../old_changelog.rst:463 b8cad1bdeea94d40980d3b5877e88912
+msgid ""
+"The :attr:`Member.roles` cache introduced in v1.3 was reverted due to "
+"issues caused (:dpy-issue:`4087`, :dpy-issue:`4157`)"
+msgstr ""
+
+#: ../../old_changelog.rst:464 2ccf186629b245aab640745b86c0b8a0
+msgid ""
+":class:`Webhook` objects are now comparable and hashable (:dpy-"
+"issue:`4182`)"
+msgstr ""
+
+#: ../../old_changelog.rst:465 bc3f1514d06e4ffa82f5958440014458
+msgid ""
+"Some more API requests got a ``reason`` parameter for audit logs (:dpy-"
+"issue:`5086`)"
+msgstr ""
+
+#: ../../old_changelog.rst:466 420f662046664e3c955aa818b7e812f0
+msgid ":meth:`TextChannel.follow`"
+msgstr ""
+
+#: ../../old_changelog.rst:467 95dde2dfd9a14a6eb12c6f7bb322987a
+msgid ":meth:`Message.pin` and :meth:`Message.unpin`"
+msgstr ""
+
+#: ../../old_changelog.rst:468 dc69c22bc09149729c7646d3e156bea0
+msgid ":meth:`Webhook.delete` and :meth:`Webhook.edit`"
+msgstr ""
+
+#: ../../old_changelog.rst:470 9e322ad210b943b4bef06ecef48a9d40
+msgid ""
+"For performance reasons ``websockets`` has been dropped in favour of "
+"``aiohttp.ws``."
+msgstr ""
+
+#: ../../old_changelog.rst:471 e47d6e04571341239630b3c4152906b9
+msgid ""
+"The blocking logging message now shows the stack trace of where the main "
+"thread was blocking"
+msgstr ""
+
+#: ../../old_changelog.rst:472 b220dd6ab8614755a7bb3c496a65e817
+msgid ""
+"The domain name was changed from ``discordapp.com`` to ``discord.com`` to"
+" prepare for the required domain migration"
+msgstr ""
+
+#: ../../old_changelog.rst:473 f2d9b55aea0c4a8d94d05409d9956864
+msgid ""
+"Reduce memory usage when reconnecting due to stale references being held "
+"by the message cache (:dpy-issue:`5133`)"
+msgstr ""
+
+#: ../../old_changelog.rst:474 aa1ce06a0a1b45058956deb9e7e9f435
+#, python-format
+msgid ""
+"Optimize :meth:`abc.GuildChannel.permissions_for` by not creating as many"
+" temporary objects (20-32% savings)."
+msgstr ""
+
+#: ../../old_changelog.rst:475 da36bfb601384d02aa09c58ae71a1ddd
+msgid ""
+"|commands| Raise :exc:`~ext.commands.CommandRegistrationError` instead of"
+" :exc:`ClientException` when a duplicate error is registered (:dpy-"
+"issue:`4217`)"
+msgstr ""
+
+#: ../../old_changelog.rst:476 96474a8793a5431d8f05525da921444a
+msgid ""
+"|tasks| No longer handle :exc:`HTTPException` by default in the task "
+"reconnect loop (:dpy-issue:`5193`)"
+msgstr ""
+
+#: ../../old_changelog.rst:481 3f9d816c70db4a8cac8f50f986ea272b
+msgid "v1.3.4"
+msgstr ""
+
+#: ../../old_changelog.rst:486 115d2cccd4bf4d719c0494b0bc53fa3a
+msgid ""
+"Fix an issue with channel overwrites causing multiple issues including "
+"crashes (:dpy-issue:`5109`)"
+msgstr ""
+
+#: ../../old_changelog.rst:491 9e212adc90f74e0ca5276d672df60e19
+msgid "v1.3.3"
+msgstr ""
+
+#: ../../old_changelog.rst:496 96b3769677394f6bbb5f9309011e3f39
+msgid "Change default WS close to 4000 instead of 1000."
+msgstr ""
+
+#: ../../old_changelog.rst:497 942953724fa34529a1b25ae7973280d6
+msgid ""
+"The previous close code caused sessions to be invalidated at a higher "
+"frequency than desired."
+msgstr ""
+
+#: ../../old_changelog.rst:499 8696fa14b4bf4ed8bbda9716eda490c3
+msgid "Fix ``None`` appearing in ``Member.activities``. (:dpy-issue:`2619`)"
+msgstr ""
+
+#: ../../old_changelog.rst:504 49b2fb2a70564e5f96322b3dbc59093c
+msgid "v1.3.2"
+msgstr ""
+
+#: ../../old_changelog.rst:506 e633fa6bc66c46fba0bf95d625f0a1c9
+msgid "Another minor bug fix release."
+msgstr ""
+
+#: ../../old_changelog.rst:511 b1a8cbd06a6345db970bd23128ecf3eb
+msgid ""
+"Higher the wait time during the ``GUILD_CREATE`` stream before "
+"``on_ready`` is fired for :class:`AutoShardedClient`."
+msgstr ""
+
+#: ../../old_changelog.rst:512 0875870fba694dd4a10bc6b1bd3030eb
+msgid ""
+":func:`on_voice_state_update` now uses the inner ``member`` payload which"
+" should make it more reliable."
+msgstr ""
+
+#: ../../old_changelog.rst:513 9513995a528f4cd2a3b151fee8bd9c72
+msgid ""
+"Fix various Cloudflare handling errors (:dpy-issue:`2572`, :dpy-"
+"issue:`2544`)"
+msgstr ""
+
+#: ../../old_changelog.rst:514 3bfca67602ea47c3bf1994ea6c6e2f54
+msgid ""
+"Fix crashes if :attr:`Message.guild` is :class:`Object` instead of "
+":class:`Guild`."
+msgstr ""
+
+#: ../../old_changelog.rst:515 f3d21c46aa5d4c35a8d69b69aa64e8a7
+msgid ""
+"Fix :meth:`Webhook.send` returning an empty string instead of ``None`` "
+"when ``wait=False``."
+msgstr ""
+
+#: ../../old_changelog.rst:516 a152a85726ae4833a9a158e081906066
+msgid "Fix invalid format specifier in webhook state (:dpy-issue:`2570`)"
+msgstr ""
+
+#: ../../old_changelog.rst:517 c414ff9f9afb45b4bac514eabfe33ec9
+msgid ""
+"|commands| Passing invalid permissions to permission related checks now "
+"raises ``TypeError``."
+msgstr ""
+
+#: ../../old_changelog.rst:522 73688aae90b74dc6992957cda76afb91
+msgid "v1.3.1"
+msgstr ""
+
+#: ../../old_changelog.rst:524 fb7259a89de141518940ab53b7118c78
+msgid "Minor bug fix release."
+msgstr ""
+
+#: ../../old_changelog.rst:529 1788832890e5432491707257ba361a1d
+msgid "Fix fetching invites in guilds that the user is not in."
+msgstr ""
+
+#: ../../old_changelog.rst:530 7732c78edba24e769c63373ca655040c
+msgid ""
+"Fix the channel returned from :meth:`Client.fetch_channel` raising when "
+"sending messages. (:dpy-issue:`2531`)"
+msgstr ""
+
+#: ../../old_changelog.rst:535 119c187b71124bf98999f351e134e1fc
+msgid "Fix compatibility warnings when using the Python 3.9 alpha."
+msgstr ""
+
+#: ../../old_changelog.rst:536 ce43892559af4e9d9053f2a27444d1b1
+msgid "Change the unknown event logging from WARNING to DEBUG to reduce noise."
+msgstr ""
+
+#: ../../old_changelog.rst:541 ef6b11460b9744f2b62136f8ffaaa66a
+msgid "v1.3.0"
+msgstr ""
+
+#: ../../old_changelog.rst:543 87ad557ce0c24885bdf43fc45061284c
+msgid ""
+"This version comes with a lot of bug fixes and new features. It's been in"
+" development for a lot longer than was anticipated!"
+msgstr ""
+
+#: ../../old_changelog.rst:548 aec2b98070ce401e8b1ca012e1bf6e45
+msgid ""
+"Add :meth:`Guild.fetch_members` to fetch members from the HTTP API. "
+"(:dpy-issue:`2204`)"
+msgstr ""
+
+#: ../../old_changelog.rst:549 820ea45ae93c4ba7b726d3bd44d84e75
+msgid ""
+"Add :meth:`Guild.fetch_roles` to fetch roles from the HTTP API. (:dpy-"
+"issue:`2208`)"
+msgstr ""
+
+#: ../../old_changelog.rst:550 f4c00a233af340fcb0085afd7d1f51a9
+msgid ""
+"Add support for teams via :class:`Team` when fetching with "
+":meth:`Client.application_info`. (:dpy-issue:`2239`)"
+msgstr ""
+
+#: ../../old_changelog.rst:551 1acf50835daa4c9d9a55815d3b08aed7
+msgid "Add support for suppressing embeds via :meth:`Message.edit`"
+msgstr ""
+
+#: ../../old_changelog.rst:552 9259271a4d244d13b437f90beafd4e78
+msgid ""
+"Add support for guild subscriptions. See the :class:`Client` "
+"documentation for more details."
+msgstr ""
+
+#: ../../old_changelog.rst:553 df5c9d0093004697a88e8a558b2e6e93
+msgid ""
+"Add :attr:`VoiceChannel.voice_states` to get voice states without relying"
+" on member cache."
+msgstr ""
+
+#: ../../old_changelog.rst:554 40fe9267ccd2476ba620b3ca5f262197
+msgid "Add :meth:`Guild.query_members` to request members from the gateway."
+msgstr ""
+
+#: ../../old_changelog.rst:555 42cb1397d3ac435fa5ed3b8ea81ad549
+msgid ""
+"Add :class:`FFmpegOpusAudio` and other voice improvements. (:dpy-"
+"issue:`2258`)"
+msgstr ""
+
+#: ../../old_changelog.rst:556 72379b04191642b3b238b05b7bb80548
+msgid ""
+"Add :attr:`RawMessageUpdateEvent.channel_id` for retrieving channel IDs "
+"during raw message updates. (:dpy-issue:`2301`)"
+msgstr ""
+
+#: ../../old_changelog.rst:557 ed8974e34b6443dfa915e4490667e4b3
+msgid ""
+"Add :attr:`RawReactionActionEvent.event_type` to disambiguate between "
+"reaction addition and removal in reaction events."
+msgstr ""
+
+#: ../../old_changelog.rst:558 0d950e8c55dd4f8586e0127ea8115e7e
+msgid ""
+"Add :attr:`abc.GuildChannel.permissions_synced` to query whether "
+"permissions are synced with the category. (:dpy-issue:`2300`, :dpy-"
+"issue:`2324`)"
+msgstr ""
+
+#: ../../old_changelog.rst:559 0e5cb164e2ac4509b46c6457ce34548c
+msgid ""
+"Add :attr:`MessageType.channel_follow_add` message type for announcement "
+"channels being followed. (:dpy-issue:`2314`)"
+msgstr ""
+
+#: ../../old_changelog.rst:560 6c1eac3232f14f6c9019ab7d740eb64d
+msgid ""
+"Add :meth:`Message.is_system` to allow for quickly filtering through "
+"system messages."
+msgstr ""
+
+#: ../../old_changelog.rst:561 6583b46d10c949c29acb8848850598e8
+msgid ""
+"Add :attr:`VoiceState.self_stream` to indicate whether someone is "
+"streaming via Go Live. (:dpy-issue:`2343`)"
+msgstr ""
+
+#: ../../old_changelog.rst:562 62cc6137853f476ea15a032b8c8519b5
+msgid ""
+"Add :meth:`Emoji.is_usable` to check if the client user can use an emoji."
+" (:dpy-issue:`2349`)"
+msgstr ""
+
+#: ../../old_changelog.rst:563 94d9d687d2da4e3b87fdfcb9fcd49664
+msgid ""
+"Add :attr:`VoiceRegion.europe` and :attr:`VoiceRegion.dubai`. (:dpy-"
+"issue:`2358`, :dpy-issue:`2490`)"
+msgstr ""
+
+#: ../../old_changelog.rst:564 31fdead7c6e8472989a0507d527e2932
+msgid ""
+"Add :meth:`TextChannel.follow` to follow a news channel. (:dpy-"
+"issue:`2367`)"
+msgstr ""
+
+#: ../../old_changelog.rst:565 5e307f47cbc04ed29b2209318a4bac63
+msgid ""
+"Add :attr:`Permissions.view_guild_insights` permission. (:dpy-"
+"issue:`2415`)"
+msgstr ""
+
+#: ../../old_changelog.rst:566 dec4a576e7e5419f82e093c7ec3f77c1
+msgid ""
+"Add support for new audit log types. See :ref:`discord-api-audit-logs` "
+"for more information. (:dpy-issue:`2427`)"
+msgstr ""
+
+#: ../../old_changelog.rst:567 9ad042fd34ed4df5b81eaad3ca88574e
+msgid "Note that integration support is not finalized."
+msgstr ""
+
+#: ../../old_changelog.rst:569 3390e29cc66644e1a1a7e1df6f9367c5
+msgid ""
+"Add :attr:`Webhook.type` to query the type of webhook "
+"(:class:`WebhookType`). (:dpy-issue:`2441`)"
+msgstr ""
+
+#: ../../old_changelog.rst:570 3f3f481b58324d67a01ebe8d09a38658
+msgid ""
+"Allow bulk editing of channel overwrites through "
+":meth:`abc.GuildChannel.edit`. (:dpy-issue:`2198`)"
+msgstr ""
+
+#: ../../old_changelog.rst:571 7aa7360276774dcb9c5d42f0e008d0ed
+msgid ""
+"Add :class:`Activity.created_at` to see when an activity was started. "
+"(:dpy-issue:`2446`)"
+msgstr ""
+
+#: ../../old_changelog.rst:572 2d05339f79e64279a5ec781e0560da3e
+msgid ""
+"Add support for ``xsalsa20_poly1305_lite`` encryption mode for voice. "
+"(:dpy-issue:`2463`)"
+msgstr ""
+
+#: ../../old_changelog.rst:573 f3dabdcb056142ee9f4d72efe16b599f
+msgid ""
+"Add :attr:`RawReactionActionEvent.member` to get the member who did the "
+"reaction. (:dpy-issue:`2443`)"
+msgstr ""
+
+#: ../../old_changelog.rst:574 341e2ad248ad4ea0bb805dfd999fcd4a
+msgid ""
+"Add support for new YouTube streaming via :attr:`Streaming.platform` and "
+":attr:`Streaming.game`. (:dpy-issue:`2445`)"
+msgstr ""
+
+#: ../../old_changelog.rst:575 b767a74f1cd74a2782b619d528041130
+msgid ""
+"Add :attr:`Guild.discovery_splash_url` to get the discovery splash image "
+"asset. (:dpy-issue:`2482`)"
+msgstr ""
+
+#: ../../old_changelog.rst:576 a85ffc6ba20f41808b72c7493ec31e68
+msgid ""
+"Add :attr:`Guild.rules_channel` to get the rules channel of public "
+"guilds. (:dpy-issue:`2482`)"
+msgstr ""
+
+#: ../../old_changelog.rst:577 6dc312fd30bd447e8842d34cc7d6d8a2
+msgid ""
+"It should be noted that this feature is restricted to those who are "
+"either in Server Discovery or planning to be there."
+msgstr ""
+
+#: ../../old_changelog.rst:579 2688d9d068b241d4b680b0b5f47bb36d
+msgid ""
+"Add support for message flags via :attr:`Message.flags` and "
+":class:`MessageFlags`. (:dpy-issue:`2433`)"
+msgstr ""
+
+#: ../../old_changelog.rst:580 878aec6500b346dda36eb646a08ce091
+msgid ""
+"Add :attr:`User.system` and :attr:`Profile.system` to know whether a user"
+" is an official Discord Trust and Safety account."
+msgstr ""
+
+#: ../../old_changelog.rst:581 ccb2835d76a542bbbffee1e2b7ba0be9
+msgid ""
+"Add :attr:`Profile.team_user` to check whether a user is a member of a "
+"team."
+msgstr ""
+
+#: ../../old_changelog.rst:582 7a8afdb6988d46028d717bed39558c6a
+msgid ""
+"Add :meth:`Attachment.to_file` to easily convert attachments to "
+":class:`File` for sending."
+msgstr ""
+
+#: ../../old_changelog.rst:583 67f65835c49c4cb288694b65171c8420
+msgid ""
+"Add certain aliases to :class:`Permissions` to match the UI better. "
+"(:dpy-issue:`2496`)"
+msgstr ""
+
+#: ../../old_changelog.rst:584 72dc3853313b490daa47774a7abb1d77
+msgid ":attr:`Permissions.manage_permissions`"
+msgstr ""
+
+#: ../../old_changelog.rst:585 1b59de54f4a54fa7a0d4dedfe39d29d3
+msgid ":attr:`Permissions.view_channel`"
+msgstr ""
+
+#: ../../old_changelog.rst:586 69de6d9d1c0b43bd94b03da2c1f5d5ee
+msgid ":attr:`Permissions.use_external_emojis`"
+msgstr ""
+
+#: ../../old_changelog.rst:588 bcfef40f9a7842e680666eed8587d004
+msgid ""
+"Add support for passing keyword arguments when creating "
+":class:`Permissions`."
+msgstr ""
+
+#: ../../old_changelog.rst:589 1a3a71d81ec84b11bca519c67ce653a9
+msgid ""
+"Add support for custom activities via :class:`CustomActivity`. (:dpy-"
+"issue:`2400`)"
+msgstr ""
+
+#: ../../old_changelog.rst:590 a4171f744d8d4df8a55fb17434885c93
+msgid "Note that as of now, bots cannot send custom activities yet."
+msgstr ""
+
+#: ../../old_changelog.rst:592 96849cffb1bb45728aacf0318bb1f3d5
+msgid ""
+"Add support for :func:`on_invite_create` and :func:`on_invite_delete` "
+"events."
+msgstr ""
+
+#: ../../old_changelog.rst:593 48089f96c59e43d6bde2e8e9957001fa
+msgid "Add support for clearing a specific reaction emoji from a message."
+msgstr ""
+
+#: ../../old_changelog.rst:594 632244af79b34909bae166762c227acf
+msgid ":meth:`Message.clear_reaction` and :meth:`Reaction.clear` methods."
+msgstr ""
+
+#: ../../old_changelog.rst:595 42938be4bae043348325c04520fa440b
+msgid ""
+":func:`on_raw_reaction_clear_emoji` and :func:`on_reaction_clear_emoji` "
+"events."
+msgstr ""
+
+#: ../../old_changelog.rst:597 75fb67b0529b45a494728d4e50adcb6d
+msgid ""
+"Add :func:`utils.sleep_until` helper to sleep until a specific datetime. "
+"(:dpy-issue:`2517`, :dpy-issue:`2519`)"
+msgstr ""
+
+#: ../../old_changelog.rst:598 0249ad2dd7254e5abbf6ee39d396afb7
+msgid ""
+"|commands| Add support for teams and :attr:`Bot.owner_ids "
+"<.ext.commands.Bot.owner_ids>` to have multiple bot owners. (:dpy-"
+"issue:`2239`)"
+msgstr ""
+
+#: ../../old_changelog.rst:599 e8e5195b30cb44a38fce09912a709a63
+msgid ""
+"|commands| Add new :attr:`BucketType.role "
+"<.ext.commands.BucketType.role>` bucket type. (:dpy-issue:`2201`)"
+msgstr ""
+
+#: ../../old_changelog.rst:600 d92c3af3b4594da58fd1e4f5903d04a0
+msgid ""
+"|commands| Expose :attr:`Command.cog <.ext.commands.Command.cog>` "
+"property publicly. (:dpy-issue:`2360`)"
+msgstr ""
+
+#: ../../old_changelog.rst:601 3447dec897544d1eb0752f24736dbec3
+msgid ""
+"|commands| Add non-decorator interface for adding checks to commands via "
+":meth:`Command.add_check <.ext.commands.Command.add_check>` and "
+":meth:`Command.remove_check <.ext.commands.Command.remove_check>`. (:dpy-"
+"issue:`2411`)"
+msgstr ""
+
+#: ../../old_changelog.rst:602 26adbcbe9c9a466eb657b4130478bf3b
+msgid ""
+"|commands| Add :func:`has_guild_permissions "
+"<.ext.commands.has_guild_permissions>` check. (:dpy-issue:`2460`)"
+msgstr ""
+
+#: ../../old_changelog.rst:603 cf3f836f411c4075806478bf81367997
+msgid ""
+"|commands| Add :func:`bot_has_guild_permissions "
+"<.ext.commands.bot_has_guild_permissions>` check. (:dpy-issue:`2460`)"
+msgstr ""
+
+#: ../../old_changelog.rst:604 92a2afd0235d4c4795512f9e78876cbd
+msgid ""
+"|commands| Add ``predicate`` attribute to checks decorated with "
+":func:`~.ext.commands.check`."
+msgstr ""
+
+#: ../../old_changelog.rst:605 1464ac88f01e41519f1e26427404337e
+msgid ""
+"|commands| Add :func:`~.ext.commands.check_any` check to logical OR "
+"multiple checks."
+msgstr ""
+
+#: ../../old_changelog.rst:606 ea0ee3d087de4b19a1480eeba4c1cbf0
+msgid ""
+"|commands| Add :func:`~.ext.commands.max_concurrency` to allow only a "
+"certain amount of users to use a command concurrently before waiting or "
+"erroring."
+msgstr ""
+
+#: ../../old_changelog.rst:607 cd207ea2fa444c8bb6df15e75bb464c6
+msgid ""
+"|commands| Add support for calling a :class:`~.ext.commands.Command` as a"
+" regular function."
+msgstr ""
+
+#: ../../old_changelog.rst:608 0176fb8ca8da4ae49df0066c2259639d
+msgid ""
+"|tasks| :meth:`Loop.add_exception_type "
+"<.ext.tasks.Loop.add_exception_type>` now allows multiple exceptions to "
+"be set. (:dpy-issue:`2333`)"
+msgstr ""
+
+#: ../../old_changelog.rst:609 dec5bd3173924b8c8791325d5a6b520a
+msgid ""
+"|tasks| Add :attr:`Loop.next_iteration <.ext.tasks.Loop.next_iteration>` "
+"property. (:dpy-issue:`2305`)"
+msgstr ""
+
+#: ../../old_changelog.rst:614 e00711a7903147f8a4bdb888b4309f0e
+msgid ""
+"Fix issue with permission resolution sometimes failing for guilds with no"
+" owner."
+msgstr ""
+
+#: ../../old_changelog.rst:615 af1470c4fd594491a2691eff3036b15d
+msgid "Tokens are now stripped upon use. (:dpy-issue:`2135`)"
+msgstr ""
+
+#: ../../old_changelog.rst:616 e7a27cebaf3c4cdebc99422fd53ea313
+msgid ""
+"Passing in a ``name`` is no longer required for :meth:`Emoji.edit`. "
+"(:dpy-issue:`2368`)"
+msgstr ""
+
+#: ../../old_changelog.rst:617 1380092aff0a4028b0b670b759dedc34
+msgid ""
+"Fix issue with webhooks not re-raising after retries have run out. (:dpy-"
+"issue:`2272`, :dpy-issue:`2380`)"
+msgstr ""
+
+#: ../../old_changelog.rst:618 dd8fdb4c46894258b8221c2301d13f9f
+msgid ""
+"Fix mismatch in URL handling in :func:`utils.escape_markdown`. (:dpy-"
+"issue:`2420`)"
+msgstr ""
+
+#: ../../old_changelog.rst:619 fdf595c42db94855a7f8af6853af630e
+msgid ""
+"Fix issue with ports being read in little endian when they should be big "
+"endian in voice connections. (:dpy-issue:`2470`)"
+msgstr ""
+
+#: ../../old_changelog.rst:620 1d13b9e881944ab4a495c23dc3f758b1
+msgid ""
+"Fix :meth:`Member.mentioned_in` not taking into consideration the "
+"message's guild."
+msgstr ""
+
+#: ../../old_changelog.rst:621 69b4c0416c7d463bbb78f21f2d5892c9
+msgid ""
+"Fix bug with moving channels when there are gaps in positions due to "
+"channel deletion and creation."
+msgstr ""
+
+#: ../../old_changelog.rst:622 31c9120e4b424b23b5a66ed2e1c95f4e
+msgid ""
+"Fix :func:`on_shard_ready` not triggering when ``fetch_offline_members`` "
+"is disabled. (:dpy-issue:`2504`)"
+msgstr ""
+
+#: ../../old_changelog.rst:623 4c641a9e0d9646b5ad775f6256f23a25
+msgid ""
+"Fix issue with large sharded bots taking too long to actually dispatch "
+":func:`on_ready`."
+msgstr ""
+
+#: ../../old_changelog.rst:624 e06f6e77f0b1430eaaecc014a836da6d
+msgid ""
+"Fix issue with fetching group DM based invites in "
+":meth:`Client.fetch_invite`."
+msgstr ""
+
+#: ../../old_changelog.rst:625 857422517b2b4b41894d102a976dc047
+msgid "Fix out of order files being sent in webhooks when there are 10 files."
+msgstr ""
+
+#: ../../old_changelog.rst:626 9e207f5368814e4288a6e4119d5dc297
+msgid ""
+"|commands| Extensions that fail internally due to ImportError will no "
+"longer raise :exc:`~.ext.commands.ExtensionNotFound`. (:dpy-issue:`2244`,"
+" :dpy-issue:`2275`, :dpy-issue:`2291`)"
+msgstr ""
+
+#: ../../old_changelog.rst:627 84d1874e4cee4c7f9b303e5278c1b50b
+msgid ""
+"|commands| Updating the :attr:`Paginator.suffix "
+"<.ext.commands.Paginator.suffix>` will not cause out of date "
+"calculations. (:dpy-issue:`2251`)"
+msgstr ""
+
+#: ../../old_changelog.rst:628 a2a25fd5ddf54ff08304c4b8b0813b1c
+msgid ""
+"|commands| Allow converters from custom extension packages. (:dpy-"
+"issue:`2369`, 2374)"
+msgstr ""
+
+#: ../../old_changelog.rst:629 3acbd2f7dd194c469a00d357419ed4c3
+msgid ""
+"|commands| Fix issue with paginator prefix being ``None`` causing empty "
+"pages. (:dpy-issue:`2471`)"
+msgstr ""
+
+#: ../../old_changelog.rst:630 3ff6e7201a974e6eaffb391ab860730d
+msgid ""
+"|commands| :class:`~.commands.Greedy` now ignores parsing errors rather "
+"than propagating them."
+msgstr ""
+
+#: ../../old_changelog.rst:631 3e28fd66ff7e4bd3b1c292f90f0744d7
+msgid ""
+"|commands| :meth:`Command.can_run <.ext.commands.Command.can_run>` now "
+"checks whether a command is disabled."
+msgstr ""
+
+#: ../../old_changelog.rst:632 528ebdf1a85049beb1234830e27cac14
+msgid ""
+"|commands| :attr:`HelpCommand.clean_prefix "
+"<.ext.commands.HelpCommand.clean_prefix>` now takes into consideration "
+"nickname mentions. (:dpy-issue:`2489`)"
+msgstr ""
+
+#: ../../old_changelog.rst:633 f834745510e24753a8617ccae5bbe89d
+msgid ""
+"|commands| :meth:`Context.send_help <.ext.commands.Context.send_help>` "
+"now properly propagates to the :meth:`HelpCommand.on_help_command_error "
+"<.ext.commands.HelpCommand.on_help_command_error>` handler."
+msgstr ""
+
+#: ../../old_changelog.rst:638 d15af8d97136478a821a5156cee0fc2c
+msgid "The library now fully supports Python 3.8 without warnings."
+msgstr ""
+
+#: ../../old_changelog.rst:639 51459269b79f432cb6f874ede7ffcc1e
+msgid ""
+"Bump the dependency of ``websockets`` to 8.0 for those who can use it. "
+"(:dpy-issue:`2453`)"
+msgstr ""
+
+#: ../../old_changelog.rst:640 4b86965130d34abdb3aeb31b6e530a76
+msgid ""
+"Due to Discord providing :class:`Member` data in mentions, users will now"
+" be upgraded to :class:`Member` more often if mentioned."
+msgstr ""
+
+#: ../../old_changelog.rst:641 a20556f4b00f4c64a9bf20b596ea3f31
+msgid ":func:`utils.escape_markdown` now properly escapes new quote markdown."
+msgstr ""
+
+#: ../../old_changelog.rst:642 8fdd1fdd3b86431180b62640480972d1
+msgid ""
+"The message cache can now be disabled by passing ``None`` to "
+"``max_messages`` in :class:`Client`."
+msgstr ""
+
+#: ../../old_changelog.rst:643 9163af8a775746c1bf6fe13b8bcb57a7
+msgid ""
+"The default message cache size has changed from 5000 to 1000 to "
+"accommodate small bots."
+msgstr ""
+
+#: ../../old_changelog.rst:644 3660b72fb04e4fed852510d1d705b550
+msgid ""
+"Lower memory usage by only creating certain objects as needed in "
+":class:`Role`."
+msgstr ""
+
+#: ../../old_changelog.rst:645 fe40aee844844a3eb90f5bdc47f33b18
+msgid ""
+"There is now a sleep of 5 seconds before re-IDENTIFYing during a "
+"reconnect to prevent long loops of session invalidation."
+msgstr ""
+
+#: ../../old_changelog.rst:646 88cf03e2442d4af8ae9a786809a507df
+msgid ""
+"The rate limiting code now uses millisecond precision to have more "
+"granular rate limit handling."
+msgstr ""
+
+#: ../../old_changelog.rst:647 9363c44d08cb418286b07eb677d89465
+msgid ""
+"Along with that, the rate limiting code now uses Discord's response to "
+"wait. If you need to use the system clock again for whatever reason, "
+"consider passing ``assume_synced_clock`` in :class:`Client`."
+msgstr ""
+
+#: ../../old_changelog.rst:649 7baaea1f94bf40b78621647e39ce1cea
+msgid ""
+"The performance of :attr:`Guild.default_role` has been improved from O(N)"
+" to O(1). (:dpy-issue:`2375`)"
+msgstr ""
+
+#: ../../old_changelog.rst:650 01555fa74acb4b1c87546bf09b15cc86
+msgid ""
+"The performance of :attr:`Member.roles` has improved due to usage of "
+"caching to avoid surprising performance traps."
+msgstr ""
+
+#: ../../old_changelog.rst:651 659cb6b920e749608386e6443eba88fc
+msgid ""
+"The GC is manually triggered during things that cause large deallocations"
+" (such as guild removal) to prevent memory fragmentation."
+msgstr ""
+
+#: ../../old_changelog.rst:652 7c4c03b56f104130a32b4f284d22b8ac
+msgid ""
+"There have been many changes to the documentation for fixes both for "
+"usability, correctness, and to fix some linter errors. Thanks to everyone"
+" who contributed to those."
+msgstr ""
+
+#: ../../old_changelog.rst:653 e22fffbbaab54a318b26af9e19ba64bf
+msgid ""
+"The loading of the opus module has been delayed which would make the "
+"result of :func:`opus.is_loaded` somewhat surprising."
+msgstr ""
+
+#: ../../old_changelog.rst:654 1152570e7c1b4aedb0b78ab5716f4d71
+msgid ""
+"|commands| Usernames prefixed with @ inside DMs will properly convert "
+"using the :class:`User` converter. (:dpy-issue:`2498`)"
+msgstr ""
+
+#: ../../old_changelog.rst:655 cc57562641f246f8904d772a9acc0534
+msgid ""
+"|tasks| The task sleeping time will now take into consideration the "
+"amount of time the task body has taken before sleeping. (:dpy-"
+"issue:`2516`)"
+msgstr ""
+
+#: ../../old_changelog.rst:660 32772be63a074f9790a3980da071a0df
+msgid "v1.2.5"
+msgstr ""
+
+#: ../../old_changelog.rst:665 4cc02c6c550d41d88b70722e41d64eb9
+msgid ""
+"Fix a bug that caused crashes due to missing ``animated`` field in Emoji "
+"structures in reactions."
+msgstr ""
+
+#: ../../old_changelog.rst:670 8d35ee473cd74d738146ce2d657df952
+msgid "v1.2.4"
+msgstr ""
+
+#: ../../old_changelog.rst:675 41d3f2674654483da67ade0a602276ee
+msgid "Fix a regression when :attr:`Message.channel` would be ``None``."
+msgstr ""
+
+#: ../../old_changelog.rst:676 4f98a741acca4cc0b69676d9fa0cad61
+msgid ""
+"Fix a regression where :attr:`Message.edited_at` would not update during "
+"edits."
+msgstr ""
+
+#: ../../old_changelog.rst:677 8b1a995241694488990f879a2ab530a2
+msgid ""
+"Fix a crash that would trigger during message updates (GH-2265, :dpy-"
+"issue:`2287`)."
+msgstr ""
+
+#: ../../old_changelog.rst:678 ff84922259cf462092e0ba88f0dc84cc
+msgid ""
+"Fix a bug when :meth:`VoiceChannel.connect` would not return (:dpy-"
+"issue:`2274`, :dpy-issue:`2372`, :dpy-issue:`2373`, :dpy-issue:`2377`)."
+msgstr ""
+
+#: ../../old_changelog.rst:679 9e030c2cfc12478ead5e21db6a98de2d
+msgid "Fix a crash relating to token-less webhooks (:dpy-issue:`2364`)."
+msgstr ""
+
+#: ../../old_changelog.rst:680 2137be9a8eb44ad2a4dffa760e0ca75b
+msgid ""
+"Fix issue where :attr:`Guild.premium_subscription_count` would be "
+"``None`` due to a Discord bug. (:dpy-issue:`2331`, :dpy-issue:`2376`)."
+msgstr ""
+
+#: ../../old_changelog.rst:685 82095021bdb24fc69b5efeface54533d
+msgid "v1.2.3"
+msgstr ""
+
+#: ../../old_changelog.rst:690 ec68a62956584222a654ac8c5a9f9a0e
+msgid ""
+"Fix an AttributeError when accessing :attr:`Member.premium_since` in "
+":func:`on_member_update`. (:dpy-issue:`2213`)"
+msgstr ""
+
+#: ../../old_changelog.rst:691 8b04ba4fa4b547f785775b36dec0dc32
+msgid ""
+"Handle :exc:`asyncio.CancelledError` in :meth:`abc.Messageable.typing` "
+"context manager. (:dpy-issue:`2218`)"
+msgstr ""
+
+#: ../../old_changelog.rst:692 ff4a94f8937f40c4acf04c945d980e64
+msgid ""
+"Raise the max encoder bitrate to 512kbps to account for nitro boosting. "
+"(:dpy-issue:`2232`)"
+msgstr ""
+
+#: ../../old_changelog.rst:693 fc15de482fa4497384fda408ce9eb801
+msgid "Properly propagate exceptions in :meth:`Client.run`. (:dpy-issue:`2237`)"
+msgstr ""
+
+#: ../../old_changelog.rst:694 49729c6a970b43f9a2a30357e74a6089
+msgid ""
+"|commands| Ensure cooldowns are properly copied when used in cog level "
+"``command_attrs``."
+msgstr ""
+
+#: ../../old_changelog.rst:699 bb0503ef74fd4792a5873fd76d5598e4
+msgid "v1.2.2"
+msgstr ""
+
+#: ../../old_changelog.rst:704 716e108d5bf24ecf95ca6f914686e494
+msgid ""
+"Audit log related attribute access have been fixed to not error out when "
+"they shouldn't have."
+msgstr ""
+
+#: ../../old_changelog.rst:709 b934da94e2344ef681e124d7d1acc9dc
+msgid "v1.2.1"
+msgstr ""
+
+#: ../../old_changelog.rst:714 5dd199bbfe5f41149d4bd595d3538b53
+msgid ":attr:`User.avatar_url` and related attributes no longer raise an error."
+msgstr ""
+
+#: ../../old_changelog.rst:715 8ff19fa9e07c40ad9f634f41bf898937
+msgid "More compatibility shims with the ``enum.Enum`` code."
+msgstr ""
+
+#: ../../old_changelog.rst:720 e6704ee9107042a08dffa820a38e14d6
+msgid "v1.2.0"
+msgstr ""
+
+#: ../../old_changelog.rst:722 6aea4acec2754d789c4fb155029ab536
+msgid ""
+"This update mainly brings performance improvements and various nitro "
+"boosting attributes (referred to in the API as \"premium guilds\")."
+msgstr ""
+
+#: ../../old_changelog.rst:727 d535394e3da64337bf2f95f4c68328f5
+msgid ""
+"Add :attr:`Guild.premium_tier` to query the guild's current nitro boost "
+"level."
+msgstr ""
+
+#: ../../old_changelog.rst:728 85c89e00a1f945e8a29d2dc681191c42
+msgid ""
+"Add :attr:`Guild.emoji_limit`, :attr:`Guild.bitrate_limit`, "
+":attr:`Guild.filesize_limit` to query the new limits of a guild when "
+"taking into consideration boosting."
+msgstr ""
+
+#: ../../old_changelog.rst:729 13bf53570ca44168ad4671112320559a
+msgid ""
+"Add :attr:`Guild.premium_subscription_count` to query how many members "
+"are boosting a guild."
+msgstr ""
+
+#: ../../old_changelog.rst:730 8248f8c75b7843d69b6281c6349a6b9f
+msgid ""
+"Add :attr:`Member.premium_since` to query since when a member has boosted"
+" a guild."
+msgstr ""
+
+#: ../../old_changelog.rst:731 d02833490c9b4a31bc76919404c42774
+msgid ""
+"Add :attr:`Guild.premium_subscribers` to query all the members currently "
+"boosting the guild."
+msgstr ""
+
+#: ../../old_changelog.rst:732 e84966586c9041f38f710e179d706d7d
+msgid ""
+"Add :attr:`Guild.system_channel_flags` to query the settings for a "
+"guild's :attr:`Guild.system_channel`."
+msgstr ""
+
+#: ../../old_changelog.rst:733 e9f825982b3b4b4a85a97392149ef455
+msgid "This includes a new type named :class:`SystemChannelFlags`"
+msgstr ""
+
+#: ../../old_changelog.rst:734 abed4b0434e14deb93b9dd7816bfe7de
+msgid ""
+"Add :attr:`Emoji.available` to query if an emoji can be used (within the "
+"guild or otherwise)."
+msgstr ""
+
+#: ../../old_changelog.rst:735 8496b053a08b4ac5a369cc182b2253bc
+msgid ""
+"Add support for animated icons in :meth:`Guild.icon_url_as` and "
+":attr:`Guild.icon_url`."
+msgstr ""
+
+#: ../../old_changelog.rst:736 5562dc76bbf64aa28462097f28ebb65c
+msgid "Add :meth:`Guild.is_icon_animated`."
+msgstr ""
+
+#: ../../old_changelog.rst:737 77e326b2fb344f3684cedea2385757f5
+msgid ""
+"Add support for the various new :class:`MessageType` involving nitro "
+"boosting."
+msgstr ""
+
+#: ../../old_changelog.rst:738 8bf0910d531845a8868bee944f1a1f5d
+msgid "Add :attr:`VoiceRegion.india`. (:dpy-issue:`2145`)"
+msgstr ""
+
+#: ../../old_changelog.rst:739 c421f16c853f4c87be81c7c4d285437f
+msgid "Add :meth:`Embed.insert_field_at`. (:dpy-issue:`2178`)"
+msgstr ""
+
+#: ../../old_changelog.rst:740 3f24421df24d43e19ef1b7e0f8e9f617
+msgid ""
+"Add a ``type`` attribute for all channels to their appropriate "
+":class:`ChannelType`. (:dpy-issue:`2185`)"
+msgstr ""
+
+#: ../../old_changelog.rst:741 051a702716434442b559300f7df01184
+msgid ""
+"Add :meth:`Client.fetch_channel` to fetch a channel by ID via HTTP. "
+"(:dpy-issue:`2169`)"
+msgstr ""
+
+#: ../../old_changelog.rst:742 cd8f8bd80eb64fe4a61bca6213a0d5ff
+msgid ""
+"Add :meth:`Guild.fetch_channels` to fetch all channels via HTTP. (:dpy-"
+"issue:`2169`)"
+msgstr ""
+
+#: ../../old_changelog.rst:743 e1bc5c5ca95b4a66a2af54d1a0c4b655
+msgid ""
+"|tasks| Add :meth:`Loop.stop <.ext.tasks.Loop.stop>` to gracefully stop a"
+" task rather than cancelling."
+msgstr ""
+
+#: ../../old_changelog.rst:744 ee4c308e720548e5887f73a475ecd9b4
+msgid ""
+"|tasks| Add :meth:`Loop.failed <.ext.tasks.Loop.failed>` to query if a "
+"task had failed somehow."
+msgstr ""
+
+#: ../../old_changelog.rst:745 f8b3aa35188b4b769b94b8d944acb906
+msgid ""
+"|tasks| Add :meth:`Loop.change_interval "
+"<.ext.tasks.Loop.change_interval>` to change the sleep interval at "
+"runtime (:dpy-issue:`2158`, :dpy-issue:`2162`)"
+msgstr ""
+
+#: ../../old_changelog.rst:750 8489684e1bbe452197997495a510ea3a
+msgid "Fix internal error when using :meth:`Guild.prune_members`."
+msgstr ""
+
+#: ../../old_changelog.rst:751 09aaedd0793f4211929dfe7ee220b854
+msgid ""
+"|commands| Fix :attr:`.Command.invoked_subcommand` being invalid in many "
+"cases."
+msgstr ""
+
+#: ../../old_changelog.rst:752 0ee56aac67c2489dbf094a51c5ecacb8
+msgid "|tasks| Reset iteration count when the loop terminates and is restarted."
+msgstr ""
+
+#: ../../old_changelog.rst:753 e23c198213a542dc9d721e6475e1d083
+msgid ""
+"|tasks| The decorator interface now works as expected when stacking "
+"(:dpy-issue:`2154`)"
+msgstr ""
+
+#: ../../old_changelog.rst:758 f7139428b28445ef9b33ad6b98a91561
+msgid "Improve performance of all Enum related code significantly."
+msgstr ""
+
+#: ../../old_changelog.rst:759 e2246424bcee4c34b91a3d695a728244
+msgid ""
+"This was done by replacing the ``enum.Enum`` code with an API compatible "
+"one."
+msgstr ""
+
+#: ../../old_changelog.rst:760 5d0c60dee6294fd9bf9bfc4bfb24fc4a
+msgid "This should not be a breaking change for most users due to duck-typing."
+msgstr ""
+
+#: ../../old_changelog.rst:761 d19671db972b4a59bcb9bd6cdf9ebe1d
+msgid "Improve performance of message creation by about 1.5x."
+msgstr ""
+
+#: ../../old_changelog.rst:762 695b0ea2545a42dc9392a56893983afa
+msgid ""
+"Improve performance of message editing by about 1.5-4x depending on "
+"payload size."
+msgstr ""
+
+#: ../../old_changelog.rst:763 956196f49ddb41c0b9d766dd13e70869
+msgid "Improve performance of attribute access on :class:`Member` about by 2x."
+msgstr ""
+
+#: ../../old_changelog.rst:764 1fb1306be3734d8a8cc9c3cbb28b1c32
+msgid ""
+"Improve performance of :func:`utils.get` by around 4-6x depending on "
+"usage."
+msgstr ""
+
+#: ../../old_changelog.rst:765 57dfc225c4d747dabc04593be6a775bc
+msgid "Improve performance of event parsing lookup by around 2.5x."
+msgstr ""
+
+#: ../../old_changelog.rst:766 cb65af04b4424167832f294a215a3bcb
+msgid ""
+"Keyword arguments in :meth:`Client.start` and :meth:`Client.run` are now "
+"validated (:dpy-issue:`953`, :dpy-issue:`2170`)"
+msgstr ""
+
+#: ../../old_changelog.rst:767 e8fd77c9bb994470be0943f0f9934948
+msgid ""
+"The Discord error code is now shown in the exception message for "
+":exc:`HTTPException`."
+msgstr ""
+
+#: ../../old_changelog.rst:768 fa32af7c385f4619a38e56430455e39c
+msgid ""
+"Internal tasks launched by the library will now have their own custom "
+"``__repr__``."
+msgstr ""
+
+#: ../../old_changelog.rst:769 173930a6d9d7411d89750308d6063f17
+msgid ""
+"All public facing types should now have a proper and more detailed "
+"``__repr__``."
+msgstr ""
+
+#: ../../old_changelog.rst:770 8d6edd72efa7463b94dd064b59aed6cd
+msgid "|tasks| Errors are now logged via the standard :mod:`py:logging` module."
+msgstr ""
+
+#: ../../old_changelog.rst:775 41ed6c2ff86942c9b2d84e519061a7f4
+msgid "v1.1.1"
+msgstr ""
+
+#: ../../old_changelog.rst:780 3a1cca59f2a64cc8900bcacbd019e0ea
+msgid ""
+"Webhooks do not overwrite data on retrying their HTTP requests (:dpy-"
+"issue:`2140`)"
+msgstr ""
+
+#: ../../old_changelog.rst:785 b12f94e65c8e4ce08def9bb978c1ff3a
+msgid ""
+"Add back signal handling to :meth:`Client.run` due to issues some users "
+"had with proper cleanup."
+msgstr ""
+
+#: ../../old_changelog.rst:790 75aa7878d6b246e88deff82b4a20876e
+msgid "v1.1.0"
+msgstr ""
+
+#: ../../old_changelog.rst:795 8ab7c9fee26c4907b83ca46394742448
+msgid "**There is a new extension dedicated to making background tasks easier.**"
+msgstr ""
+
+#: ../../old_changelog.rst:796 04b2abf983614f05a216bbd77df94480
+msgid "You can check the documentation here: :ref:`ext_tasks_api`."
+msgstr ""
+
+#: ../../old_changelog.rst:797 9bcf0ad8d17744cca27a35403f513f68
+msgid "Add :attr:`Permissions.stream` permission. (:dpy-issue:`2077`)"
+msgstr ""
+
+#: ../../old_changelog.rst:798 b96651c7fce843fe89cb3d648ab60b59
+msgid "Add equality comparison and hash support to :class:`Asset`"
+msgstr ""
+
+#: ../../old_changelog.rst:799 2001a7e7c471414b8989d983bc72bbf4
+msgid ""
+"Add ``compute_prune_members`` parameter to :meth:`Guild.prune_members` "
+"(:dpy-issue:`2085`)"
+msgstr ""
+
+#: ../../old_changelog.rst:800 1633635822854cdfa4efe0bdccebc646
+msgid ""
+"Add :attr:`Client.cached_messages` attribute to fetch the message cache "
+"(:dpy-issue:`2086`)"
+msgstr ""
+
+#: ../../old_changelog.rst:801 c6827444aa8d42558a18478f91f50c8e
+msgid ""
+"Add :meth:`abc.GuildChannel.clone` to clone a guild channel. (:dpy-"
+"issue:`2093`)"
+msgstr ""
+
+#: ../../old_changelog.rst:802 0ed17c2355eb43409544365f442edc3f
+msgid ""
+"Add ``delay`` keyword-only argument to :meth:`Message.delete` (:dpy-"
+"issue:`2094`)"
+msgstr ""
+
+#: ../../old_changelog.rst:803 b81605c12d0b42e08ed7b601c0cc3fc5
+msgid "Add support for ``<:name:id>`` when adding reactions (:dpy-issue:`2095`)"
+msgstr ""
+
+#: ../../old_changelog.rst:804 2efabecec4354b3ca7c2cd82767b15fc
+msgid ""
+"Add :meth:`Asset.read` to fetch the bytes content of an asset (:dpy-"
+"issue:`2107`)"
+msgstr ""
+
+#: ../../old_changelog.rst:805 bd0378f1e19a46bfb99e0e2c00faceb3
+msgid ""
+"Add :meth:`Attachment.read` to fetch the bytes content of an attachment "
+"(:dpy-issue:`2118`)"
+msgstr ""
+
+#: ../../old_changelog.rst:806 7484b113bed844c989ae6d3d5f65d654
+msgid ""
+"Add support for voice kicking by passing ``None`` to "
+":meth:`Member.move_to`."
+msgstr ""
+
+#: ../../old_changelog.rst:809 ../../old_changelog.rst:830
+#: ../../old_changelog.rst:849 353cdc2e00964c6581422a101ca734c2
+#: 35b01b73e8b7417c9e8fa9aea638facf bf8f0a7614934e239dca8a71fe39d6ec
+msgid "``discord.ext.commands``"
+msgstr ""
+
+#: ../../old_changelog.rst:811 ffd2e34478494424ac4f9327a0225566
+msgid "Add new :func:`~.commands.dm_only` check."
+msgstr ""
+
+#: ../../old_changelog.rst:812 6f878137716c4df285e94066ed200448
+msgid "Support callable converters in :data:`~.commands.Greedy`"
+msgstr ""
+
+#: ../../old_changelog.rst:813 842f5c1614254efda86822631d02c9b7
+msgid "Add new :class:`~.commands.MessageConverter`."
+msgstr ""
+
+#: ../../old_changelog.rst:814 9a8ef9fb89a7499ab26c19de62fba397
+msgid "This allows you to use :class:`Message` as a type hint in functions."
+msgstr ""
+
+#: ../../old_changelog.rst:815 87ee843257764f64bc863742ed0773de
+msgid ""
+"Allow passing ``cls`` in the :func:`~.commands.group` decorator (:dpy-"
+"issue:`2061`)"
+msgstr ""
+
+#: ../../old_changelog.rst:816 429e9c8fbef245a1adf95b7c76946aab
+msgid ""
+"Add :attr:`.Command.parents` to fetch the parents of a command (:dpy-"
+"issue:`2104`)"
+msgstr ""
+
+#: ../../old_changelog.rst:822 ebd3614bab2947c39476b6f9f0fdbb7c
+msgid "Fix :exc:`AttributeError` when using ``__repr__`` on :class:`Widget`."
+msgstr ""
+
+#: ../../old_changelog.rst:823 d3bc87e8e66b41ce88c83586755b025f
+msgid ""
+"Fix issue with :attr:`abc.GuildChannel.overwrites` returning ``None`` for"
+" keys."
+msgstr ""
+
+#: ../../old_changelog.rst:824 6c29a5d920bf425d9e17bcd9caf6ddef
+msgid "Remove incorrect legacy NSFW checks in e.g. :meth:`TextChannel.is_nsfw`."
+msgstr ""
+
+#: ../../old_changelog.rst:825 33b74cc8d32e47d2a77a06276c2bea2e
+msgid ""
+"Fix :exc:`UnboundLocalError` when :class:`RequestsWebhookAdapter` raises "
+"an error."
+msgstr ""
+
+#: ../../old_changelog.rst:826 418b6c19665b49fa94e3aedd83f94831
+msgid "Fix bug where updating your own user did not update your member instances."
+msgstr ""
+
+#: ../../old_changelog.rst:827 0b53ec5cb17d4ae4af172df204660d94
+msgid ""
+"Tighten constraints of ``__eq__`` in :class:`Spotify` objects (:dpy-"
+"issue:`2113`, :dpy-issue:`2117`)"
+msgstr ""
+
+#: ../../old_changelog.rst:832 c8af3691fb4f4dd1b71fd245ac72f1b6
+msgid "Fix lambda converters in a non-module context (e.g. ``eval``)."
+msgstr ""
+
+#: ../../old_changelog.rst:833 0135532f0d8d49d381044f61a378a082
+msgid "Use message creation time for reference time when computing cooldowns."
+msgstr ""
+
+#: ../../old_changelog.rst:834 e37f77d54e1a41f0b3886188333e173c
+msgid "This prevents cooldowns from triggering during e.g. a RESUME session."
+msgstr ""
+
+#: ../../old_changelog.rst:835 59f5f9999f4f4656b23266d2eca0c22f
+msgid ""
+"Fix the default :func:`on_command_error` to work with new-style cogs "
+"(:dpy-issue:`2094`)"
+msgstr ""
+
+#: ../../old_changelog.rst:836 652d58ecab8b4ad7bd69e5b21a7d9e91
+msgid ""
+"DM channels are now recognised as NSFW in :func:`~.commands.is_nsfw` "
+"check."
+msgstr ""
+
+#: ../../old_changelog.rst:837 a2408f1102374ce9a7900023527d6b92
+msgid "Fix race condition with help commands (:dpy-issue:`2123`)"
+msgstr ""
+
+#: ../../old_changelog.rst:838 4bb4d13b319243a0937382776d074fa6
+msgid ""
+"Fix cog descriptions not showing in "
+":class:`~.commands.MinimalHelpCommand` (:dpy-issue:`2139`)"
+msgstr ""
+
+#: ../../old_changelog.rst:843 0b23deb02adc4aeeb15b8200b8eee3be
+msgid ""
+"Improve the performance of internal enum creation in the library by about"
+" 5x."
+msgstr ""
+
+#: ../../old_changelog.rst:844 7c30dcc6e74f4dce9865b467a546eb30
+msgid "Make the output of ``python -m discord --version`` a bit more useful."
+msgstr ""
+
+#: ../../old_changelog.rst:845 6289d0fbbaf941f3bdaa2650470a73bb
+msgid "The loop cleanup facility has been rewritten again."
+msgstr ""
+
+#: ../../old_changelog.rst:846 de0893f387314c98b9ccf4ad70eb9111
+msgid "The signal handling in :meth:`Client.run` has been removed."
+msgstr ""
+
+#: ../../old_changelog.rst:851 1a05f8c3fd874cbbbb8ef3c9529811c2
+msgid ""
+"Custom exception classes are now used for all default checks in the "
+"library (:dpy-issue:`2101`)"
+msgstr ""
+
+#: ../../old_changelog.rst:857 e31e149cda4e45a2a081bae9c2d1d5d2
+msgid "v1.0.1"
+msgstr ""
+
+#: ../../old_changelog.rst:862 826f500ba6ac4f399260c33ef472b0a2
+msgid "Fix issue with speaking state being cast to ``int`` when it was invalid."
+msgstr ""
+
+#: ../../old_changelog.rst:863 86eb7d54cc7a48f39a734633bb49f38b
+msgid ""
+"Fix some issues with loop cleanup that some users experienced on Linux "
+"machines."
+msgstr ""
+
+#: ../../old_changelog.rst:864 9e1dfa5c70e54aa9a27ed50e063bc55c
+msgid "Fix voice handshake race condition (:dpy-issue:`2056`, :dpy-issue:`2063`)"
+msgstr ""
+
+#: ../../old_changelog.rst:867 f3afcd3c4aec443cb9fc3f1767d32626
+msgid "v1.0.0"
+msgstr ""
+
+#: ../../old_changelog.rst:869 54eb6094804b480792bf4b19717bd001
+msgid ""
+"The changeset for this version are too big to be listed here, for more "
+"information please see :ref:`the migrating page <migrating_1_0>`."
+msgstr ""
+
+#: ../../old_changelog.rst:876 8d34ca49e72b4d94977388e0f7d158c3
+msgid "v0.16.6"
+msgstr ""
+
+#: ../../old_changelog.rst:881 400962b603c64113a9d06058fbc73ae2
+msgid "Fix issue with :meth:`Client.create_server` that made it stop working."
+msgstr ""
+
+#: ../../old_changelog.rst:882 4b339fa4be8c453fbbc89f9b4c5071c7
+msgid "Fix main thread being blocked upon calling ``StreamPlayer.stop``."
+msgstr ""
+
+#: ../../old_changelog.rst:883 acb73f781c9d4f7f98f2f615f1677140
+msgid "Handle HEARTBEAT_ACK and resume gracefully when it occurs."
+msgstr ""
+
+#: ../../old_changelog.rst:884 5eb72f9c8d984c18b6a1430354385ca2
+msgid ""
+"Fix race condition when pre-emptively rate limiting that caused releasing"
+" an already released lock."
+msgstr ""
+
+#: ../../old_changelog.rst:885 b1422c0d343f4a179574e6193054b6a4
+msgid "Fix invalid state errors when immediately cancelling a coroutine."
+msgstr ""
+
+#: ../../old_changelog.rst:890 e70e848d00374c13960322c33fde8d72
+msgid "v0.16.1"
+msgstr ""
+
+#: ../../old_changelog.rst:892 c180cea6662a4264b588bec807112bc0
+msgid ""
+"This release is just a bug fix release with some better rate limit "
+"implementation."
+msgstr ""
+
+#: ../../old_changelog.rst:897 b2cc7c3696be4b4394aabe3e142d3c77
+msgid "Servers are now properly chunked for user bots."
+msgstr ""
+
+#: ../../old_changelog.rst:898 10c1f4d7920140e0ba562707ad569b00
+msgid "The CDN URL is now used instead of the API URL for assets."
+msgstr ""
+
+#: ../../old_changelog.rst:899 7f2844cf578e490d8a218bd8d6fac74d
+msgid "Rate limit implementation now tries to use header information if possible."
+msgstr ""
+
+#: ../../old_changelog.rst:900 1a8cc223d9924645ae6ff30f128b281f
+msgid "Event loop is now properly propagated (:dpy-issue:`420`)"
+msgstr ""
+
+#: ../../old_changelog.rst:901 a039d224d6974fa5867fdf5681fd695d
+msgid ""
+"Allow falsey values in :meth:`Client.send_message` and "
+":meth:`Client.send_file`."
+msgstr ""
+
+#: ../../old_changelog.rst:906 8af330c929144bd68d1a17c75f46d3fd
+msgid "v0.16.0"
+msgstr ""
+
+#: ../../old_changelog.rst:911 8091f41711624576ad0767c2b637d63a
+msgid ""
+"Add :attr:`Channel.overwrites` to get all the permission overwrites of a "
+"channel."
+msgstr ""
+
+#: ../../old_changelog.rst:912 1705c9bfc0e7429eb76a0810f42ef216
+msgid "Add :attr:`Server.features` to get information about partnered servers."
+msgstr ""
+
+#: ../../old_changelog.rst:917 14583ce007924f38a286e45cd3a4fb31
+msgid ""
+"Timeout when waiting for offline members while triggering "
+":func:`on_ready`."
+msgstr ""
+
+#: ../../old_changelog.rst:919 15635997b0f04a77a9f3030573821172
+msgid ""
+"The fact that we did not timeout caused a gigantic memory leak in the "
+"library that caused thousands of duplicate :class:`Member` instances "
+"causing big memory spikes."
+msgstr ""
+
+#: ../../old_changelog.rst:922 728676a982a647c39b781c1579c17ece
+msgid "Discard null sequences in the gateway."
+msgstr ""
+
+#: ../../old_changelog.rst:924 4bdff11f2ea7495b8ec5f790251839e4
+msgid ""
+"The fact these were not discarded meant that :func:`on_ready` kept being "
+"called instead of :func:`on_resumed`. Since this has been corrected, in "
+"most cases :func:`on_ready` will be called once or twice with "
+":func:`on_resumed` being called much more often."
+msgstr ""
+
+#: ../../old_changelog.rst:931 b5ae211062204c38a3ca1b4adf75921b
+msgid "v0.15.1"
+msgstr ""
+
+#: ../../old_changelog.rst:933 1b97fd47cef9458e902f1e7d44bfc9ca
+msgid "Fix crash on duplicate or out of order reactions."
+msgstr ""
+
+#: ../../old_changelog.rst:938 b0ad980148da4251be1c8a66a86d2b33
+msgid "v0.15.0"
+msgstr ""
+
+#: ../../old_changelog.rst:943 ce44c839c7174c32baba66ed8a20239a
+msgid "Rich Embeds for messages are now supported."
+msgstr ""
+
+#: ../../old_changelog.rst:945 27cf820bba86470baa2910acb6c49c2e
+msgid ""
+"To do so, create your own :class:`Embed` and pass the instance to the "
+"``embed`` keyword argument to :meth:`Client.send_message` or "
+":meth:`Client.edit_message`."
+msgstr ""
+
+#: ../../old_changelog.rst:946 4eb4fb67f26a4cd384239ee9c0af46ea
+msgid "Add :meth:`Client.clear_reactions` to remove all reactions from a message."
+msgstr ""
+
+#: ../../old_changelog.rst:947 9d643a0f8f444c1284ac6ad8e48dbec0
+msgid ""
+"Add support for MESSAGE_REACTION_REMOVE_ALL event, under "
+":func:`on_reaction_clear`."
+msgstr ""
+
+#: ../../old_changelog.rst:948 56c72e2a3e174e28a99a188b4e755ba1
+msgid ""
+"Add :meth:`Permissions.update` and :meth:`PermissionOverwrite.update` for"
+" bulk permission updates."
+msgstr ""
+
+#: ../../old_changelog.rst:950 ea8d96999a8343378f726ad441f4341b
+msgid ""
+"This allows you to use e.g. ``p.update(read_messages=True, "
+"send_messages=False)`` in a single line."
+msgstr ""
+
+#: ../../old_changelog.rst:951 8e8f7d3e0144418b975ee9a8b005fc16
+msgid ""
+"Add :meth:`PermissionOverwrite.is_empty` to check if the overwrite is "
+"empty (i.e. has no overwrites set explicitly as true or false)."
+msgstr ""
+
+#: ../../old_changelog.rst:953 20af3ca42c4042dbb92f02fc67e7e1c1
+msgid "For the command extension, the following changed:"
+msgstr ""
+
+#: ../../old_changelog.rst:955 37b31394101e4cb8b6eea54a1b6fb874
+msgid "``Context`` is no longer slotted to facilitate setting dynamic attributes."
+msgstr ""
+
+#: ../../old_changelog.rst:960 442dac8b6bdd457c8cd9d62ff3665891
+msgid "v0.14.3"
+msgstr ""
+
+#: ../../old_changelog.rst:965 c3530998896c4acb83acf3cc8be925dd
+msgid "Fix crash when dealing with MESSAGE_REACTION_REMOVE"
+msgstr ""
+
+#: ../../old_changelog.rst:966 86a9d9f30a0745fe86360577aedd4b87
+msgid "Fix incorrect buckets for reactions."
+msgstr ""
+
+#: ../../old_changelog.rst:971 560438be2f9b4fcdbe36b8ee0504b8fb
+msgid "v0.14.2"
+msgstr ""
+
+#: ../../old_changelog.rst:976 dc80ff37135b4e638c58f17db21e4c0a
+msgid ""
+":meth:`Client.wait_for_reaction` now returns a namedtuple with "
+"``reaction`` and ``user`` attributes."
+msgstr ""
+
+#: ../../old_changelog.rst:977 036c24ac01ba4f4b9949c19a912d558e
+msgid ""
+"This is for better support in the case that ``None`` is returned since "
+"tuple unpacking can lead to issues."
+msgstr ""
+
+#: ../../old_changelog.rst:982 967b42b78c644c3ba5dfb034336345fd
+msgid ""
+"Fix bug that disallowed ``None`` to be passed for ``emoji`` parameter in "
+":meth:`Client.wait_for_reaction`."
+msgstr ""
+
+#: ../../old_changelog.rst:987 b6ac064689a04e51aa6a216f3a73e91a
+msgid "v0.14.1"
+msgstr ""
+
+#: ../../old_changelog.rst:990 216db4481b16411e9087cb64de235a2e
+msgid "Bug fixes"
+msgstr ""
+
+#: ../../old_changelog.rst:992 dea34ac8768d404e8d4c0ed5346385a4
+msgid "Fix bug with `Reaction` not being visible at import."
+msgstr ""
+
+#: ../../old_changelog.rst:993 8ee7413e096846a58cec819c52aafbaa
+msgid "This was also breaking the documentation."
+msgstr ""
+
+#: ../../old_changelog.rst:998 cfa4214c5f9843b686f38bb36035f066
+msgid "v0.14.0"
+msgstr ""
+
+#: ../../old_changelog.rst:1000 5c6e07e6e9bd4a68aac9624f93c9b0d2
+msgid "This update adds new API features and a couple of bug fixes."
+msgstr ""
+
+#: ../../old_changelog.rst:1005 a46b619fc5634974b2379c5508044120
+msgid ""
+"Add support for Manage Webhooks permission under "
+":attr:`Permissions.manage_webhooks`"
+msgstr ""
+
+#: ../../old_changelog.rst:1006 7b202e75cc344f8c93e39b8ae9dfa579
+msgid "Add support for ``around`` argument in 3.5+ :meth:`Client.logs_from`."
+msgstr ""
+
+#: ../../old_changelog.rst:1007 e114d8a07caa406fbea9b95b7639e24e
+msgid "Add support for reactions."
+msgstr ""
+
+#: ../../old_changelog.rst:1008 17b4e516a372462a894248bdaae7196e
+msgid ":meth:`Client.add_reaction` to add a reactions"
+msgstr ""
+
+#: ../../old_changelog.rst:1009 ec1d2036de944e2ca87c72eaf49c4d7c
+msgid ":meth:`Client.remove_reaction` to remove a reaction."
+msgstr ""
+
+#: ../../old_changelog.rst:1010 a9cdb1a7898147c09856109b3afdeb05
+msgid ""
+":meth:`Client.get_reaction_users` to get the users that reacted to a "
+"message."
+msgstr ""
+
+#: ../../old_changelog.rst:1011 415943aaf1a344d8bd9444f5108f1730
+msgid ":attr:`Permissions.add_reactions` permission bit support."
+msgstr ""
+
+#: ../../old_changelog.rst:1012 163dfb606de84c07b42f4e20f84ce43e
+msgid "Two new events, :func:`on_reaction_add` and :func:`on_reaction_remove`."
+msgstr ""
+
+#: ../../old_changelog.rst:1013 6a80f05b4e52495ab40d3fc642df5199
+msgid ":attr:`Message.reactions` to get reactions from a message."
+msgstr ""
+
+#: ../../old_changelog.rst:1014 80deeea814004f4ea369cc81d2ca32a0
+msgid ":meth:`Client.wait_for_reaction` to wait for a reaction from a user."
+msgstr ""
+
+#: ../../old_changelog.rst:1019 13ef32142511430498c607b61b8ef3d9
+msgid "Fix bug with Paginator still allowing lines that are too long."
+msgstr ""
+
+#: ../../old_changelog.rst:1020 fa4262a541934728a78a4ae11f86ce0d
+msgid "Fix the :attr:`Permissions.manage_emojis` bit being incorrect."
+msgstr ""
+
+#: ../../old_changelog.rst:1025 3403b220243c449b9cb6566ddf645806
+msgid "v0.13.0"
+msgstr ""
+
+#: ../../old_changelog.rst:1027 41def317528741cdbc678bf5b02de26a
+msgid "This is a backwards compatible update with new features."
+msgstr ""
+
+#: ../../old_changelog.rst:1032 a74ce62b2e6e4a8096b8453816f12466
+msgid "Add the ability to manage emojis."
+msgstr ""
+
+#: ../../old_changelog.rst:1034 cc60ed7cc6334311841fc39f1c67e50f
+msgid ":meth:`Client.create_custom_emoji` to create new emoji."
+msgstr ""
+
+#: ../../old_changelog.rst:1035 c35562fa5ef94f54b2c81e85e6c9a612
+msgid ":meth:`Client.edit_custom_emoji` to edit an old emoji."
+msgstr ""
+
+#: ../../old_changelog.rst:1036 b37b6defec1f426d8dbae2e5555fe2f8
+msgid ":meth:`Client.delete_custom_emoji` to delete a custom emoji."
+msgstr ""
+
+#: ../../old_changelog.rst:1037 d1b9b9154ef24517b09f2176f32297b7
+msgid "Add new :attr:`Permissions.manage_emojis` toggle."
+msgstr ""
+
+#: ../../old_changelog.rst:1039 733e373db9354990a64b1ea25954dc70
+msgid "This applies for :class:`PermissionOverwrite` as well."
+msgstr ""
+
+#: ../../old_changelog.rst:1040 dd744fd43f8d4112a29b84670b4215a6
+msgid "Add new statuses for :class:`Status`."
+msgstr ""
+
+#: ../../old_changelog.rst:1042 e4e1783642e048a6bfe64466a76f7262
+msgid ""
+":attr:`Status.dnd` (aliased with :attr:`Status.do_not_disturb`\\) for Do "
+"Not Disturb."
+msgstr ""
+
+#: ../../old_changelog.rst:1043 60ea97fddecf40c29f2a2595cdab41ed
+msgid ""
+":attr:`Status.invisible` for setting your status to invisible (please see"
+" the docs for a caveat)."
+msgstr ""
+
+#: ../../old_changelog.rst:1044 26787e4212b34c03a73643d1bfe3e947
+msgid "Deprecate :meth:`Client.change_status`"
+msgstr ""
+
+#: ../../old_changelog.rst:1046 1f82ba4f65334537a46ba82e0c424ca8
+msgid ""
+"Use :meth:`Client.change_presence` instead for better more up to date "
+"functionality."
+msgstr ""
+
+#: ../../old_changelog.rst:1047 1908df9cf4d944b08087da9543912ab3
+msgid "This method is subject for removal in a future API version."
+msgstr ""
+
+#: ../../old_changelog.rst:1048 4da76a0effd2420a83e11fbd0a2d6466
+msgid ""
+"Add :meth:`Client.change_presence` for changing your status with the new "
+"Discord API change."
+msgstr ""
+
+#: ../../old_changelog.rst:1050 79e46a60e46340b9ba53dff7580df69c
+msgid ""
+"This is the only method that allows changing your status to invisible or "
+"do not disturb."
+msgstr ""
+
+#: ../../old_changelog.rst:1055 f4ccad2af9354f7e822fa4eb1c8c6407
+msgid "Paginator pages do not exceed their max_size anymore (:dpy-issue:`340`)"
+msgstr ""
+
+#: ../../old_changelog.rst:1056 c278c60270d248809f3de4f421b01ce5
+msgid ""
+"Do Not Disturb users no longer show up offline due to the new "
+":class:`Status` changes."
+msgstr ""
+
+#: ../../old_changelog.rst:1061 09089ecb9a4c485ea305e17c4c8aaf5d
+msgid "v0.12.0"
+msgstr ""
+
+#: ../../old_changelog.rst:1063 548138d84d244d6cb13573eda15480b7
+msgid "This is a bug fix update that also comes with new features."
+msgstr ""
+
+#: ../../old_changelog.rst:1068 4fb4ccc6969d48ddbf04dac7b5cb3d6d
+msgid "Add custom emoji support."
+msgstr ""
+
+#: ../../old_changelog.rst:1070 bc0add1c6f234e70aab5a0a8295898fe
+msgid "Adds a new class to represent a custom Emoji named :class:`Emoji`"
+msgstr ""
+
+#: ../../old_changelog.rst:1071 be55f48c53af4318a073657887abd338
+msgid "Adds a utility generator function, :meth:`Client.get_all_emojis`."
+msgstr ""
+
+#: ../../old_changelog.rst:1072 c314bf2643094c1787d15951af04ef01
+msgid "Adds a list of emojis on a server, :attr:`Server.emojis`."
+msgstr ""
+
+#: ../../old_changelog.rst:1073 5a77560e76aa48c393f0736a806f3da8
+msgid "Adds a new event, :func:`on_server_emojis_update`."
+msgstr ""
+
+#: ../../old_changelog.rst:1074 daad923c52ad4c8a95cb940b31fe6198
+msgid "Add new server regions to :class:`ServerRegion`"
+msgstr ""
+
+#: ../../old_changelog.rst:1076 42037256927f458ea5d8113abb5deb15
+msgid ":attr:`ServerRegion.eu_central` and :attr:`ServerRegion.eu_west`."
+msgstr ""
+
+#: ../../old_changelog.rst:1077 6aa8d6c507814dbfb0d634be8ef4b016
+msgid ""
+"Add support for new pinned system message under "
+":attr:`MessageType.pins_add`."
+msgstr ""
+
+#: ../../old_changelog.rst:1078 a82d1236076840f2bf52ec450c0e20f5
+msgid ""
+"Add order comparisons for :class:`Role` to allow it to be compared with "
+"regards to hierarchy."
+msgstr ""
+
+#: ../../old_changelog.rst:1080 911947e7229141a088ab2171f28636ef
+msgid ""
+"This means that you can now do ``role_a > role_b`` etc to check if "
+"``role_b`` is lower in the hierarchy."
+msgstr ""
+
+#: ../../old_changelog.rst:1082 e907524158e84994ab1dbbc2bb3ab697
+msgid "Add :attr:`Server.role_hierarchy` to get the server's role hierarchy."
+msgstr ""
+
+#: ../../old_changelog.rst:1083 5ec62ed7d6644f51aba581ee4a6c171a
+msgid ""
+"Add :attr:`Member.server_permissions` to get a member's server "
+"permissions without their channel specific overwrites."
+msgstr ""
+
+#: ../../old_changelog.rst:1084 eef3dacce9de4505839cd23a6e5e6162
+msgid "Add :meth:`Client.get_user_info` to retrieve a user's info from their ID."
+msgstr ""
+
+#: ../../old_changelog.rst:1085 ea834cd3e65a4923ace4a327bef37247
+msgid ""
+"Add a new ``Player`` property, ``Player.error`` to fetch the error that "
+"stopped the player."
+msgstr ""
+
+#: ../../old_changelog.rst:1087 3a60bded23684c39b5a0d95c728b2231
+msgid ""
+"To help with this change, a player's ``after`` function can now take a "
+"single parameter denoting the current player."
+msgstr ""
+
+#: ../../old_changelog.rst:1088 92dcafa9947b44fcb69ae818cbb7da70
+msgid "Add support for server verification levels."
+msgstr ""
+
+#: ../../old_changelog.rst:1090 3ae021277e2f4c6d8e180c26122aabd6
+msgid "Adds a new enum called :class:`VerificationLevel`."
+msgstr ""
+
+#: ../../old_changelog.rst:1091 86cddb14909742c4b4b9c502f67e64f7
+msgid ""
+"This enum can be used in :meth:`Client.edit_server` under the "
+"``verification_level`` keyword argument."
+msgstr ""
+
+#: ../../old_changelog.rst:1092 4e9c1967b5d448b9b41956e12fdf9339
+msgid "Adds a new attribute in the server, :attr:`Server.verification_level`."
+msgstr ""
+
+#: ../../old_changelog.rst:1093 d952adee81134f4791bf96f953a856a9
+msgid ""
+"Add :attr:`Server.voice_client` shortcut property for "
+":meth:`Client.voice_client_in`."
+msgstr ""
+
+#: ../../old_changelog.rst:1095 de0e3204e21f42308471ec9171a49d8f
+msgid ""
+"This is technically old (was added in v0.10.0) but was undocumented until"
+" v0.12.0."
+msgstr ""
+
+#: ../../old_changelog.rst:1097 ../../old_changelog.rst:1143
+#: 612442a7ef444152a01c8c35b6b59b78 cc11234dd494498dbcc2ac2292afd82a
+msgid "For the command extension, the following are new:"
+msgstr ""
+
+#: ../../old_changelog.rst:1099 df5ad0102466494cb0aa407c74f7875f
+msgid "Add custom emoji converter."
+msgstr ""
+
+#: ../../old_changelog.rst:1100 755231ea41e74dc0920ef97292b103e5
+msgid "All default converters that can take IDs can now convert via ID."
+msgstr ""
+
+#: ../../old_changelog.rst:1101 4f43210f983e4946bf612c58539cfacd
+msgid "Add coroutine support for ``Bot.command_prefix``."
+msgstr ""
+
+#: ../../old_changelog.rst:1102 6ab6a9a776994e95a127f0f4f9e50acb
+msgid "Add a method to reset command cooldown."
+msgstr ""
+
+#: ../../old_changelog.rst:1107 4ae80c7f355d4534a1800d1686becc7c
+msgid ""
+"Fix bug that caused the library to not work with the latest "
+"``websockets`` library."
+msgstr ""
+
+#: ../../old_changelog.rst:1108 9d0f1a07415445d99e511a89ebdee3f3
+msgid "Fix bug that leaked keep alive threads (:dpy-issue:`309`)"
+msgstr ""
+
+#: ../../old_changelog.rst:1109 b94d78af4b24432084b31c1e046262ce
+msgid ""
+"Fix bug that disallowed :class:`ServerRegion` from being used in "
+":meth:`Client.edit_server`."
+msgstr ""
+
+#: ../../old_changelog.rst:1110 4e726722251f4e6b91a5cf91bb1e3ff4
+msgid ""
+"Fix bug in :meth:`Channel.permissions_for` that caused permission "
+"resolution to happen out of order."
+msgstr ""
+
+#: ../../old_changelog.rst:1111 41c519e1555548dca4647c24e0dddf47
+msgid ""
+"Fix bug in :attr:`Member.top_role` that did not account for same-position"
+" roles."
+msgstr ""
+
+#: ../../old_changelog.rst:1116 6009bde1262a46e98cd81b7df88ae0e5
+msgid "v0.11.0"
+msgstr ""
+
+#: ../../old_changelog.rst:1118 29d469e953694d2d85cfe3c76b487eb1
+msgid ""
+"This is a minor bug fix update that comes with a gateway update (v5 -> "
+"v6)."
+msgstr ""
+
+#: ../../old_changelog.rst:1121 bc91110fc66649c2b878133e17a53ffa
+msgid "Breaking Changes"
+msgstr ""
+
+#: ../../old_changelog.rst:1123 74e52d191bf54255a98e49529f6d6a9b
+msgid ""
+"``Permissions.change_nicknames`` has been renamed to "
+":attr:`Permissions.change_nickname` to match the UI."
+msgstr ""
+
+#: ../../old_changelog.rst:1128 81fc15a59d1e4f98b01e3ac2447a2884
+msgid "Add the ability to prune members via :meth:`Client.prune_members`."
+msgstr ""
+
+#: ../../old_changelog.rst:1129 cbf12c55f7154c7c849b69eee42920ea
+msgid ""
+"Switch the websocket gateway version to v6 from v5. This allows the "
+"library to work with group DMs and 1-on-1 calls."
+msgstr ""
+
+#: ../../old_changelog.rst:1130 7fc8aeae055e442db7c287219c3f156e
+msgid "Add :attr:`AppInfo.owner` attribute."
+msgstr ""
+
+#: ../../old_changelog.rst:1131 7a7bf1da73674c18967856b59e02981a
+msgid "Add :class:`CallMessage` for group voice call messages."
+msgstr ""
+
+#: ../../old_changelog.rst:1132 7061315e254645aba3fa63deb99e539c
+msgid "Add :class:`GroupCall` for group voice call information."
+msgstr ""
+
+#: ../../old_changelog.rst:1133 997b6e575c344a1b94ed7bac2212b1b0
+msgid "Add :attr:`Message.system_content` to get the system message."
+msgstr ""
+
+#: ../../old_changelog.rst:1134 ccc22857665f4ec5a669e2fe75fe53e1
+msgid ""
+"Add the remaining VIP servers and the Brazil servers into "
+":class:`ServerRegion` enum."
+msgstr ""
+
+#: ../../old_changelog.rst:1135 50c84becc3504eb093b46f6194db320a
+msgid ""
+"Add ``stderr`` argument to :meth:`VoiceClient.create_ffmpeg_player` to "
+"redirect stderr."
+msgstr ""
+
+#: ../../old_changelog.rst:1136 f4fac67b65a448d0bf8df8e1bc099e7f
+msgid ""
+"The library now handles implicit permission resolution in "
+":meth:`Channel.permissions_for`."
+msgstr ""
+
+#: ../../old_changelog.rst:1137 2c1c212e7be84a268e065e6a7937c307
+msgid "Add :attr:`Server.mfa_level` to query a server's 2FA requirement."
+msgstr ""
+
+#: ../../old_changelog.rst:1138 61eaaf02c4cf42bfa1cf263abd19da02
+msgid "Add :attr:`Permissions.external_emojis` permission."
+msgstr ""
+
+#: ../../old_changelog.rst:1139 fa99771ac2974dac8c6aeffd6df8a2ce
+msgid "Add :attr:`Member.voice` attribute that refers to a :class:`VoiceState`."
+msgstr ""
+
+#: ../../old_changelog.rst:1141 1b6c1efaaee449228e768fc73d46ade2
+msgid ""
+"For backwards compatibility, the member object will have properties "
+"mirroring the old behaviour."
+msgstr ""
+
+#: ../../old_changelog.rst:1145 f78416bf2ab84700bf893df624c2c654
+msgid "Command cooldown system with the ``cooldown`` decorator."
+msgstr ""
+
+#: ../../old_changelog.rst:1146 97ecffb0fabf4b0496b24a9357af5757
+msgid ""
+"``UserInputError`` exception for the hierarchy for user input related "
+"errors."
+msgstr ""
+
+#: ../../old_changelog.rst:1151 7c33d10e7dbb4be592efcce09234ff92
+msgid ":attr:`Client.email` is now saved when using a token for user accounts."
+msgstr ""
+
+#: ../../old_changelog.rst:1152 b5115b6278bb42a484c152543f0b787e
+msgid "Fix issue when removing roles out of order."
+msgstr ""
+
+#: ../../old_changelog.rst:1153 6d07090496b041ae871a6fde98f220db
+msgid "Fix bug where discriminators would not update."
+msgstr ""
+
+#: ../../old_changelog.rst:1154 5dc4a0c238564b4899e51aa8b0bfd195
+msgid ""
+"Handle cases where ``HEARTBEAT`` opcode is received. This caused bots to "
+"disconnect seemingly randomly."
+msgstr ""
+
+#: ../../old_changelog.rst:1156 bdd8141d06d9471d917fec2a33e21e73
+msgid "For the command extension, the following bug fixes apply:"
+msgstr ""
+
+#: ../../old_changelog.rst:1158 fdc429cdfd3d444baf57d41d672b318c
+msgid "``Bot.check`` decorator is actually a decorator not requiring parentheses."
+msgstr ""
+
+#: ../../old_changelog.rst:1159 aa7cf80d36aa407e97cb2f2f460a0969
+msgid ""
+"``Bot.remove_command`` and ``Group.remove_command`` no longer throw if "
+"the command doesn't exist."
+msgstr ""
+
+#: ../../old_changelog.rst:1160 4c3408206e6744159b43e1967ab96dec
+msgid "Command names are no longer forced to be ``lower()``."
+msgstr ""
+
+#: ../../old_changelog.rst:1161 5284256204e34c5395fc978a376ff4b0
+msgid ""
+"Fix a bug where Member and User converters failed to work in private "
+"message contexts."
+msgstr ""
+
+#: ../../old_changelog.rst:1162 76a5b852278b46098efac4903316ecef
+msgid ""
+"``HelpFormatter`` now ignores hidden commands when deciding the maximum "
+"width."
+msgstr ""
+
+#: ../../old_changelog.rst:1167 d62df80546ab4f48920984081af2969e
+msgid "v0.10.0"
+msgstr ""
+
+#: ../../old_changelog.rst:1169 38b37e3f7dc3481ea5d7f7401a46865c
+msgid ""
+"For breaking changes, see `0.10.0 migration "
+"<https://discordpy.readthedocs.io/en/stable/migrating_to_async.html"
+"#migrating-to-async>`_. The breaking changes listed there will not be "
+"enumerated below. Since this version is rather a big departure from "
+"v0.9.2, this change log will be non-exhaustive."
+msgstr ""
+
+#: ../../old_changelog.rst:1174 184a8fc86a784b18b834a0d449cda64d
+msgid ""
+"The library is now fully ``asyncio`` compatible, allowing you to write "
+"non-blocking code a lot more easily."
+msgstr ""
+
+#: ../../old_changelog.rst:1175 85c4f564280148f0bf5ee9b4a129f78f
+msgid "The library now fully handles 429s and unconditionally retries on 502s."
+msgstr ""
+
+#: ../../old_changelog.rst:1176 3002e45c216d4336bce5fae8a60dacc1
+msgid ""
+"A new command extension module was added but is currently undocumented. "
+"Figuring it out is left as an exercise to the reader."
+msgstr ""
+
+#: ../../old_changelog.rst:1177 b53f0641a47b4f10b3323f3ad45ae616
+msgid ""
+"Two new exception types, :exc:`Forbidden` and :exc:`NotFound` to denote "
+"permission errors or 404 errors."
+msgstr ""
+
+#: ../../old_changelog.rst:1178 14b76fab0c254197bbcd7b536d314107
+msgid "Added :meth:`Client.delete_invite` to revoke invites."
+msgstr ""
+
+#: ../../old_changelog.rst:1179 8c523459e5aa4614ac5adf3ff969ca91
+msgid ""
+"Added support for sending voice. Check :class:`VoiceClient` for more "
+"details."
+msgstr ""
+
+#: ../../old_changelog.rst:1180 a6e4192a274b4c60b9232ff077f30af0
+msgid ""
+"Added :meth:`Client.wait_for_message` coroutine to aid with follow up "
+"commands."
+msgstr ""
+
+#: ../../old_changelog.rst:1181 071a551ad2844ca19303086993ce4a73
+msgid ""
+"Added :data:`version_info` named tuple to check version info of the "
+"library."
+msgstr ""
+
+#: ../../old_changelog.rst:1182 7e29bae8ce1f4fd0aae1e442c713833d
+msgid ""
+"Login credentials are now cached to have a faster login experience. You "
+"can disable this by passing in ``cache_auth=False`` when constructing a "
+":class:`Client`."
+msgstr ""
+
+#: ../../old_changelog.rst:1184 8d07cc56b6cf42ba8712f3543ccb0a17
+msgid ""
+"New utility function, :func:`discord.utils.get` to simplify retrieval of "
+"items based on attributes."
+msgstr ""
+
+#: ../../old_changelog.rst:1185 c7570f3e583b48eab10e6d9e4ef5d81b
+msgid ""
+"All data classes now support ``!=``, ``==``, ``hash(obj)`` and "
+"``str(obj)``."
+msgstr ""
+
+#: ../../old_changelog.rst:1186 f8d754a0d6454f35893e27cde72fa22c
+msgid "Added :meth:`Client.get_bans` to get banned members from a server."
+msgstr ""
+
+#: ../../old_changelog.rst:1187 ab731dea83b54524b4f182638d3d8c55
+msgid ""
+"Added :meth:`Client.invites_from` to get currently active invites in a "
+"server."
+msgstr ""
+
+#: ../../old_changelog.rst:1188 d27f27c4051543c4b321417eba8d4a1f
+msgid ""
+"Added :attr:`Server.me` attribute to get the :class:`Member` version of "
+":attr:`Client.user`."
+msgstr ""
+
+#: ../../old_changelog.rst:1189 e5b2082987f041f6898c95c48b6e129d
+msgid ""
+"Most data classes now support a ``hash(obj)`` function to allow you to "
+"use them in ``set`` or ``dict`` classes or subclasses."
+msgstr ""
+
+#: ../../old_changelog.rst:1190 6549c2adb90742d7b58fb741ff74d15b
+msgid ""
+"Add :meth:`Message.clean_content` to get a text version of the content "
+"with the user and channel mentioned changed into their names."
+msgstr ""
+
+#: ../../old_changelog.rst:1191 021d8a84ae334381a3263fa1f2d09b63
+msgid ""
+"Added a way to remove the messages of the user that just got banned in "
+":meth:`Client.ban`."
+msgstr ""
+
+#: ../../old_changelog.rst:1192 51f18f0490444b5f865fb559f03c187f
+msgid ""
+"Added :meth:`Client.wait_until_ready` to facilitate easy creation of "
+"tasks that require the client cache to be ready."
+msgstr ""
+
+#: ../../old_changelog.rst:1193 8e5d05dca1804f358b539d1b267a10fa
+msgid ""
+"Added :meth:`Client.wait_until_login` to facilitate easy creation of "
+"tasks that require the client to be logged in."
+msgstr ""
+
+#: ../../old_changelog.rst:1194 026315e76b8d49cb87f01fe9f65d0337
+msgid ""
+"Add :class:`discord.Game` to represent any game with custom text to send "
+"to :meth:`Client.change_status`."
+msgstr ""
+
+#: ../../old_changelog.rst:1195 f554bb1ace35445ab972d5661600ca5c
+msgid "Add :attr:`Message.nonce` attribute."
+msgstr ""
+
+#: ../../old_changelog.rst:1196 eee11aa74e244b14858321e335417c16
+msgid ""
+"Add :meth:`Member.permissions_in` as another way of doing "
+":meth:`Channel.permissions_for`."
+msgstr ""
+
+#: ../../old_changelog.rst:1197 0a180ee3f16d46248ca77da117e661c5
+msgid "Add :meth:`Client.move_member` to move a member to another voice channel."
+msgstr ""
+
+#: ../../old_changelog.rst:1198 21926029e1a944248149a2bc300b285c
+msgid "You can now create a server via :meth:`Client.create_server`."
+msgstr ""
+
+#: ../../old_changelog.rst:1199 e04b411ff2424852ad7e222373bca92a
+msgid "Added :meth:`Client.edit_server` to edit existing servers."
+msgstr ""
+
+#: ../../old_changelog.rst:1200 c5d78d3806974aeaa952776524993cbf
+msgid ""
+"Added :meth:`Client.server_voice_state` to server mute or server deafen a"
+" member."
+msgstr ""
+
+#: ../../old_changelog.rst:1201 7b061a3cd1b2462c8ddacf5d5e564993
+msgid "If you are being rate limited, the library will now handle it for you."
+msgstr ""
+
+#: ../../old_changelog.rst:1202 61e04f1171664dcaa0e150be6b2819da
+msgid ""
+"Add :func:`on_member_ban` and :func:`on_member_unban` events that trigger"
+" when a member is banned/unbanned."
+msgstr ""
+
+#: ../../old_changelog.rst:1205 56eb11079208428080c8d73acd06fee0
+msgid "Performance Improvements"
+msgstr ""
+
+#: ../../old_changelog.rst:1207 1412ab0e00154d83963273002bafb044
+msgid ""
+"All data classes now use ``__slots__`` which greatly reduce the memory "
+"usage of things kept in cache."
+msgstr ""
+
+#: ../../old_changelog.rst:1208 9ac35842677c4b578d8bd5b41f5ec48b
+msgid ""
+"Due to the usage of ``asyncio``, the CPU usage of the library has gone "
+"down significantly."
+msgstr ""
+
+#: ../../old_changelog.rst:1209 01584faafc6a4daca4220d7c16a73c34
+msgid ""
+"A lot of the internal cache lists were changed into dictionaries to "
+"change the ``O(n)`` lookup into ``O(1)``."
+msgstr ""
+
+#: ../../old_changelog.rst:1210 5cba5de179a840d4bd057588237bce3b
+msgid ""
+"Compressed READY is now on by default. This means if you're on a lot of "
+"servers (or maybe even a few) you would receive performance improvements "
+"by having to download and process less data."
+msgstr ""
+
+#: ../../old_changelog.rst:1212 a67624475d8d400fae5d574258d7cc89
+msgid ""
+"While minor, change regex from ``\\d+`` to ``[0-9]+`` to avoid "
+"unnecessary unicode character lookups."
+msgstr ""
+
+#: ../../old_changelog.rst:1217 36fe131c905e49599f23a59a57d99164
+msgid "Fix bug where guilds being updated did not edit the items in cache."
+msgstr ""
+
+#: ../../old_changelog.rst:1218 c574cf0726e342eeadbfca536471c333
+msgid ""
+"Fix bug where ``member.roles`` were empty upon joining instead of having "
+"the ``@everyone`` role."
+msgstr ""
+
+#: ../../old_changelog.rst:1219 8875df9f7e5f4f8b9986b376b7384042
+msgid ""
+"Fix bug where :meth:`Role.is_everyone` was not being set properly when "
+"the role was being edited."
+msgstr ""
+
+#: ../../old_changelog.rst:1220 35a32f8aa4214282a706e7a57c0f7320
+msgid ""
+":meth:`Client.logs_from` now handles cases where limit > 100 to sidestep "
+"the discord API limitation."
+msgstr ""
+
+#: ../../old_changelog.rst:1221 aaba9e94e0f24d4ebfde35a5a5967bcf
+msgid "Fix bug where a role being deleted would trigger a ``ValueError``."
+msgstr ""
+
+#: ../../old_changelog.rst:1222 330455a4235b4ff3adc377c165c4d3f9
+msgid ""
+"Fix bug where :meth:`Permissions.kick_members` and "
+":meth:`Permissions.ban_members` were flipped."
+msgstr ""
+
+#: ../../old_changelog.rst:1223 351e7977d6f3450cb3416063e5697686
+msgid ""
+"Mentions are now triggered normally. This was changed due to the way "
+"discord handles it internally."
+msgstr ""
+
+#: ../../old_changelog.rst:1224 4cc1e926917e4f3eac8869fc76f629fe
+msgid ""
+"Fix issue when a :class:`Message` would attempt to upgrade a "
+":attr:`Message.server` when the channel is a :class:`Object`."
+msgstr ""
+
+#: ../../old_changelog.rst:1226 d16221ec9071446b867806e6bd1d825d
+msgid ""
+"Unavailable servers were not being added into cache, this has been "
+"corrected."
+msgstr ""
+
+#~ msgid ""
+#~ "|commands| Allow converters from custom "
+#~ "extension packages. (:dpy-issue:`2369`, "
+#~ ":dpy-issue:`2374`)"
+#~ msgstr ""
+

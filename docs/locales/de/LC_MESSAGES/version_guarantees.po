@@ -15,44 +15,44 @@ msgid "Version Guarantees"
 msgstr "Versionsgarantien"
 
 msgid "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
-msgstr "Die Bibliothek folgt dem `semantischen Versionierungsgrundsatz <https://semver.org/>`_ was bedeutet, dass die Hauptversion jedes Mal aktualisiert wird, wenn eine inkompatible API-Änderung vorliegt. Aufgrund der fehlenden Garantien auf der Discord-Seite, wenn es darum geht, Änderungen mit der ziemlich dynamischen Natur von Python zu durchbrechen, kann es jedoch schwierig sein zu erkennen, was als eine bahnbrechende Veränderung angesehen werden kann und was nicht."
+msgstr "The library follows the `semantic versioning principle <https://semver.org/>`_ which means that the major version is updated every time there is an incompatible API change. However due to the lack of guarantees on the Discord side when it comes to breaking changes along with the fairly dynamic nature of Python it can be hard to discern what can be considered a breaking change and what isn't."
 
 msgid "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
-msgstr "Das erste, was man im Auge behalten sollte, ist, dass das Abbrechen von Änderungen nur für **öffentlich dokumentierte Funktionen und Klassen zutreffen**. Wenn sie hier nicht in der Dokumentation aufgelistet ist, dann ist sie nicht Teil der öffentlichen API und wird sich daher zwangsläufig ändern. Dies beinhaltet Attribute, die mit einem Unterstrich oder Funktionen ohne Unterstrich beginnen, die nicht dokumentiert sind."
+msgstr "The first thing to keep in mind is that breaking changes only apply to **publicly documented functions and classes**. If it's not listed in the documentation here then it is not part of the public API and is thus bound to change. This includes attributes that start with an underscore or functions without an underscore that are not documented."
 
 msgid "The examples below are non-exhaustive."
-msgstr "Die folgenden Beispiele sind nicht erschöpfend."
+msgstr "Die folgenden Beispiele erheben keinen Anspruch auf Vollständigkeit."
 
 msgid "Examples of Breaking Changes"
-msgstr "Beispiele für Bruchänderungen"
+msgstr "Examples of Breaking Changes"
 
 msgid "Changing the default parameter value to something else."
-msgstr "Ändert den Standardparameter auf etwas anderes."
+msgstr "Changing the default parameter value to something else."
 
 msgid "Renaming a function without an alias to an old function."
-msgstr "Umbenennen einer Funktion ohne Alias in eine alte Funktion."
+msgstr "Renaming a function without an alias to an old function."
 
 msgid "Adding or removing parameters to an event."
-msgstr "Hinzufügen oder Entfernen von Parametern zu einem Ereignis."
+msgstr "Adding or removing parameters to an event."
 
 msgid "Examples of Non-Breaking Changes"
-msgstr "Beispiele für nicht auftretende Änderungen"
+msgstr "Examples of Non-Breaking Changes"
 
 msgid "Adding or removing private underscored attributes."
-msgstr "Private unterstrichene Attribute hinzufügen oder entfernen."
+msgstr "Adding or removing private underscored attributes."
 
 msgid "Adding an element into the ``__slots__`` of a data class."
-msgstr "Füge ein Element in die ``__slots__`` einer Datenklasse hinzu."
+msgstr "Adding an element into the ``__slots__`` of a data class."
 
 msgid "Changing the behaviour of a function to fix a bug."
-msgstr "Ändern des Verhaltens einer Funktion um einen Fehler zu beheben."
+msgstr "Changing the behaviour of a function to fix a bug."
 
 msgid "Changes in the documentation."
-msgstr "Änderungen in der Dokumentation."
+msgstr "Changes in the documentation."
 
 msgid "Modifying the internal HTTP handling."
-msgstr "Änderung der internen HTTP-Behandlung."
+msgstr "Modifying the internal HTTP handling."
 
 msgid "Upgrading the dependencies to a new version, major or otherwise."
-msgstr "Aktualisieren der Abhängigkeiten auf eine neue Version, Hauptversion oder anders."
+msgstr "Upgrading the dependencies to a new version, major or otherwise."
 

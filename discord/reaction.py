@@ -35,7 +35,7 @@ __all__ = ("Reaction", "ReactionCountDetails")
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .emoji import Emoji
+    from .emoji import AppEmoji, GuildEmoji
     from .message import Message
     from .partial_emoji import PartialEmoji
     from .types.message import Reaction as ReactionPayload
@@ -70,7 +70,7 @@ class Reaction:
 
     Attributes
     ----------
-    emoji: Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]
+    emoji: Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]
         The reaction emoji. May be a custom emoji, or a unicode emoji.
     count: :class:`int`
         The combined total of normal and super reactions for this emoji.
@@ -100,10 +100,10 @@ class Reaction:
         *,
         message: Message,
         data: ReactionPayload,
-        emoji: PartialEmoji | Emoji | str | None = None,
+        emoji: PartialEmoji | GuildEmoji | AppEmoji | str | None = None,
     ):
         self.message: Message = message
-        self.emoji: PartialEmoji | Emoji | str = (
+        self.emoji: PartialEmoji | GuildEmoji | AppEmoji | str = (
             emoji or message._state.get_reaction_emoji(data["emoji"])
         )
         self.count: int = data.get("count", 1)

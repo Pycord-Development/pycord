@@ -555,7 +555,7 @@ msgid "Returns the user's name with discriminator or global_name."
 msgstr "Returns the user's name with discriminator or global_name."
 
 msgid "The user's username."
-msgstr "The user's username."
+msgstr "El nombre del usuario."
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
@@ -570,7 +570,7 @@ msgid "If the user has migrated to the new username system, this will always be 
 msgstr "If the user has migrated to the new username system, this will always be 0."
 
 msgid "The user's global name."
-msgstr "The user's global name."
+msgstr "El nombre global del usuario."
 
 msgid "Specifies if the user is a bot account."
 msgstr "Specifies if the user is a bot account."
@@ -690,7 +690,7 @@ msgid "Returns a URL that allows the client to jump to the user."
 msgstr "Returns a URL that allows the client to jump to the user."
 
 msgid "Returns a string that allows you to mention the given user."
-msgstr "Returns a string that allows you to mention the given user."
+msgstr "Retorna una cadena que permite mencionar al usuario."
 
 msgid "Checks if the user is mentioned in the specified message."
 msgstr "Checks if the user is mentioned in the specified message."
@@ -1727,8 +1727,8 @@ msgstr "The guild's notification settings."
 msgid ":class:`NotificationLevel`"
 msgstr ":class:`NotificationLevel`"
 
-msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_."
-msgstr "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists#guild-feature-glossary>`_."
+msgid "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_."
+msgstr "A list of features that the guild has. The features that a guild can have are subject to arbitrary change by Discord. You can find a catalog of guild features `here <https://github.com/Delitefully/DiscordLists?tab=readme-ov-file#guild-feature-glossary>`_."
 
 msgid "List[:class:`str`]"
 msgstr "List[:class:`str`]"
@@ -2070,7 +2070,7 @@ msgid "The category to place the newly created channel under. The permissions wi
 msgstr "The category to place the newly created channel under. The permissions will be automatically synced to category if no overwrites are provided."
 
 msgid "The position in the channel list. This is a number that starts at 0. e.g. the top channel is position 0."
-msgstr "The position in the channel list. This is a number that starts at 0. e.g. the top channel is position 0."
+msgstr "La posición del canal en la lista de canales. Este es un entero comenzando desde 0. p. ej., el primer canal tiene la posición 0."
 
 msgid "The new channel's topic."
 msgstr "The new channel's topic."
@@ -2091,10 +2091,10 @@ msgid ":class:`TextChannel`"
 msgstr ":class:`TextChannel`"
 
 msgid "You do not have the proper permissions to create this channel."
-msgstr "You do not have the proper permissions to create this channel."
+msgstr "No tienes los permisos necesarios para crear este canal."
 
 msgid "Creating the channel failed."
-msgstr "Creating the channel failed."
+msgstr "Algo falló mientras se creaba el canal."
 
 msgid "The permission overwrite information is not in proper form."
 msgstr "The permission overwrite information is not in proper form."
@@ -2376,13 +2376,13 @@ msgid ":class:`BanEntry`"
 msgstr ":class:`BanEntry`"
 
 msgid "You do not have proper permissions to get the information."
-msgstr "You do not have proper permissions to get the information."
+msgstr "No tienes los permisos necesarios para poder obtener esta información."
 
 msgid "This user is not banned."
 msgstr "This user is not banned."
 
 msgid "An error occurred while fetching the information."
-msgstr "An error occurred while fetching the information."
+msgstr "Algo falló mientras se obtenía la información."
 
 msgid "Retrieves a :class:`.abc.GuildChannel` or :class:`.Thread` with the specified ID."
 msgstr "Retrieves a :class:`.abc.GuildChannel` or :class:`.Thread` with the specified ID."
@@ -2454,7 +2454,7 @@ msgid "The number of days before counting as inactive."
 msgstr "The number of days before counting as inactive."
 
 msgid "The reason for doing this action. Shows up on the audit log."
-msgstr "The reason for doing this action. Shows up on the audit log."
+msgstr "La razón por la que se hace esta acción. Se muestra en el registro de auditoría."
 
 msgid "Whether to compute the prune count. This defaults to ``True`` which makes it prone to timeouts in very large guilds. In order to prevent timeouts, you must set this to ``False``. If this is set to ``False``\\, then this function will always return ``None``."
 msgstr "Whether to compute the prune count. This defaults to ``True`` which makes it prone to timeouts in very large guilds. In order to prevent timeouts, you must set this to ``False``. If this is set to ``False``\\, then this function will always return ``None``."
@@ -2526,7 +2526,7 @@ msgid "You must have the :attr:`~Permissions.manage_guild` permission to get thi
 msgstr "You must have the :attr:`~Permissions.manage_guild` permission to get this information."
 
 msgid "The list of invites that are currently active."
-msgstr "The list of invites that are currently active."
+msgstr "La lista de invitaciones actualmente activas."
 
 msgid "List[:class:`Invite`]"
 msgstr "List[:class:`Invite`]"
@@ -2753,6 +2753,21 @@ msgstr "All roles in the guild."
 msgid "Retrieving the roles failed."
 msgstr "Retrieving the roles failed."
 
+msgid "Retrieves a :class:`Role` that the guild has."
+msgstr "Retrieves a :class:`Role` that the guild has."
+
+msgid "This method is an API call. For general usage, consider using :attr:`get_role` instead."
+msgstr "This method is an API call. For general usage, consider using :attr:`get_role` instead."
+
+msgid "The role in the guild with the specified ID."
+msgstr "The role in the guild with the specified ID."
+
+msgid ":class:`Role`"
+msgstr ":class:`Role`"
+
+msgid "Retrieving the role failed."
+msgstr "Retrieving the role failed."
+
 msgid "Creates a :class:`Role` for the guild."
 msgstr "Creates a :class:`Role` for the guild."
 
@@ -2791,9 +2806,6 @@ msgstr "The role's unicode emoji. If this argument is passed, ``icon`` is set to
 
 msgid "The newly created role."
 msgstr "The newly created role."
-
-msgid ":class:`Role`"
-msgstr ":class:`Role`"
 
 msgid "You do not have permissions to create the role."
 msgstr "You do not have permissions to create the role."
@@ -4095,10 +4107,10 @@ msgid ":class:`ChannelType`"
 msgstr ":class:`ChannelType`"
 
 msgid "The string that allows you to mention the channel."
-msgstr "The string that allows you to mention the channel."
+msgstr "Retorna una cadena que permite mencionar el canal."
 
 msgid "Returns the channel's creation time in UTC."
-msgstr "Returns the channel's creation time in UTC."
+msgstr "Retorna la fecha de creación del canal en UTC."
 
 msgid "Represents a Discord :class:`Guild` or :class:`abc.GuildChannel` invite."
 msgstr "Represents a Discord :class:`Guild` or :class:`abc.GuildChannel` invite."
@@ -5250,16 +5262,16 @@ msgid "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e
 msgstr "An NSFW thread is a thread that has a parent that is an NSFW channel, i.e. :meth:`.TextChannel.is_nsfw` is ``True``."
 
 msgid "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
-msgstr "Handles permission resolution for the :class:`~discord.Member` or :class:`~discord.Role`."
+msgstr "Gestiona la resolución de los permisos para el :class:`~discord.Member` o :class:`~discord.Role`."
 
 msgid "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
 msgstr "Since threads do not have their own permissions, they inherit them from the parent channel. This is a convenience method for calling :meth:`~discord.TextChannel.permissions_for` on the parent channel."
 
 msgid "The object to resolve permissions for. This could be either a member or a role. If it's a role then member overwrites are not computed."
-msgstr "The object to resolve permissions for. This could be either a member or a role. If it's a role then member overwrites are not computed."
+msgstr "El objeto del que obtener los permisos. Este puede ser un miembro o rol. Si es un rol, entonces las sobrescrituras de miembro no son calculadas."
 
 msgid "The resolved permissions for the member or role."
-msgstr "The resolved permissions for the member or role."
+msgstr "Los permisos calculados del miembro o rol."
 
 msgid ":class:`~discord.Permissions`"
 msgstr ":class:`~discord.Permissions`"
@@ -5523,10 +5535,10 @@ msgid "Returns the channel's name."
 msgstr "Returns the channel's name."
 
 msgid "The channel name."
-msgstr "The channel name."
+msgstr "El nombre del canal."
 
 msgid "The guild the channel belongs to."
-msgstr "The guild the channel belongs to."
+msgstr "El servidor al cual este canal pertenece."
 
 msgid "The channel ID."
 msgstr "The channel ID."
@@ -5619,16 +5631,16 @@ msgid "A list of members who are moderating the stage channel."
 msgstr "A list of members who are moderating the stage channel."
 
 msgid "Clones this channel. This creates a channel with the same properties as this channel."
-msgstr "Clones this channel. This creates a channel with the same properties as this channel."
+msgstr "Clona este canal. Esto crea uno nuevo con las mismas propiedades."
 
 msgid "You must have the :attr:`~discord.Permissions.manage_channels` permission to do this."
-msgstr "You must have the :attr:`~discord.Permissions.manage_channels` permission to do this."
+msgstr "Debes tener el permiso :attr:`~discord.Permissions.manage_channels` para poder usar esto."
 
 msgid "The name of the new channel. If not provided, defaults to this channel name."
-msgstr "The name of the new channel. If not provided, defaults to this channel name."
+msgstr "El nuevo nombre del canal. Si no se proporciona, se usará el nombre del canal existente."
 
 msgid "The reason for cloning this channel. Shows up on the audit log."
-msgstr "The reason for cloning this channel. Shows up on the audit log."
+msgstr "La razón por la que se clona el canal. Se muestra en el registro de auditoría."
 
 msgid ":class:`.abc.GuildChannel`"
 msgstr ":class:`.abc.GuildChannel`"
@@ -5730,13 +5742,13 @@ msgid "Editing the channel failed."
 msgstr "Editing the channel failed."
 
 msgid "The category this channel belongs to."
-msgstr "The category this channel belongs to."
+msgstr "La categoría a la cual pertenece este canal."
 
 msgid "If there is no category then this is ``None``."
-msgstr "If there is no category then this is ``None``."
+msgstr "Si no pertenece a ninguna, entonces esto retorna ``None``."
 
 msgid "Returns a list of roles that have been overridden from their default values in the :attr:`~discord.Guild.roles` attribute."
-msgstr "Returns a list of roles that have been overridden from their default values in the :attr:`~discord.Guild.roles` attribute."
+msgstr "Retorna una lista de roles que han sido sobreescritos de su valor predeterminado en el atributo :attr:`~discord.Guild.roles`."
 
 msgid "Connects to voice and creates a :class:`VoiceClient` to establish your connection to the voice server."
 msgstr "Connects to voice and creates a :class:`VoiceClient` to establish your connection to the voice server."
@@ -5769,52 +5781,52 @@ msgid "The opus library has not been loaded."
 msgstr "The opus library has not been loaded."
 
 msgid "Creates an instant invite from a text or voice channel."
-msgstr "Creates an instant invite from a text or voice channel."
+msgstr "Crea una invitación instantánea a partir de un canal de texto o voz."
 
 msgid "You must have the :attr:`~discord.Permissions.create_instant_invite` permission to do this."
-msgstr "You must have the :attr:`~discord.Permissions.create_instant_invite` permission to do this."
+msgstr "Debes tener el permiso :attr:`~discord.Permissions.create_instant_invite` para poder usar esto."
 
 msgid "How long the invite should last in seconds. If it's 0 then the invite doesn't expire. Defaults to ``0``."
-msgstr "How long the invite should last in seconds. If it's 0 then the invite doesn't expire. Defaults to ``0``."
+msgstr "Cuánto durará la invitación en segundos. Si se proporciona 0 entonces esta invitación no expirará. El valor por defecto es ``0``."
 
 msgid "How many uses the invite could be used for. If it's 0 then there are unlimited uses. Defaults to ``0``."
-msgstr "How many uses the invite could be used for. If it's 0 then there are unlimited uses. Defaults to ``0``."
+msgstr "Cuántos usos tendrá la invitación. Si se proporciona 0 entonces tendrá usos ilimitados. El valor por defecto es ``0``."
 
 msgid "Denotes that the invite grants temporary membership (i.e. they get kicked after they disconnect). Defaults to ``False``."
-msgstr "Denotes that the invite grants temporary membership (i.e. they get kicked after they disconnect). Defaults to ``False``."
+msgstr "Marca que la invitación otorgará una membresía temporal (es decir, son expulsados después de desconectarse). El valor por defecto es ``False``."
 
 msgid "Indicates if a unique invite URL should be created. Defaults to True. If this is set to ``False`` then it will return a previously created invite."
-msgstr "Indicates if a unique invite URL should be created. Defaults to True. If this is set to ``False`` then it will return a previously created invite."
+msgstr "Indica si debería crearse un enlace único para la invitación. El valor por defecto es ``True``. Si se proporciona ``False`` entonces retornará una invitación ya existente."
 
 msgid "The reason for creating this invite. Shows up on the audit log."
-msgstr "The reason for creating this invite. Shows up on the audit log."
+msgstr "La razón por la que se crea la invitación. Se muestra en el registro de auditoría."
 
 msgid "The type of target for the voice channel invite, if any.  .. versionadded:: 2.0"
-msgstr "The type of target for the voice channel invite, if any.  .. versionadded:: 2.0"
+msgstr "El tipo de objetivo para la invitación al canal de voz, si aplicable.  .. versionadded:: 2.0"
 
 msgid "The type of target for the voice channel invite, if any."
-msgstr "The type of target for the voice channel invite, if any."
+msgstr "El tipo de objetivo para la invitación al canal de voz, si aplicable."
 
 msgid "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel.  .. versionadded:: 2.0"
-msgstr "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel.  .. versionadded:: 2.0"
+msgstr "El usuario cuál directo mostrar en esta invitación. Obligatorio si el valor del parámetro `target_type` es `TargetType.stream`. El usuario debe estar en directo en el canal.  .. versionadded:: 2.0"
 
 msgid "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel."
-msgstr "The user whose stream to display for this invite, required if `target_type` is `TargetType.stream`. The user must be streaming in the channel."
+msgstr "El usuario cuál directo mostrar en esta invitación. Obligatorio si el valor del parámetro `target_type` es `TargetType.stream`. El usuario debe estar en directo en el canal."
 
 msgid "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`.  .. versionadded:: 2.0"
-msgstr "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`.  .. versionadded:: 2.0"
+msgstr "El ID de la aplicación que mostrar en la invitación. Obligatorio si el valor del parámetro de `target_type` es `TargetType.embedded_application`.  .. versionadded:: 2.0"
 
 msgid "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`."
-msgstr "The id of the embedded application for the invite, required if `target_type` is `TargetType.embedded_application`."
+msgstr "El ID de la aplicación que mostrar en la invitación. Obligatorio si el valor del parámetro de `target_type` es `TargetType.embedded_application`."
 
 msgid "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`  See :meth:`.Invite.set_scheduled_event` for more info on event invite linking.  .. versionadded:: 2.0"
-msgstr "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`  See :meth:`.Invite.set_scheduled_event` for more info on event invite linking.  .. versionadded:: 2.0"
+msgstr "El objeto de evento que enlazar a la invitación. Atajo de :meth:`.Invite.set_scheduled_event`. Véase también :meth:`.Invite.set_scheduled_event` para más información en como enlazar un evento a la invitación.  .. versionadded:: 2.0"
 
 msgid "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`"
-msgstr "The scheduled event object to link to the event. Shortcut to :meth:`.Invite.set_scheduled_event`"
+msgstr "El objeto de evento que enlazar a la invitación. Atajo de :meth:`.Invite.set_scheduled_event`."
 
 msgid "See :meth:`.Invite.set_scheduled_event` for more info on event invite linking."
-msgstr "See :meth:`.Invite.set_scheduled_event` for more info on event invite linking."
+msgstr "Véase también :meth:`.Invite.set_scheduled_event` para más información en como enlazar un evento a la invitación."
 
 msgid "The invite that was created."
 msgstr "The invite that was created."
@@ -5823,196 +5835,196 @@ msgid ":class:`~discord.Invite`"
 msgstr ":class:`~discord.Invite`"
 
 msgid "Invite creation failed."
-msgstr "Invite creation failed."
+msgstr "Algo falló al crear la invitación."
 
 msgid "The channel that was passed is a category or an invalid channel."
-msgstr "The channel that was passed is a category or an invalid channel."
+msgstr "El canal que se proporcionó era una categoría o era un canal no válido."
 
 msgid "Deletes the channel."
-msgstr "Deletes the channel."
+msgstr "Elimina este canal."
 
 msgid "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
-msgstr "You must have :attr:`~discord.Permissions.manage_channels` permission to use this."
+msgstr "Debes tener el permiso :attr:`~discord.Permissions.manage_channels` para poder usar esto."
 
 msgid "The reason for deleting this channel. Shows up on the audit log."
-msgstr "The reason for deleting this channel. Shows up on the audit log."
+msgstr "La razón por la que se elimina el canal. Se muestra en el registro de auditoría."
 
 msgid "You do not have proper permissions to delete the channel."
-msgstr "You do not have proper permissions to delete the channel."
+msgstr "No tienes los permisos necesarios para poder eliminar el canal."
 
 msgid "The channel was not found or was already deleted."
-msgstr "The channel was not found or was already deleted."
+msgstr "El canal no se encontró o ya fue eliminado."
 
 msgid "Deleting the channel failed."
-msgstr "Deleting the channel failed."
+msgstr "Algo falló mientras se eliminaba el canal."
 
 msgid "Returns a list of all active instant invites from this channel."
-msgstr "Returns a list of all active instant invites from this channel."
+msgstr "Retorna una lista de todas las invitaciones activas de este canal."
 
 msgid "You must have :attr:`~discord.Permissions.manage_channels` to get this information."
-msgstr "You must have :attr:`~discord.Permissions.manage_channels` to get this information."
+msgstr "Debes tener el permiso :attr:`~discord.Permissions.manage_channels` para poder usar esto."
 
 msgid "List[:class:`~discord.Invite`]"
 msgstr "List[:class:`~discord.Invite`]"
 
 msgid "Returns a URL that allows the client to jump to the channel."
-msgstr "Returns a URL that allows the client to jump to the channel."
+msgstr "Retorna un enlace que permite al cliente ir directamente al canal."
 
 msgid "Returns all members that are currently inside this voice channel."
 msgstr "Returns all members that are currently inside this voice channel."
 
 msgid "A rich interface to help move a channel relative to other channels."
-msgstr "A rich interface to help move a channel relative to other channels."
+msgstr "Una interfaz completa la cual ayuda a mover un canal en relación con los otros."
 
 msgid "If exact position movement is required, ``edit`` should be used instead."
-msgstr "If exact position movement is required, ``edit`` should be used instead."
+msgstr "Si la posición exacta a la que quiere moverse es requerida, deberías usar ``edit`` en su lugar."
 
 msgid "Voice channels will always be sorted below text channels. This is a Discord limitation."
-msgstr "Voice channels will always be sorted below text channels. This is a Discord limitation."
+msgstr "Los canales de voz siempre se ordenarán después de los canales de texto. Esto es una limitación de Discord."
 
 msgid "Whether to move the channel to the beginning of the channel list (or category if given). This is mutually exclusive with ``end``, ``before``, and ``after``."
-msgstr "Whether to move the channel to the beginning of the channel list (or category if given). This is mutually exclusive with ``end``, ``before``, and ``after``."
+msgstr "Si debería moverse el canal al principio de la lista de canales (o categoría, si es proporcionada). Esto es mutuamente excluyente con ``end``, ``before`` y ``after``."
 
 msgid "Whether to move the channel to the end of the channel list (or category if given). This is mutually exclusive with ``beginning``, ``before``, and ``after``."
-msgstr "Whether to move the channel to the end of the channel list (or category if given). This is mutually exclusive with ``beginning``, ``before``, and ``after``."
+msgstr "Si mover el canal al final de la lista de canales (o de la categoría, si es proporcionada). Esto es mutuamente excluyente con ``beginning``, ``before`` y ``after``."
 
 msgid "The channel that should be before our current channel. This is mutually exclusive with ``beginning``, ``end``, and ``after``."
-msgstr "The channel that should be before our current channel. This is mutually exclusive with ``beginning``, ``end``, and ``after``."
+msgstr "El canal que debería estar antes del canal actual. Esto es mutuamente excluyente con ``beginning``, ``end`` y ``after``."
 
 msgid "The channel that should be after our current channel. This is mutually exclusive with ``beginning``, ``end``, and ``before``."
-msgstr "The channel that should be after our current channel. This is mutually exclusive with ``beginning``, ``end``, and ``before``."
+msgstr "El canal que debería estar después del canal actual. Esto es mutuamente excluyente con ``beginning``, ``end`` y ``before``."
 
 msgid "The number of channels to offset the move by. For example, an offset of ``2`` with ``beginning=True`` would move it 2 after the beginning. A positive number moves it below while a negative number moves it above. Note that this number is relative and computed after the ``beginning``, ``end``, ``before``, and ``after`` parameters."
-msgstr "The number of channels to offset the move by. For example, an offset of ``2`` with ``beginning=True`` would move it 2 after the beginning. A positive number moves it below while a negative number moves it above. Note that this number is relative and computed after the ``beginning``, ``end``, ``before``, and ``after`` parameters."
+msgstr "La cantidad de canales que mover para compensar. Por ejemplo, un desplazamiento de valor ``2`` con ``beginning=True`` moverá el canal 2 posiciones a partir del principio. Un número positivo mueve el canal hacia abajo, mientras uno negativo lo mueve hacia arriba. Tenga en cuenta que este número es relativo y calculado a partir de los parámetros ``beginning``, ``end``, ``before`` y ``after``."
 
 msgid "The category to move this channel under. If ``None`` is given then it moves it out of the category. This parameter is ignored if moving a category channel."
-msgstr "The category to move this channel under. If ``None`` is given then it moves it out of the category. This parameter is ignored if moving a category channel."
+msgstr "La categoría a la que mover este canal. Si se proporciona ``None`` entonces mueve el canal fuera de esta. Este parámetro es ignorado si se mueve una categoría."
 
 msgid "Whether to sync the permissions with the category (if given)."
-msgstr "Whether to sync the permissions with the category (if given)."
+msgstr "Si se deben sincronizar los permisos con la categoría a la que se mueve (si es proporcionada)."
 
 msgid "The reason for the move."
-msgstr "The reason for the move."
+msgstr "La razón por la que se mueve este canal."
 
 msgid "An invalid position was given or a bad mix of arguments was passed."
-msgstr "An invalid position was given or a bad mix of arguments was passed."
+msgstr "Se proporcionó una posición no válida, o se mezclaron parámetros mutuamente excluyentes."
 
 msgid "You do not have permissions to move the channel."
-msgstr "You do not have permissions to move the channel."
+msgstr "No tienes los permisos necesarios para poder mover el canal."
 
 msgid "Moving the channel failed."
-msgstr "Moving the channel failed."
+msgstr "Algo falló mientras se movía el canal."
 
 msgid "Returns all of the channel's overwrites."
-msgstr "Returns all of the channel's overwrites."
+msgstr "Retorna todas las sobrescrituras de este canal."
 
 msgid "This is returned as a dictionary where the key contains the target which can be either a :class:`~discord.Role` or a :class:`~discord.Member` and the value is the overwrite as a :class:`~discord.PermissionOverwrite`."
-msgstr "This is returned as a dictionary where the key contains the target which can be either a :class:`~discord.Role` or a :class:`~discord.Member` and the value is the overwrite as a :class:`~discord.PermissionOverwrite`."
+msgstr "Esto es retornado como un diccionario donde la llave es el objeto, que puede ser de tipo :class:`~discord.Role` o :class:`~discord.Member`, y el valor es la sobrescritura, que es de tipo :class:`~discord.PermissionOverwrite`."
 
 msgid "The channel's permission overwrites."
-msgstr "The channel's permission overwrites."
+msgstr "Las sobrescrituras de los permisos de este canal."
 
 msgid "Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], :class:`~discord.PermissionOverwrite`]"
 msgstr "Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], :class:`~discord.PermissionOverwrite`]"
 
 msgid "Returns the channel-specific overwrites for a member or a role."
-msgstr "Returns the channel-specific overwrites for a member or a role."
+msgstr "Retorna las sobrescrituras de un miembro o rol específicas de este canal."
 
 msgid "The role or user denoting whose overwrite to get."
-msgstr "The role or user denoting whose overwrite to get."
+msgstr "El rol o usuario de los que quieres obtener las sobrescrituras."
 
 msgid "The permission overwrites for this object."
-msgstr "The permission overwrites for this object."
+msgstr "Las sobre escrituras de los permisos para este objeto."
 
 msgid ":class:`~discord.PermissionOverwrite`"
 msgstr ":class:`~discord.PermissionOverwrite`"
 
 msgid "This function takes into consideration the following cases:"
-msgstr "This function takes into consideration the following cases:"
+msgstr "Esta función tiene en cuenta los siguientes casos:"
 
 msgid "Guild owner"
-msgstr "Guild owner"
+msgstr "Propietario del servidor"
 
 msgid "Guild roles"
-msgstr "Guild roles"
+msgstr "Roles del servidor"
 
 msgid "Channel overrides"
-msgstr "Channel overrides"
+msgstr "Sobrescrituras de canales"
 
 msgid "Member overrides"
-msgstr "Member overrides"
+msgstr "Sobrescrituras de miembros"
 
 msgid "If a :class:`~discord.Role` is passed, then it checks the permissions someone with that role would have, which is essentially:"
-msgstr "If a :class:`~discord.Role` is passed, then it checks the permissions someone with that role would have, which is essentially:"
+msgstr "Si se proporciona un :class:`~discord.Role`, entonces esto comprueba los permisos de alguien que tenga el rol, que es esencialmente:"
 
 msgid "The default role permissions"
-msgstr "The default role permissions"
+msgstr "Los permisos del rol por defecto"
 
 msgid "The permissions of the role used as a parameter"
-msgstr "The permissions of the role used as a parameter"
+msgstr "Los permisos del rol usado como parámetro"
 
 msgid "The default role permission overwrites"
-msgstr "The default role permission overwrites"
+msgstr "Las sobrescrituras de permisos del rol por defecto"
 
 msgid "The permission overwrites of the role used as a parameter"
-msgstr "The permission overwrites of the role used as a parameter"
+msgstr "Las sobrescrituras de permisos del rol usado como parámetro"
 
 msgid "The object passed in can now be a role object."
-msgstr "The object passed in can now be a role object."
+msgstr "El objeto proporcionado ahora puede ser un rol."
 
 msgid "Whether the permissions for this channel are synced with the category it belongs to."
-msgstr "Whether the permissions for this channel are synced with the category it belongs to."
+msgstr "Si los permisos de este canal están sincronizados con los de la categoría a la que pertenece."
 
 msgid "If there is no category then this is ``False``."
-msgstr "If there is no category then this is ``False``."
+msgstr "Si no pertenece a ninguna categoría, entonces esto es ``False``."
 
 msgid "Sets the channel specific permission overwrites for a target in the channel."
-msgstr "Sets the channel specific permission overwrites for a target in the channel."
+msgstr "Establece las sobrescrituras de permisos para un objetivo en el canal."
 
 msgid "The ``target`` parameter should either be a :class:`~discord.Member` or a :class:`~discord.Role` that belongs to guild."
-msgstr "The ``target`` parameter should either be a :class:`~discord.Member` or a :class:`~discord.Role` that belongs to guild."
+msgstr "El parámetro ``target`` debe ser del tipo :class:`~discord.Member` o :class:`~discord.Role` que pertenezca al servidor."
 
 msgid "The ``overwrite`` parameter, if given, must either be ``None`` or :class:`~discord.PermissionOverwrite`. For convenience, you can pass in keyword arguments denoting :class:`~discord.Permissions` attributes. If this is done, then you cannot mix the keyword arguments with the ``overwrite`` parameter."
-msgstr "The ``overwrite`` parameter, if given, must either be ``None`` or :class:`~discord.PermissionOverwrite`. For convenience, you can pass in keyword arguments denoting :class:`~discord.Permissions` attributes. If this is done, then you cannot mix the keyword arguments with the ``overwrite`` parameter."
+msgstr "El parámetro ``overwrite``, si es proporcionado, debe ser ``None`` o de tipo :class:`~discord.PermissionOverwrite`. Por conveniencia, puedes proporcionar argumentos de palabras clave que denoten atributos :class:`~discord.Permissions`. Si eso se hace, no se podrán combinar los argumentos de palabras clave con el parámetro ``overwrite``."
 
 msgid "If the ``overwrite`` parameter is ``None``, then the permission overwrites are deleted."
-msgstr "If the ``overwrite`` parameter is ``None``, then the permission overwrites are deleted."
+msgstr "Si el parámetro ``overwrite`` es ``None``, entonces se eliminarán las sobrescrituras ya existentes."
 
 msgid "You must have the :attr:`~discord.Permissions.manage_roles` permission to use this."
-msgstr "You must have the :attr:`~discord.Permissions.manage_roles` permission to use this."
+msgstr "Debes tener el permiso :attr:`~discord.Permissions.manage_roles` para poder usar esto."
 
 msgid "This method *replaces* the old overwrites with the ones given."
-msgstr "This method *replaces* the old overwrites with the ones given."
+msgstr "Este método *reemplaza* las sobrescrituras antiguas con las proporcionadas."
 
 msgid "Setting allow and deny: ::"
-msgstr "Setting allow and deny: ::"
+msgstr "Estableciendo permitidos y denegados: ::"
 
 msgid "Deleting overwrites ::"
-msgstr "Deleting overwrites ::"
+msgstr "Eliminar sobrescrituras: ::"
 
 msgid "Using :class:`~discord.PermissionOverwrite` ::"
-msgstr "Using :class:`~discord.PermissionOverwrite` ::"
+msgstr "Usando :class:`~discord.PermissionOverwrite`: ::"
 
 msgid "The member or role to overwrite permissions for."
-msgstr "The member or role to overwrite permissions for."
+msgstr "El miembro o rol al que editar las sobrescrituras de permisos."
 
 msgid "The permissions to allow and deny to the target, or ``None`` to delete the overwrite."
-msgstr "The permissions to allow and deny to the target, or ``None`` to delete the overwrite."
+msgstr "Los permisos que aceptar o denegar al objetivo, o ``None`` para eliminar la sobrescritura."
 
 msgid "A keyword argument list of permissions to set for ease of use. Cannot be mixed with ``overwrite``."
-msgstr "A keyword argument list of permissions to set for ease of use. Cannot be mixed with ``overwrite``."
+msgstr "Una lista de argumentos de palabras clave de los permisos a establecer para facilitar el uso. No se puede combinar con ``overwrite``."
 
 msgid "You do not have permissions to edit channel specific permissions."
-msgstr "You do not have permissions to edit channel specific permissions."
+msgstr "No tienes permisos para editar los permisos de este canal."
 
 msgid "Editing channel specific permissions failed."
-msgstr "Editing channel specific permissions failed."
+msgstr "Algo falló mientras se editaban los permisos del canal."
 
 msgid "The role or member being edited is not part of the guild."
-msgstr "The role or member being edited is not part of the guild."
+msgstr "El rol o miembro que se va a editar no es parte del servidor."
 
 msgid "The overwrite parameter invalid or the target type was not     :class:`~discord.Role` or :class:`~discord.Member`."
-msgstr "The overwrite parameter invalid or the target type was not     :class:`~discord.Role` or :class:`~discord.Member`."
+msgstr "El parámetro ``overwrite`` no es válido o el tipo de objetivo no era un :class:`~discord.Role` o :class:`~discord.Member`."
 
 msgid "Returns a mapping of member IDs who have voice states in this channel."
 msgstr "Returns a mapping of member IDs who have voice states in this channel."
@@ -7149,7 +7161,7 @@ msgid "The user you are participating with in the direct message channel. If thi
 msgstr "The user you are participating with in the direct message channel. If this channel is received through the gateway, the recipient information may not be always available."
 
 msgid "The user presenting yourself."
-msgstr "The user presenting yourself."
+msgstr "El usuario que te representa."
 
 msgid "The direct message channel ID."
 msgstr "The direct message channel ID."

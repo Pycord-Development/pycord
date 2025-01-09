@@ -15,7 +15,7 @@ msgid "Cogs"
 msgstr "Cogs"
 
 msgid "The base class that all cogs must inherit from."
-msgstr "The base class that all cogs must inherit from."
+msgstr "La classe de base dont tous les cogs doivent hériter."
 
 msgid "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
 msgstr "A cog is a collection of commands, listeners, and optional state to help group commands together. More information on them can be found on the :ref:`ext_commands_cogs` page."
@@ -24,7 +24,7 @@ msgid "When inheriting from this class, the options shown in :class:`CogMeta` ar
 msgstr "When inheriting from this class, the options shown in :class:`CogMeta` are equally valid here."
 
 msgid "Returns"
-msgstr "Returns"
+msgstr "Retours"
 
 msgid "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
 msgstr "A :class:`list` of :class:`.ApplicationCommand`\\s that are defined inside this cog.  .. note::      This does not include subcommands."
@@ -36,7 +36,7 @@ msgid "This does not include subcommands."
 msgstr "This does not include subcommands."
 
 msgid "Return type"
-msgstr "Return type"
+msgstr "Type de la valeur retournée"
 
 msgid "List[:class:`.ApplicationCommand`]"
 msgstr "List[:class:`.ApplicationCommand`]"
@@ -55,9 +55,6 @@ msgstr "Yields"
 
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
-
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."
 msgstr "Returns a :class:`list` of (name, function) listener pairs that are defined in this cog."

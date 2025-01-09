@@ -1,0 +1,840 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2015-2021, Rapptz & 2021-present, Pycord Development
+# This file is distributed under the same license as the Pycord package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pycord 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-11 09:03+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: ../../api/utils.rst:6 b2f28caecc924db59cc0bfda2cf725bb
+msgid "Utility Functions"
+msgstr ""
+
+#: discord.utils.find:1 e551a85abadc4f54a50aee8720846873 of
+msgid ""
+"A helper to return the first element found in the sequence that meets the"
+" predicate. For example: ::"
+msgstr ""
+
+#: 9281f3d427c24c5199324b441b758af9 discord.utils.find:6 of
+msgid ""
+"would find the first :class:`~discord.Member` whose name is 'Mighty' and "
+"return it. If an entry is not found, then ``None`` is returned."
+msgstr ""
+
+#: 8e363292f30e4a8c8001b4f2a413d3f5 discord.utils.find:9 of
+msgid ""
+"This is different from :func:`py:filter` due to the fact it stops the "
+"moment it finds a valid entry."
+msgstr ""
+
+#: ../../api/utils.rst 050571d8ce744379a07e80a62aa94870
+#: 1c60fdf432a34262b02af7df598af358 201c050fc14d44f0810c776b20c676a1
+#: 35c87733e7a44f0abc2df0b1b7ea12be 39fbbccdd8e84cfbb3dd88b8836b653e
+#: 4182382f67e146d09cff1cbee0f070a5 4b7d6b239eb844b0a07455620184eb3e
+#: 55701d63ab734c498871b0f9b16d1c6d 5f476066bcaf4eae9d5ca625db8badcf
+#: 6a62a020e98a4607844e6a1d92754354 7a0f3e4603c446ee80192ad6a4c2a275
+#: 8a406056f674402fbda55a5b21a97010 8cd9a4a6430f4d4083e18c8cf19fcf48
+#: ab4317ac344e484ab6269743deb00536 ac91098994644d18b800c34e375c9751
+#: b2325f4789474a608227307565f07ab8 b2eaf3d8463e41408acf895a2e2016b6
+#: d084c891f79846a089b9181a6952a853 discord.utils.get_or_fetch
+#: e235bd384d1b429d8285ad37f2d4a591 f8bf8feea079450998152dcff00e95c1 of
+msgid "Parameters"
+msgstr ""
+
+#: 9fa7a6562c90425ba95278c8fb52c572 discord.utils.find:13 of
+msgid "A function that returns a boolean-like result."
+msgstr ""
+
+#: bf625ed56ac94e4e9c16375a29c802e4 discord.utils.find:15 of
+msgid "The iterable to search through."
+msgstr ""
+
+#: ../../api/utils.rst 02dcab3cde5943e6b6bb51bb073c78d3
+#: 17bce3950d8d41f999cfc959de1c8005 2b2c738b3ccb483f9981028c7a67eb93
+#: 2eb1e3111512438984551edfa1d65489 392e00c2a71444519c80974c8388009c
+#: 3c6d52d4b8354e06b6ce0fcf3b086c85 54a28def4381478084624d76e12f9f45
+#: 6284d5d5ec2c4d81b0867bef1a730df0 737183e407f044cfbdeb3520b0664458
+#: 74261c6f68334a9c9832b03ab14c173c 77e1c55771274774bc9154f8b83f65fc
+#: 7b6ea48218734b5d9fdac096eb1869e9 8c58ff1ae8594e3885fc52f7276a6393
+#: abf23af895704f009e6e57170df2e2c3 ae19383e27b04626a84993ee6c1dc6c2
+#: b240a7e64248402482220648f8d25d89 c287aafc3232425da8ccd5cca5f25e2d
+#: discord.utils.get_or_fetch eaf3c063f00646c9a476d69b6683b0ac
+#: eb0e0c983f3c4751858bc3209d71caf8 f43529e1bd0a4b11aa3c197db4892dee of
+msgid "Return type"
+msgstr ""
+
+#: 1f9579e8c87641de83f52a1e20a4f328 b44d8109461742229a137bc4ba3bceef
+#: discord.utils.find:18 discord.utils.get:40 discord.utils.sleep_until:17
+#: f5452727e7f94436b7f9a74b23e539ab of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Optional\\`\\\\"
+" \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
+"\\\\\\(\\`\\`T\\`\\`\\)\\]`"
+msgstr ""
+
+#: 1bf4fedf587c4b5fbebab4a690e1e45d discord.utils.get:1 of
+msgid ""
+"A helper that returns the first element in the iterable that meets all "
+"the traits passed in ``attrs``. This is an alternative for "
+":func:`~discord.utils.find`."
+msgstr ""
+
+#: 7e04bf3fc16d4bdd8184628cad06f709 discord.utils.get:5 of
+msgid ""
+"When multiple attributes are specified, they are checked using logical "
+"AND, not logical OR. Meaning they have to meet every attribute passed in "
+"and not one of them."
+msgstr ""
+
+#: discord.utils.get:9 e17e9bba8fca4009a6e42a4491469d8a of
+msgid ""
+"To have a nested attribute search (i.e. search by ``x.y``) then pass in "
+"``x__y`` as the keyword argument."
+msgstr ""
+
+#: 8ce8eccaa5d54963817ec2ccbfcd4897 discord.utils.get:12 of
+msgid ""
+"If nothing is found that matches the attributes passed, then ``None`` is "
+"returned."
+msgstr ""
+
+#: 3521bfb272664038a752ad0c4215b894 38fdef3a74ae45a48840ee240fd21411
+#: 3924fb9efa21466e8ad1606af419115d discord.utils.basic_autocomplete:22
+#: discord.utils.get:16 discord.utils.get_or_fetch:28 of
+msgid "Examples"
+msgstr ""
+
+#: 19a0e7b1793540e8a019407150d0b27a discord.utils.basic_autocomplete:23
+#: discord.utils.get:17 ebf141cbc71a4423aa0f9536eaa183a4 of
+msgid "Basic usage:"
+msgstr ""
+
+#: 6eb8c1d8a594429bbe9089eaa7e1ac0a discord.utils.get:23 of
+msgid "Multiple attribute matching:"
+msgstr ""
+
+#: discord.utils.get:29 e122d883c8ba4dc9a17922e005f6f3a0 of
+msgid "Nested attribute matching:"
+msgstr ""
+
+#: discord.utils.get:36 ece83686d52643cdb6c8406fde3c7285 of
+msgid "An iterable to search through."
+msgstr ""
+
+#: discord.utils.get:38 fe5bcc80273940e1a3c9d8a61010ca49 of
+msgid "Keyword arguments that denote attributes to search with."
+msgstr ""
+
+#: 047a5517f469416aab2b765c3711e2c9 813a458483fc4657bb6de6015318ea4c
+#: discord.utils.get_or_fetch:1 discord.utils.sleep_until:1 of
+msgid "|coro|"
+msgstr ""
+
+#: 6059a0ee37c84b7c968bbb3180cd4061 discord.utils.get_or_fetch:3 of
+msgid ""
+"Attempts to get an attribute from the object in cache. If it fails, it "
+"will attempt to fetch it. If the fetch also fails, an error will be "
+"raised."
+msgstr ""
+
+#: 99c21646a64544a7a66635fe89a62488 discord.utils.get_or_fetch:7 of
+msgid "The object to use the get or fetch methods in"
+msgstr ""
+
+#: 722b7174a36e40d9ad7f4158e4dec713 discord.utils.get_or_fetch:10 of
+msgid ""
+"The attribute to get or fetch. Note the object must have both a ``get_`` "
+"and ``fetch_`` method for this attribute."
+msgstr ""
+
+#: d12701e421f14168a8c064b63bbca7d1 discord.utils.get_or_fetch:13 of
+msgid "The ID of the object"
+msgstr ""
+
+#: bebeace681de4c4b82947227d8b175ce discord.utils.get_or_fetch:16 of
+msgid ""
+"The default value to return if the object is not found, instead of "
+"raising an error."
+msgstr ""
+
+#: ../../api/utils.rst 1fec765e695e4742b8b12fe2c089354f
+#: 2cada1fbf84b404fb2628ac3f35b19ed 36f7538b818747bba0d09bfdca701d0c
+#: 410c4260d88e4f388018236761fc0965 5a9fd330b31e4c7c8844cdf8c620430b
+#: 5e2662c472244430a1c5f927e8ad5742 6a6845d4e22b436ca97dfac93491f478
+#: 7fd927630bce466fb5d388f8d11fcdb4 8035ef1de15d4808923a8f8d047577bc
+#: 80cac2a2e81441b287f204bf5131b09d 96d038e7361c4ea69e5d5fb8389f92dd
+#: b9b2c90b77b84eb5805166bc365f005b c1a779448b8c416f9893dcbbbc8b8ae1
+#: c2f878aa2d944761ba684104b753f875 c9e6df7e45324f84a24e0117930a36a1
+#: discord.utils.get_or_fetch e4958f5419174efea8ba08cb566b5fe0
+#: fa6b89a60707475d9f9f29fe605228b4 of
+msgid "Returns"
+msgstr ""
+
+#: 44457c74e11f4bcb86593baff8be9dab discord.utils.get_or_fetch:19 of
+msgid "The object found or the default value."
+msgstr ""
+
+#: 30b0356fd64d4d41b7a8e2cad0506d17 discord.utils.get_or_fetch of
+msgid "Raises"
+msgstr ""
+
+#: discord.utils.get_or_fetch:22 f118d1f7f46440f8b25a14d07b483c94 of
+msgid "The object is missing a ``get_`` or ``fetch_`` method"
+msgstr ""
+
+#: 044578fd72984f17b794e0b1b3b98deb discord.utils.get_or_fetch:23 of
+msgid "Invalid ID for the object"
+msgstr ""
+
+#: a32ef12495724e3592521d9a0b9e1a9a discord.utils.get_or_fetch:24 of
+msgid "An error occurred fetching the object"
+msgstr ""
+
+#: 8cf54e47d9784ec687e61aee0ab3215c discord.utils.get_or_fetch:25 of
+msgid "You do not have permission to fetch the object"
+msgstr ""
+
+#: 10c9649c25a64cd0a556bf2a290e0a61 discord.utils.get_or_fetch:29 of
+msgid "Getting a guild from a guild ID: ::"
+msgstr ""
+
+#: 78c2fa52a132456abfb980a83613441d discord.utils.get_or_fetch:33 of
+msgid ""
+"Getting a channel from the guild. If the channel is not found, return "
+"None: ::"
+msgstr ""
+
+#: discord.utils.oauth_url:1 fe4a3d1e945e470898618bbdafc75294 of
+msgid ""
+"A helper function that returns the OAuth2 URL for inviting the bot into "
+"guilds."
+msgstr ""
+
+#: 6922f1e7d23c4cdca00cb7eb5a3f919f discord.utils.oauth_url:5 of
+msgid "The client ID for your bot."
+msgstr ""
+
+#: 53556372d4e94d1fb9ab93f8b9843b8a discord.utils.oauth_url:8 of
+msgid ""
+"The permissions you're requesting. If not given then you won't be "
+"requesting any permissions."
+msgstr ""
+
+#: 96730f42a5cf4cba83bbb44013b202c2 discord.utils.oauth_url:12 of
+msgid "The guild to pre-select in the authorization screen, if available."
+msgstr ""
+
+#: 45c5f11bfe894ccaadeefd066064da1f discord.utils.oauth_url:15 of
+msgid "An optional valid redirect URI."
+msgstr ""
+
+#: cd3dfb289ce14729873225317a503d8f discord.utils.oauth_url:18 of
+msgid ""
+"An optional valid list of scopes. Defaults to ``('bot',)``.  .. "
+"versionadded:: 1.7"
+msgstr ""
+
+#: 0c9e2a41e0514b69a182b945cf09782e discord.utils.oauth_url:18 of
+msgid "An optional valid list of scopes. Defaults to ``('bot',)``."
+msgstr ""
+
+#: a58d963b26244f65946d3ce5d9507396 discord.utils.oauth_url:23 of
+msgid ""
+"Whether to disallow the user from changing the guild dropdown.  .. "
+"versionadded:: 2.0"
+msgstr ""
+
+#: 33c3ea449b084bbba0bac77189221864 discord.utils.oauth_url:23 of
+msgid "Whether to disallow the user from changing the guild dropdown."
+msgstr ""
+
+#: dddb7780a58c4d02a9e33a83610456f6 discord.utils.oauth_url:28 of
+msgid "The OAuth2 URL for inviting the bot into guilds."
+msgstr ""
+
+#: 00e022b285884d4caddb3d3d92874d00 1691932c989c44919f5464baf2015706
+#: 35c97cbad62a46f6bbbcc1e7cd22ec91 365ce5216faf447abc535b71d88ddd14
+#: 7f98ae082d164224a29428f14d1e0e6d 9590c8c38e8b4cf78813d5435267d058
+#: 983c0fcb3ba3401e9e63e6128fb8cc0d discord.utils.escape_markdown:21
+#: discord.utils.escape_mentions:18 discord.utils.format_dt:36
+#: discord.utils.oauth_url:29 discord.utils.remove_markdown:19
+#: discord.utils.resolve_invite:8 discord.utils.resolve_template:10 of
+msgid ":class:`str`"
+msgstr ""
+
+#: 744cadce5cf74df4b0bff0d86815d9bd discord.utils.remove_markdown:1 of
+msgid "A helper function that removes markdown characters."
+msgstr ""
+
+#: dd119c77246d4c808920c17ba3cd4e62 discord.utils.remove_markdown:6 of
+msgid ""
+"This function is not markdown aware and may remove meaning from the "
+"original text. For example, if the input contains ``10 * 5`` then it will"
+" be converted into ``10  5``."
+msgstr ""
+
+#: 4f53660c7b22469a88a4b9d71b7e3b7e discord.utils.remove_markdown:10 of
+msgid "The text to remove markdown from."
+msgstr ""
+
+#: a8a0bc5695a34e19b9e67a672ebbc601 discord.utils.remove_markdown:13 of
+msgid ""
+"Whether to leave links alone when removing markdown. For example, if a "
+"URL in the text contains characters such as ``_`` then it will be left "
+"alone. Defaults to ``True``."
+msgstr ""
+
+#: a07ce7398e2448098358b434ba711f00 discord.utils.remove_markdown:18 of
+msgid "The text with the markdown special characters removed."
+msgstr ""
+
+#: 8dfc3e36bdd74417ac27356ec9ecb8d8 discord.utils.escape_markdown:1 of
+msgid "A helper function that escapes Discord's markdown."
+msgstr ""
+
+#: 8d7409e0a4bb46fa8923de1e64781442 discord.utils.escape_markdown:4 of
+msgid "The text to escape markdown from."
+msgstr ""
+
+#: c185975ffa2e45ba87bba442cd8de2cc discord.utils.escape_markdown:7 of
+msgid ""
+"Whether to escape the markdown characters as needed. This means that it "
+"does not escape extraneous characters if it's not necessary, e.g. "
+"``**hello**`` is escaped into ``\\*\\*hello**`` instead of "
+"``\\*\\*hello\\*\\*``. Note however that this can open you up to some "
+"clever syntax abuse. Defaults to ``False``."
+msgstr ""
+
+#: 671aab37aa2840b3ae919cb1ca5d756f discord.utils.escape_markdown:14 of
+msgid ""
+"Whether to leave links alone when escaping markdown. For example, if a "
+"URL in the text contains characters such as ``_`` then it will be left "
+"alone. This option is not supported with ``as_needed``. Defaults to "
+"``True``."
+msgstr ""
+
+#: 114cb57eb6be46778579ab942ac8a33c discord.utils.escape_markdown:20 of
+msgid "The text with the markdown special characters escaped with a slash."
+msgstr ""
+
+#: 92d7cc35f363403b9589b8ca920d471e discord.utils.escape_mentions:1 of
+msgid "A helper function that escapes everyone, here, role, and user mentions."
+msgstr ""
+
+#: 211f6b0061a04ff0b830caab837a2a42 discord.utils.escape_mentions:5 of
+msgid "This does not include channel mentions."
+msgstr ""
+
+#: 3bc32d1196534e289a79d7d33bbf3888 discord.utils.escape_mentions:9 of
+msgid ""
+"For more granular control over what mentions should be escaped within "
+"messages, refer to the :class:`~discord.AllowedMentions` class."
+msgstr ""
+
+#: 49f4649faee743348413613de50a095a discord.utils.escape_mentions:14 of
+msgid "The text to escape mentions from."
+msgstr ""
+
+#: d5330c7ee270424fad80aca4a9bf2687 discord.utils.escape_mentions:17 of
+msgid "The text with the mentions removed."
+msgstr ""
+
+#: bfa4bf501e754a7a8e564daf92173adc discord.utils.raw_mentions:1 of
+msgid "Returns a list of user IDs matching ``<@user_id>`` in the string."
+msgstr ""
+
+#: 2b8d9969221f4e3b842ecd4c5b0ff7ed discord.utils.raw_mentions:6 of
+msgid "The string to get user mentions from."
+msgstr ""
+
+#: discord.utils.raw_mentions:9 ff66d05ec8364c5bb85c870a70b62b85 of
+msgid "A list of user IDs found in the string."
+msgstr ""
+
+#: 7683abc8d79f4cff8f52ada8f6f537fe b7adc5671b74425aa0dc7620d4e36e60
+#: bf95fb3638ae4162a3ede56e570d575d discord.utils.raw_channel_mentions:10
+#: discord.utils.raw_mentions:10 discord.utils.raw_role_mentions:10 of
+msgid "List[:class:`int`]"
+msgstr ""
+
+#: a1bdaec1c08143d09c3070b44e4546db discord.utils.raw_channel_mentions:1 of
+msgid "Returns a list of channel IDs matching ``<@#channel_id>`` in the string."
+msgstr ""
+
+#: discord.utils.raw_channel_mentions:6 ef551f719496417da562512dee9448b1 of
+msgid "The string to get channel mentions from."
+msgstr ""
+
+#: bbe74131d518497b942a440880a52043 discord.utils.raw_channel_mentions:9 of
+msgid "A list of channel IDs found in the string."
+msgstr ""
+
+#: 090aaefa36ea42ce8ac9a82def9de7c9 discord.utils.raw_role_mentions:1 of
+msgid "Returns a list of role IDs matching ``<@&role_id>`` in the string."
+msgstr ""
+
+#: aad51dd511f94d5faf5c31f04e4975a3 discord.utils.raw_role_mentions:6 of
+msgid "The string to get role mentions from."
+msgstr ""
+
+#: 27df55b1abed40ad926dbd266a1b38ba discord.utils.raw_role_mentions:9 of
+msgid "A list of role IDs found in the string."
+msgstr ""
+
+#: 0b0a46fc6d8148818f7321a47619a716 discord.utils.resolve_invite:1 of
+msgid "Resolves an invite from a :class:`~discord.Invite`, URL or code."
+msgstr ""
+
+#: 7852632e3bfc4c818c1f732dabda5b61 discord.utils.resolve_invite:4 of
+msgid "The invite."
+msgstr ""
+
+#: 7f73d202fc844dd3bdcdd567127959e0 discord.utils.resolve_invite:7 of
+msgid "The invite code."
+msgstr ""
+
+#: 2cdcdcf9d2bf4ffd9559d511ef27090d discord.utils.resolve_template:1 of
+msgid "Resolves a template code from a :class:`~discord.Template`, URL or code."
+msgstr ""
+
+#: 9a9b237ba8764f16a2735e97b8ba92cd discord.utils.resolve_template:6 of
+msgid "The code."
+msgstr ""
+
+#: 382208b003a849349169f0693d92fe85 discord.utils.resolve_template:9 of
+msgid "The template code."
+msgstr ""
+
+#: 759a5b88a9474bde911dc404a88a4c7d discord.utils.sleep_until:3 of
+msgid "Sleep until a specified time."
+msgstr ""
+
+#: 498fcacad5e542c9b535af7c5ac323bb discord.utils.sleep_until:5 of
+msgid "If the time supplied is in the past this function will yield instantly."
+msgstr ""
+
+#: 356a2d3a17414064a0332ba1c9110db4 discord.utils.sleep_until:10 of
+msgid ""
+"The timestamp in which to sleep until. If the datetime is naive then it "
+"is assumed to be local time."
+msgstr ""
+
+#: 46cdf4f783574bbd845beea1f3778f06 discord.utils.sleep_until:14 of
+msgid "If provided is returned to the caller when the coroutine completes."
+msgstr ""
+
+#: b2522dd48dfa4bea8fcd24de4d79178d discord.utils.utcnow:1 of
+msgid ""
+"A helper function to return an aware UTC datetime representing the "
+"current time."
+msgstr ""
+
+#: be409753e4dc466f8c77ca040ecaeccb discord.utils.utcnow:3 of
+msgid ""
+"This should be preferred to :meth:`datetime.datetime.utcnow` since it is "
+"an aware datetime, compared to the naive datetime in the standard "
+"library."
+msgstr ""
+
+#: 683514a7b0d641748f3c0d70b7009595 discord.utils.utcnow:8 of
+msgid "The current aware datetime in UTC."
+msgstr ""
+
+#: 3d3d51edb6044a099f7629a77d8811e9 56bd424aabf44587a6ffcec02aaa5af0
+#: discord.utils.snowflake_time:8 discord.utils.utcnow:9 of
+msgid ":class:`datetime.datetime`"
+msgstr ""
+
+#: db52e7d27432444ebc061c6347543444 discord.utils.snowflake_time:1 of
+msgid "Converts a Discord snowflake ID to a UTC-aware datetime object."
+msgstr ""
+
+#: 1445cceebae94da79f69c7ec2c82b3b8 discord.utils.snowflake_time:4 of
+msgid "The snowflake ID."
+msgstr ""
+
+#: 050dbdb6689b438184c22d7a4a9c4e1d discord.utils.snowflake_time:7 of
+msgid "An aware datetime in UTC representing the creation time of the snowflake."
+msgstr ""
+
+#: 7ddbe7752a5e4bbb8c60ae498b445f46 discord.utils.parse_time:1 of
+msgid "A helper function to convert an ISO 8601 timestamp to a datetime object."
+msgstr ""
+
+#: 87b7502a035c4f7a94b7b1d26819abef discord.utils.parse_time:4 of
+msgid "The timestamp to convert."
+msgstr ""
+
+#: c723db34011f49828d3bb12fed23d6a9 discord.utils.parse_time:7 of
+msgid "The converted datetime object."
+msgstr ""
+
+#: aa502e7ed02045ffa2fd6ab5aec5825c discord.utils.parse_time:8 of
+msgid "Optional[:class:`datetime.datetime`]"
+msgstr ""
+
+#: c3e3a912c4c747749a63ac1951adc0cd discord.utils.format_dt:1 of
+msgid ""
+"A helper function to format a :class:`datetime.datetime` for presentation"
+" within Discord."
+msgstr ""
+
+#: 014018350bde44a1af3b87f0a256c312 discord.utils.format_dt:3 of
+msgid ""
+"This allows for a locale-independent way of presenting data using Discord"
+" specific Markdown."
+msgstr ""
+
+#: 47c889fce51d4655894d69995fd09e64 discord.utils.format_dt:6 of
+msgid "Style"
+msgstr ""
+
+#: 9d872289da7647aa939a4249ed2116fc discord.utils.format_dt:6 of
+msgid "Example Output"
+msgstr ""
+
+#: 04d70e88eed741e8b7baec36dedd45a4 discord.utils.format_dt:6 of
+msgid "Description"
+msgstr ""
+
+#: d9773363dfdd4110be3202594b90deac discord.utils.format_dt:8 of
+msgid "t"
+msgstr ""
+
+#: 01f669f9d718485dabce66ae18c650d8 discord.utils.format_dt:8 of
+msgid "22:57"
+msgstr ""
+
+#: 4505dbbdb65643d689966d6ad5241fe9 discord.utils.format_dt:8 of
+msgid "Short Time"
+msgstr ""
+
+#: 7e56e826b4c54267b72e5e1333ce0835 discord.utils.format_dt:10 of
+msgid "T"
+msgstr ""
+
+#: 1db4a09a55cd497685f2e7e43eb40b7e discord.utils.format_dt:10 of
+msgid "22:57:58"
+msgstr ""
+
+#: discord.utils.format_dt:10 e2d7da40ee0a4cefb235c71f5059c1ba of
+msgid "Long Time"
+msgstr ""
+
+#: 0398eefcdaa9424e8095fc7c978adb69 discord.utils.format_dt:12 of
+msgid "d"
+msgstr ""
+
+#: 44d935830a894d798035c30178c37847 discord.utils.format_dt:12 of
+msgid "17/05/2016"
+msgstr ""
+
+#: 88dc24f2daf64b9b82ab2b5ccc55ef52 discord.utils.format_dt:12 of
+msgid "Short Date"
+msgstr ""
+
+#: c9ee5decc37b48bcb25bd130c3d5dc5f discord.utils.format_dt:14 of
+msgid "D"
+msgstr ""
+
+#: 3c3e68c2c7b34fa8975ca83d45c6e0d0 discord.utils.format_dt:14 of
+msgid "17 May 2016"
+msgstr ""
+
+#: 4dab2a15edd0492e8a71438ceb43b912 discord.utils.format_dt:14 of
+msgid "Long Date"
+msgstr ""
+
+#: 5efb87fd0d8744eb878c558c2f961a3c discord.utils.format_dt:16 of
+msgid "f (default)"
+msgstr ""
+
+#: a0b3a00fe113498a930293b0366f9ac8 discord.utils.format_dt:16 of
+msgid "17 May 2016 22:57"
+msgstr ""
+
+#: cebb638af4a44e89b22972425a3e8afc discord.utils.format_dt:16 of
+msgid "Short Date Time"
+msgstr ""
+
+#: 3e3fe2959acc44be92e90ac97ccb20f0 discord.utils.format_dt:18 of
+msgid "F"
+msgstr ""
+
+#: 59f32996a6ea4df6b6b3f171f6204b5e discord.utils.format_dt:18 of
+msgid "Tuesday, 17 May 2016 22:57"
+msgstr ""
+
+#: 5d1bb8a7e0e94646aa89baef02aa1b35 discord.utils.format_dt:18 of
+msgid "Long Date Time"
+msgstr ""
+
+#: 36677a24a28c4e50908c73cdfc0ce8cb discord.utils.format_dt:20 of
+msgid "R"
+msgstr ""
+
+#: 2ef4165bf158419caff2c9444a4a275d discord.utils.format_dt:20 of
+msgid "5 years ago"
+msgstr ""
+
+#: b4009f9e19a74f9c9c43a0d25e49b637 discord.utils.format_dt:20 of
+msgid "Relative Time"
+msgstr ""
+
+#: 8f6bdcb0e1b746d294b046b91e82acfa discord.utils.format_dt:23 of
+msgid ""
+"Note that the exact output depends on the user's locale setting in the "
+"client. The example output presented is using the ``en-GB`` locale."
+msgstr ""
+
+#: 7a8890fe32364076971c15c65e42d0af discord.utils.format_dt:29 of
+msgid "The datetime to format."
+msgstr ""
+
+#: 752d22d96de1489489a0e1045d3f1702 discord.utils.format_dt:32 of
+msgid "The style to format the datetime with."
+msgstr ""
+
+#: 1247f6c9467c4399a21d45c6c2540b8f discord.utils.format_dt:35 of
+msgid "The formatted string."
+msgstr ""
+
+#: 3dbe398f94684d7d81111c3a9d78ddee discord.utils.time_snowflake:1 of
+msgid "Returns a numeric snowflake pretending to be created at the given date."
+msgstr ""
+
+#: 4f0a375b5445437c9b32c94bb126d2eb discord.utils.time_snowflake:3 of
+msgid ""
+"When using as the lower end of a range, use ``time_snowflake(high=False) "
+"- 1`` to be inclusive, ``high=True`` to be exclusive."
+msgstr ""
+
+#: discord.utils.time_snowflake:6 fd7692997b8d4147ae031cc74d728ea2 of
+msgid ""
+"When using as the higher end of a range, use ``time_snowflake(high=True) "
+"+ 1`` to be inclusive, ``high=False`` to be exclusive"
+msgstr ""
+
+#: 156dc943215f43459e046968ed3d56f3 707b6da896314b699199545f50ffaa4c
+#: discord.utils.generate_snowflake:5 discord.utils.time_snowflake:10 of
+msgid ""
+"A datetime object to convert to a snowflake. If naive, the timezone is "
+"assumed to be local time."
+msgstr ""
+
+#: 4d4b4aed7951406c98672889e6af4aff discord.utils.time_snowflake:14 of
+msgid "Whether to set the lower 22 bit to high or low."
+msgstr ""
+
+#: 36df0fad6db443f498326d3435c79e77 685eec1e29a2446e99fd2c65c95ed67e
+#: discord.utils.generate_snowflake:9 discord.utils.time_snowflake:17 of
+msgid "The snowflake representing the time given."
+msgstr ""
+
+#: 1592ca8f639d49108573be44e12cd05c discord.utils.generate_snowflake:10
+#: discord.utils.time_snowflake:18 f921d097fcff48d2ba649bf347797916 of
+msgid ":class:`int`"
+msgstr ""
+
+#: c8903060dda24558a54ef44d79166e0a discord.utils.generate_snowflake:1 of
+msgid ""
+"Returns a numeric snowflake pretending to be created at the given date "
+"but more accurate and random than :func:`time_snowflake`. If dt is not "
+"passed, it makes one from the current time using utcnow."
+msgstr ""
+
+#: 342ee272ba1a47d28edeb42756e01b5e discord.utils.basic_autocomplete:1 of
+msgid ""
+"A helper function to make a basic autocomplete for slash commands. This "
+"is a pretty standard autocomplete and will return any options that start "
+"with the value from the user, case-insensitive. If the ``values`` "
+"parameter is callable, it will be called with the AutocompleteContext."
+msgstr ""
+
+#: 548784abce704512a534212ed4f89380 discord.utils.basic_autocomplete:5 of
+msgid ""
+"This is meant to be passed into the :attr:`discord.Option.autocomplete` "
+"attribute."
+msgstr ""
+
+#: 71b0b09a76194f82a93177616dd8e775 discord.utils.basic_autocomplete:8 of
+msgid ""
+"Possible values for the option. Accepts an iterable of :class:`str`, a "
+"callable (sync or async) that takes a single argument of "
+":class:`.AutocompleteContext`, or a coroutine. Must resolve to an "
+"iterable of :class:`str`."
+msgstr ""
+
+#: c0f0a3612cc74a278647f21b62775366 discord.utils.basic_autocomplete:12 of
+msgid ""
+"An optional callable (sync or async) used to filter the autocomplete "
+"options. It accepts two arguments: the :class:`.AutocompleteContext` and "
+"an item from ``values`` iteration treated as callback parameters. If "
+"``None`` is provided, a default filter is used that includes items whose "
+"string representation starts with the user's input value, case-"
+"insensitive.  .. versionadded:: 2.7"
+msgstr ""
+
+#: 4f8f6a20ccb74da0bedc2af0272683dd discord.utils.basic_autocomplete:12 of
+msgid ""
+"An optional callable (sync or async) used to filter the autocomplete "
+"options. It accepts two arguments: the :class:`.AutocompleteContext` and "
+"an item from ``values`` iteration treated as callback parameters. If "
+"``None`` is provided, a default filter is used that includes items whose "
+"string representation starts with the user's input value, case-"
+"insensitive."
+msgstr ""
+
+#: 42efe68651a145729d12aa25efb1c936 discord.utils.basic_autocomplete:18 of
+msgid "A wrapped callback for the autocomplete."
+msgstr ""
+
+#: 62cb574c35064e82b913901dea277846 discord.utils.basic_autocomplete:19 of
+msgid ""
+"Callable[[:class:`.AutocompleteContext`], "
+"Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`],"
+" Iterable[:class:`int`], Iterable[:class:`float`]]]]"
+msgstr ""
+
+#: 7fef041098264e3091c78a0aee99f4cb discord.utils.basic_autocomplete:36 of
+msgid "With filter parameter:"
+msgstr ""
+
+#: 3701cd6df81947f6b20b79fcfdf29842 discord.utils.basic_autocomplete:44 of
+msgid "Autocomplete cannot be used for options that have specified choices."
+msgstr ""
+
+#: 94bfe37178034b48a425cb2ffe69a1cd discord.utils.as_chunks:1 of
+msgid "A helper function that collects an iterator into chunks of a given size."
+msgstr ""
+
+#: 640eef2dc9a746c299d6db0ada4512c9 discord.utils.as_chunks:7 of
+msgid "The last chunk collected may not be as large as ``max_size``."
+msgstr ""
+
+#: 2262035739314e6d8569f13a615f7cf5 discord.utils.as_chunks:10 of
+msgid "The iterator to chunk, can be sync or async."
+msgstr ""
+
+#: 1625a9682d7245ecb50b94b93e94221b discord.utils.as_chunks:13 of
+msgid "The maximum chunk size."
+msgstr ""
+
+#: discord.utils.as_chunks:16 e3de94aceeb44a3aafdddf7c05d7465c of
+msgid "A new iterator which yields chunks of a given size."
+msgstr ""
+
+#: 3648eed64c0e442d8e3e1df5cea6d046 discord.utils.as_chunks:17 of
+msgid ""
+"Union[:class:`collections.abc.Iterator`, "
+":class:`collections.abc.AsyncIterator`]"
+msgstr ""
+
+#: c36eedeb288e42c78bc4a987d84c2d5d discord.utils.filter_params:1 of
+msgid "A helper function to filter out and replace certain keyword parameters"
+msgstr ""
+
+#: d88520e24b1d4208890200ce4d45cbe8 discord.utils.filter_params:4 of
+msgid "The initial parameters to filter."
+msgstr ""
+
+#: 8f56edb34ffa4871b090fe88f83da282 discord.utils.filter_params:7 of
+msgid ""
+"Key to value pairs where the key's contents would be moved to the value, "
+"or if the value is None, remove key's contents (see code example)."
+msgstr ""
+
+#: 38fdef3a74ae45a48840ee240fd21411 discord.utils.filter_params:12 of
+msgid "Example"
+msgstr ""
+
+#: 8da4e468cec14bc380a9febfd1ecb5f6 discord.utils.warn_deprecated:1 of
+msgid ""
+"Warn about a deprecated function, with the ability to specify details "
+"about the deprecation. Emits a DeprecationWarning."
+msgstr ""
+
+#: discord.utils.warn_deprecated:5 e3d8c023dd1c4350ac0fbd6bf2429a05 of
+msgid "The name of the deprecated function."
+msgstr ""
+
+#: 1aba31edeed24fc0bf925b49f4d01770 discord.utils.deprecated:5
+#: discord.utils.warn_deprecated:8 of
+msgid "A recommended alternative to the function."
+msgstr ""
+
+#: b9b3be6c3207442c804878da48136de5 discord.utils.deprecated:8
+#: discord.utils.warn_deprecated:11 of
+msgid ""
+"The version in which the function was deprecated. This should be in the "
+"format ``major.minor(.patch)``, where the patch version is optional."
+msgstr ""
+
+#: a626227cb070430481695b7033d08037 discord.utils.deprecated:12
+#: discord.utils.warn_deprecated:15 of
+msgid ""
+"The version in which the function is planned to be removed. This should "
+"be in the format ``major.minor(.patch)``, where the patch version is "
+"optional."
+msgstr ""
+
+#: discord.utils.deprecated:16 discord.utils.warn_deprecated:19
+#: f683b72936684971a741eb6883ee293c of
+msgid ""
+"A reference that explains the deprecation, typically a URL to a page such"
+" as a changelog entry or a GitHub issue/PR."
+msgstr ""
+
+#: c47d7142272b415fb0e9cc38033dabb9 discord.utils.deprecated:20
+#: discord.utils.warn_deprecated:23 of
+msgid "The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3."
+msgstr ""
+
+#: a7e969196e094149b160e9b2d531f047 discord.utils.warn_deprecated:26 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+msgstr ""
+
+#: discord.utils.deprecated:1 efa18c465579446cbbcd9b510d81a062 of
+msgid ""
+"A decorator implementation of :func:`warn_deprecated`. This will "
+"automatically call :func:`warn_deprecated` when the decorated function is"
+" called."
+msgstr ""
+
+#: c062d6ae6db141b5ba8ffe616b229d28 discord.utils.deprecated:23 of
+msgid ""
+"Whether to use the qualified name of the function in the deprecation "
+"warning. If ``False``, the short name of the function will be used "
+"instead. For example, __qualname__ will display as ``Client.login`` while"
+" __name__ will display as ``login``. Defaults to ``True``."
+msgstr ""
+
+#: discord.utils.deprecated:28 f8e97d5772924b948068e5d0a2b93af1 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\"
+" \\\\\\[\\\\\\[\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.ParamSpec\\`\\\\ "
+"\\\\\\(\\`\\`P\\`\\`\\, bound\\= \\:py\\:obj\\:\\`None\\`\\)\\]\\, "
+"\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
+"\\\\\\(\\`\\`T\\`\\`\\)\\]\\]\\, "
+"\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
+"\\\\\\[\\\\\\[\\:py\\:class\\:\\`\\~typing.ParamSpec\\`\\\\ "
+"\\\\\\(\\`\\`P\\`\\`\\, bound\\= \\:py\\:obj\\:\\`None\\`\\)\\]\\, "
+"\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
+"\\\\\\(\\`\\`T\\`\\`\\)\\]\\]`"
+msgstr ""
+

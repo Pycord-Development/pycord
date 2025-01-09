@@ -18,5 +18,5 @@ msgid "This module allows using one command callback in order to make both a pre
 msgstr "This module allows using one command callback in order to make both a prefix command and a slash command. This page includes the API reference/documentation for the module, but only contains a short example. For a more detailed guide on how to use this, see our `discord.ext.bridge guide <https://guide.pycord.dev/extensions/bridge>`_."
 
 msgid "Example usage:"
-msgstr "Example usage:"
+msgstr "Beispiel Verwendung:"
 

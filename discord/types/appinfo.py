@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from .._typed_dict import NotRequired, TypedDict
+from typing_extensions import NotRequired, TypedDict
+
 from .snowflake import Snowflake
 from .team import Team
 from .user import User
@@ -59,3 +60,8 @@ class PartialAppInfo(BaseAppInfo):
     rpc_origins: NotRequired[list[str]]
     cover_image: NotRequired[str]
     flags: NotRequired[int]
+
+
+class AppInstallParams(TypedDict):
+    scopes: list[str]
+    permissions: str

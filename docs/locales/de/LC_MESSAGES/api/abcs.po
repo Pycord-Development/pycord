@@ -30,7 +30,7 @@ msgid "If you want to create a snowflake on your own, consider using :class:`.Ob
 msgstr "If you want to create a snowflake on your own, consider using :class:`.Object`."
 
 msgid "The model's unique ID."
-msgstr "The model's unique ID."
+msgstr "Die einzigartige ID des Modells."
 
 msgid "type"
 msgstr "type"
