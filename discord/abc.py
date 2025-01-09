@@ -46,7 +46,7 @@ from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
 from .errors import ClientException, InvalidArgument
-from .file import File
+from .file import File, VoiceMessage
 from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
@@ -1566,7 +1566,7 @@ class Messageable:
         flags = MessageFlags(
             suppress_embeds=bool(suppress),
             suppress_notifications=bool(silent),
-        ).value
+        )
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
@@ -1612,27 +1612,7 @@ class Messageable:
         if file is not None:
             if not isinstance(file, File):
                 raise InvalidArgument("file parameter must be File")
-
-            try:
-                data = await state.http.send_files(
-                    channel.id,
-                    files=[file],
-                    allowed_mentions=allowed_mentions,
-                    content=content,
-                    tts=tts,
-                    embed=embed,
-                    embeds=embeds,
-                    nonce=nonce,
-                    enforce_nonce=enforce_nonce,
-                    message_reference=reference,
-                    stickers=stickers,
-                    components=components,
-                    flags=flags,
-                    poll=poll,
-                )
-            finally:
-                file.close()
-
+            files = [file]
         elif files is not None:
             if len(files) > 10:
                 raise InvalidArgument(
@@ -1641,6 +1621,10 @@ class Messageable:
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
+        if files is not None:
+            flags = flags + MessageFlags(
+                is_voice_message=any(isinstance(f, VoiceMessage) for f in files)
+            )
             try:
                 data = await state.http.send_files(
                     channel.id,
@@ -1655,7 +1639,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    flags=flags,
+                    flags=flags.value,
                     poll=poll,
                 )
             finally:
@@ -1674,7 +1658,7 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
-                flags=flags,
+                flags=flags.value,
                 poll=poll,
             )
 

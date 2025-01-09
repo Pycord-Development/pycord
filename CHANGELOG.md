@@ -30,6 +30,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added role tags: `subscription_listing_id`, `guild_connections`, and
+  `available_for_purchase`.
+  ([#2606](https://github.com/Pycord-Development/pycord/pull/2606))
 - Added missing `with_counts` parameter to `fetch_guilds` method.
   ([#2615](https://github.com/Pycord-Development/pycord/pull/2615))
 - Added the following missing permissions: `Permissions.use_soundboard`,
@@ -38,6 +41,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
 - Added `MediaChannel` channel type.
   ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))
+- Added `Message._raw_data` attribute.
+  ([#2670](https://github.com/Pycord-Development/pycord/pull/2670))
+- Added helper methods to determine the authorizing party of an `Interaction`.
+  ([#2659](https://github.com/Pycord-Development/pycord/pull/2659))
+- Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
+  ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 
 ### Fixed
 
@@ -68,6 +77,12 @@ These changes are available on the `master` branch, but have not yet been releas
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
+- Fixed an error when responding non-ephemerally with a `Paginator` to an ephemerally
+  deferred interaction.
+  ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))
+- Fixed attachment metadata being set incorrectly in interaction responses causing the
+  metadata to be ignored by Discord.
+  ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
 
 ### Changed
 
@@ -81,6 +96,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Replaced audioop (deprecated module) implementation of `PCMVolumeTransformer.read`
   method with a pure Python equivalent.
   ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
+- Updated `Guild.filesize_limit` to 10 MB instead of 25 MB following Discord's API
+  changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))
 
 ### Deprecated
 
