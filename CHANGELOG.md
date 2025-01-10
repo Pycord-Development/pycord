@@ -30,14 +30,21 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added role tags: `subscription_listing_id`, `guild_connections`, and
+  `available_for_purchase`.
+  ([#2606](https://github.com/Pycord-Development/pycord/pull/2606))
 - Added missing `with_counts` parameter to `fetch_guilds` method.
   ([#2615](https://github.com/Pycord-Development/pycord/pull/2615))
 - Added the following missing permissions: `Permissions.use_soundboard`,
   `Permissions.use_external_sounds`, and
   `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
+- Added `Message._raw_data` attribute.
+  ([#2670](https://github.com/Pycord-Development/pycord/pull/2670))
 - Added helper methods to determine the authorizing party of an `Interaction`.
   ([#2659](https://github.com/Pycord-Development/pycord/pull/2659))
+- Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
+  ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 
 ### Fixed
 
@@ -71,6 +78,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed an error when responding non-ephemerally with a `Paginator` to an ephemerally
   deferred interaction.
   ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))
+- Fixed attachment metadata being set incorrectly in interaction responses causing the
+  metadata to be ignored by Discord.
+  ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
 
 ### Changed
 
