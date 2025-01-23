@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import contextlib
 import datetime
 from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, overload
 
@@ -1170,10 +1169,9 @@ class ForumChannel(_TextChannel):
         HTTPException
             Editing the channel failed.
         """
-        with contextlib.suppress(KeyError):
-            require_tag = options.pop("require_tag")
+        if "require_tag" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
-            options["flags"].require_tag = require_tag
+            options["flags"].require_tag = options.pop("require_tag")
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
@@ -1432,8 +1430,11 @@ class MediaChannel(ForumChannel):
     """
 
     @property
-    def hides_media_download_options(self) -> bool:
-        """Whether media download options are hidden in this media channel."""
+    def media_download_options_hidden(self) -> bool:
+        """Whether media download options are hidden in this media channel.
+
+        .. versionadded:: 2.7
+        """
         return self.flags.hide_media_download_options
 
     @overload
@@ -1528,19 +1529,14 @@ class MediaChannel(ForumChannel):
         HTTPException
             Editing the channel failed.
         """
-        with contextlib.suppress(KeyError):
-            require_tag = options.pop("require_tag")
-            options["flags"] = options.get("flags") or ChannelFlags._from_value(
-                self.flags.value
-            )
-            options["flags"].require_tag = require_tag
 
-        with contextlib.suppress(KeyError):
-            hide_media_download_options = options.pop("hide_media_download_options")
-            options["flags"] = options.get("flags") or ChannelFlags._from_value(
-                self.flags.value
+        if "require_tag" in options or "hide_media_download_options" in options:
+            flags = ChannelFlags._from_value(self.flags.value)
+            flags.require_tag = options.pop("require_tag", flags.require_tag)
+            flags.hide_media_download_options = options.pop(
+                "hide_media_download_options", flags.hide_media_download_options
             )
-            options["flags"].hide_media_download_options = hide_media_download_options
+            options["flags"] = flags
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:

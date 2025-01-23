@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import contextlib
 import copy
 import time
 from typing import (
@@ -418,8 +417,10 @@ class GuildChannel:
         except KeyError:
             pass
 
-        with contextlib.suppress(KeyError):
+        try:
             options["flags"] = options.pop("flags").value
+        except KeyError:
+            pass
 
         try:
             options["available_tags"] = [
