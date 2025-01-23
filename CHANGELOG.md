@@ -30,6 +30,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2587](https://github.com/Pycord-Development/pycord/pull/2587/))
 - Added optional `filter` parameter to `utils.basic_autocomplete()`.
   ([#2590](https://github.com/Pycord-Development/pycord/pull/2590))
+- Added role tags: `subscription_listing_id`, `guild_connections`, and
+  `available_for_purchase`.
+  ([#2606](https://github.com/Pycord-Development/pycord/pull/2606))
 - Added missing `with_counts` parameter to `fetch_guilds` method.
   ([#2615](https://github.com/Pycord-Development/pycord/pull/2615))
 - Added the following missing permissions: `Permissions.use_soundboard`,
@@ -79,6 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
   ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))
+- Fixed malformed properties in `Interaction.channel`.
+  ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
 - Fixed an error when responding non-ephemerally with a `Paginator` to an ephemerally
   deferred interaction.
   ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))
