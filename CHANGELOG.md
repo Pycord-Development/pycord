@@ -81,8 +81,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed attachment metadata being set incorrectly in interaction responses causing the
   metadata to be ignored by Discord.
   ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
-- Fixed unexpected backoff behaviour in the tasks extension's handling of task failure
-  ([#2700](https://github.com/Pycord-Development/pycord/pull/2700))
+- Fixed unexpected backoff behavior in the handling of task failures
+  ([#2700](https://github.com/Pycord-Development/pycord/pull/2700)).
 
 ### Changed
 
