@@ -488,9 +488,9 @@ linkcheck_ignore = [
 ]
 
 linkcheck_exclude_documents = [
-    r"migrating_to_v1.rst",
-    r"migrating_to_v2.rst",
-    r"old_changelog.rst"
+    r"*migrating_to_v1*",
+    r"*migrating_to_v2*",
+    r"*old_changelog*"
 ]
 
 linkcheck_anchors_ignore_for_url = [r"https://github.com/Delitefully/DiscordLists"]
