@@ -487,6 +487,12 @@ linkcheck_ignore = [
     r"https://packages.debian.org/.*",
 ]
 
+linkcheck_exclude_documents = [
+    r"migrating_to_v1.rst",
+    r"migrating_to_v2.rst",
+    r"old_changelog.rst"
+]
+
 linkcheck_anchors_ignore_for_url = [r"https://github.com/Delitefully/DiscordLists"]
 
 modindex_common_prefix = ["discord."]
