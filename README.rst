@@ -31,7 +31,7 @@ Pycord is a modern, easy to use, feature-rich, and async ready API wrapper for D
 Note
 ----
 
-Pycord supports Python ``3.9`` - ``3.12``
+Pycord supports Python ``3.9`` - ``3.13``
 
 Key Features
 ------------
