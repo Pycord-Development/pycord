@@ -45,6 +45,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2659](https://github.com/Pycord-Development/pycord/pull/2659))
 - Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
+- Added `positional` argument to `commands.Flag`.
+  ([#2443](https://github.com/Pycord-Development/pycord/pull/2443))
 
 ### Fixed
 
