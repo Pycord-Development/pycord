@@ -500,6 +500,20 @@ Stickers
 .. autoclass:: GuildSticker()
     :members:
 
+Soundboard
+----------
+
+.. attributetable:: PartialSoundboardSound
+
+.. autoclass:: PartialSoundboardSound()
+    :members:
+
+.. attributetable:: SoundboardSound
+
+.. autoclass:: SoundboardSound()
+    :members:
+    :inherited-members:
+
 Events
 ------
 
@@ -581,6 +595,11 @@ Events
 .. attributetable:: RawVoiceChannelStatusUpdateEvent
 
 .. autoclass:: RawVoiceChannelStatusUpdateEvent()
+    :members:
+
+.. attributetable:: VoiceChannelEffectSendEvent
+
+.. autoclass:: VoiceChannelEffectSendEvent()
     :members:
 
 
