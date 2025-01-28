@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Crowdin\\n"
 
 msgid "Migrating to v2.0"
-msgstr "Migration vers la v2.0"
+msgstr "Migrer vers la version 2.0"
 
 msgid "v2.0 introduced new Discord features and deprecated some old ones."
-msgstr "v2.0 a introduit de nouvelles fonctionnalités Discord et a marqué certaines anciennes fonctionnalités comme obsolètes."
+msgstr "La version 2.0 a introduit de nouvelles fonctionnalités Discord et a marqué certaines anciennes fonctionnalités comme obsolètes."
 
 msgid "Part of the redesign involves making application commands and components. These changes include a new :class:`Bot` class, :class:`ui.View`, and a new :class:`ApplicationContext` class. If you're interested in creating them, please check out our :resource:`guide <guide>`."
 msgstr "Une partie de la refonte implique la création de commandes d'application et de composants. Ces changements incluent une nouvelle classe :class:`Bot`, :class:`ui.View`, et une nouvelle classe :class:`ApplicationContext`. Si vous êtes intéressé par leur création, veuillez consulter notre :resource:`guide <guide>`."
@@ -27,7 +27,7 @@ msgid "In order to make development easier and also to allow for our dependencie
 msgstr "Afin de faciliter le développement et de permettre à nos dépendances de se mettre à jour pour supporter Python 3.8 ou une version supérieure, la bibliothèque a dû retirer le support des versions de Python inférieures à 3.7, ce qui signifie essentiellement que **le support pour Python 3.7 et les versions antérieures a été abandonné**."
 
 msgid "Major Model Changes"
-msgstr "Changements majeurs du modèle"
+msgstr "Changements majeurs des modèles"
 
 msgid "Below are major changes that have happened in v2.0:"
 msgstr "Ci-dessous sont les changements majeurs qui se sont produits dans la v2.0 :"
