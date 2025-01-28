@@ -87,6 +87,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
 - Fixed unexpected backoff behavior in the handling of task failures
   ([#2700](https://github.com/Pycord-Development/pycord/pull/2700)).
+- Fixed `BridgeCommand` duplicate in default help command.
+  ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))
 
 ### Changed
 
