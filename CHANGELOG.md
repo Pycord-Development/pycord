@@ -39,6 +39,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `Permissions.use_external_sounds`, and
   `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
+- Added `MediaChannel` channel type.
+  ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))
 - Added `Message._raw_data` attribute.
   ([#2670](https://github.com/Pycord-Development/pycord/pull/2670))
 - Added helper methods to determine the authorizing party of an `Interaction`.
@@ -69,6 +71,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
 - Fixed `AttributeError` when sending polls with `PartialWebook`.
   ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
+- Fixed editing `ForumChannel` flags not working.
+  ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))
 - Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.

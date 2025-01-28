@@ -46,7 +46,7 @@ from .context_managers import Typing
 from .enums import ChannelType
 from .errors import ClientException, InvalidArgument
 from .file import File, VoiceMessage
-from .flags import MessageFlags
+from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
 from .mentions import AllowedMentions
@@ -85,7 +85,6 @@ if TYPE_CHECKING:
     from .client import Client
     from .embeds import Embed
     from .enums import InviteTarget
-    from .flags import ChannelFlags
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
@@ -419,8 +418,7 @@ class GuildChannel:
             pass
 
         try:
-            if options.pop("require_tag"):
-                options["flags"] = ChannelFlags.require_tag.flag
+            options["flags"] = options.pop("flags").value
         except KeyError:
             pass
 
