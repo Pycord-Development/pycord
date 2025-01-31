@@ -70,6 +70,7 @@ class Subscription(TypedDict):
     user_id: Snowflake
     sku_ids: list[Snowflake]
     entitlement_ids: list[Snowflake]
+    renewal_sku_ids: list[Snowflake]
     current_period_start: str
     current_period_end: str
     status: SubscriptionStatus
