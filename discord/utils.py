@@ -55,7 +55,6 @@ from typing import (
     Iterator,
     Literal,
     Mapping,
-    NewType,
     Protocol,
     Sequence,
     TypeVar,
@@ -152,7 +151,7 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = NewType("cached_property", property)
+    cached_property = property
 
     P = ParamSpec("P")
 
