@@ -48,7 +48,7 @@ msgid "A privileged intent is one that requires you to go to the developer porta
 msgstr "A privileged intent is one that requires you to go to the developer portal and manually enable it. To enable privileged intents do the following:"
 
 msgid "Make sure you're logged on to the `Discord website <https://discord.com>`_."
-msgstr "Make sure you're logged on to the `Discord website <https://discord.com>`_."
+msgstr "Assurez-vous d'être connecté au `site Discord <https://discord.com>`."
 
 msgid "Navigate to the `application page <https://discord.com/developers/applications>`_."
 msgstr "Navigate to the `application page <https://discord.com/developers/applications>`_."
