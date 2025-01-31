@@ -295,6 +295,8 @@ class Subscription(Hashable):
         The IDs of the SKUs this subscription is for.
     entitlement_ids: List[:class:`int`]
         The IDs of the entitlements this subscription is for.
+    renewal_sku_ids: List[:class:`int`]
+        The IDs of the SKUs that the buyer will be subscribed to at renewal.
     current_period_start: :class:`datetime.datetime`
         The start of the current subscription period.
     current_period_end: :class:`datetime.datetime`
@@ -311,6 +313,7 @@ class Subscription(Hashable):
         "user_id",
         "sku_ids",
         "entitlement_ids",
+        "renewal_sku_ids",
         "current_period_start",
         "current_period_end",
         "status",
@@ -324,6 +327,7 @@ class Subscription(Hashable):
         self.user_id: int = int(data["user_id"])
         self.sku_ids: list[int] = list(map(int, data["sku_ids"]))
         self.entitlement_ids: list[int] = list(map(int, data["entitlement_ids"]))
+        self.renewal_sku_ids: list[int] = list(map(int, data["renewal_sku_ids"]))
         self.current_period_start: datetime = parse_time(data["current_period_start"])
         self.current_period_end: datetime = parse_time(data["current_period_end"])
         self.status: SubscriptionStatus = try_enum(SubscriptionStatus, data["status"])
