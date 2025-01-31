@@ -47,6 +47,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2659](https://github.com/Pycord-Development/pycord/pull/2659))
 - Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
+- Added new `Subscription` object and related methods/events.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Fixed
 
@@ -104,6 +106,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
 - Updated `Guild.filesize_limit` to 10 MB instead of 25 MB following Discord's API
   changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))
+- `Entitlement.ends_at` can now be `None`.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Deprecated
 
@@ -111,6 +115,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 - Deprecated `Emoji` in favor of `GuildEmoji`.
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
+
+### Fixed
+
+- Fixed `AttributeError` when trying to consume a consumable entitlement.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ## [2.6.1] - 2024-09-15
 
