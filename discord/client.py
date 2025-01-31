@@ -310,7 +310,8 @@ class Client:
 
     @property
     def latency(self) -> float:
-        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket
+        is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``.
 
         This could be referred to as the Discord WebSocket protocol latency.
         """
@@ -1462,6 +1463,7 @@ class Client:
         limit: int | None = 100,
         before: SnowflakeTime = None,
         after: SnowflakeTime = None,
+        with_counts: bool = True,
     ) -> GuildIterator:
         """Retrieves an :class:`.AsyncIterator` that enables receiving your guilds.
 
@@ -1489,6 +1491,11 @@ class Client:
             Retrieve guilds after this date or object.
             If a datetime is provided, it is recommended to use a UTC aware datetime.
             If the datetime is naive, it is assumed to be local time.
+        with_counts: :class:`bool`
+            Whether to include member count information in guilds. This fills the
+            :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count`
+            fields.
+            Defaults to ``True``.
 
         Yields
         ------
@@ -1515,7 +1522,9 @@ class Client:
 
         All parameters are optional.
         """
-        return GuildIterator(self, limit=limit, before=before, after=after)
+        return GuildIterator(
+            self, limit=limit, before=before, after=after, with_counts=with_counts
+        )
 
     async def fetch_template(self, code: Template | str) -> Template:
         """|coro|

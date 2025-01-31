@@ -433,6 +433,12 @@ Channels
     :members:
     :inherited-members:
 
+.. attributetable:: MediaChannel
+
+.. autoclass:: MediaChannel()
+    :members:
+    :inherited-members:
+
 .. attributetable:: VoiceChannel
 
 .. autoclass:: VoiceChannel()

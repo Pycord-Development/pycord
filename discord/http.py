@@ -44,6 +44,7 @@ from .errors import (
     LoginFailure,
     NotFound,
 )
+from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .utils import MISSING, warn_deprecated
 
@@ -567,13 +568,17 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -633,13 +638,17 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -1445,6 +1454,7 @@ class HTTPClient:
         limit: int,
         before: Snowflake | None = None,
         after: Snowflake | None = None,
+        with_counts: bool = True,
     ) -> Response[list[guild.Guild]]:
         params: dict[str, Any] = {
             "limit": limit,
@@ -1454,6 +1464,8 @@ class HTTPClient:
             params["before"] = before
         if after:
             params["after"] = after
+        if with_counts:
+            params["with_counts"] = int(with_counts)
 
         return self.request(Route("GET", "/users/@me/guilds"), params=params)
 
@@ -3012,7 +3024,7 @@ class HTTPClient:
         if user_id is not None:
             params["user_id"] = user_id
         if sku_ids is not None:
-            params["sku_ids"] = ",".join(sku_ids)
+            params["sku_ids"] = ",".join(str(sku_id) for sku_id in sku_ids)
         if before is not None:
             params["before"] = before
         if after is not None:
