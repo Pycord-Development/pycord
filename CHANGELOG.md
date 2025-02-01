@@ -91,6 +91,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2700](https://github.com/Pycord-Development/pycord/pull/2700)).
 - Fixed `BridgeCommand` duplicate in default help command.
   ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))
+- Fixed Async I/O errors that could be raised when using `Client.run`.
+  ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
 
 ### Changed
 
