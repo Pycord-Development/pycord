@@ -91,6 +91,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2700](https://github.com/Pycord-Development/pycord/pull/2700)).
 - Fixed `BridgeCommand` duplicate in default help command.
   ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))
+- Fixed `AttributeError` when trying to consume a consumable entitlement.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Changed
 
@@ -115,11 +117,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 - Deprecated `Emoji` in favor of `GuildEmoji`.
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
-
-### Fixed
-
-- Fixed `AttributeError` when trying to consume a consumable entitlement.
-  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
+- Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
+  ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
 
 ## [2.6.1] - 2024-09-15
 
