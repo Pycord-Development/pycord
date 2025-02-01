@@ -1356,6 +1356,8 @@ class MinimalHelpCommand(HelpCommand):
         await self.send_pages()
 
     async def send_cog_help(self, cog):
+        from discord.ext.bridge import BridgeExtCommand
+
         bot = self.context.bot
         if bot.description:
             self.paginator.add_line(bot.description, empty=True)
@@ -1370,7 +1372,7 @@ class MinimalHelpCommand(HelpCommand):
         filtered = await self.filter_commands(
             cog.get_commands(),
             sort=self.sort_commands,
-            exclude=(bridge.BridgeExtCommand,),
+            exclude=(BridgeExtCommand,),
         )
         if filtered:
             self.paginator.add_line(f"**{cog.qualified_name} {self.commands_heading}**")
