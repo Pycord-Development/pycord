@@ -727,10 +727,10 @@ class Client:
 
         Closes the connection to Discord.
         """
-        if self.is_closed():
-            return
-
         async with self._closing_task:
+            if self.is_closed():
+                return
+
             await self.http.close()
 
             for voice in self.voice_clients:
@@ -753,7 +753,7 @@ class Client:
         and :meth:`is_ready` both return ``False`` along with the bot's internal
         cache cleared.
         """
-        self._closed = False
+        self._closed.clear()
         self._ready.clear()
         self._connection.clear()
         self.http.recreate()
