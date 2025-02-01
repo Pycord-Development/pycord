@@ -32,7 +32,6 @@ import re
 from typing import TYPE_CHECKING, Any
 
 import discord.utils
-from discord.ext import bridge
 
 from .core import Command, Group
 from .errors import CommandError
@@ -1111,13 +1110,15 @@ class DefaultHelpCommand(HelpCommand):
         await self.send_pages()
 
     async def send_cog_help(self, cog):
+        from discord.ext.bridge import BridgeExtCommand
+
         if cog.description:
             self.paginator.add_line(cog.description, empty=True)
 
         filtered = await self.filter_commands(
             cog.get_commands(),
             sort=self.sort_commands,
-            exclude=(bridge.BridgeExtCommand,),
+            exclude=(BridgeExtCommand,),
         )
         self.add_indented_commands(filtered, heading=self.commands_heading)
 
