@@ -39,7 +39,9 @@ if TYPE_CHECKING:
     from .partial_emoji import PartialEmoji
     from .state import ConnectionState
     from .threads import Thread
-    from .types.raw_models import AuditLogEntryEvent
+    from .types.raw_models import (
+        AuditLogEntryEvent,
+    )
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,

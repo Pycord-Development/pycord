@@ -1695,7 +1695,7 @@ def command(
         func: (
             Callable[Concatenate[ContextT, P], Coro[Any]]
             | Callable[Concatenate[CogT, ContextT, P], Coro[Any]]
-        )
+        ),
     ) -> CommandT:
         if isinstance(func, Command):
             raise TypeError("Callback is already a command.")
