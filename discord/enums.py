@@ -1078,7 +1078,6 @@ class SubscriptionStatus(Enum):
     inactive = 2
 
 
-
 T = TypeVar("T")
 
 
