@@ -1625,27 +1625,7 @@ class Messageable:
         if file is not None:
             if not isinstance(file, File):
                 raise InvalidArgument("file parameter must be File")
-
-            try:
-                data = await state.http.send_files(
-                    channel.id,
-                    files=[file],
-                    allowed_mentions=allowed_mentions,
-                    content=content,
-                    tts=tts,
-                    embed=embed,
-                    embeds=embeds,
-                    nonce=nonce,
-                    enforce_nonce=enforce_nonce,
-                    message_reference=_reference,
-                    stickers=stickers,
-                    components=components,
-                    flags=flags,
-                    poll=poll,
-                )
-            finally:
-                file.close()
-
+            files = [file]
         elif files is not None:
             if len(files) > 10:
                 raise InvalidArgument(
