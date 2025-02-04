@@ -2088,8 +2088,8 @@ class Message(Hashable):
 
         Parameters
         ----------
-        channel: Union[:class:`Emoji`, :class:`Reaction`, :class:`PartialEmoji`, :class:`str`]
-            The emoji to react with.
+        channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+            The channel to forward this to.
 
         Returns
         -------
