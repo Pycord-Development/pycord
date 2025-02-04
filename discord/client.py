@@ -310,7 +310,8 @@ class Client:
 
     @property
     def latency(self) -> float:
-        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds.
+        """Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket
+        is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``.
 
         This could be referred to as the Discord WebSocket protocol latency.
         """
@@ -2086,7 +2087,7 @@ class Client:
             The bot's SKUs.
         """
         data = await self._connection.http.list_skus(self.application_id)
-        return [SKU(data=s) for s in data]
+        return [SKU(state=self._connection, data=s) for s in data]
 
     def entitlements(
         self,

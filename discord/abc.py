@@ -45,8 +45,8 @@ from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
 from .errors import ClientException, InvalidArgument
-from .file import File
-from .flags import MessageFlags
+from .file import File, VoiceMessage
+from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
 from .mentions import AllowedMentions
@@ -85,7 +85,6 @@ if TYPE_CHECKING:
     from .client import Client
     from .embeds import Embed
     from .enums import InviteTarget
-    from .flags import ChannelFlags
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
@@ -419,8 +418,7 @@ class GuildChannel:
             pass
 
         try:
-            if options.pop("require_tag"):
-                options["flags"] = ChannelFlags.require_tag.flag
+            options["flags"] = options.pop("flags").value
         except KeyError:
             pass
 
@@ -1569,7 +1567,7 @@ class Messageable:
         flags = MessageFlags(
             suppress_embeds=bool(suppress),
             suppress_notifications=bool(silent),
-        ).value
+        )
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
@@ -1634,6 +1632,10 @@ class Messageable:
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
+        if files is not None:
+            flags = flags + MessageFlags(
+                is_voice_message=any(isinstance(f, VoiceMessage) for f in files)
+            )
             try:
                 data = await state.http.send_files(
                     channel.id,
@@ -1648,7 +1650,7 @@ class Messageable:
                     message_reference=_reference,
                     stickers=stickers,
                     components=components,
-                    flags=flags,
+                    flags=flags.value,
                     poll=poll,
                 )
             finally:
@@ -1667,7 +1669,7 @@ class Messageable:
                 message_reference=_reference,
                 stickers=stickers,
                 components=components,
-                flags=flags,
+                flags=flags.value,
                 poll=poll,
             )
 

@@ -833,6 +833,7 @@ class SlashCommandOptionType(Enum):
             "ThreadOption",
             "Thread",
             "ForumChannel",
+            "MediaChannel",
             "DMChannel",
         ]:
             return cls.channel
@@ -1067,6 +1068,15 @@ class MessageReferenceType(Enum):
 
     default = 0
     forward = 1
+
+
+class SubscriptionStatus(Enum):
+    """The status of a subscription."""
+
+    active = 0
+    ending = 1
+    inactive = 2
+
 
 
 T = TypeVar("T")

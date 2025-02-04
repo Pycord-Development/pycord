@@ -920,6 +920,7 @@ class Message(Hashable):
 
     __slots__ = (
         "_state",
+        "_raw_data",
         "_edited_timestamp",
         "_cs_channel_mentions",
         "_cs_raw_mentions",
@@ -974,6 +975,7 @@ class Message(Hashable):
         data: MessagePayload,
     ):
         self._state: ConnectionState = state
+        self._raw_data: MessagePayload = data
         self.id: int = int(data["id"])
         self.webhook_id: int | None = utils._get_as_snowflake(data, "webhook_id")
         self.reactions: list[Reaction] = [
