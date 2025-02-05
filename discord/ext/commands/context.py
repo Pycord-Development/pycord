@@ -405,5 +405,7 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         return await self.message.reply(content, **kwargs)
 
     @discord.utils.copy_doc(Message.forward_to)
-    async def forward_to(self, channel: discord.abc.Messageable, **kwargs: Any) -> Message:
+    async def forward_to(
+        self, channel: discord.abc.Messageable, **kwargs: Any
+    ) -> Message:
         return await self.message.forward_to(channel, **kwargs)
