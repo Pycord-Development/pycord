@@ -1588,12 +1588,10 @@ class Messageable:
         _reference = None
         if reference is not None:
             try:
+                _reference = reference.to_message_reference_dict()
                 from .message import MessageReference
 
-                if isinstance(reference, MessageReference):
-                    _reference = reference
-                else:
-                    _reference = reference.to_message_reference_dict()
+                if not isinstance(reference, MessageReference):
                     utils.warn_deprecated(
                         f"Passing {type(reference).__name__} to reference",
                         "MessageReference",
