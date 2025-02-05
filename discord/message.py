@@ -2255,6 +2255,7 @@ class PartialMessage(Hashable):
     clear_reaction = Message.clear_reaction
     clear_reactions = Message.clear_reactions
     reply = Message.reply
+    forward_to = Message.forward_to
     to_reference = Message.to_reference
     to_message_reference_dict = Message.to_message_reference_dict
 
