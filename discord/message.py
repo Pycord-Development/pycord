@@ -705,9 +705,15 @@ class ForwardedMessage:
         self._reference = reference
         self.id: int = reference.message_id
         self.channel = state.get_channel(reference.channel_id) or (
-            reference.channel_id and PartialMessageable(state=state, id=reference.channel_id, )
+            reference.channel_id
+            and PartialMessageable(
+                state=state,
+                id=reference.channel_id,
+            )
         )
-        self.original_message = state.get_message(self.id) or (self.id and channel.get_partial_message(self.id))
+        self.original_message = state.get_message(self.id) or (
+            self.id and channel.get_partial_message(self.id)
+        )
         self.guild = state._get_guild(reference.guild_id) or (
             reference.guild_id and Object(reference.guild_id)
         )
