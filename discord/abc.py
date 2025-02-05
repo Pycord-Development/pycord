@@ -1589,6 +1589,7 @@ class Messageable:
         if reference is not None:
             try:
                 from .message import MessageReference
+
                 if isinstance(reference, MessageReference):
                     _reference = reference
                 else:
