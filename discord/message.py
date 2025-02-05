@@ -668,8 +668,14 @@ class ForwardedMessage:
     Attributes
     ----------
     type: :class:`MessageType`
-        The type of message. In most cases this should not be checked, but it is helpful
+        The type of the original message. In most cases this should not be checked, but it is helpful
         in cases where it might be a system message for :attr:`system_content`.
+    original_message: Optional[Union[:class:`Message`, :class:`PartialMessage`]]
+        The original message that was forwarded, if available.
+    channel: Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`GroupChannel`, :class:`PartialMessageable`]
+        The :class:`TextChannel` or :class:`Thread` that the original message was sent from.
+    guild: Optional[Union[:class:`Guild`, :class:`Object`]]
+        The guild that the original message belonged to, if applicable.
     content: :class:`str`
         The contents of the original message.
     embeds: List[:class:`Embed`]
@@ -677,11 +683,11 @@ class ForwardedMessage:
     attachments: List[:class:`Attachment`]
         A list of attachments given to the original message.
     flags: :class:`MessageFlags`
-        Extra features of the message.
+        Extra features of the original message.
     mentions: List[Union[:class:`abc.User`, :class:`Object`]]
-        A list of :class:`Member` that were mentioned.
+        A list of :class:`Member` that were originally mentioned.
     role_mentions: List[Union[:class:`Role`, :class:`Object`]]
-        A list of :class:`Role` that were mentioned.
+        A list of :class:`Role` that were originally mentioned.
     stickers: List[:class:`StickerItem`]
         A list of sticker items given to the original message.
     components: List[:class:`Component`]
@@ -699,8 +705,9 @@ class ForwardedMessage:
         self._reference = reference
         self.id: int = reference.message_id
         self.channel = state.get_channel(reference.channel_id) or (
-            reference.channel_id and Object(reference.channel_id)
+            reference.channel_id and PartialMessageable(state=state, id=reference.channel_id, )
         )
+        self.original_message = state.get_message(self.id) or (self.id and channel.get_partial_message(self.id))
         self.guild = state._get_guild(reference.guild_id) or (
             reference.guild_id and Object(reference.guild_id)
         )
@@ -758,6 +765,9 @@ class MessageSnapshot:
         self.message: ForwardedMessage | None
         if fm := data.get("message"):
             self.message = ForwardedMessage(state=state, reference=reference, data=fm)
+
+    def __repr__(self) -> str:
+        return f"<MessageSnapshot message={self.message!r}>"
 
 
 def flatten_handlers(cls):
@@ -2076,7 +2086,7 @@ class Message(Hashable):
 
         return await self.channel.send(content, reference=self.to_reference(), **kwargs)
 
-    async def forward(
+    async def forward_to(
         self, channel: MessageableChannel | PartialMessageableChannel, **kwargs
     ) -> Message:
         """|coro|
@@ -2108,7 +2118,7 @@ class Message(Hashable):
         """
 
         return await channel.send(
-            reference=self.to_reference(type=MessageReferenceType.forward)
+            reference=self.to_reference(type=MessageReferenceType.forward), **kwargs
         )
 
     async def end_poll(self) -> Message:
