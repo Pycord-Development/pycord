@@ -711,7 +711,7 @@ class ForwardedMessage:
                 id=reference.channel_id,
             )
         )
-        self.original_message = state.get_message(self.id) or (
+        self.original_message = state._get_message(self.id) or (
             self.id and channel.get_partial_message(self.id)
         )
         self.guild = state._get_guild(reference.guild_id) or (
