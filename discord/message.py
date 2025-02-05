@@ -1433,11 +1433,14 @@ class Message(Hashable):
         regardless of the :attr:`Message.type`.
 
         In the case of :attr:`MessageType.default` and :attr:`MessageType.reply`\,
-        this just returns the regular :attr:`Message.content`. Otherwise, this
+        this just returns the regular :attr:`Message.content`, and forwarded messages
+        will display the original message's content from :attr:`Message.snapshots`. Otherwise, this
         returns an English message denoting the contents of the system message.
         """
 
         if self.type is MessageType.default:
+            if self.snapshots:
+                return self.snapshots[0].message and self.snapshots[0].message.content
             return self.content
 
         if self.type is MessageType.recipient_add:
