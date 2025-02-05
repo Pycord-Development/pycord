@@ -711,11 +711,11 @@ class ForwardedMessage:
                 id=reference.channel_id,
             )
         )
-        self.original_message = state._get_message(self.id) or (
-            self.id and channel.get_partial_message(self.id)
-        )
         self.guild = state._get_guild(reference.guild_id) or (
             reference.guild_id and Object(reference.guild_id)
+        )
+        self.original_message = state._get_message(self.id) or (
+            self.id and self.channel.get_partial_message(self.id)
         )
         self.content: str = data["content"]
         self.embeds: list[Embed] = [Embed.from_dict(a) for a in data["embeds"]]
