@@ -33,7 +33,13 @@ from .errors import InvalidArgument
 from .flags import RoleFlags
 from .mixins import Hashable
 from .permissions import Permissions
-from .utils import MISSING, _bytes_to_base64_data, _get_as_snowflake, snowflake_time
+from .utils import (
+    MISSING,
+    _bytes_to_base64_data,
+    _get_as_snowflake,
+    cached_slot_property,
+    snowflake_time,
+)
 
 __all__ = (
     "RoleTags",
@@ -79,16 +85,18 @@ class RoleTags:
     """
 
     __slots__ = (
-        "bot_id",
         "integration_id",
         "subscription_listing_id",
         "_premium_subscriber",
         "_available_for_purchase",
         "_guild_connections",
+        "_bot_id",
+        "_bot_role",
+        "_data",
     )
 
     def __init__(self, data: RoleTagPayload):
-        self.bot_id: int | None = _get_as_snowflake(data, "bot_id")
+        self._data: RoleTagPayload = data
         self.integration_id: int | None = _get_as_snowflake(data, "integration_id")
         self.subscription_listing_id: int | None = _get_as_snowflake(
             data, "subscription_listing_id"
@@ -104,7 +112,13 @@ class RoleTags:
         )
         self._guild_connections: Any | None = data.get("guild_connections", MISSING)
 
-    def is_bot_managed(self) -> bool:
+    @cached_slot_property("_bot_id")
+    def bot_id(self) -> int | None:
+        """The bot's user ID that manages this role."""
+        return int(self._data.get("bot_id", 0) or 0) or None
+
+    @cached_slot_property("_bot_role")
+    def is_bot_role(self) -> bool:
         """Whether the role is associated with a bot."""
         return self.bot_id is not None
 
