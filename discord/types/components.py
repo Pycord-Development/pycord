@@ -86,7 +86,7 @@ class SelectMenu(TypedDict):
     custom_id: str
 
 
-class TextDisplay(TypedDict):
+class TextDisplayComponent(TypedDict):
     type: Literal[10]
     content: str
 
