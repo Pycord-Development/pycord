@@ -1070,6 +1070,13 @@ class SubscriptionStatus(Enum):
     inactive = 2
 
 
+class SeparatorSpacingSize(Enum):
+    """A separator component's spacing size."""
+
+    small = 1
+    large = 2
+
+
 T = TypeVar("T")
 
 

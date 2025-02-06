@@ -39,12 +39,17 @@ InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
 
 
-class ActionRow(TypedDict):
+class BaseComponent(TypedDict):
+    type: ComponentType
+    id: NotRequired[int]
+
+
+class ActionRow(BaseComponent):
     type: Literal[1]
     components: list[Component]
 
 
-class ButtonComponent(TypedDict):
+class ButtonComponent(BaseComponent):
     custom_id: NotRequired[str]
     url: NotRequired[str]
     disabled: NotRequired[bool]
@@ -55,7 +60,7 @@ class ButtonComponent(TypedDict):
     sku_id: Snowflake
 
 
-class InputText(TypedDict):
+class InputText(BaseComponent):
     min_length: NotRequired[int]
     max_length: NotRequired[int]
     required: NotRequired[bool]
@@ -75,7 +80,7 @@ class SelectOption(TypedDict):
     default: bool
 
 
-class SelectMenu(TypedDict):
+class SelectMenu(BaseComponent):
     placeholder: NotRequired[str]
     min_values: NotRequired[int]
     max_values: NotRequired[int]
@@ -86,13 +91,25 @@ class SelectMenu(TypedDict):
     custom_id: str
 
 
-class TextDisplayComponent(TypedDict):
+class TextDisplayComponent(BaseComponent):
     type: Literal[10]
     content: str
 
 
-class UnfurledMediaItem:
+class SectionComponent(BaseComponent):
+    type: Literal[9]
+    components: list[TextDisplayComponent, ButtonComponent]
+
+
+class UnfurledMediaItem(TypedDict):
     url: str
+
+
+class ThumbnailComponent(BaseComponent):
+    type: Literal[11]
+    media: UnfurledMediaItem
+    description: NotRequired[str]
+    spoiler: NotRequired[bool]
 
 
 class MediaGalleryItem(TypedDict):
@@ -101,33 +118,31 @@ class MediaGalleryItem(TypedDict):
     spoiler: NotRequired[bool]
 
 
-class SectionComponent(TypedDict):
-    type: Literal[9]
-    components: list[TextDisplayComponent, ButtonComponent]
-
-
-class ThumbnailComponent(TypedDict):
-    type: Literal[11]
-    media: UnfurledMediaItem
-    description: NotRequired[str]
-    spoiler: NotRequired[bool]
-
-
-class MediaGalleryComponent(TypedDict):
+class MediaGalleryComponent(BaseComponent):
     type: Literal[12]
     items: list[MediaGalleryItem]
 
 
-class FileComponent(TypedDict):
+class FileComponent(BaseComponent):
     type: Literal[13]
     file: UnfurledMediaItem
     spoiler: NotRequired[bool]
 
 
-class SeparatorComponent(TypedDict):
+class SeparatorComponent(BaseComponent):
     type: Literal[14]
     divider: NotRequired[bool]
     spacing: NotRequired[SeparatorSpacingSize]
+
+
+class ContainerComponent(BaseComponent):
+    type: Literal[17]
+    accent_color: NotRequired[int]
+    spoiler: NotRequired[bool]
+    components: list[ContainerComponents]
+
+
+Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
 
 
 ContainerComponents = Union[
@@ -138,13 +153,3 @@ ContainerComponents = Union[
     SeparatorComponent,
     SectionComponent,
 ]
-
-
-class ContainerComponent(TypedDict):
-    type: Literal[17]
-    accent_color: NotRequired[int]
-    spoiler: NotRequired[bool]
-    components: list[ContainerComponents]
-
-
-Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
