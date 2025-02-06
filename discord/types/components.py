@@ -130,7 +130,14 @@ class SeparatorComponent(TypedDict):
     spacing: NotRequired[SeparatorSpacingSize]
 
 
-ContainerComponents = Union[ActionRow, TextDisplayComponent, MediaGalleryComponent, FileComponent, SeparatorComponent, SectionComponent]
+ContainerComponents = Union[
+    ActionRow,
+    TextDisplayComponent,
+    MediaGalleryComponent,
+    FileComponent,
+    SeparatorComponent,
+    SectionComponent,
+]
 
 
 class ContainerComponent(TypedDict):
