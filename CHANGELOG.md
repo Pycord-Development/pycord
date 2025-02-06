@@ -93,7 +93,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))
 - Fixed `AttributeError` when trying to consume a consumable entitlement.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
-- Fixed `Subscription.renewal_sku_ids` not accepting `None` from discord payload.
+- Fixed `Subscription.renewal_sku_ids` not accepting `None` from the received payload.
   ([#2709](https://github.com/Pycord-Development/pycord/pull/2709))
 
 ### Changed
