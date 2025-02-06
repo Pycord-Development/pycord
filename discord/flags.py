@@ -413,7 +413,7 @@ class MessageFlags(BaseFlags):
 
     @flag_value
     def is_components_v2(self):
-        """:class:`bool`: Returns ``True`` if this message has v2 components. This flag disables sending `content` and `embeds`.
+        """:class:`bool`: Returns ``True`` if this message has v2 components. This flag disables sending `content`, `embed`, and `embeds`.
 
         .. versionadded:: 2.7
         """
