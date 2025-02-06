@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 from ..components import Section as SectionComponent
@@ -26,11 +25,7 @@ class Section:
         This section's accessory. This is displayed in the top right of the section. Currently only supports :class:`~discord.ui.TextDisplay` and :class:`~discord.ui.Button`.
     """
 
-    def __init__(
-        self,
-        *items: Item,
-        accessory: Item = None
-    ):
+    def __init__(self, *items: Item, accessory: Item = None):
         super().__init__()
 
         self.items = items
@@ -85,14 +80,16 @@ class Section:
 
         if len(self.items) >= 3:
             raise ValueError("maximum number of children exceeded")
-        
+
         text = ...
 
         self.items.append(text)
-    
-    def add_button(self, label: str, ) -> None:
+
+    def add_button(
+        self,
+        label: str,
+    ) -> None:
         """finish"""
-        pass
 
     @property
     def type(self) -> ComponentType:
