@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, Final, TypeVar
 
 from .asset import Asset
 from .colour import Colour
@@ -36,8 +36,6 @@ from .permissions import Permissions
 from .utils import (
     MISSING,
     _bytes_to_base64_data,
-    _get_as_snowflake,
-    cached_slot_property,
     snowflake_time,
 )
 
@@ -57,20 +55,72 @@ if TYPE_CHECKING:
     from .types.role import RoleTags as RoleTagPayload
 
 
+def _parse_tag_bool(data: RoleTagPayload, key: str) -> bool | None:
+    """Parse a boolean from a role tag payload.
+
+    None is returned if the key is not present.
+    True is returned if the key is present and the value is None.
+    False is returned if the key is present and the value is not None.
+
+    Parameters
+    ----------
+    data: :class:`RoleTagPayload`
+        The role tag payload to parse from.
+    key: :class:`str`
+        The key to parse from.
+
+    Returns
+    -------
+    :class:`bool` | :class:`None`
+        The parsed boolean value or None if the key is not present.
+    """
+    try:
+        # if it is False, False != None -> False
+        # if it is None, None == None -> True
+        return data[key] is None
+    except KeyError:
+        # if the key is not present, None
+        return None
+
+
+def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
+    """Parse an integer from a role tag payload.
+
+    An integer is returned if the key is present and the value is an integer string.
+    None is returned if the key is not present or the value is not an integer string.
+
+    Parameters
+    ----------
+    data: :class:`RoleTagPayload`
+        The role tag payload to parse from.
+    key: :class:`str`
+        The key to parse from.
+
+    Returns
+    -------
+    :class:`int` | :class:`None`
+        The parsed integer value or None if the key is not present or the value is not an integer string.
+    """
+    try:
+        return int(data[key])  # pyright: ignore[reportUnknownArgumentType]
+    except (KeyError, ValueError):
+        # key error means it's not there
+        # value error means it's not an number string (None or "")
+        return None
+
+
 class RoleTags:
     """Represents tags on a role.
 
     A role tag is a piece of extra information attached to a managed role
     that gives it context for the reason the role is managed.
 
-    While this can be accessed, a useful interface is also provided in the
-    :class:`Role` and :class:`Guild` classes as well.
-
     Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
     We aim to improve the documentation / introduce new attributes in future.
     For the meantime read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work.
 
     .. versionadded:: 1.6
+    .. versionchanged:: 2.7
 
     Attributes
     ----------
@@ -90,73 +140,123 @@ class RoleTags:
         "_premium_subscriber",
         "_available_for_purchase",
         "_guild_connections",
-        "_bot_id",
-        "_bot_role",
+        "bot_id",
         "_data",
     )
 
     def __init__(self, data: RoleTagPayload):
         self._data: RoleTagPayload = data
-        self.integration_id: int | None = _get_as_snowflake(data, "integration_id")
-        self.subscription_listing_id: int | None = _get_as_snowflake(
+        self.integration_id: int | None = _parse_tag_int(data, "integration_id")
+        self.subscription_listing_id: int | None = _parse_tag_int(
             data, "subscription_listing_id"
         )
-        # NOTE: The API returns "null" for each of the following tags if they are True, and omits them if False.
-        # However, "null" corresponds to None.
-        # This is different from other fields where "null" means "not there".
-        # So in this case, a value of None is the same as True.
-        # Which means we would need a different sentinel.
-        self._premium_subscriber: Any | None = data.get("premium_subscriber", MISSING)
-        self._available_for_purchase: Any | None = data.get(
-            "available_for_purchase", MISSING
+        self.bot_id: int | None = _parse_tag_int(data, "bot_id")
+        self._guild_connections: bool | None = _parse_tag_bool(
+            data, "guild_connections"
         )
-        self._guild_connections: Any | None = data.get("guild_connections", MISSING)
+        self._premium_subscriber: bool | None = _parse_tag_bool(
+            data, "premium_subscriber"
+        )
+        self._available_for_purchase: bool | None = _parse_tag_bool(
+            data, "available_for_purchase"
+        )
 
-    @cached_slot_property("_bot_id")
-    def bot_id(self) -> int | None:
-        """The bot's user ID that manages this role."""
-        return int(self._data.get("bot_id", 0) or 0) or None
-
-    @cached_slot_property("_bot_role")
+    @property
     def is_bot_role(self) -> bool:
-        """Whether the role is associated with a bot."""
+        """Whether the role is associated with a bot.
+        .. versionadded:: 2.7
+        """
         return self.bot_id is not None
 
-    def is_premium_subscriber(self) -> bool:
-        """Whether the role is the premium subscriber, AKA "boost", role for the guild."""
-        return self._premium_subscriber is None
+    @property
+    def is_booster_role(self) -> bool:
+        """Whether the role is the "boost", role for the guild.
+        .. versionadded:: 2.7
+        """
+        return self._guild_connections is False and self._premium_subscriber is True
 
+    @property
+    def is_guild_product_role(self) -> bool:
+        """Whether the role is a guild product role.
+
+        .. versionadded:: 2.7
+        """
+        return self._guild_connections is False and self._premium_subscriber is False
+
+    @property
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
         """
         return self.integration_id is not None
 
-    def is_available_for_purchase(self) -> bool:
-        """Whether the role is available for purchase.
-
-        Returns ``True`` if the role is available for purchase, and
-        ``False`` if it is not available for purchase or if the role
-        is not linked to a guild subscription.
+    @property
+    def is_base_subscription_role(self) -> bool:
+        """Whether the role is a base subscription role.
 
         .. versionadded:: 2.7
         """
-        return self._available_for_purchase is None
+        return (
+            self._guild_connections is False
+            and self._premium_subscriber is False
+            and self.integration_id is not None
+        )
 
+    @property
+    def is_subscription_role(self) -> bool:
+        """Whether the role is a subscription role.
+
+        .. versionadded:: 2.7
+        """
+        return (
+            self._guild_connections is False
+            and self._premium_subscriber is None
+            and self.integration_id is not None
+            and self.subscription_listing_id is not None
+            and self._available_for_purchase is True
+        )
+
+    @property
+    def is_draft_subscription_role(self) -> bool:
+        """Whether the role is a draft subscription role.
+
+        .. versionadded:: 2.7
+        """
+        return (
+            self._guild_connections is False
+            and self._premium_subscriber is None
+            and self.subscription_listing_id is not None
+            and self.integration_id is not None
+            and self._available_for_purchase is False
+        )
+
+    @property
     def is_guild_connections_role(self) -> bool:
         """Whether the role is a guild connections role.
 
         .. versionadded:: 2.7
         """
-        return self._guild_connections is None
+        return self._guild_connections is True
+
+    QUALIFIERS: Final = (
+        "is_bot_role",
+        "is_booster_role",
+        "is_guild_product_role",
+        "is_integration",
+        "is_base_subscription_role",
+        "is_subscription_role",
+        "is_draft_subscription_role",
+        "is_guild_connections_role",
+    )
 
     def __repr__(self) -> str:
         return (
             f"<RoleTags bot_id={self.bot_id} integration_id={self.integration_id} "
-            f"subscription_listing_id={self.subscription_listing_id} "
-            f"premium_subscriber={self.is_premium_subscriber()} "
-            f"available_for_purchase={self.is_available_for_purchase()} "
-            f"guild_connections={self.is_guild_connections_role()}>"
+            + f"subscription_listing_id={self.subscription_listing_id} "
+            + " ".join(
+                q.removeprefix("is_") for q in self.QUALIFIERS if getattr(self, q)
+            )
+            + ">"
         )
 
 
@@ -230,7 +330,8 @@ class Role(Hashable):
     mentionable: :class:`bool`
         Indicates if the role can be mentioned by users.
     tags: Optional[:class:`RoleTags`]
-        The role tags associated with this role.
+        The role tags associated with this role. Use the tags to determine additional information about the role,
+        like if it's a bot role, a booster role, etc...
     unicode_emoji: Optional[:class:`str`]
         The role's unicode emoji.
         Only available to guilds that contain ``ROLE_ICONS`` in :attr:`Guild.features`.
@@ -330,28 +431,6 @@ class Role(Hashable):
         """Checks if the role is the default role."""
         return self.guild.id == self.id
 
-    def is_bot_managed(self) -> bool:
-        """Whether the role is associated with a bot.
-
-        .. versionadded:: 1.6
-        """
-        return self.tags is not None and self.tags.is_bot_managed()
-
-    def is_premium_subscriber(self) -> bool:
-        """Whether the role is the premium subscriber, AKA "boost", role for the guild.
-
-        .. versionadded:: 1.6
-        """
-        return self.tags is not None and self.tags.is_premium_subscriber()
-
-    def is_integration(self) -> bool:
-        """Whether the guild manages the role through some form of
-        integrations such as Twitch or through guild subscriptions.
-
-        .. versionadded:: 1.6
-        """
-        return self.tags is not None and self.tags.is_integration()
-
     def is_assignable(self) -> bool:
         """Whether the role is able to be assigned or removed by the bot.
 
@@ -363,24 +442,6 @@ class Role(Hashable):
             and not self.managed
             and (me.top_role > self or me.id == self.guild.owner_id)
         )
-
-    def is_available_for_purchase(self) -> bool:
-        """Whether the role is available for purchase.
-
-        Returns ``True`` if the role is available for purchase, and
-        ``False`` if it is not available for purchase or if the
-        role is not linked to a guild subscription.
-
-        .. versionadded:: 2.7
-        """
-        return self.tags is not None and self.tags.is_available_for_purchase()
-
-    def is_guild_connections_role(self) -> bool:
-        """Whether the role is a guild connections role.
-
-        .. versionadded:: 2.7
-        """
-        return self.tags is not None and self.tags.is_guild_connections_role()
 
     @property
     def permissions(self) -> Permissions:
