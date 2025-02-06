@@ -27,28 +27,35 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
-from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, SeparatorSpacingSize, try_enum
+from .enums import (
+    ButtonStyle,
+    ChannelType,
+    ComponentType,
+    InputTextStyle,
+    SeparatorSpacingSize,
+    try_enum,
+)
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
+    from .types.components import BaseComponent as BaseComponentPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
-    from .types.components import BaseComponent as BaseComponentPayload
+    from .types.components import ContainerComponent as ContainerComponentPayload
+    from .types.components import FileComponent as FileComponentPayload
     from .types.components import InputText as InputTextComponentPayload
+    from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
+    from .types.components import MediaGalleryItem as MediaGalleryItemPayload
+    from .types.components import SectionComponent as SectionComponentPayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
-    from .types.components import TextDisplayComponent as TextDisplayComponentPayload
-    from .types.components import SectionComponent as SectionComponentPayload
-    from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
-    from .types.components import ThumbnailComponent as ThumbnailComponentPayload
-    from .types.components import MediaGalleryItem as MediaGalleryItemPayload
-    from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
-    from .types.components import FileComponent as FileComponentPayload
     from .types.components import SeparatorComponent as SeparatorComponentPayload
-    from .types.components import ContainerComponent as ContainerComponentPayload
+    from .types.components import TextDisplayComponent as TextDisplayComponentPayload
+    from .types.components import ThumbnailComponent as ThumbnailComponentPayload
+    from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
 
 __all__ = (
     "Component",
@@ -62,6 +69,7 @@ __all__ = (
 )
 
 C = TypeVar("C", bound="Component")
+
 
 class Component:
     """Represents a Discord Bot UI Kit Component.
@@ -532,7 +540,9 @@ class Section(Component):
     def __init__(self, data: SectionComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
-        self.components: list[Component] = [_component_factory(d) for d in data.get("components", [])]
+        self.components: list[Component] = [
+            _component_factory(d) for d in data.get("components", [])
+        ]
         self.accessory: Component | None = None
         if _accessory := data.get("accessory"):
             self.accessory = _component_factory(_accessory)
@@ -541,7 +551,7 @@ class Section(Component):
         payload = {
             "type": int(self.type),
             "id": self.id,
-            "components": [c.to_dict() for c in self.components]
+            "components": [c.to_dict() for c in self.components],
         }
         if self.accessory:
             payload["accessory"] = self.accessory.to_dict()
@@ -573,11 +583,7 @@ class TextDisplay(Component):
         self.content: str = data.get("content")
 
     def to_dict(self) -> TextDisplayComponentPayload:
-        return {
-            "type": int(self.type),
-            "id": self.id,
-            "content": self.content
-        }
+        return {"type": int(self.type), "id": self.id, "content": self.content}
 
 
 COMPONENT_MAPPINGS = {
@@ -597,6 +603,7 @@ COMPONENT_MAPPINGS = {
     14: None,
     17: None,
 }
+
 
 def _component_factory(data: ComponentPayload) -> Component:
     component_type = data["type"]
