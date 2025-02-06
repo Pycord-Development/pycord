@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
+from .colour import Colour
 from .enums import (
     ButtonStyle,
     ChannelType,
@@ -35,7 +36,6 @@ from .enums import (
     SeparatorSpacingSize,
     try_enum,
 )
-from .colour import Colour
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
@@ -616,23 +616,25 @@ class Thumbnail(Component):
         Whether the thumbnail is a spoiler.
     """
 
-    __slots__: tuple[str, ...] = ("media", "description", "spoiler", )
+    __slots__: tuple[str, ...] = (
+        "media",
+        "description",
+        "spoiler",
+    )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: ThumbnailComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
-        self.media: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(umi)
+        self.media: UnfurledMediaItem = (
+            umi := data.get("media")
+        ) and UnfurledMediaItem(umi)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> ThumbnailComponentPayload:
-        payload = {
-            "type": int(self.type),
-            "id": self.id,
-            "media": self.media.to_dict()
-        }
+        payload = {"type": int(self.type), "id": self.id, "media": self.media.to_dict()}
         if self.description:
             payload["description"] = self.description
         if self.spoiler is not None:
@@ -641,16 +643,16 @@ class Thumbnail(Component):
 
 
 class MediaGalleryItem:
-    
+
     def __init__(self, data: MediaGalleryItemPayload):
-        self.media: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(umi)
+        self.media: UnfurledMediaItem = (
+            umi := data.get("media")
+        ) and UnfurledMediaItem(umi)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self):
-        payload = {
-            "media": self.media.to_dict()
-        }
+        payload = {"media": self.media.to_dict()}
         if self.description:
             payload["description"] = self.description
         if self.spoiler is not None:
@@ -673,20 +675,22 @@ class MediaGallery(Component):
         The media this gallery contains.
     """
 
-    __slots__: tuple[str, ...] = ("items", )
+    __slots__: tuple[str, ...] = ("items",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: MediaGalleryComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
-        self.items: list[MediaGalleryItem] = [MediaGalleryItem(d) for d in data.get("items", [])]
+        self.items: list[MediaGalleryItem] = [
+            MediaGalleryItem(d) for d in data.get("items", [])
+        ]
 
     def to_dict(self) -> MediaGalleryComponentPayload:
         return {
             "type": int(self.type),
             "id": self.id,
-            "items": [i.to_dict() for i in self.items]
+            "items": [i.to_dict() for i in self.items],
         }
 
 
@@ -707,22 +711,23 @@ class FileComponent(Component):
         Whether the file is a spoiler.
     """
 
-    __slots__: tuple[str, ...] = ("file", "spoiler", )
+    __slots__: tuple[str, ...] = (
+        "file",
+        "spoiler",
+    )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: FileComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
-        self.file: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(umi)
+        self.file: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(
+            umi
+        )
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> FileComponentPayload:
-        payload = {
-            "type": int(self.type),
-            "id": self.id,
-            "file": self.file.to_dict()
-        }
+        payload = {"type": int(self.type), "id": self.id, "file": self.file.to_dict()}
         if self.spoiler is not None:
             payload["spoiler"] = self.spoiler
         return payload
@@ -745,17 +750,27 @@ class Separator(Component):
         The separator's spacing size.
     """
 
-    __slots__: tuple[str, ...] = ("divider", "spacing",)
+    __slots__: tuple[str, ...] = (
+        "divider",
+        "spacing",
+    )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: SeparatorComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.divider: bool = data.get("divider")
-        self.spacing: SeparatorSpacingSize = try_enum(SeparatorSpacingSize, data.get("spacing", 1))
+        self.spacing: SeparatorSpacingSize = try_enum(
+            SeparatorSpacingSize, data.get("spacing", 1)
+        )
 
     def to_dict(self) -> SeparatorComponentPayload:
-        return {"type": int(self.type), "id": self.id, "divider": self.divider, "spacing": int(self.spacing)}
+        return {
+            "type": int(self.type),
+            "id": self.id,
+            "divider": self.divider,
+            "spacing": int(self.spacing),
+        }
 
 
 class Container(Component):
@@ -774,14 +789,20 @@ class Container(Component):
         The media this gallery contains.
     """
 
-    __slots__: tuple[str, ...] = ("accent_color", "spoiler", "components", )
+    __slots__: tuple[str, ...] = (
+        "accent_color",
+        "spoiler",
+        "components",
+    )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
 
     def __init__(self, data: ContainerComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
-        self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(c)  # at this point, not adding alternative spelling
+        self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
+            c
+        )  # at this point, not adding alternative spelling
         self.spoiler: bool | None = data.get("spoiler")
         self.components: list[Component] = [
             _component_factory(d) for d in data.get("components", [])
