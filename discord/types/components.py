@@ -33,9 +33,10 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4]
+ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
+SeparatorSpacingSize = Literal[1, 2]
 
 
 class ActionRow(TypedDict):
@@ -83,6 +84,60 @@ class SelectMenu(TypedDict):
     options: NotRequired[list[SelectOption]]
     type: Literal[3, 5, 6, 7, 8]
     custom_id: str
+
+
+class TextDisplay(TypedDict):
+    type: Literal[10]
+    content: str
+
+
+class UnfurledMediaItem:
+    url: str
+
+
+class MediaGalleryItem(TypedDict):
+    media: UnfurledMediaItem
+    description: NotRequired[str]
+    spoiler: NotRequired[bool]
+
+
+class SectionComponent(TypedDict):
+    type: Literal[9]
+    components: list[TextDisplayComponent, ButtonComponent]
+
+
+class ThumbnailComponent(TypedDict):
+    type: Literal[11]
+    media: UnfurledMediaItem
+    description: NotRequired[str]
+    spoiler: NotRequired[bool]
+
+
+class MediaGalleryComponent(TypedDict):
+    type: Literal[12]
+    items: list[MediaGalleryItem]
+
+
+class FileComponent(TypedDict):
+    type: Literal[13]
+    file: UnfurledMediaItem
+    spoiler: NotRequired[bool]
+
+
+class SeparatorComponent(TypedDict):
+    type: Literal[14]
+    divider: NotRequired[bool]
+    spacing: NotRequired[SeparatorSpacingSize]
+
+
+ContainerComponents = Union[ActionRow, TextDisplayComponent, MediaGalleryComponent, FileComponent, SeparatorComponent, SectionComponent]
+
+
+class ContainerComponent(TypedDict):
+    type: Literal[17]
+    accent_color: NotRequired[int]
+    spoiler: NotRequired[bool]
+    components: list[ContainerComponents]
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]

@@ -712,6 +712,13 @@ class ComponentType(Enum):
     role_select = 6
     mentionable_select = 7
     channel_select = 8
+    section = 9
+    text_display = 10
+    thumbnail = 11
+    media_gallery = 12
+    file = 13
+    separator = 14
+    container = 17
 
     def __int__(self):
         return self.value
