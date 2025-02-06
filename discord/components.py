@@ -35,6 +35,7 @@ from .enums import (
     SeparatorSpacingSize,
     try_enum,
 )
+from .colour import Colour
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
@@ -586,6 +587,219 @@ class TextDisplay(Component):
         return {"type": int(self.type), "id": self.id, "content": self.content}
 
 
+class UnfurledMediaItem:
+
+    def __init__(self, data: UnfurledMediaItemPayload):
+        self.url = data.get("url")
+        # need to test this more
+
+    def to_dict(self):
+        return {"url": self.url}
+
+
+class Thumbnail(Component):
+    """Represents a Thumbnail from Components V2.
+
+    This is a component that displays media such as images and videos.
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    media: :class:`UnfurledMediaItem`
+        The component's media URL.
+    description: Optional[:class:`str`]
+        The thumbnail's description, up to 1024 characters.
+    spoiler: Optional[:class:`bool`]
+        Whether the thumbnail is a spoiler.
+    """
+
+    __slots__: tuple[str, ...] = ("media", "description", "spoiler", )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+
+    def __init__(self, data: ThumbnailComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: str = data.get("id")
+        self.media: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(umi)
+        self.description: str | None = data.get("description")
+        self.spoiler: bool | None = data.get("spoiler")
+
+    def to_dict(self) -> ThumbnailComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "media": self.media.to_dict()
+        }
+        if self.description:
+            payload["description"] = self.description
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+
+class MediaGalleryItem:
+    
+    def __init__(self, data: MediaGalleryItemPayload):
+        self.media: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(umi)
+        self.description: str | None = data.get("description")
+        self.spoiler: bool | None = data.get("spoiler")
+
+    def to_dict(self):
+        payload = {
+            "media": self.media.to_dict()
+        }
+        if self.description:
+            payload["description"] = self.description
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+
+class MediaGallery(Component):
+    """Represents a Media Gallery from Components V2.
+
+    This is a component that displays up to 10 different :class:`MediaGalleryItem`s.
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    items: List[:class:`MediaGalleryItem`]
+        The media this gallery contains.
+    """
+
+    __slots__: tuple[str, ...] = ("items", )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+
+    def __init__(self, data: MediaGalleryComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: str = data.get("id")
+        self.items: list[MediaGalleryItem] = [MediaGalleryItem(d) for d in data.get("items", [])]
+
+    def to_dict(self) -> MediaGalleryComponentPayload:
+        return {
+            "type": int(self.type),
+            "id": self.id,
+            "items": [i.to_dict() for i in self.items]
+        }
+
+
+class FileComponent(Component):
+    """Represents a File from Components V2.
+
+    This is a component that displays some file (elaborate?).
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    file: :class:`UnfurledMediaItem`
+        The file's media URL.
+    spoiler: Optional[:class:`bool`]
+        Whether the file is a spoiler.
+    """
+
+    __slots__: tuple[str, ...] = ("file", "spoiler", )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+
+    def __init__(self, data: FileComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: str = data.get("id")
+        self.file: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(umi)
+        self.spoiler: bool | None = data.get("spoiler")
+
+    def to_dict(self) -> FileComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "file": self.file.to_dict()
+        }
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+
+class Separator(Component):
+    """Represents a Separator from Components V2.
+
+    This is a component that separates components.
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    divider: :class:`bool`
+        Whether the separator is a divider (provide example?)
+    spacing: Optional[:class:`SeparatorSpacingSize`]
+        The separator's spacing size.
+    """
+
+    __slots__: tuple[str, ...] = ("divider", "spacing",)
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+
+    def __init__(self, data: SeparatorComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.divider: bool = data.get("divider")
+        self.spacing: SeparatorSpacingSize = try_enum(SeparatorSpacingSize, data.get("spacing", 1))
+
+    def to_dict(self) -> SeparatorComponentPayload:
+        return {"type": int(self.type), "id": self.id, "divider": self.divider, "spacing": int(self.spacing)}
+
+
+class Container(Component):
+    """Represents a Container from Components V2.
+
+    This is a component that contains up to 10 different :class:`Component`s.
+    It may only contain :class:`ActionRow`, :class:`TextDisplay`, :class:`Section`, :class:`MediaGallery`, :class:`Separator`, and :class:`FileComponent`.
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    items: List[:class:`MediaGalleryItem`]
+        The media this gallery contains.
+    """
+
+    __slots__: tuple[str, ...] = ("accent_color", "spoiler", "components", )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+
+    def __init__(self, data: ContainerComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: str = data.get("id")
+        self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(c)  # at this point, not adding alternative spelling
+        self.spoiler: bool | None = data.get("spoiler")
+        self.components: list[Component] = [
+            _component_factory(d) for d in data.get("components", [])
+        ]
+
+    def to_dict(self) -> ContainerComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "components": [c.to_dict() for c in self.components],
+        }
+        if self.accent_color:
+            payload["accent_color"] = self.accent_color.value
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+
 COMPONENT_MAPPINGS = {
     1: ActionRow,
     2: Button,
@@ -597,11 +811,11 @@ COMPONENT_MAPPINGS = {
     8: SelectMenu,
     9: Section,
     10: TextDisplay,
-    11: None,
-    12: None,
-    13: None,
-    14: None,
-    17: None,
+    11: Thumbnail,
+    12: MediaGallery,
+    13: FileComponent,
+    14: Separator,
+    17: Container,
 }
 
 
