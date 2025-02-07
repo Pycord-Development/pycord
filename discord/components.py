@@ -38,6 +38,7 @@ from .enums import (
 )
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
+from .flags import AttachmentFlags
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
@@ -591,7 +592,15 @@ class UnfurledMediaItem:
 
     def __init__(self, data: UnfurledMediaItemPayload):
         self.url = data.get("url")
-        # need to test this more
+        self.proxy_url: str = data.get("proxy_url")
+        self.height: int | None = data.get("height")
+        self.width: int | None = data.get("width")
+        self.content_type: str | None = data.get("content_type")
+        self.flags: AttachmentFlags = AttachmentFlags._from_value(data.get("flags", 0))
+        self.placeholder: str = data.get("placeholder")
+        self.placeholder_version: int = data.get("placeholder_version")
+        self.loading_state: int = data.get("loading_state")
+        self.src_is_animated: bool = data.get("src_is_animated")
 
     def to_dict(self):
         return {"url": self.url}

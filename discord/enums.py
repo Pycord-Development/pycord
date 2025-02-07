@@ -718,6 +718,7 @@ class ComponentType(Enum):
     media_gallery = 12
     file = 13
     separator = 14
+    content_inventory_entry = 16
     container = 17
 
     def __int__(self):

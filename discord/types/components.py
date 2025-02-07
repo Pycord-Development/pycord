@@ -33,7 +33,7 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17]
+ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
@@ -104,6 +104,15 @@ class SectionComponent(BaseComponent):
 
 class UnfurledMediaItem(TypedDict):
     url: str
+    proxy_url: str
+    height: NotRequired[int | None]
+    width: NotRequired[int | None]
+    content_type: NotRequired[str]
+    src_is_animated: NotRequired[bool]
+    placeholder: str
+    placeholder_version: int
+    loading_state: int
+    flags: NotRequired[int]
 
 
 class ThumbnailComponent(BaseComponent):
