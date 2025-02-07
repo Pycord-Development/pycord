@@ -6,7 +6,7 @@ from ..components import Section as SectionComponent
 from ..enums import ComponentType
 from .item import Item
 
-__all__ = ("InputText",)
+__all__ = ("Section",)
 
 if TYPE_CHECKING:
     from ..types.components import SectionComponent as SectionComponentPayload
