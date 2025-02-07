@@ -327,7 +327,7 @@ class Subscription(Hashable):
         self.user_id: int = int(data["user_id"])
         self.sku_ids: list[int] = list(map(int, data["sku_ids"]))
         self.entitlement_ids: list[int] = list(map(int, data["entitlement_ids"]))
-        self.renewal_sku_ids: list[int] = list(map(int, data["renewal_sku_ids"]))
+        self.renewal_sku_ids: list[int] = list(map(int, data["renewal_sku_ids"] or []))
         self.current_period_start: datetime = parse_time(data["current_period_start"])
         self.current_period_end: datetime = parse_time(data["current_period_end"])
         self.status: SubscriptionStatus = try_enum(SubscriptionStatus, data["status"])
