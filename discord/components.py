@@ -36,9 +36,9 @@ from .enums import (
     SeparatorSpacingSize,
     try_enum,
 )
+from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
-from .flags import AttachmentFlags
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
