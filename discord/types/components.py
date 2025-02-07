@@ -149,13 +149,13 @@ class ContainerComponent(BaseComponent):
     type: Literal[17]
     accent_color: NotRequired[int]
     spoiler: NotRequired[bool]
-    components: list[ContainerComponents]
+    components: list[AllowedContainerComponents]
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
 
 
-ContainerComponents = Union[
+AllowedContainerComponents = Union[
     ActionRow,
     TextDisplayComponent,
     MediaGalleryComponent,
