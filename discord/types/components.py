@@ -37,6 +37,7 @@ ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
+LoadingState = Literal[0, 1, 2, 3]
 
 
 class BaseComponent(TypedDict):
@@ -111,7 +112,7 @@ class UnfurledMediaItem(TypedDict):
     src_is_animated: NotRequired[bool]
     placeholder: str
     placeholder_version: int
-    loading_state: int
+    loading_state: LoadingState
     flags: NotRequired[int]
 
 

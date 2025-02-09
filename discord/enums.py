@@ -1078,6 +1078,15 @@ class SeparatorSpacingSize(Enum):
     large = 2
 
 
+class MediaItemLoadingState(Enum):
+    """An :class:`~discord.UnfurledMediaItem`'s ``loading_state``."""
+
+    unknown = 0
+    loading = 1
+    loaded_success = 2
+    loaded_not_found = 3
+
+
 T = TypeVar("T")
 
 

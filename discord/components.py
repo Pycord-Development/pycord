@@ -34,6 +34,7 @@ from .enums import (
     ComponentType,
     InputTextStyle,
     SeparatorSpacingSize,
+    MediaItemLoadingState,
     try_enum,
 )
 from .flags import AttachmentFlags
@@ -599,7 +600,7 @@ class UnfurledMediaItem:
         self.flags: AttachmentFlags = AttachmentFlags._from_value(data.get("flags", 0))
         self.placeholder: str = data.get("placeholder")
         self.placeholder_version: int = data.get("placeholder_version")
-        self.loading_state: int = data.get("loading_state")
+        self.loading_state: MediaItemLoadingState = try_enum(MediaItemLoadingState, data.get("loading_state"))
         self.src_is_animated: bool = data.get("src_is_animated")
 
     def to_dict(self):
