@@ -81,7 +81,7 @@ if TYPE_CHECKING:
     from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
-    from .types.interactions import Interaction as InteractionPayload
+    from .types.interactions import Interaction as InteractionPayload, InteractionCallbackResponse
     from .types.interactions import InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
@@ -129,6 +129,7 @@ class Interaction:
         The user or member that sent the interaction. Will be `None` in PING interactions.
     message: Optional[:class:`Message`]
         The message that sent this interaction.
+        This is updated to the message object of the response after responding by sending or editing a message.
     token: :class:`str`
         The token to continue the interaction. These are valid
         for 15 minutes.
@@ -185,12 +186,16 @@ class Interaction:
         "_cs_response",
         "_cs_followup",
         "_cs_channel",
+        "_response_message_loading",
+        "_response_message_ephemeral",
     )
 
     def __init__(self, *, data: InteractionPayload, state: ConnectionState):
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
+        self._response_message_loading: bool = False
+        self._response_message_ephemeral: bool = False
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
@@ -307,6 +312,22 @@ class Interaction:
     def is_component(self) -> bool:
         """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
+
+    def is_loading(self) -> bool:
+        """Indicates whether the response message is in a loading state.
+
+        .. versionadded:: 2.7
+        """
+        return self._response_message_loading
+
+    def is_ephemeral(self) -> bool:
+        """Indicates whether the response message is ephemeral.
+
+        This might be useful for determining if the message was forced to be ephemeral.
+
+        .. versionadded:: 2.7
+        """
+        return self._response_message_ephemeral
 
     @utils.cached_slot_property("_cs_channel")
     @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
@@ -871,6 +892,19 @@ class InteractionResponse:
             )
             self._responded = True
 
+    async def _process_callback_response(self, callback_response: InteractionCallbackResponse):
+        if callback_response.get("resource") and callback_response["resource"].get("message"):
+            # TODO: fix later to not raise?
+            channel = self._parent.channel
+            if channel is None:
+                raise ClientException("Channel for message could not be resolved")
+            state = _InteractionMessageState(self._parent, self._parent._state)
+            message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
+            self._parent._original_response = message
+
+        self._parent._response_message_ephemeral = callback_response["interaction"].get("response_message_ephemeral", False)
+        self._parent._response_message_loading = callback_response["interaction"].get("response_message_loading", False)
+
     async def send_message(
         self,
         content: Any | None = None,
@@ -1007,7 +1041,7 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
+            callback_response: InteractionCallbackResponse = await self._locked_response(
                 adapter.create_interaction_response(
                     parent.id,
                     parent.token,
@@ -1030,6 +1064,8 @@ class InteractionResponse:
 
             view.parent = self._parent
             self._parent._state.store_view(view)
+
+        await self._process_callback_response(callback_response)
 
         self._responded = True
         if delete_after is not None:
@@ -1171,7 +1207,7 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
+            callback_response: InteractionCallbackResponse = await self._locked_response(
                 adapter.create_interaction_response(
                     parent.id,
                     parent.token,
@@ -1191,6 +1227,8 @@ class InteractionResponse:
         if view and not view.is_finished():
             view.message = msg
             state.store_view(view, message_id)
+
+        await self._process_callback_response(callback_response)
 
         self._responded = True
         if delete_after is not None:
@@ -1319,7 +1357,7 @@ class InteractionResponse:
         self._responded = True
         return self._parent
 
-    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> None:
+    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> Any:
         """|coro|
 
         Wraps a response and makes sure that it's locked while executing.
@@ -1338,7 +1376,7 @@ class InteractionResponse:
             if self.is_done():
                 coro.close()  # cleanup un-awaited coroutine
                 raise InteractionResponded(self._parent)
-            await coro
+            return await coro
 
 
 class _InteractionMessageState:
