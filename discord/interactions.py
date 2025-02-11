@@ -81,8 +81,8 @@ if TYPE_CHECKING:
     from .poll import Poll
     from .state import ConnectionState
     from .threads import Thread
-    from .types.interactions import Interaction as InteractionPayload, InteractionCallbackResponse
-    from .types.interactions import InteractionData
+    from .types.interactions import Interaction as InteractionPayload
+    from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
@@ -892,8 +892,12 @@ class InteractionResponse:
             )
             self._responded = True
 
-    async def _process_callback_response(self, callback_response: InteractionCallbackResponse):
-        if callback_response.get("resource") and callback_response["resource"].get("message"):
+    async def _process_callback_response(
+        self, callback_response: InteractionCallbackResponse
+    ):
+        if callback_response.get("resource") and callback_response["resource"].get(
+            "message"
+        ):
             # TODO: fix later to not raise?
             channel = self._parent.channel
             if channel is None:
@@ -902,8 +906,12 @@ class InteractionResponse:
             message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
             self._parent._original_response = message
 
-        self._parent._response_message_ephemeral = callback_response["interaction"].get("response_message_ephemeral", False)
-        self._parent._response_message_loading = callback_response["interaction"].get("response_message_loading", False)
+        self._parent._response_message_ephemeral = callback_response["interaction"].get(
+            "response_message_ephemeral", False
+        )
+        self._parent._response_message_loading = callback_response["interaction"].get(
+            "response_message_loading", False
+        )
 
     async def send_message(
         self,
@@ -1041,16 +1049,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            callback_response: InteractionCallbackResponse = await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.channel_message.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.channel_message.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
@@ -1207,16 +1217,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            callback_response: InteractionCallbackResponse = await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.message_update.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.message_update.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
