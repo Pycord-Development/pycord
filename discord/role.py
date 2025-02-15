@@ -25,7 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Final, TypeVar
+from enum import IntEnum
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from .asset import Asset
 from .colour import Colour
@@ -36,6 +37,8 @@ from .permissions import Permissions
 from .utils import (
     MISSING,
     _bytes_to_base64_data,
+    cached_slot_property,
+    deprecated,
     snowflake_time,
 )
 
@@ -109,6 +112,43 @@ def _parse_tag_int(data: RoleTagPayload, key: str) -> int | None:
         return None
 
 
+class RoleType(IntEnum):
+    """Represents the type of role.
+
+    This is NOT provided by discord but is rather computed by pycord based on the role tags.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    APPLICATION: :class:`int`
+        The role is an application role.
+    BOOSTER: :class:`int`
+        The role is a guild's booster role.
+    GUILD_PRODUCT: :class:`int`
+        The role is a guild product role.
+    PREMIUM_SUBSCRIPTION_BASE: :class:`int`
+        The role is a base subscription role.
+    PREMIUM_SUBSCRIPTION_TIER: :class:`int`
+        The role is a subscription role.
+    DRAFT_PREMIUM_SUBSCRIPTION_TIER: :class:`int`
+        The role is a draft subscription role.
+    INTEGRATION: :class:`int`
+        The role is an integration role.
+    CONNECTION: :class:`int`
+        The role is a guild connections role.
+    """
+
+    APPLICATION = 1
+    BOOSTER = 2
+    GUILD_PRODUCT = 3
+    PREMIUM_SUBSCRIPTION_BASE = 4  # Not possible to determine currently, will be INTEGRATION if it's a base subscription
+    PREMIUM_SUBSCRIPTION_TIER = 5
+    DRAFT_PREMIUM_SUBSCRIPTION_TIER = 5
+    INTEGRATION = 7
+    CONNECTION = 8
+
+
 class RoleTags:
     """Represents tags on a role.
 
@@ -142,6 +182,7 @@ class RoleTags:
         "_guild_connections",
         "bot_id",
         "_data",
+        "_type",
     )
 
     def __init__(self, data: RoleTagPayload):
@@ -161,102 +202,73 @@ class RoleTags:
             data, "available_for_purchase"
         )
 
-    @property
-    def is_bot_role(self) -> bool:
-        """Whether the role is associated with a bot.
-        .. versionadded:: 2.7
-        """
+    @cached_slot_property("_type")
+    def type(self) -> RoleType:
+        """Determine the role type based on tag flags."""
+        # Bot role
+        if self.bot_id is not None:
+            return RoleType.APPLICATION
+
+        # Role connection
+        if self._guild_connections is True:
+            return RoleType.CONNECTION
+
+        # Paid roles
+        if self._guild_connections is False:
+            if self._premium_subscriber is False:
+                return RoleType.GUILD_PRODUCT
+
+            if self._premium_subscriber is True:
+                return RoleType.BOOSTER
+
+            # subscription roles
+            if self.integration_id is not None:
+                if (
+                    self._premium_subscriber is None
+                    and self.subscription_listing_id is not None
+                ):
+                    if self._available_for_purchase is True:
+                        return RoleType.PREMIUM_SUBSCRIPTION_TIER
+                    return RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER
+
+        # integration role (Twitch/YouTube)
+        if self.integration_id is not None:
+            return RoleType.INTEGRATION
+
+        raise ValueError("Unable to determine the role type based on provided tags.")
+
+    @deprecated("RoleTags.type", "2.7")
+    def is_bot_managed(self) -> bool:
+        """Whether the role is associated with a bot."""
         return self.bot_id is not None
 
-    @property
-    def is_booster_role(self) -> bool:
-        """Whether the role is the "boost", role for the guild.
-        .. versionadded:: 2.7
-        """
-        return self._guild_connections is False and self._premium_subscriber is True
+    @deprecated("RoleTags.type", "2.7")
+    def is_premium_subscriber(self) -> bool:
+        """Whether the role is the premium subscriber, AKA "boost", role for the guild."""
+        return self._premium_subscriber is None
 
-    @property
-    def is_guild_product_role(self) -> bool:
-        """Whether the role is a guild product role.
-
-        .. versionadded:: 2.7
-        """
-        return self._guild_connections is False and self._premium_subscriber is False
-
-    @property
+    @deprecated("RoleTags.type", "2.7")
     def is_integration(self) -> bool:
         """Whether the guild manages the role through some form of
         integrations such as Twitch or through guild subscriptions.
         """
         return self.integration_id is not None
 
-    @property
-    def is_base_subscription_role(self) -> bool:
-        """Whether the role is a base subscription role.
+    @deprecated("RoleTags.type", "2.7")
+    def is_available_for_purchase(self) -> bool:
+        """Whether the role is available for purchase."""
+        return self._available_for_purchase is True
 
-        .. versionadded:: 2.7
-        """
-        return (
-            self._guild_connections is False
-            and self._premium_subscriber is False
-            and self.integration_id is not None
-        )
-
-    @property
-    def is_subscription_role(self) -> bool:
-        """Whether the role is a subscription role.
-
-        .. versionadded:: 2.7
-        """
-        return (
-            self._guild_connections is False
-            and self._premium_subscriber is None
-            and self.integration_id is not None
-            and self.subscription_listing_id is not None
-            and self._available_for_purchase is True
-        )
-
-    @property
-    def is_draft_subscription_role(self) -> bool:
-        """Whether the role is a draft subscription role.
-
-        .. versionadded:: 2.7
-        """
-        return (
-            self._guild_connections is False
-            and self._premium_subscriber is None
-            and self.subscription_listing_id is not None
-            and self.integration_id is not None
-            and self._available_for_purchase is False
-        )
-
-    @property
+    @deprecated("RoleTags.type", "2.7")
     def is_guild_connections_role(self) -> bool:
-        """Whether the role is a guild connections role.
-
-        .. versionadded:: 2.7
-        """
+        """Whether the role is a guild connections role."""
         return self._guild_connections is True
-
-    QUALIFIERS: Final = (
-        "is_bot_role",
-        "is_booster_role",
-        "is_guild_product_role",
-        "is_integration",
-        "is_base_subscription_role",
-        "is_subscription_role",
-        "is_draft_subscription_role",
-        "is_guild_connections_role",
-    )
 
     def __repr__(self) -> str:
         return (
             f"<RoleTags bot_id={self.bot_id} integration_id={self.integration_id} "
             + f"subscription_listing_id={self.subscription_listing_id} "
-            + " ".join(
-                q.removeprefix("is_") for q in self.QUALIFIERS if getattr(self, q)
-            )
-            + ">"
+            + f"type={self.type!r}>"
         )
 
 
@@ -431,6 +443,31 @@ class Role(Hashable):
         """Checks if the role is the default role."""
         return self.guild.id == self.id
 
+    @deprecated("Role.type", "2.7")
+    def is_bot_managed(self) -> bool:
+        """Whether the role is associated with a bot.
+
+        .. versionadded:: 1.6
+        """
+        return self.tags is not None and self.tags.is_bot_managed()
+
+    @deprecated("Role.type", "2.7")
+    def is_premium_subscriber(self) -> bool:
+        """Whether the role is the premium subscriber, AKA "boost", role for the guild.
+
+        .. versionadded:: 1.6
+        """
+        return self.tags is not None and self.tags.is_premium_subscriber()
+
+    @deprecated("Role.type", "2.7")
+    def is_integration(self) -> bool:
+        """Whether the guild manages the role through some form of
+        integrations such as Twitch or through guild subscriptions.
+
+        .. versionadded:: 1.6
+        """
+        return self.tags is not None and self.tags.is_integration()
+
     def is_assignable(self) -> bool:
         """Whether the role is able to be assigned or removed by the bot.
 
@@ -442,6 +479,26 @@ class Role(Hashable):
             and not self.managed
             and (me.top_role > self or me.id == self.guild.owner_id)
         )
+
+    @deprecated("Role.type", "2.7")
+    def is_available_for_purchase(self) -> bool:
+        """Whether the role is available for purchase.
+
+        Returns ``True`` if the role is available for purchase, and
+        ``False`` if it is not available for purchase or if the
+        role is not linked to a guild subscription.
+
+        .. versionadded:: 2.7
+        """
+        return self.tags is not None and self.tags.is_available_for_purchase()
+
+    @deprecated("Role.type", "2.7")
+    def is_guild_connections_role(self) -> bool:
+        """Whether the role is a guild connections role.
+
+        .. versionadded:: 2.7
+        """
+        return self.tags is not None and self.tags.is_guild_connections_role()
 
     @property
     def permissions(self) -> Permissions:
@@ -488,6 +545,14 @@ class Role(Hashable):
             return None
 
         return Asset._from_icon(self._state, self.id, self._icon, "role")
+
+    @property
+    def type(self) -> RoleType:
+        """The type of the role.
+
+        .. versionadded:: 2.7
+        """
+        return self.tags.type
 
     async def _move(self, position: int, reason: str | None) -> None:
         if position <= 0:
