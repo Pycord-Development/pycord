@@ -1046,6 +1046,61 @@ class Paginator(discord.ui.View):
 
         return self.message
 
+    async def channel_send(
+        self,
+        channel: discord.abc.Messageable,
+        allowed_mentions: discord.AllowedMentions | None = None,
+        delete_after: float | None = None,
+    ) -> discord.Message:
+        """Sends a message to a specified channel with the paginated items.
+
+        Parameters
+        ----------
+        channel: Optional[:class:`~discord.abc.Messageable`]
+            A channel where the paginated message should be sent.
+        allowed_mentions: Optional[:class:`~discord.AllowedMentions`]
+            Controls the mentions being processed in this message. If this is
+            passed, then the object is merged with :attr:`~discord.Client.allowed_mentions`.
+            The merging behaviour only overrides attributes that have been explicitly passed
+            to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
+            If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
+            are used instead.
+        delete_after: Optional[:class:`float`]
+            If set, deletes the paginator after the specified time.
+
+        Returns
+        -------
+        :class:`~discord.Message`
+            The message that was sent with the paginator.
+        """
+        if not isinstance(channel, discord.abc.Messageable):
+            raise TypeError(f"expected abc.Messageable not {channel.__class__!r}")
+
+        if allowed_mentions is not None and not isinstance(
+            allowed_mentions, discord.AllowedMentions
+        ):
+            raise TypeError(
+                f"expected AllowedMentions not {allowed_mentions.__class__!r}"
+            )
+
+        self.update_buttons()
+        page = self.pages[self.current_page]
+        page_content = self.get_page_content(page)
+
+        if page_content.custom_view:
+            self.update_custom_view(page_content.custom_view)
+
+        self.message = await channel.send(
+            content=page_content.content,
+            embeds=page_content.embeds,
+            files=page_content.files,
+            view=self,
+            allowed_mentions=allowed_mentions,
+            delete_after=delete_after,
+        )
+
+        return self.message
+
     async def edit(
         self,
         message: discord.Message,
