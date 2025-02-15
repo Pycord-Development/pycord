@@ -122,21 +122,23 @@ class RoleType(IntEnum):
     Attributes
     ----------
     APPLICATION: :class:`int`
-        The role is an application role.
+        The role is an application (bot) role.
     BOOSTER: :class:`int`
         The role is a guild's booster role.
     GUILD_PRODUCT: :class:`int`
         The role is a guild product role.
     PREMIUM_SUBSCRIPTION_BASE: :class:`int`
-        The role is a base subscription role.
+        The role is a base subscription role. This is not possible to determine currently, will be INTEGRATION if it's a base subscription.
     PREMIUM_SUBSCRIPTION_TIER: :class:`int`
         The role is a subscription role.
     DRAFT_PREMIUM_SUBSCRIPTION_TIER: :class:`int`
         The role is a draft subscription role.
     INTEGRATION: :class:`int`
-        The role is an integration role.
+        The role is an integration role, such as Twitch or YouTube, or a base subscription role.
     CONNECTION: :class:`int`
         The role is a guild connections role.
+    UNKNOWN: :class:`int`
+        The role type is unknown.
     """
 
     APPLICATION = 1
@@ -157,11 +159,13 @@ class RoleTags:
     that gives it context for the reason the role is managed.
 
     Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
-    We aim to improve the documentation / introduce new attributes in future.
-    For the meantime read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work.
+    In order to make your life easier, pycord provides a :attr:`RoleTags.type` attribute that attempts to determine the role type based on the role tags. It's value is not provided by discord but is rather computed by pycord based on the role tags.
+    If you find an issue, please open an issue on `GitHub <https://github.com/Pycord-Development/pycord/issues/new?template=bug_report.yml>`_.
+    Read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work.
 
     .. versionadded:: 1.6
     .. versionchanged:: 2.7
+        The type of the role is now determined by the :attr:`RoleTags.type` attribute.
 
     Attributes
     ----------
