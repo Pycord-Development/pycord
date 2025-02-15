@@ -144,9 +144,10 @@ class RoleType(IntEnum):
     GUILD_PRODUCT = 3
     PREMIUM_SUBSCRIPTION_BASE = 4  # Not possible to determine currently, will be INTEGRATION if it's a base subscription
     PREMIUM_SUBSCRIPTION_TIER = 5
-    DRAFT_PREMIUM_SUBSCRIPTION_TIER = 5
+    DRAFT_PREMIUM_SUBSCRIPTION_TIER = 6
     INTEGRATION = 7
     CONNECTION = 8
+    UNKNOWN = 9
 
 
 class RoleTags:
@@ -180,6 +181,7 @@ class RoleTags:
         "_premium_subscriber",
         "_available_for_purchase",
         "_guild_connections",
+        "_is_guild_product_role",
         "bot_id",
         "_data",
         "_type",
@@ -201,6 +203,8 @@ class RoleTags:
         self._available_for_purchase: bool | None = _parse_tag_bool(
             data, "available_for_purchase"
         )
+        # here discord did things in a normal and logical way for once
+        self._is_guild_product_role: bool | None = data.get("is_guild_product_role")
 
     @cached_slot_property("_type")
     def type(self) -> RoleType:
@@ -214,28 +218,29 @@ class RoleTags:
             return RoleType.CONNECTION
 
         # Paid roles
-        if self._guild_connections is False:
-            if self._premium_subscriber is False:
-                return RoleType.GUILD_PRODUCT
+        if self._is_guild_product_role is True:
+            return RoleType.GUILD_PRODUCT
 
-            if self._premium_subscriber is True:
-                return RoleType.BOOSTER
+        # Booster role
+        if self._premium_subscriber is True:
+            return RoleType.BOOSTER
 
-            # subscription roles
-            if self.integration_id is not None:
-                if (
-                    self._premium_subscriber is None
-                    and self.subscription_listing_id is not None
-                ):
-                    if self._available_for_purchase is True:
-                        return RoleType.PREMIUM_SUBSCRIPTION_TIER
-                    return RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER
+        # subscription roles
+        if (
+            self.integration_id is not None
+            and self._premium_subscriber is None
+            and self.subscription_listing_id is not None
+        ):
+            if self._available_for_purchase is True:
+                return RoleType.PREMIUM_SUBSCRIPTION_TIER
+            return RoleType.DRAFT_PREMIUM_SUBSCRIPTION_TIER
 
         # integration role (Twitch/YouTube)
         if self.integration_id is not None:
             return RoleType.INTEGRATION
 
-        raise ValueError("Unable to determine the role type based on provided tags.")
+        # Seeing how messed up this is it wouldn't be a surprise if this happened
+        return RoleType.UNKNOWN
 
     @deprecated("RoleTags.type", "2.7")
     def is_bot_managed(self) -> bool:
