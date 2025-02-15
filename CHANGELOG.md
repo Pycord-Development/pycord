@@ -49,6 +49,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
+- Added `Paginator.channel_send` method for sending paginators without user context.
+  ([#2713](https://github.com/Pycord-Development/pycord/pull/2713))
 
 ### Fixed
 
