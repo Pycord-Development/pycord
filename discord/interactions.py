@@ -845,15 +845,17 @@ class InteractionResponse:
         if defer_type:
             adapter = async_context.get()
             http = parent._state.http
-            callback_response: InteractionCallbackResponse = await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=defer_type,
-                    data=data,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=defer_type,
+                        data=data,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                    )
                 )
             )
             self._responded = True
@@ -880,14 +882,16 @@ class InteractionResponse:
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
             http = parent._state.http
-            callback_response: InteractionCallbackResponse = await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    type=InteractionResponseType.pong.value,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        type=InteractionResponseType.pong.value,
+                    )
                 )
             )
             self._responded = True
