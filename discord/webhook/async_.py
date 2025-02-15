@@ -538,7 +538,7 @@ class AsyncWebhookAdapter:
         )
 
         params: dict[str, Any] = {
-            "with_response": True,
+            "with_response": "true",
         }
 
         return self.request(
