@@ -129,7 +129,6 @@ class Interaction:
         The user or member that sent the interaction. Will be `None` in PING interactions.
     message: Optional[:class:`Message`]
         The message that sent this interaction.
-        This is updated to the message object of the response after responding by sending or editing a message.
     token: :class:`str`
         The token to continue the interaction. These are valid
         for 15 minutes.
@@ -846,7 +845,7 @@ class InteractionResponse:
         if defer_type:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
+            callback_response: InteractionCallbackResponse = await self._locked_response(
                 adapter.create_interaction_response(
                     parent.id,
                     parent.token,
@@ -858,6 +857,7 @@ class InteractionResponse:
                 )
             )
             self._responded = True
+            await self._process_callback_response(callback_response)
 
     async def pong(self) -> None:
         """|coro|
@@ -880,7 +880,7 @@ class InteractionResponse:
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
+            callback_response: InteractionCallbackResponse = await self._locked_response(
                 adapter.create_interaction_response(
                     parent.id,
                     parent.token,
@@ -891,6 +891,7 @@ class InteractionResponse:
                 )
             )
             self._responded = True
+            self._process_callback_response(callback_response)
 
     async def _process_callback_response(
         self, callback_response: InteractionCallbackResponse
@@ -1075,9 +1076,8 @@ class InteractionResponse:
             view.parent = self._parent
             self._parent._state.store_view(view)
 
-        await self._process_callback_response(callback_response)
-
         self._responded = True
+        await self._process_callback_response(callback_response)
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
         return self._parent
@@ -1240,9 +1240,8 @@ class InteractionResponse:
             view.message = msg
             state.store_view(view, message_id)
 
-        await self._process_callback_response(callback_response)
-
         self._responded = True
+        await self._process_callback_response(callback_response)
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
 
@@ -1278,7 +1277,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1291,6 +1290,7 @@ class InteractionResponse:
         )
 
         self._responded = True
+        self._process_callback_response(callback_response)
 
     async def send_modal(self, modal: Modal) -> Interaction:
         """|coro|
@@ -1317,7 +1317,7 @@ class InteractionResponse:
         payload = modal.to_dict()
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1329,6 +1329,7 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        self._process_callback_response(callback_response)
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
@@ -1356,7 +1357,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1367,6 +1368,7 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        self._process_callback_response(callback_response)
         return self._parent
 
     async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> Any:
