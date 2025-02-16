@@ -121,6 +121,8 @@ class RoleType(IntEnum):
 
     Attributes
     ----------
+    NORMAL: :class:`int`
+        The role is a normal role.
     APPLICATION: :class:`int`
         The role is an application (bot) role.
     BOOSTER: :class:`int`
@@ -141,6 +143,7 @@ class RoleType(IntEnum):
         The role type is unknown.
     """
 
+    NORMAL = 0
     APPLICATION = 1
     BOOSTER = 2
     GUILD_PRODUCT = 3
@@ -561,7 +564,7 @@ class Role(Hashable):
 
         .. versionadded:: 2.7
         """
-        return self.tags.type
+        return self.tags.type if self.tags is not None else RoleType.NORMAL
 
     async def _move(self, position: int, reason: str | None) -> None:
         if position <= 0:
