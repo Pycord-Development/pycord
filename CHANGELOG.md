@@ -39,6 +39,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `Permissions.use_external_sounds`, and
   `Permissions.view_creator_monetization_analytics`.
   ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))
+- Added `MediaChannel` channel type.
+  ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))
 - Added `Message._raw_data` attribute.
   ([#2670](https://github.com/Pycord-Development/pycord/pull/2670))
 - Added helper methods to determine the authorizing party of an `Interaction`.
@@ -54,6 +56,8 @@ These changes are available on the `master` branch, but have not yet been releas
   - Soundboard limits based on guild premium tier (8-48 slots) in
     `Guild.soundboard_limit`.
     ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
+- Added new `Subscription` object and related methods/events.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Fixed
 
@@ -78,6 +82,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2627](https://github.com/Pycord-Development/pycord/issues/2627))
 - Fixed `AttributeError` when sending polls with `PartialWebook`.
   ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
+- Fixed editing `ForumChannel` flags not working.
+  ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))
 - Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
@@ -92,6 +98,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))
 - Fixed unexpected backoff behavior in the handling of task failures
   ([#2700](https://github.com/Pycord-Development/pycord/pull/2700)).
+- Fixed `BridgeCommand` duplicate in default help command.
+  ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))
+- Fixed `AttributeError` when trying to consume a consumable entitlement.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
+- Fixed `Subscription.renewal_sku_ids` not accepting `None` from the received payload.
+  ([#2709](https://github.com/Pycord-Development/pycord/pull/2709))
 
 ### Changed
 
@@ -107,6 +119,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2176](https://github.com/Pycord-Development/pycord/pull/2176))
 - Updated `Guild.filesize_limit` to 10 MB instead of 25 MB following Discord's API
   changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))
+- `Entitlement.ends_at` can now be `None`.
+  ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 
 ### Deprecated
 
@@ -114,6 +128,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2520](https://github.com/Pycord-Development/pycord/pull/2520))
 - Deprecated `Emoji` in favor of `GuildEmoji`.
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
+- Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
+  ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
 
 ## [2.6.1] - 2024-09-15
 

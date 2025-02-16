@@ -46,7 +46,9 @@ if TYPE_CHECKING:
     from .soundboard import PartialSoundboardSound, SoundboardSound
     from .state import ConnectionState
     from .threads import Thread
-    from .types.raw_models import AuditLogEntryEvent
+    from .types.raw_models import (
+        AuditLogEntryEvent,
+    )
     from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .types.raw_models import (
         BulkMessageDeleteEvent,
@@ -65,7 +67,9 @@ if TYPE_CHECKING:
         TypingEvent,
     )
     from .types.raw_models import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
-    from .types.raw_models import VoiceChannelStatusUpdateEvent
+    from .types.raw_models import (
+        VoiceChannelStatusUpdateEvent,
+    )
     from .user import User
 
 

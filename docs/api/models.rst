@@ -114,6 +114,11 @@ Monetization
 .. autoclass:: Entitlement()
     :members:
 
+.. attributetable:: Subscription
+
+.. autoclass:: Subscription()
+    :members:
+
 Guild
 -----
 
@@ -425,6 +430,12 @@ Channels
 .. attributetable:: ForumChannel
 
 .. autoclass:: ForumChannel()
+    :members:
+    :inherited-members:
+
+.. attributetable:: MediaChannel
+
+.. autoclass:: MediaChannel()
     :members:
     :inherited-members:
 

@@ -826,6 +826,7 @@ class SlashCommandOptionType(Enum):
             "ThreadOption",
             "Thread",
             "ForumChannel",
+            "MediaChannel",
             "DMChannel",
         ]:
             return cls.channel
@@ -1063,6 +1064,14 @@ class VoiceChannelEffectAnimationType(Enum):
 
     premium = 0
     basic = 1
+
+
+class SubscriptionStatus(Enum):
+    """The status of a subscription."""
+
+    active = 0
+    ending = 1
+    inactive = 2
 
 
 T = TypeVar("T")
