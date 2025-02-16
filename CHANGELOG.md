@@ -49,6 +49,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
+- Added the ability to use functions with any number of optional arguments and functions
+  returning an awaitable as `Option.autocomplete`.
+  ([#2669](https://github.com/Pycord-Development/pycord/pull/2669))
 
 ### Fixed
 
