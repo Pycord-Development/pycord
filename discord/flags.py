@@ -411,6 +411,14 @@ class MessageFlags(BaseFlags):
         """
         return 8192
 
+    @flag_value
+    def has_snapshot(self):
+        """:class:`bool`: Returns ``True`` if this message has a snapshot from message forwarding.
+
+        .. versionadded:: 2.7
+        """
+        return 1 << 14
+
 
 @fill_with_flags()
 class PublicUserFlags(BaseFlags):
