@@ -40,7 +40,6 @@ from typing import (
 
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
-from .monetization import Entitlement
 from .object import Object
 from .utils import maybe_coroutine, snowflake_time, time_snowflake
 
@@ -52,6 +51,7 @@ __all__ = (
     "MemberIterator",
     "ScheduledEventSubscribersIterator",
     "EntitlementIterator",
+    "SubscriptionIterator",
 )
 
 if TYPE_CHECKING:
@@ -59,12 +59,14 @@ if TYPE_CHECKING:
     from .guild import BanEntry, Guild
     from .member import Member
     from .message import Message
+    from .monetization import Entitlement, Subscription
     from .scheduled_events import ScheduledEvent
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
     from .types.monetization import Entitlement as EntitlementPayload
+    from .types.monetization import Subscription as SubscriptionPayload
     from .types.threads import Thread as ThreadPayload
     from .types.user import PartialUser as PartialUserPayload
     from .user import User
@@ -1031,6 +1033,11 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         self.retrieve = r
         return r > 0
 
+    def create_entitlement(self, data) -> Entitlement:
+        from .monetization import Entitlement
+
+        return Entitlement(data=data, state=self.state)
+
     async def fill_entitlements(self):
         if not self._get_retrieve():
             return
@@ -1044,9 +1051,9 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             self.limit = 0  # terminate loop
 
         for element in data:
-            await self.entitlements.put(Entitlement(data=element, state=self.state))
+            await self.entitlements.put(self.create_entitlement(element))
 
-    async def _retrieve_entitlements(self, retrieve) -> list[Entitlement]:
+    async def _retrieve_entitlements(self, retrieve) -> list[EntitlementPayload]:
         """Retrieve entitlements and update next parameters."""
         raise NotImplementedError
 
@@ -1088,4 +1095,106 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             if self.limit is not None:
                 self.limit -= retrieve
             self.after = Object(id=int(data[-1]["id"]))
+        return data
+
+
+class SubscriptionIterator(_AsyncIterator["Subscription"]):
+    def __init__(
+        self,
+        state,
+        sku_id: int,
+        limit: int = None,
+        before: datetime.datetime | None = None,
+        after: datetime.datetime | None = None,
+        user_id: int | None = None,
+    ):
+        if isinstance(before, datetime.datetime):
+            before = Object(id=time_snowflake(before, high=False))
+        if isinstance(after, datetime.datetime):
+            after = Object(id=time_snowflake(after, high=True))
+
+        self.state = state
+        self.sku_id = sku_id
+        self.limit = limit
+        self.before = before
+        self.after = after
+        self.user_id = user_id
+
+        self._filter = None
+
+        self.get_subscriptions = state.http.list_sku_subscriptions
+        self.subscriptions = asyncio.Queue()
+
+        if self.before and self.after:
+            self._retrieve_subscriptions = self._retrieve_subscriptions_before_strategy
+            self._filter = lambda m: int(m["id"]) > self.after.id
+        elif self.after:
+            self._retrieve_subscriptions = self._retrieve_subscriptions_after_strategy
+        else:
+            self._retrieve_subscriptions = self._retrieve_subscriptions_before_strategy
+
+    async def next(self) -> Guild:
+        if self.subscriptions.empty():
+            await self.fill_subscriptions()
+
+        try:
+            return self.subscriptions.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    def _get_retrieve(self):
+        l = self.limit
+        if l is None or l > 100:
+            r = 100
+        else:
+            r = l
+        self.retrieve = r
+        return r > 0
+
+    def create_subscription(self, data) -> Subscription:
+        from .monetization import Subscription
+
+        return Subscription(state=self.state, data=data)
+
+    async def fill_subscriptions(self):
+        if self._get_retrieve():
+            data = await self._retrieve_subscriptions(self.retrieve)
+            if self.limit is None or len(data) < 100:
+                self.limit = 0
+
+            if self._filter:
+                data = filter(self._filter, data)
+
+            for element in data:
+                await self.subscriptions.put(self.create_subscription(element))
+
+    async def _retrieve_subscriptions(self, retrieve) -> list[SubscriptionPayload]:
+        raise NotImplementedError
+
+    async def _retrieve_subscriptions_before_strategy(self, retrieve):
+        before = self.before.id if self.before else None
+        data: list[SubscriptionPayload] = await self.get_subscriptions(
+            self.sku_id,
+            limit=retrieve,
+            before=before,
+            user_id=self.user_id,
+        )
+        if len(data):
+            if self.limit is not None:
+                self.limit -= retrieve
+            self.before = Object(id=int(data[-1]["id"]))
+        return data
+
+    async def _retrieve_subscriptions_after_strategy(self, retrieve):
+        after = self.after.id if self.after else None
+        data: list[SubscriptionPayload] = await self.get_subscriptions(
+            self.sku_id,
+            limit=retrieve,
+            after=after,
+            user_id=self.user_id,
+        )
+        if len(data):
+            if self.limit is not None:
+                self.limit -= retrieve
+            self.after = Object(id=int(data[0]["id"]))
         return data
