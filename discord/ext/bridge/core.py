@@ -41,7 +41,9 @@ from discord import (
 )
 
 from ...utils import MISSING, find, get, warn_deprecated
-from ..commands import BadArgument
+from ..commands import (
+    BadArgument,
+)
 from ..commands import Bot as ExtBot
 from ..commands import (
     Command,

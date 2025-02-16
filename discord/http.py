@@ -44,6 +44,7 @@ from .errors import (
     LoginFailure,
     NotFound,
 )
+from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .utils import MISSING, warn_deprecated
 
@@ -567,13 +568,17 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -633,13 +638,17 @@ class HTTPClient:
         attachments = []
         form.append({"name": "payload_json"})
         for index, file in enumerate(files):
-            attachments.append(
-                {
-                    "id": index,
-                    "filename": file.filename,
-                    "description": file.description,
-                }
-            )
+            attachment_info = {
+                "id": index,
+                "filename": file.filename,
+                "description": file.description,
+            }
+            if isinstance(file, VoiceMessage):
+                attachment_info.update(
+                    waveform=file.waveform,
+                    duration_secs=file.duration_secs,
+                )
+            attachments.append(attachment_info)
             form.append(
                 {
                     "name": f"files[{index}]",
@@ -3071,6 +3080,43 @@ class HTTPClient:
             entitlement_id=entitlement_id,
         )
         return self.request(r)
+
+    def list_sku_subscriptions(
+        self,
+        sku_id: Snowflake,
+        *,
+        before: Snowflake | None = None,
+        after: Snowflake | None = None,
+        limit: int = 50,
+        user_id: Snowflake | None = None,
+    ) -> Response[list[monetization.Subscription]]:
+        params: dict[str, Any] = {}
+        if before is not None:
+            params["before"] = before
+        if after is not None:
+            params["after"] = after
+        if limit is not None:
+            params["limit"] = limit
+        if user_id is not None:
+            params["user_id"] = user_id
+        return self.request(
+            Route("GET", "/skus/{sku_id}/subscriptions", sku_id=sku_id),
+            params=params,
+        )
+
+    def get_subscription(
+        self,
+        sku_id: Snowflake,
+        subscription_id: Snowflake,
+    ) -> Response[monetization.Subscription]:
+        return self.request(
+            Route(
+                "GET",
+                "/skus/{sku_id}/subscriptions/{subscription_id}",
+                sku_id=sku_id,
+                subscription_id=subscription_id,
+            )
+        )
 
     # Onboarding
 

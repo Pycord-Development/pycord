@@ -37,7 +37,7 @@ from .enums import (
     try_enum,
 )
 from .errors import ClientException, InteractionResponded, InvalidArgument
-from .file import File
+from .file import File, VoiceMessage
 from .flags import MessageFlags
 from .guild import Guild
 from .member import Member
@@ -119,7 +119,7 @@ class Interaction:
         The interaction type.
     guild_id: Optional[:class:`int`]
         The guild ID the interaction was sent from.
-    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]
+    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]
         The channel the interaction was sent from.
     channel_id: Optional[:class:`int`]
         The ID of the channel the interaction was sent from.
@@ -261,20 +261,23 @@ class Interaction:
             except KeyError:
                 pass
 
-        if channel := data.get("channel"):
-            if (ch_type := channel.get("type")) is not None:
-                factory, ch_type = _threaded_channel_factory(ch_type)
+        channel = data.get("channel")
+        data_ch_type: int | None = channel.get("type") if channel else None
 
-                if ch_type in (ChannelType.group, ChannelType.private):
-                    self.channel = factory(
-                        me=self.user, data=channel, state=self._state
-                    )
-                elif self.guild:
-                    self.channel = factory(
-                        guild=self.guild, state=self._state, data=channel
-                    )
-        else:
-            self.channel = self.cached_channel
+        if data_ch_type is not None:
+            factory, ch_type = _threaded_channel_factory(data_ch_type)
+            if ch_type in (ChannelType.group, ChannelType.private):
+                self.channel = factory(me=self.user, data=channel, state=self._state)
+
+        if self.channel is None and self.guild:
+            self.channel = self.guild._resolve_channel(self.channel_id)
+        if self.channel is None and self.channel_id is not None:
+            ch_type = (
+                ChannelType.text if self.guild_id is not None else ChannelType.private
+            )
+            self.channel = PartialMessageable(
+                state=self._state, id=self.channel_id, type=ch_type
+            )
 
         self._channel_data = channel
 
@@ -306,12 +309,12 @@ class Interaction:
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
+    @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
     def cached_channel(self) -> InteractionChannel | None:
-        """The channel the
-        interaction was sent from.
+        """The cached channel from which the interaction was sent.
+        DM channels are not resolved. These are :class:`PartialMessageable` instead.
 
-        Note that due to a Discord limitation, DM channels are not resolved since there is
-        no data to complete them. These are :class:`PartialMessageable` instead.
+        .. deprecated:: 2.7
         """
         guild = self.guild
         channel = guild and guild._resolve_channel(self.channel_id)
@@ -957,8 +960,7 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        if ephemeral:
-            payload["flags"] = 64
+        flags = MessageFlags(ephemeral=ephemeral)
 
         if view is not None:
             payload["components"] = view.to_components()
@@ -995,6 +997,11 @@ class InteractionResponse:
                 )
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
+
+            if any(isinstance(file, VoiceMessage) for file in files):
+                flags = flags + MessageFlags(is_voice_message=True)
+
+        payload["flags"] = flags.value
 
         parent = self._parent
         adapter = async_context.get()
