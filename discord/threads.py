@@ -604,18 +604,18 @@ class Thread(Messageable, Hashable):
         )
 
     async def edit(
-            self,
-            *,
-            name: str = MISSING,
-            archived: bool = MISSING,
-            locked: bool = MISSING,
-            invitable: bool = MISSING,
-            slowmode_delay: int = MISSING,
-            auto_archive_duration: ThreadArchiveDuration = MISSING,
-            pinned: bool = MISSING,
-            applied_tags: list[ForumTag] = MISSING,
-            reason: str | None = None,
-            overwrites: Mapping[Union[Role, Member], PermissionOverwrite] = MISSING
+        self,
+        *,
+        name: str = MISSING,
+        archived: bool = MISSING,
+        locked: bool = MISSING,
+        invitable: bool = MISSING,
+        slowmode_delay: int = MISSING,
+        auto_archive_duration: ThreadArchiveDuration = MISSING,
+        pinned: bool = MISSING,
+        applied_tags: list[ForumTag] = MISSING,
+        reason: str | None = None,
+        overwrites: Mapping[Union[Role, Member], PermissionOverwrite] = MISSING,
     ) -> Thread:
         """
         Edits the thread.
@@ -694,12 +694,14 @@ class Thread(Messageable, Hashable):
             for target, overwrite in overwrites.items():
                 ow_type = 0 if isinstance(target, Role) else 1  # 0=Role, 1=Member
                 allow, deny = overwrite.pair()  # returns (Permissions, Permissions)
-                new_overwrites.append({
-                    "id": target.id,
-                    "type": ow_type,
-                    "allow": str(allow.value),  # bitfield as string
-                    "deny": str(deny.value),
-                })
+                new_overwrites.append(
+                    {
+                        "id": target.id,
+                        "type": ow_type,
+                        "allow": str(allow.value),  # bitfield as string
+                        "deny": str(deny.value),
+                    }
+                )
             payload["permission_overwrites"] = new_overwrites
 
         data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
