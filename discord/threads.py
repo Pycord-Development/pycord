@@ -595,20 +595,20 @@ class Thread(Messageable, Hashable):
         )
 
     async def edit(
-        self,
-        *,
-        name: str = MISSING,
-        archived: bool = MISSING,
-        locked: bool = MISSING,
-        invitable: bool = MISSING,
-        slowmode_delay: int = MISSING,
-        auto_archive_duration: ThreadArchiveDuration = MISSING,
-        pinned: bool = MISSING,
-        applied_tags: list[ForumTag] = MISSING,
-        reason: str | None = None,
+            self,
+            *,
+            name: str = MISSING,
+            archived: bool = MISSING,
+            locked: bool = MISSING,
+            invitable: bool = MISSING,
+            slowmode_delay: int = MISSING,
+            auto_archive_duration: ThreadArchiveDuration = MISSING,
+            pinned: bool = MISSING,
+            applied_tags: list[ForumTag] = MISSING,
+            reason: str | None = None,
+            overwrites: Mapping[Union[Role, Member], PermissionOverwrite] = MISSING
     ) -> Thread:
-        """|coro|
-
+        """
         Edits the thread.
 
         Editing the thread requires :attr:`.Permissions.manage_threads`. The thread
@@ -633,16 +633,17 @@ class Thread(Messageable, Hashable):
             The new duration in minutes before a thread is automatically archived for inactivity.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
         slowmode_delay: :class:`int`
-            Specifies the slowmode rate limit for user in this thread, in seconds.
-            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
-        reason: Optional[:class:`str`]
-            The reason for editing this thread. Shows up on the audit log.
+            Specifies the slowmode rate limit for this thread, in seconds.
+            A value of ``0`` disables slowmode. The maximum value is ``21600``.
         pinned: :class:`bool`
-            Whether to pin the thread or not. This only works if the thread is part of a forum or media channel.
+            Whether to pin the thread or not. Works only if the thread is in a forum or media channel.
         applied_tags: List[:class:`ForumTag`]
-            The set of tags to apply to the thread. Each tag object should have an ID set.
-
-            .. versionadded:: 2.3
+            The set of tags to apply to the thread (forum-only). Each tag should have an ID set.
+        reason: Optional[:class:`str`]
+            The reason for editing this thread. This shows up in the audit log.
+        overwrites: Mapping[Union[:class:`Role`, :class:`Member`], :class:`PermissionOverwrite`]
+            A mapping of roles/members to permission overwrites for this thread.
+            If provided, this replaces all existing overwrites for the thread.
 
         Returns
         -------
@@ -652,11 +653,13 @@ class Thread(Messageable, Hashable):
         Raises
         ------
         Forbidden
-            You do not have permissions to edit the thread.
+            You do not have permission to edit the thread.
         HTTPException
             Editing the thread failed.
         """
+
         payload = {}
+
         if name is not MISSING:
             payload["name"] = str(name)
         if archived is not MISSING:
@@ -670,15 +673,28 @@ class Thread(Messageable, Hashable):
         if slowmode_delay is not MISSING:
             payload["rate_limit_per_user"] = slowmode_delay
         if pinned is not MISSING:
-            # copy the ChannelFlags object to avoid mutating the original
             flags = ChannelFlags._from_value(self.flags.value)
             flags.pinned = pinned
             payload["flags"] = flags.value
         if applied_tags is not MISSING:
             payload["applied_tags"] = [tag.id for tag in applied_tags]
 
+        # New logic for overwrites:
+        if overwrites is not MISSING:
+            new_overwrites = []
+            for target, overwrite in overwrites.items():
+                ow_type = 0 if isinstance(target, Role) else 1  # 0=Role, 1=Member
+                allow, deny = overwrite.pair()  # returns (Permissions, Permissions)
+                new_overwrites.append({
+                    "id": target.id,
+                    "type": ow_type,
+                    "allow": str(allow.value),  # bitfield as string
+                    "deny": str(deny.value),
+                })
+            payload["permission_overwrites"] = new_overwrites
+
         data = await self._state.http.edit_channel(self.id, **payload, reason=reason)
-        # The data payload will always be a Thread payload
+        # The data payload should be a Thread JSON from the API
         return Thread(data=data, state=self._state, guild=self.guild)  # type: ignore
 
     async def archive(self, locked: bool = MISSING) -> Thread:
