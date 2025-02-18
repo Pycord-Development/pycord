@@ -41,12 +41,13 @@ __all__ = (
 
 from typing import Mapping, Union
 
+from .member import Member
+
 # If PermissionOverwrite is defined in .permissions:
 from .permissions import PermissionOverwrite, Permissions
 
 # If Role and Member are defined in .role and .member:
 from .role import Role
-from .member import Member
 
 if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
@@ -615,7 +616,7 @@ class Thread(Messageable, Hashable):
         pinned: bool = MISSING,
         applied_tags: list[ForumTag] = MISSING,
         reason: str | None = None,
-        overwrites: Mapping[Union[Role, Member], PermissionOverwrite] = MISSING,
+        overwrites: Mapping[Role | Member, PermissionOverwrite] = MISSING,
     ) -> Thread:
         """
         Edits the thread.
