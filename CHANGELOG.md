@@ -51,6 +51,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
   ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
+- Added ability to change the API's base URL with `Route.API_BASE_URL`.
+  ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 
 ### Fixed
 
