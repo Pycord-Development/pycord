@@ -26,9 +26,9 @@ class Section(Item[V]):
     Parameters
     ----------
     *items: :class:`Item`
-        The initial items contained in this section, up to 3. Currently only supports :class:`~discord.ui.TextDisplay` and :class:`~discord.ui.Button`.
+        The initial items contained in this section, up to 3. Currently only supports :class:`~discord.ui.TextDisplay`.
     accessory: Optional[:class:`Item`]
-        This section's accessory. This is displayed in the top right of the section. Currently only supports :class:`~discord.ui.TextDisplay` and :class:`~discord.ui.Button`.
+        This section's accessory. This is displayed in the top right of the section. Currently only supports :class:`~discord.ui.Thumbnail` and :class:`~discord.ui.Button`.
     """
 
     def __init__(self, *items: Item, accessory: Item = None):
@@ -91,12 +91,6 @@ class Section(Item[V]):
         text = ...
 
         self.items.append(text)
-
-    def add_button(
-        self,
-        label: str,
-    ) -> None:
-        """finish"""
 
     def set_accessory(self, item: Item) -> None:
         """Set an item as the section's :attr:`accessory`.

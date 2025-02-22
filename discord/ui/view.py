@@ -39,6 +39,7 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
+from ..components import TextDisplay as TextDisplayComponent
 from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType
@@ -74,6 +75,10 @@ def _component_to_item(component: Component) -> Item:
         from .section import Section
 
         return Section.from_component(component)
+    if isinstance(component, TextDisplayComponent):
+        from .text_display import TextDisplay
+
+        return TextDisplay.from_component(component)
     return Item.from_component(component)
 
 
