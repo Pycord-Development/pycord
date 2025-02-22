@@ -44,6 +44,11 @@ class TextDisplay(Item[V]):
     def type(self) -> ComponentType:
         return self._underlying.type
 
+    def set_text(self, content):
+        """Update this component's content."""
+        self.content = content
+        self._underlying.content = content
+
     def to_component_dict(self) -> TextDisplayComponentPayload:
         return self._underlying.to_dict()
 
