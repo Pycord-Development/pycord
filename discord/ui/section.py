@@ -69,7 +69,7 @@ class Section(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         self.items.append(item)
-        self._underlying.components.append(_component_factory(item))
+        self._underlying.components.append(item._underlying)
 
     def add_text(self, content: str) -> None:
         """Adds a :class:`TextDisplay` to the section.
