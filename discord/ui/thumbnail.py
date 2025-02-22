@@ -38,7 +38,7 @@ class Thumbnail(Item[V]):
         self._underlying = ThumbnailComponent._raw_construct(
             type=ComponentType.thumbnail,
             id=None,
-            media=self.media,
+            media=media,
             description=description,
             spoiler=spoiler,
         )
@@ -86,6 +86,6 @@ class Thumbnail(Item[V]):
 
     @classmethod
     def from_component(cls: type[T], component: ThumbnailComponent) -> T:
-        return cls(component.content)
+        return cls(component.media and component.media.url, description=component.description, spoiler=component.spoiler)
 
     callback = None
