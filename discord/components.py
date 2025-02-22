@@ -73,7 +73,7 @@ __all__ = (
     "MediaGallery",
     "FileComponent",
     "Separator",
-    "Container"
+    "Container",
 )
 
 C = TypeVar("C", bound="Component")
