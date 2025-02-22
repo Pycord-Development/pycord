@@ -11,6 +11,7 @@ __all__ = ("Section",)
 
 if TYPE_CHECKING:
     from ..types.components import SectionComponent as SectionComponentPayload
+    from .view import View
 
 
 S = TypeVar("S", bound="Section")
