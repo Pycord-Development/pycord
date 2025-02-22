@@ -44,7 +44,7 @@ class TextDisplay(Item[V]):
     def type(self) -> ComponentType:
         return self._underlying.type
 
-    def to_component_dict(self) -> TextDisplayPayload:
+    def to_component_dict(self) -> TextDisplayComponentPayload:
         return self._underlying.to_dict()
 
     @classmethod
