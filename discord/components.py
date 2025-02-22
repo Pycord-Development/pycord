@@ -124,6 +124,7 @@ class Component:
     def is_v2(self) -> bool:
         return self.versions and 1 not in self.versions
 
+
 class ActionRow(Component):
     """Represents a Discord Bot UI Kit Action Row.
 
@@ -144,7 +145,10 @@ class ActionRow(Component):
     __slots__: tuple[str, ...] = ("children",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (1, 2, )
+    versions: tuple[int, ...] = (
+        1,
+        2,
+    )
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -197,7 +201,10 @@ class InputText(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (1, 2, )
+    versions: tuple[int, ...] = (
+        1,
+        2,
+    )
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
@@ -279,7 +286,10 @@ class Button(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (1, 2, )
+    versions: tuple[int, ...] = (
+        1,
+        2,
+    )
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -372,7 +382,10 @@ class SelectMenu(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (1, 2, )
+    versions: tuple[int, ...] = (
+        1,
+        2,
+    )
 
     def __init__(self, data: SelectMenuPayload):
         self.type = try_enum(ComponentType, data["type"])
@@ -546,7 +559,7 @@ class Section(Component):
     __slots__: tuple[str, ...] = ("components", "accessory")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: SectionComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -587,7 +600,7 @@ class TextDisplay(Component):
     __slots__: tuple[str, ...] = ("content",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: TextDisplayComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -644,7 +657,7 @@ class Thumbnail(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: ThumbnailComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -700,7 +713,7 @@ class MediaGallery(Component):
     __slots__: tuple[str, ...] = ("items",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: MediaGalleryComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -740,7 +753,7 @@ class FileComponent(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: FileComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -780,7 +793,7 @@ class Separator(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: SeparatorComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -821,7 +834,7 @@ class Container(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: ContainerComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])

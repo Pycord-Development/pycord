@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 from ..components import Section as SectionComponent
 from ..components import _component_factory
@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
 S = TypeVar("S", bound="Section")
 V = TypeVar("V", bound="View", covariant=True)
+
 
 class Section(Item[V]):
     """Represents a UI section.
@@ -124,12 +125,9 @@ class Section(Item[V]):
     @classmethod
     def from_component(cls: type[S], component: SectionComponent) -> S:
         from .view import _component_to_item
-        
+
         items = [_component_to_item(c) for c in component.components]
         accessory = _component_to_item(component.accessory)
-        return cls(
-            *items,
-            accessory = accessory
-        )
-    
+        return cls(*items, accessory=accessory)
+
     callback = None
