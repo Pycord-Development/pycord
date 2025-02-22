@@ -6,6 +6,7 @@ from ..components import Section as SectionComponent
 from ..components import _component_factory
 from ..enums import ComponentType
 from .item import Item
+from .text_display import TextDisplay
 
 __all__ = ("Section",)
 
@@ -34,7 +35,7 @@ class Section(Item[V]):
     def __init__(self, *items: Item, accessory: Item = None):
         super().__init__()
 
-        self.items = items
+        self.items = items or []
         self.accessory = accessory
         components = [i._underlying for i in items]
 
@@ -68,6 +69,7 @@ class Section(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         self.items.append(item)
+        self._underlying.components.append(_component_factory(item))
 
     def add_text(self, content: str) -> None:
         """Adds a :class:`TextDisplay` to the section.
@@ -88,9 +90,9 @@ class Section(Item[V]):
         if len(self.items) >= 3:
             raise ValueError("maximum number of children exceeded")
 
-        text = ...
+        text = TextDisplay(content)
 
-        self.items.append(text)
+        self.add_item(text)
 
     def set_accessory(self, item: Item) -> None:
         """Set an item as the section's :attr:`accessory`.
@@ -110,6 +112,7 @@ class Section(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         self.accessory = item
+        self._underlying.accessory = accessory._underlying
 
     @property
     def type(self) -> ComponentType:
