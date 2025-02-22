@@ -20,7 +20,7 @@ V = TypeVar("V", bound="View", covariant=True)
 
 
 class Section(Item[V]):
-    """Represents a UI section.
+    """Represents a UI section. Sections must have 1-3 items and an accessory set.
 
     .. versionadded:: 2.7
 
@@ -82,7 +82,7 @@ class Section(Item[V]):
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            A :class:`str` was not passed.
         ValueError
             Maximum number of items has been exceeded (3).
         """
@@ -117,6 +117,10 @@ class Section(Item[V]):
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
+
+    @property
+    def width(self) -> int:
+        return 5
 
     def to_component_dict(self) -> SectionComponentPayload:
         return self._underlying.to_dict()
