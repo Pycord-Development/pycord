@@ -226,19 +226,22 @@ class View:
         def key(item: Item) -> int:
             return item._rendered_row or 0
 
-        children = sorted(self.children, key=key)
-        components: list[dict[str, Any]] = []
-        for _, group in groupby(children, key=key):
-            children = [item.to_component_dict() for item in group]
-            if not children:
-                continue
+        if self.is_v2():
+            components = [item.to_component_dict() for item in self.children]
+        else:
+            children = sorted(self.children, key=key)
+            components: list[dict[str, Any]] = []
+            for _, group in groupby(children, key=key):
+                children = [item.to_component_dict() for item in group]
+                if not children:
+                    continue
 
-            components.append(
-                {
-                    "type": 1,
-                    "components": children,
-                }
-            )
+                components.append(
+                    {
+                        "type": 1,
+                        "components": children,
+                    }
+                )
 
         return components
 
