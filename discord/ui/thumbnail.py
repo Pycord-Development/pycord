@@ -86,6 +86,10 @@ class Thumbnail(Item[V]):
 
     @classmethod
     def from_component(cls: type[T], component: ThumbnailComponent) -> T:
-        return cls(component.media and component.media.url, description=component.description, spoiler=component.spoiler)
+        return cls(
+            component.media and component.media.url,
+            description=component.description,
+            spoiler=component.spoiler,
+        )
 
     callback = None
