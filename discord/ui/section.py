@@ -35,9 +35,9 @@ class Section(Item[V]):
     def __init__(self, *items: Item, accessory: Item = None):
         super().__init__()
 
-        self.items = items or []
-        self.accessory = accessory
+        self.items = [i for i in items]
         components = [i._underlying for i in items]
+        self.accessory = accessory
 
         self._underlying = SectionComponent._raw_construct(
             type=ComponentType.section,
