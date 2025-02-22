@@ -111,7 +111,6 @@ class Component:
 
     __repr_info__: ClassVar[tuple[str, ...]]
     type: ComponentType
-    id: str
     versions: tuple[int, ...]
 
     def __repr__(self) -> str:
@@ -162,6 +161,7 @@ class ActionRow(Component):
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: str = data.get("id")
         self.children: list[Component] = [
             _component_factory(d) for d in data.get("components", [])
         ]
@@ -215,6 +215,7 @@ class InputText(Component):
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
+        self.id: str = data.get("id")
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
         self.label: str = data.get("label", None)
@@ -297,6 +298,7 @@ class Button(Component):
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: str = data.get("id")
         self.style: ButtonStyle = try_enum(ButtonStyle, data["style"])
         self.custom_id: str | None = data.get("custom_id")
         self.url: str | None = data.get("url")
@@ -390,6 +392,7 @@ class SelectMenu(Component):
 
     def __init__(self, data: SelectMenuPayload):
         self.type = try_enum(ComponentType, data["type"])
+        self.id: str = data.get("id")
         self.custom_id: str = data["custom_id"]
         self.placeholder: str | None = data.get("placeholder")
         self.min_values: int = data.get("min_values", 1)
