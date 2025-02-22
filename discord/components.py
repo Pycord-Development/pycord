@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
+from .asset import AssetMixin
 from .colour import Colour
 from .enums import (
     ButtonStyle,
@@ -615,10 +616,10 @@ class TextDisplay(Component):
         return {"type": int(self.type), "id": self.id, "content": self.content}
 
 
-class UnfurledMediaItem:
+class UnfurledMediaItem(AssetMixin):
 
     def __init__(self, data: UnfurledMediaItemPayload):
-        self.url = data.get("url")
+        self._url = data.get("url")
         self.proxy_url: str = data.get("proxy_url")
         self.height: int | None = data.get("height")
         self.width: int | None = data.get("width")
@@ -630,6 +631,11 @@ class UnfurledMediaItem:
             MediaItemLoadingState, data.get("loading_state")
         )
         self.src_is_animated: bool = data.get("src_is_animated")
+
+    @property
+    def url(self) -> str:
+        """Returns the underlying URL of this media."""
+        return self._url
 
     def to_dict(self):
         return {"url": self.url}
