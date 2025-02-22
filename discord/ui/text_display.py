@@ -48,7 +48,7 @@ class TextDisplay(Item[V]):
         return self._underlying.to_dict()
 
     @classmethod
-    def from_component(cls: type[S], component: TextDisplayComponent) -> T:
+    def from_component(cls: type[T], component: TextDisplayComponent) -> T:
         return cls(component.content)
 
     callback = None
