@@ -112,7 +112,7 @@ class Section(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         self.accessory = item
-        self._underlying.accessory = accessory._underlying
+        self._underlying.accessory = item._underlying
 
     @property
     def type(self) -> ComponentType:
