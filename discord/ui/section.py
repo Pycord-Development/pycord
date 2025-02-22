@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, TypeVar
 
 from ..components import Section as SectionComponent
+from ..components import _component_factory
 from ..enums import ComponentType
 from .item import Item
 
@@ -12,7 +13,10 @@ if TYPE_CHECKING:
     from ..types.components import SectionComponent as SectionComponentPayload
 
 
-class Section:
+S = TypeVar("S", bound="Section")
+V = TypeVar("V", bound="View", covariant=True)
+
+class Section(Item[V]):
     """Represents a UI section.
 
     .. versionadded:: 2.7
@@ -30,12 +34,12 @@ class Section:
 
         self.items = items
         self.accessory = accessory
-        components = []
+        components = [i._underlying for i in items]
 
         self._underlying = SectionComponent._raw_construct(
             type=ComponentType.section,
             components=components,
-            accessory=accessory,
+            accessory=accessory._underlying,
         )
 
     def add_item(self, item: Item) -> None:
@@ -91,9 +95,41 @@ class Section:
     ) -> None:
         """finish"""
 
+    def set_accessory(self, item: Item) -> None:
+        """Set an item as the section's :attr:`accessory`.
+
+        Parameters
+        ----------
+        item: :class:`Item`
+            The item to set as accessory. Currently only supports :class:`~discord.ui.Thumbnail` and :class:`~discord.ui.Button`.
+
+        Raises
+        ------
+        TypeError
+            An :class:`Item` was not passed.
+        """
+
+        if not isinstance(item, Item):
+            raise TypeError(f"expected Item not {item.__class__!r}")
+
+        self.accessory = item
+
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
 
     def to_component_dict(self) -> SectionComponentPayload:
         return self._underlying.to_dict()
+
+    @classmethod
+    def from_component(cls: type[S], component: SectionComponent) -> S:
+        from .view import _component_to_item
+        
+        items = [_component_to_item(c) for c in component.components]
+        accessory = _component_to_item(component.accessory)
+        return cls(
+            *items,
+            accessory = accessory
+        )
+    
+    callback = None

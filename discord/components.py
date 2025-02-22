@@ -75,7 +75,7 @@ C = TypeVar("C", bound="Component")
 
 
 class Component:
-    """Represents a Discord Bot UI Kit Component.
+    """Represents a Discord Bot UI Kit V1 Component.
 
     Currently, the only components supported by Discord are:
 
@@ -100,6 +100,7 @@ class Component:
     __repr_info__: ClassVar[tuple[str, ...]]
     type: ComponentType
     id: str
+    versions: tuple[int, ...]
 
     def __repr__(self) -> str:
         attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__repr_info__)
@@ -120,6 +121,8 @@ class Component:
     def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
+    def is_v2(self) -> bool:
+        return self.versions and 1 not in self.versions
 
 class ActionRow(Component):
     """Represents a Discord Bot UI Kit Action Row.
@@ -141,6 +144,7 @@ class ActionRow(Component):
     __slots__: tuple[str, ...] = ("children",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2, )
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -193,6 +197,7 @@ class InputText(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2, )
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
@@ -274,6 +279,7 @@ class Button(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2, )
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -366,6 +372,7 @@ class SelectMenu(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2, )
 
     def __init__(self, data: SelectMenuPayload):
         self.type = try_enum(ComponentType, data["type"])
@@ -539,6 +546,7 @@ class Section(Component):
     __slots__: tuple[str, ...] = ("components", "accessory")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2, )
 
     def __init__(self, data: SectionComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -579,6 +587,7 @@ class TextDisplay(Component):
     __slots__: tuple[str, ...] = ("content",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2, )
 
     def __init__(self, data: TextDisplayComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -635,6 +644,7 @@ class Thumbnail(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2, )
 
     def __init__(self, data: ThumbnailComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -690,6 +700,7 @@ class MediaGallery(Component):
     __slots__: tuple[str, ...] = ("items",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2, )
 
     def __init__(self, data: MediaGalleryComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -729,6 +740,7 @@ class FileComponent(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2, )
 
     def __init__(self, data: FileComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -768,6 +780,7 @@ class Separator(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2, )
 
     def __init__(self, data: SeparatorComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -808,6 +821,7 @@ class Container(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2, )
 
     def __init__(self, data: ContainerComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])

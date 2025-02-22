@@ -37,12 +37,13 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
 from ..components import Component
+from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
 from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType
 
-__all__ = ("View",)
+__all__ = ("View", "_component_to_item")
 
 
 if TYPE_CHECKING:
@@ -69,6 +70,10 @@ def _component_to_item(component: Component) -> Item:
         from .select import Select
 
         return Select.from_component(component)
+    if isinstance(component, SectionComponent):
+        from .section import Section
+
+        return Section.from_component(component)
     return Item.from_component(component)
 
 
@@ -514,6 +519,13 @@ class View:
         return self.timeout is None and all(
             item.is_persistent() for item in self.children
         )
+
+    def is_v2(self) -> bool:
+        """Whether the view contains V2 components.
+        
+        A view containing V2 components may not be sent alongside message content or embeds.
+        """
+        return any([item._underlying.is_v2() for item in self.children])
 
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
