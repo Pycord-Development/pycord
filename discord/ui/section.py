@@ -41,7 +41,7 @@ class Section(Item[V]):
         self._underlying = SectionComponent._raw_construct(
             type=ComponentType.section,
             components=components,
-            accessory=accessory._underlying,
+            accessory=accessory and accessory._underlying,
         )
 
     def add_item(self, item: Item) -> None:
