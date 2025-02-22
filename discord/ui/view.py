@@ -232,11 +232,12 @@ class View:
         children = sorted(self.children, key=key)
         components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
-            children = [item.to_component_dict() for item in group]
+            items = list(group)
+            children = [item.to_component_dict() for item in items]
             if not children:
                 continue
 
-            if any([i._underlying.is_v2() for i in group]):
+            if any([i._underlying.is_v2() for i in items]):
                 components += children
             else:
                 components.append(
