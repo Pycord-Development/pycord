@@ -1575,7 +1575,7 @@ class Message(Hashable):
             payload["embeds"] = [] if embed is None else [embed.to_dict()]
         elif embeds is not MISSING:
             payload["embeds"] = [e.to_dict() for e in embeds]
-        
+
         flags = MessageFlags._from_value(self.flags.value)
 
         if suppress is not MISSING:
@@ -1605,7 +1605,7 @@ class Message(Hashable):
                 flags.is_components_v2 = True
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument("cannot pass both file and files parameter to edit()")
-        
+
         if flags.value != self.flags.value:
             payload["flags"] = flags.value
 

@@ -1786,7 +1786,7 @@ class Webhook(BaseWebhook):
 
         if application_webhook:
             wait = True
-        
+
         with_components = False
 
         if view is not MISSING:
