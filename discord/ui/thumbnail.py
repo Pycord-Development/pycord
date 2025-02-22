@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, TypeVar
 
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import _component_factory, UnfurledMediaItem
+from ..components import UnfurledMediaItem, _component_factory
 from ..enums import ComponentType
 from .item import Item
 
@@ -55,7 +55,7 @@ class Thumbnail(Item[V]):
     def url(self) -> str:
         """The URL of this thumbnail's media. This can either be an arbitrary URL or an ``attachment://`` URL."""
         return self._url
-    
+
     @url.setter
     def url(self, value: str) -> None:
         self._url = value

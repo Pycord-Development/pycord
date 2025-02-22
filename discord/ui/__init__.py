@@ -15,5 +15,5 @@ from .modal import *
 from .section import *
 from .select import *
 from .text_display import *
-from .view import *
 from .thumbnail import *
+from .view import *
