@@ -69,19 +69,31 @@ __all__ = (
     "InputText",
     "Section",
     "TextDisplay",
+    "Thumbnail",
+    "MediaGallery",
+    "FileComponent",
+    "Separator",
+    "Container"
 )
 
 C = TypeVar("C", bound="Component")
 
 
 class Component:
-    """Represents a Discord Bot UI Kit V1 Component.
+    """Represents a Discord Bot UI Kit Component.
 
-    Currently, the only components supported by Discord are:
+    The components supported by Discord in messages are as follows:
 
     - :class:`ActionRow`
     - :class:`Button`
     - :class:`SelectMenu`
+    - :class:`Section`
+    - :class:`TextDisplay`
+    - :class:`Thumbnail`
+    - :class:`MediaGallery`
+    - :class:`FileComponent`
+    - :class:`Separator`
+    - :class:`Container`
 
     This class is abstract and cannot be instantiated.
 
@@ -122,6 +134,7 @@ class Component:
         raise NotImplementedError
 
     def is_v2(self) -> bool:
+        """Whether this component was introduced in Components V2."""
         return self.versions and 1 not in self.versions
 
 
@@ -145,10 +158,7 @@ class ActionRow(Component):
     __slots__: tuple[str, ...] = ("children",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (
-        1,
-        2,
-    )
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -201,10 +211,7 @@ class InputText(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (
-        1,
-        2,
-    )
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
@@ -286,10 +293,7 @@ class Button(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (
-        1,
-        2,
-    )
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -382,10 +386,7 @@ class SelectMenu(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (
-        1,
-        2,
-    )
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: SelectMenuPayload):
         self.type = try_enum(ComponentType, data["type"])
