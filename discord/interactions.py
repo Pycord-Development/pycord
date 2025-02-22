@@ -964,6 +964,8 @@ class InteractionResponse:
 
         if view is not None:
             payload["components"] = view.to_components()
+            if view.is_v2():
+                flags.is_components_v2 = True
 
         if poll is not None:
             payload["poll"] = poll.to_dict()
