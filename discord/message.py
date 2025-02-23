@@ -1120,7 +1120,7 @@ class Message(Hashable):
                     self.role_mentions.append(role)
 
     def _handle_components(self, components: list[ComponentPayload]):
-        self.components = [_component_factory(d) for d in components]
+        self.components = [_component_factory(d, state=self._state) for d in components]
 
     def _rebind_cached_references(
         self, new_guild: Guild, new_channel: TextChannel | Thread

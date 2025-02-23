@@ -665,4 +665,4 @@ class ViewStore:
     def update_from_message(self, message_id: int, components: list[ComponentPayload]):
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
-        view.refresh([_component_factory(d) for d in components])
+        view.refresh([_component_factory(d, state=self._state) for d in components])

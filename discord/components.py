@@ -566,15 +566,15 @@ class Section(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: SectionComponentPayload):
+    def __init__(self, data: SectionComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
         self.components: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
+            _component_factory(d, state=state) for d in data.get("components", [])
         ]
         self.accessory: Component | None = None
         if _accessory := data.get("accessory"):
-            self.accessory = _component_factory(_accessory)
+            self.accessory = _component_factory(_accessory, state=state)
 
     def to_dict(self) -> SectionComponentPayload:
         payload = {
@@ -847,7 +847,7 @@ class Container(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ContainerComponentPayload):
+    def __init__(self, data: ContainerComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
         self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
@@ -855,7 +855,7 @@ class Container(Component):
         )  # at this point, not adding alternative spelling
         self.spoiler: bool | None = data.get("spoiler")
         self.components: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
+            _component_factory(d, state=state) for d in data.get("components", [])
         ]
 
     def to_dict(self) -> ContainerComponentPayload:
@@ -893,7 +893,7 @@ COMPONENT_MAPPINGS = {
 def _component_factory(data: ComponentPayload, state=None) -> Component:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
-        if cls in (Thumbnail, MediaGallery, FileComponent):
+        if cls in (Section, Container, Thumbnail, MediaGallery, FileComponent):
             return cls(data, state=state)
         else:
             return cls(data)
