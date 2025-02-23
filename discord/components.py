@@ -618,8 +618,8 @@ class TextDisplay(Component):
 
 class UnfurledMediaItem(AssetMixin):
 
-    def __init__(self, data: UnfurledMediaItemPayload):
-        self._state = None
+    def __init__(self, data: UnfurledMediaItemPayload, state=None):
+        self._state = state
         self._url = data.get("url")
         self.proxy_url: str = data.get("proxy_url")
         self.height: int | None = data.get("height")
@@ -690,10 +690,10 @@ class Thumbnail(Component):
 
 class MediaGalleryItem:
 
-    def __init__(self, data: MediaGalleryItemPayload):
+    def __init__(self, data: MediaGalleryItemPayload, state=None):
         self.media: UnfurledMediaItem = (
             umi := data.get("media")
-        ) and UnfurledMediaItem(umi)
+        ) and UnfurledMediaItem(umi, state=state)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
@@ -726,11 +726,11 @@ class MediaGallery(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: MediaGalleryComponentPayload):
+    def __init__(self, data: MediaGalleryComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
         self.items: list[MediaGalleryItem] = [
-            MediaGalleryItem(d) for d in data.get("items", [])
+            MediaGalleryItem(d, state=state) for d in data.get("items", [])
         ]
 
     def to_dict(self) -> MediaGalleryComponentPayload:
@@ -766,11 +766,11 @@ class FileComponent(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: FileComponentPayload):
+    def __init__(self, data: FileComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
         self.file: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(
-            umi
+            umi, state=state
         )
         self.spoiler: bool | None = data.get("spoiler")
 
@@ -890,10 +890,13 @@ COMPONENT_MAPPINGS = {
 }
 
 
-def _component_factory(data: ComponentPayload) -> Component:
+def _component_factory(data: ComponentPayload, state=None) -> Component:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
-        return cls(data)
+        if cls in (Thumbnail, MediaGallery, FileComponent):
+            return cls(data, state=state)
+        else:
+            return cls(data)
     else:
         as_enum = try_enum(ComponentType, component_type)
         return Component._raw_construct(type=as_enum)

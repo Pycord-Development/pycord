@@ -870,7 +870,7 @@ class Message(Hashable):
             StickerItem(data=d, state=state) for d in data.get("sticker_items", [])
         ]
         self.components: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
+            _component_factory(d, state=state) for d in data.get("components", [])
         ]
 
         try:
