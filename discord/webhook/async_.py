@@ -338,17 +338,18 @@ class AsyncWebhookAdapter:
         files: list[File] | None = None,
         thread_id: int | None = None,
         thread_name: str | None = None,
+        with_components: bool | None = None,
         wait: bool = False,
-        with_components: bool = False,
     ) -> Response[MessagePayload | None]:
         params = {"wait": int(wait)}
         if thread_id:
             params["thread_id"] = thread_id
-        if with_components:
-            params["with_components"] = with_components
 
         if thread_name:
             payload["thread_name"] = thread_name
+
+        if with_components is not None:
+            params["with_components"] = with_components
 
         route = Route(
             "POST",
