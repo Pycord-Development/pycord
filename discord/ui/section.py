@@ -105,7 +105,6 @@ class Section(Item[V]):
             The item to set as accessory.
             Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
 
-
         Raises
         ------
         TypeError
