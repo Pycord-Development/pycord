@@ -33,7 +33,7 @@ class MediaGallery(Item[V]):
         super().__init__()
 
         self._underlying = MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery, id=None, items=self.items
+            type=ComponentType.media_gallery, id=None, items=[i for i in items]
         )
 
     @property
