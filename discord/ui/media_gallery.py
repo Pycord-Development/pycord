@@ -32,13 +32,15 @@ class MediaGallery(Item[V]):
     def __init__(self, *items: MediaGalleryItem):
         super().__init__()
 
-        self.items = [i for i in items]
-
         self._underlying = MediaGalleryComponent._raw_construct(
             type=ComponentType.media_gallery, id=None, items=self.items
         )
+    
+    @property
+    def items(self):
+        return self._underlying.items
 
-    def add_item(self, item: MediaGalleryItem) -> None:
+    def append_item(self, item: MediaGalleryItem) -> None:
         """Adds a :attr:`MediaGalleryItem` to the gallery.
 
         Parameters
@@ -60,27 +62,22 @@ class MediaGallery(Item[V]):
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
 
-        self.items.append(item)
         self._underlying.items.append(item)
 
-    def add_media(
-        self, url: str, *, description: str = None, spoiler: bool = False
-    ) -> None:
-        """Adds new media to the gallery.
+    def add_item(self, url: str, *, description: str = None, spoiler: bool = False) -> None:
+        """Adds a new media item to the gallery.
 
         Parameters
         ----------
         url: :class:`str`
-            The URL of this item's media. This can either be an arbitrary URL or an ``attachment://`` URL.
+            The URL of the media item. This can either be an arbitrary URL or an ``attachment://`` URL.
         description: Optional[:class:`str`]
-            The item's description, up to 1024 characters.
+            The media item's description, up to 1024 characters.
         spoiler: Optional[:class:`bool`]
-            Whether the item is a spoiler.
+            Whether the media item is a spoiler.
 
         Raises
         ------
-        TypeError
-            A :class:`str` was not passed.
         ValueError
             Maximum number of items has been exceeded (10).
         """

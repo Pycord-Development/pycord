@@ -731,7 +731,7 @@ class MediaGalleryItem:
         spoiler = data.get("spoiler", False)
 
         r = cls(
-            media=media.url,
+            url=media.url,
             description=description,
             spoiler=spoiler,
         )
