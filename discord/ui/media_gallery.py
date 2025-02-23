@@ -87,7 +87,7 @@ class MediaGallery(Item[V]):
 
         item = MediaGalleryItem(url, description=description, spoiler=spoiler)
 
-        self.add_item(item)
+        self.append_item(item)
 
     @property
     def type(self) -> ComponentType:
