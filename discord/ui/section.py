@@ -102,7 +102,9 @@ class Section(Item[V]):
         Parameters
         ----------
         item: :class:`Item`
-            The item to set as accessory. Currently only supports :class:`~discord.ui.Thumbnail` and :class:`~discord.ui.Button`.
+            The item to set as accessory.
+            Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+
 
         Raises
         ------
