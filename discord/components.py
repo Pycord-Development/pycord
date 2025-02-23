@@ -619,6 +619,7 @@ class TextDisplay(Component):
 class UnfurledMediaItem(AssetMixin):
 
     def __init__(self, data: UnfurledMediaItemPayload):
+        self._state = None
         self._url = data.get("url")
         self.proxy_url: str = data.get("proxy_url")
         self.height: int | None = data.get("height")
