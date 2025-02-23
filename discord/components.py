@@ -670,12 +670,12 @@ class Thumbnail(Component):
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
     versions: tuple[int, ...] = (2,)
 
-    def __init__(self, data: ThumbnailComponentPayload):
+    def __init__(self, data: ThumbnailComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
         self.media: UnfurledMediaItem = (
             umi := data.get("media")
-        ) and UnfurledMediaItem(umi)
+        ) and UnfurledMediaItem(umi, state=state)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
