@@ -41,6 +41,7 @@ from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
+from ..components import MediaGallery as MediaGalleryComponent
 from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType
@@ -84,6 +85,10 @@ def _component_to_item(component: Component) -> Item:
         from .thumbnail import Thumbnail
 
         return Thumbnail.from_component(component)
+    if isinstance(component, MediaGalleryComponent):
+        from .media_gallery import MediaGallery
+
+        return MediaGallery.from_component(component)
     return Item.from_component(component)
 
 

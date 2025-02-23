@@ -17,3 +17,4 @@ from .select import *
 from .text_display import *
 from .thumbnail import *
 from .view import *
+from .media_gallery import *

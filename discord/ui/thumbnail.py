@@ -30,7 +30,7 @@ class Thumbnail(Item[V]):
     def __init__(self, url: str, *, description: str = None, spoiler: bool = False):
         super().__init__()
 
-        media = UnfurledMediaItem({"url": url})
+        media = UnfurledMediaItem(url)
         self._url = url
         self._description: str | None = description
         self._spoiler: bool = spoiler

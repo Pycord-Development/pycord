@@ -72,6 +72,8 @@ __all__ = (
     "TextDisplay",
     "Thumbnail",
     "MediaGallery",
+    "MediaGalleryItem",
+    "UnfurledMediaItem",
     "FileComponent",
     "Separator",
     "Container",
@@ -618,25 +620,41 @@ class TextDisplay(Component):
 
 class UnfurledMediaItem(AssetMixin):
 
-    def __init__(self, data: UnfurledMediaItemPayload, state=None):
-        self._state = state
-        self._url = data.get("url")
-        self.proxy_url: str = data.get("proxy_url")
-        self.height: int | None = data.get("height")
-        self.width: int | None = data.get("width")
-        self.content_type: str | None = data.get("content_type")
-        self.flags: AttachmentFlags = AttachmentFlags._from_value(data.get("flags", 0))
-        self.placeholder: str = data.get("placeholder")
-        self.placeholder_version: int = data.get("placeholder_version")
-        self.loading_state: MediaItemLoadingState = try_enum(
-            MediaItemLoadingState, data.get("loading_state")
-        )
-        self.src_is_animated: bool = data.get("src_is_animated")
+    def __init__(self, url: str):
+        self._state = None
+        self._url: str = url
+        self.proxy_url: str | None = None
+        self.height: int | None = None
+        self.width: int | None = None
+        self.content_type: str | None = None
+        self.flags: AttachmentFlags | None = None
+        self.placeholder: str | None = None
+        self.placeholder_version: int | None = None
+        self.loading_state: MediaItemLoadingState | None = None
+        self.src_is_animated: bool | None = None
 
     @property
     def url(self) -> str:
         """Returns the underlying URL of this media."""
         return self._url
+
+    @classmethod
+    def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
+
+        r = cls(data.get("url"))
+        r.proxy_url = data.get("proxy_url")
+        r.height = data.get("height")
+        r.width = data.get("width")
+        r.content_type = data.get("content_type")
+        r.flags = AttachmentFlags._from_value(data.get("flags", 0))
+        r.placeholder = data.get("placeholder")
+        r.placeholder_version = data.get("placeholder_version")
+        r.loading_state = try_enum(
+            MediaItemLoadingState, data.get("loading_state")
+        )
+        r.src_is_animated = data.get("src_is_animated")
+        r._state = state
+        return r
 
     def to_dict(self):
         return {"url": self.url}
@@ -654,7 +672,7 @@ class Thumbnail(Component):
     Attributes
     ----------
     media: :class:`UnfurledMediaItem`
-        The component's media URL.
+        The component's media object.
     description: Optional[:class:`str`]
         The thumbnail's description, up to 1024 characters.
     spoiler: Optional[:class:`bool`]
@@ -675,9 +693,14 @@ class Thumbnail(Component):
         self.id: str = data.get("id")
         self.media: UnfurledMediaItem = (
             umi := data.get("media")
-        ) and UnfurledMediaItem(umi, state=state)
+        ) and UnfurledMediaItem.from_dict(umi, state=state)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
+
+    @property
+    def url(self) -> str:
+        """Returns the underlying URL of this thumbnail."""
+        return self.media.url
 
     def to_dict(self) -> ThumbnailComponentPayload:
         payload = {"type": int(self.type), "id": self.id, "media": self.media.to_dict()}
@@ -690,12 +713,31 @@ class Thumbnail(Component):
 
 class MediaGalleryItem:
 
-    def __init__(self, data: MediaGalleryItemPayload, state=None):
-        self.media: UnfurledMediaItem = (
-            umi := data.get("media")
-        ) and UnfurledMediaItem(umi, state=state)
-        self.description: str | None = data.get("description")
-        self.spoiler: bool | None = data.get("spoiler")
+    def __init__(self, url, *, description=None, spoiler=False):
+        self._state = None
+        self.media: UnfurledMediaItem = UnfurledMediaItem(url)
+        self.description: str | None = description
+        self.spoiler: bool = spoiler
+
+    @property
+    def url(self) -> str:
+        """Returns the underlying URL of this gallery item."""
+        return self.media.url
+
+    @classmethod
+    def from_dict(cls, data: MediaGalleryItemPayload, state=None) -> MediaGalleryItem:
+        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(umi, state=state)
+        description = data.get("description")
+        spoiler = data.get("spoiler", False)
+
+        r = cls(
+            media=media.url,
+            description=description,
+            spoiler=spoiler,
+        )
+        r._state = state
+        r.media = media
+        return r
 
     def to_dict(self):
         payload = {"media": self.media.to_dict()}
@@ -730,7 +772,7 @@ class MediaGallery(Component):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
         self.items: list[MediaGalleryItem] = [
-            MediaGalleryItem(d, state=state) for d in data.get("items", [])
+            MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])
         ]
 
     def to_dict(self) -> MediaGalleryComponentPayload:
@@ -769,7 +811,7 @@ class FileComponent(Component):
     def __init__(self, data: FileComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
-        self.file: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem(
+        self.file: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem.from_dict(
             umi, state=state
         )
         self.spoiler: bool | None = data.get("spoiler")
@@ -780,6 +822,7 @@ class FileComponent(Component):
             payload["spoiler"] = self.spoiler
         return payload
 
+# Alternate idea - subclass above components as UnfurledMedia?
 
 class Separator(Component):
     """Represents a Separator from Components V2.

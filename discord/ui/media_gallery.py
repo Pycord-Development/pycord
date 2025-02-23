@@ -1,0 +1,110 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, TypeVar
+
+from ..components import MediaGallery as MediaGalleryComponent
+from ..components import MediaGalleryItem
+from ..enums import ComponentType
+from .item import Item
+
+__all__ = ("MediaGallery",)
+
+if TYPE_CHECKING:
+    from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
+    from .view import View
+
+
+M = TypeVar("M", bound="MediaGallery")
+V = TypeVar("V", bound="View", covariant=True)
+
+
+class MediaGallery(Item[V]):
+    """Represents a UI Media Gallery. Galleries may contain up to 10 :class:`MediaGalleryItem`s.
+
+    .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    *items: :class:`MediaGalleryItem`
+        The initial items contained in this gallery, up to 10.
+    """
+
+    def __init__(self, *items: MediaGalleryItem):
+        super().__init__()
+
+        self.items = [i for i in items]
+
+        self._underlying = MediaGalleryComponent._raw_construct(
+            type=ComponentType.media_gallery,
+            id=None,
+            items=self.items
+        )
+
+    def add_item(self, item: MediaGalleryItem) -> None:
+        """Adds a :attr:`MediaGalleryItem` to the gallery.
+
+        Parameters
+        ----------
+        item: :class:`MediaGalleryItem`
+            The gallery item to add to the gallery.
+
+        Raises
+        ------
+        TypeError
+            A :class:`MediaGalleryItem` was not passed.
+        ValueError
+            Maximum number of items has been exceeded (10).
+        """
+
+        if len(self.items) >= 10:
+            raise ValueError("maximum number of children exceeded")
+
+        if not isinstance(item, MediaGalleryItem):
+            raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
+
+        self.items.append(item)
+        self._underlying.items.append(item)
+
+    def add_media(self, url: str, *, description: str = None, spoiler: bool = False) -> None:
+        """Adds new media to the gallery.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The URL of this item's media. This can either be an arbitrary URL or an ``attachment://`` URL.
+        description: Optional[:class:`str`]
+            The item's description, up to 1024 characters.
+        spoiler: Optional[:class:`bool`]
+            Whether the item is a spoiler.
+
+        Raises
+        ------
+        TypeError
+            A :class:`str` was not passed.
+        ValueError
+            Maximum number of items has been exceeded (10).
+        """
+
+        if len(self.items) >= 10:
+            raise ValueError("maximum number of children exceeded")
+
+        item = MediaGalleryItem(url, description=description, spoiler=spoiler)
+
+        self.add_item(item)
+
+    @property
+    def type(self) -> ComponentType:
+        return self._underlying.type
+
+    @property
+    def width(self) -> int:
+        return 5
+
+    def to_component_dict(self) -> MediaGalleryComponentPayload:
+        return self._underlying.to_dict()
+
+    @classmethod
+    def from_component(cls: type[M], component: MediaGalleryComponent) -> M:
+        return cls(*component.items)
+
+    callback = None
