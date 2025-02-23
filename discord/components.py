@@ -649,9 +649,7 @@ class UnfurledMediaItem(AssetMixin):
         r.flags = AttachmentFlags._from_value(data.get("flags", 0))
         r.placeholder = data.get("placeholder")
         r.placeholder_version = data.get("placeholder_version")
-        r.loading_state = try_enum(
-            MediaItemLoadingState, data.get("loading_state")
-        )
+        r.loading_state = try_enum(MediaItemLoadingState, data.get("loading_state"))
         r.src_is_animated = data.get("src_is_animated")
         r._state = state
         return r
@@ -726,7 +724,9 @@ class MediaGalleryItem:
 
     @classmethod
     def from_dict(cls, data: MediaGalleryItemPayload, state=None) -> MediaGalleryItem:
-        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(umi, state=state)
+        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(
+            umi, state=state
+        )
         description = data.get("description")
         spoiler = data.get("spoiler", False)
 
@@ -811,9 +811,9 @@ class FileComponent(Component):
     def __init__(self, data: FileComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
-        self.file: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem.from_dict(
-            umi, state=state
-        )
+        self.file: UnfurledMediaItem = (
+            umi := data.get("media")
+        ) and UnfurledMediaItem.from_dict(umi, state=state)
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> FileComponentPayload:
@@ -822,7 +822,9 @@ class FileComponent(Component):
             payload["spoiler"] = self.spoiler
         return payload
 
+
 # Alternate idea - subclass above components as UnfurledMedia?
+
 
 class Separator(Component):
     """Represents a Separator from Components V2.

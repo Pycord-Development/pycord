@@ -35,9 +35,7 @@ class MediaGallery(Item[V]):
         self.items = [i for i in items]
 
         self._underlying = MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery,
-            id=None,
-            items=self.items
+            type=ComponentType.media_gallery, id=None, items=self.items
         )
 
     def add_item(self, item: MediaGalleryItem) -> None:
@@ -65,7 +63,9 @@ class MediaGallery(Item[V]):
         self.items.append(item)
         self._underlying.items.append(item)
 
-    def add_media(self, url: str, *, description: str = None, spoiler: bool = False) -> None:
+    def add_media(
+        self, url: str, *, description: str = None, spoiler: bool = False
+    ) -> None:
         """Adds new media to the gallery.
 
         Parameters

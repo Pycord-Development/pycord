@@ -11,10 +11,10 @@ UI Kit helper for the Discord API
 from .button import *
 from .input_text import *
 from .item import *
+from .media_gallery import *
 from .modal import *
 from .section import *
 from .select import *
 from .text_display import *
 from .thumbnail import *
 from .view import *
-from .media_gallery import *
