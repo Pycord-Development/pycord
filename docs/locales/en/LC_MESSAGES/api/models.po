@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-11 09:03+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.16.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/models.rst:6 38e0de79b9364f9192187f5cafbf86e6
 msgid "Discord Models"
@@ -97,7 +97,7 @@ msgstr ""
 #: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
 #: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
 #: discord.guild.Guild.bans discord.guild.Guild.fetch_members
-#: discord.reaction.Reaction.users
+#: discord.monetization.SKU.fetch_subscriptions discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.threads.Thread.purge e4bba7ea10be4e9ea126e3aa6e9ad74a
 #: faad64e33270420d9540268e1052426c of
@@ -135,7 +135,7 @@ msgstr ""
 #: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
 #: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
 #: discord.guild.Guild.bans discord.guild.Guild.fetch_members
-#: discord.reaction.Reaction.users
+#: discord.monetization.SKU.fetch_subscriptions discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.threads.Thread.purge e819402188e744ca884c8ba6b1a852d5
 #: f31cbc6d18c4492d8d39476d33e60215 of
@@ -147,7 +147,7 @@ msgstr ""
 #: discord.channel.CategoryChannel.is_nsfw:4
 #: discord.channel.StageChannel.is_nsfw:4 discord.channel.TextChannel.is_news:4
 #: discord.channel.VoiceChannel.is_nsfw:4
-#: discord.channel._TextChannel.is_nsfw:4
+#: discord.channel._TextChannel.is_nsfw:4 discord.emoji.AppEmoji.is_usable:4
 #: discord.interactions.Interaction.is_command:4
 #: discord.interactions.Interaction.is_component:4
 #: discord.interactions.InteractionResponse.is_done:6
@@ -156,7 +156,7 @@ msgstr ""
 #: discord.partial_emoji.PartialEmoji.is_unicode_emoji:4
 #: discord.reaction.Reaction.is_custom_emoji:4 discord.role.Role.is_default:4
 #: discord.role.RoleTags.is_bot_managed:4
-#: discord.role.RoleTags.is_integration:4
+#: discord.role.RoleTags.is_integration:5
 #: discord.role.RoleTags.is_premium_subscriber:4
 #: discord.threads.Thread.is_news:7 discord.threads.Thread.is_nsfw:7
 #: discord.threads.Thread.is_private:7 of
@@ -228,7 +228,7 @@ msgstr ""
 #: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
 #: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
 #: discord.guild.Guild.bans discord.guild.Guild.fetch_members
-#: discord.reaction.Reaction.users
+#: discord.monetization.SKU.fetch_subscriptions discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.threads.Thread.purge e0eacc7163104667a12355c978c322ca
 #: f5bccbd888d048908de44bba82b6968a fb44d6093f9241de967bd1a6a92c87d8
@@ -309,7 +309,7 @@ msgstr ""
 #: discord.channel.CategoryChannel.move:1
 #: discord.channel.ForumChannel.create_thread:1
 #: discord.channel.ForumChannel.edit:1 discord.channel.GroupChannel.leave:1
-#: discord.channel.StageChannel.clone:1
+#: discord.channel.MediaChannel.edit:1 discord.channel.StageChannel.clone:1
 #: discord.channel.StageChannel.create_instance:1
 #: discord.channel.StageChannel.create_webhook:1
 #: discord.channel.StageChannel.delete_messages:1
@@ -327,7 +327,8 @@ msgstr ""
 #: discord.channel._TextChannel.create_webhook:1
 #: discord.channel._TextChannel.delete_messages:1
 #: discord.channel._TextChannel.purge:1 discord.channel._TextChannel.webhooks:1
-#: discord.emoji.Emoji.delete:1 discord.emoji.Emoji.edit:1
+#: discord.emoji.AppEmoji.delete:1 discord.emoji.AppEmoji.edit:1
+#: discord.emoji.GuildEmoji.delete:1 discord.emoji.GuildEmoji.edit:1
 #: discord.guild.Guild.active_threads:1 discord.guild.Guild.ban:1
 #: discord.guild.Guild.bans:1 discord.guild.Guild.bulk_ban:1
 #: discord.guild.Guild.change_voice_state:1 discord.guild.Guild.chunk:1
@@ -500,16 +501,18 @@ msgstr ""
 #: discord.channel.CategoryChannel:39 discord.channel.DMChannel:39
 #: discord.channel.ForumChannel:37 discord.channel.ForumChannel:76
 #: discord.channel.ForumChannel:94 discord.channel.GroupChannel:37
-#: discord.channel.GroupChannel:51 discord.channel.PartialMessageable:28
-#: discord.channel.StageChannel:39 discord.channel.StageChannel:64
-#: discord.channel.StageChannel:70 discord.channel.TextChannel:37
-#: discord.channel.TextChannel:72 discord.channel.TextChannel:90
-#: discord.channel.VoiceChannel:37 discord.channel.VoiceChannel:56
-#: discord.channel.VoiceChannel:62 discord.channel.VoiceChannel:98
-#: discord.components.SelectMenu:41 discord.components.SelectMenu:48
-#: discord.emoji.Emoji:39 discord.emoji.Emoji:63 discord.guild.Guild:47
-#: discord.guild.Guild:59 discord.guild.Guild:71 discord.guild.Guild:119
-#: discord.guild.Guild:152 discord.guild.Guild:158
+#: discord.channel.GroupChannel:51 discord.channel.MediaChannel:39
+#: discord.channel.MediaChannel:78 discord.channel.MediaChannel:94
+#: discord.channel.PartialMessageable:28 discord.channel.StageChannel:39
+#: discord.channel.StageChannel:64 discord.channel.StageChannel:70
+#: discord.channel.TextChannel:37 discord.channel.TextChannel:72
+#: discord.channel.TextChannel:90 discord.channel.VoiceChannel:37
+#: discord.channel.VoiceChannel:56 discord.channel.VoiceChannel:62
+#: discord.channel.VoiceChannel:98 discord.components.SelectMenu:41
+#: discord.components.SelectMenu:48 discord.emoji.AppEmoji:41
+#: discord.emoji.GuildEmoji:39 discord.emoji.GuildEmoji:63
+#: discord.guild.Guild:47 discord.guild.Guild:59 discord.guild.Guild:71
+#: discord.guild.Guild:119 discord.guild.Guild:152 discord.guild.Guild:158
 #: discord.guild.Guild.estimate_pruned_members:18
 #: discord.integrations.BotIntegration:9 discord.integrations.Integration:9
 #: discord.integrations.IntegrationApplication:9
@@ -522,9 +525,10 @@ msgstr ""
 #: discord.invite.PartialInviteChannel:34 discord.invite.PartialInviteGuild:34
 #: discord.message.Attachment:28 discord.message.Attachment:34
 #: discord.message.Attachment.save:24 discord.message.Message:119
-#: discord.monetization.Entitlement:9 discord.monetization.Entitlement:15
-#: discord.monetization.Entitlement:21 discord.monetization.SKU:9
-#: discord.monetization.SKU:21 discord.onboarding.OnboardingPrompt:9
+#: discord.monetization.Entitlement:16 discord.monetization.Entitlement:22
+#: discord.monetization.Entitlement:28 discord.monetization.SKU:9
+#: discord.monetization.SKU:21 discord.monetization.Subscription:11
+#: discord.monetization.Subscription:17 discord.onboarding.OnboardingPrompt:9
 #: discord.onboarding.PromptOption:9
 #: discord.raw_models.AutoModActionExecutionEvent:15
 #: discord.raw_models.AutoModActionExecutionEvent:29
@@ -728,15 +732,17 @@ msgstr ""
 #: discord.AuthorizingIntegrationOwners.user
 #: discord.InteractionMetadata.interacted_message
 #: discord.InteractionMetadata.original_response_message discord.SKU.url
-#: discord.Thread.applied_tags discord.automod.AutoModAction
-#: discord.automod.AutoModActionMetadata discord.automod.AutoModRule
-#: discord.automod.AutoModTriggerMetadata discord.channel.CategoryChannel
-#: discord.channel.DMChannel discord.channel.ForumChannel
-#: discord.channel.GroupChannel discord.channel.PartialMessageable
+#: discord.Subscription.user discord.Thread.applied_tags
+#: discord.automod.AutoModAction discord.automod.AutoModActionMetadata
+#: discord.automod.AutoModRule discord.automod.AutoModTriggerMetadata
+#: discord.channel.CategoryChannel discord.channel.DMChannel
+#: discord.channel.ForumChannel discord.channel.GroupChannel
+#: discord.channel.MediaChannel discord.channel.PartialMessageable
 #: discord.channel.StageChannel discord.channel.TextChannel
 #: discord.channel.VoiceChannel discord.components.ActionRow
 #: discord.components.Button discord.components.Component
-#: discord.components.SelectMenu discord.emoji.Emoji discord.guild.Guild
+#: discord.components.SelectMenu discord.emoji.AppEmoji
+#: discord.emoji.GuildEmoji discord.guild.Guild
 #: discord.integrations.BotIntegration discord.integrations.Integration
 #: discord.integrations.IntegrationAccount
 #: discord.integrations.IntegrationApplication
@@ -747,9 +753,9 @@ msgstr ""
 #: discord.invite.PartialInviteChannel discord.invite.PartialInviteGuild
 #: discord.member.Member discord.member.VoiceState discord.message.Attachment
 #: discord.message.Message discord.monetization.Entitlement
-#: discord.monetization.SKU discord.onboarding.Onboarding
-#: discord.onboarding.OnboardingPrompt discord.onboarding.PromptOption
-#: discord.partial_emoji.PartialEmoji
+#: discord.monetization.SKU discord.monetization.Subscription
+#: discord.onboarding.Onboarding discord.onboarding.OnboardingPrompt
+#: discord.onboarding.PromptOption discord.partial_emoji.PartialEmoji
 #: discord.raw_models.AutoModActionExecutionEvent
 #: discord.raw_models.RawAuditLogEntryEvent
 #: discord.raw_models.RawBulkMessageDeleteEvent
@@ -801,9 +807,12 @@ msgstr ""
 #: c553482c64d74d31a199dacf7d704993 df0105c172b14940b0ce5d8fb044beee
 #: discord.abc.Messageable.can_send:4 discord.automod.AutoModRule:69
 #: discord.channel.CategoryChannel:56 discord.channel.ForumChannel:86
-#: discord.channel.TextChannel:82 discord.components.Button:35
-#: discord.components.SelectMenu:70 discord.emoji.Emoji:45
-#: discord.emoji.Emoji:51 discord.emoji.Emoji:57 discord.emoji.Emoji:69
+#: discord.channel.MediaChannel:88 discord.channel.TextChannel:82
+#: discord.components.Button:35 discord.components.SelectMenu:70
+#: discord.emoji.AppEmoji:47 discord.emoji.AppEmoji:53
+#: discord.emoji.AppEmoji:59 discord.emoji.AppEmoji:71
+#: discord.emoji.GuildEmoji:45 discord.emoji.GuildEmoji:51
+#: discord.emoji.GuildEmoji:57 discord.emoji.GuildEmoji:69
 #: discord.guild.Guild:65 discord.guild.Guild:81 discord.guild.Guild:166
 #: discord.integrations.BotIntegration:33 discord.integrations.Integration:33
 #: discord.integrations.StreamIntegration:33
@@ -815,8 +824,8 @@ msgstr ""
 #: discord.member.VoiceState:39 discord.member.VoiceState:49
 #: discord.member.VoiceState:67 discord.message.Attachment:90
 #: discord.message.Message:23 discord.message.Message:85
-#: discord.message.Message:138 discord.monetization.Entitlement:39
-#: discord.monetization.Entitlement:65 discord.onboarding.Onboarding:15
+#: discord.message.Message:138 discord.monetization.Entitlement:46
+#: discord.monetization.Entitlement:72 discord.onboarding.Onboarding:15
 #: discord.onboarding.OnboardingPrompt:33
 #: discord.onboarding.OnboardingPrompt:39
 #: discord.onboarding.OnboardingPrompt:45 discord.partial_emoji.PartialEmoji:38
@@ -824,7 +833,7 @@ msgstr ""
 #: discord.raw_models.RawReactionClearEmojiEvent:33
 #: discord.reaction.Reaction:42 discord.reaction.Reaction:48
 #: discord.reaction.Reaction:60 discord.reaction.ReactionCountDetails:13
-#: discord.role.Role:59 discord.role.Role:81 discord.role.Role:87
+#: discord.role.Role:59 discord.role.Role:83 discord.role.Role:89
 #: discord.stage_instance.StageInstance:53 discord.sticker.GuildSticker:47
 #: discord.threads.Thread:95 discord.threads.Thread:101
 #: discord.threads.Thread:108 discord.user.BaseUser.mentioned_in:8
@@ -1050,7 +1059,7 @@ msgstr ""
 #: discord.guild.Guild.bans discord.guild.Guild.entitlements
 #: discord.guild.Guild.fetch_members
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general
-#: discord.reaction.Reaction.users
+#: discord.monetization.SKU.fetch_subscriptions discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
 #: discord.user.User.entitlements of
 msgid "Yields"
@@ -1083,7 +1092,9 @@ msgstr ""
 #: discord.guild.Guild.audit_logs:35 discord.guild.Guild.bans:35
 #: discord.guild.Guild.create_forum_channel:63
 #: discord.guild.Guild.create_text_channel:56
-#: discord.guild.Guild.fetch_members:29 discord.reaction.Reaction.users:27
+#: discord.guild.Guild.fetch_members:29
+#: discord.monetization.SKU.fetch_subscriptions:28
+#: discord.reaction.Reaction.users:27
 #: discord.scheduled_events.ScheduledEvent.subscribers:38
 #: discord.threads.Thread.purge:48 of
 msgid "Examples"
@@ -1091,7 +1102,9 @@ msgstr ""
 
 #: 51b8dfbb15bb43ef95c144c7a5d3f6ba 745ca57186c14e1785a2e80ce870df80
 #: discord.abc.Messageable.history:40 discord.guild.Guild.bans:36
-#: discord.guild.Guild.fetch_members:30 discord.reaction.Reaction.users:28
+#: discord.guild.Guild.fetch_members:30
+#: discord.monetization.SKU.fetch_subscriptions:29
+#: discord.reaction.Reaction.users:28
 #: discord.scheduled_events.ScheduledEvent.subscribers:39
 #: f95b2fa403dc4f92a794b30158d2f431 of
 msgid "Usage ::"
@@ -1415,9 +1428,9 @@ msgstr ""
 #: discord.channel.VoiceChannel.delete_messages:28
 #: discord.channel.VoiceChannel.set_status:17
 #: discord.channel._TextChannel.delete_messages:28
-#: discord.emoji.Emoji.delete:15 discord.guild.Guild.ban:25
-#: discord.guild.Guild.chunk:16 discord.guild.Guild.create_integration:20
-#: discord.guild.Guild.delete:10
+#: discord.emoji.AppEmoji.delete:11 discord.emoji.GuildEmoji.delete:15
+#: discord.guild.Guild.ban:25 discord.guild.Guild.chunk:16
+#: discord.guild.Guild.create_integration:20 discord.guild.Guild.delete:10
 #: discord.guild.Guild.delete_auto_moderation_rule:13
 #: discord.guild.Guild.delete_emoji:18 discord.guild.Guild.delete_sticker:20
 #: discord.guild.Guild.edit_widget:20 discord.guild.Guild.kick:20
@@ -1442,7 +1455,7 @@ msgstr ""
 #: discord.message.Message.clear_reactions:11 discord.message.Message.delete:24
 #: discord.message.Message.pin:18 discord.message.Message.publish:14
 #: discord.message.Message.remove_reaction:25 discord.message.Message.unpin:18
-#: discord.monetization.Entitlement.consume:11
+#: discord.monetization.Entitlement.consume:10
 #: discord.monetization.Entitlement.delete:10
 #: discord.reaction.Reaction.remove:19 discord.role.Role.delete:15
 #: discord.scheduled_events.ScheduledEvent.delete:9
@@ -1573,9 +1586,10 @@ msgstr ""
 #: d8bb4e332f9e4288aa8952e99c0043df discord.SKU.url:3
 #: discord.automod.AutoModActionMetadata:27 discord.automod.AutoModRule:33
 #: discord.channel.CategoryChannel:27 discord.channel.ForumChannel:25
-#: discord.channel.StageChannel:27 discord.channel.TextChannel:25
-#: discord.channel.VoiceChannel:25 discord.emoji.Emoji:33
-#: discord.guild.Guild:27 discord.integrations.BotIntegration:15
+#: discord.channel.MediaChannel:27 discord.channel.StageChannel:27
+#: discord.channel.TextChannel:25 discord.channel.VoiceChannel:25
+#: discord.emoji.AppEmoji:35 discord.emoji.GuildEmoji:33 discord.guild.Guild:27
+#: discord.integrations.BotIntegration:15
 #: discord.integrations.BotIntegration:27 discord.integrations.Integration:15
 #: discord.integrations.Integration:27
 #: discord.integrations.IntegrationAccount:9
@@ -1661,23 +1675,23 @@ msgstr ""
 msgid "The IETF language tag used to identify the language the user is using."
 msgstr ""
 
-#: ../../api/models.rst:140 7a2d9ca6781d4f33b2f9fa33a78e4bcc
+#: ../../api/models.rst:145 7a2d9ca6781d4f33b2f9fa33a78e4bcc
 #: 7c77b2ea3750497e96dc19203a13f276 9c465eb7704a47f9811d7160f3bd5935
 #: cdc5ce07494d46818ca2ced81397e2b3 dc1d35b84de04aa694c7b09e76c9f5ab
 #: discord.channel.ForumChannel:53 discord.channel.GroupChannel:57
-#: discord.channel.StageChannel:45 discord.channel.TextChannel:49
-#: discord.channel.VoiceChannel:106 discord.components.Button:23
-#: discord.components.Button:29 discord.components.Button:41
-#: discord.components.SelectMenu:28 discord.components.SelectMenu:34
-#: discord.guild.Guild:111 discord.guild.Guild:173
-#: discord.integrations.IntegrationApplication:21
+#: discord.channel.MediaChannel:55 discord.channel.StageChannel:45
+#: discord.channel.TextChannel:49 discord.channel.VoiceChannel:106
+#: discord.components.Button:23 discord.components.Button:29
+#: discord.components.Button:41 discord.components.SelectMenu:28
+#: discord.components.SelectMenu:34 discord.guild.Guild:111
+#: discord.guild.Guild:173 discord.integrations.IntegrationApplication:21
 #: discord.interactions.Interaction:85 discord.invite.PartialInviteGuild:52
 #: discord.member.Member:54 discord.message.Attachment:61
 #: discord.message.Attachment:82 discord.message.Attachment:98
 #: discord.message.Attachment:114 discord.onboarding.PromptOption:39
 #: discord.partial_emoji.PartialEmoji:32
 #: discord.raw_models.RawAuditLogEntryEvent:39
-#: discord.raw_models.RawVoiceChannelStatusUpdateEvent:21 discord.role.Role:102
+#: discord.raw_models.RawVoiceChannelStatusUpdateEvent:21 discord.role.Role:104
 #: discord.scheduled_events.ScheduledEvent:39 discord.user.ClientUser:75
 #: discord.widget.WidgetMember:55 discord.widget.WidgetMember:61
 #: f2fec74b5ab74ff4b1cab4cf1a188256 of
@@ -2126,14 +2140,16 @@ msgstr ""
 #: 8a0504dbcaec4f5ca2890730091a5b6a discord.Thread.category_id:4
 #: discord.channel.CategoryChannel:46 discord.channel.ForumChannel:43
 #: discord.channel.ForumChannel:60 discord.channel.ForumChannel:67
-#: discord.channel.ForumChannel:126 discord.channel.StageChannel:51
+#: discord.channel.ForumChannel:126 discord.channel.MediaChannel:45
+#: discord.channel.MediaChannel:62 discord.channel.MediaChannel:69
+#: discord.channel.MediaChannel:118 discord.channel.StageChannel:51
 #: discord.channel.StageChannel:58 discord.channel.StageChannel:100
 #: discord.channel.TextChannel:43 discord.channel.TextChannel:56
 #: discord.channel.TextChannel:63 discord.channel.TextChannel:106
 #: discord.channel.VoiceChannel:43 discord.channel.VoiceChannel:50
 #: discord.channel.VoiceChannel:87 discord.components.Button:53
-#: discord.guild.Guild:87 discord.guild.Guild:97 discord.guild.Guild:105
-#: discord.guild.Guild:190 discord.guild.Guild:201
+#: discord.emoji.AppEmoji:65 discord.guild.Guild:87 discord.guild.Guild:97
+#: discord.guild.Guild:105 discord.guild.Guild:190 discord.guild.Guild:201
 #: discord.guild.Guild.prune_members:42 discord.interactions.Interaction:24
 #: discord.interactions.Interaction:36
 #: discord.interactions.InteractionMetadata:35
@@ -2153,8 +2169,9 @@ msgstr ""
 #: discord.raw_models.RawReactionActionEvent:26
 #: discord.raw_models.RawReactionClearEmojiEvent:21
 #: discord.raw_models.RawReactionClearEvent:19
-#: discord.raw_models.RawTypingEvent:27 discord.role.RoleTags:15
-#: discord.role.RoleTags:21 discord.scheduled_events.ScheduledEvent:70
+#: discord.raw_models.RawTypingEvent:27 discord.role.RoleTags:19
+#: discord.role.RoleTags:25 discord.role.RoleTags:33
+#: discord.scheduled_events.ScheduledEvent:70
 #: discord.scheduled_events.ScheduledEvent:78 discord.threads.Thread:61
 #: f50b8fb8640844a6933c62864952effb f55fe32c1fb5446182de1835f38e3e5f of
 msgid "Optional[:class:`int`]"
@@ -2967,7 +2984,9 @@ msgstr ""
 #: 1aa5ee02625744fb8125add13b1e3df3 discord.message.Message.add_reaction:5
 #: discord.message.Message.clear_reaction:5
 #: discord.message.Message.remove_reaction:5 of
-msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+msgid ""
+"The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an "
+":class:`AppEmoji`."
 msgstr ""
 
 #: 0664e6f74ec5451ab9265738e4ebaa40 discord.message.Message.add_reaction:7 of
@@ -3278,9 +3297,10 @@ msgstr ""
 msgid "The reaction emoji. May be a custom emoji, or a unicode emoji."
 msgstr ""
 
-#: d0fdab02f7ff4c81b105f060099ea6dd discord.reaction.Reaction:30
-#: discord.welcome_screen.WelcomeScreenChannel:21 of
-msgid "Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]"
+#: d0fdab02f7ff4c81b105f060099ea6dd discord.reaction.Reaction:30 of
+msgid ""
+"Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, "
+":class:`str`]"
 msgstr ""
 
 #: 2c4aa0d7cbbb4f988a1a6fc2f1c7f688 discord.reaction.Reaction:34 of
@@ -3466,65 +3486,139 @@ msgstr ""
 msgid "Returns the URL for the SKU."
 msgstr ""
 
+#: 024d66d0841244cab9d49a97deb4c5e5
+#: discord.monetization.SKU.fetch_subscriptions:1 of
+msgid ""
+"Returns an :class:`.AsyncIterator` that enables fetching the SKU's "
+"subscriptions."
+msgstr ""
+
+#: discord.monetization.SKU.fetch_subscriptions:6
+#: e985008dbcff48aca12f0100d929a58b of
+msgid "The user for which to retrieve subscriptions."
+msgstr ""
+
+#: 19c5cfcf169d466a949ae4cad69dd539
+#: discord.monetization.SKU.fetch_subscriptions:9 of
+msgid ""
+"Retrieves subscriptions before this date or object. If a datetime is "
+"provided, it is recommended to use a UTC-aware datetime. If the datetime "
+"is naive, it is assumed to be local time."
+msgstr ""
+
+#: 960251d52e934e4c92c9bd0a0aa77ea8
+#: discord.monetization.SKU.fetch_subscriptions:14 of
+msgid ""
+"Retrieve subscriptions after this date or object. If a datetime is "
+"provided, it is recommended to use a UTC-aware datetime. If the datetime "
+"is naive, it is assumed to be local time."
+msgstr ""
+
+#: discord.monetization.SKU.fetch_subscriptions:19
+#: fb2eba26c34c411ca8bbe737728d0a39 of
+msgid ""
+"The number of subscriptions to retrieve. If ``None``, retrieves all "
+"subscriptions."
+msgstr ""
+
+#: 4c69159877084830ad00ea3485e639ae
+#: discord.monetization.SKU.fetch_subscriptions:22 of
+msgid ":class:`Subscription` -- A subscription that the user has for this SKU."
+msgstr ""
+
+#: aa2b527516c44c569aff79684995a1ba
+#: discord.monetization.SKU.fetch_subscriptions:24 of
+msgid "Getting the subscriptions failed."
+msgstr ""
+
+#: 71a9a557b42348ec8e3746a3f51ea658
+#: discord.monetization.SKU.fetch_subscriptions:25 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.SubscriptionIterator\\``"
+msgstr ""
+
+#: 081c6429caa04e0a8c5e5dbf3e7662c7 discord.guild.Guild.bans:41
+#: discord.guild.Guild.fetch_members:35
+#: discord.monetization.SKU.fetch_subscriptions:34 of
+msgid "Flattening into a list ::"
+msgstr ""
+
+#: 0d272e8551554a528b510633e63e660b
+#: discord.monetization.SKU.fetch_subscriptions:39 of
+msgid "All parameters except for ``user`` are optional."
+msgstr ""
+
 #: discord.monetization.Entitlement:1 f90050e635304cceb060faed27c18428 of
 msgid "Represents a Discord entitlement."
 msgstr ""
 
-#: 474393e263ed49ceadcdb9df979b1e80 discord.monetization.Entitlement:7 of
+#: 27baecc3276a41b28300eb5732e444c8 discord.monetization.Entitlement:7 of
+msgid ""
+"As of October 1, 2024, entitlements that have been purchased will have "
+"``ends_at`` set to ``None`` unless the parent :class:`Subscription` has "
+"been cancelled."
+msgstr ""
+
+#: b6afb38f8d2e49ebb42b29492db03440 discord.monetization.Entitlement:10 of
+msgid ""
+"`See the Discord changelog. <https://discord.com/developers/docs/change-"
+"log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
+msgstr ""
+
+#: 474393e263ed49ceadcdb9df979b1e80 discord.monetization.Entitlement:14 of
 msgid "The entitlement's ID."
 msgstr ""
 
-#: discord.monetization.Entitlement:13 e22b12906d11423b92816daccc7bbee6 of
+#: discord.monetization.Entitlement:20 e22b12906d11423b92816daccc7bbee6 of
 msgid "The ID of the SKU this entitlement is for."
 msgstr ""
 
-#: discord.monetization.Entitlement:19 fcc6d115692f4a39ad0cd1665c40aded of
+#: discord.monetization.Entitlement:26 fcc6d115692f4a39ad0cd1665c40aded of
 msgid "The ID of the application this entitlement belongs to."
 msgstr ""
 
-#: 390ffbbcdbea4754bbbd4fa8dc55c4a1 discord.monetization.Entitlement:25 of
+#: 390ffbbcdbea4754bbbd4fa8dc55c4a1 discord.monetization.Entitlement:32 of
 msgid "The ID of the user that owns this entitlement."
 msgstr ""
 
-#: 6cb0d709a1ce4db0ac68dcdb6166f2fc discord.monetization.Entitlement:27
-#: discord.monetization.Entitlement:57 of
+#: 6cb0d709a1ce4db0ac68dcdb6166f2fc discord.monetization.Entitlement:34
+#: discord.monetization.Entitlement:64 of
 msgid "Union[:class:`int`, :class:`MISSING`]"
 msgstr ""
 
-#: 6127f165c1f342a69f6e0693dc75a9f9 discord.monetization.Entitlement:31 of
+#: 6127f165c1f342a69f6e0693dc75a9f9 discord.monetization.Entitlement:38 of
 msgid "The type of entitlement."
 msgstr ""
 
-#: 7d438bff37c749b3950ffe589d702f9f discord.monetization.Entitlement:33 of
+#: 7d438bff37c749b3950ffe589d702f9f discord.monetization.Entitlement:40 of
 msgid ":class:`EntitlementType`"
 msgstr ""
 
-#: discord.monetization.Entitlement:37 eeed4145d06f42de87ad7d9fa099ee64 of
+#: discord.monetization.Entitlement:44 eeed4145d06f42de87ad7d9fa099ee64 of
 msgid "Whether the entitlement has been deleted."
 msgstr ""
 
-#: discord.monetization.Entitlement:43 e426dda4c7484e6c94320a0b89169497 of
+#: discord.monetization.Entitlement:50 e426dda4c7484e6c94320a0b89169497 of
 msgid "When the entitlement starts."
 msgstr ""
 
-#: c2010b24b8dd4c6d88d0ecd78719e628 discord.monetization.Entitlement:45
-#: discord.monetization.Entitlement:51 of
+#: c2010b24b8dd4c6d88d0ecd78719e628 discord.monetization.Entitlement:52
+#: discord.monetization.Entitlement:58 of
 msgid "Union[:class:`datetime.datetime`, :class:`MISSING`]"
 msgstr ""
 
-#: 455f169162d3445d83c04197602e6bac discord.monetization.Entitlement:49 of
+#: 455f169162d3445d83c04197602e6bac discord.monetization.Entitlement:56 of
 msgid "When the entitlement expires."
 msgstr ""
 
-#: a8a68a11ea664400b47e3c47bb207c13 discord.monetization.Entitlement:55 of
+#: a8a68a11ea664400b47e3c47bb207c13 discord.monetization.Entitlement:62 of
 msgid "The ID of the guild that owns this entitlement."
 msgstr ""
 
-#: 75e64b3cc68246fd9a86531d95c85d6e discord.monetization.Entitlement:61 of
+#: 75e64b3cc68246fd9a86531d95c85d6e discord.monetization.Entitlement:68 of
 msgid ""
 "Whether or not this entitlement has been consumed. This will always be "
-"``False`` for entitlements that are not of type "
-":attr:`EntitlementType.consumable`."
+"``False`` for entitlements that are not from an SKU of type "
+":attr:`SKUType.consumable`."
 msgstr ""
 
 #: 7007221d52574f1ab5ad1b0a27d15876 discord.monetization.Entitlement.consume:3
@@ -3535,16 +3629,11 @@ msgstr ""
 #: 48fb2081fef249e38e28e7ff56356232 discord.monetization.Entitlement.consume:5
 #: of
 msgid ""
-"This can only be done on entitlements of type "
-":attr:`EntitlementType.consumable`."
+"This can only be done on entitlements from an SKU of type "
+":attr:`SKUType.consumable`."
 msgstr ""
 
-#: 1a95e9e2ea00431a8d3081cad5c245c4 discord.monetization.Entitlement.consume:7
-#: of
-msgid "The entitlement is not consumable."
-msgstr ""
-
-#: discord.monetization.Entitlement.consume:8 fb894fb00daa46e8b8dae1d812d0c7b9
+#: discord.monetization.Entitlement.consume:7 fb894fb00daa46e8b8dae1d812d0c7b9
 #: of
 msgid "Consuming the entitlement failed."
 msgstr ""
@@ -3567,7 +3656,90 @@ msgstr ""
 msgid "Deleting the entitlement failed."
 msgstr ""
 
-#: ../../api/models.rst:118 e844acaaa52845ed85e5fd6814cb0f53
+#: discord.monetization.Subscription:1 e6473b15bf1c4aab8d18c91cd7a68623 of
+msgid "Represents a user making recurring payments for one or more SKUs."
+msgstr ""
+
+#: 0cd1ee51866e49e794e1e2aae78f8260 discord.monetization.Subscription:3 of
+msgid ""
+"Successful payments grant the user access to entitlements associated with"
+" the SKU."
+msgstr ""
+
+#: 6008728ed3b44140a9d0d21ecc5f3928 discord.monetization.Subscription:9 of
+msgid "The subscription's ID."
+msgstr ""
+
+#: 390ffbbcdbea4754bbbd4fa8dc55c4a1 discord.monetization.Subscription:15 of
+msgid "The ID of the user that owns this subscription."
+msgstr ""
+
+#: discord.monetization.Subscription:21 e22b12906d11423b92816daccc7bbee6 of
+msgid "The IDs of the SKUs this subscription is for."
+msgstr ""
+
+#: 87c8fe8fea4441edb52f0ea109aaae0a discord.automod.AutoModRule:75
+#: discord.automod.AutoModRule:81 discord.monetization.Subscription:23
+#: discord.monetization.Subscription:29 discord.monetization.Subscription:35 of
+msgid "List[:class:`int`]"
+msgstr ""
+
+#: bf5e70691eb048d29e5620a2952c0e85 discord.monetization.Subscription:27 of
+msgid "The IDs of the entitlements this subscription is for."
+msgstr ""
+
+#: 6eeedd965eac44a5b905a06d37c570d7 discord.monetization.Subscription:33 of
+msgid "The IDs of the SKUs that the buyer will be subscribed to at renewal."
+msgstr ""
+
+#: discord.monetization.Subscription:39 fc2d5f7de1334ecfa878e4a54efbe2d7 of
+msgid "The start of the current subscription period."
+msgstr ""
+
+#: b8e1833f3ac147369e252c5d8801de52 discord.integrations.StreamIntegration:75
+#: discord.invite.Invite:77 discord.monetization.Subscription:41
+#: discord.monetization.Subscription:47 discord.raw_models.RawTypingEvent:21
+#: discord.scheduled_events.ScheduledEvent:45 discord.template.Template:39
+#: discord.template.Template:46 discord.threads.Thread:121
+#: discord.threads.ThreadMember:39 of
+msgid ":class:`datetime.datetime`"
+msgstr ""
+
+#: 2589e072a10945fd91844cf562e522f8 discord.monetization.Subscription:45 of
+msgid "The end of the current subscription period."
+msgstr ""
+
+#: 7fa115df6d194b9eaf2c37b4960c54fb discord.monetization.Subscription:51 of
+msgid "The status of the subscription."
+msgstr ""
+
+#: beaedb41ec2840239f556ef2b031ce7c discord.monetization.Subscription:53 of
+msgid ":class:`SubscriptionStatus`"
+msgstr ""
+
+#: aa2b527516c44c569aff79684995a1ba discord.monetization.Subscription:57 of
+msgid "When the subscription was canceled."
+msgstr ""
+
+#: b8e1833f3ac147369e252c5d8801de52 discord.monetization.Subscription:59 of
+msgid ":class:`datetime.datetime` | ``None``"
+msgstr ""
+
+#: 457c653cc8d74125bcd46da778f939b9 discord.Subscription.user:1 of
+msgid "The user that owns this subscription."
+msgstr ""
+
+#: ../../docstring cc61dfae294c4579ba596a34ef3fa088
+#: discord.AuthorizingIntegrationOwners.user:4 discord.Subscription.user:3
+#: discord.channel.DMChannel:27 discord.channel.GroupChannel:43
+#: discord.emoji.AppEmoji:77 discord.emoji.GuildEmoji:76
+#: discord.integrations.IntegrationApplication:39 discord.invite.Invite:103
+#: discord.invite.Invite:147 discord.scheduled_events.ScheduledEvent:84
+#: discord.sticker.GuildSticker:60 of
+msgid "Optional[:class:`User`]"
+msgstr ""
+
+#: ../../api/models.rst:123 e844acaaa52845ed85e5fd6814cb0f53
 msgid "Guild"
 msgstr ""
 
@@ -3604,7 +3776,7 @@ msgid "All emojis that the guild owns."
 msgstr ""
 
 #: 258a28d33dbe4186945587d0e306c05b discord.guild.Guild:33 of
-msgid "Tuple[:class:`Emoji`, ...]"
+msgid "Tuple[:class:`GuildEmoji`, ...]"
 msgstr ""
 
 #: 93bac270df3c4e049e8b16b766fedea4 discord.guild.Guild:37 of
@@ -3805,11 +3977,6 @@ msgstr ""
 
 #: 3fe2216ce94246bda3794d4c16683ddd discord.guild.Guild.fetch_members:26 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MemberIterator\\``"
-msgstr ""
-
-#: 081c6429caa04e0a8c5e5dbf3e7662c7 discord.guild.Guild.bans:41
-#: discord.guild.Guild.fetch_members:35 of
-msgid "Flattening into a list ::"
 msgstr ""
 
 #: ae8d71971791441db70367c5a6d14451 discord.guild.Guild.audit_logs:1 of
@@ -4295,7 +4462,7 @@ msgid ""
 msgstr ""
 
 #: b12af80947024bd196b707459a1c7ab1 discord.channel.ForumChannel.edit:10
-#: discord.channel.TextChannel.edit:19
+#: discord.channel.MediaChannel.edit:10 discord.channel.TextChannel.edit:19
 #: discord.guild.Guild.create_forum_channel:35
 #: discord.guild.Guild.create_stage_channel:11
 #: discord.guild.Guild.create_text_channel:35 of
@@ -4310,7 +4477,7 @@ msgid ""
 msgstr ""
 
 #: 6e0e5f25fba64a62b1ac7c005cb3c4aa discord.channel.ForumChannel.edit:14
-#: discord.channel.TextChannel.edit:23
+#: discord.channel.MediaChannel.edit:14 discord.channel.TextChannel.edit:23
 #: discord.guild.Guild.create_forum_channel:42
 #: discord.guild.Guild.create_text_channel:42 of
 msgid "To mark the channel as NSFW or not."
@@ -4463,7 +4630,7 @@ msgstr ""
 #: of
 msgid ""
 "The default reaction emoji. Can be a unicode emoji or a custom emoji in "
-"the forms: :class:`Emoji`, snowflake ID, string representation (eg. "
+"the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. "
 "'<a:emoji_name:emoji_id>').  .. versionadded:: v2.5"
 msgstr ""
 
@@ -4471,7 +4638,7 @@ msgstr ""
 #: discord.guild.Guild.create_forum_channel:48 of
 msgid ""
 "The default reaction emoji. Can be a unicode emoji or a custom emoji in "
-"the forms: :class:`Emoji`, snowflake ID, string representation (eg. "
+"the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. "
 "'<a:emoji_name:emoji_id>')."
 msgstr ""
 
@@ -4729,10 +4896,10 @@ msgid ""
 msgstr ""
 
 #: 276f56a64f5843658e8be434f64806d5 discord.channel.CategoryChannel:33
-#: discord.channel.ForumChannel:31 discord.channel.StageChannel:33
-#: discord.channel.TextChannel:31 discord.channel.VoiceChannel:31
-#: discord.guild.Guild.edit:105 discord.integrations.BotIntegration:21
-#: discord.integrations.Integration:21
+#: discord.channel.ForumChannel:31 discord.channel.MediaChannel:33
+#: discord.channel.StageChannel:33 discord.channel.TextChannel:31
+#: discord.channel.VoiceChannel:31 discord.guild.Guild.edit:105
+#: discord.integrations.BotIntegration:21 discord.integrations.Integration:21
 #: discord.integrations.StreamIntegration:21 discord.member.Member:48
 #: discord.role.Role:53 discord.scheduled_events.ScheduledEvent:27
 #: discord.stage_instance.StageInstance:29 discord.template.Template:52
@@ -5348,7 +5515,7 @@ msgid "An error occurred deleting the sticker."
 msgstr ""
 
 #: 7e19d4e700d74093a3cdc5c09aa87a7d discord.guild.Guild.fetch_emojis:3 of
-msgid "Retrieves all custom :class:`Emoji`\\s from the guild."
+msgid "Retrieves all custom :class:`GuildEmoji`\\s from the guild."
 msgstr ""
 
 #: 0e34069b5d51441ab8c457a52f2d4c01 discord.guild.Guild.fetch_emojis:7 of
@@ -5366,11 +5533,11 @@ msgid "The retrieved emojis."
 msgstr ""
 
 #: d20f42179eff44a7a621d7a831ddbe4b discord.guild.Guild.fetch_emojis:12 of
-msgid "List[:class:`Emoji`]"
+msgid "List[:class:`GuildEmoji`]"
 msgstr ""
 
 #: cc1afd530dcb498eab35fafe4575a8d9 discord.guild.Guild.fetch_emoji:3 of
-msgid "Retrieves a custom :class:`Emoji` from the guild."
+msgid "Retrieves a custom :class:`GuildEmoji` from the guild."
 msgstr ""
 
 #: 20deca88487948c09b27806328bb2663 discord.guild.Guild.fetch_emoji:7 of
@@ -5379,8 +5546,8 @@ msgid ""
 ":attr:`emojis` instead."
 msgstr ""
 
-#: 53a1817de08548d2a68fbe1e43614c15 discord.emoji.Emoji:37
-#: discord.guild.Guild.fetch_emoji:11 of
+#: 53a1817de08548d2a68fbe1e43614c15 discord.emoji.AppEmoji:39
+#: discord.emoji.GuildEmoji:37 discord.guild.Guild.fetch_emoji:11 of
 msgid "The emoji's ID."
 msgstr ""
 
@@ -5388,10 +5555,10 @@ msgstr ""
 msgid "The retrieved emoji."
 msgstr ""
 
-#: 1eb1e8a92e454d7bbee3b5e9541f84fd 37a41037481642b78fafaee019f75015
-#: discord.emoji.Emoji.edit:25 discord.guild.Guild.create_custom_emoji:29
+#: 1eda185924ee4e90b494cdb8b767c886 2802fcb7a86b474589f5c11ccebdfc55
+#: discord.emoji.GuildEmoji.edit:25 discord.guild.Guild.create_custom_emoji:29
 #: discord.guild.Guild.fetch_emoji:15 of
-msgid ":class:`Emoji`"
+msgid ":class:`GuildEmoji`"
 msgstr ""
 
 #: 7dca8307be0f46d9bc1484bffd2db96e discord.guild.Guild.fetch_emoji:17 of
@@ -5404,7 +5571,7 @@ msgstr ""
 
 #: c19298ed5a9d4c7f94a5ba4c63da6ecf discord.guild.Guild.create_custom_emoji:3
 #: of
-msgid "Creates a custom :class:`Emoji` for the guild."
+msgid "Creates a custom :class:`GuildEmoji` for the guild."
 msgstr ""
 
 #: 67653b1edbe444cfa63bdb3f8dd142ee discord.guild.Guild.create_custom_emoji:5
@@ -5462,10 +5629,10 @@ msgid "The created emoji."
 msgstr ""
 
 #: 29f350f034fc4530acff6df42f01d8c8 discord.guild.Guild.delete_emoji:3 of
-msgid "Deletes the custom :class:`Emoji` from the guild."
+msgid "Deletes the custom :class:`GuildEmoji` from the guild."
 msgstr ""
 
-#: discord.emoji.Emoji.delete:5 discord.emoji.Emoji.edit:5
+#: discord.emoji.GuildEmoji.delete:5 discord.emoji.GuildEmoji.edit:5
 #: discord.guild.Guild.delete_emoji:5 ff6de30aac954fea9e2f208059f9cb4c of
 msgid "You must have :attr:`~Permissions.manage_emojis` permission to do this."
 msgstr ""
@@ -5474,18 +5641,18 @@ msgstr ""
 msgid "The emoji you are deleting."
 msgstr ""
 
-#: 678beeb23b2d4987b952b0071cc7e655 discord.emoji.Emoji.delete:9
+#: 678beeb23b2d4987b952b0071cc7e655 discord.emoji.GuildEmoji.delete:9
 #: discord.guild.Guild.delete_emoji:12 of
 msgid "The reason for deleting this emoji. Shows up on the audit log."
 msgstr ""
 
-#: d87322ed656a4631bd9fa98caa580e08 discord.emoji.Emoji.delete:12
+#: d87322ed656a4631bd9fa98caa580e08 discord.emoji.GuildEmoji.delete:12
 #: discord.guild.Guild.delete_emoji:15 of
 msgid "You are not allowed to delete emojis."
 msgstr ""
 
-#: 595f6eee2e13488f8569abd8053aeeb1 discord.emoji.Emoji.delete:13
-#: discord.guild.Guild.delete_emoji:16 of
+#: 595f6eee2e13488f8569abd8053aeeb1 discord.emoji.AppEmoji.delete:8
+#: discord.emoji.GuildEmoji.delete:13 discord.guild.Guild.delete_emoji:16 of
 msgid "An error occurred deleting the emoji."
 msgstr ""
 
@@ -6436,19 +6603,19 @@ msgid ""
 "parameter."
 msgstr ""
 
-#: ../../api/models.rst:134 fb9668f6a20a4f0bbf8ba6929fd3594b
+#: ../../api/models.rst:139 fb9668f6a20a4f0bbf8ba6929fd3594b
 msgid "A namedtuple which represents a ban returned from :meth:`~Guild.bans`."
 msgstr ""
 
-#: ../../api/models.rst:138 4d8636790bdc471f860037026c9b8f57
+#: ../../api/models.rst:143 4d8636790bdc471f860037026c9b8f57
 msgid "The reason this user was banned."
 msgstr ""
 
-#: ../../api/models.rst:143 83ffc7d2c2814caa965b59434791892d
+#: ../../api/models.rst:148 83ffc7d2c2814caa965b59434791892d
 msgid "The :class:`User` that was banned."
 msgstr ""
 
-#: ../../api/models.rst:145 d1bc287ff89b4eea9c60ff6c175ddc51
+#: ../../api/models.rst:150 d1bc287ff89b4eea9c60ff6c175ddc51
 #: discord.integrations.BotIntegration:39 discord.integrations.Integration:45
 #: discord.integrations.StreamIntegration:63
 #: discord.interactions.InteractionMetadata:23
@@ -7152,14 +7319,6 @@ msgstr ""
 msgid "An aware datetime in UTC representing when the template was created."
 msgstr ""
 
-#: b8e1833f3ac147369e252c5d8801de52 discord.integrations.StreamIntegration:75
-#: discord.invite.Invite:77 discord.raw_models.RawTypingEvent:21
-#: discord.scheduled_events.ScheduledEvent:45 discord.template.Template:39
-#: discord.template.Template:46 discord.threads.Thread:121
-#: discord.threads.ThreadMember:39 of
-msgid ":class:`datetime.datetime`"
-msgstr ""
-
 #: a08d3b7933ae42939fabfd13f6d815fa discord.template.Template:43 of
 msgid ""
 "An aware datetime in UTC representing when the template was last updated."
@@ -7307,7 +7466,7 @@ msgstr ""
 msgid "The template url."
 msgstr ""
 
-#: ../../api/models.rst:166 225faf34ffdd44d1b1e7d780b7711787
+#: ../../api/models.rst:171 225faf34ffdd44d1b1e7d780b7711787
 msgid "AutoMod"
 msgstr ""
 
@@ -7381,11 +7540,6 @@ msgstr ""
 
 #: 0759c70f615648d4b1b0b4c37556dd99 discord.automod.AutoModRule:73 of
 msgid "The IDs of the roles that are exempt from this rule."
-msgstr ""
-
-#: 87c8fe8fea4441edb52f0ea109aaae0a discord.automod.AutoModRule:75
-#: discord.automod.AutoModRule:81 of
-msgid "List[:class:`int`]"
 msgstr ""
 
 #: 82153e076b5f42eca5f02ddfb4a738b1 discord.automod.AutoModRule:79 of
@@ -7630,7 +7784,7 @@ msgstr ""
 msgid "The total number of unique role and user mentions allowed."
 msgstr ""
 
-#: ../../api/models.rst:189 30ed9cbe01954df3a16f002ee6bb94c2
+#: ../../api/models.rst:194 30ed9cbe01954df3a16f002ee6bb94c2
 msgid "Invites"
 msgstr ""
 
@@ -7729,17 +7883,18 @@ msgid ":class:`ChannelType`"
 msgstr ""
 
 #: bf4b576b58b64dbcaa30f9f34b305d1c discord.CategoryChannel.mention:1
-#: discord.ForumChannel.mention:1 discord.PartialInviteChannel.mention:1
-#: discord.StageChannel.mention:1 discord.TextChannel.mention:1
-#: discord.VoiceChannel.mention:1 discord.WidgetChannel.mention:1 of
+#: discord.ForumChannel.mention:1 discord.MediaChannel.mention:1
+#: discord.PartialInviteChannel.mention:1 discord.StageChannel.mention:1
+#: discord.TextChannel.mention:1 discord.VoiceChannel.mention:1
+#: discord.WidgetChannel.mention:1 of
 msgid "The string that allows you to mention the channel."
 msgstr ""
 
 #: d9cb26c43e2f4fdf8263a762822511b3 discord.CategoryChannel.created_at:1
 #: discord.ForumChannel.created_at:1 discord.GroupChannel.created_at:1
-#: discord.PartialInviteChannel.created_at:1 discord.StageChannel.created_at:1
-#: discord.TextChannel.created_at:1 discord.VoiceChannel.created_at:1
-#: discord.WidgetChannel.created_at:1 of
+#: discord.MediaChannel.created_at:1 discord.PartialInviteChannel.created_at:1
+#: discord.StageChannel.created_at:1 discord.TextChannel.created_at:1
+#: discord.VoiceChannel.created_at:1 discord.WidgetChannel.created_at:1 of
 msgid "Returns the channel's creation time in UTC."
 msgstr ""
 
@@ -7872,15 +8027,6 @@ msgstr ""
 msgid "The user who created the invite."
 msgstr ""
 
-#: ../../docstring cc61dfae294c4579ba596a34ef3fa088
-#: discord.AuthorizingIntegrationOwners.user:4 discord.channel.DMChannel:27
-#: discord.channel.GroupChannel:43 discord.emoji.Emoji:76
-#: discord.integrations.IntegrationApplication:39 discord.invite.Invite:103
-#: discord.invite.Invite:147 discord.scheduled_events.ScheduledEvent:84
-#: discord.sticker.GuildSticker:60 of
-msgid "Optional[:class:`User`]"
-msgstr ""
-
 #: 092635739e83496eb3cfaf0b1e9893bb discord.invite.Invite:107 of
 msgid "The approximate number of members in the guild."
 msgstr ""
@@ -7986,7 +8132,7 @@ msgstr ""
 msgid "The scheduled event object to link."
 msgstr ""
 
-#: ../../api/models.rst:207 b0b4dba2274847c2bc1e96752ddd4675
+#: ../../api/models.rst:212 b0b4dba2274847c2bc1e96752ddd4675
 msgid "Role"
 msgstr ""
 
@@ -8057,35 +8203,37 @@ msgid ""
 "themselves."
 msgstr ""
 
-#: 71708c2052ef460cbf50e18eff7472ff discord.role.Role:78 of
+#: acd95f70d2cf467092a0fdec7705ec9d discord.role.Role:78 of
 msgid ""
-"Indicates if the role is managed by the guild through some form of "
-"integrations such as Twitch."
+"Indicates if the role is managed by the guild. This is true if any of "
+":meth:`Role.is_integration`, :meth:`Role.is_premium_subscriber`, "
+":meth:`Role.is_bot_managed` or :meth:`Role.is_guild_connections_role` is "
+"``True``."
 msgstr ""
 
-#: b9bafa1eea5a42449a950ef3b3948003 discord.role.Role:85 of
+#: b9bafa1eea5a42449a950ef3b3948003 discord.role.Role:87 of
 msgid "Indicates if the role can be mentioned by users."
 msgstr ""
 
-#: 90292a8451094a81b831a50845ab0581 discord.role.Role:91 of
+#: 90292a8451094a81b831a50845ab0581 discord.role.Role:93 of
 msgid "The role tags associated with this role."
 msgstr ""
 
-#: ce68cf07f32542ee887cbfe498cd4506 discord.role.Role:93 of
+#: ce68cf07f32542ee887cbfe498cd4506 discord.role.Role:95 of
 msgid "Optional[:class:`RoleTags`]"
 msgstr ""
 
-#: 6b477dc220bf4cd0affb1801794c7c46 discord.role.Role:97 of
+#: 6b477dc220bf4cd0affb1801794c7c46 discord.role.Role:99 of
 msgid ""
 "The role's unicode emoji. Only available to guilds that contain "
 "``ROLE_ICONS`` in :attr:`Guild.features`."
 msgstr ""
 
-#: discord.role.Role:106 fa704dc55e8b4bc89b983325045fb26e of
+#: discord.role.Role:108 fa704dc55e8b4bc89b983325045fb26e of
 msgid "Extra attributes of the role."
 msgstr ""
 
-#: 235c07739380495f822049acb2f71763 discord.role.Role:110 of
+#: 235c07739380495f822049acb2f71763 discord.role.Role:112 of
 msgid ":class:`RoleFlags`"
 msgstr ""
 
@@ -8107,15 +8255,40 @@ msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: adc96808a0f849419bffb0291dfcf2e1 discord.role.Role.is_integration:1 of
+#: 57a256a1d1ec47d8bd23a3f5a026fde3 discord.role.Role.is_integration:1 of
 msgid ""
-"Whether the role is managed by an integration. :rtype: "
+"Whether the guild manages the role through some form of integrations such"
+" as Twitch or through guild subscriptions. :rtype: "
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
 #: c2e51432847743fba93caa703ec89c5d discord.role.Role.is_assignable:1 of
 msgid ""
 "Whether the role is able to be assigned or removed by the bot. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: 33a23d7c29004eaaa37ca543e08ac512
+#: discord.role.Role.is_available_for_purchase:1
+#: discord.role.RoleTags.is_available_for_purchase:1 of
+msgid "Whether the role is available for purchase."
+msgstr ""
+
+#: 3ee6b3f8d1c048f982438c73c203fd20 d4dfc8934fac44858e4bc0b02dc6b489
+#: discord.role.Role.is_available_for_purchase:3
+#: discord.role.RoleTags.is_available_for_purchase:3 of
+msgid ""
+"Returns ``True`` if the role is available for purchase, and ``False`` if "
+"it is not available for purchase or if the role is not linked to a guild "
+"subscription. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: abaa9e6454b3434897bdb6657fb9c73a
+#: discord.role.Role.is_guild_connections_role:1
+#: discord.role.RoleTags.is_guild_connections_role:1 of
+msgid ""
+"Whether the role is a guild connections role. :rtype: "
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
@@ -8252,12 +8425,26 @@ msgid ""
 ":class:`Role` and :class:`Guild` classes as well."
 msgstr ""
 
-#: cefbfbe8367243c9873b7f3e6efd68cf discord.role.RoleTags:13 of
+#: 382fabd779224b428d4dac3659b03cb7 discord.role.RoleTags:9 of
+msgid ""
+"Role tags are a fairly complex topic, since it's usually hard to "
+"determine which role tag combination represents which role type. We aim "
+"to improve the documentation / introduce new attributes in future. For "
+"the meantime read `this <https://discord-lib-devs.notion.site/special-"
+"roles-role-tags>`_ if you need detailed information about how role tags "
+"work."
+msgstr ""
+
+#: cefbfbe8367243c9873b7f3e6efd68cf discord.role.RoleTags:17 of
 msgid "The bot's user ID that manages this role."
 msgstr ""
 
-#: 05a238fa0ee54228891c9067f660ce29 discord.role.RoleTags:19 of
+#: 05a238fa0ee54228891c9067f660ce29 discord.role.RoleTags:23 of
 msgid "The integration ID that manages the role."
+msgstr ""
+
+#: d1574884bdf44266b4c3364b6f302c7a discord.role.RoleTags:29 of
+msgid "The subscription SKU and listing ID of the role."
 msgstr ""
 
 #: 32f901508cfe434eaa834608ef0a2813 discord.role.RoleTags.is_bot_managed:1 of
@@ -8271,11 +8458,13 @@ msgid ""
 "guild."
 msgstr ""
 
-#: 8cd2b27c79a1497d9fe2ed01efa457c8 discord.role.RoleTags.is_integration:1 of
-msgid "Whether the role is managed by an integration."
+#: 71708c2052ef460cbf50e18eff7472ff discord.role.RoleTags.is_integration:1 of
+msgid ""
+"Whether the guild manages the role through some form of integrations such"
+" as Twitch or through guild subscriptions."
 msgstr ""
 
-#: ../../api/models.rst:220 501c6b29607b4c55ace35858ceb2e513
+#: ../../api/models.rst:225 501c6b29607b4c55ace35858ceb2e513
 msgid "Scheduled Event"
 msgstr ""
 
@@ -8651,7 +8840,7 @@ msgstr ""
 msgid ":class:`ScheduledEventLocationType`"
 msgstr ""
 
-#: ../../api/models.rst:231 bd728eaba2b94cb59255cd2be9d0a4a5
+#: ../../api/models.rst:236 bd728eaba2b94cb59255cd2be9d0a4a5
 msgid "Welcome Screen"
 msgstr ""
 
@@ -8721,7 +8910,12 @@ msgstr ""
 msgid "The emoji of the channel that is shown on welcome screen."
 msgstr ""
 
-#: ../../api/models.rst:244 e2ae072aa4324f3fb90878fc5cfbd742
+#: d0fdab02f7ff4c81b105f060099ea6dd
+#: discord.welcome_screen.WelcomeScreenChannel:21 of
+msgid "Union[:class:`GuildEmoji`, :class:`PartialEmoji`, :class:`str`]"
+msgstr ""
+
+#: ../../api/models.rst:249 e2ae072aa4324f3fb90878fc5cfbd742
 msgid "Onboarding"
 msgstr ""
 
@@ -8901,7 +9095,7 @@ msgid "The emoji displayed with the option."
 msgstr ""
 
 #: 201b7a7c20b7462080d7ef962f18c186 discord.onboarding.PromptOption:27 of
-msgid "Union[:class:`Emoji`, :class:`PartialEmoji`]"
+msgid "Union[:class:`GuildEmoji`, :class:`PartialEmoji`]"
 msgstr ""
 
 #: d5adad86add84b7980b126a6cd5977bf discord.onboarding.PromptOption:31 of
@@ -8912,7 +9106,7 @@ msgstr ""
 msgid "The option's description."
 msgstr ""
 
-#: ../../api/models.rst:262 336df85a4c564d0e9187eaaab07e05fc
+#: ../../api/models.rst:267 336df85a4c564d0e9187eaaab07e05fc
 msgid "Integration"
 msgstr ""
 
@@ -9156,7 +9350,7 @@ msgstr ""
 msgid "Syncing the integration failed."
 msgstr ""
 
-#: ../../api/models.rst:280 9cf29fbd2890454db490e0730bd67152
+#: ../../api/models.rst:285 9cf29fbd2890454db490e0730bd67152
 msgid "Widget"
 msgstr ""
 
@@ -9330,7 +9524,7 @@ msgstr ""
 msgid "Returns the member's display name."
 msgstr ""
 
-#: ../../api/models.rst:299 37c503ce08c645ed80617cb4dae9b391
+#: ../../api/models.rst:304 37c503ce08c645ed80617cb4dae9b391
 msgid "Threads"
 msgstr ""
 
@@ -9447,9 +9641,9 @@ msgid "Extra features of the thread."
 msgstr ""
 
 #: discord.channel.CategoryChannel:64 discord.channel.ForumChannel:102
-#: discord.channel.StageChannel:93 discord.channel.TextChannel:98
-#: discord.channel.VoiceChannel:114 discord.threads.Thread:136
-#: f03b50bb386e47e88f5080d349b75439 of
+#: discord.channel.MediaChannel:100 discord.channel.StageChannel:93
+#: discord.channel.TextChannel:98 discord.channel.VoiceChannel:114
+#: discord.threads.Thread:136 f03b50bb386e47e88f5080d349b75439 of
 msgid ":class:`ChannelFlags`"
 msgstr ""
 
@@ -9462,9 +9656,9 @@ msgstr ""
 
 #: 4e301d5d8f414b4a8fca6cb4433976e7 discord.CategoryChannel.type:1
 #: discord.DMChannel.type:1 discord.ForumChannel.type:1
-#: discord.GroupChannel.type:1 discord.StageChannel.type:1
-#: discord.TextChannel.type:1 discord.Thread.type:1 discord.VoiceChannel.type:1
-#: of
+#: discord.GroupChannel.type:1 discord.MediaChannel.type:1
+#: discord.StageChannel.type:1 discord.TextChannel.type:1 discord.Thread.type:1
+#: discord.VoiceChannel.type:1 of
 msgid "The channel's Discord type."
 msgstr ""
 
@@ -9502,11 +9696,11 @@ msgid "A list of tags applied to this thread."
 msgstr ""
 
 #: 520a7a4a8aeb471a9616b98069fe4e20 discord.Thread.applied_tags:3 of
-msgid "This is only available for threads in forum channels."
+msgid "This is only available for threads in forum or media channels."
 msgstr ""
 
 #: 22ee64cf3e304d3fa699868a43f6e342 discord.Thread.applied_tags:5
-#: discord.channel.ForumChannel:110 of
+#: discord.channel.ForumChannel:110 discord.channel.MediaChannel:106 of
 msgid "List[:class:`ForumTag`]"
 msgstr ""
 
@@ -9515,21 +9709,23 @@ msgid "Returns the last message from this thread in cache."
 msgstr ""
 
 #: 79224463831a451c8339369ad55335d1 discord.ForumChannel.last_message:3
-#: discord.StageChannel.last_message:3 discord.TextChannel.last_message:3
-#: discord.Thread.last_message:3 discord.Thread.starting_message:3
-#: discord.VoiceChannel.last_message:3 of
+#: discord.MediaChannel.last_message:3 discord.StageChannel.last_message:3
+#: discord.TextChannel.last_message:3 discord.Thread.last_message:3
+#: discord.Thread.starting_message:3 discord.VoiceChannel.last_message:3 of
 msgid "The message might not be valid or point to an existing message."
 msgstr ""
 
 #: 086f64f83b2e45448c6e193790788fb9 discord.ForumChannel.last_message:5
-#: discord.StageChannel.last_message:5 discord.TextChannel.last_message:5
-#: discord.Thread.last_message:5 discord.VoiceChannel.last_message:5 of
+#: discord.MediaChannel.last_message:5 discord.StageChannel.last_message:5
+#: discord.TextChannel.last_message:5 discord.Thread.last_message:5
+#: discord.VoiceChannel.last_message:5 of
 msgid "Reliable Fetching"
 msgstr ""
 
 #: 1fa6735ff47b46a5a2bd90070d218c40 discord.ForumChannel.last_message:8
-#: discord.StageChannel.last_message:8 discord.TextChannel.last_message:8
-#: discord.Thread.last_message:8 discord.VoiceChannel.last_message:8 of
+#: discord.MediaChannel.last_message:8 discord.StageChannel.last_message:8
+#: discord.TextChannel.last_message:8 discord.Thread.last_message:8
+#: discord.VoiceChannel.last_message:8 of
 msgid ""
 "For a slightly more reliable method of fetching the last message, "
 "consider using either :meth:`history` or :meth:`fetch_message` with the "
@@ -9537,8 +9733,9 @@ msgid ""
 msgstr ""
 
 #: 53538facaa654a67be082b8dfbf4f8d3 discord.ForumChannel.last_message:13
-#: discord.StageChannel.last_message:13 discord.TextChannel.last_message:13
-#: discord.Thread.last_message:13 discord.VoiceChannel.last_message:13 of
+#: discord.MediaChannel.last_message:13 discord.StageChannel.last_message:13
+#: discord.TextChannel.last_message:13 discord.Thread.last_message:13
+#: discord.VoiceChannel.last_message:13 of
 msgid "The last message in this channel or ``None`` if not found."
 msgstr ""
 
@@ -9546,9 +9743,10 @@ msgstr ""
 #: discord.ForumChannel.last_message:14
 #: discord.InteractionMetadata.interacted_message:4
 #: discord.InteractionMetadata.original_response_message:4
-#: discord.StageChannel.last_message:14 discord.TextChannel.last_message:14
-#: discord.Thread.last_message:14 discord.Thread.starting_message:9
-#: discord.VoiceChannel.last_message:14 discord.interactions.Interaction:54
+#: discord.MediaChannel.last_message:14 discord.StageChannel.last_message:14
+#: discord.TextChannel.last_message:14 discord.Thread.last_message:14
+#: discord.Thread.starting_message:9 discord.VoiceChannel.last_message:14
+#: discord.interactions.Interaction:54
 #: discord.raw_models.AutoModActionExecutionEvent:72
 #: discord.raw_models.AutoModActionExecutionEvent:86
 #: discord.raw_models.RawMessageDeleteEvent:25
@@ -9597,8 +9795,9 @@ msgstr ""
 
 #: b9b0a2dd3d2e4ecc887943971386974f discord.threads.Thread.is_pinned:1 of
 msgid ""
-"Whether the thread is pinned to the top of its parent forum channel. "
-":rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+"Whether the thread is pinned to the top of its parent forum or media "
+"channel. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
 #: 1e601881276b4c0f8d04536a4d310638 discord.threads.Thread.is_private:1 of
@@ -9916,7 +10115,7 @@ msgstr ""
 #: 16778a16ff164603a54eef19b4f71952 discord.threads.Thread.edit:37 of
 msgid ""
 "Whether to pin the thread or not. This only works if the thread is part "
-"of a forum."
+"of a forum or media channel."
 msgstr ""
 
 #: 0da7c0a3c631463692bb26a46134936a discord.threads.Thread.edit:40 of
@@ -10113,7 +10312,7 @@ msgstr ""
 msgid "The thread this member belongs to."
 msgstr ""
 
-#: ../../api/models.rst:320 74f4a8b9588440d094786e1993d7e7b4
+#: ../../api/models.rst:325 74f4a8b9588440d094786e1993d7e7b4
 msgid "Stages"
 msgstr ""
 
@@ -10123,46 +10322,48 @@ msgstr ""
 
 #: cbc78674793e480aaaf2d52a99574eb8 discord.channel.CategoryChannel:9
 #: discord.channel.DMChannel:7 discord.channel.ForumChannel:7
-#: discord.channel.GroupChannel:7 discord.channel.StageChannel:9
-#: discord.channel.TextChannel:7 discord.channel.VoiceChannel:7 of
+#: discord.channel.GroupChannel:7 discord.channel.MediaChannel:7
+#: discord.channel.StageChannel:9 discord.channel.TextChannel:7
+#: discord.channel.VoiceChannel:7 of
 msgid "Checks if two channels are equal."
 msgstr ""
 
 #: 91b7e5fb35174e4c8cab7571141a7cd9 discord.channel.CategoryChannel:13
 #: discord.channel.DMChannel:11 discord.channel.ForumChannel:11
-#: discord.channel.GroupChannel:11 discord.channel.StageChannel:13
-#: discord.channel.TextChannel:11 discord.channel.VoiceChannel:11 of
+#: discord.channel.GroupChannel:11 discord.channel.MediaChannel:11
+#: discord.channel.StageChannel:13 discord.channel.TextChannel:11
+#: discord.channel.VoiceChannel:11 of
 msgid "Checks if two channels are not equal."
 msgstr ""
 
 #: 40b19f0e11a242c3878748f60e579d3c discord.channel.DMChannel:15
 #: discord.channel.ForumChannel:15 discord.channel.GroupChannel:15
-#: discord.channel.StageChannel:17 discord.channel.TextChannel:15
-#: discord.channel.VoiceChannel:15 of
+#: discord.channel.MediaChannel:15 discord.channel.StageChannel:17
+#: discord.channel.TextChannel:15 discord.channel.VoiceChannel:15 of
 msgid "Returns the channel's hash."
 msgstr ""
 
 #: c3008f4769c14c198b601e8cc3c70be8 discord.channel.ForumChannel:19
-#: discord.channel.StageChannel:21 discord.channel.TextChannel:19
-#: discord.channel.VoiceChannel:19 of
+#: discord.channel.MediaChannel:19 discord.channel.StageChannel:21
+#: discord.channel.TextChannel:19 discord.channel.VoiceChannel:19 of
 msgid "Returns the channel's name."
 msgstr ""
 
 #: b116e2cea92b420eac9aea8cc1ab81f0 discord.channel.ForumChannel:23
-#: discord.channel.StageChannel:25 discord.channel.TextChannel:23
-#: discord.channel.VoiceChannel:23 of
+#: discord.channel.MediaChannel:25 discord.channel.StageChannel:25
+#: discord.channel.TextChannel:23 discord.channel.VoiceChannel:23 of
 msgid "The channel name."
 msgstr ""
 
-#: discord.channel.ForumChannel:29 discord.channel.StageChannel:31
-#: discord.channel.TextChannel:29 discord.channel.VoiceChannel:29
-#: e4d03f1e47a9494392429ae5f2172724 of
+#: discord.channel.ForumChannel:29 discord.channel.MediaChannel:31
+#: discord.channel.StageChannel:31 discord.channel.TextChannel:29
+#: discord.channel.VoiceChannel:29 e4d03f1e47a9494392429ae5f2172724 of
 msgid "The guild the channel belongs to."
 msgstr ""
 
 #: 10d9af8b3c114f4f9be973e412b03fb3 discord.channel.ForumChannel:35
-#: discord.channel.StageChannel:37 discord.channel.TextChannel:35
-#: discord.channel.VoiceChannel:35 of
+#: discord.channel.MediaChannel:37 discord.channel.StageChannel:37
+#: discord.channel.TextChannel:35 discord.channel.VoiceChannel:35 of
 msgid "The channel ID."
 msgstr ""
 
@@ -10171,14 +10372,14 @@ msgid "The channel's topic. ``None`` if it isn't set."
 msgstr ""
 
 #: 7bce4c601b7e4d13af2c0eeb1288ed61 discord.channel.ForumChannel:41
-#: discord.channel.StageChannel:49 discord.channel.TextChannel:41
-#: discord.channel.VoiceChannel:41 of
+#: discord.channel.MediaChannel:43 discord.channel.StageChannel:49
+#: discord.channel.TextChannel:41 discord.channel.VoiceChannel:41 of
 msgid "The category channel ID this channel belongs to, if applicable."
 msgstr ""
 
 #: 17d5c49b53b94e559f645697fdc954fc discord.channel.ForumChannel:57
-#: discord.channel.StageChannel:55 discord.channel.TextChannel:53
-#: discord.channel.VoiceChannel:47 of
+#: discord.channel.MediaChannel:59 discord.channel.StageChannel:55
+#: discord.channel.TextChannel:53 discord.channel.VoiceChannel:47 of
 msgid ""
 "The position in the channel list. This is a number that starts at 0. e.g."
 " the top channel is position 0. Can be ``None`` if the channel was "
@@ -10211,8 +10412,9 @@ msgid ":class:`VideoQualityMode`"
 msgstr ""
 
 #: 0e3d32b5c2244ca6a0d83a892a081f8d discord.channel.CategoryChannel:60
-#: discord.channel.ForumChannel:98 discord.channel.StageChannel:89
-#: discord.channel.TextChannel:94 discord.channel.VoiceChannel:110 of
+#: discord.channel.ForumChannel:98 discord.channel.MediaChannel:98
+#: discord.channel.StageChannel:89 discord.channel.TextChannel:94
+#: discord.channel.VoiceChannel:110 of
 msgid "Extra features of the channel."
 msgstr ""
 
@@ -10242,8 +10444,8 @@ msgid "Checks if the channel is NSFW."
 msgstr ""
 
 #: 0605656b32984ab9a75c79ef67a728b8 discord.ForumChannel.last_message:1
-#: discord.StageChannel.last_message:1 discord.TextChannel.last_message:1
-#: discord.VoiceChannel.last_message:1 of
+#: discord.MediaChannel.last_message:1 discord.StageChannel.last_message:1
+#: discord.TextChannel.last_message:1 discord.VoiceChannel.last_message:1 of
 msgid "Fetches the last message from this channel in cache."
 msgstr ""
 
@@ -10393,7 +10595,7 @@ msgid "Create a stage instance."
 msgstr ""
 
 #: 3788fffc313c4e17a7031c304b84dbf1 discord.channel.CategoryChannel.edit:5
-#: discord.channel.ForumChannel.edit:5
+#: discord.channel.ForumChannel.edit:5 discord.channel.MediaChannel.edit:5
 #: discord.channel.StageChannel.create_instance:5
 #: discord.channel.StageChannel.edit:5 discord.channel.TextChannel.edit:5
 #: discord.channel.VoiceChannel.edit:5
@@ -10477,8 +10679,9 @@ msgid "Getting the stage instance failed."
 msgstr ""
 
 #: b2e2f851c87a4d75806ec5d84d91f6a8 discord.channel.CategoryChannel.edit:3
-#: discord.channel.ForumChannel.edit:3 discord.channel.StageChannel.edit:3
-#: discord.channel.TextChannel.edit:3 discord.channel.VoiceChannel.edit:3 of
+#: discord.channel.ForumChannel.edit:3 discord.channel.MediaChannel.edit:3
+#: discord.channel.StageChannel.edit:3 discord.channel.TextChannel.edit:3
+#: discord.channel.VoiceChannel.edit:3 of
 msgid "Edits the channel."
 msgstr ""
 
@@ -10500,34 +10703,35 @@ msgid "The new channel's name."
 msgstr ""
 
 #: 9a4fe72c71564b6dac1e273987ca267d discord.channel.ForumChannel.edit:12
-#: discord.channel.StageChannel.edit:16 discord.channel.TextChannel.edit:21
-#: discord.channel.VoiceChannel.edit:20 of
+#: discord.channel.MediaChannel.edit:12 discord.channel.StageChannel.edit:16
+#: discord.channel.TextChannel.edit:21 discord.channel.VoiceChannel.edit:20 of
 msgid "The new channel's position."
 msgstr ""
 
 #: 28b85d3d9a3e42c690aebcdc756b8659 discord.channel.ForumChannel.edit:16
-#: discord.channel.StageChannel.edit:18 discord.channel.TextChannel.edit:25
-#: discord.channel.VoiceChannel.edit:22 of
+#: discord.channel.MediaChannel.edit:16 discord.channel.StageChannel.edit:18
+#: discord.channel.TextChannel.edit:25 discord.channel.VoiceChannel.edit:22 of
 msgid ""
 "Whether to sync permissions with the channel's new or pre-existing "
 "category. Defaults to ``False``."
 msgstr ""
 
 #: 7a7108c1fdb34bed8937a7877d4f1c06 discord.channel.ForumChannel.edit:19
-#: discord.channel.StageChannel.edit:21 discord.channel.TextChannel.edit:28
-#: discord.channel.VoiceChannel.edit:25 of
+#: discord.channel.MediaChannel.edit:19 discord.channel.StageChannel.edit:21
+#: discord.channel.TextChannel.edit:28 discord.channel.VoiceChannel.edit:25 of
 msgid "The new category for this channel. Can be ``None`` to remove the category."
 msgstr ""
 
 #: c0b3b7fe32594f7c93abe776da7dd8f6 discord.channel.ForumChannel.edit:26
-#: discord.channel.StageChannel.edit:25 discord.channel.TextChannel.edit:39
-#: discord.channel.VoiceChannel.edit:29 of
+#: discord.channel.MediaChannel.edit:26 discord.channel.StageChannel.edit:25
+#: discord.channel.TextChannel.edit:39 discord.channel.VoiceChannel.edit:29 of
 msgid "The reason for editing this channel. Shows up on the audit log."
 msgstr ""
 
 #: discord.channel.CategoryChannel.edit:23 discord.channel.ForumChannel.edit:28
-#: discord.channel.StageChannel.edit:27 discord.channel.TextChannel.edit:41
-#: discord.channel.VoiceChannel.edit:31 e9fbe45828cb4bd19e93296ab98065b3 of
+#: discord.channel.MediaChannel.edit:28 discord.channel.StageChannel.edit:27
+#: discord.channel.TextChannel.edit:41 discord.channel.VoiceChannel.edit:31
+#: e9fbe45828cb4bd19e93296ab98065b3 of
 msgid ""
 "The overwrites to apply to channel permissions. Useful for creating "
 "secret channels."
@@ -10560,33 +10764,36 @@ msgstr ""
 msgid "If the permission overwrite information is not in proper form."
 msgstr ""
 
-#: discord.channel.ForumChannel.edit:61 discord.channel.StageChannel.edit:42
-#: discord.channel.TextChannel.edit:56 discord.channel.VoiceChannel.edit:48
-#: eee74368fc62419e83a5fa7e4547b372 of
+#: discord.channel.ForumChannel.edit:61 discord.channel.MediaChannel.edit:53
+#: discord.channel.StageChannel.edit:42 discord.channel.TextChannel.edit:56
+#: discord.channel.VoiceChannel.edit:48 eee74368fc62419e83a5fa7e4547b372 of
 msgid "You do not have permissions to edit the channel."
 msgstr ""
 
-#: discord.channel.ForumChannel.edit:62 discord.channel.StageChannel.edit:43
-#: discord.channel.TextChannel.edit:57 discord.channel.VoiceChannel.edit:49
-#: f4eee836c1ef4595a1249c72fc4aa856 of
+#: discord.channel.ForumChannel.edit:62 discord.channel.MediaChannel.edit:54
+#: discord.channel.StageChannel.edit:43 discord.channel.TextChannel.edit:57
+#: discord.channel.VoiceChannel.edit:49 f4eee836c1ef4595a1249c72fc4aa856 of
 msgid "Editing the channel failed."
 msgstr ""
 
 #: 09cedcdcfe6748fd9851abb128364216 discord.CategoryChannel.category:1
-#: discord.ForumChannel.category:1 discord.StageChannel.category:1
-#: discord.TextChannel.category:1 discord.VoiceChannel.category:1 of
+#: discord.ForumChannel.category:1 discord.MediaChannel.category:1
+#: discord.StageChannel.category:1 discord.TextChannel.category:1
+#: discord.VoiceChannel.category:1 of
 msgid "The category this channel belongs to."
 msgstr ""
 
 #: 79a25807046443a6bc1b79a1b106bd6e discord.CategoryChannel.category:3
-#: discord.ForumChannel.category:3 discord.StageChannel.category:3
-#: discord.TextChannel.category:3 discord.VoiceChannel.category:3 of
+#: discord.ForumChannel.category:3 discord.MediaChannel.category:3
+#: discord.StageChannel.category:3 discord.TextChannel.category:3
+#: discord.VoiceChannel.category:3 of
 msgid "If there is no category then this is ``None``."
 msgstr ""
 
 #: 48031388459c4cebb09fdaaa927a12bd discord.CategoryChannel.changed_roles:1
-#: discord.ForumChannel.changed_roles:1 discord.StageChannel.changed_roles:1
-#: discord.TextChannel.changed_roles:1 discord.VoiceChannel.changed_roles:1 of
+#: discord.ForumChannel.changed_roles:1 discord.MediaChannel.changed_roles:1
+#: discord.StageChannel.changed_roles:1 discord.TextChannel.changed_roles:1
+#: discord.VoiceChannel.changed_roles:1 of
 msgid ""
 "Returns a list of roles that have been overridden from their default "
 "values in the :attr:`~discord.Guild.roles` attribute."
@@ -10809,8 +11016,9 @@ msgstr ""
 
 #: 61992eebcf9d49e5b62a6f71ca4ffa9d discord.CategoryChannel.jump_url:1
 #: discord.DMChannel.jump_url:1 discord.ForumChannel.jump_url:1
-#: discord.GroupChannel.jump_url:1 discord.StageChannel.jump_url:1
-#: discord.TextChannel.jump_url:1 discord.VoiceChannel.jump_url:1 of
+#: discord.GroupChannel.jump_url:1 discord.MediaChannel.jump_url:1
+#: discord.StageChannel.jump_url:1 discord.TextChannel.jump_url:1
+#: discord.VoiceChannel.jump_url:1 of
 msgid "Returns a URL that allows the client to jump to the channel."
 msgstr ""
 
@@ -10910,14 +11118,16 @@ msgid "Moving the channel failed."
 msgstr ""
 
 #: b7dc82bf54634320a5031a32b5afd0e0 discord.CategoryChannel.overwrites:1
-#: discord.ForumChannel.overwrites:1 discord.StageChannel.overwrites:1
-#: discord.TextChannel.overwrites:1 discord.VoiceChannel.overwrites:1 of
+#: discord.ForumChannel.overwrites:1 discord.MediaChannel.overwrites:1
+#: discord.StageChannel.overwrites:1 discord.TextChannel.overwrites:1
+#: discord.VoiceChannel.overwrites:1 of
 msgid "Returns all of the channel's overwrites."
 msgstr ""
 
 #: d2fe158d967147c8b4ef1867798ca82b discord.CategoryChannel.overwrites:3
-#: discord.ForumChannel.overwrites:3 discord.StageChannel.overwrites:3
-#: discord.TextChannel.overwrites:3 discord.VoiceChannel.overwrites:3 of
+#: discord.ForumChannel.overwrites:3 discord.MediaChannel.overwrites:3
+#: discord.StageChannel.overwrites:3 discord.TextChannel.overwrites:3
+#: discord.VoiceChannel.overwrites:3 of
 msgid ""
 "This is returned as a dictionary where the key contains the target which "
 "can be either a :class:`~discord.Role` or a :class:`~discord.Member` and "
@@ -10925,14 +11135,16 @@ msgid ""
 msgstr ""
 
 #: cf5f4a1ff74146fb903c23deb37c3299 discord.CategoryChannel.overwrites:7
-#: discord.ForumChannel.overwrites:7 discord.StageChannel.overwrites:7
-#: discord.TextChannel.overwrites:7 discord.VoiceChannel.overwrites:7 of
+#: discord.ForumChannel.overwrites:7 discord.MediaChannel.overwrites:7
+#: discord.StageChannel.overwrites:7 discord.TextChannel.overwrites:7
+#: discord.VoiceChannel.overwrites:7 of
 msgid "The channel's permission overwrites."
 msgstr ""
 
 #: 83956f5a5333400b902ec3cbf55ef987 discord.CategoryChannel.overwrites:8
-#: discord.ForumChannel.overwrites:8 discord.StageChannel.overwrites:8
-#: discord.TextChannel.overwrites:8 discord.VoiceChannel.overwrites:8 of
+#: discord.ForumChannel.overwrites:8 discord.MediaChannel.overwrites:8
+#: discord.StageChannel.overwrites:8 discord.TextChannel.overwrites:8
+#: discord.VoiceChannel.overwrites:8 of
 msgid ""
 "Dict[Union[:class:`~discord.Role`, :class:`~discord.Member`], "
 ":class:`~discord.PermissionOverwrite`]"
@@ -11031,6 +11243,7 @@ msgstr ""
 #: 5afc09453dd94d4aa2b35273e549c663
 #: discord.CategoryChannel.permissions_synced:1
 #: discord.ForumChannel.permissions_synced:1
+#: discord.MediaChannel.permissions_synced:1
 #: discord.StageChannel.permissions_synced:1
 #: discord.TextChannel.permissions_synced:1
 #: discord.VoiceChannel.permissions_synced:1 of
@@ -11042,6 +11255,7 @@ msgstr ""
 #: 981749f5cb0242b8855f2826a6dc6bf4
 #: discord.CategoryChannel.permissions_synced:4
 #: discord.ForumChannel.permissions_synced:4
+#: discord.MediaChannel.permissions_synced:4
 #: discord.StageChannel.permissions_synced:4
 #: discord.TextChannel.permissions_synced:4
 #: discord.VoiceChannel.permissions_synced:4 of
@@ -11272,7 +11486,7 @@ msgstr ""
 msgid "Deleting the stage instance failed."
 msgstr ""
 
-#: ../../api/models.rst:334 dd317db3c9cb4a29aeb80d2b10ad338c
+#: ../../api/models.rst:339 dd317db3c9cb4a29aeb80d2b10ad338c
 msgid "Interactions"
 msgstr ""
 
@@ -11309,16 +11523,14 @@ msgstr ""
 msgid "The guild ID the interaction was sent from."
 msgstr ""
 
-#: ../../docstring 6592055219f343cb9bdd6913260e9096
-#: da78be11664f477fa8875f0a7b3cf40d discord.Interaction.cached_channel:1
-#: discord.interactions.Interaction:28 of
+#: 6592055219f343cb9bdd6913260e9096 discord.interactions.Interaction:28 of
 msgid "The channel the interaction was sent from."
 msgstr ""
 
 #: discord.interactions.Interaction:30 fe765f9ca0464f1b81b27493ad00183c of
 msgid ""
 "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, "
-":class:`Thread`]]"
+":class:`Thread`, :class:`PartialMessageable`]]"
 msgstr ""
 
 #: d4988af767804657b320108c5d7b3467 discord.interactions.Interaction:34 of
@@ -11431,11 +11643,10 @@ msgid "Indicates whether the interaction is a message component."
 msgstr ""
 
 #: ../../docstring 2059802134ba4fd1847a6c6046b12b09
-#: discord.Interaction.cached_channel:4 of
+#: discord.Interaction.cached_channel:1 of
 msgid ""
-"Note that due to a Discord limitation, DM channels are not resolved since"
-" there is no data to complete them. These are :class:`PartialMessageable`"
-" instead."
+"The cached channel from which the interaction was sent. DM channels are "
+"not resolved. These are :class:`PartialMessageable` instead."
 msgstr ""
 
 #: 38c0562356cc42cd894edfbccb261023 discord.Interaction.permissions:1 of
@@ -11472,6 +11683,54 @@ msgstr ""
 #: ../../docstring 8fdd84284e2a497bade0d8001a36e09a
 #: discord.Interaction.followup:1 of
 msgid "Returns the followup webhook for followup interactions."
+msgstr ""
+
+#: 6eeedd965eac44a5b905a06d37c570d7
+#: discord.interactions.Interaction.is_guild_authorised:1 of
+msgid ":class:`bool`: Checks if the interaction is guild authorised."
+msgstr ""
+
+#: c2e51432847743fba93caa703ec89c5d
+#: discord.interactions.Interaction.is_guild_authorised:3 of
+msgid ""
+"There is an alias for this called :meth:`.is_guild_authorized`. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: 26ede07ec91341e19637c9b51fbf2327
+#: discord.interactions.Interaction.is_user_authorised:1 of
+msgid ":class:`bool`: Checks if the interaction is user authorised."
+msgstr ""
+
+#: c2e51432847743fba93caa703ec89c5d
+#: discord.interactions.Interaction.is_user_authorised:3 of
+msgid ""
+"There is an alias for this called :meth:`.is_user_authorized`. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: 6eeedd965eac44a5b905a06d37c570d7
+#: discord.interactions.Interaction.is_guild_authorized:1 of
+msgid ":class:`bool`: Checks if the interaction is guild authorized."
+msgstr ""
+
+#: c2e51432847743fba93caa703ec89c5d
+#: discord.interactions.Interaction.is_guild_authorized:3 of
+msgid ""
+"There is an alias for this called :meth:`.is_guild_authorised`. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ""
+
+#: 26ede07ec91341e19637c9b51fbf2327
+#: discord.interactions.Interaction.is_user_authorized:1 of
+msgid ":class:`bool`: Checks if the interaction is user authorized."
+msgstr ""
+
+#: c2e51432847743fba93caa703ec89c5d
+#: discord.interactions.Interaction.is_user_authorized:3 of
+msgid ""
+"There is an alias for this called :meth:`.is_user_authorised`. :rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
 #: 2de1a112cdb84a6f9936002cc8f558aa
@@ -12267,141 +12526,206 @@ msgstr ""
 msgid "Whether the select is disabled or not."
 msgstr ""
 
-#: ../../api/models.rst:389 c885c2e7084646b998c51b1c9bafc0aa
+#: ../../api/models.rst:394 c885c2e7084646b998c51b1c9bafc0aa
 msgid "Emoji"
 msgstr ""
 
-#: a4f545bdd7dc437c9d245d238586c702 discord.emoji.Emoji:1 of
-msgid "Represents a custom emoji."
+#: 2211977338284dabb4ddd3a5298bc2ee discord.emoji.GuildEmoji:1 of
+msgid "Represents a custom emoji in a guild."
 msgstr ""
 
-#: a3349dfb97b44db9b3ecbbee8e3a01ff discord.emoji.Emoji:3 of
+#: a3349dfb97b44db9b3ecbbee8e3a01ff discord.emoji.AppEmoji:3
+#: discord.emoji.GuildEmoji:3 of
 msgid ""
 "Depending on the way this object was created, some attributes can have a "
 "value of ``None``."
 msgstr ""
 
-#: 44bf70fa78894c1daddd55e9d90838e2 discord.emoji.Emoji:10
-#: discord.partial_emoji.PartialEmoji:12 of
+#: 44bf70fa78894c1daddd55e9d90838e2 discord.emoji.AppEmoji:12
+#: discord.emoji.GuildEmoji:10 discord.partial_emoji.PartialEmoji:12 of
 msgid "Checks if two emoji are the same."
 msgstr ""
 
-#: d2a07b8aa3ab40839e60c1d979b40ceb discord.emoji.Emoji:14
-#: discord.partial_emoji.PartialEmoji:16 of
+#: d2a07b8aa3ab40839e60c1d979b40ceb discord.emoji.AppEmoji:16
+#: discord.emoji.GuildEmoji:14 discord.partial_emoji.PartialEmoji:16 of
 msgid "Checks if two emoji are not the same."
 msgstr ""
 
-#: 4c8a36b9a18a42cc928f6013bb72307c discord.emoji.Emoji:18
-#: discord.partial_emoji.PartialEmoji:20 of
+#: 4c8a36b9a18a42cc928f6013bb72307c discord.emoji.AppEmoji:20
+#: discord.emoji.GuildEmoji:18 discord.partial_emoji.PartialEmoji:20 of
 msgid "Return the emoji's hash."
 msgstr ""
 
-#: 7cf57bf9d537462a8b495549c81e2242 discord.emoji.Emoji:22 of
+#: 7cf57bf9d537462a8b495549c81e2242 discord.emoji.AppEmoji:24
+#: discord.emoji.GuildEmoji:22 of
 msgid ""
 "Returns an iterator of ``(field, value)`` pairs. This allows this class "
 "to be used as an iterable in list/dict/etc constructions."
 msgstr ""
 
-#: 2a7b951e1a5b452d93036b3794628d0d discord.emoji.Emoji:27
-#: discord.partial_emoji.PartialEmoji:24 of
+#: 2a7b951e1a5b452d93036b3794628d0d discord.emoji.AppEmoji:29
+#: discord.emoji.GuildEmoji:27 discord.partial_emoji.PartialEmoji:24 of
 msgid "Returns the emoji rendered for discord."
 msgstr ""
 
-#: 14ea0733e1d541da9fea4210dc039209 discord.emoji.Emoji:31 of
+#: 14ea0733e1d541da9fea4210dc039209 discord.emoji.AppEmoji:33
+#: discord.emoji.GuildEmoji:31 of
 msgid "The name of the emoji."
 msgstr ""
 
-#: b6e01311a7694deeba97d6ea2b8240e8 discord.emoji.Emoji:43 of
+#: b6e01311a7694deeba97d6ea2b8240e8 discord.emoji.AppEmoji:45
+#: discord.emoji.GuildEmoji:43 of
 msgid ""
 "If colons are required to use this emoji in the client (:PJSalt: vs "
 "PJSalt)."
 msgstr ""
 
-#: 880bd48f7776420995813479f53ac12a discord.emoji.Emoji:49 of
+#: 880bd48f7776420995813479f53ac12a discord.emoji.AppEmoji:51
+#: discord.emoji.GuildEmoji:49 of
 msgid "Whether an emoji is animated or not."
 msgstr ""
 
-#: 69dcc8a19c474fdb8fad0b3391750694 discord.emoji.Emoji:55 of
+#: 69dcc8a19c474fdb8fad0b3391750694 discord.emoji.AppEmoji:57
+#: discord.emoji.GuildEmoji:55 of
 msgid "If this emoji is managed by a Twitch integration."
 msgstr ""
 
-#: a1e8a33a32c64b71bef5731eeaa07cd3 discord.emoji.Emoji:61 of
+#: a1e8a33a32c64b71bef5731eeaa07cd3 discord.emoji.GuildEmoji:61 of
 msgid "The guild ID the emoji belongs to."
 msgstr ""
 
-#: 33a23d7c29004eaaa37ca543e08ac512 discord.emoji.Emoji:67 of
+#: 33a23d7c29004eaaa37ca543e08ac512 discord.emoji.AppEmoji:69
+#: discord.emoji.GuildEmoji:67 of
 msgid "Whether the emoji is available for use."
 msgstr ""
 
-#: db162171483149d08942625fc5b9ac36 discord.emoji.Emoji:73 of
+#: db162171483149d08942625fc5b9ac36 discord.emoji.GuildEmoji:73 of
 msgid ""
 "The user that created the emoji. This can only be retrieved using "
 ":meth:`Guild.fetch_emoji` and having the "
 ":attr:`~Permissions.manage_emojis` permission."
 msgstr ""
 
-#: 62dffac0a0724a6383eb42c22cd717c4 discord.Emoji.created_at:1 of
-msgid "Returns the emoji's creation time in UTC."
-msgstr ""
-
-#: 94a262936d7443e284a5b0bca6175dc3 discord.Emoji.url:1 of
-msgid "Returns the URL of the emoji."
-msgstr ""
-
-#: 5dfaa3531d0646b0bf85c2b34e72fb67 discord.Emoji.roles:1 of
+#: 5dfaa3531d0646b0bf85c2b34e72fb67 discord.GuildEmoji.roles:1 of
 msgid "A :class:`list` of roles that is allowed to use this emoji."
 msgstr ""
 
-#: d76d5cc472e547e2893bf6d83d18cb1b discord.Emoji.roles:3 of
+#: d76d5cc472e547e2893bf6d83d18cb1b discord.GuildEmoji.roles:3 of
 msgid "If roles is empty, the emoji is unrestricted."
 msgstr ""
 
-#: 04b446a6ff504bf8a407983e47aaeb77 discord.Emoji.guild:1 of
+#: 04b446a6ff504bf8a407983e47aaeb77 discord.GuildEmoji.guild:1 of
 msgid "The guild this emoji belongs to."
 msgstr ""
 
-#: a9a8d25d86ae4c3496bc37cd89b9ea7d discord.emoji.Emoji.is_usable:1 of
+#: a9a8d25d86ae4c3496bc37cd89b9ea7d discord.emoji.GuildEmoji.is_usable:1 of
 msgid ""
 "Whether the bot can use this emoji. :rtype: "
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: 496fefc520c1400a95b50c17283f2426 discord.emoji.Emoji.delete:3 of
+#: 496fefc520c1400a95b50c17283f2426 discord.emoji.GuildEmoji.delete:3 of
 msgid "Deletes the custom emoji."
 msgstr ""
 
-#: aca7f87a81bc40f8855d7c68ddee4b7c discord.emoji.Emoji.edit:3 of
+#: aca7f87a81bc40f8855d7c68ddee4b7c discord.emoji.GuildEmoji.edit:3 of
 msgid "Edits the custom emoji."
 msgstr ""
 
-#: 9eeff73ac06d4e61bc1a6e1a62c484b2 discord.emoji.Emoji.edit:8 of
+#: 9eeff73ac06d4e61bc1a6e1a62c484b2 discord.emoji.GuildEmoji.edit:8 of
 msgid "The newly updated emoji is returned."
 msgstr ""
 
-#: b1be944c7f23429e8685fd13dcaf8082 discord.emoji.Emoji.edit:12 of
+#: b1be944c7f23429e8685fd13dcaf8082 discord.emoji.AppEmoji.edit:8
+#: discord.emoji.GuildEmoji.edit:12 of
 msgid "The new emoji name."
 msgstr ""
 
-#: 7a765fb4a9714da9b98d6d67185e6ad0 discord.emoji.Emoji.edit:15 of
+#: 7a765fb4a9714da9b98d6d67185e6ad0 discord.emoji.GuildEmoji.edit:15 of
 msgid ""
 "A list of roles that can use this emoji. An empty list can be passed to "
 "make it available to everyone."
 msgstr ""
 
-#: 9a6b2a99c62d43668117ae80889fa7d7 discord.emoji.Emoji.edit:18 of
+#: 9a6b2a99c62d43668117ae80889fa7d7 discord.emoji.GuildEmoji.edit:18 of
 msgid "The reason for editing this emoji. Shows up on the audit log."
 msgstr ""
 
-#: b2b4c21efd88459db5e27419833f6c0b discord.emoji.Emoji.edit:21 of
+#: b2b4c21efd88459db5e27419833f6c0b discord.emoji.GuildEmoji.edit:21 of
 msgid "You are not allowed to edit emojis."
 msgstr ""
 
-#: 29b4b67b766647a38d168494e1cfa898 discord.emoji.Emoji.edit:22 of
+#: 29b4b67b766647a38d168494e1cfa898 discord.emoji.AppEmoji.edit:12
+#: discord.emoji.GuildEmoji.edit:22 of
 msgid "An error occurred editing the emoji."
 msgstr ""
 
-#: 89165b83444e45609f6f4d2352594759 discord.emoji.Emoji.edit:24 of
+#: 89165b83444e45609f6f4d2352594759 discord.emoji.AppEmoji.edit:14
+#: discord.emoji.GuildEmoji.edit:24 of
 msgid "The newly updated emoji."
+msgstr ""
+
+#: 62dffac0a0724a6383eb42c22cd717c4 discord.AppEmoji.created_at:1
+#: discord.GuildEmoji.created_at:1 of
+msgid "Returns the emoji's creation time in UTC."
+msgstr ""
+
+#: 94a262936d7443e284a5b0bca6175dc3 discord.AppEmoji.url:1
+#: discord.GuildEmoji.url:1 of
+msgid "Returns the URL of the emoji."
+msgstr ""
+
+#: a7dc168070fb49c3a3446ea00d0e15df discord.emoji.AppEmoji:1 of
+msgid "Represents a custom emoji from an application."
+msgstr ""
+
+#: 7bce4c601b7e4d13af2c0eeb1288ed61 discord.emoji.AppEmoji:63 of
+msgid "The application ID the emoji belongs to, if available."
+msgstr ""
+
+#: discord.emoji.AppEmoji:75 f5152bae14734569aeef4a6b6f207e59 of
+msgid "The user that created the emoji."
+msgstr ""
+
+#: 5cdca06cd89a457fb2fc1187e7a8cad7 discord.AppEmoji.guild:1 of
+msgid ""
+"The guild this emoji belongs to. This is always `None` for "
+":class:`AppEmoji`."
+msgstr ""
+
+#: 621f782ce5f14018a13edc57e5d3e1cb discord.AppEmoji.roles:1 of
+msgid ""
+"A :class:`list` of roles that is allowed to use this emoji. This is "
+"always empty for :class:`AppEmoji`."
+msgstr ""
+
+#: 92ad8e5b06b44eaeb61e9ec6fe198505 discord.emoji.AppEmoji.is_usable:1 of
+msgid "Whether the bot can use this emoji."
+msgstr ""
+
+#: 496fefc520c1400a95b50c17283f2426 discord.emoji.AppEmoji.delete:3 of
+msgid "Deletes the application emoji."
+msgstr ""
+
+#: 9afd0935187a461ab98d15477738fc11 discord.emoji.AppEmoji.delete:5
+#: discord.emoji.AppEmoji.edit:5 of
+msgid "You must own the emoji to do this."
+msgstr ""
+
+#: d87322ed656a4631bd9fa98caa580e08 discord.emoji.AppEmoji.delete:7 of
+msgid "You are not allowed to delete the emoji."
+msgstr ""
+
+#: aca7f87a81bc40f8855d7c68ddee4b7c discord.emoji.AppEmoji.edit:3 of
+msgid "Edits the application emoji."
+msgstr ""
+
+#: b2b4c21efd88459db5e27419833f6c0b discord.emoji.AppEmoji.edit:11 of
+msgid "You are not allowed to edit the emoji."
+msgstr ""
+
+#: 37a41037481642b78fafaee019f75015 discord.emoji.AppEmoji.edit:15 of
+msgid ":class:`AppEmoji`"
 msgstr ""
 
 #: discord.partial_emoji.PartialEmoji:1 f39d6b6e8b3044fba02ad0bd00f8d7f6 of
@@ -12511,7 +12835,7 @@ msgstr ""
 msgid "If this isn't a custom emoji then an empty string is returned"
 msgstr ""
 
-#: ../../api/models.rst:404 a26c3fb538cc4eae85bc9b01ec610081
+#: ../../api/models.rst:415 a26c3fb538cc4eae85bc9b01ec610081
 msgid "Channels"
 msgstr ""
 
@@ -12520,19 +12844,20 @@ msgid "Represents a Discord text channel."
 msgstr ""
 
 #: 28cadf33bcaa4284b510b25b352040ba discord.channel.ForumChannel:47
-#: discord.channel.TextChannel:47 of
+#: discord.channel.MediaChannel:49 discord.channel.TextChannel:47 of
 msgid "The channel's topic. ``None`` if it doesn't exist."
 msgstr ""
 
 #: de489b1b036047c99f633e4585c04d92 discord.channel.ForumChannel:64
-#: discord.channel.TextChannel:60 of
+#: discord.channel.MediaChannel:66 discord.channel.TextChannel:60 of
 msgid ""
 "The last message ID of the message sent to this channel. It may *not* "
 "point to an existing or valid message."
 msgstr ""
 
 #: 77a34e9892e94686b1a5737a8469fde8 discord.channel.ForumChannel:71
-#: discord.channel.TextChannel:67 discord.channel.VoiceChannel:91 of
+#: discord.channel.MediaChannel:73 discord.channel.TextChannel:67
+#: discord.channel.VoiceChannel:91 of
 msgid ""
 "The number of seconds a member must wait between sending messages in this"
 " channel. A value of `0` denotes that it is disabled. Bots and users with"
@@ -12541,26 +12866,28 @@ msgid ""
 msgstr ""
 
 #: discord.channel.CategoryChannel:50 discord.channel.ForumChannel:80
-#: discord.channel.TextChannel:76 fab80e171db445d78867efd958f0536b of
+#: discord.channel.MediaChannel:82 discord.channel.TextChannel:76
+#: fab80e171db445d78867efd958f0536b of
 msgid "If the channel is marked as \"not safe for work\"."
 msgstr ""
 
 #: 50ed6ace112b45399a2e24de081c9951 discord.channel.CategoryChannel:54
-#: discord.channel.ForumChannel:84 discord.channel.TextChannel:80 of
+#: discord.channel.ForumChannel:84 discord.channel.MediaChannel:86
+#: discord.channel.TextChannel:80 of
 msgid ""
 "To check if the channel or the guild of that channel are marked as NSFW, "
 "consider :meth:`is_nsfw` instead."
 msgstr ""
 
 #: 39c3e1849aea42b1a5e44b6b35945813 discord.channel.ForumChannel:90
-#: discord.channel.TextChannel:86 of
+#: discord.channel.MediaChannel:92 discord.channel.TextChannel:86 of
 msgid ""
 "The default auto archive duration in minutes for threads created in this "
 "channel."
 msgstr ""
 
 #: c03fe611956149aba94e3914962f92df discord.channel.ForumChannel:122
-#: discord.channel.TextChannel:102 of
+#: discord.channel.MediaChannel:116 discord.channel.TextChannel:102 of
 msgid ""
 "The initial slowmode delay to set on newly created threads in this "
 "channel."
@@ -12584,12 +12911,12 @@ msgid "The ``type`` keyword-only parameter was added."
 msgstr ""
 
 #: b736174baf734a728df41ae7c8846701 discord.channel.ForumChannel.edit:8
-#: discord.channel.TextChannel.edit:17 of
+#: discord.channel.MediaChannel.edit:8 discord.channel.TextChannel.edit:17 of
 msgid "The new channel name."
 msgstr ""
 
 #: 795407065f204ab394d5d71e46f4f9e4 discord.channel.ForumChannel.edit:22
-#: discord.channel.TextChannel.edit:31 of
+#: discord.channel.MediaChannel.edit:22 discord.channel.TextChannel.edit:31 of
 msgid ""
 "Specifies the slowmode rate limit for user in this channel, in seconds. A"
 " value of `0` disables slowmode. The maximum value possible is `21600`."
@@ -12604,7 +12931,7 @@ msgid ""
 msgstr ""
 
 #: aec9e5551cb74af8b49d87aceac3742b discord.channel.ForumChannel.edit:30
-#: discord.channel.TextChannel.edit:43 of
+#: discord.channel.MediaChannel.edit:30 discord.channel.TextChannel.edit:43 of
 msgid ""
 "The new default auto archive duration in minutes for threads created in "
 "this channel. Must be one of ``60``, ``1440``, ``4320``, or ``10080``."
@@ -12618,7 +12945,7 @@ msgid ""
 msgstr ""
 
 #: a07120a4d00149718bbcb809103cc6a7 discord.channel.ForumChannel.edit:33
-#: discord.channel.TextChannel.edit:46 of
+#: discord.channel.MediaChannel.edit:33 discord.channel.TextChannel.edit:46 of
 msgid ""
 "The new default slowmode delay in seconds for threads created in this "
 "channel."
@@ -12635,7 +12962,7 @@ msgid "Optional[:class:`.TextChannel`]"
 msgstr ""
 
 #: 0fc3c3b030404e49b32d2e3452611428 discord.channel.ForumChannel.edit:60
-#: discord.channel.TextChannel.edit:55 of
+#: discord.channel.MediaChannel.edit:52 discord.channel.TextChannel.edit:55 of
 msgid ""
 "If position is less than 0 or greater than the number of channels, or if"
 "     the permission overwrite information is not in proper form."
@@ -12804,12 +13131,12 @@ msgid "You do not have the permissions to create a webhook."
 msgstr ""
 
 #: d3a81ce636a44a9e88b3eea449b50f70 discord.ForumChannel.members:1
-#: discord.TextChannel.members:1 of
+#: discord.MediaChannel.members:1 discord.TextChannel.members:1 of
 msgid "Returns all members that can see this channel."
 msgstr ""
 
-#: discord.ForumChannel.threads:1 discord.TextChannel.threads:1
-#: f4fe0d12fcea454aa752afbccfa50240 of
+#: discord.ForumChannel.threads:1 discord.MediaChannel.threads:1
+#: discord.TextChannel.threads:1 f4fe0d12fcea454aa752afbccfa50240 of
 msgid "Returns all the threads that you can see."
 msgstr ""
 
@@ -12817,41 +13144,50 @@ msgstr ""
 msgid "Represents a Discord forum channel."
 msgstr ""
 
-#: 4b34ca608be34c5597336cc69ea91cf2 discord.channel.ForumChannel:51 of
+#: 4b34ca608be34c5597336cc69ea91cf2 discord.channel.ForumChannel:51
+#: discord.channel.MediaChannel:53 of
 msgid ":attr:`guidelines` exists as an alternative to this attribute."
 msgstr ""
 
-#: b083e6a86b634b1894c54f243b988735 discord.channel.ForumChannel:106 of
+#: b083e6a86b634b1894c54f243b988735 discord.channel.ForumChannel:106
+#: discord.channel.MediaChannel:104 of
 msgid "The set of tags that can be used in a forum channel."
 msgstr ""
 
-#: cae1b545239a43b6aa72e818246d1b4a discord.channel.ForumChannel:114 of
+#: cae1b545239a43b6aa72e818246d1b4a discord.channel.ForumChannel:114
+#: discord.channel.MediaChannel:110 of
 msgid "The default sort order type used to order posts in this channel."
 msgstr ""
 
-#: 163ca8890cd8438d88981ac907297672 discord.channel.ForumChannel:118 of
+#: 163ca8890cd8438d88981ac907297672 discord.channel.ForumChannel:118
+#: discord.channel.MediaChannel:112 of
 msgid "Optional[:class:`SortOrder`]"
 msgstr ""
 
-#: 79295ddcd99444a28326d80b16bcb8e8 discord.channel.ForumChannel:130 of
+#: 79295ddcd99444a28326d80b16bcb8e8 discord.channel.ForumChannel:130
+#: discord.channel.MediaChannel:122 of
 msgid "The default forum reaction emoji."
 msgstr ""
 
-#: 301a6e58f833446e89b741b0196dbd33 discord.channel.ForumChannel:134 of
-msgid "Optional[:class:`str` | :class:`discord.Emoji`]"
+#: 301a6e58f833446e89b741b0196dbd33 discord.channel.ForumChannel:134
+#: discord.channel.MediaChannel:124 of
+msgid "Optional[:class:`str` | :class:`discord.GuildEmoji`]"
 msgstr ""
 
-#: 718249dfc3d4489791382f41a839e150 discord.ForumChannel.guidelines:1 of
+#: 718249dfc3d4489791382f41a839e150 discord.ForumChannel.guidelines:1
+#: discord.MediaChannel.guidelines:1 of
 msgid "The channel's guidelines. An alias of :attr:`topic`."
 msgstr ""
 
-#: 8dae47fc78014be6bdc6ca09757b5007 discord.ForumChannel.requires_tag:1 of
+#: 8dae47fc78014be6bdc6ca09757b5007 discord.ForumChannel.requires_tag:1
+#: discord.MediaChannel.requires_tag:1 of
 msgid ""
 "Whether a tag is required to be specified when creating a thread in this "
-"forum channel."
+"forum or media channel."
 msgstr ""
 
-#: discord.ForumChannel.requires_tag:3 ef72d447ccb444db82cfbcc3779bc392 of
+#: discord.ForumChannel.requires_tag:3 discord.MediaChannel.requires_tag:3
+#: ef72d447ccb444db82cfbcc3779bc392 of
 msgid "Tags are specified in :attr:`applied_tags`."
 msgstr ""
 
@@ -12873,14 +13209,15 @@ msgid ""
 "versionadded:: 2.3"
 msgstr ""
 
-#: a743fff2abf44d978975cbef0b68d112 discord.channel.ForumChannel.edit:37 of
+#: a743fff2abf44d978975cbef0b68d112 discord.channel.ForumChannel.edit:37
+#: discord.channel.MediaChannel.edit:35 of
 msgid "The default sort order type to use to order posts in this channel."
 msgstr ""
 
 #: 60f31611259c42a69519afb9d55367d7 discord.channel.ForumChannel.edit:41 of
 msgid ""
 "The default reaction emoji. Can be a unicode emoji or a custom emoji in "
-"the forms: :class:`Emoji`, snowflake ID, string representation (eg. "
+"the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. "
 "'<a:emoji_name:emoji_id>').  .. versionadded:: 2.5"
 msgstr ""
 
@@ -12890,7 +13227,8 @@ msgid ""
 "  .. versionadded:: 2.3"
 msgstr ""
 
-#: 0b5e325a38434b46b84bf970a8b2c356 discord.channel.ForumChannel.edit:47 of
+#: 0b5e325a38434b46b84bf970a8b2c356 discord.channel.ForumChannel.edit:47
+#: discord.channel.MediaChannel.edit:41 of
 msgid "The set of tags that can be used in this channel. Must be less than `20`."
 msgstr ""
 
@@ -12900,7 +13238,8 @@ msgid ""
 "in this channel.  .. versionadded:: 2.3"
 msgstr ""
 
-#: 46f1ffe182e64c9ba4a690d9f6460f58 discord.channel.ForumChannel.edit:51 of
+#: 46f1ffe182e64c9ba4a690d9f6460f58 discord.channel.ForumChannel.edit:51
+#: discord.channel.MediaChannel.edit:43 of
 msgid ""
 "Whether a tag should be required to be specified when creating a thread "
 "in this channel."
@@ -12939,6 +13278,36 @@ msgid ""
 "with :attr:`~Permissions.manage_channels` or "
 ":attr:`~Permissions.manage_messages` bypass slowmode. If not provided, "
 "the forum channel's default slowmode is used."
+msgstr ""
+
+#: d6341ad4205a4369988579907602c902 discord.channel.MediaChannel:1 of
+msgid "Represents a Discord media channel. Subclass of :class:`ForumChannel`."
+msgstr ""
+
+#: 8dae47fc78014be6bdc6ca09757b5007
+#: discord.MediaChannel.media_download_options_hidden:1 of
+msgid "Whether media download options are hidden in this media channel."
+msgstr ""
+
+#: acba40fd9b99460bb43889ba61c943d4 discord.channel.MediaChannel.edit:37 of
+msgid ""
+"The default reaction emoji. Can be a unicode emoji or a custom emoji in "
+"the forms: :class:`GuildEmoji`, snowflake ID, string representation "
+"(e.g., '<a:emoji_name:emoji_id>')."
+msgstr ""
+
+#: 8dae47fc78014be6bdc6ca09757b5007 discord.channel.MediaChannel.edit:45 of
+msgid "Whether media download options should be hidden in this media channel."
+msgstr ""
+
+#: b15a139dcf17430b9bda24a4052d3504 discord.channel.MediaChannel.edit:48 of
+msgid ""
+"The newly edited media channel. If the edit was only positional then "
+"``None`` is returned instead."
+msgstr ""
+
+#: 9e006a134f6d4a5c98852ac3f6ee4da7 discord.channel.MediaChannel.edit:50 of
+msgid "Optional[:class:`.MediaChannel`]"
 msgstr ""
 
 #: 176b5d8e42a149aca568b2ab47d6d85d discord.channel.VoiceChannel:1 of
@@ -13315,7 +13684,7 @@ msgstr ""
 msgid "Leaving the group failed."
 msgstr ""
 
-#: ../../api/models.rst:464 209e72461fff4eaeb235cc21aa5f1997
+#: ../../api/models.rst:481 209e72461fff4eaeb235cc21aa5f1997
 msgid "Stickers"
 msgstr ""
 
@@ -13555,7 +13924,7 @@ msgstr ""
 msgid "An error occurred editing the sticker."
 msgstr ""
 
-#: ../../api/models.rst:492 fa3209921266443fb19f43b396c4c0a6
+#: ../../api/models.rst:509 fa3209921266443fb19f43b396c4c0a6
 msgid "Events"
 msgstr ""
 
@@ -14281,7 +14650,7 @@ msgid ""
 "status-update>`_."
 msgstr ""
 
-#: ../../api/models.rst:577 eae4e206e45a463f80727bc3e3eee504
+#: ../../api/models.rst:594 eae4e206e45a463f80727bc3e3eee504
 msgid "Webhooks"
 msgstr ""
 
@@ -14309,5 +14678,131 @@ msgstr ""
 #~ " catalog of guild features `here "
 #~ "<https://github.com/Delitefully/DiscordLists#guild-feature-"
 #~ "glossary>`_."
+#~ msgstr ""
+
+#~ msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+#~ msgstr ""
+
+#~ msgid "Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether or not this entitlement has "
+#~ "been consumed. This will always be "
+#~ "``False`` for entitlements that are not"
+#~ " of type :attr:`EntitlementType.consumable`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This can only be done on "
+#~ "entitlements of type "
+#~ ":attr:`EntitlementType.consumable`."
+#~ msgstr ""
+
+#~ msgid "The entitlement is not consumable."
+#~ msgstr ""
+
+#~ msgid "Tuple[:class:`Emoji`, ...]"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The default reaction emoji. Can be "
+#~ "a unicode emoji or a custom emoji"
+#~ " in the forms: :class:`Emoji`, snowflake"
+#~ " ID, string representation (eg. "
+#~ "'<a:emoji_name:emoji_id>').  .. versionadded:: v2.5"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The default reaction emoji. Can be "
+#~ "a unicode emoji or a custom emoji"
+#~ " in the forms: :class:`Emoji`, snowflake"
+#~ " ID, string representation (eg. "
+#~ "'<a:emoji_name:emoji_id>')."
+#~ msgstr ""
+
+#~ msgid "Retrieves all custom :class:`Emoji`\\s from the guild."
+#~ msgstr ""
+
+#~ msgid "List[:class:`Emoji`]"
+#~ msgstr ""
+
+#~ msgid "Retrieves a custom :class:`Emoji` from the guild."
+#~ msgstr ""
+
+#~ msgid ":class:`Emoji`"
+#~ msgstr ""
+
+#~ msgid "Creates a custom :class:`Emoji` for the guild."
+#~ msgstr ""
+
+#~ msgid "Deletes the custom :class:`Emoji` from the guild."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Indicates if the role is managed "
+#~ "by the guild through some form of"
+#~ " integrations such as Twitch."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether the role is managed by an"
+#~ " integration. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid "Whether the role is managed by an integration."
+#~ msgstr ""
+
+#~ msgid "Union[:class:`Emoji`, :class:`PartialEmoji`]"
+#~ msgstr ""
+
+#~ msgid "This is only available for threads in forum channels."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether the thread is pinned to "
+#~ "the top of its parent forum "
+#~ "channel. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether to pin the thread or not."
+#~ " This only works if the thread "
+#~ "is part of a forum."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Optional[Union[:class:`abc.GuildChannel`, "
+#~ ":class:`abc.PrivateChannel`, :class:`Thread`]]"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Note that due to a Discord "
+#~ "limitation, DM channels are not resolved"
+#~ " since there is no data to "
+#~ "complete them. These are "
+#~ ":class:`PartialMessageable` instead."
+#~ msgstr ""
+
+#~ msgid "Represents a custom emoji."
+#~ msgstr ""
+
+#~ msgid "Optional[:class:`str` | :class:`discord.Emoji`]"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Whether a tag is required to be"
+#~ " specified when creating a thread in"
+#~ " this forum channel."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The default reaction emoji. Can be "
+#~ "a unicode emoji or a custom emoji"
+#~ " in the forms: :class:`Emoji`, snowflake"
+#~ " ID, string representation (eg. "
+#~ "'<a:emoji_name:emoji_id>').  .. versionadded:: 2.5"
 #~ msgstr ""
 

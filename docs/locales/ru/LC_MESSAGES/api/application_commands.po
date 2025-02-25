@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
+"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
 "Last-Translator: \\n"
 "Language-Team: none\\n"
 "MIME-Version: 1.0\\n"
@@ -847,6 +847,24 @@ msgstr "You specified both ``embed`` and ``embeds`` or ``file`` and ``files``"
 
 msgid "Returns the cog associated with this context's command. ``None`` if it does not exist."
 msgstr "Returns the cog associated with this context's command. ``None`` if it does not exist."
+
+msgid ":class:`bool`: Checks if the invoked command is guild-installed. This is a shortcut for :meth:`Interaction.is_guild_authorised`."
+msgstr ":class:`bool`: Checks if the invoked command is guild-installed. This is a shortcut for :meth:`Interaction.is_guild_authorised`."
+
+msgid "There is an alias for this called :meth:`.is_guild_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "There is an alias for this called :meth:`.is_guild_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid ":class:`bool`: Checks if the invoked command is user-installed. This is a shortcut for :meth:`Interaction.is_user_authorised`."
+msgstr ":class:`bool`: Checks if the invoked command is user-installed. This is a shortcut for :meth:`Interaction.is_user_authorised`."
+
+msgid "There is an alias for this called :meth:`.is_user_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "There is an alias for this called :meth:`.is_user_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid ":class:`bool`: An alias for :meth:`.is_guild_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ":class:`bool`: An alias for :meth:`.is_guild_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid ":class:`bool`: An alias for :meth:`.is_user_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr ":class:`bool`: An alias for :meth:`.is_user_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "Represents context for a slash command's option autocomplete."
 msgstr "Represents context for a slash command's option autocomplete."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -276,7 +276,7 @@ msgstr ""
 
 #: ../../faq.rst:202
 #: 83b6da571d72418b976c492e3fe88640
-msgid "For custom emoji, you should pass an instance of :class:`Emoji`. You can also pass a ``'<:name:id>'`` string, but if you can use said emoji, you should be able to use :meth:`Client.get_emoji` to get an emoji via ID or use :func:`utils.find`/ :func:`utils.get` on :attr:`Client.emojis` or :attr:`Guild.emojis` collections."
+msgid "For custom emoji, you should pass an instance of :class:`GuildEmoji` or :class:`AppEmoji`. You can also pass a ``'<:name:id>'`` string, but if you can use said emoji, you should be able to use :meth:`Client.get_emoji` to get an emoji via ID or use :func:`utils.find`/ :func:`utils.get` on :attr:`Client.emojis` or :attr:`Guild.emojis` collections."
 msgstr ""
 
 #: ../../faq.rst:206

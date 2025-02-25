@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-12 14:51+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/cogs.rst:4 5374666c885c4434b06da0a8790fecdb
 msgid "Cogs"
@@ -92,6 +92,14 @@ msgstr ""
 msgid ""
 "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the "
 "cog."
+msgstr ""
+
+#: 37ca252417a04d0f9a6d189f27bf99a5 discord.cog.Cog.walk_commands:6 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+" "
+"\\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\,"
+" \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
 #: 483845d65d544491a23375ed5d92e183 discord.cog.Cog.get_listeners:1 of
