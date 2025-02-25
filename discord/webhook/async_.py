@@ -338,6 +338,7 @@ class AsyncWebhookAdapter:
         files: list[File] | None = None,
         thread_id: int | None = None,
         thread_name: str | None = None,
+        with_components: bool | None = None,
         wait: bool = False,
     ) -> Response[MessagePayload | None]:
         params = {"wait": int(wait)}
@@ -346,6 +347,9 @@ class AsyncWebhookAdapter:
 
         if thread_name:
             payload["thread_name"] = thread_name
+
+        if with_components is not None:
+            params["with_components"] = with_components
 
         route = Route(
             "POST",
@@ -653,8 +657,15 @@ def handle_message_parameters(
     if attachments is not MISSING:
         _attachments = [a.to_dict() for a in attachments]
 
+    flags = MessageFlags(
+        suppress_embeds=suppress,
+        ephemeral=ephemeral,
+    )
+
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
+        if view and view.is_v2():
+            flags.is_components_v2 = True
     if poll is not MISSING:
         payload["poll"] = poll.to_dict()
     payload["tts"] = tts
@@ -662,11 +673,6 @@ def handle_message_parameters(
         payload["avatar_url"] = str(avatar_url)
     if username:
         payload["username"] = username
-
-    flags = MessageFlags(
-        suppress_embeds=suppress,
-        ephemeral=ephemeral,
-    )
 
     if applied_tags is not MISSING:
         payload["applied_tags"] = applied_tags
@@ -1782,6 +1788,8 @@ class Webhook(BaseWebhook):
         if application_webhook:
             wait = True
 
+        with_components = False
+
         if view is not MISSING:
             if isinstance(self._state, _WebhookState):
                 raise InvalidArgument(
@@ -1789,6 +1797,8 @@ class Webhook(BaseWebhook):
                 )
             if ephemeral is True and view.timeout is None:
                 view.timeout = 15 * 60.0
+            if not application_webhook:
+                with_components = True
 
         if poll is None:
             poll = MISSING
@@ -1826,6 +1836,7 @@ class Webhook(BaseWebhook):
             thread_id=thread_id,
             thread_name=thread_name,
             wait=wait,
+            with_components=with_components,
         )
 
         msg = None
