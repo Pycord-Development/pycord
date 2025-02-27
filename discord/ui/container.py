@@ -3,15 +3,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, TypeVar
 
 from ..colour import Colour
+from ..components import ActionRow
 from ..components import Container as ContainerComponent
-from ..components import _component_factory, ActionRow
+from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
-from .item import Item
-from .text_display import TextDisplay
-from .section import Section
-from .media_gallery import MediaGallery
-from .separator import Separator
 from .file import File
+from .item import Item
+from .media_gallery import MediaGallery
+from .section import Section
+from .separator import Separator
+from .text_display import TextDisplay
 
 __all__ = ("Container",)
 
@@ -37,7 +38,6 @@ class Container(Item[V]):
     - :class:`discord.ui.File`
     - :class:`discord.ui.Separator`
 
-
     .. versionadded:: 2.7
 
     Parameters
@@ -50,10 +50,10 @@ class Container(Item[V]):
 
     def __init__(
         self,
-        *items: Item, 
+        *items: Item,
         colour: int | Colour | None = None,
         color: int | Colour | None = None,
-        spoiler: bool = False
+        spoiler: bool = False,
     ):
         super().__init__()
 
@@ -66,7 +66,7 @@ class Container(Item[V]):
             id=None,
             components=components,
             accent_color=colour,
-            spoiler=spoiler
+            spoiler=spoiler,
         )
 
     def add_item(self, item: Item) -> None:
@@ -101,17 +101,16 @@ class Container(Item[V]):
             found = False
             for i in range(len(self._underlying.components) - 1, 0, -1):
                 row = self._underlying.components[i]
-                if isinstance(row, ActionRow) and row.width + item.width <= 5:  # If an actionRow exists
+                if (
+                    isinstance(row, ActionRow) and row.width + item.width <= 5
+                ):  # If an actionRow exists
                     row.children.append(item._underlying)
                     found = True
             if not found:
                 row = ActionRow.with_components(item._underlying)
                 self._underlying.components.append(row)
 
-    def add_section(
-        self,
-        *items: Item, accessory: Item = None
-    ):
+    def add_section(self, *items: Item, accessory: Item = None):
         """Adds a :class:`Section` to the container.
 
         To append a pre-existing :class:`Section` use the
@@ -128,9 +127,7 @@ class Container(Item[V]):
         """
         # accept raw strings?
 
-        section = Section(
-            *items, accessory=accessory
-        )
+        section = Section(*items, accessory=accessory)
 
         self.add_item(section)
 
@@ -163,9 +160,7 @@ class Container(Item[V]):
         """
         # accept raw urls?
 
-        g = MediaGallery(
-            *items
-        )
+        g = MediaGallery(*items)
 
         self.add_item(g)
 
@@ -184,7 +179,12 @@ class Container(Item[V]):
 
         self.add_item(f)
 
-    def add_separator(self, *, divider: bool = True, spacing: SeparatorSpacingSize = SeparatorSpacingSize.small) -> None:
+    def add_separator(
+        self,
+        *,
+        divider: bool = True,
+        spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
+    ) -> None:
         """Adds a :class:`Separator` to the container.
 
         Parameters

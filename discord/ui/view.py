@@ -36,14 +36,16 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
+from ..components import Component
+from ..components import Container as ContainerComponent
+from ..components import FileComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
+from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import Separator as SeparatorComponent
-from ..components import Container as ContainerComponent
-from ..components import _component_factory, Component, FileComponent
+from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType
 

@@ -186,10 +186,9 @@ class ActionRow(Component):
     @classmethod
     def with_components(cls, *components):
         return cls._raw_construct(
-            type=ComponentType.action_row,
-            id=None,
-            children=[c for c in components]
+            type=ComponentType.action_row, id=None, children=[c for c in components]
         )
+
 
 class InputText(Component):
     """Represents an Input Text field from the Discord Bot UI Kit.
