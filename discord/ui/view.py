@@ -546,7 +546,7 @@ class View:
             item.is_persistent() for item in self.children
         )
 
-    def is_v2(self) -> bool:
+    def is_components_v2(self) -> bool:
         """Whether the view contains V2 components.
 
         A view containing V2 components may not be sent alongside message content or embeds.
