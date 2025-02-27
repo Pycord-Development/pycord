@@ -349,7 +349,7 @@ class AsyncWebhookAdapter:
             payload["thread_name"] = thread_name
 
         if with_components is not None:
-            params["with_components"] = with_components
+            params["with_components"] = int(with_components)
 
         route = Route(
             "POST",
