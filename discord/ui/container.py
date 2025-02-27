@@ -98,15 +98,14 @@ class Container(Item[V]):
         if item._underlying.is_v2():
             self._underlying.components.append(item._underlying)
         else:
-            found = False
             for i in range(len(self._underlying.components) - 1, 0, -1):
                 row = self._underlying.components[i]
                 if (
                     isinstance(row, ActionRow) and row.width + item.width <= 5
-                ):  # If an actionRow exists
+                ):  # If a valid ActionRow exists
                     row.children.append(item._underlying)
-                    found = True
-            if not found:
+                    break
+            else:
                 row = ActionRow.with_components(item._underlying)
                 self._underlying.components.append(row)
 
