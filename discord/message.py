@@ -1601,7 +1601,7 @@ class Message(Hashable):
         if view is not MISSING:
             self._state.prevent_view_updates_for(self.id)
             payload["components"] = view.to_components() if view else []
-            if view and view.is_v2():
+            if view and view.is_components_v2():
                 flags.is_components_v2 = True
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument("cannot pass both file and files parameter to edit()")

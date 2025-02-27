@@ -240,9 +240,6 @@ class View:
         def key(item: Item) -> int:
             return item._rendered_row or 0
 
-        # if self.is_v2():
-        #     components = [item.to_component_dict() for item in self.children]
-        # else:
         children = sorted(self.children, key=key)
         components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):

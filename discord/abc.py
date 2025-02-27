@@ -1601,7 +1601,7 @@ class Messageable:
                 )
 
             components = view.to_components()
-            if view.is_v2():
+            if view.is_components_v2():
                 flags.is_components_v2 = True
         else:
             components = None

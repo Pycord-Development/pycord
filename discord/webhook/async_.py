@@ -664,7 +664,7 @@ def handle_message_parameters(
 
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
-        if view and view.is_v2():
+        if view and view.is_components_v2():
             flags.is_components_v2 = True
     if poll is not MISSING:
         payload["poll"] = poll.to_dict()
