@@ -109,7 +109,7 @@ class Container(Item[V]):
                 row = ActionRow.with_components(item._underlying)
                 self._underlying.components.append(row)
 
-    def add_section(self, *items: Item, accessory: Item = None):
+    def add_section(self, *items: Item, accessory: Item):
         """Adds a :class:`Section` to the container.
 
         To append a pre-existing :class:`Section` use the
