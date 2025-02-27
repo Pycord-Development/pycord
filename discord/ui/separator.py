@@ -43,7 +43,7 @@ class Separator(Item[V]):
         self.spacing = spacing
 
         self._underlying = SeparatorComponent._raw_construct(
-            type=ComponentType.text_display,
+            type=ComponentType.separator,
             id=None,
             divider=divider,
             spacing=spacing,
