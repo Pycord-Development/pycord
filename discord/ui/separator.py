@@ -31,7 +31,12 @@ class Separator(Item[V]):
         The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
     """
 
-    def __init__(self, *, divider: bool = True, spacing: SeparatorSpacingSize = SeparatorSpacingSize.small):
+    def __init__(
+        self,
+        *,
+        divider: bool = True,
+        spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
+    ):
         super().__init__()
 
         self.divider = divider
