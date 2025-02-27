@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypeVar
 
-from ..components import FileComponent
-from ..components import UnfurledMediaItem, _component_factory
+from ..components import FileComponent, UnfurledMediaItem, _component_factory
 from ..enums import ComponentType
 from .item import Item
 
