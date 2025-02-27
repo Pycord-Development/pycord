@@ -61,7 +61,7 @@ class File(Item[V]):
     @property
     def spoiler(self) -> bool:
         """Whether the file is a spoiler. Defaults to ``False``."""
-        return self.spoiler
+        return self._spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:

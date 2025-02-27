@@ -18,3 +18,6 @@ from .select import *
 from .text_display import *
 from .thumbnail import *
 from .view import *
+from .file import *
+from .separator import *
+from .container import *

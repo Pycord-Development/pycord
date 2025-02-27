@@ -36,13 +36,14 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
-from ..components import Component, FileComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import _component_factory
+from ..components import Separator as SeparatorComponent
+from ..components import Container as ContainerComponent
+from ..components import _component_factory, Component, FileComponent
 from ..utils import get
 from .item import Item, ItemCallbackType
 
@@ -93,6 +94,14 @@ def _component_to_item(component: Component) -> Item:
         from .file import File
 
         return File.from_component(component)
+    if isinstance(component, SeparatorComponent):
+        from .separator import Separator
+
+        return Separator.from_component(component)
+    if isinstance(component, ContainerComponent):
+        from .container import Container
+
+        return Container.from_component(component)
     return Item.from_component(component)
 
 

@@ -169,12 +169,27 @@ class ActionRow(Component):
             _component_factory(d) for d in data.get("components", [])
         ]
 
+    @property
+    def width(self):
+        """Return the total item width used by this action row."""
+        t = 0
+        for item in self.children:
+            t += 1 if item.type is ComponentType.button else 5
+        return t
+
     def to_dict(self) -> ActionRowPayload:
         return {
             "type": int(self.type),
             "components": [child.to_dict() for child in self.children],
         }  # type: ignore
 
+    @classmethod
+    def with_components(cls, *components):
+        return cls._raw_construct(
+            type=ComponentType.action_row,
+            id=None,
+            children=[c for c in components]
+        )
 
 class InputText(Component):
     """Represents an Input Text field from the Discord Bot UI Kit.
