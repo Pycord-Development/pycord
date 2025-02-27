@@ -62,7 +62,7 @@ class Container(Item[V]):
         self._color = colour
 
         self._underlying = ContainerComponent._raw_construct(
-            type=ComponentType.section,
+            type=ComponentType.container,
             id=None,
             components=components,
             accent_color=colour,
