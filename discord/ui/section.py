@@ -49,7 +49,7 @@ class Section(Item[V]):
         super().__init__()
 
         self.items = []
-        components = [i._underlying for i in items]
+        [i._underlying for i in items]
         self.accessory = None
 
         self._underlying = SectionComponent._raw_construct(
@@ -147,7 +147,9 @@ class Section(Item[V]):
         self._view = value
         if self.accessory:
             if getattr(self.accessory, "_tmp_func", None):
-                self.accessory.callback = partial(self.accessory._tmp_func, self.view, self.accessory)
+                self.accessory.callback = partial(
+                    self.accessory._tmp_func, self.view, self.accessory
+                )
                 setattr(self.view, self.accessory._tmp_func.__name__, self.accessory)
                 delattr(self.accessory, "_tmp_func")
             self.accessory._view = value
