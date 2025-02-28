@@ -652,13 +652,27 @@ class ViewStore:
             elif hasattr(item, "items"):
                 for sub_item in item.items:
                     if sub_item.is_dispatchable():
-                        self._views[(sub_item.type.value, message_id, sub_item.custom_id)] = (view, sub_item)
+                        self._views[
+                            (sub_item.type.value, message_id, sub_item.custom_id)
+                        ] = (view, sub_item)
                     elif hasattr(item, "accessory"):
                         if sub_item.accessory.is_dispatchable():
-                            self._views[(sub_item.accessory.type.value, message_id, sub_item.accessory.custom_id)] = (view, sub_item.accessory)
+                            self._views[
+                                (
+                                    sub_item.accessory.type.value,
+                                    message_id,
+                                    sub_item.accessory.custom_id,
+                                )
+                            ] = (view, sub_item.accessory)
             elif hasattr(item, "accessory"):
                 if item.accessory.is_dispatchable():
-                    self._views[(item.accessory.type.value, message_id, item.accessory.custom_id)] = (view, item.accessory)
+                    self._views[
+                        (
+                            item.accessory.type.value,
+                            message_id,
+                            item.accessory.custom_id,
+                        )
+                    ] = (view, item.accessory)
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
