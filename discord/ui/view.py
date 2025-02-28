@@ -131,6 +131,8 @@ class _ViewWeights:
         raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item) -> None:
+        if item._underlying.is_v2() and not self.requires_v2():
+            self.weights.extend([0,0,0,0,0])
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -151,6 +153,9 @@ class _ViewWeights:
 
     def clear(self) -> None:
         self.weights = [0, 0, 0, 0, 0]
+
+    def requires_v2(self) -> bool:
+        return sum(w > 0 for w in self.weights) > 5
 
 
 class View:
@@ -565,7 +570,7 @@ class View:
 
         A view containing V2 components may not be sent alongside message content or embeds.
         """
-        return any([item._underlying.is_v2() for item in self.children])
+        return any([item._underlying.is_v2() for item in self.children]) or self.__weights.requires_v2()
 
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
