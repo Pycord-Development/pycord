@@ -58,16 +58,21 @@ class Container(Item[V]):
         super().__init__()
 
         self.items = [i for i in items]
-        components = [i._underlying for i in items]
         self._color = colour
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
             id=None,
-            components=components,
+            components=[],
             accent_color=colour,
             spoiler=spoiler,
         )
+        for i in items:
+            if isinstance(i, ActionRow):
+                for c in i.children:
+                    self.add_item(c)
+            else:
+                self.add_item(i)
 
     def add_item(self, item: Item) -> None:
         """Adds an item to the container.
