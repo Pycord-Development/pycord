@@ -85,9 +85,6 @@ class Container(Item[V]):
             Maximum number of items has been exceeded (10).
         """
 
-        if len(self.items) >= 10:
-            raise ValueError("maximum number of children exceeded")
-
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
@@ -98,8 +95,7 @@ class Container(Item[V]):
         if item._underlying.is_v2():
             self._underlying.components.append(item._underlying)
         else:
-            for i in range(len(self._underlying.components) - 1, 0, -1):
-                row = self._underlying.components[i]
+            for row in reversed(self._underlying.components):
                 if (
                     isinstance(row, ActionRow) and row.width + item.width <= 5
                 ):  # If a valid ActionRow exists

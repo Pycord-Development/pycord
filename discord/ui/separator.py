@@ -62,6 +62,6 @@ class Separator(Item[V]):
 
     @classmethod
     def from_component(cls: type[S], component: SeparatorComponent) -> S:
-        return cls(component.content)
+        return cls(divider=component.divider, spacing=component.spacing)
 
     callback = None
