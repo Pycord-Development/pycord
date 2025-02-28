@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import Section as SectionComponent
 from ..components import _component_factory
 from ..enums import ComponentType
-from .item import Item
+from .item import Item, ItemCallbackType
 from .text_display import TextDisplay
 
 __all__ = ("Section",)
@@ -34,19 +34,44 @@ class Section(Item[V]):
         Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
     """
 
+    __section_accessory_item__: ClassVar[ItemCallbackType] = None
+
+    def __init_subclass__(cls) -> None:
+        accessory: ItemCallbackType = None
+        for base in reversed(cls.__mro__):
+            for member in base.__dict__.values():
+                if hasattr(member, "__discord_ui_model_type__"):
+                    accessory = member
+
+        cls.__section_accessory_item__ = accessory
+
     def __init__(self, *items: Item, accessory: Item = None):
         super().__init__()
 
-        self.items = [i for i in items]
+        self.items = []
         components = [i._underlying for i in items]
-        self.accessory = accessory
+        self.accessory = None
 
         self._underlying = SectionComponent._raw_construct(
             type=ComponentType.section,
             id=None,
-            components=components,
-            accessory=accessory and accessory._underlying,
+            components=[],
+            accessory=None,
         )
+        if func := self.__section_accessory_item__:
+            item: Item = func.__discord_ui_model_type__(
+                **func.__discord_ui_model_kwargs__
+            )
+            if self.view:
+                item.callback = partial(func, self.view, item)
+                setattr(self.view, func.__name__, item)
+            else:
+                item._tmp_func = func
+            self.set_accessory(item)
+        elif accessory:
+            self.set_accessory(accessory)
+        for i in items:
+            self.add_item(i)
 
     def add_item(self, item: Item) -> None:
         """Adds an item to the section.
@@ -116,6 +141,16 @@ class Section(Item[V]):
 
         self.accessory = item
         self._underlying.accessory = item._underlying
+
+    @Item.view.setter
+    def view(self, value):
+        self._view = value
+        if self.accessory:
+            if getattr(self.accessory, "_tmp_func", None):
+                self.accessory.callback = partial(self.accessory._tmp_func, self.view, self.accessory)
+                setattr(self.view, self.accessory._tmp_func.__name__, self.accessory)
+                delattr(self.accessory, "_tmp_func")
+            self.accessory._view = value
 
     @property
     def type(self) -> ComponentType:
