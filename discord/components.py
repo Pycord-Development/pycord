@@ -826,7 +826,7 @@ class FileComponent(Component):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: str = data.get("id")
         self.file: UnfurledMediaItem = (
-            umi := data.get("media")
+            umi := data.get("file")
         ) and UnfurledMediaItem.from_dict(umi, state=state)
         self.spoiler: bool | None = data.get("spoiler")
 

@@ -29,14 +29,14 @@ class File(Item[V]):
     def __init__(self, url: str, *, spoiler: bool = False):
         super().__init__()
 
-        media = UnfurledMediaItem(url)
+        file = UnfurledMediaItem(url)
         self._url = url
         self._spoiler: bool = spoiler
 
         self._underlying = FileComponent._raw_construct(
             type=ComponentType.file,
             id=None,
-            file=media,
+            file=file,
             spoiler=spoiler,
         )
 
@@ -56,7 +56,7 @@ class File(Item[V]):
     @url.setter
     def url(self, value: str) -> None:
         self._url = value
-        self._underlying.media.url = value
+        self._underlying.file.url = value
 
     @property
     def spoiler(self) -> bool:
