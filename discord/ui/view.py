@@ -106,7 +106,7 @@ def _component_to_item(component: Component) -> Item:
         return Container.from_component(component)
     if isinstance(component, ActionRow):
         # Handle ActionRow.children manually, or design ui.ActionRow?
-        
+
         return component
     return Item.from_component(component)
 
