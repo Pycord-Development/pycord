@@ -74,7 +74,7 @@ class File(Item[V]):
     @classmethod
     def from_component(cls: type[F], component: FileComponent) -> F:
         return cls(
-            component.media and component.media.url,
+            component.file and component.file.url,
             spoiler=component.spoiler,
         )
 
