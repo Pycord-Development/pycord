@@ -247,7 +247,7 @@ class Container(Item[V]):
 
     color = colour
 
-    @view.setter
+    @Item.view.setter
     def view(self, value):
         self._view = value
         for item in self.items:
