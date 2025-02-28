@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypeVar, ClassVar
 from functools import partial
+from typing import TYPE_CHECKING, ClassVar, TypeVar
 
 from ..components import Section as SectionComponent
 from ..components import _component_factory
