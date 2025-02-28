@@ -13,6 +13,7 @@ from .media_gallery import MediaGallery
 from .section import Section
 from .separator import Separator
 from .text_display import TextDisplay
+from .view import _walk_all_components
 
 __all__ = ("Container",)
 
@@ -58,21 +59,16 @@ class Container(Item[V]):
         super().__init__()
 
         self.items = [i for i in items]
+        components = [i._underlying for i in items]
         self._color = colour
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
             id=None,
-            components=[],
+            components=components,
             accent_color=colour,
             spoiler=spoiler,
         )
-        for i in items:
-            if isinstance(i, ActionRow):
-                for c in i.children:
-                    self.add_item(c)
-            else:
-                self.add_item(i)
 
     def add_item(self, item: Item) -> None:
         """Adds an item to the container.
@@ -243,7 +239,7 @@ class Container(Item[V]):
     def from_component(cls: type[C], component: ContainerComponent) -> C:
         from .view import _component_to_item
 
-        items = [_component_to_item(c) for c in component.components]
+        items = [_component_to_item(c) for c in _walk_all_components(component.components)]
         return cls(*items, colour=component.accent_color, spoiler=component.spoiler)
 
     callback = None

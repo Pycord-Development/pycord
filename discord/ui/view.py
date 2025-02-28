@@ -49,7 +49,7 @@ from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType
 
-__all__ = ("View", "_component_to_item")
+__all__ = ("View", "_component_to_item", "_walk_all_components")
 
 
 if TYPE_CHECKING:
@@ -104,7 +104,7 @@ def _component_to_item(component: Component) -> Item:
         from .container import Container
 
         return Container.from_component(component)
-    if isinstance(component, ActionRow):
+    if isinstance(component, ActionRowComponent):
         # Handle ActionRow.children manually, or design ui.ActionRow?
 
         return component
