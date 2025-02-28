@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypeVar
+from urllib.parse import urlparse
 
 from ..components import FileComponent, UnfurledMediaItem, _component_factory
 from ..enums import ComponentType
@@ -73,8 +74,11 @@ class File(Item[V]):
 
     @classmethod
     def from_component(cls: type[F], component: FileComponent) -> F:
+        url = component.file and component.file.url
+        if not url.startswith("attachment://"):
+            url = "attachment://" + urlparse(url).path.rsplit("/", 1)[-1]
         return cls(
-            component.file and component.file.url,
+            url,
             spoiler=component.spoiler,
         )
 
