@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, TypeVar
+from functools import partial
+from typing import TYPE_CHECKING, TypeVar, ClassVar
 
 from ..colour import Colour
 from ..components import ActionRow
@@ -14,6 +15,7 @@ from .section import Section
 from .separator import Separator
 from .text_display import TextDisplay
 from .view import _walk_all_components
+from .item import Item, ItemCallbackType
 
 __all__ = ("Container",)
 
@@ -49,6 +51,17 @@ class Container(Item[V]):
         The accent colour of the container. Aliased to ``color`` as well.
     """
 
+    __container_children_items__: ClassVar[list[ItemCallbackType]] = []
+
+    def __init_subclass__(cls) -> None:
+        children: list[ItemCallbackType] = []
+        for base in reversed(cls.__mro__):
+            for member in base.__dict__.values():
+                if hasattr(member, "__discord_ui_model_type__"):
+                    children.append(member)
+
+        cls.__container_children_items__ = children
+
     def __init__(
         self,
         *items: Item,
@@ -60,6 +73,14 @@ class Container(Item[V]):
 
         self.items = []
         self._color = colour
+        for func in self.__container_children_items__:
+            item: Item = func.__discord_ui_model_type__(
+                **func.__discord_ui_model_kwargs__
+            )
+            item.callback = partial(func, self.view, item)
+            if self.view:
+                setattr(self.view, func.__name__, item)
+            self.add_item(item)
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
@@ -89,6 +110,8 @@ class Container(Item[V]):
 
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
+        
+        item._view = self.view
 
         self.items.append(item)
 
@@ -224,6 +247,12 @@ class Container(Item[V]):
         self._underlying.accent_color = self.colour
 
     color = colour
+
+    @view.setter
+    def view(self, value):
+        self._view = value
+        for item in self.items:
+            item._view = value
 
     @property
     def type(self) -> ComponentType:
