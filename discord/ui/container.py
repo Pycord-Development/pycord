@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import TYPE_CHECKING, TypeVar, ClassVar
+from typing import TYPE_CHECKING, ClassVar, TypeVar
 
 from ..colour import Colour
 from ..components import ActionRow
@@ -9,13 +9,12 @@ from ..components import Container as ContainerComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
 from .file import File
-from .item import Item
+from .item import Item, ItemCallbackType
 from .media_gallery import MediaGallery
 from .section import Section
 from .separator import Separator
 from .text_display import TextDisplay
 from .view import _walk_all_components
-from .item import Item, ItemCallbackType
 
 __all__ = ("Container",)
 
@@ -110,7 +109,7 @@ class Container(Item[V]):
 
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
-        
+
         item._view = self.view
 
         self.items.append(item)
