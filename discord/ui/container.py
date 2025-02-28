@@ -239,7 +239,9 @@ class Container(Item[V]):
     def from_component(cls: type[C], component: ContainerComponent) -> C:
         from .view import _component_to_item
 
-        items = [_component_to_item(c) for c in _walk_all_components(component.components)]
+        items = [
+            _component_to_item(c) for c in _walk_all_components(component.components)
+        ]
         return cls(*items, colour=component.accent_color, spoiler=component.spoiler)
 
     callback = None
