@@ -663,7 +663,7 @@ class ViewStore:
                         self._views[
                             (sub_item.type.value, message_id, sub_item.custom_id)
                         ] = (view, sub_item)
-                    elif hasattr(item, "accessory"):
+                    elif hasattr(sub_item, "accessory"):
                         if sub_item.accessory.is_dispatchable():
                             self._views[
                                 (
