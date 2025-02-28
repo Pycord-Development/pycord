@@ -72,14 +72,6 @@ class Container(Item[V]):
 
         self.items = []
         self._color = colour
-        for func in self.__container_children_items__:
-            item: Item = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
-            item.callback = partial(func, self.view, item)
-            if self.view:
-                setattr(self.view, func.__name__, item)
-            self.add_item(item)
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
@@ -88,6 +80,15 @@ class Container(Item[V]):
             accent_color=colour,
             spoiler=spoiler,
         )
+        
+        for func in self.__container_children_items__:
+            item: Item = func.__discord_ui_model_type__(
+                **func.__discord_ui_model_kwargs__
+            )
+            item.callback = partial(func, self.view, item)
+            if self.view:
+                setattr(self.view, func.__name__, item)
+            self.add_item(item)
         for i in items:
             self.add_item(i)
 
