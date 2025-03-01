@@ -657,30 +657,31 @@ class ViewStore:
         for item in view.children:
             if item.is_dispatchable():
                 self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
-            elif hasattr(item, "items"):
-                for sub_item in item.items:
-                    if sub_item.is_dispatchable():
-                        self._views[
-                            (sub_item.type.value, message_id, sub_item.custom_id)
-                        ] = (view, sub_item)
-                    elif hasattr(sub_item, "accessory"):
-                        if sub_item.accessory.is_dispatchable():
+            else:
+                if hasattr(item, "items"):
+                    for sub_item in item.items:
+                        if sub_item.is_dispatchable():
                             self._views[
-                                (
-                                    sub_item.accessory.type.value,
-                                    message_id,
-                                    sub_item.accessory.custom_id,
-                                )
-                            ] = (view, sub_item.accessory)
-            elif hasattr(item, "accessory"):
-                if item.accessory.is_dispatchable():
-                    self._views[
-                        (
-                            item.accessory.type.value,
-                            message_id,
-                            item.accessory.custom_id,
-                        )
-                    ] = (view, item.accessory)
+                                (sub_item.type.value, message_id, sub_item.custom_id)
+                            ] = (view, sub_item)
+                        elif hasattr(sub_item, "accessory"):
+                            if sub_item.accessory.is_dispatchable():
+                                self._views[
+                                    (
+                                        sub_item.accessory.type.value,
+                                        message_id,
+                                        sub_item.accessory.custom_id,
+                                    )
+                                ] = (view, sub_item.accessory)
+                if hasattr(item, "accessory"):
+                    if item.accessory.is_dispatchable():
+                        self._views[
+                            (
+                                item.accessory.type.value,
+                                message_id,
+                                item.accessory.custom_id,
+                            )
+                        ] = (view, item.accessory)
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
