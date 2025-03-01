@@ -27,7 +27,14 @@ class Thumbnail(Item[V]):
     ----------
     """
 
-    def __init__(self, url: str, *, description: str = None, spoiler: bool = False, id: int = None):
+    def __init__(
+        self,
+        url: str,
+        *,
+        description: str = None,
+        spoiler: bool = False,
+        id: int = None,
+    ):
         super().__init__()
 
         media = UnfurledMediaItem(url)

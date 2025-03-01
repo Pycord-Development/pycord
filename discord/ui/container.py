@@ -133,7 +133,12 @@ class Container(Item[V]):
                 row = ActionRow.with_components(item._underlying)
                 self._underlying.components.append(row)
 
-    def add_section(self, *items: Item, accessory: Item, id: int | None = None,):
+    def add_section(
+        self,
+        *items: Item,
+        accessory: Item,
+        id: int | None = None,
+    ):
         """Adds a :class:`Section` to the container.
 
         To append a pre-existing :class:`Section` use the
@@ -214,7 +219,7 @@ class Container(Item[V]):
         *,
         divider: bool = True,
         spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
-        id: int | None = None
+        id: int | None = None,
     ) -> None:
         """Adds a :class:`Separator` to the container.
 
@@ -285,6 +290,11 @@ class Container(Item[V]):
         items = [
             _component_to_item(c) for c in _walk_all_components(component.components)
         ]
-        return cls(*items, colour=component.accent_color, spoiler=component.spoiler, id=component.id)
+        return cls(
+            *items,
+            colour=component.accent_color,
+            spoiler=component.spoiler,
+            id=component.id,
+        )
 
     callback = None

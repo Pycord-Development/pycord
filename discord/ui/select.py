@@ -680,5 +680,5 @@ def channel_select(
         disabled=disabled,
         channel_types=channel_types,
         row=row,
-        id=id
+        id=id,
     )

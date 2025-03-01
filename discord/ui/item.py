@@ -150,7 +150,7 @@ class Item(Generic[V]):
             The ID of this item, or ``None`` if the user didn't set one.
         """
         return self._underlying and self._underlying.id
-    
+
     @id.setter
     def id(self, value) -> None:
         if not self._underlying:

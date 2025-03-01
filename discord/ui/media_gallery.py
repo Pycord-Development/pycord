@@ -65,7 +65,11 @@ class MediaGallery(Item[V]):
         self._underlying.items.append(item)
 
     def add_item(
-        self, url: str, *, description: str = None, spoiler: bool = False, 
+        self,
+        url: str,
+        *,
+        description: str = None,
+        spoiler: bool = False,
     ) -> None:
         """Adds a new media item to the gallery.
 

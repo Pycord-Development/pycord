@@ -29,7 +29,11 @@ class TextDisplay(Item[V]):
         The text display's content.
     """
 
-    def __init__(self, content: str, id: int | None = None,):
+    def __init__(
+        self,
+        content: str,
+        id: int | None = None,
+    ):
         super().__init__()
 
         self._underlying = TextDisplayComponent._raw_construct(
