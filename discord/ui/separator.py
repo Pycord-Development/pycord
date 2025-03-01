@@ -25,10 +25,6 @@ class Separator(Item[V]):
 
     Parameters
     ----------
-    divider: :class:`bool`
-        Whether the separator is a divider. Defaults to ``True``.
-    spacing: :class:`~discord.SeparatorSpacingSize`
-        The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
     """
 
     def __init__(
@@ -36,15 +32,13 @@ class Separator(Item[V]):
         *,
         divider: bool = True,
         spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
+        id: int | None = None,
     ):
         super().__init__()
 
-        self.divider = divider
-        self.spacing = spacing
-
         self._underlying = SeparatorComponent._raw_construct(
             type=ComponentType.separator,
-            id=None,
+            id=id,
             divider=divider,
             spacing=spacing,
         )
@@ -52,6 +46,24 @@ class Separator(Item[V]):
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
+
+    @property
+    def divider(self) -> bool:
+        """Whether the separator is a divider. Defaults to ``True``."""
+        return self._underlying.divider
+
+    @divider.setter
+    def divider(self, value: bool) -> None:
+        self._underlying.divider = value
+
+    @property
+    def spacing(self) -> SeparatorSpacingSize:
+        """The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`."""
+        return self._underlying.spacing
+
+    @spacing.setter
+    def spacing(self, value: SeparatorSpacingSize) -> None:
+        self._underlying.spacing = value
 
     @property
     def width(self) -> int:
@@ -62,6 +74,6 @@ class Separator(Item[V]):
 
     @classmethod
     def from_component(cls: type[S], component: SeparatorComponent) -> S:
-        return cls(divider=component.divider, spacing=component.spacing)
+        return cls(divider=component.divider, spacing=component.spacing, id=component.id)
 
     callback = None

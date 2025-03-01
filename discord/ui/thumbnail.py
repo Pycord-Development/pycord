@@ -27,17 +27,14 @@ class Thumbnail(Item[V]):
     ----------
     """
 
-    def __init__(self, url: str, *, description: str = None, spoiler: bool = False):
+    def __init__(self, url: str, *, description: str = None, spoiler: bool = False, id: int = None):
         super().__init__()
 
         media = UnfurledMediaItem(url)
-        self._url = url
-        self._description: str | None = description
-        self._spoiler: bool = spoiler
 
         self._underlying = ThumbnailComponent._raw_construct(
             type=ComponentType.thumbnail,
-            id=None,
+            id=id,
             media=media,
             description=description,
             spoiler=spoiler,
@@ -54,31 +51,28 @@ class Thumbnail(Item[V]):
     @property
     def url(self) -> str:
         """The URL of this thumbnail's media. This can either be an arbitrary URL or an ``attachment://`` URL."""
-        return self._url
+        return self._underlying.media and self._underlying.media.url
 
     @url.setter
     def url(self, value: str) -> None:
-        self._url = value
         self._underlying.media.url = value
 
     @property
     def description(self) -> str | None:
         """The thumbnail's description, up to 1024 characters."""
-        return self._description
+        return self._underlying.description
 
     @description.setter
     def description(self, description: str | None) -> None:
-        self._description = description
         self._underlying.description = description
 
     @property
     def spoiler(self) -> bool:
         """Whether the thumbnail is a spoiler. Defaults to ``False``."""
-        return self._spoiler
+        return self._underlying.spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
-        self._spoiler = spoiler
         self._underlying.spoiler = spoiler
 
     def to_component_dict(self) -> ThumbnailComponentPayload:
@@ -90,6 +84,7 @@ class Thumbnail(Item[V]):
             component.media and component.media.url,
             description=component.description,
             spoiler=component.spoiler,
+            id=component.id,
         )
 
     callback = None

@@ -58,6 +58,7 @@ class Item(Generic[V]):
         self._view: V | None = None
         self._row: int | None = None
         self._rendered_row: int | None = None
+        self._underlying: Component | None = None
         # This works mostly well but there is a gotcha with
         # the interaction with from_component, since that technically provides
         # a custom_id most dispatchable items would get this set to True even though
@@ -136,6 +137,25 @@ class Item(Generic[V]):
             The width of the item. Defaults to 1.
         """
         return 1
+
+    @property
+    def id(self) -> int | None:
+        """Gets this item's ID.
+
+        This can be set by the user when constructing an Item. If not, Discord will automatically provide one when the View is sent.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The ID of this item, or ``None`` if the user didn't set one.
+        """
+        return self._underlying and self._underlying.id
+    
+    @id.setter
+    def id(self, value) -> None:
+        if not self._underlying:
+            return
+        self._underlying.id = value
 
     @property
     def view(self) -> V | None:

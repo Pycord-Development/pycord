@@ -46,7 +46,7 @@ class Section(Item[V]):
 
         cls.__section_accessory_item__ = accessory
 
-    def __init__(self, *items: Item, accessory: Item = None):
+    def __init__(self, *items: Item, accessory: Item = None, id: int | None = None):
         super().__init__()
 
         self.items = []
@@ -55,7 +55,7 @@ class Section(Item[V]):
 
         self._underlying = SectionComponent._raw_construct(
             type=ComponentType.section,
-            id=None,
+            id=id,
             components=[],
             accessory=None,
         )
@@ -99,13 +99,15 @@ class Section(Item[V]):
         self.items.append(item)
         self._underlying.components.append(item._underlying)
 
-    def add_text(self, content: str) -> None:
+    def add_text(self, content: str, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the section.
 
         Parameters
         ----------
         content: :class:`str`
-            The content of the TextDisplay
+            The content of the text display.
+        id: Optiona[:class:`int`]
+            The text display's ID.
 
         Raises
         ------
@@ -118,7 +120,7 @@ class Section(Item[V]):
         if len(self.items) >= 3:
             raise ValueError("maximum number of children exceeded")
 
-        text = TextDisplay(content)
+        text = TextDisplay(content, id=id)
 
         self.add_item(text)
 
@@ -172,6 +174,6 @@ class Section(Item[V]):
 
         items = [_component_to_item(c) for c in component.components]
         accessory = _component_to_item(component.accessory)
-        return cls(*items, accessory=accessory)
+        return cls(*items, accessory=accessory, id=component.id)
 
     callback = None

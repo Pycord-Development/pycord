@@ -99,8 +99,8 @@ class TextDisplayComponent(BaseComponent):
 
 class SectionComponent(BaseComponent):
     type: Literal[9]
-    components: list[TextDisplayComponent, ButtonComponent]
-    accessory: NotRequired[Component]
+    components: list[TextDisplayComponent]
+    accessory: NotRequired[ThumbnailComponent, ButtonComponent]
 
 
 class UnfurledMediaItem(TypedDict):

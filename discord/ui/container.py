@@ -67,19 +67,20 @@ class Container(Item[V]):
         colour: int | Colour | None = None,
         color: int | Colour | None = None,
         spoiler: bool = False,
+        id: int | None = None,
     ):
         super().__init__()
 
         self.items = []
-        self._color = colour
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
-            id=None,
+            id=id,
             components=[],
-            accent_color=colour,
+            accent_color=None,
             spoiler=spoiler,
         )
+        self.color = colour or color
 
         for func in self.__container_children_items__:
             item: Item = func.__discord_ui_model_type__(
@@ -132,7 +133,7 @@ class Container(Item[V]):
                 row = ActionRow.with_components(item._underlying)
                 self._underlying.components.append(row)
 
-    def add_section(self, *items: Item, accessory: Item):
+    def add_section(self, *items: Item, accessory: Item, id: int | None = None,):
         """Adds a :class:`Section` to the container.
 
         To append a pre-existing :class:`Section` use the
@@ -146,14 +147,16 @@ class Container(Item[V]):
         accessory: Optional[:class:`Item`]
             The section's accessory. This is displayed in the top right of the section.
             Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        id: Optional[:class:`int`]
+            The section's ID.
         """
         # accept raw strings?
 
-        section = Section(*items, accessory=accessory)
+        section = Section(*items, accessory=accessory, id=id)
 
         self.add_item(section)
 
-    def add_text(self, content: str) -> None:
+    def add_text(self, content: str, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the container.
 
         Parameters
@@ -162,13 +165,14 @@ class Container(Item[V]):
             The content of the TextDisplay
         """
 
-        text = TextDisplay(content)
+        text = TextDisplay(content, id=id)
 
         self.add_item(text)
 
     def add_gallery(
         self,
         *items: Item,
+        id: int | None = None,
     ):
         """Adds a :class:`MediaGallery` to the container.
 
@@ -179,14 +183,16 @@ class Container(Item[V]):
         ----------
         *items: List[:class:`MediaGalleryItem`]
             The media this gallery contains.
+        id: Optiona[:class:`int`]
+            The gallery's ID.
         """
         # accept raw urls?
 
-        g = MediaGallery(*items)
+        g = MediaGallery(*items, id=id)
 
         self.add_item(g)
 
-    def add_file(self, url: str, spoiler: bool = False) -> None:
+    def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the container.
 
         Parameters
@@ -195,9 +201,11 @@ class Container(Item[V]):
             The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
         spoiler: Optional[:class:`bool`]
             Whether the file is a spoiler. Defaults to ``False``.
+        id: Optiona[:class:`int`]
+            The file's ID.
         """
 
-        f = File(url, spoiler=spoiler)
+        f = File(url, spoiler=spoiler, id=id)
 
         self.add_item(f)
 
@@ -206,6 +214,7 @@ class Container(Item[V]):
         *,
         divider: bool = True,
         spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
+        id: int | None = None
     ) -> None:
         """Adds a :class:`Separator` to the container.
 
@@ -217,36 +226,34 @@ class Container(Item[V]):
             The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
         """
 
-        s = Separator(divider=divider, spacing=spacing)
+        s = Separator(divider=divider, spacing=spacing, id=id)
 
         self.add_item(s)
 
     @property
     def spoiler(self) -> bool:
         """Whether the container is a spoiler. Defaults to ``False``."""
-        return self._spoiler
+        return self._underlying.spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
-        self._spoiler = spoiler
         self._underlying.spoiler = spoiler
 
     @property
     def colour(self) -> Colour | None:
-        return getattr(self, "_colour", None)
+        return self._underlying.accent_color
 
     @colour.setter
     def colour(self, value: int | Colour | None):  # type: ignore
         if value is None or isinstance(value, Colour):
-            self._colour = value
+            self._underlying.accent_color = value
         elif isinstance(value, int):
-            self._colour = Colour(value=value)
+            self._underlying.accent_color = Colour(value=value)
         else:
             raise TypeError(
                 "Expected discord.Colour, int, or None but received"
                 f" {value.__class__.__name__} instead."
             )
-        self._underlying.accent_color = self.colour
 
     color = colour
 
@@ -278,6 +285,6 @@ class Container(Item[V]):
         items = [
             _component_to_item(c) for c in _walk_all_components(component.components)
         ]
-        return cls(*items, colour=component.accent_color, spoiler=component.spoiler)
+        return cls(*items, colour=component.accent_color, spoiler=component.spoiler, id=component.id)
 
     callback = None

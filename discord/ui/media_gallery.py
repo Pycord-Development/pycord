@@ -29,11 +29,11 @@ class MediaGallery(Item[V]):
         The initial items contained in this gallery, up to 10.
     """
 
-    def __init__(self, *items: MediaGalleryItem):
+    def __init__(self, *items: MediaGalleryItem, id: int | None = None):
         super().__init__()
 
         self._underlying = MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery, id=None, items=[i for i in items]
+            type=ComponentType.media_gallery, id=id, items=[i for i in items]
         )
 
     @property
@@ -65,7 +65,7 @@ class MediaGallery(Item[V]):
         self._underlying.items.append(item)
 
     def add_item(
-        self, url: str, *, description: str = None, spoiler: bool = False
+        self, url: str, *, description: str = None, spoiler: bool = False, 
     ) -> None:
         """Adds a new media item to the gallery.
 
@@ -104,6 +104,6 @@ class MediaGallery(Item[V]):
 
     @classmethod
     def from_component(cls: type[M], component: MediaGalleryComponent) -> M:
-        return cls(*component.items)
+        return cls(*component.items, id=component.id)
 
     callback = None

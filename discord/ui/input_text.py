@@ -60,6 +60,7 @@ class InputText:
         required: bool | None = True,
         value: str | None = None,
         row: int | None = None,
+        id: int | None = None,
     ):
         super().__init__()
         if len(str(label)) > 45:
@@ -88,6 +89,7 @@ class InputText:
             max_length=max_length,
             required=required,
             value=value,
+            id=id,
         )
         self._input_value = False
         self.row = row

@@ -106,8 +106,8 @@ class Component:
     ----------
     type: :class:`ComponentType`
         The type of component.
-    id: :class:`str`
-        The component's ID.
+    id: :class:`int`
+        The component's ID. If not provided by the user, it's automatically incremented.
     """
 
     __slots__: tuple[str, ...] = ("type", "id")
@@ -164,7 +164,7 @@ class ActionRow(Component):
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.children: list[Component] = [
             _component_factory(d) for d in data.get("components", [])
         ]
@@ -180,13 +180,14 @@ class ActionRow(Component):
     def to_dict(self) -> ActionRowPayload:
         return {
             "type": int(self.type),
+            "id": self.id,
             "components": [child.to_dict() for child in self.children],
         }  # type: ignore
 
     @classmethod
-    def with_components(cls, *components):
+    def with_components(cls, *components, id=None):
         return cls._raw_construct(
-            type=ComponentType.action_row, id=None, children=[c for c in components]
+            type=ComponentType.action_row, id=id, children=[c for c in components]
         )
 
 
@@ -232,7 +233,7 @@ class InputText(Component):
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
         self.label: str = data.get("label", None)
@@ -245,6 +246,7 @@ class InputText(Component):
     def to_dict(self) -> InputTextComponentPayload:
         payload = {
             "type": 4,
+            "id": self.id,
             "style": self.style.value,
             "label": self.label,
         }
@@ -315,7 +317,7 @@ class Button(Component):
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.style: ButtonStyle = try_enum(ButtonStyle, data["style"])
         self.custom_id: str | None = data.get("custom_id")
         self.url: str | None = data.get("url")
@@ -331,6 +333,7 @@ class Button(Component):
     def to_dict(self) -> ButtonComponentPayload:
         payload = {
             "type": 2,
+            "id": self.id,
             "style": int(self.style),
             "label": self.label,
             "disabled": self.disabled,
@@ -409,7 +412,7 @@ class SelectMenu(Component):
 
     def __init__(self, data: SelectMenuPayload):
         self.type = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.custom_id: str = data["custom_id"]
         self.placeholder: str | None = data.get("placeholder")
         self.min_values: int = data.get("min_values", 1)
@@ -425,6 +428,7 @@ class SelectMenu(Component):
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
             "type": self.type.value,
+            "id": self.id,
             "custom_id": self.custom_id,
             "min_values": self.min_values,
             "max_values": self.max_values,
@@ -584,7 +588,7 @@ class Section(Component):
 
     def __init__(self, data: SectionComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.components: list[Component] = [
             _component_factory(d, state=state) for d in data.get("components", [])
         ]
@@ -625,7 +629,7 @@ class TextDisplay(Component):
 
     def __init__(self, data: TextDisplayComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.content: str = data.get("content")
 
     def to_dict(self) -> TextDisplayComponentPayload:
@@ -702,7 +706,7 @@ class Thumbnail(Component):
 
     def __init__(self, data: ThumbnailComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.media: UnfurledMediaItem = (
             umi := data.get("media")
         ) and UnfurledMediaItem.from_dict(umi, state=state)
@@ -784,7 +788,7 @@ class MediaGallery(Component):
 
     def __init__(self, data: MediaGalleryComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.items: list[MediaGalleryItem] = [
             MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])
         ]
@@ -824,7 +828,7 @@ class FileComponent(Component):
 
     def __init__(self, data: FileComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.file: UnfurledMediaItem = (
             umi := data.get("file")
         ) and UnfurledMediaItem.from_dict(umi, state=state)
@@ -867,6 +871,7 @@ class Separator(Component):
 
     def __init__(self, data: SeparatorComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = None
         self.divider: bool = data.get("divider")
         self.spacing: SeparatorSpacingSize = try_enum(
             SeparatorSpacingSize, data.get("spacing", 1)
@@ -908,7 +913,7 @@ class Container(Component):
 
     def __init__(self, data: ContainerComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: str = data.get("id")
+        self.id: int = data.get("id")
         self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
             c
         )  # at this point, not adding alternative spelling

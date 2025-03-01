@@ -27,16 +27,14 @@ class File(Item[V]):
     ----------
     """
 
-    def __init__(self, url: str, *, spoiler: bool = False):
+    def __init__(self, url: str, *, spoiler: bool = False, id: int | None = None):
         super().__init__()
 
         file = UnfurledMediaItem(url)
-        self._url = url
-        self._spoiler: bool = spoiler
 
         self._underlying = FileComponent._raw_construct(
             type=ComponentType.file,
-            id=None,
+            id=id,
             file=file,
             spoiler=spoiler,
         )
@@ -52,21 +50,19 @@ class File(Item[V]):
     @property
     def url(self) -> str:
         """The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`."""
-        return self._url
+        return self._underlying.file and self._underlying.file.url
 
     @url.setter
     def url(self, value: str) -> None:
-        self._url = value
         self._underlying.file.url = value
 
     @property
     def spoiler(self) -> bool:
         """Whether the file is a spoiler. Defaults to ``False``."""
-        return self._spoiler
+        return self._underlying.spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
-        self._spoiler = spoiler
         self._underlying.spoiler = spoiler
 
     def to_component_dict(self) -> FileComponentPayload:
@@ -80,6 +76,7 @@ class File(Item[V]):
         return cls(
             url,
             spoiler=component.spoiler,
+            id=component.id,
         )
 
     callback = None

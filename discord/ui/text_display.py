@@ -29,14 +29,12 @@ class TextDisplay(Item[V]):
         The text display's content.
     """
 
-    def __init__(self, content: str):
+    def __init__(self, content: str, id: int | None = None,):
         super().__init__()
-
-        self.content = content
 
         self._underlying = TextDisplayComponent._raw_construct(
             type=ComponentType.text_display,
-            id=None,
+            id=id,
             content=content,
         )
 
@@ -45,19 +43,23 @@ class TextDisplay(Item[V]):
         return self._underlying.type
 
     @property
+    def content(self) -> str:
+        """The text display's content."""
+        return self._underlying.content
+
+    @content.setter
+    def content(self, value: str) -> None:
+        self._underlying.content = value
+
+    @property
     def width(self) -> int:
         return 5
-
-    def set_text(self, content):
-        """Update this component's content."""
-        self.content = content
-        self._underlying.content = content
 
     def to_component_dict(self) -> TextDisplayComponentPayload:
         return self._underlying.to_dict()
 
     @classmethod
     def from_component(cls: type[T], component: TextDisplayComponent) -> T:
-        return cls(component.content)
+        return cls(component.content, id=component.id)
 
     callback = None
