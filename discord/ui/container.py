@@ -186,7 +186,7 @@ class Container(Item[V]):
 
         Parameters
         ----------
-        *items: List[:class:`MediaGalleryItem`]
+        *items: :class:`MediaGalleryItem`
             The media this gallery contains.
         id: Optiona[:class:`int`]
             The gallery's ID.
