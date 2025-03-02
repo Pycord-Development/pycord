@@ -164,7 +164,7 @@ class RoleTags:
     Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
     In order to make your life easier, pycord provides a :attr:`RoleTags.type` attribute that attempts to determine the role type based on the role tags. It's value is not provided by discord but is rather computed by pycord based on the role tags.
     If you find an issue, please open an issue on `GitHub <https://github.com/Pycord-Development/pycord/issues/new?template=bug_report.yml>`_.
-    Read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work.
+    Read `this <https://discord-lib-devs.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work.
 
     .. versionadded:: 1.6
     .. versionchanged:: 2.7
