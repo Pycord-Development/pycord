@@ -192,6 +192,8 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     def __init__(self, func: Callable, **kwargs) -> None:
         from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
+        actual_func = func if not isinstance(func, functools.partial) else func.func
+
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
         if cooldown is None:
@@ -214,7 +216,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         self._callback = None
         self.module = None
 
-        self.name: str = kwargs.get("name", func.__name__)
+        self.name: str = kwargs.get("name", actual_func.__name__)
 
         try:
             checks = func.__commands_checks__
@@ -483,7 +485,13 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             ctx.bot.dispatch("application_command_error", ctx, error)
 
     def _get_signature_parameters(self):
-        return OrderedDict(inspect.signature(self.callback).parameters)
+        params = OrderedDict(inspect.signature(self.callback).parameters)
+
+        if isinstance(self.callback, functools.partial):
+            for param in self.callback.keywords:
+                params.pop(param, None)
+
+        return params
 
     def error(self, coro):
         """A decorator that registers a coroutine as a local error handler.

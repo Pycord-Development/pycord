@@ -153,7 +153,9 @@ def get_signature_parameters(
             raise TypeError("Unparameterized Greedy[...] is disallowed in signature.")
 
         params[name] = parameter.replace(annotation=annotation)
-
+    if isinstance(function, functools.partial):
+        for param in function.keywords:
+            params.pop(param, None)
     return params
 
 
@@ -328,7 +330,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
 
-        name = kwargs.get("name") or func.__name__
+        actual_func = func if not isinstance(func, functools.partial) else func.func
+
+        name = kwargs.get("name", actual_func.__name__)
         if not isinstance(name, str):
             raise TypeError("Name of a command must be a string.")
         self.name: str = name

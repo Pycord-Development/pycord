@@ -31,6 +31,7 @@ import os
 import pathlib
 import sys
 import types
+from functools import partial
 from typing import Any, Callable, ClassVar, Generator, Mapping, TypeVar, overload
 
 import discord.utils
@@ -256,8 +257,14 @@ class CogMeta(type):
             if not isinstance(command, SlashCommandGroup) and not hasattr(
                 command, "add_to"
             ):
+                actual_callback = (
+                    command.callback.func
+                    if isinstance(command.callback, partial)
+                    else command.callback
+                )
+
                 # ignore bridge commands
-                cmd = getattr(new_cls, command.callback.__name__, None)
+                cmd = getattr(new_cls, actual_callback.__name__, None)
                 if hasattr(cmd, "add_to"):
                     setattr(
                         cmd,
@@ -265,7 +272,7 @@ class CogMeta(type):
                         command,
                     )
                 else:
-                    setattr(new_cls, command.callback.__name__, command)
+                    setattr(new_cls, actual_callback.__name__, command)
 
                 parent = command.parent
                 if parent is not None:
