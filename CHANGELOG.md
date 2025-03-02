@@ -52,6 +52,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added the ability to use functions with any number of optional arguments and functions
   returning an awaitable as `Option.autocomplete`.
   ([#2669](https://github.com/Pycord-Development/pycord/pull/2669))
+- Added ability to change the API's base URL with `Route.API_BASE_URL`.
+  ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 
 ### Fixed
 
