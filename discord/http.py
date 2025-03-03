@@ -108,6 +108,8 @@ async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str
 
 
 class Route:
+    API_BASE_URL: str = "https://discord.com/api/v{API_VERSION}"
+
     def __init__(self, method: str, path: str, **parameters: Any) -> None:
         self.path: str = path
         self.method: str = method
@@ -129,7 +131,7 @@ class Route:
 
     @property
     def base(self) -> str:
-        return f"https://discord.com/api/v{API_VERSION}"
+        return self.API_BASE_URL.format(API_VERSION=API_VERSION)
 
     @property
     def bucket(self) -> str:
