@@ -62,7 +62,7 @@ class RoleTags:
 
     Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type.
     We aim to improve the documentation / introduce new attributes in future.
-    For the meantime read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work.
+    For the meantime read `this <https://discord-lib-devs.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work.
 
     .. versionadded:: 1.6
 
