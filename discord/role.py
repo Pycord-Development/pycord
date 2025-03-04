@@ -194,6 +194,8 @@ class RoleTags:
         "_type",
     )
 
+    _type: RoleType
+
     def __init__(self, data: RoleTagPayload):
         self._data: RoleTagPayload = data
         self.integration_id: int | None = _parse_tag_int(data, "integration_id")
