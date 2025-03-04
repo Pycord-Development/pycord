@@ -55,8 +55,7 @@ from .commands import (
 )
 
 if TYPE_CHECKING:
-    from .ext.bridge import BridgeCommand, BridgeCommandGroup
-    from .ext.commands import Command
+    from .ext.bridge import BridgeCommand
 
 
 __all__ = (
@@ -92,6 +91,58 @@ def _validate_name_prefix(base_class: type, name: str) -> None:
         raise TypeError(
             f"Commands or listeners must not start with cog_ or bot_ (in method {base_class}.{name})"
         )
+
+
+def _process_attributes(base: type) -> tuple[dict[str, Any], dict[str, Any]]:
+    commands: dict[str, _BaseCommand | BridgeCommand] = {}
+    listeners: dict[str, Callable[..., Any]] = {}
+
+    for attr_name, attr_value in base.__dict__.items():
+        if attr_name in commands:
+            del commands[attr_name]
+        if attr_name in listeners:
+            del listeners[attr_name]
+
+        if getattr(attr_value, "parent", None) and isinstance(
+            attr_value, ApplicationCommand
+        ):
+            # Skip application commands if they are a part of a group
+            # Since they are already added when the group is added
+            continue
+
+        if inspect.iscoroutinefunction(attr_value) and getattr(
+            attr_value, "__cog_listener__", False
+        ):
+            _validate_name_prefix(base, attr_name)
+            listeners[attr_name] = attr_value
+            continue
+
+        is_static_method = isinstance(attr_value, staticmethod)
+        if is_static_method:
+            attr_value = attr_value.__func__
+
+        if isinstance(attr_value, _BaseCommand):
+            if is_static_method:
+                raise TypeError(
+                    f"Command in method {base}.{attr_name!r} must not be staticmethod."
+                )
+            _validate_name_prefix(base, attr_name)
+            commands[attr_name] = attr_value
+
+        if _is_bridge_command(attr_value) and not attr_value.parent:
+            if is_static_method:
+                raise TypeError(
+                    f"Command in method {base}.{attr_name!r} must not be staticmethod."
+                )
+            _validate_name_prefix(base, attr_name)
+
+            commands[f"ext_{attr_name}"] = attr_value.ext_variant
+            commands[f"app_{attr_name}"] = attr_value.slash_variant
+            commands[attr_name] = attr_value
+            for cmd in getattr(attr_value, "subcommands", []):
+                commands[f"ext_{cmd.ext_variant.qualified_name}"] = cmd.ext_variant
+
+    return commands, listeners
 
 
 class CogMeta(type):
@@ -162,11 +213,7 @@ class CogMeta(type):
 
     __cog_name__: str
     __cog_settings__: dict[str, Any]
-    __cog_commands__: list[
-        ApplicationCommand  # pyright: ignore[reportMissingTypeArgument]
-        | Command  # pyright: ignore[reportMissingTypeArgument]
-        | BridgeCommand
-    ]
+    __cog_commands__: list[_BaseCommand | BridgeCommand]
     __cog_listeners__: list[tuple[str, str]]
     __cog_guild_ids__: list[int]
 
@@ -181,72 +228,15 @@ class CogMeta(type):
             description = inspect.cleandoc(attrs.get("__doc__", ""))
         attrs["__cog_description__"] = description
 
-        commands = {}
-        listeners = {}
+        commands: dict[str, _BaseCommand | BridgeCommand] = {}
+        listeners: dict[str, Callable[..., Any]] = {}
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
-        valid_commands = [
-            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand))
-            for j in reversed(new_cls.__mro__)
-        ]
-        if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(
-            not isinstance(i, _BaseCommand) for i in valid_commands
-        ):
-            _filter = ApplicationCommand
-        else:
-            _filter = _BaseCommand
-
         for base in reversed(new_cls.__mro__):
-            for attr_name, attr_value in base.__dict__.items():
-                if attr_name in commands:
-                    del commands[attr_name]
-                if attr_name in listeners:
-                    del listeners[attr_name]
-
-                if getattr(attr_value, "parent", None) and isinstance(
-                    attr_value, ApplicationCommand
-                ):
-                    # Skip application commands if they are a part of a group
-                    # Since they are already added when the group is added
-                    continue
-
-                is_static_method = isinstance(attr_value, staticmethod)
-                if is_static_method:
-                    attr_value = attr_value.__func__
-                if isinstance(attr_value, _filter):
-                    if is_static_method:
-                        raise TypeError(
-                            f"Command in method {base}.{attr_name!r} must not be"
-                            " staticmethod."
-                        )
-                    _validate_name_prefix(base, attr_name)
-                    commands[attr_name] = attr_value
-
-                if _is_bridge_command(attr_value) and not attr_value.parent:
-                    if is_static_method:
-                        raise TypeError(
-                            f"Command in method {base}.{attr_name!r} must not be"
-                            " staticmethod."
-                        )
-                    _validate_name_prefix(base, attr_name)
-
-                    commands[f"ext_{attr_name}"] = attr_value.ext_variant
-                    commands[f"app_{attr_name}"] = attr_value.slash_variant
-                    commands[attr_name] = attr_value
-                    for cmd in getattr(attr_value, "subcommands", []):
-                        commands[f"ext_{cmd.ext_variant.qualified_name}"] = (
-                            cmd.ext_variant
-                        )
-
-                if inspect.iscoroutinefunction(attr_value):
-                    try:
-                        getattr(attr_value, "__cog_listener__")
-                    except AttributeError:
-                        continue
-                    else:
-                        _validate_name_prefix(base, attr_name)
-                        listeners[attr_name] = attr_value
+            new_commands, new_listeners = _process_attributes(base)
+            commands.update(new_commands)
+            listeners.update(new_listeners)
 
         new_cls.__cog_commands__ = list(commands.values())
 
