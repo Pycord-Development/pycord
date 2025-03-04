@@ -240,14 +240,11 @@ class CogMeta(type):
 
         new_cls.__cog_commands__ = list(commands.values())
 
-        listeners_as_list = []
-        for listener in listeners.values():
-            for listener_name in listener.__cog_listener_names__:
-                # I use __name__ instead of just storing the value, so I can inject
-                # the self attribute when the time comes to add them to the bot
-                listeners_as_list.append((listener_name, listener.__name__))
-
-        new_cls.__cog_listeners__ = listeners_as_list
+        new_cls.__cog_listeners__ = [
+            (listener_name, listener.__name__)
+            for listener in listeners.values()
+            for listener_name in listener.__cog_listener_names__
+        ]
 
         cmd_attrs = new_cls.__cog_settings__
 
