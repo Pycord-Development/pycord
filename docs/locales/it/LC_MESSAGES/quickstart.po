@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
+"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
 "Last-Translator: \\n"
 "Language-Team: none\\n"
 "MIME-Version: 1.0\\n"
@@ -33,16 +33,16 @@ msgid "Let's name this file ``example_bot.py``. Make sure not to name it ``disco
 msgstr "Nominiamo questo file ``example_bot.py``. Assicurati di non nominarlo ```discord.py`` in quanto è in conflitto con la libreria."
 
 msgid "There's a lot going on here, so let's walk you through it step by step:"
-msgstr "There's a lot going on here, so let's walk you through it step by step:"
+msgstr "Ci sono molte cose da capire, quindi andiamo un passo alla volta:"
 
 msgid "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
-msgstr "The first line just imports the library, if this raises a `ModuleNotFoundError` or `ImportError` then head on over to :ref:`installing` section to properly install."
+msgstr "La prima istruzione importa la libreria, se dovesse sollevare un `ModuleNotFoundError` o `ImportError`, verifica la sezione `installazione` di :ref:per installarla correttamente."
 
 msgid "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
-msgstr "Next, we create an instance of a :class:`Client`. This client is our connection to Discord."
+msgstr "In seguito, creiamo un'istanza di :class:`Client`. Si tratta della nostra connessione a Discord."
 
 msgid "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
-msgstr "We then use the :meth:`Client.event` decorator to register an event. This library has many events. Since this library is asynchronous, we do things in a \"callback\" style manner."
+msgstr "Utilizziamo quindi il decoratore :meth:`Client.event` per registrare un evento. Questa libreria ha molti eventi. Visto che questa libreria è asincrona, facciamo uso di funzioni di richiamo."
 
 msgid "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."
 msgstr "A callback is essentially a function that is called when something happens. In our case, the :func:`on_ready` event is called when the bot has finished logging in and setting things up and the :func:`on_message` event is called when the bot has received a message."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,6 +68,7 @@ msgstr ""
 #: a548999373424e22a1eef592535cb0e9
 #: a548999373424e22a1eef592535cb0e9
 #: a548999373424e22a1eef592535cb0e9
+#: a548999373424e22a1eef592535cb0e9
 msgid "Return type"
 msgstr ""
 
@@ -99,6 +100,11 @@ msgstr ""
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.walk_commands:3
 #: c6b428360ea8462ab87d860eeb14f885
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
+msgstr ""
+
+#: ../../../discord/cog.py:docstring of discord.cog.Cog.walk_commands:6
+#: 37ca252417a04d0f9a6d189f27bf99a5
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
 #: ../../../discord/cog.py:docstring of discord.cog.Cog.get_listeners:1
