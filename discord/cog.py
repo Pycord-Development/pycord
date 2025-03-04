@@ -123,21 +123,17 @@ def _process_attributes(
             listeners[attr_name] = attr_value
             continue
 
-        if isinstance(attr_value, _BaseCommand):
+        if isinstance(attr_value, _BaseCommand) or _is_bridge_command(attr_value):
             if is_static_method:
                 raise TypeError(
                     f"Command in method {base}.{attr_name!r} must not be staticmethod."
                 )
             _validate_name_prefix(base, attr_name)
+
+        if isinstance(attr_value, _BaseCommand):
             commands[attr_name] = attr_value
 
         if _is_bridge_command(attr_value) and not attr_value.parent:
-            if is_static_method:
-                raise TypeError(
-                    f"Command in method {base}.{attr_name!r} must not be staticmethod."
-                )
-            _validate_name_prefix(base, attr_name)
-
             commands[f"ext_{attr_name}"] = attr_value.ext_variant
             commands[f"app_{attr_name}"] = attr_value.slash_variant
             commands[attr_name] = attr_value
