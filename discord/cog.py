@@ -93,7 +93,9 @@ def _validate_name_prefix(base_class: type, name: str) -> None:
         )
 
 
-def _process_attributes(base: type) -> tuple[dict[str, Any], dict[str, Any]]:
+def _process_attributes(
+    base: type,
+) -> tuple[dict[str, Any], dict[str, Any]]:  # pyright: ignore[reportExplicitAny]
     commands: dict[str, _BaseCommand | BridgeCommand] = {}
     listeners: dict[str, Callable[..., Any]] = {}
 
@@ -143,6 +145,43 @@ def _process_attributes(base: type) -> tuple[dict[str, Any], dict[str, Any]]:
                 commands[f"ext_{cmd.ext_variant.qualified_name}"] = cmd.ext_variant
 
     return commands, listeners
+
+
+def _update_command(
+    command: _BaseCommand | BridgeCommand,
+    guild_ids: list[int],
+    lookup_table: dict[str, _BaseCommand | BridgeCommand],
+    new_cls: type[Cog],
+) -> None:
+    if isinstance(command, ApplicationCommand) and not command.guild_ids and guild_ids:
+        command.guild_ids = guild_ids
+
+    if not isinstance(command, SlashCommandGroup) and not _is_bridge_command(command):
+        # ignore bridge commands
+        cmd: BridgeCommand | _BaseCommand | None = getattr(
+            new_cls, command.callback.__name__, None
+        )  # pyright: ignore[reportUnknownMemberType,reportUnknownArgumentType,reportAttributeAccessIssue,reportAssignmentType]
+        if _is_bridge_command(cmd):
+            setattr(
+                cmd,
+                f"{_name_filter(command).replace('app', 'slash')}_variant",
+                command,
+            )
+        else:
+            setattr(
+                new_cls, command.callback.__name__, command
+            )  # pyright: ignore[reportUnknownMemberType,reportUnknownArgumentType,reportAttributeAccessIssue]
+
+        parent: BridgeCommand | _BaseCommand | None = (
+            command.parent
+        )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportAttributeAccessIssue]
+        if parent is not None:
+            # Get the latest parent reference
+            parent = lookup_table[f"{_name_filter(command)}_{parent.qualified_name}"]  # type: ignore # pyright: ignore[reportUnknownMemberType]
+
+            # Update our parent's reference to our self
+            parent.remove_command(command.name)  # type: ignore # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
+            parent.add_command(command)  # type: ignore # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
 
 
 class CogMeta(type):
@@ -250,7 +289,7 @@ class CogMeta(type):
 
         # Either update the command with the cog provided defaults or copy it.
         # r.e type ignore, type-checker complains about overriding a ClassVar
-        new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not _is_bridge_command(c) else c for c in new_cls.__cog_commands__)  # type: ignore
+        new_cls.__cog_commands__ = list(tuple(c._update_copy(cmd_attrs) if not _is_bridge_command(c) else c for c in new_cls.__cog_commands__))  # type: ignore
 
         lookup = {
             f"{_name_filter(cmd)}_{cmd.qualified_name}": cmd
@@ -259,35 +298,7 @@ class CogMeta(type):
 
         # Update the Command instances dynamically as well
         for command in new_cls.__cog_commands__:
-            if (
-                isinstance(command, ApplicationCommand)
-                and not command.guild_ids
-                and new_cls.__cog_guild_ids__
-            ):
-                command.guild_ids = new_cls.__cog_guild_ids__
-
-            if not isinstance(command, SlashCommandGroup) and not _is_bridge_command(
-                command
-            ):
-                # ignore bridge commands
-                cmd = getattr(new_cls, command.callback.__name__, None)
-                if _is_bridge_command(cmd):
-                    setattr(
-                        cmd,
-                        f"{_name_filter(command).replace('app', 'slash')}_variant",
-                        command,
-                    )
-                else:
-                    setattr(new_cls, command.callback.__name__, command)
-
-                parent = command.parent
-                if parent is not None:
-                    # Get the latest parent reference
-                    parent = lookup[f"{_name_filter(command)}_{parent.qualified_name}"]  # type: ignore
-
-                    # Update our parent's reference to our self
-                    parent.remove_command(command.name)  # type: ignore
-                    parent.add_command(command)  # type: ignore
+            _update_command(command, new_cls.__cog_guild_ids__, lookup, new_cls)
 
         return new_cls
 
