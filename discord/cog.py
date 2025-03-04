@@ -75,6 +75,18 @@ def _is_submodule(parent: str, child: str) -> bool:
     return parent == child or child.startswith(f"{parent}.")
 
 
+def _is_bridge_command(command: Any) -> TypeGuard[BridgeCommand]:
+    return getattr(command, "__bridge__", False)
+
+
+def _name_filter(c: Any) -> str:
+    return (
+        "app"
+        if isinstance(c, ApplicationCommand)
+        else ("bridge" if not _is_bridge_command(c) else "ext")
+    )
+
+
 class CogMeta(type):
     """A metaclass for defining a cog.
 
@@ -208,8 +220,7 @@ class CogMeta(type):
                         raise TypeError(no_bot_cog.format(base, elem))
                     commands[elem] = value
 
-                # a test to see if this value is a BridgeCommand
-                if hasattr(value, "add_to") and not getattr(value, "parent", None):
+                if _is_bridge_command(value) and not value.parent:
                     if is_static_method:
                         raise TypeError(
                             f"Command in method {base}.{elem!r} must not be"
@@ -251,16 +262,10 @@ class CogMeta(type):
 
         # Either update the command with the cog provided defaults or copy it.
         # r.e type ignore, type-checker complains about overriding a ClassVar
-        new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not hasattr(c, "add_to") else c for c in new_cls.__cog_commands__)  # type: ignore
-
-        name_filter = lambda c: (
-            "app"
-            if isinstance(c, ApplicationCommand)
-            else ("bridge" if not hasattr(c, "add_to") else "ext")
-        )
+        new_cls.__cog_commands__ = tuple(c._update_copy(cmd_attrs) if not _is_bridge_command(c) else c for c in new_cls.__cog_commands__)  # type: ignore
 
         lookup = {
-            f"{name_filter(cmd)}_{cmd.qualified_name}": cmd
+            f"{_name_filter(cmd)}_{cmd.qualified_name}": cmd
             for cmd in new_cls.__cog_commands__
         }
 
@@ -273,15 +278,15 @@ class CogMeta(type):
             ):
                 command.guild_ids = new_cls.__cog_guild_ids__
 
-            if not isinstance(command, SlashCommandGroup) and not hasattr(
-                command, "add_to"
+            if not isinstance(command, SlashCommandGroup) and not _is_bridge_command(
+                command
             ):
                 # ignore bridge commands
                 cmd = getattr(new_cls, command.callback.__name__, None)
-                if hasattr(cmd, "add_to"):
+                if _is_bridge_command(cmd):
                     setattr(
                         cmd,
-                        f"{name_filter(command).replace('app', 'slash')}_variant",
+                        f"{_name_filter(command).replace('app', 'slash')}_variant",
                         command,
                     )
                 else:
@@ -290,7 +295,7 @@ class CogMeta(type):
                 parent = command.parent
                 if parent is not None:
                     # Get the latest parent reference
-                    parent = lookup[f"{name_filter(command)}_{parent.qualified_name}"]  # type: ignore
+                    parent = lookup[f"{_name_filter(command)}_{parent.qualified_name}"]  # type: ignore
 
                     # Update our parent's reference to our self
                     parent.remove_command(command.name)  # type: ignore
@@ -568,7 +573,7 @@ class Cog(metaclass=CogMeta):
         # we've added so far for some form of atomic loading.
 
         for index, command in enumerate(self.__cog_commands__):
-            if hasattr(command, "add_to"):
+            if _is_bridge_command(command):
                 bot.bridge_commands.append(command)
                 continue
 
@@ -613,7 +618,7 @@ class Cog(metaclass=CogMeta):
 
         try:
             for command in self.__cog_commands__:
-                if hasattr(command, "add_to"):
+                if _is_bridge_command(command):
                     bot.bridge_commands.remove(command)
                     continue
                 elif isinstance(command, ApplicationCommand):
