@@ -110,16 +110,16 @@ def _process_attributes(base: type) -> tuple[dict[str, Any], dict[str, Any]]:
             # Since they are already added when the group is added
             continue
 
+        is_static_method = isinstance(attr_value, staticmethod)
+        if is_static_method:
+            attr_value = attr_value.__func__
+
         if inspect.iscoroutinefunction(attr_value) and getattr(
             attr_value, "__cog_listener__", False
         ):
             _validate_name_prefix(base, attr_name)
             listeners[attr_name] = attr_value
             continue
-
-        is_static_method = isinstance(attr_value, staticmethod)
-        if is_static_method:
-            attr_value = attr_value.__func__
 
         if isinstance(attr_value, _BaseCommand):
             if is_static_method:
