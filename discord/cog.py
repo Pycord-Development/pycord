@@ -198,55 +198,55 @@ class CogMeta(type):
             _filter = _BaseCommand
 
         for base in reversed(new_cls.__mro__):
-            for elem, value in base.__dict__.items():
-                if elem in commands:
-                    del commands[elem]
-                if elem in listeners:
-                    del listeners[elem]
+            for attr_name, attr_value in base.__dict__.items():
+                if attr_name in commands:
+                    del commands[attr_name]
+                if attr_name in listeners:
+                    del listeners[attr_name]
 
-                if getattr(value, "parent", None) and isinstance(
-                    value, ApplicationCommand
+                if getattr(attr_value, "parent", None) and isinstance(
+                    attr_value, ApplicationCommand
                 ):
                     # Skip application commands if they are a part of a group
                     # Since they are already added when the group is added
                     continue
 
-                is_static_method = isinstance(value, staticmethod)
+                is_static_method = isinstance(attr_value, staticmethod)
                 if is_static_method:
-                    value = value.__func__
-                if isinstance(value, _filter):
+                    attr_value = attr_value.__func__
+                if isinstance(attr_value, _filter):
                     if is_static_method:
                         raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be"
+                            f"Command in method {base}.{attr_name!r} must not be"
                             " staticmethod."
                         )
-                    _validate_name_prefix(base, elem)
-                    commands[elem] = value
+                    _validate_name_prefix(base, attr_name)
+                    commands[attr_name] = attr_value
 
-                if _is_bridge_command(value) and not value.parent:
+                if _is_bridge_command(attr_value) and not attr_value.parent:
                     if is_static_method:
                         raise TypeError(
-                            f"Command in method {base}.{elem!r} must not be"
+                            f"Command in method {base}.{attr_name!r} must not be"
                             " staticmethod."
                         )
-                    _validate_name_prefix(base, elem)
+                    _validate_name_prefix(base, attr_name)
 
-                    commands[f"ext_{elem}"] = value.ext_variant
-                    commands[f"app_{elem}"] = value.slash_variant
-                    commands[elem] = value
-                    for cmd in getattr(value, "subcommands", []):
+                    commands[f"ext_{attr_name}"] = attr_value.ext_variant
+                    commands[f"app_{attr_name}"] = attr_value.slash_variant
+                    commands[attr_name] = attr_value
+                    for cmd in getattr(attr_value, "subcommands", []):
                         commands[f"ext_{cmd.ext_variant.qualified_name}"] = (
                             cmd.ext_variant
                         )
 
-                if inspect.iscoroutinefunction(value):
+                if inspect.iscoroutinefunction(attr_value):
                     try:
-                        getattr(value, "__cog_listener__")
+                        getattr(attr_value, "__cog_listener__")
                     except AttributeError:
                         continue
                     else:
-                        _validate_name_prefix(base, elem)
-                        listeners[elem] = value
+                        _validate_name_prefix(base, attr_name)
+                        listeners[attr_name] = attr_value
 
         new_cls.__cog_commands__ = list(commands.values())
 
