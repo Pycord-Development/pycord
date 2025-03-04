@@ -87,6 +87,13 @@ def _name_filter(c: Any) -> str:
     )
 
 
+def _validate_name_prefix(base_class: type, name: str) -> None:
+    if name.startswith(("cog_", "bot_")):
+        raise TypeError(
+            f"Commands or listeners must not start with cog_ or bot_ (in method {base_class}.{name})"
+        )
+
+
 class CogMeta(type):
     """A metaclass for defining a cog.
 
@@ -176,10 +183,6 @@ class CogMeta(type):
 
         commands = {}
         listeners = {}
-        no_bot_cog = (
-            "Commands or listeners must not start with cog_ or bot_ (in method"
-            " {0.__name__}.{1})"
-        )
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
@@ -204,7 +207,8 @@ class CogMeta(type):
                 if getattr(value, "parent", None) and isinstance(
                     value, ApplicationCommand
                 ):
-                    # Skip commands if they are a part of a group
+                    # Skip application commands if they are a part of a group
+                    # Since they are already added when the group is added
                     continue
 
                 is_static_method = isinstance(value, staticmethod)
@@ -216,8 +220,7 @@ class CogMeta(type):
                             f"Command in method {base}.{elem!r} must not be"
                             " staticmethod."
                         )
-                    if elem.startswith(("cog_", "bot_")):
-                        raise TypeError(no_bot_cog.format(base, elem))
+                    _validate_name_prefix(base, elem)
                     commands[elem] = value
 
                 if _is_bridge_command(value) and not value.parent:
@@ -226,8 +229,7 @@ class CogMeta(type):
                             f"Command in method {base}.{elem!r} must not be"
                             " staticmethod."
                         )
-                    if elem.startswith(("cog_", "bot_")):
-                        raise TypeError(no_bot_cog.format(base, elem))
+                    _validate_name_prefix(base, elem)
 
                     commands[f"ext_{elem}"] = value.ext_variant
                     commands[f"app_{elem}"] = value.slash_variant
@@ -243,8 +245,7 @@ class CogMeta(type):
                     except AttributeError:
                         continue
                     else:
-                        if elem.startswith(("cog_", "bot_")):
-                            raise TypeError(no_bot_cog.format(base, elem))
+                        _validate_name_prefix(base, elem)
                         listeners[elem] = value
 
         new_cls.__cog_commands__ = list(commands.values())
