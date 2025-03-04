@@ -31,7 +31,18 @@ import os
 import pathlib
 import sys
 import types
-from typing import Any, Callable, ClassVar, Generator, Mapping, TypeVar, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    ClassVar,
+    Generator,
+    Mapping,
+    TypeVar,
+    overload,
+)
+
+from typing_extensions import TypeGuard
 
 import discord.utils
 
@@ -42,6 +53,11 @@ from .commands import (
     SlashCommandGroup,
     _BaseCommand,
 )
+
+if TYPE_CHECKING:
+    from .ext.bridge import BridgeCommand, BridgeCommandGroup
+    from .ext.commands import Command
+
 
 __all__ = (
     "CogMeta",
@@ -127,7 +143,11 @@ class CogMeta(type):
 
     __cog_name__: str
     __cog_settings__: dict[str, Any]
-    __cog_commands__: list[ApplicationCommand]
+    __cog_commands__: list[
+        ApplicationCommand  # pyright: ignore[reportMissingTypeArgument]
+        | Command  # pyright: ignore[reportMissingTypeArgument]
+        | BridgeCommand
+    ]
     __cog_listeners__: list[tuple[str, str]]
     __cog_guild_ids__: list[int]
 
