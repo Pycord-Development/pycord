@@ -49,6 +49,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
+- Added `RoleType` enum accessible via `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 - Added ability to change the API's base URL with `Route.API_BASE_URL`.
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 
@@ -123,6 +125,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+- Deprecated for both `Role` and `RoleTags`: `is_bot_managed`, `is_premium_subscriber`,
+  `is_integration`, `is_available_for_purchase`, and `is_guild_connections_role`, in
+  favor of `Role.type` and `RoleTags.type`.
+  ([#2708](https://github.com/Pycord-Development/pycord/pull/2708))
 
 ## [2.6.1] - 2024-09-15
 
