@@ -124,6 +124,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
 
+### Removed
+
+- Removed deprecated support for `Option` in `BridgeCommand`. Use `BridgeOption`
+  instead. ([#2731])(https://github.com/Pycord-Development/pycord/pull/2731))
+
 ## [2.6.1] - 2024-09-15
 
 ### Fixed
