@@ -159,7 +159,7 @@ msgid "The permission overwrites for this object."
 msgstr "The permission overwrites for this object."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid ":class:`~discord.PermissionOverwrite`"
 msgstr ":class:`~discord.PermissionOverwrite`"

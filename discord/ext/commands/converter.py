@@ -805,8 +805,8 @@ class GuildConverter(IDConverter[discord.Guild]):
         return result
 
 
-class EmojiConverter(IDConverter[discord.Emoji]):
-    """Converts to a :class:`~discord.Emoji`.
+class EmojiConverter(IDConverter[discord.GuildEmoji]):
+    """Converts to a :class:`~discord.GuildEmoji`.
 
     All lookups are done for the local guild first, if available. If that lookup
     fails, then it checks the client's global cache.
@@ -821,7 +821,7 @@ class EmojiConverter(IDConverter[discord.Emoji]):
          Raise :exc:`.EmojiNotFound` instead of generic :exc:`.BadArgument`
     """
 
-    async def convert(self, ctx: Context, argument: str) -> discord.Emoji:
+    async def convert(self, ctx: Context, argument: str) -> discord.GuildEmoji:
         match = self._get_id_match(argument) or re.match(
             r"<a?:\w{1,32}:([0-9]{15,20})>$", argument
         )
@@ -1111,7 +1111,7 @@ CONVERTER_MAPPING: dict[type[Any], Any] = {
     discord.Colour: ColourConverter,
     discord.VoiceChannel: VoiceChannelConverter,
     discord.StageChannel: StageChannelConverter,
-    discord.Emoji: EmojiConverter,
+    discord.GuildEmoji: EmojiConverter,
     discord.PartialEmoji: PartialEmojiConverter,
     discord.CategoryChannel: CategoryChannelConverter,
     discord.ForumChannel: ForumChannelConverter,

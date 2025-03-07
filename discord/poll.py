@@ -43,7 +43,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .emoji import Emoji
+    from .emoji import AppEmoji, GuildEmoji
     from .message import Message, PartialMessage
     from .types.poll import Poll as PollPayload
     from .types.poll import PollAnswer as PollAnswerPayload
@@ -62,13 +62,15 @@ class PollMedia:
     text: :class:`str`
         The question/answer text. May have up to 300 characters for questions and 55 characters for answers.
 
-    emoji: Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]
+    emoji: Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]]
         The answer's emoji.
     """
 
-    def __init__(self, text: str, emoji: Emoji | PartialEmoji | str | None = None):
+    def __init__(
+        self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
+    ):
         self.text: str = text
-        self.emoji: Emoji | PartialEmoji | str | None = emoji
+        self.emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = emoji
 
     def to_dict(self) -> PollMediaPayload:
         dict_ = {
@@ -124,7 +126,9 @@ class PollAnswer:
         The relevant media for this answer.
     """
 
-    def __init__(self, text: str, emoji: Emoji | PartialEmoji | str | None = None):
+    def __init__(
+        self, text: str, emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None
+    ):
         self.media = PollMedia(text, emoji)
         self.id = None
         self._poll = None
@@ -135,7 +139,7 @@ class PollAnswer:
         return self.media.text
 
     @property
-    def emoji(self) -> Emoji | PartialEmoji | None:
+    def emoji(self) -> GuildEmoji | AppEmoji | PartialEmoji | None:
         """The answer's emoji. Shortcut for :attr:`PollMedia.emoji`."""
         return self.media.emoji
 
@@ -446,7 +450,10 @@ class Poll:
         return utils.get(self.answers, id=id)
 
     def add_answer(
-        self, text: str, *, emoji: Emoji | PartialEmoji | str | None = None
+        self,
+        text: str,
+        *,
+        emoji: GuildEmoji | AppEmoji | PartialEmoji | str | None = None,
     ) -> Poll:
         """Add an answer to this poll.
 
@@ -457,7 +464,7 @@ class Poll:
         ----------
         text: :class:`str`
             The answer text. Maximum 55 characters.
-        emoji: Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]
+        emoji: Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]]
             The answer's emoji.
 
         Raises

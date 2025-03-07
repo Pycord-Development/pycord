@@ -32,7 +32,7 @@ from .utils import _get_as_snowflake, get
 
 if TYPE_CHECKING:
     from .abc import Snowflake
-    from .emoji import Emoji
+    from .emoji import GuildEmoji
     from .guild import Guild
     from .partial_emoji import PartialEmoji
     from .types.welcome_screen import WelcomeScreen as WelcomeScreenPayload
@@ -58,7 +58,7 @@ class WelcomeScreenChannel:
         The channel that is being referenced.
     description: :class:`str`
         The description of the channel that is shown on the welcome screen.
-    emoji: Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]
+    emoji: Union[:class:`GuildEmoji`, :class:`PartialEmoji`, :class:`str`]
         The emoji of the channel that is shown on welcome screen.
     """
 
@@ -66,7 +66,7 @@ class WelcomeScreenChannel:
         self,
         channel: Snowflake,
         description: str,
-        emoji: Emoji | PartialEmoji | str,
+        emoji: GuildEmoji | PartialEmoji | str,
     ):
         self.channel = channel
         self.description = description

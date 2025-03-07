@@ -29,7 +29,10 @@ import io
 import os
 from typing import TYPE_CHECKING
 
-__all__ = ("File",)
+__all__ = (
+    "File",
+    "VoiceMessage",
+)
 
 
 class File:
@@ -89,6 +92,7 @@ class File:
         description: str | None = None,
         spoiler: bool = False,
     ):
+
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
                 raise ValueError(f"File buffer {fp!r} must be seekable and readable")
@@ -143,3 +147,60 @@ class File:
         self.fp.close = self._closer
         if self._owner:
             self._closer()
+
+
+class VoiceMessage(File):
+    """A special case of the File class that represents a voice message.
+
+    .. versionadded:: 2.7
+
+    .. note::
+
+        Similar to File objects, VoiceMessage objects are single use and are not meant to be reused in
+        multiple requests.
+
+    Attributes
+    ----------
+    fp: Union[:class:`os.PathLike`, :class:`io.BufferedIOBase`]
+        A audio file-like object opened in binary mode and read mode
+        or a filename representing a file in the hard drive to
+        open.
+
+        .. note::
+
+            If the file-like object passed is opened via ``open`` then the
+            modes 'rb' should be used.
+
+            To pass binary data, consider usage of ``io.BytesIO``.
+
+    filename: Optional[:class:`str`]
+        The filename to display when uploading to Discord.
+        If this is not given then it defaults to ``fp.name`` or if ``fp`` is
+        a string then the ``filename`` will default to the string given.
+    description: Optional[:class:`str`]
+        The description of a file, used by Discord to display alternative text on images.
+    spoiler: :class:`bool`
+        Whether the attachment is a spoiler.
+    waveform: Optional[:class:`str`]
+        The base64 encoded bytearray representing a sampled waveform.
+    duration_secs: Optional[:class:`float`]
+        The duration of the voice message.
+    """
+
+    __slots__ = (
+        "waveform",
+        "duration_secs",
+    )
+
+    def __init__(
+        self,
+        fp: str | bytes | os.PathLike | io.BufferedIOBase,
+        filename: str | None = None,
+        *,
+        waveform: str = "",
+        duration_secs: float = 0.0,
+        **kwargs,
+    ):
+        super().__init__(fp, filename, **kwargs)
+        self.waveform = waveform
+        self.duration_secs = duration_secs

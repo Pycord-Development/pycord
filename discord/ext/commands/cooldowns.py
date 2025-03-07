@@ -30,6 +30,7 @@ import time
 from collections import deque
 from typing import TYPE_CHECKING, Any, Callable, Deque, TypeVar
 
+import discord.abc
 from discord.enums import Enum
 
 from ...abc import PrivateChannel
@@ -69,7 +70,12 @@ class BucketType(Enum):
         elif self is BucketType.member:
             return (msg.guild and msg.guild.id), msg.author.id
         elif self is BucketType.category:
-            return (msg.channel.category or msg.channel).id  # type: ignore
+            return (
+                msg.channel.category.id
+                if isinstance(msg.channel, discord.abc.GuildChannel)
+                and msg.channel.category
+                else msg.channel.id
+            )
         elif self is BucketType.role:
             # we return the channel id of a private-channel as there are only roles in guilds
             # and that yields the same result as for a guild with only the @everyone role

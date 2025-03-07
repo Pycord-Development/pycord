@@ -25,8 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import array
 import asyncio
-import audioop
 import io
 import json
 import logging
@@ -37,6 +37,7 @@ import sys
 import threading
 import time
 import traceback
+from math import floor
 from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
 from .errors import ClientException
@@ -704,8 +705,17 @@ class PCMVolumeTransformer(AudioSource, Generic[AT]):
         self.original.cleanup()
 
     def read(self) -> bytes:
+        maxval = 0x7FFF
+        minval = -0x8000
+
+        volume = min(self._volume, 2.0)
         ret = self.original.read()
-        return audioop.mul(ret, 2, min(self._volume, 2.0))
+        samples = array.array("h")
+        samples.frombytes(ret)
+        for i in range(len(samples)):
+            samples[i] = int(floor(min(maxval, max(samples[i] * volume, minval))))
+
+        return samples.tobytes()
 
 
 class AudioPlayer(threading.Thread):
@@ -724,6 +734,7 @@ class AudioPlayer(threading.Thread):
         self._current_error: Exception | None = None
         self._connected: threading.Event = client._connected
         self._lock: threading.Lock = threading.Lock()
+        self._played_frames_offset: int = 0
 
         if after is not None and not callable(after):
             raise TypeError('Expected a callable for the "after" parameter.')
@@ -751,10 +762,12 @@ class AudioPlayer(threading.Thread):
                 # wait until we are connected
                 self._connected.wait()
                 # reset our internal data
+                self._played_frames_offset += self.loops
                 self.loops = 0
                 self._start = time.perf_counter()
 
             self.loops += 1
+
             # Send the data read from the start of the function if it is not None
             if first_data is not None:
                 data = first_data
@@ -809,6 +822,7 @@ class AudioPlayer(threading.Thread):
             self._speak(False)
 
     def resume(self, *, update_speaking: bool = True) -> None:
+        self._played_frames_offset += self.loops
         self.loops = 0
         self._start = time.perf_counter()
         self._resumed.set()
@@ -834,3 +848,7 @@ class AudioPlayer(threading.Thread):
             )
         except Exception as e:
             _log.info("Speaking call in player failed: %s", e)
+
+    def played_frames(self) -> int:
+        """Gets the number of 20ms frames played since the start of the audio file."""
+        return self._played_frames_offset + self.loops

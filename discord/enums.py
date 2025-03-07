@@ -224,6 +224,7 @@ class ChannelType(Enum):
     stage_voice = 13
     directory = 14
     forum = 15
+    media = 16
 
     def __str__(self):
         return self.name
@@ -824,6 +825,7 @@ class SlashCommandOptionType(Enum):
             "ThreadOption",
             "Thread",
             "ForumChannel",
+            "MediaChannel",
             "DMChannel",
         ]:
             return cls.channel
@@ -1051,6 +1053,14 @@ class PollLayoutType(Enum):
     """The poll's layout type."""
 
     default = 1
+
+
+class SubscriptionStatus(Enum):
+    """The status of a subscription."""
+
+    active = 0
+    ending = 1
+    inactive = 2
 
 
 T = TypeVar("T")

@@ -31,7 +31,7 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectMenu, SelectOption
-from ..emoji import Emoji
+from ..emoji import AppEmoji, GuildEmoji
 from ..enums import ChannelType, ComponentType
 from ..errors import InvalidArgument
 from ..interactions import Interaction
@@ -260,7 +260,7 @@ class Select(Item[V]):
         label: str,
         value: str = MISSING,
         description: str | None = None,
-        emoji: str | Emoji | PartialEmoji | None = None,
+        emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         default: bool = False,
     ):
         """Adds an option to the select menu.
@@ -279,9 +279,9 @@ class Select(Item[V]):
         description: Optional[:class:`str`]
             An additional description of the option, if any.
             Can only be up to 100 characters.
-        emoji: Optional[Union[:class:`str`, :class:`.Emoji`, :class:`.PartialEmoji`]]
+        emoji: Optional[Union[:class:`str`, :class:`GuildEmoji`, :class:`AppEmoji`, :class:`.PartialEmoji`]]
             The emoji of the option, if available. This can either be a string representing
-            the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`.
+            the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`.
         default: :class:`bool`
             Whether this option is selected by default.
 

@@ -97,6 +97,22 @@ class Item(Generic[V]):
 
     @property
     def row(self) -> int | None:
+        """Gets or sets the row position of this item within its parent view.
+
+        The row position determines the vertical placement of the item in the UI.
+        The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate
+        that no specific row is set.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The row position of the item, or ``None`` if not explicitly set.
+
+        Raises
+        ------
+        ValueError
+            If the row value is not ``None`` and is outside the range [0, 4].
+        """
         return self._row
 
     @row.setter
@@ -110,11 +126,29 @@ class Item(Generic[V]):
 
     @property
     def width(self) -> int:
+        """Gets the width of the item in the UI layout.
+
+        The width determines how much horizontal space this item occupies within its row.
+
+        Returns
+        -------
+        :class:`int`
+            The width of the item. Defaults to 1.
+        """
         return 1
 
     @property
     def view(self) -> V | None:
-        """The underlying view for this item."""
+        """Gets the parent view associated with this item.
+
+        The view refers to the container that holds this item. This is typically set
+        automatically when the item is added to a view.
+
+        Returns
+        -------
+        Optional[:class:`View`]
+            The parent view of this item, or ``None`` if the item is not attached to any view.
+        """
         return self._view
 
     async def callback(self, interaction: Interaction):

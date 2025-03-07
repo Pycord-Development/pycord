@@ -34,11 +34,13 @@ from ..channel import (
     CategoryChannel,
     DMChannel,
     ForumChannel,
+    MediaChannel,
     StageChannel,
     TextChannel,
     Thread,
     VoiceChannel,
 )
+from ..commands import ApplicationContext
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
@@ -84,6 +86,7 @@ CHANNEL_TYPE_MAP = {
     CategoryChannel: ChannelType.category,
     Thread: ChannelType.public_thread,
     ForumChannel: ChannelType.forum,
+    MediaChannel: ChannelType.media,
     DMChannel: ChannelType.private,
 }
 
@@ -226,6 +229,13 @@ class Option:
             self.input_type = input_type
         else:
             from ..ext.commands import Converter
+
+            if isinstance(input_type, tuple) and any(
+                issubclass(op, ApplicationContext) for op in input_type
+            ):
+                input_type = next(
+                    op for op in input_type if issubclass(op, ApplicationContext)
+                )
 
             if (
                 isinstance(input_type, Converter)

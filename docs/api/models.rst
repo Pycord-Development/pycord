@@ -114,6 +114,11 @@ Monetization
 .. autoclass:: Entitlement()
     :members:
 
+.. attributetable:: Subscription
+
+.. autoclass:: Subscription()
+    :members:
+
 Guild
 -----
 
@@ -388,9 +393,15 @@ Interactions
 Emoji
 -----
 
-.. attributetable:: Emoji
+.. attributetable:: GuildEmoji
 
-.. autoclass:: Emoji()
+.. autoclass:: GuildEmoji()
+    :members:
+    :inherited-members:
+
+.. attributetable:: AppEmoji
+
+.. autoclass:: AppEmoji()
     :members:
     :inherited-members:
 
@@ -419,6 +430,12 @@ Channels
 .. attributetable:: ForumChannel
 
 .. autoclass:: ForumChannel()
+    :members:
+    :inherited-members:
+
+.. attributetable:: MediaChannel
+
+.. autoclass:: MediaChannel()
     :members:
     :inherited-members:
 

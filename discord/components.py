@@ -32,7 +32,7 @@ from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
 if TYPE_CHECKING:
-    from .emoji import Emoji
+    from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
@@ -412,7 +412,7 @@ class SelectOption:
         label: str,
         value: str = MISSING,
         description: str | None = None,
-        emoji: str | Emoji | PartialEmoji | None = None,
+        emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         default: bool = False,
     ) -> None:
         if len(label) > 100:
@@ -444,7 +444,7 @@ class SelectOption:
         return base
 
     @property
-    def emoji(self) -> str | Emoji | PartialEmoji | None:
+    def emoji(self) -> str | GuildEmoji | AppEmoji | PartialEmoji | None:
         """The emoji of the option, if available."""
         return self._emoji
 
@@ -457,7 +457,7 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, Emoji, or PartialEmoji not"
+                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not"
                     f" {value.__class__}"
                 )
 

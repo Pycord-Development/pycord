@@ -45,8 +45,8 @@ from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
 from .errors import ClientException, InvalidArgument
-from .file import File
-from .flags import MessageFlags
+from .file import File, VoiceMessage
+from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator
 from .mentions import AllowedMentions
@@ -85,7 +85,6 @@ if TYPE_CHECKING:
     from .client import Client
     from .embeds import Embed
     from .enums import InviteTarget
-    from .flags import ChannelFlags
     from .guild import Guild
     from .member import Member
     from .message import Message, MessageReference, PartialMessage
@@ -419,8 +418,7 @@ class GuildChannel:
             pass
 
         try:
-            if options.pop("require_tag"):
-                options["flags"] = ChannelFlags.require_tag.flag
+            options["flags"] = options.pop("flags").value
         except KeyError:
             pass
 
@@ -513,7 +511,9 @@ class GuildChannel:
         except KeyError:
             pass
         else:
-            if isinstance(default_reaction_emoji, _EmojiTag):  # Emoji, PartialEmoji
+            if isinstance(
+                default_reaction_emoji, _EmojiTag
+            ):  # GuildEmoji, PartialEmoji
                 default_reaction_emoji = default_reaction_emoji._to_partial()
             elif isinstance(default_reaction_emoji, int):
                 default_reaction_emoji = PartialEmoji(
@@ -523,7 +523,7 @@ class GuildChannel:
                 default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
             else:
                 raise InvalidArgument(
-                    "default_reaction_emoji must be of type: Emoji | int | str"
+                    "default_reaction_emoji must be of type: GuildEmoji | int | str"
                 )
 
             options["default_reaction_emoji"] = (
@@ -1567,7 +1567,7 @@ class Messageable:
         flags = MessageFlags(
             suppress_embeds=bool(suppress),
             suppress_notifications=bool(silent),
-        ).value
+        )
 
         if stickers is not None:
             stickers = [sticker.id for sticker in stickers]
@@ -1613,27 +1613,7 @@ class Messageable:
         if file is not None:
             if not isinstance(file, File):
                 raise InvalidArgument("file parameter must be File")
-
-            try:
-                data = await state.http.send_files(
-                    channel.id,
-                    files=[file],
-                    allowed_mentions=allowed_mentions,
-                    content=content,
-                    tts=tts,
-                    embed=embed,
-                    embeds=embeds,
-                    nonce=nonce,
-                    enforce_nonce=enforce_nonce,
-                    message_reference=reference,
-                    stickers=stickers,
-                    components=components,
-                    flags=flags,
-                    poll=poll,
-                )
-            finally:
-                file.close()
-
+            files = [file]
         elif files is not None:
             if len(files) > 10:
                 raise InvalidArgument(
@@ -1642,6 +1622,10 @@ class Messageable:
             elif not all(isinstance(file, File) for file in files):
                 raise InvalidArgument("files parameter must be a list of File")
 
+        if files is not None:
+            flags = flags + MessageFlags(
+                is_voice_message=any(isinstance(f, VoiceMessage) for f in files)
+            )
             try:
                 data = await state.http.send_files(
                     channel.id,
@@ -1656,7 +1640,7 @@ class Messageable:
                     message_reference=reference,
                     stickers=stickers,
                     components=components,
-                    flags=flags,
+                    flags=flags.value,
                     poll=poll,
                 )
             finally:
@@ -1675,7 +1659,7 @@ class Messageable:
                 message_reference=reference,
                 stickers=stickers,
                 components=components,
-                flags=flags,
+                flags=flags.value,
                 poll=poll,
             )
 
@@ -1792,7 +1776,7 @@ class Messageable:
             "Message": "send_messages",
             "Embed": "embed_links",
             "File": "attach_files",
-            "Emoji": "use_external_emojis",
+            "GuildEmoji": "use_external_emojis",
             "GuildSticker": "use_external_stickers",
         }
         # Can't use channel = await self._get_channel() since its async
@@ -1817,7 +1801,7 @@ class Messageable:
                         mapping.get(type(obj).__name__) or mapping[obj.__name__]
                     )
 
-                if type(obj).__name__ == "Emoji":
+                if type(obj).__name__ == "GuildEmoji":
                     if (
                         obj._to_partial().is_unicode_emoji
                         or obj.guild_id == channel.guild.id
