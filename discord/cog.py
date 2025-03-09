@@ -31,13 +31,12 @@ import os
 import pathlib
 import sys
 import types
+from collections.abc import Generator, Mapping
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
     ClassVar,
-    Generator,
-    Mapping,
     TypeVar,
     overload,
 )
