@@ -154,8 +154,10 @@ def _update_command(
     if not isinstance(command, SlashCommandGroup) and not _is_bridge_command(command):
         # ignore bridge commands
         cmd: BridgeCommand | _BaseCommand | None = getattr(
-            new_cls, command.callback.__name__, None
-        )  # pyright: ignore[reportUnknownMemberType,reportUnknownArgumentType,reportAttributeAccessIssue,reportAssignmentType]
+            new_cls,
+            command.callback.__name__,
+            None,  # pyright: ignore[reportUnknownMemberType,reportUnknownArgumentType,reportAttributeAccessIssue]
+        )
         if _is_bridge_command(cmd):
             setattr(
                 cmd,
@@ -164,12 +166,16 @@ def _update_command(
             )
         else:
             setattr(
-                new_cls, command.callback.__name__, command
-            )  # pyright: ignore[reportUnknownMemberType,reportUnknownArgumentType,reportAttributeAccessIssue]
+                new_cls,
+                command.callback.__name__,
+                command,  # pyright: ignore [reportAttributeAccessIssue, reportUnknownArgumentType, reportUnknownMemberType]
+            )
 
-        parent: BridgeCommand | _BaseCommand | None = (
-            command.parent
-        )  # pyright: ignore[reportUnknownMemberType,reportUnknownVariableType,reportAttributeAccessIssue]
+        parent: (
+            BridgeCommand | _BaseCommand | None
+        ) = (  # pyright: ignore [reportUnknownMemberType, reportUnknownVariableType]
+            command.parent  # pyright: ignore [reportAttributeAccessIssue]
+        )
         if parent is not None:
             # Get the latest parent reference
             parent = lookup_table[f"{_name_filter(command)}_{parent.qualified_name}"]  # type: ignore # pyright: ignore[reportUnknownMemberType]
