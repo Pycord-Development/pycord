@@ -180,7 +180,7 @@ def _update_command(
             # Get the latest parent reference
             parent = lookup_table[f"{_name_filter(command)}_{parent.qualified_name}"]  # type: ignore # pyright: ignore[reportUnknownMemberType]
 
-            # Update our parent's reference to our self
+            # Update the parent's reference to our self
             parent.remove_command(command.name)  # type: ignore # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
             parent.add_command(command)  # type: ignore # pyright: ignore[reportAttributeAccessIssue, reportUnknownMemberType]
 
