@@ -34,7 +34,6 @@ from collections.abc import Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
 import aiohttp
-
 import discord
 from discord.backoff import ExponentialBackoff
 from discord.utils import MISSING

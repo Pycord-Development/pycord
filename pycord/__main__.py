@@ -31,7 +31,6 @@ from pathlib import Path
 from typing import Tuple
 
 import aiohttp
-
 import discord
 
 

@@ -27,7 +27,6 @@ DEALINGS IN THE SOFTWARE.
 from typing import TypeVar
 
 import pytest
-
 from discord.utils import (
     MISSING,
     _cached_property,

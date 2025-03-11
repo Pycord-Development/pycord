@@ -1,8 +1,7 @@
 import io
 
-import pydub  # pip install pydub==0.25.1
-
 import discord
+import pydub  # pip install pydub==0.25.1
 from discord.sinks import MP3Sink
 
 bot = discord.Bot()

@@ -67,9 +67,8 @@ from .cooldowns import (
 from .errors import *
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec, TypeGuard
-
     from discord.message import Message
+    from typing_extensions import Concatenate, ParamSpec, TypeGuard
 
     from ._types import Check, Coro, CoroFunc, Error, Hook
 

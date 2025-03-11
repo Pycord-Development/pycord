@@ -1,10 +1,9 @@
 from typing import Optional
 
-from typing_extensions import Annotated
-
 import discord
 from discord import SlashCommandOptionType
 from discord.commands.core import SlashCommand, slash_command
+from typing_extensions import Annotated
 
 
 def test_typing_annotated():

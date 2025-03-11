@@ -34,14 +34,13 @@ import discord.utils
 from discord.message import Message
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
-
     from discord.abc import MessageableChannel
     from discord.guild import Guild
     from discord.member import Member
     from discord.state import ConnectionState
     from discord.user import ClientUser, User
     from discord.voice_client import VoiceProtocol
+    from typing_extensions import ParamSpec
 
     from .bot import AutoShardedBot, Bot
     from .cog import Cog
