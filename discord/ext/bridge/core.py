@@ -98,14 +98,13 @@ class BridgeExtCommand(Command):
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
 
-        if any(
-            isinstance(option.annotation, Option)
-            and not isinstance(option.annotation, BridgeOption)
-            for option in self.params.values()
-        ):
-            raise TypeError(
-                f"Option is not supported in bridge commands. Use BridgeOption instead."
-            )
+        for option in self.params.values():
+            if isinstance(option.annotation, Option) and not isinstance(
+                option.annotation, BridgeOption
+            ):
+                raise TypeError(
+                    f"{option.annotation.__class__.__name__} is not supported in bridge commands. Use BridgeOption instead."
+                )
 
     async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
         await super().dispatch_error(ctx, error)
