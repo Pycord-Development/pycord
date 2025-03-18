@@ -5,7 +5,7 @@ pytest-asyncio~=0.24.0
 # pytest-order~=1.0.1
 mypy~=1.15.0
 coverage~=7.7
-pre-commit==4.1.0
+pre-commit==4.2.0
 codespell==2.4.1
 bandit==1.8.3
 flake8==7.1.2
