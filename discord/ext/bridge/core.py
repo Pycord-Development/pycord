@@ -41,7 +41,9 @@ from discord import (
 )
 
 from ...utils import MISSING, find, get, warn_deprecated
-from ..commands import BadArgument
+from ..commands import (
+    BadArgument,
+)
 from ..commands import Bot as ExtBot
 from ..commands import (
     Command,
@@ -230,7 +232,7 @@ class BridgeCommand:
         except AttributeError as e:
             # if it doesn't exist, check this list, if the name of
             # the parameter is here
-            if name is self.__special_attrs__:
+            if name in self.__special_attrs__:
                 raise e
 
             # looks up the result in the variants.

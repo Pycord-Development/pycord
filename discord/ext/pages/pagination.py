@@ -1163,7 +1163,7 @@ class Paginator(discord.ui.View):
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
-        if ephemeral and (self.timeout >= 900 or self.timeout is None):
+        if ephemeral and (self.timeout is None or self.timeout >= 900):
             raise ValueError(
                 "paginator responses cannot be ephemeral if the paginator timeout is 15"
                 " minutes or greater"
