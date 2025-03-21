@@ -1279,13 +1279,7 @@ def format_dt(
         The formatted string.
     """
     if isinstance(dt, datetime.time):
-        if style is None:
-            style = "t"
-        elif style not in ("t", "T"):
-            raise ValueError("Time styles must be 't' or 'T'.")
-        dt = datetime.datetime.combine(
-            datetime.datetime.fromtimestamp(DISCORD_EPOCH, tz=datetime.UTC), dt
-        )
+        dt = datetime.datetime.combine(datetime.datetime.now(), dt)
     if style is None:
         return f"<t:{int(dt.timestamp())}>"
     return f"<t:{int(dt.timestamp())}:{style}>"
