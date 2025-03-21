@@ -151,17 +151,6 @@ class CogMeta(type):
 
         new_cls = super().__new__(cls, name, bases, attrs, **kwargs)
 
-        valid_commands = [
-            (c for i, c in j.__dict__.items() if isinstance(c, _BaseCommand))
-            for j in reversed(new_cls.__mro__)
-        ]
-        if any(isinstance(i, ApplicationCommand) for i in valid_commands) and any(
-            not isinstance(i, _BaseCommand) for i in valid_commands
-        ):
-            _filter = ApplicationCommand
-        else:
-            _filter = _BaseCommand
-
         for base in reversed(new_cls.__mro__):
             for elem, value in base.__dict__.items():
                 if elem in commands:
@@ -178,7 +167,7 @@ class CogMeta(type):
                 is_static_method = isinstance(value, staticmethod)
                 if is_static_method:
                     value = value.__func__
-                if isinstance(value, _filter):
+                if isinstance(value, _BaseCommand):
                     if is_static_method:
                         raise TypeError(
                             f"Command in method {base}.{elem!r} must not be"
