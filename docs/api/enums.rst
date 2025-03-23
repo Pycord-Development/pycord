@@ -2500,3 +2500,26 @@ of :class:`enum.Enum`.
     .. attribute:: private_channel
 
         The interaction is in a private DM or group DM channel.
+
+
+.. class:: ScheduledEventRecurrenceRuleFrequency
+
+    A scheduled event recurrence rule's frequency.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: yearly
+
+        The event will repeat on a yearly basis.
+
+    .. attribute:: monthly
+
+        The event will repeat on a monthly basis.
+
+    .. attribute:: weekly
+
+        The event will repeat on a weekly basis.
+
+    .. attribute:: daily
+
+        The event will repeat on a daily basis.

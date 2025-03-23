@@ -76,6 +76,7 @@ __all__ = (
     "EntitlementOwnerType",
     "IntegrationType",
     "InteractionContextType",
+    "ScheduledEventRecurrenceFrequency",
 )
 
 
@@ -1052,6 +1053,15 @@ class PollLayoutType(Enum):
     """The poll's layout type."""
 
     default = 1
+
+
+class ScheduledEventRecurrenceFrequency(Enum):
+    """A scheduled event recurrence rule's frequency."""
+
+    yearly = 0
+    monthly = 1
+    weekly = 2
+    daily = 3
 
 
 T = TypeVar("T")
