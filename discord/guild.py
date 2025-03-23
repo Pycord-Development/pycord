@@ -80,7 +80,11 @@ from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role
-from .scheduled_events import ScheduledEvent, ScheduledEventLocation, ScheduledEventRecurrenceRule
+from .scheduled_events import (
+    ScheduledEvent,
+    ScheduledEventLocation,
+    ScheduledEventRecurrenceRule,
+)
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
@@ -3848,9 +3852,9 @@ class Guild(Hashable):
 
         if recurrence_rule is not MISSING:
             if recurrence_rule is None:
-                payload['recurrence_rule'] = None
+                payload["recurrence_rule"] = None
             else:
-                payload['recurrence_rule'] = recurrence_rule._to_dict()
+                payload["recurrence_rule"] = recurrence_rule._to_dict()
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload

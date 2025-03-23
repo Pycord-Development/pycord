@@ -36,7 +36,7 @@ from .enums import (
     ScheduledEventStatus,
     try_enum,
 )
-from .errors import InvalidArgument, ValidationError, ClientException
+from .errors import ClientException, InvalidArgument, ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
@@ -56,8 +56,8 @@ if TYPE_CHECKING:
     from .member import Member
     from .state import ConnectionState
     from .types.channel import StageChannel, VoiceChannel
+    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.scheduled_events import (
-        ScheduledEvent as ScheduledEventPayload,
         ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
     )
 
@@ -163,7 +163,6 @@ class ScheduledEventRecurrenceRule:
     count: Optional[:class:`int`]
         The amount of times the event will recur before stopping. Will be ``None``
         if :attr:`ScheduledEventRecurrenceRule.end_date` is ``None``.
-
 
     Examples
     --------
@@ -332,15 +331,15 @@ class ScheduledEventRecurrenceRule:
             A list containing the specific day on a month when the event will recur on. The year
             is ignored.
 
+        Returns
+        -------
+        :class:`ScheduledEventRecurrenceRule`
+            The updated recurrence rule.
+
         Raises
         ------
         ClientException
             You cannot edit this recurrence rule.
-
-        Returns
-        -------
-        :class:`ScheduledEventRecurrenceRule`
-            The updated recurrence rule. 
         """
 
         if self._state is not None:
