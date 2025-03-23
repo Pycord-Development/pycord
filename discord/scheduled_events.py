@@ -385,7 +385,7 @@ class ScheduledEventRecurrenceRule:
         weekdays = data.get('by_weekday', MISSING) or MISSING
         self._weekdays = weekdays
 
-        n_weekdays = data.get('by_n_weekday', MISSING) or MISSING:
+        n_weekdays = data.get('by_n_weekday', MISSING) or MISSING
         if n_weekdays is not MISSING:
             self._n_weekdays = [(n['n'], n['day']) for n in n_weekdays]
 
