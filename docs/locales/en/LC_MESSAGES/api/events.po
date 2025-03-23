@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/events.rst:6 b2b93f092885467db7bfd392648d888f
 msgid "Event Reference"
@@ -61,52 +61,24 @@ msgstr ""
 msgid "Called when an application command is received."
 msgstr ""
 
-#: ../../api/events.rst 0450b87209e04abf999c6d16346f74ad
-#: 0d00d17e652745278bde98e5a9baac57 0d3719138c324b9b86dfd4e1f7c983c2
+#: ../../api/events.rst 0d3719138c324b9b86dfd4e1f7c983c2
 #: 1031328b8ab2414c85e5725dc3c4efbf 13bb21ffd48c4d37b43cae9d0af4273a
-#: 13c8a10e7a204b58956db583cfa99493 1678169629ec4355a18db9887c5dbc22
-#: 176ab3d1374941268495018745427ade 17839a738d044231b7bb90c4f01bdc9b
-#: 18ff51c5a3704f5a9fa461a57b8e9b66 1938a7564e7f49a4a0c3d07f69097a01
-#: 2047ad9931154d87a4d5f8a7090fd208 281495434b004210ae4aaff83990d327
-#: 349abfcdf56240438f5690772fe0a18d 37ee4bf65332432b844f4c82c96e130f
-#: 40ac5755dc1642c89e6bc723e5950d7a 450ea7dd8b0742b6a95034bc736a0b26
-#: 47834821ad7340b2a0c1b302cf59221a 4866914077374dcabb7961c78d04b703
-#: 4aa9dc788bbb4783842e434f794ea2be 4ab35ccbcc7a421bba4f7493d8ae96c4
-#: 4f354ed77ba74f58a8bfe8f9e4523bc8 5015785657bd461bb6bf2bc0a2125668
-#: 559e63e7918344a8afdb26e8d8af2bae 5f9dfeae511c4e658ed3c94bd40b4560
-#: 60839dcce1c248789ade9b533e7911db 60b3d7ac967d4fbaa7ab300016181e83
-#: 620a42e608284789b3c467b464c96dad 677c6a863bc24ae1a5ad297c49517cd8
-#: 67c06d15edc74df8ac0d765f1893023e 681f4a0621c84af5b603e302957fca24
-#: 69f16d3ebdce40d299735d1b99859fc4 69f826f1232a4d53a56d0d5f09d6091a
-#: 6b62d4d670624d2590578fa265eae9af 6d7428028f5f4c47a87e228b3382926a
-#: 6d8d97277dc24519b84ce4eddbcf5e6c 6dab0c0a2e24494ab8395fce18a6640a
-#: 70306a7be41d4b578c334a0619ba1f3c 72ce7e3d4c314950a9bc3410fd54a91a
+#: 17839a738d044231b7bb90c4f01bdc9b 349abfcdf56240438f5690772fe0a18d
+#: 450ea7dd8b0742b6a95034bc736a0b26 47834821ad7340b2a0c1b302cf59221a
+#: 4f354ed77ba74f58a8bfe8f9e4523bc8 69f16d3ebdce40d299735d1b99859fc4
+#: 69f826f1232a4d53a56d0d5f09d6091a 6dab0c0a2e24494ab8395fce18a6640a
 #: 73dad0dff0974575a4f932f888e57e50 743a2e37a02c4c5fb8f7dd22c8217882
 #: 78208569a83144aa920b951012b5ce70 78efea9536c547dea9bcf4f0fb904c57
-#: 80f30be1218d4627ac862062d98f65b9 81c162aa46b14ab0a333ed9962606f0a
-#: 8432d53ccc6b4c218b0be97b5c783d06 847adddbea6a47e4b9b7e13a7f352ad5
+#: 81c162aa46b14ab0a333ed9962606f0a 8432d53ccc6b4c218b0be97b5c783d06
 #: 8ae7a130296f41c286012b115ac400f6 8f134176570e4223ac70dfaf54649fd3
-#: 8f50058a92a84b47a4211733aacacd7e 900882c0284c4bc4a079c467bf577de2
-#: 962d87d49ce14c0ea1cceabda7c9cc2d 96b417dff47e45afba7e2b6cd8b168f6
-#: 99b1f8fedb1a4fab9e06d830c354345b 99b97506806e4f40b1382cef723cca78
-#: 9a16c00d4a624d2aa7e42be17f5e9e41 9ac90eb414af4d83b9c363cc85e04e26
-#: 9d17e39474da4efb97dc8dba285d4e27 a2a4098c99f44db3990a9980266e23aa
+#: 900882c0284c4bc4a079c467bf577de2 96b417dff47e45afba7e2b6cd8b168f6
+#: 99b1f8fedb1a4fab9e06d830c354345b a2a4098c99f44db3990a9980266e23aa
 #: a3d69eddf6564725bc67771befc4aeca a3d7e20844c140bfae16d8b945ec35b3
-#: a62f5e8fc8174aa7881c7c7803d52529 a6c90e28198047819bbc09741d0e820b
 #: a88f1812c49f42f1ac7a744c1c840822 a9ebc9dfbb2342c09e6f908ff8b05b61
-#: ab5d8aefc1db4a4c817b5368caa5543e b04fccd185f843d1aca16ec4a414e75c
-#: b71cd393e4bb46869fc9b5aa74556aea be24ecbc72b54a3390c05a17b44d15b6
-#: c41c21d6e6304513afc6ce518472f17b c914a36558cb4bc98abd8de320e5cfc0
-#: ca0cd7fa385341149261f81c4cb9db61 cf1af74adcc940c6b88151caa220ceb0
-#: d057103729ff4f3b8dbe93fe0bc1262e d4d90a7f98cf4fa785b0c5df1c055240
-#: d5cd6b0856484ad1a5f1be0f36dbca84 d71e0e6a13fe4d9990262d983c4aea4b
-#: d907a1e1ec6441fda3a2d770dd044ffb d945cfa6fb84406aada47da35d94e1b0
-#: da5228275de345319b40abae16fbe8b7 ddbc0fd0c67b4c47b95f888da332497a
-#: de18df4128cb43da8ea61b66283e75f2 e3455443ac954b88b181ebe074279d1a
-#: e6e388c1d5e74cfcb8a83eb43c1ea8c0 e9aab89b208b4e639310868813af5a3a
-#: eb2b8d62e3094050ababe6c81875b9a3 ee9815d10d0f4b26aa8a87feed666d51
-#: f19251d202354981b849ab1942b91951 f4f36adbe07941dbb50a3375686a7f96
-#: fb18645345c14733936ee43bac2428ab fca243bce7384dd5a65201e550249536
+#: b04fccd185f843d1aca16ec4a414e75c be24ecbc72b54a3390c05a17b44d15b6
+#: cf1af74adcc940c6b88151caa220ceb0 d057103729ff4f3b8dbe93fe0bc1262e
+#: e3455443ac954b88b181ebe074279d1a f19251d202354981b849ab1942b91951
+#: f4f36adbe07941dbb50a3375686a7f96 fb18645345c14733936ee43bac2428ab
 #: fe865df5dd99489498c73d866ac670dc
 msgid "Parameters"
 msgstr ""
@@ -173,22 +145,14 @@ msgid ""
 " internal user cache."
 msgstr ""
 
-#: ../../api/events.rst:126 ../../api/events.rst:610 ../../api/events.rst:705
-#: ../../api/events.rst:844 ../../api/events.rst:857 ../../api/events.rst:910
-#: ../../api/events.rst:937 ../../api/events.rst:962 ../../api/events.rst:999
-#: ../../api/events.rst:1031 ../../api/events.rst:1054
-#: ../../api/events.rst:1079 ../../api/events.rst:1134
-#: ../../api/events.rst:1158 ../../api/events.rst:1257
-#: ../../api/events.rst:1284 ../../api/events.rst:1318
-#: 023402936a654371aab9f215b6e0c90c 0635e0f24c0e47b894c9c7fec506157a
-#: 08eb4bec2f2a4837932a221dbd3220c0 198f9bbae5974dffbe423f6dd1819686
-#: 2c7f1cc4edff4bc29e8b8268e06aa93e 61459f05ae5d4e50b742f4e8ea6afe1f
+#: ../../api/events.rst:126 ../../api/events.rst:574 ../../api/events.rst:669
+#: ../../api/events.rst:808 ../../api/events.rst:821 ../../api/events.rst:874
+#: ../../api/events.rst:901 ../../api/events.rst:926 ../../api/events.rst:963
+#: ../../api/events.rst:995 ../../api/events.rst:1018 ../../api/events.rst:1043
+#: ../../api/events.rst:1170 ../../api/events.rst:1194
+#: ../../api/events.rst:1293 ../../api/events.rst:1320
+#: ../../api/events.rst:1354 2c7f1cc4edff4bc29e8b8268e06aa93e
 #: 6214e4ff9d514cadbf5a0815af3cccaa 6b8bd14634da4b118afbfe9e49e3beb1
-#: 6bea76946d334a7996bd35f353135667 776fe87242094fc881ad350436325a2a
-#: 7c6afb134ff248edbef99cd378aeac64 83f294fe23f6474ba62680e79b9ecfee
-#: 940bd659eeb745b2b753faf7238ee8fe 97da3d1b88d84c68a282dfdb9f98fbb3
-#: ac6d84c776ef4acaa1b57da19160c5d3 b5f3a3acf81442c49df4b0db70f59a29
-#: cebb871f992f4011aea78bd0c12995fb
 msgid "The raw event payload data."
 msgstr ""
 
@@ -285,13 +249,10 @@ msgstr ""
 msgid "Called whenever a private group DM is updated. e.g. changed name or topic."
 msgstr ""
 
-#: ../../api/events.rst:203 ../../api/events.rst:789 ../../api/events.rst:812
-#: ../../api/events.rst:829 ../../api/events.rst:842 ../../api/events.rst:855
-#: ../../api/events.rst:882 ../../api/events.rst:908
-#: 024d5d91d73a44de83c021d43b5b54e9 1082924a78134519a59315c26ab91333
-#: 9021e87cdea64927a2681528197df4d5 95ccb54b20fd47e58417710ed5f5eb52
-#: af5b8c5a72884a83ac69344f157698af cb3213b1115949de9bb856d6d491d2ac
-#: d97041759bf74fb7a97daf70cfe8bf3f e55034f9969343d990011bfeb8b17ce5
+#: ../../api/events.rst:203 ../../api/events.rst:753 ../../api/events.rst:776
+#: ../../api/events.rst:793 ../../api/events.rst:806 ../../api/events.rst:819
+#: ../../api/events.rst:846 ../../api/events.rst:872
+#: cb3213b1115949de9bb856d6d491d2ac e55034f9969343d990011bfeb8b17ce5
 msgid "This requires :attr:`Intents.messages` to be enabled."
 msgstr ""
 
@@ -325,19 +286,13 @@ msgid ""
 msgstr ""
 
 #: ../../api/events.rst:223 ../../api/events.rst:234 ../../api/events.rst:248
-#: ../../api/events.rst:456 ../../api/events.rst:475 ../../api/events.rst:489
-#: ../../api/events.rst:503 ../../api/events.rst:512 ../../api/events.rst:553
-#: ../../api/events.rst:1197 ../../api/events.rst:1210
-#: ../../api/events.rst:1223 ../../api/events.rst:1245
-#: ../../api/events.rst:1293 ../../api/events.rst:1314
-#: 0873cc1fdc914f0fad25fd05b59de54d 213bd7864c0e48eea8da67e27a46dabc
-#: 2e278f832d434ef9a4960f7d01cde05e 3ad5cbd41ddb4c8e847d8f8ac5f8c3e6
-#: 4330cee10810420eae954b7acf917069 45b3e36bf4724062b1bddf760945f9e1
-#: 5d355f08e7f145bc97271086b10d0260 701881eeed2b49a0bf24be49460e89d7
-#: 77ddc91aee8f43b7b3639a94cef10e17 8b159796a6f349e8aeaf7c5bf5752f37
-#: a4a7d77e88f44357be30d5714d93dd1b e12869e76b1849dfb9a5de16e606e9d9
-#: ec0f92796f594f4297ae5903eb0667b8 f28de120c204470e8efc2483a3ec3ec3
-#: f9ffac6969464760865bea86217e862e
+#: ../../api/events.rst:420 ../../api/events.rst:439 ../../api/events.rst:453
+#: ../../api/events.rst:467 ../../api/events.rst:476 ../../api/events.rst:517
+#: ../../api/events.rst:1233 ../../api/events.rst:1246
+#: ../../api/events.rst:1259 ../../api/events.rst:1281
+#: ../../api/events.rst:1329 ../../api/events.rst:1350
+#: 3ad5cbd41ddb4c8e847d8f8ac5f8c3e6 5d355f08e7f145bc97271086b10d0260
+#: f28de120c204470e8efc2483a3ec3ec3 f9ffac6969464760865bea86217e862e
 msgid "This requires :attr:`Intents.guilds` to be enabled."
 msgstr ""
 
@@ -576,261 +531,220 @@ msgid ""
 "denote a regular text message."
 msgstr ""
 
-#: ../../api/events.rst:414 a7d79f8ec9934e6287e9f91b426f9ca3
-msgid "Entitlements"
-msgstr ""
-
-#: ../../api/events.rst:417 c4bda84ba80d4f6b82e53d44e2704b60
-msgid "Called when a user subscribes to an SKU."
-msgstr ""
-
-#: ../../api/events.rst:421 ec2ef743271140fca72f11b8f28b55f2
-msgid "The entitlement that was created as a result of the subscription."
-msgstr ""
-
-#: ../../api/events.rst:426 072d6e76c4bb492ebf7fc48e64a58def
-msgid ""
-"Called when a user's subscription to an Entitlement is renewed for the "
-"next billing period."
-msgstr ""
-
-#: ../../api/events.rst:430 79720b0dadf04f179a625168706790b9
-msgid "The entitlement that was updated."
-msgstr ""
-
-#: ../../api/events.rst:435 1d13e1996ca641bcb26d6179d19e09e7
-msgid "Called when a user's entitlement is deleted."
-msgstr ""
-
-#: ../../api/events.rst:437 3b910d98ee1b441498f2613151a00f70
-msgid ""
-"Entitlements are usually only deleted when Discord issues a refund for a "
-"subscription, or manually removes an entitlement from a user."
-msgstr ""
-
-#: ../../api/events.rst:442 bf621f37de124bcbb5cce9859564f2d1
-msgid "This is not called when a user's subscription is cancelled."
-msgstr ""
-
-#: ../../api/events.rst:446 9dbb179c32b54a398dc87524d5bbaef8
-msgid "The entitlement that was deleted."
-msgstr ""
-
-#: ../../api/events.rst:450 4dfcfdb6c0064ac3b4f73a5d1c00da93
+#: ../../api/events.rst:414 4dfcfdb6c0064ac3b4f73a5d1c00da93
 msgid "Guilds"
 msgstr ""
 
-#: ../../api/events.rst:453 20311648994641ae8ff17f72b5da9d99
+#: ../../api/events.rst:417 20311648994641ae8ff17f72b5da9d99
 msgid ""
 "Called when a :class:`Guild` is either created by the :class:`Client` or "
 "when the :class:`Client` joins a guild."
 msgstr ""
 
-#: ../../api/events.rst:458 ea6e535b185f4d968990adf6893c7de0
+#: ../../api/events.rst:422 ea6e535b185f4d968990adf6893c7de0
 msgid "The guild that was joined."
 msgstr ""
 
-#: ../../api/events.rst:463 070a63745b6849fbbeab2bf0a1b4e515
+#: ../../api/events.rst:427 070a63745b6849fbbeab2bf0a1b4e515
 msgid "Called when a :class:`Guild` is removed from the :class:`Client`."
 msgstr ""
 
-#: ../../api/events.rst:465 5d6cba70019f45f3ad96f5ec0a2594cc
+#: ../../api/events.rst:429 5d6cba70019f45f3ad96f5ec0a2594cc
 msgid "This happens through, but not limited to, these circumstances:"
 msgstr ""
 
-#: ../../api/events.rst:467 51b0d21974c1475a806ed37c3782ff11
+#: ../../api/events.rst:431 51b0d21974c1475a806ed37c3782ff11
 msgid "The client got banned."
 msgstr ""
 
-#: ../../api/events.rst:468 ff9e9e053e6049889fca38347497fb96
+#: ../../api/events.rst:432 ff9e9e053e6049889fca38347497fb96
 msgid "The client got kicked."
 msgstr ""
 
-#: ../../api/events.rst:469 1ed4f7c318cb43ce8b62cb081fe6a0b1
+#: ../../api/events.rst:433 1ed4f7c318cb43ce8b62cb081fe6a0b1
 msgid "The client left the guild."
 msgstr ""
 
-#: ../../api/events.rst:470 ec3900333c3f461bb2ad0cc95bc5ef2d
+#: ../../api/events.rst:434 ec3900333c3f461bb2ad0cc95bc5ef2d
 msgid "The client or the guild owner deleted the guild."
 msgstr ""
 
-#: ../../api/events.rst:472 c09fcb5ca235482a9dee894607af5aa1
+#: ../../api/events.rst:436 c09fcb5ca235482a9dee894607af5aa1
 msgid ""
 "In order for this event to be invoked then the :class:`Client` must have "
 "been part of the guild to begin with. (i.e. it is part of "
 ":attr:`Client.guilds`)"
 msgstr ""
 
-#: ../../api/events.rst:477 a83039edb3ba4814a286c7e322c10728
+#: ../../api/events.rst:441 a83039edb3ba4814a286c7e322c10728
 msgid "The guild that got removed."
 msgstr ""
 
-#: ../../api/events.rst:482 1e90656c38f64056af4b1e544753df18
+#: ../../api/events.rst:446 1e90656c38f64056af4b1e544753df18
 msgid "Called when a :class:`Guild` is updated, for example:"
 msgstr ""
 
-#: ../../api/events.rst:484 422f145b8062401c84f76756bb9820e2
+#: ../../api/events.rst:448 422f145b8062401c84f76756bb9820e2
 msgid "Changed name"
 msgstr ""
 
-#: ../../api/events.rst:485 cbab865be7764aefa53002b353147cda
+#: ../../api/events.rst:449 cbab865be7764aefa53002b353147cda
 msgid "Changed AFK channel"
 msgstr ""
 
-#: ../../api/events.rst:486 deebcf9e947142edbdbcb28d9c54c4a6
+#: ../../api/events.rst:450 deebcf9e947142edbdbcb28d9c54c4a6
 msgid "Changed AFK timeout"
 msgstr ""
 
-#: ../../api/events.rst:487 e5891580f33b405da90cd749c059cb8f
+#: ../../api/events.rst:451 e5891580f33b405da90cd749c059cb8f
 msgid "etc."
 msgstr ""
 
-#: ../../api/events.rst:491 a8cffe8722014b508fe234b456e99add
+#: ../../api/events.rst:455 a8cffe8722014b508fe234b456e99add
 msgid "The guild prior to being updated."
 msgstr ""
 
-#: ../../api/events.rst:493 09559bb331d54c818d9456c9e50dccc8
+#: ../../api/events.rst:457 09559bb331d54c818d9456c9e50dccc8
 msgid "The guild after being updated."
 msgstr ""
 
-#: ../../api/events.rst:499 4926a01720844942bb4fbe2214b41d5d
+#: ../../api/events.rst:463 4926a01720844942bb4fbe2214b41d5d
 msgid "Called when a :class:`Guild` creates or deletes a :class:`Role`."
 msgstr ""
 
-#: ../../api/events.rst:501 26919d02a3764b4bb306d4b2bb402aac
+#: ../../api/events.rst:465 26919d02a3764b4bb306d4b2bb402aac
 msgid "To get the guild it belongs to, use :attr:`Role.guild`."
 msgstr ""
 
-#: ../../api/events.rst:505 1ff07f75468541b38b5b8945ccec0b63
+#: ../../api/events.rst:469 1ff07f75468541b38b5b8945ccec0b63
 msgid "The role that was created or deleted."
 msgstr ""
 
-#: ../../api/events.rst:510 f7dd6519c06844c08e5241b1559491a5
+#: ../../api/events.rst:474 f7dd6519c06844c08e5241b1559491a5
 msgid "Called when a :class:`Role` is changed guild-wide."
 msgstr ""
 
-#: ../../api/events.rst:514 f1b5a9b9b024439d9ed75c18e938f390
+#: ../../api/events.rst:478 f1b5a9b9b024439d9ed75c18e938f390
 msgid "The updated role's old info."
 msgstr ""
 
-#: ../../api/events.rst:516 1ff66a23bf0d491cb53e831bae382c88
+#: ../../api/events.rst:480 1ff66a23bf0d491cb53e831bae382c88
 msgid "The updated role's updated info."
 msgstr ""
 
-#: ../../api/events.rst:521 8cbae07e47ba4cdebe69ec4076d665f9
-msgid "Called when a :class:`Guild` adds or removes an :class:`Emoji`."
+#: ../../api/events.rst:485 8cbae07e47ba4cdebe69ec4076d665f9
+msgid "Called when a :class:`Guild` adds or removes an :class:`GuildEmoji`."
 msgstr ""
 
-#: ../../api/events.rst:523 ../../api/events.rst:536
-#: 7d54c1f8e6e74a72b35f12482d5961b4 f67a33188bb34272a8889e369b01d223
+#: ../../api/events.rst:487 ../../api/events.rst:500
+#: 7d54c1f8e6e74a72b35f12482d5961b4
 msgid "This requires :attr:`Intents.emojis_and_stickers` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:525 73965f3cab494980aa9dd819ffd29c0b
+#: ../../api/events.rst:489 73965f3cab494980aa9dd819ffd29c0b
 msgid "The guild who got their emojis updated."
 msgstr ""
 
-#: ../../api/events.rst:527 fe7eb70f2c4a42d88b47e0e0c2137c58
+#: ../../api/events.rst:491 fe7eb70f2c4a42d88b47e0e0c2137c58
 msgid "A list of emojis before the update."
 msgstr ""
 
-#: ../../api/events.rst:529 0b5a5ffd3b384bb8b875fd343f7d22a6
+#: ../../api/events.rst:493 0b5a5ffd3b384bb8b875fd343f7d22a6
 msgid "A list of emojis after the update."
 msgstr ""
 
-#: ../../api/events.rst:534 7b8bb01b2d34498da90bd94b2c350575
+#: ../../api/events.rst:498 7b8bb01b2d34498da90bd94b2c350575
 msgid "Called when a :class:`Guild` adds or removes a sticker."
 msgstr ""
 
-#: ../../api/events.rst:540 1fae23769a4342888fab8d136a77ec99
+#: ../../api/events.rst:504 1fae23769a4342888fab8d136a77ec99
 msgid "The guild who got their stickers updated."
 msgstr ""
 
-#: ../../api/events.rst:542 b36c6dcfc18940f9abb2e0f888efff66
+#: ../../api/events.rst:506 b36c6dcfc18940f9abb2e0f888efff66
 msgid "A list of stickers before the update."
 msgstr ""
 
-#: ../../api/events.rst:544 cd05518a2d924fd68974c2f5ea934b34
+#: ../../api/events.rst:508 cd05518a2d924fd68974c2f5ea934b34
 msgid "A list of stickers after the update."
 msgstr ""
 
-#: ../../api/events.rst:550 3c8f786f39b7401bb26040a54f057dc1
+#: ../../api/events.rst:514 3c8f786f39b7401bb26040a54f057dc1
 msgid ""
 "Called when a guild becomes available or unavailable. The guild must have"
 " existed in the :attr:`Client.guilds` cache."
 msgstr ""
 
-#: ../../api/events.rst:555 c35fb39492e5426aa2d9ea96218afa36
+#: ../../api/events.rst:519 c35fb39492e5426aa2d9ea96218afa36
 msgid "The guild that has changed availability."
 msgstr ""
 
-#: ../../api/events.rst:560 6b348d1a6bcb4fd483811fb2f1f365d5
+#: ../../api/events.rst:524 6b348d1a6bcb4fd483811fb2f1f365d5
 msgid ""
 "Called whenever a webhook is created, modified, or removed from a guild "
 "channel."
 msgstr ""
 
-#: ../../api/events.rst:562 a4440117ae634b6681222e5129783348
+#: ../../api/events.rst:526 a4440117ae634b6681222e5129783348
 msgid "This requires :attr:`Intents.webhooks` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:564 e31dea0d4cf244af992bdf2f321a7013
+#: ../../api/events.rst:528 e31dea0d4cf244af992bdf2f321a7013
 msgid "The channel that had its webhooks updated."
 msgstr ""
 
-#: ../../api/events.rst:568 4c52e96a47324217a4defdba08ed9919
+#: ../../api/events.rst:532 4c52e96a47324217a4defdba08ed9919
 msgid "Integrations"
 msgstr ""
 
-#: ../../api/events.rst:571 a6000695a11241f1b80ace12ef5bd409
+#: ../../api/events.rst:535 a6000695a11241f1b80ace12ef5bd409
 msgid ""
 "Called whenever an integration is created, modified, or removed from a "
 "guild."
 msgstr ""
 
-#: ../../api/events.rst:573 ../../api/events.rst:584 ../../api/events.rst:595
-#: ../../api/events.rst:606 737a9cd4e70a4373a753fbdf4dff4b3b
-#: a5ca1990b43345bebb2c1cb83f07bb00 b5b38af536e54fbe8712c1ed8deb7547
-#: c2e1693b47554cf7945399623ff784b2
+#: ../../api/events.rst:537 ../../api/events.rst:548 ../../api/events.rst:559
+#: ../../api/events.rst:570 a5ca1990b43345bebb2c1cb83f07bb00
+#: b5b38af536e54fbe8712c1ed8deb7547
 msgid "This requires :attr:`Intents.integrations` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:577 7cd3123072c84da0b5786b9c2dceed48
+#: ../../api/events.rst:541 7cd3123072c84da0b5786b9c2dceed48
 msgid "The guild that had its integrations updated."
 msgstr ""
 
-#: ../../api/events.rst:582 c09a7f4e3d20488fa04c4baa6e222d0c
+#: ../../api/events.rst:546 c09a7f4e3d20488fa04c4baa6e222d0c
 msgid "Called when an integration is created."
 msgstr ""
 
-#: ../../api/events.rst:588 ../../api/events.rst:599
-#: 060f67ac9b304260a34915be922f68c1 7f9c50d99dd24e9fac1bc3fee804ca53
+#: ../../api/events.rst:552 ../../api/events.rst:563
+#: 7f9c50d99dd24e9fac1bc3fee804ca53
 msgid "The integration that was created."
 msgstr ""
 
-#: ../../api/events.rst:593 184033097d74474fb4d5a9e187a0eb1b
+#: ../../api/events.rst:557 184033097d74474fb4d5a9e187a0eb1b
 msgid "Called when an integration is updated."
 msgstr ""
 
-#: ../../api/events.rst:604 da531782f86c4b52b37c365448ee9f07
+#: ../../api/events.rst:568 da531782f86c4b52b37c365448ee9f07
 msgid "Called when an integration is deleted."
 msgstr ""
 
-#: ../../api/events.rst:614 cfb2b057b0c1472cb4d3eee5331ae7ae
+#: ../../api/events.rst:578 cfb2b057b0c1472cb4d3eee5331ae7ae
 msgid "Interactions"
 msgstr ""
 
-#: ../../api/events.rst:617 53db6b926a804818a95dc3ff07ce5e99
+#: ../../api/events.rst:581 53db6b926a804818a95dc3ff07ce5e99
 msgid "Called when an interaction happened."
 msgstr ""
 
-#: ../../api/events.rst:619 3ebdd96f98e9443a8d255dc81f17e869
+#: ../../api/events.rst:583 3ebdd96f98e9443a8d255dc81f17e869
 msgid ""
 "This currently happens due to application command invocations or "
 "components being used."
 msgstr ""
 
-#: ../../api/events.rst:623 2689cfaa9dd24275b9870faf19ad2f56
+#: ../../api/events.rst:587 2689cfaa9dd24275b9870faf19ad2f56
 msgid ""
 "This is a low level function that is not generally meant to be used. If "
 "you are working with components, consider using the callbacks associated "
@@ -838,234 +752,230 @@ msgid ""
 "experience."
 msgstr ""
 
-#: ../../api/events.rst:629 5036e83617bf4ba58f9fcb428bc0680d
+#: ../../api/events.rst:593 5036e83617bf4ba58f9fcb428bc0680d
 msgid "The interaction data."
 msgstr ""
 
-#: ../../api/events.rst:633 6973c117b78e4a2ebc6825aacb60698c
+#: ../../api/events.rst:597 6973c117b78e4a2ebc6825aacb60698c
 msgid "Invites"
 msgstr ""
 
-#: ../../api/events.rst:636 ae71ea8985fa469282da5f31bdaf7446
+#: ../../api/events.rst:600 ae71ea8985fa469282da5f31bdaf7446
 msgid ""
 "Called when an :class:`Invite` is created. You must have the "
 ":attr:`~Permissions.manage_channels` permission to receive this."
 msgstr ""
 
-#: ../../api/events.rst:643 ../../api/events.rst:660
-#: 812b6d18d5a946d9bf0784367bb3affd e9c28be70066461abdb827b38b467cff
+#: ../../api/events.rst:607 ../../api/events.rst:624
+#: 812b6d18d5a946d9bf0784367bb3affd
 msgid ""
 "There is a rare possibility that the :attr:`Invite.guild` and "
 ":attr:`Invite.channel` attributes will be of :class:`Object` rather than "
 "the respective models."
 msgstr ""
 
-#: ../../api/events.rst:646 ../../api/events.rst:666
-#: 3cf7be58f5b4432ca452bf28c48129e9 4dd28bae94dc48ccb43ad42ddf3c2eaf
+#: ../../api/events.rst:610 ../../api/events.rst:630
+#: 3cf7be58f5b4432ca452bf28c48129e9
 msgid "This requires :attr:`Intents.invites` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:648 088d046716804d73b129d0bf49e473bb
+#: ../../api/events.rst:612 088d046716804d73b129d0bf49e473bb
 msgid "The invite that was created."
 msgstr ""
 
-#: ../../api/events.rst:653 dab222e69c2c439887152238901a2947
+#: ../../api/events.rst:617 dab222e69c2c439887152238901a2947
 msgid ""
 "Called when an :class:`Invite` is deleted. You must have the "
 ":attr:`~Permissions.manage_channels` permission to receive this."
 msgstr ""
 
-#: ../../api/events.rst:663 1e05ea8a6a2444f7b38051ea5441c228
+#: ../../api/events.rst:627 1e05ea8a6a2444f7b38051ea5441c228
 msgid ""
 "Outside of those two attributes, the only other attribute guaranteed to "
 "be filled by the Discord gateway for this event is :attr:`Invite.code`."
 msgstr ""
 
-#: ../../api/events.rst:668 2af6321a181640749c67d39cf154ad77
+#: ../../api/events.rst:632 2af6321a181640749c67d39cf154ad77
 msgid "The invite that was deleted."
 msgstr ""
 
-#: ../../api/events.rst:672 cc2adb6fe784475a94c0c0e32b9bac4c
+#: ../../api/events.rst:636 cc2adb6fe784475a94c0c0e32b9bac4c
 msgid "Members/Users"
 msgstr ""
 
-#: ../../api/events.rst:675 59e3a422d23b4ebe987e2ae3ec18c6dc
+#: ../../api/events.rst:639 59e3a422d23b4ebe987e2ae3ec18c6dc
 msgid "Called when a :class:`Member` joins a :class:`Guild`."
 msgstr ""
 
-#: ../../api/events.rst:677 ../../api/events.rst:690 ../../api/events.rst:701
-#: ../../api/events.rst:720 ../../api/events.rst:776 ../../api/events.rst:1267
-#: ../../api/events.rst:1280 0608221e23ac498eb93feba2e0df9730
-#: 245dfa13ed9940cb9f9e97069c816268 571a0224eed04afca25ceb6fe779b727
-#: 8c500bf67b4947efbccd591b47e807d3 ac04b1a2a0c4454d82d101ecb00a6bc0
-#: b77f2bddd083470aabb9f69a1aa4df63 c267ed1dfc214c44b6f071d6284d0d90
+#: ../../api/events.rst:641 ../../api/events.rst:654 ../../api/events.rst:665
+#: ../../api/events.rst:684 ../../api/events.rst:740 ../../api/events.rst:1303
+#: ../../api/events.rst:1316 8c500bf67b4947efbccd591b47e807d3
 msgid "This requires :attr:`Intents.members` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:679 51b1cf557f3b4b28a31d47b008c958e5
+#: ../../api/events.rst:643 51b1cf557f3b4b28a31d47b008c958e5
 msgid "The member who joined."
 msgstr ""
 
-#: ../../api/events.rst:684 4bdb0182507c45c8b03ae52c0d7fe188
+#: ../../api/events.rst:648 4bdb0182507c45c8b03ae52c0d7fe188
 msgid "Called when a :class:`Member` leaves a :class:`Guild`."
 msgstr ""
 
-#: ../../api/events.rst:686 659720c167f64e42b9d9d1052d9709a6
+#: ../../api/events.rst:650 659720c167f64e42b9d9d1052d9709a6
 msgid ""
 "If the guild or member could not be found in the internal cache, this "
 "event will not be called. Alternatively, :func:`on_raw_member_remove` is "
 "called regardless of the internal cache."
 msgstr ""
 
-#: ../../api/events.rst:692 3fd5f443082f4f50ab9d14d965e5906c
+#: ../../api/events.rst:656 3fd5f443082f4f50ab9d14d965e5906c
 msgid "The member who left."
 msgstr ""
 
-#: ../../api/events.rst:697 bfd4357c25b649b89eb3bf3b2f0cc0c6
+#: ../../api/events.rst:661 bfd4357c25b649b89eb3bf3b2f0cc0c6
 msgid ""
 "Called when a :class:`Member` leaves a :class:`Guild`. Unlike "
 ":func:`on_member_remove`, this is called regardless of the state of the "
 "internal member cache."
 msgstr ""
 
-#: ../../api/events.rst:710 72cf960892384ef2a30c0f88ed9d2050
+#: ../../api/events.rst:674 72cf960892384ef2a30c0f88ed9d2050
 msgid "Called when a :class:`Member` updates their profile."
 msgstr ""
 
-#: ../../api/events.rst:712 ../../api/events.rst:731 ../../api/events.rst:769
-#: 94033025616b4076bd1cd69dbccbce65 9c0d0062f4524f09afc01922b6880478
-#: df7654b2971a4c8cb816e6a4cb412282
+#: ../../api/events.rst:676 ../../api/events.rst:695 ../../api/events.rst:733
+#: 9c0d0062f4524f09afc01922b6880478
 msgid "This is called when one or more of the following things change:"
 msgstr ""
 
-#: ../../api/events.rst:714 636b715442114d74b10fffcb5ea1f423
+#: ../../api/events.rst:678 636b715442114d74b10fffcb5ea1f423
 msgid "nickname"
 msgstr ""
 
-#: ../../api/events.rst:715 72c18648ea0441579e75a0809dda2be0
+#: ../../api/events.rst:679 72c18648ea0441579e75a0809dda2be0
 msgid "roles"
 msgstr ""
 
-#: ../../api/events.rst:716 32412ad2806a4c19a0b79bd9de971467
+#: ../../api/events.rst:680 32412ad2806a4c19a0b79bd9de971467
 msgid "pending"
 msgstr ""
 
-#: ../../api/events.rst:717 23c7215831354f6eaa85e8cfa1a70f3e
+#: ../../api/events.rst:681 23c7215831354f6eaa85e8cfa1a70f3e
 msgid "communication_disabled_until"
 msgstr ""
 
-#: ../../api/events.rst:718 dfb5abcb569a43c7acb95e5da9c81b39
+#: ../../api/events.rst:682 dfb5abcb569a43c7acb95e5da9c81b39
 msgid "timed_out"
 msgstr ""
 
-#: ../../api/events.rst:722 ../../api/events.rst:740
-#: 3c202860a49f49fe90fce486a871deb3 725047654176421eb19576468343096f
+#: ../../api/events.rst:686 ../../api/events.rst:704
+#: 725047654176421eb19576468343096f
 msgid "The updated member's old info."
 msgstr ""
 
-#: ../../api/events.rst:724 ../../api/events.rst:742
-#: 4a04609fc50046328661598fbb671487 efbf85ad83644356bf043efa7cd58731
+#: ../../api/events.rst:688 ../../api/events.rst:706
+#: 4a04609fc50046328661598fbb671487
 msgid "The updated member's updated info."
 msgstr ""
 
-#: ../../api/events.rst:729 1dee8a81bb94444cb7bc2ddf2fab5117
+#: ../../api/events.rst:693 1dee8a81bb94444cb7bc2ddf2fab5117
 msgid "Called when a :class:`Member` updates their presence."
 msgstr ""
 
-#: ../../api/events.rst:733 1a275606817640eb8e06ee192f0f607b
+#: ../../api/events.rst:697 1a275606817640eb8e06ee192f0f607b
 msgid "status"
 msgstr ""
 
-#: ../../api/events.rst:734 9f977430a74e4863afee82b21fcbf311
+#: ../../api/events.rst:698 9f977430a74e4863afee82b21fcbf311
 msgid "activity"
 msgstr ""
 
-#: ../../api/events.rst:736 765cb25bca1e473d8f12775b7c880b4f
+#: ../../api/events.rst:700 765cb25bca1e473d8f12775b7c880b4f
 msgid ""
 "This requires :attr:`Intents.presences` and :attr:`Intents.members` to be"
 " enabled."
 msgstr ""
 
-#: ../../api/events.rst:747 a4a83d5acfa848f298585ef71e363a26
+#: ../../api/events.rst:711 a4a83d5acfa848f298585ef71e363a26
 msgid "Called when a :class:`Member` changes their :class:`VoiceState`."
 msgstr ""
 
-#: ../../api/events.rst:749 ../../api/events.rst:1177
-#: 0c77a95ffd774442b4de3a3305b391f4 79633923465b40b68645223137732d3e
+#: ../../api/events.rst:713 ../../api/events.rst:1213
+#: 0c77a95ffd774442b4de3a3305b391f4
 msgid ""
 "The following, but not limited to, examples illustrate when this event is"
 " called:"
 msgstr ""
 
-#: ../../api/events.rst:751 2bdb0897344a4989a02198ce2b493750
+#: ../../api/events.rst:715 2bdb0897344a4989a02198ce2b493750
 msgid "A member joins a voice or stage channel."
 msgstr ""
 
-#: ../../api/events.rst:752 a2d0ec0a66f44b798dbfdf16e54cf5f4
+#: ../../api/events.rst:716 a2d0ec0a66f44b798dbfdf16e54cf5f4
 msgid "A member leaves a voice or stage channel."
 msgstr ""
 
-#: ../../api/events.rst:753 906d40a6e6c54fa48a691ea0742aefcd
+#: ../../api/events.rst:717 906d40a6e6c54fa48a691ea0742aefcd
 msgid "A member is muted or deafened by their own accord."
 msgstr ""
 
-#: ../../api/events.rst:754 bae40f0b39be405a95122a36592e4a53
+#: ../../api/events.rst:718 bae40f0b39be405a95122a36592e4a53
 msgid "A member is muted or deafened by a guild administrator."
 msgstr ""
 
-#: ../../api/events.rst:756 1c7f2baeafaf4301bfd220ebeb3936ea
+#: ../../api/events.rst:720 1c7f2baeafaf4301bfd220ebeb3936ea
 msgid "This requires :attr:`Intents.voice_states` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:758 0da0ec4c5bc04aaab41c2ad70e357a81
+#: ../../api/events.rst:722 0da0ec4c5bc04aaab41c2ad70e357a81
 msgid "The member whose voice states changed."
 msgstr ""
 
-#: ../../api/events.rst:760 3b6875267fcb48fea947ebbc069ac8e3
+#: ../../api/events.rst:724 3b6875267fcb48fea947ebbc069ac8e3
 msgid "The voice state prior to the changes."
 msgstr ""
 
-#: ../../api/events.rst:762 88099f60004742219109afd6e44eadff
+#: ../../api/events.rst:726 88099f60004742219109afd6e44eadff
 msgid "The voice state after the changes."
 msgstr ""
 
-#: ../../api/events.rst:767 525d8057d8ac440b9f12215a99861567
+#: ../../api/events.rst:731 525d8057d8ac440b9f12215a99861567
 msgid "Called when a :class:`User` updates their profile."
 msgstr ""
 
-#: ../../api/events.rst:771 f8f87a7c98ed4b2f928b30556b4fa7b7
+#: ../../api/events.rst:735 f8f87a7c98ed4b2f928b30556b4fa7b7
 msgid "avatar"
 msgstr ""
 
-#: ../../api/events.rst:772 599d96b1a33b4f199c8d33b53feb03be
+#: ../../api/events.rst:736 599d96b1a33b4f199c8d33b53feb03be
 msgid "username"
 msgstr ""
 
-#: ../../api/events.rst:773 e0ee257c4fb84b0d9c81e54f1137853d
+#: ../../api/events.rst:737 e0ee257c4fb84b0d9c81e54f1137853d
 msgid "discriminator"
 msgstr ""
 
-#: ../../api/events.rst:774 32ad7813f11149efa7fa506c96845ed4
+#: ../../api/events.rst:738 32ad7813f11149efa7fa506c96845ed4
 msgid "global_name"
 msgstr ""
 
-#: ../../api/events.rst:778 b7fa74d14bdc43d68246734145009b99
+#: ../../api/events.rst:742 b7fa74d14bdc43d68246734145009b99
 msgid "The updated user's old info."
 msgstr ""
 
-#: ../../api/events.rst:780 9ba6bc5b6bbb4eaea29046092573c451
+#: ../../api/events.rst:744 9ba6bc5b6bbb4eaea29046092573c451
 msgid "The updated user's updated info."
 msgstr ""
 
-#: ../../api/events.rst:784 7abff70b9dca4670aa6d4733ba79f565
+#: ../../api/events.rst:748 7abff70b9dca4670aa6d4733ba79f565
 msgid "Messages"
 msgstr ""
 
-#: ../../api/events.rst:787 82baa07e4f7c4be7b944e0382240ef7e
+#: ../../api/events.rst:751 82baa07e4f7c4be7b944e0382240ef7e
 msgid "Called when a :class:`Message` is created and sent."
 msgstr ""
 
-#: ../../api/events.rst:793 e221d3668fa64676b963ba741fcd5174
+#: ../../api/events.rst:757 e221d3668fa64676b963ba741fcd5174
 msgid ""
 "Your bot's own messages and private messages are sent through this event."
 " This can lead cases of 'recursion' depending on how your bot was "
@@ -1074,11 +984,11 @@ msgid ""
 "problem."
 msgstr ""
 
-#: ../../api/events.rst:799 192f3d3b79e047c4b51ec51f981e33b7
+#: ../../api/events.rst:763 192f3d3b79e047c4b51ec51f981e33b7
 msgid "The current message."
 msgstr ""
 
-#: ../../api/events.rst:804 7b25830b67764d73a3031060cc579689
+#: ../../api/events.rst:768 7b25830b67764d73a3031060cc579689
 msgid ""
 "Called when a message is deleted. If the message is not found in the "
 "internal message cache, then this event will not be called. Messages "
@@ -1086,17 +996,17 @@ msgid ""
 "participating in high traffic guilds."
 msgstr ""
 
-#: ../../api/events.rst:809 ad4a7fb8f74444bb8d146c990732bb91
+#: ../../api/events.rst:773 ad4a7fb8f74444bb8d146c990732bb91
 msgid ""
 "If this occurs increase the :class:`max_messages <Client>` parameter or "
 "use the :func:`on_raw_message_delete` event instead."
 msgstr ""
 
-#: ../../api/events.rst:814 a428153671394c76966c2a2f9024abcf
+#: ../../api/events.rst:778 a428153671394c76966c2a2f9024abcf
 msgid "The deleted message."
 msgstr ""
 
-#: ../../api/events.rst:819 095b22a1f2f24220ac745a7a4fdc391c
+#: ../../api/events.rst:783 095b22a1f2f24220ac745a7a4fdc391c
 msgid ""
 "Called when messages are bulk deleted. If none of the messages deleted "
 "are found in the internal message cache, then this event will not be "
@@ -1107,43 +1017,43 @@ msgid ""
 "guilds."
 msgstr ""
 
-#: ../../api/events.rst:826 26e2709b7f5540ec85c1bb0c0a606eb3
+#: ../../api/events.rst:790 26e2709b7f5540ec85c1bb0c0a606eb3
 msgid ""
 "If this occurs increase the :class:`max_messages <Client>` parameter or "
 "use the :func:`on_raw_bulk_message_delete` event instead."
 msgstr ""
 
-#: ../../api/events.rst:831 9ce00566593447c492ca1278f8511426
+#: ../../api/events.rst:795 9ce00566593447c492ca1278f8511426
 msgid "The messages that have been deleted."
 msgstr ""
 
-#: ../../api/events.rst:836 10a8f337e50f4b8d898d4a2a2d6d795e
+#: ../../api/events.rst:800 10a8f337e50f4b8d898d4a2a2d6d795e
 msgid ""
 "Called when a message is deleted. Unlike :func:`on_message_delete`, this "
 "is called regardless of the message being in the internal message cache "
 "or not."
 msgstr ""
 
-#: ../../api/events.rst:839 acf2103910fa49ef84cc4b32ec70ca78
+#: ../../api/events.rst:803 acf2103910fa49ef84cc4b32ec70ca78
 msgid ""
 "If the message is found in the message cache, it can be accessed via "
 ":attr:`RawMessageDeleteEvent.cached_message`"
 msgstr ""
 
-#: ../../api/events.rst:849 2bd4db8e59954989bcbf5cb1e022bff5
+#: ../../api/events.rst:813 2bd4db8e59954989bcbf5cb1e022bff5
 msgid ""
 "Called when a bulk delete is triggered. Unlike "
 ":func:`on_bulk_message_delete`, this is called regardless of the messages"
 " being in the internal message cache or not."
 msgstr ""
 
-#: ../../api/events.rst:852 5852b5d52c9e40adbf768b1102728e63
+#: ../../api/events.rst:816 5852b5d52c9e40adbf768b1102728e63
 msgid ""
 "If the messages are found in the message cache, they can be accessed via "
 ":attr:`RawBulkMessageDeleteEvent.cached_messages`"
 msgstr ""
 
-#: ../../api/events.rst:862 bf594df6bb134ca5ac6e7b608cd5b09e
+#: ../../api/events.rst:826 bf594df6bb134ca5ac6e7b608cd5b09e
 msgid ""
 "Called when a :class:`Message` receives an update event. If the message "
 "is not found in the internal message cache, then these events will not be"
@@ -1151,61 +1061,61 @@ msgid ""
 "client is participating in high traffic guilds."
 msgstr ""
 
-#: ../../api/events.rst:867 2824fa05ca1a4c06892fcc7588ddd6d8
+#: ../../api/events.rst:831 2824fa05ca1a4c06892fcc7588ddd6d8
 msgid ""
 "If this occurs increase the :class:`max_messages <Client>` parameter or "
 "use the :func:`on_raw_message_edit` event instead."
 msgstr ""
 
-#: ../../api/events.rst:870 9335cc2da527455584f33d3799b39d7d
+#: ../../api/events.rst:834 9335cc2da527455584f33d3799b39d7d
 msgid "The following non-exhaustive cases trigger this event:"
 msgstr ""
 
-#: ../../api/events.rst:872 53861c9cc0f64565af31bcc8356d1596
+#: ../../api/events.rst:836 53861c9cc0f64565af31bcc8356d1596
 msgid "A message has been pinned or unpinned."
 msgstr ""
 
-#: ../../api/events.rst:873 308d8ed1000e42cf94bd6253c7eee766
+#: ../../api/events.rst:837 308d8ed1000e42cf94bd6253c7eee766
 msgid "The message content has been changed."
 msgstr ""
 
-#: ../../api/events.rst:874 066a5520d3c14022b153532fb10de9ca
+#: ../../api/events.rst:838 066a5520d3c14022b153532fb10de9ca
 msgid "The message has received an embed."
 msgstr ""
 
-#: ../../api/events.rst:876 0af62deae9b743988d34523a50c3d13a
+#: ../../api/events.rst:840 0af62deae9b743988d34523a50c3d13a
 msgid ""
 "For performance reasons, the embed server does not do this in a "
 "\"consistent\" manner."
 msgstr ""
 
-#: ../../api/events.rst:878 b0864434abef4d4f9c3b7fb53099a72e
+#: ../../api/events.rst:842 b0864434abef4d4f9c3b7fb53099a72e
 msgid "The message's embeds were suppressed or unsuppressed."
 msgstr ""
 
-#: ../../api/events.rst:879 0f327a0f417a439eab5204a3f58142bb
+#: ../../api/events.rst:843 0f327a0f417a439eab5204a3f58142bb
 msgid "A call message has received an update to its participants or ending time."
 msgstr ""
 
-#: ../../api/events.rst:880 497e563c063242e7b911450f5531d398
+#: ../../api/events.rst:844 497e563c063242e7b911450f5531d398
 msgid "A poll has ended and the results have been finalized."
 msgstr ""
 
-#: ../../api/events.rst:884 d43cb6b0601a480684fa45bddbf78ded
+#: ../../api/events.rst:848 d43cb6b0601a480684fa45bddbf78ded
 msgid "The previous version of the message."
 msgstr ""
 
-#: ../../api/events.rst:886 7a7d3bc5be514a42acadd0236c90968a
+#: ../../api/events.rst:850 7a7d3bc5be514a42acadd0236c90968a
 msgid "The current version of the message."
 msgstr ""
 
-#: ../../api/events.rst:891 dd5375656537461f878930425fd44d9e
+#: ../../api/events.rst:855 dd5375656537461f878930425fd44d9e
 msgid ""
 "Called when a message is edited. Unlike :func:`on_message_edit`, this is "
 "called regardless of the state of the internal message cache."
 msgstr ""
 
-#: ../../api/events.rst:894 acb34759c383410297e89a9ab9014412
+#: ../../api/events.rst:858 acb34759c383410297e89a9ab9014412
 msgid ""
 "If the message is found in the message cache, it can be accessed via "
 ":attr:`RawMessageUpdateEvent.cached_message`. The cached message "
@@ -1217,14 +1127,14 @@ msgid ""
 "was modified."
 msgstr ""
 
-#: ../../api/events.rst:900 ae06f1f32c284364a9fcc8766cd567cc
+#: ../../api/events.rst:864 ae06f1f32c284364a9fcc8766cd567cc
 msgid ""
 "Due to the inherently raw nature of this event, the data parameter "
 "coincides with the raw data given by the `gateway "
 "<https://discord.com/developers/docs/topics/gateway#message-update>`_."
 msgstr ""
 
-#: ../../api/events.rst:903 7c877ddff3c948babea4b56c5855c106
+#: ../../api/events.rst:867 7c877ddff3c948babea4b56c5855c106
 msgid ""
 "Since the data payload can be partial, care must be taken when accessing "
 "stuff in the dictionary. One example of a common case of partial data is "
@@ -1233,11 +1143,11 @@ msgid ""
 "Discord embed server."
 msgstr ""
 
-#: ../../api/events.rst:914 407e56cbd8894cc7bfead844affa902e
+#: ../../api/events.rst:878 407e56cbd8894cc7bfead844affa902e
 msgid "Polls"
 msgstr ""
 
-#: ../../api/events.rst:917 a9b8e9767e884d369172fb6ab1841177
+#: ../../api/events.rst:881 a9b8e9767e884d369172fb6ab1841177
 msgid ""
 "Called when a vote is cast on a poll. If multiple answers were selected, "
 "this fires multiple times. if the poll was not found in the internal poll"
@@ -1245,34 +1155,32 @@ msgid ""
 ":func:`on_raw_poll_vote_add` instead."
 msgstr ""
 
-#: ../../api/events.rst:921 ../../api/events.rst:935 ../../api/events.rst:946
-#: ../../api/events.rst:960 91c503e67e4742a392a6f3e5e71708ec
-#: b162b13f9b5b4acd8b928cdf76d398af cf97ca5ad27a4e5fbbe4f583cc89dc60
-#: e8a3023c3c93418e9c82cb67372f1bf7
+#: ../../api/events.rst:885 ../../api/events.rst:899 ../../api/events.rst:910
+#: ../../api/events.rst:924 cf97ca5ad27a4e5fbbe4f583cc89dc60
 msgid "This requires :attr:`Intents.polls` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:923 ../../api/events.rst:948
-#: 258ead003f2243f494b187adccae34fa ff747bd5556c4a8d9167ea03a335f344
+#: ../../api/events.rst:887 ../../api/events.rst:912
+#: 258ead003f2243f494b187adccae34fa
 msgid "The current state of the poll."
 msgstr ""
 
-#: ../../api/events.rst:925 57e5c2cd8fde48a285c0585219a834ef
+#: ../../api/events.rst:889 57e5c2cd8fde48a285c0585219a834ef
 msgid "The user who added the vote."
 msgstr ""
 
-#: ../../api/events.rst:927 ../../api/events.rst:952
-#: 90a34ed5976846189bfc2190e990abdf b9bc568e4f2143f2b176e85afef48e8e
+#: ../../api/events.rst:891 ../../api/events.rst:916
+#: 90a34ed5976846189bfc2190e990abdf
 msgid "The answer that was voted."
 msgstr ""
 
-#: ../../api/events.rst:932 ee4f3182cf624af0b171db60500aa13a
+#: ../../api/events.rst:896 ee4f3182cf624af0b171db60500aa13a
 msgid ""
 "Called when a vote is cast on a poll. Unlike :func:`on_poll_vote_add`, "
 "this is called regardless of the state of the internal poll cache."
 msgstr ""
 
-#: ../../api/events.rst:942 8d2b824eaf98481c961139a209dd3b16
+#: ../../api/events.rst:906 8d2b824eaf98481c961139a209dd3b16
 msgid ""
 "Called when a vote is removed from a poll. If multiple answers were "
 "removed, this fires multiple times. if the poll is not found in the "
@@ -1280,22 +1188,22 @@ msgid ""
 ":func:`on_raw_poll_vote_remove` instead."
 msgstr ""
 
-#: ../../api/events.rst:950 5f583e96e69c4434b86aa5855a38a645
+#: ../../api/events.rst:914 5f583e96e69c4434b86aa5855a38a645
 msgid "The user who removed the vote."
 msgstr ""
 
-#: ../../api/events.rst:957 5679d90e3b9043f8824042c0a86c634b
+#: ../../api/events.rst:921 5679d90e3b9043f8824042c0a86c634b
 msgid ""
 "Called when a vote is removed from a poll. Unlike "
 ":func:`on_poll_vote_remove`, this is called regardless of the state of "
 "the internal message cache."
 msgstr ""
 
-#: ../../api/events.rst:966 1e6beea08c6545e1956f072b67cf94c0
+#: ../../api/events.rst:930 1e6beea08c6545e1956f072b67cf94c0
 msgid "Reactions"
 msgstr ""
 
-#: ../../api/events.rst:969 2259c8a34d124723a84253786909f8d4
+#: ../../api/events.rst:933 2259c8a34d124723a84253786909f8d4
 msgid ""
 "Called when a message has a reaction added to it. Similar to "
 ":func:`on_message_edit`, if the message is not found in the internal "
@@ -1303,23 +1211,20 @@ msgid ""
 ":func:`on_raw_reaction_add` instead."
 msgstr ""
 
-#: ../../api/events.rst:975 0c4a10e8c65043cb8ad5b2aa8740c0f9
+#: ../../api/events.rst:939 0c4a10e8c65043cb8ad5b2aa8740c0f9
 msgid ""
 "To get the :class:`Message` being reacted, access it via "
 ":attr:`Reaction.message`."
 msgstr ""
 
-#: ../../api/events.rst:977 ../../api/events.rst:997 ../../api/events.rst:1029
-#: ../../api/events.rst:1040 ../../api/events.rst:1052
-#: ../../api/events.rst:1063 ../../api/events.rst:1075
-#: 05cf2a3105064224935b6fc52c104a8b 3ae12ea3aa9e49c29f89238dd55ad89d
-#: 71824a77e84c432daeeb45c809a4cf3d 8b747aaeeaa54dbaa2bb43a1cacfb4a4
-#: d254e7018b894d5da0d9ab3310487581 dcf7eda8ed0e407aaabc8a42264dd252
-#: e903959ba860442bacb9dbb7455787a1
+#: ../../api/events.rst:941 ../../api/events.rst:961 ../../api/events.rst:993
+#: ../../api/events.rst:1004 ../../api/events.rst:1016
+#: ../../api/events.rst:1027 ../../api/events.rst:1039
+#: d254e7018b894d5da0d9ab3310487581
 msgid "This requires :attr:`Intents.reactions` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:981 ba7506ec538a430493d6a2010d86c710
+#: ../../api/events.rst:945 ba7506ec538a430493d6a2010d86c710
 msgid ""
 "This doesn't require :attr:`Intents.members` within a guild context, but "
 "due to Discord not providing updated user information in a direct message"
@@ -1328,54 +1233,54 @@ msgid ""
 " enable the members intent."
 msgstr ""
 
-#: ../../api/events.rst:987 ../../api/events.rst:1019
-#: 09d780eee4834c02bccf9c957d6a8cf6 367f92343bc64207970e6a72c687716d
+#: ../../api/events.rst:951 ../../api/events.rst:983
+#: 367f92343bc64207970e6a72c687716d
 msgid "The current state of the reaction."
 msgstr ""
 
-#: ../../api/events.rst:989 ../../api/events.rst:1021
-#: 6e25ca528d3649428e675864d9383bf7 b19a600ee7604f58ae7c7dae8826a694
+#: ../../api/events.rst:953 ../../api/events.rst:985
+#: b19a600ee7604f58ae7c7dae8826a694
 msgid "The user who added the reaction."
 msgstr ""
 
-#: ../../api/events.rst:994 c55e19feffcb41368d0fc845e8ae8880
+#: ../../api/events.rst:958 c55e19feffcb41368d0fc845e8ae8880
 msgid ""
 "Called when a message has a reaction added. Unlike "
 ":func:`on_reaction_add`, this is called regardless of the state of the "
 "internal message cache."
 msgstr ""
 
-#: ../../api/events.rst:1004 fc5f26cb8154484282163f3be1d72ecb
+#: ../../api/events.rst:968 fc5f26cb8154484282163f3be1d72ecb
 msgid ""
 "Called when a message has a reaction removed from it. Similar to "
 "on_message_edit, if the message is not found in the internal message "
 "cache, then this event will not be called."
 msgstr ""
 
-#: ../../api/events.rst:1010 602b41b73b974da69daf8f4af20d682b
+#: ../../api/events.rst:974 602b41b73b974da69daf8f4af20d682b
 msgid "To get the message being reacted, access it via :attr:`Reaction.message`."
 msgstr ""
 
-#: ../../api/events.rst:1012 f0e3d9f9640149579db72c4d79b4b9b7
+#: ../../api/events.rst:976 f0e3d9f9640149579db72c4d79b4b9b7
 msgid ""
 "This requires both :attr:`Intents.reactions` and :attr:`Intents.members` "
 "to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:1016 3e9d3eacd60d4aa38b1c604cfbc3af0c
+#: ../../api/events.rst:980 3e9d3eacd60d4aa38b1c604cfbc3af0c
 msgid ""
 "Consider using :func:`on_raw_reaction_remove` if you need this and do not"
 " want to enable the members intent."
 msgstr ""
 
-#: ../../api/events.rst:1026 adb3323cef574cb280e6fcadbcd9d1cf
+#: ../../api/events.rst:990 adb3323cef574cb280e6fcadbcd9d1cf
 msgid ""
 "Called when a message has a reaction removed. Unlike "
 ":func:`on_reaction_remove`, this is called regardless of the state of the"
 " internal message cache."
 msgstr ""
 
-#: ../../api/events.rst:1036 9487bf16e1d148c6918cc08f09685396
+#: ../../api/events.rst:1000 9487bf16e1d148c6918cc08f09685396
 msgid ""
 "Called when a message has all its reactions removed from it. Similar to "
 ":func:`on_message_edit`, if the message is not found in the internal "
@@ -1383,22 +1288,22 @@ msgid ""
 ":func:`on_raw_reaction_clear` instead."
 msgstr ""
 
-#: ../../api/events.rst:1042 957dda2d335345a6a9873f634958c021
+#: ../../api/events.rst:1006 957dda2d335345a6a9873f634958c021
 msgid "The message that had its reactions cleared."
 msgstr ""
 
-#: ../../api/events.rst:1044 07322cdc6b664f13af8dca1e2b91081b
+#: ../../api/events.rst:1008 07322cdc6b664f13af8dca1e2b91081b
 msgid "The reactions that were removed."
 msgstr ""
 
-#: ../../api/events.rst:1049 0e10554d194944c49499801e107242a0
+#: ../../api/events.rst:1013 0e10554d194944c49499801e107242a0
 msgid ""
 "Called when a message has all its reactions removed. Unlike "
 ":func:`on_reaction_clear`, this is called regardless of the state of the "
 "internal message cache."
 msgstr ""
 
-#: ../../api/events.rst:1059 a2e41cfa30e1418aa393c0cf0d1858f8
+#: ../../api/events.rst:1023 a2e41cfa30e1418aa393c0cf0d1858f8
 msgid ""
 "Called when a message has a specific reaction removed from it. Similar to"
 " :func:`on_message_edit`, if the message is not found in the internal "
@@ -1406,171 +1311,250 @@ msgid ""
 ":func:`on_raw_reaction_clear_emoji` instead."
 msgstr ""
 
-#: ../../api/events.rst:1067 dfa4f0b46a1048fb9196d4cab53e7e96
+#: ../../api/events.rst:1031 dfa4f0b46a1048fb9196d4cab53e7e96
 msgid "The reaction that got cleared."
 msgstr ""
 
-#: ../../api/events.rst:1072 fa250169bf22484892b7b04838eb6a62
+#: ../../api/events.rst:1036 fa250169bf22484892b7b04838eb6a62
 msgid ""
 "Called when a message has a specific reaction removed from it. Unlike "
 ":func:`on_reaction_clear_emoji` this is called regardless of the state of"
 " the internal message cache."
 msgstr ""
 
-#: ../../api/events.rst:1083 35ea4a4f51b14096be194c1b45b9980e
+#: ../../api/events.rst:1047 4c52e96a47324217a4defdba08ed9919
+msgid "Monetization"
+msgstr ""
+
+#: ../../api/events.rst:1050 c4bda84ba80d4f6b82e53d44e2704b60
+msgid "Called when a user subscribes to an SKU."
+msgstr ""
+
+#: ../../api/events.rst:1054 ec2ef743271140fca72f11b8f28b55f2
+msgid "The entitlement that was created as a result of the subscription."
+msgstr ""
+
+#: ../../api/events.rst:1059 072d6e76c4bb492ebf7fc48e64a58def
+msgid "Called when a user's subscription to an Entitlement is cancelled."
+msgstr ""
+
+#: ../../api/events.rst:1065 0e5c7574cf1641eb92588ee42cf949c8
+msgid ""
+"Before October 1, 2024, this event was called when a user's subscription "
+"was renewed."
+msgstr ""
+
+#: ../../api/events.rst:1067 438a722423d44ce8914d0be34b1600cb
+msgid ""
+"Entitlements that no longer follow this behavior will have a type of "
+":attr:`EntitlementType.purchase`. Those that follow the old behavior will"
+" have a type of :attr:`EntitlementType.application_subscription`."
+msgstr ""
+
+#: ../../api/events.rst:1070 0a0768b592be40a89c28b086a2229aa1
+msgid ""
+"`See the Discord changelog. <https://discord.com/developers/docs/change-"
+"log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
+msgstr ""
+
+#: ../../api/events.rst:1072 79720b0dadf04f179a625168706790b9
+msgid "The entitlement that was updated."
+msgstr ""
+
+#: ../../api/events.rst:1077 1d13e1996ca641bcb26d6179d19e09e7
+msgid "Called when a user's entitlement is deleted."
+msgstr ""
+
+#: ../../api/events.rst:1079 3b910d98ee1b441498f2613151a00f70
+msgid ""
+"Entitlements are usually only deleted when Discord issues a refund for a "
+"subscription, or manually removes an entitlement from a user."
+msgstr ""
+
+#: ../../api/events.rst:1084 bf621f37de124bcbb5cce9859564f2d1
+msgid "This is not called when a user's subscription is cancelled."
+msgstr ""
+
+#: ../../api/events.rst:1088 9dbb179c32b54a398dc87524d5bbaef8
+msgid "The entitlement that was deleted."
+msgstr ""
+
+#: ../../api/events.rst:1093 070a63745b6849fbbeab2bf0a1b4e515
+msgid "Called when a subscription is created for the application."
+msgstr ""
+
+#: ../../api/events.rst:1097 7f9c50d99dd24e9fac1bc3fee804ca53
+msgid "The subscription that was created."
+msgstr ""
+
+#: ../../api/events.rst:1102 0e3eb0e978f147ee8ac9f2ad8b364954
+msgid ""
+"Called when a subscription has been updated. This could be a renewal, "
+"cancellation, or other payment related update."
+msgstr ""
+
+#: ../../api/events.rst:1106 7f9c50d99dd24e9fac1bc3fee804ca53
+msgid "The subscription that was updated."
+msgstr ""
+
+#: ../../api/events.rst:1111 da531782f86c4b52b37c365448ee9f07
+msgid "Called when a subscription has been deleted."
+msgstr ""
+
+#: ../../api/events.rst:1115 7f9c50d99dd24e9fac1bc3fee804ca53
+msgid "The subscription that was deleted."
+msgstr ""
+
+#: ../../api/events.rst:1119 35ea4a4f51b14096be194c1b45b9980e
 msgid "Scheduled Events"
 msgstr ""
 
-#: ../../api/events.rst:1086 92289345aa99456e8fccb0d2bedcc037
+#: ../../api/events.rst:1122 92289345aa99456e8fccb0d2bedcc037
 msgid "Called when an :class:`ScheduledEvent` is created."
 msgstr ""
 
-#: ../../api/events.rst:1088 ../../api/events.rst:1097
-#: ../../api/events.rst:1108 ../../api/events.rst:1119
-#: ../../api/events.rst:1132 ../../api/events.rst:1143
-#: ../../api/events.rst:1156 2fd67e22f8f24a24a4f09f34a9e9d221
-#: 397fd90fe30649a59c540215efdd33f2 5d2d9f01bc57458b94256b5aaae996bc
-#: 9262461979874e4ba80b732bd9128414 d1665efce5a24edea7b9f156c11971dc
-#: e0576265fd4140f3a91040bbb9245078 f1a230d4368d427a8aa0254e2144a131
+#: ../../api/events.rst:1124 ../../api/events.rst:1133
+#: ../../api/events.rst:1144 ../../api/events.rst:1155
+#: ../../api/events.rst:1168 ../../api/events.rst:1179
+#: ../../api/events.rst:1192 397fd90fe30649a59c540215efdd33f2
 msgid "This requires :attr:`Intents.scheduled_events` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:1090 df55f40708a14557bca10e280cadffcd
+#: ../../api/events.rst:1126 df55f40708a14557bca10e280cadffcd
 msgid "The newly created scheduled event."
 msgstr ""
 
-#: ../../api/events.rst:1095 3003cf8ca0d9419d9d22b0f170953af8
+#: ../../api/events.rst:1131 3003cf8ca0d9419d9d22b0f170953af8
 msgid "Called when a scheduled event is updated."
 msgstr ""
 
-#: ../../api/events.rst:1099 f4adbcfb52fd47f483e7dcff7ef80d89
+#: ../../api/events.rst:1135 f4adbcfb52fd47f483e7dcff7ef80d89
 msgid "The old scheduled event."
 msgstr ""
 
-#: ../../api/events.rst:1101 dd0e692f4c5a4846b85c3503724118c9
+#: ../../api/events.rst:1137 dd0e692f4c5a4846b85c3503724118c9
 msgid "The updated scheduled event."
 msgstr ""
 
-#: ../../api/events.rst:1106 a5186e52c5b5474589a4e4fce901f851
+#: ../../api/events.rst:1142 a5186e52c5b5474589a4e4fce901f851
 msgid "Called when a scheduled event is deleted."
 msgstr ""
 
-#: ../../api/events.rst:1110 30ee4a060f724db18a7e1b6d5dae9c6f
+#: ../../api/events.rst:1146 30ee4a060f724db18a7e1b6d5dae9c6f
 msgid "The deleted scheduled event."
 msgstr ""
 
-#: ../../api/events.rst:1115 fabb729a4b424d468699c4b45e7f928c
+#: ../../api/events.rst:1151 fabb729a4b424d468699c4b45e7f928c
 msgid ""
 "Called when a user subscribes to an event. If the member or event is not "
 "found in the internal cache, then this event will not be called. Consider"
 " using :func:`on_raw_scheduled_event_user_add` instead."
 msgstr ""
 
-#: ../../api/events.rst:1121 65b1bb809e964351ab01b21f5d03bce1
+#: ../../api/events.rst:1157 65b1bb809e964351ab01b21f5d03bce1
 msgid "The scheduled event subscribed to."
 msgstr ""
 
-#: ../../api/events.rst:1123 1d1f095f702e4d1cba2e0300dfb1d7cd
+#: ../../api/events.rst:1159 1d1f095f702e4d1cba2e0300dfb1d7cd
 msgid "The member who subscribed."
 msgstr ""
 
-#: ../../api/events.rst:1128 0e3eb0e978f147ee8ac9f2ad8b364954
+#: ../../api/events.rst:1164 0e3eb0e978f147ee8ac9f2ad8b364954
 msgid ""
 "Called when a user subscribes to an event. Unlike "
 ":meth:`on_scheduled_event_user_add`, this will be called regardless of "
 "the state of the internal cache."
 msgstr ""
 
-#: ../../api/events.rst:1139 009d57aba14a48edb7352ac0171cad61
+#: ../../api/events.rst:1175 009d57aba14a48edb7352ac0171cad61
 msgid ""
 "Called when a user unsubscribes to an event. If the member or event is "
 "not found in the internal cache, then this event will not be called. "
 "Consider using :func:`on_raw_scheduled_event_user_remove` instead."
 msgstr ""
 
-#: ../../api/events.rst:1145 7fa34a768768480d8411a6b67d092bf9
+#: ../../api/events.rst:1181 7fa34a768768480d8411a6b67d092bf9
 msgid "The scheduled event unsubscribed from."
 msgstr ""
 
-#: ../../api/events.rst:1147 ca841d99fac740dc81c93bccf1047b92
+#: ../../api/events.rst:1183 ca841d99fac740dc81c93bccf1047b92
 msgid "The member who unsubscribed."
 msgstr ""
 
-#: ../../api/events.rst:1152 42dbcfa7372c454aa0641aba41689b96
+#: ../../api/events.rst:1188 42dbcfa7372c454aa0641aba41689b96
 msgid ""
 "Called when a user unsubscribes to an event. Unlike "
 ":meth:`on_scheduled_event_user_remove`, this will be called regardless of"
 " the state of the internal cache."
 msgstr ""
 
-#: ../../api/events.rst:1162 fdab4d3cb6594493937e482cf6f3a3cd
+#: ../../api/events.rst:1198 fdab4d3cb6594493937e482cf6f3a3cd
 msgid "Stage Instances"
 msgstr ""
 
-#: ../../api/events.rst:1166 5e4de8c9a02d40568f53b22e2928b78b
+#: ../../api/events.rst:1202 5e4de8c9a02d40568f53b22e2928b78b
 msgid ""
 "Called when a :class:`StageInstance` is created or deleted for a "
 ":class:`StageChannel`."
 msgstr ""
 
-#: ../../api/events.rst:1170 4362791ab4114db28b8dd19f7ef7ef07
+#: ../../api/events.rst:1206 4362791ab4114db28b8dd19f7ef7ef07
 msgid "The stage instance that was created or deleted."
 msgstr ""
 
-#: ../../api/events.rst:1175 885999ae3cce4971a022991fe5ae4fcd
+#: ../../api/events.rst:1211 885999ae3cce4971a022991fe5ae4fcd
 msgid "Called when a :class:`StageInstance` is updated."
 msgstr ""
 
-#: ../../api/events.rst:1179 cf4fabc871504d3c8c5ef7cf2452c119
+#: ../../api/events.rst:1215 cf4fabc871504d3c8c5ef7cf2452c119
 msgid "The topic is changed."
 msgstr ""
 
-#: ../../api/events.rst:1180 6f32d000266b4d3480e3e484435b15a8
+#: ../../api/events.rst:1216 6f32d000266b4d3480e3e484435b15a8
 msgid "The privacy level is changed."
 msgstr ""
 
-#: ../../api/events.rst:1184 0330580b863a4796b086995635979c2c
+#: ../../api/events.rst:1220 0330580b863a4796b086995635979c2c
 msgid "The stage instance before the update."
 msgstr ""
 
-#: ../../api/events.rst:1186 e2d1b23c3728472291d4c10ad1e01549
+#: ../../api/events.rst:1222 e2d1b23c3728472291d4c10ad1e01549
 msgid "The stage instance after the update."
 msgstr ""
 
-#: ../../api/events.rst:1190 17f76be0c525474bb937f182666eecd1
+#: ../../api/events.rst:1226 17f76be0c525474bb937f182666eecd1
 msgid "Threads"
 msgstr ""
 
-#: ../../api/events.rst:1193 5b3f3d40701149f19d64a98a31e8adc5
+#: ../../api/events.rst:1229 5b3f3d40701149f19d64a98a31e8adc5
 msgid "Called whenever a thread is joined."
 msgstr ""
 
-#: ../../api/events.rst:1195 ../../api/events.rst:1208
-#: ../../api/events.rst:1221 ../../api/events.rst:1243
-#: 2a9ac789aa754c35880a62d90d5b91cf 423b8f3188c34015b3769ffa0fcab9ca
-#: 61dce03189704726b094d79abe9d639f aa7a8ccefad941ce85f2f7bcfb056245
+#: ../../api/events.rst:1231 ../../api/events.rst:1244
+#: ../../api/events.rst:1257 ../../api/events.rst:1279
+#: 423b8f3188c34015b3769ffa0fcab9ca
 msgid "Note that you can get the guild from :attr:`Thread.guild`."
 msgstr ""
 
-#: ../../api/events.rst:1201 5ec02873673f4719852827e4a4fc1fd5
+#: ../../api/events.rst:1237 5ec02873673f4719852827e4a4fc1fd5
 msgid "The thread that got joined."
 msgstr ""
 
-#: ../../api/events.rst:1206 59bfa1563ad747e98d7057340d442f09
+#: ../../api/events.rst:1242 59bfa1563ad747e98d7057340d442f09
 msgid "Called whenever a thread is created."
 msgstr ""
 
-#: ../../api/events.rst:1214 dfb084bf5ccd42c29d6b55512463bf9f
+#: ../../api/events.rst:1250 dfb084bf5ccd42c29d6b55512463bf9f
 msgid "The thread that got created."
 msgstr ""
 
-#: ../../api/events.rst:1219 8c4ff18149944315a69630439fd143b6
+#: ../../api/events.rst:1255 8c4ff18149944315a69630439fd143b6
 msgid ""
 "Called whenever a thread is removed. This is different from a thread "
 "being deleted."
 msgstr ""
 
-#: ../../api/events.rst:1227 e603d6dd1e314cbcbd72c972a610957c
+#: ../../api/events.rst:1263 e603d6dd1e314cbcbd72c972a610957c
 msgid ""
 "Due to technical limitations, this event might not be called as soon as "
 "one expects. Since the library tracks thread membership locally, the API "
@@ -1578,54 +1562,54 @@ msgid ""
 "a thread."
 msgstr ""
 
-#: ../../api/events.rst:1234 22b7be80106949e8ac757cfca635aa77
+#: ../../api/events.rst:1270 22b7be80106949e8ac757cfca635aa77
 msgid "The thread that got removed."
 msgstr ""
 
-#: ../../api/events.rst:1239 31254204062147f58ec2e17d16079cd6
+#: ../../api/events.rst:1275 31254204062147f58ec2e17d16079cd6
 msgid ""
 "Called whenever a thread is deleted.  If the deleted thread isn't found "
 "in internal cache then this will not be called. Archived threads are not "
 "in the cache. Consider using :func:`on_raw_thread_delete`"
 msgstr ""
 
-#: ../../api/events.rst:1249 c836cd8213994a84b0e2a036731f5f51
+#: ../../api/events.rst:1285 c836cd8213994a84b0e2a036731f5f51
 msgid "The thread that got deleted."
 msgstr ""
 
-#: ../../api/events.rst:1254 bca48653dfbd43498473f0a6031eb84b
+#: ../../api/events.rst:1290 bca48653dfbd43498473f0a6031eb84b
 msgid ""
 "Called whenever a thread is deleted. Unlike :func:`on_thread_delete` this"
 " is called regardless of the state of the internal cache."
 msgstr ""
 
-#: ../../api/events.rst:1263 7a457e60855f40f1a930b8e3039c0c99
+#: ../../api/events.rst:1299 7a457e60855f40f1a930b8e3039c0c99
 msgid "Called when a :class:`ThreadMember` leaves or joins a :class:`Thread`."
 msgstr ""
 
-#: ../../api/events.rst:1265 258b46c075964405929ecf4a53efca46
+#: ../../api/events.rst:1301 258b46c075964405929ecf4a53efca46
 msgid ""
 "You can get the thread a member belongs in by accessing "
 ":attr:`ThreadMember.thread`."
 msgstr ""
 
-#: ../../api/events.rst:1271 3768dbfed1414b8bbc6b887601538d2d
+#: ../../api/events.rst:1307 3768dbfed1414b8bbc6b887601538d2d
 msgid "The member who joined or left."
 msgstr ""
 
-#: ../../api/events.rst:1277 5db932fbff93400397baddb4e85e642d
+#: ../../api/events.rst:1313 5db932fbff93400397baddb4e85e642d
 msgid ""
 "Called when a :class:`ThreadMember` leaves a :class:`Thread`. Unlike "
 ":func:`on_thread_member_remove` this is called regardless of the member "
 "being in the thread's internal cache of members or not."
 msgstr ""
 
-#: ../../api/events.rst:1291 ../../api/events.rst:1309
-#: 0b546f8438b44009bacd6b97af0d4b28 f4fb02cac22b4700aded6cad53c12eb7
+#: ../../api/events.rst:1327 ../../api/events.rst:1345
+#: 0b546f8438b44009bacd6b97af0d4b28
 msgid "Called whenever a thread is updated."
 msgstr ""
 
-#: ../../api/events.rst:1295 0df795db76f04dcaa3d951202f9797f4
+#: ../../api/events.rst:1331 0df795db76f04dcaa3d951202f9797f4
 msgid ""
 "If the thread could not be found in the internal cache, this event will "
 "not be called. Threads will not be in the cache if they are archived. "
@@ -1633,100 +1617,112 @@ msgid ""
 "internal cache."
 msgstr ""
 
-#: ../../api/events.rst:1301 73530b47c0c14ea596341620dbb70d97
+#: ../../api/events.rst:1337 73530b47c0c14ea596341620dbb70d97
 msgid "The updated thread's old info."
 msgstr ""
 
-#: ../../api/events.rst:1303 e4ad496582ca4ac58d49cb868450344f
+#: ../../api/events.rst:1339 e4ad496582ca4ac58d49cb868450344f
 msgid "The updated thread's new info."
 msgstr ""
 
-#: ../../api/events.rst:1311 21b1f36456ed41fcb1da52570c551b1a
+#: ../../api/events.rst:1347 21b1f36456ed41fcb1da52570c551b1a
 msgid ""
 "Unlike :func:`on_thread_update` this is called regardless of if the "
 "thread is in the internal thread cache or not."
 msgstr ""
 
-#: ../../api/events.rst:1322 1060458a9a7a4da09c743728271e7d05
+#: ../../api/events.rst:1358 1060458a9a7a4da09c743728271e7d05
 msgid "Typing"
 msgstr ""
 
-#: ../../api/events.rst:1325 36ddd6002ec044c082db85e340ffd365
+#: ../../api/events.rst:1361 36ddd6002ec044c082db85e340ffd365
 msgid "Called when someone begins typing a message."
 msgstr ""
 
-#: ../../api/events.rst:1327 d7bdd9fa230e405d81dbef6cd1a0d7e6
+#: ../../api/events.rst:1363 d7bdd9fa230e405d81dbef6cd1a0d7e6
 msgid ""
 "The ``channel`` parameter can be a :class:`abc.Messageable` instance. "
 "Which could either be :class:`TextChannel`, :class:`GroupChannel`, or "
 ":class:`DMChannel`."
 msgstr ""
 
-#: ../../api/events.rst:1331 1bcac394435946fdac38181633fad1cb
+#: ../../api/events.rst:1367 1bcac394435946fdac38181633fad1cb
 msgid ""
 "If the ``channel`` is a :class:`TextChannel` then the ``user`` parameter "
 "is a :class:`Member`, otherwise it is a :class:`User`."
 msgstr ""
 
-#: ../../api/events.rst:1334 ../../api/events.rst:1351
-#: 4c2cab82fe0d4d7d9bb9226ebd0f9ba1 f4c7ce967027460c941934be2c781d19
+#: ../../api/events.rst:1370 ../../api/events.rst:1387
+#: f4c7ce967027460c941934be2c781d19
 msgid "This requires :attr:`Intents.typing` to be enabled."
 msgstr ""
 
-#: ../../api/events.rst:1336 6bd9c433daea4c2e8516e44a45101692
+#: ../../api/events.rst:1372 6bd9c433daea4c2e8516e44a45101692
 msgid "The location where the typing originated from."
 msgstr ""
 
-#: ../../api/events.rst:1338 f0f1ef599c534a958cf8278f9d26283d
+#: ../../api/events.rst:1374 f0f1ef599c534a958cf8278f9d26283d
 msgid "The user that started typing."
 msgstr ""
 
-#: ../../api/events.rst:1340 3f0964e9777347c394ba677711de264d
+#: ../../api/events.rst:1376 3f0964e9777347c394ba677711de264d
 msgid "When the typing started as an aware datetime in UTC."
 msgstr ""
 
-#: ../../api/events.rst:1345 022f547d6ee849aa9405bdbea72c23b1
+#: ../../api/events.rst:1381 022f547d6ee849aa9405bdbea72c23b1
 msgid ""
 "Called when someone begins typing a message. Unlike :func:`on_typing`, "
 "this is called regardless if the user can be found in the bot's cache or "
 "not."
 msgstr ""
 
-#: ../../api/events.rst:1348 a2234f0918c24dadbdf649c1a93e3e57
+#: ../../api/events.rst:1384 a2234f0918c24dadbdf649c1a93e3e57
 msgid ""
 "If the typing event is occurring in a guild, the member that started "
 "typing can be accessed via :attr:`RawTypingEvent.member`"
 msgstr ""
 
-#: ../../api/events.rst:1353 dadfbe18822e4f56a787d7eee475f016
+#: ../../api/events.rst:1389 dadfbe18822e4f56a787d7eee475f016
 msgid "The raw typing payload."
 msgstr ""
 
-#: ../../api/events.rst:1358 72cc8acd59874ea7a93625ae002a2026
+#: ../../api/events.rst:1394 72cc8acd59874ea7a93625ae002a2026
 msgid "Voice Channel Status Update"
 msgstr ""
 
-#: ../../api/events.rst:1361 faf876de35744e14972adcc55c9f6413
+#: ../../api/events.rst:1397 faf876de35744e14972adcc55c9f6413
 msgid "Called when someone updates a voice channel status."
 msgstr ""
 
-#: ../../api/events.rst:1365 c82e605cb0a14ccfba06f997667f1f06
+#: ../../api/events.rst:1401 c82e605cb0a14ccfba06f997667f1f06
 msgid "The channel where the voice channel status update originated from."
 msgstr ""
 
-#: ../../api/events.rst:1367 17c48469e42a4a4ba626198df396e32d
+#: ../../api/events.rst:1403 17c48469e42a4a4ba626198df396e32d
 msgid "The old voice channel status."
 msgstr ""
 
-#: ../../api/events.rst:1369 cada34ee29ff4e7eb0d6d6c47797ec4d
+#: ../../api/events.rst:1405 cada34ee29ff4e7eb0d6d6c47797ec4d
 msgid "The new voice channel status."
 msgstr ""
 
-#: ../../api/events.rst:1374 52dd6b5033a0412b9bba7a8a156f8e4f
+#: ../../api/events.rst:1410 52dd6b5033a0412b9bba7a8a156f8e4f
 msgid "Called when someone updates a voice channels status."
 msgstr ""
 
-#: ../../api/events.rst:1378 1bb0b4ef346543ad92c14dd99a025211
+#: ../../api/events.rst:1414 1bb0b4ef346543ad92c14dd99a025211
 msgid "The raw voice channel status update payload."
 msgstr ""
+
+#~ msgid "Entitlements"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Called when a user's subscription to "
+#~ "an Entitlement is renewed for the "
+#~ "next billing period."
+#~ msgstr ""
+
+#~ msgid "Called when a :class:`Guild` adds or removes an :class:`Emoji`."
+#~ msgstr ""
 
