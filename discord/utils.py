@@ -56,7 +56,6 @@ from typing import (
     Iterator,
     Literal,
     Mapping,
-    NewType,
     Protocol,
     Sequence,
     TypeVar,
@@ -151,7 +150,7 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = NewType("cached_property", property)
+    cached_property = property
 
     P = ParamSpec("P")
 
@@ -1237,7 +1236,9 @@ def resolve_annotation(
 TimestampStyle = Literal["f", "F", "d", "D", "t", "T", "R"]
 
 
-def format_dt(dt: datetime.datetime, /, style: TimestampStyle | None = None) -> str:
+def format_dt(
+    dt: datetime.datetime | datetime.time, /, style: TimestampStyle | None = None
+) -> str:
     """A helper function to format a :class:`datetime.datetime` for presentation within Discord.
 
     This allows for a locale-independent way of presenting data using Discord specific Markdown.
@@ -1267,7 +1268,7 @@ def format_dt(dt: datetime.datetime, /, style: TimestampStyle | None = None) -> 
 
     Parameters
     ----------
-    dt: :class:`datetime.datetime`
+    dt: Union[:class:`datetime.datetime`, :class:`datetime.time`]
         The datetime to format.
     style: :class:`str`
         The style to format the datetime with.
@@ -1277,6 +1278,8 @@ def format_dt(dt: datetime.datetime, /, style: TimestampStyle | None = None) -> 
     :class:`str`
         The formatted string.
     """
+    if isinstance(dt, datetime.time):
+        dt = datetime.datetime.combine(datetime.datetime.now(), dt)
     if style is None:
         return f"<t:{int(dt.timestamp())}>"
     return f"<t:{int(dt.timestamp())}:{style}>"

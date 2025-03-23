@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 02:50+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/ui_kit.rst:4 cef9c4161ab944be895b73e34a1e959e
 msgid "Bot UI Kit"
@@ -51,20 +51,14 @@ msgid ""
 msgstr ""
 
 #: ../../api/ui_kit.rst 0eb33b6aec414778a7e06b676fd526f3
-#: 0fde91581db244e9a38eaa1298517198 16f62a630b6c42649b13ec913a13f066
-#: 196110ed1f174bbc90e8e7f376d23b2d 26b856f134bd43d89d7bd04e9508cec1
-#: 31274878cbf8429eb4cbbaab562f687a 3310aa20be5a488690708eb9e3dd0fcc
-#: 402dffb461e445cba56e4e1afcc98a38 53499c7c38dd43799b5780dfd21b3b02
-#: 68f0e04b65fd43ccad6348c57bad93ba 7075cd32ada643e1afe2b1b1e2540a78
-#: 7c40b29c39174637a4378923ab36d01b 7f8342f4fa72464f92c9c3cffcfcbda4
+#: 0fde91581db244e9a38eaa1298517198 196110ed1f174bbc90e8e7f376d23b2d
+#: 26b856f134bd43d89d7bd04e9508cec1 31274878cbf8429eb4cbbaab562f687a
+#: 53499c7c38dd43799b5780dfd21b3b02 68f0e04b65fd43ccad6348c57bad93ba
+#: 7075cd32ada643e1afe2b1b1e2540a78 7c40b29c39174637a4378923ab36d01b
 #: 87b1f760ee304fdcb8d3158dad1f9687 89289390586d4a4cab63303506125e33
 #: 8ca8779b464a40069954fb8439451723 99b19d97768746f6aad0d4c9f04602fc
-#: a32d29d036704b3aadf3893a40c1fd58 a5c25727efd240d7b3b1f5647ed24ce6
-#: bb7676b81f53410c845e5d60a69a03a4 beefc8c24f164c63a80136a8c5e5e925
-#: ca073ce612814d8abbb2857a4f7c31cc d1dc3c0514e641c29d06f205b7feefc9
-#: db02240fc27a4c479381b1273800b086 dce921ab81d64865ba38df542fa4386f
-#: dde97b21e9124139901056550166fb09 de7bcf10bc5947e99f4931c26c17c8c2
-#: e6eacbc6685647afaa993a9e034c2c9e ee24240ba8fe4d32b79a3dbd84647890
+#: beefc8c24f164c63a80136a8c5e5e925 ca073ce612814d8abbb2857a4f7c31cc
+#: de7bcf10bc5947e99f4931c26c17c8c2 e6eacbc6685647afaa993a9e034c2c9e
 #: f4f99caceafc4e0b857149cb71c15de8 ffbafb20b66d44b193637453dd85a141
 msgid "Parameters"
 msgstr ""
@@ -90,7 +84,8 @@ msgstr ""
 #: c138b390419e4f4194bf27c7e5da9e82 discord.ui.button.button:28 of
 msgid ""
 "The emoji of the button. This can be in string form or a "
-":class:`.PartialEmoji` or a full :class:`.Emoji`."
+":class:`.PartialEmoji` or a full :class:`GuildEmoji` or "
+":class:`AppEmoji`."
 msgstr ""
 
 #: 7226675e37a14baba12bf447b1d4a11e c7feafdb9ed34fceaaf137f89a8fad12
@@ -105,19 +100,18 @@ msgid ""
 msgstr ""
 
 #: ../../api/ui_kit.rst 4847b534d3c14deba4061b428620b95b
-#: 48dd419af0df473f93e5e713b7748656 49a56da0430b431f8c729950b9c55006
-#: 4d44fb14e809440e8f7f915460300e06 5354adfbc0cb4f498d3e07dc0ed3d63c
+#: 48dd419af0df473f93e5e713b7748656 4d44fb14e809440e8f7f915460300e06
 #: 67269ff08c06462b82bff968f744feea 69ca8cba0b9a411d8e19abd29f7f1ed4
 #: 74e20e420edc4715b4995ab7938b2023 76d49544901349599337569d52510ee9
 #: 787aeffb30b548a38cbe20f0a065de37 79d2f21642c04d77b8bce27656a52f8f
 #: 9764068d3bfa4df68a9821f82609e559 9b9d0befc3c64fb9bae98aba514956f0
 #: a0b7807032194a53a18ea1511e4f67d3 ae8f754f5d1a446e866e9443cd10081d
 #: b1890cceac0449368e45eca0e3cc227a b96d252eb71246cba2ed7ce0fa575e98
-#: c8632725e7ca4cb18d9ec87f8986c8b6 d36c9dfb2e944d03935e93d529a40227
-#: e1405bf6c4334211ba770e0674f150f9 e5ecb31082e14aa3861296ff5854437a
-#: e6251a3992ae4babb7e79b06a31ea11d e6517eae45a3404e899c0bdfabdf3aea
-#: f041071e4093433a9cac0a03ce5ab140 f360a94646744e36b9934341c7885ed7
-#: f66852d0a07246dbb596fa01e203d767 f8f0d423ecf24626a1247f45667e5bfd
+#: d36c9dfb2e944d03935e93d529a40227 e1405bf6c4334211ba770e0674f150f9
+#: e5ecb31082e14aa3861296ff5854437a e6251a3992ae4babb7e79b06a31ea11d
+#: e6517eae45a3404e899c0bdfabdf3aea f041071e4093433a9cac0a03ce5ab140
+#: f360a94646744e36b9934341c7885ed7 f66852d0a07246dbb596fa01e203d767
+#: f8f0d423ecf24626a1247f45667e5bfd
 msgid "Return type"
 msgstr ""
 
@@ -182,9 +176,9 @@ msgid ""
 ":attr:`discord.ComponentType.channel_select`."
 msgstr ""
 
-#: 3e3120d48b4f41869c6ac4d4a11ae788 46f50cc5d1d241dea802bc7c51e5b497
-#: cf7265a79f204a609bac4e3eeac79c31 discord.ui.Select.placeholder:1
-#: discord.ui.select.Select:26 discord.ui.select.select:21 of
+#: 3e3120d48b4f41869c6ac4d4a11ae788 cf7265a79f204a609bac4e3eeac79c31
+#: discord.ui.Select.placeholder:1 discord.ui.select.Select:26
+#: discord.ui.select.select:21 of
 msgid "The placeholder text that is shown if nothing is selected, if any."
 msgstr ""
 
@@ -282,11 +276,10 @@ msgstr ""
 msgid "The initial items attached to this view."
 msgstr ""
 
-#: 447ce0fa50bb4a4b82ed7747b529452c 807b8f486b1846ca85e2c78b609a287d
-#: discord.ui.modal.Modal:19 discord.ui.view.View:11 of
+#: 807b8f486b1846ca85e2c78b609a287d discord.ui.view.View:11 of
 msgid ""
 "Timeout in seconds from last interaction with the UI before no longer "
-"accepting input. If ``None`` then there is no timeout."
+"accepting input. Defaults to 180.0. If ``None`` then there is no timeout."
 msgstr ""
 
 #: 880d25828d79404c9b741921ea68a63e discord.ui.view.View:17 of
@@ -366,8 +359,8 @@ msgid "The timeout of the converted view."
 msgstr ""
 
 #: ../../api/ui_kit.rst 28a3de2a47e54084b6f9a9b85e58ffda
-#: bdf962475cee47d4ae16bdb523f4bdd4 cebca2833179445fb4e661e106d5cc43
-#: f4f15b52c843401587586464af1f15be
+#: 787aeffb30b548a38cbe20f0a065de37 bdf962475cee47d4ae16bdb523f4bdd4
+#: cebca2833179445fb4e661e106d5cc43 f4f15b52c843401587586464af1f15be
 msgid "Returns"
 msgstr ""
 
@@ -390,7 +383,7 @@ msgid "The item to add to the view."
 msgstr ""
 
 #: ../../api/ui_kit.rst 024152e81dad464c8dea98a5986784a2
-#: a8beb6c0b45f41f3802af4f176357b18 acf1210671c64fe0a94869a2ec5777fd
+#: acf1210671c64fe0a94869a2ec5777fd
 msgid "Raises"
 msgstr ""
 
@@ -405,9 +398,8 @@ msgid ""
 msgstr ""
 
 #: 06d7048de769474a8bb1a6d4a2dc4250 0f024bf23b354403841f7dde8d71621a
-#: 14e8aec6cbaf4828aec5b04bd5b670b0 3c90e45f56914ab3a3afc07c95abbe60
-#: 5ca2db4b948a4526bbe2f7733e9e1540 8a6327ab096844d5ab16d2316f29be99
-#: c0e5fc96f0134c3ca7023b6236f2a3fd c28cd0a90c6243f48951aebe91f5a89c
+#: 3c90e45f56914ab3a3afc07c95abbe60 5ca2db4b948a4526bbe2f7733e9e1540
+#: 8a6327ab096844d5ab16d2316f29be99 c0e5fc96f0134c3ca7023b6236f2a3fd
 #: df7ded422fee4a2f97fa22d4a7adac87 discord.ui.modal.Modal.on_error:14
 #: discord.ui.modal.Modal.on_timeout:6 discord.ui.modal.Modal.stop:4
 #: discord.ui.view.View.add_item:10 discord.ui.view.View.clear_items:4
@@ -451,13 +443,11 @@ msgid "Optional[:class:`Item`]"
 msgstr ""
 
 #: 1a6fca5291324410a90c948c1a5ba32b 24255cea69ed481396a70f77f164a517
-#: 34fbdd6619144a00b71dc4a9dfbdf301 69e9487f1d3f4f93adcadb433feb339b
-#: 770fffa13a5f46cca1d7d0a054cb695f 8b341b66e04245dd9e4f5a2f1f5e69eb
-#: cca85a1077c94196a7736c41aeb0a7f5 discord.ui.item.Item.callback:1
+#: 34fbdd6619144a00b71dc4a9dfbdf301 discord.ui.item.Item.callback:1
 #: discord.ui.modal.Modal.callback:1 discord.ui.modal.Modal.on_error:1
 #: discord.ui.modal.Modal.on_timeout:1 discord.ui.view.View.interaction_check:1
 #: discord.ui.view.View.on_error:1 discord.ui.view.View.on_timeout:1
-#: e969a0150e5149c3b6be69868a5dcd77 e983730f42794becb4c575857dd306d4 of
+#: e983730f42794becb4c575857dd306d4 of
 msgid "|coro|"
 msgstr ""
 
@@ -620,23 +610,98 @@ msgstr ""
 msgid ":class:`discord.ui.Select`"
 msgstr ""
 
-#: 718197200d854b84879705c60c0d53e8 82ecd677a8ae42efab9547d6e0c64ca6
-#: discord.ui.Button.view:1 discord.ui.Item.view:1 discord.ui.Select.view:1
-#: eece3a9744f2405a8e83f30be0252a22 of
-msgid "The underlying view for this item."
+#: 0e7a72fe224642d185c918757f0f0e07 528c932c0aa34b83a5705942f842b0ba
+#: 9afe95efb3f541b58748fae054975844 discord.ui.Button.row:1
+#: discord.ui.Item.row:1 discord.ui.Select.row:1 of
+msgid "Gets or sets the row position of this item within its parent view."
 msgstr ""
 
-#: 055cf67df1e94d0592bbc5d22013c323 c8cd5c6c52b2432086a54d8ebaf9dade
-#: discord.ui.item.Item.callback:3 e3934636086a444ea2d8e67a258834cb of
+#: 0b8d5442a6da4f5f9388de5619105189 2966564565d947b68f3d47ce36a50edc
+#: 6a953251c3a04c189cbd3bb505c5064d discord.ui.Button.row:3
+#: discord.ui.Item.row:3 discord.ui.Select.row:3 of
+msgid ""
+"The row position determines the vertical placement of the item in the UI."
+" The value must be an integer between 0 and 4 (inclusive), or ``None`` to"
+" indicate that no specific row is set."
+msgstr ""
+
+#: 049f4ecfd49145a38a13208975c18f13 4f78604fdc644108a15d19e0d86d527f
+#: 8b271c453f5e42cdbca0b51c70f6f541 discord.ui.Button.row:7
+#: discord.ui.Item.row:7 discord.ui.Select.row:7 of
+msgid "The row position of the item, or ``None`` if not explicitly set."
+msgstr ""
+
+#: 0d1b7b3ebb1843d7a08af32dba31680a c4b229dcc8e94342a05e13effb8385c2
+#: discord.ui.Button.row:8 discord.ui.Item.row:8 discord.ui.Select.row:8
+#: e38547a50c034ab9807a13ecc38ab43a of
+msgid "Optional[:class:`int`]"
+msgstr ""
+
+#: 0199d2a0f84848b48937a4d5853bf651 d83f11310ba64db093845d47b6b0f7a0
+#: discord.ui.Button.row:10 discord.ui.Item.row:10 discord.ui.Select.row:10
+#: e33203dc950d4e84a28c122aa39e6b4c of
+msgid "If the row value is not ``None`` and is outside the range [0, 4]."
+msgstr ""
+
+#: d1f45a3b27da4ba69428076fe7aa9191 discord.ui.Button.width:1
+#: discord.ui.Item.width:1 discord.ui.Select.width:1 of
+msgid "Gets the width of the item in the UI layout."
+msgstr ""
+
+#: 3fd84bb2467f4c9a9914bfaa38386fb9 64dfd6bbc90d43e78708b4d3e6d900b2
+#: 8e2598b65b2d4b9cb4ed1ca3d26d3d67 discord.ui.Button.width:3
+#: discord.ui.Item.width:3 discord.ui.Select.width:3 of
+msgid ""
+"The width determines how much horizontal space this item occupies within "
+"its row."
+msgstr ""
+
+#: 0841d9930482419a831cb90ca1d54c5f discord.ui.Button.width:5
+#: discord.ui.Item.width:5 discord.ui.Select.width:5 of
+msgid "The width of the item. Defaults to 1."
+msgstr ""
+
+#: 574e63a83c824cccaff8decf43609b50 9a526aac2e644b789d686cfd0caa5c6d
+#: discord.ui.Button.width:6 discord.ui.Item.width:6 discord.ui.Select.width:6
+#: e7ab5b99207b41528e6ae4e7018d7a60 of
+msgid ":class:`int`"
+msgstr ""
+
+#: 055cf67df1e94d0592bbc5d22013c323 discord.ui.Button.view:1
+#: discord.ui.Item.view:1 discord.ui.Select.view:1 of
+msgid "Gets the parent view associated with this item."
+msgstr ""
+
+#: 0b7f2e26bb8342949d3aa2c4ffc05240 313d2dfd0e054186b5309b0bc9593891
+#: d37b0580bb184040b8748482a98b1e0b discord.ui.Button.view:3
+#: discord.ui.Item.view:3 discord.ui.Select.view:3 of
+msgid ""
+"The view refers to the container that holds this item. This is typically "
+"set automatically when the item is added to a view."
+msgstr ""
+
+#: 05bd49caf8884ea7884fd31a402e6272 9212d4ebc9bd4310860030e3e00d9aa7
+#: ab49d7efd6404221b72e504c584ff8e6 discord.ui.Button.view:6
+#: discord.ui.Item.view:6 discord.ui.Select.view:6 of
+msgid ""
+"The parent view of this item, or ``None`` if the item is not attached to "
+"any view."
+msgstr ""
+
+#: 18819a9062ce44e5832579e33b33d183 b7dd0c5f308f47c9bd89f36498661b17
+#: d6f2e5d5e44c407b8d8bbb9c0b189365 discord.ui.Button.view:7
+#: discord.ui.Item.view:7 discord.ui.Select.view:7 of
+msgid "Optional[:class:`View`]"
+msgstr ""
+
+#: 055cf67df1e94d0592bbc5d22013c323 discord.ui.item.Item.callback:3 of
 msgid "The callback associated with this UI item."
 msgstr ""
 
-#: 253657b63da14170bec87bc80bc4c38a 30a9c108e9d24604ac60bf1e911af72d
 #: 94fcbdc6f4a7448fbbebfa233bf60049 discord.ui.item.Item.callback:5 of
 msgid "This can be overridden by subclasses."
 msgstr ""
 
-#: 2dfbae61c770488cbbe415c1fe433949 9083cdfe2ae24b2f950208892462f7bb
 #: c4a0d0cb7af54912ad4f4e1cfb4aff78 discord.ui.item.Item.callback:8 of
 msgid "The interaction that triggered this UI item."
 msgstr ""
@@ -645,8 +710,8 @@ msgstr ""
 msgid "Represents a UI button."
 msgstr ""
 
-#: 3e0672a1b2d64d418a64a8f5033f2572 5f26973a49434bcf9f88e06a44a7629c
-#: discord.ui.Button.style:1 discord.ui.button.Button:6 of
+#: 3e0672a1b2d64d418a64a8f5033f2572 discord.ui.Button.style:1
+#: discord.ui.button.Button:6 of
 msgid "The style of the button."
 msgstr ""
 
@@ -657,12 +722,12 @@ msgid ""
 msgstr ""
 
 #: 47abb7d1e6094637a97fa3df6a95a8e8 discord.ui.Button.url:1
-#: discord.ui.button.Button:13 f2929e3d104a48f08a200c52f438e072 of
+#: discord.ui.button.Button:13 of
 msgid "The URL this button sends you to."
 msgstr ""
 
-#: 1800abfd6ac44f59ae3181e5274b405c 2eb02a2f95694738aa23bf512070f586
-#: discord.ui.Button.disabled:1 discord.ui.button.Button:16 of
+#: 1800abfd6ac44f59ae3181e5274b405c discord.ui.Button.disabled:1
+#: discord.ui.button.Button:16 of
 msgid "Whether the button is disabled or not."
 msgstr ""
 
@@ -670,13 +735,13 @@ msgstr ""
 msgid "The label of the button, if any. Maximum of 80 chars."
 msgstr ""
 
-#: 3faa2a41847245938c5f2b330a599f40 74f13428fd0a40f39ee7531329565abf
-#: discord.ui.Button.emoji:1 discord.ui.button.Button:22 of
+#: 74f13428fd0a40f39ee7531329565abf discord.ui.Button.emoji:1
+#: discord.ui.button.Button:22 of
 msgid "The emoji of the button, if available."
 msgstr ""
 
 #: bf020129ab2a4825b8dfff6074481348 discord.ui.Button.sku_id:1
-#: discord.ui.button.Button:25 e113ed73331e4e739300825d1691dd3f of
+#: discord.ui.button.Button:25 of
 msgid "The ID of the SKU this button refers to."
 msgstr ""
 
@@ -739,8 +804,8 @@ msgid ""
 " selects of type :attr:`discord.ComponentType.channel_select`."
 msgstr ""
 
-#: 6ccb04df725844a182a2639c2457b4b5 796771ff82554675a187cca6828acb7c
-#: discord.ui.Select.disabled:1 discord.ui.select.Select:45 of
+#: 796771ff82554675a187cca6828acb7c discord.ui.Select.disabled:1
+#: discord.ui.select.Select:45 of
 msgid "Whether the select is disabled or not."
 msgstr ""
 
@@ -796,7 +861,7 @@ msgstr ""
 msgid ""
 "The emoji of the option, if available. This can either be a string "
 "representing the custom or unicode emoji or an instance of "
-":class:`.PartialEmoji` or :class:`.Emoji`."
+":class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`."
 msgstr ""
 
 #: 27eb750afa664a6ea5cf41996fc3cacc discord.ui.select.Select.add_option:23 of
@@ -804,7 +869,7 @@ msgid "Whether this option is selected by default."
 msgstr ""
 
 #: 7eff0916811d4ee2b31c189597562605 discord.ui.select.Select.add_option:26
-#: discord.ui.select.Select.append_option:7 e190a9601c2e43eb88aaeb92ae48a1a1 of
+#: discord.ui.select.Select.append_option:7 of
 msgid "The number of options exceeds 25."
 msgstr ""
 
@@ -842,6 +907,12 @@ msgstr ""
 msgid ""
 "The ID of the modal dialog that gets received during an interaction. Must"
 " be 100 characters or fewer."
+msgstr ""
+
+#: 807b8f486b1846ca85e2c78b609a287d discord.ui.modal.Modal:19 of
+msgid ""
+"Timeout in seconds from last interaction with the UI before no longer "
+"accepting input. If ``None`` then there is no timeout."
 msgstr ""
 
 #: 0dfdf29800e044d89a49e207c803d984 discord.ui.Modal.title:1 of
@@ -904,13 +975,13 @@ msgstr ""
 msgid "Represents a UI text input field."
 msgstr ""
 
-#: 391f2a60ad1a446b9b869244f8074585 46ab89f240c04a70b1772095a8585e87
-#: discord.ui.InputText.style:1 discord.ui.input_text.InputText:6 of
+#: 46ab89f240c04a70b1772095a8585e87 discord.ui.InputText.style:1
+#: discord.ui.input_text.InputText:6 of
 msgid "The style of the input text field."
 msgstr ""
 
-#: 53336a0409494b719bad7895bab5d8e3 7dd47d92ba824a4d802daaecff316b4a
-#: discord.ui.InputText.custom_id:1 discord.ui.input_text.InputText:9 of
+#: 53336a0409494b719bad7895bab5d8e3 discord.ui.InputText.custom_id:1
+#: discord.ui.input_text.InputText:9 of
 msgid "The ID of the input text field that gets received during an interaction."
 msgstr ""
 
@@ -936,8 +1007,8 @@ msgid ""
 "and 4000."
 msgstr ""
 
-#: 3c95c7168cee4a3ca835e439caf1363f 584df796ba3345878a51cb7cbbd2ad12
-#: discord.ui.InputText.required:1 discord.ui.input_text.InputText:28 of
+#: 584df796ba3345878a51cb7cbbd2ad12 discord.ui.InputText.required:1
+#: discord.ui.input_text.InputText:28 of
 msgid "Whether the input text field is required or not. Defaults to ``True``."
 msgstr ""
 
@@ -976,4 +1047,22 @@ msgstr ""
 #: 7eef7bc7f5434d39baab02325cc1ee35 discord.ui.InputText.value:1 of
 msgid "The value entered in the text field."
 msgstr ""
+
+#~ msgid ""
+#~ "The emoji of the button. This can"
+#~ " be in string form or a "
+#~ ":class:`.PartialEmoji` or a full "
+#~ ":class:`.Emoji`."
+#~ msgstr ""
+
+#~ msgid "The underlying view for this item."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The emoji of the option, if "
+#~ "available. This can either be a "
+#~ "string representing the custom or "
+#~ "unicode emoji or an instance of "
+#~ ":class:`.PartialEmoji` or :class:`.Emoji`."
+#~ msgstr ""
 

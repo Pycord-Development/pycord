@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from .._typed_dict import NotRequired, Required, TypedDict
+from typing_extensions import NotRequired, Required, TypedDict
+
 from .activity import PartialPresenceUpdate
 from .channel import GuildChannel
 from .emoji import Emoji

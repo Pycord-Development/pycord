@@ -34,6 +34,7 @@ from ..channel import (
     CategoryChannel,
     DMChannel,
     ForumChannel,
+    MediaChannel,
     StageChannel,
     TextChannel,
     Thread,
@@ -85,6 +86,7 @@ CHANNEL_TYPE_MAP = {
     CategoryChannel: ChannelType.category,
     Thread: ChannelType.public_thread,
     ForumChannel: ChannelType.forum,
+    MediaChannel: ChannelType.media,
     DMChannel: ChannelType.private,
 }
 

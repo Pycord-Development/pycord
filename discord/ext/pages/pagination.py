@@ -1163,7 +1163,7 @@ class Paginator(discord.ui.View):
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
-        if ephemeral and (self.timeout >= 900 or self.timeout is None):
+        if ephemeral and (self.timeout is None or self.timeout >= 900):
             raise ValueError(
                 "paginator responses cannot be ephemeral if the paginator timeout is 15"
                 " minutes or greater"
@@ -1202,7 +1202,7 @@ class Paginator(discord.ui.View):
                 )
                 # convert from WebhookMessage to Message reference to bypass
                 # 15min webhook token timeout (non-ephemeral messages only)
-                if not ephemeral:
+                if not ephemeral and not msg.flags.ephemeral:
                     msg = await msg.channel.fetch_message(msg.id)
             else:
                 msg = await interaction.response.send_message(

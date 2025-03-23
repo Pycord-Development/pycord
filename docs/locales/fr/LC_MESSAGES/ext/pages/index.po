@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
+"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
 "Last-Translator: \\n"
 "Language-Team: none\\n"
 "MIME-Version: 1.0\\n"
@@ -15,7 +15,7 @@ msgid "discord.ext.pages"
 msgstr "discord.ext.pages"
 
 msgid "This module provides an easy pagination system with buttons, page groups, and custom view support."
-msgstr "This module provides an easy pagination system with buttons, page groups, and custom view support."
+msgstr "Ce module fournit un système de pagination simple avec des boutons, des groupes de pages, et un support pour des vues customisées."
 
 msgid "Example usage in a cog:"
 msgstr "Example usage in a cog:"
@@ -27,22 +27,22 @@ msgid "Page"
 msgstr "Page"
 
 msgid "Represents a page shown in the paginator."
-msgstr "Represents a page shown in the paginator."
+msgstr "Représente une page affichée dans le paginateur."
 
 msgid "Allows for directly referencing and modifying each page as a class instance."
-msgstr "Allows for directly referencing and modifying each page as a class instance."
+msgstr "Permet le référencement direct et la modification de chaque page en tant qu'instance de classe."
 
 msgid "Parameters"
-msgstr "Parameters"
+msgstr "Paramètres"
 
 msgid "The content of the page. Corresponds to the :class:`discord.Message.content` attribute."
-msgstr "The content of the page. Corresponds to the :class:`discord.Message.content` attribute."
+msgstr "Le contenu de la page. Correspond à l'attribut :class:`discord.Message.content`."
 
 msgid "The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute."
-msgstr "The embeds of the page. Corresponds to the :class:`discord.Message.embeds` attribute."
+msgstr "Les embeds de la page. Correspond à l'attribut :class:`discord.Message.embeds`."
 
 msgid "A list of local files to be shown with the page."
-msgstr "A list of local files to be shown with the page."
+msgstr "Une liste de fichiers locaux affichés sur la page."
 
 msgid "The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator."
 msgstr "The custom view shown when the page is visible. Overrides the `custom_view` attribute of the main paginator."
@@ -51,49 +51,49 @@ msgid "|coro|"
 msgstr "|coro|"
 
 msgid "The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called."
-msgstr "The coroutine associated to a specific page. If `Paginator.page_action()` is used, this coroutine is called."
+msgstr "La coroutine associée à une spécifique page. Si `Paginator.page_action()` est utilisé, cette coroutine est appelée."
 
 msgid "The interaction associated with the callback, if any."
-msgstr "The interaction associated with the callback, if any."
+msgstr "L'interaction associée avec le rappel, s'il y en a."
 
 msgid "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
-msgstr "Updates :class:`discord.File` objects so that they can be sent multiple times. This is called internally each time the page is sent."
+msgstr "Met à jour l'objet :class:`discord.File` pour pouvoir les envoyer plusieurs fois. Ceci est appelé en interne à chaque fois qu'une page est envoyée."
 
 msgid "Return type"
-msgstr "Type de retour"
+msgstr "Type de la valeur retournée"
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`list\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.file.File\\`\\] \\| \\:py\\:obj\\:\\`None\\``"
 
 msgid "Gets the content for the page."
-msgstr "Gets the content for the page."
+msgstr "Récupère le contenu de la page."
 
 msgid "Gets the embeds for the page."
-msgstr "Gets the embeds for the page."
+msgstr "Récupère les embeds de la page."
 
 msgid "Gets the custom view assigned to the page."
-msgstr "Gets the custom view assigned to the page."
+msgstr "Récupère la vue customisée assignée à la page."
 
 msgid "Gets the files associated with the page."
-msgstr "Gets the files associated with the page."
+msgstr "Récupère les fichiers associés avec la page."
 
 msgid "Paginator"
-msgstr "Paginator"
+msgstr "Paginateur"
 
 msgid "Creates a paginator which can be sent as a message and uses buttons for navigation."
-msgstr "Creates a paginator which can be sent as a message and uses buttons for navigation."
+msgstr "Crée un paginateur qui peut être envoyé en tant que message et utilise des boutons pour la navigation."
 
 msgid "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate. If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed."
 msgstr "The list of :class:`PageGroup` objects, :class:`Page` objects, strings, embeds, or list of embeds to paginate. If a list of :class:`PageGroup` objects is provided and `show_menu` is ``False``, only the first page group will be displayed."
 
 msgid "Whether to show disabled buttons."
-msgstr "Whether to show disabled buttons."
+msgstr "S'il faut afficher les boutons désactivés."
 
 msgid "Whether to show the page indicator when using the default buttons."
-msgstr "Whether to show the page indicator when using the default buttons."
+msgstr "S'il faut afficher l'indicateur de page lorsqu'on utilise les boutons par défaut."
 
 msgid "Whether to show a select menu that allows the user to switch between groups of pages."
-msgstr "Whether to show a select menu that allows the user to switch between groups of pages."
+msgstr "S'il faut afficher un menu de sélection qui autorise l'utilisateur de basculer entre les groupes de pages."
 
 msgid "The placeholder text to show in the page group menu when no page group has been selected yet. Defaults to \"Select Page Group\" if not provided."
 msgstr "The placeholder text to show in the page group menu when no page group has been selected yet. Defaults to \"Select Page Group\" if not provided."
@@ -536,14 +536,44 @@ msgstr "The ID of the button that gets received during an interaction."
 msgid "If this button is for a URL, it does not have a custom ID."
 msgstr "If this button is for a URL, it does not have a custom ID."
 
+msgid "Gets or sets the row position of this item within its parent view."
+msgstr "Gets or sets the row position of this item within its parent view."
+
+msgid "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate that no specific row is set."
+msgstr "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate that no specific row is set."
+
+msgid "The row position of the item, or ``None`` if not explicitly set."
+msgstr "The row position of the item, or ``None`` if not explicitly set."
+
+msgid "If the row value is not ``None`` and is outside the range [0, 4]."
+msgstr "If the row value is not ``None`` and is outside the range [0, 4]."
+
 msgid "The ID of the SKU this button refers to."
 msgstr "The ID of the SKU this button refers to."
 
 msgid "The URL this button sends you to."
 msgstr "The URL this button sends you to."
 
-msgid "The underlying view for this item."
-msgstr "The underlying view for this item."
+msgid "Gets the parent view associated with this item."
+msgstr "Gets the parent view associated with this item."
+
+msgid "The view refers to the container that holds this item. This is typically set automatically when the item is added to a view."
+msgstr "The view refers to the container that holds this item. This is typically set automatically when the item is added to a view."
+
+msgid "The parent view of this item, or ``None`` if the item is not attached to any view."
+msgstr "The parent view of this item, or ``None`` if the item is not attached to any view."
+
+msgid "Optional[:class:`View`]"
+msgstr "Optional[:class:`View`]"
+
+msgid "Gets the width of the item in the UI layout."
+msgstr "Gets the width of the item in the UI layout."
+
+msgid "The width determines how much horizontal space this item occupies within its row."
+msgstr "The width determines how much horizontal space this item occupies within its row."
+
+msgid "The width of the item. Defaults to 1."
+msgstr "The width of the item. Defaults to 1."
 
 msgid "PaginatorMenu"
 msgstr "PaginatorMenu"
@@ -572,8 +602,8 @@ msgstr "The value of the option. This is not displayed to users. If not given, d
 msgid "An additional description of the option, if any. Can only be up to 100 characters."
 msgstr "An additional description of the option, if any. Can only be up to 100 characters."
 
-msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
-msgstr "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
+msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`."
+msgstr "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`."
 
 msgid "Whether this option is selected by default."
 msgstr "Whether this option is selected by default."

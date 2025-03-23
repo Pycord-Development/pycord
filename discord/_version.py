@@ -30,7 +30,7 @@ import re
 import warnings
 from importlib.metadata import PackageNotFoundError, version
 
-from ._typed_dict import TypedDict
+from typing_extensions import TypedDict
 
 __all__ = ("__version__", "VersionInfo", "version_info")
 
