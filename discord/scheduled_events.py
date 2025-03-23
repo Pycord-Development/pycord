@@ -214,16 +214,16 @@ class ScheduledEventRecurrenceRule:
     """
 
     __slots__ = (
-        'start_date',
-        'frequency',
-        'interval',
-        'count',
-        'end_date',
-        '_weekdays',
-        '_n_weekdays',
-        '_month_days',
-        '_year_days',
-        '_state',
+        "start_date",
+        "frequency",
+        "interval",
+        "count",
+        "end_date",
+        "_weekdays",
+        "_n_weekdays",
+        "_month_days",
+        "_year_days",
+        "_state",
     )
 
     def __init__(
@@ -251,7 +251,7 @@ class ScheduledEventRecurrenceRule:
         self._state: ConnectionState | None = None
 
     def __repr__(self) -> str:
-        return f'<ScheduledEventRecurrenceRule start_date={self.start_date} frequency={self.frequency} interval={self.interval}>'
+        return f"<ScheduledEventRecurrenceRule start_date={self.start_date} frequency={self.frequency} interval={self.interval}>"
 
     @property
     def weekdays(self) -> list[WeekDay]:
@@ -346,9 +346,9 @@ class ScheduledEventRecurrenceRule:
             raise ClientException("You cannot edit this recurrence rule")
 
         for value, attr in (
-            (weekdays, '_weekdays'),
-            (n_weekdays, '_n_weekdays'),
-            (month_days, '_month_days'),
+            (weekdays, "_weekdays"),
+            (n_weekdays, "_n_weekdays"),
+            (month_days, "_month_days"),
         ):
             if value is None:
                 setattr(self, attr, MISSING)
@@ -361,41 +361,45 @@ class ScheduledEventRecurrenceRule:
         months, days = map(list, zip(*((m.month, m.day) for m in self._month_days)))
         return months, days
 
-    def _parse_month_days_payload(self, months: list[int], days: list[int]) -> list[datetime.date]:
+    def _parse_month_days_payload(
+        self, months: list[int], days: list[int]
+    ) -> list[datetime.date]:
         return [datetime.date(1900, month, day) for month, day in zip(months, days)]
 
     @classmethod
-    def _from_data(cls, data: ScheduledEventRecurrenceRulePayload | None, state: ConnectionState) -> Self | None:
+    def _from_data(
+        cls, data: ScheduledEventRecurrenceRulePayload | None, state: ConnectionState
+    ) -> Self | None:
         if data is None:
             return None
 
-        start = utils.parse_time(data['start'])
-        end = utils.parse_time(data.get('end'))
+        start = utils.parse_time(data["start"])
+        end = utils.parse_time(data.get("end"))
 
         self = cls(
             start_date=start,
-            frequency=try_enum(ScheduledEventRecurrenceFrequency, data['frequency']),
-            interval=int(data['interval']),  # pyright: ignore[reportArgumentType]
+            frequency=try_enum(ScheduledEventRecurrenceFrequency, data["frequency"]),
+            interval=int(data["interval"]),  # pyright: ignore[reportArgumentType]
         )
 
         self._state = state
         self.end_date = end
-        self.count = data.get('count')
+        self.count = data.get("count")
 
-        weekdays = data.get('by_weekday', MISSING) or MISSING
+        weekdays = data.get("by_weekday", MISSING) or MISSING
         self._weekdays = weekdays
 
-        n_weekdays = data.get('by_n_weekday', MISSING) or MISSING
+        n_weekdays = data.get("by_n_weekday", MISSING) or MISSING
         if n_weekdays is not MISSING:
-            self._n_weekdays = [(n['n'], n['day']) for n in n_weekdays]
+            self._n_weekdays = [(n["n"], n["day"]) for n in n_weekdays]
 
-        months = data.get('by_month')
-        month_days = data.get('by_month_day')
+        months = data.get("by_month")
+        month_days = data.get("by_month_day")
 
         if months and month_days:
             self._month_days = self._parse_month_days_payload(months, month_days)
 
-        year_days = data.get('by_year_day')
+        year_days = data.get("by_year_day")
         if year_days is not None:
             self._year_days = year_days
 
@@ -403,13 +407,13 @@ class ScheduledEventRecurrenceRule:
 
     def _to_dict(self) -> ScheduledEventRecurrenceRulePayload:
         payload: ScheduledEventRecurrenceRulePayload = {
-            'start': self.start_date.isoformat(),
-            'frequency': self.frequency.value,
-            'interval': self.interval,
-            'by_weekday': None,
-            'by_n_weekday': None,
-            'by_month': None,
-            'by_month_day': None,
+            "start": self.start_date.isoformat(),
+            "frequency": self.frequency.value,
+            "interval": self.interval,
+            "by_weekday": None,
+            "by_n_weekday": None,
+            "by_month": None,
+            "by_month_day": None,
         }
 
         if self._weekdays is not MISSING:
@@ -417,7 +421,7 @@ class ScheduledEventRecurrenceRule:
         if self._n_weekdays is not MISSING:
             payload["by_n_weekday"] = list(
                 map(
-                    lambda nw: {'n': nw[0], 'day': nw[1]},
+                    lambda nw: {"n": nw[0], "day": nw[1]},
                     self._n_weekdays,
                 ),
             )
@@ -507,7 +511,7 @@ class ScheduledEvent(Hashable):
         "_image",
         "subscriber_count",
         "recurrence_rule",
-        'exceptions',
+        "exceptions",
     )
 
     def __init__(
@@ -547,13 +551,16 @@ class ScheduledEvent(Hashable):
         else:
             self.location = ScheduledEventLocation(state=state, value=int(channel_id))
 
-        self.recurrence_rule: ScheduledEventRecurrenceRule | None = ScheduledEventRecurrenceRule._from_data(
-            data.get("recurrence_rule"), state,
+        self.recurrence_rule: ScheduledEventRecurrenceRule | None = (
+            ScheduledEventRecurrenceRule._from_data(
+                data.get("recurrence_rule"),
+                state,
+            )
         )
         self.exceptions: list[Object] = list(
             map(
                 Object,
-                data.get('guild_scheduled_events_exceptions', []) or [],
+                data.get("guild_scheduled_events_exceptions", []) or [],
             ),
         )
 
