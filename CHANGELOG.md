@@ -49,7 +49,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
-- Added `Message.forward_to`, `Message.snapshots` and related attributes.
+- Added `Message.forward_to`, `Message.snapshots`, and other related attributes.
   ([#2598](https://github.com/Pycord-Development/pycord/pull/2598))
 - Added ability to change the API's base URL with `Route.API_BASE_URL`.
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))

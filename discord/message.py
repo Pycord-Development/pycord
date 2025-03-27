@@ -482,7 +482,7 @@ class MessageReference:
     Attributes
     ----------
     type: Optional[:class:`~discord.MessageReferenceType`]
-        The type of message reference. If this is not provided, assume default behavior (reply).
+        The type of message reference. If this is not provided, assume the default behavior (i.e., reply).
 
         .. versionadded:: 2.7
 
@@ -661,7 +661,7 @@ class MessageCall:
 
 
 class ForwardedMessage:
-    """Represents the snapshotted contents from a forwarded message. Forwarded messages are immutable; any updates to the original message won't be reflected.
+    """Represents the snapshotted contents from a forwarded message. Forwarded messages are immutable; any updates to the original message will not be reflected.
 
     .. versionadded:: 2.7
 

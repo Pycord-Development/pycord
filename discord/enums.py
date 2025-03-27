@@ -1064,7 +1064,7 @@ class PollLayoutType(Enum):
 
 
 class MessageReferenceType(Enum):
-    """The message reference's type"""
+    """The type of the message reference object"""
 
     default = 0
     forward = 1
