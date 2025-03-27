@@ -76,6 +76,7 @@ __all__ = (
     "EntitlementOwnerType",
     "IntegrationType",
     "InteractionContextType",
+    "ScheduledEventRecurrenceFrequency",
 )
 
 
@@ -1061,6 +1062,15 @@ class SubscriptionStatus(Enum):
     active = 0
     ending = 1
     inactive = 2
+
+
+class ScheduledEventRecurrenceFrequency(Enum):
+    """A scheduled event recurrence rule's frequency."""
+
+    yearly = 0
+    monthly = 1
+    weekly = 2
+    daily = 3
 
 
 T = TypeVar("T")

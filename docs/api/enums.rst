@@ -2519,3 +2519,26 @@ of :class:`enum.Enum`.
     .. attribute:: inactive
 
         The subscription is inactive and the subscription owner is not being charged.
+
+
+.. class:: ScheduledEventRecurrenceRuleFrequency
+
+    A scheduled event recurrence rule's frequency.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: yearly
+
+        The event will repeat on a yearly basis.
+
+    .. attribute:: monthly
+
+        The event will repeat on a monthly basis.
+
+    .. attribute:: weekly
+
+        The event will repeat on a weekly basis.
+
+    .. attribute:: daily
+
+        The event will repeat on a daily basis.
