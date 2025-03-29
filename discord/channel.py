@@ -1724,6 +1724,11 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+
+    nsfw: :class:`bool`
+        To mark the channel as NSFW or not.
+
+        .. versionadded:: 2.7
     """
 
     def __init__(
@@ -2042,6 +2047,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
+        nsfw: int = ...,
         reason: str | None = ...,
     ) -> VoiceChannel | None: ...
 
@@ -2091,6 +2097,17 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             The camera video quality for the voice channel's participants.
 
             .. versionadded:: 2.0
+
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            The maximum value possible is `21600`.
+             
+            .. versionadded:: 2.7
+        
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+            
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -2250,6 +2267,17 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     last_message_id: Optional[:class:`int`]
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
         .. versionadded:: 2.5
+
+    slowmode_delay: :class:`int`
+        Specifies the slowmode rate limit for user in this channel, in seconds.
+        The maximum value possible is `21600`.
+
+        .. versionadded:: 2.7
+
+    nsfw: :class:`bool`
+        To mark the channel as NSFW or not.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = ("topic",)
@@ -2733,6 +2761,32 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The camera video quality for the stage channel's participants.
 
             .. versionadded:: 2.0
+
+        bitrate: :class:`int`
+            The channel's preferred audio bitrate in bits per second.
+            
+            .. versionadded:: 2.7
+        
+        user_limit: :class:`int`
+            The channel's limit for number of members that can be in a voice channel.
+            
+            .. versionadded:: 2.7
+        
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            The maximum value possible is `21600`.
+            
+            .. versionadded:: 2.7
+        
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+            
+            .. versionadded:: 2.7
+
+        Returns
+        -------
+        :class:`StageChannel`
+            The channel that was just created.
 
         Returns
         -------
