@@ -1672,6 +1672,7 @@ class Guild(Hashable):
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         reason: str | None = None,
         position: int = MISSING,
+        nsfw: bool = MISSING,
     ) -> CategoryChannel:
         """|coro|
 
@@ -1699,7 +1700,10 @@ class Guild(Hashable):
         options: dict[str, Any] = {}
         if position is not MISSING:
             options["position"] = position
-
+        
+        if nsfw is not MISSING:
+            options["nsfw"] = nsfw
+            
         data = await self._create_channel(
             name,
             overwrites=overwrites,
