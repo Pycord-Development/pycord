@@ -1911,8 +1911,8 @@ class Guild(Hashable):
                 if "DISCOVERABLE" in features:
                     features.remove("DISCOVERABLE")
 
-        if raid_alerts is not MISSING:
-            if raid_alerts:
+        if enable_raid_alerts is not MISSING:
+            if enable_raid_alerts:
                 if "RAID_ALERTS_DISABLED" in features:
                     features.remove("RAID_ALERTS_DISABLED")
             else:
