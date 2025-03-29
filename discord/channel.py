@@ -2101,12 +2101,12 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
             The maximum value possible is `21600`.
-             
+
             .. versionadded:: 2.7
-        
+
         nsfw: :class:`bool`
             To mark the channel as NSFW or not.
-            
+
             .. versionadded:: 2.7
 
         Returns
@@ -2764,29 +2764,24 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         bitrate: :class:`int`
             The channel's preferred audio bitrate in bits per second.
-            
+
             .. versionadded:: 2.7
-        
+
         user_limit: :class:`int`
             The channel's limit for number of members that can be in a voice channel.
-            
+
             .. versionadded:: 2.7
-        
+
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
             The maximum value possible is `21600`.
-            
-            .. versionadded:: 2.7
-        
-        nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
-            
+
             .. versionadded:: 2.7
 
-        Returns
-        -------
-        :class:`StageChannel`
-            The channel that was just created.
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+
+            .. versionadded:: 2.7
 
         Returns
         -------
