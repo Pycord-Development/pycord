@@ -1651,7 +1651,8 @@ class Guild(Hashable):
                 )
 
             options["default_reaction_emoji"] = (
-                default_reaction_emoji._to_forum_reaction_payload()
+                default_reaction_emoji._to_forum_reaction_payload() if default_reaction_emoji
+                else None
             )
 
         data = await self._create_channel(
