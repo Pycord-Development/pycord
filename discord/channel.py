@@ -1038,7 +1038,9 @@ class ForumChannel(_TextChannel):
         self.default_sort_order: SortOrder | None = data.get("default_sort_order", None)
         if self.default_sort_order is not None:
             self.default_sort_order = try_enum(SortOrder, self.default_sort_order)
-
+        
+        self.default_reaction_emoji = None
+        
         reaction_emoji_ctx: dict = data.get("default_reaction_emoji")
         if reaction_emoji_ctx is not None:
             emoji_name = reaction_emoji_ctx.get("emoji_name")
