@@ -1643,9 +1643,11 @@ class Guild(Hashable):
                 )
             elif isinstance(default_reaction_emoji, str):
                 default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            elif default_reaction_emoji is None:
+                pass
             else:
                 raise InvalidArgument(
-                    "default_reaction_emoji must be of type: GuildEmoji | int | str"
+                    "default_reaction_emoji must be of type: GuildEmoji | int | str | None"
                 )
 
             options["default_reaction_emoji"] = (
