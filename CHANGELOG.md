@@ -103,7 +103,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
-- Fixed missing docstrings and parameters for channels, allow creating channels with None as default reaction
+- Fixed missing docstrings and parameters for channels, allow creating channels with
+  None as default reaction
   ([#2754])(https://github.com/Pycord-Development/pycord/pull/2754)
 
 ### Changed
