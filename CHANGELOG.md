@@ -49,8 +49,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
-- Added ability to change the API's base URL with `Route.API_BASE_URL`.
+- Added the ability to change the API's base URL with `Route.API_BASE_URL`.
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
+- Added the ability to pass a `datetime.time` object to `format_dt`
+  ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
 
 ### Fixed
 
@@ -97,6 +99,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Fixed `Subscription.renewal_sku_ids` not accepting `None` from the received payload.
   ([#2709](https://github.com/Pycord-Development/pycord/pull/2709))
+- Fixed `ForumChannel.edit` allowing `default_reaction_emoji` to be `None`
+  ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
+- Fixed missing `None` type hints in `Select.__init__`.
+  ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 
 ### Changed
 

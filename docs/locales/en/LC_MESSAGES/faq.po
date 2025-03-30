@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../faq.rst:7 42c694dc6243417398dfda77b5d62118
 msgid "Frequently Asked Questions"
@@ -274,6 +274,7 @@ msgid "``'\\U0001F44D'``"
 msgstr ""
 
 #: ../../faq.rst:191 3b675c057f77434183fe3ba30d93d2bf
+#, python-brace-format
 msgid "``'\\N{THUMBS UP SIGN}'``"
 msgstr ""
 
@@ -293,10 +294,11 @@ msgstr ""
 
 #: ../../faq.rst:202 83b6da571d72418b976c492e3fe88640
 msgid ""
-"For custom emoji, you should pass an instance of :class:`Emoji`. You can "
-"also pass a ``'<:name:id>'`` string, but if you can use said emoji, you "
-"should be able to use :meth:`Client.get_emoji` to get an emoji via ID or "
-"use :func:`utils.find`/ :func:`utils.get` on :attr:`Client.emojis` or "
+"For custom emoji, you should pass an instance of :class:`GuildEmoji` or "
+":class:`AppEmoji`. You can also pass a ``'<:name:id>'`` string, but if "
+"you can use said emoji, you should be able to use "
+":meth:`Client.get_emoji` to get an emoji via ID or use "
+":func:`utils.find`/ :func:`utils.get` on :attr:`Client.emojis` or "
 ":attr:`Guild.emojis` collections."
 msgstr ""
 
@@ -549,4 +551,16 @@ msgstr ""
 #: ../../faq.rst:406 293c6bec61af42d7803ffc3d3ab42a5a
 msgid "This could then be used as ``?git push origin master``."
 msgstr ""
+
+#~ msgid ""
+#~ "For custom emoji, you should pass "
+#~ "an instance of :class:`Emoji`. You can"
+#~ " also pass a ``'<:name:id>'`` string, "
+#~ "but if you can use said emoji, "
+#~ "you should be able to use "
+#~ ":meth:`Client.get_emoji` to get an emoji "
+#~ "via ID or use :func:`utils.find`/ "
+#~ ":func:`utils.get` on :attr:`Client.emojis` or "
+#~ ":attr:`Guild.emojis` collections."
+#~ msgstr ""
 

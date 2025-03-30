@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,11 +81,11 @@ msgstr ""
 #: d5bca9a9f4e3404884791ef3d4aca196
 #: f2a2b2cd04354ce2b4dbcb6e77dd1bd1
 #: 5a2d03e908f5498ca371e47073d60077
-#: 148f4b586e154d7b9784cf4e6149b19c
-#: 0ee33849feaa4e1c9b968a1b176c4840
-#: 075fafed1a384290b249cd03322da598
-#: dbf01b3b2c5841ba9be4972edf38c752
-#: 5d6bf83ea6804891811293d85965e471
+#: 5a2d03e908f5498ca371e47073d60077
+#: 5a2d03e908f5498ca371e47073d60077
+#: 5a2d03e908f5498ca371e47073d60077
+#: 5a2d03e908f5498ca371e47073d60077
+#: 5a2d03e908f5498ca371e47073d60077
 msgid "Parameters"
 msgstr ""
 
@@ -165,6 +165,12 @@ msgstr ""
 #: 4d583655849d4c3eae271f096ea6e32a
 #: d5396ed79c0a49578511de018e0b2963
 #: 1562ad6d689b4e78a93104700ab3429f
+#: 627d893b1afb4056a4f521d568d44df1
+#: 248c0373d8944714814082aba337d190
+#: 3bee1989b47b4a7a82ed576e7684bcfd
+#: dd536d96843d46489e6579cc1bf9d9c0
+#: 3c10e0bc688f4d958a2089fd1b26e767
+#: a4fa9795433e414082cd2d9c77c020a0
 msgid "Return type"
 msgstr ""
 
@@ -358,8 +364,12 @@ msgstr ""
 msgid "The index of the default page group shown when the paginator is initially sent. Defined by setting ``default`` to ``True`` on a :class:`PageGroup`."
 msgstr ""
 
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.row:8
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.row:8
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:70
 #: 9427ff2e436a432290830b7a5ed07653
+#: 6a06163b053143819ff1b3f107885c50
+#: 06df5cad38f549c581993c96ecea1a0e
 msgid "Optional[:class:`int`]"
 msgstr ""
 
@@ -368,10 +378,14 @@ msgstr ""
 msgid "A zero-indexed value showing the current page number."
 msgstr ""
 
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.width:6
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.width:6
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:76
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.pagination.Paginator:82
 #: cd1000c6b1654d0f856cdf9321d03a5c
 #: 2ac3cef8cda94569a45f9c40a7419fcf
+#: f24f43ef85fc4fa49db3873d9f486199
+#: f24f43ef85fc4fa49db3873d9f486199
 msgid ":class:`int`"
 msgstr ""
 
@@ -536,6 +550,12 @@ msgstr ""
 #: afe45ade9581404fbe8fb11422546746
 #: 7194b0de3a6c48f09395740786c65dfe
 #: b76f2a1bbef34d9e922ff8ccd944e554
+#: ee4568b124ed45489d0ca2389831f6b6
+#: 43940aed299244c5a538ec120a016f76
+#: 7b9083154e6b470aa6f83a1a46968cd9
+#: e982cc1b46af41aca5a4ade870cbb45b
+#: 6560da2073c3421896857e7282cf3722
+#: d335e1267ee54dccb7ce08d2f96e082d
 msgid "Returns"
 msgstr ""
 
@@ -722,7 +742,9 @@ msgstr ""
 #: ../../ext/pages/index.rst:0
 #: db25be38ef7749eab275cfcf7ce4fb30
 #: b67cd9be980a4fdf8e179a3825ce7070
-#: 9f2e580e981742ac800ab0c0ffa636e3
+#: b67cd9be980a4fdf8e179a3825ce7070
+#: b67cd9be980a4fdf8e179a3825ce7070
+#: b67cd9be980a4fdf8e179a3825ce7070
 msgid "Raises"
 msgstr ""
 
@@ -1067,6 +1089,34 @@ msgstr ""
 msgid "If this button is for a URL, it does not have a custom ID."
 msgstr ""
 
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.row:1
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.row:1
+#: dd9f54893efb4676bdf90fd27986561d
+#: 1baa1d66ae084e69b552dda00eeb3809
+msgid "Gets or sets the row position of this item within its parent view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.row:3
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.row:3
+#: ddd63fd900d9470383dfa2a87694928d
+#: e678ad7b20054d43ad687a9f33dccb3e
+msgid "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate that no specific row is set."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.row:7
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.row:7
+#: 23221f1b8cac42baa39792993a1eb4f3
+#: 5aa856fc9a7841bc99debf8c3eeef373
+msgid "The row position of the item, or ``None`` if not explicitly set."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.row:10
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.row:10
+#: ddbceb2510a84338bc7582315e3cd972
+#: 9a2e9db42440405ea8f8faf1bc3241cf
+msgid "If the row value is not ``None`` and is outside the range [0, 4]."
+msgstr ""
+
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.sku_id:1
 #: c87c8240e5dd4ff69d19866fc6522c5f
 msgid "The ID of the SKU this button refers to."
@@ -1079,9 +1129,51 @@ msgstr ""
 
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.view:1
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.view:1
-#: 779b1ffc73854c80b1b87b3fb7b03228
-#: b3dc3a0e33de4930b09c6128690cc85b
-msgid "The underlying view for this item."
+#: 624fd0e7e2b94fa4afe0a2a37d896c6c
+#: 0691648cd462495ba6b66f420fefb0e8
+msgid "Gets the parent view associated with this item."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.view:3
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.view:3
+#: de1896f184794a4aad8b50b0a376c468
+#: 8c642c826f7d4546b997eb3342f2c947
+msgid "The view refers to the container that holds this item. This is typically set automatically when the item is added to a view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.view:6
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.view:6
+#: 7a8937a2dbb54965a590f68e98627806
+#: 9ef563a417bd443eba9d613f25f4ad4e
+msgid "The parent view of this item, or ``None`` if the item is not attached to any view."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.view:7
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.view:7
+#: ec07a9dea875411c92d7312aeba8aec1
+#: 23fd525d702e4836a60f604a7deca651
+msgid "Optional[:class:`View`]"
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.width:1
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.width:1
+#: dea0f3e5ef3c4c6ea0067ef707954f13
+#: dea0f3e5ef3c4c6ea0067ef707954f13
+msgid "Gets the width of the item in the UI layout."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.width:3
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.width:3
+#: f37e3f782a9d4a16bb3e8d35ea49d26d
+#: a81482f1a9b54169847bf97b702e19c2
+msgid "The width determines how much horizontal space this item occupies within its row."
+msgstr ""
+
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorButton.width:5
+#: ../../../discord/ext/pages/pagination.py:docstring of discord.ext.pages.PaginatorMenu.width:5
+#: c87c8240e5dd4ff69d19866fc6522c5f
+#: c87c8240e5dd4ff69d19866fc6522c5f
+msgid "The width of the item. Defaults to 1."
 msgstr ""
 
 #: ../../ext/pages/index.rst:321
@@ -1131,7 +1223,7 @@ msgstr ""
 
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:19
 #: 03aca7b4fad14c57a7cec8d245b4958b
-msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
+msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`."
 msgstr ""
 
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:23
@@ -1142,7 +1234,7 @@ msgstr ""
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.add_option:26
 #: ../../../discord/ext/pages/pagination.py:docstring of discord.ui.select.Select.append_option:7
 #: 8aa241191edb441496f0c1bd02fe0da0
-#: 39baed4852504458b9d8d46f72c39a2a
+#: 8aa241191edb441496f0c1bd02fe0da0
 msgid "The number of options exceeds 25."
 msgstr ""
 
