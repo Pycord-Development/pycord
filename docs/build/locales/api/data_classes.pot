@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 23:44+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -128,6 +128,7 @@ msgstr ""
 #: ../../docstring of discord.AttachmentFlags.is_clip:0
 #: ../../docstring of discord.AttachmentFlags.is_remix:0
 #: ../../docstring of discord.AttachmentFlags.is_thumbnail:0
+#: ../../docstring of discord.ChannelFlags.hide_media_download_options:0
 #: ../../docstring of discord.ChannelFlags.pinned:0
 #: ../../docstring of discord.ChannelFlags.require_tag:0
 #: ../../docstring of discord.Intents.auto_moderation_configuration:0
@@ -220,11 +221,14 @@ msgstr ""
 #: ../../docstring of discord.Permissions.use_application_commands:0
 #: ../../docstring of discord.Permissions.use_external_apps:0
 #: ../../docstring of discord.Permissions.use_external_emojis:0
+#: ../../docstring of discord.Permissions.use_external_sounds:0
 #: ../../docstring of discord.Permissions.use_external_stickers:0
 #: ../../docstring of discord.Permissions.use_slash_commands:0
+#: ../../docstring of discord.Permissions.use_soundboard:0
 #: ../../docstring of discord.Permissions.use_voice_activation:0
 #: ../../docstring of discord.Permissions.view_audit_log:0
 #: ../../docstring of discord.Permissions.view_channel:0
+#: ../../docstring of discord.Permissions.view_creator_monetization_analytics:0
 #: ../../docstring of discord.Permissions.view_guild_insights:0
 #: ../../docstring of discord.PublicUserFlags.active_developer:0
 #: ../../docstring of discord.PublicUserFlags.bot_http_interactions:0
@@ -296,6 +300,10 @@ msgstr ""
 #: 3cde02c1afdd471284767db5f3c67801
 #: 0d8cf03e305c441a937b9d418b558488
 #: e6bfdc42ce134a04bfb90118a9947aa3
+#: 0b6bdc9f79764717a733eb7a5958f520
+#: 0b6bdc9f79764717a733eb7a5958f520
+#: 0b6bdc9f79764717a733eb7a5958f520
+#: 0b6bdc9f79764717a733eb7a5958f520
 #: 0b6bdc9f79764717a733eb7a5958f520
 #: 0b6bdc9f79764717a733eb7a5958f520
 #: 0b6bdc9f79764717a733eb7a5958f520
@@ -776,6 +784,7 @@ msgstr ""
 #: ../../docstring of discord.AttachmentFlags.is_clip:3
 #: ../../docstring of discord.AttachmentFlags.is_remix:3
 #: ../../docstring of discord.AttachmentFlags.is_thumbnail:3
+#: ../../docstring of discord.ChannelFlags.hide_media_download_options:5
 #: ../../docstring of discord.ChannelFlags.pinned:3
 #: ../../docstring of discord.ChannelFlags.require_tag:6
 #: ../../docstring of discord.Intents.auto_moderation_configuration:9
@@ -868,11 +877,14 @@ msgstr ""
 #: ../../docstring of discord.Permissions.use_application_commands:5
 #: ../../docstring of discord.Permissions.use_external_apps:8
 #: ../../docstring of discord.Permissions.use_external_emojis:5
+#: ../../docstring of discord.Permissions.use_external_sounds:5
 #: ../../docstring of discord.Permissions.use_external_stickers:5
 #: ../../docstring of discord.Permissions.use_slash_commands:5
+#: ../../docstring of discord.Permissions.use_soundboard:5
 #: ../../docstring of discord.Permissions.use_voice_activation:3
 #: ../../docstring of discord.Permissions.view_audit_log:3
 #: ../../docstring of discord.Permissions.view_channel:3
+#: ../../docstring of discord.Permissions.view_creator_monetization_analytics:5
 #: ../../docstring of discord.Permissions.view_guild_insights:5
 #: ../../docstring of discord.PublicUserFlags.active_developer:5
 #: ../../docstring of discord.PublicUserFlags.bot_http_interactions:5
@@ -931,6 +943,10 @@ msgstr ""
 #: d50186c464354e00bb33065cbbc894ca
 #: 5e77c1cbf15f4edbace963555bada8f4
 #: 7ff8f88daaf64e81ae8e54a9a098fba8
+#: e1c1e64874eb4dc4b81588e9d084845b
+#: e1c1e64874eb4dc4b81588e9d084845b
+#: e1c1e64874eb4dc4b81588e9d084845b
+#: e1c1e64874eb4dc4b81588e9d084845b
 #: e1c1e64874eb4dc4b81588e9d084845b
 #: e1c1e64874eb4dc4b81588e9d084845b
 #: e1c1e64874eb4dc4b81588e9d084845b
@@ -1740,7 +1756,7 @@ msgstr ""
 
 #: ../../docstring of discord.Intents.emojis_and_stickers:12
 #: 8d522dd4ec834c5e834a8a3a1d82637a
-msgid ":class:`Emoji`"
+msgid ":class:`GuildEmoji`"
 msgstr ""
 
 #: ../../docstring of discord.Intents.emojis_and_stickers:13
@@ -2704,8 +2720,8 @@ msgid "Connects a shard. If the shard is already connected this does nothing."
 msgstr ""
 
 #: ../../../discord/shard.py:docstring of discord.ShardInfo.latency:1
-#: a1f36fed4af44c01a9019cc4415319a2
-msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."
+#: 77a9f6e52669457f8060e59f51444378
+msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard. If no heartbeat has been received yet this returns ``float('inf')``."
 msgstr ""
 
 #: ../../../discord/shard.py:docstring of discord.shard.ShardInfo.is_ws_ratelimited:1
@@ -3135,7 +3151,7 @@ msgstr ""
 #: cd02277db89943ed9ee4591e8af3275f
 #: cd02277db89943ed9ee4591e8af3275f
 #: cd02277db89943ed9ee4591e8af3275f
-msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+msgid "The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`."
 msgstr ""
 
 #: ../../../discord/message.py:docstring of discord.message.Message.add_reaction:7
@@ -4310,7 +4326,7 @@ msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.poll.PollMedia:15
 #: b006fb5c6c854d799f871d8884228162
-msgid "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
+msgid "Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]]"
 msgstr ""
 
 #: ../../../discord/poll.py:docstring of discord.poll.PollAnswer:1
@@ -4925,6 +4941,11 @@ msgstr ""
 #: ../../docstring of discord.ChannelFlags.require_tag:1
 #: 7f91812da4014ead9e3be4e675f7e057
 msgid "Returns ``True`` if a tag is required to be specified when creating a thread in a :class:`ForumChannel`."
+msgstr ""
+
+#: ../../docstring of discord.ChannelFlags.hide_media_download_options:1
+#: dd01266c445141a097c673b102981c4d
+msgid "Returns ``True`` if the embedded media download options are hidden for the media channel posts."
 msgstr ""
 
 #: ../../../discord/flags.py:docstring of discord.flags.SKUFlags:1
@@ -5630,7 +5651,7 @@ msgstr ""
 #: ../../../discord/activity.py:docstring of discord.activity.Game:24
 #: ../../../discord/activity.py:docstring of discord.activity.Game:29
 #: 710eb25609234a2eab35dd6ef26a8672
-#: 60ec9c34573a4bfd974edad2940fc120
+#: 710eb25609234a2eab35dd6ef26a8672
 msgid "The game's name."
 msgstr ""
 
@@ -5933,41 +5954,46 @@ msgid ":attr:`view_guild_insights`"
 msgstr ""
 
 #: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:10
+#: 9233959505d54774aefa37968742a69c
+msgid ":attr:`view_creator_monetization_analytics`"
+msgstr ""
+
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:11
 #: 7b554c4be8944c03a6ef76c5b73eede5
 msgid ":attr:`manage_guild`"
 msgstr ""
 
-#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:11
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:12
 #: 7f33532c524d48eeb208f2f316ac7879
 msgid ":attr:`change_nickname`"
 msgstr ""
 
-#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:12
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:13
 #: 606ad5d3e5084e568298891c3b0588e7
 msgid ":attr:`manage_nicknames`"
 msgstr ""
 
-#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:13
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:14
 #: 48fc50f3db1a4049aa6ed259c0016e20
 msgid ":attr:`kick_members`"
 msgstr ""
 
-#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:14
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:15
 #: e7d64bc06aef4cc7837d72e3051db957
 msgid ":attr:`ban_members`"
 msgstr ""
 
-#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:15
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:16
 #: c502768910914af6a4de9d4bbf12a158
 msgid ":attr:`administrator`"
 msgstr ""
 
-#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:17
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:18
 #: 58e62e0ef9144695b99159ad964e9797
 msgid "Added :attr:`stream`, :attr:`priority_speaker` and :attr:`use_slash_commands` permissions."
 msgstr ""
 
-#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:20
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.all_channel:21
 #: 1ac70319723b451d9c8b3252e52b6e79
 msgid "Added :attr:`create_public_threads`, :attr:`create_private_threads`, :attr:`manage_threads`, :attr:`use_external_stickers`, :attr:`send_messages_in_threads` and :attr:`request_to_speak` permissions."
 msgstr ""
@@ -5980,6 +6006,11 @@ msgstr ""
 #: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.general:6
 #: 150148bc2a3e43f7b18149bb6897ee01
 msgid "Permission :attr:`read_messages` is now included in the general permissions, but permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part of the general permissions."
+msgstr ""
+
+#: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.general:11
+#: 58e62e0ef9144695b99159ad964e9797
+msgid "Added :attr:`view_creator_monetization_analytics` permission."
 msgstr ""
 
 #: ../../../discord/permissions.py:docstring of discord.permissions.Permissions.membership:1
@@ -6294,6 +6325,21 @@ msgstr ""
 msgid "Returns ``True`` if a user can moderate members (timeout)."
 msgstr ""
 
+#: ../../docstring of discord.Permissions.view_creator_monetization_analytics:1
+#: 19b7f1d6020a42598e0f34f2792209d2
+msgid "Returns ``True`` if a user can view creator monetization (role subscription) analytics."
+msgstr ""
+
+#: ../../docstring of discord.Permissions.use_soundboard:1
+#: ee7d230c69a64cf6bd2fe7b2832f656a
+msgid "Returns ``True`` if a user can use the soundboard in a voice channel."
+msgstr ""
+
+#: ../../docstring of discord.Permissions.use_external_sounds:1
+#: ee7d230c69a64cf6bd2fe7b2832f656a
+msgid "Returns ``True`` if a user can use external soundboard sounds in a voice channel."
+msgstr ""
+
 #: ../../docstring of discord.Permissions.send_voice_messages:1
 #: 21e49f2607d948d1aac14cf0bde7222d
 msgid "Returns ``True`` if a member can send voice messages."
@@ -6431,6 +6477,6 @@ msgstr ""
 
 #: ../../../discord/application_role_connection.py:docstring of discord.application_role_connection.ApplicationRoleConnectionMetadata:23
 #: 246b61db68854beb9cb72d12dc9cfd40
-#: 4f3b424badea44d289a8fba4635a8270
+#: 246b61db68854beb9cb72d12dc9cfd40
 msgid "The description localizations for this metadata field. The values of this should be ``\"locale\": \"name\"``. See `here <https://discord.com/developers/docs/reference#locales>`_ for a list of valid locales."
 msgstr ""
