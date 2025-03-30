@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
+"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
+"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
 "Last-Translator: \\n"
 "Language-Team: none\\n"
 "MIME-Version: 1.0\\n"
@@ -1208,8 +1208,8 @@ msgstr "|commands| Extensions that fail internally due to ImportError will no lo
 msgid "|commands| Updating the :attr:`Paginator.suffix <.ext.commands.Paginator.suffix>` will not cause out of date calculations. (:dpy-issue:`2251`)"
 msgstr "|commands| Updating the :attr:`Paginator.suffix <.ext.commands.Paginator.suffix>` will not cause out of date calculations. (:dpy-issue:`2251`)"
 
-msgid "|commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, :dpy-issue:`2374`)"
-msgstr "|commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, :dpy-issue:`2374`)"
+msgid "|commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, 2374)"
+msgstr "|commands| Allow converters from custom extension packages. (:dpy-issue:`2369`, 2374)"
 
 msgid "|commands| Fix issue with paginator prefix being ``None`` causing empty pages. (:dpy-issue:`2471`)"
 msgstr "|commands| Fix issue with paginator prefix being ``None`` causing empty pages. (:dpy-issue:`2471`)"
