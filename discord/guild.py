@@ -1746,7 +1746,7 @@ class Guild(Hashable):
         discoverable: :class:`bool`
             Whether the guild should be discoverable in the discover tab.
         disable_raid_alerts: :class:`bool`
-            Whether activity alerts for the guild should be enabled.
+            Whether activity alerts for the guild should be disabled.
         enable_activity_feed: class:`bool`
             Whether the guild's user activity feed should be enabled.
         reason: Optional[:class:`str`]
