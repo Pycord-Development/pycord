@@ -187,7 +187,7 @@ class ScheduledEventRecurrenceRule:
             interval=2,  # interval CAN ONLY BE 2 in this context, and makes the rule be "every other Wednesday"
             weekdays=[2],
         )
-    Creating a recurrence rule that repeats every monthly on the fourth Wednesday: ::
+    Creating a recurrence rule that repeats every month on the fourth Wednesday: ::
         rrule = discord.ScheduledEventRecurrenceRule(
             start_date=...,
             frequency=discord.ScheduledEventRecurrenceFrequency.monthly,
