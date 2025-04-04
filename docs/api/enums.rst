@@ -2542,3 +2542,38 @@ of :class:`enum.Enum`.
     .. attribute:: daily
 
         The event will repeat on a daily basis.
+
+
+.. class:: ScheduledEventWeekday
+
+    Represents a scheduled event weekday.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: monday
+
+        Monday, the first day of the week. Index of 0.
+
+    .. attribute:: tuesday
+
+        Tuesday, the second day of the week. Index of 1.
+
+    .. attribute:: wednesday
+
+        Wednesday, the third day of the week. Index of 2.
+
+    .. attribute:: thursday
+
+        Thrusday, the fourth day of the week. Index of 3.
+
+    .. attribute:: friday
+
+        Friday, the fifth day of the week. Index of 4.
+
+    .. attribute:: saturday
+
+        Saturday, the sixth day of the week. Index of 5.
+
+    .. attribute:: sunday
+
+        Sunday, the seventh day of the week. Index of 6.
