@@ -315,6 +315,7 @@ class WebhookAdapter:
             params["thread_id"] = thread_id
 
         if thread_name:
+            payload = payload or {}
             payload["thread_name"] = thread_name
 
         route = Route(
