@@ -355,7 +355,9 @@ class ScheduledEventRecurrenceRule:
                 setattr(self, attr, MISSING)
             elif value is not MISSING:
                 if attr == "_weekdays":
-                    value = self._parse_weekdays(weekdays)  # pyright: ignore[reportArgumentType]
+                    value = self._parse_weekdays(
+                        weekdays
+                    )  # pyright: ignore[reportArgumentType]
                 setattr(self, attr, value)
 
         return self
@@ -372,7 +374,10 @@ class ScheduledEventRecurrenceRule:
     def _parse_weekdays(
         self, weekdays: list[WeekDay | ScheduledEventWeekday]
     ) -> list[ScheduledEventWeekday]:
-        return [w if w is ScheduledEventWeekday else try_enum(ScheduledEventWeekday, w) for w in weekdays]
+        return [
+            w if w is ScheduledEventWeekday else try_enum(ScheduledEventWeekday, w)
+            for w in weekdays
+        ]
 
     def _get_weekdays(self) -> list[WeekDay]:
         return [w.value for w in self._weekdays]
@@ -398,7 +403,9 @@ class ScheduledEventRecurrenceRule:
         self.count = data.get("count")
 
         weekdays = data.get("by_weekday", MISSING) or MISSING
-        self._weekdays = self._parse_weekdays(weekdays)  # pyright: ignore[reportArgumentType]
+        self._weekdays = self._parse_weekdays(
+            weekdays
+        )  # pyright: ignore[reportArgumentType]
 
         n_weekdays = data.get("by_n_weekday", MISSING) or MISSING
         if n_weekdays is not MISSING:
