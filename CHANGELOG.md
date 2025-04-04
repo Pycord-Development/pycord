@@ -103,6 +103,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
+- Fixed `TypeError` when specifying `thread_name` in `Webhook.send`
+  ([#2761])(https://github.com/Pycord-Development/pycord/pull/2761)
 
 ### Changed
 
