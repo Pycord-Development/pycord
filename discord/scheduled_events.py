@@ -200,7 +200,7 @@ class ScheduledEventRecurrenceRule:
                 ),
             ],
         )
-    Creating a recurrence rule that repeats anually on July 24: ::
+    Creating a recurrence rule that repeats anually on July 4: ::
         rrule = discord.ScheduledEventRecurrenceRule(
             start_date=...,
             frequency=discord.ScheduledEventRecurrenceFrequency.yearly,
