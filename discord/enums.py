@@ -77,7 +77,7 @@ __all__ = (
     "IntegrationType",
     "InteractionContextType",
     "ScheduledEventRecurrenceFrequency",
-    "ScheduledEventWeekday"
+    "ScheduledEventWeekday",
 )
 
 
