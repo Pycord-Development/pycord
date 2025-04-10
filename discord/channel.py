@@ -2780,10 +2780,6 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
             .. versionadded:: 2.7
 
-        nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
-
-            .. versionadded:: 2.7
 
         Returns
         -------
@@ -2844,7 +2840,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
         .. note::
 
-            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
     flags: :class:`ChannelFlags`
         Extra features of the channel.
 
@@ -2873,7 +2868,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     def __repr__(self) -> str:
         return (
             "<CategoryChannel"
-            f" id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
+            f" id={self.id} name={self.name!r} position={self.position}"
         )
 
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
@@ -2896,10 +2891,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     def type(self) -> ChannelType:
         """The channel's Discord type."""
         return ChannelType.category
-
-    def is_nsfw(self) -> bool:
-        """Checks if the category is NSFW."""
-        return self.nsfw
 
     @utils.copy_doc(discord.abc.GuildChannel.clone)
     async def clone(
