@@ -2841,8 +2841,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     position: Optional[:class:`int`]
         The position in the category list. This is a number that starts at 0. e.g. the
         top category is position 0. Can be ``None`` if the channel was received in an interaction.
-    nsfw: :class:`bool`
-        If the channel is marked as "not safe for work".
 
         .. note::
 
@@ -2886,7 +2884,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
-            self.nsfw: bool = data.get("nsfw", False)
             self.position: int = data.get("position")
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
             self._fill_overwrites(data)
@@ -2916,7 +2913,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         *,
         name: str = ...,
         position: int = ...,
-        nsfw: bool = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         reason: str | None = ...,
     ) -> CategoryChannel | None: ...
@@ -2944,8 +2940,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             The new category's name.
         position: :class:`int`
             The new category's position.
-        nsfw: :class:`bool`
-            To mark the category as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for editing this category. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
