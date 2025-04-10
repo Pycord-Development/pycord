@@ -2780,7 +2780,6 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
             .. versionadded:: 2.7
 
-
         Returns
         -------
         Optional[:class:`.StageChannel`]
