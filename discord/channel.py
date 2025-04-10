@@ -1039,6 +1039,8 @@ class ForumChannel(_TextChannel):
         if self.default_sort_order is not None:
             self.default_sort_order = try_enum(SortOrder, self.default_sort_order)
 
+        self.default_reaction_emoji = None
+
         reaction_emoji_ctx: dict = data.get("default_reaction_emoji")
         if reaction_emoji_ctx is not None:
             emoji_name = reaction_emoji_ctx.get("emoji_name")
@@ -1724,6 +1726,11 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         Extra features of the channel.
 
         .. versionadded:: 2.0
+
+    nsfw: :class:`bool`
+        To mark the channel as NSFW or not.
+
+        .. versionadded:: 2.7
     """
 
     def __init__(
@@ -2042,6 +2049,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
+        nsfw: int = ...,
         reason: str | None = ...,
     ) -> VoiceChannel | None: ...
 
@@ -2091,6 +2099,17 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             The camera video quality for the voice channel's participants.
 
             .. versionadded:: 2.0
+
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            The maximum value possible is `21600`.
+
+            .. versionadded:: 2.7
+
+        nsfw: :class:`bool`
+            To mark the channel as NSFW or not.
+
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -2250,6 +2269,17 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     last_message_id: Optional[:class:`int`]
         The ID of the last message sent to this channel. It may not always point to an existing or valid message.
         .. versionadded:: 2.5
+
+    slowmode_delay: :class:`int`
+        Specifies the slowmode rate limit for user in this channel, in seconds.
+        The maximum value possible is `21600`.
+
+        .. versionadded:: 2.7
+
+    nsfw: :class:`bool`
+        To mark the channel as NSFW or not.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = ("topic",)
@@ -2734,6 +2764,22 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
             .. versionadded:: 2.0
 
+        bitrate: :class:`int`
+            The channel's preferred audio bitrate in bits per second.
+
+            .. versionadded:: 2.7
+
+        user_limit: :class:`int`
+            The channel's limit for number of members that can be in a voice channel.
+
+            .. versionadded:: 2.7
+
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            The maximum value possible is `21600`.
+
+            .. versionadded:: 2.7
+
         Returns
         -------
         Optional[:class:`.StageChannel`]
@@ -2790,12 +2836,9 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     position: Optional[:class:`int`]
         The position in the category list. This is a number that starts at 0. e.g. the
         top category is position 0. Can be ``None`` if the channel was received in an interaction.
-    nsfw: :class:`bool`
-        If the channel is marked as "not safe for work".
 
         .. note::
 
-            To check if the channel or the guild of that channel are marked as NSFW, consider :meth:`is_nsfw` instead.
     flags: :class:`ChannelFlags`
         Extra features of the channel.
 
@@ -2824,7 +2867,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     def __repr__(self) -> str:
         return (
             "<CategoryChannel"
-            f" id={self.id} name={self.name!r} position={self.position} nsfw={self.nsfw}>"
+            f" id={self.id} name={self.name!r} position={self.position}"
         )
 
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
@@ -2835,7 +2878,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
-            self.nsfw: bool = data.get("nsfw", False)
             self.position: int = data.get("position")
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
             self._fill_overwrites(data)
@@ -2849,10 +2891,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """The channel's Discord type."""
         return ChannelType.category
 
-    def is_nsfw(self) -> bool:
-        """Checks if the category is NSFW."""
-        return self.nsfw
-
     @utils.copy_doc(discord.abc.GuildChannel.clone)
     async def clone(
         self, *, name: str | None = None, reason: str | None = None
@@ -2865,7 +2903,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         *,
         name: str = ...,
         position: int = ...,
-        nsfw: bool = ...,
         overwrites: Mapping[Role | Member, PermissionOverwrite] = ...,
         reason: str | None = ...,
     ) -> CategoryChannel | None: ...
@@ -2893,8 +2930,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             The new category's name.
         position: :class:`int`
             The new category's position.
-        nsfw: :class:`bool`
-            To mark the category as NSFW or not.
         reason: Optional[:class:`str`]
             The reason for editing this category. Shows up on the audit log.
         overwrites: Dict[Union[:class:`Role`, :class:`Member`, :class:`~discord.abc.Snowflake`], :class:`PermissionOverwrite`]
