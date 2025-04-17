@@ -92,7 +92,7 @@ jobs:
           version-branch-name: ${{ needs.pre_config.outputs.branch_name }}
           ref: ${{ github.ref_name }}
           repository: ${{ github.repository }}
-          python-version: "3.13"
+          python-version: "3.14"
           release-requirements: "requirements/_release.txt"
           version: ${{ needs.pre_config.outputs.version }}
           is-rc: ${{ needs.pre_config.outputs.is_rc }}
