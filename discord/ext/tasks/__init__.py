@@ -223,6 +223,7 @@ class Loop(Generic[LF]):
             count=self.count,
             reconnect=self.reconnect,
             loop=self.loop,
+            overlap=self.overlap,
         )
         copy._injected = obj
         copy._before_loop = self._before_loop
