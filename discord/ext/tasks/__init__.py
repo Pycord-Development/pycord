@@ -783,6 +783,8 @@ def loop(
     overlap: :class:`bool`
         Whether to allow the next iteration of the loop to run even if the previous one has not completed.
 
+        .. versionadded:: 2.7
+
     Raises
     ------
     ValueError
