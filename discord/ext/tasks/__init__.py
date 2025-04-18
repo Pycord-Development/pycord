@@ -117,6 +117,7 @@ class Loop(Generic[LF]):
         self._is_being_cancelled = False
         self._has_failed = False
         self._stop_next_iteration = False
+        self._tasks: list[asyncio.Task[Any]] = []
 
         if self.count is not None and self.count <= 0:
             raise ValueError("count must be greater than 0 or None.")
@@ -169,7 +170,8 @@ class Loop(Generic[LF]):
                     self._next_iteration = self._get_next_sleep_time()
                 try:
                     if self.overlap:
-                        asyncio.create_task(self.coro(*args, **kwargs))
+                        task = asyncio.create_task(self.coro(*args, **kwargs))
+                        self._tasks.append(task)
                     else:
                         await self.coro(*args, **kwargs)
                     self._last_iteration_failed = False
@@ -197,6 +199,9 @@ class Loop(Generic[LF]):
 
         except asyncio.CancelledError:
             self._is_being_cancelled = True
+            for task in self._tasks:
+                task.cancel()
+            await asyncio.gather(*self._tasks, return_exceptions=True)
             raise
         except Exception as exc:
             self._has_failed = True
