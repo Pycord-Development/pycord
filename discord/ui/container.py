@@ -8,13 +8,13 @@ from ..components import ActionRow
 from ..components import Container as ContainerComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
+from ..utils import get
 from .file import File
 from .item import Item, ItemCallbackType
 from .media_gallery import MediaGallery
 from .section import Section
 from .separator import Separator
 from .text_display import TextDisplay
-from ..utils import get
 from .view import _walk_all_components
 
 __all__ = ("Container",)
