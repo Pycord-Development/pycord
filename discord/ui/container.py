@@ -94,7 +94,7 @@ class Container(Item[V]):
             self.add_item(item)
         for i in items:
             self.add_item(i)
-    
+
     def _add_component_from_item(self, item: Item):
         if item._underlying.is_v2():
             self._underlying.components.append(item._underlying)
