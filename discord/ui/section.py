@@ -50,7 +50,6 @@ class Section(Item[V]):
         super().__init__()
 
         self.items = []
-        [i._underlying for i in items]
         self.accessory = None
 
         self._underlying = SectionComponent._raw_construct(
@@ -73,6 +72,14 @@ class Section(Item[V]):
             self.set_accessory(accessory)
         for i in items:
             self.add_item(i)
+
+    def _add_component_from_item(self, item: Item):
+        self._underlying.components.append(item._underlying)
+
+    def _set_components(self, items: list[Item]):
+        self._underlying.components.clear()
+        for item in items:
+            self._add_component_from_item(item)
 
     def add_item(self, item: Item) -> None:
         """Adds an item to the section.
@@ -97,7 +104,7 @@ class Section(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         self.items.append(item)
-        self._underlying.components.append(item._underlying)
+        self._add_component_from_item(item)
 
     def add_text(self, content: str, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the section.
@@ -166,6 +173,8 @@ class Section(Item[V]):
         return 5
 
     def to_component_dict(self) -> SectionComponentPayload:
+        self._set_components(self.items)
+        self.set_accessory(self.accessory)
         return self._underlying.to_dict()
 
     @classmethod
