@@ -91,7 +91,7 @@ class Loop(Generic[LF]):
         count: int | None,
         reconnect: bool,
         loop: asyncio.AbstractEventLoop,
-        overlap: bool
+        overlap: bool,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
@@ -802,7 +802,7 @@ def loop(
             time=time,
             reconnect=reconnect,
             loop=loop,
-            overlap=overlap
+            overlap=overlap,
         )
 
     return decorator
