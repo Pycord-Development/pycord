@@ -59,10 +59,14 @@ class SleepHandle:
         relative_delta = discord.utils.compute_timedelta(dt)
         self.handle = loop.call_later(relative_delta, future.set_result, True)
 
+    def _set_result_safe(self):
+        if not self.future.done():
+            self.future.set_result(True)
+
     def recalculate(self, dt: datetime.datetime) -> None:
         self.handle.cancel()
         relative_delta = discord.utils.compute_timedelta(dt)
-        self.handle = self.loop.call_later(relative_delta, self.future.set_result, True)
+        self.handle = loop.call_later(relative_delta, self._set_result_safe)
 
     def wait(self) -> asyncio.Future[Any]:
         return self.future
@@ -91,10 +95,12 @@ class Loop(Generic[LF]):
         count: int | None,
         reconnect: bool,
         loop: asyncio.AbstractEventLoop,
+        overlap: bool,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
         self.loop: asyncio.AbstractEventLoop = loop
+        self.overlap: bool = overlap
         self.count: int | None = count
         self._current_loop = 0
         self._handle: SleepHandle = MISSING
@@ -115,6 +121,7 @@ class Loop(Generic[LF]):
         self._is_being_cancelled = False
         self._has_failed = False
         self._stop_next_iteration = False
+        self._tasks: list[asyncio.Task[Any]] = []
 
         if self.count is not None and self.count <= 0:
             raise ValueError("count must be greater than 0 or None.")
@@ -166,7 +173,11 @@ class Loop(Generic[LF]):
                     self._last_iteration = self._next_iteration
                     self._next_iteration = self._get_next_sleep_time()
                 try:
-                    await self.coro(*args, **kwargs)
+                    if self.overlap:
+                        task = asyncio.create_task(self.coro(*args, **kwargs))
+                        self._tasks.append(task)
+                    else:
+                        await self.coro(*args, **kwargs)
                     self._last_iteration_failed = False
                     backoff = ExponentialBackoff()
                 except self._valid_exception:
@@ -192,6 +203,9 @@ class Loop(Generic[LF]):
 
         except asyncio.CancelledError:
             self._is_being_cancelled = True
+            for task in self._tasks:
+                task.cancel()
+            await asyncio.gather(*self._tasks, return_exceptions=True)
             raise
         except Exception as exc:
             self._has_failed = True
@@ -218,6 +232,7 @@ class Loop(Generic[LF]):
             count=self.count,
             reconnect=self.reconnect,
             loop=self.loop,
+            overlap=self.overlap,
         )
         copy._injected = obj
         copy._before_loop = self._before_loop
@@ -738,6 +753,7 @@ def loop(
     count: int | None = None,
     reconnect: bool = True,
     loop: asyncio.AbstractEventLoop = MISSING,
+    overlap: bool = False,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
     optional reconnect logic. The decorator returns a :class:`Loop`.
@@ -774,6 +790,11 @@ def loop(
         The loop to use to register the task, if not given
         defaults to :func:`asyncio.get_event_loop`.
 
+    overlap: :class:`bool`
+        Whether to allow the next iteration of the loop to run even if the previous one has not completed.
+
+        .. versionadded:: 2.7
+
     Raises
     ------
     ValueError
@@ -793,6 +814,7 @@ def loop(
             time=time,
             reconnect=reconnect,
             loop=loop,
+            overlap=overlap,
         )
 
     return decorator
