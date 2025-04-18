@@ -154,7 +154,13 @@ class Container(Item[V]):
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
         if isinstance(id, int):
-            return get(self.items, id=id)
+            child = get(self.items, id=id)
+            if not child:
+                for i in self.items:
+                    if hasattr(i, "get_item"):
+                        if child := i.get_item(custom_id):
+                            return child
+            return child
         return get(self.items, custom_id=id)
 
     def add_section(
