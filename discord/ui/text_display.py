@@ -62,6 +62,10 @@ class TextDisplay(Item[V]):
     def to_component_dict(self) -> TextDisplayComponentPayload:
         return self._underlying.to_dict()
 
+    def copy_text(self) -> str:
+        """Returns the content of this TextDisplay. Equivalent to the `Copy Text` option on Discord clients."""
+        return self.content
+
     @classmethod
     def from_component(cls: type[T], component: TextDisplayComponent) -> T:
         return cls(component.content, id=component.id)

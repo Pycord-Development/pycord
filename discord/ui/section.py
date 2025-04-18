@@ -106,6 +106,21 @@ class Section(Item[V]):
         self.items.append(item)
         self._add_component_from_item(item)
 
+    def get_item(self, id: int) -> Item | None:
+        """Get an item from this section. Alias for `utils.get(section.items, id=id)`.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The id of the item to get
+
+        Returns
+        -------
+        Optional[:class:`Item`]
+            The item with the matching ``id`` if it exists.
+        """
+        return get(self.items, id=id)
+
     def add_text(self, content: str, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the section.
 
@@ -163,6 +178,10 @@ class Section(Item[V]):
                 setattr(self.view, self.accessory._tmp_func.__name__, self.accessory)
                 delattr(self.accessory, "_tmp_func")
             self.accessory._view = value
+
+    def copy_text(self) -> str:
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section. Equivalent to the `Copy Text` option on Discord clients."""
+        return "\n".join(i.text for i in self.items)
 
     @property
     def type(self) -> ComponentType:

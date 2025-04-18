@@ -618,6 +618,10 @@ class View:
             if exclusions is None or child not in exclusions:
                 child.disabled = False
 
+    def copy_text(self) -> str:
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
+        return "\n".join([i.copy_text() for i in self.children])
+
     @property
     def message(self):
         return self._message
