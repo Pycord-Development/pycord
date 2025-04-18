@@ -14,6 +14,7 @@ from .media_gallery import MediaGallery
 from .section import Section
 from .separator import Separator
 from .text_display import TextDisplay
+from ..utils import get
 from .view import _walk_all_components
 
 __all__ = ("Container",)
