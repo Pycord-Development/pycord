@@ -158,7 +158,7 @@ class Container(Item[V]):
             if not child:
                 for i in self.items:
                     if hasattr(i, "get_item"):
-                        if child := i.get_item(custom_id):
+                        if child := i.get_item(id):
                             return child
             return child
         return get(self.items, custom_id=id)
