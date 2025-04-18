@@ -59,10 +59,14 @@ class SleepHandle:
         relative_delta = discord.utils.compute_timedelta(dt)
         self.handle = loop.call_later(relative_delta, future.set_result, True)
 
+    def _set_result_safe(self):
+    if not self.future.done():
+        self.future.set_result(True)
+
     def recalculate(self, dt: datetime.datetime) -> None:
         self.handle.cancel()
         relative_delta = discord.utils.compute_timedelta(dt)
-        self.handle = self.loop.call_later(relative_delta, self.future.set_result, True)
+        self.handle = loop.call_later(relative_delta, self._set_result_safe)
 
     def wait(self) -> asyncio.Future[Any]:
         return self.future
