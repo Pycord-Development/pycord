@@ -60,8 +60,8 @@ class SleepHandle:
         self.handle = loop.call_later(relative_delta, future.set_result, True)
 
     def _set_result_safe(self):
-    if not self.future.done():
-        self.future.set_result(True)
+        if not self.future.done():
+            self.future.set_result(True)
 
     def recalculate(self, dt: datetime.datetime) -> None:
         self.handle.cancel()
