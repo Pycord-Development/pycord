@@ -183,6 +183,7 @@ class Select(Item[V]):
         if len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
+        self._provided_custom_id = value is not None
 
     @property
     def placeholder(self) -> str | None:

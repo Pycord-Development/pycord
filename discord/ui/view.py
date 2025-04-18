@@ -366,8 +366,9 @@ class View:
         self.children.clear()
         self.__weights.clear()
 
-    def get_item(self, custom_id: str) -> Item | None:
-        """Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`.
+    def get_item(self, custom_id: str | int) -> Item | None:
+        """Get an item from the view. Alias for `utils.get(view.children, ...)`.
+        If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
 
         Parameters
         ----------
@@ -377,8 +378,10 @@ class View:
         Returns
         -------
         Optional[:class:`Item`]
-            The item with the matching ``custom_id`` if it exists.
+            The item with the matching ``custom_id`` or ``id`` if it exists.
         """
+        if isinstance(custom_id, int):
+            return get(self.children, id=custom_id)
         return get(self.children, custom_id=custom_id)
 
     async def interaction_check(self, interaction: Interaction) -> bool:

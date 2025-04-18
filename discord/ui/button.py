@@ -174,6 +174,7 @@ class Button(Item[V]):
         if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
+        self._provided_custom_id = value is not None
 
     @property
     def url(self) -> str | None:

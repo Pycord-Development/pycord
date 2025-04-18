@@ -94,6 +94,25 @@ class Container(Item[V]):
             self.add_item(item)
         for i in items:
             self.add_item(i)
+    
+    def _add_component_from_item(self, item: Item):
+        if item._underlying.is_v2():
+            self._underlying.components.append(item._underlying)
+        else:
+            for row in reversed(self._underlying.components):
+                if (
+                    isinstance(row, ActionRow) and row.width + item.width <= 5
+                ):  # If a valid ActionRow exists
+                    row.children.append(item._underlying)
+                    break
+            else:
+                row = ActionRow.with_components(item._underlying)
+                self._underlying.components.append(row)
+
+    def _set_components(self, items: list[Item]):
+        self._underlying.components.clear()
+        for item in items:
+            self._add_component_from_item(item)
 
     def add_item(self, item: Item) -> None:
         """Adds an item to the container.
@@ -117,21 +136,25 @@ class Container(Item[V]):
         item._view = self.view
 
         self.items.append(item)
+        self._add_component_from_item(item)
 
-        # reuse weight system?
+    def get_item(self, id: str | int) -> Item | None:
+        """Get a top-level item from this container. Alias for `utils.get(container.items, ...)`.
+        If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
 
-        if item._underlying.is_v2():
-            self._underlying.components.append(item._underlying)
-        else:
-            for row in reversed(self._underlying.components):
-                if (
-                    isinstance(row, ActionRow) and row.width + item.width <= 5
-                ):  # If a valid ActionRow exists
-                    row.children.append(item._underlying)
-                    break
-            else:
-                row = ActionRow.with_components(item._underlying)
-                self._underlying.components.append(row)
+        Parameters
+        ----------
+        id: :class:`str`
+            The id or custom_id of the item to get
+
+        Returns
+        -------
+        Optional[:class:`Item`]
+            The item with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if isinstance(id, int):
+            return get(self.items, id=id)
+        return get(self.items, custom_id=id)
 
     def add_section(
         self,
@@ -281,6 +304,7 @@ class Container(Item[V]):
         return 5
 
     def to_component_dict(self) -> ContainerComponentPayload:
+        self._set_components(self.items)
         return self._underlying.to_dict()
 
     @classmethod
