@@ -385,7 +385,7 @@ class View:
             if not child:
                 for i in self.children:
                     if hasattr(i, "get_item"):
-                        if (child := i.get_item(custom_id)):
+                        if child := i.get_item(custom_id):
                             return child
             return child
         return get(self.children, custom_id=custom_id)
