@@ -95,6 +95,10 @@ class MediaGallery(Item[V]):
 
         self.append_item(item)
 
+    @Item.view.setter
+    def view(self, value):
+        self._view = value
+
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
