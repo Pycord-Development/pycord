@@ -739,6 +739,9 @@ class MediaGalleryItem:
     def url(self) -> str:
         """Returns the underlying URL of this gallery item."""
         return self.media.url
+    
+    def is_dispatchable(self) -> bool:
+        return False
 
     @classmethod
     def from_dict(cls, data: MediaGalleryItemPayload, state=None) -> MediaGalleryItem:
