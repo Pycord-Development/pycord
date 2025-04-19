@@ -63,11 +63,11 @@ class Section(Item[V]):
             item: Item = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
-            if self.view:
-                item.callback = partial(func, self.view, item)
-                setattr(self.view, func.__name__, item)
-            else:
+            item.callback = partial(func, self.view, item)
+            if not self.view:
                 item._tmp_func = func
+            else:
+                setattr(self.view, func.__name__, item)
             self.set_accessory(item)
         elif accessory:
             self.set_accessory(accessory)
@@ -164,6 +164,8 @@ class Section(Item[V]):
 
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
+        if self.view:
+            item._view = self.view
 
         self.accessory = item
         self._underlying.accessory = item._underlying

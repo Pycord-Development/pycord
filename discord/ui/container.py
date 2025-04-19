@@ -87,11 +87,11 @@ class Container(Item[V]):
             item: Item = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
-            if self.view:
-                item.callback = partial(func, self.view, item)
-                setattr(self.view, func.__name__, item)
-            else:
+            item.callback = partial(func, self.view, item)
+            if not self.view:
                 item._tmp_func = func
+            else:
+                setattr(self.view, func.__name__, item)
             self.add_item(item)
         for i in items:
             self.add_item(i)
@@ -135,6 +135,8 @@ class Container(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         item._view = self.view
+        if hasattr(item, "items"):
+            item.view = self
 
         self.items.append(item)
         self._add_component_from_item(item)
@@ -305,6 +307,8 @@ class Container(Item[V]):
                 setattr(self.view, item._tmp_func.__name__, item)
                 delattr(item, "_tmp_func")
             item._view = value
+            if hasattr(item, "items"):
+                item.view = value
 
     @property
     def type(self) -> ComponentType:
