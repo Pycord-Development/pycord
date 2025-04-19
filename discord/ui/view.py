@@ -37,12 +37,19 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
 from ..components import Component
+from ..components import Container as ContainerComponent
+from ..components import FileComponent
+from ..components import MediaGallery as MediaGalleryComponent
+from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
+from ..components import Separator as SeparatorComponent
+from ..components import TextDisplay as TextDisplayComponent
+from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..utils import get
 from .item import Item, ItemCallbackType
 
-__all__ = ("View",)
+__all__ = ("View", "_component_to_item", "_walk_all_components")
 
 
 if TYPE_CHECKING:
@@ -69,6 +76,38 @@ def _component_to_item(component: Component) -> Item:
         from .select import Select
 
         return Select.from_component(component)
+    if isinstance(component, SectionComponent):
+        from .section import Section
+
+        return Section.from_component(component)
+    if isinstance(component, TextDisplayComponent):
+        from .text_display import TextDisplay
+
+        return TextDisplay.from_component(component)
+    if isinstance(component, ThumbnailComponent):
+        from .thumbnail import Thumbnail
+
+        return Thumbnail.from_component(component)
+    if isinstance(component, MediaGalleryComponent):
+        from .media_gallery import MediaGallery
+
+        return MediaGallery.from_component(component)
+    if isinstance(component, FileComponent):
+        from .file import File
+
+        return File.from_component(component)
+    if isinstance(component, SeparatorComponent):
+        from .separator import Separator
+
+        return Separator.from_component(component)
+    if isinstance(component, ContainerComponent):
+        from .container import Container
+
+        return Container.from_component(component)
+    if isinstance(component, ActionRowComponent):
+        # Handle ActionRow.children manually, or design ui.ActionRow?
+
+        return component
     return Item.from_component(component)
 
 
@@ -92,6 +131,8 @@ class _ViewWeights:
         raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item) -> None:
+        if item._underlying.is_v2() and not self.requires_v2():
+            self.weights.extend([0, 0, 0, 0, 0])
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -112,6 +153,9 @@ class _ViewWeights:
 
     def clear(self) -> None:
         self.weights = [0, 0, 0, 0, 0]
+
+    def requires_v2(self) -> bool:
+        return sum(w > 0 for w in self.weights) > 5
 
 
 class View:
@@ -219,16 +263,20 @@ class View:
         children = sorted(self.children, key=key)
         components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
-            children = [item.to_component_dict() for item in group]
+            items = list(group)
+            children = [item.to_component_dict() for item in items]
             if not children:
                 continue
 
-            components.append(
-                {
-                    "type": 1,
-                    "components": children,
-                }
-            )
+            if any([i._underlying.is_v2() for i in items]):
+                components += children
+            else:
+                components.append(
+                    {
+                        "type": 1,
+                        "components": children,
+                    }
+                )
 
         return components
 
@@ -293,6 +341,8 @@ class View:
         self.__weights.add_item(item)
 
         item._view = self
+        if hasattr(item, "items"):
+            item.view = self
         self.children.append(item)
 
     def remove_item(self, item: Item) -> None:
@@ -316,8 +366,9 @@ class View:
         self.children.clear()
         self.__weights.clear()
 
-    def get_item(self, custom_id: str) -> Item | None:
-        """Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`.
+    def get_item(self, custom_id: str | int) -> Item | None:
+        """Get an item from the view. Alias for `utils.get(view.children, ...)`.
+        If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
 
         Parameters
         ----------
@@ -327,8 +378,16 @@ class View:
         Returns
         -------
         Optional[:class:`Item`]
-            The item with the matching ``custom_id`` if it exists.
+            The item with the matching ``custom_id`` or ``id`` if it exists.
         """
+        if isinstance(custom_id, int):
+            child = get(self.children, id=custom_id)
+            if not child:
+                for i in self.children:
+                    if hasattr(i, "get_item"):
+                        if child := i.get_item(custom_id):
+                            return child
+            return child
         return get(self.children, custom_id=custom_id)
 
     async def interaction_check(self, interaction: Interaction) -> bool:
@@ -515,6 +574,16 @@ class View:
             item.is_persistent() for item in self.children
         )
 
+    def is_components_v2(self) -> bool:
+        """Whether the view contains V2 components.
+
+        A view containing V2 components may not be sent alongside message content or embeds.
+        """
+        return (
+            any([item._underlying.is_v2() for item in self.children])
+            or self.__weights.requires_v2()
+        )
+
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
 
@@ -554,6 +623,10 @@ class View:
         for child in self.children:
             if exclusions is None or child not in exclusions:
                 child.disabled = False
+
+    def copy_text(self) -> str:
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
+        return "\n".join([i.copy_text() for i in self.children])
 
     @property
     def message(self):
@@ -597,6 +670,31 @@ class ViewStore:
         for item in view.children:
             if item.is_dispatchable():
                 self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
+            else:
+                if hasattr(item, "items"):
+                    for sub_item in item.items:
+                        if sub_item.is_dispatchable():
+                            self._views[
+                                (sub_item.type.value, message_id, sub_item.custom_id)
+                            ] = (view, sub_item)
+                        elif hasattr(sub_item, "accessory"):
+                            if sub_item.accessory.is_dispatchable():
+                                self._views[
+                                    (
+                                        sub_item.accessory.type.value,
+                                        message_id,
+                                        sub_item.accessory.custom_id,
+                                    )
+                                ] = (view, sub_item.accessory)
+                if hasattr(item, "accessory"):
+                    if item.accessory.is_dispatchable():
+                        self._views[
+                            (
+                                item.accessory.type.value,
+                                message_id,
+                                item.accessory.custom_id,
+                            )
+                        ] = (view, item.accessory)
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
@@ -636,4 +734,4 @@ class ViewStore:
     def update_from_message(self, message_id: int, components: list[ComponentPayload]):
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
-        view.refresh([_component_factory(d) for d in components])
+        view.refresh([_component_factory(d, state=self._state) for d in components])

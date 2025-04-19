@@ -1,0 +1,335 @@
+from __future__ import annotations
+
+from functools import partial
+from typing import TYPE_CHECKING, ClassVar, TypeVar
+
+from ..colour import Colour
+from ..components import ActionRow
+from ..components import Container as ContainerComponent
+from ..components import _component_factory
+from ..enums import ComponentType, SeparatorSpacingSize
+from ..utils import get
+from .file import File
+from .item import Item, ItemCallbackType
+from .media_gallery import MediaGallery
+from .section import Section
+from .separator import Separator
+from .text_display import TextDisplay
+from .view import _walk_all_components
+
+__all__ = ("Container",)
+
+if TYPE_CHECKING:
+    from ..types.components import ContainerComponent as ContainerComponentPayload
+    from .view import View
+
+
+C = TypeVar("C", bound="Container")
+V = TypeVar("V", bound="View", covariant=True)
+
+
+class Container(Item[V]):
+    """Represents a UI Container. Containers may contain up to 10 items.
+
+    The current items supported are:
+
+    - :class:`discord.ui.Button`
+    - :class:`discord.ui.Select`
+    - :class:`discord.ui.Section`
+    - :class:`discord.ui.TextDisplay`
+    - :class:`discord.ui.MediaGallery`
+    - :class:`discord.ui.File`
+    - :class:`discord.ui.Separator`
+
+    .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    *items: :class:`Item`
+        The initial items in this container, up to 10.
+    colour: Union[:class:`Colour`, :class:`int`]
+        The accent colour of the container. Aliased to ``color`` as well.
+    """
+
+    __container_children_items__: ClassVar[list[ItemCallbackType]] = []
+
+    def __init_subclass__(cls) -> None:
+        children: list[ItemCallbackType] = []
+        for base in reversed(cls.__mro__):
+            for member in base.__dict__.values():
+                if hasattr(member, "__discord_ui_model_type__"):
+                    children.append(member)
+
+        cls.__container_children_items__ = children
+
+    def __init__(
+        self,
+        *items: Item,
+        colour: int | Colour | None = None,
+        color: int | Colour | None = None,
+        spoiler: bool = False,
+        id: int | None = None,
+    ):
+        super().__init__()
+
+        self.items = []
+
+        self._underlying = ContainerComponent._raw_construct(
+            type=ComponentType.container,
+            id=id,
+            components=[],
+            accent_color=None,
+            spoiler=spoiler,
+        )
+        self.color = colour or color
+
+        for func in self.__container_children_items__:
+            item: Item = func.__discord_ui_model_type__(
+                **func.__discord_ui_model_kwargs__
+            )
+            if self.view:
+                item.callback = partial(func, self.view, item)
+                setattr(self.view, func.__name__, item)
+            else:
+                item._tmp_func = func
+            self.add_item(item)
+        for i in items:
+            self.add_item(i)
+
+    def _add_component_from_item(self, item: Item):
+        if item._underlying.is_v2():
+            self._underlying.components.append(item._underlying)
+        else:
+            for row in reversed(self._underlying.components):
+                if (
+                    isinstance(row, ActionRow) and row.width + item.width <= 5
+                ):  # If a valid ActionRow exists
+                    row.children.append(item._underlying)
+                    break
+            else:
+                row = ActionRow.with_components(item._underlying)
+                self._underlying.components.append(row)
+
+    def _set_components(self, items: list[Item]):
+        self._underlying.components.clear()
+        for item in items:
+            self._add_component_from_item(item)
+
+    def add_item(self, item: Item) -> None:
+        """Adds an item to the container.
+
+        Parameters
+        ----------
+        item: :class:`Item`
+            The item to add to the container.
+
+        Raises
+        ------
+        TypeError
+            An :class:`Item` was not passed.
+        ValueError
+            Maximum number of items has been exceeded (10).
+        """
+
+        if not isinstance(item, Item):
+            raise TypeError(f"expected Item not {item.__class__!r}")
+
+        item._view = self.view
+
+        self.items.append(item)
+        self._add_component_from_item(item)
+
+    def get_item(self, id: str | int) -> Item | None:
+        """Get a top-level item from this container. Alias for `utils.get(container.items, ...)`.
+        If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            The id or custom_id of the item to get
+
+        Returns
+        -------
+        Optional[:class:`Item`]
+            The item with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if isinstance(id, int):
+            child = get(self.items, id=id)
+            if not child:
+                for i in self.items:
+                    if hasattr(i, "get_item"):
+                        if child := i.get_item(id):
+                            return child
+            return child
+        return get(self.items, custom_id=id)
+
+    def add_section(
+        self,
+        *items: Item,
+        accessory: Item,
+        id: int | None = None,
+    ):
+        """Adds a :class:`Section` to the container.
+
+        To append a pre-existing :class:`Section` use the
+        :meth:`add_item` method instead.
+
+        Parameters
+        ----------
+        *items: :class:`Item`
+            The items contained in this section, up to 3.
+            Currently only supports :class:`~discord.ui.TextDisplay`.
+        accessory: Optional[:class:`Item`]
+            The section's accessory. This is displayed in the top right of the section.
+            Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        id: Optional[:class:`int`]
+            The section's ID.
+        """
+        # accept raw strings?
+
+        section = Section(*items, accessory=accessory, id=id)
+
+        self.add_item(section)
+
+    def add_text(self, content: str, id: int | None = None) -> None:
+        """Adds a :class:`TextDisplay` to the container.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The content of the TextDisplay
+        """
+
+        text = TextDisplay(content, id=id)
+
+        self.add_item(text)
+
+    def add_gallery(
+        self,
+        *items: Item,
+        id: int | None = None,
+    ):
+        """Adds a :class:`MediaGallery` to the container.
+
+        To append a pre-existing :class:`MediaGallery` use the
+        :meth:`add_item` method instead.
+
+        Parameters
+        ----------
+        *items: :class:`MediaGalleryItem`
+            The media this gallery contains.
+        id: Optiona[:class:`int`]
+            The gallery's ID.
+        """
+        # accept raw urls?
+
+        g = MediaGallery(*items, id=id)
+
+        self.add_item(g)
+
+    def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> None:
+        """Adds a :class:`TextDisplay` to the container.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
+        spoiler: Optional[:class:`bool`]
+            Whether the file is a spoiler. Defaults to ``False``.
+        id: Optiona[:class:`int`]
+            The file's ID.
+        """
+
+        f = File(url, spoiler=spoiler, id=id)
+
+        self.add_item(f)
+
+    def add_separator(
+        self,
+        *,
+        divider: bool = True,
+        spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
+        id: int | None = None,
+    ) -> None:
+        """Adds a :class:`Separator` to the container.
+
+        Parameters
+        ----------
+        divider: :class:`bool`
+            Whether the separator is a divider. Defaults to ``True``.
+        spacing: :class:`~discord.SeparatorSpacingSize`
+            The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
+        """
+
+        s = Separator(divider=divider, spacing=spacing, id=id)
+
+        self.add_item(s)
+
+    def copy_text(self) -> str:
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this container. Equivalent to the `Copy Text` option on Discord clients."""
+        return "\n".join([i.copy_text() for i in self.items])
+
+    @property
+    def spoiler(self) -> bool:
+        """Whether the container is a spoiler. Defaults to ``False``."""
+        return self._underlying.spoiler
+
+    @spoiler.setter
+    def spoiler(self, spoiler: bool) -> None:
+        self._underlying.spoiler = spoiler
+
+    @property
+    def colour(self) -> Colour | None:
+        return self._underlying.accent_color
+
+    @colour.setter
+    def colour(self, value: int | Colour | None):  # type: ignore
+        if value is None or isinstance(value, Colour):
+            self._underlying.accent_color = value
+        elif isinstance(value, int):
+            self._underlying.accent_color = Colour(value=value)
+        else:
+            raise TypeError(
+                "Expected discord.Colour, int, or None but received"
+                f" {value.__class__.__name__} instead."
+            )
+
+    color = colour
+
+    @Item.view.setter
+    def view(self, value):
+        self._view = value
+        for item in self.items:
+            if getattr(item, "_tmp_func", None):
+                item.callback = partial(item._tmp_func, self.view, item)
+                setattr(self.view, item._tmp_func.__name__, item)
+                delattr(item, "_tmp_func")
+            item._view = value
+
+    @property
+    def type(self) -> ComponentType:
+        return self._underlying.type
+
+    @property
+    def width(self) -> int:
+        return 5
+
+    def to_component_dict(self) -> ContainerComponentPayload:
+        self._set_components(self.items)
+        return self._underlying.to_dict()
+
+    @classmethod
+    def from_component(cls: type[C], component: ContainerComponent) -> C:
+        from .view import _component_to_item
+
+        items = [
+            _component_to_item(c) for c in _walk_all_components(component.components)
+        ]
+        return cls(
+            *items,
+            colour=component.accent_color,
+            spoiler=component.spoiler,
+            id=component.id,
+        )
+
+    callback = None
