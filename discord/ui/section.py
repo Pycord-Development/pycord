@@ -64,11 +64,8 @@ class Section(Item[V]):
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self.view, item)
-            if not self.view:
-                item._tmp_func = func
-            else:
-                setattr(self.view, func.__name__, item)
             self.set_accessory(item)
+            setattr(self, func.__name__, item)
         elif accessory:
             self.set_accessory(accessory)
         for i in items:
@@ -178,12 +175,6 @@ class Section(Item[V]):
     def view(self, value):
         self._view = value
         if self.accessory:
-            if getattr(self.accessory, "_tmp_func", None):
-                self.accessory.callback = partial(
-                    self.accessory._tmp_func, self.view, self.accessory
-                )
-                setattr(self.view, self.accessory._tmp_func.__name__, self.accessory)
-                delattr(self.accessory, "_tmp_func")
             self.accessory._view = value
 
     def copy_text(self) -> str:

@@ -87,12 +87,9 @@ class Container(Item[V]):
             item: Item = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
-            item.callback = partial(func, self.view, item)
-            if not self.view:
-                item._tmp_func = func
-            else:
-                setattr(self.view, func.__name__, item)
+            item.callback = partial(func, self, item)
             self.add_item(item)
+            setattr(self, func.__name__, item)
         for i in items:
             self.add_item(i)
 
@@ -304,10 +301,6 @@ class Container(Item[V]):
     def view(self, value):
         self._view = value
         for item in self.items:
-            if getattr(item, "_tmp_func", None):
-                item.callback = partial(item._tmp_func, self.view, item)
-                setattr(self.view, item._tmp_func.__name__, item)
-                delattr(item, "_tmp_func")
             item._view = value
             if hasattr(item, "items"):
                 item.view = value
