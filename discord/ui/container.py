@@ -72,7 +72,7 @@ class Container(Item[V]):
     ):
         super().__init__()
 
-        self.items = []
+        self.items: List[Item] = []
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
