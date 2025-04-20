@@ -369,6 +369,7 @@ class View:
     def get_item(self, custom_id: str | int) -> Item | None:
         """Get an item from the view. Roughly equal to `utils.get(view.children, ...)`.
         If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
+        This method will also search nested items.
 
         Parameters
         ----------

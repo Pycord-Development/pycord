@@ -144,6 +144,7 @@ class Container(Item[V]):
     def get_item(self, id: str | int) -> Item | None:
         """Get a top-level item from this container. Roughly equal to `utils.get(container.items, ...)`.
         If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
+        This method will also search nested items.
 
         Parameters
         ----------
