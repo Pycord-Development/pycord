@@ -63,7 +63,7 @@ class Section(Item[V]):
             item: Item = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
-            item.callback = partial(func, self.view, item)
+            item.callback = partial(func, self, item)
             self.set_accessory(item)
             setattr(self, func.__name__, item)
         elif accessory:
