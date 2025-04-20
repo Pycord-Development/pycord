@@ -120,6 +120,8 @@ class Section(Item[V]):
         Optional[:class:`Item`]
             The item with the matching ``id`` if it exists.
         """
+        if not id:
+            return None
         if self.accessory and self.accessory.id == id:
             return self.accessory
         return get(self.items, id=id)

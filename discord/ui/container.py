@@ -8,7 +8,7 @@ from ..components import ActionRow
 from ..components import Container as ContainerComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
-from ..utils import get
+from ..utils import get, find
 from .file import File
 from .item import Item, ItemCallbackType
 from .media_gallery import MediaGallery
@@ -155,6 +155,8 @@ class Container(Item[V]):
         Optional[:class:`Item`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
+        if not id:
+            return None
         if isinstance(id, int):
             child = get(self.items, id=id)
             if not child:
@@ -163,7 +165,7 @@ class Container(Item[V]):
                         if child := i.get_item(id):
                             return child
             return child
-        return get(self.items, custom_id=id)
+        return find(lambda i: getattr(i, "custom_id", None) == id, self.items)
 
     def add_section(
         self,

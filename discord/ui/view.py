@@ -46,7 +46,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..utils import get
+from ..utils import get, find
 from .item import Item, ItemCallbackType
 
 __all__ = ("View", "_component_to_item", "_walk_all_components")
@@ -367,7 +367,7 @@ class View:
         self.__weights.clear()
 
     def get_item(self, custom_id: str | int) -> Item | None:
-        """Get an item from the view. Alias for `utils.get(view.children, ...)`.
+        """Get an item from the view. Roughly equal to `utils.get(view.children, ...)`.
         If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
 
         Parameters
@@ -380,6 +380,8 @@ class View:
         Optional[:class:`Item`]
             The item with the matching ``custom_id`` or ``id`` if it exists.
         """
+        if not custom_id:
+            return None
         if isinstance(custom_id, int):
             child = get(self.children, id=custom_id)
             if not child:
@@ -388,7 +390,7 @@ class View:
                         if child := i.get_item(custom_id):
                             return child
             return child
-        return get(self.children, custom_id=custom_id)
+        return find(lambda i: getattr(i, "custom_id", None) == custom_id, self.children)
 
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
