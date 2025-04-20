@@ -121,9 +121,8 @@ class Section(Item[V]):
             The item with the matching ``id`` if it exists.
         """
         if self.accessory and self.accessory.id == id:
-                return self.accessory
+            return self.accessory
         return get(self.items, id=id)
-
 
     def add_text(self, content: str, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the section.
