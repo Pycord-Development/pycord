@@ -50,8 +50,8 @@ class Section(Item[V]):
     def __init__(self, *items: Item, accessory: Item = None, id: int | None = None):
         super().__init__()
 
-        self.items = []
-        self.accessory = None
+        self.items: List[Item] = []
+        self.accessory: Optional[Item] = None
 
         self._underlying = SectionComponent._raw_construct(
             type=ComponentType.section,
