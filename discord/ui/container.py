@@ -142,7 +142,7 @@ class Container(Item[V]):
         self._add_component_from_item(item)
 
     def get_item(self, id: str | int) -> Item | None:
-        """Get a top-level item from this container. Alias for `utils.get(container.items, ...)`.
+        """Get a top-level item from this container. Roughly equal to `utils.get(container.items, ...)`.
         If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
 
         Parameters
@@ -157,15 +157,14 @@ class Container(Item[V]):
         """
         if not id:
             return None
-        if isinstance(id, int):
-            child = get(self.items, id=id)
-            if not child:
-                for i in self.items:
-                    if hasattr(i, "get_item"):
-                        if child := i.get_item(id):
-                            return child
-            return child
-        return find(lambda i: getattr(i, "custom_id", None) == id, self.items)
+        attr = "id" if isinstance(id, int) else "custom_id"
+        child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        if not child:
+            for i in self.items:
+                if hasattr(i, "get_item"):
+                    if child := i.get_item(id):
+                        return child
+        return child
 
     def add_section(
         self,

@@ -382,15 +382,14 @@ class View:
         """
         if not custom_id:
             return None
-        if isinstance(custom_id, int):
-            child = get(self.children, id=custom_id)
-            if not child:
-                for i in self.children:
-                    if hasattr(i, "get_item"):
-                        if child := i.get_item(custom_id):
-                            return child
-            return child
-        return find(lambda i: getattr(i, "custom_id", None) == custom_id, self.children)
+        attr = "id" if isinstance(custom_id, int) else "custom_id"
+        child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
+        if not child:
+            for i in self.children:
+                if hasattr(i, "get_item"):
+                    if child := i.get_item(custom_id):
+                        return child
+        return child
 
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
