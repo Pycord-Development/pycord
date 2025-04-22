@@ -170,7 +170,14 @@ class Section(Item[V]):
         self.accessory = item
         self._underlying.accessory = item._underlying
 
-    def set_thumbnail(self, url: str, *, description: str | None = None, spoiler: bool = False, id: int | None = None) -> None:
+    def set_thumbnail(
+        self,
+        url: str,
+        *,
+        description: str | None = None,
+        spoiler: bool = False,
+        id: int | None = None,
+    ) -> None:
         """Set a :class:`Thumbnail` with the provided url as the section's :attr:`accessory`.
 
         Parameters
