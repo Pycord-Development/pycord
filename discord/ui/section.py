@@ -9,6 +9,7 @@ from ..enums import ComponentType
 from ..utils import get
 from .item import Item, ItemCallbackType
 from .text_display import TextDisplay
+from .thumbnail import Thumbnail
 
 __all__ = ("Section",)
 
@@ -123,7 +124,7 @@ class Section(Item[V]):
             return self.accessory
         return get(self.items, id=id)
 
-    def add_text(self, content: str, id: int | None = None) -> None:
+    def add_text(self, content: str, *, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the section.
 
         Parameters
@@ -135,8 +136,6 @@ class Section(Item[V]):
 
         Raises
         ------
-        TypeError
-            A :class:`str` was not passed.
         ValueError
             Maximum number of items has been exceeded (3).
         """
@@ -170,6 +169,21 @@ class Section(Item[V]):
 
         self.accessory = item
         self._underlying.accessory = item._underlying
+
+    def set_thumbnail(self, url: str, *, id: int | None = None) -> None:
+        """Set a :class:`Thumbnail` with the provided url as the section's :attr:`accessory`.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The url of the thumbnail.
+        id: Optiona[:class:`int`]
+            The thumbnail's ID.
+        """
+
+        thumbnail = Thumbnail(url, id=id)
+
+        self.set_accessory(thumbnail)
 
     @Item.view.setter
     def view(self, value):
