@@ -892,7 +892,7 @@ class Separator(Component):
 class Container(Component):
     """Represents a Container from Components V2.
 
-    This is a component that contains up to 10 different :class:`Component`s.
+    This is a component that contains up to 10 different :class:`Component` objects.
     It may only contain objects of type :class:`ActionRow`, :class:`TextDisplay`, :class:`Section`, :class:`MediaGallery`, :class:`Separator`, or :class:`FileComponent`.
 
     This inherits from :class:`Component`.
