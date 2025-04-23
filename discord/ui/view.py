@@ -628,7 +628,7 @@ class View:
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
-        return "\n".join([i.copy_text() for i in self.children])
+        return "\n".join(i.copy_text() for i in self.children if i)
 
     @property
     def message(self):

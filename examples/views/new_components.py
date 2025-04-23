@@ -11,6 +11,7 @@ from discord import (
     User,
 )
 from discord.ui import (
+    button,
     Button,
     Container,
     MediaGallery,
@@ -55,7 +56,7 @@ class MyView(View):
             TextDisplay("Above is a `MediaGallery` containing two `MediaGalleryItem`s.")
         )
 
-    @discord.ui.button(label="Delete Message", style=ButtonStyle.red, id=200)
+    @button(label="Delete Message", style=ButtonStyle.red, id=200)
     async def delete_button(self, button: Button, interaction: Interaction):
         await interaction.response.defer(invisible=True)
         await interaction.delete_original_response()

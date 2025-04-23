@@ -269,7 +269,7 @@ class Container(Item[V]):
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this container. Equivalent to the `Copy Text` option on Discord clients."""
-        return "\n".join([i.copy_text() for i in self.items])
+        return "\n".join([i.copy_text() for i in self.items if i])
 
     @property
     def spoiler(self) -> bool:
