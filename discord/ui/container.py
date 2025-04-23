@@ -175,7 +175,6 @@ class Container(Item[V]):
         To append a pre-existing :class:`Section`, use the
         :meth:`add_item` method, instead.
 
-
         Parameters
         ----------
         *items: :class:`Item`
