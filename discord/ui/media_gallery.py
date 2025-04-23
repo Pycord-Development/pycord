@@ -19,7 +19,8 @@ V = TypeVar("V", bound="View", covariant=True)
 
 
 class MediaGallery(Item[V]):
-    """Represents a UI Media Gallery. Galleries may contain up to 10 :class:`MediaGalleryItem`s.
+    """Represents a UI Media Gallery. Galleries may contain up to 10 :class:`MediaGalleryItem` objects.
+
 
     .. versionadded:: 2.7
 

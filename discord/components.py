@@ -107,7 +107,7 @@ class Component:
     type: :class:`ComponentType`
         The type of component.
     id: :class:`int`
-        The component's ID. If not provided by the user, it's automatically incremented.
+        The component's ID. If not provided by the user, it is automatically incremented.
     """
 
     __slots__: tuple[str, ...] = ("type", "id")
@@ -171,7 +171,7 @@ class ActionRow(Component):
 
     @property
     def width(self):
-        """Return the total item width used by this action row."""
+        """Return the total item width that this action row uses."""
         t = 0
         for item in self.children:
             t += 1 if item.type is ComponentType.button else 5
@@ -567,7 +567,7 @@ class SelectOption:
 class Section(Component):
     """Represents a Section from Components V2.
 
-    This is a component that contains other components such as :class:`TextDisplay` and :class:`Thumbnail`.
+    This is a component that groups other components together.
 
     This inherits from :class:`Component`.
 
@@ -679,7 +679,7 @@ class UnfurledMediaItem(AssetMixin):
 class Thumbnail(Component):
     """Represents a Thumbnail from Components V2.
 
-    This is a component that displays media such as images and videos.
+    This is a component that displays media, such as images and videos.
 
     This inherits from :class:`Component`.
 
@@ -772,7 +772,7 @@ class MediaGalleryItem:
 class MediaGallery(Component):
     """Represents a Media Gallery from Components V2.
 
-    This is a component that displays up to 10 different :class:`MediaGalleryItem`s.
+    This is a component that displays up to 10 different :class:`MediaGalleryItem` objects.
 
     This inherits from :class:`Component`.
 
@@ -850,7 +850,7 @@ class FileComponent(Component):
 class Separator(Component):
     """Represents a Separator from Components V2.
 
-    This is a component that separates components.
+    This is a component that separates other components.
 
     This inherits from :class:`Component`.
 
@@ -893,7 +893,7 @@ class Container(Component):
     """Represents a Container from Components V2.
 
     This is a component that contains up to 10 different :class:`Component`s.
-    It may only contain :class:`ActionRow`, :class:`TextDisplay`, :class:`Section`, :class:`MediaGallery`, :class:`Separator`, and :class:`FileComponent`.
+    It may only contain objects of type :class:`ActionRow`, :class:`TextDisplay`, :class:`Section`, :class:`MediaGallery`, :class:`Separator`, or :class:`FileComponent`.
 
     This inherits from :class:`Component`.
 

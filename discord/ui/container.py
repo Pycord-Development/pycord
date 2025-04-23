@@ -31,7 +31,7 @@ V = TypeVar("V", bound="View", covariant=True)
 class Container(Item[V]):
     """Represents a UI Container. Containers may contain up to 10 items.
 
-    The current items supported are:
+    The current items supported are as follows:
 
     - :class:`discord.ui.Button`
     - :class:`discord.ui.Select`
@@ -140,13 +140,13 @@ class Container(Item[V]):
 
     def get_item(self, id: str | int) -> Item | None:
         """Get a top-level item from this container. Roughly equal to `utils.get(container.items, ...)`.
-        If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
-        This method will also search nested items.
+        If an ``int`` is provided, it will be retrieved by ``id``, otherwise it will check for ``custom_id``.
+        This method will also search for nested items.
 
         Parameters
         ----------
         id: :class:`str`
-            The id or custom_id of the item to get
+            The id or custom_id of the item to get.
 
         Returns
         -------
@@ -172,8 +172,9 @@ class Container(Item[V]):
     ):
         """Adds a :class:`Section` to the container.
 
-        To append a pre-existing :class:`Section` use the
-        :meth:`add_item` method instead.
+        To append a pre-existing :class:`Section`, use the
+        :meth:`add_item` method, instead.
+
 
         Parameters
         ----------
@@ -212,7 +213,8 @@ class Container(Item[V]):
     ):
         """Adds a :class:`MediaGallery` to the container.
 
-        To append a pre-existing :class:`MediaGallery` use the
+        To append a pre-existing :class:`MediaGallery`, use the
+
         :meth:`add_item` method instead.
 
         Parameters

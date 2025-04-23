@@ -23,7 +23,7 @@ V = TypeVar("V", bound="View", covariant=True)
 
 
 class Section(Item[V]):
-    """Represents a UI section. Sections must have 1-3 items and an accessory set.
+    """Represents a UI section. Sections must have 1-3 (inclusive) items and an accessory set.
 
     .. versionadded:: 2.7
 
@@ -131,7 +131,7 @@ class Section(Item[V]):
         ----------
         content: :class:`str`
             The content of the text display.
-        id: Optiona[:class:`int`]
+        id: Optional[:class:`int`]
             The text display's ID.
 
         Raises
@@ -178,7 +178,7 @@ class Section(Item[V]):
         spoiler: bool = False,
         id: int | None = None,
     ) -> None:
-        """Set a :class:`Thumbnail` with the provided url as the section's :attr:`accessory`.
+        """Sets a :class:`Thumbnail` with the provided URL as the section's :attr:`accessory`.
 
         Parameters
         ----------

@@ -579,7 +579,7 @@ class View:
     def is_components_v2(self) -> bool:
         """Whether the view contains V2 components.
 
-        A view containing V2 components may not be sent alongside message content or embeds.
+        A view containing V2 components cannot be sent alongside message content or embeds.
         """
         return (
             any([item._underlying.is_v2() for item in self.children])
