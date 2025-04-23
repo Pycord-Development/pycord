@@ -11,7 +11,6 @@ from discord import (
     User,
 )
 from discord.ui import (
-    button,
     Button,
     Container,
     MediaGallery,
@@ -21,6 +20,7 @@ from discord.ui import (
     TextDisplay,
     Thumbnail,
     View,
+    button,
 )
 
 
