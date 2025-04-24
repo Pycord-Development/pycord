@@ -243,8 +243,8 @@ class Section(Item[V]):
         for item in self.items + [self.accessory]:
             if (
                 hasattr(item, "disabled")
-                and exclusions is None
-                or item not in exclusions
+                and (exclusions is None
+                or item not in exclusions)
             ):
                 item.disabled = True
 

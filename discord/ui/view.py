@@ -614,8 +614,8 @@ class View:
         for child in self.children:
             if (
                 hasattr(child, "disabled")
-                and exclusions is None
-                or child not in exclusions
+                and (exclusions is None
+                or child not in exclusions)
             ):
                 child.disabled = True
             if hasattr(child, "items"):
@@ -633,8 +633,8 @@ class View:
         for child in self.children:
             if (
                 hasattr(child, "disabled")
-                and exclusions is None
-                or child not in exclusions
+                and (exclusions is None
+                or child not in exclusions)
             ):
                 child.disabled = False
             if hasattr(child, "items"):

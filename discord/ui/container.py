@@ -342,8 +342,8 @@ class Container(Item[V]):
         for item in self.items:
             if (
                 hasattr(item, "disabled")
-                and exclusions is None
-                or item not in exclusions
+                and (exclusions is None
+                or item not in exclusions)
             ):
                 item.disabled = True
 
