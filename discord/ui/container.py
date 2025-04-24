@@ -314,6 +314,32 @@ class Container(Item[V]):
     def width(self) -> int:
         return 5
 
+    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+        """
+        Disables all buttons and select menus in the container.
+
+        Parameters
+        ----------
+        exclusions: Optional[List[:class:`Item`]]
+            A list of items in `self.items` to not disable from the view.
+        """
+        for item in self.items:
+            if hasattr(item, "disabled") and exclusions is None or item not in exclusions:
+                item.disabled = True
+
+    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+        """
+        Enables all buttons and select menus in the container.
+
+        Parameters
+        ----------
+        exclusions: Optional[List[:class:`Item`]]
+            A list of items in `self.items` to not enable from the view.
+        """
+        for item in self.items:
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
+                item.disabled = False
+
     def to_component_dict(self) -> ContainerComponentPayload:
         self._set_components(self.items)
         return self._underlying.to_dict()

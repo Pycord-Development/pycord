@@ -214,6 +214,34 @@ class Section(Item[V]):
     def width(self) -> int:
         return 5
 
+    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+        """
+        Disables all buttons and select menus in the section.
+        At the moment, this only disables :attr:`accessory` if it is a button.
+
+        Parameters
+        ----------
+        exclusions: Optional[List[:class:`Item`]]
+            A list of items in `self.items` to not disable from the view.
+        """
+        for item in self.items + [self.accessory]:
+            if hasattr(item, "disabled") and exclusions is None or item not in exclusions:
+                item.disabled = True
+
+    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+        """
+        Enables all buttons and select menus in the container.
+        At the moment, this only enables :attr:`accessory` if it is a button.
+
+        Parameters
+        ----------
+        exclusions: Optional[List[:class:`Item`]]
+            A list of items in `self.items` to not enable from the view.
+        """
+        for item in self.items + [self.accessory]:
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
+                item.disabled = False
+
     def to_component_dict(self) -> SectionComponentPayload:
         self._set_components(self.items)
         self.set_accessory(self.accessory)

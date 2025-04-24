@@ -602,7 +602,7 @@ class View:
 
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
-        Disables all items in the view.
+        Disables all buttons and select menus in the view.
 
         Parameters
         ----------
@@ -610,12 +610,14 @@ class View:
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
-            if exclusions is None or child not in exclusions:
+            if hasattr(item, "disabled") and exclusions is None or item not in exclusions:
                 child.disabled = True
+            if hasattr(item, "items"):
+                item.disable_all_items(exclusions=exclusions)
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
-        Enables all items in the view.
+        Enables all buttons and select menus in the view.
 
         Parameters
         ----------
@@ -623,8 +625,10 @@ class View:
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
-            if exclusions is None or child not in exclusions:
+            if hasattr(item, "disabled") and exclusions is None or item not in exclusions:
                 child.disabled = False
+            if hasattr(item, "items"):
+                item.enable_all_items(exclusions=exclusions)
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
