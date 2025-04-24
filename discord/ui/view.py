@@ -611,13 +611,13 @@ class View:
         """
         for child in self.children:
             if (
-                hasattr(item, "disabled")
+                hasattr(child, "disabled")
                 and exclusions is None
-                or item not in exclusions
+                or child not in exclusions
             ):
                 child.disabled = True
-            if hasattr(item, "items"):
-                item.disable_all_items(exclusions=exclusions)
+            if hasattr(child, "items"):
+                child.disable_all_items(exclusions=exclusions)
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
@@ -630,13 +630,13 @@ class View:
         """
         for child in self.children:
             if (
-                hasattr(item, "disabled")
+                hasattr(child, "disabled")
                 and exclusions is None
-                or item not in exclusions
+                or child not in exclusions
             ):
                 child.disabled = False
-            if hasattr(item, "items"):
-                item.enable_all_items(exclusions=exclusions)
+            if hasattr(child, "items"):
+                child.enable_all_items(exclusions=exclusions)
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
