@@ -345,7 +345,7 @@ class View:
             item.view = self
         self.children.append(item)
 
-    def remove_item(self, item: Item) -> None:
+    def remove_item(self, item: Item | int | str) -> None:
         """Removes an item from the view. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
