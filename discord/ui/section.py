@@ -225,7 +225,11 @@ class Section(Item[V]):
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.items + [self.accessory]:
-            if hasattr(item, "disabled") and exclusions is None or item not in exclusions:
+            if (
+                hasattr(item, "disabled")
+                and exclusions is None
+                or item not in exclusions
+            ):
                 item.disabled = True
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
@@ -239,7 +243,9 @@ class Section(Item[V]):
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.items + [self.accessory]:
-            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
+            if hasattr(item, "disabled") and (
+                exclusions is None or item not in exclusions
+            ):
                 item.disabled = False
 
     def to_component_dict(self) -> SectionComponentPayload:

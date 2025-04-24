@@ -610,7 +610,11 @@ class View:
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
-            if hasattr(item, "disabled") and exclusions is None or item not in exclusions:
+            if (
+                hasattr(item, "disabled")
+                and exclusions is None
+                or item not in exclusions
+            ):
                 child.disabled = True
             if hasattr(item, "items"):
                 item.disable_all_items(exclusions=exclusions)
@@ -625,7 +629,11 @@ class View:
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
-            if hasattr(item, "disabled") and exclusions is None or item not in exclusions:
+            if (
+                hasattr(item, "disabled")
+                and exclusions is None
+                or item not in exclusions
+            ):
                 child.disabled = False
             if hasattr(item, "items"):
                 item.enable_all_items(exclusions=exclusions)
