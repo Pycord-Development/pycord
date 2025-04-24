@@ -807,7 +807,7 @@ class MediaGallery(Component):
 class FileComponent(Component):
     """Represents a File from Components V2.
 
-    This is a component that displays some file (elaborate?).
+    This component displays a downloadable file in a message.
 
     This inherits from :class:`Component`.
 
