@@ -346,14 +346,16 @@ class View:
         self.children.append(item)
 
     def remove_item(self, item: Item) -> None:
-        """Removes an item from the view.
+        """Removes an item from the view. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: :class:`Item`
-            The item to remove from the view.
+        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+            The item, item :attr:`id`, or item ``custom_id`` to remove from the view.
         """
 
+        if isinstance(item, (str, int)):
+            item = self.get_item(item)
         try:
             self.children.remove(item)
         except ValueError:

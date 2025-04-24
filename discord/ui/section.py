@@ -105,6 +105,22 @@ class Section(Item[V]):
         self.items.append(item)
         self._add_component_from_item(item)
 
+    def remove_item(self, item: Item | int) -> None:
+        """Removes an item from the section. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
+
+        Parameters
+        ----------
+        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+            The item, item :attr:`id`, or item ``custom_id`` to remove from the section.
+        """
+
+        if isinstance(item, (str, int)):
+            item = self.get_item(item)
+        try:
+            self.items.remove(item)
+        except ValueError:
+            pass
+
     def get_item(self, id: int) -> Item | None:
         """Get an item from this section. Alias for `utils.get(section.items, id=id)`.
 
