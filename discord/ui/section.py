@@ -241,10 +241,8 @@ class Section(Item[V]):
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.items + [self.accessory]:
-            if (
-                hasattr(item, "disabled")
-                and (exclusions is None
-                or item not in exclusions)
+            if hasattr(item, "disabled") and (
+                exclusions is None or item not in exclusions
             ):
                 item.disabled = True
 
