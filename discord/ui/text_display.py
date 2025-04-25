@@ -19,14 +19,14 @@ V = TypeVar("V", bound="View", covariant=True)
 
 
 class TextDisplay(Item[V]):
-    """Represents a UI TextDisplay.
+    """Represents a UI text display. A message can have up to 4000 characters across all :class:`TextDisplay` objects combined.
 
     .. versionadded:: 2.7
 
     Parameters
     ----------
     content: :class:`str`
-        The text display's content.
+        The text display's content, up to 4000 characters.
     """
 
     def __init__(
