@@ -105,6 +105,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 - Fixed `valid_locates` mismatch with Discord API locales by adding `id` (Indonesian)
   and `es-419` (Spanish, LATAM)
+  ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
 
 ### Changed
 
