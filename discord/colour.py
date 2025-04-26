@@ -300,12 +300,12 @@ class Colour:
 
     @classmethod
     def dark_theme(cls: type[CT]) -> CT:
-        """A factory method that returns a :class:`Colour` with a value of ``0x36393F``.
+        """A factory method that returns a :class:`Colour` with a value of ``0x393a41``.
         This will appear transparent on Discord's dark theme.
 
         .. versionadded:: 1.5
         """
-        return cls(0x36393F)
+        return cls(0x393a41)
 
     @classmethod
     def fuchsia(cls: type[CT]) -> CT:
