@@ -962,7 +962,7 @@ STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
 def _component_factory(data: ComponentPayload, state=None) -> Component:
     component_type = data["type"]
     if cls := COMPONENT_MAPPINGS.get(component_type):
-        if cls in (Section, Container, Thumbnail, MediaGallery, FileComponent):
+        if issubclass(cls, STATE_COMPONENTS):
             return cls(data, state=state)
         else:
             return cls(data)
