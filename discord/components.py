@@ -956,6 +956,7 @@ COMPONENT_MAPPINGS = {
     17: Container,
 }
 
+STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
 
 def _component_factory(data: ComponentPayload, state=None) -> Component:
     component_type = data["type"]
