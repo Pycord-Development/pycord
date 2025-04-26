@@ -305,7 +305,7 @@ class Colour:
 
         .. versionadded:: 1.5
         """
-        return cls(0x393a41)
+        return cls(0x393A41)
 
     @classmethod
     def fuchsia(cls: type[CT]) -> CT:
