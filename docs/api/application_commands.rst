@@ -38,6 +38,9 @@ Shortcut Decorators
 .. autofunction:: discord.commands.message_command
     :decorator:
 
+.. autofunction:: discord.commands.option
+    :decorator:
+
 Objects
 ~~~~~~~
 
@@ -60,17 +63,6 @@ Objects
 .. attributetable:: MessageCommand
 .. autoclass:: MessageCommand
     :members:
-
-Options
--------
-
-Shortcut Decorators
-~~~~~~~~~~~~~~~~~~~
-.. autofunction:: discord.commands.option
-    :decorator:
-
-Objects
-~~~~~~~
 
 .. attributetable:: Option
 .. autoclass:: Option
