@@ -32,26 +32,25 @@ from discord.interactions import Interaction, InteractionMessage, InteractionRes
 from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
+    from typing import Awaitable, Callable
+
     from typing_extensions import ParamSpec
 
     import discord
-    from .. import Bot
-    from ..state import ConnectionState
-    from ..voice_client import VoiceClient
 
-    from .core import ApplicationCommand, Option
-    from ..interactions import InteractionChannel
+    from .. import Bot
+    from ..client import ClientUser
+    from ..cog import Cog
     from ..guild import Guild
+    from ..interactions import InteractionChannel
     from ..member import Member
     from ..message import Message
-    from ..user import User
     from ..permissions import Permissions
-    from ..client import ClientUser
-
-    from ..cog import Cog
+    from ..state import ConnectionState
+    from ..user import User
+    from ..voice_client import VoiceClient
     from ..webhook import WebhookMessage
-
-    from typing import Callable, Awaitable
+    from .core import ApplicationCommand, Option
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
