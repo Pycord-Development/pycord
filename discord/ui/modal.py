@@ -205,6 +205,7 @@ class Modal:
 
         self._weights.add_item(item)
         self._children.append(item)
+        return self
 
     def remove_item(self, item: InputText):
         """Removes an InputText component from the modal dialog.
@@ -218,6 +219,7 @@ class Modal:
             self._children.remove(item)
         except ValueError:
             pass
+        return self
 
     def stop(self) -> None:
         """Stops listening to interaction events from the modal dialog."""

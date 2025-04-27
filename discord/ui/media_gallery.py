@@ -63,6 +63,7 @@ class MediaGallery(Item[V]):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
 
         self._underlying.items.append(item)
+        return self
 
     def add_item(
         self,
@@ -93,7 +94,7 @@ class MediaGallery(Item[V]):
 
         item = MediaGalleryItem(url, description=description, spoiler=spoiler)
 
-        self.append_item(item)
+        return self.append_item(item)
 
     @Item.view.setter
     def view(self, value):

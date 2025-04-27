@@ -104,6 +104,7 @@ class Section(Item[V]):
 
         self.items.append(item)
         self._add_component_from_item(item)
+        return self
 
     def remove_item(self, item: Item | int) -> None:
         """Removes an item from the section. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
@@ -120,6 +121,7 @@ class Section(Item[V]):
             self.items.remove(item)
         except ValueError:
             pass
+        return self
 
     def get_item(self, id: int) -> Item | None:
         """Get an item from this section. Alias for `utils.get(section.items, id=id)`.
@@ -161,7 +163,7 @@ class Section(Item[V]):
 
         text = TextDisplay(content, id=id)
 
-        self.add_item(text)
+        return self.add_item(text)
 
     def set_accessory(self, item: Item) -> None:
         """Set an item as the section's :attr:`accessory`.
@@ -185,6 +187,7 @@ class Section(Item[V]):
 
         self.accessory = item
         self._underlying.accessory = item._underlying
+        return self
 
     def set_thumbnail(
         self,
@@ -210,7 +213,7 @@ class Section(Item[V]):
 
         thumbnail = Thumbnail(url, description=description, spoiler=spoiler, id=id)
 
-        self.set_accessory(thumbnail)
+        return self.set_accessory(thumbnail)
 
     @Item.view.setter
     def view(self, value):
@@ -245,6 +248,7 @@ class Section(Item[V]):
                 exclusions is None or item not in exclusions
             ):
                 item.disabled = True
+        return self
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
@@ -261,6 +265,7 @@ class Section(Item[V]):
                 exclusions is None or item not in exclusions
             ):
                 item.disabled = False
+        return self
 
     def to_component_dict(self) -> SectionComponentPayload:
         self._set_components(self.items)

@@ -137,6 +137,7 @@ class Container(Item[V]):
 
         self.items.append(item)
         self._add_component_from_item(item)
+        return self
 
     def remove_item(self, item: Item | int) -> None:
         """Removes an item from the container. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
@@ -153,6 +154,7 @@ class Container(Item[V]):
             self.items.remove(item)
         except ValueError:
             pass
+        return self
 
     def get_item(self, id: str | int) -> Item | None:
         """Get a top-level item from this container. Roughly equal to `utils.get(container.items, ...)`.
@@ -206,7 +208,7 @@ class Container(Item[V]):
 
         section = Section(*items, accessory=accessory, id=id)
 
-        self.add_item(section)
+        return self.add_item(section)
 
     def add_text(self, content: str, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the container.
@@ -219,7 +221,7 @@ class Container(Item[V]):
 
         text = TextDisplay(content, id=id)
 
-        self.add_item(text)
+        return self.add_item(text)
 
     def add_gallery(
         self,
@@ -243,7 +245,7 @@ class Container(Item[V]):
 
         g = MediaGallery(*items, id=id)
 
-        self.add_item(g)
+        return self.add_item(g)
 
     def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the container.
@@ -260,7 +262,7 @@ class Container(Item[V]):
 
         f = File(url, spoiler=spoiler, id=id)
 
-        self.add_item(f)
+        return self.add_item(f)
 
     def add_separator(
         self,
@@ -281,7 +283,7 @@ class Container(Item[V]):
 
         s = Separator(divider=divider, spacing=spacing, id=id)
 
-        self.add_item(s)
+        return self.add_item(s)
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this container. Equivalent to the `Copy Text` option on Discord clients."""
@@ -359,6 +361,7 @@ class Container(Item[V]):
                 exclusions is None or item not in exclusions
             ):
                 item.disabled = False
+        return self
 
     def to_component_dict(self) -> ContainerComponentPayload:
         self._set_components(self.items)

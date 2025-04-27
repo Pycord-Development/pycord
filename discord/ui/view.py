@@ -344,6 +344,7 @@ class View:
         if hasattr(item, "items"):
             item.view = self
         self.children.append(item)
+        return self
 
     def remove_item(self, item: Item | int | str) -> None:
         """Removes an item from the view. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
@@ -362,11 +363,13 @@ class View:
             pass
         else:
             self.__weights.remove_item(item)
+        return self
 
     def clear_items(self) -> None:
         """Removes all items from the view."""
         self.children.clear()
         self.__weights.clear()
+        return self
 
     def get_item(self, custom_id: str | int) -> Item | None:
         """Get an item from the view. Roughly equal to `utils.get(view.children, ...)`.
@@ -618,6 +621,7 @@ class View:
                 child.disabled = True
             if hasattr(child, "items"):
                 child.disable_all_items(exclusions=exclusions)
+        return self
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
@@ -635,6 +639,7 @@ class View:
                 child.disabled = False
             if hasattr(child, "items"):
                 child.enable_all_items(exclusions=exclusions)
+        return self
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""

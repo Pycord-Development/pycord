@@ -304,7 +304,7 @@ class Select(Item[V]):
             default=default,
         )
 
-        self.append_option(option)
+        return self.append_option(option)
 
     def append_option(self, option: SelectOption):
         """Appends an option to the select menu.
@@ -326,6 +326,7 @@ class Select(Item[V]):
             raise ValueError("maximum number of options already provided")
 
         self._underlying.options.append(option)
+        return self
 
     @property
     def values(
