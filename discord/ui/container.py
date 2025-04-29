@@ -29,7 +29,7 @@ V = TypeVar("V", bound="View", covariant=True)
 
 
 class Container(Item[V]):
-    """Represents a UI Container. Containers may contain up to 10 items.
+    """Represents a UI Container.
 
     The current items supported are as follows:
 
@@ -46,7 +46,7 @@ class Container(Item[V]):
     Parameters
     ----------
     *items: :class:`Item`
-        The initial items in this container, up to 10.
+        The initial items in this container.
     colour: Union[:class:`Colour`, :class:`int`]
         The accent colour of the container. Aliased to ``color`` as well.
     """
@@ -124,8 +124,6 @@ class Container(Item[V]):
         ------
         TypeError
             An :class:`Item` was not passed.
-        ValueError
-            Maximum number of items has been exceeded (10).
         """
 
         if not isinstance(item, Item):

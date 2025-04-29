@@ -132,7 +132,7 @@ class _ViewWeights:
 
     def add_item(self, item: Item) -> None:
         if item._underlying.is_v2() and not self.requires_v2():
-            self.weights.extend([0, 0, 0, 0, 0])
+            self.weights.extend([0, 0, 0, 0, 0]*7)
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -200,8 +200,8 @@ class View:
                 if hasattr(member, "__discord_ui_model_type__"):
                     children.append(member)
 
-        if len(children) > 25:
-            raise TypeError("View cannot have more than 25 children")
+        if len(children) > 40:
+            raise TypeError("View cannot have more than 40 children")
 
         cls.__view_children_items__ = children
 
@@ -328,11 +328,11 @@ class View:
         TypeError
             An :class:`Item` was not passed.
         ValueError
-            Maximum number of children has been exceeded (25)
+            Maximum number of children has been exceeded (40)
             or the row the item is trying to be added to is full.
         """
 
-        if len(self.children) > 25:
+        if len(self.children) > 40:
             raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, Item):
