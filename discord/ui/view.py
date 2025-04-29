@@ -132,7 +132,7 @@ class _ViewWeights:
 
     def add_item(self, item: Item) -> None:
         if item._underlying.is_v2() and not self.requires_v2():
-            self.weights.extend([0, 0, 0, 0, 0]*7)
+            self.weights.extend([0, 0, 0, 0, 0] * 7)
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
