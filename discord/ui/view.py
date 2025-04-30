@@ -131,7 +131,9 @@ class _ViewWeights:
         raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item) -> None:
-        if (item._underlying.is_v2() or not self.fits_legacy(item)) and not self.requires_v2():
+        if (
+            item._underlying.is_v2() or not self.fits_legacy(item)
+        ) and not self.requires_v2():
             self.weights.extend([0, 0, 0, 0, 0] * 7)
         if item.row is not None:
             total = self.weights[item.row] + item.width
@@ -161,6 +163,7 @@ class _ViewWeights:
         if item.row is not None:
             return item.row <= 4
         return self.weights[-1] + item.width <= 5
+
 
 class View:
     """Represents a UI view.
