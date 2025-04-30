@@ -104,7 +104,7 @@ class Item(Generic[V]):
         """Gets or sets the row position of this item within its parent view.
 
         The row position determines the vertical placement of the item in the UI.
-        The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate
+        The value must be an integer between 0 and 39 (inclusive), or ``None`` to indicate
         that no specific row is set.
 
         Returns
@@ -115,7 +115,7 @@ class Item(Generic[V]):
         Raises
         ------
         ValueError
-            If the row value is not ``None`` and is outside the range [0, 4].
+            If the row value is not ``None`` and is outside the range [0, 39].
         """
         return self._row
 
@@ -123,10 +123,10 @@ class Item(Generic[V]):
     def row(self, value: int | None):
         if value is None:
             self._row = None
-        elif 5 > value >= 0:
+        elif 39 > value >= 0:
             self._row = value
         else:
-            raise ValueError("row cannot be negative or greater than or equal to 5")
+            raise ValueError("row cannot be negative or greater than or equal to 39")
 
     @property
     def width(self) -> int:
