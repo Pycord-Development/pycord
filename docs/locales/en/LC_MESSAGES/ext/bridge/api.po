@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 23:44+0000\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.16.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../ext/bridge/api.rst:4 6fa316d9035a4819abf06d5ae0850304
 msgid "API Reference"
@@ -228,9 +228,10 @@ msgstr ""
 
 #: 0dcaa4de42d7417ab675d15d95c0545e 3233f6d67e434cb4930d286b1cedbf93
 #: 530c706f8f2d4cde86d4b9959a708cf9 695ca16e39234b53a145ba1a621e6ef6
-#: c199030b71784af6aa7369b62ea3c70a discord.ext.bridge.core.BridgeCommand
-#: discord.ext.bridge.core.BridgeCommandGroup fcd3136ef9a54e679fb18bae06554cee
-#: of
+#: c102617394d14eb786c58ca83d415312 c199030b71784af6aa7369b62ea3c70a
+#: discord.ext.bridge.core.BridgeCommand
+#: discord.ext.bridge.core.BridgeCommandGroup
+#: discord.ext.bridge.core.bridge_option fcd3136ef9a54e679fb18bae06554cee of
 msgid "type"
 msgstr ""
 
@@ -255,6 +256,7 @@ msgstr ""
 
 #: 201f3f3932184f08a7790734fe0c0df9
 #: discord.ext.bridge.BridgeCommand.name_localizations:4 of
+#, python-brace-format
 msgid ""
 "bridge_command.name_localizations[\"en-UK\"] = ...  # or any other locale"
 " # or bridge_command.name_localizations = {\"en-UK\": ..., \"fr-FR\": "
@@ -270,6 +272,7 @@ msgstr ""
 
 #: 664bc2c5a41e47f7b116b97ca69052f3
 #: discord.ext.bridge.BridgeCommand.description_localizations:4 of
+#, python-brace-format
 msgid ""
 "bridge_command.description_localizations[\"en-UK\"] = ...  # or any other"
 " locale # or bridge_command.description_localizations = {\"en-UK\": ..., "
@@ -723,11 +726,31 @@ msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr ""
 
 #: ../../ext/bridge/api.rst:162 be07208f849b4f75afd5cb572c0a4830
-msgid "Option"
+msgid "Options"
 msgstr ""
 
-#: ../../ext/bridge/api.rst:165 0b5ee756992f4209aeb8020d1f811b80
-msgid "BridgeOption"
+#: ../../ext/bridge/api.rst:165 1f60901eac6a457aa7223e42c10cd93f
+msgid "Shortcut Decorators"
+msgstr ""
+
+#: 69b358da5f70406084f5cf2e5739a26c discord.ext.bridge.core.bridge_option:1 of
+msgid ""
+"A decorator that can be used instead of typehinting "
+":class:`.BridgeOption`."
+msgstr ""
+
+#: 4ec148203eee4759923f7f7b020f695f discord.ext.bridge.core.bridge_option:7 of
+msgid ""
+"The name of the target function parameter this option is mapped to. This "
+"allows you to have a separate UI ``name`` and parameter name."
+msgstr ""
+
+#: 91b7ac886f874e52a683d4c29e70b140 discord.ext.bridge.core.bridge_option:10 of
+msgid ":class:`str`"
+msgstr ""
+
+#: ../../ext/bridge/api.rst:170 ce259b63f70742b7a14bfb05534ee558
+msgid "Objects"
 msgstr ""
 
 #: 545f31dcbb4e4ab0ac92bc0c8e7e6b47 discord.ext.bridge.core.BridgeOption:1 of
@@ -778,5 +801,11 @@ msgstr ""
 #~ "Alias of :data:`typing.Union` [ "
 #~ ":class:`.BridgeExtContext`, :class:`.BridgeApplicationContext`"
 #~ " ] for typing convenience."
+#~ msgstr ""
+
+#~ msgid "Option"
+#~ msgstr ""
+
+#~ msgid "BridgeOption"
 #~ msgstr ""
 

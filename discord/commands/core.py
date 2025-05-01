@@ -2042,11 +2042,13 @@ def command(**kwargs):
 
 docs = "https://discord.com/developers/docs"
 valid_locales = [
+    "id",
     "da",
     "de",
     "en-GB",
     "en-US",
     "es-ES",
+    "es-419",
     "fr",
     "hr",
     "it",
