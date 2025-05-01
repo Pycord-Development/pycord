@@ -105,6 +105,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 - Fixed `TypeError` when using `Flag` with python 3.11+
   ([#2759])(https://github.com/Pycord-Development/pycord/pull/2759)
+- Updated `valid_locales` to support `in` and `es-419`.
+  ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
 
 ### Changed
 
