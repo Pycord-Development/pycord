@@ -177,7 +177,7 @@ class Loop(Generic[LF]):
                         self._tasks.append(
                             asyncio.create_task(
                                 self.coro(*args, **kwargs),
-                                name=f"pycord-loop-{self.coro.__name__}"
+                                name=f"pycord-loop-{self.coro.__name__}",
                             )
                         )
                     else:
