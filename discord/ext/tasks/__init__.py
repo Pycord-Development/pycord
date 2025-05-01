@@ -95,12 +95,12 @@ class Loop(Generic[LF]):
         count: int | None,
         reconnect: bool,
         loop: asyncio.AbstractEventLoop,
-        overlap: bool,
+        overlap: bool | int,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
         self.loop: asyncio.AbstractEventLoop = loop
-        self.overlap: bool = overlap
+        self.overlap: bool | int = overlap
         self.count: int | None = count
         self._current_loop = 0
         self._handle: SleepHandle = MISSING
@@ -135,6 +135,15 @@ class Loop(Generic[LF]):
             raise TypeError(
                 f"Expected coroutine function, not {type(self.coro).__name__!r}."
             )
+        if isinstance(overlap, bool):
+            self._semaphore = asyncio.Semaphore(1 if not overlap else math.inf)
+        elif isinstance(overlap, int):
+            if overlap <= 0:
+                raise ValueError("overlap as an integer must be greater than 0.")
+            self._semaphore = asyncio.Semaphore(overlap)
+        else:
+            raise TypeError("overlap must be a bool or a positive integer.")
+
 
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, f"_{name}")
@@ -173,15 +182,14 @@ class Loop(Generic[LF]):
                     self._last_iteration = self._next_iteration
                     self._next_iteration = self._get_next_sleep_time()
                 try:
-                    if self.overlap:
-                        self._tasks.append(
-                            asyncio.create_task(
-                                self.coro(*args, **kwargs),
-                                name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
-                            )
-                        )
-                    else:
-                        await self.coro(*args, **kwargs)
+                    async def run_with_semaphore():
+                        async with self._semaphore:
+                            await self.coro(*args, **kwargs)
+                    
+                    self._tasks.append(asyncio.create_task(
+                        run_with_semaphore(),
+                        name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
+                    ))
                     self._last_iteration_failed = False
                     backoff = ExponentialBackoff()
                 except self._valid_exception:
@@ -757,7 +765,7 @@ def loop(
     count: int | None = None,
     reconnect: bool = True,
     loop: asyncio.AbstractEventLoop = MISSING,
-    overlap: bool = False,
+    overlap: bool | int = False,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
     optional reconnect logic. The decorator returns a :class:`Loop`.
@@ -794,8 +802,12 @@ def loop(
         The loop to use to register the task, if not given
         defaults to :func:`asyncio.get_event_loop`.
 
-    overlap: :class:`bool`
-        Whether to allow the next iteration of the loop to run even if the previous one has not completed.
+    overlap: Union[:class:`bool`, :class:`int`]
+        Controls whether to allow overlapping executions of the loop task.
+    
+        - If set to :class:`False` (default), the next iteration waits until the previous finishes.
+        - If set to :class:`True`, overlapping executions are allowed with no limit.
+        - If set to an :class:`int`, allows up to that many overlapping executions at once.
 
         .. versionadded:: 2.7
 
