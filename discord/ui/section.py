@@ -207,7 +207,8 @@ class Section(Item[V]):
             The thumbnail's description, up to 1024 characters.
         spoiler: Optional[:class:`bool`]
             Whether the thumbnail is a spoiler. Defaults to ``False``.
-        id: Optiona[:class:`int`]
+        id: Optional[:class:`int`]
+
             The thumbnail's ID.
         """
 
