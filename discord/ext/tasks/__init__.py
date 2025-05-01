@@ -26,11 +26,11 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextvars
 import datetime
 import inspect
 import sys
 import traceback
-import contextvars
 from collections.abc import Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
@@ -39,8 +39,6 @@ import aiohttp
 import discord
 from discord.backoff import ExponentialBackoff
 from discord.utils import MISSING
-
-
 
 __all__ = ("loop",)
 
