@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import math
 import asyncio
 import datetime
 import inspect
@@ -137,10 +138,11 @@ class Loop(Generic[LF]):
             )
         if not isinstance(overlap, (bool, int)):
             raise TypeError("overlap must be a bool or a positive integer.")
-        elif isinstance(overlap, int):
+        elif overlap is not False and isinstance(overlap, int):
             if overlap <= 1:
                 raise ValueError("overlap as an integer must be greater than 1.")
             self._semaphore = asyncio.Semaphore(overlap)
+            
 
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, f"_{name}")
@@ -182,18 +184,13 @@ class Loop(Generic[LF]):
                     if not self.overlap:
                         await self.coro(*args, **kwargs)
                     else:
-
                         async def run_with_semaphore():
                             async with self._semaphore:
                                 await self.coro(*args, **kwargs)
-
+    
                         self._tasks.append(
                             asyncio.create_task(
-                                (
-                                    self.coro(*args, **kwargs)
-                                    if self.overlap is True
-                                    else run_with_semaphore()
-                                ),
+                                self.coro(*args, **kwargs) if self.overlap is True else run_with_semaphore(),
                                 name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
                             )
                         )
