@@ -2273,8 +2273,6 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         Specifies the slowmode rate limit for user in this channel, in seconds.
         The maximum value possible is `21600`.
 
-        .. versionadded:: 2.7
-
     nsfw: :class:`bool`
         To mark the channel as NSFW or not.
 
