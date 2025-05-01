@@ -30,6 +30,7 @@ import datetime
 import inspect
 import sys
 import traceback
+import contextvars
 from collections.abc import Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
@@ -39,6 +40,8 @@ import discord
 from discord.backoff import ExponentialBackoff
 from discord.utils import MISSING
 
+
+
 __all__ = ("loop",)
 
 T = TypeVar("T")
@@ -46,7 +49,7 @@ _func = Callable[..., Awaitable[Any]]
 LF = TypeVar("LF", bound=_func)
 FT = TypeVar("FT", bound=_func)
 ET = TypeVar("ET", bound=Callable[[Any, BaseException], Awaitable[Any]])
-
+_current_loop_ctx: contextvars.ContextVar[int] = contextvars.ContextVar("_current_loop_ctx", default=0)
 
 class SleepHandle:
     __slots__ = ("future", "loop", "handle")
@@ -179,6 +182,7 @@ class Loop(Generic[LF]):
                     self._last_iteration = self._next_iteration
                     self._next_iteration = self._get_next_sleep_time()
                 try:
+                    token = _current_loop_ctx.set(self._current_loop)
                     if not self.overlap:
                         await self.coro(*args, **kwargs)
                     else:
@@ -197,6 +201,7 @@ class Loop(Generic[LF]):
                                 name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
                             )
                         )
+                    _current_loop_ctx.reset(token)
                     self._last_iteration_failed = False
                     backoff = ExponentialBackoff()
                 except self._valid_exception:
@@ -303,7 +308,7 @@ class Loop(Generic[LF]):
     @property
     def current_loop(self) -> int:
         """The current iteration of the loop."""
-        return self._current_loop
+	    return _current_loop_ctx.get()
 
     @property
     def next_iteration(self) -> datetime.datetime | None:
