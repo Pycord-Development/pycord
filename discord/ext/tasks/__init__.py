@@ -137,7 +137,7 @@ class Loop(Generic[LF]):
             )
         if not isinstance(overlap, (bool, int)):
             raise TypeError("overlap must be a bool or a positive integer.")
-        elif isinstance(overlap, bool) and isinstance(overlap, int):
+        elif not isinstance(overlap, bool) and isinstance(overlap, int):
             if overlap <= 1:
                 raise ValueError("overlap as an integer must be greater than 1.")
             self._semaphore = asyncio.Semaphore(overlap)
