@@ -192,16 +192,17 @@ class Loop(Generic[LF]):
                             async with self._semaphore:
                                 await self.coro(*args, **kwargs)
 
-                        self._tasks.append(
-                            asyncio.create_task(
-                                (
-                                    self.coro(*args, **kwargs)
-                                    if self.overlap is True
-                                    else run_with_semaphore()
-                                ),
-                                name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
-                            )
+                        task = asyncio.create_task(
+                            (
+                                self.coro(*args, **kwargs)
+                                if self.overlap is True
+                                else run_with_semaphore()
+                            ),
+                            name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
                         )
+                        task.add_done_callback(self._tasks.remove)
+                        self._tasks.append(task)
+
                     _current_loop_ctx.reset(token)
                     self._last_iteration_failed = False
                     backoff = ExponentialBackoff()
