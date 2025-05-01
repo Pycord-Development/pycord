@@ -26,11 +26,11 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import contextvars
 import datetime
 import inspect
 import sys
 import traceback
+import contextvars
 from collections.abc import Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
@@ -39,6 +39,8 @@ import aiohttp
 import discord
 from discord.backoff import ExponentialBackoff
 from discord.utils import MISSING
+
+
 
 __all__ = ("loop",)
 
@@ -306,7 +308,7 @@ class Loop(Generic[LF]):
     @property
     def current_loop(self) -> int:
         """The current iteration of the loop."""
-	    return _current_loop_ctx.get()
+	    return _current_loop_ctx.get() or self.current_loop
 
     @property
     def next_iteration(self) -> datetime.datetime | None:
