@@ -309,7 +309,7 @@ class Loop(Generic[LF]):
     @property
     def current_loop(self) -> int:
         """The current iteration of the loop."""
-        return _current_loop_ctx.get() or self.current_loop
+        return _current_loop_ctx.get() or self._current_loop
 
     @property
     def next_iteration(self) -> datetime.datetime | None:
