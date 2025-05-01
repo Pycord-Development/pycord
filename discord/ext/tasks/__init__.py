@@ -145,7 +145,6 @@ class Loop(Generic[LF]):
         else:
             raise TypeError("overlap must be a bool or a positive integer.")
 
-
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, f"_{name}")
         if coro is None:
@@ -183,14 +182,17 @@ class Loop(Generic[LF]):
                     self._last_iteration = self._next_iteration
                     self._next_iteration = self._get_next_sleep_time()
                 try:
+
                     async def run_with_semaphore():
                         async with self._semaphore:
                             await self.coro(*args, **kwargs)
-                    
-                    self._tasks.append(asyncio.create_task(
-                        run_with_semaphore(),
-                        name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
-                    ))
+
+                    self._tasks.append(
+                        asyncio.create_task(
+                            run_with_semaphore(),
+                            name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
+                        )
+                    )
                     self._last_iteration_failed = False
                     backoff = ExponentialBackoff()
                 except self._valid_exception:
@@ -805,7 +807,7 @@ def loop(
 
     overlap: Union[:class:`bool`, :class:`int`]
         Controls whether to allow overlapping executions of the loop task.
-    
+
         - If set to :class:`False` (default), the next iteration waits until the previous finishes.
         - If set to :class:`True`, overlapping executions are allowed with no limit.
         - If set to an :class:`int`, allows up to that many overlapping executions at once.
