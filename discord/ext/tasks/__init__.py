@@ -17,7 +17,7 @@ all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHERgt
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
@@ -174,8 +174,12 @@ class Loop(Generic[LF]):
                     self._next_iteration = self._get_next_sleep_time()
                 try:
                     if self.overlap:
-                        task = asyncio.create_task(self.coro(*args, **kwargs))
-                        self._tasks.append(task)
+                        self._tasks.append(
+                            asyncio.create_task(
+                                self.coro(*args, **kwargs),
+                                name=f"pycord-loop-{self.coro.__name__}"
+                            )
+                        )
                     else:
                         await self.coro(*args, **kwargs)
                     self._last_iteration_failed = False
