@@ -136,14 +136,13 @@ class Loop(Generic[LF]):
             raise TypeError(
                 f"Expected coroutine function, not {type(self.coro).__name__!r}."
             )
-        if isinstance(overlap, bool):
-            self._semaphore = asyncio.Semaphore(1 if not overlap else math.inf)
-        elif isinstance(overlap, int):
-            if overlap <= 0:
-                raise ValueError("overlap as an integer must be greater than 0.")
-            self._semaphore = asyncio.Semaphore(overlap)
-        else:
+        if not isinstance(overlap, (bool, int)):
             raise TypeError("overlap must be a bool or a positive integer.")
+        elif isinstance(overlap, int):
+            if overlap <= 1:
+                raise ValueError("overlap as an integer must be greater than 1.")
+            self._semaphore = asyncio.Semaphore(overlap)
+            
 
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, f"_{name}")
@@ -182,17 +181,19 @@ class Loop(Generic[LF]):
                     self._last_iteration = self._next_iteration
                     self._next_iteration = self._get_next_sleep_time()
                 try:
-
-                    async def run_with_semaphore():
-                        async with self._semaphore:
-                            await self.coro(*args, **kwargs)
-
-                    self._tasks.append(
-                        asyncio.create_task(
-                            run_with_semaphore(),
-                            name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
+                    if not self.overlap:
+                        await self.coro(*args, **kwargs)
+                    else:
+                        async def run_with_semaphore():
+                            async with self._semaphore:
+                                await self.coro(*args, **kwargs)
+    
+                        self._tasks.append(
+                            asyncio.create_task(
+                                self.coro(*args, **kwargs) if self.overlap is True else run_with_semaphore(),
+                                name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
+                            )
                         )
-                    )
                     self._last_iteration_failed = False
                     backoff = ExponentialBackoff()
                 except self._valid_exception:
