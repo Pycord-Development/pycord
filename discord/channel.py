@@ -2049,7 +2049,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         rtc_region: VoiceRegion | None = ...,
         video_quality_mode: VideoQualityMode = ...,
         slowmode_delay: int = ...,
-        nsfw: int = ...,
+        nsfw: bool = ...,
         reason: str | None = ...,
     ) -> VoiceChannel | None: ...
 
