@@ -38,6 +38,7 @@ from discord import (
     SlashCommand,
     SlashCommandGroup,
     SlashCommandOptionType,
+    Member
 )
 
 from ...utils import MISSING, find, get, warn_deprecated
@@ -53,6 +54,7 @@ from ..commands import (
     GuildChannelConverter,
     RoleConverter,
     UserConverter,
+    MemberConverter
 )
 from ..commands.converter import _convert_to_bool, run_converters
 
@@ -622,6 +624,29 @@ class BridgeOption(Option, Converter):
     command option and a prefixed command argument for bridge commands.
     """
 
+    def __init__(self, input_type, *args, **kwargs):
+        super().__init__(input_type, *args, **kwargs)
+
+        self.converter = kwargs.pop("converter", None)
+
+        if self.converter is None:
+            converter = BRIDGE_CONVERTER_MAPPING.get(input_type)
+            if input_type in (Member, SlashCommandOptionType.user):
+                self.converter = self._guild_aware_user_converter
+
+            elif isinstance(converter, type) and issubclass(converter, Converter):
+                self.converter = converter()
+            else:
+                self.converter = converter
+
+    async def _guild_aware_user_converter(self, ctx, argument):
+        if ctx.guild:
+            try:
+                return await MemberConverter().convert(ctx, argument)
+            except BadArgument:
+                pass
+        return await UserConverter().convert(ctx, argument)
+    
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
