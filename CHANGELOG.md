@@ -105,8 +105,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
-- Fixed support emoji aliases like `:smile:` in PartialEmoji.from_str
-  ([#2774](https://github.com/Pycord-Development/pycord/pull/2774))
+- Fixed Ensure correct conversion of discord.Member in BridgeOption
+  ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 
 ### Changed
 
