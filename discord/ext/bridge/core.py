@@ -38,7 +38,6 @@ from discord import (
     SlashCommand,
     SlashCommandGroup,
     SlashCommandOptionType,
-    Member
 )
 
 from ...utils import MISSING, find, get, warn_deprecated
@@ -54,7 +53,7 @@ from ..commands import (
     GuildChannelConverter,
     RoleConverter,
     UserConverter,
-    MemberConverter
+    MemberConverter,
 )
 from ..commands.converter import _convert_to_bool, run_converters
 
@@ -582,15 +581,22 @@ def has_permissions(**perms: bool):
 
 
 class MentionableConverter(Converter):
-    """A converter that can convert a mention to a user or a role."""
+    """A converter that can convert a mention to a member or a role, preferring Member in guilds."""
 
     async def convert(self, ctx, argument):
         try:
             return await RoleConverter().convert(ctx, argument)
         except BadArgument:
-            return await UserConverter().convert(ctx, argument)
+            pass
 
+        if ctx.guild:
+            try:
+                return await MemberConverter().convert(ctx, argument)
+            except BadArgument:
+                pass
 
+        return await UserConverter().convert(ctx, argument)
+    
 class AttachmentConverter(Converter):
     async def convert(self, ctx: Context, arg: str):
         try:
@@ -616,6 +622,7 @@ BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.mentionable: MentionableConverter,
     SlashCommandOptionType.number: float,
     SlashCommandOptionType.attachment: AttachmentConverter,
+    discord.Member: MemberConverter 
 }
 
 
@@ -624,39 +631,30 @@ class BridgeOption(Option, Converter):
     command option and a prefixed command argument for bridge commands.
     """
 
+
     def __init__(self, input_type, *args, **kwargs):
+        self.converter = kwargs.pop("converter", None)
         super().__init__(input_type, *args, **kwargs)
 
-        self.converter = kwargs.pop("converter", None)
-
         if self.converter is None:
-            converter = BRIDGE_CONVERTER_MAPPING.get(input_type)
-            if input_type in (Member, SlashCommandOptionType.user):
-                self.converter = self._guild_aware_user_converter
-
-            elif isinstance(converter, type) and issubclass(converter, Converter):
-                self.converter = converter()
+            if input_type == discord.Member:
+                self.converter = MemberConverter()
             else:
-                self.converter = converter
+                self.converter = BRIDGE_CONVERTER_MAPPING.get(input_type)
 
-    async def _guild_aware_user_converter(self, ctx, argument):
-        if ctx.guild:
-            try:
-                return await MemberConverter().convert(ctx, argument)
-            except BadArgument:
-                pass
-        return await UserConverter().convert(ctx, argument)
-    
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
                 converted = await self.converter.convert(ctx, argument)
             else:
-                converter = BRIDGE_CONVERTER_MAPPING[self.input_type]
-                if issubclass(converter, Converter):
+                converter = BRIDGE_CONVERTER_MAPPING.get(self.input_type)
+                if isinstance(converter, type) and issubclass(converter, Converter):
                     converted = await converter().convert(ctx, argument)  # type: ignore # protocol class
-                else:
+                elif callable(converter):
                     converted = converter(argument)
+                else:
+                    raise TypeError(f"Invalid converter: {converter}")
+
 
             if self.choices:
                 choices_names: list[str | int | float] = [
