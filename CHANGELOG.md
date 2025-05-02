@@ -108,7 +108,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed support emoji aliases like `:smile:` in PartialEmoji.from_str
   ([#2774](https://github.com/Pycord-Development/pycord/pull/2774))
 
-
 ### Changed
 
 - Renamed `cover` property of `ScheduledEvent` and `cover` argument of

@@ -51,9 +51,9 @@ from ..commands import (
     Converter,
     Group,
     GuildChannelConverter,
+    MemberConverter,
     RoleConverter,
     UserConverter,
-    MemberConverter,
 )
 from ..commands.converter import _convert_to_bool, run_converters
 
@@ -596,7 +596,8 @@ class MentionableConverter(Converter):
                 pass
 
         return await UserConverter().convert(ctx, argument)
-    
+
+
 class AttachmentConverter(Converter):
     async def convert(self, ctx: Context, arg: str):
         try:
@@ -622,7 +623,7 @@ BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.mentionable: MentionableConverter,
     SlashCommandOptionType.number: float,
     SlashCommandOptionType.attachment: AttachmentConverter,
-    discord.Member: MemberConverter 
+    discord.Member: MemberConverter,
 }
 
 
@@ -630,7 +631,6 @@ class BridgeOption(Option, Converter):
     """A subclass of :class:`discord.Option` which represents a selectable slash
     command option and a prefixed command argument for bridge commands.
     """
-
 
     def __init__(self, input_type, *args, **kwargs):
         self.converter = kwargs.pop("converter", None)
@@ -654,7 +654,6 @@ class BridgeOption(Option, Converter):
                     converted = converter(argument)
                 else:
                     raise TypeError(f"Invalid converter: {converter}")
-
 
             if self.choices:
                 choices_names: list[str | int | float] = [
