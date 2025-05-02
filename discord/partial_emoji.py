@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
+import emoji as emoji_lib
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
@@ -126,6 +127,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         - ``<a:name:id>``
         - ``name:id``
         - ``<:name:id>``
+        - ``:name:``
 
         If the format does not match then it is assumed to be a unicode emoji.
 
@@ -141,6 +143,10 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
+        resolved = emoji_lib.emojize(value, language="alias")
+        if resolved:
+            return cls(name=resolved, id=None, animated=False)
+            
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
             groups = match.groupdict()
