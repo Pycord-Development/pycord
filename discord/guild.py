@@ -882,6 +882,7 @@ class Guild(Hashable):
         self: Guild,
         object_type: Type[_FETCHABLE],
         object_id: int,
+        default: Any = MISSING
     ) -> Optional[_FETCHABLE]:
         """Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
 
@@ -892,7 +893,10 @@ class Guild(Hashable):
 
         object_id: :class:`int`
             ID of object to get.
-
+        
+        default : Any, optional
+            A default to return instead of raising if fetch fails.
+        
         Returns
         -------
 
@@ -900,30 +904,14 @@ class Guild(Hashable):
             The object of type that was specified or ``None`` if not found.
 
         """
-        if object_type is Member:
-            return await utils.get_or_fetch(
-                obj=self,
-                attr="member",
-                id=object_id,
-                default=None
-            )
+        return await utils.get_or_fetch(
+            obj=self,
+            object_type=object_type,
+            object_id=object_id,
+            default=default
+        )
 
-        elif object_type in (
-            VoiceChannel,
-            TextChannel,
-            ForumChannel,
-            StageChannel,
-            CategoryChannel,
-            Thread,
-        ):
-            return await utils.get_or_fetch(
-                obj=self,
-                attr="channel",
-                id=object_id,
-                default=None
-            )
-
-        raise InvalidArgument(f"Class {object_type.__name__} cannot be used with discord.Guild.get_or_fetch()")
+        
         
     @property
     def premium_subscribers(self) -> list[Member]:
