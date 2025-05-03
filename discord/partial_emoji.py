@@ -28,7 +28,7 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
-import emoji as emoji_lib
+import dismoji
 
 from . import utils
 from .asset import Asset, AssetMixin
@@ -144,8 +144,8 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
-        resolved = emoji_lib.emojize(value, language="alias")
-        if resolved:
+        resolved = dismoji.emojize(value)
+        if resolved != value:
             return cls(name=resolved, id=None, animated=False)
 
         match = cls._CUSTOM_EMOJI_RE.match(value)
