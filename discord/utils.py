@@ -633,16 +633,9 @@ async def get_or_fetch(
     Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]]
         The object of type that was specified or ``None`` if not found.
     """
-    if object_type.__name__ in {"Member", "User", "Guild"}:
+    if issubclass(object_type, (Member, User, Guild)):
         attr = object_type.__name__.lower()
-    elif object_type.__name__ in {
-        "VoiceChannel",
-        "TextChannel",
-        "ForumChannel",
-        "StageChannel",
-        "CategoryChannel",
-        "Thread",
-    }:
+    elif issubclass(object_type, (VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread)):
         attr = "channel"
     else:
         raise InvalidArgument(
