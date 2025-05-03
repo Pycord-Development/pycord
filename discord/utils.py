@@ -75,6 +75,7 @@ if TYPE_CHECKING:
         Member,
         User,
         Guild,
+        GuildEmoji,
     )
 
 from .errors import HTTPException, InvalidArgument
@@ -599,6 +600,7 @@ _FETCHABLE = TypeVar(
         Member,
         User,
         Guild,
+        GuildEmoji,
     ],
 )
 
@@ -616,7 +618,7 @@ async def get_or_fetch(
     ----------
     obj : Guild | Client
         The object to operate on.
-    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]
+    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]
         Type of object to fetch or get.
 
     object_id: :class:`int`
@@ -628,10 +630,10 @@ async def get_or_fetch(
     Returns
     -------
 
-    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]]
+    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]]
         The object of type that was specified or ``None`` if not found.
     """
-    if issubclass(object_type, (Member, User, Guild)):
+    if issubclass(object_type, (Member, User, Guild, GuildEmoji)):
         attr = object_type.__name__.lower()
     elif issubclass(
         object_type,
