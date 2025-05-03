@@ -61,7 +61,23 @@ from typing import (
     TypeVar,
     Union,
     overload,
+    Type,
+    Optional
 )
+if TYPE_CHECKING:
+    from discord import (
+        Client,
+        VoiceChannel,
+        TextChannel,
+        ForumChannel,
+        StageChannel,
+        CategoryChannel,
+        Thread,
+        Member,
+        User,
+        Guild,
+    )
+
 
 from .errors import HTTPException, InvalidArgument
 
@@ -573,65 +589,78 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
     return None
 
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:
-    """|coro|
-
-    Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it.
-    If the fetch also fails, an error will be raised.
+_FETCHABLE = TypeVar(
+        "_FETCHABLE",
+        bound=Union[
+            VoiceChannel,
+            TextChannel,
+            ForumChannel,
+            StageChannel,
+            CategoryChannel,
+            Thread,
+            Member,
+            User,
+            Guild,
+        ],
+    )
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: Type[_FETCHABLE],
+    object_id: int,
+    default: Any = MISSING
+) -> Optional[_FETCHABLE]:
+    """
+    Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
 
     Parameters
     ----------
-    obj: Any
-        The object to use the get or fetch methods in
-    attr: :class:`str`
-        The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute.
-    id: :class:`int`
-        The ID of the object
-    default: Any
-        The default value to return if the object is not found, instead of raising an error.
+    obj : Guild | Client
+        The object to operate on.
+    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]
+        Type of object to fetch or get.
+
+    object_id: :class:`int`
+        ID of object to get.
+    
+    default : Any, optional
+        A default to return instead of raising if fetch fails.
 
     Returns
     -------
-    Any
-        The object found or the default value.
 
-    Raises
-    ------
-    :exc:`AttributeError`
-        The object is missing a ``get_`` or ``fetch_`` method
-    :exc:`NotFound`
-        Invalid ID for the object
-    :exc:`HTTPException`
-        An error occurred fetching the object
-    :exc:`Forbidden`
-        You do not have permission to fetch the object
+    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]]
+        The object of type that was specified or ``None`` if not found.
 
-    Examples
-    --------
-
-    Getting a guild from a guild ID: ::
-
-        guild = await utils.get_or_fetch(client, 'guild', guild_id)
-
-    Getting a channel from the guild. If the channel is not found, return None: ::
-
-        channel = await utils.get_or_fetch(guild, 'channel', channel_id, default=None)
     """
-    getter = getattr(obj, f"get_{attr}")(id)
-    if getter is None:
+    if object_type.__name__ in {"Member", "User", "Guild"}:
+        attr = object_type.__name__.lower()
+    elif object_type.__name__ in {
+        "VoiceChannel",
+        "TextChannel",
+        "ForumChannel",
+        "StageChannel",
+        "CategoryChannel",
+        "Thread",
+    }:
+        attr = "channel"
+    else:
+        raise InvalidArgument(f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()")
+
+    
+    getter = getattr(obj, f"get_{attr}", None)
+    if getter:
+        result = getter(object_id)
+        if result is not None:
+            return result
+
+    fetcher = getattr(obj, f"fetch_{attr}", None) or getattr(obj, f"_fetch_{attr}", None)
+    if fetcher:
         try:
-            getter = await getattr(obj, f"fetch_{attr}")(id)
-        except AttributeError:
-            getter = await getattr(obj, f"_fetch_{attr}")(id)
-            if getter is None:
-                raise ValueError(f"Could not find {attr} with id {id} on {obj}")
+            return await fetcher(object_id)
         except (HTTPException, ValueError):
             if default is not MISSING:
                 return default
-            else:
-                raise
-    return getter
-
+            raise
 
 def _unique(iterable: Iterable[T]) -> list[T]:
     return [x for x in dict.fromkeys(iterable)]
