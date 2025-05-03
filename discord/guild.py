@@ -36,10 +36,10 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Type,
+    TypeVar,
     Union,
     overload,
-    TypeVar,
-    Type
 )
 
 from . import abc, utils
@@ -880,10 +880,10 @@ class Guild(Hashable):
 
     async def get_or_fetch(
         self: Guild,
-        object_type: Type[_FETCHABLE],
+        object_type: type[_FETCHABLE],
         object_id: int,
-        default: Any = MISSING
-    ) -> Optional[_FETCHABLE]:
+        default: Any = MISSING,
+    ) -> _FETCHABLE | None:
         """Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
 
         Parameters
@@ -893,26 +893,20 @@ class Guild(Hashable):
 
         object_id: :class:`int`
             ID of object to get.
-        
+
         default : Any, optional
             A default to return instead of raising if fetch fails.
-        
+
         Returns
         -------
 
         Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]]
             The object of type that was specified or ``None`` if not found.
-
         """
         return await utils.get_or_fetch(
-            obj=self,
-            object_type=object_type,
-            object_id=object_id,
-            default=default
+            obj=self, object_type=object_type, object_id=object_id, default=default
         )
 
-        
-        
     @property
     def premium_subscribers(self) -> list[Member]:
         """A list of members who have "boosted" this guild."""

@@ -56,14 +56,15 @@ from typing import (
     Iterator,
     Literal,
     Mapping,
+    Optional,
     Protocol,
     Sequence,
+    Type,
     TypeVar,
     Union,
     overload,
-    Type,
-    Optional
 )
+
 if TYPE_CHECKING:
     from discord import (
         Client,
@@ -77,7 +78,6 @@ if TYPE_CHECKING:
         User,
         Guild,
     )
-
 
 from .errors import HTTPException, InvalidArgument
 
@@ -590,25 +590,27 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 
 _FETCHABLE = TypeVar(
-        "_FETCHABLE",
-        bound=Union[
-            VoiceChannel,
-            TextChannel,
-            ForumChannel,
-            StageChannel,
-            CategoryChannel,
-            Thread,
-            Member,
-            User,
-            Guild,
-        ],
-    )
+    "_FETCHABLE",
+    bound=Union[
+        VoiceChannel,
+        TextChannel,
+        ForumChannel,
+        StageChannel,
+        CategoryChannel,
+        Thread,
+        Member,
+        User,
+        Guild,
+    ],
+)
+
+
 async def get_or_fetch(
     obj: Guild | Client,
-    object_type: Type[_FETCHABLE],
+    object_type: type[_FETCHABLE],
     object_id: int,
-    default: Any = MISSING
-) -> Optional[_FETCHABLE]:
+    default: Any = MISSING,
+) -> _FETCHABLE | None:
     """
     Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
 
@@ -621,7 +623,7 @@ async def get_or_fetch(
 
     object_id: :class:`int`
         ID of object to get.
-    
+
     default : Any, optional
         A default to return instead of raising if fetch fails.
 
@@ -630,7 +632,6 @@ async def get_or_fetch(
 
     Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]]
         The object of type that was specified or ``None`` if not found.
-
     """
     if object_type.__name__ in {"Member", "User", "Guild"}:
         attr = object_type.__name__.lower()
@@ -644,16 +645,19 @@ async def get_or_fetch(
     }:
         attr = "channel"
     else:
-        raise InvalidArgument(f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()")
+        raise InvalidArgument(
+            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
+        )
 
-    
     getter = getattr(obj, f"get_{attr}", None)
     if getter:
         result = getter(object_id)
         if result is not None:
             return result
 
-    fetcher = getattr(obj, f"fetch_{attr}", None) or getattr(obj, f"_fetch_{attr}", None)
+    fetcher = getattr(obj, f"fetch_{attr}", None) or getattr(
+        obj, f"_fetch_{attr}", None
+    )
     if fetcher:
         try:
             return await fetcher(object_id)
@@ -661,6 +665,7 @@ async def get_or_fetch(
             if default is not MISSING:
                 return default
             raise
+
 
 def _unique(iterable: Iterable[T]) -> list[T]:
     return [x for x in dict.fromkeys(iterable)]
