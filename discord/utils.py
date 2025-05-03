@@ -56,10 +56,8 @@ from typing import (
     Iterator,
     Literal,
     Mapping,
-    Optional,
     Protocol,
     Sequence,
-    Type,
     TypeVar,
     Union,
     overload,
@@ -635,7 +633,17 @@ async def get_or_fetch(
     """
     if issubclass(object_type, (Member, User, Guild)):
         attr = object_type.__name__.lower()
-    elif issubclass(object_type, (VoiceChannel, TextChannel, ForumChannel, StageChannel, CategoryChannel, Thread)):
+    elif issubclass(
+        object_type,
+        (
+            VoiceChannel,
+            TextChannel,
+            ForumChannel,
+            StageChannel,
+            CategoryChannel,
+            Thread,
+        ),
+    ):
         attr = "channel"
     else:
         raise InvalidArgument(
