@@ -53,7 +53,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
-
+- Added `Guild.get_or_fetch()` shortcut method and better get_or_fetch
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
+  
 ### Fixed
 
 - Fixed `Enum` options not setting the correct type when only one choice is available.
@@ -105,8 +107,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
-- Fixed support emoji aliases like `:smile:` in PartialEmoji.from_str
-  ([#2774](https://github.com/Pycord-Development/pycord/pull/2774))
 
 
 ### Changed
