@@ -874,6 +874,7 @@ class Guild(Hashable):
             CategoryChannel,
             Thread,
             Member,
+            GuildEmoji,
         ],
     )
 
@@ -887,7 +888,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]
+        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]
             Type of object to fetch or get.
 
         object_id: :class:`int`
@@ -899,7 +900,7 @@ class Guild(Hashable):
         Returns
         -------
 
-        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`]]
+        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]]
             The object of type that was specified or ``None`` if not found.
         """
         return await utils.get_or_fetch(
@@ -2707,6 +2708,26 @@ class Guild(Hashable):
         """
         await self._state.http.delete_guild_sticker(self.id, sticker.id, reason)
 
+    def get_emoji(self, emoji_id: int, /) -> Optional[GuildEmoji]:
+        """Returns an emoji with the given ID.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        emoji_id: int
+            The ID to search for.
+
+        Returns
+        --------
+        Optional[:class:`Emoji`]
+            The returned Emoji or ``None`` if not found.
+        """
+        emoji = self._state.get_emoji(emoji_id)
+        if emoji and emoji.guild == self:
+            return emoji
+        return None
+        
     async def fetch_emojis(self) -> list[GuildEmoji]:
         r"""|coro|
 
