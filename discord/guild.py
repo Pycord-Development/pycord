@@ -2708,7 +2708,7 @@ class Guild(Hashable):
         """
         await self._state.http.delete_guild_sticker(self.id, sticker.id, reason)
 
-    def get_emoji(self, emoji_id: int, /) -> Optional[GuildEmoji]:
+    def get_emoji(self, emoji_id: int, /) -> GuildEmoji | None:
         """Returns an emoji with the given ID.
 
         .. versionadded:: 2.7
@@ -2719,7 +2719,7 @@ class Guild(Hashable):
             The ID to search for.
 
         Returns
-        --------
+        -------
         Optional[:class:`Emoji`]
             The returned Emoji or ``None`` if not found.
         """
@@ -2727,7 +2727,7 @@ class Guild(Hashable):
         if emoji and emoji.guild == self:
             return emoji
         return None
-        
+
     async def fetch_emojis(self) -> list[GuildEmoji]:
         r"""|coro|
 
