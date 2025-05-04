@@ -28,8 +28,6 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
-import dismoji
-
 from . import utils
 from .asset import Asset, AssetMixin
 from .errors import InvalidArgument
@@ -98,7 +96,9 @@ class PartialEmoji(_EmojiTag, AssetMixin):
     _CUSTOM_EMOJI_RE = re.compile(
         r"<?(?P<animated>a)?:?(?P<name>\w+):(?P<id>[0-9]{13,20})>?"
     )
-
+    _emoji_map: ClassVar[dict[str, str]] = {}
+    _emoji_lock: ClassVar[asyncio.Lock] = asyncio.Lock()
+    
     if TYPE_CHECKING:
         id: int | None
 
@@ -144,9 +144,11 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
-        resolved = dismoji.emojize(value)
-        if resolved != value:
-            return cls(name=resolved, id=None, animated=False)
+        if value.startswith(":") and value.endswith(":"):
+            name = value[1:-1]
+            unicode_emoji = await cls._get_discord_unicode(name)
+            if unicode_emoji:
+                return cls(name=unicode_emoji, id=None, animated=False)
 
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
@@ -157,6 +159,24 @@ class PartialEmoji(_EmojiTag, AssetMixin):
             return cls(name=name, animated=animated, id=emoji_id)
 
         return cls(name=value, id=None, animated=False)
+
+    @classmethod
+    async def _get_discord_unicode(cls, name: str) -> Optional[str]:
+        async with cls._emoji_lock:
+            if not cls._emoji_map:
+                url = "https://raw.githubusercontent.com/Paillat-dev/discord-emojis/refs/heads/master/build/emojis.json"
+                try:
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(url) as response:
+                            data = await response.json()
+                            for emoji in data.get("emojis", []):
+                                for alias in emoji.get("names", []):
+                                    cls._emoji_map[alias] = emoji.get("surrogates", "")
+                except Exception as e:
+                    print(f"[PartialEmoji] Failed to load emoji data: {e}")
+                    return None
+    
+        return cls._emoji_map.get(name)
 
     def to_dict(self) -> dict[str, Any]:
         o: dict[str, Any] = {"name": self.name}
