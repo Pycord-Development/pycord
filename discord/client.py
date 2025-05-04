@@ -31,7 +31,7 @@ import signal
 import sys
 import traceback
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar, Union
 
 import aiohttp
 
@@ -1121,19 +1121,10 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
+
     _FETCHABLE = TypeVar(
         "_FETCHABLE",
-        bound=Union[
-            VoiceChannel,
-            TextChannel,
-            ForumChannel,
-            StageChannel,
-            CategoryChannel,
-            Thread,
-            User,
-            GuildEmoji,
-            Guild,
-        ],
+        bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji"
     )
 
     async def get_or_fetch(
