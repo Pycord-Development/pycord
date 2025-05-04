@@ -590,9 +590,8 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 _FETCHABLE = TypeVar(
     "_FETCHABLE",
-    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji",
+    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji | AppEmoji",
 )
-
 
 async def get_or_fetch(
     obj: Guild | Client,
@@ -607,7 +606,7 @@ async def get_or_fetch(
     ----------
     obj : Guild | Client
         The object to operate on.
-    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]
+    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]
         Type of object to fetch or get.
 
     object_id: :class:`int`
@@ -619,40 +618,50 @@ async def get_or_fetch(
     Returns
     -------
 
-    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]]
+    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]]
         The object of type that was specified or ``None`` if not found.
     """
     from discord import (
-        CategoryChannel,
-        ForumChannel,
-        Guild,
-        GuildEmoji,
-        Member,
-        StageChannel,
-        TextChannel,
-        Thread,
-        User,
-        VoiceChannel,
+        VoiceChannel, TextChannel, ForumChannel, StageChannel,
+        CategoryChannel, Thread, Member, User, Guild, GuildEmoji, AppEmoji
     )
-
-    if issubclass(object_type, (Member, User, Guild, GuildEmoji)):
-        attr = object_type.__name__.lower()
-    elif issubclass(
-        object_type,
-        (
-            VoiceChannel,
-            TextChannel,
-            ForumChannel,
-            StageChannel,
-            CategoryChannel,
-            Thread,
-        ),
-    ):
-        attr = "channel"
-    else:
-        raise InvalidArgument(
-            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
+    if isinstance(object_type, str):
+        warn_deprecated(
+            name="get_or_fetch(obj, attr=str, ...)",
+            instead="get_or_fetch(obj, object_type=Type, ...)",
+            since="2.7",
         )
+        if object_type not in ["emoji", "channel", "member", "user", "guild"]:
+            raise InvalidArgument(
+                f"Invalid type {object_type} passed to get_or_fetch."
+            )
+        else:
+            attr = object_type
+    else:
+        if issubclass(object_type, (Member, User, Guild)):
+            attr = object_type.__name__.lower()
+        elif issubclass(object_type, (GuildEmoji, AppEmoji)):
+            attr = "emoji"
+        elif issubclass(
+            object_type,
+            (
+                VoiceChannel,
+                TextChannel,
+                ForumChannel,
+                StageChannel,
+                CategoryChannel,
+                Thread,
+            ),
+        ):
+            attr = "channel"
+        else:
+            raise InvalidArgument(
+                f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
+            )
+    if isinstance(obj, Guild) and object_type is User:
+        raise InvalidArgument("Guild cannot get_or_fetch discord.User. Use Client instead.")
+    elif isinstance(obj, Client) and object_type is Member:
+            raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
 
     getter = getattr(obj, f"get_{attr}", None)
     if getter:
