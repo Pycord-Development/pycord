@@ -593,6 +593,7 @@ _FETCHABLE = TypeVar(
     bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji | AppEmoji",
 )
 
+
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE],
@@ -622,9 +623,19 @@ async def get_or_fetch(
         The object of type that was specified or ``None`` if not found.
     """
     from discord import (
-        VoiceChannel, TextChannel, ForumChannel, StageChannel,
-        CategoryChannel, Thread, Member, User, Guild, GuildEmoji, AppEmoji
+        AppEmoji,
+        CategoryChannel,
+        ForumChannel,
+        Guild,
+        GuildEmoji,
+        Member,
+        StageChannel,
+        TextChannel,
+        Thread,
+        User,
+        VoiceChannel,
     )
+
     if isinstance(object_type, str):
         warn_deprecated(
             name="get_or_fetch(obj, attr=str, ...)",
@@ -632,9 +643,7 @@ async def get_or_fetch(
             since="2.7",
         )
         if object_type not in ["emoji", "channel", "member", "user", "guild"]:
-            raise InvalidArgument(
-                f"Invalid type {object_type} passed to get_or_fetch."
-            )
+            raise InvalidArgument(f"Invalid type {object_type} passed to get_or_fetch.")
         else:
             attr = object_type
     else:
@@ -659,9 +668,11 @@ async def get_or_fetch(
                 f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
             )
     if isinstance(obj, Guild) and object_type is User:
-        raise InvalidArgument("Guild cannot get_or_fetch discord.User. Use Client instead.")
+        raise InvalidArgument(
+            "Guild cannot get_or_fetch discord.User. Use Client instead."
+        )
     elif isinstance(obj, Client) and object_type is Member:
-            raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
+        raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
 
     getter = getattr(obj, f"get_{attr}", None)
     if getter:
