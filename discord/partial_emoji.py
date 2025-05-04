@@ -98,7 +98,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
     )
     _emoji_map: ClassVar[dict[str, str]] = {}
     _emoji_lock: ClassVar[asyncio.Lock] = asyncio.Lock()
-    
+
     if TYPE_CHECKING:
         id: int | None
 
@@ -175,7 +175,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
                 except Exception as e:
                     print(f"[PartialEmoji] Failed to load emoji data: {e}")
                     return None
-    
+
         return cls._emoji_map.get(name)
 
     def to_dict(self) -> dict[str, Any]:
