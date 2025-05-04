@@ -1121,6 +1121,26 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
+    @utils.deprecated(
+        instead="Client.get_or_fetch(User, id)",
+        since="2.7",
+    )
+    async def get_or_fetch_user(self, id: int, /) -> User | None:
+        """|coro|
+
+        Looks up a user in the user cache or fetches if not found.
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID to search for.
+        Returns
+        -------
+        Optional[:class:`~discord.User`]
+            The user or ``None`` if not found.
+        """
+
+        return await utils.get_or_fetch(obj=self, attr=User, id=id, default=None)
+        
     _FETCHABLE = TypeVar(
         "_FETCHABLE",
         bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji",
