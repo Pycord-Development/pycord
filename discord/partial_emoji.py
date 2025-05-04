@@ -173,9 +173,8 @@ class PartialEmoji(_EmojiTag, AssetMixin):
                             for emoji in data.get("emojis", []):
                                 for alias in emoji.get("names", []):
                                     cls._emoji_map[alias] = emoji.get("surrogates", "")
-                except Exception as e:
+                except Exception:
                     return {}
-
 
     def to_dict(self) -> dict[str, Any]:
         o: dict[str, Any] = {"name": self.name}
