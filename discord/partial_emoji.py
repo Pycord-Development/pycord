@@ -145,8 +145,9 @@ class PartialEmoji(_EmojiTag, AssetMixin):
             The partial emoji from this string.
         """
         if value.startswith(":") and value.endswith(":"):
+            # FIND A WAY TO _load_discord_unicode without blocking the bot
             name = value[1:-1]
-            unicode_emoji = await cls._get_discord_unicode(name)
+            unicode_emoji = await cls._emoji_map.get(name)
             if unicode_emoji:
                 return cls(name=unicode_emoji, id=None, animated=False)
 
@@ -161,7 +162,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return cls(name=value, id=None, animated=False)
 
     @classmethod
-    async def _get_discord_unicode(cls, name: str) -> Optional[str]:
+    async def _load_discord_unicode(cls, name: str) -> Optional[str]:
         async with cls._emoji_lock:
             if not cls._emoji_map:
                 url = "https://raw.githubusercontent.com/Paillat-dev/discord-emojis/refs/heads/master/build/emojis.json"
@@ -173,10 +174,8 @@ class PartialEmoji(_EmojiTag, AssetMixin):
                                 for alias in emoji.get("names", []):
                                     cls._emoji_map[alias] = emoji.get("surrogates", "")
                 except Exception as e:
-                    print(f"[PartialEmoji] Failed to load emoji data: {e}")
-                    return None
+                    return {}
 
-        return cls._emoji_map.get(name)
 
     def to_dict(self) -> dict[str, Any]:
         o: dict[str, Any] = {"name": self.name}
