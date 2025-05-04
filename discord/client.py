@@ -68,8 +68,8 @@ from .widget import Widget
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import (
-        DMChannel,
         CategoryChannel,
+        DMChannel,
         ForumChannel,
         StageChannel,
         TextChannel,
@@ -78,8 +78,8 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .poll import Poll
-    from .voice_client import VoiceProtocol
     from .threads import Thread, ThreadMember
+    from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
 
@@ -1143,6 +1143,7 @@ class Client:
         default: Any = MISSING,
     ) -> _FETCHABLE | None:
         """Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
+
         Parameters
         ----------
         object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`GuildEmoji`, :class:`Guild`]
@@ -1151,6 +1152,7 @@ class Client:
             ID of object to get.
         default : Any, optional
             A default to return instead of raising if fetch fails.
+
         Returns
         -------
         Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`GuildEmoji`, :class:`Guild`]]
@@ -1159,6 +1161,7 @@ class Client:
         return await utils.get_or_fetch(
             obj=self, object_type=object_type, object_id=object_id, default=default
         )
+
     # listeners/waiters
 
     async def wait_until_ready(self) -> None:
