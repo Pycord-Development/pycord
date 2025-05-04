@@ -67,11 +67,19 @@ from .widget import Widget
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
-    from .channel import DMChannel
+    from .channel import (
+        DMChannel,
+        CategoryChannel,
+        ForumChannel,
+        StageChannel,
+        TextChannel,
+        VoiceChannel,
+    )
     from .member import Member
     from .message import Message
     from .poll import Poll
     from .voice_client import VoiceProtocol
+    from .threads import Thread, ThreadMember
 
 __all__ = ("Client",)
 
@@ -1113,24 +1121,44 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
-    async def get_or_fetch_user(self, id: int, /) -> User | None:
-        """|coro|
+    _FETCHABLE = TypeVar(
+        "_FETCHABLE",
+        bound=Union[
+            VoiceChannel,
+            TextChannel,
+            ForumChannel,
+            StageChannel,
+            CategoryChannel,
+            Thread,
+            User,
+            GuildEmoji,
+            Guild,
+        ],
+    )
 
-        Looks up a user in the user cache or fetches if not found.
-
+    async def get_or_fetch(
+        self: Client,
+        object_type: type[_FETCHABLE],
+        object_id: int,
+        default: Any = MISSING,
+    ) -> _FETCHABLE | None:
+        """Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
         Parameters
         ----------
-        id: :class:`int`
-            The ID to search for.
-
+        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`GuildEmoji`, :class:`Guild`]
+            Type of object to fetch or get.
+        object_id: :class:`int`
+            ID of object to get.
+        default : Any, optional
+            A default to return instead of raising if fetch fails.
         Returns
         -------
-        Optional[:class:`~discord.User`]
-            The user or ``None`` if not found.
+        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`GuildEmoji`, :class:`Guild`]]
+            The object of type that was specified or ``None`` if not found.
         """
-
-        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
-
+        return await utils.get_or_fetch(
+            obj=self, object_type=object_type, object_id=object_id, default=default
+        )
     # listeners/waiters
 
     async def wait_until_ready(self) -> None:
