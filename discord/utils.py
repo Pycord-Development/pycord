@@ -590,8 +590,9 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 _FETCHABLE = TypeVar(
     "_FETCHABLE",
-    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji"
+    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji",
 )
+
 
 async def get_or_fetch(
     obj: Guild | Client,
@@ -622,9 +623,18 @@ async def get_or_fetch(
         The object of type that was specified or ``None`` if not found.
     """
     from discord import (
-        VoiceChannel, TextChannel, ForumChannel, StageChannel,
-        CategoryChannel, Thread, Member, User, Guild, GuildEmoji
+        CategoryChannel,
+        ForumChannel,
+        Guild,
+        GuildEmoji,
+        Member,
+        StageChannel,
+        TextChannel,
+        Thread,
+        User,
+        VoiceChannel,
     )
+
     if issubclass(object_type, (Member, User, Guild, GuildEmoji)):
         attr = object_type.__name__.lower()
     elif issubclass(
