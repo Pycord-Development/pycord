@@ -590,9 +590,8 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 _FETCHABLE = TypeVar(
     "_FETCHABLE",
-    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji",
+    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji"
 )
-
 
 async def get_or_fetch(
     obj: Guild | Client,
@@ -622,6 +621,10 @@ async def get_or_fetch(
     Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]]
         The object of type that was specified or ``None`` if not found.
     """
+    from discord import (
+        VoiceChannel, TextChannel, ForumChannel, StageChannel,
+        CategoryChannel, Thread, Member, User, Guild, GuildEmoji
+    )
     if issubclass(object_type, (Member, User, Guild, GuildEmoji)):
         attr = object_type.__name__.lower()
     elif issubclass(
