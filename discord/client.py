@@ -1145,7 +1145,7 @@ class Client:
 
     _FETCHABLE = TypeVar(
         "_FETCHABLE",
-        bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji",
+        bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji",
     )
 
     async def get_or_fetch(
@@ -1158,7 +1158,7 @@ class Client:
 
         Parameters
         ----------
-        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`GuildEmoji`, :class:`Guild`]
+        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`GuildEmoji`, :class:`AppEmoji`]
             Type of object to fetch or get.
         object_id: :class:`int`
             ID of object to get.
@@ -1167,7 +1167,7 @@ class Client:
 
         Returns
         -------
-        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`GuildEmoji`, :class:`Guild`]]
+        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`GuildEmoji`, :class:`AppEmoji`]]
             The object of type that was specified or ``None`` if not found.
         """
         return await utils.get_or_fetch(
