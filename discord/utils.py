@@ -626,18 +626,14 @@ async def get_or_fetch(
         The object of type that was specified or ``None`` if not found.
     """
     from discord import (
-        AppEmoji,
-        CategoryChannel,
         Client,
-        ForumChannel,
+        User,
         Guild,
+        AppEmoji,
         GuildEmoji,
         Member,
-        StageChannel,
-        TextChannel,
-        Thread,
-        User,
-        VoiceChannel,
+        abc,
+        
     )
 
     # TODO REMOVE THIS PART AfTER DEPREcIATION
@@ -684,17 +680,7 @@ async def get_or_fetch(
         attr = object_type.__name__.lower()
     elif issubclass(object_type, (GuildEmoji, AppEmoji)):
         attr = "emoji"
-    elif issubclass(
-        object_type,
-        (
-            VoiceChannel,
-            TextChannel,
-            ForumChannel,
-            StageChannel,
-            CategoryChannel,
-            Thread,
-        ),
-    ):
+    elif issubclass(object_type, abc.GuildChannel):
         attr = "channel"
     else:
         raise InvalidArgument(
