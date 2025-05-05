@@ -626,14 +626,13 @@ async def get_or_fetch(
         The object of type that was specified or ``None`` if not found.
     """
     from discord import (
-        Client,
-        User,
-        Guild,
         AppEmoji,
+        Client,
+        Guild,
         GuildEmoji,
         Member,
+        User,
         abc,
-        
     )
 
     # TODO REMOVE THIS PART AfTER DEPREcIATION
