@@ -655,14 +655,25 @@ async def get_or_fetch(
             instead="get_or_fetch(obj, object_type=Type, object_id=...)",
             since="2.7",
         )
-        attr = object_type if object_type is not MISSING else attr
-        mapped_type = string_to_type.get(attr.lower())
-        if mapped_type is None:
-            raise InvalidArgument(
-                f"Unknown type string '{attr}' passed as `attr`. Use a valid object class instead."
+
+        deprecated_attr = attr if attr is not MISSING else object_type
+        deprecated_id = id if id is not MISSING else object_id
+
+        if isinstance(deprecated_attr, str):
+            mapped_type = string_to_type.get(deprecated_attr.lower())
+            if mapped_type is None:
+                raise InvalidArgument(
+                    f"Unknown type string '{deprecated_attr}' used. Please use a valid object class like `discord.Member` instead."
+                )
+            object_type = mapped_type
+        elif isinstance(deprecated_attr, type):
+            object_type = deprecated_attr
+        else:
+            raise TypeError(
+                f"Invalid `attr` or `object_type`: expected a string or class, got {type(deprecated_attr).__name__}."
             )
-        object_type = mapped_type
-        object_id = id
+
+        object_id = deprecated_id
 
     if object_type is MISSING or object_id is MISSING:
         raise TypeError("required parameters: `object_type` and `object_id`.")
