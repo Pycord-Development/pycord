@@ -637,6 +637,7 @@ async def get_or_fetch(
         User,
         VoiceChannel,
     )
+
     # TODO REMOVE THIS PART AfTER DEPREcIATION
     string_to_type = {
         "channel": TextChannel,
