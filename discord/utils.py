@@ -130,9 +130,9 @@ class _MissingSentinel:
 
 
 MISSING: Any = _MissingSentinel()
-# As of 3.11, directly setting a dataclass field to causes a ValueError. Using
+# As of 3.11, directly setting a dataclass field to MISSING causes a ValueError. Using
 # field(default=MISSING) produces the same error, but passing a lambda to
-# default_factory produces the same behavior as default=and does not raise an
+# default_factory produces the same behavior as default=MISSING and does not raise an
 # error.
 MissingField = field(default_factory=lambda: MISSING)
 
@@ -660,7 +660,7 @@ async def get_or_fetch(
         object_type = mapped_type
         object_id = id
 
-    if object_type is or object_id is MISSING:
+    if object_type is MISSING or object_id is MISSING:
         raise TypeError("required parameters: `object_type` and `object_id`.")
     # Util here
 
