@@ -656,7 +656,7 @@ async def get_or_fetch(
             since="2.7",
         )
         attr = object_type if object_type is not MISSING else attr
-        mapped_type = string_to_type.get(attr.lower() )
+        mapped_type = string_to_type.get(attr.lower())
         if mapped_type is None:
             raise InvalidArgument(
                 f"Unknown type string '{attr}' passed as `attr`. Use a valid object class instead."
