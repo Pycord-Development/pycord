@@ -626,19 +626,20 @@ async def get_or_fetch(
         The object of type that was specified or ``None`` if not found.
     """
     from discord import (
-            Client,
-            VoiceChannel,
-            TextChannel,
-            ForumChannel,
-            StageChannel,
-            CategoryChannel,
-            Thread,
-            Member,
-            User,
-            Guild,
-            GuildEmoji,
-            AppEmoji,
-        )
+        AppEmoji,
+        CategoryChannel,
+        Client,
+        ForumChannel,
+        Guild,
+        GuildEmoji,
+        Member,
+        StageChannel,
+        TextChannel,
+        Thread,
+        User,
+        VoiceChannel,
+    )
+
     # TODO REMOVE THIS PART AfTER DEPREcIATION
     string_to_type = {
         "channel": TextChannel,
