@@ -593,6 +593,7 @@ _FETCHABLE = TypeVar(
     bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji | AppEmoji",
 )
 
+
 # TODO REMOVE THE FOR object_type and object_id + remove both attr and id after depreciation
 async def get_or_fetch(
     obj: Guild | Client,
@@ -656,7 +657,9 @@ async def get_or_fetch(
         )
         mapped_type = string_to_type.get(attr.lower())
         if mapped_type is None:
-            raise InvalidArgument(f"Unknown type string '{attr}' passed as `attr`. Use a valid object class instead.")
+            raise InvalidArgument(
+                f"Unknown type string '{attr}' passed as `attr`. Use a valid object class instead."
+            )
         object_type = mapped_type
         object_id = id
 
