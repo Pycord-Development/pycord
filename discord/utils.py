@@ -649,7 +649,7 @@ async def get_or_fetch(
         "appemoji": AppEmoji,
     }
 
-    if attr is not MISSING or id is not MISSING or isistance(object_type, str):
+    if attr is not MISSING or id is not MISSING or isinstance(object_type, str):
         warn_deprecated(
             name="get_or_fetch(obj, attr='type', id=...)",
             instead="get_or_fetch(obj, object_type=Type, object_id=...)",
