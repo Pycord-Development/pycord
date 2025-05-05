@@ -108,7 +108,6 @@ class PartialEmoji(_EmojiTag, AssetMixin):
     _CUSTOM_EMOJI_RE = re.compile(
         r"<?(?P<animated>a)?:?(?P<name>\w+):(?P<id>[0-9]{13,20})>?"
     )
-    _emoji_lock: ClassVar[asyncio.Lock] = asyncio.Lock()
 
     if TYPE_CHECKING:
         id: int | None
