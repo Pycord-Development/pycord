@@ -632,7 +632,7 @@ async def get_or_fetch(
         GuildEmoji,
         Member,
         User,
-        _EmojiTag,
+        emoji,
         abc,
     )
 
@@ -642,7 +642,7 @@ async def get_or_fetch(
         "member": Member,
         "user": User,
         "guild": Guild,
-        "emoji": _EmojiTag,
+        "emoji": emoji._EmojiTag,
         "appemoji": AppEmoji,
     }
 
@@ -678,7 +678,7 @@ async def get_or_fetch(
 
     if issubclass(object_type, (Member, User, Guild)):
         attr = object_type.__name__.lower()
-    elif issubclass(object_type, _EmojiTag):
+    elif issubclass(object_type, emoji._EmojiTag):
         attr = "emoji"
     elif issubclass(object_type, abc.GuildChannel):
         attr = "channel"
