@@ -632,8 +632,8 @@ async def get_or_fetch(
         GuildEmoji,
         Member,
         User,
-        emoji,
         abc,
+        emoji,
     )
 
     # TODO REMOVE THIS PART AfTER DEPREcIATION
