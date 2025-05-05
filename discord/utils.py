@@ -593,12 +593,14 @@ _FETCHABLE = TypeVar(
     bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji | AppEmoji",
 )
 
-
+# TODO REMOVE THE MISSING FOR object_type and object_id + remove both attr and id after depreciation
 async def get_or_fetch(
     obj: Guild | Client,
-    object_type: type[_FETCHABLE],
-    object_id: int,
+    object_type: type[_FETCHABLE] = MISSING,
+    object_id: int = MISSING,
     default: Any = MISSING,
+    attr: str = MISSING
+    id: int = MISSING,
 ) -> _FETCHABLE | None:
     """
     Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
@@ -635,38 +637,54 @@ async def get_or_fetch(
         User,
         VoiceChannel,
     )
+    # TODO REMOVE THIS PART AfTER DEPREcIATION
+    string_to_type = {
+        "channel": TextChannel,
+        "member": Member,
+        "user": User,
+        "guild": Guild,
+        "emoji": GuildEmoji,
+        "appemoji": AppEmoji,
+    }
 
-    if isinstance(object_type, str):
+    if attr is not MISSING and id is not MISSING:
         warn_deprecated(
-            name="get_or_fetch(obj, attr=str, ...)",
-            instead="get_or_fetch(obj, object_type=Type, ...)",
+            name="get_or_fetch(obj, attr='type', id=...)",
+            instead="get_or_fetch(obj, object_type=Type, object_id=...)",
             since="2.7",
+            removed="3.0",
+            reference="https://github.com/Lumabots/pycord/pull/XYZ"
         )
-        if object_type not in ["emoji", "channel", "member", "user", "guild"]:
-            raise InvalidArgument(f"Invalid type {object_type} passed to get_or_fetch.")
-        else:
-            attr = object_type
+        mapped_type = string_to_type.get(attr.lower())
+        if mapped_type is None:
+            raise InvalidArgument(f"Unknown type string '{attr}' passed as `attr`. Use a valid object class instead.")
+        object_type = mapped_type
+        object_id = id
+
+    if object_type is MISSING or object_id is MISSING:
+        raise TypeError("Missing required parameters: `object_type` and `object_id`.")
+    # Util here
+
+    if issubclass(object_type, (Member, User, Guild)):
+        attr = object_type.__name__.lower()
+    elif issubclass(object_type, (GuildEmoji, AppEmoji)):
+        attr = "emoji"
+    elif issubclass(
+        object_type,
+        (
+            VoiceChannel,
+            TextChannel,
+            ForumChannel,
+            StageChannel,
+            CategoryChannel,
+            Thread,
+        ),
+    ):
+        attr = "channel"
     else:
-        if issubclass(object_type, (Member, User, Guild)):
-            attr = object_type.__name__.lower()
-        elif issubclass(object_type, (GuildEmoji, AppEmoji)):
-            attr = "emoji"
-        elif issubclass(
-            object_type,
-            (
-                VoiceChannel,
-                TextChannel,
-                ForumChannel,
-                StageChannel,
-                CategoryChannel,
-                Thread,
-            ),
-        ):
-            attr = "channel"
-        else:
-            raise InvalidArgument(
-                f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
-            )
+        raise InvalidArgument(
+            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
+        )
     if isinstance(obj, Guild) and object_type is User:
         raise InvalidArgument(
             "Guild cannot get_or_fetch discord.User. Use Client instead."
