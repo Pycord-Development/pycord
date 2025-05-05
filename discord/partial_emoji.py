@@ -25,15 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import json
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
 from .errors import InvalidArgument
-
-import json
-from pathlib import Path
 
 EMOJIS_MAP_PATH = Path(__file__).parent / "emojis.json"
 
@@ -110,7 +109,6 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         r"<?(?P<animated>a)?:?(?P<name>\w+):(?P<id>[0-9]{13,20})>?"
     )
     _emoji_lock: ClassVar[asyncio.Lock] = asyncio.Lock()
-    
 
     if TYPE_CHECKING:
         id: int | None
@@ -172,7 +170,6 @@ class PartialEmoji(_EmojiTag, AssetMixin):
             return cls(name=name, animated=animated, id=emoji_id)
 
         return cls(name=value, id=None, animated=False)
-
 
     def to_dict(self) -> dict[str, Any]:
         o: dict[str, Any] = {"name": self.name}
