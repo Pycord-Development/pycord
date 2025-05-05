@@ -130,9 +130,9 @@ class _MissingSentinel:
 
 
 MISSING: Any = _MissingSentinel()
-# As of 3.11, directly setting a dataclass field to MISSING causes a ValueError. Using
+# As of 3.11, directly setting a dataclass field to causes a ValueError. Using
 # field(default=MISSING) produces the same error, but passing a lambda to
-# default_factory produces the same behavior as default=MISSING and does not raise an
+# default_factory produces the same behavior as default=and does not raise an
 # error.
 MissingField = field(default_factory=lambda: MISSING)
 
@@ -593,13 +593,13 @@ _FETCHABLE = TypeVar(
     bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji | AppEmoji",
 )
 
-# TODO REMOVE THE MISSING FOR object_type and object_id + remove both attr and id after depreciation
+# TODO REMOVE THE FOR object_type and object_id + remove both attr and id after depreciation
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE] = MISSING,
     object_id: int = MISSING,
     default: Any = MISSING,
-    attr: str = MISSING
+    attr: str = MISSING,
     id: int = MISSING,
 ) -> _FETCHABLE | None:
     """
@@ -648,13 +648,11 @@ async def get_or_fetch(
         "appemoji": AppEmoji,
     }
 
-    if attr is not MISSING and id is not MISSING:
+    if attr is not and id is not MISSING or isistance(object_type, str):
         warn_deprecated(
             name="get_or_fetch(obj, attr='type', id=...)",
             instead="get_or_fetch(obj, object_type=Type, object_id=...)",
             since="2.7",
-            removed="3.0",
-            reference="https://github.com/Lumabots/pycord/pull/XYZ"
         )
         mapped_type = string_to_type.get(attr.lower())
         if mapped_type is None:
@@ -662,8 +660,8 @@ async def get_or_fetch(
         object_type = mapped_type
         object_id = id
 
-    if object_type is MISSING or object_id is MISSING:
-        raise TypeError("Missing required parameters: `object_type` and `object_id`.")
+    if object_type is or object_id is MISSING:
+        raise TypeError("required parameters: `object_type` and `object_id`.")
     # Util here
 
     if issubclass(object_type, (Member, User, Guild)):
