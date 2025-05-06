@@ -1024,6 +1024,9 @@ class Message(Hashable):
                 continue
             else:
                 handler(self, value)
+                # Update the message's _raw_data
+                # ref: #2777
+                self._raw_data[key] = value
 
         # clear the cached properties
         for attr in self._CACHED_SLOTS:
