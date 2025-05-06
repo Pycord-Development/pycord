@@ -447,40 +447,37 @@ class Guild(Hashable):
 
         return role
 
-    def _from_data(self, guild: GuildPayload) -> None:
-        member_count = guild.get("member_count")
+    def _from_data(self, guild: models.Guild | models.gateway.GuildCreateData) -> None:
+        member_count = None
+        if isinstance(guild, models.gateway.GuildCreateData):
+            member_count = guild.member_count
         # Either the payload includes member_count, or it hasn't been set yet.
         # Prevents valid _member_count from suddenly changing to None
         if member_count is not None or not hasattr(self, "_member_count"):
             self._member_count: int | None = member_count
 
-        self.name: str = guild.get("name")
-        self.verification_level: VerificationLevel = try_enum(
-            VerificationLevel, guild.get("verification_level")
-        )
-        self.default_notifications: NotificationLevel = try_enum(
-            NotificationLevel, guild.get("default_message_notifications")
-        )
-        self.explicit_content_filter: ContentFilter = try_enum(
-            ContentFilter, guild.get("explicit_content_filter", 0)
-        )
-        self.afk_timeout: int = guild.get("afk_timeout")
-        self._icon: str | None = guild.get("icon")
-        self._banner: str | None = guild.get("banner")
-        self.unavailable: bool = guild.get("unavailable", False)
-        self.id: int = int(guild["id"])
+        self.name: str = guild.name
+        self.verification_level: models.VerificationLevel = guild.verification_level
+        self.default_notifications: models.NotificationLevel = guild.default_message_notifications
+        self.explicit_content_filter: ContentFilter = guild.explicit_content_filter
+
+        self.afk_timeout: int = guild.afk_timeout
+        self._icon: str | None = guild.icon if guild.icon is not models.MISSING else None
+        self._banner: str | None = guild.banner
+        self.unavailable: bool = guild.unavailable
+        self.id: models.types.GuildID = guild.id
         self._roles: dict[int, Role] = {}
         state = self._state  # speed up attribute access
-        for r in guild.get("roles", []):
+        for r in guild.roles:
             role = Role(guild=self, data=r, state=state)
             self._roles[role.id] = role
 
-        self.mfa_level: MFALevel = guild.get("mfa_level")
+        self.mfa_level: models.MFALevel = guild.mfa_level
         self.emojis: tuple[GuildEmoji, ...] = tuple(
-            map(lambda d: state.store_emoji(self, d), guild.get("emojis", []))
+            map(lambda d: state.store_emoji(self, d), guild.emojis
         )
         self.stickers: tuple[GuildSticker, ...] = tuple(
-            map(lambda d: state.store_sticker(self, d), guild.get("stickers", []))
+            map(lambda d: state.store_sticker(self, d), guild.stickers
         )
         self.features: list[GuildFeature] = guild.get("features", [])
         self._splash: str | None = guild.get("splash")

@@ -4,7 +4,14 @@ from enum import IntEnum
 
 from pydantic import BaseModel
 
-from ..types import MISSING, Color, Locale, MissingSentinel, Snowflake, UserID
+from ..types import (
+    MISSING,
+    AvatarDecorationData,
+    Color,
+    Locale,
+    MissingSentinel,
+    UserID,
+)
 from ..types.flags import UserFlags
 
 
@@ -13,11 +20,6 @@ class PremiumType(IntEnum):
     NITRO_CLASSIC = 1
     NITRO = 2
     NITRO_BASIC = 3
-
-
-class AvatarDecorationData(BaseModel):
-    asset: str
-    sku_id: Snowflake
 
 
 class User(BaseModel):

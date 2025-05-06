@@ -25,8 +25,10 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Any, Iterator
 
+from . import models
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .user import User
@@ -61,19 +63,31 @@ class BaseEmoji(_EmojiTag, AssetMixin):
         "available",
     )
 
-    def __init__(self, *, state: ConnectionState, data: EmojiPayload):
+    def __init__(self, *, state: ConnectionState, data: models.Emoji):
+        if isinstance(data, dict):
+            data = models.Emoji(**data)
+            warnings.warn(
+                "Passing a dict to Emoji is deprecated and will be removed in a future version.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         self._state: ConnectionState = state
         self._from_data(data)
 
-    def _from_data(self, emoji: EmojiPayload):
-        self.require_colons: bool = emoji.get("require_colons", False)
-        self.managed: bool = emoji.get("managed", False)
-        self.id: int = int(emoji["id"])  # type: ignore
-        self.name: str = emoji["name"]  # type: ignore
-        self.animated: bool = emoji.get("animated", False)
-        self.available: bool = emoji.get("available", True)
-        user = emoji.get("user")
-        self.user: User | None = User(state=self._state, data=user) if user else None
+    def _from_data(self, emoji: models.Emoji):
+        self.require_colons: bool = (
+            emoji.require_colons if emoji.require_colons is not MISSING else False
+        )
+        self.managed: bool = False if emoji.managed is MISSING else bool(emoji.managed)
+        self.id: models.types.EmojiID = emoji.id
+        self.name: str = emoji.name
+        self.animated: bool = emoji.animated if emoji.animated is not MISSING else False
+        self.available: bool = (
+            emoji.available if emoji.available is not MISSING else True
+        )
+        self.user: User | None = (
+            User(state=self._state, data=emoji.user) if emoji.user else None
+        )
 
     def _to_partial(self) -> PartialEmoji:
         return PartialEmoji(name=self.name, animated=self.animated, id=self.id)
@@ -166,9 +180,17 @@ class GuildEmoji(BaseEmoji):
         "guild_id",
     )
 
-    def __init__(self, *, guild: Guild, state: ConnectionState, data: EmojiPayload):
+    def __init__(self, *, guild: Guild, state: ConnectionState, data: models.Emoji):
+        if isinstance(data, dict):
+            data = models.Emoji(**data)
+            warnings.warn(
+                "Passing a dict to Emoji is deprecated and will be removed in a future version.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         self.guild_id: int = guild.id
-        self._roles: SnowflakeList = SnowflakeList(map(int, data.get("roles", [])))
+        if data.roles is not models.MISSING:
+            self._roles: SnowflakeList = SnowflakeList(map(int, data.roles))
         super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:

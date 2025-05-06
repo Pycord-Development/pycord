@@ -352,8 +352,8 @@ class ConnectionState:
         for vc in self.voice_clients:
             vc.main_ws = ws  # type: ignore
 
-    def store_user(self, data: UserPayload) -> User:
-        user_id = int(data["id"])
+    def store_user(self, data: models.User) -> User:
+        user_id = data.id
         try:
             return self._users[user_id]
         except KeyError:
@@ -376,10 +376,8 @@ class ConnectionState:
         # the keys of self._users are ints
         return self._users.get(id)  # type: ignore
 
-    def store_emoji(self, guild: Guild, data: EmojiPayload) -> GuildEmoji:
-        # the id will be present here
-        emoji_id = int(data["id"])  # type: ignore
-        self._emojis[emoji_id] = emoji = GuildEmoji(guild=guild, state=self, data=data)
+    def store_emoji(self, guild: Guild, data: models.Emoji) -> GuildEmoji:
+        self._emojis[data.id] = emoji = GuildEmoji(guild=guild, state=self, data=data)
         return emoji
 
     def maybe_store_app_emoji(
@@ -1414,9 +1412,8 @@ class ConnectionState:
         else:
             self.dispatch("guild_join", guild)
 
-    def parse_guild_create(self, data) -> None:
-        unavailable = data.get("unavailable")
-        if unavailable is True:
+    def parse_guild_create(self, data: models.gateway.GuildCreateData) -> None:
+        if data.unavailable is True:
             # joined a guild with unavailable == True so..
             return
 
@@ -1441,6 +1438,10 @@ class ConnectionState:
             self.dispatch("guild_available", guild)
         else:
             self.dispatch("guild_join", guild)
+
+    parse_guild_create._supports_model = (  # pyright: ignore [reportFunctionMemberAccess]
+        models.gateway.GuildCreate
+    )
 
     def parse_guild_update(self, data) -> None:
         guild = self._get_guild(int(data["id"]))

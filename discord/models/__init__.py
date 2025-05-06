@@ -1,16 +1,19 @@
-from discord.models.base.role import Role
-
 from . import gateway, types
 from .base import (
-    AvatarDecorationData,
     Ban,
+    DefaultNotificationLevel,
     Emoji,
+    ExplicitContentFilterLevel,
     Guild,
+    Member,
+    MFALevel,
+    Role,
     Sticker,
     UnavailableGuild,
     User,
+    VerificationLevel,
 )
-from .types import Snowflake
+from .types import AvatarDecorationData, Snowflake
 from .types.utils import MISSING
 
 __all__ = (
@@ -24,6 +27,11 @@ __all__ = (
     "MISSING",
     "AvatarDecorationData",
     "gateway",
+    "VerificationLevel",
+    "DefaultNotificationLevel",
+    "ExplicitContentFilterLevel",
+    "MFALevel",
     "Ban",
     "Snowflake",
+    "Member",
 )

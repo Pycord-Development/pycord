@@ -4,10 +4,11 @@ from typing import Any, ClassVar
 
 from typing_extensions import Self, final
 
-from .base import BaseFlags, flag_value
+from .base import BaseFlags, fill_with_flags, flag_value
 
 
 @final
+@fill_with_flags()
 class UserFlags(BaseFlags):
     """Wraps up the Discord user flags value.
 

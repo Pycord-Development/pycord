@@ -5,7 +5,7 @@ from typing import Any
 
 from typing_extensions import Self, final
 
-from .base import BaseFlags, alias_flag_value, flag_value
+from .base import BaseFlags, alias_flag_value, fill_with_flags, flag_value
 
 
 class permission_alias(alias_flag_value):
@@ -18,7 +18,7 @@ def make_permission_alias(
     [Callable[[Any], int]], permission_alias
 ]:  # pyright: ignore [reportExplicitAny]
     def decorator(
-        func: Callable[[Any], int]
+        func: Callable[[Any], int],
     ) -> permission_alias:  # pyright: ignore [reportExplicitAny]
         ret = permission_alias(func)
         ret.alias = alias
@@ -28,6 +28,7 @@ def make_permission_alias(
 
 
 @final
+@fill_with_flags()
 class Permissions(BaseFlags):
     """Wraps up the Discord permission value.
 

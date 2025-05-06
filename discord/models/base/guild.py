@@ -6,7 +6,7 @@ from typing import Any
 from pydantic import BaseModel, Field, GetCoreSchemaHandler
 from pydantic_core import CoreSchema, core_schema
 
-from discord.models.types import (
+from ..types import (
     MISSING,
     ChannelID,
     EmojiID,
@@ -17,7 +17,6 @@ from discord.models.types import (
     SystemChannelFlags,
     UserID,
 )
-
 from .emoji import Emoji
 from .role import Role
 from .sticker import Sticker

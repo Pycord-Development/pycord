@@ -1,4 +1,5 @@
 from .base import BaseFlags, fill_with_flags, flag_value
+from .member import MemberFlags
 from .permissions import Permissions
 from .role import RoleFlags
 from .system_channel import SystemChannelFlags
@@ -12,4 +13,5 @@ __all__ = [
     "fill_with_flags",
     "RoleFlags",
     "UserFlags",
+    "MemberFlags",
 ]

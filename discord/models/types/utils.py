@@ -1,9 +1,12 @@
+from typing import Literal
+
 from typing_extensions import TypeAlias, final
 
 
 @final
 class MISSING:
-    pass
+    def __bool__(self) -> Literal[False]:
+        return False
 
 
 MissingSentinel: TypeAlias = type[MISSING]

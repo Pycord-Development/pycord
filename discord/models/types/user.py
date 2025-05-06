@@ -2,4 +2,4 @@ from .snowflake import Snowflake
 
 
 class UserID(Snowflake):
-    """Represents a Discord Channel ID."""
+    """Represents a Discord User ID."""

@@ -29,12 +29,13 @@ import datetime
 import inspect
 import itertools
 import sys
+import warnings
 from operator import attrgetter
 from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 import discord.abc
 
-from . import utils
+from . import models, utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
 from .colour import Colour
@@ -311,29 +312,42 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
 
-    def __init__(
-        self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
-    ):
+    def __init__(self, *, data: models.Member, guild: Guild, state: ConnectionState):
+        if isinstance(data, dict):
+            data = models.Member(**data)
+            warnings.warn(
+                "Passing a dict to Member is deprecated and will be removed in a future version.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         self._state: ConnectionState = state
-        self._user: User = state.store_user(data["user"])
+        if not isinstance(data.user, models.User):
+            raise ValueError("Member data must contain a user object")
+        self._user: User = state.store_user(data.user)
         self.guild: Guild = guild
-        self.joined_at: datetime.datetime | None = utils.parse_time(
-            data.get("joined_at")
+        self.joined_at: datetime.datetime | None = data.joined_at
+        self.premium_since: datetime.datetime | None = (
+            data.premium_since if data.premium_since is not models.MISSING else None
         )
-        self.premium_since: datetime.datetime | None = utils.parse_time(
-            data.get("premium_since")
-        )
-        self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
+        self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data.roles))
         self._client_status: dict[str | None, str] = {None: "offline"}
         self.activities: tuple[ActivityTypes, ...] = ()
-        self.nick: str | None = data.get("nick", None)
-        self.pending: bool = data.get("pending", False)
-        self._avatar: str | None = data.get("avatar")
-        self._banner: str | None = data.get("banner")
-        self.communication_disabled_until: datetime.datetime | None = utils.parse_time(
-            data.get("communication_disabled_until")
+        self.nick: str | None = data.nick if data.nick is not models.MISSING else None
+        self.pending: bool = (
+            data.pending if data.pending is not models.MISSING else False
         )
-        self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
+        self._avatar: str | None = (
+            data.avatar if data.avatar is not models.MISSING else None
+        )
+        self._banner: str | None = (
+            data.banner if data.banner is not models.MISSING else None
+        )
+        self.communication_disabled_until: datetime.datetime | None = (
+            data.communication_disabled_until
+            if data.communication_disabled_until is not models.MISSING
+            else None
+        )
+        self.flags: models.types.flags.MemberFlags = data.flags
 
     def __str__(self) -> str:
         return str(self._user)

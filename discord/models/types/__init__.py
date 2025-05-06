@@ -1,3 +1,4 @@
+from .avatar_decorations import AvatarDecorationData
 from .channel import ChannelID
 from .color import Color, Colour
 from .emoji import EmojiID
@@ -27,4 +28,5 @@ __all__ = [
     "EmojiID",
     "StickerID",
     "UserFlags",
+    "AvatarDecorationData",
 ]
