@@ -105,7 +105,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
-- Fixed `Message._raw_data` do be updated when the message is edited.
+- Fixed `Message._raw_data` to be updated when the message is edited.
   ([#2778](https://github.com/Pycord-Development/pycord/pull/2778))
 
 ### Changed
