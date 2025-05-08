@@ -126,7 +126,10 @@ class _ViewWeights:
     def find_open_space(self, item: Item) -> int:
         for index, weight in enumerate(self.weights):
             # check if open space AND (next row has no items OR this is the last row)
-            if (weight + item.width <= 5) and ((index < len(self.weights) - 1 and self.weights[index + 1] == 0) or index == len(self.weights) - 1):
+            if (weight + item.width <= 5) and (
+                (index < len(self.weights) - 1 and self.weights[index + 1] == 0)
+                or index == len(self.weights) - 1
+            ):
                 return index
 
         raise ValueError("could not find open space for item")
