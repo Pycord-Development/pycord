@@ -60,7 +60,7 @@ from .template import Template
 from .threads import Thread
 from .ui.view import View
 from .user import ClientUser, User
-from .utils import MISSING
+from .utils import _FETCHABLE, MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
@@ -1143,11 +1143,6 @@ class Client:
         """
 
         return await self.get_or_fetch(object_type=User, object_id=id, default=None)
-
-    _FETCHABLE = TypeVar(
-        "_FETCHABLE",
-        bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji",
-    )
 
     async def get_or_fetch(
         self: Client,

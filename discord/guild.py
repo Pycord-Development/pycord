@@ -36,10 +36,11 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
-    TypeVar,
     Union,
     overload,
 )
+
+from utils import _FETCHABLE
 
 from . import abc, utils
 from .asset import Asset
@@ -863,11 +864,6 @@ class Guild(Hashable):
             The member or ``None`` if not found.
         """
         return self._members.get(user_id)
-
-    _FETCHABLE = TypeVar(
-        "_FETCHABLE",
-        bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | GuildEmoji",
-    )
 
     async def get_or_fetch(
         self: Guild,
