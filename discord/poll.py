@@ -358,7 +358,7 @@ class Poll:
         self._expiry = None
         self._message = None
 
-    @utils.cached_property
+    @property
     def expiry(self) -> datetime.datetime | None:
         """An aware datetime object that specifies the date and time in UTC when the poll will end."""
         return utils.parse_time(self._expiry)
