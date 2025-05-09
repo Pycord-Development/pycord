@@ -107,6 +107,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
 - Fixed `Message._raw_data` to be updated when the message is edited.
   ([#2778](https://github.com/Pycord-Development/pycord/pull/2778))
+- Fixed `Webhook.edit` not working with `attachments=[]`.
+  ([#2779])(https://github.com/Pycord-Development/pycord/pull/2779)
 
 ### Changed
 
