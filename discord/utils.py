@@ -119,7 +119,10 @@ MISSING: Any = _MissingSentinel()
 # field(default=MISSING) produces the same error, but passing a lambda to
 # default_factory produces the same behavior as default=MISSING and does not raise an
 # error.
-MissingField = field(default_factory=lambda: MISSING)
+
+
+def missing_field_factory() -> field:
+    return field(default_factory=lambda: MISSING)
 
 
 class _cached_property:
