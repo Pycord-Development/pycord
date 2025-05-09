@@ -776,6 +776,8 @@ class ConnectionState:
         message = self._get_message(raw.message_id)
         if message is not None:
             older_message = copy.copy(message)
+            # Copy the raw data because copy.copy will keep references to the same object
+            message._raw_data = copy.deepcopy(message._raw_data)
             raw.cached_message = older_message
             self.dispatch("raw_message_edit", raw)
             message._update(data)
