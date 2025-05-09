@@ -638,7 +638,6 @@ async def get_or_fetch(
         AppEmoji,
         Client,
         Guild,
-        GuildEmoji,
         Member,
         User,
         abc,

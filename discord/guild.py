@@ -875,7 +875,8 @@ class Guild(Hashable):
         object_id: int,
         default: Any = MISSING,
     ) -> _FETCHABLE | None:
-        """Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
+        """
+        Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 
         Parameters
         ----------
@@ -893,6 +894,15 @@ class Guild(Hashable):
 
         Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]]
             The object of type that was specified or ``None`` if not found.
+
+        Raises
+        ------
+        :exc:`NotFound`
+            Invalid ID for the object
+        :exc:`HTTPException`
+            An error occurred fetching the object
+        :exc:`Forbidden`
+            You do not have permission to fetch the object
         """
         return await utils.get_or_fetch(
             obj=self, object_type=object_type, object_id=object_id, default=default
