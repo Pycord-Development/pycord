@@ -594,7 +594,6 @@ _FETCHABLE = TypeVar(
 )
 
 
-# TODO REMOVE THE FOR object_type and object_id + remove both attr and id after depreciation
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE] = MISSING,
@@ -636,7 +635,6 @@ async def get_or_fetch(
         emoji,
     )
 
-    # TODO REMOVE THIS PART AfTER DEPREcIATION
     string_to_type = {
         "channel": abc.GuildChannel,
         "member": Member,
@@ -674,7 +672,6 @@ async def get_or_fetch(
 
     if object_type is MISSING or object_id is MISSING:
         raise TypeError("required parameters: `object_type` and `object_id`.")
-    # Util here
 
     if issubclass(object_type, (Member, User, Guild)):
         attr = object_type.__name__.lower()
