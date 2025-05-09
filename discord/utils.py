@@ -727,7 +727,7 @@ async def get_or_fetch(
     }
     try:
         base_type = next(
-            base for base in getter_fetcher_map if issubclass(object_type, base_type)
+            base for base in getter_fetcher_map if issubclass(object_type, base)
         )
         getter, fetcher = getter_fetcher_map[base_type]
     except KeyError:
