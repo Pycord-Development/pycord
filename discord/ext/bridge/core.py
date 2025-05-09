@@ -632,6 +632,16 @@ class BridgeOption(Option, Converter):
     command option and a prefixed command argument for bridge commands.
     """
 
+    def __init__(self, input_type, *args, **kwargs):
+        self.converter = kwargs.pop("converter", None)
+        super().__init__(input_type, *args, **kwargs)
+
+        if self.converter is None:
+            if input_type == discord.Member:
+                self.converter = MemberConverter()
+            else:
+                self.converter = BRIDGE_CONVERTER_MAPPING.get(input_type)
+
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
