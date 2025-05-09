@@ -1141,7 +1141,7 @@ class Client:
             The user or ``None`` if not found.
         """
 
-        return await utils.get_or_fetch(obj=self, attr=User, id=id, default=None)
+        return await self.get_or_fetch(object_type=User, object_id=id, default=None)
 
     _FETCHABLE = TypeVar(
         "_FETCHABLE",
