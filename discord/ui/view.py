@@ -161,7 +161,7 @@ class _ViewWeights:
         self.weights = [0, 0, 0, 0, 0]
 
     def requires_v2(self) -> bool:
-        return sum(w > 0 for w in self.weights) > 5
+        return sum(w > 0 for w in self.weights) > 5 or len(self.weights) > 5
 
     def fits_legacy(self, item) -> bool:
         if item.row is not None:
@@ -343,7 +343,7 @@ class View:
             or the row the item is trying to be added to is full.
         """
 
-        if len(self.children) > 40:
+        if len(self.children) >= 40:
             raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, Item):
