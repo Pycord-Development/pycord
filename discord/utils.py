@@ -76,6 +76,7 @@ if TYPE_CHECKING:
         User,
         Guild,
         GuildEmoji,
+        AppEmoji
     )
 
 from .errors import HTTPException, InvalidArgument
