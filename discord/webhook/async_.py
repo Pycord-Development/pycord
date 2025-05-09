@@ -709,7 +709,7 @@ def handle_message_parameters(
         if voice_message:
             flags = flags + MessageFlags(is_voice_message=True)
 
-    if _attachments:
+    if attachments is not MISSING or _attachments:
         payload["attachments"] = _attachments
 
     payload["flags"] = flags.value
