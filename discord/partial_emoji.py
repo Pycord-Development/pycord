@@ -138,9 +138,8 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         - ``<a:name:id>``
         - ``name:id``
         - ``<:name:id>``
-        - ``:name:``
-
-        If the format does not match then it is assumed to be a unicode emoji.
+ 
+         If the format does not match then it is assumed to be a unicode emoji, either as Unicode characters or as a Discord alias (``:smile:``).
 
         .. versionadded:: 2.0
 
