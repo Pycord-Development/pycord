@@ -63,6 +63,22 @@ from typing import (
     overload,
 )
 
+if TYPE_CHECKING:
+    from discord import (
+        Client,
+        VoiceChannel,
+        TextChannel,
+        ForumChannel,
+        StageChannel,
+        CategoryChannel,
+        Thread,
+        Member,
+        User,
+        Guild,
+        GuildEmoji,
+        AppEmoji,
+    )
+
 from .errors import HTTPException, InvalidArgument
 
 try:
@@ -573,64 +589,160 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
     return None
 
 
-async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:
-    """|coro|
+_FETCHABLE = TypeVar(
+    "_FETCHABLE",
+    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji | AppEmoji",
+)
 
-    Attempts to get an attribute from the object in cache. If it fails, it will attempt to fetch it.
-    If the fetch also fails, an error will be raised.
+
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: type[_FETCHABLE] = MISSING,
+    object_id: int = MISSING,
+    default: Any = MISSING,
+    attr: str = MISSING,
+    id: int = MISSING,
+) -> _FETCHABLE | None:  # TODO: Remove in 3.0 the arguments attr and id
+    """
+    Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 
     Parameters
     ----------
-    obj: Any
-        The object to use the get or fetch methods in
-    attr: :class:`str`
-        The attribute to get or fetch. Note the object must have both a ``get_`` and ``fetch_`` method for this attribute.
-    id: :class:`int`
-        The ID of the object
-    default: Any
-        The default value to return if the object is not found, instead of raising an error.
+    obj : Guild | Client
+        The object to operate on.
+    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]
+        Type of object to fetch or get.
+
+    object_id: :class:`int`
+        ID of object to get.
+
+    default : Any, optional
+        A default to return instead of raising if fetch fails.
 
     Returns
     -------
-    Any
-        The object found or the default value.
+
+    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]]
+        The object of type that was specified or ``None`` if not found.
 
     Raises
     ------
-    :exc:`AttributeError`
-        The object is missing a ``get_`` or ``fetch_`` method
     :exc:`NotFound`
         Invalid ID for the object
     :exc:`HTTPException`
         An error occurred fetching the object
     :exc:`Forbidden`
         You do not have permission to fetch the object
-
-    Examples
-    --------
-
-    Getting a guild from a guild ID: ::
-
-        guild = await utils.get_or_fetch(client, 'guild', guild_id)
-
-    Getting a channel from the guild. If the channel is not found, return None: ::
-
-        channel = await utils.get_or_fetch(guild, 'channel', channel_id, default=None)
     """
-    getter = getattr(obj, f"get_{attr}")(id)
-    if getter is None:
-        try:
-            getter = await getattr(obj, f"fetch_{attr}")(id)
-        except AttributeError:
-            getter = await getattr(obj, f"_fetch_{attr}")(id)
-            if getter is None:
-                raise ValueError(f"Could not find {attr} with id {id} on {obj}")
-        except (HTTPException, ValueError):
-            if default is not MISSING:
-                return default
-            else:
-                raise
-    return getter
+    from discord import (
+        AppEmoji,
+        Client,
+        Guild,
+        Member,
+        User,
+        abc,
+        emoji,
+    )
+
+    string_to_type = {
+        "channel": abc.GuildChannel,
+        "member": Member,
+        "user": User,
+        "guild": Guild,
+        "emoji": emoji._EmojiTag,
+        "appemoji": AppEmoji,
+    }
+
+    if attr is not MISSING or id is not MISSING or isinstance(object_type, str):
+        warn_deprecated(
+            name="get_or_fetch(obj, attr='type', id=...)",
+            instead="get_or_fetch(obj, object_type=Type, object_id=...)",
+            since="2.7",
+        )
+
+        deprecated_attr = attr if attr is not MISSING else object_type
+        deprecated_id = id if id is not MISSING else object_id
+
+        if isinstance(deprecated_attr, str):
+            mapped_type = string_to_type.get(deprecated_attr.lower())
+            if mapped_type is None:
+                raise InvalidArgument(
+                    f"Unknown type string '{deprecated_attr}' used. Please use a valid object class like `discord.Member` instead."
+                )
+            object_type = mapped_type
+        elif isinstance(deprecated_attr, type):
+            object_type = deprecated_attr
+        else:
+            raise TypeError(
+                f"Invalid `attr` or `object_type`: expected a string or class, got {type(deprecated_attr).__name__}."
+            )
+
+        object_id = deprecated_id
+
+    if object_type is MISSING or object_id is MISSING:
+        raise TypeError("required parameters: `object_type` and `object_id`.")
+
+    if issubclass(object_type, (Member, User, Guild)):
+        attr = object_type.__name__.lower()
+    elif issubclass(object_type, emoji._EmojiTag):
+        attr = "emoji"
+    elif issubclass(object_type, abc.GuildChannel):
+        attr = "channel"
+    else:
+        raise InvalidArgument(
+            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
+        )
+
+    if isinstance(obj, Guild) and object_type is User:
+        raise InvalidArgument(
+            "Guild cannot get_or_fetch discord.User. Use Client instead."
+        )
+    if isinstance(obj, Client) and object_type is Member:
+        raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
+
+    if isinstance(obj, Guild) and object_type is Guild:
+        raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
+
+    getter_fetcher_map = {
+        Member: (
+            lambda obj, oid: obj.get_member(oid),
+            lambda obj, oid: obj.fetch_member(oid),
+        ),
+        User: (
+            lambda obj, oid: obj.get_user(oid),
+            lambda obj, oid: obj.fetch_user(oid),
+        ),
+        Guild: (
+            lambda obj, oid: obj.get_guild(oid),
+            lambda obj, oid: obj.fetch_guild(oid),
+        ),
+        emoji._EmojiTag: (
+            lambda obj, oid: obj.get_emoji(oid),
+            lambda obj, oid: obj.fetch_emoji(oid),
+        ),
+        abc.GuildChannel: (
+            lambda obj, oid: obj.get_channel(oid),
+            lambda obj, oid: obj.fetch_channel(oid),
+        ),
+    }
+    try:
+        base_type = next(
+            base for base in getter_fetcher_map if issubclass(object_type, base)
+        )
+        getter, fetcher = getter_fetcher_map[base_type]
+    except KeyError:
+        raise InvalidArgument(f"Unsupported object type: {object_type.__name__}")
+
+    result = getter(obj, object_id)
+    if result is not None:
+        return result
+
+    try:
+        return await fetcher(obj, object_id)
+    except (HTTPException, ValueError):
+        if default is not None:
+            return default
+        raise
 
 
 def _unique(iterable: Iterable[T]) -> list[T]:
