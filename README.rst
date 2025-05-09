@@ -1,3 +1,7 @@
+⚠️ This is a testing repository, and should not be used in production.
+
+Please use the main repository: https://github.com/Pycord-Development/pycord
+
 .. image:: https://raw.githubusercontent.com/Pycord-Development/pycord/master/pycord.png
    :alt: Pycord v3
 
