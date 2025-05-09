@@ -43,6 +43,7 @@ EMOJIS_MAP = {}
 for emoji_entry in data["emojis"]:
     for name in emoji_entry["names"]:
         EMOJIS_MAP[name] = emoji_entry["surrogates"]
+del data
 
 __all__ = ("PartialEmoji",)
 
