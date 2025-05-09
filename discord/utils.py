@@ -602,7 +602,7 @@ async def get_or_fetch(
     default: Any = MISSING,
     attr: str = MISSING,
     id: int = MISSING,
-) -> _FETCHABLE | None:
+) -> _FETCHABLE | None:  # TODO: Remove in 3.0 the arguments attr and id
     """
     Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 

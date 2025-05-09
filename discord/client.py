@@ -1124,8 +1124,9 @@ class Client:
     @utils.deprecated(
         instead="Client.get_or_fetch(User, id)",
         since="2.7",
+        removed="3.0",
     )
-    async def get_or_fetch_user(self, id: int, /) -> User | None:
+    async def get_or_fetch_user(self, id: int, /) -> User | None:  # TODO: Remove in 3.0
         """|coro|
 
         Looks up a user in the user cache or fetches if not found.
