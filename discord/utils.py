@@ -700,6 +700,9 @@ async def get_or_fetch(
     if isinstance(obj, Client) and object_type is Member:
         raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
 
+    if isinstance(obj, Guild) and object_type is Guild:
+        raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
+
     getter_fetcher_map = {
         Member: (
             lambda obj, oid: obj.get_member(oid),
@@ -723,7 +726,10 @@ async def get_or_fetch(
         ),
     }
     try:
-        getter, fetcher = getter_fetcher_map[object_type]
+        base_type = next(
+            base for base in getter_fetcher_map if issubclass(object_type, base_type)
+        )
+        getter, fetcher = getter_fetcher_map[base_type]
     except KeyError:
         raise InvalidArgument(f"Unsupported object type: {object_type.__name__}")
 
