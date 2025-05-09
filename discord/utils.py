@@ -603,7 +603,7 @@ async def get_or_fetch(
     id: int = MISSING,
 ) -> _FETCHABLE | None:
     """
-    Shortcut method to get data from guild object either by returning the cached version, or if it does not exist, attempt to fetch it from the api.
+    Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 
     Parameters
     ----------
