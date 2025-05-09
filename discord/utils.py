@@ -623,6 +623,15 @@ async def get_or_fetch(
 
     Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]]
         The object of type that was specified or ``None`` if not found.
+
+    Raises
+    ------
+    :exc:`NotFound`
+        Invalid ID for the object
+    :exc:`HTTPException`
+        An error occurred fetching the object
+    :exc:`Forbidden`
+        You do not have permission to fetch the object
     """
     from discord import (
         AppEmoji,
