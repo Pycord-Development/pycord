@@ -155,9 +155,9 @@ class Page:
         files: list[discord.File] | None = None,
         **kwargs,
     ):
-        if content is None and embeds is None:
+        if content is None and embeds is None and custom_view is None:
             raise discord.InvalidArgument(
-                "A page cannot have both content and embeds equal to None."
+                "A page must at least have content, embeds, or custom_view set."
             )
         self._content = content
         self._embeds = embeds or []
@@ -918,6 +918,8 @@ class Paginator(discord.ui.View):
             return Page(content=None, embeds=[page], files=[])
         elif isinstance(page, discord.File):
             return Page(content=None, embeds=[], files=[page])
+        elif isinstance(page, discord.ui.View):
+            return Page(content=None, embeds=[], files=[], custom_view=page)
         elif isinstance(page, List):
             if all(isinstance(x, discord.Embed) for x in page):
                 return Page(content=None, embeds=page, files=[])
@@ -927,7 +929,7 @@ class Paginator(discord.ui.View):
                 raise TypeError("All list items must be embeds or files.")
         else:
             raise TypeError(
-                "Page content must be a Page object, string, an embed, a list of"
+                "Page content must be a Page object, string, an embed, a view, a list of"
                 " embeds, a file, or a list of files."
             )
 

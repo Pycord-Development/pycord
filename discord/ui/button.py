@@ -98,6 +98,7 @@ class Button(Item[V]):
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         sku_id: int | None = None,
         row: int | None = None,
+        id: int | None = None,
     ):
         super().__init__()
         if label and len(str(label)) > 80:
@@ -145,6 +146,7 @@ class Button(Item[V]):
             style=style,
             emoji=emoji,
             sku_id=sku_id,
+            id=id,
         )
         self.row = row
 
@@ -172,6 +174,7 @@ class Button(Item[V]):
         if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
+        self._provided_custom_id = value is not None
 
     @property
     def url(self) -> str | None:
@@ -248,6 +251,7 @@ class Button(Item[V]):
             emoji=button.emoji,
             sku_id=button.sku_id,
             row=None,
+            id=button.id,
         )
 
     @property
@@ -277,6 +281,7 @@ def button(
     style: ButtonStyle = ButtonStyle.secondary,
     emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a button to a component.
 
@@ -326,6 +331,7 @@ def button(
             "label": label,
             "emoji": emoji,
             "row": row,
+            "id": id,
         }
         return func
 

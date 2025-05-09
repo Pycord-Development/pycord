@@ -134,6 +134,7 @@ class Select(Item[V]):
         channel_types: list[ChannelType] | None = None,
         disabled: bool = False,
         row: int | None = None,
+        id: int | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
@@ -166,6 +167,7 @@ class Select(Item[V]):
             disabled=disabled,
             options=options or [],
             channel_types=channel_types or [],
+            id=id,
         )
         self.row = row
 
@@ -181,6 +183,7 @@ class Select(Item[V]):
         if len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
+        self._provided_custom_id = value is not None
 
     @property
     def placeholder(self) -> str | None:
@@ -301,7 +304,7 @@ class Select(Item[V]):
             default=default,
         )
 
-        self.append_option(option)
+        return self.append_option(option)
 
     def append_option(self, option: SelectOption):
         """Appends an option to the select menu.
@@ -323,6 +326,7 @@ class Select(Item[V]):
             raise ValueError("maximum number of options already provided")
 
         self._underlying.options.append(option)
+        return self
 
     @property
     def values(
@@ -427,6 +431,7 @@ class Select(Item[V]):
             channel_types=component.channel_types,
             disabled=component.disabled,
             row=None,
+            id=component.id,
         )
 
     @property
@@ -457,6 +462,7 @@ def select(
     channel_types: list[ChannelType] = MISSING,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a select menu to a component.
 
@@ -531,6 +537,7 @@ def select(
             "min_values": min_values,
             "max_values": max_values,
             "disabled": disabled,
+            "id": id,
         }
         if options:
             model_kwargs["options"] = options
@@ -554,6 +561,7 @@ def string_select(
     options: list[SelectOption] = MISSING,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.string_select`.
 
@@ -568,6 +576,7 @@ def string_select(
         options=options,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -579,6 +588,7 @@ def user_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.user_select`.
 
@@ -592,6 +602,7 @@ def user_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -603,6 +614,7 @@ def role_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
@@ -616,6 +628,7 @@ def role_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -627,6 +640,7 @@ def mentionable_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
@@ -640,6 +654,7 @@ def mentionable_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -652,6 +667,7 @@ def channel_select(
     disabled: bool = False,
     channel_types: list[ChannelType] = MISSING,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
@@ -666,4 +682,5 @@ def channel_select(
         disabled=disabled,
         channel_types=channel_types,
         row=row,
+        id=id,
     )

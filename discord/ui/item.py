@@ -58,6 +58,7 @@ class Item(Generic[V]):
         self._view: V | None = None
         self._row: int | None = None
         self._rendered_row: int | None = None
+        self._underlying: Component | None = None
         # This works mostly well but there is a gotcha with
         # the interaction with from_component, since that technically provides
         # a custom_id most dispatchable items would get this set to True even though
@@ -87,7 +88,10 @@ class Item(Generic[V]):
         return False
 
     def is_persistent(self) -> bool:
-        return self._provided_custom_id
+        return not self.is_dispatchable() or self._provided_custom_id
+
+    def copy_text(self) -> str:
+        return ""
 
     def __repr__(self) -> str:
         attrs = " ".join(
@@ -100,7 +104,7 @@ class Item(Generic[V]):
         """Gets or sets the row position of this item within its parent view.
 
         The row position determines the vertical placement of the item in the UI.
-        The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate
+        The value must be an integer between 0 and 39 (inclusive), or ``None`` to indicate
         that no specific row is set.
 
         Returns
@@ -111,7 +115,7 @@ class Item(Generic[V]):
         Raises
         ------
         ValueError
-            If the row value is not ``None`` and is outside the range [0, 4].
+            If the row value is not ``None`` and is outside the range [0, 39].
         """
         return self._row
 
@@ -119,10 +123,10 @@ class Item(Generic[V]):
     def row(self, value: int | None):
         if value is None:
             self._row = None
-        elif 5 > value >= 0:
+        elif 39 > value >= 0:
             self._row = value
         else:
-            raise ValueError("row cannot be negative or greater than or equal to 5")
+            raise ValueError("row cannot be negative or greater than or equal to 39")
 
     @property
     def width(self) -> int:
@@ -136,6 +140,25 @@ class Item(Generic[V]):
             The width of the item. Defaults to 1.
         """
         return 1
+
+    @property
+    def id(self) -> int | None:
+        """Gets this item's ID.
+
+        This can be set by the user when constructing an Item. If not, Discord will automatically provide one when the View is sent.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The ID of this item, or ``None`` if the user didn't set one.
+        """
+        return self._underlying and self._underlying.id
+
+    @id.setter
+    def id(self, value) -> None:
+        if not self._underlying:
+            return
+        self._underlying.id = value
 
     @property
     def view(self) -> V | None:
