@@ -692,29 +692,51 @@ async def get_or_fetch(
         raise InvalidArgument(
             f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
         )
+
     if isinstance(obj, Guild) and object_type is User:
         raise InvalidArgument(
             "Guild cannot get_or_fetch discord.User. Use Client instead."
         )
-    elif isinstance(obj, Client) and object_type is Member:
+    if isinstance(obj, Client) and object_type is Member:
         raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
 
-    getter = getattr(obj, f"get_{attr}", None)
-    if getter:
-        result = getter(object_id)
-        if result is not None:
-            return result
+    getter_fetcher_map = {
+        Member: (
+            lambda obj, oid: obj.get_member(oid),
+            lambda obj, oid: obj.fetch_member(oid),
+        ),
+        User: (
+            lambda obj, oid: obj.get_user(oid),
+            lambda obj, oid: obj.fetch_user(oid),
+        ),
+        Guild: (
+            lambda obj, oid: obj.get_guild(oid),
+            lambda obj, oid: obj.fetch_guild(oid),
+        ),
+        emoji._EmojiTag: (
+            lambda obj, oid: obj.get_emoji(oid),
+            lambda obj, oid: obj.fetch_emoji(oid),
+        ),
+        abc.GuildChannel: (
+            lambda obj, oid: obj.get_channel(oid),
+            lambda obj, oid: obj.fetch_channel(oid),
+        ),
+    }
+    try:
+        getter, fetcher = getter_fetcher_map[object_type]
+    except KeyError:
+        raise InvalidArgument(f"Unsupported object type: {object_type.__name__}")
 
-    fetcher = getattr(obj, f"fetch_{attr}", None) or getattr(
-        obj, f"_fetch_{attr}", None
-    )
-    if fetcher:
-        try:
-            return await fetcher(object_id)
-        except (HTTPException, ValueError):
-            if default is not MISSING:
-                return default
-            raise
+    result = getter(obj, object_id)
+    if result is not None:
+        return result
+
+    try:
+        return await fetcher(obj, object_id)
+    except (HTTPException, ValueError):
+        if default is not None:
+            return default
+        raise
 
 
 def _unique(iterable: Iterable[T]) -> list[T]:
