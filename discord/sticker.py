@@ -32,7 +32,7 @@ from .asset import Asset, AssetMixin
 from .enums import StickerFormatType, StickerType, try_enum
 from .errors import InvalidData
 from .mixins import Hashable
-from .utils import MISSING, cached_slot_property, find, get, snowflake_time
+from .utils import MISSING, Undefined, cached_slot_property, find, get, snowflake_time
 
 __all__ = (
     "StickerPack",
@@ -454,9 +454,9 @@ class GuildSticker(Sticker):
     async def edit(
         self,
         *,
-        name: str = MISSING,
-        description: str = MISSING,
-        emoji: str = MISSING,
+        name: str | Undefined = MISSING,
+        description: str | Undefined = MISSING,
+        emoji: str | Undefined = MISSING,
         reason: str | None = None,
     ) -> GuildSticker:
         """|coro|

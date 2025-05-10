@@ -43,6 +43,8 @@ from typing import (
 )
 
 import discord
+from discord import utils
+from discord.utils import Undefined
 
 from ...commands import (
     ApplicationCommand,
@@ -1410,8 +1412,8 @@ class GroupMixin(Generic[CogT]):
 
     def command(
         self,
-        name: str = MISSING,
-        cls: type[CommandT] = MISSING,
+        name: str | Undefined = MISSING,
+        cls: type[CommandT] | Undefined = MISSING,
         *args: Any,
         **kwargs: Any,
     ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], CommandT]:
@@ -1460,8 +1462,8 @@ class GroupMixin(Generic[CogT]):
 
     def group(
         self,
-        name: str = MISSING,
-        cls: type[GroupT] = MISSING,
+        name: str | Undefined = MISSING,
+        cls: type[GroupT] | Undefined = MISSING,
         *args: Any,
         **kwargs: Any,
     ) -> Callable[[Callable[Concatenate[ContextT, P], Coro[Any]]], GroupT]:
@@ -1649,7 +1651,7 @@ def command(
 
 
 def command(
-    name: str = MISSING, cls: type[CommandT] = MISSING, **attrs: Any
+    name: str | utils.Undefined = MISSING, cls: type[CommandT] | utils.Undefined = MISSING, **attrs: Any
 ) -> Callable[
     [
         (
@@ -1737,8 +1739,8 @@ def group(
 
 
 def group(
-    name: str = MISSING,
-    cls: type[GroupT] = MISSING,
+    name: str | utils.Undefined = MISSING,
+    cls: type[GroupT] | utils.Undefined = MISSING,
     **attrs: Any,
 ) -> Callable[
     [

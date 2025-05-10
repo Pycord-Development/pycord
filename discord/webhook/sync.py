@@ -466,13 +466,13 @@ class SyncWebhookMessage(Message):
 
     def edit(
         self,
-        content: str | None = MISSING,
-        embeds: list[Embed] = MISSING,
-        embed: Embed | None = MISSING,
-        file: File = MISSING,
-        files: list[File] = MISSING,
+        content: str | None | utils.Undefined = MISSING,
+        embeds: list[Embed] | utils.Undefined = MISSING,
+        embed: Embed | None | utils.Undefined = MISSING,
+        file: File | utils.Undefined = MISSING,
+        files: list[File] | utils.Undefined = MISSING,
         allowed_mentions: AllowedMentions | None = None,
-        suppress: bool | None = MISSING,
+        suppress: bool | None | utils.Undefined = MISSING,
     ) -> SyncWebhookMessage:
         """Edits the message.
 
@@ -648,7 +648,7 @@ class SyncWebhook(BaseWebhook):
         id: int,
         token: str,
         *,
-        session: Session = MISSING,
+        session: Session | utils.Undefined = MISSING,
         bot_token: str | None = None,
     ) -> SyncWebhook:
         """Creates a partial :class:`Webhook`.
@@ -689,7 +689,7 @@ class SyncWebhook(BaseWebhook):
 
     @classmethod
     def from_url(
-        cls, url: str, *, session: Session = MISSING, bot_token: str | None = None
+        cls, url: str, *, session: Session | utils.Undefined = MISSING, bot_token: str | None = None
     ) -> SyncWebhook:
         """Creates a partial :class:`Webhook` from a webhook URL.
 
@@ -824,8 +824,8 @@ class SyncWebhook(BaseWebhook):
         self,
         *,
         reason: str | None = None,
-        name: str | None = MISSING,
-        avatar: bytes | None = MISSING,
+        name: str | None | utils.Undefined = MISSING,
+        avatar: bytes | None | utils.Undefined = MISSING,
         channel: Snowflake | None = None,
         prefer_auth: bool = True,
     ) -> SyncWebhook:
@@ -927,17 +927,17 @@ class SyncWebhook(BaseWebhook):
     @overload
     def send(
         self,
-        content: str = MISSING,
+        content: str | utils.Undefined = MISSING,
         *,
-        username: str = MISSING,
-        avatar_url: Any = MISSING,
-        tts: bool = MISSING,
-        file: File = MISSING,
-        files: list[File] = MISSING,
-        embed: Embed = MISSING,
-        embeds: list[Embed] = MISSING,
-        allowed_mentions: AllowedMentions = MISSING,
-        thread: Snowflake = MISSING,
+        username: str | utils.Undefined = MISSING,
+        avatar_url: Any | utils.Undefined = MISSING,
+        tts: bool | utils.Undefined = MISSING,
+        file: File | utils.Undefined = MISSING,
+        files: list[File] | utils.Undefined = MISSING,
+        embed: Embed | utils.Undefined = MISSING,
+        embeds: list[Embed] | utils.Undefined = MISSING,
+        allowed_mentions: AllowedMentions | utils.Undefined = MISSING,
+        thread: Snowflake | utils.Undefined = MISSING,
         thread_name: str | None = None,
         wait: Literal[True],
     ) -> SyncWebhookMessage: ...
@@ -945,35 +945,35 @@ class SyncWebhook(BaseWebhook):
     @overload
     def send(
         self,
-        content: str = MISSING,
+        content: str | utils.Undefined = MISSING,
         *,
-        username: str = MISSING,
-        avatar_url: Any = MISSING,
-        tts: bool = MISSING,
-        file: File = MISSING,
-        files: list[File] = MISSING,
-        embed: Embed = MISSING,
-        embeds: list[Embed] = MISSING,
-        allowed_mentions: AllowedMentions = MISSING,
-        thread: Snowflake = MISSING,
+        username: str | utils.Undefined = MISSING,
+        avatar_url: Any | utils.Undefined = MISSING,
+        tts: bool | utils.Undefined = MISSING,
+        file: File | utils.Undefined = MISSING,
+        files: list[File] | utils.Undefined = MISSING,
+        embed: Embed | utils.Undefined = MISSING,
+        embeds: list[Embed] | utils.Undefined = MISSING,
+        allowed_mentions: AllowedMentions | utils.Undefined = MISSING,
+        thread: Snowflake | utils.Undefined = MISSING,
         thread_name: str | None = None,
         wait: Literal[False] = ...,
-        suppress: bool = MISSING,
+        suppress: bool | utils.Undefined = MISSING,
     ) -> None: ...
 
     def send(
         self,
-        content: str = MISSING,
+        content: str | utils.Undefined = MISSING,
         *,
-        username: str = MISSING,
-        avatar_url: Any = MISSING,
+        username: str | utils.Undefined = MISSING,
+        avatar_url: Any | utils.Undefined = MISSING,
         tts: bool = False,
-        file: File = MISSING,
-        files: list[File] = MISSING,
-        embed: Embed = MISSING,
-        embeds: list[Embed] = MISSING,
-        allowed_mentions: AllowedMentions = MISSING,
-        thread: Snowflake = MISSING,
+        file: File | utils.Undefined = MISSING,
+        files: list[File] | utils.Undefined = MISSING,
+        embed: Embed | utils.Undefined = MISSING,
+        embeds: list[Embed] | utils.Undefined = MISSING,
+        allowed_mentions: AllowedMentions | utils.Undefined = MISSING,
+        thread: Snowflake | utils.Undefined = MISSING,
         thread_name: str | None = None,
         wait: bool = False,
         suppress: bool = False,
@@ -1154,13 +1154,13 @@ class SyncWebhook(BaseWebhook):
         self,
         message_id: int,
         *,
-        content: str | None = MISSING,
-        embeds: list[Embed] = MISSING,
-        embed: Embed | None = MISSING,
-        file: File = MISSING,
-        files: list[File] = MISSING,
+        content: str | None | utils.Undefined = MISSING,
+        embeds: list[Embed] | utils.Undefined = MISSING,
+        embed: Embed | None | utils.Undefined = MISSING,
+        file: File | utils.Undefined = MISSING,
+        files: list[File] | utils.Undefined = MISSING,
         allowed_mentions: AllowedMentions | None = None,
-        thread: Snowflake | None = MISSING,
+        thread: Snowflake | None | utils.Undefined = MISSING,
         suppress: bool = False,
     ) -> SyncWebhookMessage:
         """Edits a message owned by this webhook.

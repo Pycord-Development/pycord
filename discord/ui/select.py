@@ -42,6 +42,7 @@ from ..threads import Thread
 from ..user import User
 from ..utils import MISSING
 from .item import Item, ItemCallbackType
+from discord import utils
 
 __all__ = (
     "Select",
@@ -258,7 +259,7 @@ class Select(Item[V]):
         self,
         *,
         label: str,
-        value: str = MISSING,
+        value: str | utils.Undefined = MISSING,
         description: str | None = None,
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         default: bool = False,
@@ -453,8 +454,8 @@ def select(
     custom_id: str | None = None,
     min_values: int = 1,
     max_values: int = 1,
-    options: list[SelectOption] = MISSING,
-    channel_types: list[ChannelType] = MISSING,
+    options: list[SelectOption] | utils.Undefined = MISSING,
+    channel_types: list[ChannelType] | utils.Undefined = MISSING,
     disabled: bool = False,
     row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
@@ -551,7 +552,7 @@ def string_select(
     custom_id: str | None = None,
     min_values: int = 1,
     max_values: int = 1,
-    options: list[SelectOption] = MISSING,
+    options: list[SelectOption] | utils.Undefined = MISSING,
     disabled: bool = False,
     row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
@@ -650,7 +651,7 @@ def channel_select(
     min_values: int = 1,
     max_values: int = 1,
     disabled: bool = False,
-    channel_types: list[ChannelType] = MISSING,
+    channel_types: list[ChannelType] | utils.Undefined = MISSING,
     row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.

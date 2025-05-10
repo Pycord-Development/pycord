@@ -44,7 +44,7 @@ from ..commands import ApplicationContext
 from ..enums import ChannelType
 from ..enums import Enum as DiscordEnum
 from ..enums import SlashCommandOptionType
-from ..utils import MISSING, basic_autocomplete
+from ..utils import MISSING, Undefined, basic_autocomplete
 
 if TYPE_CHECKING:
     from ..ext.commands import Converter
@@ -414,7 +414,7 @@ class OptionChoice:
         self,
         name: str,
         value: str | int | float | None = None,
-        name_localizations: dict[str, str] = MISSING,
+        name_localizations: dict[str, str] | Undefined = MISSING,
     ):
         self.name = str(name)
         self.value = value if value is not None else name

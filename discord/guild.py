@@ -1079,7 +1079,7 @@ class Guild(Hashable):
         self,
         name: str,
         channel_type: ChannelType,
-        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] | utils.Undefined = MISSING,
         category: Snowflake | None = None,
         **options: Any,
     ):
@@ -1125,11 +1125,11 @@ class Guild(Hashable):
         *,
         reason: str | None = None,
         category: CategoryChannel | None = None,
-        position: int = MISSING,
-        topic: str = MISSING,
-        slowmode_delay: int = MISSING,
-        nsfw: bool = MISSING,
-        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        position: int | utils.Undefined = MISSING,
+        topic: str | utils.Undefined = MISSING,
+        slowmode_delay: int | utils.Undefined = MISSING,
+        nsfw: bool | utils.Undefined = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] | utils.Undefined = MISSING,
     ) -> TextChannel:
         """|coro|
 
@@ -1240,12 +1240,12 @@ class Guild(Hashable):
         *,
         reason: str | None = None,
         category: CategoryChannel | None = None,
-        position: int = MISSING,
-        bitrate: int = MISSING,
-        user_limit: int = MISSING,
-        rtc_region: VoiceRegion | None = MISSING,
-        video_quality_mode: VideoQualityMode = MISSING,
-        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        position: int | utils.Undefined = MISSING,
+        bitrate: int | utils.Undefined = MISSING,
+        user_limit: int | utils.Undefined = MISSING,
+        rtc_region: VoiceRegion | None | utils.Undefined = MISSING,
+        video_quality_mode: VideoQualityMode | utils.Undefined = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] | utils.Undefined = MISSING,
     ) -> VoiceChannel:
         """|coro|
 
@@ -1329,8 +1329,8 @@ class Guild(Hashable):
         name: str,
         *,
         topic: str,
-        position: int = MISSING,
-        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        position: int | utils.Undefined = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] | utils.Undefined = MISSING,
         category: CategoryChannel | None = None,
         reason: str | None = None,
     ) -> StageChannel:
@@ -1399,12 +1399,12 @@ class Guild(Hashable):
         *,
         reason: str | None = None,
         category: CategoryChannel | None = None,
-        position: int = MISSING,
-        topic: str = MISSING,
-        slowmode_delay: int = MISSING,
-        nsfw: bool = MISSING,
-        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
-        default_reaction_emoji: GuildEmoji | int | str = MISSING,
+        position: int | utils.Undefined = MISSING,
+        topic: str | utils.Undefined = MISSING,
+        slowmode_delay: int | utils.Undefined = MISSING,
+        nsfw: bool | utils.Undefined = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] | utils.Undefined = MISSING,
+        default_reaction_emoji: GuildEmoji | int | str | utils.Undefined = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1539,9 +1539,9 @@ class Guild(Hashable):
         self,
         name: str,
         *,
-        overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        overwrites: dict[Role | Member, PermissionOverwrite] | utils.Undefined = MISSING,
         reason: str | None = None,
-        position: int = MISSING,
+        position: int | utils.Undefined = MISSING,
     ) -> CategoryChannel:
         """|coro|
 
@@ -1642,27 +1642,27 @@ class Guild(Hashable):
     async def edit(
         self,
         *,
-        reason: str | None = MISSING,
-        name: str = MISSING,
-        description: str | None = MISSING,
-        icon: bytes | None = MISSING,
-        banner: bytes | None = MISSING,
+        reason: str | None | utils.Undefined = MISSING,
+        name: str | utils.Undefined = MISSING,
+        description: str | None | utils.Undefined = MISSING,
+        icon: bytes | None | utils.Undefined = MISSING,
+        banner: bytes | None | utils.Undefined = MISSING,
         splash: bytes | None = MISSING,
-        discovery_splash: bytes | None = MISSING,
-        community: bool = MISSING,
-        afk_channel: VoiceChannel | None = MISSING,
-        owner: Snowflake = MISSING,
-        afk_timeout: int = MISSING,
-        default_notifications: NotificationLevel = MISSING,
-        verification_level: VerificationLevel = MISSING,
-        explicit_content_filter: ContentFilter = MISSING,
-        system_channel: TextChannel | None = MISSING,
-        system_channel_flags: SystemChannelFlags = MISSING,
-        preferred_locale: str = MISSING,
-        rules_channel: TextChannel | None = MISSING,
-        public_updates_channel: TextChannel | None = MISSING,
-        premium_progress_bar_enabled: bool = MISSING,
-        disable_invites: bool = MISSING,
+        discovery_splash: bytes | None | utils.Undefined = MISSING,
+        community: bool | utils.Undefined = MISSING,
+        afk_channel: VoiceChannel | None | utils.Undefined = MISSING,
+        owner: Snowflake | utils.Undefined = MISSING,
+        afk_timeout: int | utils.Undefined = MISSING,
+        default_notifications: NotificationLevel | utils.Undefined = MISSING,
+        verification_level: VerificationLevel | utils.Undefined = MISSING,
+        explicit_content_filter: ContentFilter | utils.Undefined = MISSING,
+        system_channel: TextChannel | None | utils.Undefined = MISSING,
+        system_channel_flags: SystemChannelFlags | utils.Undefined = MISSING,
+        preferred_locale: str | utils.Undefined = MISSING,
+        rules_channel: TextChannel | None | utils.Undefined = MISSING,
+        public_updates_channel: TextChannel | None | utils.Undefined = MISSING,
+        premium_progress_bar_enabled: bool | utils.Undefined = MISSING,
+        disable_invites: bool | utils.Undefined = MISSING,
     ) -> Guild:
         r"""|coro|
 
@@ -2231,7 +2231,7 @@ class Guild(Hashable):
         *,
         days: int,
         compute_prune_count: bool = True,
-        roles: list[Snowflake] = MISSING,
+        roles: list[Snowflake] | utils.Undefined = MISSING,
         reason: str | None = None,
     ) -> int | None:
         r"""|coro|
@@ -2347,7 +2347,7 @@ class Guild(Hashable):
         return [Webhook.from_state(d, state=self._state) for d in data]
 
     async def estimate_pruned_members(
-        self, *, days: int, roles: list[Snowflake] = MISSING
+        self, *, days: int, roles: list[Snowflake] | utils.Undefined = MISSING
     ) -> int:
         """|coro|
 
@@ -2422,7 +2422,7 @@ class Guild(Hashable):
         return result
 
     async def create_template(
-        self, *, name: str, description: str = MISSING
+        self, *, name: str, description: str | utils.Undefined = MISSING
     ) -> Template:
         """|coro|
 
@@ -2721,7 +2721,7 @@ class Guild(Hashable):
         *,
         name: str,
         image: bytes,
-        roles: list[Role] = MISSING,
+        roles: list[Role] | utils.Undefined = MISSING,
         reason: str | None = None,
     ) -> GuildEmoji:
         r"""|coro|
@@ -2883,8 +2883,8 @@ class Guild(Hashable):
         colour: Colour | int = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
-        icon: bytes | None = MISSING,
-        unicode_emoji: str | None = MISSING,
+        icon: bytes | None | utils.Undefined = MISSING,
+        unicode_emoji: str | None | utils.Undefined = MISSING,
     ) -> Role: ...
 
     @overload
@@ -2904,15 +2904,15 @@ class Guild(Hashable):
     async def create_role(
         self,
         *,
-        name: str = MISSING,
-        permissions: Permissions = MISSING,
-        color: Colour | int = MISSING,
-        colour: Colour | int = MISSING,
-        hoist: bool = MISSING,
-        mentionable: bool = MISSING,
+        name: str | utils.Undefined = MISSING,
+        permissions: Permissions | utils.Undefined = MISSING,
+        color: Colour | int | utils.Undefined = MISSING,
+        colour: Colour | int | utils.Undefined = MISSING,
+        hoist: bool | utils.Undefined = MISSING,
+        mentionable: bool | utils.Undefined = MISSING,
         reason: str | None = None,
-        icon: bytes | None = MISSING,
-        unicode_emoji: str | None = MISSING,
+        icon: bytes | None | utils.Undefined = MISSING,
+        unicode_emoji: str | None | utils.Undefined = MISSING,
     ) -> Role:
         """|coro|
 
@@ -3382,7 +3382,7 @@ class Guild(Hashable):
         return Widget(state=self._state, data=data)
 
     async def edit_widget(
-        self, *, enabled: bool = MISSING, channel: Snowflake | None = MISSING
+        self, *, enabled: bool | utils.Undefined = MISSING, channel: Snowflake | None | utils.Undefined = MISSING
     ) -> None:
         """|coro|
 
@@ -3769,13 +3769,13 @@ class Guild(Hashable):
         self,
         *,
         name: str,
-        description: str = MISSING,
+        description: str | utils.Undefined = MISSING,
         start_time: datetime,
-        end_time: datetime = MISSING,
+        end_time: datetime | utils.Undefined = MISSING,
         location: str | int | VoiceChannel | StageChannel | ScheduledEventLocation,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
-        image: bytes = MISSING,
+        image: bytes | utils.Undefined = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
         Creates a scheduled event.
@@ -3986,11 +3986,11 @@ class Guild(Hashable):
     async def edit_onboarding(
         self,
         *,
-        prompts: list[OnboardingPrompt] | None = MISSING,
-        default_channels: list[Snowflake] | None = MISSING,
-        enabled: bool | None = MISSING,
-        mode: OnboardingMode | None = MISSING,
-        reason: str | None = MISSING,
+        prompts: list[OnboardingPrompt] | None | utils.Undefined = MISSING,
+        default_channels: list[Snowflake] | None | utils.Undefined = MISSING,
+        enabled: bool | None | utils.Undefined = MISSING,
+        mode: OnboardingMode | None | utils.Undefined = MISSING,
+        reason: str | None | utils.Undefined = MISSING,
     ) -> Onboarding:
         """|coro|
 

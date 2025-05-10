@@ -92,9 +92,9 @@ class AutoModActionMetadata:
 
     def __init__(
         self,
-        channel_id: int = MISSING,
-        timeout_duration: timedelta = MISSING,
-        custom_message: str = MISSING,
+        channel_id: int | utils.Undefined = MISSING,
+        timeout_duration: timedelta | utils.Undefined = MISSING,
+        custom_message: str | utils.Undefined = MISSING,
     ):
         self.channel_id: int = channel_id
         self.timeout_duration: timedelta = timeout_duration
@@ -247,11 +247,11 @@ class AutoModTriggerMetadata:
 
     def __init__(
         self,
-        keyword_filter: list[str] = MISSING,
-        regex_patterns: list[str] = MISSING,
-        presets: list[AutoModKeywordPresetType] = MISSING,
-        allow_list: list[str] = MISSING,
-        mention_total_limit: int = MISSING,
+        keyword_filter: list[str] | utils.Undefined = MISSING,
+        regex_patterns: list[str] | utils.Undefined = MISSING,
+        presets: list[AutoModKeywordPresetType] | utils.Undefined = MISSING,
+        allow_list: list[str] | utils.Undefined = MISSING,
+        mention_total_limit: int | utils.Undefined = MISSING,
     ):
         self.keyword_filter = keyword_filter
         self.regex_patterns = regex_patterns
@@ -483,13 +483,13 @@ class AutoModRule(Hashable):
     async def edit(
         self,
         *,
-        name: str = MISSING,
-        event_type: AutoModEventType = MISSING,
-        trigger_metadata: AutoModTriggerMetadata = MISSING,
-        actions: list[AutoModAction] = MISSING,
-        enabled: bool = MISSING,
-        exempt_roles: list[Snowflake] = MISSING,
-        exempt_channels: list[Snowflake] = MISSING,
+        name: str | utils.Undefined = MISSING,
+        event_type: AutoModEventType | utils.Undefined = MISSING,
+        trigger_metadata: AutoModTriggerMetadata | utils.Undefined = MISSING,
+        actions: list[AutoModAction] | utils.Undefined = MISSING,
+        enabled: bool | utils.Undefined = MISSING,
+        exempt_roles: list[Snowflake] | utils.Undefined = MISSING,
+        exempt_channels: list[Snowflake] | utils.Undefined = MISSING,
         reason: str | None = None,
     ) -> AutoModRule | None:
         """|coro|

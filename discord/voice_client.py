@@ -224,7 +224,7 @@ class VoiceClient(VoiceProtocol):
     or the library will not be able to transmit audio.
     """
 
-    endpoint_ip: str
+    endpoint_ip: str | utils.Undefined
     voice_port: int
     secret_key: list[int]
     ssrc: int
@@ -235,7 +235,7 @@ class VoiceClient(VoiceProtocol):
 
         super().__init__(client, channel)
         state = client._connection
-        self.token: str = MISSING
+        self.token: str | utils.Undefined = MISSING
         self.socket = MISSING
         self.loop: asyncio.AbstractEventLoop = state.loop
         self._state: ConnectionState = state
@@ -247,17 +247,17 @@ class VoiceClient(VoiceProtocol):
         self._voice_state_complete: asyncio.Event = asyncio.Event()
         self._voice_server_complete: asyncio.Event = asyncio.Event()
 
-        self.mode: str = MISSING
+        self.mode: str | utils.Undefined = MISSING
         self._connections: int = 0
         self.sequence: int = 0
         self.timestamp: int = 0
         self.timeout: float = 0
-        self._runner: asyncio.Task = MISSING
+        self._runner: asyncio.Task | utils.Undefined = MISSING
         self._player: AudioPlayer | None = None
-        self.encoder: Encoder = MISSING
+        self.encoder: Encoder | utils.Undefined = MISSING
         self.decoder = None
         self._lite_nonce: int = 0
-        self.ws: DiscordVoiceWebSocket = MISSING
+        self.ws: DiscordVoiceWebSocket | utils.Undefined = MISSING
 
         self.paused = False
         self.recording = False

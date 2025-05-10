@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from email import utils
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from .asset import Asset
@@ -448,16 +449,16 @@ class Role(Hashable):
     async def edit(
         self,
         *,
-        name: str = MISSING,
-        permissions: Permissions = MISSING,
-        colour: Colour | int = MISSING,
-        color: Colour | int = MISSING,
-        hoist: bool = MISSING,
-        mentionable: bool = MISSING,
-        position: int = MISSING,
-        reason: str | None = MISSING,
-        icon: bytes | None = MISSING,
-        unicode_emoji: str | None = MISSING,
+        name: str | utils.Undefined = MISSING,
+        permissions: Permissions | utils.Undefined = MISSING,
+        colour: Colour | int | utils.Undefined = MISSING,
+        color: Colour | int | utils.Undefined = MISSING,
+        hoist: bool | utils.Undefined = MISSING,
+        mentionable: bool | utils.Undefined = MISSING,
+        position: int | utils.Undefined = MISSING,
+        reason: str | None | utils.Undefined = MISSING,
+        icon: bytes | None | utils.Undefined = MISSING,
+        unicode_emoji: str | None | utils.Undefined = MISSING,
     ) -> Role | None:
         """|coro|
 

@@ -29,6 +29,7 @@ import array
 import asyncio
 import collections.abc
 import datetime
+from enum import Enum, auto
 import functools
 import itertools
 import json
@@ -103,24 +104,14 @@ __all__ = (
 DISCORD_EPOCH = 1420070400000
 
 
-class _MissingSentinel:
-    def __eq__(self, other) -> bool:
+class Undefined(Enum):
+    MISSING = auto()
+
+    def __bool__(self) -> Literal[False]:
         return False
 
-    def __bool__(self) -> bool:
-        return False
 
-    def __repr__(self) -> str:
-        return "..."
-
-
-MISSING: Any = _MissingSentinel()
-# As of 3.11, directly setting a dataclass field to MISSING causes a ValueError. Using
-# field(default=MISSING) produces the same error, but passing a lambda to
-# default_factory produces the same behavior as default=MISSING and does not raise an
-# error.
-MissingField = field(default_factory=lambda: MISSING)
-
+MISSING: Literal[Undefined.MISSING] = Undefined.MISSING
 
 class _cached_property:
     def __init__(self, function):
@@ -388,10 +379,10 @@ def deprecated(
 def oauth_url(
     client_id: int | str,
     *,
-    permissions: Permissions = MISSING,
-    guild: Snowflake = MISSING,
-    redirect_uri: str = MISSING,
-    scopes: Iterable[str] = MISSING,
+    permissions: Permissions | Undefined = MISSING,
+    guild: Snowflake | Undefined = MISSING,
+    redirect_uri: str | Undefined = MISSING,
+    scopes: Iterable[str] | Undefined = MISSING,
     disable_guild_select: bool = False,
 ) -> str:
     """A helper function that returns the OAuth2 URL for inviting the bot

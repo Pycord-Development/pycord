@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, Any
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
 from .utils import MISSING, cached_property, generate_snowflake, get
+from discord import utils
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -266,11 +267,11 @@ class Onboarding:
     async def edit(
         self,
         *,
-        prompts: list[OnboardingPrompt] | None = MISSING,
-        default_channels: list[Snowflake] | None = MISSING,
-        enabled: bool | None = MISSING,
-        mode: OnboardingMode | None = MISSING,
-        reason: str | None = MISSING,
+        prompts: list[OnboardingPrompt] | None | utils.Undefined = MISSING,
+        default_channels: list[Snowflake] | None | utils.Undefined = MISSING,
+        enabled: bool | None | utils.Undefined = MISSING,
+        mode: OnboardingMode | None | utils.Undefined = MISSING,
+        reason: str | None | utils.Undefined = MISSING,
     ) -> Onboarding:
         """|coro|
 
@@ -442,7 +443,7 @@ class Onboarding:
         self,
         id: int,
         *,
-        reason: str | None = MISSING,
+        reason: str | None | utils.Undefined = MISSING,
     ):
         """|coro|
 

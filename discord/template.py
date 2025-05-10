@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from .guild import Guild
-from .utils import MISSING, _bytes_to_base64_data, parse_time
+from .utils import MISSING, Undefined, _bytes_to_base64_data, parse_time
 
 __all__ = ("Template",)
 
@@ -236,8 +236,8 @@ class Template:
     async def edit(
         self,
         *,
-        name: str = MISSING,
-        description: str | None = MISSING,
+        name: str | Undefined = MISSING,
+        description: str | None | Undefined = MISSING,
     ) -> Template:
         """|coro|
 

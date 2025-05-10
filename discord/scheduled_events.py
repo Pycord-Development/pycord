@@ -279,16 +279,16 @@ class ScheduledEvent(Hashable):
         self,
         *,
         reason: str | None = None,
-        name: str = MISSING,
-        description: str = MISSING,
-        status: int | ScheduledEventStatus = MISSING,
+        name: str | utils.Undefined = MISSING,
+        description: str | utils.Undefined = MISSING,
+        status: int | ScheduledEventStatus | utils.Undefined = MISSING,
         location: (
-            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
+            str | int | VoiceChannel | StageChannel | ScheduledEventLocation | utils.Undefined
         ) = MISSING,
-        start_time: datetime.datetime = MISSING,
-        end_time: datetime.datetime = MISSING,
-        cover: bytes | None = MISSING,
-        image: bytes | None = MISSING,
+        start_time: datetime.datetime | utils.Undefined = MISSING,
+        end_time: datetime.datetime | utils.Undefined = MISSING,
+        cover: bytes | None | utils.Undefined = MISSING,
+        image: bytes | None | utils.Undefined = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
     ) -> ScheduledEvent | None:
         """|coro|
@@ -375,7 +375,7 @@ class ScheduledEvent(Hashable):
 
         if location is not MISSING:
             if not isinstance(
-                location, (ScheduledEventLocation, utils._MissingSentinel)
+                location, (ScheduledEventLocation, utils.Undefined)
             ):
                 location = ScheduledEventLocation(state=self._state, value=location)
 

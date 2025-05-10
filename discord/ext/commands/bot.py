@@ -32,6 +32,7 @@ import traceback
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
+from discord.utils import Undefined
 
 from . import errors
 from .context import Context
@@ -123,7 +124,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 str | Iterable[str] | Coroutine[Any, Any, str | Iterable[str]],
             ]
         ) = when_mentioned,
-        help_command: HelpCommand | None = MISSING,
+        help_command: HelpCommand | None | Undefined = MISSING,
         **options,
     ):
         super().__init__(**options)

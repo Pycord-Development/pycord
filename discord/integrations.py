@@ -32,6 +32,7 @@ from .enums import ExpireBehaviour, try_enum
 from .errors import InvalidArgument
 from .user import User
 from .utils import MISSING, _get_as_snowflake, parse_time
+from discord import utils
 
 __all__ = (
     "IntegrationAccount",
@@ -226,9 +227,9 @@ class StreamIntegration(Integration):
     async def edit(
         self,
         *,
-        expire_behaviour: ExpireBehaviour = MISSING,
-        expire_grace_period: int = MISSING,
-        enable_emoticons: bool = MISSING,
+        expire_behaviour: ExpireBehaviour | utils.Undefined = MISSING,
+        expire_grace_period: int | utils.Undefined = MISSING,
+        enable_emoticons: bool | utils.Undefined = MISSING,
     ) -> None:
         """|coro|
 

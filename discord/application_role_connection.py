@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from .enums import ApplicationRoleConnectionMetadataType, try_enum
-from .utils import MISSING
+from .utils import MISSING, Undefined
 
 if TYPE_CHECKING:
     from .types.application_role_connection import (
@@ -77,8 +77,8 @@ class ApplicationRoleConnectionMetadata:
         key: str,
         name: str,
         description: str,
-        name_localizations: dict[str, str] = MISSING,
-        description_localizations: dict[str, str] = MISSING,
+        name_localizations: dict[str, str] | Undefined = MISSING,
+        description_localizations: dict[str, str] | Undefined = MISSING,
     ):
         self.type: ApplicationRoleConnectionMetadataType = type
         self.key: str = key

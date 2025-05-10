@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING
 from .enums import StagePrivacyLevel, try_enum
 from .errors import InvalidArgument
 from .mixins import Hashable
-from .utils import MISSING, cached_slot_property
+from .utils import MISSING, Undefined, cached_slot_property
 
 __all__ = ("StageInstance",)
 
@@ -128,8 +128,8 @@ class StageInstance(Hashable):
     async def edit(
         self,
         *,
-        topic: str = MISSING,
-        privacy_level: StagePrivacyLevel = MISSING,
+        topic: str | Undefined = MISSING,
+        privacy_level: StagePrivacyLevel | Undefined = MISSING,
         reason: str | None = None,
     ) -> None:
         """|coro|

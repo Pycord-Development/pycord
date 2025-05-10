@@ -43,7 +43,7 @@ from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
 from .errors import ClientException
 from .oggparse import OggStream
 from .opus import Encoder as OpusEncoder
-from .utils import MISSING
+from .utils import MISSING, Undefined
 
 if TYPE_CHECKING:
     from .voice_client import VoiceClient
@@ -164,7 +164,7 @@ class FFmpegAudio(AudioSource):
         kwargs = {"stdout": subprocess.PIPE}
         kwargs.update(subprocess_kwargs)
 
-        self._process: subprocess.Popen = self._spawn_process(args, **kwargs)
+        self._process: subprocess.Popen | Undefined = self._spawn_process(args, **kwargs)
         self._stdout: IO[bytes] = self._process.stdout  # type: ignore
         self._stdin: IO[bytes] | None = None
         self._pipe_thread: threading.Thread | None = None

@@ -33,6 +33,7 @@ from .errors import ClientException
 from .flags import ChannelFlags
 from .mixins import Hashable
 from .utils import MISSING, _get_as_snowflake, parse_time
+from discord import utils
 
 __all__ = (
     "Thread",
@@ -517,7 +518,7 @@ class Thread(Messageable, Hashable):
         self,
         *,
         limit: int | None = 100,
-        check: Callable[[Message], bool] = MISSING,
+        check: Callable[[Message], bool] | utils.Undefined = MISSING,
         before: SnowflakeTime | None = None,
         after: SnowflakeTime | None = None,
         around: SnowflakeTime | None = None,
@@ -597,14 +598,14 @@ class Thread(Messageable, Hashable):
     async def edit(
         self,
         *,
-        name: str = MISSING,
-        archived: bool = MISSING,
-        locked: bool = MISSING,
-        invitable: bool = MISSING,
-        slowmode_delay: int = MISSING,
-        auto_archive_duration: ThreadArchiveDuration = MISSING,
-        pinned: bool = MISSING,
-        applied_tags: list[ForumTag] = MISSING,
+        name: str | utils.Undefined = MISSING,
+        archived: bool | utils.Undefined = MISSING,
+        locked: bool | utils.Undefined = MISSING,
+        invitable: bool | utils.Undefined = MISSING,
+        slowmode_delay: int | utils.Undefined = MISSING,
+        auto_archive_duration: ThreadArchiveDuration | utils.Undefined = MISSING,
+        pinned: bool | utils.Undefined = MISSING,
+        applied_tags: list[ForumTag] | utils.Undefined = MISSING,
         reason: str | None = None,
     ) -> Thread:
         """|coro|
@@ -681,7 +682,7 @@ class Thread(Messageable, Hashable):
         # The data payload will always be a Thread payload
         return Thread(data=data, state=self._state, guild=self.guild)  # type: ignore
 
-    async def archive(self, locked: bool = MISSING) -> Thread:
+    async def archive(self, locked: bool | utils.Undefined = MISSING) -> Thread:
         """|coro|
 
         Archives the thread. This is a shorthand of :meth:`.edit`.

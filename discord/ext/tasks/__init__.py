@@ -36,6 +36,7 @@ from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 import aiohttp
 
 import discord
+from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.utils import MISSING
 
@@ -97,8 +98,8 @@ class Loop(Generic[LF]):
         self.loop: asyncio.AbstractEventLoop = loop
         self.count: int | None = count
         self._current_loop = 0
-        self._handle: SleepHandle = MISSING
-        self._task: asyncio.Task[None] = MISSING
+        self._handle: SleepHandle | utils.Undefined = MISSING
+        self._task: asyncio.Task[None] | utils.Undefined = MISSING
         self._injected = None
         self._valid_exception = (
             OSError,
@@ -121,7 +122,7 @@ class Loop(Generic[LF]):
 
         self.change_interval(seconds=seconds, minutes=minutes, hours=hours, time=time)
         self._last_iteration_failed = False
-        self._last_iteration: datetime.datetime = MISSING
+        self._last_iteration: datetime.datetime | utils.Undefined = MISSING
         self._next_iteration = None
 
         if not inspect.iscoroutinefunction(self.coro):
@@ -611,7 +612,7 @@ class Loop(Generic[LF]):
         self._time_index += 1
         return datetime.datetime.combine(next_date, next_time)
 
-    def _prepare_time_index(self, now: datetime.datetime = MISSING) -> None:
+    def _prepare_time_index(self, now: datetime.datetime | utils.Undefined = MISSING) -> None:
         # now kwarg should be a datetime.datetime representing the time "now"
         # to calculate the next time index from
 
@@ -663,7 +664,7 @@ class Loop(Generic[LF]):
         seconds: float = 0,
         minutes: float = 0,
         hours: float = 0,
-        time: datetime.time | Sequence[datetime.time] = MISSING,
+        time: datetime.time | Sequence[datetime.time] | utils.Undefined = MISSING,
     ) -> None:
         """Changes the interval for the sleep time.
 
@@ -709,7 +710,7 @@ class Loop(Generic[LF]):
             self._seconds = float(seconds)
             self._hours = float(hours)
             self._minutes = float(minutes)
-            self._time: list[datetime.time] = MISSING
+            self._time: list[datetime.time] | utils.Undefined = MISSING
         else:
             if any((seconds, minutes, hours)):
                 raise TypeError("Cannot mix explicit time with relative time")
@@ -731,13 +732,13 @@ class Loop(Generic[LF]):
 
 def loop(
     *,
-    seconds: float = MISSING,
-    minutes: float = MISSING,
-    hours: float = MISSING,
-    time: datetime.time | Sequence[datetime.time] = MISSING,
+    seconds: float | utils.Undefined = MISSING,
+    minutes: float | utils.Undefined = MISSING,
+    hours: float | utils.Undefined = MISSING,
+    time: datetime.time | Sequence[datetime.time] | utils.Undefined = MISSING,
     count: int | None = None,
     reconnect: bool = True,
-    loop: asyncio.AbstractEventLoop = MISSING,
+    loop: asyncio.AbstractEventLoop | utils.Undefined = MISSING,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
     optional reconnect logic. The decorator returns a :class:`Loop`.

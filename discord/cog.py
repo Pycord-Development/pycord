@@ -369,7 +369,7 @@ class Cog(metaclass=CogMeta):
 
     @classmethod
     def listener(
-        cls, name: str = MISSING, once: bool = False
+        cls, name: str | discord.utils.Undefined = MISSING, once: bool = False
     ) -> Callable[[FuncT], FuncT]:
         """A decorator that marks a function as a listener.
 

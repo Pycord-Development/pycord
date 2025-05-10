@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
 from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
 from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, get_slots
+from .utils import MISSING, Undefined, get_slots
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
@@ -410,7 +410,7 @@ class SelectOption:
         self,
         *,
         label: str,
-        value: str = MISSING,
+        value: str | Undefined = MISSING,
         description: str | None = None,
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         default: bool = False,

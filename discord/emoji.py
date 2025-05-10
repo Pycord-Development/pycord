@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING, Any, Iterator
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .user import User
-from .utils import MISSING, SnowflakeList, snowflake_time
+from .utils import MISSING, SnowflakeList, Undefined, snowflake_time
 
 __all__ = (
     "Emoji",
@@ -234,8 +234,8 @@ class GuildEmoji(BaseEmoji):
     async def edit(
         self,
         *,
-        name: str = MISSING,
-        roles: list[Snowflake] = MISSING,
+        name: str | Undefined = MISSING,
+        roles: list[Snowflake] | Undefined = MISSING,
         reason: str | None = None,
     ) -> GuildEmoji:
         r"""|coro|
@@ -383,7 +383,7 @@ class AppEmoji(BaseEmoji):
     async def edit(
         self,
         *,
-        name: str = MISSING,
+        name: str | Undefined = MISSING,
     ) -> AppEmoji:
         r"""|coro|
 

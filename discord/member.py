@@ -760,15 +760,15 @@ class Member(discord.abc.Messageable, _UserTag):
     async def edit(
         self,
         *,
-        nick: str | None = MISSING,
-        mute: bool = MISSING,
-        deafen: bool = MISSING,
-        suppress: bool = MISSING,
-        roles: list[discord.abc.Snowflake] = MISSING,
-        voice_channel: VocalGuildChannel | None = MISSING,
+        nick: str | None | utils.Undefined = MISSING,
+        mute: bool | utils.Undefined = MISSING,
+        deafen: bool | utils.Undefined = MISSING,
+        suppress: bool | utils.Undefined = MISSING,
+        roles: list[discord.abc.Snowflake] | utils.Undefined = MISSING,
+        voice_channel: VocalGuildChannel | None | utils.Undefined = MISSING,
         reason: str | None = None,
-        communication_disabled_until: datetime.datetime | None = MISSING,
-        bypass_verification: bool | None = MISSING,
+        communication_disabled_until: datetime.datetime | None | utils.Undefined = MISSING,
+        bypass_verification: bool | None | utils.Undefined = MISSING,
     ) -> Member | None:
         """|coro|
 

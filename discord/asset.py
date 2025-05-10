@@ -333,9 +333,9 @@ class Asset(AssetMixin):
     def replace(
         self,
         *,
-        size: int = MISSING,
-        format: ValidAssetFormatTypes = MISSING,
-        static_format: ValidStaticFormatTypes = MISSING,
+        size: int | utils.Undefined = MISSING,
+        format: ValidAssetFormatTypes | utils.Undefined = MISSING,
+        static_format: ValidStaticFormatTypes | utils.Undefined = MISSING,
     ) -> Asset:
         """Returns a new asset with the passed components replaced.
 

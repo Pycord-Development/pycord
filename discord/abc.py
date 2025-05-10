@@ -118,7 +118,7 @@ async def _purge_messages_helper(
     channel: TextChannel | StageChannel | Thread | VoiceChannel,
     *,
     limit: int | None = 100,
-    check: Callable[[Message], bool] = MISSING,
+    check: Callable[[Message], bool] | utils.Undefined = MISSING,
     before: SnowflakeTime | None = None,
     after: SnowflakeTime | None = None,
     around: SnowflakeTime | None = None,
@@ -1031,10 +1031,10 @@ class GuildChannel:
         self,
         *,
         beginning: bool,
-        offset: int = MISSING,
-        category: Snowflake | None = MISSING,
-        sync_permissions: bool = MISSING,
-        reason: str | None = MISSING,
+        offset: int | utils.Undefined = MISSING,
+        category: Snowflake | None | utils.Undefined = MISSING,
+        sync_permissions: bool | utils.Undefined = MISSING,
+        reason: str | None | utils.Undefined = MISSING,
     ) -> None: ...
 
     @overload
@@ -1042,10 +1042,10 @@ class GuildChannel:
         self,
         *,
         end: bool,
-        offset: int = MISSING,
-        category: Snowflake | None = MISSING,
-        sync_permissions: bool = MISSING,
-        reason: str = MISSING,
+        offset: int | utils.Undefined = MISSING,
+        category: Snowflake | None | utils.Undefined = MISSING,
+        sync_permissions: bool | utils.Undefined = MISSING,
+        reason: str | utils.Undefined = MISSING,
     ) -> None: ...
 
     @overload
@@ -1053,10 +1053,10 @@ class GuildChannel:
         self,
         *,
         before: Snowflake,
-        offset: int = MISSING,
-        category: Snowflake | None = MISSING,
-        sync_permissions: bool = MISSING,
-        reason: str = MISSING,
+        offset: int | utils.Undefined = MISSING,
+        category: Snowflake | None | utils.Undefined = MISSING,
+        sync_permissions: bool | utils.Undefined = MISSING,
+        reason: str | utils.Undefined = MISSING,
     ) -> None: ...
 
     @overload
@@ -1064,10 +1064,10 @@ class GuildChannel:
         self,
         *,
         after: Snowflake,
-        offset: int = MISSING,
-        category: Snowflake | None = MISSING,
-        sync_permissions: bool = MISSING,
-        reason: str = MISSING,
+        offset: int | utils.Undefined = MISSING,
+        category: Snowflake | None | utils.Undefined = MISSING,
+        sync_permissions: bool | utils.Undefined = MISSING,
+        reason: str | utils.Undefined = MISSING,
     ) -> None: ...
 
     async def move(self, **kwargs) -> None:
