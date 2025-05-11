@@ -1791,9 +1791,9 @@ class Webhook(BaseWebhook):
         with_components = False
 
         if view is not MISSING:
-            if isinstance(self._state, _WebhookState):
+            if isinstance(self._state, _WebhookState) and view and view.is_dispatchable():
                 raise InvalidArgument(
-                    "Webhook views require an associated state with the webhook"
+                    "Dispatchable Webhook views require an associated state with the webhook"
                 )
             if ephemeral is True and view.timeout is None:
                 view.timeout = 15 * 60.0

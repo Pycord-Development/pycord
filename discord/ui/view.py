@@ -578,6 +578,11 @@ class View:
         """Whether the view has finished interacting."""
         return self.__stopped.done()
 
+    def is_dispatchable(self) -> bool:
+        return any(
+            item.is_dispatchable() for item in self.children
+        )
+
     def is_dispatching(self) -> bool:
         """Whether the view has been added for dispatching purposes."""
         return self.__cancel_callback is not None
