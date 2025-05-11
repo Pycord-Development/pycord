@@ -335,9 +335,7 @@ class Container(Item[V]):
         return 5
 
     def is_dispatchable(self) -> bool:
-        return any(
-            item.is_dispatchable() for item in self.items
-        )
+        return any(item.is_dispatchable() for item in self.items)
 
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
