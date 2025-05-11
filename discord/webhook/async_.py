@@ -1850,7 +1850,7 @@ class Webhook(BaseWebhook):
         if view is not MISSING and not view.is_finished():
             message_id = None if msg is None else msg.id
             view.message = None if msg is None else msg
-            if view.dispatchable():
+            if view.is_dispatchable():
                 self._state.store_view(view, message_id)
 
         if delete_after is not None:
@@ -2051,7 +2051,7 @@ class Webhook(BaseWebhook):
         message = self._create_message(data)
         if view and not view.is_finished():
             view.message = message
-            if view.dispatchable():
+            if view.is_dispatchable():
                 self._state.store_view(view, message_id)
         return message
 

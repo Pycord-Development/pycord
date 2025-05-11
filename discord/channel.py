@@ -1346,7 +1346,7 @@ class ForumChannel(_TextChannel):
 
         ret = Thread(guild=self.guild, state=self._state, data=data)
         msg = ret.get_partial_message(int(data["last_message_id"]))
-        if view and view.dispatchable()::
+        if view and view.is_dispatchable():
             state.store_view(view, msg.id)
 
         if delete_message_after is not None:

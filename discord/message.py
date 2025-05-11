@@ -1643,7 +1643,7 @@ class Message(Hashable):
 
         if view and not view.is_finished():
             view.message = message
-            if view.dispatchable():
+            if view.is_dispatchable():
                 self._state.store_view(view, self.id)
 
         if delete_after is not None:
@@ -2239,7 +2239,7 @@ class PartialMessage(Hashable):
             msg = self._state.create_message(channel=self.channel, data=data)  # type: ignore
             if view and not view.is_finished():
                 view.message = msg
-                if view.dispatchable():
+                if view.is_dispatchable():
                     self._state.store_view(view, self.id)
             return msg
 

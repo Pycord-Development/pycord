@@ -571,7 +571,7 @@ class Interaction:
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             view.message = message
-            if view.dispatchable():
+            if view.is_dispatchable():
                 self._state.store_view(view, message.id)
 
         if delete_after is not None:
@@ -1032,7 +1032,7 @@ class InteractionResponse:
                 view.timeout = 15 * 60.0
 
             view.parent = self._parent
-            if view.dispatchable():
+            if view.is_dispatchable():
                 self._parent._state.store_view(view)
 
         self._responded = True

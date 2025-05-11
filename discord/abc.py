@@ -1671,7 +1671,7 @@ class Messageable:
 
         ret = state.create_message(channel=channel, data=data)
         if view:
-            if view.dispatchable():
+            if view.is_dispatchable():
                 state.store_view(view, ret.id)
             view.message = ret
 
