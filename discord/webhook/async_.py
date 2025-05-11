@@ -1791,7 +1791,11 @@ class Webhook(BaseWebhook):
         with_components = False
 
         if view is not MISSING:
-            if isinstance(self._state, _WebhookState) and view and view.is_dispatchable():
+            if (
+                isinstance(self._state, _WebhookState)
+                and view
+                and view.is_dispatchable()
+            ):
                 raise InvalidArgument(
                     "Dispatchable Webhook views require an associated state with the webhook"
                 )

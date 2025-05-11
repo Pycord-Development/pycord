@@ -579,9 +579,7 @@ class View:
         return self.__stopped.done()
 
     def is_dispatchable(self) -> bool:
-        return any(
-            item.is_dispatchable() for item in self.children
-        )
+        return any(item.is_dispatchable() for item in self.children)
 
     def is_dispatching(self) -> bool:
         """Whether the view has been added for dispatching purposes."""
