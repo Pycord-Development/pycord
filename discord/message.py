@@ -1643,7 +1643,8 @@ class Message(Hashable):
 
         if view and not view.is_finished():
             view.message = message
-            self._state.store_view(view, self.id)
+            if view.dispatchable():
+                self._state.store_view(view, self.id)
 
         if delete_after is not None:
             await self.delete(delay=delete_after)
@@ -2238,7 +2239,8 @@ class PartialMessage(Hashable):
             msg = self._state.create_message(channel=self.channel, data=data)  # type: ignore
             if view and not view.is_finished():
                 view.message = msg
-                self._state.store_view(view, self.id)
+                if view.dispatchable():
+                    self._state.store_view(view, self.id)
             return msg
 
     async def end_poll(self) -> Message:

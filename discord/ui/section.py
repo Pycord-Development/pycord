@@ -234,6 +234,9 @@ class Section(Item[V]):
     def width(self) -> int:
         return 5
 
+    def is_dispatchable(self) -> bool:
+        return self.accessory and self.accessory.is_dispatchable()
+
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
         Disables all buttons and select menus in the section.

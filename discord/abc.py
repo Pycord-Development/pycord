@@ -1671,7 +1671,8 @@ class Messageable:
 
         ret = state.create_message(channel=channel, data=data)
         if view:
-            state.store_view(view, ret.id)
+            if view.dispatchable():
+                state.store_view(view, ret.id)
             view.message = ret
 
         if delete_after is not None:
