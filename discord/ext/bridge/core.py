@@ -581,7 +581,7 @@ def has_permissions(**perms: bool):
 
 
 class MentionableConverter(Converter):
-    """A converter that can convert a mention to a member or a role, preferring Member in guilds."""
+    """A converter that can convert a mention to a member, a user or a role."""
 
     async def convert(self, ctx, argument):
         try:
