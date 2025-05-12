@@ -212,7 +212,11 @@ class StickerItem(_StickerTag):
         self.format: StickerFormatType = try_enum(
             StickerFormatType, data["format_type"]
         )
-        base = "https://media.discordapp.net" if self.format is StickerFormatType.gif else Asset.BASE
+        base = (
+            "https://media.discordapp.net"
+            if self.format is StickerFormatType.gif
+            else Asset.BASE
+        )
         self.url: str = f"{base}/stickers/{self.id}.{self.format.file_extension}"
 
     def __repr__(self) -> str:
@@ -289,7 +293,11 @@ class Sticker(_StickerTag):
         self.format: StickerFormatType = try_enum(
             StickerFormatType, data["format_type"]
         )
-        base = "https://media.discordapp.net" if self.format is StickerFormatType.gif else Asset.BASE
+        base = (
+            "https://media.discordapp.net"
+            if self.format is StickerFormatType.gif
+            else Asset.BASE
+        )
         self.url: str = f"{base}/stickers/{self.id}.{self.format.file_extension}"
 
     def __repr__(self) -> str:
