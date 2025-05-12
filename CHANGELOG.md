@@ -99,16 +99,16 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Fixed `Subscription.renewal_sku_ids` not accepting `None` from the received payload.
   ([#2709](https://github.com/Pycord-Development/pycord/pull/2709))
-- Fixed `ForumChannel.edit` allowing `default_reaction_emoji` to be `None`
+- Fixed `ForumChannel.edit` allowing `default_reaction_emoji` to be `None`.
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
-  ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
+  ([#2746](https://github.com/Pycord-Development/pycord/pull/2746))
 - Updated `valid_locales` to support `in` and `es-419`.
-  ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
+  ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
-  ([#2779])(https://github.com/Pycord-Development/pycord/pull/2779)
+  ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
 - Fixed GIF-based `Sticker` returning the wrong `url`.
-  ([#2781])(https://github.com/Pycord-Development/pycord/pull/2781)
+  ([#2781](https://github.com/Pycord-Development/pycord/pull/2781))
 
 ### Changed
 
