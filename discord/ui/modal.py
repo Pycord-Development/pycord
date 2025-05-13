@@ -53,9 +53,7 @@ class Modal:
     ) -> None:
         self.timeout: float | None = timeout
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         self._custom_id: str | None = custom_id or os.urandom(16).hex()
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
@@ -107,9 +105,7 @@ class Modal:
             return
 
         self._stopped.set_result(True)
-        self.loop.create_task(
-            self.on_timeout(), name=f"discord-ui-view-timeout-{self.custom_id}"
-        )
+        self.loop.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.custom_id}")
 
     @property
     def title(self) -> str:
@@ -133,10 +129,7 @@ class Modal:
     def children(self, value: list[InputText]):
         for item in value:
             if not isinstance(item, InputText):
-                raise TypeError(
-                    "all Modal children must be InputText, not"
-                    f" {item.__class__.__name__}"
-                )
+                raise TypeError(f"all Modal children must be InputText, not {item.__class__.__name__}")
         self._weights = _ModalWeights(self._children)
         self._children = value
 
@@ -148,9 +141,7 @@ class Modal:
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f"expected custom_id to be str, not {value.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {value.__class__.__name__}")
         if len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._custom_id = value
@@ -254,9 +245,7 @@ class Modal:
             The interaction that led to the failure.
         """
         print(f"Ignoring exception in modal {self}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
     async def on_timeout(self) -> None:
         """|coro|
@@ -288,9 +277,7 @@ class _ModalWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(
-                    f"item would not fit at row {item.row} ({total} > 5 width)"
-                )
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:

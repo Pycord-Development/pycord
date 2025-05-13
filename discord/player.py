@@ -155,10 +155,7 @@ class FFmpegAudio(AudioSource):
     ):
         piping = subprocess_kwargs.get("stdin") == subprocess.PIPE
         if piping and isinstance(source, str):
-            raise TypeError(
-                "parameter conflict: 'source' parameter cannot be a string when piping"
-                " to stdin"
-            )
+            raise TypeError("parameter conflict: 'source' parameter cannot be a string when piping to stdin")
 
         args = [executable, *args]
         kwargs = {"stdout": subprocess.PIPE}
@@ -172,23 +169,17 @@ class FFmpegAudio(AudioSource):
         if piping:
             n = f"popen-stdin-writer:{id(self):#x}"
             self._stdin = self._process.stdin
-            self._pipe_thread = threading.Thread(
-                target=self._pipe_writer, args=(source,), daemon=True, name=n
-            )
+            self._pipe_thread = threading.Thread(target=self._pipe_writer, args=(source,), daemon=True, name=n)
             self._pipe_thread.start()
 
     def _spawn_process(self, args: Any, **subprocess_kwargs: Any) -> subprocess.Popen:
         try:
-            process = subprocess.Popen(
-                args, creationflags=CREATE_NO_WINDOW, **subprocess_kwargs
-            )
+            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, **subprocess_kwargs)
         except FileNotFoundError:
             executable = args.partition(" ")[0] if isinstance(args, str) else args[0]
             raise ClientException(f"{executable} was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise ClientException(
-                f"Popen failed: {exc.__class__.__name__}: {exc}"
-            ) from exc
+            raise ClientException(f"Popen failed: {exc.__class__.__name__}: {exc}") from exc
         else:
             return process
 
@@ -202,9 +193,7 @@ class FFmpegAudio(AudioSource):
         try:
             proc.kill()
         except Exception:
-            _log.exception(
-                "Ignoring error attempting to kill ffmpeg process %s", proc.pid
-            )
+            _log.exception("Ignoring error attempting to kill ffmpeg process %s", proc.pid)
 
         if proc.poll() is None:
             _log.info(
@@ -497,7 +486,7 @@ class FFmpegOpusAudio(FFmpegAudio):
         If you are on Windows and don't have ffprobe installed, use the ``fallback`` method
         to probe using ffmpeg instead: ::
 
-            source = await discord.FFmpegOpusAudio.from_probe("song.webm", method='fallback')
+            source = await discord.FFmpegOpusAudio.from_probe("song.webm", method="fallback")
             voice_client.play(source)
 
         Using a custom method of determining codec and bitrate: ::
@@ -505,6 +494,7 @@ class FFmpegOpusAudio(FFmpegAudio):
             def custom_probe(source, executable):
                 # some analysis code here
                 return codec, bitrate
+
 
             source = await discord.FFmpegOpusAudio.from_probe("song.webm", method=custom_probe)
             voice_client.play(source)
@@ -566,10 +556,7 @@ class FFmpegOpusAudio(FFmpegAudio):
             probefunc = method
             fallback = cls._probe_codec_fallback
         else:
-            raise TypeError(
-                "Expected str or callable for parameter 'probe', "
-                f"not '{method.__class__.__name__}'"
-            )
+            raise TypeError(f"Expected str or callable for parameter 'probe', not '{method.__class__.__name__}'")
 
         codec = bitrate = None
         loop = asyncio.get_event_loop()
@@ -580,9 +567,7 @@ class FFmpegOpusAudio(FFmpegAudio):
                 _log.exception("Probe '%s' using '%s' failed", method, executable)
                 return  # type: ignore
 
-            _log.exception(
-                "Probe '%s' using '%s' failed, trying fallback", method, executable
-            )
+            _log.exception("Probe '%s' using '%s' failed, trying fallback", method, executable)
             try:
                 codec, bitrate = await loop.run_in_executor(None, lambda: fallback(source, executable))  # type: ignore
             except Exception:
@@ -595,14 +580,8 @@ class FFmpegOpusAudio(FFmpegAudio):
             return codec, bitrate
 
     @staticmethod
-    def _probe_codec_native(
-        source, executable: str = "ffmpeg"
-    ) -> tuple[str | None, int | None]:
-        exe = (
-            f"{executable[:2]}probe"
-            if executable in {"ffmpeg", "avconv"}
-            else executable
-        )
+    def _probe_codec_native(source, executable: str = "ffmpeg") -> tuple[str | None, int | None]:
+        exe = f"{executable[:2]}probe" if executable in {"ffmpeg", "avconv"} else executable
 
         args = [
             exe,
@@ -629,9 +608,7 @@ class FFmpegOpusAudio(FFmpegAudio):
         return codec, bitrate
 
     @staticmethod
-    def _probe_codec_fallback(
-        source, executable: str = "ffmpeg"
-    ) -> tuple[str | None, int | None]:
+    def _probe_codec_fallback(source, executable: str = "ffmpeg") -> tuple[str | None, int | None]:
         args = [executable, "-hide_banner", "-i", source]
         proc = subprocess.Popen(
             args,
@@ -843,9 +820,7 @@ class AudioPlayer(threading.Thread):
 
     def _speak(self, speaking: bool) -> None:
         try:
-            asyncio.run_coroutine_threadsafe(
-                self.client.ws.speak(speaking), self.client.loop
-            )
+            asyncio.run_coroutine_threadsafe(self.client.ws.speak(speaking), self.client.loop)
         except Exception as e:
             _log.info("Speaking call in player failed: %s", e)
 

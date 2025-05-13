@@ -11,10 +11,7 @@ class NitpickFileIgnorer(logging.Filter):
 
     def filter(self, record: sphinx_logging.SphinxLogRecord) -> bool:
         if getattr(record, "type", None) == "ref":
-            return (
-                record.location.get("refdoc")
-                not in self.app.config.nitpick_ignore_files
-            )
+            return record.location.get("refdoc") not in self.app.config.nitpick_ignore_files
         return True
 
 

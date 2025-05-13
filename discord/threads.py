@@ -188,42 +188,24 @@ class Thread(Messageable, Hashable):
         self._type = try_enum(ChannelType, data["type"])
 
         # This data may be missing depending on how this object is being created
-        self.owner_id = (
-            int(data.get("owner_id"))
-            if data.get("owner_id", None) is not None
-            else None
-        )
+        self.owner_id = int(data.get("owner_id")) if data.get("owner_id", None) is not None else None
         self.last_message_id = _get_as_snowflake(data, "last_message_id")
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
         self.message_count = data.get("message_count", None)
         self.member_count = data.get("member_count", None)
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.total_message_sent = data.get("total_message_sent", None)
-        self._applied_tags: list[int] = [
-            int(tag_id) for tag_id in data.get("applied_tags", [])
-        ]
+        self._applied_tags: list[int] = [int(tag_id) for tag_id in data.get("applied_tags", [])]
 
         # Here, we try to fill in potentially missing data
         if thread := self.guild.get_thread(self.id) and data.pop("_invoke_flag", False):
             self.owner_id = thread.owner_id if self.owner_id is None else self.owner_id
-            self.last_message_id = (
-                thread.last_message_id
-                if self.last_message_id is None
-                else self.last_message_id
-            )
-            self.message_count = (
-                thread.message_count
-                if self.message_count is None
-                else self.message_count
-            )
+            self.last_message_id = thread.last_message_id if self.last_message_id is None else self.last_message_id
+            self.message_count = thread.message_count if self.message_count is None else self.message_count
             self.total_message_sent = (
-                thread.total_message_sent
-                if self.total_message_sent is None
-                else self.total_message_sent
+                thread.total_message_sent if self.total_message_sent is None else self.total_message_sent
             )
-            self.member_count = (
-                thread.member_count if self.member_count is None else self.member_count
-            )
+            self.member_count = thread.member_count if self.member_count is None else self.member_count
 
         self._unroll_metadata(data["thread_metadata"])
 
@@ -248,9 +230,7 @@ class Thread(Messageable, Hashable):
         except KeyError:
             pass
 
-        self._applied_tags: list[int] = [
-            int(tag_id) for tag_id in data.get("applied_tags", [])
-        ]
+        self._applied_tags: list[int] = [int(tag_id) for tag_id in data.get("applied_tags", [])]
         self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
 
@@ -306,11 +286,7 @@ class Thread(Messageable, Hashable):
         from .channel import ForumChannel  # to prevent circular import
 
         if isinstance(self.parent, ForumChannel):
-            return [
-                tag
-                for tag_id in self._applied_tags
-                if (tag := self.parent.get_tag(tag_id)) is not None
-            ]
+            return [tag for tag_id in self._applied_tags if (tag := self.parent.get_tag(tag_id)) is not None]
         return []
 
     @property
@@ -332,11 +308,7 @@ class Thread(Messageable, Hashable):
         Optional[:class:`Message`]
             The last message in this channel or ``None`` if not found.
         """
-        return (
-            self._state._get_message(self.last_message_id)
-            if self.last_message_id
-            else None
-        )
+        return self._state._get_message(self.last_message_id) if self.last_message_id else None
 
     @property
     def category(self) -> CategoryChannel | None:
@@ -458,9 +430,7 @@ class Thread(Messageable, Hashable):
             raise ClientException("Parent channel not found")
         return parent.permissions_for(obj)
 
-    async def delete_messages(
-        self, messages: Iterable[Snowflake], *, reason: str | None = None
-    ) -> None:
+    async def delete_messages(self, messages: Iterable[Snowflake], *, reason: str | None = None) -> None:
         """|coro|
 
         Deletes a list of messages. This is similar to :meth:`Message.delete`
@@ -580,8 +550,9 @@ class Thread(Messageable, Hashable):
             def is_me(m):
                 return m.author == client.user
 
+
             deleted = await thread.purge(limit=100, check=is_me)
-            await thread.send(f'Deleted {len(deleted)} message(s)')
+            await thread.send(f"Deleted {len(deleted)} message(s)")
         """
         return await _purge_messages_helper(
             self,
@@ -907,10 +878,7 @@ class ThreadMember(Hashable):
         self._from_data(data)
 
     def __repr__(self) -> str:
-        return (
-            "<ThreadMember"
-            f" id={self.id} thread_id={self.thread_id} joined_at={self.joined_at!r}>"
-        )
+        return f"<ThreadMember id={self.id} thread_id={self.thread_id} joined_at={self.joined_at!r}>"
 
     def _from_data(self, data: ThreadMemberPayload):
         try:

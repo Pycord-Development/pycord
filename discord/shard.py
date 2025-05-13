@@ -70,9 +70,7 @@ class EventType:
 class EventItem:
     __slots__ = ("type", "shard", "error")
 
-    def __init__(
-        self, etype: int, shard: Shard | None, error: Exception | None
-    ) -> None:
+    def __init__(self, etype: int, shard: Shard | None, error: Exception | None) -> None:
         self.type: int = etype
         self.shard: Shard | None = shard
         self.error: Exception | None = error
@@ -154,11 +152,7 @@ class Shard:
 
         if isinstance(e, ConnectionClosed):
             if e.code == 4014:
-                self._queue_put(
-                    EventItem(
-                        EventType.terminate, self, PrivilegedIntentsRequired(self.id)
-                    )
-                )
+                self._queue_put(EventItem(EventType.terminate, self, PrivilegedIntentsRequired(self.id)))
                 return
             if e.code != 1000:
                 self._queue_put(EventItem(EventType.close, self, e))
@@ -352,9 +346,7 @@ class AutoShardedClient(Client):
 
         if self.shard_ids is not None:
             if self.shard_count is None:
-                raise ClientException(
-                    "When passing manual shard_ids, you must provide a shard_count."
-                )
+                raise ClientException("When passing manual shard_ids, you must provide a shard_count.")
             elif not isinstance(self.shard_ids, (list, tuple)):
                 raise ClientException("shard_ids parameter must be a list or a tuple.")
 
@@ -365,9 +357,7 @@ class AutoShardedClient(Client):
         self._connection._get_client = lambda: self
         self.__queue = asyncio.PriorityQueue()
 
-    def _get_websocket(
-        self, guild_id: int | None = None, *, shard_id: int | None = None
-    ) -> DiscordWebSocket:
+    def _get_websocket(self, guild_id: int | None = None, *, shard_id: int | None = None) -> DiscordWebSocket:
         if shard_id is None:
             # guild_id won't be None if shard_id is None and shard_count won't be None here
             shard_id = (guild_id >> 22) % self.shard_count  # type: ignore
@@ -402,9 +392,7 @@ class AutoShardedClient(Client):
 
         This returns a list of tuples with elements ``(shard_id, latency)``.
         """
-        return [
-            (shard_id, shard.ws.latency) for shard_id, shard in self.__shards.items()
-        ]
+        return [(shard_id, shard.ws.latency) for shard_id, shard in self.__shards.items()]
 
     def get_shard(self, shard_id: int) -> ShardInfo | None:
         """Gets the shard information at a given shard ID or ``None`` if not found."""
@@ -418,18 +406,11 @@ class AutoShardedClient(Client):
     @property
     def shards(self) -> dict[int, ShardInfo]:
         """Returns a mapping of shard IDs to their respective info object."""
-        return {
-            shard_id: ShardInfo(parent, self.shard_count)
-            for shard_id, parent in self.__shards.items()
-        }
+        return {shard_id: ShardInfo(parent, self.shard_count) for shard_id, parent in self.__shards.items()}
 
-    async def launch_shard(
-        self, gateway: str, shard_id: int, *, initial: bool = False
-    ) -> None:
+    async def launch_shard(self, gateway: str, shard_id: int, *, initial: bool = False) -> None:
         try:
-            coro = DiscordWebSocket.from_client(
-                self, initial=initial, gateway=gateway, shard_id=shard_id
-            )
+            coro = DiscordWebSocket.from_client(self, initial=initial, gateway=gateway, shard_id=shard_id)
             ws = await asyncio.wait_for(coro, timeout=180.0)
         except Exception:
             _log.exception("Failed to connect for shard_id: %s. Retrying...", shard_id)
@@ -494,10 +475,7 @@ class AutoShardedClient(Client):
             except Exception:
                 pass
 
-        to_close = [
-            asyncio.ensure_future(shard.close(), loop=self.loop)
-            for shard in self.__shards.values()
-        ]
+        to_close = [asyncio.ensure_future(shard.close(), loop=self.loop) for shard in self.__shards.values()]
         if to_close:
             await asyncio.wait(to_close)
 

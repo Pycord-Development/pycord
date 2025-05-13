@@ -84,7 +84,7 @@ def when_mentioned_or(
 
     .. code-block:: python3
 
-        bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'))
+        bot = commands.Bot(command_prefix=commands.when_mentioned_or("!"))
 
     .. note::
 
@@ -94,7 +94,7 @@ def when_mentioned_or(
         .. code-block:: python3
 
             async def get_prefix(bot, message):
-                extras = await prefixes_for(message.guild) # returns a list
+                extras = await prefixes_for(message.guild)  # returns a list
                 return commands.when_mentioned_or(*extras)(bot, message)
     """
 
@@ -129,9 +129,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
     ):
         super().__init__(**options)
         self.command_prefix = command_prefix
-        self.help_command = (
-            DefaultHelpCommand() if help_command is MISSING else help_command
-        )
+        self.help_command = DefaultHelpCommand() if help_command is MISSING else help_command
         self.strip_after_prefix = options.get("strip_after_prefix", False)
 
     @discord.utils.copy_doc(discord.Client.close)
@@ -150,9 +148,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
 
         await super().close()  # type: ignore
 
-    async def on_command_error(
-        self, context: Context, exception: errors.CommandError
-    ) -> None:
+    async def on_command_error(self, context: Context, exception: errors.CommandError) -> None:
         """|coro|
 
         The default command error handler provided by the bot.
@@ -174,9 +170,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
             return
 
         print(f"Ignoring exception in command {context.command}:", file=sys.stderr)
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stderr)
 
     async def can_run(self, ctx: Context, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks
@@ -246,9 +240,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 )
 
             if not ret:
-                raise ValueError(
-                    "Iterable command_prefix must contain at least one prefix"
-                )
+                raise ValueError("Iterable command_prefix must contain at least one prefix")
 
         return ret
 
@@ -306,8 +298,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
             except TypeError:
                 if not isinstance(prefix, list):
                     raise TypeError(
-                        "get_prefix must return either a string or a list of string, "
-                        f"not {prefix.__class__.__name__}"
+                        f"get_prefix must return either a string or a list of string, not {prefix.__class__.__name__}"
                     )
 
                 # It's possible a bad command_prefix got us here.

@@ -119,9 +119,7 @@ class ActionRow(Component):
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.children: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
-        ]
+        self.children: list[Component] = [_component_factory(d) for d in data.get("components", [])]
 
     def to_dict(self) -> ActionRowPayload:
         return {
@@ -349,12 +347,8 @@ class SelectMenu(Component):
         self.min_values: int = data.get("min_values", 1)
         self.max_values: int = data.get("max_values", 1)
         self.disabled: bool = data.get("disabled", False)
-        self.options: list[SelectOption] = [
-            SelectOption.from_dict(option) for option in data.get("options", [])
-        ]
-        self.channel_types: list[ChannelType] = [
-            try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
-        ]
+        self.options: list[SelectOption] = [SelectOption.from_dict(option) for option in data.get("options", [])]
+        self.channel_types: list[ChannelType] = [try_enum(ChannelType, ct) for ct in data.get("channel_types", [])]
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -457,8 +451,7 @@ class SelectOption:
                 value = value._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not"
-                    f" {value.__class__}"
+                    f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji, not {value.__class__}"
                 )
 
         self._emoji = value

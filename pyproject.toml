@@ -106,9 +106,12 @@ exclude = [
 [tool.ruff.lint]
 select = ["ALL"]
 per-file-ignores = {}
+# When ignoring a rule globally, please consider if it can be ignored in a more specific way.
+# Also, leave a comment explaining why the rule is ignored.
 extend-ignore = [
-    "A001",
+    "A001", # Ignored when migrating from original codebase, idem for others if not mentioned otherwise
     "A002",
+    "A005",
     "ANN001",
     "ANN002",
     "ANN003",
@@ -289,7 +292,8 @@ extend-ignore = [
     "SIM116",
     "SLF001",
     "W293",
-    "D211"
+    "D211",
+    "D203" # conflicts with formatter
 ]
 
 [tool.mypy]

@@ -186,15 +186,15 @@ class EmbedMedia:  # Thumbnail, Image, Video
     def from_dict(cls, data: dict[str, str | int]) -> EmbedMedia:
         self = cls.__new__(cls)
         self.url = str(data.get("url"))
-        self.proxy_url = (
-            str(proxy_url) if (proxy_url := data.get("proxy_url")) else None
-        )
+        self.proxy_url = str(proxy_url) if (proxy_url := data.get("proxy_url")) else None
         self.height = int(height) if (height := data.get("height")) else None
         self.width = int(width) if (width := data.get("width")) else None
         return self
 
     def __repr__(self) -> str:
-        return f"<EmbedMedia url={self.url!r} proxy_url={self.proxy_url!r}> height={self.height!r} width={self.width!r}>"
+        return (
+            f"<EmbedMedia url={self.url!r} proxy_url={self.proxy_url!r}> height={self.height!r} width={self.width!r}>"
+        )
 
 
 class EmbedProvider:
@@ -527,10 +527,7 @@ class Embed:
         elif isinstance(value, int):
             self._colour = Colour(value=value)
         else:
-            raise TypeError(
-                "Expected discord.Colour, int, or None but received"
-                f" {value.__class__.__name__} instead."
-            )
+            raise TypeError(f"Expected discord.Colour, int, or None but received {value.__class__.__name__} instead.")
 
     color = colour
 
@@ -547,10 +544,7 @@ class Embed:
         elif value is None:
             self._timestamp = value
         else:
-            raise TypeError(
-                "Expected datetime.datetime or None. Received"
-                f" {value.__class__.__name__} instead"
-            )
+            raise TypeError(f"Expected datetime.datetime or None. Received {value.__class__.__name__} instead")
 
     @property
     def footer(self) -> EmbedFooter | None:
@@ -572,10 +566,7 @@ class Embed:
         elif isinstance(value, EmbedFooter):
             self._footer = value.to_dict()
         else:
-            raise TypeError(
-                "Expected EmbedFooter or None. Received"
-                f" {value.__class__.__name__} instead"
-            )
+            raise TypeError(f"Expected EmbedFooter or None. Received {value.__class__.__name__} instead")
 
     def set_footer(
         self: E,
@@ -648,10 +639,7 @@ class Embed:
         elif isinstance(value, EmbedMedia):
             self.set_image(url=value.url)
         else:
-            raise TypeError(
-                "Expected discord.EmbedMedia, or None but received"
-                f" {value.__class__.__name__} instead."
-            )
+            raise TypeError(f"Expected discord.EmbedMedia, or None but received {value.__class__.__name__} instead.")
 
     def set_image(self: E, *, url: Any | None) -> E:
         """Sets the image for the embed content.
@@ -722,10 +710,7 @@ class Embed:
         elif isinstance(value, EmbedMedia):
             self.set_thumbnail(url=value.url)
         else:
-            raise TypeError(
-                "Expected discord.EmbedMedia, or None but received"
-                f" {value.__class__.__name__} instead."
-            )
+            raise TypeError(f"Expected discord.EmbedMedia, or None but received {value.__class__.__name__} instead.")
 
     def set_thumbnail(self: E, *, url: Any | None) -> E:
         """Sets the thumbnail for the embed content.
@@ -819,10 +804,7 @@ class Embed:
         elif isinstance(value, EmbedAuthor):
             self._author = value.to_dict()
         else:
-            raise TypeError(
-                "Expected discord.EmbedAuthor, or None but received"
-                f" {value.__class__.__name__} instead."
-            )
+            raise TypeError(f"Expected discord.EmbedAuthor, or None but received {value.__class__.__name__} instead.")
 
     def set_author(
         self: E,
@@ -934,9 +916,7 @@ class Embed:
 
         return self
 
-    def insert_field_at(
-        self: E, index: int, *, name: Any, value: Any, inline: bool = True
-    ) -> E:
+    def insert_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
         """Inserts a field before a specified index to the embed.
 
         This function returns the class instance to allow for fluent-style
@@ -989,9 +969,7 @@ class Embed:
         except IndexError:
             pass
 
-    def set_field_at(
-        self: E, index: int, *, name: Any, value: Any, inline: bool = True
-    ) -> E:
+    def set_field_at(self: E, index: int, *, name: Any, value: Any, inline: bool = True) -> E:
         """Modifies a field to the embed object.
 
         The index must point to a valid pre-existing field. There must be 25 fields or fewer.
@@ -1064,13 +1042,9 @@ class Embed:
         else:
             if timestamp:
                 if timestamp.tzinfo:
-                    result["timestamp"] = timestamp.astimezone(
-                        tz=datetime.timezone.utc
-                    ).isoformat()
+                    result["timestamp"] = timestamp.astimezone(tz=datetime.timezone.utc).isoformat()
                 else:
-                    result["timestamp"] = timestamp.replace(
-                        tzinfo=datetime.timezone.utc
-                    ).isoformat()
+                    result["timestamp"] = timestamp.replace(tzinfo=datetime.timezone.utc).isoformat()
 
         # add in the non-raw attribute ones
         if self.type:

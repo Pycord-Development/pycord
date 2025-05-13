@@ -298,9 +298,7 @@ class ExtensionError(DiscordException):
         self.name: str = name
         message = message or f"Extension {name!r} had an error."
         # clean-up @everyone and @here mentions
-        m = message.replace("@everyone", "@\u200beveryone").replace(
-            "@here", "@\u200bhere"
-        )
+        m = message.replace("@everyone", "@\u200beveryone").replace("@here", "@\u200bhere")
         super().__init__(m, *args)
 
 
@@ -350,10 +348,7 @@ class ExtensionFailed(ExtensionError):
 
     def __init__(self, name: str, original: Exception) -> None:
         self.original: Exception = original
-        msg = (
-            f"Extension {name!r} raised an error: {original.__class__.__name__}:"
-            f" {original}"
-        )
+        msg = f"Extension {name!r} raised an error: {original.__class__.__name__}: {original}"
         super().__init__(msg, name=name)
 
 
@@ -408,6 +403,4 @@ class ApplicationCommandInvokeError(ApplicationCommandError):
 
     def __init__(self, e: Exception) -> None:
         self.original: Exception = e
-        super().__init__(
-            f"Application Command raised an exception: {e.__class__.__name__}: {e}"
-        )
+        super().__init__(f"Application Command raised an exception: {e.__class__.__name__}: {e}")

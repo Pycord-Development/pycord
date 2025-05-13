@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 import importlib.resources
 import logging
@@ -14,20 +16,20 @@ from . import __version__
 import colorlog
 import colorlog.escape_codes
 
-__all__: Sequence[str] = ('start_logging', 'print_banner')
+__all__: Sequence[str] = ("start_logging", "print_banner")
 
 
 day_prefixes: dict[int, str] = {
-    1: 'st',
-    2: 'nd',
-    3: 'rd',
-    4: 'th',
-    5: 'th',
-    6: 'th',
-    7: 'th',
-    8: 'th',
-    9: 'th',
-    0: 'th',
+    1: "st",
+    2: "nd",
+    3: "rd",
+    4: "th",
+    5: "th",
+    6: "th",
+    7: "th",
+    8: "th",
+    9: "th",
+    0: "th",
 }
 
 
@@ -41,7 +43,7 @@ def start_logging(flavor: None | int | str | dict, debug: bool = False):
     if isinstance(flavor, dict):
         logging.config.dictConfig(flavor)
 
-        if flavor.get('handler'):
+        if flavor.get("handler"):
             return
 
         flavor = None
@@ -52,18 +54,18 @@ def start_logging(flavor: None | int | str | dict, debug: bool = False):
 
     colorlog.basicConfig(
         level=flavor,
-        format='%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: '
-        '%(thin)s%(message)s%(reset)s',
+        format="%(log_color)s%(bold)s%(levelname)-1.1s%(thin)s %(asctime)23.23s %(bold)s%(name)s: "
+        "%(thin)s%(message)s%(reset)s",
         stream=sys.stderr,
         log_colors={
-            'DEBUG': 'cyan',
-            'INFO': 'green',
-            'WARNING': 'yellow',
-            'ERROR': 'red',
-            'CRITICAL': 'red, bg_white',
+            "DEBUG": "cyan",
+            "INFO": "green",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "red, bg_white",
         },
     )
-    warnings.simplefilter('always', DeprecationWarning)
+    warnings.simplefilter("always", DeprecationWarning)
     logging.captureWarnings(True)
 
 
@@ -73,27 +75,27 @@ def get_day_prefix(num: int) -> str:
 
 
 def print_banner(
-    bot_name: str = 'A bot',
-    module: str | None = 'pycord',
+    bot_name: str = "A bot",
+    module: str | None = "pycord",
 ):
     banners = importlib.resources.files(module)
 
     for trav in banners.iterdir():
-        if trav.name == 'banner.txt':
+        if trav.name == "banner.txt":
             banner = trav.read_text()
-        elif trav.name == 'ibanner.txt':
+        elif trav.name == "ibanner.txt":
             info_banner = trav.read_text()
 
-    today = datetime.date.today()
+    today = datetime.datetime.now().date()
 
     args = {
         # the # prefix only works on Windows, and the - prefix only works on linux/unix systems
-        'current_time': today.strftime(f'%B the %#d{get_day_prefix(today.day)} of %Y')
-        if os.name == 'nt'
-        else today.strftime(f'%B the %-d{get_day_prefix(today.day)} of %Y'),
-        'py_version': platform.python_version(),
-        'botname': bot_name,
-        'version': __version__
+        "current_time": today.strftime(f"%B the %#d{get_day_prefix(today.day)} of %Y")
+        if os.name == "nt"
+        else today.strftime(f"%B the %-d{get_day_prefix(today.day)} of %Y"),
+        "py_version": platform.python_version(),
+        "botname": bot_name,
+        "version": __version__,
     }
     args |= colorlog.escape_codes.escape_codes
 

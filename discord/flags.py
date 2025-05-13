@@ -76,11 +76,7 @@ class alias_flag_value(flag_value):
 
 def fill_with_flags(*, inverted: bool = False):
     def decorator(cls: type[BF]):
-        cls.VALID_FLAGS = {
-            name: value.flag
-            for name, value in cls.__dict__.items()
-            if isinstance(value, flag_value)
-        }
+        cls.VALID_FLAGS = {name: value.flag for name, value in cls.__dict__.items() if isinstance(value, flag_value)}
 
         if inverted:
             max_bits = max(cls.VALID_FLAGS.values()).bit_length()
@@ -138,9 +134,7 @@ class BaseFlags:
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & other.flag)
         else:
-            raise TypeError(
-                f"'&' not supported between instances of {type(self)} and {type(other)}"
-            )
+            raise TypeError(f"'&' not supported between instances of {type(self)} and {type(other)}")
 
     def __or__(self, other):
         if isinstance(other, self.__class__):
@@ -148,17 +142,13 @@ class BaseFlags:
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value | other.flag)
         else:
-            raise TypeError(
-                f"'|' not supported between instances of {type(self)} and {type(other)}"
-            )
+            raise TypeError(f"'|' not supported between instances of {type(self)} and {type(other)}")
 
     def __add__(self, other):
         try:
             return self | other
         except TypeError:
-            raise TypeError(
-                f"'+' not supported between instances of {type(self)} and {type(other)}"
-            )
+            raise TypeError(f"'+' not supported between instances of {type(self)} and {type(other)}")
 
     def __sub__(self, other):
         if isinstance(other, self.__class__):
@@ -166,9 +156,7 @@ class BaseFlags:
         elif isinstance(other, flag_value):
             return self.__class__._from_value(self.value & ~other.flag)
         else:
-            raise TypeError(
-                f"'-' not supported between instances of {type(self)} and {type(other)}"
-            )
+            raise TypeError(f"'-' not supported between instances of {type(self)} and {type(other)}")
 
     def __invert__(self):
         return self.__class__._from_value(~self.value)
@@ -572,11 +560,7 @@ class PublicUserFlags(BaseFlags):
 
     def all(self) -> list[UserFlags]:
         """List[:class:`UserFlags`]: Returns all public flags the user has."""
-        return [
-            public_flag
-            for public_flag in UserFlags
-            if self._has_flag(public_flag.value)
-        ]
+        return [public_flag for public_flag in UserFlags if self._has_flag(public_flag.value)]
 
 
 @fill_with_flags()

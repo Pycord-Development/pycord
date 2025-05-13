@@ -89,10 +89,7 @@ class WidgetChannel:
         return self.name
 
     def __repr__(self) -> str:
-        return (
-            "<WidgetChannel"
-            f" id={self.id} name={self.name!r} position={self.position!r}>"
-        )
+        return f"<WidgetChannel id={self.id} name={self.name!r} position={self.position!r}>"
 
     @property
     def mention(self) -> str:
@@ -182,12 +179,8 @@ class WidgetMember(BaseUser):
         super().__init__(state=state, data=data)
         self.nick: str | None = data.get("nick")
         self.status: Status = try_enum(Status, data.get("status"))
-        self.deafened: bool | None = data.get("deaf", False) or data.get(
-            "self_deaf", False
-        )
-        self.muted: bool | None = data.get("mute", False) or data.get(
-            "self_mute", False
-        )
+        self.deafened: bool | None = data.get("deaf", False) or data.get("self_deaf", False)
+        self.muted: bool | None = data.get("mute", False) or data.get("self_mute", False)
         self.suppress: bool | None = data.get("suppress", False)
 
         try:
@@ -208,21 +201,15 @@ class WidgetMember(BaseUser):
                     f"<WidgetMember name={self.name!r} global_name={self.global_name!r}"
                     f" bot={self.bot} nick={self.nick!r}>"
                 )
-            return (
-                f"<WidgetMember name={self.name!r}"
-                f" bot={self.bot} nick={self.nick!r}>"
-            )
+            return f"<WidgetMember name={self.name!r} bot={self.bot} nick={self.nick!r}>"
         return (
-            f"<WidgetMember name={self.name!r} discriminator={self.discriminator!r}"
-            f" bot={self.bot} nick={self.nick!r}>"
+            f"<WidgetMember name={self.name!r} discriminator={self.discriminator!r} bot={self.bot} nick={self.nick!r}>"
         )
 
     @property
     def display_name(self) -> str:
         """Returns the member's display name."""
-        return self.nick or (
-            self.global_name or self.name if self.is_migrated else self.name
-        )
+        return self.nick or (self.global_name or self.name if self.is_migrated else self.name)
 
 
 class Widget:
@@ -273,11 +260,7 @@ class Widget:
         self.channels: list[WidgetChannel] = []
         for channel in data.get("channels", []):
             _id = int(channel["id"])
-            self.channels.append(
-                WidgetChannel(
-                    id=_id, name=channel["name"], position=channel["position"]
-                )
-            )
+            self.channels.append(WidgetChannel(id=_id, name=channel["name"], position=channel["position"]))
 
         self.members: list[WidgetMember] = []
         channels = {channel.id: channel for channel in self.channels}
@@ -286,15 +269,9 @@ class Widget:
             if connected_channel in channels:
                 connected_channel = channels[connected_channel]  # type: ignore
             elif connected_channel:
-                connected_channel = WidgetChannel(
-                    id=connected_channel, name="", position=0
-                )
+                connected_channel = WidgetChannel(id=connected_channel, name="", position=0)
 
-            self.members.append(
-                WidgetMember(
-                    state=self._state, data=member, connected_channel=connected_channel
-                )
-            )  # type: ignore
+            self.members.append(WidgetMember(state=self._state, data=member, connected_channel=connected_channel))  # type: ignore
 
     def __str__(self) -> str:
         return self.json_url
@@ -305,9 +282,7 @@ class Widget:
         return False
 
     def __repr__(self) -> str:
-        return (
-            f"<Widget id={self.id} name={self.name!r} invite_url={self.invite_url!r}>"
-        )
+        return f"<Widget id={self.id} name={self.name!r} invite_url={self.invite_url!r}>"
 
     @property
     def created_at(self) -> datetime.datetime:

@@ -134,9 +134,7 @@ def unwrap_function(function: Callable[..., Any]) -> Callable[..., Any]:
             return function
 
 
-def get_signature_parameters(
-    function: Callable[..., Any], globalns: dict[str, Any]
-) -> dict[str, inspect.Parameter]:
+def get_signature_parameters(function: Callable[..., Any], globalns: dict[str, Any]) -> dict[str, inspect.Parameter]:
     signature = inspect.signature(function)
     params = {}
     cache: dict[str, Any] = {}
@@ -321,10 +319,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     def __init__(
         self,
-        func: (
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]]
-            | Callable[Concatenate[ContextT, P], Coro[T]]
-        ),
+        func: (Callable[Concatenate[CogT, ContextT, P], Coro[T]] | Callable[Concatenate[ContextT, P], Coro[T]]),
         **kwargs: Any,
     ):
         if not asyncio.iscoroutinefunction(func):
@@ -355,9 +350,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         self.extras: dict[str, Any] = kwargs.get("extras", {})
 
         if not isinstance(self.aliases, (list, tuple)):
-            raise TypeError(
-                "Aliases of a command must be a list or a tuple of strings."
-            )
+            raise TypeError("Aliases of a command must be a list or a tuple of strings.")
 
         self.description: str = inspect.cleandoc(kwargs.get("description", ""))
         self.hidden: bool = kwargs.get("hidden", False)
@@ -380,9 +373,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         elif isinstance(cooldown, CooldownMapping):
             buckets = cooldown
         else:
-            raise TypeError(
-                "Cooldown must be a an instance of CooldownMapping or None."
-            )
+            raise TypeError("Cooldown must be a an instance of CooldownMapping or None.")
         self._buckets: CooldownMapping = buckets
 
         try:
@@ -420,19 +411,13 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     @property
     def callback(
         self,
-    ) -> (
-        Callable[Concatenate[CogT, Context, P], Coro[T]]
-        | Callable[Concatenate[Context, P], Coro[T]]
-    ):
+    ) -> Callable[Concatenate[CogT, Context, P], Coro[T]] | Callable[Concatenate[Context, P], Coro[T]]:
         return self._callback
 
     @callback.setter
     def callback(
         self,
-        function: (
-            Callable[Concatenate[CogT, Context, P], Coro[T]]
-            | Callable[Concatenate[Context, P], Coro[T]]
-        ),
+        function: (Callable[Concatenate[CogT, Context, P], Coro[T]] | Callable[Concatenate[Context, P], Coro[T]]),
     ) -> None:
         self._callback = function
         unwrap = unwrap_function(function)
@@ -575,9 +560,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             required = default is param.empty
 
         converter = get_converter(param)
-        consume_rest_is_special = (
-            param.kind == param.KEYWORD_ONLY and not self.rest_is_raw
-        )
+        consume_rest_is_special = param.kind == param.KEYWORD_ONLY and not self.rest_is_raw
         view = ctx.view
         view.skip_ws()
 
@@ -585,13 +568,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         # it undoes the view ready for the next parameter to use instead
         if isinstance(converter, Greedy):
             if param.kind in (param.POSITIONAL_OR_KEYWORD, param.POSITIONAL_ONLY):
-                return await self._transform_greedy_pos(
-                    ctx, param, required, converter.converter
-                )
+                return await self._transform_greedy_pos(ctx, param, required, converter.converter)
             elif param.kind == param.VAR_POSITIONAL:
-                return await self._transform_greedy_var_pos(
-                    ctx, param, converter.converter
-                )
+                return await self._transform_greedy_var_pos(ctx, param, converter.converter)
             else:
                 # if we're here, then it's a KEYWORD_ONLY param type
                 # since this is mostly useless, we'll helpfully transform Greedy[X]
@@ -604,10 +583,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             if required:
                 if self._is_typing_optional(param.annotation):
                     return None
-                if (
-                    hasattr(converter, "__commands_is_flag__")
-                    and converter._can_be_constructible()
-                ):
+                if hasattr(converter, "__commands_is_flag__") and converter._can_be_constructible():
                     return await converter._construct_default(ctx)
                 raise MissingRequiredArgument(param)
             return default
@@ -651,9 +627,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             return param.default
         return result
 
-    async def _transform_greedy_var_pos(
-        self, ctx: Context, param: inspect.Parameter, converter: Any
-    ) -> Any:
+    async def _transform_greedy_var_pos(self, ctx: Context, param: inspect.Parameter, converter: Any) -> Any:
         view = ctx.view
         previous = view.index
         try:
@@ -767,17 +741,13 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             try:
                 next(iterator)
             except StopIteration:
-                raise discord.ClientException(
-                    f'Callback for {self.name} command is missing "self" parameter.'
-                )
+                raise discord.ClientException(f'Callback for {self.name} command is missing "self" parameter.')
 
         # next we have the 'ctx' as the next parameter
         try:
             next(iterator)
         except StopIteration:
-            raise discord.ClientException(
-                f'Callback for {self.name} command is missing "ctx" parameter.'
-            )
+            raise discord.ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
 
         for name, param in iterator:
             ctx.current_parameter = param
@@ -804,9 +774,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                         break
 
         if not self.ignore_extra and not view.eof:
-            raise TooManyArguments(
-                f"Too many arguments passed to {self.qualified_name}"
-            )
+            raise TooManyArguments(f"Too many arguments passed to {self.qualified_name}")
 
     async def call_before_hooks(self, ctx: Context) -> None:
         # now that we're done preparing we can call the pre-command hooks
@@ -866,9 +834,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         ctx.command = self
 
         if not await self.can_run(ctx):
-            raise CheckFailure(
-                f"The check functions for command {self.qualified_name} failed."
-            )
+            raise CheckFailure(f"The check functions for command {self.qualified_name} failed.")
 
         if self._max_concurrency is not None:
             # For this application, context can be duck-typed as a Message
@@ -1083,11 +1049,8 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
     def _is_typing_optional(self, annotation: T | T | None) -> TypeGuard[T | None]:
         return (
-            getattr(annotation, "__origin__", None) is Union
-            or type(annotation) is getattr(types, "UnionType", Union)
-        ) and type(
-            None
-        ) in annotation.__args__  # type: ignore
+            getattr(annotation, "__origin__", None) is Union or type(annotation) is getattr(types, "UnionType", Union)
+        ) and type(None) in annotation.__args__  # type: ignore
 
     @property
     def signature(self) -> str:
@@ -1117,24 +1080,13 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                     origin = getattr(annotation, "__origin__", None)
 
             if origin is Literal:
-                name = "|".join(
-                    f'"{v}"' if isinstance(v, str) else str(v)
-                    for v in annotation.__args__
-                )
+                name = "|".join(f'"{v}"' if isinstance(v, str) else str(v) for v in annotation.__args__)
             if param.default is not param.empty:
                 # We don't want None or '' to trigger the [name=value] case, and instead it should
                 # do [name] since [name=None] or [name=] are not exactly useful for the user.
-                should_print = (
-                    param.default
-                    if isinstance(param.default, str)
-                    else param.default is not None
-                )
+                should_print = param.default if isinstance(param.default, str) else param.default is not None
                 if should_print:
-                    result.append(
-                        f"[{name}={param.default}]"
-                        if not greedy
-                        else f"[{name}={param.default}]..."
-                    )
+                    result.append(f"[{name}={param.default}]" if not greedy else f"[{name}={param.default}]...")
                     continue
                 else:
                     result.append(f"[{name}]")
@@ -1188,10 +1140,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         try:
             if not await ctx.bot.can_run(ctx):
-                raise CheckFailure(
-                    "The global check functions for command"
-                    f" {self.qualified_name} failed."
-                )
+                raise CheckFailure(f"The global check functions for command {self.qualified_name} failed.")
 
             cog = self.cog
             if cog is not None:
@@ -1229,9 +1178,7 @@ class GroupMixin(Generic[CogT]):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         case_insensitive = kwargs.get("case_insensitive", False)
-        self.prefixed_commands: dict[str, Command[CogT, Any, Any]] = (
-            _CaseInsensitiveDict() if case_insensitive else {}
-        )
+        self.prefixed_commands: dict[str, Command[CogT, Any, Any]] = _CaseInsensitiveDict() if case_insensitive else {}
         self.case_insensitive: bool = case_insensitive
         super().__init__(*args, **kwargs)
 
@@ -1392,12 +1339,7 @@ class GroupMixin(Generic[CogT]):
         *args: Any,
         **kwargs: Any,
     ) -> Callable[
-        [
-            (
-                Callable[Concatenate[CogT, ContextT, P], Coro[T]]
-                | Callable[Concatenate[ContextT, P], Coro[T]]
-            )
-        ],
+        [(Callable[Concatenate[CogT, ContextT, P], Coro[T]] | Callable[Concatenate[ContextT, P], Coro[T]])],
         Command[CogT, P, T],
     ]: ...
 
@@ -1442,12 +1384,7 @@ class GroupMixin(Generic[CogT]):
         *args: Any,
         **kwargs: Any,
     ) -> Callable[
-        [
-            (
-                Callable[Concatenate[CogT, ContextT, P], Coro[T]]
-                | Callable[Concatenate[ContextT, P], Coro[T]]
-            )
-        ],
+        [(Callable[Concatenate[CogT, ContextT, P], Coro[T]] | Callable[Concatenate[ContextT, P], Coro[T]])],
         Group[CogT, P, T],
     ]: ...
 
@@ -1606,14 +1543,7 @@ def command(
     cls: type[Command[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
-    [
-        (
-            Callable[Concatenate[CogT, ContextT, P]]
-            | Coro[T]
-            | Callable[Concatenate[ContextT, P]]
-            | Coro[T]
-        )
-    ],
+    [(Callable[Concatenate[CogT, ContextT, P]] | Coro[T] | Callable[Concatenate[ContextT, P]] | Coro[T])],
     Command[CogT, P, T],
 ]: ...
 
@@ -1624,12 +1554,7 @@ def command(
     cls: type[Command[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
-    [
-        (
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]]
-            | Callable[Concatenate[ContextT, P], Coro[T]]
-        )
-    ],
+    [(Callable[Concatenate[CogT, ContextT, P], Coro[T]] | Callable[Concatenate[ContextT, P], Coro[T]])],
     Command[CogT, P, T],
 ]: ...
 
@@ -1640,12 +1565,7 @@ def command(
     cls: type[CommandT] = ...,
     **attrs: Any,
 ) -> Callable[
-    [
-        (
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]]
-            | Callable[Concatenate[ContextT, P], Coro[Any]]
-        )
-    ],
+    [(Callable[Concatenate[CogT, ContextT, P], Coro[Any]] | Callable[Concatenate[ContextT, P], Coro[Any]])],
     CommandT,
 ]: ...
 
@@ -1653,12 +1573,7 @@ def command(
 def command(
     name: str | utils.Undefined = MISSING, cls: type[CommandT] | utils.Undefined = MISSING, **attrs: Any
 ) -> Callable[
-    [
-        (
-            Callable[Concatenate[ContextT, P], Coro[Any]]
-            | Callable[Concatenate[CogT, ContextT, P], Coro[T]]
-        )
-    ],
+    [(Callable[Concatenate[ContextT, P], Coro[Any]] | Callable[Concatenate[CogT, ContextT, P], Coro[T]])],
     Command[CogT, P, T] | CommandT,
 ]:
     """A decorator that transforms a function into a :class:`.Command`
@@ -1694,10 +1609,7 @@ def command(
         cls = Command  # type: ignore
 
     def decorator(
-        func: (
-            Callable[Concatenate[ContextT, P], Coro[Any]]
-            | Callable[Concatenate[CogT, ContextT, P], Coro[Any]]
-        ),
+        func: (Callable[Concatenate[ContextT, P], Coro[Any]] | Callable[Concatenate[CogT, ContextT, P], Coro[Any]]),
     ) -> CommandT:
         if isinstance(func, Command):
             raise TypeError("Callback is already a command.")
@@ -1712,12 +1624,7 @@ def group(
     cls: type[Group[CogT, P, T]] = ...,
     **attrs: Any,
 ) -> Callable[
-    [
-        (
-            Callable[Concatenate[CogT, ContextT, P], Coro[T]]
-            | Callable[Concatenate[ContextT, P], Coro[T]]
-        )
-    ],
+    [(Callable[Concatenate[CogT, ContextT, P], Coro[T]] | Callable[Concatenate[ContextT, P], Coro[T]])],
     Group[CogT, P, T],
 ]: ...
 
@@ -1728,12 +1635,7 @@ def group(
     cls: type[GroupT] = ...,
     **attrs: Any,
 ) -> Callable[
-    [
-        (
-            Callable[Concatenate[CogT, ContextT, P], Coro[Any]]
-            | Callable[Concatenate[ContextT, P], Coro[Any]]
-        )
-    ],
+    [(Callable[Concatenate[CogT, ContextT, P], Coro[Any]] | Callable[Concatenate[ContextT, P], Coro[Any]])],
     GroupT,
 ]: ...
 
@@ -1743,12 +1645,7 @@ def group(
     cls: type[GroupT] | utils.Undefined = MISSING,
     **attrs: Any,
 ) -> Callable[
-    [
-        (
-            Callable[Concatenate[ContextT, P], Coro[Any]]
-            | Callable[Concatenate[CogT, ContextT, P], Coro[T]]
-        )
-    ],
+    [(Callable[Concatenate[ContextT, P], Coro[Any]] | Callable[Concatenate[CogT, ContextT, P], Coro[T]])],
     Group[CogT, P, T] | GroupT,
 ]:
     """A decorator that transforms a function into a :class:`.Group`.
@@ -1786,10 +1683,12 @@ def check(predicate: Check) -> Callable[[T], T]:
 
         def owner_or_permissions(**perms):
             original = commands.has_permissions(**perms).predicate
+
             async def extended_check(ctx):
                 if ctx.guild is None:
                     return False
                 return ctx.guild.owner_id == ctx.author.id or await original(ctx)
+
             return commands.check(extended_check)
 
     .. note::
@@ -1810,10 +1709,11 @@ def check(predicate: Check) -> Callable[[T], T]:
         def check_if_it_is_me(ctx):
             return ctx.message.author.id == 85309593344815104
 
+
         @bot.command()
         @commands.check(check_if_it_is_me)
         async def only_for_me(ctx):
-            await ctx.send('I know you!')
+            await ctx.send("I know you!")
 
     Transforming common checks into its own decorator:
 
@@ -1822,12 +1722,14 @@ def check(predicate: Check) -> Callable[[T], T]:
         def is_me():
             def predicate(ctx):
                 return ctx.message.author.id == 85309593344815104
+
             return commands.check(predicate)
+
 
         @bot.command()
         @is_me()
         async def only_me(ctx):
-            await ctx.send('Only you!')
+            await ctx.send("Only you!")
 
     Parameters
     -----------
@@ -1895,12 +1797,14 @@ def check_any(*checks: Check) -> Callable[[T], T]:
         def is_guild_owner():
             def predicate(ctx):
                 return ctx.guild is not None and ctx.guild.owner_id == ctx.author.id
+
             return commands.check(predicate)
+
 
         @bot.command()
         @commands.check_any(commands.is_owner(), is_guild_owner())
         async def only_for_owners(ctx):
-            await ctx.send('Hello mister owner!')
+            await ctx.send("Hello mister owner!")
     """
 
     unwrapped = []
@@ -1908,9 +1812,7 @@ def check_any(*checks: Check) -> Callable[[T], T]:
         try:
             pred = wrapped.predicate
         except AttributeError:
-            raise TypeError(
-                f"{wrapped!r} must be wrapped by commands.check decorator"
-            ) from None
+            raise TypeError(f"{wrapped!r} must be wrapped by commands.check decorator") from None
         else:
             unwrapped.append(pred)
 
@@ -2000,9 +1902,9 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
     .. code-block:: python3
 
         @bot.command()
-        @commands.has_any_role('Library Devs', 'Moderators', 492212595072434186)
+        @commands.has_any_role("Library Devs", "Moderators", 492212595072434186)
         async def cool(ctx):
-            await ctx.send('You are cool indeed')
+            await ctx.send("You are cool indeed")
     """
 
     def predicate(ctx):
@@ -2012,12 +1914,7 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
         # ctx.guild is None doesn't narrow ctx.author to Member
         getter = functools.partial(discord.utils.get, ctx.author.roles)  # type: ignore
         if any(
-            (
-                getter(id=item) is not None
-                if isinstance(item, int)
-                else getter(name=item) is not None
-            )
-            for item in items
+            (getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None) for item in items
         ):
             return True
         raise MissingAnyRole(list(items))
@@ -2076,12 +1973,7 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
         me = ctx.me
         getter = functools.partial(discord.utils.get, me.roles)
         if any(
-            (
-                getter(id=item) is not None
-                if isinstance(item, int)
-                else getter(name=item) is not None
-            )
-            for item in items
+            (getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None) for item in items
         ):
             return True
         raise BotMissingAnyRole(list(items))
@@ -2117,7 +2009,7 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
         @bot.command()
         @commands.has_permissions(manage_messages=True)
         async def test(ctx):
-            await ctx.send('You can manage messages.')
+            await ctx.send("You can manage messages.")
 
     """
 
@@ -2130,9 +2022,7 @@ def has_permissions(**perms: bool) -> Callable[[T], T]:
             return True
         permissions = ctx.channel.permissions_for(ctx.author)  # type: ignore
 
-        missing = [
-            perm for perm, value in perms.items() if getattr(permissions, perm) != value
-        ]
+        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 
         if not missing:
             return True
@@ -2165,9 +2055,7 @@ def bot_has_permissions(**perms: bool) -> Callable[[T], T]:
         else:
             permissions = ctx.channel.permissions_for(me)  # type: ignore
 
-        missing = [
-            perm for perm, value in perms.items() if getattr(permissions, perm) != value
-        ]
+        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 
         if not missing:
             return True
@@ -2196,9 +2084,7 @@ def has_guild_permissions(**perms: bool) -> Callable[[T], T]:
             raise NoPrivateMessage
 
         permissions = ctx.author.guild_permissions  # type: ignore
-        missing = [
-            perm for perm, value in perms.items() if getattr(permissions, perm) != value
-        ]
+        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 
         if not missing:
             return True
@@ -2224,9 +2110,7 @@ def bot_has_guild_permissions(**perms: bool) -> Callable[[T], T]:
             raise NoPrivateMessage
 
         permissions = ctx.me.guild_permissions  # type: ignore
-        missing = [
-            perm for perm, value in perms.items() if getattr(permissions, perm) != value
-        ]
+        missing = [perm for perm, value in perms.items() if getattr(permissions, perm) != value]
 
         if not missing:
             return True
@@ -2304,9 +2188,7 @@ def is_nsfw() -> Callable[[T], T]:
 
     def pred(ctx: Context) -> bool:
         ch = ctx.channel
-        if ctx.guild is None or (
-            isinstance(ch, (discord.TextChannel, discord.Thread)) and ch.is_nsfw()
-        ):
+        if ctx.guild is None or (isinstance(ch, (discord.TextChannel, discord.Thread)) and ch.is_nsfw()):
             return True
         raise NSFWChannelRequired(ch)  # type: ignore
 
@@ -2399,9 +2281,7 @@ def dynamic_cooldown(
     return decorator  # type: ignore
 
 
-def max_concurrency(
-    number: int, per: BucketType = BucketType.default, *, wait: bool = False
-) -> Callable[[T], T]:
+def max_concurrency(number: int, per: BucketType = BucketType.default, *, wait: bool = False) -> Callable[[T], T]:
     """A decorator that adds a maximum concurrency to a command
 
     This enables you to only allow a certain number of command invocations at the same time,
@@ -2450,27 +2330,29 @@ def before_invoke(coro) -> Callable[[T], T]:
     .. code-block:: python3
 
         async def record_usage(ctx):
-            print(ctx.author, 'used', ctx.command, 'at', ctx.message.created_at)
+            print(ctx.author, "used", ctx.command, "at", ctx.message.created_at)
+
 
         @bot.command()
         @commands.before_invoke(record_usage)
-        async def who(ctx): # Output: <User> used who at <Time>
-            await ctx.send('I am a bot')
+        async def who(ctx):  # Output: <User> used who at <Time>
+            await ctx.send("I am a bot")
+
 
         class What(commands.Cog):
-
             @commands.before_invoke(record_usage)
             @commands.command()
-            async def when(self, ctx): # Output: <User> used when at <Time>
-                await ctx.send(f'and I have existed since {ctx.bot.user.created_at}')
+            async def when(self, ctx):  # Output: <User> used when at <Time>
+                await ctx.send(f"and I have existed since {ctx.bot.user.created_at}")
 
             @commands.command()
-            async def where(self, ctx): # Output: <Nothing>
-                await ctx.send('on Discord')
+            async def where(self, ctx):  # Output: <Nothing>
+                await ctx.send("on Discord")
 
             @commands.command()
-            async def why(self, ctx): # Output: <Nothing>
-                await ctx.send('because someone made me')
+            async def why(self, ctx):  # Output: <Nothing>
+                await ctx.send("because someone made me")
+
 
         bot.add_cog(What())
     """
