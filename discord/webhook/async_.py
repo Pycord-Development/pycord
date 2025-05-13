@@ -104,8 +104,9 @@ class AsyncDeferredLock:
 
 
 class AsyncWebhookAdapter:
-    def __init__(self):
+    def __init__(self, *, discord_api_url: str = "https://discord.com/api/v10"):
         self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
+        self.api_url = discord_api_url
 
     async def request(
         self,
@@ -144,7 +145,7 @@ class AsyncWebhookAdapter:
         response: aiohttp.ClientResponse | None = None
         data: dict[str, Any] | str | None = None
         method = route.method
-        url = route.url
+        url = route.merge(self.api_url)
         webhook_id = route.webhook_id
 
         async with AsyncDeferredLock(lock) as lock:

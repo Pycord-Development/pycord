@@ -96,8 +96,9 @@ class DeferredLock:
 
 
 class WebhookAdapter:
-    def __init__(self):
+    def __init__(self, *, discord_api_url: str = "https://discord.com/api/v10"):
         self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
+        self.api_url = discord_api_url
 
     def request(
         self,
@@ -135,7 +136,7 @@ class WebhookAdapter:
         data: dict[str, Any] | str | None = None
         file_data: dict[str, Any] | None = None
         method = route.method
-        url = route.url
+        url = route.merge(self.api_url)
         webhook_id = route.webhook_id
 
         with DeferredLock(lock) as lock:
