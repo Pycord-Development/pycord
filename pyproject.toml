@@ -63,6 +63,15 @@ docs = [
     "typing-extensions==4.13.1",
 ]
 dev = [
+    "bandit==1.8.3",
+    "codespell==2.4.1",
+    "coverage~=7.8",
+    "flake8==7.1.2",
+    "mypy~=1.15.0",
+    "pre-commit==4.2.0",
+    "pylint~=3.3.6",
+    "pytest~=8.3.5",
+    "pytest-asyncio~=0.24.0",
     "ruff>=0.11.9",
 ]
 
