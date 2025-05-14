@@ -706,8 +706,8 @@ async def get_or_fetch(
             lambda obj, oid: obj.fetch_member(oid),
         ),
         Role: (
-            lambda obj, oid: obj.get_member(oid),
-            lambda obj, oid: obj.fetch_member(oid),
+            lambda obj, oid: obj.get_role(oid),
+            lambda obj, oid: obj._fetch_role(oid),
         ),
         User: (
             lambda obj, oid: obj.get_user(oid),
