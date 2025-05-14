@@ -875,7 +875,7 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]
+        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`]
             Type of object to fetch or get.
 
         object_id: :class:`int`
@@ -887,7 +887,7 @@ class Guild(Hashable):
         Returns
         -------
 
-        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Member`, :class:`GuildEmoji`]]
+        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`]]
             The object of type that was specified or ``None`` if not found.
 
         Raises

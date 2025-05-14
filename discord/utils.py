@@ -75,6 +75,7 @@ if TYPE_CHECKING:
         Member,
         User,
         Guild,
+        Role,
         GuildEmoji,
         AppEmoji,
     )
@@ -591,7 +592,7 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 _FETCHABLE = TypeVar(
     "_FETCHABLE",
-    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | GuildEmoji | AppEmoji",
+    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | Role | GuildEmoji | AppEmoji",
 )
 
 
@@ -610,7 +611,7 @@ async def get_or_fetch(
     ----------
     obj : Guild | Client
         The object to operate on.
-    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]
+    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]
         Type of object to fetch or get.
 
     object_id: :class:`int`
@@ -622,7 +623,7 @@ async def get_or_fetch(
     Returns
     -------
 
-    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]]
+    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]]
         The object of type that was specified or ``None`` if not found.
 
     Raises
@@ -634,15 +635,7 @@ async def get_or_fetch(
     :exc:`Forbidden`
         You do not have permission to fetch the object
     """
-    from discord import (
-        AppEmoji,
-        Client,
-        Guild,
-        Member,
-        User,
-        abc,
-        emoji,
-    )
+    from discord import AppEmoji, Client, Guild, Member, Role, User, abc, emoji
 
     string_to_type = {
         "channel": abc.GuildChannel,
@@ -651,6 +644,7 @@ async def get_or_fetch(
         "guild": Guild,
         "emoji": emoji._EmojiTag,
         "appemoji": AppEmoji,
+        "role": Role,
     }
 
     if attr is not MISSING or id is not MISSING or isinstance(object_type, str):
@@ -686,6 +680,8 @@ async def get_or_fetch(
         attr = object_type.__name__.lower()
     elif issubclass(object_type, emoji._EmojiTag):
         attr = "emoji"
+    elif issubclass(object_type, Role):
+        attr = "role"
     elif issubclass(object_type, abc.GuildChannel):
         attr = "channel"
     else:
@@ -697,14 +693,19 @@ async def get_or_fetch(
         raise InvalidArgument(
             "Guild cannot get_or_fetch discord.User. Use Client instead."
         )
-    if isinstance(obj, Client) and object_type is Member:
+    elif isinstance(obj, Client) and object_type is Member:
         raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
-
-    if isinstance(obj, Guild) and object_type is Guild:
-        raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
+    elif isinstance(obj, Client) and object_type is Role:
+        raise InvalidArgument("Client cannot get_or_fetch Role. Use Guild instead.")
+    elif isinstance(obj, Guild) and object_type is Guild:
+        raise InvalidArgument("Guild cannot get_or_fetch Guild. Use Client instead.")
 
     getter_fetcher_map = {
         Member: (
+            lambda obj, oid: obj.get_member(oid),
+            lambda obj, oid: obj.fetch_member(oid),
+        ),
+        Role: (
             lambda obj, oid: obj.get_member(oid),
             lambda obj, oid: obj.fetch_member(oid),
         ),
