@@ -4,7 +4,6 @@ import asyncio
 import os
 import sys
 import time
-import traceback
 from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable
