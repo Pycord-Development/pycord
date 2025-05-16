@@ -29,7 +29,6 @@ import asyncio
 import os
 import sys
 import time
-import traceback
 from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
@@ -37,12 +36,19 @@ from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
 from ..components import Component
+from ..components import Container as ContainerComponent
+from ..components import FileComponent
+from ..components import MediaGallery as MediaGalleryComponent
+from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
+from ..components import Separator as SeparatorComponent
+from ..components import TextDisplay as TextDisplayComponent
+from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..utils import get
+from ..utils import find, get
 from .item import Item, ItemCallbackType
 
-__all__ = ("View",)
+__all__ = ("View", "_component_to_item", "_walk_all_components")
 
 
 if TYPE_CHECKING:
@@ -69,6 +75,38 @@ def _component_to_item(component: Component) -> Item:
         from .select import Select
 
         return Select.from_component(component)
+    if isinstance(component, SectionComponent):
+        from .section import Section
+
+        return Section.from_component(component)
+    if isinstance(component, TextDisplayComponent):
+        from .text_display import TextDisplay
+
+        return TextDisplay.from_component(component)
+    if isinstance(component, ThumbnailComponent):
+        from .thumbnail import Thumbnail
+
+        return Thumbnail.from_component(component)
+    if isinstance(component, MediaGalleryComponent):
+        from .media_gallery import MediaGallery
+
+        return MediaGallery.from_component(component)
+    if isinstance(component, FileComponent):
+        from .file import File
+
+        return File.from_component(component)
+    if isinstance(component, SeparatorComponent):
+        from .separator import Separator
+
+        return Separator.from_component(component)
+    if isinstance(component, ContainerComponent):
+        from .container import Container
+
+        return Container.from_component(component)
+    if isinstance(component, ActionRowComponent):
+        # Handle ActionRow.children manually, or design ui.ActionRow?
+
+        return component
     return Item.from_component(component)
 
 
@@ -86,12 +124,20 @@ class _ViewWeights:
 
     def find_open_space(self, item: Item) -> int:
         for index, weight in enumerate(self.weights):
-            if weight + item.width <= 5:
+            # check if open space AND (next row has no items OR this is the last row)
+            if (weight + item.width <= 5) and (
+                (index < len(self.weights) - 1 and self.weights[index + 1] == 0)
+                or index == len(self.weights) - 1
+            ):
                 return index
 
         raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item) -> None:
+        if (
+            item._underlying.is_v2() or not self.fits_legacy(item)
+        ) and not self.requires_v2():
+            self.weights.extend([0, 0, 0, 0, 0] * 7)
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -112,6 +158,14 @@ class _ViewWeights:
 
     def clear(self) -> None:
         self.weights = [0, 0, 0, 0, 0]
+
+    def requires_v2(self) -> bool:
+        return sum(w > 0 for w in self.weights) > 5 or len(self.weights) > 5
+
+    def fits_legacy(self, item) -> bool:
+        if item.row is not None:
+            return item.row <= 4
+        return self.weights[-1] + item.width <= 5
 
 
 class View:
@@ -156,8 +210,8 @@ class View:
                 if hasattr(member, "__discord_ui_model_type__"):
                     children.append(member)
 
-        if len(children) > 25:
-            raise TypeError("View cannot have more than 25 children")
+        if len(children) > 40:
+            raise TypeError("View cannot have more than 40 children")
 
         cls.__view_children_items__ = children
 
@@ -219,16 +273,20 @@ class View:
         children = sorted(self.children, key=key)
         components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
-            children = [item.to_component_dict() for item in group]
+            items = list(group)
+            children = [item.to_component_dict() for item in items]
             if not children:
                 continue
 
-            components.append(
-                {
-                    "type": 1,
-                    "components": children,
-                }
-            )
+            if any([i._underlying.is_v2() for i in items]):
+                components += children
+            else:
+                components.append(
+                    {
+                        "type": 1,
+                        "components": children,
+                    }
+                )
 
         return components
 
@@ -280,11 +338,11 @@ class View:
         TypeError
             An :class:`Item` was not passed.
         ValueError
-            Maximum number of children has been exceeded (25)
+            Maximum number of children has been exceeded (40)
             or the row the item is trying to be added to is full.
         """
 
-        if len(self.children) > 25:
+        if len(self.children) >= 40:
             raise ValueError("maximum number of children exceeded")
 
         if not isinstance(item, Item):
@@ -293,31 +351,40 @@ class View:
         self.__weights.add_item(item)
 
         item._view = self
+        if hasattr(item, "items"):
+            item.view = self
         self.children.append(item)
+        return self
 
-    def remove_item(self, item: Item) -> None:
-        """Removes an item from the view.
+    def remove_item(self, item: Item | int | str) -> None:
+        """Removes an item from the view. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: :class:`Item`
-            The item to remove from the view.
+        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+            The item, item :attr:`id`, or item ``custom_id`` to remove from the view.
         """
 
+        if isinstance(item, (str, int)):
+            item = self.get_item(item)
         try:
             self.children.remove(item)
         except ValueError:
             pass
         else:
             self.__weights.remove_item(item)
+        return self
 
     def clear_items(self) -> None:
         """Removes all items from the view."""
         self.children.clear()
         self.__weights.clear()
+        return self
 
-    def get_item(self, custom_id: str) -> Item | None:
-        """Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`.
+    def get_item(self, custom_id: str | int) -> Item | None:
+        """Get an item from the view. Roughly equal to `utils.get(view.children, ...)`.
+        If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
+        This method will also search nested items.
 
         Parameters
         ----------
@@ -327,9 +394,18 @@ class View:
         Returns
         -------
         Optional[:class:`Item`]
-            The item with the matching ``custom_id`` if it exists.
+            The item with the matching ``custom_id`` or ``id`` if it exists.
         """
-        return get(self.children, custom_id=custom_id)
+        if not custom_id:
+            return None
+        attr = "id" if isinstance(custom_id, int) else "custom_id"
+        child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
+        if not child:
+            for i in self.children:
+                if hasattr(i, "get_item"):
+                    if child := i.get_item(custom_id):
+                        return child
+        return child
 
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
@@ -409,10 +485,7 @@ class View:
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f"Ignoring exception in view {self} for item {item}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        interaction.client.dispatch("view_error", error, item, interaction)
 
     async def _scheduled_task(self, item: Item, interaction: Interaction):
         try:
@@ -501,6 +574,9 @@ class View:
         """Whether the view has finished interacting."""
         return self.__stopped.done()
 
+    def is_dispatchable(self) -> bool:
+        return any(item.is_dispatchable() for item in self.children)
+
     def is_dispatching(self) -> bool:
         """Whether the view has been added for dispatching purposes."""
         return self.__cancel_callback is not None
@@ -513,6 +589,16 @@ class View:
         """
         return self.timeout is None and all(
             item.is_persistent() for item in self.children
+        )
+
+    def is_components_v2(self) -> bool:
+        """Whether the view contains V2 components.
+
+        A view containing V2 components cannot be sent alongside message content or embeds.
+        """
+        return (
+            any([item._underlying.is_v2() for item in self.children])
+            or self.__weights.requires_v2()
         )
 
     async def wait(self) -> bool:
@@ -531,7 +617,7 @@ class View:
 
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
-        Disables all items in the view.
+        Disables all buttons and select menus in the view.
 
         Parameters
         ----------
@@ -539,12 +625,17 @@ class View:
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
-            if exclusions is None or child not in exclusions:
+            if hasattr(child, "disabled") and (
+                exclusions is None or child not in exclusions
+            ):
                 child.disabled = True
+            if hasattr(child, "items"):
+                child.disable_all_items(exclusions=exclusions)
+        return self
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
-        Enables all items in the view.
+        Enables all buttons and select menus in the view.
 
         Parameters
         ----------
@@ -552,8 +643,17 @@ class View:
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
-            if exclusions is None or child not in exclusions:
+            if hasattr(child, "disabled") and (
+                exclusions is None or child not in exclusions
+            ):
                 child.disabled = False
+            if hasattr(child, "items"):
+                child.enable_all_items(exclusions=exclusions)
+        return self
+
+    def copy_text(self) -> str:
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
+        return "\n".join(t for i in self.children if (t := i.copy_text()))
 
     @property
     def message(self):
@@ -595,15 +695,40 @@ class ViewStore:
 
         view._start_listening_from_store(self)
         for item in view.children:
-            if item.is_dispatchable():
+            if item.is_storable():
                 self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
+            else:
+                if hasattr(item, "items"):
+                    for sub_item in item.items:
+                        if sub_item.is_storable():
+                            self._views[
+                                (sub_item.type.value, message_id, sub_item.custom_id)
+                            ] = (view, sub_item)
+                        elif hasattr(sub_item, "accessory"):
+                            if sub_item.accessory.is_storable():
+                                self._views[
+                                    (
+                                        sub_item.accessory.type.value,
+                                        message_id,
+                                        sub_item.accessory.custom_id,
+                                    )
+                                ] = (view, sub_item.accessory)
+                if hasattr(item, "accessory"):
+                    if item.accessory.is_storable():
+                        self._views[
+                            (
+                                item.accessory.type.value,
+                                message_id,
+                                item.accessory.custom_id,
+                            )
+                        ] = (view, item.accessory)
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
 
     def remove_view(self, view: View):
         for item in view.children:
-            if item.is_dispatchable():
+            if item.is_storable():
                 self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
 
         for key, value in self._synced_message_views.items():
@@ -624,6 +749,7 @@ class ViewStore:
             return
 
         view, item = value
+        interaction.view = view
         item.refresh_state(interaction)
         view._dispatch_item(item, interaction)
 
@@ -636,4 +762,4 @@ class ViewStore:
     def update_from_message(self, message_id: int, components: list[ComponentPayload]):
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
-        view.refresh([_component_factory(d) for d in components])
+        view.refresh([_component_factory(d, state=self._state) for d in components])
