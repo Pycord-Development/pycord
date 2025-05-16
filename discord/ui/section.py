@@ -10,6 +10,7 @@ from ..utils import get
 from .item import Item, ItemCallbackType
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
+from .button import Button
 
 __all__ = ("Section",)
 
@@ -236,6 +237,11 @@ class Section(Item[V]):
 
     def is_dispatchable(self) -> bool:
         return self.accessory and self.accessory.is_dispatchable()
+
+    def is_persistent(self) -> bool:
+        if not isinstance(self.accessory, Button):
+            return True
+        return self.accessory.is_persistent()
 
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
