@@ -442,7 +442,7 @@ class Select(Item[V]):
         return True
 
     def is_storable(self) -> bool:
-        return False
+        return True
 
 
 _select_types = (
