@@ -553,7 +553,10 @@ class Client:
         This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
         """
 
-        print(f"Ignoring exception in view {interaction.view} for item {item}:", file=sys.stderr)
+        print(
+            f"Ignoring exception in view {interaction.view} for item {item}:",
+            file=sys.stderr,
+        )
         traceback.print_exception(
             error.__class__, error, error.__traceback__, file=sys.stderr
         )
