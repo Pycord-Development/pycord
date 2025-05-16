@@ -255,10 +255,7 @@ class Modal:
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f"Ignoring exception in modal {self}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        interaction.client.dispatch("modal_error", error, interaction)
 
     async def on_timeout(self) -> None:
         """|coro|
@@ -328,6 +325,7 @@ class ModalStore:
         value = self._modals.get(key)
         if value is None:
             return
+        interaction.modal = value
 
         try:
             components = [

@@ -75,7 +75,7 @@ if TYPE_CHECKING:
         VoiceChannel,
     )
     from .client import Client
-    from .commands import OptionChoice
+    from .commands import OptionChoice, ApplicationCommand
     from .embeds import Embed
     from .mentions import AllowedMentions
     from .poll import Poll
@@ -152,6 +152,18 @@ class Interaction:
         The context in which this command was executed.
 
         .. versionadded:: 2.6
+    command: Optional[:class:`ApplicationCommand`]
+        The command that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    view: Optional[:class:`View`]
+        The view that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    modal: Optional[:class:`Modal`]
+        The modal that this interaction belongs to.
+
+        .. versionadded:: 2.7
     """
 
     __slots__: tuple[str, ...] = (
@@ -223,6 +235,10 @@ class Interaction:
             if "context" in data
             else None
         )
+
+        self.command: ApplicationCommand | None = None
+        self.view: View | None = None
+        self.modal: Modal | None = None
 
         self.message: Message | None = None
         self.channel = None

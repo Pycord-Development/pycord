@@ -486,10 +486,7 @@ class View:
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f"Ignoring exception in view {self} for item {item}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        interaction.client.dispatch("view_error", error, item, interaction)
 
     async def _scheduled_task(self, item: Item, interaction: Interaction):
         try:
@@ -753,6 +750,7 @@ class ViewStore:
             return
 
         view, item = value
+        interaction.view = view
         item.refresh_state(interaction)
         view._dispatch_item(item, interaction)
 
