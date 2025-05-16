@@ -7,10 +7,10 @@ from ..components import Section as SectionComponent
 from ..components import _component_factory
 from ..enums import ComponentType
 from ..utils import get
+from .button import Button
 from .item import Item, ItemCallbackType
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
-from .button import Button
 
 __all__ = ("Section",)
 
