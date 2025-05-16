@@ -1497,9 +1497,9 @@ class Messageable:
             .. versionadded:: 1.4
 
         reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
-            A reference to the :class:`~discord.Message` you are replying to or forwarding, this can be created using
-            :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. When replying, you can control
-            whether this mentions the author of the referenced message using the
+            A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using
+            :meth:`~discord.Message.to_reference`.
+            When replying, you can control whether this mentions the author of the referenced message using the
             :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by
             setting ``mention_author``.
 
