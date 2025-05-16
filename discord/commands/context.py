@@ -407,7 +407,7 @@ class AutocompleteContext:
         A name to value mapping of the options that the user has selected before this option.
     """
 
-    __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
+    __slots__ = ("bot", "interaction", "focused", "value", "options")
 
     def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
