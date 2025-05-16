@@ -224,7 +224,7 @@ class Section(Item[V]):
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section. Equivalent to the `Copy Text` option on Discord clients."""
-        return "\n".join(i.copy_text() for i in self.items if i)
+        return "\n".join(t for i in self.items if (t := i.copy_text()))
 
     @property
     def type(self) -> ComponentType:

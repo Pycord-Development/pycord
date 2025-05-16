@@ -657,7 +657,7 @@ class View:
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
-        return "\n".join(i.copy_text() for i in self.children if i)
+        return "\n".join(t for i in self.children if (t := i.copy_text()))
 
     @property
     def message(self):
@@ -699,17 +699,17 @@ class ViewStore:
 
         view._start_listening_from_store(self)
         for item in view.children:
-            if item.is_dispatchable():
+            if item.is_storable():
                 self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
             else:
                 if hasattr(item, "items"):
                     for sub_item in item.items:
-                        if sub_item.is_dispatchable():
+                        if sub_item.is_storable():
                             self._views[
                                 (sub_item.type.value, message_id, sub_item.custom_id)
                             ] = (view, sub_item)
                         elif hasattr(sub_item, "accessory"):
-                            if sub_item.accessory.is_dispatchable():
+                            if sub_item.accessory.is_storable():
                                 self._views[
                                     (
                                         sub_item.accessory.type.value,
@@ -718,7 +718,7 @@ class ViewStore:
                                     )
                                 ] = (view, sub_item.accessory)
                 if hasattr(item, "accessory"):
-                    if item.accessory.is_dispatchable():
+                    if item.accessory.is_storable():
                         self._views[
                             (
                                 item.accessory.type.value,
@@ -732,7 +732,7 @@ class ViewStore:
 
     def remove_view(self, view: View):
         for item in view.children:
-            if item.is_dispatchable():
+            if item.is_storable():
                 self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
 
         for key, value in self._synced_message_views.items():

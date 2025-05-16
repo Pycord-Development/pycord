@@ -441,6 +441,9 @@ class Select(Item[V]):
     def is_dispatchable(self) -> bool:
         return True
 
+    def is_storable(self) -> bool:
+        return False
+
 
 _select_types = (
     ComponentType.string_select,

@@ -264,6 +264,9 @@ class Button(Item[V]):
     def is_dispatchable(self) -> bool:
         return self.custom_id is not None
 
+    def is_storable(self) -> bool:
+        return self.is_dispatchable()
+
     def is_persistent(self) -> bool:
         if self.style is ButtonStyle.link:
             return self.url is not None

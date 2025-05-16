@@ -87,6 +87,9 @@ class Item(Generic[V]):
     def is_dispatchable(self) -> bool:
         return False
 
+    def is_storable(self) -> bool:
+        return False
+
     def is_persistent(self) -> bool:
         return not self.is_dispatchable() or self._provided_custom_id
 
