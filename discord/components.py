@@ -610,8 +610,7 @@ class Section(Component):
         r = self.components
         if self.accessory:
             r.append(self.accessory)
-        for c in r:
-            yield c
+        yield from r
 
 
 class TextDisplay(Component):

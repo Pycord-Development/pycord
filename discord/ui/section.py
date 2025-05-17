@@ -292,8 +292,7 @@ class Section(Item[V]):
         r = self.items
         if self.accessory:
             r.append(self.accessory)
-        for item in r:
-            yield item
+        yield from r
 
     def to_component_dict(self) -> SectionComponentPayload:
         self._set_components(self.items)

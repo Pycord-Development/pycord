@@ -65,6 +65,7 @@ def _walk_all_components(components: list[Component]) -> Iterator[Component]:
         else:
             yield item
 
+
 def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
     for item in components:
         if isinstance(item, ActionRowComponent):
@@ -410,7 +411,9 @@ class View:
         if not custom_id:
             return None
         attr = "id" if isinstance(custom_id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == custom_id, list(self.walk_children()))
+        child = find(
+            lambda i: getattr(i, attr, None) == custom_id, list(self.walk_children())
+        )
         return child
 
     async def interaction_check(self, interaction: Interaction) -> bool:
@@ -540,7 +543,7 @@ class View:
     def refresh(self, components: list[Component]):
         # Refreshes view using discord's values
         old_state: dict[tuple[int, str], Item] = {
-            (item.type.value, item.custom_id): item for item in self.walk_children() if item.is_storable()   # type: ignore
+            (item.type.value, item.custom_id): item for item in self.walk_children() if item.is_storable()  # type: ignore
         }
         children: list[Item] = []
 
