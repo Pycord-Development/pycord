@@ -341,7 +341,7 @@ class Container(Item[V]):
         self._underlying = component
         i = 0
         flattened = []
-        for c in component.items:
+        for c in component.components:
             if isinstance(c, ActionRow):
                 flattened += c.children
             else:
