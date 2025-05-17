@@ -363,7 +363,7 @@ class View:
 
         item.parent = self
         item._view = self
-        if hasattr(item, "items"):
+            The item, item ``id``, or item ``custom_id`` to remove from the view.
             item.view = self
         self.children.append(item)
         return self
@@ -541,23 +541,23 @@ class View:
         )
 
     def refresh(self, components: list[Component]):
-        # Refreshes view using discord's values
-        old_state: dict[tuple[int, str], Item] = {
-            (item.type.value, item.custom_id): item for item in self.walk_children() if item.is_storable()  # type: ignore
-        }
-        children: list[Item] = []
+        # Refreshes view data using discord's values
+        # Assumes the components and items are identical
 
-        for component in _walk_all_components_v2(components):
-            try:
-                older = old_state[(component.type.value, component.custom_id)]  # type: ignore
-            except (KeyError, AttributeError):
-                item = _component_to_item(component)
-                children.append(item)
+        i = 0
+        flattened = []
+        for c in components:
+            if isinstance(c, ActionRow):
+                flattened += c.children
             else:
-                older.refresh_component(component)
-                children.append(older)
-
-        self.children = children
+                flatten.append(c)
+        for c in flattened:
+            try:
+                item = self.children[i]
+            except:
+                break
+            item.refresh_component(c)
+            i += 1
 
     def stop(self) -> None:
         """Stops listening to interaction events from this view.

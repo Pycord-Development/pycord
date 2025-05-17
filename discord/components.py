@@ -184,6 +184,9 @@ class ActionRow(Component):
             "components": [child.to_dict() for child in self.children],
         }  # type: ignore
 
+    def walk_components(self) -> Iterator[Component]:
+        yield from self.components
+
     @classmethod
     def with_components(cls, *components, id=None):
         return cls._raw_construct(

@@ -339,8 +339,17 @@ class Container(Item[V]):
 
     def refresh_component(self, component: ContainerComponent) -> None:
         self._underlying = component
-        for x, y in zip(self.items, component.items):
+        i = 0
+        flattened = []
+        for c in component.items:
+            if isinstance(c, ActionRow):
+                flattened += c.children
+            else:
+                flatten.append(c)
+        for y in flattened:
+            x = self.items[i]
             x.refresh_component(y)
+            i += 1
 
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
