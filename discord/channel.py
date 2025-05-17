@@ -3412,6 +3412,9 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
 
         return PartialMessage(channel=self, id=message_id)
 
+    def __repr__(self) -> str:
+        return f"<PartialMessageable id={self.id} type={self.type!r}>"
+
 
 def _guild_channel_factory(channel_type: int):
     value = try_enum(ChannelType, channel_type)

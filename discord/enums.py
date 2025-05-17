@@ -77,6 +77,7 @@ __all__ = (
     "IntegrationType",
     "InteractionContextType",
     "PollLayoutType",
+    "MessageReferenceType",
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "MediaItemLoadingState",
@@ -270,6 +271,12 @@ class MessageType(Enum):
     stage_raise_hand = 30
     stage_topic = 31
     guild_application_premium_subscription = 32
+    guild_incident_alert_mode_enabled = 36
+    guild_incident_alert_mode_disabled = 37
+    guild_incident_report_raid = 38
+    guild_incident_report_false_alarm = 39
+    purchase_notification = 44
+    poll_result = 46
 
 
 class VoiceRegion(Enum):
@@ -1065,6 +1072,13 @@ class PollLayoutType(Enum):
     """The poll's layout type."""
 
     default = 1
+
+
+class MessageReferenceType(Enum):
+    """The type of the message reference object"""
+
+    default = 0
+    forward = 1
 
 
 class SubscriptionStatus(Enum):
