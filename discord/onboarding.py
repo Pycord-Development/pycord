@@ -28,7 +28,7 @@ from typing import TYPE_CHECKING, Any
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import MISSING, cached_property, generate_snowflake, get
+from .utils import MISSING, generate_snowflake, get
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -247,7 +247,7 @@ class Onboarding:
         self.enabled: bool = data["enabled"]
         self.mode: OnboardingMode = try_enum(OnboardingMode, data.get("mode"))
 
-    @cached_property
+    @property
     def default_channels(
         self,
     ) -> list[TextChannel | ForumChannel | VoiceChannel | Object]:
