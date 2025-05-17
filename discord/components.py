@@ -185,7 +185,7 @@ class ActionRow(Component):
         }  # type: ignore
 
     def walk_components(self) -> Iterator[Component]:
-        yield from self.components
+        yield from self.children
 
     @classmethod
     def with_components(cls, *components, id=None):
