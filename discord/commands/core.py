@@ -73,9 +73,9 @@ from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
 if sys.version_info >= (3, 11):
-    from typing import Annotated, get_args, get_origin
+    from typing import Annotated, Literal, get_args, get_origin
 else:
-    from typing_extensions import Annotated, get_args, get_origin
+    from typing_extensions import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -805,6 +805,18 @@ class SlashCommand(ApplicationCommand):
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
+            if get_origin(option) is Literal:
+                literal_values = get_args(option)
+                if not all(isinstance(v, (str, int, float)) for v in literal_values):
+                    raise TypeError(
+                        "Literal values must be str, int, or float for Discord choices."
+                    )
+                option = Option(
+                    str,
+                    choices=[
+                        OptionChoice(name=str(v), value=str(v)) for v in literal_values
+                    ],
+                )
 
             if self._is_typing_annotated(option):
                 type_hint = get_args(option)[0]
