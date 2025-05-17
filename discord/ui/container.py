@@ -136,6 +136,7 @@ class Container(Item[V]):
         item._view = self.view
         if hasattr(item, "items"):
             item.view = self
+        item.parent = self
 
         self.items.append(item)
         self._add_component_from_item(item)
@@ -165,7 +166,7 @@ class Container(Item[V]):
 
         Parameters
         ----------
-        id: :class:`str`
+        id: Union[:class:`str`, :class:`int`]
             The id or custom_id of the item to get.
 
         Returns
@@ -176,12 +177,7 @@ class Container(Item[V]):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.items)
-        if not child:
-            for i in self.items:
-                if hasattr(i, "get_item"):
-                    if child := i.get_item(id):
-                        return child
+        child = find(lambda i: getattr(i, attr, None) == id, list(self.walk_items()))
         return child
 
     def add_section(
@@ -322,6 +318,7 @@ class Container(Item[V]):
     def view(self, value):
         self._view = value
         for item in self.items:
+            item.parent = self
             item._view = value
             if hasattr(item, "items"):
                 item.view = value
@@ -340,6 +337,11 @@ class Container(Item[V]):
     def is_persistent(self) -> bool:
         return all(item.is_persistent() for item in self.items)
 
+    def refresh_component(self, component: ContainerComponent) -> None:
+        self._underlying = component
+        for x, y in zip(self.items, component.items):
+            x.refresh_component(y)
+
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
         Disables all buttons and select menus in the container.
@@ -349,11 +351,12 @@ class Container(Item[V]):
         exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.items` to not disable from the view.
         """
-        for item in self.items:
+        for item in self.walk_items():
             if hasattr(item, "disabled") and (
                 exclusions is None or item not in exclusions
             ):
                 item.disabled = True
+        return self
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
@@ -364,12 +367,19 @@ class Container(Item[V]):
         exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.items` to not enable from the view.
         """
-        for item in self.items:
+        for item in self.walk_items():
             if hasattr(item, "disabled") and (
                 exclusions is None or item not in exclusions
             ):
                 item.disabled = False
         return self
+
+    def walk_items(self) -> Iterator[Item]:
+        for item in self.items:
+            if hasattr(item, "walk_items"):
+                yield from item.walk_items()
+            else:
+                yield item
 
     def to_component_dict(self) -> ContainerComponentPayload:
         self._set_components(self.items)

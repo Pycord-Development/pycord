@@ -606,6 +606,13 @@ class Section(Component):
             payload["accessory"] = self.accessory.to_dict()
         return payload
 
+    def walk_components(self) -> Iterator[Component]:
+        r = self.components
+        if self.accessory:
+            r.append(self.accessory)
+        for c in r:
+            yield c
+
 
 class TextDisplay(Component):
     """Represents a Text Display from Components V2.
@@ -936,6 +943,13 @@ class Container(Component):
         if self.spoiler is not None:
             payload["spoiler"] = self.spoiler
         return payload
+
+    def walk_components(self) -> Iterator[Component]:
+        for c in self.components:
+            if hasattr(c, "walk_components"):
+                yield from c.walk_components()
+            else:
+                yield c
 
 
 COMPONENT_MAPPINGS = {

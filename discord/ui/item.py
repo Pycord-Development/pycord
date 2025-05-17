@@ -66,12 +66,13 @@ class Item(Generic[V]):
         # actually affect the intended purpose of this check because from_component is
         # only called upon edit and we're mainly interested during initial creation time.
         self._provided_custom_id: bool = False
+        self.parent: Item | View | None = self.view
 
     def to_component_dict(self) -> dict[str, Any]:
         raise NotImplementedError
 
     def refresh_component(self, component: Component) -> None:
-        return None
+        self._underlying = component
 
     def refresh_state(self, interaction: Interaction) -> None:
         return None

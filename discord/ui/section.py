@@ -103,6 +103,7 @@ class Section(Item[V]):
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
+        item.parent = self
         self.items.append(item)
         self._add_component_from_item(item)
         return self
@@ -124,13 +125,14 @@ class Section(Item[V]):
             pass
         return self
 
-    def get_item(self, id: int) -> Item | None:
-        """Get an item from this section. Alias for `utils.get(section.items, id=id)`.
+    def get_item(self, id: int | str) -> Item | None:
+        """Get an item from this section. Alias for `utils.get(section.walk_items(), ...)`.
+        If an ``int`` is provided, it will be retrieved by ``id``, otherwise it will check the accessory's ``custom_id``.
 
         Parameters
         ----------
-        id: :class:`int`
-            The id of the item to get
+        id: Union[:class:`str`, :class:`int`]
+            The id or custom_id of the item to get.
 
         Returns
         -------
@@ -139,9 +141,9 @@ class Section(Item[V]):
         """
         if not id:
             return None
-        if self.accessory and self.accessory.id == id:
-            return self.accessory
-        return get(self.items, id=id)
+        attr = "id" if isinstance(id, int) else "custom_id"
+        child = find(lambda i: getattr(i, attr, None) == id, list(self.walk_items()))
+        return child
 
     def add_text(self, content: str, *, id: int | None = None) -> None:
         """Adds a :class:`TextDisplay` to the section.
@@ -185,6 +187,7 @@ class Section(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
         if self.view:
             item._view = self.view
+        item.parent = self
 
         self.accessory = item
         self._underlying.accessory = item._underlying
@@ -220,8 +223,9 @@ class Section(Item[V]):
     @Item.view.setter
     def view(self, value):
         self._view = value
-        if self.accessory:
-            self.accessory._view = value
+        for item in self.walk_items():
+            item._view = value
+            item.parent = self
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section. Equivalent to the `Copy Text` option on Discord clients."""
@@ -243,6 +247,13 @@ class Section(Item[V]):
             return True
         return self.accessory.is_persistent()
 
+    def refresh_component(self, component: SectionComponent) -> None:
+        self._underlying = component
+        for x, y in zip(self.items, component.items):
+            x.refresh_component(y)
+        if self.accessory and component.accessory:
+            self.accessory.refresh_component(component.accessory)
+
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
         """
         Disables all buttons and select menus in the section.
@@ -253,7 +264,7 @@ class Section(Item[V]):
         exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.items` to not disable from the view.
         """
-        for item in self.items + [self.accessory]:
+        for item in self.walk_items():
             if hasattr(item, "disabled") and (
                 exclusions is None or item not in exclusions
             ):
@@ -270,12 +281,19 @@ class Section(Item[V]):
         exclusions: Optional[List[:class:`Item`]]
             A list of items in `self.items` to not enable from the view.
         """
-        for item in self.items + [self.accessory]:
+        for item in self.walk_items():
             if hasattr(item, "disabled") and (
                 exclusions is None or item not in exclusions
             ):
                 item.disabled = False
         return self
+
+    def walk_items(self) -> Iterator[Item]:
+        r = self.items
+        if self.accessory:
+            r.append(self.accessory)
+        for item in r:
+            yield item
 
     def to_component_dict(self) -> SectionComponentPayload:
         self._set_components(self.items)

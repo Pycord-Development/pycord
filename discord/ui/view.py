@@ -65,6 +65,15 @@ def _walk_all_components(components: list[Component]) -> Iterator[Component]:
         else:
             yield item
 
+def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
+    for item in components:
+        if isinstance(item, ActionRowComponent):
+            yield from item.children
+        elif isinstance(item, (SectionComponent, ContainerComponent)):
+            yield from item.walk_components()
+        else:
+            yield item
+
 
 def _component_to_item(component: Component) -> Item:
     if isinstance(component, ButtonComponent):
@@ -230,6 +239,7 @@ class View:
             )
             item.callback = partial(func, self, item)
             item._view = self
+            item.parent = self
             setattr(self, func.__name__, item)
             self.children.append(item)
 
@@ -350,6 +360,7 @@ class View:
 
         self.__weights.add_item(item)
 
+        item.parent = self
         item._view = self
         if hasattr(item, "items"):
             item.view = self
@@ -399,12 +410,7 @@ class View:
         if not custom_id:
             return None
         attr = "id" if isinstance(custom_id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
-        if not child:
-            for i in self.children:
-                if hasattr(i, "get_item"):
-                    if child := i.get_item(custom_id):
-                        return child
+        child = find(lambda i: getattr(i, attr, None) == custom_id, list(self.walk_children()))
         return child
 
     async def interaction_check(self, interaction: Interaction) -> bool:
@@ -532,20 +538,17 @@ class View:
         )
 
     def refresh(self, components: list[Component]):
-        # This is pretty hacky at the moment
+        # Refreshes view using discord's values
         old_state: dict[tuple[int, str], Item] = {
-            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
+            (item.type.value, item.custom_id): item for item in self.walk_children() if item.is_storable()   # type: ignore
         }
-        children: list[Item] = [
-            item for item in self.children if not item.is_dispatchable()
-        ]
-        for component in _walk_all_components(components):
+        children: list[Item] = []
+
+        for component in _walk_all_components_v2(components):
             try:
                 older = old_state[(component.type.value, component.custom_id)]  # type: ignore
             except (KeyError, AttributeError):
                 item = _component_to_item(component)
-                if not item.is_dispatchable():
-                    continue
                 children.append(item)
             else:
                 older.refresh_component(component)
@@ -651,6 +654,13 @@ class View:
                 child.enable_all_items(exclusions=exclusions)
         return self
 
+    def walk_children(self) -> Iterator[Item]:
+        for item in self.children:
+            if hasattr(item, "walk_items"):
+                yield from item.walk_items()
+            else:
+                yield item
+
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
         return "\n".join(t for i in self.children if (t := i.copy_text()))
@@ -694,40 +704,15 @@ class ViewStore:
         self.__verify_integrity()
 
         view._start_listening_from_store(self)
-        for item in view.children:
+        for item in view.walk_children():
             if item.is_storable():
                 self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
-            else:
-                if hasattr(item, "items"):
-                    for sub_item in item.items:
-                        if sub_item.is_storable():
-                            self._views[
-                                (sub_item.type.value, message_id, sub_item.custom_id)
-                            ] = (view, sub_item)
-                        elif hasattr(sub_item, "accessory"):
-                            if sub_item.accessory.is_storable():
-                                self._views[
-                                    (
-                                        sub_item.accessory.type.value,
-                                        message_id,
-                                        sub_item.accessory.custom_id,
-                                    )
-                                ] = (view, sub_item.accessory)
-                if hasattr(item, "accessory"):
-                    if item.accessory.is_storable():
-                        self._views[
-                            (
-                                item.accessory.type.value,
-                                message_id,
-                                item.accessory.custom_id,
-                            )
-                        ] = (view, item.accessory)
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
 
     def remove_view(self, view: View):
-        for item in view.children:
+        for item in view.walk_children():
             if item.is_storable():
                 self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
 
@@ -762,4 +747,5 @@ class ViewStore:
     def update_from_message(self, message_id: int, components: list[ComponentPayload]):
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
-        view.refresh([_component_factory(d, state=self._state) for d in components])
+        components = [_component_factory(d, state=self._state) for d in components]
+        view.refresh(components)

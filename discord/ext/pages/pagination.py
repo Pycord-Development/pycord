@@ -591,8 +591,9 @@ class Paginator(discord.ui.View):
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
         if self.disable_on_timeout:
-            for item in self.children:
-                item.disabled = True
+            for item in self.walk_children():
+                if hasattr(item, "disabled"):
+                    item.disabled = True
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
@@ -617,12 +618,12 @@ class Paginator(discord.ui.View):
             The page content to show after disabling the paginator.
         """
         page = self.get_page_content(page)
-        for item in self.children:
+        for item in self.walk_children():
             if (
                 include_custom
                 or not self.custom_view
                 or item not in self.custom_view.children
-            ):
+            ) and hasattr(item, "disabled"):
                 item.disabled = True
         if page:
             await self.message.edit(
