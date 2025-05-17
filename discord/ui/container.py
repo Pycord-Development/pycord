@@ -345,7 +345,7 @@ class Container(Item[V]):
             if isinstance(c, ActionRow):
                 flattened += c.children
             else:
-                flatten.append(c)
+                flattened.append(c)
         for y in flattened:
             x = self.items[i]
             x.refresh_component(y)

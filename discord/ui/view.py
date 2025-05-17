@@ -363,7 +363,7 @@ class View:
 
         item.parent = self
         item._view = self
-            The item, item ``id``, or item ``custom_id`` to remove from the view.
+        if hasattr(item, "items"):
             item.view = self
         self.children.append(item)
         return self
@@ -550,7 +550,7 @@ class View:
             if isinstance(c, ActionRow):
                 flattened += c.children
             else:
-                flatten.append(c)
+                flattened.append(c)
         for c in flattened:
             try:
                 item = self.children[i]
