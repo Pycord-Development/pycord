@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, TypeVar, Iterator
+from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
 
 from ..colour import Colour
 from ..components import ActionRow
