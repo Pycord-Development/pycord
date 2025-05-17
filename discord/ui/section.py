@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import TYPE_CHECKING, ClassVar, TypeVar
+from typing import TYPE_CHECKING, ClassVar, TypeVar, Iterator
 
 from ..components import Section as SectionComponent
 from ..components import _component_factory
 from ..enums import ComponentType
-from ..utils import get
+from ..utils import get, find
 from .button import Button
 from .item import Item, ItemCallbackType
 from .text_display import TextDisplay
