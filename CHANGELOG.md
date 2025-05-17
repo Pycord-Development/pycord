@@ -53,8 +53,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
-- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods, and
-  deprecated the old `get_or_fetch` behavior.
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
   ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Fixed
@@ -138,6 +137,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+- Deprecated the old `get_or_fetch(attr, id)` in favor of `get_or_fetch(object_type, object_id`.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ## [2.6.1] - 2024-09-15
 
