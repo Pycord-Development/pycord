@@ -547,7 +547,7 @@ class View:
         i = 0
         flattened = []
         for c in components:
-            if isinstance(c, ActionRow):
+            if isinstance(c, ActionRowComponent):
                 flattened += c.children
             else:
                 flattened.append(c)
