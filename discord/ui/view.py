@@ -330,6 +330,31 @@ class View:
             view.add_item(_component_to_item(component))
         return view
 
+    @classmethod
+    def from_dict(
+        cls, data: list[Component], /, *, timeout: float | None = 180.0
+    ) -> View:
+        """Converts a list of component dicts into a :class:`View`.
+
+        Parameters
+        ----------
+        data: List[:class:`.Component`]
+            The list of components to convert into a view.
+        timeout: Optional[:class:`float`]
+            The timeout of the converted view.
+
+        Returns
+        -------
+        :class:`View`
+            The converted view. This always returns a :class:`View` and not
+            one of its subclasses.
+        """
+        view = View(timeout=timeout)
+        components = [_component_factory(d, state=self._state) for d in data]
+        for component in _walk_all_components(components):
+            view.add_item(_component_to_item(component))
+        return view
+
     @property
     def _expires_at(self) -> float | None:
         if self.timeout:
