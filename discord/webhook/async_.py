@@ -1850,6 +1850,8 @@ class Webhook(BaseWebhook):
         if view is not MISSING and not view.is_finished():
             message_id = None if msg is None else msg.id
             view.message = None if msg is None else msg
+            if msg:
+                view.refresh(msg.components)
             if view.is_dispatchable():
                 self._state.store_view(view, message_id)
 
@@ -2051,6 +2053,7 @@ class Webhook(BaseWebhook):
         message = self._create_message(data)
         if view and not view.is_finished():
             view.message = message
+            view.refresh(message.components)
             if view.is_dispatchable():
                 self._state.store_view(view, message_id)
         return message

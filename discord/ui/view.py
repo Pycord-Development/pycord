@@ -543,6 +543,8 @@ class View:
     def refresh(self, components: list[Component]):
         # Refreshes view data using discord's values
         # Assumes the components and items are identical
+        if not components:
+            return
 
         i = 0
         flattened = []
