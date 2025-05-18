@@ -177,7 +177,12 @@ class Container(Item[V]):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, list(self.walk_items()))
+        child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        if not child:
+            for i in self.items:
+                if hasattr(i, "get_item"):
+                    if child := i.get_item(id):
+                        return child
         return child
 
     def add_section(

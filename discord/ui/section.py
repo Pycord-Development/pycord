@@ -142,7 +142,9 @@ class Section(Item[V]):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, list(self.walk_items()))
+        if self.accessory and id == getattr(self.accessory, attr, None):
+            return self.accessory
+        child = find(lambda i: getattr(i, attr, None) == id, self.items)
         return child
 
     def add_text(self, content: str, *, id: int | None = None) -> None:
