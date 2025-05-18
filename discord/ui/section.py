@@ -298,7 +298,8 @@ class Section(Item[V]):
 
     def to_component_dict(self) -> SectionComponentPayload:
         self._set_components(self.items)
-        self.set_accessory(self.accessory)
+        if self.accessory:
+            self.set_accessory(self.accessory)
         return self._underlying.to_dict()
 
     @classmethod
