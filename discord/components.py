@@ -883,7 +883,7 @@ class Separator(Component):
 
     def __init__(self, data: SeparatorComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = None
+        self.id: int = data.get("id")
         self.divider: bool = data.get("divider")
         self.spacing: SeparatorSpacingSize = try_enum(
             SeparatorSpacingSize, data.get("spacing", 1)
