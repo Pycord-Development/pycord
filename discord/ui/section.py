@@ -293,7 +293,7 @@ class Section(Item[V]):
     def walk_items(self) -> Iterator[Item]:
         r = self.items
         if self.accessory:
-            r.append(self.accessory)
+            yield from r + [self.accessory]
         yield from r
 
     def to_component_dict(self) -> SectionComponentPayload:

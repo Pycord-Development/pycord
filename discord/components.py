@@ -612,7 +612,7 @@ class Section(Component):
     def walk_components(self) -> Iterator[Component]:
         r = self.components
         if self.accessory:
-            r.append(self.accessory)
+            yield from r + [self.accessory]
         yield from r
 
 
