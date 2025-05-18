@@ -556,8 +556,9 @@ class View:
                 item = self.children[i]
             except:
                 break
-            item.refresh_component(c)
-            i += 1
+            else:
+                item.refresh_component(c)
+                i += 1
 
     def stop(self) -> None:
         """Stops listening to interaction events from this view.
