@@ -332,7 +332,7 @@ class View:
 
     @classmethod
     def from_dict(
-        cls, data: list[Component], /, *, timeout: float | None = 180.0
+        cls, data: list[Component], /, *, timeout: float | None = 180.0, state: ConnectionState | None = None
     ) -> View:
         """Converts a list of component dicts into a :class:`View`.
 
@@ -342,6 +342,8 @@ class View:
             The list of components to convert into a view.
         timeout: Optional[:class:`float`]
             The timeout of the converted view.
+        state: Optional[:class:`ConnectionState`]
+            The state the view should use. This may be required by certain components, and is typically found under ``Client._connection``.
 
         Returns
         -------
@@ -350,7 +352,7 @@ class View:
             one of its subclasses.
         """
         view = View(timeout=timeout)
-        components = [_component_factory(d, state=self._state) for d in data]
+        components = [_component_factory(d, state=state) for d in data]
         for component in _walk_all_components(components):
             view.add_item(_component_to_item(component))
         return view
