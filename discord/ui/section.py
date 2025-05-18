@@ -249,7 +249,7 @@ class Section(Item[V]):
 
     def refresh_component(self, component: SectionComponent) -> None:
         self._underlying = component
-        for x, y in zip(self.items, component.items):
+        for x, y in zip(self.items, component.components):
             x.refresh_component(y)
         if self.accessory and component.accessory:
             self.accessory.refresh_component(component.accessory)
