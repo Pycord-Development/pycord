@@ -332,7 +332,12 @@ class View:
 
     @classmethod
     def from_dict(
-        cls, data: list[Component], /, *, timeout: float | None = 180.0, state: ConnectionState | None = None
+        cls,
+        data: list[Component],
+        /,
+        *,
+        timeout: float | None = 180.0,
+        state: ConnectionState | None = None,
     ) -> View:
         """Converts a list of component dicts into a :class:`View`.
 
