@@ -2,6 +2,8 @@ include README.rst
 include LICENSE
 include requirements.txt
 include discord/bin/*.dll
+include discord/banner.txt
+include discord/ibanner.txt
 include discord/py.typed
 
 prune .github
