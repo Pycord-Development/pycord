@@ -26,7 +26,16 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, overload, Sequence
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Iterable,
+    Mapping,
+    Sequence,
+    TypeVar,
+    overload,
+)
 
 import discord.abc
 
