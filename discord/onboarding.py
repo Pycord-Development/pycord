@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
+from functools import cached_property
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
@@ -247,7 +248,7 @@ class Onboarding:
         self.enabled: bool = data["enabled"]
         self.mode: OnboardingMode = try_enum(OnboardingMode, data.get("mode"))
 
-    @property
+    @cached_property
     def default_channels(
         self,
     ) -> list[TextChannel | ForumChannel | VoiceChannel | Object]:
