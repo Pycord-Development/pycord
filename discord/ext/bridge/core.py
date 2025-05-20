@@ -98,26 +98,12 @@ class BridgeExtCommand(Command):
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
 
-        # TODO: v2.7: Remove backwards support for Option in bridge commands.
-        for name, option in self.params.items():
+        for option in self.params.values():
             if isinstance(option.annotation, Option) and not isinstance(
                 option.annotation, BridgeOption
             ):
-                # Warn not to do this
-                warn_deprecated(
-                    "Using Option for bridge commands",
-                    "BridgeOption",
-                    "2.5",
-                    "2.7",
-                    reference="https://github.com/Pycord-Development/pycord/pull/2417",
-                    stacklevel=6,
-                )
-                # Override the convert method of the parameter's annotated Option.
-                # We can use the convert method from BridgeOption, and bind "self"
-                # using a manual invocation of the descriptor protocol.
-                # Definitely not a good approach, but gets the job done until removal.
-                self.params[name].annotation.convert = BridgeOption.convert.__get__(
-                    self.params[name].annotation
+                raise TypeError(
+                    f"{option.annotation.__class__.__name__} is not supported in bridge commands. Use BridgeOption instead."
                 )
 
     async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
