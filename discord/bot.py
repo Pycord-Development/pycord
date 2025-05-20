@@ -879,7 +879,7 @@ class ApplicationCommandMixin(ABC):
 
         ctx = await self.get_application_context(interaction)
         if command:
-            ctx.command = command
+            interaction.command = command
         await self.invoke_application_command(ctx)
 
     async def on_application_command_auto_complete(
@@ -887,7 +887,7 @@ class ApplicationCommandMixin(ABC):
     ) -> None:
         async def callback() -> None:
             ctx = await self.get_autocomplete_context(interaction)
-            ctx.command = command
+            interaction.command = command
             return await command.invoke_autocomplete_callback(ctx)
 
         autocomplete_task = self._bot.loop.create_task(callback())
