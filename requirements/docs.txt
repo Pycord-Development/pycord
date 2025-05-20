@@ -7,5 +7,5 @@ sphinx-copybutton==0.5.2
 furo==2024.8.6
 sphinx-autodoc-typehints==2.2.3
 sphinx-intl==2.3.1
-typing_extensions==4.13.1
+typing_extensions==4.13.2
 levenshtein==0.27.1
