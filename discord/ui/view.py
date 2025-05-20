@@ -670,7 +670,7 @@ class View:
                 exclusions is None or child not in exclusions
             ):
                 child.disabled = True
-            if hasattr(child, "items"):
+            if hasattr(child, "disable_all_items"):
                 child.disable_all_items(exclusions=exclusions)
         return self
 
@@ -688,7 +688,7 @@ class View:
                 exclusions is None or child not in exclusions
             ):
                 child.disabled = False
-            if hasattr(child, "items"):
+            if hasattr(child, "enable_all_items"):
                 child.enable_all_items(exclusions=exclusions)
         return self
 
