@@ -277,7 +277,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `TypeError` when specifying `thread_name` in `Webhook.send`.
   ([#2761](https://github.com/Pycord-Development/pycord/pull/2761))
 - Updated `valid_locales` to support `in` and `es-419`.
-  ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
+  ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
+- Fixed `Webhook.edit` not working with `attachments=[]`.
+  ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
+- Fixed GIF-based `Sticker` returning the wrong `url`.
+  ([#2781](https://github.com/Pycord-Development/pycord/pull/2781))
 
 ### Changed
 
