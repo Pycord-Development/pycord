@@ -282,11 +282,36 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2774](https://github.com/Pycord-Development/pycord/pull/2774))
 
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
-
+<<<<<<< HEAD
+- Added support for emoji aliases like `:smile:` in PartialEmoji.from_str. Also applied
+  the same logic in PartialEmojiConverter.
+  ([#2815](https://github.com/Pycord-Development/pycord/pull/2815))
+=======
+>>>>>>> f0b1cf96 (sync with pycord)
 - Fixed `Webhook.edit` not working with `attachments=[]`.
   ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
 - Fixed GIF-based `Sticker` returning the wrong `url`.
   ([#2781](https://github.com/Pycord-Development/pycord/pull/2781))
+<<<<<<< HEAD
+- Fixed `VoiceClient` crashing randomly while receiving audio
+  ([#2800](https://github.com/Pycord-Development/pycord/pull/2800))
+- Fixed `VoiceClient.connect` failing to do initial connection.
+  ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
+- Fixed `AttributeError` when printing a File component's `__repr__`.
+  ([#2843](https://github.com/Pycord-Development/pycord/pull/2843))
+- Fixed `TypeError` when using `@option` with certain annotations and along with
+  `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
+- Fixed `TypeError` when using `Optional[...]` or `... | None` in command option type.
+  ([#2852](https://github.com/Pycord-Development/pycord/pull/2852))
+- Fixed type-hinting for `PermissionOverwrite.update`.
+  ([#2878](https://github.com/Pycord-Development/pycord/pull/2878))
+- Fixed `AttributeError` when accessing `AuditLogEntry.changes` more than once.
+  ([#2882])(https://github.com/Pycord-Development/pycord/pull/2882))
+- Fixed type hint for argument `start_time` and `end_time` of
+  `Guild.create_scheduled_event`
+  ([#2879](https://github.com/Pycord-Development/pycord/pull/2879))
+=======
+>>>>>>> f0b1cf96 (sync with pycord)
 
 ### Changed
 
