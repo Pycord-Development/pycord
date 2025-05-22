@@ -106,8 +106,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed missing `None` type hints in `Select.__init__`.
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 - Fixed parameters for channels And allow creating channels with None as default
-  reaction 
-  ([#2754])(https://github.com/Pycord-Development/pycord/pull/2754)
+  reaction ([#2754])(https://github.com/Pycord-Development/pycord/pull/2754)
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
