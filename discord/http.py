@@ -33,8 +33,8 @@ from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
 from urllib.parse import quote as _uriquote
 
 import aiohttp
+import utils
 
-import .utils
 from . import __version__
 from .errors import (
     DiscordServerError,
