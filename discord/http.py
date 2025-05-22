@@ -34,6 +34,7 @@ from urllib.parse import quote as _uriquote
 
 import aiohttp
 
+import .utils
 from . import __version__
 from .errors import (
     DiscordServerError,
@@ -46,7 +47,6 @@ from .errors import (
 )
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
-import .utils
 
 _log = logging.getLogger(__name__)
 
