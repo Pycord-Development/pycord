@@ -34,7 +34,7 @@ from urllib.parse import quote as _uriquote
 
 import aiohttp
 
-from . import __version__, utils
+from . import __version__
 from .errors import (
     DiscordServerError,
     Forbidden,
@@ -46,7 +46,7 @@ from .errors import (
 )
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
-from .utils import MISSING, warn_deprecated
+import .utils
 
 _log = logging.getLogger(__name__)
 
@@ -179,7 +179,7 @@ class HTTPClient:
             asyncio.get_event_loop() if loop is None else loop
         )
         self.connector = connector
-        self.__session: aiohttp.ClientSession = MISSING  # filled in static_login
+        self.__session: aiohttp.ClientSession = utils.MISSING  # filled in static_login
         self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
         self._global_over: asyncio.Event = asyncio.Event()
         self._global_over.set()
