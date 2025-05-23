@@ -822,7 +822,7 @@ def loop(
     overlap: Union[:class:`bool`, :class:`int`]
         Controls whether overlapping executions of the task loop are allowed.
         Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.
-    
+
         .. versionadded:: 2.7
 
     Raises
