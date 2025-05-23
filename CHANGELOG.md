@@ -55,7 +55,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
-- Added support for Literal[...] to define command choices.
+- Added support for `Literal[...]` to define command choices.
   ([#2782](https://github.com/Pycord-Development/pycord/pull/2782))
 
 ### Fixed
