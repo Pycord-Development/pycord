@@ -819,14 +819,10 @@ def loop(
     loop: :class:`asyncio.AbstractEventLoop`
         The loop to use to register the task, if not given
         defaults to :func:`asyncio.get_event_loop`.
-
     overlap: Union[:class:`bool`, :class:`int`]
-        Controls whether to allow overlapping executions of the task loop.
-
-        - If set to :class:`False` (default), the next iteration waits until the previous finishes.
-        - If set to :class:`True`, overlapping executions are allowed with no limit.
-        - If set to an :class:`int`, allows up to that many overlapping executions at once.
-
+        Controls whether overlapping executions of the task loop are allowed.
+        Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.
+    
         .. versionadded:: 2.7
 
     Raises
