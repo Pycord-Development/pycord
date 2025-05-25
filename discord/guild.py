@@ -56,6 +56,7 @@ from .enums import (
     EntitlementOwnerType,
     NotificationLevel,
     NSFWLevel,
+    OnboardingMode,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     VerificationLevel,
@@ -77,7 +78,7 @@ from .iterators import (
 from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
-from .onboarding import Onboarding
+from .onboarding import Onboarding, OnboardingPrompt
 from .permissions import PermissionOverwrite
 from .role import Role
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation

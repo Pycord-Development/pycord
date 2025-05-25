@@ -300,6 +300,31 @@ class Asset(AssetMixin):
             animated=False,
         )
 
+    @classmethod
+    def _from_user_tag(cls, state, guild_id: int, badge_id: str) -> Asset:
+        """Creates an Asset for a user's clan (tag) badge.
+
+        Parameters
+        ----------
+        state: ConnectionState
+            The connection state.
+        guild_id: int
+            The ID of the guild (clan).
+        badge_id: str
+            The badge hash/id.
+
+        Returns
+        -------
+        :class:`Asset`
+            The clan badge asset.
+        """
+        return cls(
+            state,
+            url=f"{cls.BASE}/clan-badges/{guild_id}/{badge_id}.png?size=256",
+            key=badge_id,
+            animated=False,
+        )
+
     def __str__(self) -> str:
         return self._url
 

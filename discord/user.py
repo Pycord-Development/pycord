@@ -28,6 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
+from discord.types.user import Tag
 
 from .asset import Asset
 from .colour import Colour
@@ -76,6 +77,7 @@ class BaseUser(_UserTag):
         "_public_flags",
         "_avatar_decoration",
         "_state",
+        "_clan",
     )
 
     if TYPE_CHECKING:
@@ -91,6 +93,7 @@ class BaseUser(_UserTag):
         _accent_colour: int | None
         _avatar_decoration: dict | None
         _public_flags: int
+        _clan: dict | None
 
     def __init__(
         self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
@@ -146,6 +149,7 @@ class BaseUser(_UserTag):
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
+        self._clan = data.get("clan", None)
 
     @classmethod
     def _copy(cls: type[BU], user: BU) -> BU:
@@ -162,6 +166,7 @@ class BaseUser(_UserTag):
         self.bot = user.bot
         self._state = user._state
         self._public_flags = user._public_flags
+        self._clan = user._clan
 
         return self
 
@@ -295,6 +300,30 @@ class BaseUser(_UserTag):
     def mention(self) -> str:
         """Returns a string that allows you to mention the given user."""
         return f"<@{self.id}>"
+
+
+    @property
+    def tag(self) -> Tag:
+        """Returns a :class:`Tag` object that contains the user's tag information.
+
+        .. versionadded:: 2.5
+
+        .. note::
+            This information is only available via :meth:`Client.fetch_user`.
+        """
+        if self._clan:
+            return Tag(
+                guild_id=self._clan.get("identity_guild_id"),
+                enabled=self._clan.get("identity_enabled", False),
+                tag=self._clan.get("tag", str(self)),
+                badge=self._clan.get("badge"),
+            )
+        return Tag(
+            identity_guild_id=None,
+            identity_enabled=False,
+            tag=str(self),
+            badge=None,
+        )
 
     @property
     def created_at(self) -> datetime:
