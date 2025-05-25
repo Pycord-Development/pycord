@@ -37,13 +37,7 @@ from .errors import InvalidArgument
 EMOJIS_MAP_PATH = Path(__file__).parent / "emojis.json"
 
 with EMOJIS_MAP_PATH.open("r", encoding="utf-8") as f:
-    data = json.load(f)
-
-EMOJIS_MAP = {}
-for emoji_entry in data["emojis"]:
-    for name in emoji_entry["names"]:
-        EMOJIS_MAP[name] = emoji_entry["surrogates"]
-del data
+    EMOJIS_MAP = json.load(f)
 
 __all__ = ("PartialEmoji",)
 
