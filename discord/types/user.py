@@ -42,11 +42,13 @@ class PartialUser(TypedDict):
 
 PremiumType = Literal[0, 1, 2, 3]
 
+
 class Tag(TypedDict, total=False):
     identity_guild_id: Snowflake | None
     identity_enabled: bool | None
     tag: str | None
     badge: str | None
+
 
 class User(PartialUser, total=False):
     bot: bool

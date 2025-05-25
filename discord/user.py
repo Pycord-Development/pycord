@@ -301,7 +301,6 @@ class BaseUser(_UserTag):
         """Returns a string that allows you to mention the given user."""
         return f"<@{self.id}>"
 
-
     @property
     def tag(self) -> Tag:
         """Returns a :class:`Tag` object that contains the user's tag information.
