@@ -48,6 +48,7 @@ jobs:
           uv run codespell --ignore-words-list="groupt,nd,ot,ro,falsy,BU" \
           --exclude-file=".github/workflows/codespell.yml"
   ruff:
+    runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v4
