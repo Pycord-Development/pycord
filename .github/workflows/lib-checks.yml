@@ -90,4 +90,4 @@ jobs:
         id: cache-dir-mypy
         run: mkdir -p -v .mypy_cache
       - name: "Run mypy"
-        run: mypy --non-interactive discord/
+        run: uv run mypy --non-interactive discord/
