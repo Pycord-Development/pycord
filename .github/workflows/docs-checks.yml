@@ -48,11 +48,15 @@ jobs:
       - name: Sync dependencies
         run: uv sync --no-python-downloads --group dev --group docs
       - name: "Check Links"
+        env:
+          SPHINXBUILD: ${{ github.workspace }}/.venv/bin/sphinx-build
         if: ${{ github.event_name == 'schedule' || inputs.with_linkcheck }}
         run: |
           cd docs
           make linkcheck
       - name: "Compile to html"
+        env:
+          SPHINXBUILD: ${{ github.workspace }}/.venv/bin/sphinx-build
         run: |
           cd docs
           make -e SPHINXOPTS="-D language='en'" html
