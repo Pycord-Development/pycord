@@ -30,6 +30,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "aiohttp>=3.6.0,<4.0",
+    "colorlog~=6.9.0",
     "typing-extensions>=4,<5",
 ]
 
@@ -84,14 +85,14 @@ version-file = "discord/_version.py"
 [tool.hatch.build.targets.wheel]
 only-packages = true
 packages = ["discord"]
-only-include = ["discord", "LICENSE", "pyproject.toml"]
-exclude = ["README.rst"]
+only-include = ["discord", "LICENSE", "pyproject.toml", "discord/bin/*.dll"]
+artifacts = ["discord/bin/*.dll"]
 
 [tool.hatch.build.targets.sdist]
 only-packages = true
 packages = ["discord"]
-only-include = ["discord", "LICENSE", "pyproject.toml"]
-exclude = ["README.rst"]
+only-include = ["discord", "README.rst", "LICENSE", "pyproject.toml", "discord/bin/*.dll"]
+artifacts = ["discord/bin/*.dll"]
 
 [tool.black]
 target-version = ['py310', 'py311', 'py312', 'py313']
