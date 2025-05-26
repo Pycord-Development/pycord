@@ -62,8 +62,10 @@ jobs:
           enable-cache: true
       - name: Sync dependencies
         run: uv sync --no-python-downloads --group dev
-      - name: "Run ruff"
+      - name: "Run ruff linter check"
         run: uv run ruff check discord/
+      - name: "Run ruff formatter check"
+        run: uv run ruff format --check discord/
   mypy:
     if: ${{ github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
