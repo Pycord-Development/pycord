@@ -1497,9 +1497,9 @@ class Messageable:
             .. versionadded:: 1.4
 
         reference: Union[:class:`~discord.Message`, :class:`~discord.MessageReference`, :class:`~discord.PartialMessage`]
-            A reference to the :class:`~discord.Message` to which you are replying, this can be created using
-            :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control
-            whether this mentions the author of the referenced message using the
+            A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using
+            :meth:`~discord.Message.to_reference`.
+            When replying, you can control whether this mentions the author of the referenced message using the
             :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by
             setting ``mention_author``.
 
@@ -1589,9 +1589,19 @@ class Messageable:
             allowed_mentions = allowed_mentions or AllowedMentions().to_dict()
             allowed_mentions["replied_user"] = bool(mention_author)
 
+        _reference = None
         if reference is not None:
             try:
-                reference = reference.to_message_reference_dict()
+                _reference = reference.to_message_reference_dict()
+                from .message import MessageReference
+
+                if not isinstance(reference, MessageReference):
+                    utils.warn_deprecated(
+                        f"Passing {type(reference).__name__} to reference",
+                        "MessageReference",
+                        "2.7",
+                        "3.0",
+                    )
             except AttributeError:
                 raise InvalidArgument(
                     "reference parameter must be Message, MessageReference, or"
@@ -1641,7 +1651,7 @@ class Messageable:
                     nonce=nonce,
                     enforce_nonce=enforce_nonce,
                     allowed_mentions=allowed_mentions,
-                    message_reference=reference,
+                    message_reference=_reference,
                     stickers=stickers,
                     components=components,
                     flags=flags.value,
@@ -1660,7 +1670,7 @@ class Messageable:
                 nonce=nonce,
                 enforce_nonce=enforce_nonce,
                 allowed_mentions=allowed_mentions,
-                message_reference=reference,
+                message_reference=_reference,
                 stickers=stickers,
                 components=components,
                 flags=flags.value,
