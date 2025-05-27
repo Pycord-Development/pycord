@@ -1073,6 +1073,7 @@ class VoiceChannelEffectAnimationType(Enum):
     premium = 0
     basic = 1
 
+
 class MessageReferenceType(Enum):
     """The type of the message reference object"""
 
