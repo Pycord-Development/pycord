@@ -30,13 +30,14 @@ from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
+from .abc import GuildChannel
+from .emoji import AppEmoji, GuildEmoji
+from .member import Member
+from .role import Role
+from .threads import Thread
+from .user import User
 
 if TYPE_CHECKING:
-    from .abc import GuildChannel
-    from .emoji import AppEmoji, GuildEmoji
-    from .member import Member
-    from .role import Role
-    from .threads import Thread
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
@@ -45,7 +46,6 @@ if TYPE_CHECKING:
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectMenuDefaultValueType
     from .types.components import SelectOption as SelectOptionPayload
-    from .user import User
 
 __all__ = (
     "Component",
