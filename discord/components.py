@@ -371,6 +371,8 @@ class SelectMenu(Component):
         for d in data.get("default_values", []):
             if isinstance(d, SelectDefaultValue):
                 _default_values.append(d)
+            elif isinstance(d, dict) and "id" in d and "type" in d:
+                _default_values.append(SelectDefaultValue(id=d["id"], type=d["type"]))
             elif isinstance(d, (User, Member)):
                 _default_values.append(SelectDefaultValue(id=d.id, type="user"))
             elif isinstance(d, Role):
@@ -400,7 +402,7 @@ class SelectMenu(Component):
         if self.placeholder:
             payload["placeholder"] = self.placeholder
         if self.type is not ComponentType.string_select and self.default_values:
-            payload["default_values"] = self.default_values
+            payload["default_values"] = [dv.to_dict() for dv in self.default_values]
 
         return payload
 
@@ -575,7 +577,7 @@ class SelectDefaultValue:
     def to_dict(self) -> SelectDefaultValuePayload:
         payload: SelectDefaultValuePayload = {
             "id": self.id,
-            "type": self.type,
+            "type": self.type.value,
         }
 
         return payload
