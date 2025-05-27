@@ -78,6 +78,7 @@ __all__ = (
     "InteractionContextType",
     "PollLayoutType",
     "MessageReferenceType",
+    "SelectMenuDefaultValueType",
 )
 
 
@@ -1076,6 +1077,17 @@ class SubscriptionStatus(Enum):
     active = 0
     ending = 1
     inactive = 2
+
+
+class SelectMenuDefaultValueType(Enum):
+    """The type of a select menu's default value."""
+
+    Channel = 'channel'
+    Role = 'role'
+    User = 'user'
+
+    def __str__(self):
+        return self.name
 
 
 T = TypeVar("T")

@@ -36,6 +36,7 @@ from .snowflake import Snowflake
 ComponentType = Literal[1, 2, 3, 4]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
+SelectMenuDefaultValueType = Literal["channel", "role", "user"]
 
 
 class ActionRow(TypedDict):
@@ -74,6 +75,11 @@ class SelectOption(TypedDict):
     default: bool
 
 
+class SelectDefaultValue(TypedDict):
+    id: Snowflake
+    type: SelectMenuDefaultValueType
+
+
 class SelectMenu(TypedDict):
     placeholder: NotRequired[str]
     min_values: NotRequired[int]
@@ -83,6 +89,7 @@ class SelectMenu(TypedDict):
     options: NotRequired[list[SelectOption]]
     type: Literal[3, 5, 6, 7, 8]
     custom_id: str
+    default_values: NotRequired[list[SelectDefaultValue]]
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]

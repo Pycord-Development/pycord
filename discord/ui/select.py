@@ -29,10 +29,11 @@ import inspect
 import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
+from .. import SelectDefaultValue
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectMenu, SelectOption
 from ..emoji import AppEmoji, GuildEmoji
-from ..enums import ChannelType, ComponentType
+from ..enums import ChannelType, ComponentType, SelectMenuDefaultValueType
 from ..errors import InvalidArgument
 from ..interactions import Interaction
 from ..member import Member
@@ -120,6 +121,7 @@ class Select(Item[V]):
         "options",
         "channel_types",
         "disabled",
+        "default_values"
     )
 
     def __init__(
@@ -134,6 +136,7 @@ class Select(Item[V]):
         channel_types: list[ChannelType] | None = None,
         disabled: bool = False,
         row: int | None = None,
+        default_values: list[User | Member | Role | GuildChannel | Thread | SelectDefaultValue] | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
@@ -141,6 +144,43 @@ class Select(Item[V]):
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
             )
+        _default_values = []
+        if default_values and select_type is ComponentType.string_select:
+            raise InvalidArgument("default_values parameter is only valid for user/role/channel/mentionable selects")
+        if default_values and select_type is ComponentType.role_select:
+            for r in default_values:
+                if not isinstance(r, Role):
+                    raise ValueError(f"default_values must be a list of Role  objects, not {r.__class__.__name__}")
+                _default_values.append(SelectDefaultValue(
+                    id=r.id,
+                    type=SelectMenuDefaultValueType.Role))
+        if default_values and select_type is ComponentType.user_select:
+            for u in default_values:
+                if not isinstance(u, (User, Member)):
+                    raise ValueError(f"default_values must be a list of User/Member objects, "
+                                     f"not {u.__class__.__name__}")
+                _default_values.append(SelectDefaultValue(
+                    id=u.id,
+                    type=SelectMenuDefaultValueType.User))
+        if default_values and select_type is ComponentType.channel_select:
+            for c in default_values:
+                if not isinstance(c, GuildChannel):
+                    raise ValueError(f"default_values must be a list of GuildChannel objects, "
+                                     f"not {c.__class__.__name__}")
+                if channel_types and c.type not in channel_types:
+                    raise ValueError(f"default_values must be a list of channels of type {channel_types}, "
+                                     f"not {c.__class__.__name__}")
+                _default_values.append(SelectDefaultValue(
+                    id=c.id,
+                    type=SelectMenuDefaultValueType.Channel))
+        if default_values and select_type is ComponentType.mentionable_select:
+            for m in default_values:
+                if not isinstance(m, (User, Member, Role)):
+                    raise ValueError(f"default_values must be a list of User/Member/Role objects, "
+                                     f"not {m.__class__.__name__}")
+                _default_values.append(SelectDefaultValue(
+                    id=m.id,
+                    type=SelectMenuDefaultValueType.Role if isinstance(m, Role) else SelectMenuDefaultValueType.User))
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
@@ -166,6 +206,7 @@ class Select(Item[V]):
             disabled=disabled,
             options=options or [],
             channel_types=channel_types or [],
+            default_values=_default_values,
         )
         self.row = row
 
@@ -325,6 +366,95 @@ class Select(Item[V]):
         self._underlying.options.append(option)
 
     @property
+    def default_values(self) -> list[SelectDefaultValue]:
+        """A list of default values that are selected by default in this menu."""
+        return self._underlying.default_values
+
+    @default_values.setter
+    def default_values(self, value: list[SelectDefaultValue]):
+        if self._underlying.type is ComponentType.string_select:
+            raise InvalidArgument("default_values can only be set on non string selects")
+        if not isinstance(value, list):
+            raise TypeError("options must be a list of SelectDefaultValue")
+        if not all(isinstance(obj, SelectDefaultValue) for obj in value):
+            raise TypeError("all list items must subclass SelectDefaultValue")
+
+        self._underlying.default_values = value
+
+    def add_default_value(
+            self,
+            *,
+            default_value: User | Member | Role | GuildChannel | Thread,
+    ):
+        """Adds a default value to the select menu.
+
+		To append a pre-existing :class:`discord.SelectDefaultValue` use the
+		:meth:`append_default_value` method instead.
+
+		Parameters
+		----------
+		default_value: Union[:class:`discord.User`, :class:`discord.Member`, :class:`discord.Role`, 
+		:class:`discord.abc.GuildChannel`, :class:`discord.Thread`]
+		    The to be added default value
+		
+
+		Raises
+		------
+		ValueError
+			The number of options exceeds 25.
+		"""
+        if self._underlying.type is ComponentType.string_select:
+            raise Exception("default values can only be set on non string selects")
+        default_value_type = None
+        if self.type is ComponentType.channel_select and not isinstance(default_value, (GuildChannel, Thread)):
+            raise InvalidArgument("default values have to be of type GuildChannel or Thread")
+        elif self.type is ComponentType.channel_select:
+            default_value_type = SelectMenuDefaultValueType.Channel
+        if self.type is ComponentType.user_select and not isinstance(default_value, (User, Member)):
+            raise InvalidArgument("default values have to be of type User or Member")
+        elif self.type is ComponentType.user_select:
+            default_value_type = SelectMenuDefaultValueType.User
+        if self.type is ComponentType.role_select and not isinstance(default_value, Role):
+            raise InvalidArgument("default values have to be of type Role")
+        elif self.type is ComponentType.role_select:
+            default_value_type = SelectMenuDefaultValueType.Role
+        if self.type is ComponentType.mentionable_select and not isinstance(default_value, (User, Member, Role)):
+            raise InvalidArgument("default values have to be of type User, Member or Role")
+        elif self.type is ComponentType.mentionable_select and isinstance(default_value, (User, Member)):
+            default_value_type = SelectMenuDefaultValueType.User
+        elif self.type is ComponentType.mentionable_select and isinstance(default_value, Role):
+            default_value_type = SelectMenuDefaultValueType.Role
+        if default_value_type is None:
+            raise InvalidArgument("default values have to be of type User, Member, Role or GuildChannel")
+        default_value = SelectDefaultValue(
+                id=default_value.id,
+                type=default_value_type,
+        )
+
+        self.append_default_value(default_value)
+
+    def append_default_value(self, default_value: SelectDefaultValue):
+        """Appends a default value to the select menu.
+
+		Parameters
+		----------
+		default_value: :class:`discord.SelectDefaultValue`
+			The default value to append to the select menu.
+
+		Raises
+		------
+		ValueError
+			The number of options exceeds 25.
+		"""
+        if self._underlying.type is ComponentType.string_select:
+            raise Exception("default values can only be set on string selects")
+
+        if len(self._underlying.default_values) > 25:
+            raise ValueError("maximum number of options already provided")
+
+        self._underlying.default_values.append(default_value)
+
+    @property
     def values(
         self,
     ) -> (
@@ -457,6 +587,7 @@ def select(
     channel_types: list[ChannelType] = MISSING,
     disabled: bool = False,
     row: int | None = None,
+    default_values: list[User | Member | Role | GuildChannel | Thread] = MISSING,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a select menu to a component.
 
@@ -516,6 +647,9 @@ def select(
     ):
         raise TypeError("options may only be specified for string selects")
 
+    if default_values is not MISSING and select_type is ComponentType.string_select:
+        raise TypeError("default_values may only be specified for user/role/channel/mentionable selects")
+
     if channel_types is not MISSING and select_type is not ComponentType.channel_select:
         raise TypeError("channel_types may only be specified for channel selects")
 
@@ -536,6 +670,8 @@ def select(
             model_kwargs["options"] = options
         if channel_types:
             model_kwargs["channel_types"] = channel_types
+        if default_values:
+            model_kwargs["default_values"] = default_values
 
         func.__discord_ui_model_type__ = Select
         func.__discord_ui_model_kwargs__ = model_kwargs
@@ -577,6 +713,7 @@ def user_select(
     custom_id: str | None = None,
     min_values: int = 1,
     max_values: int = 1,
+    default_values: list[Member | User] | None = None,
     disabled: bool = False,
     row: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
@@ -592,6 +729,7 @@ def user_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        default_values=default_values,
     )
 
 
@@ -603,6 +741,7 @@ def role_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    default_values: list[Role] | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
@@ -616,6 +755,7 @@ def role_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        default_values=default_values
     )
 
 
@@ -627,6 +767,7 @@ def mentionable_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    default_values: list[Member | User | Role] | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
@@ -640,6 +781,7 @@ def mentionable_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        default_values=default_values,
     )
 
 
@@ -652,6 +794,7 @@ def channel_select(
     disabled: bool = False,
     channel_types: list[ChannelType] = MISSING,
     row: int | None = None,
+    default_values: list[GuildChannel | Thread] | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
@@ -666,4 +809,5 @@ def channel_select(
         disabled=disabled,
         channel_types=channel_types,
         row=row,
+        default_values=default_values,
     )
