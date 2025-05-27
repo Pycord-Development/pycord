@@ -3444,6 +3444,9 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
 
         return PartialMessage(channel=self, id=message_id)
 
+    def __repr__(self) -> str:
+        return f"<PartialMessageable id={self.id} type={self.type!r}>"
+
 
 class VoiceChannelEffectAnimation(NamedTuple):
     """Represents an animation that can be sent to a voice channel.
