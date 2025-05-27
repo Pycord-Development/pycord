@@ -27,15 +27,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
 
-from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
-from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, get_slots
 from .abc import GuildChannel
 from .emoji import AppEmoji, GuildEmoji
+from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
 from .member import Member
+from .partial_emoji import PartialEmoji, _EmojiTag
 from .role import Role
 from .threads import Thread
 from .user import User
+from .utils import MISSING, get_slots
 
 if TYPE_CHECKING:
     from .types.components import ActionRow as ActionRowPayload
