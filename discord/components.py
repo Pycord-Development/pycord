@@ -41,6 +41,11 @@ if TYPE_CHECKING:
     from .types.components import SelectOption as SelectOptionPayload
     from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenuDefaultValueType
+    from .threads import Thread
+    from .abc import GuildChannel
+    from .role import Role
+    from .member import Member
+    from .user import User
 
 __all__ = (
     "Component",
@@ -362,7 +367,22 @@ class SelectMenu(Component):
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
-        self.default_values: list[SelectDefaultValue] = []
+        _default_values = []
+        for d in data.get("default_values", []):
+            if isinstance(d, SelectDefaultValue):
+                _default_values.append(d)
+            elif isinstance(d, (User, Member)):
+                _default_values.append(SelectDefaultValue(id=d.id, type="user"))
+            elif isinstance(d, Role):
+                _default_values.append(SelectDefaultValue(id=d.id, type="role"))
+            elif isinstance(d, (GuildChannel, Thread)):
+                _default_values.append(SelectDefaultValue(id=d.id, type="channel"))
+            else:
+                raise TypeError(
+                        f"expected SelectDefaultValue, User, Member, Role, GuildChannel or Mentionable, not {d.__class__}"
+                )
+
+        self.default_values: list[SelectDefaultValue] = _default_values
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -379,8 +399,8 @@ class SelectMenu(Component):
             payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.placeholder:
             payload["placeholder"] = self.placeholder
-        if self.type is ComponentType.role_select and self.default_values:
-            payload["default_values"] = []
+        if self.type is not ComponentType.string_select and self.default_values:
+            payload["default_values"] = self.default_values
 
         return payload
 
