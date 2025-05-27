@@ -29,9 +29,8 @@ import inspect
 import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
-from .. import SelectDefaultValue
 from ..channel import _threaded_guild_channel_factory
-from ..components import SelectMenu, SelectOption
+from ..components import SelectMenu, SelectOption, SelectDefaultValue
 from ..emoji import AppEmoji, GuildEmoji
 from ..enums import ChannelType, ComponentType, SelectMenuDefaultValueType
 from ..errors import InvalidArgument
