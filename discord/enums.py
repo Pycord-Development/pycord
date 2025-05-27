@@ -1082,9 +1082,9 @@ class SubscriptionStatus(Enum):
 class SelectMenuDefaultValueType(Enum):
     """The type of a select menu's default value."""
 
-    Channel = 'channel'
-    Role = 'role'
-    User = 'user'
+    Channel = "channel"
+    Role = "role"
+    User = "user"
 
     def __str__(self):
         return self.name

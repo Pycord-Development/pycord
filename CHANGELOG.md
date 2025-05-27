@@ -55,8 +55,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
-- Added the ability to pass default values into `ui.Select` of type `ComponentType.channel_select`, `ComponentType.
-  user_select`, `ComponentType.role_select` and `ComponentType.mentionable_select`
+- Added the ability to pass default values into `ui.Select` of type
+  `ComponentType.channel_select`, `ComponentType. user_select`,
+  `ComponentType.role_select` and `ComponentType.mentionable_select`
 
 ### Fixed
 

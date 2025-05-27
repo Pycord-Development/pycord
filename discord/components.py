@@ -32,19 +32,19 @@ from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
 if TYPE_CHECKING:
+    from .abc import GuildChannel
     from .emoji import AppEmoji, GuildEmoji
+    from .member import Member
+    from .role import Role
+    from .threads import Thread
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
     from .types.components import InputText as InputTextComponentPayload
-    from .types.components import SelectMenu as SelectMenuPayload
-    from .types.components import SelectOption as SelectOptionPayload
     from .types.components import SelectDefaultValue as SelectDefaultValuePayload
+    from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectMenuDefaultValueType
-    from .threads import Thread
-    from .abc import GuildChannel
-    from .role import Role
-    from .member import Member
+    from .types.components import SelectOption as SelectOptionPayload
     from .user import User
 
 __all__ = (
@@ -381,7 +381,7 @@ class SelectMenu(Component):
                 _default_values.append(SelectDefaultValue(id=d.id, type="channel"))
             else:
                 raise TypeError(
-                        f"expected SelectDefaultValue, User, Member, Role, GuildChannel or Mentionable, not {d.__class__}"
+                    f"expected SelectDefaultValue, User, Member, Role, GuildChannel or Mentionable, not {d.__class__}"
                 )
 
         self.default_values: list[SelectDefaultValue] = _default_values
@@ -546,22 +546,12 @@ class SelectDefaultValue:
         "type",
     )
 
-    def __init__(
-        self,
-        *,
-        id: int,
-        type: SelectMenuDefaultValueType
-    ) -> None:
+    def __init__(self, *, id: int, type: SelectMenuDefaultValueType) -> None:
         self.id = id
         self.type = type
 
-
-
     def __repr__(self) -> str:
-        return (
-            "<SelectDefaultValue"
-            f" id={self.id!r} type={self.type!r}>"
-        )
+        return "<SelectDefaultValue" f" id={self.id!r} type={self.type!r}>"
 
     def __str__(self) -> str:
         return f"{self.id} {self.type}"
@@ -570,8 +560,8 @@ class SelectDefaultValue:
     def from_dict(cls, data: SelectDefaultValuePayload) -> SelectDefaultValue:
 
         return cls(
-                id=data["id"],
-                type=data["type"],
+            id=data["id"],
+            type=data["type"],
         )
 
     def to_dict(self) -> SelectDefaultValuePayload:
