@@ -147,61 +147,62 @@ class Select(Item[V]):
                 "channel_types parameter is only valid for channel selects"
             )
         _default_values = []
-        if default_values and select_type is ComponentType.string_select:
-            raise InvalidArgument(
-                "default_values parameter is only valid for user/role/channel/mentionable selects"
-            )
-        if default_values and select_type is ComponentType.role_select:
-            for r in default_values:
-                if not isinstance(r, Role):
-                    raise ValueError(
-                        f"default_values must be a list of Role  objects, not {r.__class__.__name__}"
-                    )
-                _default_values.append(
-                    SelectDefaultValue(id=r.id, type=SelectMenuDefaultValueType.Role)
+        if default_values:
+            if select_type is ComponentType.string_select:
+                raise InvalidArgument(
+                    "default_values parameter is only valid for user/role/channel/mentionable selects"
                 )
-        if default_values and select_type is ComponentType.user_select:
-            for u in default_values:
-                if not isinstance(u, (User, Member)):
-                    raise ValueError(
-                        f"default_values must be a list of User/Member objects, "
-                        f"not {u.__class__.__name__}"
+            if select_type is ComponentType.role_select:
+                for r in default_values:
+                    if not isinstance(r, Role):
+                        raise ValueError(
+                            f"default_values must be a list of Role  objects, not {r.__class__.__name__}"
+                        )
+                    _default_values.append(
+                        SelectDefaultValue(id=r.id, type=SelectMenuDefaultValueType.Role)
                     )
-                _default_values.append(
-                    SelectDefaultValue(id=u.id, type=SelectMenuDefaultValueType.User)
-                )
-        if default_values and select_type is ComponentType.channel_select:
-            for c in default_values:
-                if not isinstance(c, GuildChannel):
-                    raise ValueError(
-                        f"default_values must be a list of GuildChannel objects, "
-                        f"not {c.__class__.__name__}"
+            if select_type is ComponentType.user_select:
+                for u in default_values:
+                    if not isinstance(u, (User, Member)):
+                        raise ValueError(
+                            f"default_values must be a list of User/Member objects, "
+                            f"not {u.__class__.__name__}"
+                        )
+                    _default_values.append(
+                        SelectDefaultValue(id=u.id, type=SelectMenuDefaultValueType.User)
                     )
-                if channel_types and c.type not in channel_types:
-                    raise ValueError(
-                        f"default_values must be a list of channels of type {channel_types}, "
-                        f"not {c.__class__.__name__}"
+            if select_type is ComponentType.channel_select:
+                for c in default_values:
+                    if not isinstance(c, GuildChannel):
+                        raise ValueError(
+                            f"default_values must be a list of GuildChannel objects, "
+                            f"not {c.__class__.__name__}"
+                        )
+                    if channel_types and c.type not in channel_types:
+                        raise ValueError(
+                            f"default_values must be a list of channels of type {channel_types}, "
+                            f"not {c.__class__.__name__}"
+                        )
+                    _default_values.append(
+                        SelectDefaultValue(id=c.id, type=SelectMenuDefaultValueType.Channel)
                     )
-                _default_values.append(
-                    SelectDefaultValue(id=c.id, type=SelectMenuDefaultValueType.Channel)
-                )
-        if default_values and select_type is ComponentType.mentionable_select:
-            for m in default_values:
-                if not isinstance(m, (User, Member, Role)):
-                    raise ValueError(
-                        f"default_values must be a list of User/Member/Role objects, "
-                        f"not {m.__class__.__name__}"
+            if select_type is ComponentType.mentionable_select:
+                for m in default_values:
+                    if not isinstance(m, (User, Member, Role)):
+                        raise ValueError(
+                            f"default_values must be a list of User/Member/Role objects, "
+                            f"not {m.__class__.__name__}"
+                        )
+                    _default_values.append(
+                        SelectDefaultValue(
+                            id=m.id,
+                            type=(
+                                SelectMenuDefaultValueType.Role
+                                if isinstance(m, Role)
+                                else SelectMenuDefaultValueType.User
+                            ),
+                        )
                     )
-                _default_values.append(
-                    SelectDefaultValue(
-                        id=m.id,
-                        type=(
-                            SelectMenuDefaultValueType.Role
-                            if isinstance(m, Role)
-                            else SelectMenuDefaultValueType.User
-                        ),
-                    )
-                )
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
