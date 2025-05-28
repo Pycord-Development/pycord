@@ -159,7 +159,9 @@ class Select(Item[V]):
                             f"default_values must be a list of Role  objects, not {r.__class__.__name__}"
                         )
                     _default_values.append(
-                        SelectDefaultValue(id=r.id, type=SelectMenuDefaultValueType.Role)
+                        SelectDefaultValue(
+                            id=r.id, type=SelectMenuDefaultValueType.Role
+                        )
                     )
             if select_type is ComponentType.user_select:
                 for u in default_values:
@@ -169,7 +171,9 @@ class Select(Item[V]):
                             f"not {u.__class__.__name__}"
                         )
                     _default_values.append(
-                        SelectDefaultValue(id=u.id, type=SelectMenuDefaultValueType.User)
+                        SelectDefaultValue(
+                            id=u.id, type=SelectMenuDefaultValueType.User
+                        )
                     )
             if select_type is ComponentType.channel_select:
                 for c in default_values:
@@ -184,7 +188,9 @@ class Select(Item[V]):
                             f"not {c.__class__.__name__}"
                         )
                     _default_values.append(
-                        SelectDefaultValue(id=c.id, type=SelectMenuDefaultValueType.Channel)
+                        SelectDefaultValue(
+                            id=c.id, type=SelectMenuDefaultValueType.Channel
+                        )
                     )
             if select_type is ComponentType.mentionable_select:
                 for m in default_values:
