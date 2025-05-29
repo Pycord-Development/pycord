@@ -613,7 +613,7 @@ msgstr ""
 msgid "The formatted string."
 msgstr ""
 
-#: 3dbe398f94684d7d81111c3a9d78ddee discord.utils.time_snowflake:1 of
+#: 3dbe398f94684d7d81111c3a9d78ddee discord.utils.:1 of
 msgid "Returns a numeric snowflake pretending to be created at the given date."
 msgstr ""
 
