@@ -92,9 +92,7 @@ class BaseUser(_UserTag):
         _avatar_decoration: dict | None
         _public_flags: int
 
-    def __init__(
-        self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
-    ) -> None:
+    def __init__(self, *, state: ConnectionState, data: UserPayload | PartialUserPayload) -> None:
         self._state = state
         self._update(data)
 
@@ -106,11 +104,7 @@ class BaseUser(_UserTag):
                     f" id={self.id} username={self.name!r} global_name={self.global_name!r}"
                     f" bot={self.bot} system={self.system}>"
                 )
-            return (
-                "<BaseUser"
-                f" id={self.id} username={self.name!r}"
-                f" bot={self.bot} system={self.system}>"
-            )
+            return f"<BaseUser id={self.id} username={self.name!r} bot={self.bot} system={self.system}>"
         return (
             "<BaseUser"
             f" id={self.id} name={self.name!r} discriminator={self.discriminator!r}"
@@ -121,11 +115,7 @@ class BaseUser(_UserTag):
         return (
             f"{self.name}#{self.discriminator}"
             if not self.is_migrated
-            else (
-                f"{self.name} ({self.global_name})"
-                if self.global_name is not None
-                else self.name
-            )
+            else (f"{self.name} ({self.global_name})" if self.global_name is not None else self.name)
         )
 
     def __eq__(self, other: Any) -> bool:
@@ -239,9 +229,7 @@ class BaseUser(_UserTag):
         """
         if self._avatar_decoration is None:
             return None
-        return Asset._from_avatar_decoration(
-            self._state, self.id, self._avatar_decoration.get("asset")
-        )
+        return Asset._from_avatar_decoration(self._state, self.id, self._avatar_decoration.get("asset"))
 
     @property
     def accent_colour(self) -> Colour | None:
@@ -545,15 +533,9 @@ class User(BaseUser, discord.abc.Messageable):
     def __repr__(self) -> str:
         if self.is_migrated:
             if self.global_name is not None:
-                return (
-                    "<User"
-                    f" id={self.id} username={self.name!r} global_name={self.global_name!r} bot={self.bot}>"
-                )
-            return "<User" f" id={self.id} username={self.name!r} bot={self.bot}>"
-        return (
-            "<User"
-            f" id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
-        )
+                return f"<User id={self.id} username={self.name!r} global_name={self.global_name!r} bot={self.bot}>"
+            return f"<User id={self.id} username={self.name!r} bot={self.bot}>"
+        return f"<User id={self.id} name={self.name!r} discriminator={self.discriminator!r} bot={self.bot}>"
 
     def __del__(self) -> None:
         try:
@@ -591,9 +573,7 @@ class User(BaseUser, discord.abc.Messageable):
 
         .. versionadded:: 1.7
         """
-        return [
-            guild for guild in self._state._guilds.values() if guild.get_member(self.id)
-        ]
+        return [guild for guild in self._state._guilds.values() if guild.get_member(self.id)]
 
     async def create_dm(self) -> DMChannel:
         """|coro|
@@ -636,9 +616,7 @@ class User(BaseUser, discord.abc.Messageable):
             "owner_id": self.id,
             "owner_type": 2,
         }
-        data = await self._state.http.create_test_entitlement(
-            self._state.application_id, payload
-        )
+        data = await self._state.http.create_test_entitlement(self._state.application_id, payload)
         return Entitlement(data=data, state=self._state)
 
     def entitlements(

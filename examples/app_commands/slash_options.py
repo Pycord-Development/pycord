@@ -29,9 +29,7 @@ async def hello(
     gender: str,
     age: int,
 ):
-    await ctx.respond(
-        f"Hello {name}! Your gender is {gender} and you are {age} years old."
-    )
+    await ctx.respond(f"Hello {name}! Your gender is {gender} and you are {age} years old.")
 
 
 @bot.slash_command(name="channel")

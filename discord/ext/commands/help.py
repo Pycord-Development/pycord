@@ -143,16 +143,11 @@ class Paginator:
         RuntimeError
             The line was too big for the current :attr:`max_size`.
         """
-        max_page_size = (
-            self.max_size - self._prefix_len - self._suffix_len - 2 * self._linesep_len
-        )
+        max_page_size = self.max_size - self._prefix_len - self._suffix_len - 2 * self._linesep_len
         if len(line) > max_page_size:
             raise RuntimeError(f"Line exceeds maximum page size {max_page_size}")
 
-        if (
-            self._count + len(line) + self._linesep_len
-            > self.max_size - self._suffix_len
-        ):
+        if self._count + len(line) + self._linesep_len > self.max_size - self._suffix_len:
             self.close_page()
 
         self._count += len(line) + self._linesep_len
@@ -412,11 +407,7 @@ class HelpCommand:
         """
         command_name = self._command_impl.name
         ctx = self.context
-        if (
-            ctx is None
-            or ctx.command is None
-            or ctx.command.qualified_name != command_name
-        ):
+        if ctx is None or ctx.command is None or ctx.command.qualified_name != command_name:
             return command_name
         return ctx.invoked_with
 
@@ -545,14 +536,10 @@ class HelpCommand:
             The string to use when the command did not have the subcommand requested.
         """
         if isinstance(command, Group) and len(command.all_commands) > 0:
-            return (
-                f'Command "{command.qualified_name}" has no subcommand named {string}'
-            )
+            return f'Command "{command.qualified_name}" has no subcommand named {string}'
         return f'Command "{command.qualified_name}" has no subcommands.'
 
-    async def filter_commands(
-        self, commands, *, sort=False, key=None, exclude: tuple[Any] | None = None
-    ):
+    async def filter_commands(self, commands, *, sort=False, key=None, exclude: tuple[Any] | None = None):
         """|coro|
 
         Returns a filtered list of commands and optionally sorts them.
@@ -591,11 +578,7 @@ class HelpCommand:
                 (discord.commands.ApplicationCommand, *(exclude if exclude else ())),
             )
         ]
-        iterator = (
-            new_commands
-            if self.show_hidden
-            else filter(lambda c: not c.hidden, new_commands)
-        )
+        iterator = new_commands if self.show_hidden else filter(lambda c: not c.hidden, new_commands)
 
         if self.verify_checks is False:
             # if we do not need to verify the checks then we can just
@@ -884,24 +867,18 @@ class HelpCommand:
         keys = command.split(" ")
         cmd = bot.all_commands.get(keys[0])
         if cmd is None:
-            string = await maybe_coro(
-                self.command_not_found, self.remove_mentions(keys[0])
-            )
+            string = await maybe_coro(self.command_not_found, self.remove_mentions(keys[0]))
             return await self.send_error_message(string)
 
         for key in keys[1:]:
             try:
                 found = cmd.all_commands.get(key)
             except AttributeError:
-                string = await maybe_coro(
-                    self.subcommand_not_found, cmd, self.remove_mentions(key)
-                )
+                string = await maybe_coro(self.subcommand_not_found, cmd, self.remove_mentions(key))
                 return await self.send_error_message(string)
             else:
                 if found is None:
-                    string = await maybe_coro(
-                        self.subcommand_not_found, cmd, self.remove_mentions(key)
-                    )
+                    string = await maybe_coro(self.subcommand_not_found, cmd, self.remove_mentions(key))
                     return await self.send_error_message(string)
                 cmd = found
 
@@ -965,7 +942,7 @@ class DefaultHelpCommand(HelpCommand):
     def shorten_text(self, text: str) -> str:
         """Shortens text to fit into the :attr:`width`."""
         if len(text) > self.width:
-            return f"{text[:self.width - 3].rstrip()}..."
+            return f"{text[: self.width - 3].rstrip()}..."
         return text
 
     def get_ending_note(self) -> str:
@@ -1011,7 +988,7 @@ class DefaultHelpCommand(HelpCommand):
         for command in commands:
             name = command.name
             width = max_size - (get_width(name) - len(name))
-            entry = f'{self.indent * " "}{name:<{width}} {command.short_doc}'
+            entry = f"{self.indent * ' '}{name:<{width}} {command.short_doc}"
             self.paginator.add_line(self.shorten_text(entry))
 
     async def send_pages(self):
@@ -1076,11 +1053,7 @@ class DefaultHelpCommand(HelpCommand):
 
         # Now we can add the commands to the page.
         for category, commands in to_iterate:
-            commands = (
-                sorted(commands, key=lambda c: c.name)
-                if self.sort_commands
-                else list(commands)
-            )
+            commands = sorted(commands, key=lambda c: c.name) if self.sort_commands else list(commands)
             self.add_indented_commands(commands, heading=category, max_size=max_size)
 
         note = self.get_ending_note()
@@ -1204,9 +1177,7 @@ class MinimalHelpCommand(HelpCommand):
         )
 
     def get_command_signature(self, command):
-        return (
-            f"{self.context.clean_prefix}{command.qualified_name} {command.signature}"
-        )
+        return f"{self.context.clean_prefix}{command.qualified_name} {command.signature}"
 
     def get_ending_note(self):
         """Return the help command's ending note. This is mainly useful to override for i18n purposes.
@@ -1255,11 +1226,7 @@ class MinimalHelpCommand(HelpCommand):
             The command to show information of.
         """
         fmt = "{0}{1} \N{EN DASH} {2}" if command.short_doc else "{0}{1}"
-        self.paginator.add_line(
-            fmt.format(
-                self.context.clean_prefix, command.qualified_name, command.short_doc
-            )
-        )
+        self.paginator.add_line(fmt.format(self.context.clean_prefix, command.qualified_name, command.short_doc))
 
     def add_aliases_formatting(self, aliases):
         """Adds the formatting information on a command's aliases.
@@ -1276,9 +1243,7 @@ class MinimalHelpCommand(HelpCommand):
         aliases: Sequence[:class:`str`]
             A list of aliases to format.
         """
-        self.paginator.add_line(
-            f'**{self.aliases_heading}** {", ".join(aliases)}', empty=True
-        )
+        self.paginator.add_line(f"**{self.aliases_heading}** {', '.join(aliases)}", empty=True)
 
     def add_command_formatting(self, command):
         """A utility function to format commands and groups.
@@ -1341,11 +1306,7 @@ class MinimalHelpCommand(HelpCommand):
         to_iterate = itertools.groupby(filtered, key=get_category)
 
         for category, commands in to_iterate:
-            commands = (
-                sorted(commands, key=lambda c: c.name)
-                if self.sort_commands
-                else list(commands)
-            )
+            commands = sorted(commands, key=lambda c: c.name) if self.sort_commands else list(commands)
             self.add_bot_commands_formatting(commands, category)
 
         note = self.get_ending_note()

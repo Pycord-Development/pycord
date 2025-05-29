@@ -91,18 +91,14 @@ class RoleTags:
     def __init__(self, data: RoleTagPayload):
         self.bot_id: int | None = _get_as_snowflake(data, "bot_id")
         self.integration_id: int | None = _get_as_snowflake(data, "integration_id")
-        self.subscription_listing_id: int | None = _get_as_snowflake(
-            data, "subscription_listing_id"
-        )
+        self.subscription_listing_id: int | None = _get_as_snowflake(data, "subscription_listing_id")
         # NOTE: The API returns "null" for each of the following tags if they are True, and omits them if False.
         # However, "null" corresponds to None.
         # This is different from other fields where "null" means "not there".
         # So in this case, a value of None is the same as True.
         # Which means we would need a different sentinel.
         self._premium_subscriber: Any | None = data.get("premium_subscriber", MISSING)
-        self._available_for_purchase: Any | None = data.get(
-            "available_for_purchase", MISSING
-        )
+        self._available_for_purchase: Any | None = data.get("available_for_purchase", MISSING)
         self._guild_connections: Any | None = data.get("guild_connections", MISSING)
 
     def is_bot_managed(self) -> bool:
@@ -345,11 +341,7 @@ class Role(Hashable):
         .. versionadded:: 2.0
         """
         me = self.guild.me
-        return (
-            not self.is_default()
-            and not self.managed
-            and (me.top_role > self or me.id == self.guild.owner_id)
-        )
+        return not self.is_default() and not self.managed and (me.top_role > self or me.id == self.guild.owner_id)
 
     def is_available_for_purchase(self) -> bool:
         """Whether the role is available for purchase.
@@ -427,23 +419,15 @@ class Role(Hashable):
 
         http = self._state.http
 
-        change_range = range(
-            min(self.position, position), max(self.position, position) + 1
-        )
-        roles = [
-            r.id
-            for r in self.guild.roles[1:]
-            if r.position in change_range and r.id != self.id
-        ]
+        change_range = range(min(self.position, position), max(self.position, position) + 1)
+        roles = [r.id for r in self.guild.roles[1:] if r.position in change_range and r.id != self.id]
 
         if self.position > position:
             roles.insert(0, self.id)
         else:
             roles.append(self.id)
 
-        payload: list[RolePositionUpdate] = [
-            {"id": z[0], "position": z[1]} for z in zip(roles, change_range)
-        ]
+        payload: list[RolePositionUpdate] = [{"id": z[0], "position": z[1]} for z in zip(roles, change_range)]
         await http.move_role_position(self.guild.id, payload, reason=reason)
 
     async def edit(
@@ -549,9 +533,7 @@ class Role(Hashable):
             payload["unicode_emoji"] = unicode_emoji
             payload["icon"] = None
 
-        data = await self._state.http.edit_role(
-            self.guild.id, self.id, reason=reason, **payload
-        )
+        data = await self._state.http.edit_role(self.guild.id, self.id, reason=reason, **payload)
         return Role(guild=self.guild, data=data, state=self._state)
 
     async def delete(self, *, reason: str | None = None) -> None:

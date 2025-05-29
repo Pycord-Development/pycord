@@ -202,29 +202,19 @@ class AppInfo:
 
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
-        self.primary_sku_id: int | None = utils._get_as_snowflake(
-            data, "primary_sku_id"
-        )
+        self.primary_sku_id: int | None = utils._get_as_snowflake(data, "primary_sku_id")
         self.slug: str | None = data.get("slug")
         self._cover_image: str | None = data.get("cover_image")
         self.terms_of_service_url: str | None = data.get("terms_of_service_url")
         self.privacy_policy_url: str | None = data.get("privacy_policy_url")
         self.approximate_guild_count: int | None = data.get("approximate_guild_count")
-        self.approximate_user_install_count: int | None = data.get(
-            "approximate_user_install_count"
-        )
+        self.approximate_user_install_count: int | None = data.get("approximate_user_install_count")
         self.redirect_uris: list[str] | None = data.get("redirect_uris", [])
-        self.interactions_endpoint_url: str | None = data.get(
-            "interactions_endpoint_url"
-        )
-        self.role_connections_verification_url: str | None = data.get(
-            "role_connections_verification_url"
-        )
+        self.interactions_endpoint_url: str | None = data.get("interactions_endpoint_url")
+        self.role_connections_verification_url: str | None = data.get("role_connections_verification_url")
 
         install_params = data.get("install_params")
-        self.install_params: AppInstallParams | None = (
-            AppInstallParams(install_params) if install_params else None
-        )
+        self.install_params: AppInstallParams | None = AppInstallParams(install_params) if install_params else None
         self.tags: list[str] | None = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
 

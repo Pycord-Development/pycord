@@ -95,9 +95,7 @@ class WelcomeScreenChannel:
         return dict_
 
     @classmethod
-    def _from_dict(
-        cls, data: WelcomeScreenChannelPayload, guild: Guild
-    ) -> WelcomeScreenChannel:
+    def _from_dict(cls, data: WelcomeScreenChannelPayload, guild: Guild) -> WelcomeScreenChannel:
         channel_id = _get_as_snowflake(data, "channel_id")
         channel = guild.get_channel(channel_id)
         description = data.get("description")
@@ -127,16 +125,12 @@ class WelcomeScreen:
         self._update(data)
 
     def __repr__(self):
-        return (
-            "<WelcomeScreen"
-            f" description={self.description} welcome_channels={self.welcome_channels}"
-        )
+        return f"<WelcomeScreen description={self.description} welcome_channels={self.welcome_channels}"
 
     def _update(self, data: WelcomeScreenPayload):
         self.description: str = data.get("description")
         self.welcome_channels: list[WelcomeScreenChannel] = [
-            WelcomeScreenChannel._from_dict(channel, self._guild)
-            for channel in data.get("welcome_channels", [])
+            WelcomeScreenChannel._from_dict(channel, self._guild) for channel in data.get("welcome_channels", [])
         ]
 
     @property
@@ -198,14 +192,15 @@ class WelcomeScreen:
 
             rules_channel = guild.get_channel(12345678)
             announcements_channel = guild.get_channel(87654321)
-            custom_emoji = utils.get(guild.emojis, name='loudspeaker')
+            custom_emoji = utils.get(guild.emojis, name="loudspeaker")
             await welcome_screen.edit(
-                description='This is a very cool community server!',
+                description="This is a very cool community server!",
                 welcome_channels=[
-                    WelcomeChannel(channel=rules_channel, description='Read the rules!', emoji='👨‍🏫'),
-                    WelcomeChannel(channel=announcements_channel, description='Watch out for announcements!',
-                                   emoji=custom_emoji),
-                ]
+                    WelcomeChannel(channel=rules_channel, description="Read the rules!", emoji="👨‍🏫"),
+                    WelcomeChannel(
+                        channel=announcements_channel, description="Watch out for announcements!", emoji=custom_emoji
+                    ),
+                ],
             )
 
         .. note::
@@ -217,9 +212,7 @@ class WelcomeScreen:
 
         for channel in welcome_channels:
             if not isinstance(channel, WelcomeScreenChannel):
-                raise TypeError(
-                    "welcome_channels parameter must be a list of WelcomeScreenChannel."
-                )
+                raise TypeError("welcome_channels parameter must be a list of WelcomeScreenChannel.")
 
             welcome_channels_data.append(channel.to_dict())
 

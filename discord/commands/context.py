@@ -188,11 +188,7 @@ class ApplicationContext(discord.abc.Messageable):
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
         message contexts, or when :meth:`Intents.guilds` is absent.
         """
-        return (
-            self.interaction.guild.me
-            if self.interaction.guild is not None
-            else self.bot.user
-        )
+        return self.interaction.guild.me if self.interaction.guild is not None else self.bot.user
 
     @cached_property
     def message(self) -> Message | None:
@@ -255,8 +251,7 @@ class ApplicationContext(discord.abc.Messageable):
                 return [
                     option
                     for option in self.command.options  # type: ignore
-                    if option.to_dict()["name"]
-                    not in [opt["name"] for opt in self.selected_options]
+                    if option.to_dict()["name"] not in [opt["name"] for opt in self.selected_options]
                 ]
             else:
                 return self.command.options  # type: ignore
@@ -269,9 +264,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @property
     @discord.utils.copy_doc(Interaction.respond)
-    def respond(
-        self, *args, **kwargs
-    ) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
+    def respond(self, *args, **kwargs) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
         return self.interaction.respond
 
     @property
@@ -281,8 +274,7 @@ class ApplicationContext(discord.abc.Messageable):
             return self.interaction.response.send_message
         else:
             raise RuntimeError(
-                "Interaction was already issued a response. Try using"
-                f" {type(self).__name__}.send_followup() instead."
+                f"Interaction was already issued a response. Try using {type(self).__name__}.send_followup() instead."
             )
 
     @property
@@ -292,8 +284,7 @@ class ApplicationContext(discord.abc.Messageable):
             return self.followup.send
         else:
             raise RuntimeError(
-                "Interaction was not yet issued a response. Try using"
-                f" {type(self).__name__}.respond() first."
+                f"Interaction was not yet issued a response. Try using {type(self).__name__}.respond() first."
             )
 
     @property

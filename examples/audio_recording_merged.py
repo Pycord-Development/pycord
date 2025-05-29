@@ -70,9 +70,7 @@ async def start(ctx: discord.ApplicationContext):
     vc: discord.VoiceClient = ctx.voice_client
 
     if not vc:
-        return await ctx.respond(
-            "I'm not in a vc right now. Use `/join` to make me join!"
-        )
+        return await ctx.respond("I'm not in a vc right now. Use `/join` to make me join!")
 
     vc.start_recording(
         MP3Sink(),

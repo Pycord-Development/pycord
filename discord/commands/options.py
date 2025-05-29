@@ -176,7 +176,7 @@ class Option:
         async def hello(
             ctx: discord.ApplicationContext,
             name: Option(str, "Enter your name"),
-            age: Option(int, "Enter your age", min_value=1, max_value=99, default=18)
+            age: Option(int, "Enter your age", min_value=1, max_value=99, default=18),
             # passing the default value makes an argument optional
             # you also can create optional argument using:
             # age: Option(int, "Enter your age") = 18
@@ -189,9 +189,7 @@ class Option:
     input_type: SlashCommandOptionType
     converter: Converter | type[Converter] | None = None
 
-    def __init__(
-        self, input_type: InputType = str, /, description: str | None = None, **kwargs
-    ) -> None:
+    def __init__(self, input_type: InputType = str, /, description: str | None = None, **kwargs) -> None:
         self.name: str | None = kwargs.pop("name", None)
         if self.name is not None:
             self.name = str(self.name)
@@ -215,9 +213,7 @@ class Option:
             if value_class in SlashCommandOptionType.__members__ and all(
                 isinstance(elem.value, value_class) for elem in enum_choices
             ):
-                input_type = SlashCommandOptionType.from_datatype(
-                    enum_choices[0].value.__class__
-                )
+                input_type = SlashCommandOptionType.from_datatype(enum_choices[0].value.__class__)
             else:
                 enum_choices = [OptionChoice(e.name, str(e.value)) for e in input_type]
                 input_type = SlashCommandOptionType.string
@@ -230,18 +226,10 @@ class Option:
         else:
             from ..ext.commands import Converter
 
-            if isinstance(input_type, tuple) and any(
-                issubclass(op, ApplicationContext) for op in input_type
-            ):
-                input_type = next(
-                    op for op in input_type if issubclass(op, ApplicationContext)
-                )
+            if isinstance(input_type, tuple) and any(issubclass(op, ApplicationContext) for op in input_type):
+                input_type = next(op for op in input_type if issubclass(op, ApplicationContext))
 
-            if (
-                isinstance(input_type, Converter)
-                or input_type_is_class
-                and issubclass(input_type, Converter)
-            ):
+            if isinstance(input_type, Converter) or input_type_is_class and issubclass(input_type, Converter):
                 self.converter = input_type
                 self._raw_type = str
                 self.input_type = SlashCommandOptionType.string
@@ -264,14 +252,8 @@ class Option:
                             else:
                                 self._raw_type = (input_type,)
                         if not self.channel_types:
-                            self.channel_types = [
-                                CHANNEL_TYPE_MAP[t]
-                                for t in self._raw_type
-                                if t is not GuildChannel
-                            ]
-        self.required: bool = (
-            kwargs.pop("required", True) if "default" not in kwargs else False
-        )
+                            self.channel_types = [CHANNEL_TYPE_MAP[t] for t in self._raw_type if t is not GuildChannel]
+        self.required: bool = kwargs.pop("required", True) if "default" not in kwargs else False
         self.default = kwargs.pop("default", None)
 
         self.autocomplete = kwargs.pop("autocomplete", None)
@@ -283,8 +265,7 @@ class Option:
             self.input_type = SlashCommandOptionType.string
         else:
             self.choices: list[OptionChoice] = enum_choices or [
-                o if isinstance(o, OptionChoice) else OptionChoice(o)
-                for o in kwargs.pop("choices", [])
+                o if isinstance(o, OptionChoice) else OptionChoice(o) for o in kwargs.pop("choices", [])
             ]
 
         if self.input_type == SlashCommandOptionType.integer:
@@ -318,47 +299,31 @@ class Option:
                 "Option does not take min_value or max_value if not of type "
                 "SlashCommandOptionType.integer or SlashCommandOptionType.number"
             )
-        if self.input_type != SlashCommandOptionType.string and (
-            self.min_length or self.max_length
-        ):
-            raise AttributeError(
-                "Option does not take min_length or max_length if not of type str"
-            )
+        if self.input_type != SlashCommandOptionType.string and (self.min_length or self.max_length):
+            raise AttributeError("Option does not take min_length or max_length if not of type str")
 
         if self.min_value is not None and not isinstance(self.min_value, minmax_types):
-            raise TypeError(
-                f"Expected {minmax_typehint} for min_value, got"
-                f' "{type(self.min_value).__name__}"'
-            )
+            raise TypeError(f'Expected {minmax_typehint} for min_value, got "{type(self.min_value).__name__}"')
         if self.max_value is not None and not isinstance(self.max_value, minmax_types):
-            raise TypeError(
-                f"Expected {minmax_typehint} for max_value, got"
-                f' "{type(self.max_value).__name__}"'
-            )
+            raise TypeError(f'Expected {minmax_typehint} for max_value, got "{type(self.max_value).__name__}"')
 
         if self.min_length is not None:
             if not isinstance(self.min_length, minmax_length_types):
                 raise TypeError(
-                    f"Expected {minmax_length_typehint} for min_length,"
-                    f' got "{type(self.min_length).__name__}"'
+                    f'Expected {minmax_length_typehint} for min_length, got "{type(self.min_length).__name__}"'
                 )
             if self.min_length < 0 or self.min_length > 6000:
-                raise AttributeError(
-                    "min_length must be between 0 and 6000 (inclusive)"
-                )
+                raise AttributeError("min_length must be between 0 and 6000 (inclusive)")
         if self.max_length is not None:
             if not isinstance(self.max_length, minmax_length_types):
                 raise TypeError(
-                    f"Expected {minmax_length_typehint} for max_length,"
-                    f' got "{type(self.max_length).__name__}"'
+                    f'Expected {minmax_length_typehint} for max_length, got "{type(self.max_length).__name__}"'
                 )
             if self.max_length < 1 or self.max_length > 6000:
                 raise AttributeError("max_length must between 1 and 6000 (inclusive)")
 
         self.name_localizations = kwargs.pop("name_localizations", MISSING)
-        self.description_localizations = kwargs.pop(
-            "description_localizations", MISSING
-        )
+        self.description_localizations = kwargs.pop("description_localizations", MISSING)
 
         if input_type is None:
             raise TypeError("input_type cannot be NoneType.")
@@ -442,11 +407,7 @@ def option(name, input_type=None, **kwargs):
 
     def decorator(func):
         resolved_name = kwargs.pop("parameter_name", None) or name
-        itype = (
-            kwargs.pop("type", None)
-            or input_type
-            or func.__annotations__.get(resolved_name, str)
-        )
+        itype = kwargs.pop("type", None) or input_type or func.__annotations__.get(resolved_name, str)
         func.__annotations__[resolved_name] = Option(itype, name=name, **kwargs)
         return func
 
