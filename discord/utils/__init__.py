@@ -697,28 +697,6 @@ def compute_timedelta(dt: datetime.datetime):
     now = datetime.datetime.now(datetime.timezone.utc)
     return max((dt - now).total_seconds(), 0)
 
-
-async def sleep_until(when: datetime.datetime, result: T | None = None) -> T | None:
-    """|coro|
-
-    Sleep until a specified time.
-
-    If the time supplied is in the past this function will yield instantly.
-
-    .. versionadded:: 1.3
-
-    Parameters
-    ----------
-    when: :class:`datetime.datetime`
-        The timestamp in which to sleep until. If the datetime is naive then
-        it is assumed to be local time.
-    result: Any
-        If provided is returned to the caller when the coroutine completes.
-    """
-    delta = compute_timedelta(when)
-    return await asyncio.sleep(delta, result)
-
-
 def valid_icon_size(size: int) -> bool:
     """Icons must be power of 2 within [16, 4096]."""
     return not size & (size - 1) and 4096 >= size >= 16
