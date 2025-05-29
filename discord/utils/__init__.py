@@ -1385,34 +1385,3 @@ def basic_autocomplete(
         return iter(itertools.islice(gen, 25))
 
     return autocomplete_callback
-
-
-def filter_params(params, **kwargs):
-    """A helper function to filter out and replace certain keyword parameters
-
-    Parameters
-    ----------
-    params: Dict[str, Any]
-        The initial parameters to filter.
-    **kwargs: Dict[str, Optional[str]]
-        Key to value pairs where the key's contents would be moved to the
-        value, or if the value is None, remove key's contents (see code example).
-
-    Example
-    -------
-    .. code-block:: python3
-
-        >>> params = {"param1": 12, "param2": 13}
-        >>> filter_params(params, param1="param3", param2=None)
-        {'param3': 12}
-        # values of 'param1' is moved to 'param3'
-        # and values of 'param2' are completely removed.
-    """
-    for old_param, new_param in kwargs.items():
-        if old_param in params:
-            if new_param is None:
-                params.pop(old_param)
-            else:
-                params[new_param] = params.pop(old_param)
-
-    return params
