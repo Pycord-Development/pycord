@@ -197,20 +197,24 @@ class OnboardingPrompt:
         return dict_
 
     @classmethod
-    def _from_dict(
-        cls, data: OnboardingPromptPayload, guild: Guild
-    ) -> OnboardingPrompt:
+    def _from_dict(cls, data: OnboardingPromptPayload, guild: Guild) -> OnboardingPrompt:
         id = data.get("id", 0)
         type = try_enum(PromptType, data.get("type"))
         title = data.get("title")
         single_select = data.get("single_select")
         required = data.get("required")
         in_onboarding = data.get("in_onboarding")
-        options = [
-            PromptOption._from_dict(option, guild) for option in data.get("options", [])
-        ]
+        options = [PromptOption._from_dict(option, guild) for option in data.get("options", [])]
 
-        return cls(type=type, title=title, single_select=single_select, required=required, in_onboarding=in_onboarding, options=options, id=id)  # type: ignore
+        return cls(
+            type=type,
+            title=title,
+            single_select=single_select,
+            required=required,
+            in_onboarding=in_onboarding,
+            options=options,
+            id=id,
+        )  # type: ignore
 
 
 class Onboarding:
@@ -239,12 +243,9 @@ class Onboarding:
     def _update(self, data: OnboardingPayload):
         self.guild_id: Snowflake = data["guild_id"]
         self.prompts: list[OnboardingPrompt] = [
-            OnboardingPrompt._from_dict(prompt, self.guild)
-            for prompt in data.get("prompts", [])
+            OnboardingPrompt._from_dict(prompt, self.guild) for prompt in data.get("prompts", [])
         ]
-        self.default_channel_ids: list[int] = [
-            int(c) for c in data["default_channel_ids"]
-        ]
+        self.default_channel_ids: list[int] = [int(c) for c in data["default_channel_ids"]]
         self.enabled: bool = data["enabled"]
         self.mode: OnboardingMode = try_enum(OnboardingMode, data.get("mode"))
 
@@ -259,10 +260,7 @@ class Onboarding:
         """
         if self.guild is None:
             return [Object(channel_id) for channel_id in self.default_channel_ids]
-        return [
-            self.guild.get_channel(channel_id) or Object(channel_id)
-            for channel_id in self.default_channel_ids
-        ]
+        return [self.guild.get_channel(channel_id) or Object(channel_id) for channel_id in self.default_channel_ids]
 
     async def edit(
         self,
@@ -322,9 +320,7 @@ class Onboarding:
         if mode is not MISSING:
             fields["mode"] = mode.value
 
-        new = await self.guild._state.http.edit_onboarding(
-            self.guild.id, fields, reason=reason
-        )
+        new = await self.guild._state.http.edit_onboarding(self.guild.id, fields, reason=reason)
         self._update(new)
         return self
 
@@ -376,9 +372,7 @@ class Onboarding:
             You don't have permissions to edit the onboarding flow.
         """
 
-        prompt = OnboardingPrompt(
-            type, title, options, single_select, required, in_onboarding
-        )
+        prompt = OnboardingPrompt(type, title, options, single_select, required, in_onboarding)
         prompts = self.prompts + [prompt]
         return await self.edit(prompts=prompts, reason=reason)
 

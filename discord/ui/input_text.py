@@ -73,9 +73,7 @@ class InputText:
         if placeholder and len(str(placeholder)) > 100:
             raise ValueError("placeholder must be 100 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
 
         self._underlying = InputTextComponent._raw_construct(
@@ -105,9 +103,7 @@ class InputText:
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
-            raise TypeError(
-                f"style must be of type InputTextStyle not {value.__class__.__name__}"
-            )
+            raise TypeError(f"style must be of type InputTextStyle not {value.__class__.__name__}")
         self._underlying.style = value
 
     @property
@@ -118,9 +114,7 @@ class InputText:
     @custom_id.setter
     def custom_id(self, value: str):
         if not isinstance(value, str):
-            raise TypeError(
-                f"custom_id must be None or str not {value.__class__.__name__}"
-            )
+            raise TypeError(f"custom_id must be None or str not {value.__class__.__name__}")
         self._underlying.custom_id = value
 
     @property

@@ -112,9 +112,7 @@ class Button(Item[V]):
             raise TypeError("cannot mix both sku_id and custom_id with Button")
 
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         self._provided_custom_id = custom_id is not None
         if url is None and custom_id is None and sku_id is None:
@@ -132,8 +130,7 @@ class Button(Item[V]):
                 emoji = emoji._to_partial()
             else:
                 raise TypeError(
-                    "expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not"
-                    f" {emoji.__class__}"
+                    f"expected emoji to be str, GuildEmoji, AppEmoji, or PartialEmoji not {emoji.__class__}"
                 )
 
         self._underlying = ButtonComponent._raw_construct(
@@ -218,10 +215,7 @@ class Button(Item[V]):
         elif isinstance(value, _EmojiTag):
             self._underlying.emoji = value._to_partial()
         else:
-            raise TypeError(
-                "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received"
-                f" {value.__class__} instead"
-            )
+            raise TypeError(f"expected str, GuildEmoji, AppEmoji, or PartialEmoji, received {value.__class__} instead")
 
     @property
     def sku_id(self) -> int | None:

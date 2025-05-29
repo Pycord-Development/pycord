@@ -194,7 +194,4 @@ class StringView:
             result.append(current)
 
     def __repr__(self):
-        return (
-            f"<StringView pos: {self.index} prev: {self.previous} end: {self.end} eof:"
-            f" {self.eof}>"
-        )
+        return f"<StringView pos: {self.index} prev: {self.previous} end: {self.end} eof: {self.eof}>"

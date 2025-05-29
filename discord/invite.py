@@ -104,9 +104,7 @@ class PartialInviteChannel:
         return self.name
 
     def __repr__(self) -> str:
-        return (
-            f"<PartialInviteChannel id={self.id} name={self.name} type={self.type!r}>"
-        )
+        return f"<PartialInviteChannel id={self.id} name={self.name} type={self.type!r}>"
 
     @property
     def mention(self) -> str:
@@ -177,9 +175,7 @@ class PartialInviteGuild:
         self._icon: str | None = data.get("icon")
         self._banner: str | None = data.get("banner")
         self._splash: str | None = data.get("splash")
-        self.verification_level: VerificationLevel = try_enum(
-            VerificationLevel, data.get("verification_level")
-        )
+        self.verification_level: VerificationLevel = try_enum(VerificationLevel, data.get("verification_level"))
         self.description: str | None = data.get("description")
 
     def __str__(self) -> str:
@@ -208,18 +204,14 @@ class PartialInviteGuild:
         """Returns the guild's banner asset, if available."""
         if self._banner is None:
             return None
-        return Asset._from_guild_image(
-            self._state, self.id, self._banner, path="banners"
-        )
+        return Asset._from_guild_image(self._state, self.id, self._banner, path="banners")
 
     @property
     def splash(self) -> Asset | None:
         """Returns the guild's invite splash asset, if available."""
         if self._splash is None:
             return None
-        return Asset._from_guild_image(
-            self._state, self.id, self._splash, path="splashes"
-        )
+        return Asset._from_guild_image(self._state, self.id, self._splash, path="splashes")
 
 
 I = TypeVar("I", bound="Invite")
@@ -361,51 +353,33 @@ class Invite(Hashable):
         self._state: ConnectionState = state
         self.max_age: int | None = data.get("max_age")
         self.code: str = data["code"]
-        self.guild: InviteGuildType | None = self._resolve_guild(
-            data.get("guild"), guild
-        )
+        self.guild: InviteGuildType | None = self._resolve_guild(data.get("guild"), guild)
         self.revoked: bool | None = data.get("revoked")
         self.created_at: datetime.datetime | None = parse_time(data.get("created_at"))
         self.temporary: bool | None = data.get("temporary")
         self.uses: int | None = data.get("uses")
         self.max_uses: int | None = data.get("max_uses")
-        self.approximate_presence_count: int | None = data.get(
-            "approximate_presence_count"
-        )
+        self.approximate_presence_count: int | None = data.get("approximate_presence_count")
         self.approximate_member_count: int | None = data.get("approximate_member_count")
 
         expires_at = data.get("expires_at", None)
-        self.expires_at: datetime.datetime | None = (
-            parse_time(expires_at) if expires_at else None
-        )
+        self.expires_at: datetime.datetime | None = parse_time(expires_at) if expires_at else None
 
         inviter_data = data.get("inviter")
-        self.inviter: User | None = (
-            None if inviter_data is None else self._state.create_user(inviter_data)
-        )
+        self.inviter: User | None = None if inviter_data is None else self._state.create_user(inviter_data)
 
-        self.channel: InviteChannelType | None = self._resolve_channel(
-            data.get("channel"), channel
-        )
+        self.channel: InviteChannelType | None = self._resolve_channel(data.get("channel"), channel)
 
         target_user_data = data.get("target_user")
-        self.target_user: User | None = (
-            None
-            if target_user_data is None
-            else self._state.create_user(target_user_data)
-        )
+        self.target_user: User | None = None if target_user_data is None else self._state.create_user(target_user_data)
 
-        self.target_type: InviteTarget = try_enum(
-            InviteTarget, data.get("target_type", 0)
-        )
+        self.target_type: InviteTarget = try_enum(InviteTarget, data.get("target_type", 0))
 
         from .scheduled_events import ScheduledEvent
 
         scheduled_event: ScheduledEventPayload = data.get("guild_scheduled_event")
         self.scheduled_event: ScheduledEvent | None = (
-            ScheduledEvent(state=state, data=scheduled_event)
-            if scheduled_event
-            else None
+            ScheduledEvent(state=state, data=scheduled_event) if scheduled_event else None
         )
 
         application = data.get("target_application")
@@ -414,9 +388,7 @@ class Invite(Hashable):
         )
 
     @classmethod
-    def from_incomplete(
-        cls: type[I], *, state: ConnectionState, data: InvitePayload
-    ) -> I:
+    def from_incomplete(cls: type[I], *, state: ConnectionState, data: InvitePayload) -> I:
         guild: Guild | PartialInviteGuild | None
         try:
             guild_data = data["guild"]
@@ -432,9 +404,7 @@ class Invite(Hashable):
 
         # As far as I know, invites always need a channel
         # So this should never raise.
-        channel: PartialInviteChannel | GuildChannel = PartialInviteChannel(
-            data["channel"]
-        )
+        channel: PartialInviteChannel | GuildChannel = PartialInviteChannel(data["channel"])
         if guild is not None and not isinstance(guild, PartialInviteGuild):
             # Upgrade the partial data if applicable
             channel = guild.get_channel(channel.id) or channel
@@ -442,9 +412,7 @@ class Invite(Hashable):
         return cls(state=state, data=data, guild=guild, channel=channel)
 
     @classmethod
-    def from_gateway(
-        cls: type[I], *, state: ConnectionState, data: GatewayInvitePayload
-    ) -> I:
+    def from_gateway(cls: type[I], *, state: ConnectionState, data: GatewayInvitePayload) -> I:
         guild_id: int | None = _get_as_snowflake(data, "guild_id")
         guild: Guild | Object | None = state._get_guild(guild_id)
         channel_id = int(data["channel_id"])

@@ -113,6 +113,7 @@ class Undefined(Enum):
 
 MISSING: Literal[Undefined.MISSING] = Undefined.MISSING
 
+
 class _cached_property:
     def __init__(self, function):
         self.function = function
@@ -163,9 +164,7 @@ class CachedSlotProperty(Generic[T, T_co]):
         self.__doc__ = getattr(function, "__doc__")
 
     @overload
-    def __get__(
-        self, instance: None, owner: type[T]
-    ) -> CachedSlotProperty[T, T_co]: ...
+    def __get__(self, instance: None, owner: type[T]) -> CachedSlotProperty[T, T_co]: ...
 
     @overload
     def __get__(self, instance: T, owner: type[T]) -> T_co: ...
@@ -475,7 +474,7 @@ def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> T | None:
     """A helper to return the first element found in the sequence
     that meets the predicate. For example: ::
 
-        member = discord.utils.find(lambda m: m.name == 'Mighty', channel.guild.members)
+        member = discord.utils.find(lambda m: m.name == "Mighty", channel.guild.members)
 
     would find the first :class:`~discord.Member` whose name is 'Mighty' and return it.
     If an entry is not found, then ``None`` is returned.
@@ -519,19 +518,19 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
     .. code-block:: python3
 
-        member = discord.utils.get(message.guild.members, name='Foo')
+        member = discord.utils.get(message.guild.members, name="Foo")
 
     Multiple attribute matching:
 
     .. code-block:: python3
 
-        channel = discord.utils.get(guild.voice_channels, name='Foo', bitrate=64000)
+        channel = discord.utils.get(guild.voice_channels, name="Foo", bitrate=64000)
 
     Nested attribute matching:
 
     .. code-block:: python3
 
-        channel = discord.utils.get(client.get_all_channels(), guild__name='Cool', name='general')
+        channel = discord.utils.get(client.get_all_channels(), guild__name="Cool", name="general")
 
     Parameters
     -----------
@@ -554,9 +553,7 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
                 return elem
         return None
 
-    converted = [
-        (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
-    ]
+    converted = [(attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()]
 
     for elem in iterable:
         if _all(pred(elem) == value for pred, value in converted):
@@ -602,11 +599,11 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> An
 
     Getting a guild from a guild ID: ::
 
-        guild = await utils.get_or_fetch(client, 'guild', guild_id)
+        guild = await utils.get_or_fetch(client, "guild", guild_id)
 
     Getting a channel from the guild. If the channel is not found, return None: ::
 
-        channel = await utils.get_or_fetch(guild, 'channel', channel_id, default=None)
+        channel = await utils.get_or_fetch(guild, "channel", channel_id, default=None)
     """
     getter = getattr(obj, f"get_{attr}")(id)
     if getter is None:
@@ -678,9 +675,7 @@ def _parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
         return float(reset_after)
     utc = datetime.timezone.utc
     now = datetime.datetime.now(utc)
-    reset = datetime.datetime.fromtimestamp(
-        float(request.headers["X-Ratelimit-Reset"]), utc
-    )
+    reset = datetime.datetime.fromtimestamp(float(request.headers["X-Ratelimit-Reset"]), utc)
     return (reset - now).total_seconds()
 
 
@@ -703,9 +698,7 @@ async def async_all(gen, *, check=_isawaitable):
 
 async def sane_wait_for(futures, *, timeout):
     ensured = [asyncio.ensure_future(fut) for fut in futures]
-    done, pending = await asyncio.wait(
-        ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED
-    )
+    done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
 
     if len(pending) != 0:
         raise asyncio.TimeoutError()
@@ -870,9 +863,7 @@ def resolve_template(code: Template | str) -> str:
     return code
 
 
-_MARKDOWN_ESCAPE_SUBREGEX = "|".join(
-    r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|")
-)
+_MARKDOWN_ESCAPE_SUBREGEX = "|".join(r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|"))
 
 # regular expression for finding and escaping links in markdown
 # note: technically, brackets are allowed in link text.
@@ -933,9 +924,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     return re.sub(regex, replacement, text, 0, re.MULTILINE)
 
 
-def escape_markdown(
-    text: str, *, as_needed: bool = False, ignore_links: bool = True
-) -> str:
+def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = True) -> str:
     r"""A helper function that escapes Discord's markdown.
 
     Parameters
@@ -1185,16 +1174,11 @@ def evaluate_annotation(
             is_literal = True
 
         evaluated_args = tuple(
-            evaluate_annotation(arg, globals, locals, cache, implicit_str=implicit_str)
-            for arg in args
+            evaluate_annotation(arg, globals, locals, cache, implicit_str=implicit_str) for arg in args
         )
 
-        if is_literal and not all(
-            isinstance(x, (str, int, bool, type(None))) for x in evaluated_args
-        ):
-            raise TypeError(
-                "Literal arguments must be of type str, int, bool, or NoneType."
-            )
+        if is_literal and not all(isinstance(x, (str, int, bool, type(None))) for x in evaluated_args):
+            raise TypeError("Literal arguments must be of type str, int, bool, or NoneType.")
 
         if evaluated_args == args:
             return tp
@@ -1227,9 +1211,7 @@ def resolve_annotation(
 TimestampStyle = Literal["f", "F", "d", "D", "t", "T", "R"]
 
 
-def format_dt(
-    dt: datetime.datetime | datetime.time, /, style: TimestampStyle | None = None
-) -> str:
+def format_dt(dt: datetime.datetime | datetime.time, /, style: TimestampStyle | None = None) -> str:
     """A helper function to format a :class:`datetime.datetime` for presentation within Discord.
 
     This allows for a locale-independent way of presenting data using Discord specific Markdown.
@@ -1303,9 +1285,7 @@ AutocompleteFunc = Callable[[AutocompleteContext], AV]
 FilterFunc = Callable[[AutocompleteContext, Any], Union[bool, Awaitable[bool]]]
 
 
-def basic_autocomplete(
-    values: Values, *, filter: FilterFunc | None = None
-) -> AutocompleteFunc:
+def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
     callable, it will be called with the AutocompleteContext.
@@ -1339,8 +1319,10 @@ def basic_autocomplete(
 
         # or
 
+
         async def autocomplete(ctx):
             return "foo", "bar", "baz", ctx.interaction.user.name
+
 
         Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
 
@@ -1348,7 +1330,11 @@ def basic_autocomplete(
 
     .. code-block:: python3
 
-        Option(str, "color", autocomplete=basic_autocomplete(("red", "green", "blue"), filter=lambda c, i: str(c.value or "") in i))
+        Option(
+            str,
+            "color",
+            autocomplete=basic_autocomplete(("red", "green", "blue"), filter=lambda c, i: str(c.value or "") in i),
+        )
 
     .. versionadded:: 2.0
 

@@ -139,9 +139,7 @@ class Select(Item[V]):
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
         if channel_types and select_type is not ComponentType.channel_select:
-            raise InvalidArgument(
-                "channel_types parameter is only valid for channel selects"
-            )
+            raise InvalidArgument("channel_types parameter is only valid for channel selects")
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
@@ -152,9 +150,7 @@ class Select(Item[V]):
         if placeholder and len(placeholder) > 150:
             raise ValueError("placeholder must be 150 characters or fewer")
         if not isinstance(custom_id, str) and custom_id is not None:
-            raise TypeError(
-                f"expected custom_id to be str, not {custom_id.__class__.__name__}"
-            )
+            raise TypeError(f"expected custom_id to be str, not {custom_id.__class__.__name__}")
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
@@ -328,13 +324,7 @@ class Select(Item[V]):
     @property
     def values(
         self,
-    ) -> (
-        list[str]
-        | list[Member | User]
-        | list[Role]
-        | list[Member | User | Role]
-        | list[GuildChannel | Thread]
-    ):
+    ) -> list[str] | list[Member | User] | list[Role] | list[Member | User | Role] | list[GuildChannel | Thread]:
         """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] |
         List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None:
         A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet.
@@ -354,17 +344,10 @@ class Select(Item[V]):
             for channel_id, _data in resolved_data.get("channels", {}).items():
                 if channel_id not in selected_values:
                     continue
-                if (
-                    int(channel_id) in guild._channels
-                    or int(channel_id) in guild._threads
-                ):
+                if int(channel_id) in guild._channels or int(channel_id) in guild._threads:
                     result = guild.get_channel_or_thread(int(channel_id))
                     _data["_invoke_flag"] = True
-                    (
-                        result._update(_data)
-                        if isinstance(result, Thread)
-                        else result._update(guild, _data)
-                    )
+                    (result._update(_data) if isinstance(result, Thread) else result._update(guild, _data))
                 else:
                     # NOTE:
                     # This is a fallback in case the channel/thread is not found in the
@@ -388,9 +371,7 @@ class Select(Item[V]):
                         member = dict(_member_data)
                         member["user"] = _data
                         _data = member
-                        result = guild._get_and_update_member(
-                            _data, int(_id), cache_flag
-                        )
+                        result = guild._get_and_update_member(_data, int(_id), cache_flag)
                     else:
                         result = User(state=state, data=_data)
                     resolved.append(result)
@@ -507,9 +488,7 @@ def select(
         Whether the select is disabled or not. Defaults to ``False``.
     """
     if select_type not in _select_types:
-        raise ValueError(
-            "select_type must be one of " + ", ".join([i.name for i in _select_types])
-        )
+        raise ValueError("select_type must be one of " + ", ".join([i.name for i in _select_types]))
 
     if options is not MISSING and select_type not in (
         ComponentType.select,
