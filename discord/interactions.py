@@ -60,6 +60,7 @@ __all__ = (
     "MessageInteraction",
     "InteractionMetadata",
     "AuthorizingIntegrationOwners",
+    "InteractionCallback"
 )
 
 if TYPE_CHECKING:
@@ -83,6 +84,7 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
     from .types.interactions import InteractionCallbackResponse, InteractionData
+    from .types.interactions import InteractionCallback as InteractionCallbackPayload
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
@@ -152,6 +154,11 @@ class Interaction:
         The context in which this command was executed.
 
         .. versionadded:: 2.6
+    callback: Optional[:class:`InteractionCallback`]
+        The callback of the interaction. Contains information about the status of the interaction response.
+        Will be `None` until the interaction is responded to.
+
+        .. versionadded:: 2.7
     """
 
     __slots__: tuple[str, ...] = (
@@ -172,6 +179,7 @@ class Interaction:
         "entitlements",
         "context",
         "authorizing_integration_owners",
+        "callback",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -185,16 +193,13 @@ class Interaction:
         "_cs_response",
         "_cs_followup",
         "_cs_channel",
-        "_response_message_loading",
-        "_response_message_ephemeral",
     )
 
     def __init__(self, *, data: InteractionPayload, state: ConnectionState):
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
-        self._response_message_loading: bool = False
-        self._response_message_ephemeral: bool = False
+        self.callback: InteractionCallback | None = None
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
@@ -311,22 +316,6 @@ class Interaction:
     def is_component(self) -> bool:
         """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
-
-    def is_loading(self) -> bool:
-        """Indicates whether the response message is in a loading state.
-
-        .. versionadded:: 2.7
-        """
-        return self._response_message_loading
-
-    def is_ephemeral(self) -> bool:
-        """Indicates whether the response message is ephemeral.
-
-        This might be useful for determining if the message was forced to be ephemeral.
-
-        .. versionadded:: 2.7
-        """
-        return self._response_message_ephemeral
 
     @utils.cached_slot_property("_cs_channel")
     @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
@@ -895,7 +884,7 @@ class InteractionResponse:
                 )
             )
             self._responded = True
-            self._process_callback_response(callback_response)
+            await self._process_callback_response(callback_response)
 
     async def _process_callback_response(
         self, callback_response: InteractionCallbackResponse
@@ -911,12 +900,7 @@ class InteractionResponse:
             message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
             self._parent._original_response = message
 
-        self._parent._response_message_ephemeral = callback_response["interaction"].get(
-            "response_message_ephemeral", False
-        )
-        self._parent._response_message_loading = callback_response["interaction"].get(
-            "response_message_loading", False
-        )
+        self._parent.callback = InteractionCallback(callback_response["interaction"])
 
     async def send_message(
         self,
@@ -1294,7 +1278,7 @@ class InteractionResponse:
         )
 
         self._responded = True
-        self._process_callback_response(callback_response)
+        await self._process_callback_response(callback_response)
 
     async def send_modal(self, modal: Modal) -> Interaction:
         """|coro|
@@ -1333,7 +1317,7 @@ class InteractionResponse:
             )
         )
         self._responded = True
-        self._process_callback_response(callback_response)
+        await self._process_callback_response(callback_response)
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
@@ -1372,7 +1356,7 @@ class InteractionResponse:
             )
         )
         self._responded = True
-        self._process_callback_response(callback_response)
+        await self._process_callback_response(callback_response)
         return self._parent
 
     async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> Any:
@@ -1718,3 +1702,26 @@ class AuthorizingIntegrationOwners:
         if not self.guild_id:
             return None
         return self._state._get_guild(self.guild_id)
+
+
+class InteractionCallback:
+    """Information about the status of the interaction response.
+
+        .. versionadded:: 2.7
+        """
+    def __init__(self, data: InteractionCallbackPayload):
+        self._response_message_loading: bool = data.get("response_message_loading", False)
+        self._response_message_ephemeral: bool = data.get("response_message_ephemeral", False)
+
+    def is_loading(self) -> bool:
+        """Indicates whether the response message is in a loading state.
+        """
+        return self._response_message_loading
+
+    def is_ephemeral(self) -> bool:
+        """Indicates whether the response message is ephemeral.
+
+        This might be useful for determining if the message was forced to be ephemeral.
+        """
+        return self._response_message_ephemeral
+
