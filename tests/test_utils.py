@@ -36,10 +36,10 @@ from discord.utils import (
     async_all,
     copy_doc,
     find,
+    generate_snowflake,
     get,
     maybe_coroutine,
     snowflake_time,
-    time_snowflake,
     utcnow,
 )
 
