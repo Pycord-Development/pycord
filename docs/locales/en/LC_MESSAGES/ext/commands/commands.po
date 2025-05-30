@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-10 03:42+0200\n"
+"POT-Creation-Date: 2025-02-24 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../ext/commands/commands.rst:6 2eb0da10d5464bf79c53ce786a7cbae8
 msgid "Commands"
@@ -488,7 +488,7 @@ msgstr ""
 
 #: ../../ext/commands/commands.rst:397 ../../ext/commands/commands.rst:440
 #: 60107320d7654b6a9154ea6e51181a3d dd3916f6d6e54dfbb9f2094c34b320b8
-msgid ":class:`Emoji`"
+msgid ":class:`GuildEmoji`"
 msgstr ""
 
 #: ../../ext/commands/commands.rst:398 ../../ext/commands/commands.rst:442
@@ -1091,4 +1091,7 @@ msgid ""
 "Be careful on how you write your global checks, as it could also lock you"
 " out of your own bot."
 msgstr ""
+
+#~ msgid ":class:`Emoji`"
+#~ msgstr ""
 
