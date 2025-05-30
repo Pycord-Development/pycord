@@ -60,7 +60,7 @@ __all__ = (
     "MessageInteraction",
     "InteractionMetadata",
     "AuthorizingIntegrationOwners",
-    "InteractionCallback"
+    "InteractionCallback",
 )
 
 if TYPE_CHECKING:
@@ -83,8 +83,8 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
-    from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionCallback as InteractionCallbackPayload
+    from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
@@ -1707,15 +1707,19 @@ class AuthorizingIntegrationOwners:
 class InteractionCallback:
     """Information about the status of the interaction response.
 
-        .. versionadded:: 2.7
-        """
+    .. versionadded:: 2.7
+    """
+
     def __init__(self, data: InteractionCallbackPayload):
-        self._response_message_loading: bool = data.get("response_message_loading", False)
-        self._response_message_ephemeral: bool = data.get("response_message_ephemeral", False)
+        self._response_message_loading: bool = data.get(
+            "response_message_loading", False
+        )
+        self._response_message_ephemeral: bool = data.get(
+            "response_message_ephemeral", False
+        )
 
     def is_loading(self) -> bool:
-        """Indicates whether the response message is in a loading state.
-        """
+        """Indicates whether the response message is in a loading state."""
         return self._response_message_loading
 
     def is_ephemeral(self) -> bool:
@@ -1724,4 +1728,3 @@ class InteractionCallback:
         This might be useful for determining if the message was forced to be ephemeral.
         """
         return self._response_message_ephemeral
-
