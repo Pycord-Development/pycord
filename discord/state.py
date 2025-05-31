@@ -44,6 +44,7 @@ from typing import (
 )
 
 from . import utils
+from .utils.private import get_as_snowflake
 from .activity import BaseActivity
 from .audit_logs import AuditLogEntry
 from .automod import AutoModRule
@@ -180,7 +181,7 @@ class ConnectionState:
         self.hooks: dict[str, Callable] = hooks
         self.shard_count: int | None = None
         self._ready_task: asyncio.Task | None = None
-        self.application_id: int | None = utils._get_as_snowflake(
+        self.application_id: int | None = get_as_snowflake(
             options, "application_id"
         )
         self.heartbeat_timeout: float = options.get("heartbeat_timeout", 60.0)
@@ -672,7 +673,7 @@ class ConnectionState:
             except KeyError:
                 pass
             else:
-                self.application_id = utils._get_as_snowflake(application, "id")
+                self.application_id = get_as_snowflake(application, "id")
                 # flags will always be present here
                 self.application_flags = ApplicationFlags._from_value(application["flags"])  # type: ignore
 
@@ -793,7 +794,7 @@ class ConnectionState:
 
     def parse_message_reaction_add(self, data) -> None:
         emoji = data["emoji"]
-        emoji_id = utils._get_as_snowflake(emoji, "id")
+        emoji_id = get_as_snowflake(emoji, "id")
         emoji = PartialEmoji.with_state(
             self, id=emoji_id, animated=emoji.get("animated", False), name=emoji["name"]
         )
@@ -832,7 +833,7 @@ class ConnectionState:
 
     def parse_message_reaction_remove(self, data) -> None:
         emoji = data["emoji"]
-        emoji_id = utils._get_as_snowflake(emoji, "id")
+        emoji_id = get_as_snowflake(emoji, "id")
         emoji = PartialEmoji.with_state(self, id=emoji_id, name=emoji["name"])
         raw = RawReactionActionEvent(data, emoji, "REACTION_REMOVE")
 
@@ -862,7 +863,7 @@ class ConnectionState:
 
     def parse_message_reaction_remove_emoji(self, data) -> None:
         emoji = data["emoji"]
-        emoji_id = utils._get_as_snowflake(emoji, "id")
+        emoji_id = get_as_snowflake(emoji, "id")
         emoji = PartialEmoji.with_state(self, id=emoji_id, name=emoji["name"])
         raw = RawReactionClearEmojiEvent(data, emoji)
         self.dispatch("raw_reaction_clear_emoji", raw)
@@ -945,7 +946,7 @@ class ConnectionState:
         self.dispatch("interaction", interaction)
 
     def parse_presence_update(self, data) -> None:
-        guild_id = utils._get_as_snowflake(data, "guild_id")
+        guild_id = get_as_snowflake(data, "guild_id")
         # guild_id won't be None here
         guild = self._get_guild(guild_id)
         if guild is None:
@@ -989,7 +990,7 @@ class ConnectionState:
         self.dispatch("invite_delete", invite)
 
     def parse_channel_delete(self, data) -> None:
-        guild = self._get_guild(utils._get_as_snowflake(data, "guild_id"))
+        guild = self._get_guild(get_as_snowflake(data, "guild_id"))
         channel_id = int(data["id"])
         if guild is not None:
             channel = guild.get_channel(channel_id)
@@ -1008,7 +1009,7 @@ class ConnectionState:
             self.dispatch("private_channel_update", old_channel, channel)
             return
 
-        guild_id = utils._get_as_snowflake(data, "guild_id")
+        guild_id = get_as_snowflake(data, "guild_id")
         guild = self._get_guild(guild_id)
         if guild is not None:
             channel = guild.get_channel(channel_id)
@@ -1036,7 +1037,7 @@ class ConnectionState:
             )
             return
 
-        guild_id = utils._get_as_snowflake(data, "guild_id")
+        guild_id = get_as_snowflake(data, "guild_id")
         guild = self._get_guild(guild_id)
         if guild is not None:
             # the factory can't be a DMChannel or GroupChannel here
@@ -1844,8 +1845,8 @@ class ConnectionState:
             )
 
     def parse_voice_state_update(self, data) -> None:
-        guild = self._get_guild(utils._get_as_snowflake(data, "guild_id"))
-        channel_id = utils._get_as_snowflake(data, "channel_id")
+        guild = self._get_guild(get_as_snowflake(data, "guild_id"))
+        channel_id = get_as_snowflake(data, "channel_id")
         flags = self.member_cache_flags
         # self.user is *always* cached when this is called
         self_id = self.user.id  # type: ignore
@@ -1965,7 +1966,7 @@ class ConnectionState:
         return self.get_user(user_id)
 
     def get_reaction_emoji(self, data) -> GuildEmoji | AppEmoji | PartialEmoji:
-        emoji_id = utils._get_as_snowflake(data, "id")
+        emoji_id = get_as_snowflake(data, "id")
 
         if not emoji_id:
             return data["name"]
@@ -2152,7 +2153,7 @@ class AutoShardedConnectionState(ConnectionState):
             except KeyError:
                 pass
             else:
-                self.application_id = utils._get_as_snowflake(application, "id")
+                self.application_id = get_as_snowflake(application, "id")
                 self.application_flags = ApplicationFlags._from_value(
                     application["flags"]
                 )

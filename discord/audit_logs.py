@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 
+from .utils.private import get_as_snowflake
 from . import enums, utils
 from .asset import Asset
 from .automod import AutoModAction, AutoModTriggerMetadata
@@ -593,8 +594,8 @@ class AuditLogEntry(Hashable):
         # into meaningful data when requested
         self._changes = data.get("changes", [])
 
-        self.user = self._get_member(utils._get_as_snowflake(data, "user_id"))  # type: ignore
-        self._target_id = utils._get_as_snowflake(data, "target_id")
+        self.user = self._get_member(get_as_snowflake(data, "user_id"))  # type: ignore
+        self._target_id = get_as_snowflake(data, "target_id")
 
     def _get_member(self, user_id: int) -> Member | User | None:
         return self.guild.get_member(user_id) or self._users.get(user_id)

@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from .utils.private import get_as_snowflake
 from . import utils
 from .asset import Asset
 from .permissions import Permissions
@@ -200,9 +201,9 @@ class AppInfo:
         self._summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
 
-        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
+        self.guild_id: int | None = get_as_snowflake(data, "guild_id")
 
-        self.primary_sku_id: int | None = utils._get_as_snowflake(
+        self.primary_sku_id: int | None = get_as_snowflake(
             data, "primary_sku_id"
         )
         self.slug: str | None = data.get("slug")

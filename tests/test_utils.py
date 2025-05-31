@@ -31,7 +31,6 @@ import pytest
 from discord.utils import (
     MISSING,
     _cached_property,
-    _parse_ratelimit_header,
     _unique,
     async_all,
     copy_doc,

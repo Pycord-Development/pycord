@@ -27,6 +27,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Any
 
+from .utils.private import get_as_snowflake, bytes_to_base64_data
 from . import utils
 from .asset import Asset
 from .enums import (
@@ -210,7 +211,7 @@ class ScheduledEvent(Hashable):
             ScheduledEventStatus, data.get("status")
         )
         self.subscriber_count: int | None = data.get("user_count", None)
-        self.creator_id: int | None = utils._get_as_snowflake(data, "creator_id")
+        self.creator_id: int | None = get_as_snowflake(data, "creator_id")
         self.creator: Member | None = creator
 
         entity_metadata = data.get("entity_metadata")
@@ -371,7 +372,7 @@ class ScheduledEvent(Hashable):
             if image is None:
                 payload["image"] = None
             else:
-                payload["image"] = utils._bytes_to_base64_data(image)
+                payload["image"] = bytes_to_base64_data(image)
 
         if location is not MISSING:
             if not isinstance(

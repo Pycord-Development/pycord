@@ -36,6 +36,7 @@ from urllib.parse import quote as urlquote
 
 import aiohttp
 
+from ..utils.private import bytes_to_base64_data, get_as_snowflake, parse_ratelimit_header
 from .. import utils
 from ..asset import Asset
 from ..channel import ForumChannel, PartialMessageable
@@ -184,7 +185,7 @@ class AsyncWebhookAdapter:
 
                         remaining = response.headers.get("X-Ratelimit-Remaining")
                         if remaining == "0" and response.status != 429:
-                            delta = utils._parse_ratelimit_header(response)
+                            delta = parse_ratelimit_header(response)
                             _log.debug(
                                 (
                                     "Webhook ID %s has been pre-emptively rate limited,"
@@ -1031,8 +1032,8 @@ class BaseWebhook(Hashable):
     def _update(self, data: WebhookPayload | FollowerWebhookPayload):
         self.id = int(data["id"])
         self.type = try_enum(WebhookType, int(data["type"]))
-        self.channel_id = utils._get_as_snowflake(data, "channel_id")
-        self.guild_id = utils._get_as_snowflake(data, "guild_id")
+        self.channel_id = get_as_snowflake(data, "channel_id")
+        self.guild_id = get_as_snowflake(data, "guild_id")
         self.name = data.get("name")
         self._avatar = data.get("avatar")
         self.token = data.get("token")
@@ -1524,7 +1525,7 @@ class Webhook(BaseWebhook):
 
         if avatar is not MISSING:
             payload["avatar"] = (
-                utils._bytes_to_base64_data(avatar) if avatar is not None else None
+                bytes_to_base64_data(avatar) if avatar is not None else None
             )
 
         adapter = async_context.get()

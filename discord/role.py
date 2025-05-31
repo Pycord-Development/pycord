@@ -34,7 +34,8 @@ from .errors import InvalidArgument
 from .flags import RoleFlags
 from .mixins import Hashable
 from .permissions import Permissions
-from .utils import MISSING, _bytes_to_base64_data, _get_as_snowflake, snowflake_time
+from .utils import MISSING, snowflake_time
+from .utils.private import get_as_snowflake, bytes_to_base64_data
 
 __all__ = (
     "RoleTags",
@@ -89,9 +90,9 @@ class RoleTags:
     )
 
     def __init__(self, data: RoleTagPayload):
-        self.bot_id: int | None = _get_as_snowflake(data, "bot_id")
-        self.integration_id: int | None = _get_as_snowflake(data, "integration_id")
-        self.subscription_listing_id: int | None = _get_as_snowflake(
+        self.bot_id: int | None = get_as_snowflake(data, "bot_id")
+        self.integration_id: int | None = get_as_snowflake(data, "integration_id")
+        self.subscription_listing_id: int | None = get_as_snowflake(
             data, "subscription_listing_id"
         )
         # NOTE: The API returns "null" for each of the following tags if they are True, and omits them if False.
@@ -542,7 +543,7 @@ class Role(Hashable):
             if icon is None:
                 payload["icon"] = None
             else:
-                payload["icon"] = _bytes_to_base64_data(icon)
+                payload["icon"] = bytes_to_base64_data(icon)
                 payload["unicode_emoji"] = None
 
         if unicode_emoji is not MISSING:

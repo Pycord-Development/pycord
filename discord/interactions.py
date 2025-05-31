@@ -28,6 +28,7 @@ from __future__ import annotations
 import asyncio
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
+from .utils.private import get_as_snowflake
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import (
@@ -199,8 +200,8 @@ class Interaction:
         self.data: InteractionData | None = data.get("data")
         self.token: str = data["token"]
         self.version: int = data["version"]
-        self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
-        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
+        self.channel_id: int | None = get_as_snowflake(data, "channel_id")
+        self.guild_id: int | None = get_as_snowflake(data, "guild_id")
         self.application_id: int = int(data["application_id"])
         self.locale: str | None = data.get("locale")
         self.guild_locale: str | None = data.get("guild_locale")
@@ -1571,10 +1572,10 @@ class InteractionMetadata:
         self.authorizing_integration_owners: AuthorizingIntegrationOwners = (
             AuthorizingIntegrationOwners(data["authorizing_integration_owners"], state)
         )
-        self.original_response_message_id: int | None = utils._get_as_snowflake(
+        self.original_response_message_id: int | None = get_as_snowflake(
             data, "original_response_message_id"
         )
-        self.interacted_message_id: int | None = utils._get_as_snowflake(
+        self.interacted_message_id: int | None = get_as_snowflake(
             data, "interacted_message_id"
         )
         self.triggering_interaction_metadata: InteractionMetadata | None = None

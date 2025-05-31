@@ -41,6 +41,7 @@ from typing import (
 )
 from urllib.parse import parse_qs, urlparse
 
+from .utils.private import get_as_snowflake
 from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
@@ -546,9 +547,9 @@ class MessageReference:
             try_enum(MessageReferenceType, data.get("type"))
             or MessageReferenceType.default
         )
-        self.message_id = utils._get_as_snowflake(data, "message_id")
-        self.channel_id = utils._get_as_snowflake(data, "channel_id")
-        self.guild_id = utils._get_as_snowflake(data, "guild_id")
+        self.message_id = get_as_snowflake(data, "message_id")
+        self.channel_id = get_as_snowflake(data, "channel_id")
+        self.guild_id = get_as_snowflake(data, "guild_id")
         self.fail_if_not_exists = data.get("fail_if_not_exists", True)
         self._state = state
         self.resolved = None
@@ -993,7 +994,7 @@ class Message(Hashable):
         self._state: ConnectionState = state
         self._raw_data: MessagePayload = data
         self.id: int = int(data["id"])
-        self.webhook_id: int | None = utils._get_as_snowflake(data, "webhook_id")
+        self.webhook_id: int | None = get_as_snowflake(data, "webhook_id")
         self.reactions: list[Reaction] = [
             Reaction(message=self, data=d) for d in data.get("reactions", [])
         ]
@@ -1025,7 +1026,7 @@ class Message(Hashable):
             # if the channel doesn't have a guild attribute, we handle that
             self.guild = channel.guild  # type: ignore
         except AttributeError:
-            self.guild = state._get_guild(utils._get_as_snowflake(data, "guild_id"))
+            self.guild = state._get_guild(get_as_snowflake(data, "guild_id"))
 
         try:
             ref = data["message_reference"]

@@ -41,6 +41,7 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 from urllib.parse import quote as urlquote
 
 from .. import utils
+from ..utils.private import parse_ratelimit_header, bytes_to_base64_data
 from ..channel import PartialMessageable
 from ..errors import (
     DiscordServerError,
@@ -186,7 +187,7 @@ class WebhookAdapter:
 
                         remaining = response.headers.get("X-Ratelimit-Remaining")
                         if remaining == "0" and response.status_code != 429:
-                            delta = utils._parse_ratelimit_header(response)
+                            delta = parse_ratelimit_header(response)
                             _log.debug(
                                 (
                                     "Webhook ID %s has been pre-emptively rate limited,"
@@ -874,7 +875,7 @@ class SyncWebhook(BaseWebhook):
 
         if avatar is not MISSING:
             payload["avatar"] = (
-                utils._bytes_to_base64_data(avatar) if avatar is not None else None
+                bytes_to_base64_data(avatar) if avatar is not None else None
             )
 
         adapter: WebhookAdapter = _get_webhook_adapter()

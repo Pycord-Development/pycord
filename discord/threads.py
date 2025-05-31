@@ -32,7 +32,8 @@ from .enums import ChannelType, try_enum
 from .errors import ClientException
 from .flags import ChannelFlags
 from .mixins import Hashable
-from .utils import MISSING, _get_as_snowflake, parse_time
+from .utils import MISSING, parse_time
+from .utils.private import get_as_snowflake
 from discord import utils
 
 __all__ = (
@@ -193,7 +194,7 @@ class Thread(Messageable, Hashable):
             if data.get("owner_id", None) is not None
             else None
         )
-        self.last_message_id = _get_as_snowflake(data, "last_message_id")
+        self.last_message_id = get_as_snowflake(data, "last_message_id")
         self.slowmode_delay = data.get("rate_limit_per_user", 0)
         self.message_count = data.get("message_count", None)
         self.member_count = data.get("member_count", None)

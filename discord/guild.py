@@ -40,6 +40,7 @@ from typing import (
     overload,
 )
 
+from .utils.private import get_as_snowflake, bytes_to_base64_data
 from . import abc, utils
 from .asset import Asset
 from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
@@ -484,7 +485,7 @@ class Guild(Hashable):
         )
         self.features: list[GuildFeature] = guild.get("features", [])
         self._splash: str | None = guild.get("splash")
-        self._system_channel_id: int | None = utils._get_as_snowflake(
+        self._system_channel_id: int | None = get_as_snowflake(
             guild, "system_channel_id"
         )
         self.description: str | None = guild.get("description")
@@ -501,10 +502,10 @@ class Guild(Hashable):
         self._system_channel_flags: int = guild.get("system_channel_flags", 0)
         self.preferred_locale: str | None = guild.get("preferred_locale")
         self._discovery_splash: str | None = guild.get("discovery_splash")
-        self._rules_channel_id: int | None = utils._get_as_snowflake(
+        self._rules_channel_id: int | None = get_as_snowflake(
             guild, "rules_channel_id"
         )
-        self._public_updates_channel_id: int | None = utils._get_as_snowflake(
+        self._public_updates_channel_id: int | None = get_as_snowflake(
             guild, "public_updates_channel_id"
         )
         self.nsfw_level: NSFWLevel = try_enum(NSFWLevel, guild.get("nsfw_level", 0))
@@ -542,9 +543,9 @@ class Guild(Hashable):
             None if self._member_count is None else self._member_count >= 250
         )
 
-        self.owner_id: int | None = utils._get_as_snowflake(guild, "owner_id")
+        self.owner_id: int | None = get_as_snowflake(guild, "owner_id")
         self.afk_channel: VoiceChannel | None = self.get_channel(
-            utils._get_as_snowflake(guild, "afk_channel_id")
+            get_as_snowflake(guild, "afk_channel_id")
         )  # type: ignore
 
         for obj in guild.get("voice_states", []):
@@ -1777,24 +1778,24 @@ class Guild(Hashable):
             fields["afk_timeout"] = afk_timeout
 
         if icon is not MISSING:
-            fields["icon"] = icon if icon is None else utils._bytes_to_base64_data(icon)
+            fields["icon"] = icon if icon is None else bytes_to_base64_data(icon)
         if banner is not MISSING:
             if banner is None:
                 fields["banner"] = banner
             else:
-                fields["banner"] = utils._bytes_to_base64_data(banner)
+                fields["banner"] = bytes_to_base64_data(banner)
 
         if splash is not MISSING:
             if splash is None:
                 fields["splash"] = splash
             else:
-                fields["splash"] = utils._bytes_to_base64_data(splash)
+                fields["splash"] = bytes_to_base64_data(splash)
 
         if discovery_splash is not MISSING:
             if discovery_splash is None:
                 fields["discovery_splash"] = discovery_splash
             else:
-                fields["discovery_splash"] = utils._bytes_to_base64_data(
+                fields["discovery_splash"] = bytes_to_base64_data(
                     discovery_splash
                 )
 
@@ -2759,7 +2760,7 @@ class Guild(Hashable):
             The created emoji.
         """
 
-        img = utils._bytes_to_base64_data(image)
+        img = bytes_to_base64_data(image)
         role_ids = [role.id for role in roles] if roles else []
         data = await self._state.http.create_custom_emoji(
             self.id, name, img, roles=role_ids, reason=reason
@@ -2990,7 +2991,7 @@ class Guild(Hashable):
             if icon is None:
                 fields["icon"] = None
             else:
-                fields["icon"] = utils._bytes_to_base64_data(icon)
+                fields["icon"] = bytes_to_base64_data(icon)
                 fields["unicode_emoji"] = None
 
         if unicode_emoji is not MISSING:
@@ -3838,7 +3839,7 @@ class Guild(Hashable):
             payload["scheduled_end_time"] = end_time.isoformat()
 
         if image is not MISSING:
-            payload["image"] = utils._bytes_to_base64_data(image)
+            payload["image"] = bytes_to_base64_data(image)
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload

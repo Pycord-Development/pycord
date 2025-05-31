@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, ove
 
 import discord.abc
 
+from .utils.private import bytes_to_base64_data, get_as_snowflake
 from . import utils
 from .asset import Asset
 from .emoji import GuildEmoji
@@ -165,7 +166,7 @@ class ForumTag(Hashable):
         self.moderated = data.get("moderated", False)
 
         emoji_name = data["emoji_name"] or ""
-        emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
+        emoji_id = get_as_snowflake(data, "emoji_id") or None
         self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
         return self
 
@@ -229,7 +230,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
-        self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.category_id: int | None = get_as_snowflake(data, "parent_id")
         self._type: int = data["type"]
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
@@ -244,7 +245,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.default_thread_slowmode_delay: int | None = data.get(
                 "default_thread_rate_limit_per_user"
             )
-            self.last_message_id: int | None = utils._get_as_snowflake(
+            self.last_message_id: int | None = get_as_snowflake(
                 data, "last_message_id"
             )
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
@@ -527,7 +528,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         from .webhook import Webhook
 
         if avatar is not None:
-            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+            avatar = bytes_to_base64_data(avatar)  # type: ignore
 
         data = await self._state.http.create_webhook(
             self.id, name=str(name), avatar=avatar, reason=reason
@@ -1046,7 +1047,7 @@ class ForumChannel(_TextChannel):
                 self.default_reaction_emoji = reaction_emoji_ctx["emoji_name"]
             else:
                 self.default_reaction_emoji = self._state.get_emoji(
-                    utils._get_as_snowflake(reaction_emoji_ctx, "emoji_id")
+                    get_as_snowflake(reaction_emoji_ctx, "emoji_id")
                 )
 
     @property
@@ -1586,7 +1587,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         # This data will always exist
         self.guild = guild
         self.name: str = data["name"]
-        self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.category_id: int | None = get_as_snowflake(data, "parent_id")
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
@@ -1597,7 +1598,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
             self.video_quality_mode: VideoQualityMode = try_enum(
                 VideoQualityMode, data.get("video_quality_mode", 1)
             )
-            self.last_message_id: int | None = utils._get_as_snowflake(
+            self.last_message_id: int | None = get_as_snowflake(
                 data, "last_message_id"
             )
             self.position: int = data.get("position")
@@ -2006,7 +2007,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         from .webhook import Webhook
 
         if avatar is not None:
-            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+            avatar = bytes_to_base64_data(avatar)  # type: ignore
 
         data = await self._state.http.create_webhook(
             self.id, name=str(name), avatar=avatar, reason=reason
@@ -2556,7 +2557,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         from .webhook import Webhook
 
         if avatar is not None:
-            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+            avatar = bytes_to_base64_data(avatar)  # type: ignore
 
         data = await self._state.http.create_webhook(
             self.id, name=str(name), avatar=avatar, reason=reason
@@ -2831,7 +2832,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
-        self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.category_id: int | None = get_as_snowflake(data, "parent_id")
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
@@ -3243,7 +3244,7 @@ class GroupChannel(discord.abc.Messageable, Hashable):
         self._update_group(data)
 
     def _update_group(self, data: GroupChannelPayload) -> None:
-        self.owner_id: int | None = utils._get_as_snowflake(data, "owner_id")
+        self.owner_id: int | None = get_as_snowflake(data, "owner_id")
         self._icon: str | None = data.get("icon")
         self.name: str | None = data.get("name")
         self.recipients: list[User] = [
