@@ -458,7 +458,7 @@ class Role(Hashable):
         reason: str | None = MISSING,
         icon: bytes | None = MISSING,
         unicode_emoji: str | None = MISSING,
-    ) -> Role | None:
+    ) -> Role:
         """|coro|
 
         Edits the role.
