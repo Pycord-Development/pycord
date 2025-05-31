@@ -329,8 +329,11 @@ class ApplicationCommandMixin(ABC):
                                 # We have a difference
                                 return True
                     elif getattr(cmd, check, None) != match.get(check):
-                        # We have a difference
-                        if (
+                        # We might have a difference
+                        if "localizations" in check and bool(attr) == bool(found):
+                            # unlike other attrs, localizations are MISSING by default
+                            continue
+                        elif (
                             check == "default_permission"
                             and getattr(cmd, check) is True
                             and match.get(check) is None
