@@ -1,9 +1,7 @@
 import discord
 
 intents = discord.Intents.default()
-intents.message_content = (
-    True  # < This may give you `read-only` warning, just ignore it.
-)
+intents.message_content = True  # < This may give you `read-only` warning, just ignore it.
 # This intent requires "Message Content Intent" to be enabled at https://discord.com/developers
 
 

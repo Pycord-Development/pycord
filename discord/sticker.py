@@ -129,10 +129,7 @@ class StickerPack(Hashable):
         return Asset._from_sticker_banner(self._state, self._banner)
 
     def __repr__(self) -> str:
-        return (
-            "<StickerPack"
-            f" id={self.id} name={self.name!r} description={self.description!r}>"
-        )
+        return f"<StickerPack id={self.id} name={self.name!r} description={self.description!r}>"
 
     def __str__(self) -> str:
         return self.name
@@ -209,14 +206,8 @@ class StickerItem(_StickerTag):
         self._state: ConnectionState = state
         self.name: str = data["name"]
         self.id: int = int(data["id"])
-        self.format: StickerFormatType = try_enum(
-            StickerFormatType, data["format_type"]
-        )
-        base = (
-            "https://media.discordapp.net"
-            if self.format is StickerFormatType.gif
-            else Asset.BASE
-        )
+        self.format: StickerFormatType = try_enum(StickerFormatType, data["format_type"])
+        base = "https://media.discordapp.net" if self.format is StickerFormatType.gif else Asset.BASE
         self.url: str = f"{base}/stickers/{self.id}.{self.format.file_extension}"
 
     def __repr__(self) -> str:
@@ -290,14 +281,8 @@ class Sticker(_StickerTag):
         self.id: int = int(data["id"])
         self.name: str = data["name"]
         self.description: str = data["description"]
-        self.format: StickerFormatType = try_enum(
-            StickerFormatType, data["format_type"]
-        )
-        base = (
-            "https://media.discordapp.net"
-            if self.format is StickerFormatType.gif
-            else Asset.BASE
-        )
+        self.format: StickerFormatType = try_enum(StickerFormatType, data["format_type"])
+        base = "https://media.discordapp.net" if self.format is StickerFormatType.gif else Asset.BASE
         self.url: str = f"{base}/stickers/{self.id}.{self.format.file_extension}"
 
     def __repr__(self) -> str:
@@ -363,9 +348,7 @@ class StandardSticker(Sticker):
             self.tags = []
 
     def __repr__(self) -> str:
-        return (
-            f"<StandardSticker id={self.id} name={self.name!r} pack_id={self.pack_id}>"
-        )
+        return f"<StandardSticker id={self.id} name={self.name!r} pack_id={self.pack_id}>"
 
     async def pack(self) -> StickerPack:
         """|coro|
@@ -384,9 +367,7 @@ class StandardSticker(Sticker):
         HTTPException
             Retrieving the sticker pack failed.
         """
-        data: ListPremiumStickerPacksPayload = (
-            await self._state.http.list_premium_sticker_packs()
-        )
+        data: ListPremiumStickerPacksPayload = await self._state.http.list_premium_sticker_packs()
         packs = data["sticker_packs"]
         pack = find(lambda d: int(d["id"]) == self.pack_id, packs)
 
@@ -447,10 +428,7 @@ class GuildSticker(Sticker):
         self.type: StickerType = StickerType.guild
 
     def __repr__(self) -> str:
-        return (
-            "<GuildSticker"
-            f" name={self.name!r} id={self.id} guild_id={self.guild_id} user={self.user!r}>"
-        )
+        return f"<GuildSticker name={self.name!r} id={self.id} guild_id={self.guild_id} user={self.user!r}>"
 
     @cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
@@ -514,9 +492,7 @@ class GuildSticker(Sticker):
 
             payload["tags"] = emoji
 
-        data: GuildStickerPayload = await self._state.http.modify_guild_sticker(
-            self.guild_id, self.id, payload, reason
-        )
+        data: GuildStickerPayload = await self._state.http.modify_guild_sticker(self.guild_id, self.id, payload, reason)
         return GuildSticker(state=self._state, data=data)
 
     async def delete(self, *, reason: str | None = None) -> None:

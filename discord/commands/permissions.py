@@ -56,10 +56,11 @@ def default_permissions(**perms: bool) -> Callable:
 
         from discord import default_permissions
 
+
         @bot.slash_command()
         @default_permissions(manage_messages=True)
         async def test(ctx):
-            await ctx.respond('You can manage messages.')
+            await ctx.respond("You can manage messages.")
     """
 
     invalid = set(perms) - set(Permissions.VALID_FLAGS)
@@ -69,9 +70,7 @@ def default_permissions(**perms: bool) -> Callable:
     def inner(command: Callable):
         if isinstance(command, ApplicationCommand):
             if command.parent is not None:
-                raise RuntimeError(
-                    "Permission restrictions can only be set on top-level commands"
-                )
+                raise RuntimeError("Permission restrictions can only be set on top-level commands")
             command.default_member_permissions = Permissions(**perms)
         else:
             command.__default_member_permissions__ = Permissions(**perms)
@@ -90,6 +89,7 @@ def guild_only() -> Callable:
     .. code-block:: python3
 
         from discord import guild_only
+
 
         @bot.slash_command()
         @guild_only()
@@ -121,6 +121,7 @@ def is_nsfw() -> Callable:
     .. code-block:: python3
 
         from discord import is_nsfw
+
 
         @bot.slash_command()
         @is_nsfw()

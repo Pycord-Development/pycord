@@ -26,9 +26,7 @@ class PageTest(commands.Cog):
             discord.Embed(
                 title="Page Five",
                 fields=[
-                    discord.EmbedField(
-                        name="Example Field", value="Example Value", inline=False
-                    ),
+                    discord.EmbedField(name="Example Field", value="Example Value", inline=False),
                 ],
             ),
             [
@@ -36,12 +34,8 @@ class PageTest(commands.Cog):
                 discord.Embed(title="Page Seven, Embed 2"),
             ],
         ]
-        self.pages[3].set_image(
-            url="https://c.tenor.com/pPKOYQpTO8AAAAAM/monkey-developer.gif"
-        )
-        self.pages[4].add_field(
-            name="Another Example Field", value="Another Example Value", inline=False
-        )
+        self.pages[3].set_image(url="https://c.tenor.com/pPKOYQpTO8AAAAAM/monkey-developer.gif")
+        self.pages[4].add_field(name="Another Example Field", value="Another Example Value", inline=False)
 
         self.more_pages = [
             "Second Page One",
@@ -100,17 +94,13 @@ class PageTest(commands.Cog):
     @pagetest.command(name="strings")
     async def pagetest_strings(self, ctx: discord.ApplicationContext):
         """Demonstrates passing a list of strings as pages."""
-        paginator = pages.Paginator(
-            pages=["Page 1", "Page 2", "Page 3"], loop_pages=True
-        )
+        paginator = pages.Paginator(pages=["Page 1", "Page 2", "Page 3"], loop_pages=True)
         await paginator.respond(ctx.interaction, ephemeral=False)
 
     @pagetest.command(name="timeout")
     async def pagetest_timeout(self, ctx: discord.ApplicationContext):
         """Demonstrates having the buttons be disabled when the paginator view times out."""
-        paginator = pages.Paginator(
-            pages=self.get_pages(), disable_on_timeout=True, timeout=30
-        )
+        paginator = pages.Paginator(pages=self.get_pages(), disable_on_timeout=True, timeout=30)
         await paginator.respond(ctx.interaction, ephemeral=False)
 
     @pagetest.command(name="remove_buttons")
@@ -125,13 +115,9 @@ class PageTest(commands.Cog):
     async def pagetest_init(self, ctx: discord.ApplicationContext):
         """Demonstrates how to pass a list of custom buttons when creating the Paginator instance."""
         page_buttons = [
-            pages.PaginatorButton(
-                "first", label="<<-", style=discord.ButtonStyle.green
-            ),
+            pages.PaginatorButton("first", label="<<-", style=discord.ButtonStyle.green),
             pages.PaginatorButton("prev", label="<-", style=discord.ButtonStyle.green),
-            pages.PaginatorButton(
-                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
-            ),
+            pages.PaginatorButton("page_indicator", style=discord.ButtonStyle.gray, disabled=True),
             pages.PaginatorButton("next", label="->", style=discord.ButtonStyle.green),
             pages.PaginatorButton("last", label="->>", style=discord.ButtonStyle.green),
         ]
@@ -155,20 +141,10 @@ class PageTest(commands.Cog):
             show_disabled=False,
         )
         paginator.add_button(
-            pages.PaginatorButton(
-                "prev", label="<", style=discord.ButtonStyle.green, loop_label="lst"
-            )
+            pages.PaginatorButton("prev", label="<", style=discord.ButtonStyle.green, loop_label="lst")
         )
-        paginator.add_button(
-            pages.PaginatorButton(
-                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
-            )
-        )
-        paginator.add_button(
-            pages.PaginatorButton(
-                "next", style=discord.ButtonStyle.green, loop_label="fst"
-            )
-        )
+        paginator.add_button(pages.PaginatorButton("page_indicator", style=discord.ButtonStyle.gray, disabled=True))
+        paginator.add_button(pages.PaginatorButton("next", style=discord.ButtonStyle.green, loop_label="fst"))
         await paginator.respond(ctx.interaction, ephemeral=False)
 
     @pagetest.command(name="emoji_buttons")
@@ -177,9 +153,7 @@ class PageTest(commands.Cog):
         page_buttons = [
             pages.PaginatorButton("first", emoji="⏪", style=discord.ButtonStyle.green),
             pages.PaginatorButton("prev", emoji="⬅", style=discord.ButtonStyle.green),
-            pages.PaginatorButton(
-                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
-            ),
+            pages.PaginatorButton("page_indicator", style=discord.ButtonStyle.gray, disabled=True),
             pages.PaginatorButton("next", emoji="➡", style=discord.ButtonStyle.green),
             pages.PaginatorButton("last", emoji="⏩", style=discord.ButtonStyle.green),
         ]
@@ -244,19 +218,13 @@ class PageTest(commands.Cog):
     async def pagetest_groups(self, ctx: discord.ApplicationContext):
         """Demonstrates using page groups to switch between different sets of pages."""
         page_buttons = [
-            pages.PaginatorButton(
-                "first", label="<<-", style=discord.ButtonStyle.green
-            ),
+            pages.PaginatorButton("first", label="<<-", style=discord.ButtonStyle.green),
             pages.PaginatorButton("prev", label="<-", style=discord.ButtonStyle.green),
-            pages.PaginatorButton(
-                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
-            ),
+            pages.PaginatorButton("page_indicator", style=discord.ButtonStyle.gray, disabled=True),
             pages.PaginatorButton("next", label="->", style=discord.ButtonStyle.green),
             pages.PaginatorButton("last", label="->>", style=discord.ButtonStyle.green),
         ]
-        view = discord.ui.View(
-            discord.ui.Button(label="Test Button, Does Nothing", row=2)
-        )
+        view = discord.ui.View(discord.ui.Button(label="Test Button, Does Nothing", row=2))
         view.add_item(
             discord.ui.Select(
                 placeholder="Test Select Menu, Does Nothing",
@@ -309,17 +277,9 @@ class PageTest(commands.Cog):
     async def pagetest_prefix(self, ctx: commands.Context):
         """Demonstrates using the paginator with a prefix-based command."""
         paginator = pages.Paginator(pages=self.get_pages(), use_default_buttons=False)
-        paginator.add_button(
-            pages.PaginatorButton("prev", label="<", style=discord.ButtonStyle.green)
-        )
-        paginator.add_button(
-            pages.PaginatorButton(
-                "page_indicator", style=discord.ButtonStyle.gray, disabled=True
-            )
-        )
-        paginator.add_button(
-            pages.PaginatorButton("next", style=discord.ButtonStyle.green)
-        )
+        paginator.add_button(pages.PaginatorButton("prev", label="<", style=discord.ButtonStyle.green))
+        paginator.add_button(pages.PaginatorButton("page_indicator", style=discord.ButtonStyle.gray, disabled=True))
+        paginator.add_button(pages.PaginatorButton("next", style=discord.ButtonStyle.green))
         await paginator.send(ctx)
 
     @commands.command()

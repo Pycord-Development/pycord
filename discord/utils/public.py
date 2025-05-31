@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import datetime
 import itertools
@@ -34,9 +36,7 @@ AutocompleteFunc = Callable[["AutocompleteContext"], AV]
 FilterFunc = Callable[["AutocompleteContext", Any], bool | Awaitable[bool]]
 
 
-def basic_autocomplete(
-    values: Values, *, filter: FilterFunc | None = None
-) -> AutocompleteFunc:
+def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
     callable, it will be called with the AutocompleteContext.
@@ -70,8 +70,10 @@ def basic_autocomplete(
 
         # or
 
+
         async def autocomplete(ctx):
             return "foo", "bar", "baz", ctx.interaction.user.name
+
 
         Option(str, "name", autocomplete=basic_autocomplete(autocomplete))
 
@@ -141,8 +143,8 @@ def generate_snowflake(
         If None, uses current UTC time.
     mode: :class:`str`
         The type of snowflake to generate:
-        - "realistic": Creates a snowflake with random-like lower bits (default)
-        - "boundary": Creates a snowflake for range queries
+        - "realistic": Creates a snowflake with random-like lower bits
+        - "boundary": Creates a snowflake for range queries (default)
     high: :class:`bool`
         Only used when mode="boundary". Whether to set the lower 22 bits
         to high (True) or low (False). Default is False.

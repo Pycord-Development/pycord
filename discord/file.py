@@ -92,7 +92,6 @@ class File:
         description: str | None = None,
         spoiler: bool = False,
     ):
-
         if isinstance(fp, io.IOBase):
             if not (fp.seekable() and fp.readable()):
                 raise ValueError(f"File buffer {fp!r} must be seekable and readable")
@@ -119,16 +118,10 @@ class File:
         else:
             self.filename = filename
 
-        if (
-            spoiler
-            and self.filename is not None
-            and not self.filename.startswith("SPOILER_")
-        ):
+        if spoiler and self.filename is not None and not self.filename.startswith("SPOILER_"):
             self.filename = f"SPOILER_{self.filename}"
 
-        self.spoiler = spoiler or (
-            self.filename is not None and self.filename.startswith("SPOILER_")
-        )
+        self.spoiler = spoiler or (self.filename is not None and self.filename.startswith("SPOILER_"))
         self.description = description
 
     def reset(self, *, seek: int | bool = True) -> None:

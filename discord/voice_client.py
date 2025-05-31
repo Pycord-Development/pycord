@@ -358,9 +358,7 @@ class VoiceClient(VoiceProtocol):
         self._voice_state_complete.clear()
         self._voice_server_complete.clear()
         self._handshaking = True
-        _log.info(
-            "Starting voice handshake... (connection attempt %d)", self._connections + 1
-        )
+        _log.info("Starting voice handshake... (connection attempt %d)", self._connections + 1)
         self._connections += 1
 
     def finish_handshake(self) -> None:
@@ -423,9 +421,7 @@ class VoiceClient(VoiceProtocol):
         self._potentially_reconnecting = True
         try:
             # We only care about VOICE_SERVER_UPDATE since VOICE_STATE_UPDATE can come before we get disconnected
-            await asyncio.wait_for(
-                self._voice_server_complete.wait(), timeout=self.timeout
-            )
+            await asyncio.wait_for(self._voice_server_complete.wait(), timeout=self.timeout)
         except asyncio.TimeoutError:
             self._potentially_reconnecting = False
             await self.disconnect(force=True)
@@ -480,18 +476,12 @@ class VoiceClient(VoiceProtocol):
                         await self.disconnect()
                         break
                     if exc.code == 4014:
-                        _log.info(
-                            "Disconnected from voice by force... potentially"
-                            " reconnecting."
-                        )
+                        _log.info("Disconnected from voice by force... potentially reconnecting.")
                         successful = await self.potential_reconnect()
                         if successful:
                             continue
 
-                        _log.info(
-                            "Reconnect was unsuccessful, disconnecting from voice"
-                            " normally..."
-                        )
+                        _log.info("Reconnect was unsuccessful, disconnecting from voice normally...")
                         await self.disconnect()
                         break
                 if not reconnect:
@@ -499,9 +489,7 @@ class VoiceClient(VoiceProtocol):
                     raise
 
                 retry = backoff.delay()
-                _log.exception(
-                    "Disconnected from voice... Reconnecting in %.2fs.", retry
-                )
+                _log.exception("Disconnected from voice... Reconnecting in %.2fs.", retry)
                 self._connected.clear()
                 await asyncio.sleep(retry)
                 await self.voice_disconnect()
@@ -620,9 +608,7 @@ class VoiceClient(VoiceProtocol):
         return data
 
     def get_ssrc(self, user_id):
-        return {info["user_id"]: ssrc for ssrc, info in self.ws.ssrc_map.items()}[
-            user_id
-        ]
+        return {info["user_id"]: ssrc for ssrc, info in self.ws.ssrc_map.items()}[user_id]
 
     @overload
     def play(
@@ -692,9 +678,7 @@ class VoiceClient(VoiceProtocol):
             raise ClientException("Already playing audio.")
 
         if not isinstance(source, AudioSource):
-            raise TypeError(
-                f"source must be an AudioSource not {source.__class__.__name__}"
-            )
+            raise TypeError(f"source must be an AudioSource not {source.__class__.__name__}")
 
         if not self.encoder and not source.is_opus():
             self.encoder = opus.Encoder()
@@ -874,36 +858,25 @@ class VoiceClient(VoiceProtocol):
     def recv_decoded_audio(self, data: RawData):
         # Add silence when they were not being recorded.
         if data.ssrc not in self.user_timestamps:  # First packet from user
-            if (
-                not self.user_timestamps or not self.sync_start
-            ):  # First packet from anyone
+            if not self.user_timestamps or not self.sync_start:  # First packet from anyone
                 self.first_packet_timestamp = data.receive_time
                 silence = 0
 
             else:  # Previously received a packet from someone else
-                silence = (
-                    (data.receive_time - self.first_packet_timestamp) * 48000
-                ) - 960
+                silence = ((data.receive_time - self.first_packet_timestamp) * 48000) - 960
 
         else:  # Previously received a packet from user
-            dRT = (
-                data.receive_time - self.user_timestamps[data.ssrc][1]
-            ) * 48000  # delta receive time
+            dRT = (data.receive_time - self.user_timestamps[data.ssrc][1]) * 48000  # delta receive time
             dT = data.timestamp - self.user_timestamps[data.ssrc][0]  # delta timestamp
             diff = abs(100 - dT * 100 / dRT)
-            if (
-                diff > 60 and dT != 960
-            ):  # If the difference in change is more than 60% threshold
+            if diff > 60 and dT != 960:  # If the difference in change is more than 60% threshold
                 silence = dRT - 960
             else:
                 silence = dT - 960
 
         self.user_timestamps.update({data.ssrc: (data.timestamp, data.receive_time)})
 
-        data.decoded_data = (
-            struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
-            + data.decoded_data
-        )
+        data.decoded_data = struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS + data.decoded_data
 
         while data.ssrc not in self.ws.ssrc_map:
             time.sleep(0.05)

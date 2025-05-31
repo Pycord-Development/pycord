@@ -19,7 +19,7 @@ import logging
 
 # We need __version__ to be imported first
 # isort: off
-from ._version import *
+from .__version import *
 
 # isort: on
 

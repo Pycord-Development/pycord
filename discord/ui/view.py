@@ -95,9 +95,7 @@ class _ViewWeights:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
-                raise ValueError(
-                    f"item would not fit at row {item.row} ({total} > 5 width)"
-                )
+                raise ValueError(f"item would not fit at row {item.row} ({total} > 5 width)")
             self.weights[item.row] = total
             item._rendered_row = item.row
         else:
@@ -171,9 +169,7 @@ class View:
         self.disable_on_timeout = disable_on_timeout
         self.children: list[Item] = []
         for func in self.__view_children_items__:
-            item: Item = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
+            item: Item = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
             item.callback = partial(func, self, item)
             item._view = self
             setattr(self, func.__name__, item)
@@ -233,9 +229,7 @@ class View:
         return components
 
     @classmethod
-    def from_message(
-        cls, message: Message, /, *, timeout: float | None = 180.0
-    ) -> View:
+    def from_message(cls, message: Message, /, *, timeout: float | None = 180.0) -> View:
         """Converts a message's components into a :class:`View`.
 
         The :attr:`.Message.components` of a message are read-only
@@ -390,9 +384,7 @@ class View:
             The interaction that occurred.
         """
 
-    async def on_error(
-        self, error: Exception, item: Item, interaction: Interaction
-    ) -> None:
+    async def on_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
         """|coro|
 
         A callback that is called when an item's callback or :meth:`interaction_check`
@@ -410,9 +402,7 @@ class View:
             The interaction that led to the failure.
         """
         print(f"Ignoring exception in view {self} for item {item}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
     async def _scheduled_task(self, item: Item, interaction: Interaction):
         try:
@@ -442,9 +432,7 @@ class View:
             return
 
         self.__stopped.set_result(True)
-        asyncio.create_task(
-            self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}"
-        )
+        asyncio.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}")
 
     def _dispatch_item(self, item: Item, interaction: Interaction):
         if self.__stopped.done():
@@ -461,11 +449,11 @@ class View:
     def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], Item] = {
-            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
+            (item.type.value, item.custom_id): item
+            for item in self.children
+            if item.is_dispatchable()  # type: ignore
         }
-        children: list[Item] = [
-            item for item in self.children if not item.is_dispatchable()
-        ]
+        children: list[Item] = [item for item in self.children if not item.is_dispatchable()]
         for component in _walk_all_components(components):
             try:
                 older = old_state[(component.type.value, component.custom_id)]  # type: ignore
@@ -511,9 +499,7 @@ class View:
         A persistent view has all their components with a set ``custom_id`` and
         a :attr:`timeout` set to ``None``.
         """
-        return self.timeout is None and all(
-            item.is_persistent() for item in self.children
-        )
+        return self.timeout is None and all(item.is_persistent() for item in self.children)
 
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
@@ -574,11 +560,7 @@ class ViewStore:
 
     @property
     def persistent_views(self) -> Sequence[View]:
-        views = {
-            view.id: view
-            for (_, (view, _)) in self._views.items()
-            if view.is_persistent()
-        }
+        views = {view.id: view for (_, (view, _)) in self._views.items() if view.is_persistent()}
         return list(views.values())
 
     def __verify_integrity(self):
@@ -617,9 +599,7 @@ class ViewStore:
         key = (component_type, message_id, custom_id)
         # Fallback to None message_id searches in case a persistent view
         # was added without an associated message_id
-        value = self._views.get(key) or self._views.get(
-            (component_type, None, custom_id)
-        )
+        value = self._views.get(key) or self._views.get((component_type, None, custom_id))
         if value is None:
             return
 

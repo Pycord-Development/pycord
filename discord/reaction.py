@@ -103,8 +103,8 @@ class Reaction:
         emoji: PartialEmoji | GuildEmoji | AppEmoji | str | None = None,
     ):
         self.message: Message = message
-        self.emoji: PartialEmoji | GuildEmoji | AppEmoji | str = (
-            emoji or message._state.get_reaction_emoji(data["emoji"])
+        self.emoji: PartialEmoji | GuildEmoji | AppEmoji | str = emoji or message._state.get_reaction_emoji(
+            data["emoji"]
         )
         self.count: int = data.get("count", 1)
         self._count_details: ReactionCountDetailsPayload = data.get("count_details", {})
@@ -252,14 +252,14 @@ class Reaction:
 
             # I do not actually recommend doing this.
             async for user in reaction.users():
-                await channel.send(f'{user} has reacted with {reaction.emoji}!')
+                await channel.send(f"{user} has reacted with {reaction.emoji}!")
 
         Flattening into a list: ::
 
             users = await reaction.users().flatten()
             # users is now a list of User...
             winner = random.choice(users)
-            await channel.send(f'{winner} has won the raffle.')
+            await channel.send(f"{winner} has won the raffle.")
 
         Getting super reactors: ::
 

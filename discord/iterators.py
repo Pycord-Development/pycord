@@ -364,9 +364,7 @@ class HistoryIterator(_AsyncIterator["Message"]):
             if self.limit is None:
                 raise ValueError("history does not support around with limit=None")
             if self.limit > 101:
-                raise ValueError(
-                    "history max limit 101 when specifying around parameter"
-                )
+                raise ValueError("history max limit 101 when specifying around parameter")
             elif self.limit == 101:
                 self.limit = 100  # Thanks discord
 
@@ -422,51 +420,37 @@ class HistoryIterator(_AsyncIterator["Message"]):
 
             channel = self.channel
             for element in data:
-                await self.messages.put(
-                    self.state.create_message(channel=channel, data=element)
-                )
+                await self.messages.put(self.state.create_message(channel=channel, data=element))
 
     async def _retrieve_messages(self, retrieve: int) -> list[MessagePayload]:
         """Retrieve messages and update next parameters."""
         raise NotImplementedError
 
-    async def _retrieve_messages_before_strategy(
-        self, retrieve: int
-    ) -> list[MessagePayload]:
+    async def _retrieve_messages_before_strategy(self, retrieve: int) -> list[MessagePayload]:
         """Retrieve messages using before parameter."""
         before = self.before.id if self.before else None
-        data: list[MessagePayload] = await self.logs_from(
-            self.channel.id, retrieve, before=before
-        )
+        data: list[MessagePayload] = await self.logs_from(self.channel.id, retrieve, before=before)
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
             self.before = Object(id=int(data[-1]["id"]))
         return data
 
-    async def _retrieve_messages_after_strategy(
-        self, retrieve: int
-    ) -> list[MessagePayload]:
+    async def _retrieve_messages_after_strategy(self, retrieve: int) -> list[MessagePayload]:
         """Retrieve messages using after parameter."""
         after = self.after.id if self.after else None
-        data: list[MessagePayload] = await self.logs_from(
-            self.channel.id, retrieve, after=after
-        )
+        data: list[MessagePayload] = await self.logs_from(self.channel.id, retrieve, after=after)
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
             self.after = Object(id=int(data[0]["id"]))
         return data
 
-    async def _retrieve_messages_around_strategy(
-        self, retrieve: int
-    ) -> list[MessagePayload]:
+    async def _retrieve_messages_around_strategy(self, retrieve: int) -> list[MessagePayload]:
         """Retrieve messages using around parameter."""
         if self.around:
             around = self.around.id if self.around else None
-            data: list[MessagePayload] = await self.logs_from(
-                self.channel.id, retrieve, around=around
-            )
+            data: list[MessagePayload] = await self.logs_from(self.channel.id, retrieve, around=around)
             self.around = None
             return data
         return []
@@ -555,9 +539,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
                 self._users[u.id] = u
 
             for element in data:
-                await self.entries.put(
-                    AuditLogEntry(data=element, users=self._users, guild=self.guild)
-                )
+                await self.entries.put(AuditLogEntry(data=element, users=self._users, guild=self.guild))
 
 
 class GuildIterator(_AsyncIterator["Guild"]):
@@ -662,9 +644,7 @@ class GuildIterator(_AsyncIterator["Guild"]):
     async def _retrieve_guilds_before_strategy(self, retrieve):
         """Retrieve guilds using before parameter."""
         before = self.before.id if self.before else None
-        data: list[GuildPayload] = await self.get_guilds(
-            retrieve, before=before, with_counts=self.with_counts
-        )
+        data: list[GuildPayload] = await self.get_guilds(retrieve, before=before, with_counts=self.with_counts)
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -674,9 +654,7 @@ class GuildIterator(_AsyncIterator["Guild"]):
     async def _retrieve_guilds_after_strategy(self, retrieve):
         """Retrieve guilds using after parameter."""
         after = self.after.id if self.after else None
-        data: list[GuildPayload] = await self.get_guilds(
-            retrieve, after=after, with_counts=self.with_counts
-        )
+        data: list[GuildPayload] = await self.get_guilds(retrieve, after=after, with_counts=self.with_counts)
         if len(data):
             if self.limit is not None:
                 self.limit -= retrieve
@@ -791,9 +769,7 @@ class BanIterator(_AsyncIterator["BanEntry"]):
         from .guild import BanEntry
         from .user import User
 
-        return BanEntry(
-            reason=data["reason"], user=User(state=self.state, data=data["user"])
-        )
+        return BanEntry(reason=data["reason"], user=User(state=self.state, data=data["user"]))
 
 
 class ArchivedThreadIterator(_AsyncIterator["Thread"]):
@@ -1057,9 +1033,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         """Retrieve entitlements and update next parameters."""
         raise NotImplementedError
 
-    async def _retrieve_entitlements_before_strategy(
-        self, retrieve: int
-    ) -> list[EntitlementPayload]:
+    async def _retrieve_entitlements_before_strategy(self, retrieve: int) -> list[EntitlementPayload]:
         """Retrieve entitlements using before parameter."""
         before = self.before.id if self.before else None
         data = await self.get_entitlements(
@@ -1077,9 +1051,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
             self.before = Object(id=int(data[-1]["id"]))
         return data
 
-    async def _retrieve_entitlements_after_strategy(
-        self, retrieve: int
-    ) -> list[EntitlementPayload]:
+    async def _retrieve_entitlements_after_strategy(self, retrieve: int) -> list[EntitlementPayload]:
         """Retrieve entitlements using after parameter."""
         after = self.after.id if self.after else None
         data = await self.get_entitlements(

@@ -249,9 +249,7 @@ class RawReactionActionEvent(_RawReprMixin):
         "data",
     )
 
-    def __init__(
-        self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str
-    ) -> None:
+    def __init__(self, data: ReactionActionEvent, emoji: PartialEmoji, event_type: str) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
         self.user_id: int = int(data["user_id"])
@@ -514,9 +512,7 @@ class RawTypingEvent(_RawReprMixin):
     def __init__(self, data: TypingEvent) -> None:
         self.channel_id: int = int(data["channel_id"])
         self.user_id: int = int(data["user_id"])
-        self.when: datetime.datetime = datetime.datetime.fromtimestamp(
-            data.get("timestamp"), tz=datetime.timezone.utc
-        )
+        self.when: datetime.datetime = datetime.datetime.fromtimestamp(data.get("timestamp"), tz=datetime.timezone.utc)
         self.member: Member | None = None
 
         try:
@@ -657,9 +653,7 @@ class AutoModActionExecutionEvent:
     def __init__(self, state: ConnectionState, data: AutoModActionExecution) -> None:
         self.action: AutoModAction = AutoModAction.from_dict(data["action"])
         self.rule_id: int = int(data["rule_id"])
-        self.rule_trigger_type: AutoModTriggerType = try_enum(
-            AutoModTriggerType, int(data["rule_trigger_type"])
-        )
+        self.rule_trigger_type: AutoModTriggerType = try_enum(AutoModTriggerType, int(data["rule_trigger_type"]))
         self.guild_id: int = int(data["guild_id"])
         self.guild: Guild | None = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
@@ -676,9 +670,7 @@ class AutoModActionExecutionEvent:
             # I don't see why this would be optional, but it's documented
             # as such, so we should treat it that way
             self.channel_id: int | None = int(data["channel_id"])
-            self.channel: MessageableChannel | None = self.guild.get_channel_or_thread(
-                self.channel_id
-            )
+            self.channel: MessageableChannel | None = self.guild.get_channel_or_thread(self.channel_id)
         except KeyError:
             self.channel_id: int | None = None
             self.channel: MessageableChannel | None = None
@@ -691,12 +683,8 @@ class AutoModActionExecutionEvent:
             self.message: Message | None = None
 
         try:
-            self.alert_system_message_id: int | None = int(
-                data["alert_system_message_id"]
-            )
-            self.alert_system_message: Message | None = state._get_message(
-                self.alert_system_message_id
-            )
+            self.alert_system_message_id: int | None = int(data["alert_system_message_id"])
+            self.alert_system_message: Message | None = state._get_message(self.alert_system_message_id)
         except KeyError:
             self.alert_system_message_id: int | None = None
             self.alert_system_message: Message | None = None

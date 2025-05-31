@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 _IS_ASCII = re.compile(r"^[\x00-\x7f]+$")
 
+
 def resolve_invite(invite: Invite | str) -> str:
     """
     Resolves an invite from a :class:`~discord.Invite`, URL or code.
@@ -37,6 +38,7 @@ def resolve_invite(invite: Invite | str) -> str:
     if m:
         return m.group(1)
     return invite
+
 
 __all__ = ("resolve_invite",)
 
@@ -76,9 +78,7 @@ def parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
         return float(reset_after)
     utc = datetime.timezone.utc
     now = datetime.datetime.now(utc)
-    reset = datetime.datetime.fromtimestamp(
-        float(request.headers["X-Ratelimit-Reset"]), utc
-    )
+    reset = datetime.datetime.fromtimestamp(float(request.headers["X-Ratelimit-Reset"]), utc)
     return (reset - now).total_seconds()
 
 
@@ -119,6 +119,7 @@ def resolve_template(code: Template | str) -> str:
         return m.group(1)
     return code
 
+
 __all__ = (
     "resolve_invite",
     "get_as_snowflake",
@@ -127,4 +128,3 @@ __all__ = (
     "parse_ratelimit_header",
     "string_width",
 )
-

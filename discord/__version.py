@@ -28,7 +28,6 @@ from __future__ import annotations
 import datetime
 import re
 import warnings
-from importlib.metadata import PackageNotFoundError, version
 
 from typing_extensions import TypedDict
 
@@ -37,26 +36,7 @@ __all__ = ("__version__", "VersionInfo", "version_info")
 from typing import Literal, NamedTuple
 
 from .utils import deprecated
-
-try:
-    __version__ = version("py-cord")
-except PackageNotFoundError:
-    # Package is not installed
-    try:
-        from setuptools_scm import get_version  # type: ignore[import]
-
-        __version__ = get_version()
-    except ImportError:
-        # setuptools_scm is not installed
-        __version__ = "0.0.0"
-        warnings.warn(
-            (
-                "Package is not installed, and setuptools_scm is not installed. "
-                f"As a fallback, {__name__}.__version__ will be set to {__version__}"
-            ),
-            RuntimeWarning,
-            stacklevel=2,
-        )
+from ._version import __version__, __version_tuple__
 
 
 class AdvancedVersionInfo(TypedDict):
@@ -70,7 +50,7 @@ class VersionInfo(NamedTuple):
     major: int
     minor: int
     micro: int
-    releaselevel: Literal["alpha", "beta", "candidate", "final"]
+    releaselevel: Literal["alpha", "beta", "candidate", "final", "dev"]
 
     # We can't set instance attributes on a NamedTuple, so we have to use a
     # global variable to store the advanced version info.
@@ -85,7 +65,7 @@ class VersionInfo(NamedTuple):
 
     @property
     @deprecated("releaselevel", "2.4")
-    def release_level(self) -> Literal["alpha", "beta", "candidate", "final"]:
+    def release_level(self) -> Literal["alpha", "beta", "candidate", "final", "dev"]:
         return self.releaselevel
 
     @property
@@ -109,49 +89,70 @@ class VersionInfo(NamedTuple):
         return self.advanced["date"]
 
 
-version_regex = re.compile(
-    r"^(?P<major>\d+)(?:\.(?P<minor>\d+))?(?:\.(?P<patch>\d+))?"
-    r"(?:(?P<level>rc|a|b)(?P<serial>\d+))?"
-    r"(?:\.dev(?P<build>\d+))?"
-    r"(?:\+(?:(?:g(?P<commit>[a-fA-F0-9]{4,40})(?:\.d(?P<date>\d{4}\d{2}\d{2})|))|d(?P<date1>\d{4}\d{2}\d{2})))?$"
-)
-version_match = version_regex.match(__version__)
-if version_match is None:
-    raise RuntimeError(f"Invalid version string: {__version__}")
-raw_info = version_match.groupdict()
-
-level_info: Literal["alpha", "beta", "candidate", "final"]
-
-if raw_info["level"] == "a":
-    level_info = "alpha"
-elif raw_info["level"] == "b":
-    level_info = "beta"
-elif raw_info["level"] == "rc":
-    level_info = "candidate"
-elif raw_info["level"] is None:
-    level_info = "final"
-else:
-    raise RuntimeError("Invalid release level")
-
-if (raw_date := raw_info["date"] or raw_info["date1"]) is not None:
-    date_info = datetime.date(
-        int(raw_date[:4]),
-        int(raw_date[4:6]),
-        int(raw_date[6:]),
-    )
-else:
+def parse_version_tuple(version_tuple):
+    """Parse setuptools-scm version tuple into components."""
+    major = version_tuple[0] if len(version_tuple) > 0 else 0
+    minor = version_tuple[1] if len(version_tuple) > 1 else 0
+    micro = 0
+    releaselevel = "final"
+    serial = 0
+    build = None
+    commit = None
     date_info = None
 
+    # Handle additional components
+    for i, component in enumerate(version_tuple[2:], start=2):
+        if isinstance(component, str):
+            # Parse development/pre-release info
+            if component.startswith("dev"):
+                releaselevel = "dev"  # Keep dev as its own category
+                serial = int(component[3:]) if len(component) > 3 else 0
+            elif component.startswith("a"):
+                releaselevel = "alpha"
+                serial = int(component[1:]) if len(component) > 1 else 0
+            elif component.startswith("b"):
+                releaselevel = "beta"
+                serial = int(component[1:]) if len(component) > 1 else 0
+            elif component.startswith("rc"):
+                releaselevel = "candidate"
+                serial = int(component[2:]) if len(component) > 2 else 0
+            elif component.startswith("g") and "." in component:
+                # Parse git info like 'g901fb98.d20250526'
+                parts = component.split(".")
+                if parts[0].startswith("g"):
+                    commit = parts[0][1:]  # Remove 'g' prefix
+                if len(parts) > 1 and parts[1].startswith("d"):
+                    date_str = parts[1][1:]  # Remove 'd' prefix
+                    if len(date_str) == 8:
+                        date_info = datetime.date(int(date_str[:4]), int(date_str[4:6]), int(date_str[6:8]))
+        elif isinstance(component, int) and i == 2:
+            micro = component
+
+    return {
+        "major": major,
+        "minor": minor,
+        "micro": micro,
+        "releaselevel": releaselevel,
+        "serial": serial,
+        "build": build,
+        "commit": commit,
+        "date": date_info,
+    }
+
+
+# Parse the version tuple
+parsed = parse_version_tuple(__version_tuple__)
+
 version_info: VersionInfo = VersionInfo(
-    major=int(raw_info["major"] or 0) or None,
-    minor=int(raw_info["minor"] or 0) or None,
-    micro=int(raw_info["patch"] or 0) or None,
-    releaselevel=level_info,
+    major=parsed["major"],
+    minor=parsed["minor"],
+    micro=parsed["micro"],
+    releaselevel=parsed["releaselevel"],
 )
 
 _advanced = AdvancedVersionInfo(
-    serial=raw_info["serial"],
-    build=int(raw_info["build"] or 0) or None,
-    commit=raw_info["commit"],
-    date=date_info,
+    serial=parsed["serial"],
+    build=parsed["build"],
+    commit=parsed["commit"],
+    date=parsed["date"],
 )

@@ -153,11 +153,7 @@ release = get_version("py-cord")
 version = ".".join(release.split(".")[:2])
 
 # This assumes a tag is available for final releases
-branch = (
-    "master"
-    if "a" in version or "b" in version or "rc" in version or "dev" in release
-    else f"v{release}"
-)
+branch = "master" if "a" in version or "b" in version or "rc" in version or "dev" in release else f"v{release}"
 
 html_title = f"{project} v{version} Documentation"
 

@@ -72,9 +72,7 @@ class PaginatorButton(discord.ui.Button):
         self,
         button_type: str,
         label: str = None,
-        emoji: (
-            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
-        ) = None,
+        emoji: (str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji) = None,
         style: discord.ButtonStyle = discord.ButtonStyle.green,
         disabled: bool = False,
         custom_id: str = None,
@@ -91,9 +89,7 @@ class PaginatorButton(discord.ui.Button):
         )
         self.button_type = button_type
         self.label = label if label or emoji else button_type.capitalize()
-        self.emoji: (
-            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
-        ) = emoji
+        self.emoji: str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji = emoji
         self.style = style
         self.disabled = disabled
         self.loop_label = self.label if not loop_label else loop_label
@@ -118,10 +114,7 @@ class PaginatorButton(discord.ui.Button):
             else:
                 new_page -= 1
         elif self.button_type == "next":
-            if (
-                self.paginator.loop_pages
-                and self.paginator.current_page == self.paginator.page_count
-            ):
+            if self.paginator.loop_pages and self.paginator.current_page == self.paginator.page_count:
                 new_page = 0
             else:
                 new_page += 1
@@ -156,9 +149,7 @@ class Page:
         **kwargs,
     ):
         if content is None and embeds is None:
-            raise discord.InvalidArgument(
-                "A page cannot have both content and embeds equal to None."
-            )
+            raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
         self._content = content
         self._embeds = embeds or []
         self._custom_view = custom_view
@@ -282,9 +273,7 @@ class PageGroup:
         pages: list[str] | list[Page] | list[list[discord.Embed] | discord.Embed],
         label: str,
         description: str | None = None,
-        emoji: (
-            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
-        ) = None,
+        emoji: (str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji) = None,
         default: bool | None = None,
         show_disabled: bool | None = None,
         show_indicator: bool | None = None,
@@ -300,9 +289,7 @@ class PageGroup:
     ):
         self.label = label
         self.description: str | None = description
-        self.emoji: (
-            str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji
-        ) = emoji
+        self.emoji: str | discord.GuildEmoji | discord.AppEmoji | discord.PartialEmoji = emoji
         self.pages: list[str] | list[list[discord.Embed] | discord.Embed] = pages
         self.default: bool | None = default
         self.show_disabled = show_disabled
@@ -382,12 +369,7 @@ class Paginator(discord.ui.View):
 
     def __init__(
         self,
-        pages: (
-            list[PageGroup]
-            | list[Page]
-            | list[str]
-            | list[list[discord.Embed] | discord.Embed]
-        ),
+        pages: (list[PageGroup] | list[Page] | list[str] | list[list[discord.Embed] | discord.Embed]),
         show_disabled: bool = True,
         show_indicator=True,
         show_menu=False,
@@ -404,12 +386,7 @@ class Paginator(discord.ui.View):
     ) -> None:
         super().__init__(timeout=timeout)
         self.timeout: float = timeout
-        self.pages: (
-            list[PageGroup]
-            | list[str]
-            | list[Page]
-            | list[list[discord.Embed] | discord.Embed]
-        ) = pages
+        self.pages: list[PageGroup] | list[str] | list[Page] | list[list[discord.Embed] | discord.Embed] = pages
         self.current_page = 0
         self.menu: PaginatorMenu | None = None
         self.show_menu = show_menu
@@ -425,9 +402,7 @@ class Paginator(discord.ui.View):
                 if pg.default:
                     self.default_page_group = self.page_groups.index(pg)
                     break
-            self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
-            )
+            self.pages: list[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
 
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
@@ -456,12 +431,7 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: None | (
-            list[PageGroup]
-            | list[Page]
-            | list[str]
-            | list[list[discord.Embed] | discord.Embed]
-        ) = None,
+        pages: None | (list[PageGroup] | list[Page] | list[str] | list[list[discord.Embed] | discord.Embed]) = None,
         show_disabled: bool | None = None,
         show_indicator: bool | None = None,
         show_menu: bool | None = None,
@@ -522,12 +492,9 @@ class Paginator(discord.ui.View):
         """
 
         # Update pages and reset current_page to 0 (default)
-        self.pages: (
-            list[PageGroup]
-            | list[str]
-            | list[Page]
-            | list[list[discord.Embed] | discord.Embed]
-        ) = (pages if pages is not None else self.pages)
+        self.pages: list[PageGroup] | list[str] | list[Page] | list[list[discord.Embed] | discord.Embed] = (
+            pages if pages is not None else self.pages
+        )
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if self.show_menu else None
@@ -537,48 +504,22 @@ class Paginator(discord.ui.View):
                 if pg.default:
                     self.default_page_group = self.page_groups.index(pg)
                     break
-            self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
-            )
+            self.pages: list[Page] = self.get_page_group_content(self.page_groups[self.default_page_group])
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
-        self.show_disabled = (
-            show_disabled if show_disabled is not None else self.show_disabled
-        )
-        self.show_indicator = (
-            show_indicator if show_indicator is not None else self.show_indicator
-        )
+        self.show_disabled = show_disabled if show_disabled is not None else self.show_disabled
+        self.show_indicator = show_indicator if show_indicator is not None else self.show_indicator
         self.usercheck = author_check if author_check is not None else self.usercheck
-        self.menu_placeholder = (
-            menu_placeholder if menu_placeholder is not None else self.menu_placeholder
-        )
-        self.disable_on_timeout = (
-            disable_on_timeout
-            if disable_on_timeout is not None
-            else self.disable_on_timeout
-        )
-        self.use_default_buttons = (
-            use_default_buttons
-            if use_default_buttons is not None
-            else self.use_default_buttons
-        )
-        self.default_button_row = (
-            default_button_row
-            if default_button_row is not None
-            else self.default_button_row
-        )
+        self.menu_placeholder = menu_placeholder if menu_placeholder is not None else self.menu_placeholder
+        self.disable_on_timeout = disable_on_timeout if disable_on_timeout is not None else self.disable_on_timeout
+        self.use_default_buttons = use_default_buttons if use_default_buttons is not None else self.use_default_buttons
+        self.default_button_row = default_button_row if default_button_row is not None else self.default_button_row
         self.loop_pages = loop_pages if loop_pages is not None else self.loop_pages
         self.custom_view: discord.ui.View = None if custom_view is None else custom_view
         self.timeout: float = timeout if timeout is not None else self.timeout
-        self.custom_buttons = (
-            custom_buttons if custom_buttons is not None else self.custom_buttons
-        )
-        self.trigger_on_display = (
-            trigger_on_display
-            if trigger_on_display is not None
-            else self.trigger_on_display
-        )
+        self.custom_buttons = custom_buttons if custom_buttons is not None else self.custom_buttons
+        self.trigger_on_display = trigger_on_display if trigger_on_display is not None else self.trigger_on_display
         self.buttons = {}
         if self.use_default_buttons:
             self.add_default_buttons()
@@ -618,11 +559,7 @@ class Paginator(discord.ui.View):
         """
         page = self.get_page_content(page)
         for item in self.children:
-            if (
-                include_custom
-                or not self.custom_view
-                or item not in self.custom_view.children
-            ):
+            if include_custom or not self.custom_view or item not in self.custom_view.children:
                 item.disabled = True
         if page:
             await self.message.edit(
@@ -650,11 +587,7 @@ class Paginator(discord.ui.View):
         items = self.children.copy()
         page = self.get_page_content(page)
         for item in items:
-            if (
-                include_custom
-                or not self.custom_view
-                or item not in self.custom_view.children
-            ):
+            if include_custom or not self.custom_view or item not in self.custom_view.children:
                 self.remove_item(item)
         if page:
             await self.message.edit(
@@ -679,9 +612,7 @@ class Paginator(discord.ui.View):
 
         return page, files
 
-    async def goto_page(
-        self, page_number: int = 0, *, interaction: discord.Interaction | None = None
-    ) -> None:
+    async def goto_page(self, page_number: int = 0, *, interaction: discord.Interaction | None = None) -> None:
         """Updates the paginator message to show the specified page number.
 
         Parameters
@@ -807,11 +738,7 @@ class Paginator(discord.ui.View):
             ),
             "label": button.label,
             "loop_label": button.loop_label,
-            "hidden": (
-                button.disabled
-                if button.button_type != "page_indicator"
-                else not self.show_indicator
-            ),
+            "hidden": (button.disabled if button.button_type != "page_indicator" else not self.show_indicator),
         }
         self.buttons[button.button_type]["object"].callback = button.callback
         button.paginator = self
@@ -819,9 +746,7 @@ class Paginator(discord.ui.View):
     def remove_button(self, button_type: str):
         """Removes a :class:`PaginatorButton` from the paginator."""
         if button_type not in self.buttons.keys():
-            raise ValueError(
-                f"no button_type {button_type} was found in this paginator."
-            )
+            raise ValueError(f"no button_type {button_type} was found in this paginator.")
         self.buttons.pop(button_type)
 
     def update_buttons(self) -> dict:
@@ -866,9 +791,7 @@ class Paginator(discord.ui.View):
         self.clear_items()
         if self.show_indicator:
             try:
-                self.buttons["page_indicator"][
-                    "object"
-                ].label = f"{self.current_page + 1}/{self.page_count + 1}"
+                self.buttons["page_indicator"]["object"].label = f"{self.current_page + 1}/{self.page_count + 1}"
             except KeyError:
                 pass
         for key, button in self.buttons.items():
@@ -927,8 +850,7 @@ class Paginator(discord.ui.View):
                 raise TypeError("All list items must be embeds or files.")
         else:
             raise TypeError(
-                "Page content must be a Page object, string, an embed, a list of"
-                " embeds, a file, or a list of files."
+                "Page content must be a Page object, string, an embed, a list of embeds, a file, or a list of files."
             )
 
     async def page_action(self, interaction: discord.Interaction | None = None) -> None:
@@ -940,18 +862,14 @@ class Paginator(discord.ui.View):
             The interaction that was used to trigger the page action.
         """
         if self.get_page_content(self.pages[self.current_page]).callback:
-            await self.get_page_content(self.pages[self.current_page]).callback(
-                interaction=interaction
-            )
+            await self.get_page_content(self.pages[self.current_page]).callback(interaction=interaction)
 
     async def send(
         self,
         ctx: Context,
         target: discord.abc.Messageable | None = None,
         target_message: str | None = None,
-        reference: None | (
-            discord.Message | discord.MessageReference | discord.PartialMessage
-        ) = None,
+        reference: None | (discord.Message | discord.MessageReference | discord.PartialMessage) = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         mention_author: bool | None = None,
         delete_after: float | None = None,
@@ -999,17 +917,10 @@ class Paginator(discord.ui.View):
             reference,
             (discord.Message, discord.MessageReference, discord.PartialMessage),
         ):
-            raise TypeError(
-                "expected Message, MessageReference, or PartialMessage not"
-                f" {reference.__class__!r}"
-            )
+            raise TypeError(f"expected Message, MessageReference, or PartialMessage not {reference.__class__!r}")
 
-        if allowed_mentions is not None and not isinstance(
-            allowed_mentions, discord.AllowedMentions
-        ):
-            raise TypeError(
-                f"expected AllowedMentions not {allowed_mentions.__class__!r}"
-            )
+        if allowed_mentions is not None and not isinstance(allowed_mentions, discord.AllowedMentions):
+            raise TypeError(f"expected AllowedMentions not {allowed_mentions.__class__!r}")
 
         if mention_author is not None and not isinstance(mention_author, bool):
             raise TypeError(f"expected bool not {mention_author.__class__!r}")
@@ -1091,9 +1002,7 @@ class Paginator(discord.ui.View):
 
         self.update_buttons()
 
-        page: Page | str | discord.Embed | list[discord.Embed] = self.pages[
-            self.current_page
-        ]
+        page: Page | str | discord.Embed | list[discord.Embed] = self.pages[self.current_page]
         page_content: Page = self.get_page_content(page)
 
         if page_content.custom_view:
@@ -1156,24 +1065,19 @@ class Paginator(discord.ui.View):
         """
 
         if not isinstance(interaction, (discord.Interaction, BridgeContext)):
-            raise TypeError(
-                f"expected Interaction or BridgeContext, not {interaction.__class__!r}"
-            )
+            raise TypeError(f"expected Interaction or BridgeContext, not {interaction.__class__!r}")
 
         if target is not None and not isinstance(target, discord.abc.Messageable):
             raise TypeError(f"expected abc.Messageable not {target.__class__!r}")
 
         if ephemeral and (self.timeout is None or self.timeout >= 900):
             raise ValueError(
-                "paginator responses cannot be ephemeral if the paginator timeout is 15"
-                " minutes or greater"
+                "paginator responses cannot be ephemeral if the paginator timeout is 15 minutes or greater"
             )
 
         self.update_buttons()
 
-        page: Page | str | discord.Embed | list[discord.Embed] = self.pages[
-            self.current_page
-        ]
+        page: Page | str | discord.Embed | list[discord.Embed] = self.pages[self.current_page]
         page_content: Page = self.get_page_content(page)
 
         if page_content.custom_view:
@@ -1183,9 +1087,7 @@ class Paginator(discord.ui.View):
             self.user = interaction.user
 
             if target:
-                await interaction.response.send_message(
-                    target_message, ephemeral=ephemeral
-                )
+                await interaction.response.send_message(target_message, ephemeral=ephemeral)
                 msg = await target.send(
                     content=page_content.content,
                     embeds=page_content.embeds,
