@@ -60,7 +60,7 @@ def _walk_all_components(components: list[Component]) -> Iterator[Component]:
             yield item
 
 
-def _component_to_item(component: Component) -> Item:
+def _component_to_item(component: Component) -> Item[View]:
     if isinstance(component, ButtonComponent):
         from .button import Button
 
@@ -75,7 +75,7 @@ def _component_to_item(component: Component) -> Item:
 class _ViewWeights:
     __slots__ = ("weights",)
 
-    def __init__(self, children: list[Item]):
+    def __init__(self, children: list[Item[View]]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -84,14 +84,14 @@ class _ViewWeights:
             for item in group:
                 self.add_item(item)
 
-    def find_open_space(self, item: Item) -> int:
+    def find_open_space(self, item: Item[View]) -> int:
         for index, weight in enumerate(self.weights):
             if weight + item.width <= 5:
                 return index
 
         raise ValueError("could not find open space for item")
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item[View]) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -105,7 +105,7 @@ class _ViewWeights:
             self.weights[index] += item.width
             item._rendered_row = index
 
-    def remove_item(self, item: Item) -> None:
+    def remove_item(self, item: Item[View]) -> None:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
@@ -163,15 +163,15 @@ class View:
 
     def __init__(
         self,
-        *items: Item,
+        *items: Item[View],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
     ):
         self.timeout = timeout
         self.disable_on_timeout = disable_on_timeout
-        self.children: list[Item] = []
+        self.children: list[Item[View]] = []
         for func in self.__view_children_items__:
-            item: Item = func.__discord_ui_model_type__(
+            item: Item[View] = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
@@ -213,7 +213,7 @@ class View:
             await asyncio.sleep(self.__timeout_expiry - now)
 
     def to_components(self) -> list[dict[str, Any]]:
-        def key(item: Item) -> int:
+        def key(item: Item[View]) -> int:
             return item._rendered_row or 0
 
         children = sorted(self.children, key=key)
@@ -267,7 +267,7 @@ class View:
             return time.monotonic() + self.timeout
         return None
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item[View]) -> None:
         """Adds an item to the view.
 
         Parameters
@@ -295,7 +295,7 @@ class View:
         item._view = self
         self.children.append(item)
 
-    def remove_item(self, item: Item) -> None:
+    def remove_item(self, item: Item[View]) -> None:
         """Removes an item from the view.
 
         Parameters
@@ -316,7 +316,7 @@ class View:
         self.children.clear()
         self.__weights.clear()
 
-    def get_item(self, custom_id: str) -> Item | None:
+    def get_item(self, custom_id: str) -> Item[View] | None:
         """Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`.
 
         Parameters
@@ -391,7 +391,7 @@ class View:
         """
 
     async def on_error(
-        self, error: Exception, item: Item, interaction: Interaction
+        self, error: Exception, item: Item[View], interaction: Interaction
     ) -> None:
         """|coro|
 
@@ -414,7 +414,7 @@ class View:
             error.__class__, error, error.__traceback__, file=sys.stderr
         )
 
-    async def _scheduled_task(self, item: Item, interaction: Interaction):
+    async def _scheduled_task(self, item: Item[View], interaction: Interaction):
         try:
             if self.timeout:
                 self.__timeout_expiry = time.monotonic() + self.timeout
@@ -446,7 +446,7 @@ class View:
             self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}"
         )
 
-    def _dispatch_item(self, item: Item, interaction: Interaction):
+    def _dispatch_item(self, item: Item[View], interaction: Interaction):
         if self.__stopped.done():
             return
 
@@ -460,10 +460,10 @@ class View:
 
     def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
-        old_state: dict[tuple[int, str], Item] = {
+        old_state: dict[tuple[int, str], Item[View]] = {
             (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
         }
-        children: list[Item] = [
+        children: list[Item[View]] = [
             item for item in self.children if not item.is_dispatchable()
         ]
         for component in _walk_all_components(components):
@@ -529,7 +529,7 @@ class View:
         """
         return await self.__stopped
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def disable_all_items(self, *, exclusions: list[Item[View]] | None = None) -> None:
         """
         Disables all items in the view.
 
@@ -542,7 +542,7 @@ class View:
             if exclusions is None or child not in exclusions:
                 child.disabled = True
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def enable_all_items(self, *, exclusions: list[Item[View]] | None = None) -> None:
         """
         Enables all items in the view.
 
@@ -567,7 +567,7 @@ class View:
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (View, Item)
-        self._views: dict[tuple[int, int | None, str], tuple[View, Item]] = {}
+        self._views: dict[tuple[int, int | None, str], tuple[View, Item[View]]] = {}
         # message_id: View
         self._synced_message_views: dict[int, View] = {}
         self._state: ConnectionState = state
