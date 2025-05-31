@@ -21,7 +21,7 @@ repos:
   #          - --remove-duplicate-keys
   #          - --remove-unused-variables
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
         exclude: \.(po|pot|yml|yaml)$
