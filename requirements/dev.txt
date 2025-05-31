@@ -1,5 +1,5 @@
 -r _.txt
-pylint~=3.3.6
+pylint~=3.3.7
 pytest~=8.3.5
 pytest-asyncio~=0.24.0
 # pytest-order~=1.0.1
