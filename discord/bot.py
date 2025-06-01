@@ -307,9 +307,12 @@ class ApplicationCommandMixin(ABC):
                             ]:
                                 # We have a difference
                                 return True
-                    elif getattr(cmd, check, None) != match.get(check):
-                        # We have a difference
-                        if check == "default_permission" and getattr(cmd, check) is True and match.get(check) is None:
+                    elif (attr := getattr(cmd, check, None)) != (found := match.get(check)):
+                        # We might have a difference
+                        if "localizations" in check and bool(attr) == bool(found):
+                            # unlike other attrs, localizations are MISSING by default
+                            continue
+                        elif check == "default_permission" and attr is True and found is None:
                             # This is a special case
                             # TODO: Remove for perms v2
                             continue

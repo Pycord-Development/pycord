@@ -128,6 +128,8 @@ These changes are available on the `master` branch, but have not yet been releas
   changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))
 - `Entitlement.ends_at` can now be `None`.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
+- Changed the default value of `ApplicationCommand.nsfw` to `False`.
+  ([#2797](https://github.com/Pycord-Development/pycord/pull/2797))
 
 ### Deprecated
 
