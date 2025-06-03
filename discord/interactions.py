@@ -303,7 +303,7 @@ class Interaction:
 
     @property
     def created_at(self) -> datetime.datetime:
-        """The partial message's creation time in UTC."""
+        """Returns the interaction's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
     def is_command(self) -> bool:
