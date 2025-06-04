@@ -613,7 +613,7 @@ class VoiceClient(VoiceProtocol):
 
     @staticmethod
     def strip_header_ext(data):
-        if data[0] == 0xBE and data[1] == 0xDE and len(data) > 4:
+        if len(data) > 4 and data[0] == 0xBE and data[1] == 0xDE:
             _, length = struct.unpack_from(">HH", data)
             offset = 4 + length * 4
             data = data[offset:]
