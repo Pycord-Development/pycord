@@ -103,10 +103,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
-- Fixed `TypeError` when using `Flag` with python 3.11+
-  ([#2759])(https://github.com/Pycord-Development/pycord/pull/2759)
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767])(https://github.com/Pycord-Development/pycord/pull/2767)
+- Fixed `TypeError` when using `Flag` with Python 3.11+.
+  ([#2759])(https://github.com/Pycord-Development/pycord/pull/2759)
 
 ### Changed
 
