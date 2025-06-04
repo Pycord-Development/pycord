@@ -4,7 +4,6 @@ import asyncio
 import os
 import sys
 import time
-import traceback
 from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable
@@ -205,6 +204,7 @@ class Modal:
 
         self._weights.add_item(item)
         self._children.append(item)
+        return self
 
     def remove_item(self, item: InputText):
         """Removes an InputText component from the modal dialog.
@@ -218,6 +218,7 @@ class Modal:
             self._children.remove(item)
         except ValueError:
             pass
+        return self
 
     def stop(self) -> None:
         """Stops listening to interaction events from the modal dialog."""
@@ -253,10 +254,7 @@ class Modal:
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f"Ignoring exception in modal {self}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        interaction.client.dispatch("modal_error", error, interaction)
 
     async def on_timeout(self) -> None:
         """|coro|
@@ -326,6 +324,7 @@ class ModalStore:
         value = self._modals.get(key)
         if value is None:
             return
+        interaction.modal = value
 
         try:
             components = [
