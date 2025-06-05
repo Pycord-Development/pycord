@@ -106,11 +106,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `ForumChannel.edit` allowing `default_reaction_emoji` to be `None`.
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
-  ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
+  ([#2746](https://github.com/Pycord-Development/pycord/pull/2746))
 - Fixed `TypeError` when using `Flag` with Python 3.11+.
-  ([#2759])(https://github.com/Pycord-Development/pycord/pull/2759)
+  ([#2759](https://github.com/Pycord-Development/pycord/pull/2759))
 - Fixed `TypeError` when specifying `thread_name` in `Webhook.send`.
-  ([#2761])(https://github.com/Pycord-Development/pycord/pull/2761)
+  ([#2761](https://github.com/Pycord-Development/pycord/pull/2761))
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
