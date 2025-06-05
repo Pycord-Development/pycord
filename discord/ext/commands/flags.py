@@ -34,7 +34,6 @@ from typing import TYPE_CHECKING, Any, Iterator, Literal, Pattern, TypeVar, Unio
 from discord.utils import (
     MISSING,
     maybe_coroutine,
-    missing_field_factory,
     resolve_annotation,
 )
 
@@ -57,6 +56,10 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .context import Context
+
+
+def _missing_field_factory() -> field:
+    return field(default_factory=lambda: MISSING)
 
 
 @dataclass
@@ -86,13 +89,13 @@ class Flag:
         Whether multiple given values overrides the previous value.
     """
 
-    name: str = missing_field_factory()
+    name: str = _missing_field_factory()
     aliases: list[str] = field(default_factory=list)
-    attribute: str = missing_field_factory()
-    annotation: Any = missing_field_factory()
-    default: Any = missing_field_factory()
-    max_args: int = missing_field_factory()
-    override: bool = missing_field_factory()
+    attribute: str = _missing_field_factory()
+    annotation: Any = _missing_field_factory()
+    default: Any = _missing_field_factory()
+    max_args: int = _missing_field_factory()
+    override: bool = _missing_field_factory()
     cast_to_dict: bool = False
 
     @property
