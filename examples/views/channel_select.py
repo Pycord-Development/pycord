@@ -49,15 +49,17 @@ async def channel_select_default(ctx: discord.ApplicationContext) -> None:
     # Default values are set to the current channel.
     class DefaultValueSelect(discord.ui.View):
         @discord.ui.channel_select(
-                placeholder="Select channels...", min_values=1, max_values=3,
-                default_values=default_values
+            placeholder="Select channels...",
+            min_values=1,
+            max_values=3,
+            default_values=default_values,
         )  # Users can select a maximum of 3 channels in the dropdown
         async def channel_select_dropdown_default(
-                self, select: discord.ui.Select, interaction: discord.Interaction
+            self, select: discord.ui.Select, interaction: discord.Interaction
         ) -> None:
             await interaction.response.send_message(
-                    f"You selected the following channels:"
-                    + f", ".join(f"{channel.mention}" for channel in select.values)
+                f"You selected the following channels:"
+                + f", ".join(f"{channel.mention}" for channel in select.values)
             )
 
     # Create the view containing our dropdown

@@ -447,13 +447,17 @@ class Select(Item[V]):
         if self.type is ComponentType.user_select and not isinstance(
             default_value, (User, Member)
         ):
-            raise InvalidArgument("Default values have to be of type User or Member with type ComponentType.user_select")
+            raise InvalidArgument(
+                "Default values have to be of type User or Member with type ComponentType.user_select"
+            )
         elif self.type is ComponentType.user_select:
             default_value_type = SelectMenuDefaultValueType.User
         if self.type is ComponentType.role_select and not isinstance(
             default_value, Role
         ):
-            raise InvalidArgument("Default values have to be of type Role with type ComponentType.role_select")
+            raise InvalidArgument(
+                "Default values have to be of type Role with type ComponentType.role_select"
+            )
         elif self.type is ComponentType.role_select:
             default_value_type = SelectMenuDefaultValueType.Role
         if self.type is ComponentType.mentionable_select and not isinstance(

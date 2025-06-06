@@ -55,15 +55,17 @@ async def role_select_default(ctx: discord.ApplicationContext) -> None:
     # Default values are set to the first three user's roles.
     class DefaultDropdownView(discord.ui.View):
         @discord.ui.role_select(
-                placeholder="Select roles...", min_values=1, max_values=3,
-                default_values=default_values
+            placeholder="Select roles...",
+            min_values=1,
+            max_values=3,
+            default_values=default_values,
         )  # Users can select a maximum of 3 roles in the dropdown
         async def role_select_dropdown(
-                self, select: discord.ui.Select, interaction: discord.Interaction
+            self, select: discord.ui.Select, interaction: discord.Interaction
         ) -> None:
             await interaction.response.send_message(
-                    f"You selected the following roles:"
-                    + f", ".join(f"{role.mention}" for role in select.values)
+                f"You selected the following roles:"
+                + f", ".join(f"{role.mention}" for role in select.values)
             )
 
     # Create the view containing our dropdown
