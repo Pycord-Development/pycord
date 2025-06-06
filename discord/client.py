@@ -31,7 +31,15 @@ import signal
 import sys
 import traceback
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Sequence,
+    TypeVar,
+)
 
 import aiohttp
 
@@ -1147,7 +1155,7 @@ class Client:
     async def get_or_fetch(
         self: Client,
         object_type: type[_FETCHABLE],
-        object_id: int,
+        object_id: int | None,
         default: Any = MISSING,
     ) -> _FETCHABLE | None:
         """

@@ -867,7 +867,7 @@ class Guild(Hashable):
     async def get_or_fetch(
         self: Guild,
         object_type: type[_FETCHABLE],
-        object_id: int,
+        object_id: int | None,
         default: Any = MISSING,
     ) -> _FETCHABLE | None:
         """

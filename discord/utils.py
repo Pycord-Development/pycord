@@ -599,7 +599,7 @@ _FETCHABLE = TypeVar(
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE] = MISSING,
-    object_id: int = MISSING,
+    object_id: int | None = MISSING,
     default: Any = MISSING,
     attr: str = MISSING,
     id: int = MISSING,
@@ -636,6 +636,9 @@ async def get_or_fetch(
         You do not have permission to fetch the object
     """
     from discord import AppEmoji, Client, Guild, Member, Role, User, abc, emoji
+
+    if object_id is None:
+        return None
 
     string_to_type = {
         "channel": abc.GuildChannel,
