@@ -812,10 +812,15 @@ class SlashCommand(ApplicationCommand):
                     raise TypeError(
                         "Literal values must be str, int, or float for Discord choices."
                     )
+
+                value_type = type(literal_values[0])
+                if not all(isinstance(v, value_type) for v in literal_values):
+                    raise TypeError("All Literal values must be of the same type.")
+
                 option = Option(
-                    str,
+                    value_type,
                     choices=[
-                        OptionChoice(name=str(v), value=str(v)) for v in literal_values
+                        OptionChoice(name=str(v), value=v) for v in literal_values
                     ],
                 )
 
