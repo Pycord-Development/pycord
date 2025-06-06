@@ -805,7 +805,8 @@ class SlashCommand(ApplicationCommand):
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
-            if get_origin(option) is Literal:
+
+            if self._is_typing_literal(option):
                 literal_values = get_args(option)
                 if not all(isinstance(v, (str, int, float)) for v in literal_values):
                     raise TypeError(
@@ -919,6 +920,9 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _is_typing_literal(self, annotation):
+        return get_origin(annotation) is Literal
 
     def _is_typing_annotated(self, annotation):
         return get_origin(annotation) is Annotated
