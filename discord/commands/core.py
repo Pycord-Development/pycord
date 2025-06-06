@@ -233,7 +233,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "__default_member_permissions__",
             kwargs.get("default_member_permissions", None),
         )
-        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", None))
+        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", False))
 
         integration_types = getattr(
             func, "__integration_types__", kwargs.get("integration_types", None)
@@ -1255,7 +1255,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.default_member_permissions: Permissions | None = kwargs.get(
             "default_member_permissions", None
         )
-        self.nsfw: bool | None = kwargs.get("nsfw", None)
+        self.nsfw: bool | None = kwargs.get("nsfw", False)
 
         integration_types = kwargs.get("integration_types", None)
         contexts = kwargs.get("contexts", None)
