@@ -150,9 +150,10 @@ class Select(Item[V]):
         if default_values:
             if select_type is ComponentType.string_select:
                 raise InvalidArgument(
-                    "default_values parameter is only valid for user/role/channel/mentionable selects"
+                    "default_values parameter is only valid for SelectMenu of type user, role, channel, or mentionable"
+                    "selects"
                 )
-            if select_type is ComponentType.role_select:
+            elif select_type is ComponentType.role_select:
                 for r in default_values:
                     if not isinstance(r, Role):
                         raise ValueError(
@@ -163,7 +164,7 @@ class Select(Item[V]):
                             id=r.id, type=SelectMenuDefaultValueType.Role
                         )
                     )
-            if select_type is ComponentType.user_select:
+            elif select_type is ComponentType.user_select:
                 for u in default_values:
                     if not isinstance(u, (User, Member)):
                         raise ValueError(
@@ -175,7 +176,7 @@ class Select(Item[V]):
                             id=u.id, type=SelectMenuDefaultValueType.User
                         )
                     )
-            if select_type is ComponentType.channel_select:
+            elif select_type is ComponentType.channel_select:
                 for c in default_values:
                     if not isinstance(c, GuildChannel):
                         raise ValueError(
@@ -192,7 +193,7 @@ class Select(Item[V]):
                             id=c.id, type=SelectMenuDefaultValueType.Channel
                         )
                     )
-            if select_type is ComponentType.mentionable_select:
+            elif select_type is ComponentType.mentionable_select:
                 for m in default_values:
                     if not isinstance(m, (User, Member, Role)):
                         raise ValueError(
@@ -430,36 +431,36 @@ class Select(Item[V]):
         Raises
         ------
         ValueError
-                The number of options exceeds 25.
+            The number of options exceeds 25.
         """
         if self._underlying.type is ComponentType.string_select:
-            raise Exception("default values can only be set on non string selects")
+            raise Exception("Default values can only be set on non string selects")
         default_value_type = None
         if self.type is ComponentType.channel_select and not isinstance(
             default_value, (GuildChannel, Thread)
         ):
             raise InvalidArgument(
-                "default values have to be of type GuildChannel or Thread"
+                "Default values have to be of type GuildChannel or Thread with type ComponentType.channel_select"
             )
         elif self.type is ComponentType.channel_select:
             default_value_type = SelectMenuDefaultValueType.Channel
         if self.type is ComponentType.user_select and not isinstance(
             default_value, (User, Member)
         ):
-            raise InvalidArgument("default values have to be of type User or Member")
+            raise InvalidArgument("Default values have to be of type User or Member with type ComponentType.user_select")
         elif self.type is ComponentType.user_select:
             default_value_type = SelectMenuDefaultValueType.User
         if self.type is ComponentType.role_select and not isinstance(
             default_value, Role
         ):
-            raise InvalidArgument("default values have to be of type Role")
+            raise InvalidArgument("Default values have to be of type Role with type ComponentType.role_select")
         elif self.type is ComponentType.role_select:
             default_value_type = SelectMenuDefaultValueType.Role
         if self.type is ComponentType.mentionable_select and not isinstance(
             default_value, (User, Member, Role)
         ):
             raise InvalidArgument(
-                "default values have to be of type User, Member or Role"
+                "Default values have to be of type User, Member or Role with type ComponentType.mentionable_select"
             )
         elif self.type is ComponentType.mentionable_select and isinstance(
             default_value, (User, Member)
@@ -471,7 +472,7 @@ class Select(Item[V]):
             default_value_type = SelectMenuDefaultValueType.Role
         if default_value_type is None:
             raise InvalidArgument(
-                "default values have to be of type User, Member, Role or GuildChannel"
+                "Default values have to be of type User, Member, Role or GuildChannel"
             )
         default_value = SelectDefaultValue(
             id=default_value.id,
@@ -486,15 +487,15 @@ class Select(Item[V]):
         Parameters
         ----------
         default_value: :class:`discord.SelectDefaultValue`
-                The default value to append to the select menu.
+            The default value to append to the select menu.
 
         Raises
         ------
         ValueError
-                The number of options exceeds 25.
+            The number of options exceeds 25.
         """
         if self._underlying.type is ComponentType.string_select:
-            raise Exception("default values can only be set on string selects")
+            raise Exception("Default values can only be set on string selects")
 
         if len(self._underlying.default_values) > 25:
             raise ValueError("maximum number of options already provided")

@@ -337,8 +337,8 @@ class SelectMenu(Component):
     disabled: :class:`bool`
         Whether the select is disabled or not.
     default_values: List[:class:`SelectDefaultValue`]
-        A list of options that are selected by default for select menus of type user, role, channel and mentionable.
-        Will be an empty list for component type :attr:`ComponentType.string_select`.
+        A list of options that are selected by default for select menus of type user, role, channel, and mentionable.
+        Will be an empty list for the component type :attr:`ComponentType.string_select`.
     """
 
     __slots__: tuple[str, ...] = (
@@ -527,7 +527,8 @@ class SelectOption:
 
 
 class SelectDefaultValue:
-    """Represents a :class:`discord.SelectMenu`'s default option for user, role, channel and mentionable select menu types.
+    """Represents a :class:`discord.SelectMenu` object's default option for user, role, channel, and mentionable select
+    menu types.
 
     These can be created by users.
 
@@ -536,7 +537,7 @@ class SelectDefaultValue:
     Attributes
     ----------
     id: :class:`int`
-        The snowflake id of the default option.
+        The snowflake ID of the default option.
     type: :class:`SelectMenuDefaultValueType`
         The type of the default value. This is not displayed to users.
     """
