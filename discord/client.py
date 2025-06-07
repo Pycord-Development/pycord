@@ -274,9 +274,9 @@ class Client:
         self._tasks = set()
 
     async def __aenter__(self) -> Client:
-        if self.loop is MISSING:
+        if self._loop is MISSING:
             try:
-                self.loop = asyncio.get_running_loop()
+                self._loop = asyncio.get_running_loop()
             except RuntimeError:
                 # No event loop was found, this should not happen
                 # because entering on this context manager means a
@@ -284,7 +284,7 @@ class Client:
                 # anyways just to prevent future errors.
 
                 # Maybe handle different system event loop policies?
-                self.loop = asyncio.new_event_loop()
+                self._loop = asyncio.new_event_loop()
 
         self.http.loop = self.loop
         self._connection.loop = self.loop
@@ -822,10 +822,12 @@ class Client:
             async with self:
                 await self.start(token=token, reconnect=reconnect)
 
-        run = asyncio.run
-
-        if self.loop is not MISSING:
+        try:
             run = self.loop.run_until_complete
+            requires_cleanup = True
+        except RuntimeError:
+            run = asyncio.run
+            requires_cleanup = False
 
         try:
             run(runner())
@@ -834,8 +836,11 @@ class Client:
             if not self.is_closed():
                 self.loop.run_until_complete(self.close())
 
-        _log.info("Cleaning up tasks.")
-        _cleanup_loop(self.loop)
+        # asyncio.run automatically does the cleanup tasks, so if we use
+        # it we don't need to clean up the tasks.
+        if requires_cleanup:
+            _log.info("Cleaning up tasks.")
+            _cleanup_loop(self.loop)
 
     # properties
 
