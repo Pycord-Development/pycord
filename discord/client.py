@@ -327,13 +327,15 @@ class Client:
     def loop(self) -> asyncio.AbstractEventLoop:
         """The event loop that the client uses for asynchronous operations."""
         if self._loop is MISSING:
-            raise RuntimeError('loop is not set')
+            raise RuntimeError("loop is not set")
         return self._loop
 
     @loop.setter
     def loop(self, value: asyncio.AbstractEventLoop) -> None:
         if not isinstance(value, asyncio.AbstractEventLoop):
-            raise TypeError(f'expected a AbstractEventLoop object, got {value.__class__.__name__!r} instead')
+            raise TypeError(
+                f"expected a AbstractEventLoop object, got {value.__class__.__name__!r} instead"
+            )
         self._loop = value
 
     @property
