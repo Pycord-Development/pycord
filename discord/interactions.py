@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import datetime
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
@@ -299,6 +300,11 @@ class Interaction:
         if self._guild:
             return self._guild
         return self._state and self._state._get_guild(self.guild_id)
+
+    @property
+    def created_at(self) -> datetime.datetime:
+        """Returns the interaction's creation time in UTC."""
+        return utils.snowflake_time(self.id)
 
     def is_command(self) -> bool:
         """Indicates whether the interaction is an application command."""

@@ -39,7 +39,6 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
-from dataclasses import field
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -115,11 +114,6 @@ class _MissingSentinel:
 
 
 MISSING: Any = _MissingSentinel()
-# As of 3.11, directly setting a dataclass field to MISSING causes a ValueError. Using
-# field(default=MISSING) produces the same error, but passing a lambda to
-# default_factory produces the same behavior as default=MISSING and does not raise an
-# error.
-MissingField = field(default_factory=lambda: MISSING)
 
 
 class _cached_property:
@@ -941,7 +935,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     regex = _MARKDOWN_STOCK_REGEX
     if ignore_links:
         regex = f"(?:{_URL_REGEX}|{regex})"
-    return re.sub(regex, replacement, text, 0, re.MULTILINE)
+    return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE)
 
 
 def escape_markdown(
@@ -983,7 +977,7 @@ def escape_markdown(
         regex = _MARKDOWN_STOCK_REGEX
         if ignore_links:
             regex = f"(?:{_URL_REGEX}|{regex})"
-        return re.sub(regex, replacement, text, 0, re.MULTILINE | re.X)
+        return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE | re.X)
     else:
         text = re.sub(r"\\", r"\\\\", text)
         return _MARKDOWN_ESCAPE_REGEX.sub(r"\\\1", text)

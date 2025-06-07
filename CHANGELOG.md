@@ -62,8 +62,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2598](https://github.com/Pycord-Development/pycord/pull/2598))
 - Added the ability to change the API's base URL with `Route.API_BASE_URL`.
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
-- Added the ability to pass a `datetime.time` object to `format_dt`
+- Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added `discord.Interaction.created_at`.
+  ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
 
 ### Fixed
 
@@ -114,12 +116,18 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
   ([#2746](https://github.com/Pycord-Development/pycord/pull/2746))
+- Fixed `TypeError` when using `Flag` with Python 3.11+.
+  ([#2759](https://github.com/Pycord-Development/pycord/pull/2759))
+- Fixed `TypeError` when specifying `thread_name` in `Webhook.send`.
+  ([#2761](https://github.com/Pycord-Development/pycord/pull/2761))
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
   ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
 - Fixed GIF-based `Sticker` returning the wrong `url`.
   ([#2781](https://github.com/Pycord-Development/pycord/pull/2781))
+- Fixed `VoiceClient` crashing randomly while receiving audio
+  ([#2800](https://github.com/Pycord-Development/pycord/pull/2800))
 
 ### Changed
 
@@ -137,6 +145,8 @@ These changes are available on the `master` branch, but have not yet been releas
   changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))
 - `Entitlement.ends_at` can now be `None`.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
+- Changed the default value of `ApplicationCommand.nsfw` to `False`.
+  ([#2797](https://github.com/Pycord-Development/pycord/pull/2797))
 
 ### Deprecated
 
@@ -146,6 +156,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+
+### Removed
+
+- Removed deprecated support for `Option` in `BridgeCommand`. Use `BridgeOption`
+  instead. ([#2731])(https://github.com/Pycord-Development/pycord/pull/2731))
 
 ## [2.6.1] - 2024-09-15
 
