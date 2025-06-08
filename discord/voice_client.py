@@ -922,13 +922,18 @@ class VoiceClient(VoiceProtocol):
         data.user_id = self.ws.ssrc_map.get(data.ssrc, {}).get("user_id")
 
         if data.user_id is None:
-            _log.debug(f"DEBUG: received packet with SSRC {data.ssrc} not linked to a user_id."
-                       f"Queueing for later processing.")
+            _log.debug(
+                f"DEBUG: received packet with SSRC {data.ssrc} not linked to a user_id."
+                f"Queueing for later processing."
+            )
             self.temp_queued_data.setdefault(data.ssrc, []).append(data)
             return
         elif data.ssrc in self.temp_queued_data:
-            _log.debug('DEBUG: We got %d packet(s) in queue for SSRC %d',
-                       len(self.temp_queued_data[data.ssrc]), data.ssrc)
+            _log.debug(
+                "DEBUG: We got %d packet(s) in queue for SSRC %d",
+                len(self.temp_queued_data[data.ssrc]),
+                data.ssrc,
+            )
             queued_packets = self.temp_queued_data.pop(data.ssrc)
             for q_packet in queued_packets:
                 q_packet.user_id = data.user_id
@@ -955,8 +960,10 @@ class VoiceClient(VoiceProtocol):
             prev_receive_time = self.user_timestamps[data.user_id][2]
 
             if data.ssrc != prev_ssrc:
-                _log.info(f"Received audio data from USER_ID {data.user_id} with a previous SSRC {prev_ssrc} and new "
-                          f"SSRC {data.ssrc}.")
+                _log.info(
+                    f"Received audio data from USER_ID {data.user_id} with a previous SSRC {prev_ssrc} and new "
+                    f"SSRC {data.ssrc}."
+                )
                 dRT = (data.receive_time - prev_receive_time) * 1000
                 silence = max(0, int(dRT / (1000 / 48000))) - 960
             else:
@@ -972,7 +979,9 @@ class VoiceClient(VoiceProtocol):
                 else:
                     silence = dT - 960
 
-        self.user_timestamps.update({data.user_id: (data.ssrc, data.timestamp, data.receive_time)})
+        self.user_timestamps.update(
+            {data.user_id: (data.ssrc, data.timestamp, data.receive_time)}
+        )
 
         data.decoded_data = (
             struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
