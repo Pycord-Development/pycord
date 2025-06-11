@@ -31,7 +31,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence
+from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence, TypeVar
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
@@ -57,6 +57,8 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
 
+V = TypeVar("V", bound="View", covariant=True)
+
 
 def _walk_all_components(components: list[Component]) -> Iterator[Component]:
     for item in components:
@@ -64,6 +66,7 @@ def _walk_all_components(components: list[Component]) -> Iterator[Component]:
             yield from item.children
         else:
             yield item
+
 
 
 def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
@@ -74,9 +77,10 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
             yield from item.walk_components()
         else:
             yield item
+            
+            
+def _component_to_item(component: Component) -> Item[V]:
 
-
-def _component_to_item(component: Component) -> Item:
     if isinstance(component, ButtonComponent):
         from .button import Button
 
@@ -123,7 +127,7 @@ def _component_to_item(component: Component) -> Item:
 class _ViewWeights:
     __slots__ = ("weights",)
 
-    def __init__(self, children: list[Item]):
+    def __init__(self, children: list[Item[V]]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -132,7 +136,7 @@ class _ViewWeights:
             for item in group:
                 self.add_item(item)
 
-    def find_open_space(self, item: Item) -> int:
+    def find_open_space(self, item: Item[V]) -> int:
         for index, weight in enumerate(self.weights):
             # check if open space AND (next row has no items OR this is the last row)
             if (weight + item.width <= 5) and (
@@ -143,11 +147,12 @@ class _ViewWeights:
 
         raise ValueError("could not find open space for item")
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item[V]) -> None:
         if (
             item._underlying.is_v2() or not self.fits_legacy(item)
         ) and not self.requires_v2():
             self.weights.extend([0, 0, 0, 0, 0] * 7)
+
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -161,7 +166,7 @@ class _ViewWeights:
             self.weights[index] += item.width
             item._rendered_row = index
 
-    def remove_item(self, item: Item) -> None:
+    def remove_item(self, item: Item[V]) -> None:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
@@ -227,15 +232,15 @@ class View:
 
     def __init__(
         self,
-        *items: Item,
+        *items: Item[V],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
     ):
         self.timeout = timeout
         self.disable_on_timeout = disable_on_timeout
-        self.children: list[Item] = []
+        self.children: list[Item[V]] = []
         for func in self.__view_children_items__:
-            item: Item = func.__discord_ui_model_type__(
+            item: Item[V] = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
@@ -278,7 +283,7 @@ class View:
             await asyncio.sleep(self.__timeout_expiry - now)
 
     def to_components(self) -> list[dict[str, Any]]:
-        def key(item: Item) -> int:
+        def key(item: Item[V]) -> int:
             return item._rendered_row or 0
 
         children = sorted(self.children, key=key)
@@ -365,7 +370,7 @@ class View:
             return time.monotonic() + self.timeout
         return None
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item[V]) -> None:
         """Adds an item to the view.
 
         Parameters
@@ -397,7 +402,7 @@ class View:
         self.children.append(item)
         return self
 
-    def remove_item(self, item: Item | int | str) -> None:
+    def remove_item(self, item: Item[V] | int | str) -> None:
         """Removes an item from the view. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
@@ -422,7 +427,7 @@ class View:
         self.__weights.clear()
         return self
 
-    def get_item(self, custom_id: str | int) -> Item | None:
+    def get_item(self, custom_id: str | int) -> Item[V] | None:
         """Get an item from the view. Roughly equal to `utils.get(view.children, ...)`.
         If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
         This method will also search nested items.
@@ -508,7 +513,7 @@ class View:
         """
 
     async def on_error(
-        self, error: Exception, item: Item, interaction: Interaction
+        self, error: Exception, item: Item[V], interaction: Interaction
     ) -> None:
         """|coro|
 
@@ -528,7 +533,7 @@ class View:
         """
         interaction.client.dispatch("view_error", error, item, interaction)
 
-    async def _scheduled_task(self, item: Item, interaction: Interaction):
+    async def _scheduled_task(self, item: Item[V], interaction: Interaction):
         try:
             if self.timeout:
                 self.__timeout_expiry = time.monotonic() + self.timeout
@@ -560,7 +565,7 @@ class View:
             self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}"
         )
 
-    def _dispatch_item(self, item: Item, interaction: Interaction):
+    def _dispatch_item(self, item: Item[V], interaction: Interaction):
         if self.__stopped.done():
             return
 
@@ -656,7 +661,7 @@ class View:
         """
         return await self.__stopped
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def disable_all_items(self, *, exclusions: list[Item[V]] | None = None) -> None:
         """
         Disables all buttons and select menus in the view.
 
@@ -674,7 +679,7 @@ class View:
                 child.disable_all_items(exclusions=exclusions)
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def enable_all_items(self, *, exclusions: list[Item[V]] | None = None) -> None:
         """
         Enables all buttons and select menus in the view.
 
@@ -715,7 +720,7 @@ class View:
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (View, Item)
-        self._views: dict[tuple[int, int | None, str], tuple[View, Item]] = {}
+        self._views: dict[tuple[int, int | None, str], tuple[View, Item[V]]] = {}
         # message_id: View
         self._synced_message_views: dict[int, View] = {}
         self._state: ConnectionState = state
