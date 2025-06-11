@@ -659,6 +659,7 @@ class UnfurledMediaItem(AssetMixin):
         self.placeholder_version: int | None = None
         self.loading_state: MediaItemLoadingState | None = None
         self.src_is_animated: bool | None = None
+        self.attachment_id: int | None = None
 
     @property
     def url(self) -> str:
@@ -678,6 +679,7 @@ class UnfurledMediaItem(AssetMixin):
         r.placeholder_version = data.get("placeholder_version")
         r.loading_state = try_enum(MediaItemLoadingState, data.get("loading_state"))
         r.src_is_animated = data.get("src_is_animated")
+        r.attachment_id = data.get("attachment_id")
         r._state = state
         return r
 
@@ -825,7 +827,11 @@ class FileComponent(Component):
     Attributes
     ----------
     file: :class:`UnfurledMediaItem`
-        The file's media URL.
+        The file's media item.
+    name: :class:`str`
+        The file's name.
+    size: :class:`int`
+        The file's size in bytes.
     spoiler: Optional[:class:`bool`]
         Whether the file is a spoiler.
     """
@@ -833,6 +839,8 @@ class FileComponent(Component):
     __slots__: tuple[str, ...] = (
         "file",
         "spoiler",
+        "name",
+        "size",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -841,9 +849,9 @@ class FileComponent(Component):
     def __init__(self, data: FileComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.file: UnfurledMediaItem = (
-            umi := data.get("file")
-        ) and UnfurledMediaItem.from_dict(umi, state=state)
+        self.name: str = data.get("name")
+        self.size: int = data.get("size")
+        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(data.get("file", {}), state=state)
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> FileComponentPayload:
@@ -851,9 +859,6 @@ class FileComponent(Component):
         if self.spoiler is not None:
             payload["spoiler"] = self.spoiler
         return payload
-
-
-# Alternate idea - subclass above components as UnfurledMedia?
 
 
 class Separator(Component):

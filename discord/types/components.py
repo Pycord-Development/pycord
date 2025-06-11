@@ -114,6 +114,7 @@ class UnfurledMediaItem(TypedDict):
     placeholder_version: int
     loading_state: LoadingState
     flags: NotRequired[int]
+    attachment_id: NotRequired[Snowflake]
 
 
 class ThumbnailComponent(BaseComponent):
@@ -138,6 +139,8 @@ class FileComponent(BaseComponent):
     type: Literal[13]
     file: UnfurledMediaItem
     spoiler: NotRequired[bool]
+    name: str
+    size: int
 
 
 class SeparatorComponent(BaseComponent):
