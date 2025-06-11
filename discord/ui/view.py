@@ -68,7 +68,6 @@ def _walk_all_components(components: list[Component]) -> Iterator[Component]:
             yield item
 
 
-
 def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
     for item in components:
         if isinstance(item, ActionRowComponent):
@@ -77,8 +76,8 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
             yield from item.walk_components()
         else:
             yield item
-            
-            
+
+
 def _component_to_item(component: Component) -> Item[V]:
 
     if isinstance(component, ButtonComponent):
