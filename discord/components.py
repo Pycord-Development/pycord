@@ -851,7 +851,9 @@ class FileComponent(Component):
         self.id: int = data.get("id")
         self.name: str = data.get("name")
         self.size: int = data.get("size")
-        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(data.get("file", {}), state=state)
+        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(
+            data.get("file", {}), state=state
+        )
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> FileComponentPayload:
