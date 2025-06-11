@@ -368,6 +368,9 @@ Interactions
 .. autoclass:: AuthorizingIntegrationOwners()
     :members:
 
+Message Components
+------------
+
 .. attributetable:: Component
 
 .. autoclass:: Component()
@@ -387,6 +390,48 @@ Interactions
 .. attributetable:: SelectMenu
 
 .. autoclass:: SelectMenu()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Section
+
+.. autoclass:: Section()
+    :members:
+    :inherited-members:
+
+.. attributetable:: TextDisplay
+
+.. autoclass:: TextDisplay()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Thumbnail
+
+.. autoclass:: Thumbnail()
+    :members:
+    :inherited-members:
+
+.. attributetable:: MediaGallery
+
+.. autoclass:: MediaGallery()
+    :members:
+    :inherited-members:
+
+.. attributetable:: FileComponent
+
+.. autoclass:: FileComponent()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Separator
+
+.. autoclass:: Separator()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Container
+
+.. autoclass:: Container()
     :members:
     :inherited-members:
 
