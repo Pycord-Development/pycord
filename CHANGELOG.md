@@ -119,6 +119,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2781](https://github.com/Pycord-Development/pycord/pull/2781))
 - Fixed `VoiceClient` crashing randomly while receiving audio
   ([#2800](https://github.com/Pycord-Development/pycord/pull/2800))
+- Fixed `VoiceClient.connect` failing to do initial connection.
+  ([#](https://github.com/Pycord-Development/pycord/pull/))
 
 ### Changed
 
