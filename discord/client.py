@@ -226,12 +226,12 @@ class Client:
     def __init__(
         self,
         *,
-        loop: asyncio.AbstractEventLoop = MISSING,
+        loop: asyncio.AbstractEventLoop | None = None,
         **options: Any,
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self._loop: asyncio.AbstractEventLoop = loop
+        self._loop: asyncio.AbstractEventLoop | None = loop
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
         )
@@ -326,7 +326,7 @@ class Client:
     @property
     def loop(self) -> asyncio.AbstractEventLoop:
         """The event loop that the client uses for asynchronous operations."""
-        if self._loop is MISSING:
+        if self._loop is None:
             raise RuntimeError("loop is not set")
         return self._loop
 
