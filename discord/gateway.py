@@ -220,7 +220,10 @@ class VoiceKeepAliveHandler(KeepAliveHandler):
         self.behind_msg = "High socket latency, shard ID %s heartbeat is %.1fs behind"
 
     def get_payload(self):
-        return {"op": self.ws.HEARTBEAT, "d": {"t": int(time.time() * 1000), "seq_ack": self.ws.seq_ack}}
+        return {
+            "op": self.ws.HEARTBEAT,
+            "d": {"t": int(time.time() * 1000), "seq_ack": self.ws.seq_ack},
+        }
 
     def ack(self):
         ack_time = time.perf_counter()
