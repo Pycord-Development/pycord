@@ -1168,9 +1168,9 @@ class Guild(Hashable):
             The new channel's topic.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
 
@@ -1302,12 +1302,12 @@ class Guild(Hashable):
 
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
 
             .. versionadded:: 2.7
 
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
 
             .. versionadded:: 2.7
 
@@ -1424,12 +1424,12 @@ class Guild(Hashable):
 
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
 
             .. versionadded:: 2.7
 
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
 
             .. versionadded:: 2.7
 
@@ -1538,9 +1538,9 @@ class Guild(Hashable):
             The new channel's topic.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
         default_reaction_emoji: Optional[:class:`GuildEmoji` | :class:`int` | :class:`str`]

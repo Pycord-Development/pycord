@@ -812,7 +812,7 @@ class TextChannel(discord.abc.Messageable, _TextChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -1115,7 +1115,7 @@ class ForumChannel(_TextChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -1478,7 +1478,7 @@ class MediaChannel(ForumChannel):
         position: :class:`int`
             The new channel's position.
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
         sync_permissions: :class:`bool`
             Whether to sync permissions with the channel's new or pre-existing
             category. Defaults to ``False``.
@@ -1728,7 +1728,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         .. versionadded:: 2.0
 
     nsfw: :class:`bool`
-        To mark the channel as NSFW or not.
+        Whether the channel is marked as NSFW.
 
         .. versionadded:: 2.7
     """
@@ -2102,10 +2102,10 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
 
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
 
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
 
             .. versionadded:: 2.7
 
@@ -2273,7 +2273,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         The maximum value possible is `21600`.
 
     nsfw: :class:`bool`
-        To mark the channel as NSFW or not.
+        Whether the channel is marked as NSFW.
 
         .. versionadded:: 2.7
     """
@@ -2768,7 +2768,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
 
         Returns
         -------
@@ -2856,8 +2856,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     def __repr__(self) -> str:
         return (
-            "<CategoryChannel"
-            f" id={self.id} name={self.name!r} position={self.position}"
+            f"<CategoryChannel id={self.id} name={self.name!r} position={self.position}"
         )
 
     def _update(self, guild: Guild, data: CategoryChannelPayload) -> None:
