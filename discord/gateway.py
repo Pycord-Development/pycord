@@ -812,6 +812,9 @@ class DiscordVoiceWebSocket:
                 "token": state.token,
                 "server_id": str(state.server_id),
                 "session_id": state.session_id,
+                # this seq_ack will allow for us to do buffered resume, which is, receive the
+                # lost voice packets while trying to resume the reconnection
+                "seq_ack": self.seq_ack,
             },
         }
         await self.send_as_json(payload)
@@ -874,7 +877,6 @@ class DiscordVoiceWebSocket:
                 "speaking": int(state),
                 "delay": 0,
             },
-            "seq": self.seq_ack,
         }
 
         await self.send_as_json(payload)
