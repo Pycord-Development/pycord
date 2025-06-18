@@ -2864,6 +2864,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.nsfw = False
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
@@ -2884,7 +2885,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     async def clone(
         self, *, name: str | None = None, reason: str | None = None
     ) -> CategoryChannel:
-        return await self._clone_impl({"nsfw": self.nsfw}, name=name, reason=reason)
+        return await self._clone_impl({}, name=name, reason=reason)
 
     @overload
     async def edit(
