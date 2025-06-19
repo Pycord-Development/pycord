@@ -108,8 +108,15 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed missing `None` type hints in `Select.__init__`.
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
 - Fixed parameters for channels And allow creating channels with None as default
-  reaction ([#2754])(https://github.com/Pycord-Development/pycord/pull/2754)
-  ([#2746](https://github.com/Pycord-Development/pycord/pull/2746))
+- Added missing parameters to `create_text_channel`: `default_thread_slowmode_delay` and
+  `default_auto_archive_duration`.
+- Added missing parameters to `create_voice_channel`: `slowmode_delay` and `nsfw`.
+- Added missing parameters to `create_stage_channel`: `bitrate`, `user_limit`,
+  `rtc_region`, `video_quality_mode`, `slowmode_delay`, and `nsfw`.
+- Added missing parameters to `create_forum_channel`: `available_tags`,
+  `default_sort_order`, `default_thread_slowmode_delay`, and
+  `default_auto_archive_duration`. Also allow `default_reaction_emoji` to be `None`.
+  ([#2772])(https://github.com/Pycord-Development/pycord/pull/2772)
 - Fixed `TypeError` when using `Flag` with Python 3.11+.
   ([#2759](https://github.com/Pycord-Development/pycord/pull/2759))
 - Fixed `TypeError` when specifying `thread_name` in `Webhook.send`.
@@ -150,6 +157,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+- Deprecated `nsfw` for categories, as it was never supported.
+  ([#2772])(https://github.com/Pycord-Development/pycord/pull/2772)
 
 ### Removed
 
