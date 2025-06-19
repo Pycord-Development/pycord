@@ -25,18 +25,20 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import importlib.resources
 import json
 import re
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
 from .errors import InvalidArgument
 
-EMOJIS_MAP_PATH = Path(__file__).parent / "emojis.json"
-
-with EMOJIS_MAP_PATH.open("r", encoding="utf-8") as f:
+with (
+    importlib.resources.files(__package__)
+    .joinpath("emojis.json")
+    .open(encoding="utf-8") as f
+):
     EMOJIS_MAP = json.load(f)
 
 __all__ = ("PartialEmoji",)
