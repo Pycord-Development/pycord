@@ -3067,7 +3067,11 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """
         return await self.guild.create_forum_channel(name, category=self, **options)
 
-    @utils.deprecated(since="2.7", removed="3.0")
+    @utils.deprecated(
+        since="2.7",
+        removed="3.0",
+        reference="Category NSFW was never supported by the API.",
+    )
     def is_nsfw(self) -> bool:
         return False
 
