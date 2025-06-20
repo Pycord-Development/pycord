@@ -31,7 +31,15 @@ import signal
 import sys
 import traceback
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Sequence,
+    TypeVar,
+)
 
 import aiohttp
 
@@ -60,17 +68,25 @@ from .template import Template
 from .threads import Thread
 from .ui.view import View
 from .user import ClientUser, User
-from .utils import MISSING
+from .utils import _FETCHABLE, MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
-    from .channel import DMChannel
+    from .channel import (
+        CategoryChannel,
+        DMChannel,
+        ForumChannel,
+        StageChannel,
+        TextChannel,
+        VoiceChannel,
+    )
     from .member import Member
     from .message import Message
     from .poll import Poll
+    from .threads import Thread, ThreadMember
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -1113,7 +1129,12 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
-    async def get_or_fetch_user(self, id: int, /) -> User | None:
+    @utils.deprecated(
+        instead="Client.get_or_fetch(User, id)",
+        since="2.7",
+        removed="3.0",
+    )
+    async def get_or_fetch_user(self, id: int, /) -> User | None:  # TODO: Remove in 3.0
         """|coro|
 
         Looks up a user in the user cache or fetches if not found.
@@ -1129,7 +1150,43 @@ class Client:
             The user or ``None`` if not found.
         """
 
-        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
+        return await self.get_or_fetch(object_type=User, object_id=id, default=None)
+
+    async def get_or_fetch(
+        self: Client,
+        object_type: type[_FETCHABLE],
+        object_id: int | None,
+        default: Any = MISSING,
+    ) -> _FETCHABLE | None:
+        """
+        Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
+
+        Parameters
+        ----------
+        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`GuildEmoji`, :class:`AppEmoji`]
+            Type of object to fetch or get.
+        object_id: :class:`int`
+            ID of object to get.
+        default : Any, optional
+            A default to return instead of raising if fetch fails.
+
+        Returns
+        -------
+        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`GuildEmoji`, :class:`AppEmoji`]]
+            The object of type that was specified or ``None`` if not found.
+
+        Raises
+        ------
+        :exc:`NotFound`
+            Invalid ID for the object
+        :exc:`HTTPException`
+            An error occurred fetching the object
+        :exc:`Forbidden`
+            You do not have permission to fetch the object
+        """
+        return await utils.get_or_fetch(
+            obj=self, object_type=object_type, object_id=object_id, default=default
+        )
 
     # listeners/waiters
 
