@@ -55,6 +55,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added various missing channel parameters and allow `default_reaction_emoji` to be
+  `None`. ([#2772])(https://github.com/Pycord-Development/pycord/pull/2772)
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
 
@@ -107,16 +109,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
   ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
-- Fixed parameters for channels And allow creating channels with None as default
-- Added missing parameters to `create_text_channel`: `default_thread_slowmode_delay` and
-  `default_auto_archive_duration`.
-- Added missing parameters to `create_voice_channel`: `slowmode_delay` and `nsfw`.
-- Added missing parameters to `create_stage_channel`: `bitrate`, `user_limit`,
-  `rtc_region`, `video_quality_mode`, `slowmode_delay`, and `nsfw`.
-- Added missing parameters to `create_forum_channel`: `available_tags`,
-  `default_sort_order`, `default_thread_slowmode_delay`, and
-  `default_auto_archive_duration`. Also allow `default_reaction_emoji` to be `None`.
-  ([#2772])(https://github.com/Pycord-Development/pycord/pull/2772)
 - Fixed `TypeError` when using `Flag` with Python 3.11+.
   ([#2759](https://github.com/Pycord-Development/pycord/pull/2759))
 - Fixed `TypeError` when specifying `thread_name` in `Webhook.send`.
