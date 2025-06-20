@@ -157,7 +157,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
-- Deprecated `nsfw` for categories, as it was never supported.
+- Deprecated `is_nsfw` for categories since it was never supported by the API.
   ([#2772])(https://github.com/Pycord-Development/pycord/pull/2772)
 
 ### Removed
