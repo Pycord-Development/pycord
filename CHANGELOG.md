@@ -56,7 +56,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
 - Added various missing channel parameters and allow `default_reaction_emoji` to be
-  `None`. ([#2772])(https://github.com/Pycord-Development/pycord/pull/2772)
+  `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
 
@@ -108,15 +108,13 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `ForumChannel.edit` allowing `default_reaction_emoji` to be `None`.
   ([#2739](https://github.com/Pycord-Development/pycord/pull/2739))
 - Fixed missing `None` type hints in `Select.__init__`.
-  ([#2746])(https://github.com/Pycord-Development/pycord/pull/2746)
+  ([#2746](https://github.com/Pycord-Development/pycord/pull/2746))
 - Fixed `TypeError` when using `Flag` with Python 3.11+.
   ([#2759](https://github.com/Pycord-Development/pycord/pull/2759))
 - Fixed `TypeError` when specifying `thread_name` in `Webhook.send`.
   ([#2761](https://github.com/Pycord-Development/pycord/pull/2761))
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
-- Fixed support emoji aliases like `:smile:` in PartialEmoji.from_str.
-  ([#2774](https://github.com/Pycord-Development/pycord/pull/2774))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
   ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
 - Fixed GIF-based `Sticker` returning the wrong `url`.
