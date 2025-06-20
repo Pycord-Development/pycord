@@ -55,6 +55,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added various missing channel parameters and allow `default_reaction_emoji` to be
+  `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
 
@@ -147,6 +149,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+- Deprecated `is_nsfw` for categories since it was never supported by the API.
+  ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 
 ### Removed
 
