@@ -611,4 +611,4 @@ Collectibles
 .. attributetable:: Nameplate
 
 .. autoclass:: Nameplate()
-    :members:
+    :undoc-members:
