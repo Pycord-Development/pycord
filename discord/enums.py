@@ -1084,17 +1084,17 @@ class NameplatePalette(Enum):
     .. versionadded:: 2.7
     """
 
-    CRIMSON = "crimson"
-    BERRY = "berry"
-    SKY = "sky"
-    TEAL = "teal"
-    FOREST = "forest"
-    BUBBLE_GUM = "bubble_gum"
-    VIOLET = "violet"
-    COBALT = "cobalt"
-    CLOVER = "clover"
-    LEMON = "lemon"
-    WHITE = "white"
+    crimson = "crimson"
+    berry = "berry"
+    sky = "sky"
+    teal = "teal"
+    forest = "forest"
+    bubble_gum = "bubble_gum"
+    violet = "violet"
+    cobalt = "cobalt"
+    clover = "clover"
+    lemon = "lemon"
+    white = "white"
 
 
 T = TypeVar("T")

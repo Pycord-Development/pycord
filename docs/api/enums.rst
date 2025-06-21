@@ -2526,4 +2526,46 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.7
 
-    :members:
+    .. attribute:: crimson
+
+        Crimson nameplate color palette.
+
+    .. attribute:: berry
+
+        Berry nameplate color palette.
+
+    .. attribute:: sky
+
+        Sky nameplate color palette.
+
+    .. attribute:: teal
+
+        Teal nameplate color palette.
+
+    .. attribute:: forest
+
+        Forest nameplate color palette.
+
+    .. attribute:: bubble_gum
+
+        Bubble_gum nameplate color palette.
+
+    .. attribute:: violet
+
+        Violet nameplate color palette.
+
+    .. attribute:: cobalt
+
+        Cobalt nameplate color palette.
+
+    .. attribute:: clover
+
+        Clover nameplate color palette.
+
+    .. attribute:: lemon
+
+        Lemon nameplate color palette.
+
+    .. attribute:: white
+
+        White nameplate color palette.
