@@ -93,6 +93,7 @@ class BaseUser(_UserTag):
         _accent_colour: int | None
         _avatar_decoration: dict | None
         _public_flags: int
+        nameplate: Nameplate | None
 
     def __init__(
         self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
