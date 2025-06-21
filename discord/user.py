@@ -542,6 +542,10 @@ class User(BaseUser, discord.abc.Messageable):
         Specifies if the user is a bot account.
     system: :class:`bool`
         Specifies if the user is a system user (i.e. represents Discord officially).
+    nameplate: Optional[:class:`Nameplate`]
+        The user's nameplate, if the user has one.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = ("_stored",)
