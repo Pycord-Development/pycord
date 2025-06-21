@@ -30,6 +30,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 import discord.abc
 
 from .asset import Asset
+from .collectibles import Nameplate
 from .colour import Colour
 from .flags import PublicUserFlags
 from .iterators import EntitlementIterator
@@ -76,6 +77,7 @@ class BaseUser(_UserTag):
         "_public_flags",
         "_avatar_decoration",
         "_state",
+        "nameplate",
     )
 
     if TYPE_CHECKING:
@@ -143,6 +145,11 @@ class BaseUser(_UserTag):
         self._banner = data.get("banner", None)
         self._accent_colour = data.get("accent_color", None)
         self._avatar_decoration = data.get("avatar_decoration_data", None)
+        nameplate = (data.get("collectibles") or {}).get("nameplate", None)
+        if nameplate:
+            self.nameplate = Nameplate(data=nameplate, state=self._state)
+        else:
+            self.nameplate = None
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
