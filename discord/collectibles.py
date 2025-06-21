@@ -34,7 +34,7 @@ from .types.collectibles import Nameplate as NameplatePayload
 
 class Nameplate:
     """
-    Represents a Discord [Nameplate](https://support.discord.com/hc/en-us/articles/30408457944215-Nameplates-FAQ)
+    Represents a Discord Nameplate.
 
     .. versionadded:: 2.7
 
