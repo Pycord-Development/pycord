@@ -114,7 +114,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
 - Added support for emoji aliases like `:smile:` in PartialEmoji.from_str.
-  ([#2774](https://github.com/Pycord-Development/pycord/pull/2774))
+  ([#2815](https://github.com/Pycord-Development/pycord/pull/2815))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
   ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
 - Fixed GIF-based `Sticker` returning the wrong `url`.
