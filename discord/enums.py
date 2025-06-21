@@ -1078,6 +1078,22 @@ class SubscriptionStatus(Enum):
     inactive = 2
 
 
+class NameplatePalette(Enum):
+    """A nameplate color palette."""
+
+    CRIMSON = ("crimson",)
+    BERRY = "berry"
+    SKY = "sky"
+    TEAL = "teal"
+    FOREST = "forest"
+    BUBBLE_GUM = "bubble_gum"
+    VIOLET = "violet"
+    COBALT = "cobalt"
+    CLOVER = "clover"
+    LEMON = "lemon"
+    WHITE = "white"
+
+
 T = TypeVar("T")
 
 

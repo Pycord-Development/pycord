@@ -24,23 +24,10 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, TypedDict
+from typing import TypedDict
 
+from ..enums import NameplatePalette
 from .snowflake import Snowflake
-
-NameplatePalette = Literal[
-    "crimson",
-    "berry",
-    "sky",
-    "teal",
-    "forest",
-    "bubble_gum",
-    "violet",
-    "cobalt",
-    "clover",
-    "lemon",
-    "white",
-]
 
 
 class Nameplate(TypedDict):

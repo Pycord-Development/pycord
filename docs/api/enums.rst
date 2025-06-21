@@ -2519,3 +2519,9 @@ of :class:`enum.Enum`.
     .. attribute:: inactive
 
         The subscription is inactive and the subscription owner is not being charged.
+
+.. class:: NameplatePalette
+
+    A nameplate color palette.
+
+    .. versionadded:: 2.7
