@@ -1079,7 +1079,10 @@ class SubscriptionStatus(Enum):
 
 
 class NameplatePalette(Enum):
-    """A nameplate color palette."""
+    """A nameplate color palette.
+
+    .. versionadded:: 2.7
+    """
 
     CRIMSON = ("crimson",)
     BERRY = "berry"

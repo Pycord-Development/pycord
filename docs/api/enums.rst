@@ -2525,3 +2525,5 @@ of :class:`enum.Enum`.
     A nameplate color palette.
 
     .. versionadded:: 2.7
+
+    :members:

@@ -36,6 +36,8 @@ class Nameplate:
     """
     Represents a Discord [Nameplate](https://support.discord.com/hc/en-us/articles/30408457944215-Nameplates-FAQ)
 
+    .. versionadded:: 2.7
+
     Attributes
     ----------
         sku_id: int
