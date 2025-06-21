@@ -1084,7 +1084,7 @@ class NameplatePalette(Enum):
     .. versionadded:: 2.7
     """
 
-    CRIMSON = ("crimson",)
+    CRIMSON = "crimson"
     BERRY = "berry"
     SKY = "sky"
     TEAL = "teal"
