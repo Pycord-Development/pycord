@@ -74,4 +74,3 @@ class Nameplate:
 
 
 __all__ = ("Nameplate", "NameplatePalette")
-"""https://cdn.discordapp.com/assets/collectibles/nameplates/nameplates/twilight/asset.webm"""
