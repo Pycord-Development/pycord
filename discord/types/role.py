@@ -41,7 +41,7 @@ class Role(TypedDict):
     id: Snowflake
     name: str
     color: int
-    colors: NotRequired[RoleColours]
+    colors: RoleColours
     hoist: bool
     position: int
     permissions: str

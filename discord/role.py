@@ -297,6 +297,11 @@ class Role(Hashable):
         Extra attributes of the role.
 
         .. versionadded:: 2.6
+
+    colours: :class:`RoleColours`
+        The role's colours.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -447,13 +452,29 @@ class Role(Hashable):
 
     @property
     def colour(self) -> Colour:
-        """Returns the role colour. An alias exists under ``color``."""
-        return Colour(self._colour)
+        """Returns the role colour. Equivalent to :attr:`colours.primary`.
+        An alias exists under ``color``.
+
+        .. versionchanged:: 2.7
+        """
+        return self.colours.primary
 
     @property
     def color(self) -> Colour:
-        """Returns the role color. An alias exists under ``colour``."""
-        return self.colour
+        """Returns the role's primary color. Equivalent to :attr:`colors.primary`.
+        An alias exists under ``colour``.
+
+        .. versionadded:: 2.7
+        """
+        return self.colours.primary
+
+    @property
+    def colors(self) -> RoleColours:
+        """Returns the role's colours. Equivalent to :attr:`colours`.
+
+        .. versionadded:: 2.7
+        """
+        return self.colours
 
     @property
     def created_at(self) -> datetime.datetime:
