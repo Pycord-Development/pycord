@@ -98,6 +98,7 @@ GuildFeature = Literal[
     "VERIFIED",
     "VIP_REGIONS",
     "WELCOME_SCREEN_ENABLED",
+    "ENHANCED_ROLE_COLORS",
 ]
 
 

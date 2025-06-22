@@ -221,6 +221,11 @@ Role
 .. autoclass:: RoleTags()
     :members:
 
+.. attributetable:: RoleColours
+
+.. autoclass:: RoleColours
+    :members:
+
 Scheduled Event
 ~~~~~~~~~~~~~~~
 
