@@ -2881,6 +2881,7 @@ class Guild(Hashable):
         name: str = ...,
         permissions: Permissions = ...,
         colour: Colour | int = ...,
+        colours: RoleColours = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
         icon: bytes | None = MISSING,
@@ -2895,6 +2896,7 @@ class Guild(Hashable):
         name: str = ...,
         permissions: Permissions = ...,
         color: Colour | int = ...,
+        colors: RoleColours = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
         icon: bytes | None = ...,
@@ -2973,13 +2975,28 @@ class Guild(Hashable):
         else:
             fields["permissions"] = "0"
 
-        actual_colour = colour or color or Colour.default()
-        colours or colors or RoleColours.default()
+        actual_colour = colour if colour not in (MISSING, None) else color
 
         if isinstance(actual_colour, int):
-            fields["color"] = actual_colour
+            actual_colour = Colour(actual_colour)
+
+        if actual_colour not in (MISSING, None):
+            actual_colours = RoleColours(primary=actual_colour)
         else:
-            fields["color"] = actual_colour.value
+            actual_colours = colours or colors or RoleColours.default()
+
+        if isinstance(actual_colours, RoleColours):
+            if "ENHANCED_ROLE_COLORS" not in self.features:
+                actual_colours.secondary = None
+                actual_colours.tertiary = None
+            fields["colors"] = actual_colours._to_dict()
+
+        else:
+            raise InvalidArgument(
+                "colours parameter must be of type RoleColours, not {0.__class__.__name__}".format(
+                    actual_colours
+                )
+            )
 
         if hoist is not MISSING:
             fields["hoist"] = hoist

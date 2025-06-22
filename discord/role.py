@@ -37,10 +37,7 @@ from .mixins import Hashable
 from .permissions import Permissions
 from .utils import MISSING, _bytes_to_base64_data, _get_as_snowflake, snowflake_time
 
-__all__ = (
-    "RoleTags",
-    "Role",
-)
+__all__ = ("RoleTags", "Role", "RoleColours")
 
 if TYPE_CHECKING:
     import datetime
@@ -214,6 +211,13 @@ class RoleColours:
         """Returns a default :class:`RoleColours` object with no colours set."""
         return cls(Colour.default(), None, None)
 
+    def __repr__(self) -> str:
+        return (
+            f"<RoleColours primary={self.primary!r} "
+            f"secondary={self.secondary!r} "
+            f"tertiary={self.tertiary!r}>"
+        )
+
 
 class Role(Hashable):
     """Represents a Discord role in a :class:`Guild`.
@@ -300,6 +304,7 @@ class Role(Hashable):
         "name",
         "_permissions",
         "_colour",
+        "colours",
         "position",
         "managed",
         "mentionable",
@@ -365,7 +370,7 @@ class Role(Hashable):
         self._permissions: int = int(data.get("permissions", 0))
         self.position: int = data.get("position", 0)
         self._colour: int = data.get("color", 0)
-        self.colours: RoleColours | None = RoleColours._from_payload(data)
+        self.colours: RoleColours | None = RoleColours._from_payload(data["colors"])
         self.hoist: bool = data.get("hoist", False)
         self.managed: bool = data.get("managed", False)
         self.mentionable: bool = data.get("mentionable", False)
@@ -596,11 +601,17 @@ class Role(Hashable):
             colours = colors
 
         if colour is not MISSING:
-            payload["color"] = colour if isinstance(colour, int) else colour.value
+            if isinstance(colour, int):
+                colour = Colour(colour)
+            colours = RoleColours(primary=colour)
 
         if colours is not MISSING:
             if not isinstance(colours, RoleColours):
                 raise InvalidArgument("colours must be a RoleColours object")
+            if "ENHANCED_ROLE_COLORS" not in self.guild.features:
+                colours.secondary = None
+                colours.tertiary = None
+
             payload["colors"] = colours._to_dict()
 
         if name is not MISSING:
