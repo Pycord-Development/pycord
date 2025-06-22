@@ -27,6 +27,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, TypeVar
 
+from typing_extensions import Self
+
 from .asset import Asset
 from .colour import Colour
 from .errors import InvalidArgument
@@ -48,6 +50,7 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.guild import RolePositionUpdate
     from .types.role import Role as RolePayload
+    from .types.role import RoleColours as RoleColoursPayload
     from .types.role import RoleTags as RoleTagPayload
 
 
@@ -147,6 +150,56 @@ class RoleTags:
 
 
 R = TypeVar("R", bound="Role")
+
+
+class RoleColours:
+    """Represents a role's gradient colours.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    primary: :class:`Colour`
+        The primary colour of the role.
+    secondary: Optional[:class:`Colour`]
+        The secondary colour of the role.
+    tertiary: Optional[:class:`Colour`]
+        The tertiary colour of the role.
+    """
+
+    def __init__(
+        self,
+        primary: Colour,
+        secondary: Colour | None = None,
+        tertiary: Colour | None = None,
+    ):
+        """Initialises a :class:`RoleColours` object.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        primary: :class:`Colour`
+            The primary colour of the role.
+        secondary: Optional[:class:`Colour`]
+            The secondary colour of the role.
+        tertiary: Optional[:class:`Colour`]
+            The tertiary colour of the role.
+        """
+        self.primary: Colour = primary
+        self.secondary: Colour | None = secondary
+        self.tertiary: Colour | None = tertiary
+
+    @classmethod
+    def _from_payload(cls, data: RoleColoursPayload) -> Self:
+        primary = Colour(data["primary_color"])
+        secondary = (
+            Colour(data["secondary_color"]) if data.get("secondary_color") else None
+        )
+        tertiary = (
+            Colour(data["tertiary_color"]) if data.get("tertiary_color") else None
+        )
+        return cls(primary, secondary, tertiary)
 
 
 class Role(Hashable):
@@ -299,6 +352,7 @@ class Role(Hashable):
         self._permissions: int = int(data.get("permissions", 0))
         self.position: int = data.get("position", 0)
         self._colour: int = data.get("color", 0)
+        self.colours: RoleColours | None = RoleColours._from_payload(data)
         self.hoist: bool = data.get("hoist", False)
         self.managed: bool = data.get("managed", False)
         self.mentionable: bool = data.get("mentionable", False)
