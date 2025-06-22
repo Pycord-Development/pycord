@@ -201,6 +201,14 @@ class RoleColours:
         )
         return cls(primary, secondary, tertiary)
 
+    def _to_dict(self) -> RoleColoursPayload:
+        """Converts the role colours to a dictionary."""
+        return {
+            "primary_color": self.primary.value,
+            "secondary_color": self.secondary.value if self.secondary else None,
+            "tertiary_color": self.tertiary.value if self.tertiary else None,
+        }
+
 
 class Role(Hashable):
     """Represents a Discord role in a :class:`Guild`.
@@ -506,6 +514,8 @@ class Role(Hashable):
         permissions: Permissions = MISSING,
         colour: Colour | int = MISSING,
         color: Colour | int = MISSING,
+        colours: RoleColours | None = MISSING,
+        colors: RoleColours | None = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         position: int = MISSING,
@@ -577,8 +587,17 @@ class Role(Hashable):
         if color is not MISSING:
             colour = color
 
+        if colors is not MISSING:
+            colours = colors
+
         if colour is not MISSING:
             payload["color"] = colour if isinstance(colour, int) else colour.value
+
+        if colours is not MISSING:
+            if not isinstance(colours, RoleColours):
+                raise InvalidArgument("colours must be a RoleColours object")
+            payload["colors"] = colours._to_dict()
+
         if name is not MISSING:
             payload["name"] = name
 
