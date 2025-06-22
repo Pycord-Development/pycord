@@ -79,7 +79,7 @@ from .mixins import Hashable
 from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
-from .role import Role
+from .role import Role, RoleColours
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
@@ -2908,6 +2908,8 @@ class Guild(Hashable):
         permissions: Permissions = MISSING,
         color: Colour | int = MISSING,
         colour: Colour | int = MISSING,
+        colors: RoleColours = MISSING,
+        colours: RoleColours = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         reason: str | None = None,
@@ -2972,6 +2974,8 @@ class Guild(Hashable):
             fields["permissions"] = "0"
 
         actual_colour = colour or color or Colour.default()
+        colours or colors or RoleColours.default()
+
         if isinstance(actual_colour, int):
             fields["color"] = actual_colour
         else:

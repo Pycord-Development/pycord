@@ -209,6 +209,11 @@ class RoleColours:
             "tertiary_color": self.tertiary.value if self.tertiary else None,
         }
 
+    @classmethod
+    def default(cls) -> RoleColours:
+        """Returns a default :class:`RoleColours` object with no colours set."""
+        return cls(Colour.default(), None, None)
+
 
 class Role(Hashable):
     """Represents a Discord role in a :class:`Guild`.
