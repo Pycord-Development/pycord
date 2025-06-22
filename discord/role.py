@@ -464,7 +464,7 @@ class Role(Hashable):
         """Returns the role's primary color. Equivalent to :attr:`colors.primary`.
         An alias exists under ``colour``.
 
-        .. versionadded:: 2.7
+        .. versionchanged:: 2.7
         """
         return self.colours.primary
 
