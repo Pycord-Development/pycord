@@ -444,7 +444,7 @@ class Role(Hashable):
         reason: str | None | utils.Undefined = MISSING,
         icon: bytes | None | utils.Undefined = MISSING,
         unicode_emoji: str | None | utils.Undefined = MISSING,
-    ) -> Role | None:
+    ) -> Role:
         """|coro|
 
         Edits the role.
