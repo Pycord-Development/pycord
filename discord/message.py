@@ -41,7 +41,7 @@ from typing import (
 )
 from urllib.parse import parse_qs, urlparse
 
-from .utils.private import get_as_snowflake
+from .utils.private import get_as_snowflake, parse_time
 from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
@@ -631,7 +631,7 @@ class MessageCall:
     def __init__(self, state: ConnectionState, data: MessageCallPayload):
         self._state: ConnectionState = state
         self._participants: SnowflakeList = data.get("participants", [])
-        self._ended_timestamp: datetime.datetime | None = utils.parse_time(data["ended_timestamp"])
+        self._ended_timestamp: datetime.datetime | None = parse_time(data["ended_timestamp"])
 
     @property
     def participants(self) -> list[User | Object]:
@@ -707,7 +707,7 @@ class ForwardedMessage:
         self.flags: MessageFlags = MessageFlags._from_value(data.get("flags", 0))
         self.stickers: list[StickerItem] = [StickerItem(data=d, state=state) for d in data.get("sticker_items", [])]
         self.components: list[Component] = [_component_factory(d) for d in data.get("components", [])]
-        self._edited_timestamp: datetime.datetime | None = utils.parse_time(data["edited_timestamp"])
+        self._edited_timestamp: datetime.datetime | None = parse_time(data["edited_timestamp"])
 
     @property
     def created_at(self) -> datetime.datetime:
@@ -976,7 +976,7 @@ class Message(Hashable):
         self.application: MessageApplicationPayload | None = data.get("application")
         self.activity: MessageActivityPayload | None = data.get("activity")
         self.channel: MessageableChannel = channel
-        self._edited_timestamp: datetime.datetime | None = utils.parse_time(data["edited_timestamp"])
+        self._edited_timestamp: datetime.datetime | None = parse_time(data["edited_timestamp"])
         self.type: MessageType = try_enum(MessageType, data["type"])
         self.pinned: bool = data["pinned"]
         self.flags: MessageFlags = MessageFlags._from_value(data.get("flags", 0))
@@ -1150,7 +1150,7 @@ class Message(Hashable):
                 pass
 
     def _handle_edited_timestamp(self, value: str) -> None:
-        self._edited_timestamp = utils.parse_time(value)
+        self._edited_timestamp = parse_time(value)
 
     def _handle_pinned(self, value: bool) -> None:
         self.pinned = value

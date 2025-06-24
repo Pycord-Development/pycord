@@ -33,6 +33,7 @@ from operator import attrgetter
 from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 import discord.abc
+from .utils.private import parse_time
 
 from . import utils
 from .activity import ActivityTypes, create_activity
@@ -148,7 +149,7 @@ class VoiceState:
         self.mute: bool = data.get("mute", False)
         self.deaf: bool = data.get("deaf", False)
         self.suppress: bool = data.get("suppress", False)
-        self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(data.get("request_to_speak_timestamp"))
+        self.requested_to_speak_at: datetime.datetime | None = parse_time(data.get("request_to_speak_timestamp"))
         self.channel: VocalGuildChannel | None = channel
 
     def __repr__(self) -> str:
@@ -309,8 +310,8 @@ class Member(discord.abc.Messageable, _UserTag):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
         self.guild: Guild = guild
-        self.joined_at: datetime.datetime | None = utils.parse_time(data.get("joined_at"))
-        self.premium_since: datetime.datetime | None = utils.parse_time(data.get("premium_since"))
+        self.joined_at: datetime.datetime | None = parse_time(data.get("joined_at"))
+        self.premium_since: datetime.datetime | None = parse_time(data.get("premium_since"))
         self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
         self._client_status: dict[str | None, str] = {None: "offline"}
         self.activities: tuple[ActivityTypes, ...] = ()
@@ -318,7 +319,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.pending: bool = data.get("pending", False)
         self._avatar: str | None = data.get("avatar")
         self._banner: str | None = data.get("banner")
-        self.communication_disabled_until: datetime.datetime | None = utils.parse_time(
+        self.communication_disabled_until: datetime.datetime | None = parse_time(
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
@@ -359,8 +360,8 @@ class Member(discord.abc.Messageable, _UserTag):
         return cls(data=data, guild=message.guild, state=message._state)  # type: ignore
 
     def _update_from_message(self, data: MemberPayload) -> None:
-        self.joined_at = utils.parse_time(data.get("joined_at"))
-        self.premium_since = utils.parse_time(data.get("premium_since"))
+        self.joined_at = parse_time(data.get("joined_at"))
+        self.premium_since = parse_time(data.get("premium_since"))
         self._roles = utils.SnowflakeList(map(int, data["roles"]))
         self.nick = data.get("nick", None)
         self.pending = data.get("pending", False)
@@ -422,11 +423,11 @@ class Member(discord.abc.Messageable, _UserTag):
         except KeyError:
             pass
 
-        self.premium_since = utils.parse_time(data.get("premium_since"))
+        self.premium_since = parse_time(data.get("premium_since"))
         self._roles = utils.SnowflakeList(map(int, data["roles"]))
         self._avatar = data.get("avatar")
         self._banner = data.get("banner")
-        self.communication_disabled_until = utils.parse_time(data.get("communication_disabled_until"))
+        self.communication_disabled_until = parse_time(data.get("communication_disabled_until"))
         self.flags = MemberFlags._from_value(data.get("flags", 0))
 
     def _presence_update(self, data: PartialPresenceUpdate, user: UserPayload) -> tuple[User, User] | None:

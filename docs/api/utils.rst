@@ -35,11 +35,7 @@ Utility Functions
 
 .. autofunction:: discord.utils.snowflake_time
 
-.. autofunction:: discord.utils.parse_time
-
 .. autofunction:: discord.utils.format_dt
-
-.. autofunction:: discord.utils.time_snowflake
 
 .. autofunction:: discord.utils.generate_snowflake
 

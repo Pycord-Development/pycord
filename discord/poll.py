@@ -27,6 +27,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Any
 
+from .utils.private import parse_time
 from . import utils
 from .enums import PollLayoutType, try_enum
 from .iterators import VoteIterator
@@ -344,7 +345,7 @@ class Poll:
     @utils.cached_property
     def expiry(self) -> datetime.datetime | None:
         """An aware datetime object that specifies the date and time in UTC when the poll will end."""
-        return utils.parse_time(self._expiry)
+        return parse_time(self._expiry)
 
     def to_dict(self) -> PollPayload:
         dict_ = {

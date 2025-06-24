@@ -43,6 +43,7 @@ from typing import (
     Union,
 )
 
+from .utils.private import parse_time
 from . import utils
 from .utils.private import get_as_snowflake
 from .activity import BaseActivity
@@ -1024,7 +1025,7 @@ class ConnectionState:
             )
             return
 
-        last_pin = utils.parse_time(data["last_pin_timestamp"]) if data["last_pin_timestamp"] else None
+        last_pin = parse_time(data["last_pin_timestamp"]) if data["last_pin_timestamp"] else None
 
         if guild is None:
             self.dispatch("private_channel_pins_update", channel, last_pin)

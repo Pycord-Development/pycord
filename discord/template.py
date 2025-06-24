@@ -28,8 +28,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from .guild import Guild
-from .utils import MISSING, Undefined, parse_time
-from .utils.private import bytes_to_base64_data
+from .utils import MISSING, Undefined
+from .utils.private import bytes_to_base64_data, parse_time
 
 __all__ = ("Template",)
 

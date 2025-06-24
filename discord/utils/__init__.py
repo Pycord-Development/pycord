@@ -73,7 +73,6 @@ DISCORD_EPOCH = 1420070400000
 
 
 __all__ = (
-    "parse_time",
     "warn_deprecated",
     "deprecated",
     "oauth_url",
@@ -232,34 +231,6 @@ def delay_task(delay: float, func: Coroutine):
     asyncio.create_task(inner_call())
 
 
-@overload
-def parse_time(timestamp: None) -> None: ...
-
-
-@overload
-def parse_time(timestamp: str) -> datetime.datetime: ...
-
-
-@overload
-def parse_time(timestamp: str | None) -> datetime.datetime | None: ...
-
-
-def parse_time(timestamp: str | None) -> datetime.datetime | None:
-    """A helper function to convert an ISO 8601 timestamp to a datetime object.
-
-    Parameters
-    ----------
-    timestamp: Optional[:class:`str`]
-        The timestamp to convert.
-
-    Returns
-    -------
-    Optional[:class:`datetime.datetime`]
-        The converted datetime object.
-    """
-    if timestamp:
-        return datetime.datetime.fromisoformat(timestamp)
-    return None
 
 
 def copy_doc(original: Callable) -> Callable[[T], T]:

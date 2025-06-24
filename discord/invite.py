@@ -32,8 +32,8 @@ from .asset import Asset
 from .enums import ChannelType, InviteTarget, VerificationLevel, try_enum
 from .mixins import Hashable
 from .object import Object
-from .utils import parse_time, snowflake_time
-from .utils.private import get_as_snowflake
+from .utils import snowflake_time
+from .utils.private import get_as_snowflake, parse_time
 
 __all__ = (
     "PartialInviteChannel",

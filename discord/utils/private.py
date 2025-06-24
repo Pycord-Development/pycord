@@ -4,7 +4,7 @@ import datetime
 import re
 import unicodedata
 from base64 import b64encode
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, overload
 
 from ..errors import InvalidArgument
 
@@ -128,3 +128,32 @@ __all__ = (
     "parse_ratelimit_header",
     "string_width",
 )
+
+
+@overload
+def parse_time(timestamp: None) -> None: ...
+
+
+@overload
+def parse_time(timestamp: str) -> datetime.datetime: ...
+
+
+@overload
+def parse_time(timestamp: str | None) -> datetime.datetime | None: ...
+
+def parse_time(timestamp: str | None) -> datetime.datetime | None:
+    """A helper function to convert an ISO 8601 timestamp to a datetime object.
+
+    Parameters
+    ----------
+    timestamp: Optional[:class:`str`]
+        The timestamp to convert.
+
+    Returns
+    -------
+    Optional[:class:`datetime.datetime`]
+        The converted datetime object.
+    """
+    if timestamp:
+        return datetime.datetime.fromisoformat(timestamp)
+    return None
