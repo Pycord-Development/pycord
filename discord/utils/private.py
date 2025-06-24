@@ -141,6 +141,7 @@ def parse_time(timestamp: str) -> datetime.datetime: ...
 @overload
 def parse_time(timestamp: str | None) -> datetime.datetime | None: ...
 
+
 def parse_time(timestamp: str | None) -> datetime.datetime | None:
     """A helper function to convert an ISO 8601 timestamp to a datetime object.
 
