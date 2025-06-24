@@ -25,8 +25,6 @@ Utility Functions
 
 .. autofunction:: discord.utils.raw_role_mentions
 
-.. autofunction:: discord.utils.resolve_template
-
 .. autofunction:: discord.utils.utcnow
 
 .. autofunction:: discord.utils.snowflake_time

@@ -16,6 +16,7 @@ release.
 - `utils.filter_params`
 - `utils.sleep_until`
 - `utils.resolve_invite`
+- `utils.resolve_template`
 - `utils.parse_time`
 - `utils.time_snowflake` use `utils.generate_snowflake` instead
 - `utils.warn_deprecated`
