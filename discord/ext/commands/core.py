@@ -43,6 +43,7 @@ from typing import (
 )
 
 import discord
+from discord.utils.private import evaluate_annotation
 from discord import utils
 from discord.utils import Undefined
 
@@ -138,7 +139,6 @@ def get_signature_parameters(function: Callable[..., Any], globalns: dict[str, A
     signature = inspect.signature(function)
     params = {}
     cache: dict[str, Any] = {}
-    eval_annotation = discord.utils.evaluate_annotation
     for name, parameter in signature.parameters.items():
         annotation = parameter.annotation
         if annotation is parameter.empty:
@@ -148,7 +148,7 @@ def get_signature_parameters(function: Callable[..., Any], globalns: dict[str, A
             params[name] = parameter.replace(annotation=type(None))
             continue
 
-        annotation = eval_annotation(annotation, globalns, globalns, cache)
+        annotation = evaluate_annotation(annotation, globalns, globalns, cache)
         if annotation is Greedy:
             raise TypeError("Unparameterized Greedy[...] is disallowed in signature.")
 

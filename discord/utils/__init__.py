@@ -31,10 +31,7 @@ import collections.abc
 import datetime
 import json
 import re
-import sys
-import types
 from bisect import bisect_left
-from enum import Enum, auto
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -44,7 +41,6 @@ from typing import (
     AsyncIterator,
     Callable,
     Coroutine,
-    ForwardRef,
     Generic,
     Iterable,
     Iterator,
@@ -111,12 +107,12 @@ class _cached_property:
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
-    from .abc import Snowflake
-    from .commands.context import AutocompleteContext
-    from .commands.options import OptionChoice
-    from .invite import Invite
-    from .permissions import Permissions
-    from .template import Template
+    from ..abc import Snowflake
+    from ..commands.context import AutocompleteContext
+    from ..commands.options import OptionChoice
+    from ..invite import Invite
+    from ..permissions import Permissions
+    from ..template import Template
 
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
@@ -726,102 +722,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     if isinstance(iterator, AsyncIterator):
         return _achunk(iterator, max_size)
     return _chunk(iterator, max_size)
-
-
-PY_310 = sys.version_info >= (3, 10)
-
-
-def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    params = []
-    literal_cls = type(Literal[0])
-    for p in parameters:
-        if isinstance(p, literal_cls):
-            params.extend(p.__args__)
-        else:
-            params.append(p)
-    return tuple(params)
-
-
-def normalise_optional_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    none_cls = type(None)
-    return tuple(p for p in parameters if p is not none_cls) + (none_cls,)
-
-
-def evaluate_annotation(
-    tp: Any,
-    globals: dict[str, Any],
-    locals: dict[str, Any],
-    cache: dict[str, Any],
-    *,
-    implicit_str: bool = True,
-):
-    if isinstance(tp, ForwardRef):
-        tp = tp.__forward_arg__
-        # ForwardRefs always evaluate their internals
-        implicit_str = True
-
-    if implicit_str and isinstance(tp, str):
-        if tp in cache:
-            return cache[tp]
-        evaluated = eval(tp, globals, locals)
-        cache[tp] = evaluated
-        return evaluate_annotation(evaluated, globals, locals, cache)
-
-    if hasattr(tp, "__args__"):
-        implicit_str = True
-        is_literal = False
-        args = tp.__args__
-        if not hasattr(tp, "__origin__"):
-            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
-                converted = Union[args]  # type: ignore
-                return evaluate_annotation(converted, globals, locals, cache)
-
-            return tp
-        if tp.__origin__ is Union:
-            try:
-                if args.index(type(None)) != len(args) - 1:
-                    args = normalise_optional_params(tp.__args__)
-            except ValueError:
-                pass
-        if tp.__origin__ is Literal:
-            if not PY_310:
-                args = flatten_literal_params(tp.__args__)
-            implicit_str = False
-            is_literal = True
-
-        evaluated_args = tuple(
-            evaluate_annotation(arg, globals, locals, cache, implicit_str=implicit_str) for arg in args
-        )
-
-        if is_literal and not all(isinstance(x, (str, int, bool, type(None))) for x in evaluated_args):
-            raise TypeError("Literal arguments must be of type str, int, bool, or NoneType.")
-
-        if evaluated_args == args:
-            return tp
-
-        try:
-            return tp.copy_with(evaluated_args)
-        except AttributeError:
-            return tp.__origin__[evaluated_args]
-
-    return tp
-
-
-def resolve_annotation(
-    annotation: Any,
-    globalns: dict[str, Any],
-    localns: dict[str, Any] | None,
-    cache: dict[str, Any] | None,
-) -> Any:
-    if annotation is None:
-        return type(None)
-    if isinstance(annotation, str):
-        annotation = ForwardRef(annotation)
-
-    locals = globalns if localns is None else localns
-    if cache is None:
-        cache = {}
-    return evaluate_annotation(annotation, globalns, locals, cache)
 
 
 TimestampStyle = Literal["f", "F", "d", "D", "t", "T", "R"]

@@ -32,7 +32,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator, Literal, Pattern, TypeVar, Union
 
 from discord import utils
-from discord.utils import MISSING, Undefined, maybe_coroutine, resolve_annotation
+from discord.utils import MISSING, Undefined, maybe_coroutine
+from ...utils.private import resolve_annotation
 
 from .converter import run_converters
 from .errors import (
