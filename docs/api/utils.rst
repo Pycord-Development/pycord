@@ -25,11 +25,7 @@ Utility Functions
 
 .. autofunction:: discord.utils.raw_role_mentions
 
-.. autofunction:: discord.utils.resolve_invite
-
 .. autofunction:: discord.utils.resolve_template
-
-.. autofunction:: discord.utils.sleep_until
 
 .. autofunction:: discord.utils.utcnow
 
@@ -42,5 +38,3 @@ Utility Functions
 .. autofunction:: discord.utils.basic_autocomplete
 
 .. autofunction:: discord.utils.as_chunks
-
-.. autofunction:: discord.utils.filter_params
