@@ -15,4 +15,6 @@ release.
 
 - `utils.filter_params`
 - `utils.sleep_until`
-- `resolve_invite`
+- `utils.resolve_invite`
+- `utils.parse_time`
+- `utils.time_snowflake` use `utils.generate_snowflake` instead
