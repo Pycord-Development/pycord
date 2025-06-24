@@ -58,7 +58,7 @@ from typing import (
 )
 
 from ..errors import HTTPException
-from .public import basic_autocomplete, generate_snowflake, utcnow
+from .public import basic_autocomplete, generate_snowflake, utcnow, snowflake_time
 
 try:
     import msgspec
@@ -286,23 +286,6 @@ def oauth_url(
     if disable_guild_select:
         url += "&disable_guild_select=true"
     return url
-
-
-def snowflake_time(id: int) -> datetime.datetime:
-    """Converts a Discord snowflake ID to a UTC-aware datetime object.
-
-    Parameters
-    ----------
-    id: :class:`int`
-        The snowflake ID.
-
-    Returns
-    -------
-    :class:`datetime.datetime`
-        An aware datetime in UTC representing the creation time of the snowflake.
-    """
-    timestamp = ((id >> 22) + DISCORD_EPOCH) / 1000
-    return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
 
 
 def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> T | None:

@@ -6,6 +6,8 @@ import itertools
 from collections.abc import Awaitable, Callable, Iterable
 from typing import TYPE_CHECKING, Any, Literal
 
+from . import DISCORD_EPOCH
+
 if TYPE_CHECKING:
     from ..commands.context import AutocompleteContext
     from ..commands.options import OptionChoice
@@ -176,3 +178,20 @@ def generate_snowflake(
         return (discord_millis << 22) + (2**22 - 1 if high else 0)
     else:
         raise ValueError(f"Invalid mode '{mode}'. Must be 'realistic' or 'boundary'")
+
+
+def snowflake_time(id: int) -> datetime.datetime:
+    """Converts a Discord snowflake ID to a UTC-aware datetime object.
+
+    Parameters
+    ----------
+    id: :class:`int`
+        The snowflake ID.
+
+    Returns
+    -------
+    :class:`datetime.datetime`
+        An aware datetime in UTC representing the creation time of the snowflake.
+    """
+    timestamp = ((id >> 22) + DISCORD_EPOCH) / 1000
+    return datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)
