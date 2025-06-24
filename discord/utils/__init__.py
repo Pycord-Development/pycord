@@ -58,7 +58,7 @@ from typing import (
 )
 
 from ..errors import HTTPException
-from .public import basic_autocomplete, generate_snowflake, utcnow, snowflake_time
+from .public import basic_autocomplete, generate_snowflake, utcnow, snowflake_time, oauth_url, Undefined, MISSING
 
 try:
     import msgspec
@@ -88,17 +88,9 @@ __all__ = (
     "format_dt",
     "generate_snowflake",
     "basic_autocomplete",
+    "Undefined",
+    "MISSING",
 )
-
-
-class Undefined(Enum):
-    MISSING = auto()
-
-    def __bool__(self) -> Literal[False]:
-        return False
-
-
-MISSING: Literal[Undefined.MISSING] = Undefined.MISSING
 
 
 class _cached_property:
@@ -234,58 +226,6 @@ def copy_doc(original: Callable) -> Callable[[T], T]:
         return overridden
 
     return decorator
-
-
-def oauth_url(
-    client_id: int | str,
-    *,
-    permissions: Permissions | Undefined = MISSING,
-    guild: Snowflake | Undefined = MISSING,
-    redirect_uri: str | Undefined = MISSING,
-    scopes: Iterable[str] | Undefined = MISSING,
-    disable_guild_select: bool = False,
-) -> str:
-    """A helper function that returns the OAuth2 URL for inviting the bot
-    into guilds.
-
-    Parameters
-    ----------
-    client_id: Union[:class:`int`, :class:`str`]
-        The client ID for your bot.
-    permissions: :class:`~discord.Permissions`
-        The permissions you're requesting. If not given then you won't be requesting any
-        permissions.
-    guild: :class:`~discord.abc.Snowflake`
-        The guild to pre-select in the authorization screen, if available.
-    redirect_uri: :class:`str`
-        An optional valid redirect URI.
-    scopes: Iterable[:class:`str`]
-        An optional valid list of scopes. Defaults to ``('bot',)``.
-
-        .. versionadded:: 1.7
-    disable_guild_select: :class:`bool`
-        Whether to disallow the user from changing the guild dropdown.
-
-        .. versionadded:: 2.0
-
-    Returns
-    -------
-    :class:`str`
-        The OAuth2 URL for inviting the bot into guilds.
-    """
-    url = f"https://discord.com/oauth2/authorize?client_id={client_id}"
-    url += f"&scope={'+'.join(scopes or ('bot',))}"
-    if permissions is not MISSING:
-        url += f"&permissions={permissions.value}"
-    if guild is not MISSING:
-        url += f"&guild_id={guild.id}"
-    if redirect_uri is not MISSING:
-        from urllib.parse import urlencode
-
-        url += f"&response_type=code&{urlencode({'redirect_uri': redirect_uri})}"
-    if disable_guild_select:
-        url += "&disable_guild_select=true"
-    return url
 
 
 def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> T | None:

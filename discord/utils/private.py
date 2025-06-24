@@ -6,9 +6,8 @@ import re
 import unicodedata
 import warnings
 from base64 import b64encode
-from typing import TYPE_CHECKING, Any, overload, Callable
+from typing import TYPE_CHECKING, Any, overload, Callable, TypeVar, ParamSpec
 
-from . import P, T
 from ..errors import InvalidArgument
 
 if TYPE_CHECKING:
@@ -206,6 +205,10 @@ def warn_deprecated(
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
     warnings.simplefilter("default", DeprecationWarning)  # reset filter
+
+
+P = ParamSpec("P")
+T = TypeVar("T")
 
 
 def deprecated(
