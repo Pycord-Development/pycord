@@ -32,7 +32,7 @@ import traceback
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
-from discord.utils import Undefined
+from ...utils import Undefined
 
 from . import errors
 from .context import Context

@@ -43,9 +43,9 @@ from typing import (
 )
 
 import discord
-from discord.utils.private import evaluate_annotation
+from ...utils.private import evaluate_annotation
 from discord import utils
-from discord.utils import Undefined
+from ...utils import Undefined
 
 from ...commands import (
     ApplicationCommand,
