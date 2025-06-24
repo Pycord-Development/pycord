@@ -44,7 +44,3 @@ Utility Functions
 .. autofunction:: discord.utils.as_chunks
 
 .. autofunction:: discord.utils.filter_params
-
-.. autofunction:: discord.utils.warn_deprecated
-
-.. autofunction:: discord.utils.deprecated
