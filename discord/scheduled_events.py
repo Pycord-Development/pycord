@@ -40,7 +40,7 @@ from .errors import InvalidArgument, ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
-from .utils import warn_deprecated
+from .utils.private import warn_deprecated
 
 __all__ = (
     "ScheduledEvent",
