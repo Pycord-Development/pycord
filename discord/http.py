@@ -47,7 +47,8 @@ from .errors import (
 )
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
-from .utils import MISSING, warn_deprecated
+from .utils import MISSING
+from .utils.private import warn_deprecated
 
 _log = logging.getLogger(__name__)
 

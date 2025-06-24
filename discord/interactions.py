@@ -292,7 +292,7 @@ class Interaction:
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
-    @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
+    @discord.utils.private.deprecated("Interaction.channel", "2.7", stacklevel=4)
     def cached_channel(self) -> InteractionChannel | None:
         """The cached channel from which the interaction was sent.
         DM channels are not resolved. These are :class:`PartialMessageable` instead.
@@ -428,7 +428,7 @@ class Interaction:
         self._original_response = message
         return message
 
-    @utils.deprecated("Interaction.original_response", "2.2")
+    @discord.utils.private.deprecated("Interaction.original_response", "2.2")
     async def original_message(self):
         """An alias for :meth:`original_response`.
 
@@ -555,7 +555,7 @@ class Interaction:
 
         return message
 
-    @utils.deprecated("Interaction.edit_original_response", "2.2")
+    @discord.utils.private.deprecated("Interaction.edit_original_response", "2.2")
     async def edit_original_message(self, **kwargs):
         """An alias for :meth:`edit_original_response`.
 
@@ -613,7 +613,7 @@ class Interaction:
         else:
             await func
 
-    @utils.deprecated("Interaction.delete_original_response", "2.2")
+    @discord.utils.private.deprecated("Interaction.delete_original_response", "2.2")
     async def delete_original_message(self, **kwargs):
         """An alias for :meth:`delete_original_response`.
 
@@ -1238,7 +1238,7 @@ class InteractionResponse:
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
-    @utils.deprecated("a button with type ButtonType.premium", "2.6")
+    @discord.utils.private.deprecated("a button with type ButtonType.premium", "2.6")
     async def premium_required(self) -> Interaction:
         """|coro|
 

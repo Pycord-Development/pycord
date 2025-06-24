@@ -35,7 +35,7 @@ __all__ = ("__version__", "VersionInfo", "version_info")
 
 from typing import Literal, NamedTuple
 
-from .utils import deprecated
+from .utils.private import deprecated
 from ._version import __version__, __version_tuple__
 
 

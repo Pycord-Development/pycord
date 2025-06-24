@@ -41,6 +41,7 @@ from typing import (
     runtime_checkable,
 )
 
+from .utils.private import warn_deprecated
 from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
@@ -1529,7 +1530,7 @@ class Messageable:
                 from .message import MessageReference
 
                 if not isinstance(reference, MessageReference):
-                    utils.warn_deprecated(
+                    warn_deprecated(
                         f"Passing {type(reference).__name__} to reference",
                         "MessageReference",
                         "2.7",

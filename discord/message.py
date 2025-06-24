@@ -41,7 +41,7 @@ from typing import (
 )
 from urllib.parse import parse_qs, urlparse
 
-from .utils.private import get_as_snowflake, parse_time
+from .utils.private import get_as_snowflake, parse_time, warn_deprecated
 from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
@@ -1245,7 +1245,7 @@ class Message(Hashable):
 
     @property
     def interaction(self) -> MessageInteraction | None:
-        utils.warn_deprecated(
+        warn_deprecated(
             "interaction",
             "interaction_metadata",
             "2.6",
@@ -1255,7 +1255,7 @@ class Message(Hashable):
 
     @interaction.setter
     def interaction(self, value: MessageInteraction | None) -> None:
-        utils.warn_deprecated(
+        warn_deprecated(
             "interaction",
             "interaction_metadata",
             "2.6",

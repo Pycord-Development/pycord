@@ -40,7 +40,8 @@ from discord import (
     SlashCommandOptionType,
 )
 
-from ...utils import MISSING, find, get, warn_deprecated
+from ...utils import MISSING, find, get
+from ...utils.private import warn_deprecated
 from ..commands import (
     BadArgument,
 )

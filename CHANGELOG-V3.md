@@ -18,3 +18,5 @@ release.
 - `utils.resolve_invite`
 - `utils.parse_time`
 - `utils.time_snowflake` use `utils.generate_snowflake` instead
+- `utils.warn_deprecated`
+- `utils.deprecated`
