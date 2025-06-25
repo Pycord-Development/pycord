@@ -30,12 +30,12 @@ import asyncio
 import collections.abc
 import datetime
 import functools
+import importlib.resources
 import itertools
 import json
 import re
 import sys
 import types
-import importlib.resources
 import unicodedata
 import warnings
 from base64 import b64encode

@@ -25,15 +25,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import importlib.resources
-import json
 import re
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
 from .errors import InvalidArgument
-
 
 __all__ = ("PartialEmoji",)
 

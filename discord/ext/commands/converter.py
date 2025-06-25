@@ -42,9 +42,9 @@ from typing import (
 
 import discord
 from discord.partial_emoji import EMOJIS_MAP
+from discord.utils import UNICODE_EMOJIS
 
 from .errors import *
-from discord.utils import UNICODE_EMOJIS
 
 if TYPE_CHECKING:
     from discord.message import PartialMessageableChannel
