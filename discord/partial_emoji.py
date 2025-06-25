@@ -25,21 +25,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import importlib.resources
-import json
 import re
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
 from .errors import InvalidArgument
-
-with (
-    importlib.resources.files(__package__)
-    .joinpath("emojis.json")
-    .open(encoding="utf-8") as f
-):
-    EMOJIS_MAP = json.load(f)
 
 __all__ = ("PartialEmoji",)
 
@@ -152,7 +143,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         """
         if value.startswith(":") and value.endswith(":") and len(value) > 2:
             name = value[1:-1]
-            if unicode_emoji := EMOJIS_MAP.get(name):
+            if unicode_emoji := utils.EMOJIS_MAP.get(name):
                 return cls(name=unicode_emoji, id=None, animated=False)
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
