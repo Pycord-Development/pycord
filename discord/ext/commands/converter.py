@@ -43,6 +43,7 @@ from typing import (
 import discord
 
 from .errors import *
+from discord.utils import UNICODE_EMOJIS
 
 if TYPE_CHECKING:
     from discord.message import PartialMessageableChannel
@@ -851,7 +852,8 @@ class EmojiConverter(IDConverter[discord.GuildEmoji]):
 class PartialEmojiConverter(Converter[discord.PartialEmoji]):
     """Converts to a :class:`~discord.PartialEmoji`.
 
-    This is done by extracting the animated flag, name and ID from the emoji.
+    This is done by extracting the animated flag, name, and ID for custom emojis,
+    or by using the standard Unicode emojis supported by Discord.
 
     .. versionchanged:: 1.5
          Raise :exc:`.PartialEmojiConversionFailure` instead of generic :exc:`.BadArgument`
@@ -870,6 +872,14 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
                 animated=emoji_animated,
                 name=emoji_name,
                 id=emoji_id,
+            )
+
+        if argument in UNICODE_EMOJIS:
+            return discord.PartialEmoji.with_state(
+                ctx.bot._connection,
+                animated=False,
+                name=argument,
+                id=None,
             )
 
         raise PartialEmojiConversionFailure(argument)
@@ -1094,7 +1104,11 @@ _GenericAlias = type(List[T])
 
 
 def is_generic_type(tp: Any, *, _GenericAlias: type = _GenericAlias) -> bool:
-    return isinstance(tp, type) and issubclass(tp, Generic) or isinstance(tp, _GenericAlias)  # type: ignore
+    return (
+        isinstance(tp, type)
+        and issubclass(tp, Generic)
+        or isinstance(tp, _GenericAlias)
+    )  # type: ignore
 
 
 CONVERTER_MAPPING: dict[type[Any], Any] = {

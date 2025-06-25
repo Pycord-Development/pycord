@@ -35,6 +35,7 @@ import json
 import re
 import sys
 import types
+import importlib.resources
 import unicodedata
 import warnings
 from base64 import b64encode
@@ -97,9 +98,20 @@ __all__ = (
     "generate_snowflake",
     "basic_autocomplete",
     "filter_params",
+    "EMOJIS_MAP",
+    "UNICODE_EMOJIS",
 )
 
 DISCORD_EPOCH = 1420070400000
+
+with (
+    importlib.resources.files(__package__)
+    .joinpath("emojis.json")
+    .open(encoding="utf-8") as f
+):
+    EMOJIS_MAP = json.load(f)
+
+UNICODE_EMOJIS = set(EMOJIS_MAP)
 
 
 class _MissingSentinel:
