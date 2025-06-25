@@ -111,7 +111,7 @@ with (
 ):
     EMOJIS_MAP = json.load(f)
 
-UNICODE_EMOJIS = set(EMOJIS_MAP)
+UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
 
 class _MissingSentinel:
