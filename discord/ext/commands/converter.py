@@ -875,6 +875,14 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
                 id=emoji_id,
             )
 
+        if argument in UNICODE_EMOJIS:
+            return discord.PartialEmoji.with_state(
+                ctx.bot._connection,
+                animated=False,
+                name=argument,
+                id=None,
+            )
+
         raise PartialEmojiConversionFailure(argument)
 
 
