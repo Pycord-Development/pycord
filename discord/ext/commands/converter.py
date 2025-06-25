@@ -41,6 +41,7 @@ from typing import (
 )
 
 import discord
+from discord.partial_emoji import EMOJIS_MAP
 
 from .errors import *
 from discord.utils import UNICODE_EMOJIS
@@ -872,14 +873,6 @@ class PartialEmojiConverter(Converter[discord.PartialEmoji]):
                 animated=emoji_animated,
                 name=emoji_name,
                 id=emoji_id,
-            )
-
-        if argument in UNICODE_EMOJIS:
-            return discord.PartialEmoji.with_state(
-                ctx.bot._connection,
-                animated=False,
-                name=argument,
-                id=None,
             )
 
         raise PartialEmojiConversionFailure(argument)
