@@ -41,7 +41,6 @@ from typing import (
 )
 
 import discord
-from discord.partial_emoji import EMOJIS_MAP
 from discord.utils import UNICODE_EMOJIS
 
 from .errors import *
