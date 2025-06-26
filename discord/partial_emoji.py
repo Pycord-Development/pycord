@@ -144,7 +144,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         value = value.removeprefix(":").removesuffix(":")
         if unicode_emoji := utils.EMOJIS_MAP.get(value):
             return cls(name=unicode_emoji, id=None, animated=False)
-
+        
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
             groups = match.groupdict()
