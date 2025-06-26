@@ -25,21 +25,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import importlib.resources
-import json
 import re
 from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
 
 from . import utils
 from .asset import Asset, AssetMixin
 from .errors import InvalidArgument
-
-with (
-    importlib.resources.files(__package__)
-    .joinpath("emojis.json")
-    .open(encoding="utf-8") as f
-):
-    EMOJIS_MAP = json.load(f)
 
 __all__ = ("PartialEmoji",)
 
@@ -136,7 +127,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         - ``name:id``
         - ``<:name:id>``
 
-        If the format does not match then it is assumed to be a unicode emoji, either as Unicode characters or as a Discord alias (``:smile:``).
+        If the format does not match then it is assumed to be a unicode emoji.
 
         .. versionadded:: 2.0
 
@@ -150,12 +141,6 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
-        if value.startswith(":") and value.endswith(":"):
-            name = value[1:-1]
-        unicode_emoji = EMOJIS_MAP.get(name)
-        if unicode_emoji:
-            return cls(name=unicode_emoji, id=None, animated=False)
-
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
             groups = match.groupdict()
