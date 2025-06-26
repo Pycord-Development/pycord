@@ -141,10 +141,10 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
-        if value.startswith(":") and value.endswith(":") and len(value) > 2:
-            name = value[1:-1]
-            if unicode_emoji := utils.EMOJIS_MAP.get(name):
-                return cls(name=unicode_emoji, id=None, animated=False)
+        value = value.removeprefix(":").removesuffix(":")
+        if unicode_emoji := utils.EMOJIS_MAP.get(value):
+            return cls(name=unicode_emoji, id=None, animated=False)
+
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
             groups = match.groupdict()
