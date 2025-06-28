@@ -815,7 +815,9 @@ class SlashCommand(ApplicationCommand):
 
                 value_type = type(literal_values[0])
                 if not all(isinstance(v, value_type) for v in literal_values):
-                    raise TypeError("All Literal values for choices must be of the same type.")
+                    raise TypeError(
+                        "All Literal values for choices must be of the same type."
+                    )
 
                 option = Option(
                     value_type,
