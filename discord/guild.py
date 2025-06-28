@@ -85,6 +85,7 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
+from .utils import _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
@@ -862,6 +863,45 @@ class Guild(Hashable):
             The member or ``None`` if not found.
         """
         return self._members.get(user_id)
+
+    async def get_or_fetch(
+        self: Guild,
+        object_type: type[_FETCHABLE],
+        object_id: int | None,
+        default: Any = MISSING,
+    ) -> _FETCHABLE | None:
+        """
+        Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
+
+        Parameters
+        ----------
+        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`]
+            Type of object to fetch or get.
+
+        object_id: :class:`int`
+            ID of object to get.
+
+        default : Any, optional
+            A default to return instead of raising if fetch fails.
+
+        Returns
+        -------
+
+        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`]]
+            The object of type that was specified or ``None`` if not found.
+
+        Raises
+        ------
+        :exc:`NotFound`
+            Invalid ID for the object
+        :exc:`HTTPException`
+            An error occurred fetching the object
+        :exc:`Forbidden`
+            You do not have permission to fetch the object
+        """
+        return await utils.get_or_fetch(
+            obj=self, object_type=object_type, object_id=object_id, default=default
+        )
 
     @property
     def premium_subscribers(self) -> list[Member]:
@@ -2663,6 +2703,26 @@ class Guild(Hashable):
             An error occurred deleting the sticker.
         """
         await self._state.http.delete_guild_sticker(self.id, sticker.id, reason)
+
+    def get_emoji(self, emoji_id: int, /) -> GuildEmoji | None:
+        """Returns an emoji with the given ID.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        emoji_id: int
+            The ID to search for.
+
+        Returns
+        -------
+        Optional[:class:`Emoji`]
+            The returned Emoji or ``None`` if not found.
+        """
+        emoji = self._state.get_emoji(emoji_id)
+        if emoji and emoji.guild == self:
+            return emoji
+        return None
 
     async def fetch_emojis(self) -> list[GuildEmoji]:
         r"""|coro|
