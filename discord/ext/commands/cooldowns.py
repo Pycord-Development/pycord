@@ -399,11 +399,11 @@ class MaxConcurrency:
             f"<MaxConcurrency per={self.per!r} number={self.number} wait={self.wait}>"
         )
 
-    def get_key(self, message: Message) -> Any:
-        return self.per.get_key(message)
+    def get_key(self, ctx: Context | ApplicationContext) -> Any:
+        return self.per.get_key(ctx)
 
-    async def acquire(self, message: Message) -> None:
-        key = self.get_key(message)
+    async def acquire(self, ctx: Context | ApplicationContext) -> None:
+        key = self.get_key(ctx)
 
         try:
             sem = self._mapping[key]
@@ -414,10 +414,10 @@ class MaxConcurrency:
         if not acquired:
             raise MaxConcurrencyReached(self.number, self.per)
 
-    async def release(self, message: Message) -> None:
+    async def release(self, ctx: Context | ApplicationContext) -> None:
         # Technically there's no reason for this function to be async
         # But it might be more useful in the future
-        key = self.get_key(message)
+        key = self.get_key(ctx)
 
         try:
             sem = self._mapping[key]
