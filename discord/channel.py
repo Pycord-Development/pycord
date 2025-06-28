@@ -457,7 +457,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             You don't have permissions to get the webhooks.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         data = await self._state.http.channel_webhooks(self.id)
         return [Webhook.from_state(d, state=self._state) for d in data]
@@ -495,7 +495,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             You do not have permissions to create a webhook.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         if avatar is not None:
             avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
@@ -544,7 +544,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         if not isinstance(destination, TextChannel):
             raise InvalidArgument(f"Expected TextChannel received {destination.__class__.__name__}")
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         data = await self._state.http.follow_webhook(self.id, webhook_channel_id=destination.id, reason=reason)
         return Webhook._as_follower(data, channel=destination, user=self._state.user)
@@ -568,7 +568,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             The partial message.
         """
 
-        from .message import PartialMessage
+        from .message import PartialMessage  # noqa: PLC0415
 
         return PartialMessage(channel=self, id=message_id)
 
@@ -1740,7 +1740,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             The partial message.
         """
 
-        from .message import PartialMessage
+        from .message import PartialMessage  # noqa: PLC0415
 
         return PartialMessage(channel=self, id=message_id)
 
@@ -1895,7 +1895,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             You don't have permissions to get the webhooks.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         data = await self._state.http.channel_webhooks(self.id)
         return [Webhook.from_state(d, state=self._state) for d in data]
@@ -1933,7 +1933,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
             You do not have permissions to create a webhook.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         if avatar is not None:
             avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
@@ -2267,7 +2267,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             The partial message.
         """
 
-        from .message import PartialMessage
+        from .message import PartialMessage  # noqa: PLC0415
 
         return PartialMessage(channel=self, id=message_id)
 
@@ -2422,7 +2422,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             You don't have permissions to get the webhooks.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         data = await self._state.http.channel_webhooks(self.id)
         return [Webhook.from_state(d, state=self._state) for d in data]
@@ -2460,7 +2460,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
             You do not have permissions to create a webhook.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         if avatar is not None:
             avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
@@ -3051,7 +3051,7 @@ class DMChannel(discord.abc.Messageable, Hashable):
             The partial message.
         """
 
-        from .message import PartialMessage
+        from .message import PartialMessage  # noqa: PLC0415
 
         return PartialMessage(channel=self, id=message_id)
 
@@ -3274,7 +3274,7 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
             The partial message.
         """
 
-        from .message import PartialMessage
+        from .message import PartialMessage  # noqa: PLC0415
 
         return PartialMessage(channel=self, id=message_id)
 

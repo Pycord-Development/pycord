@@ -96,23 +96,11 @@ class BridgeExtCommand(Command):
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
 
-        # TODO: v2.7: Remove backwards support for Option in bridge commands.
-        for name, option in self.params.items():
+        for option in self.params.values():
             if isinstance(option.annotation, Option) and not isinstance(option.annotation, BridgeOption):
-                # Warn not to do this
-                warn_deprecated(
-                    "Using Option for bridge commands",
-                    "BridgeOption",
-                    "2.5",
-                    "2.7",
-                    reference="https://github.com/Pycord-Development/pycord/pull/2417",
-                    stacklevel=6,
+                raise TypeError(
+                    f"{option.annotation.__class__.__name__} is not supported in bridge commands. Use BridgeOption instead."
                 )
-                # Override the convert method of the parameter's annotated Option.
-                # We can use the convert method from BridgeOption, and bind "self"
-                # using a manual invocation of the descriptor protocol.
-                # Definitely not a good approach, but gets the job done until removal.
-                self.params[name].annotation.convert = BridgeOption.convert.__get__(self.params[name].annotation)
 
     async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
         await super().dispatch_error(ctx, error)
@@ -504,7 +492,7 @@ def guild_only():
         else:
             func.__guild_only__ = True
 
-        from ..commands import guild_only
+        from ..commands import guild_only  # noqa: PLC0415
 
         return guild_only()(func)
 
@@ -528,7 +516,7 @@ def is_nsfw():
         else:
             func.__nsfw__ = True
 
-        from ..commands import is_nsfw
+        from ..commands import is_nsfw  # noqa: PLC0415
 
         return is_nsfw()(func)
 
@@ -550,7 +538,7 @@ def has_permissions(**perms: bool):
     """
 
     def predicate(func: Callable | ApplicationCommand):
-        from ..commands import has_permissions
+        from ..commands import has_permissions  # noqa: PLC0415
 
         func = has_permissions(**perms)(func)
         _perms = Permissions(**perms)

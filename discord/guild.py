@@ -88,7 +88,7 @@ from .user import User
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("Guild",)
+__all__ = ("BanEntry", "Guild")
 
 MISSING = utils.MISSING
 
@@ -2224,7 +2224,7 @@ class Guild(Hashable):
         Forbidden
             You don't have permissions to get the templates.
         """
-        from .template import Template
+        from .template import Template  # noqa: PLC0415
 
         data = await self._state.http.guild_templates(self.id)
         return [Template(data=d, state=self._state) for d in data]
@@ -2247,7 +2247,7 @@ class Guild(Hashable):
             You don't have permissions to get the webhooks.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         data = await self._state.http.guild_webhooks(self.id)
         return [Webhook.from_state(d, state=self._state) for d in data]
@@ -2337,7 +2337,7 @@ class Guild(Hashable):
         description: :class:`str`
             The description of the template.
         """
-        from .template import Template
+        from .template import Template  # noqa: PLC0415
 
         payload = {"name": name}
 

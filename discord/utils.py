@@ -40,7 +40,6 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
-from dataclasses import field
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -419,7 +418,7 @@ def oauth_url(
     if guild is not MISSING:
         url += f"&guild_id={guild.id}"
     if redirect_uri is not MISSING:
-        from urllib.parse import urlencode
+        from urllib.parse import urlencode  # noqa: PLC0415
 
         url += f"&response_type=code&{urlencode({'redirect_uri': redirect_uri})}"
     if disable_guild_select:
@@ -825,7 +824,7 @@ def resolve_invite(invite: Invite | str) -> str:
     :class:`str`
         The invite code.
     """
-    from .invite import Invite  # circular import
+    from .invite import Invite  # circular import  # noqa: PLC0415
 
     if isinstance(invite, Invite):
         return invite.code
@@ -852,7 +851,7 @@ def resolve_template(code: Template | str) -> str:
     :class:`str`
         The template code.
     """
-    from .template import Template  # circular import
+    from .template import Template  # circular import  # noqa: PLC0415
 
     if isinstance(code, Template):
         return code.code
@@ -921,7 +920,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     regex = _MARKDOWN_STOCK_REGEX
     if ignore_links:
         regex = f"(?:{_URL_REGEX}|{regex})"
-    return re.sub(regex, replacement, text, 0, re.MULTILINE)
+    return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE)
 
 
 def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = True) -> str:
@@ -961,7 +960,7 @@ def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = 
         regex = _MARKDOWN_STOCK_REGEX
         if ignore_links:
             regex = f"(?:{_URL_REGEX}|{regex})"
-        return re.sub(regex, replacement, text, 0, re.MULTILINE | re.X)
+        return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE | re.X)
     else:
         text = re.sub(r"\\", r"\\\\", text)
         return _MARKDOWN_ESCAPE_REGEX.sub(r"\\\1", text)

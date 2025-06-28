@@ -119,6 +119,7 @@ per-file-ignores = {}
 # Also, leave a comment explaining why the rule is ignored.
 extend-ignore = [
     "A001", # Ignored when migrating from original codebase, idem for others if not mentioned otherwise
+    "PLW1641", # Object does not implement `__hash__` method
     "A002",
     "A005",
     "ANN001",

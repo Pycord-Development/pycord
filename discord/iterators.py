@@ -211,7 +211,7 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
 
     async def fill_users(self):
         # this is a hack because >circular imports<
-        from .user import User
+        from .user import User  # noqa: PLC0415
 
         if self.limit > 0:
             retrieve = min(self.limit, 100)
@@ -266,7 +266,7 @@ class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
 
     async def fill_users(self):
         # import here to prevent circular imports
-        from .user import User
+        from .user import User  # noqa: PLC0415
 
         if self.limit > 0:
             retrieve = min(self.limit, 100)
@@ -527,7 +527,7 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
         return r > 0
 
     async def _fill(self):
-        from .user import User
+        from .user import User  # noqa: PLC0415
 
         if self._get_retrieve():
             users, data = await self._retrieve_entries(self.retrieve)
@@ -621,7 +621,7 @@ class GuildIterator(_AsyncIterator["Guild"]):
         return r > 0
 
     def create_guild(self, data):
-        from .guild import Guild
+        from .guild import Guild  # noqa: PLC0415
 
         return Guild(state=self.state, data=data)
 
@@ -711,7 +711,7 @@ class MemberIterator(_AsyncIterator["Member"]):
             await self.members.put(self.create_member(element))
 
     def create_member(self, data):
-        from .member import Member
+        from .member import Member  # noqa: PLC0415
 
         return Member(data=data, guild=self.guild, state=self.state)
 
@@ -766,8 +766,8 @@ class BanIterator(_AsyncIterator["BanEntry"]):
             await self.bans.put(self.create_ban(element))
 
     def create_ban(self, data):
-        from .guild import BanEntry
-        from .user import User
+        from .guild import BanEntry  # noqa: PLC0415
+        from .user import User  # noqa: PLC0415
 
         return BanEntry(reason=data["reason"], user=User(state=self.state, data=data["user"]))
 
@@ -858,7 +858,7 @@ class ArchivedThreadIterator(_AsyncIterator["Thread"]):
             self.before = self.update_before(threads[-1])
 
     def create_thread(self, data: ThreadPayload) -> Thread:
-        from .threads import Thread
+        from .threads import Thread  # noqa: PLC0415
 
         return Thread(guild=self.guild, state=self.guild._state, data=data)
 
@@ -905,7 +905,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         return r > 0
 
     def member_from_payload(self, data):
-        from .member import Member
+        from .member import Member  # noqa: PLC0415
 
         user = data.pop("user")
 
@@ -915,7 +915,7 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
         return Member(data=member, guild=self.event.guild, state=self.event._state)
 
     def user_from_payload(self, data):
-        from .user import User
+        from .user import User  # noqa: PLC0415
 
         user = data.pop("user")
 
@@ -1010,7 +1010,7 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
         return r > 0
 
     def create_entitlement(self, data) -> Entitlement:
-        from .monetization import Entitlement
+        from .monetization import Entitlement  # noqa: PLC0415
 
         return Entitlement(data=data, state=self.state)
 
@@ -1124,7 +1124,7 @@ class SubscriptionIterator(_AsyncIterator["Subscription"]):
         return r > 0
 
     def create_subscription(self, data) -> Subscription:
-        from .monetization import Subscription
+        from .monetization import Subscription  # noqa: PLC0415
 
         return Subscription(state=self.state, data=data)
 

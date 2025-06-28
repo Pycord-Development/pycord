@@ -1083,7 +1083,7 @@ class DefaultHelpCommand(HelpCommand):
         await self.send_pages()
 
     async def send_cog_help(self, cog):
-        from discord.ext.bridge import BridgeExtCommand
+        from discord.ext.bridge import BridgeExtCommand  # noqa: PLC0415
 
         if cog.description:
             self.paginator.add_line(cog.description, empty=True)
@@ -1317,7 +1317,7 @@ class MinimalHelpCommand(HelpCommand):
         await self.send_pages()
 
     async def send_cog_help(self, cog):
-        from discord.ext.bridge import BridgeExtCommand
+        from discord.ext.bridge import BridgeExtCommand  # noqa: PLC0415
 
         bot = self.context.bot
         if bot.description:

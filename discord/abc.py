@@ -1526,7 +1526,7 @@ class Messageable:
         if reference is not None:
             try:
                 _reference = reference.to_message_reference_dict()
-                from .message import MessageReference
+                from .message import MessageReference  # noqa: PLC0415
 
                 if not isinstance(reference, MessageReference):
                     utils.warn_deprecated(

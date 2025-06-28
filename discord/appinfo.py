@@ -182,7 +182,7 @@ class AppInfo:
     )
 
     def __init__(self, state: ConnectionState, data: AppInfoPayload):
-        from .team import Team
+        from .team import Team  # noqa: PLC0415
 
         self._state: ConnectionState = state
         self.id: int = int(data["id"])

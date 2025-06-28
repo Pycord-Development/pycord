@@ -224,7 +224,7 @@ class Option:
         if isinstance(input_type, SlashCommandOptionType):
             self.input_type = input_type
         else:
-            from ..ext.commands import Converter
+            from ..ext.commands import Converter  # noqa: PLC0415
 
             if isinstance(input_type, tuple) and any(issubclass(op, ApplicationContext) for op in input_type):
                 input_type = next(op for op in input_type if issubclass(op, ApplicationContext))
@@ -237,7 +237,7 @@ class Option:
                 try:
                     self.input_type = SlashCommandOptionType.from_datatype(input_type)
                 except TypeError as exc:
-                    from ..ext.commands.converter import CONVERTER_MAPPING
+                    from ..ext.commands.converter import CONVERTER_MAPPING  # noqa: PLC0415
 
                     if input_type not in CONVERTER_MAPPING:
                         raise exc

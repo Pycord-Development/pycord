@@ -976,7 +976,7 @@ class Client:
         Optional[:class:`.StageInstance`]
             The stage instance or ``None`` if not found.
         """
-        from .channel import StageChannel
+        from .channel import StageChannel  # noqa: PLC0415
 
         channel = self._connection.get_channel(id)
 

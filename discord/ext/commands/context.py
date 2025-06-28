@@ -347,8 +347,8 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         Any
             The result of the help command, if any.
         """
-        from .core import Command, Group, wrap_callback
-        from .errors import CommandError
+        from .core import Command, Group, wrap_callback  # noqa: PLC0415
+        from .errors import CommandError  # noqa: PLC0415
 
         bot = self.bot
         cmd = bot.help_command

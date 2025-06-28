@@ -1028,7 +1028,7 @@ class Message(Hashable):
         except KeyError:
             self.snapshots = []
 
-        from .interactions import InteractionMetadata, MessageInteraction
+        from .interactions import InteractionMetadata, MessageInteraction  # noqa: PLC0415
 
         self._interaction: MessageInteraction | None
         try:
