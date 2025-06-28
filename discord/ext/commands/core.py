@@ -33,6 +33,7 @@ import types
 from typing import (
     TYPE_CHECKING,
     Any,
+    Awaitable,
     Callable,
     Generator,
     Generic,
@@ -69,6 +70,7 @@ from .errors import *
 if TYPE_CHECKING:
     from typing_extensions import Concatenate, ParamSpec, TypeGuard
 
+    from discord import ApplicationContext
     from discord.message import Message
 
     from ._types import Check, Coro, CoroFunc, Error, Hook
@@ -397,7 +399,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
 
         # bandaid for the fact that sometimes parent can be the bot instance
         parent = kwargs.get("parent")
-        self.parent: GroupMixin | None = parent if isinstance(parent, _BaseCommand) else None  # type: ignore
+        self.parent: GroupMixin | None = (
+            parent if isinstance(parent, _BaseCommand) else None
+        )  # type: ignore
 
         self._before_invoke: Hook | None = None
         try:
@@ -850,11 +854,11 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         if hook is not None:
             await hook(ctx)
 
-    def _prepare_cooldowns(self, ctx: Context) -> None:
+    async def _prepare_cooldowns(self, ctx: Context) -> None:
         if self._buckets.valid:
             dt = ctx.message.edited_at or ctx.message.created_at
             current = dt.replace(tzinfo=datetime.timezone.utc).timestamp()
-            bucket = self._buckets.get_bucket(ctx.message, current)
+            bucket = await self._buckets.get_bucket(ctx, current)
             if bucket is not None:
                 retry_after = bucket.update_rate_limit(current)
                 if retry_after:
@@ -875,9 +879,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         try:
             if self.cooldown_after_parsing:
                 await self._parse_arguments(ctx)
-                self._prepare_cooldowns(ctx)
+                await self._prepare_cooldowns(ctx)
             else:
-                self._prepare_cooldowns(ctx)
+                await self._prepare_cooldowns(ctx)
                 await self._parse_arguments(ctx)
 
             await self.call_before_hooks(ctx)
@@ -1204,7 +1208,9 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                 # since we have no checks, then we just return True.
                 return True
 
-            return await discord.utils.async_all(predicate(ctx) for predicate in predicates)  # type: ignore
+            return await discord.utils.async_all(
+                predicate(ctx) for predicate in predicates
+            )  # type: ignore
         finally:
             ctx.command = original
 
@@ -2353,36 +2359,23 @@ def cooldown(
 
 
 def dynamic_cooldown(
-    cooldown: BucketType | Callable[[Message], Any],
+    cooldown: Callable[
+        [Context | ApplicationContext], Cooldown | Awaitable[Cooldown] | None
+    ],
     type: BucketType = BucketType.default,
 ) -> Callable[[T], T]:
-    """A decorator that adds a dynamic cooldown to a command
+    """A decorator that adds a dynamic cooldown to a command.
 
-    This differs from :func:`.cooldown` in that it takes a function that
-    accepts a single parameter of type :class:`.discord.Message` and must
-    return a :class:`.Cooldown` or ``None``. If ``None`` is returned then
-    that cooldown is effectively bypassed.
-
-    A cooldown allows a command to only be used a specific amount
-    of times in a specific time frame. These cooldowns can be based
-    either on a per-guild, per-channel, per-user, per-role or global basis.
-    Denoted by the third argument of ``type`` which must be of enum
-    type :class:`.BucketType`.
-
-    If a cooldown is triggered, then :exc:`.CommandOnCooldown` is triggered in
-    :func:`.on_command_error` and the local error handler.
-
-    A command can only have a single cooldown.
-
-    .. versionadded:: 2.0
+    This supports both sync and async cooldown factories and accepts either
+    a :class:`discord.Message` or :class:`discord.ApplicationContext`.
 
     Parameters
     ----------
-    cooldown: Callable[[:class:`.discord.Message`], Optional[:class:`.Cooldown`]]
-        A function that takes a message and returns a cooldown that will
-        apply to this invocation or ``None`` if the cooldown should be bypassed.
-    type: :class:`.BucketType`
-        The type of cooldown to have.
+    cooldown: Callable[[Union[Message, ApplicationContext]], Union[Cooldown, Awaitable[Cooldown], None]]
+        A function that takes a message or context and returns a cooldown
+        to apply for that invocation or ``None`` to bypass.
+    type: :class:`BucketType`
+        The cooldown bucket type (e.g. per-user, per-channel).
     """
     if not callable(cooldown):
         raise TypeError("A callable must be provided")

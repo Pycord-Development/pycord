@@ -333,10 +333,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 InteractionContextType.private_channel,
             }
 
-    def _prepare_cooldowns(self, ctx: ApplicationContext):
+    async def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
             current = datetime.datetime.now().timestamp()
-            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
+            bucket = await self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
 
             if bucket is not None:
                 retry_after = bucket.update_rate_limit(current)
@@ -360,7 +360,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
 
         try:
-            self._prepare_cooldowns(ctx)
+            await self._prepare_cooldowns(ctx)
             await self.call_before_hooks(ctx)
         except:
             if self._max_concurrency is not None:

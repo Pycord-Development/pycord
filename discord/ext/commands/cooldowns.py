@@ -26,9 +26,10 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import time
 from collections import deque
-from typing import TYPE_CHECKING, Any, Callable, Deque, TypeVar
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Deque, TypeVar
 
 import discord.abc
 from discord.enums import Enum
@@ -37,6 +38,8 @@ from ...abc import PrivateChannel
 from .errors import MaxConcurrencyReached
 
 if TYPE_CHECKING:
+    from ...commands import ApplicationContext
+    from ...ext.commands import Context
     from ...message import Message
 
 __all__ = (
@@ -60,31 +63,35 @@ class BucketType(Enum):
     category = 5
     role = 6
 
-    def get_key(self, msg: Message) -> Any:
+    def get_key(self, ctx: Context | ApplicationContext) -> Any:
         if self is BucketType.user:
-            return msg.author.id
+            return ctx.author.id
         elif self is BucketType.guild:
-            return (msg.guild or msg.author).id
+            return (ctx.guild or ctx.author).id
         elif self is BucketType.channel:
-            return msg.channel.id
+            return ctx.channel.id
         elif self is BucketType.member:
-            return (msg.guild and msg.guild.id), msg.author.id
+            return (ctx.guild and ctx.guild.id), ctx.author.id
         elif self is BucketType.category:
             return (
-                msg.channel.category.id
-                if isinstance(msg.channel, discord.abc.GuildChannel)
-                and msg.channel.category
-                else msg.channel.id
+                ctx.channel.category.id
+                if isinstance(ctx.channel, discord.abc.GuildChannel)
+                and ctx.channel.category
+                else ctx.channel.id
             )
         elif self is BucketType.role:
             # we return the channel id of a private-channel as there are only roles in guilds
             # and that yields the same result as for a guild with only the @everyone role
             # NOTE: PrivateChannel doesn't actually have an id attribute, but we assume we are
             # receiving a DMChannel or GroupChannel which inherit from PrivateChannel and do
-            return (msg.channel if isinstance(msg.channel, PrivateChannel) else msg.author.top_role).id  # type: ignore
+            return (
+                ctx.channel
+                if isinstance(ctx.channel, PrivateChannel)
+                else ctx.author.top_role
+            ).id  # type: ignore
 
-    def __call__(self, msg: Message) -> Any:
-        return self.get_key(msg)
+    def __call__(self, ctx: Context | ApplicationContext) -> Any:
+        return self.get_key(ctx)
 
 
 class Cooldown:
@@ -208,14 +215,14 @@ class CooldownMapping:
     def __init__(
         self,
         original: Cooldown | None,
-        type: Callable[[Message], Any],
+        type: Callable[[Context | ApplicationContext], Any],
     ) -> None:
         if not callable(type):
             raise TypeError("Cooldown type must be a BucketType or callable")
 
         self._cache: dict[Any, Cooldown] = {}
         self._cooldown: Cooldown | None = original
-        self._type: Callable[[Message], Any] = type
+        self._type: Callable[[Context | ApplicationContext], Any] = type
 
     def copy(self) -> CooldownMapping:
         ret = CooldownMapping(self._cooldown, self._type)
@@ -227,15 +234,15 @@ class CooldownMapping:
         return self._cooldown is not None
 
     @property
-    def type(self) -> Callable[[Message], Any]:
+    def type(self) -> Callable[[Context | ApplicationContext], Any]:
         return self._type
 
     @classmethod
     def from_cooldown(cls: type[C], rate, per, type) -> C:
         return cls(Cooldown(rate, per), type)
 
-    def _bucket_key(self, msg: Message) -> Any:
-        return self._type(msg)
+    def _bucket_key(self, ctx: Context | ApplicationContext) -> Any:
+        return self._type(ctx)
 
     def _verify_cache_integrity(self, current: float | None = None) -> None:
         # we want to delete all cache objects that haven't been used
@@ -246,17 +253,19 @@ class CooldownMapping:
         for k in dead_keys:
             del self._cache[k]
 
-    def create_bucket(self, message: Message) -> Cooldown:
+    async def create_bucket(self, ctx: Context | ApplicationContext) -> Cooldown:
         return self._cooldown.copy()  # type: ignore
 
-    def get_bucket(self, message: Message, current: float | None = None) -> Cooldown:
+    async def get_bucket(
+        self, ctx: Context | ApplicationContext, current: float | None = None
+    ) -> Cooldown:
         if self._type is BucketType.default:
             return self._cooldown  # type: ignore
 
         self._verify_cache_integrity(current)
-        key = self._bucket_key(message)
+        key = self._bucket_key(ctx)
         if key not in self._cache:
-            bucket = self.create_bucket(message)
+            bucket = await self.create_bucket(ctx)
             if bucket is not None:
                 self._cache[key] = bucket
         else:
@@ -264,19 +273,25 @@ class CooldownMapping:
 
         return bucket
 
-    def update_rate_limit(
-        self, message: Message, current: float | None = None
+    async def update_rate_limit(
+        self, ctx: Context | ApplicationContext, current: float | None = None
     ) -> float | None:
-        bucket = self.get_bucket(message, current)
+        bucket = await self.get_bucket(ctx, current)
         return bucket.update_rate_limit(current)
 
 
 class DynamicCooldownMapping(CooldownMapping):
     def __init__(
-        self, factory: Callable[[Message], Cooldown], type: Callable[[Message], Any]
+        self,
+        factory: Callable[
+            [Context | ApplicationContext], Cooldown | Awaitable[Cooldown]
+        ],
+        type: Callable[[Context | ApplicationContext], Any],
     ) -> None:
         super().__init__(None, type)
-        self._factory: Callable[[Message], Cooldown] = factory
+        self._factory: Callable[
+            [Context | ApplicationContext], Cooldown | Awaitable[Cooldown]
+        ] = factory
 
     def copy(self) -> DynamicCooldownMapping:
         ret = DynamicCooldownMapping(self._factory, self._type)
@@ -287,8 +302,16 @@ class DynamicCooldownMapping(CooldownMapping):
     def valid(self) -> bool:
         return True
 
-    def create_bucket(self, message: Message) -> Cooldown:
-        return self._factory(message)
+    async def create_bucket(self, ctx: Context | ApplicationContext) -> Cooldown:
+        from ...ext.commands import Context
+
+        if isinstance(ctx, Context):
+            result = self._factory(ctx.message)
+        else:
+            result = self._factory(ctx)
+        if inspect.isawaitable(result):
+            return await result
+        return result
 
 
 class _Semaphore:
