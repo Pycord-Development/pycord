@@ -47,11 +47,11 @@ class Section(Item[V]):
     __section_accessory_item__: ClassVar[ItemCallbackType] = None
 
     def __init_subclass__(cls) -> None:
-        accessory: ItemCallbackType = None
+        accessory: list[ItemCallbackType] = []
         for base in reversed(cls.__mro__):
             for member in base.__dict__.values():
                 if hasattr(member, "__discord_ui_model_type__"):
-                    accessory = member
+                    accessory.append(member)
 
         cls.__section_accessory_item__ = accessory
 
@@ -67,14 +67,14 @@ class Section(Item[V]):
             components=[],
             accessory=None,
         )
-        if func := self.__section_accessory_item__:
+        for func in self.__section_accessory_item__:
             item: Item = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
             self.set_accessory(item)
             setattr(self, func.__name__, item)
-        elif accessory:
+        if accessory:
             self.set_accessory(accessory)
         for i in items:
             self.add_item(i)
