@@ -17,6 +17,7 @@ __all__ = ("Section",)
 if TYPE_CHECKING:
     from ..types.components import SectionComponent as SectionComponentPayload
     from .view import View
+    from typing_extensions import Self
 
 
 S = TypeVar("S", bound="Section")
@@ -85,7 +86,7 @@ class Section(Item[V]):
         for item in items:
             self._add_component_from_item(item)
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item) -> Self:
         """Adds an item to the section.
 
         Parameters
@@ -98,7 +99,7 @@ class Section(Item[V]):
         TypeError
             An :class:`Item` was not passed.
         ValueError
-            Maximum number of items has been exceeded (10).
+            Maximum number of items has been exceeded (3).
         """
 
         if len(self.items) >= 3:
@@ -112,13 +113,14 @@ class Section(Item[V]):
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: Item | int) -> None:
-        """Removes an item from the section. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
+    def remove_item(self, item: Item | str | int) -> Self:
+        """Removes an item from the section. If an :class:`int` or :class:`str` is passed, 
+        the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
         Parameters
         ----------
         item: Union[:class:`Item`, :class:`int`, :class:`str`]
-            The item, item :attr:`id`, or item ``custom_id`` to remove from the section.
+            The item, item ``id``, or item ``custom_id`` to remove from the section.
         """
 
         if isinstance(item, (str, int)):
@@ -151,7 +153,7 @@ class Section(Item[V]):
         child = find(lambda i: getattr(i, attr, None) == id, self.items)
         return child
 
-    def add_text(self, content: str, *, id: int | None = None) -> None:
+    def add_text(self, content: str, *, id: int | None = None) -> Self:
         """Adds a :class:`TextDisplay` to the section.
 
         Parameters
@@ -174,7 +176,7 @@ class Section(Item[V]):
 
         return self.add_item(text)
 
-    def set_accessory(self, item: Item) -> None:
+    def set_accessory(self, item: Item) -> Self:
         """Set an item as the section's :attr:`accessory`.
 
         Parameters
@@ -206,7 +208,7 @@ class Section(Item[V]):
         description: str | None = None,
         spoiler: bool = False,
         id: int | None = None,
-    ) -> None:
+    ) -> Self:
         """Sets a :class:`Thumbnail` with the provided URL as the section's :attr:`accessory`.
 
         Parameters
@@ -233,7 +235,8 @@ class Section(Item[V]):
             item.parent = self
 
     def copy_text(self) -> str:
-        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section. Equivalent to the `Copy Text` option on Discord clients."""
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
+        Equivalent to the `Copy Text` option on Discord clients."""
         return "\n".join(t for i in self.items if (t := i.copy_text()))
 
     @property
@@ -259,7 +262,7 @@ class Section(Item[V]):
         if self.accessory and component.accessory:
             self.accessory.refresh_component(component.accessory)
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
         Disables all buttons and select menus in the section.
         At the moment, this only disables :attr:`accessory` if it is a button.
@@ -276,7 +279,7 @@ class Section(Item[V]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
         Enables all buttons and select menus in the container.
         At the moment, this only enables :attr:`accessory` if it is a button.

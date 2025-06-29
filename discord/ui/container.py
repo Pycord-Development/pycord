@@ -22,6 +22,7 @@ __all__ = ("Container",)
 if TYPE_CHECKING:
     from ..types.components import ContainerComponent as ContainerComponentPayload
     from .view import View
+    from typing_extensions import Self
 
 
 C = TypeVar("C", bound="Container")
@@ -120,7 +121,7 @@ class Container(Item[V]):
         for item in items:
             self._add_component_from_item(item)
 
-    def add_item(self, item: Item) -> None:
+    def add_item(self, item: Item) -> Self:
         """Adds an item to the container.
 
         Parameters
@@ -146,13 +147,13 @@ class Container(Item[V]):
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: Item | int) -> None:
+    def remove_item(self, item: Item | int) -> Self:
         """Removes an item from the container. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
         ----------
         item: Union[:class:`Item`, :class:`int`, :class:`str`]
-            The item, item :attr:`id`, or item ``custom_id`` to remove from the container.
+            The item, ``id``, or item ``custom_id`` to remove from the container.
         """
 
         if isinstance(item, (str, int)):
@@ -164,8 +165,8 @@ class Container(Item[V]):
         return self
 
     def get_item(self, id: str | int) -> Item | None:
-        """Get a top-level item from this container. Roughly equal to `utils.get(container.items, ...)`.
-        If an ``int`` is provided, it will be retrieved by ``id``, otherwise it will check for ``custom_id``.
+        """Get a top-level item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
+        If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
 
         Parameters
@@ -194,7 +195,7 @@ class Container(Item[V]):
         *items: Item,
         accessory: Item,
         id: int | None = None,
-    ):
+    ) -> Self:
         """Adds a :class:`Section` to the container.
 
         To append a pre-existing :class:`Section`, use the
@@ -211,13 +212,12 @@ class Container(Item[V]):
         id: Optional[:class:`int`]
             The section's ID.
         """
-        # accept raw strings?
 
         section = Section(*items, accessory=accessory, id=id)
 
         return self.add_item(section)
 
-    def add_text(self, content: str, id: int | None = None) -> None:
+    def add_text(self, content: str, id: int | None = None) -> Self:
         """Adds a :class:`TextDisplay` to the container.
 
         Parameters
@@ -234,12 +234,10 @@ class Container(Item[V]):
         self,
         *items: Item,
         id: int | None = None,
-    ):
+    ) -> Self:
         """Adds a :class:`MediaGallery` to the container.
 
-        To append a pre-existing :class:`MediaGallery`, use the
-
-        :meth:`add_item` method instead.
+        To append a pre-existing :class:`MediaGallery`, use :meth:`add_item` instead.
 
         Parameters
         ----------
@@ -248,13 +246,12 @@ class Container(Item[V]):
         id: Optiona[:class:`int`]
             The gallery's ID.
         """
-        # accept raw urls?
 
         g = MediaGallery(*items, id=id)
 
         return self.add_item(g)
 
-    def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> None:
+    def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> Self:
         """Adds a :class:`TextDisplay` to the container.
 
         Parameters
@@ -277,7 +274,7 @@ class Container(Item[V]):
         divider: bool = True,
         spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
         id: int | None = None,
-    ) -> None:
+    ) -> Self:
         """Adds a :class:`Separator` to the container.
 
         Parameters
@@ -295,7 +292,8 @@ class Container(Item[V]):
         return self.add_item(s)
 
     def copy_text(self) -> str:
-        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this container. Equivalent to the `Copy Text` option on Discord clients."""
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this container.
+        Equivalent to the `Copy Text` option on Discord clients."""
         return "\n".join(t for i in self.items if (t := i.copy_text()))
 
     @property
@@ -362,7 +360,7 @@ class Container(Item[V]):
             x.refresh_component(y)
             i += 1
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
         Disables all buttons and select menus in the container.
 
@@ -378,7 +376,7 @@ class Container(Item[V]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> None:
+    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
         Enables all buttons and select menus in the container.
 

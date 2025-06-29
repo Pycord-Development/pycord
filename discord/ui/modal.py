@@ -19,6 +19,7 @@ __all__ = (
 if TYPE_CHECKING:
     from ..interactions import Interaction
     from ..state import ConnectionState
+    from typing_extensions import Self
 
 
 class Modal:
@@ -187,7 +188,7 @@ class Modal:
 
         return components
 
-    def add_item(self, item: InputText):
+    def add_item(self, item: InputText) -> Self:
         """Adds an InputText component to the modal dialog.
 
         Parameters
@@ -206,7 +207,7 @@ class Modal:
         self._children.append(item)
         return self
 
-    def remove_item(self, item: InputText):
+    def remove_item(self, item: InputText) -> Self:
         """Removes an InputText component from the modal dialog.
 
         Parameters

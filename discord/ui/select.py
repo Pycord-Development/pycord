@@ -58,6 +58,7 @@ if TYPE_CHECKING:
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .view import View
+    from typing_extensions import Self
 
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="View", covariant=True)
@@ -267,7 +268,7 @@ class Select(Item[V]):
         description: str | None = None,
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         default: bool = False,
-    ):
+    ) -> Self:
         """Adds an option to the select menu.
 
         To append a pre-existing :class:`discord.SelectOption` use the
@@ -308,7 +309,7 @@ class Select(Item[V]):
 
         return self.append_option(option)
 
-    def append_option(self, option: SelectOption):
+    def append_option(self, option: SelectOption) -> Self:
         """Appends an option to the select menu.
 
         Parameters

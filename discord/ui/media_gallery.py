@@ -12,6 +12,7 @@ __all__ = ("MediaGallery",)
 if TYPE_CHECKING:
     from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .view import View
+    from typing_extensions import Self
 
 
 M = TypeVar("M", bound="MediaGallery")
@@ -42,7 +43,7 @@ class MediaGallery(Item[V]):
     def items(self):
         return self._underlying.items
 
-    def append_item(self, item: MediaGalleryItem) -> None:
+    def append_item(self, item: MediaGalleryItem) -> Self:
         """Adds a :attr:`MediaGalleryItem` to the gallery.
 
         Parameters
