@@ -65,7 +65,7 @@ class TextDisplay(Item[V]):
         return self._underlying.to_dict()
 
     def copy_text(self) -> str:
-        """Returns the content of this TextDisplay. Equivalent to the `Copy Text` option on Discord clients."""
+        """Returns the content of this text display. Equivalent to the `Copy Text` option on Discord clients."""
         return self.content
 
     @classmethod

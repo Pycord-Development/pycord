@@ -21,6 +21,9 @@ V = TypeVar("V", bound="View", covariant=True)
 class File(Item[V]):
     """Represents a UI File.
 
+    .. note::
+        This component does not show media previews. Use :class:`MediaGallery` for previews instead.
+
     .. versionadded:: 2.7
 
     Parameters
