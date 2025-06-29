@@ -59,7 +59,8 @@ class MyView(View):
     @button(label="Delete Message", style=ButtonStyle.red, id=200)
     async def delete_button(self, button: Button, interaction: Interaction):
         await interaction.response.defer(invisible=True)
-        await interaction.delete_original_response()
+        await interaction.message.delete()
+
 
     async def on_timeout(self):
         self.get_item(200).disabled = True
