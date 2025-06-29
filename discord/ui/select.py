@@ -124,6 +124,8 @@ class Select(Item[V]):
         "options",
         "channel_types",
         "disabled",
+        "custom_id",
+        "id",
     )
 
     def __init__(

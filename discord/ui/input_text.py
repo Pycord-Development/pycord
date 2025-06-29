@@ -50,6 +50,17 @@ class InputText:
         The input text's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "label",
+        "placeholder",
+        "value",
+        "required",
+        "style",
+        "min_length",
+        "max_length",
+        "id",
+    )
+
     def __init__(
         self,
         *,
@@ -96,6 +107,12 @@ class InputText:
         self._input_value = False
         self.row = row
         self._rendered_row: int | None = None
+
+    def __repr__(self) -> str:
+        attrs = " ".join(
+            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
+        )
+        return f"<{self.__class__.__name__} {attrs}>"
 
     @property
     def type(self) -> ComponentType:

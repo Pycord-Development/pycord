@@ -31,6 +31,11 @@ class TextDisplay(Item[V]):
         The text display's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "content",
+        "id",
+    )
+
     def __init__(
         self,
         content: str,

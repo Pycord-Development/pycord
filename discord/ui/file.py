@@ -36,6 +36,12 @@ class File(Item[V]):
         The file component's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "file",
+        "spoiler",
+        "id",
+    )
+
     def __init__(self, url: str, *, spoiler: bool = False, id: int | None = None):
         super().__init__()
 

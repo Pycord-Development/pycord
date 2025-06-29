@@ -45,6 +45,12 @@ class Modal:
         If ``None`` then there is no timeout.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "title",
+        "children",
+        "timeout",
+    )
+
     def __init__(
         self,
         *children: InputText,
@@ -69,6 +75,12 @@ class Modal:
         self.__timeout_expiry: float | None = None
         self.__timeout_task: asyncio.Task[None] | None = None
         self.loop = asyncio.get_event_loop()
+
+    def __repr__(self) -> str:
+        attrs = " ".join(
+            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
+        )
+        return f"<{self.__class__.__name__} {attrs}>"
 
     def _start_listening_from_store(self, store: ModalStore) -> None:
         self.__cancel_callback = partial(store.remove_modal)

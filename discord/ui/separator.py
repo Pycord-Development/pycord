@@ -33,6 +33,12 @@ class Separator(Item[V]):
         The separator's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "divider",
+        "spacing",
+        "id",
+    )
+
     def __init__(
         self,
         *,

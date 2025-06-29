@@ -33,6 +33,11 @@ class MediaGallery(Item[V]):
         The gallery's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "items",
+        "id",
+    )
+
     def __init__(self, *items: MediaGalleryItem, id: int | None = None):
         super().__init__()
 

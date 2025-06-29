@@ -87,6 +87,8 @@ class Button(Item[V]):
         "emoji",
         "sku_id",
         "row",
+        "custom_id",
+        "id",
     )
 
     def __init__(

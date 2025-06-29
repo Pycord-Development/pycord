@@ -57,6 +57,13 @@ class Container(Item[V]):
         The container's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "items",
+        "colour",
+        "spoiler",
+        "id",
+    )
+
     __container_children_items__: ClassVar[list[ItemCallbackType]] = []
 
     def __init_subclass__(cls) -> None:

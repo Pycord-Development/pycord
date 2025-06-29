@@ -35,6 +35,13 @@ class Thumbnail(Item[V]):
         The thumbnail's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "url",
+        "description",
+        "spoiler",
+        "id",
+    )
+
     def __init__(
         self,
         url: str,

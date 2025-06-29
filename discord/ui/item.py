@@ -48,7 +48,6 @@ class Item(Generic[V]):
 
     - :class:`discord.ui.Button`
     - :class:`discord.ui.Select`
-    - :class:`discord.ui.InputText` (Modals only)
 
     And the following are new items under the "Components V2" specification:
 

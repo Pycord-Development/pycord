@@ -44,6 +44,12 @@ class Section(Item[V]):
         The section's ID.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "items",
+        "accessory",
+        "id",
+    )
+
     __section_accessory_item__: ClassVar[ItemCallbackType] = None
 
     def __init_subclass__(cls) -> None:
