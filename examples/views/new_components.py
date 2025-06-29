@@ -61,7 +61,6 @@ class MyView(View):
         await interaction.response.defer(invisible=True)
         await interaction.message.delete()
 
-
     async def on_timeout(self):
         self.get_item(200).disabled = True
         await self.message.edit(view=self)
