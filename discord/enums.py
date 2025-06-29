@@ -80,7 +80,6 @@ __all__ = (
     "MessageReferenceType",
     "SubscriptionStatus",
     "SeparatorSpacingSize",
-    "MediaItemLoadingState",
 )
 
 
@@ -1094,18 +1093,6 @@ class SeparatorSpacingSize(Enum):
 
     small = 1
     large = 2
-
-    def __int__(self):
-        return self.value
-
-
-class MediaItemLoadingState(Enum):
-    """An :class:`~discord.UnfurledMediaItem`'s ``loading_state``."""
-
-    unknown = 0
-    loading = 1
-    loaded_success = 2
-    loaded_not_found = 3
 
     def __int__(self):
         return self.value

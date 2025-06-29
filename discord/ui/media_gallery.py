@@ -27,6 +27,8 @@ class MediaGallery(Item[V]):
     ----------
     *items: :class:`MediaGalleryItem`
         The initial items contained in this gallery, up to 10.
+    id: Optional[:class:`int`]
+        The gallery's ID.
     """
 
     def __init__(self, *items: MediaGalleryItem, id: int | None = None):

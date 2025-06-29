@@ -25,6 +25,12 @@ class File(Item[V]):
 
     Parameters
     ----------
+    url: :class:`str`
+        The URL of this file. This must be an ``attachment://`` URL referring to a local file used with :class:`~discord.File`.
+    spoiler: Optional[:class:`bool`]
+        Whether this file is a spoiler.
+    id: Optional[:class:`int`]
+        The file component's ID.
     """
 
     def __init__(self, url: str, *, spoiler: bool = False, id: int | None = None):
@@ -64,6 +70,16 @@ class File(Item[V]):
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
         self._underlying.spoiler = spoiler
+
+    @property
+    def name(self) -> str:
+        """The name of this file, if provided by Discord."""
+        return self._underlying.name
+
+    @property
+    def size(self) -> int:
+        """The size of this file in bytes, if provided by Discord."""
+        return self._underlying.size
 
     def to_component_dict(self) -> FileComponentPayload:
         return self._underlying.to_dict()

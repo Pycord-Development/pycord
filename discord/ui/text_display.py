@@ -27,6 +27,8 @@ class TextDisplay(Item[V]):
     ----------
     content: :class:`str`
         The text display's content, up to 4000 characters.
+    id: Optional[:class:`int`]
+        The text display's ID.
     """
 
     def __init__(

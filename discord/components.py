@@ -34,7 +34,6 @@ from .enums import (
     ChannelType,
     ComponentType,
     InputTextStyle,
-    MediaItemLoadingState,
     SeparatorSpacingSize,
     try_enum,
 )
@@ -646,6 +645,17 @@ class TextDisplay(Component):
 
 
 class UnfurledMediaItem(AssetMixin):
+    """Represents an Unfurled Media Item used in Components V2.
+
+    This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    url: :class:`str`
+        The URL of this media item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
+    """
 
     def __init__(self, url: str):
         self._state = None
@@ -655,15 +665,11 @@ class UnfurledMediaItem(AssetMixin):
         self.width: int | None = None
         self.content_type: str | None = None
         self.flags: AttachmentFlags | None = None
-        self.placeholder: str | None = None
-        self.placeholder_version: int | None = None
-        self.loading_state: MediaItemLoadingState | None = None
-        self.src_is_animated: bool | None = None
         self.attachment_id: int | None = None
 
     @property
     def url(self) -> str:
-        """Returns the underlying URL of this media."""
+        """Returns this media item's url."""
         return self._url
 
     @classmethod
@@ -675,10 +681,6 @@ class UnfurledMediaItem(AssetMixin):
         r.width = data.get("width")
         r.content_type = data.get("content_type")
         r.flags = AttachmentFlags._from_value(data.get("flags", 0))
-        r.placeholder = data.get("placeholder")
-        r.placeholder_version = data.get("placeholder_version")
-        r.loading_state = try_enum(MediaItemLoadingState, data.get("loading_state"))
-        r.src_is_animated = data.get("src_is_animated")
         r.attachment_id = data.get("attachment_id")
         r._state = state
         return r
@@ -699,7 +701,7 @@ class Thumbnail(Component):
     Attributes
     ----------
     media: :class:`UnfurledMediaItem`
-        The component's media object.
+        The component's underlying media object.
     description: Optional[:class:`str`]
         The thumbnail's description, up to 1024 characters.
     spoiler: Optional[:class:`bool`]
@@ -726,7 +728,7 @@ class Thumbnail(Component):
 
     @property
     def url(self) -> str:
-        """Returns the underlying URL of this thumbnail."""
+        """Returns the URL of this thumbnail's underlying media item."""
         return self.media.url
 
     def to_dict(self) -> ThumbnailComponentPayload:
@@ -739,6 +741,21 @@ class Thumbnail(Component):
 
 
 class MediaGalleryItem:
+    """Represents an item used in the :class:`MediaGallery` component.
+
+    This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    url: :class:`str`
+        The URL of this gallery item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
+    description: Optional[:class:`str`]
+        The gallery item's description, up to 1024 characters.
+    spoiler: Optional[:class:`bool`]
+        Whether the gallery item is a spoiler.
+    """
 
     def __init__(self, url, *, description=None, spoiler=False):
         self._state = None
@@ -748,7 +765,7 @@ class MediaGalleryItem:
 
     @property
     def url(self) -> str:
-        """Returns the underlying URL of this gallery item."""
+        """Returns the URL of this gallery's underlying media item."""
         return self.media.url
 
     def is_dispatchable(self) -> bool:

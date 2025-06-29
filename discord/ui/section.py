@@ -33,9 +33,13 @@ class Section(Item[V]):
     *items: :class:`Item`
         The initial items contained in this section, up to 3.
         Currently only supports :class:`~discord.ui.TextDisplay`.
+        Sections must have at least 1 item before being sent.
     accessory: Optional[:class:`Item`]
         The section's accessory. This is displayed in the top right of the section.
         Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        Sections must have an accessory attached before being sent.
+    id: Optional[:class:`int`]
+        The section's ID.
     """
 
     __section_accessory_item__: ClassVar[ItemCallbackType] = None
@@ -214,7 +218,6 @@ class Section(Item[V]):
         spoiler: Optional[:class:`bool`]
             Whether the thumbnail is a spoiler. Defaults to ``False``.
         id: Optional[:class:`int`]
-
             The thumbnail's ID.
         """
 

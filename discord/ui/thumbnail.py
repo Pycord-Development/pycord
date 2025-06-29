@@ -25,6 +25,14 @@ class Thumbnail(Item[V]):
 
     Parameters
     ----------
+    url: :class:`str`
+        The url of the thumbnail. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
+    description: Optional[:class:`str`]
+        The thumbnail's description, up to 1024 characters.
+    spoiler: Optional[:class:`bool`]
+        Whether the thumbnail is a spoiler. Defaults to ``False``.
+    id: Optional[:class:`int`]
+        The thumbnail's ID.
     """
 
     def __init__(

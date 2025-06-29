@@ -110,6 +110,8 @@ class Select(Item[V]):
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+    id: Optional[:class:`int`]
+        The select menu's ID.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -513,6 +515,8 @@ def select(
         Defaults to all channel types.
     disabled: :class:`bool`
         Whether the select is disabled or not. Defaults to ``False``.
+    id: Optional[:class:`int`]
+        The select menu's ID.
     """
     if select_type not in _select_types:
         raise ValueError(

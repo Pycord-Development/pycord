@@ -25,6 +25,12 @@ class Separator(Item[V]):
 
     Parameters
     ----------
+    divider: :class:`bool`
+        Whether the separator is a divider. Defaults to ``True``.
+    spacing: :class:`~discord.SeparatorSpacingSize`
+        The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
+    id: Optional[:class:`int`]
+        The separator's ID.
     """
 
     def __init__(

@@ -49,6 +49,10 @@ class Container(Item[V]):
         The initial items in this container.
     colour: Union[:class:`Colour`, :class:`int`]
         The accent colour of the container. Aliased to ``color`` as well.
+    spoiler: Optional[:class:`bool`]
+        Whether this container is a spoiler.
+    id: Optional[:class:`int`]
+        The container's ID.
     """
 
     __container_children_items__: ClassVar[list[ItemCallbackType]] = []
@@ -282,6 +286,8 @@ class Container(Item[V]):
             Whether the separator is a divider. Defaults to ``True``.
         spacing: :class:`~discord.SeparatorSpacingSize`
             The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
+        id: Optional[:class:`int`]
+            The separator's ID.
         """
 
         s = Separator(divider=divider, spacing=spacing, id=id)
