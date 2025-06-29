@@ -402,12 +402,13 @@ class View:
         return self
 
     def remove_item(self, item: Item[V] | int | str) -> None:
-        """Removes an item from the view. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
+        """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
+        the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
         Parameters
         ----------
         item: Union[:class:`Item`, :class:`int`, :class:`str`]
-            The item, item :attr:`id`, or item ``custom_id`` to remove from the view.
+            The item, item ``id``, or item ``custom_id`` to remove from the view.
         """
 
         if isinstance(item, (str, int)):
@@ -427,8 +428,8 @@ class View:
         return self
 
     def get_item(self, custom_id: str | int) -> Item[V] | None:
-        """Get an item from the view. Roughly equal to `utils.get(view.children, ...)`.
-        If an ``int`` is provided it will retrieve by ``id``, otherwise it will check ``custom_id``.
+        """Gets an item from the view. Roughly equal to `utils.get(view.children, ...)`.
+        If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by  ``custom_id``.
         This method will also search nested items.
 
         Parameters
@@ -704,7 +705,8 @@ class View:
                 yield item
 
     def copy_text(self) -> str:
-        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View. Equivalent to the `Copy Text` option on Discord clients."""
+        """Returns the text of all :class:`~discord.ui.TextDisplay` items in this View.
+        Equivalent to the `Copy Text` option on Discord clients."""
         return "\n".join(t for i in self.children if (t := i.copy_text()))
 
     @property
