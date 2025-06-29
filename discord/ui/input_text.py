@@ -58,6 +58,7 @@ class InputText:
         "style",
         "min_length",
         "max_length",
+        "custom_id",
         "id",
     )
 
