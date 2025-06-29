@@ -46,7 +46,21 @@ class InputText:
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+    id: Optional[:class:`int`]
+        The input text's ID.
     """
+
+    __item_repr_attributes__: tuple[str, ...] = (
+        "label",
+        "placeholder",
+        "value",
+        "required",
+        "style",
+        "min_length",
+        "max_length",
+        "custom_id",
+        "id",
+    )
 
     def __init__(
         self,
@@ -60,6 +74,7 @@ class InputText:
         required: bool | None = True,
         value: str | None = None,
         row: int | None = None,
+        id: int | None = None,
     ):
         super().__init__()
         if len(str(label)) > 45:
@@ -88,10 +103,17 @@ class InputText:
             max_length=max_length,
             required=required,
             value=value,
+            id=id,
         )
         self._input_value = False
         self.row = row
         self._rendered_row: int | None = None
+
+    def __repr__(self) -> str:
+        attrs = " ".join(
+            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
+        )
+        return f"<{self.__class__.__name__} {attrs}>"
 
     @property
     def type(self) -> ComponentType:
