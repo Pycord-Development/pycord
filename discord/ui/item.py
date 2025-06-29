@@ -44,12 +44,26 @@ ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 class Item(Generic[V]):
     """Represents the base UI item that all UI components inherit from.
 
-    The current UI items supported are:
+    The following are the original items:
 
     - :class:`discord.ui.Button`
     - :class:`discord.ui.Select`
+    - :class:`discord.ui.InputText` (Modals only)
+
+    And the following are new items under the "Components V2" specification:
+
+    - :class:`discord.ui.Section`
+    - :class:`discord.ui.TextDisplay`
+    - :class:`discord.ui.Thumbnail`
+    - :class:`discord.ui.MediaGallery`
+    - :class:`discord.ui.File`
+    - :class:`discord.ui.Separator`
+    - :class:`discord.ui.Container`
 
     .. versionadded:: 2.0
+
+    .. versionchanged:: 2.7
+        Added V2 Components.
     """
 
     __item_repr_attributes__: tuple[str, ...] = ("row",)
