@@ -148,7 +148,7 @@ class Container(Item[V]):
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: Item | int) -> Self:
+    def remove_item(self, item: Item | str | int) -> Self:
         """Removes an item from the container. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
