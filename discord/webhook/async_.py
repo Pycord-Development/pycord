@@ -2015,7 +2015,7 @@ class Webhook(BaseWebhook):
             raise InvalidArgument(
                 "This webhook does not have a token associated with it"
             )
-        
+
         with_components = False
 
         if view is not MISSING:
