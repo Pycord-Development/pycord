@@ -960,7 +960,7 @@ class InteractionResponse:
         HTTPException
             Sending the message failed.
         TypeError
-            You specified both ``embed`` and ``embeds``.
+            You specified both ``embed`` and ``embeds``, or sent content or embeds with V2 components.
         ValueError
             The length of ``embeds`` was invalid.
         InteractionResponded
@@ -992,6 +992,8 @@ class InteractionResponse:
         if view is not None:
             payload["components"] = view.to_components()
             if view.is_components_v2():
+                if embeds or content:
+                    raise TypeError("cannot send embeds or content with a view using v2 component logic")
                 flags.is_components_v2 = True
 
         if poll is not None:
