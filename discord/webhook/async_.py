@@ -408,11 +408,15 @@ class AsyncWebhookAdapter:
         payload: dict[str, Any] | None = None,
         multipart: list[dict[str, Any]] | None = None,
         files: list[File] | None = None,
+        with_components: bool | None = None,
     ) -> Response[WebhookMessage]:
         params = {}
 
         if thread_id:
             params["thread_id"] = thread_id
+
+        if with_components is not None:
+            params["with_components"] = int(with_components)
 
         route = Route(
             "PATCH",
@@ -2011,14 +2015,22 @@ class Webhook(BaseWebhook):
             raise InvalidArgument(
                 "This webhook does not have a token associated with it"
             )
+        
+        with_components = False
 
         if view is not MISSING:
-            if isinstance(self._state, _WebhookState):
+            if (
+                isinstance(self._state, _WebhookState)
+                and view
+                and view.is_dispatchable()
+            ):
                 raise InvalidArgument(
-                    "This webhook does not have state associated with it"
+                    "Dispatchable Webhook views require an associated state with the webhook"
                 )
 
             self._state.prevent_view_updates_for(message_id)
+            if self.type is not WebhookType.application:
+                with_components = True
 
         previous_mentions: AllowedMentions | None = getattr(
             self._state, "allowed_mentions", None
@@ -2052,6 +2064,7 @@ class Webhook(BaseWebhook):
             payload=params.payload,
             multipart=params.multipart,
             files=params.files,
+            with_components=with_components,
         )
 
         message = self._create_message(data)
