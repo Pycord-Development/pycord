@@ -10,9 +10,10 @@ from .item import Item
 __all__ = ("MediaGallery",)
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .view import View
-    from typing_extensions import Self
 
 
 M = TypeVar("M", bound="MediaGallery")

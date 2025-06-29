@@ -54,11 +54,12 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from ..abc import GuildChannel
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .view import View
-    from typing_extensions import Self
 
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="View", covariant=True)

@@ -17,9 +17,10 @@ __all__ = (
 
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from ..interactions import Interaction
     from ..state import ConnectionState
-    from typing_extensions import Self
 
 
 class Modal:

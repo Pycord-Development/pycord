@@ -20,9 +20,10 @@ from .view import _walk_all_components
 __all__ = ("Container",)
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from ..types.components import ContainerComponent as ContainerComponentPayload
     from .view import View
-    from typing_extensions import Self
 
 
 C = TypeVar("C", bound="Container")
@@ -293,7 +294,8 @@ class Container(Item[V]):
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this container.
-        Equivalent to the `Copy Text` option on Discord clients."""
+        Equivalent to the `Copy Text` option on Discord clients.
+        """
         return "\n".join(t for i in self.items if (t := i.copy_text()))
 
     @property

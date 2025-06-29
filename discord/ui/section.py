@@ -15,9 +15,10 @@ from .thumbnail import Thumbnail
 __all__ = ("Section",)
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from ..types.components import SectionComponent as SectionComponentPayload
     from .view import View
-    from typing_extensions import Self
 
 
 S = TypeVar("S", bound="Section")
@@ -114,7 +115,7 @@ class Section(Item[V]):
         return self
 
     def remove_item(self, item: Item | str | int) -> Self:
-        """Removes an item from the section. If an :class:`int` or :class:`str` is passed, 
+        """Removes an item from the section. If an :class:`int` or :class:`str` is passed,
         the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
         Parameters
@@ -236,7 +237,8 @@ class Section(Item[V]):
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
-        Equivalent to the `Copy Text` option on Discord clients."""
+        Equivalent to the `Copy Text` option on Discord clients.
+        """
         return "\n".join(t for i in self.items if (t := i.copy_text()))
 
     @property
