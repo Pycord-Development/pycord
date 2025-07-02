@@ -76,7 +76,7 @@ if TYPE_CHECKING:
         VoiceChannel,
     )
     from .client import Client
-    from .commands import OptionChoice
+    from .commands import ApplicationCommand, OptionChoice
     from .embeds import Embed
     from .mentions import AllowedMentions
     from .poll import Poll
@@ -153,6 +153,18 @@ class Interaction:
         The context in which this command was executed.
 
         .. versionadded:: 2.6
+    command: Optional[:class:`ApplicationCommand`]
+        The command that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    view: Optional[:class:`View`]
+        The view that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    modal: Optional[:class:`Modal`]
+        The modal that this interaction belongs to.
+
+        .. versionadded:: 2.7
     """
 
     __slots__: tuple[str, ...] = (
@@ -173,6 +185,9 @@ class Interaction:
         "entitlements",
         "context",
         "authorizing_integration_owners",
+        "command",
+        "view",
+        "modal",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -224,6 +239,10 @@ class Interaction:
             if "context" in data
             else None
         )
+
+        self.command: ApplicationCommand | None = None
+        self.view: View | None = None
+        self.modal: Modal | None = None
 
         self.message: Message | None = None
         self.channel = None
@@ -577,7 +596,9 @@ class Interaction:
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             view.message = message
-            self._state.store_view(view, message.id)
+            view.refresh(message.components)
+            if view.is_dispatchable():
+                self._state.store_view(view, message.id)
 
         if delete_after is not None:
             await self.delete_original_response(delay=delete_after)
@@ -939,7 +960,7 @@ class InteractionResponse:
         HTTPException
             Sending the message failed.
         TypeError
-            You specified both ``embed`` and ``embeds``.
+            You specified both ``embed`` and ``embeds``, or sent content or embeds with V2 components.
         ValueError
             The length of ``embeds`` was invalid.
         InteractionResponded
@@ -970,6 +991,12 @@ class InteractionResponse:
 
         if view is not None:
             payload["components"] = view.to_components()
+            if view.is_components_v2():
+                if embeds or content:
+                    raise TypeError(
+                        "cannot send embeds or content with a view using v2 component logic"
+                    )
+                flags.is_components_v2 = True
 
         if poll is not None:
             payload["poll"] = poll.to_dict()
@@ -1035,7 +1062,8 @@ class InteractionResponse:
                 view.timeout = 15 * 60.0
 
             view.parent = self._parent
-            self._parent._state.store_view(view)
+            if view.is_dispatchable():
+                self._parent._state.store_view(view)
 
         self._responded = True
         if delete_after is not None:
