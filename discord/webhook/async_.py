@@ -670,7 +670,7 @@ def handle_message_parameters(
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
         if view and view.is_components_v2():
-            if payload["content"] or payload["embeds"]:
+            if payload.get("content") or payload.get("embeds"):
                 raise TypeError(
                     "cannot send embeds or content with a view using v2 component logic"
                 )
