@@ -75,6 +75,11 @@ class Button(Item[V]):
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+
+        .. warning::
+
+            This parameter does not work with V2 components or with more than 25 items in your view.
+
     id: Optional[:class:`int`]
         The button's ID.
     """
