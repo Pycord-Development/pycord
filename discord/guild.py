@@ -1020,7 +1020,7 @@ class Guild(Hashable):
 
             # do the actual lookup and return if found
             # if it isn't found then we'll do a full name lookup below.
-            result = utils.get(members, name=name[:-5], discriminator=potential_discriminator)
+            result = utils.find(lambda m: m.name == name[:-5] and discriminator == potential_discriminator, members)
             if result is not None:
                 return result
 

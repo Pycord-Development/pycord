@@ -1025,7 +1025,7 @@ class ForumChannel(_TextChannel):
 
         .. versionadded:: 2.3
         """
-        return utils.get(lambda t: t.id == id, self.available_tags)
+        return utils.find(lambda t: t.id == id, self.available_tags)
 
     @overload
     async def edit(
@@ -2491,7 +2491,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         .. versionadded:: 2.0
         """
-        return utils.get(self.guild.stage_instances, channel_id=self.id)
+        return utils.find(lambda s: s.channel_id == self.id, self.guild.stage_instances)
 
     async def create_instance(
         self,

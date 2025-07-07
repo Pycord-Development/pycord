@@ -63,7 +63,7 @@ from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
 from .user import User
-from .utils import MISSING, find, get
+from .utils import MISSING, find
 from .utils.private import async_all
 
 if TYPE_CHECKING:
@@ -358,7 +358,7 @@ class ApplicationCommandMixin(ABC):
 
         # Now let's see if there are any commands on discord that we need to delete
         for cmd, value_ in registered_commands_dict.items():
-            match = get(pending, name=registered_commands_dict[cmd]["name"])
+            match = find(lambda c: c.name == registered_commands_dict[cmd]["name"], pending)
             if match is None:
                 # We have this command registered but not in our list
                 return_value.append(
@@ -516,8 +516,9 @@ class ApplicationCommandMixin(ABC):
                         }
                     )
                     continue
-                # We can assume the command item is a command, since it's only a string if action is delete
-                match = get(pending, name=cmd["command"].name, type=cmd["command"].type)
+                # We can assume the command item is a com
+                # mand, since it's only a string if action is delete
+                match = find(lambda c: c.name == cmd["command"].name and c.type == cmd["command"].type, pending)
                 if match is None:
                     continue
                 if cmd["action"] == "edit":
@@ -606,10 +607,9 @@ class ApplicationCommandMixin(ABC):
             registered = await register("bulk", data, guild_id=guild_id)
 
         for i in registered:
-            cmd = get(
+            cmd = find(
+                lambda c: c.name == i["name"] and c.type == i.get("type"),
                 self.pending_application_commands,
-                name=i["name"],
-                type=i.get("type"),
             )
             if not cmd:
                 raise ValueError(f"Registered command {i['name']}, type {i.get('type')} not found in pending commands")
@@ -713,11 +713,9 @@ class ApplicationCommandMixin(ABC):
                 registered_guild_commands[guild_id] = app_cmds
 
         for i in registered_commands:
-            cmd = get(
+            cmd = find(
+                lambda c: c.name == i["name"] and c.guild_ids is None and c.type == i.get("type"),
                 self.pending_application_commands,
-                name=i["name"],
-                guild_ids=None,
-                type=i.get("type"),
             )
             if cmd:
                 cmd.id = i["id"]

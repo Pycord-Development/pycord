@@ -33,17 +33,6 @@ Certain utilities make working with async iterators easier, detailed below.
         Advances the iterator by one, if possible. If no more items are found
         then this raises :exc:`NoMoreItems`.
 
-    .. method:: get(**attrs)
-        :async:
-
-        |coro|
-
-        Similar to :func:`utils.get` except run over the async iterator.
-
-        Getting the last message by a user named 'Dave' or ``None``: ::
-
-            msg = await channel.history().get(author__name='Dave')
-
     .. method:: find(predicate)
         :async:
 

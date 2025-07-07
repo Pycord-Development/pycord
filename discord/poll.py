@@ -144,7 +144,7 @@ class PollAnswer:
             return None
         if self._poll.results is None:
             return None  # Unknown vote count.
-        _count = self._poll.results and utils.get(self._poll.results.answer_counts, id=self.id)
+        _count = self._poll.results and utils.find(lambda p: p.id == id, self._poll.results.answer_counts)
         if _count:
             return _count.count
         return 0  # If an answer isn't in answer_counts, it has 0 votes.
@@ -426,7 +426,7 @@ class Poll:
         Optional[:class:`.PollAnswer`]
             The returned answer or ``None`` if not found.
         """
-        return utils.get(self.answers, id=id)
+        return utils.find(lambda a: a.id == id, self.answers)
 
     def add_answer(
         self,

@@ -214,7 +214,7 @@ Quick example: ::
     await message.add_reaction(emoji)
 
     # no ID, do a lookup
-    emoji = discord.utils.get(guild.emojis, name='LUL')
+    emoji = discord.utils.find(lambda e: e.name == "LUL", guild.emojis)
     if emoji:
         await message.add_reaction(emoji)
 
@@ -279,13 +279,13 @@ The following use an HTTP request:
 - :meth:`Guild.fetch_member`
 
 
-If the functions above do not help you, then use of :func:`utils.find` or :func:`utils.get` would serve some use in finding
+If the functions above do not help you, then use of :func:`utils.find` would serve some use in finding
 specific models.
 
 Quick example: ::
 
     # find a guild by name
-    guild = discord.utils.get(client.guilds, name='My Server')
+    guild = discord.utils.find(lambda g: g.name == "My Server", client.guilds)
 
     # make sure to check if it's found
     if guild is not None:

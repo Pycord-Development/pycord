@@ -85,20 +85,6 @@ class _AsyncIterator(AsyncIterator[T]):
     async def next(self) -> T:
         raise NotImplementedError
 
-    def get(self, **attrs: Any) -> Awaitable[T | None]:
-        def predicate(elem: T):
-            for attr, val in attrs.items():
-                nested = attr.split("__")
-                obj = elem
-                for attribute in nested:
-                    obj = getattr(obj, attribute)
-
-                if obj != val:
-                    return False
-            return True
-
-        return self.find(predicate)
-
     async def find(self, predicate: _Func[T, bool]) -> T | None:
         while True:
             try:

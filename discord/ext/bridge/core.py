@@ -40,7 +40,7 @@ from discord import (
     SlashCommandOptionType,
 )
 
-from ...utils import MISSING, find, get
+from ...utils import MISSING, find
 from ...utils.private import warn_deprecated
 from ..commands import (
     BadArgument,
@@ -621,7 +621,7 @@ class BridgeOption(Option, Converter):
 
             if self.choices:
                 choices_names: list[str | int | float] = [choice.name for choice in self.choices]
-                if converted in choices_names and (choice := get(self.choices, name=converted)):
+                if converted in choices_names and (choice := find(lambda c: c.name == converted, self.choices)):
                     converted = choice.value
                 else:
                     choices = [choice.value for choice in self.choices]

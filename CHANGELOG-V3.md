@@ -22,6 +22,7 @@ release.
 - `utils.time_snowflake` use `utils.generate_snowflake` instead
 - `utils.warn_deprecated`
 - `utils.deprecated`
-- `utils.get` use `utils.find` instead
+- `utils.get` use `utils.find` with `lambda i: i.attr == val`instead
+- `AsyncIterator.get` use `AsyncIterator.find` with `lambda i: i.attr == val` instead
 - `utils.as_chunks` use `itertools.batched` on Python 3.12+ or your own implementation
   instead

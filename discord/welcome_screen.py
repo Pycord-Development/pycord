@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, overload
 
 from .partial_emoji import _EmojiTag
-from .utils import get
+from . import utils
 from .utils.private import get_as_snowflake
 
 if TYPE_CHECKING:
@@ -103,7 +103,7 @@ class WelcomeScreenChannel:
         _emoji_id = get_as_snowflake(data, "emoji_id")
         _emoji_name = data.get("emoji_name")
 
-        emoji = get(guild.emojis, id=_emoji_id) if _emoji_id else _emoji_name
+        emoji = utils.find(lambda e: e.id == _emoji_id, guild.emojis) if _emoji_id else _emoji_name
         return cls(channel=channel, description=description, emoji=emoji)  # type: ignore
 
 
@@ -193,7 +193,7 @@ class WelcomeScreen:
 
             rules_channel = guild.get_channel(12345678)
             announcements_channel = guild.get_channel(87654321)
-            custom_emoji = utils.get(guild.emojis, name="loudspeaker")
+            custom_emoji = utils.find(lambda e: e.name == "loudspeaker", guild.emojis)
             await welcome_screen.edit(
                 description="This is a very cool community server!",
                 welcome_channels=[

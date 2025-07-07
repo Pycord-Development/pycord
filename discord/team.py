@@ -85,7 +85,7 @@ class Team:
     @property
     def owner(self) -> TeamMember | None:
         """The team's owner."""
-        return utils.get(self.members, id=self.owner_id)
+        return utils.find(lambda m: m.id == self.owner_id, self.members)
 
 
 class TeamMember(BaseUser):

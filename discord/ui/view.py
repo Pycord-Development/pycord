@@ -39,7 +39,7 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import SelectMenu as SelectComponent
 from ..components import _component_factory
-from ..utils import get
+from .. import utils
 from .item import Item, ItemCallbackType
 
 __all__ = ("View",)
@@ -311,7 +311,7 @@ class View:
         self.__weights.clear()
 
     def get_item(self, custom_id: str) -> Item | None:
-        """Get an item from the view with the given custom ID. Alias for `utils.get(view.children, custom_id=custom_id)`.
+        """Get an item from the view with the given custom ID. Alias for `utils.find(lambda i: i.custom_id == custom_id, self.children)`.
 
         Parameters
         ----------
@@ -323,7 +323,7 @@ class View:
         Optional[:class:`Item`]
             The item with the matching ``custom_id`` if it exists.
         """
-        return get(self.children, custom_id=custom_id)
+        return utils.find(lambda i: i.custom_id == custom_id, self.children)
 
     async def interaction_check(self, interaction: Interaction) -> bool:
         """|coro|
