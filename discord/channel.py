@@ -1025,7 +1025,7 @@ class ForumChannel(_TextChannel):
 
         .. versionadded:: 2.3
         """
-        return utils.get(self.available_tags, id=id)
+        return utils.get(lambda t: t.id == id, self.available_tags)
 
     @overload
     async def edit(

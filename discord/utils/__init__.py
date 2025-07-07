@@ -69,7 +69,6 @@ __all__ = (
     "oauth_url",
     "snowflake_time",
     "find",
-    "get",
     "get_or_fetch",
     "sleep_until ",
     "utcnow",
@@ -228,71 +227,6 @@ def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> T | None:
     for element in seq:
         if predicate(element):
             return element
-    return None
-
-
-def get(iterable: Iterable[T], **attrs: Any) -> T | None:
-    r"""A helper that returns the first element in the iterable that meets
-    all the traits passed in ``attrs``. This is an alternative for
-    :func:`~discord.utils.find`.
-
-    When multiple attributes are specified, they are checked using
-    logical AND, not logical OR. Meaning they have to meet every
-    attribute passed in and not one of them.
-
-    To have a nested attribute search (i.e. search by ``x.y``) then
-    pass in ``x__y`` as the keyword argument.
-
-    If nothing is found that matches the attributes passed, then
-    ``None`` is returned.
-
-    Examples
-    ---------
-
-    Basic usage:
-
-    .. code-block:: python3
-
-        member = discord.utils.get(message.guild.members, name="Foo")
-
-    Multiple attribute matching:
-
-    .. code-block:: python3
-
-        channel = discord.utils.get(guild.voice_channels, name="Foo", bitrate=64000)
-
-    Nested attribute matching:
-
-    .. code-block:: python3
-
-        channel = discord.utils.get(client.get_all_channels(), guild__name="Cool", name="general")
-
-    Parameters
-    -----------
-    iterable
-        An iterable to search through.
-    \*\*attrs
-        Keyword arguments that denote attributes to search with.
-    """
-
-    # global -> local
-    _all = all
-    attrget = attrgetter
-
-    # Special case the single element call
-    if len(attrs) == 1:
-        k, v = attrs.popitem()
-        pred = attrget(k.replace("__", "."))
-        for elem in iterable:
-            if pred(elem) == v:
-                return elem
-        return None
-
-    converted = [(attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()]
-
-    for elem in iterable:
-        if _all(pred(elem) == value for pred, value in converted):
-            return elem
     return None
 
 

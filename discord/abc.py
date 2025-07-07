@@ -725,7 +725,7 @@ class GuildChannel:
             if obj.is_default():
                 return base
 
-            overwrite = utils.get(self._overwrites, type=_Overwrites.ROLE, id=obj.id)
+            overwrite = utils.find(lambda o: o.type == _Overwrites.ROLE and o.id == obj.id, self._overwrites)
             if overwrite is not None:
                 base.handle_overwrite(overwrite.allow, overwrite.deny)
 

@@ -21,3 +21,4 @@ release.
 - `utils.time_snowflake` use `utils.generate_snowflake` instead
 - `utils.warn_deprecated`
 - `utils.deprecated`
+- `utils.get` use `utils.find` instead

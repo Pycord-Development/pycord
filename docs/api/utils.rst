@@ -7,7 +7,6 @@ Utility Functions
 
 .. autofunction:: discord.utils.find
 
-.. autofunction:: discord.utils.get
 
 .. autofunction:: discord.utils.get_or_fetch
 

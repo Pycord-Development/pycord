@@ -216,13 +216,13 @@ class ApplicationCommandMixin(ABC):
                 return command
             elif (names := name.split())[0] == command.name and isinstance(command, SlashCommandGroup):
                 while len(names) > 1:
-                    command = get(commands, name=names.pop(0))
+                    command = find(lambda c: c.name == names.pop(0), commands)
                     if not isinstance(command, SlashCommandGroup) or (
                         guild_ids is not None and command.guild_ids != guild_ids
                     ):
                         return
                     commands = command.subcommands
-                command = get(commands, name=names.pop())
+                command = find(lambda c: c.name == names.pop(), commands)
                 if not isinstance(command, type) or (guild_ids is not None and command.guild_ids != guild_ids):
                     return
                 return command
