@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
+from functools import cached_property
 
 from .utils.private import get_as_snowflake
 from . import enums, utils
@@ -569,12 +570,12 @@ class AuditLogEntry(Hashable):
     def __repr__(self) -> str:
         return f"<AuditLogEntry id={self.id} action={self.action} user={self.user!r}>"
 
-    @utils.cached_property
+    @cached_property
     def created_at(self) -> datetime.datetime:
         """Returns the entry's creation time in UTC."""
         return utils.snowflake_time(self.id)
 
-    @utils.cached_property
+    @cached_property
     def target(
         self,
     ) -> (
@@ -598,24 +599,24 @@ class AuditLogEntry(Hashable):
         else:
             return converter(self._target_id)
 
-    @utils.cached_property
+    @property
     def category(self) -> enums.AuditLogActionCategory:
         """The category of the action, if applicable."""
         return self.action.category
 
-    @utils.cached_property
+    @cached_property
     def changes(self) -> AuditLogChanges:
         """The list of changes this entry has."""
         obj = AuditLogChanges(self, self._changes, state=self._state)
         del self._changes
         return obj
 
-    @utils.cached_property
+    @property
     def before(self) -> AuditLogDiff:
         """The target's prior state."""
         return self.changes.before
 
-    @utils.cached_property
+    @property
     def after(self) -> AuditLogDiff:
         """The target's subsequent state."""
         return self.changes.after

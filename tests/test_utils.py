@@ -30,7 +30,6 @@ import pytest
 
 from discord.utils import (
     MISSING,
-    _cached_property,
     find,
     generate_snowflake,
     snowflake_time,
@@ -72,23 +71,6 @@ def test_temporary():
 #     assert MISSING != object()
 #     assert not MISSING
 #     assert repr(MISSING) == '...'
-#
-#
-# def test_cached_property() -> None:
-#     class Test:
-#         def __init__(self, x: int):
-#             self.x = x
-#
-#         @_cached_property
-#         def foo(self) -> int:
-#             self.x += 1
-#             return self.x
-#
-#     t = Test(0)
-#     assert isinstance(_cached_property.__get__(_cached_property(None), None, None), _cached_property)
-#     assert t.foo == 1
-#     assert t.foo == 1
-#
 #
 # def test_find_get() -> None:
 #     class Obj:
