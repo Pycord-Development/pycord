@@ -49,7 +49,6 @@ from .public import (
     escape_mentions,
     raw_mentions,
     raw_channel_mentions,
-    raw_mentions,
     remove_markdown,
     escape_markdown,
 )
