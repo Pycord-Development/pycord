@@ -376,7 +376,7 @@ class Invite(Hashable):
 
         self.target_type: InviteTarget = try_enum(InviteTarget, data.get("target_type", 0))
 
-        from .scheduled_events import ScheduledEvent
+        from .scheduled_events import ScheduledEvent  # noqa: PLC0415
 
         scheduled_event: ScheduledEventPayload = data.get("guild_scheduled_event")
         self.scheduled_event: ScheduledEvent | None = (

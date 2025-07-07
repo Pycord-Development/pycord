@@ -833,8 +833,8 @@ class SlashCommandOptionType(Enum):
         if issubclass(datatype, float):
             return cls.number
 
-        from .commands.context import ApplicationContext
-        from .ext.bridge import BridgeContext
+        from .commands.context import ApplicationContext  # noqa: PLC0415
+        from .ext.bridge import BridgeContext  # noqa: PLC0415
 
         if not issubclass(
             datatype, (ApplicationContext, BridgeContext)

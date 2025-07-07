@@ -666,7 +666,7 @@ class SyncWebhook(BaseWebhook):
             "type": 1,
             "token": token,
         }
-        import requests
+        import requests  # noqa: PLC0415
 
         if session is MISSING:
             session = requests  # type: ignore
@@ -713,7 +713,7 @@ class SyncWebhook(BaseWebhook):
 
         data: dict[str, Any] = m.groupdict()
         data["type"] = 1
-        import requests
+        import requests  # noqa: PLC0415
 
         if session is MISSING:
             session = requests  # type: ignore

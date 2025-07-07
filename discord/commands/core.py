@@ -111,7 +111,7 @@ else:
 
 
 def wrap_callback(coro):
-    from ..ext.commands.errors import CommandError
+    from ..ext.commands.errors import CommandError  # noqa: PLC0415
 
     @functools.wraps(coro)
     async def wrapped(*args, **kwargs):
@@ -131,7 +131,7 @@ def wrap_callback(coro):
 
 
 def hooked_wrapped_callback(command, ctx, coro):
-    from ..ext.commands.errors import CommandError
+    from ..ext.commands.errors import CommandError  # noqa: PLC0415
 
     @functools.wraps(coro)
     async def wrapped(arg):
@@ -188,7 +188,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency  # noqa: PLC0415
 
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
@@ -330,7 +330,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 retry_after = bucket.update_rate_limit(current)
 
                 if retry_after:
-                    from ..ext.commands.errors import CommandOnCooldown
+                    from ..ext.commands.errors import CommandOnCooldown  # noqa: PLC0415
 
                     raise CommandOnCooldown(bucket, retry_after, self._buckets.type)  # type: ignore
 
@@ -982,7 +982,7 @@ class SlashCommand(ApplicationCommand):
                     arg = Object(id=int(arg))
 
             elif op.input_type == SlashCommandOptionType.string and (converter := op.converter) is not None:
-                from discord.ext.commands import Converter
+                from discord.ext.commands import Converter  # noqa: PLC0415
 
                 if isinstance(converter, Converter):
                     if isinstance(converter, type):
@@ -1207,7 +1207,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.description_localizations: dict[str, str] = kwargs.get("description_localizations", MISSING)
 
         # similar to ApplicationCommand
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency  # noqa: PLC0415
 
         # no need to getattr, since slash cmds groups cant be created using a decorator
 

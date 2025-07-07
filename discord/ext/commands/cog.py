@@ -58,7 +58,7 @@ class Cog(Cog):
         Union[:class:`.Command`, :class:`.Group`]
             A command or group from the cog.
         """
-        from .core import GroupMixin
+        from .core import GroupMixin  # noqa: PLC0415
 
         for command in self.__cog_commands__:
             if not isinstance(command, ApplicationCommand):

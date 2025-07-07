@@ -64,11 +64,11 @@ def _walk_all_components(components: list[Component]) -> Iterator[Component]:
 
 def _component_to_item(component: Component) -> Item[V]:
     if isinstance(component, ButtonComponent):
-        from .button import Button
+        from .button import Button  # noqa: PLC0415
 
         return Button.from_component(component)
     if isinstance(component, SelectComponent):
-        from .select import Select
+        from .select import Select  # noqa: PLC0415
 
         return Select.from_component(component)
     return Item.from_component(component)

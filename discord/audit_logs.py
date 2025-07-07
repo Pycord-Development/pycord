@@ -336,7 +336,7 @@ class AuditLogChanges:
                     before = transformer(entry, before)
 
             if attr == "location" and hasattr(self.before, "location_type"):
-                from .scheduled_events import ScheduledEventLocation
+                from .scheduled_events import ScheduledEventLocation  # noqa: PLC0415
 
                 if self.before.location_type is enums.ScheduledEventLocationType.external:
                     before = ScheduledEventLocation(state=state, value=before)
@@ -354,7 +354,7 @@ class AuditLogChanges:
                     after = transformer(entry, after)
 
             if attr == "location" and hasattr(self.after, "location_type"):
-                from .scheduled_events import ScheduledEventLocation
+                from .scheduled_events import ScheduledEventLocation  # noqa: PLC0415
 
                 if self.after.location_type is enums.ScheduledEventLocationType.external:
                     after = ScheduledEventLocation(state=state, value=after)

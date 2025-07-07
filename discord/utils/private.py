@@ -59,7 +59,7 @@ def resolve_invite(invite: Invite | str) -> str:
     :class:`str`
         The invite code.
     """
-    from ..invite import Invite  # circular import
+    from ..invite import Invite  # noqa: PLC0415 # circular import
 
     if isinstance(invite, Invite):
         return invite.code
@@ -139,7 +139,7 @@ def resolve_template(code: Template | str) -> str:
     :class:`str`
         The template code.
     """
-    from .template import Template  # circular import
+    from .template import Template  # noqa: PLC0415 # circular import
 
     if isinstance(code, Template):
         return code.code
