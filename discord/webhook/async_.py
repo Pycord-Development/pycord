@@ -36,7 +36,7 @@ from urllib.parse import quote as urlquote
 
 import aiohttp
 
-from ..utils.private import bytes_to_base64_data, get_as_snowflake, parse_ratelimit_header
+from ..utils.private import bytes_to_base64_data, get_as_snowflake, parse_ratelimit_header, _to_json
 from .. import utils
 from ..asset import Asset
 from ..channel import ForumChannel, PartialMessageable
@@ -135,7 +135,7 @@ class AsyncWebhookAdapter:
 
         if payload is not None:
             headers["Content-Type"] = "application/json"
-            to_send = utils._to_json(payload)
+            to_send = _to_json(payload)
 
         if auth_token is not None:
             headers["Authorization"] = f"Bot {auth_token}"
@@ -509,7 +509,7 @@ class AsyncWebhookAdapter:
             )
         if attachments:
             payload["data"]["attachments"] = attachments
-        form[0]["value"] = utils._to_json(payload)
+        form[0]["value"] = _to_json(payload)
 
         route = Route(
             "POST",
@@ -701,7 +701,7 @@ def handle_message_parameters(
         payload["thread_name"] = thread_name
 
     if multipart_files:
-        multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
+        multipart.append({"name": "payload_json", "value": _to_json(payload)})
         payload = None
         multipart += multipart_files
 

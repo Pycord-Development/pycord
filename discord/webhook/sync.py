@@ -41,7 +41,7 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 from urllib.parse import quote as urlquote
 
 from .. import utils
-from ..utils.private import parse_ratelimit_header, bytes_to_base64_data
+from ..utils.private import parse_ratelimit_header, bytes_to_base64_data, _to_json
 from ..channel import PartialMessageable
 from ..errors import (
     DiscordServerError,
@@ -125,7 +125,7 @@ class WebhookAdapter:
 
         if payload is not None:
             headers["Content-Type"] = "application/json"
-            to_send = utils._to_json(payload)
+            to_send = _to_json(payload)
 
         if auth_token is not None:
             headers["Authorization"] = f"Bot {auth_token}"

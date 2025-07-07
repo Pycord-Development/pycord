@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import json
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -55,13 +54,6 @@ from .public import (
     remove_markdown,
     escape_markdown,
 )
-
-try:
-    import msgspec
-except ModuleNotFoundError:
-    HAS_MSGSPEC = False
-else:
-    HAS_MSGSPEC = True
 
 DISCORD_EPOCH = 1420070400000
 
@@ -181,18 +173,3 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> An
             else:
                 raise
     return getter
-
-
-if HAS_MSGSPEC:
-
-    def _to_json(obj: Any) -> str:  # type: ignore
-        return msgspec.json.encode(obj).decode("utf-8")
-
-    _from_json = msgspec.json.decode  # type: ignore
-
-else:
-
-    def _to_json(obj: Any) -> str:
-        return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
-
-    _from_json = json.loads
