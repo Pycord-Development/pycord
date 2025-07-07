@@ -14,10 +14,10 @@ release.
 ### Removed
 
 - `utils.filter_params`
-- `utils.sleep_until`
+- `utils.sleep_until` use `asyncio.sleep` combined with `datetime.datetime` instead
 - `utils.resolve_invite`
 - `utils.resolve_template`
-- `utils.parse_time`
+- `utils.parse_time` use `datetime.datetime.fromisoformat` instead
 - `utils.time_snowflake` use `utils.generate_snowflake` instead
 - `utils.warn_deprecated`
 - `utils.deprecated`
