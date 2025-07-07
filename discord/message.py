@@ -1593,6 +1593,10 @@ class Message(Hashable):
                 " build the server!"
             )
 
+        if self.type is MessageType.application_command:
+            return (f"{self.author.name} sent an application command to {self.channel.name} channel in"
+                    f" {self.guild.name if self.guild is not None else 'NoneGuild'} guild.")
+
     async def delete(
         self, *, delay: float | None = None, reason: str | None = None
     ) -> None:
