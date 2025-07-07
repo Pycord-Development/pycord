@@ -15,6 +15,7 @@ release.
 
 - `utils.filter_params`
 - `utils.sleep_until` use `asyncio.sleep` combined with `datetime.datetime` instead
+- `utils.compute_timedelta` use the `datetime` module instead
 - `utils.resolve_invite`
 - `utils.resolve_template`
 - `utils.parse_time` use `datetime.datetime.fromisoformat` instead
