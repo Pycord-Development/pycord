@@ -33,5 +33,3 @@ Utility Functions
 .. autofunction:: discord.utils.generate_snowflake
 
 .. autofunction:: discord.utils.basic_autocomplete
-
-.. autofunction:: discord.utils.as_chunks

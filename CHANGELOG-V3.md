@@ -22,3 +22,5 @@ release.
 - `utils.warn_deprecated`
 - `utils.deprecated`
 - `utils.get` use `utils.find` instead
+- `utils.as_chunks` use `itertools.batched` on Python 3.12+ or your own implementation
+  instead

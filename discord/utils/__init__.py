@@ -76,7 +76,6 @@ __all__ = (
     "snowflake_time",
     "find",
     "get_or_fetch",
-    "sleep_until ",
     "utcnow",
     "remove_markdown",
     "escape_markdown",
@@ -547,68 +546,3 @@ def raw_role_mentions(text: str) -> list[int]:
         A list of role IDs found in the string.
     """
     return [int(x) for x in re.findall(r"<@&([0-9]+)>", text)]
-
-
-def _chunk(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]:
-    ret = []
-    n = 0
-    for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
-
-
-async def _achunk(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]:
-    ret = []
-    n = 0
-    async for item in iterator:
-        ret.append(item)
-        n += 1
-        if n == max_size:
-            yield ret
-            ret = []
-            n = 0
-    if ret:
-        yield ret
-
-
-@overload
-def as_chunks(iterator: Iterator[T], max_size: int) -> Iterator[list[T]]: ...
-
-
-@overload
-def as_chunks(iterator: AsyncIterator[T], max_size: int) -> AsyncIterator[list[T]]: ...
-
-
-def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
-    """A helper function that collects an iterator into chunks of a given size.
-
-    .. versionadded:: 2.0
-
-    .. warning::
-
-        The last chunk collected may not be as large as ``max_size``.
-
-    Parameters
-    ----------
-    iterator: Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
-        The iterator to chunk, can be sync or async.
-    max_size: :class:`int`
-        The maximum chunk size.
-
-    Returns
-    -------
-    Union[:class:`collections.abc.Iterator`, :class:`collections.abc.AsyncIterator`]
-        A new iterator which yields chunks of a given size.
-    """
-    if max_size <= 0:
-        raise ValueError("Chunk sizes must be greater than 0.")
-
-    if isinstance(iterator, AsyncIterator):
-        return _achunk(iterator, max_size)
-    return _chunk(iterator, max_size)
