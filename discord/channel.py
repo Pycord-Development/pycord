@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, ove
 
 import discord.abc
 
-from .utils.private import bytes_to_base64_data, get_as_snowflake
+from .utils.private import bytes_to_base64_data, get_as_snowflake, copy_doc
 from . import utils
 from .asset import Asset
 from .emoji import GuildEmoji
@@ -244,7 +244,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
     def _sorting_bucket(self) -> int:
         return ChannelType.text.value
 
-    @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
+    @copy_doc(discord.abc.GuildChannel.permissions_for)
     def permissions_for(self, obj: Member | Role, /) -> Permissions:
         base = super().permissions_for(obj)
 
@@ -295,7 +295,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         """Edits the channel."""
         raise NotImplementedError
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> TextChannel:
         return await self._clone_impl(
             {
@@ -1581,7 +1581,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
             if value.channel and value.channel.id == self.id
         }
 
-    @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
+    @copy_doc(discord.abc.GuildChannel.permissions_for)
     def permissions_for(self, obj: Member | Role, /) -> Permissions:
         base = super().permissions_for(obj)
 
@@ -1945,7 +1945,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """The channel's Discord type."""
         return ChannelType.voice
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> VoiceChannel:
         return await self._clone_impl(
             {"bitrate": self.bitrate, "user_limit": self.user_limit},
@@ -2481,7 +2481,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         """The channel's Discord type."""
         return ChannelType.stage_voice
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> StageChannel:
         return await self._clone_impl({}, name=name, reason=reason)
 
@@ -2744,7 +2744,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """Checks if the category is NSFW."""
         return self.nsfw
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> CategoryChannel:
         return await self._clone_impl({"nsfw": self.nsfw}, name=name, reason=reason)
 
@@ -2810,7 +2810,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             # the payload will always be the proper channel payload
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
-    @utils.copy_doc(discord.abc.GuildChannel.move)
+    @copy_doc(discord.abc.GuildChannel.move)
     async def move(self, **kwargs):
         kwargs.pop("category", None)
         await super().move(**kwargs)

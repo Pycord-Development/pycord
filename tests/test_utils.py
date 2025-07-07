@@ -31,7 +31,6 @@ import pytest
 from discord.utils import (
     MISSING,
     _cached_property,
-    copy_doc,
     find,
     generate_snowflake,
     get,

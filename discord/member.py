@@ -34,7 +34,6 @@ from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 import discord.abc
 
-
 from . import utils
 from .activity import ActivityTypes, create_activity
 from .asset import Asset
@@ -45,7 +44,7 @@ from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
-from .utils.private import parse_time, SnowflakeList
+from .utils.private import parse_time, SnowflakeList, copy_doc
 
 __all__ = (
     "VoiceState",
@@ -202,7 +201,7 @@ def flatten_user(cls):
                 return general
 
             func = generate_function(attr)
-            func = utils.copy_doc(value)(func)
+            func = copy_doc(value)(func)
             setattr(cls, attr, func)
 
     return cls

@@ -27,14 +27,12 @@ from __future__ import annotations
 
 import collections.abc
 import json
-from inspect import signature as _signature
 from typing import (
     TYPE_CHECKING,
     Any,
     AsyncIterator,
     Callable,
     Generic,
-    Iterable,
     Iterator,
     Mapping,
     Protocol,
@@ -200,15 +198,6 @@ class SequenceProxy(Generic[T_co], collections.abc.Sequence):
 
     def count(self, value: Any) -> int:
         return self.__proxied.count(value)
-
-
-def copy_doc(original: Callable) -> Callable[[T], T]:
-    def decorator(overridden: T) -> T:
-        overridden.__doc__ = original.__doc__
-        overridden.__signature__ = _signature(original)  # type: ignore
-        return overridden
-
-    return decorator
 
 
 async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:

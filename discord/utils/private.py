@@ -11,7 +11,7 @@ import unicodedata
 import warnings
 from _bisect import bisect_left
 from base64 import b64encode
-from inspect import isawaitable
+from inspect import isawaitable, signature
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -447,3 +447,12 @@ class SnowflakeList(array.array):
     def has(self, element: int) -> bool:
         i = bisect_left(self, element)
         return i != len(self) and self[i] == element
+
+
+def copy_doc(original: Callable) -> Callable[[T], T]:
+    def decorator(overridden: T) -> T:
+        overridden.__doc__ = original.__doc__
+        overridden.__signature__ = signature(original)  # type: ignore
+        return overridden
+
+    return decorator

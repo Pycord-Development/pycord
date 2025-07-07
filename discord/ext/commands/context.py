@@ -32,6 +32,7 @@ from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
 import discord.abc
 import discord.utils
 from discord.message import Message
+from discord.utils.private import copy_doc
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -398,10 +399,10 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         except CommandError as e:
             await cmd.on_help_command_error(self, e)
 
-    @discord.utils.copy_doc(Message.reply)
+    @copy_doc(Message.reply)
     async def reply(self, content: str | None = None, **kwargs: Any) -> Message:
         return await self.message.reply(content, **kwargs)
 
-    @discord.utils.copy_doc(Message.forward_to)
+    @copy_doc(Message.forward_to)
     async def forward_to(self, channel: discord.abc.Messageable, **kwargs: Any) -> Message:
         return await self.message.forward_to(channel, **kwargs)
