@@ -196,11 +196,3 @@ else:
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 
     _from_json = json.loads
-
-
-def get_slots(cls: type[Any]) -> Iterator[str]:
-    for mro in reversed(cls.__mro__):
-        try:
-            yield from mro.__slots__
-        except AttributeError:
-            continue

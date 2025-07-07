@@ -515,6 +515,14 @@ class CachedSlotProperty(Generic[T, T_co]):
             return value
 
 
+def get_slots(cls: type[Any]) -> Iterator[str]:
+    for mro in reversed(cls.__mro__):
+        try:
+            yield from mro.__slots__
+        except AttributeError:
+            continue
+
+
 def cached_slot_property(
     name: str,
 ) -> Callable[[Callable[[T], T_co]], CachedSlotProperty[T, T_co]]:
