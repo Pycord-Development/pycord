@@ -32,6 +32,7 @@ import traceback
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
+import discord.utils.private
 from ...utils import Undefined
 
 from . import errors
@@ -179,7 +180,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
             return True
 
         # type-checker doesn't distinguish between functions and methods
-        return await discord.utils.async_all(f(ctx) for f in data)  # type: ignore
+        return await discord.utils.private.async_all(f(ctx) for f in data)  # type: ignore
 
     # help command stuff
 

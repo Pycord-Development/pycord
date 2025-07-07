@@ -9,6 +9,7 @@ import types
 import unicodedata
 import warnings
 from base64 import b64encode
+from inspect import isawaitable
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -382,3 +383,12 @@ def delay_task(delay: float, func: Coroutine):
             pass
 
     asyncio.create_task(inner_call())
+
+
+async def async_all(gen: Iterable[Any]) -> bool:
+    for elem in gen:
+        if isawaitable(elem):
+            elem = await elem
+        if not elem:
+            return False
+    return True

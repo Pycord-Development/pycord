@@ -63,7 +63,8 @@ from .interactions import Interaction
 from .shard import AutoShardedClient
 from .types import interactions
 from .user import User
-from .utils import MISSING, async_all, find, get
+from .utils import MISSING, find, get
+from .utils.private import async_all
 
 if TYPE_CHECKING:
     from .member import Member

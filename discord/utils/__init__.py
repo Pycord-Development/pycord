@@ -32,9 +32,8 @@ import datetime
 import json
 import re
 from bisect import bisect_left
-from inspect import isawaitable as _isawaitable
+from inspect import isawaitable
 from inspect import signature as _signature
-from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -307,19 +306,10 @@ else:
 
 async def maybe_coroutine(f, *args, **kwargs):
     value = f(*args, **kwargs)
-    if _isawaitable(value):
+    if isawaitable(value):
         return await value
     else:
         return value
-
-
-async def async_all(gen, *, check=_isawaitable):
-    for elem in gen:
-        if check(elem):
-            elem = await elem
-        if not elem:
-            return False
-    return True
 
 
 async def sane_wait_for(futures, *, timeout):
