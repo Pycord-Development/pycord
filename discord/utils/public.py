@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 import datetime
 from enum import Enum, auto
 import itertools
@@ -309,3 +310,199 @@ def format_dt(dt: datetime.datetime | datetime.time, /, style: TimestampStyle | 
     if style is None:
         return f"<t:{int(dt.timestamp())}>"
     return f"<t:{int(dt.timestamp())}:{style}>"
+
+
+MENTION_PATTERN = re.compile(r"@(everyone|here|[!&]?[0-9]{17,20})")
+
+
+def escape_mentions(text: str) -> str:
+    """A helper function that escapes everyone, here, role, and user mentions.
+
+    .. note::
+
+        This does not include channel mentions.
+
+    .. note::
+
+        For more granular control over what mentions should be escaped
+        within messages, refer to the :class:`~discord.AllowedMentions`
+        class.
+
+    Parameters
+    ----------
+    text: :class:`str`
+        The text to escape mentions from.
+
+    Returns
+    -------
+    :class:`str`
+        The text with the mentions removed.
+    """
+    return MENTION_PATTERN.sub("@\u200b\\1", text)
+
+
+RAW_MENTION_PATTERN = re.compile(r"<@!?([0-9]+)>")
+
+
+def raw_mentions(text: str) -> list[int]:
+    """Returns a list of user IDs matching ``<@user_id>`` in the string.
+
+    .. versionadded:: 2.2
+
+    Parameters
+    ----------
+    text: :class:`str`
+        The string to get user mentions from.
+
+    Returns
+    -------
+    List[:class:`int`]
+        A list of user IDs found in the string.
+    """
+    return [int(x) for x in RAW_MENTION_PATTERN.findall(text)]
+
+
+RAW_CHANNEL_PATTERN = re.compile(r"<#([0-9]+)>")
+
+
+def raw_channel_mentions(text: str) -> list[int]:
+    """Returns a list of channel IDs matching ``<@#channel_id>`` in the string.
+
+    .. versionadded:: 2.2
+
+    Parameters
+    ----------
+    text: :class:`str`
+        The string to get channel mentions from.
+
+    Returns
+    -------
+    List[:class:`int`]
+        A list of channel IDs found in the string.
+    """
+    return [int(x) for x in RAW_CHANNEL_PATTERN.findall(text)]
+
+
+RAW_ROLE_PATTERN = re.compile(r"<@&([0-9]+)>")
+
+
+def raw_role_mentions(text: str) -> list[int]:
+    """Returns a list of role IDs matching ``<@&role_id>`` in the string.
+
+    .. versionadded:: 2.2
+
+    Parameters
+    ----------
+    text: :class:`str`
+        The string to get role mentions from.
+
+    Returns
+    -------
+    List[:class:`int`]
+        A list of role IDs found in the string.
+    """
+    return [int(x) for x in RAW_ROLE_PATTERN.findall(text)]
+
+
+_MARKDOWN_ESCAPE_SUBREGEX = "|".join(r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|"))
+
+# regular expression for finding and escaping links in markdown
+# note: technically, brackets are allowed in link text.
+# perhaps more concerning, parentheses are also allowed in link destination.
+# this regular expression matches neither of those.
+# this page provides a good reference: http://blog.michaelperrin.fr/2019/02/04/advanced-regular-expressions/
+_MARKDOWN_ESCAPE_LINKS = r"""
+\[  # matches link text
+    [^\[\]]* # link text can contain anything but brackets
+\]
+\(  # matches link destination
+    [^\(\)]+ # link destination cannot contain parentheses
+\)"""  # note 2: make sure this regex is consumed in re.X (extended mode) since it has whitespace and comments
+
+_MARKDOWN_ESCAPE_COMMON = rf"^>(?:>>)?\s|{_MARKDOWN_ESCAPE_LINKS}"
+
+_MARKDOWN_ESCAPE_REGEX = re.compile(
+    rf"(?P<markdown>{_MARKDOWN_ESCAPE_SUBREGEX}|{_MARKDOWN_ESCAPE_COMMON})",
+    re.MULTILINE | re.X,
+)
+
+_URL_REGEX = r"(?P<url><[^: >]+:\/[^ >]+>|(?:https?|steam):\/\/[^\s<]+[^<.,:;\"\'\]\s])"
+
+_MARKDOWN_STOCK_REGEX = rf"(?P<markdown>[_\\~|\*`]|{_MARKDOWN_ESCAPE_COMMON})"
+
+
+def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
+    """A helper function that removes markdown characters.
+
+    .. versionadded:: 1.7
+
+    .. note::
+            This function is not markdown aware and may remove meaning from the original text. For example,
+            if the input contains ``10 * 5`` then it will be converted into ``10  5``.
+
+    Parameters
+    ----------
+    text: :class:`str`
+        The text to remove markdown from.
+    ignore_links: :class:`bool`
+        Whether to leave links alone when removing markdown. For example,
+        if a URL in the text contains characters such as ``_`` then it will
+        be left alone. Defaults to ``True``.
+
+    Returns
+    -------
+    :class:`str`
+        The text with the markdown special characters removed.
+    """
+
+    def replacement(match):
+        groupdict = match.groupdict()
+        return groupdict.get("url", "")
+
+    regex = _MARKDOWN_STOCK_REGEX
+    if ignore_links:
+        regex = f"(?:{_URL_REGEX}|{regex})"
+    return re.sub(regex, replacement, text, 0, re.MULTILINE)
+
+
+def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = True) -> str:
+    r"""A helper function that escapes Discord's markdown.
+
+    Parameters
+    -----------
+    text: :class:`str`
+        The text to escape markdown from.
+    as_needed: :class:`bool`
+        Whether to escape the markdown characters as needed. This
+        means that it does not escape extraneous characters if it's
+        not necessary, e.g. ``**hello**`` is escaped into ``\*\*hello**``
+        instead of ``\*\*hello\*\*``. Note however that this can open
+        you up to some clever syntax abuse. Defaults to ``False``.
+    ignore_links: :class:`bool`
+        Whether to leave links alone when escaping markdown. For example,
+        if a URL in the text contains characters such as ``_`` then it will
+        be left alone. This option is not supported with ``as_needed``.
+        Defaults to ``True``.
+
+    Returns
+    --------
+    :class:`str`
+        The text with the markdown special characters escaped with a slash.
+    """
+
+    if not as_needed:
+
+        def replacement(match):
+            groupdict = match.groupdict()
+            is_url = groupdict.get("url")
+            if is_url:
+                return is_url
+            return f"\\{groupdict['markdown']}"
+
+        regex = _MARKDOWN_STOCK_REGEX
+        if ignore_links:
+            regex = f"(?:{_URL_REGEX}|{regex})"
+        return re.sub(regex, replacement, text, 0, re.MULTILINE | re.X)
+    else:
+        text = re.sub(r"\\", r"\\\\", text)
+        return _MARKDOWN_ESCAPE_REGEX.sub(r"\\\1", text)
