@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import datetime
 import functools
 import re
@@ -8,9 +9,21 @@ import types
 import unicodedata
 import warnings
 from base64 import b64encode
-from typing import TYPE_CHECKING, Any, overload, Callable, TypeVar, ParamSpec, Iterable, Literal, ForwardRef, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    overload,
+    Callable,
+    TypeVar,
+    ParamSpec,
+    Iterable,
+    Literal,
+    ForwardRef,
+    Union,
+    Coroutine,
+)
 
-from ..errors import InvalidArgument
+from ..errors import InvalidArgument, HTTPException
 
 if TYPE_CHECKING:
     from ..invite import Invite
@@ -358,3 +371,14 @@ def resolve_annotation(
     if cache is None:
         cache = {}
     return evaluate_annotation(annotation, globalns, locals, cache)
+
+
+def delay_task(delay: float, func: Coroutine):
+    async def inner_call():
+        await asyncio.sleep(delay)
+        try:
+            await func
+        except HTTPException:
+            pass
+
+    asyncio.create_task(inner_call())

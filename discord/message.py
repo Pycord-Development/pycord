@@ -41,7 +41,7 @@ from typing import (
 )
 from urllib.parse import parse_qs, urlparse
 
-from .utils.private import get_as_snowflake, parse_time, warn_deprecated
+from .utils.private import get_as_snowflake, parse_time, warn_deprecated, delay_task
 from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
@@ -1539,7 +1539,7 @@ class Message(Hashable):
         """
         del_func = self._state.http.delete_message(self.channel.id, self.id, reason=reason)
         if delay is not None:
-            utils.delay_task(delay, del_func)
+            delay_task(delay, del_func)
         else:
             await del_func
 

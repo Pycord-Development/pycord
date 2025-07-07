@@ -40,7 +40,6 @@ from typing import (
     Any,
     AsyncIterator,
     Callable,
-    Coroutine,
     Generic,
     Iterable,
     Iterator,
@@ -106,13 +105,6 @@ class _cached_property:
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
-
-    from ..abc import Snowflake
-    from ..commands.context import AutocompleteContext
-    from ..commands.options import OptionChoice
-    from ..invite import Invite
-    from ..permissions import Permissions
-    from ..template import Template
 
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
@@ -202,17 +194,6 @@ class SequenceProxy(Generic[T_co], collections.abc.Sequence):
 
     def count(self, value: Any) -> int:
         return self.__proxied.count(value)
-
-
-def delay_task(delay: float, func: Coroutine):
-    async def inner_call():
-        await asyncio.sleep(delay)
-        try:
-            await func
-        except HTTPException:
-            pass
-
-    asyncio.create_task(inner_call())
 
 
 def copy_doc(original: Callable) -> Callable[[T], T]:

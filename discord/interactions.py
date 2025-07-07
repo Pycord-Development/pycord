@@ -28,7 +28,7 @@ from __future__ import annotations
 import asyncio
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
-from .utils.private import get_as_snowflake, deprecated
+from .utils.private import get_as_snowflake, deprecated, delay_task
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import (
@@ -609,7 +609,7 @@ class Interaction:
         )
 
         if delay is not None:
-            utils.delay_task(delay, func)
+            delay_task(delay, func)
         else:
             await func
 
