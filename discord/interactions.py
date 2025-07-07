@@ -29,7 +29,7 @@ import asyncio
 import datetime
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
-from .utils.private import get_as_snowflake, deprecated, delay_task
+from .utils.private import get_as_snowflake, deprecated, delay_task, cached_slot_property
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import (
@@ -297,7 +297,7 @@ class Interaction:
         """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
 
-    @utils.cached_slot_property("_cs_channel")
+    @cached_slot_property("_cs_channel")
     @deprecated("Interaction.channel", "2.7", stacklevel=4)
     def cached_channel(self) -> InteractionChannel | None:
         """The cached channel from which the interaction was sent.
@@ -322,12 +322,12 @@ class Interaction:
         """
         return Permissions(self._permissions)
 
-    @utils.cached_slot_property("_cs_app_permissions")
+    @cached_slot_property("_cs_app_permissions")
     def app_permissions(self) -> Permissions:
         """The resolved permissions of the application in the channel, including overwrites."""
         return Permissions(self._app_permissions)
 
-    @utils.cached_slot_property("_cs_response")
+    @cached_slot_property("_cs_response")
     def response(self) -> InteractionResponse:
         """Returns an object responsible for handling responding to the interaction.
 
@@ -336,7 +336,7 @@ class Interaction:
         """
         return InteractionResponse(self)
 
-    @utils.cached_slot_property("_cs_followup")
+    @cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
         """Returns the followup webhook for followup interactions."""
         payload = {
@@ -1542,7 +1542,7 @@ class InteractionMetadata:
     def __repr__(self):
         return f"<InteractionMetadata id={self.id} type={self.type!r} user={self.user!r}>"
 
-    @utils.cached_slot_property("_cs_original_response_message")
+    @cached_slot_property("_cs_original_response_message")
     def original_response_message(self) -> Message | None:
         """Optional[:class:`Message`]: The original response message.
         Returns ``None`` if the message is not in cache, or if :attr:`original_response_message_id` is ``None``.
@@ -1551,7 +1551,7 @@ class InteractionMetadata:
             return None
         return self._state._get_message(self.original_response_message_id)
 
-    @utils.cached_slot_property("_cs_interacted_message")
+    @cached_slot_property("_cs_interacted_message")
     def interacted_message(self) -> Message | None:
         """Optional[:class:`Message`]: The message that triggered the interaction.
         Returns ``None`` if the message is not in cache, or if :attr:`interacted_message_id` is ``None``.
@@ -1597,7 +1597,7 @@ class AuthorizingIntegrationOwners:
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    @utils.cached_slot_property("_cs_user")
+    @cached_slot_property("_cs_user")
     def user(self) -> User | None:
         """Optional[:class:`User`]: The user that authorized the integration.
         Returns ``None`` if the user is not in cache, or if :attr:`user_id` is ``None``.
@@ -1606,7 +1606,7 @@ class AuthorizingIntegrationOwners:
             return None
         return self._state.get_user(self.user_id)
 
-    @utils.cached_slot_property("_cs_guild")
+    @cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
         """Optional[:class:`Guild`]: The guild that authorized the integration.
         Returns ``None`` if the guild is not in cache, or if :attr:`guild_id` is ``0`` or ``None``.

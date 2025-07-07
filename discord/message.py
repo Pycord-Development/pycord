@@ -41,7 +41,7 @@ from typing import (
 )
 from urllib.parse import parse_qs, urlparse
 
-from .utils.private import get_as_snowflake, parse_time, warn_deprecated, delay_task
+from .utils.private import get_as_snowflake, parse_time, warn_deprecated, delay_task, cached_slot_property
 from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
@@ -1263,7 +1263,7 @@ class Message(Hashable):
         )
         self._interaction = value
 
-    @utils.cached_slot_property("_cs_raw_mentions")
+    @cached_slot_property("_cs_raw_mentions")
     def raw_mentions(self) -> list[int]:
         """A property that returns an array of user IDs matched with
         the syntax of ``<@user_id>`` in the message content.
@@ -1273,28 +1273,28 @@ class Message(Hashable):
         """
         return [int(x) for x in re.findall(r"<@!?([0-9]{15,20})>", self.content)]
 
-    @utils.cached_slot_property("_cs_raw_channel_mentions")
+    @cached_slot_property("_cs_raw_channel_mentions")
     def raw_channel_mentions(self) -> list[int]:
         """A property that returns an array of channel IDs matched with
         the syntax of ``<#channel_id>`` in the message content.
         """
         return [int(x) for x in re.findall(r"<#([0-9]{15,20})>", self.content)]
 
-    @utils.cached_slot_property("_cs_raw_role_mentions")
+    @cached_slot_property("_cs_raw_role_mentions")
     def raw_role_mentions(self) -> list[int]:
         """A property that returns an array of role IDs matched with
         the syntax of ``<@&role_id>`` in the message content.
         """
         return [int(x) for x in re.findall(r"<@&([0-9]{15,20})>", self.content)]
 
-    @utils.cached_slot_property("_cs_channel_mentions")
+    @cached_slot_property("_cs_channel_mentions")
     def channel_mentions(self) -> list[GuildChannel]:
         if self.guild is None:
             return []
         it = filter(None, map(self.guild.get_channel, self.raw_channel_mentions))
         return list(dict.fromkeys(it))  # using dict.fromkeys and not set to preserve order
 
-    @utils.cached_slot_property("_cs_clean_content")
+    @cached_slot_property("_cs_clean_content")
     def clean_content(self) -> str:
         """A property that returns the content in a "cleaned up"
         manner. This basically means that mentions are transformed
@@ -1371,7 +1371,7 @@ class Message(Hashable):
             MessageType.thread_starter_message,
         )
 
-    @utils.cached_slot_property("_cs_system_content")
+    @cached_slot_property("_cs_system_content")
     def system_content(self) -> str:
         r"""A property that returns the content that is rendered
         regardless of the :attr:`Message.type`.
@@ -2185,7 +2185,7 @@ class PartialMessage(Hashable):
     def poll(self) -> Poll | None:
         return self._state._polls.get(self.id)
 
-    @utils.cached_slot_property("_cs_guild")
+    @cached_slot_property("_cs_guild")
     def guild(self) -> Guild | None:
         """The guild that the partial message belongs to, if applicable."""
         return getattr(self.channel, "guild", None)

@@ -30,7 +30,8 @@ from typing import TYPE_CHECKING
 from .enums import StagePrivacyLevel, try_enum
 from .errors import InvalidArgument
 from .mixins import Hashable
-from .utils import MISSING, Undefined, cached_slot_property
+from .utils import MISSING, Undefined
+from .utils.private import cached_slot_property
 
 __all__ = ("StageInstance",)
 

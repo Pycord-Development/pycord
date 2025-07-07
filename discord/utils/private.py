@@ -32,7 +32,6 @@ from typing import (
     Iterator,
 )
 
-from . import T_co
 from ..errors import InvalidArgument, HTTPException
 
 if TYPE_CHECKING:
@@ -43,6 +42,7 @@ _IS_ASCII = re.compile(r"^[\x00-\x7f]+$")
 
 P = ParamSpec("P")
 T = TypeVar("T")
+T_co = TypeVar("T_co", covariant=True)
 
 
 def resolve_invite(invite: Invite | str) -> str:
@@ -489,3 +489,36 @@ class SequenceProxy(collections.abc.Sequence, Generic[T_co]):
 
     def count(self, value: Any) -> int:
         return self.__proxied.count(value)
+
+
+class CachedSlotProperty(Generic[T, T_co]):
+    def __init__(self, name: str, function: Callable[[T], T_co]) -> None:
+        self.name = name
+        self.function = function
+        self.__doc__ = getattr(function, "__doc__")
+
+    @overload
+    def __get__(self, instance: None, owner: type[T]) -> CachedSlotProperty[T, T_co]: ...
+
+    @overload
+    def __get__(self, instance: T, owner: type[T]) -> T_co: ...
+
+    def __get__(self, instance: T | None, owner: type[T]) -> Any:
+        if instance is None:
+            return self
+
+        try:
+            return getattr(instance, self.name)
+        except AttributeError:
+            value = self.function(instance)
+            setattr(instance, self.name, value)
+            return value
+
+
+def cached_slot_property(
+    name: str,
+) -> Callable[[Callable[[T], T_co]], CachedSlotProperty[T, T_co]]:
+    def decorator(func: Callable[[T], T_co]) -> CachedSlotProperty[T, T_co]:
+        return CachedSlotProperty(name, func)
+
+    return decorator

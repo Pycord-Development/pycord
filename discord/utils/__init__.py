@@ -30,14 +30,11 @@ from typing import (
     TYPE_CHECKING,
     Any,
     AsyncIterator,
-    Callable,
-    Generic,
     Iterator,
     Mapping,
     Protocol,
     TypeVar,
     Union,
-    overload,
 )
 
 from ..errors import HTTPException
@@ -124,50 +121,6 @@ else:
 T = TypeVar("T")
 T_co = TypeVar("T_co", covariant=True)
 _Iter = Union[Iterator[T], AsyncIterator[T]]
-
-
-class CachedSlotProperty(Generic[T, T_co]):
-    def __init__(self, name: str, function: Callable[[T], T_co]) -> None:
-        self.name = name
-        self.function = function
-        self.__doc__ = getattr(function, "__doc__")
-
-    @overload
-    def __get__(self, instance: None, owner: type[T]) -> CachedSlotProperty[T, T_co]: ...
-
-    @overload
-    def __get__(self, instance: T, owner: type[T]) -> T_co: ...
-
-    def __get__(self, instance: T | None, owner: type[T]) -> Any:
-        if instance is None:
-            return self
-
-        try:
-            return getattr(instance, self.name)
-        except AttributeError:
-            value = self.function(instance)
-            setattr(instance, self.name, value)
-            return value
-
-
-class classproperty(Generic[T_co]):
-    def __init__(self, fget: Callable[[Any], T_co]) -> None:
-        self.fget = fget
-
-    def __get__(self, instance: Any | None, owner: type[Any]) -> T_co:
-        return self.fget(owner)
-
-    def __set__(self, instance, value) -> None:
-        raise AttributeError("cannot set attribute")
-
-
-def cached_slot_property(
-    name: str,
-) -> Callable[[Callable[[T], T_co]], CachedSlotProperty[T, T_co]]:
-    def decorator(func: Callable[[T], T_co]) -> CachedSlotProperty[T, T_co]:
-        return CachedSlotProperty(name, func)
-
-    return decorator
 
 
 async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:
