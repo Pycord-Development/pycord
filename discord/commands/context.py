@@ -259,17 +259,17 @@ class ApplicationContext(discord.abc.Messageable):
         return None
 
     @property
-    @copy_doc.copy_doc(InteractionResponse.send_modal)
+    @copy_doc(InteractionResponse.send_modal)
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
         return self.interaction.response.send_modal
 
     @property
-    @copy_doc.copy_doc(Interaction.respond)
+    @copy_doc(Interaction.respond)
     def respond(self, *args, **kwargs) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
         return self.interaction.respond
 
     @property
-    @copy_doc.copy_doc(InteractionResponse.send_message)
+    @copy_doc(InteractionResponse.send_message)
     def send_response(self) -> Callable[..., Awaitable[Interaction]]:
         if not self.interaction.response.is_done():
             return self.interaction.response.send_message
@@ -279,7 +279,7 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
-    @copy_doc.copy_doc(Webhook.send)
+    @copy_doc(Webhook.send)
     def send_followup(self) -> Callable[..., Awaitable[WebhookMessage]]:
         if self.interaction.response.is_done():
             return self.followup.send
@@ -289,7 +289,7 @@ class ApplicationContext(discord.abc.Messageable):
             )
 
     @property
-    @copy_doc.copy_doc(InteractionResponse.defer)
+    @copy_doc(InteractionResponse.defer)
     def defer(self) -> Callable[..., Awaitable[None]]:
         return self.interaction.response.defer
 
@@ -323,7 +323,7 @@ class ApplicationContext(discord.abc.Messageable):
         return await self.interaction.delete_original_response(delay=delay)
 
     @property
-    @copy_doc.copy_doc(Interaction.edit_original_response)
+    @copy_doc(Interaction.edit_original_response)
     def edit(self) -> Callable[..., Awaitable[InteractionMessage]]:
         return self.interaction.edit_original_response
 
