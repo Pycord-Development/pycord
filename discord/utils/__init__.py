@@ -318,11 +318,6 @@ def get_slots(cls: type[Any]) -> Iterator[str]:
             continue
 
 
-def valid_icon_size(size: int) -> bool:
-    """Icons must be power of 2 within [16, 4096]."""
-    return not size & (size - 1) and 4096 >= size >= 16
-
-
 class SnowflakeList(array.array):
     """Internal data storage class to efficiently store a list of snowflakes.
 
