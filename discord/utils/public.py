@@ -6,14 +6,16 @@ import datetime
 from enum import Enum, auto
 import itertools
 from collections.abc import Awaitable, Callable, Iterable
-from typing import TYPE_CHECKING, Any, Literal, Iterable
-
+from typing import TYPE_CHECKING, Any, Literal, Iterable, TypeVar
 
 if TYPE_CHECKING:
-    from .abc import Snowflake
+    from ..abc import Snowflake
     from ..commands.context import AutocompleteContext
     from ..commands.options import OptionChoice
     from ..permissions import Permissions
+
+
+T = TypeVar("T")
 
 
 class Undefined(Enum):
@@ -506,3 +508,29 @@ def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = 
     else:
         text = re.sub(r"\\", r"\\\\", text)
         return _MARKDOWN_ESCAPE_REGEX.sub(r"\\\1", text)
+
+
+def find(predicate: Callable[[T], Any], seq: Iterable[T]) -> T | None:
+    """A helper to return the first element found in the sequence
+    that meets the predicate. For example: ::
+
+        member = discord.utils.find(lambda m: m.name == "Mighty", channel.guild.members)
+
+    would find the first :class:`~discord.Member` whose name is 'Mighty' and return it.
+    If an entry is not found, then ``None`` is returned.
+
+    This is different from :func:`py:filter` due to the fact it stops the moment it finds
+    a valid entry.
+
+    Parameters
+    ----------
+    predicate
+        A function that returns a boolean-like result.
+    seq: :class:`collections.abc.Iterable`
+        The iterable to search through.
+    """
+
+    for element in seq:
+        if predicate(element):
+            return element
+    return None
