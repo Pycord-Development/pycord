@@ -43,7 +43,7 @@ from typing import (
     Union,
 )
 
-from .utils.private import parse_time
+from .utils.private import parse_time, sane_wait_for
 from . import utils
 from .utils.private import get_as_snowflake
 from .activity import BaseActivity
@@ -1937,7 +1937,7 @@ class AutoShardedConnectionState(ConnectionState):
                     )
                     if len(current_bucket) >= max_concurrency:
                         try:
-                            await utils.sane_wait_for(current_bucket, timeout=max_concurrency * 70.0)
+                            await sane_wait_for(current_bucket, timeout=max_concurrency * 70.0)
                         except asyncio.TimeoutError:
                             fmt = "Shard ID %s failed to wait for chunks from a sub-bucket with length %d"
                             _log.warning(fmt, guild.shard_id, len(current_bucket))
@@ -1959,7 +1959,7 @@ class AutoShardedConnectionState(ConnectionState):
             # 110 reqs/minute w/ 1 req/guild plus some buffer
             timeout = 61 * (len(children) / 110)
             try:
-                await utils.sane_wait_for(futures, timeout=timeout)
+                await sane_wait_for(futures, timeout=timeout)
             except asyncio.TimeoutError:
                 _log.warning(
                     ("Shard ID %s failed to wait for chunks (timeout=%.2f) for %d guilds"),

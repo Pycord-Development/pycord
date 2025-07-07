@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import array
-import asyncio
 import collections.abc
 import datetime
 import json
@@ -301,16 +300,6 @@ else:
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 
     _from_json = json.loads
-
-
-async def sane_wait_for(futures, *, timeout):
-    ensured = [asyncio.ensure_future(fut) for fut in futures]
-    done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
-
-    if len(pending) != 0:
-        raise asyncio.TimeoutError()
-
-    return done
 
 
 def get_slots(cls: type[Any]) -> Iterator[str]:

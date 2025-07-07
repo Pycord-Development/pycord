@@ -401,3 +401,13 @@ async def maybe_awaitable(f: Callable[P, T | Awaitable[T]], *args: P.args, **kwa
         reveal_type(f)
         return await value
     return value
+
+
+async def sane_wait_for(futures: Iterable[Awaitable[T]], *, timeout: float) -> set[asyncio.Future[T]]:
+    ensured = [asyncio.ensure_future(fut) for fut in futures]
+    done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
+
+    if len(pending) != 0:
+        raise asyncio.TimeoutError()
+
+    return done
