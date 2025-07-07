@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import collections.abc
 import json
 from typing import (
     TYPE_CHECKING,
@@ -36,7 +35,6 @@ from typing import (
     Iterator,
     Mapping,
     Protocol,
-    Sequence,
     TypeVar,
     Union,
     overload,
@@ -170,34 +168,6 @@ def cached_slot_property(
         return CachedSlotProperty(name, func)
 
     return decorator
-
-
-class SequenceProxy(Generic[T_co], collections.abc.Sequence):
-    """Read-only proxy of a Sequence."""
-
-    def __init__(self, proxied: Sequence[T_co]):
-        self.__proxied = proxied
-
-    def __getitem__(self, idx: int) -> T_co:
-        return self.__proxied[idx]
-
-    def __len__(self) -> int:
-        return len(self.__proxied)
-
-    def __contains__(self, item: Any) -> bool:
-        return item in self.__proxied
-
-    def __iter__(self) -> Iterator[T_co]:
-        return iter(self.__proxied)
-
-    def __reversed__(self) -> Iterator[T_co]:
-        return reversed(self.__proxied)
-
-    def index(self, value: Any, *args, **kwargs) -> int:
-        return self.__proxied.index(value, *args, **kwargs)
-
-    def count(self, value: Any) -> int:
-        return self.__proxied.count(value)
 
 
 async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> Any:

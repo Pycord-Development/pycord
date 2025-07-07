@@ -64,6 +64,7 @@ from .threads import Thread
 from .ui.view import View
 from .user import ClientUser, User
 from .utils import MISSING
+from .utils.private import SequenceProxy
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
@@ -385,7 +386,7 @@ class Client:
 
         .. versionadded:: 1.1
         """
-        return utils.SequenceProxy(self._connection._messages or [])
+        return SequenceProxy(self._connection._messages or [])
 
     @property
     def private_channels(self) -> list[PrivateChannel]:
