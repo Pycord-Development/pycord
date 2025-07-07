@@ -1048,7 +1048,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
 
         if not atomic:
-            new_roles = utils._unique(Object(id=r.id) for s in (self.roles[1:], roles) for r in s)
+            new_roles = list({Object(id=r.id) for s in (self.roles[1:], roles) for r in s})
             await self.edit(roles=new_roles, reason=reason)
         else:
             req = self._state.http.add_role

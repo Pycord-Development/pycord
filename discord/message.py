@@ -1292,7 +1292,7 @@ class Message(Hashable):
         if self.guild is None:
             return []
         it = filter(None, map(self.guild.get_channel, self.raw_channel_mentions))
-        return utils._unique(it)
+        return list(dict.fromkeys(it))  # using dict.fromkeys and not set to preserve order
 
     @utils.cached_slot_property("_cs_clean_content")
     def clean_content(self) -> str:

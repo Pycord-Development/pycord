@@ -290,10 +290,6 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> An
     return getter
 
 
-def _unique(iterable: Iterable[T]) -> list[T]:
-    return [x for x in dict.fromkeys(iterable)]
-
-
 if HAS_MSGSPEC:
 
     def _to_json(obj: Any) -> str:  # type: ignore
