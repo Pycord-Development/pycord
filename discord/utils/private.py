@@ -22,6 +22,8 @@ from typing import (
     ForwardRef,
     Union,
     Coroutine,
+    Awaitable,
+    reveal_type,
 )
 
 from ..errors import InvalidArgument, HTTPException
@@ -31,6 +33,9 @@ if TYPE_CHECKING:
     from ..template import Template
 
 _IS_ASCII = re.compile(r"^[\x00-\x7f]+$")
+
+P = ParamSpec("P")
+T = TypeVar("T")
 
 
 def resolve_invite(invite: Invite | str) -> str:
@@ -223,10 +228,6 @@ def warn_deprecated(
     warnings.simplefilter("default", DeprecationWarning)  # reset filter
 
 
-P = ParamSpec("P")
-T = TypeVar("T")
-
-
 def deprecated(
     instead: str | None = None,
     since: str | None = None,
@@ -394,9 +395,9 @@ async def async_all(gen: Iterable[Any]) -> bool:
     return True
 
 
-async def maybe_coroutine(f, *args, **kwargs):
+async def maybe_awaitable(f: Callable[P, T | Awaitable[T]], *args: P.args, **kwargs: P.kwargs) -> T:
     value = f(*args, **kwargs)
     if isawaitable(value):
+        reveal_type(f)
         return await value
-    else:
-        return value
+    return value

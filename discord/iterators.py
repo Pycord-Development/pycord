@@ -42,7 +42,7 @@ from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
 from .utils import generate_snowflake, snowflake_time
-from .utils.private import maybe_coroutine
+from .utils.private import maybe_awaitable
 
 __all__ = (
     "ReactionIterator",
@@ -106,7 +106,7 @@ class _AsyncIterator(AsyncIterator[T]):
             except NoMoreItems:
                 return None
 
-            ret = await maybe_coroutine(predicate, elem)
+            ret = await maybe_awaitable(predicate, elem)
             if ret:
                 return elem
 
@@ -164,7 +164,7 @@ class _MappedAsyncIterator(_AsyncIterator[T]):
     async def next(self) -> T:
         # this raises NoMoreItems and will propagate appropriately
         item = await self.iterator.next()
-        return await maybe_coroutine(self.func, item)
+        return await maybe_awaitable(self.func, item)
 
 
 class _FilteredAsyncIterator(_AsyncIterator[T]):
@@ -182,7 +182,7 @@ class _FilteredAsyncIterator(_AsyncIterator[T]):
         while True:
             # propagate NoMoreItems similar to _MappedAsyncIterator
             item = await getter()
-            ret = await maybe_coroutine(pred, item)
+            ret = await maybe_awaitable(pred, item)
             if ret:
                 return item
 

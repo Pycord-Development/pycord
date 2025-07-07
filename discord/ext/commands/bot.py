@@ -224,7 +224,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         """
         prefix = ret = self.command_prefix
         if callable(prefix):
-            ret = await discord.utils.private.maybe_coroutine(prefix, self, message)
+            ret = await discord.utils.private.maybe_awaitable(prefix, self, message)
 
         if not isinstance(ret, str):
             try:
