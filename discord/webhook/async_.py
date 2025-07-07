@@ -328,15 +328,11 @@ class AsyncWebhookAdapter:
         multipart: list[dict[str, Any]] | None = None,
         files: list[File] | None = None,
         thread_id: int | None = None,
-        thread_name: str | None = None,
         wait: bool = False,
     ) -> Response[MessagePayload | None]:
         params = {"wait": int(wait)}
         if thread_id:
             params["thread_id"] = thread_id
-
-        if thread_name:
-            payload["thread_name"] = thread_name
 
         route = Route(
             "POST",
@@ -618,6 +614,7 @@ def handle_message_parameters(
     allowed_mentions: AllowedMentions | None | utils.Undefined = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
+    thread_name: str | None = None,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")
@@ -699,6 +696,9 @@ def handle_message_parameters(
         payload["attachments"] = _attachments
 
     payload["flags"] = flags.value
+
+    if thread_name:
+        payload["thread_name"] = thread_name
 
     if multipart_files:
         multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
@@ -1770,6 +1770,7 @@ class Webhook(BaseWebhook):
             applied_tags=applied_tags,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
+            thread_name=thread_name,
         )
         adapter = async_context.get()
         thread_id: int | None = None
@@ -1786,7 +1787,6 @@ class Webhook(BaseWebhook):
             multipart=params.multipart,
             files=params.files,
             thread_id=thread_id,
-            thread_name=thread_name,
             wait=wait,
         )
 

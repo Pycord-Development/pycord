@@ -298,15 +298,11 @@ class WebhookAdapter:
         multipart: list[dict[str, Any]] | None = None,
         files: list[File] | None = None,
         thread_id: int | None = None,
-        thread_name: str | None = None,
         wait: bool = False,
     ):
         params = {"wait": int(wait)}
         if thread_id:
             params["thread_id"] = thread_id
-
-        if thread_name:
-            payload["thread_name"] = thread_name
 
         route = Route(
             "POST",
@@ -1051,6 +1047,7 @@ class SyncWebhook(BaseWebhook):
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
             suppress=suppress,
+            thread_name=thread_name,
         )
         adapter: WebhookAdapter = _get_webhook_adapter()
         thread_id: int | None = None
@@ -1065,7 +1062,6 @@ class SyncWebhook(BaseWebhook):
             multipart=params.multipart,
             files=params.files,
             thread_id=thread_id,
-            thread_name=thread_name,
             wait=wait,
         )
         if wait:

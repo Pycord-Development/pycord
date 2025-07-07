@@ -294,7 +294,7 @@ class ApplicationCommandMixin(ABC):
                     "integration_types": None,
                 }
                 for check, value in to_check.items():
-                    if type(to_check[check]) == list:
+                    if type(value) == list:
                         # We need to do some falsy conversion here
                         # The API considers False (autocomplete) and [] (choices) to be falsy values
                         falsy_vals = (False, [])
@@ -358,12 +358,12 @@ class ApplicationCommandMixin(ABC):
 
         # Now let's see if there are any commands on discord that we need to delete
         for cmd, value_ in registered_commands_dict.items():
-            match = find(lambda c: c.name == registered_commands_dict[cmd]["name"], pending)
+            match = find(lambda c: c.name == value_["name"], pending)
             if match is None:
                 # We have this command registered but not in our list
                 return_value.append(
                     {
-                        "command": registered_commands_dict[cmd]["name"],
+                        "command": value_["name"],
                         "id": int(value_["id"]),
                         "action": "delete",
                     }
