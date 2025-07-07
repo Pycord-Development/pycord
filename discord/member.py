@@ -33,7 +33,7 @@ from operator import attrgetter
 from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 import discord.abc
-from .utils.private import parse_time
+
 
 from . import utils
 from .activity import ActivityTypes, create_activity
@@ -45,6 +45,7 @@ from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
+from .utils.private import parse_time, SnowflakeList
 
 __all__ = (
     "VoiceState",
@@ -312,7 +313,7 @@ class Member(discord.abc.Messageable, _UserTag):
         self.guild: Guild = guild
         self.joined_at: datetime.datetime | None = parse_time(data.get("joined_at"))
         self.premium_since: datetime.datetime | None = parse_time(data.get("premium_since"))
-        self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
+        self._roles: SnowflakeList = SnowflakeList(map(int, data["roles"]))
         self._client_status: dict[str | None, str] = {None: "offline"}
         self.activities: tuple[ActivityTypes, ...] = ()
         self.nick: str | None = data.get("nick", None)
@@ -362,7 +363,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def _update_from_message(self, data: MemberPayload) -> None:
         self.joined_at = parse_time(data.get("joined_at"))
         self.premium_since = parse_time(data.get("premium_since"))
-        self._roles = utils.SnowflakeList(map(int, data["roles"]))
+        self._roles = SnowflakeList(map(int, data["roles"]))
         self.nick = data.get("nick", None)
         self.pending = data.get("pending", False)
 
@@ -387,7 +388,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def _copy(cls: type[M], member: M) -> M:
         self: M = cls.__new__(cls)  # to bypass __init__
 
-        self._roles = utils.SnowflakeList(member._roles, is_sorted=True)
+        self._roles = SnowflakeList(member._roles, is_sorted=True)
         self.joined_at = member.joined_at
         self.premium_since = member.premium_since
         self._client_status = member._client_status.copy()
@@ -424,7 +425,7 @@ class Member(discord.abc.Messageable, _UserTag):
             pass
 
         self.premium_since = parse_time(data.get("premium_since"))
-        self._roles = utils.SnowflakeList(map(int, data["roles"]))
+        self._roles = SnowflakeList(map(int, data["roles"]))
         self._avatar = data.get("avatar")
         self._banner = data.get("banner")
         self.communication_disabled_until = parse_time(data.get("communication_disabled_until"))

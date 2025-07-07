@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import array
 import asyncio
 import datetime
 import functools
@@ -8,6 +9,7 @@ import sys
 import types
 import unicodedata
 import warnings
+from _bisect import bisect_left
 from base64 import b64encode
 from inspect import isawaitable
 from typing import (
@@ -411,3 +413,37 @@ async def sane_wait_for(futures: Iterable[Awaitable[T]], *, timeout: float) -> s
         raise asyncio.TimeoutError()
 
     return done
+
+
+class SnowflakeList(array.array):
+    """Internal data storage class to efficiently store a list of snowflakes.
+
+    This should have the following characteristics:
+
+    - Low memory usage
+    - O(n) iteration (obviously)
+    - O(n log n) initial creation if data is unsorted
+    - O(log n) search and indexing
+    - O(n) insertion
+    """
+
+    __slots__ = ()
+
+    if TYPE_CHECKING:
+
+        def __init__(self, data: Iterable[int], *, is_sorted: bool = False): ...
+
+    def __new__(cls, data: Iterable[int], *, is_sorted: bool = False):
+        return array.array.__new__(cls, "Q", data if is_sorted else sorted(data))  # type: ignore
+
+    def add(self, element: int) -> None:
+        i = bisect_left(self, element)
+        self.insert(i, element)
+
+    def get(self, element: int) -> int | None:
+        i = bisect_left(self, element)
+        return self[i] if i != len(self) and self[i] == element else None
+
+    def has(self, element: int) -> bool:
+        i = bisect_left(self, element)
+        return i != len(self) and self[i] == element
