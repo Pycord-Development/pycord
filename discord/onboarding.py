@@ -30,7 +30,7 @@ from discord import utils
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import MISSING, cached_property, generate_snowflake, get
+from .utils import MISSING, cached_property, generate_snowflake, find
 
 if TYPE_CHECKING:
     from .abc import Snowflake
@@ -128,7 +128,7 @@ class PromptOption:
             # Emoji object is {'id': None, 'name': None, 'animated': False} ...
             emoji = PartialEmoji.from_dict(_emoji)
             if emoji.id:
-                emoji = get(guild.emojis, id=emoji.id) or emoji
+                emoji = find(lambda e: e.id == emoji.id, guild.emojis) or emoji
         else:
             emoji = None
 
@@ -432,7 +432,7 @@ class Onboarding:
             The matching prompt, or None if it didn't exist.
         """
 
-        return get(self.prompts, id=id)
+        return find(lambda p: p.id == id, self.prompts)
 
     async def delete_prompt(
         self,

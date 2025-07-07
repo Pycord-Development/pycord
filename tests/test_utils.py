@@ -33,7 +33,6 @@ from discord.utils import (
     _cached_property,
     find,
     generate_snowflake,
-    get,
     snowflake_time,
     utcnow,
 )
