@@ -392,3 +392,11 @@ async def async_all(gen: Iterable[Any]) -> bool:
         if not elem:
             return False
     return True
+
+
+async def maybe_coroutine(f, *args, **kwargs):
+    value = f(*args, **kwargs)
+    if isawaitable(value):
+        return await value
+    else:
+        return value

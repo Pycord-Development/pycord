@@ -41,7 +41,8 @@ from typing import (
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
-from .utils import generate_snowflake, maybe_coroutine, snowflake_time
+from .utils import generate_snowflake, snowflake_time
+from .utils.private import maybe_coroutine
 
 __all__ = (
     "ReactionIterator",

@@ -32,7 +32,6 @@ import datetime
 import json
 import re
 from bisect import bisect_left
-from inspect import isawaitable
 from inspect import signature as _signature
 from typing import (
     TYPE_CHECKING,
@@ -302,14 +301,6 @@ else:
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 
     _from_json = json.loads
-
-
-async def maybe_coroutine(f, *args, **kwargs):
-    value = f(*args, **kwargs)
-    if isawaitable(value):
-        return await value
-    else:
-        return value
 
 
 async def sane_wait_for(futures, *, timeout):

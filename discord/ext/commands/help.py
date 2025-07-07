@@ -32,7 +32,7 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from ... import utils
-from ...utils.private import string_width
+from ...utils.private import string_width, maybe_coroutine
 
 from .core import Command, Group
 from .errors import CommandError
@@ -868,18 +868,18 @@ class HelpCommand:
         keys = command.split(" ")
         cmd = bot.all_commands.get(keys[0])
         if cmd is None:
-            string = await utils.maybe_coroutine(self.command_not_found, self.remove_mentions(keys[0]))
+            string = await maybe_coroutine(self.command_not_found, self.remove_mentions(keys[0]))
             return await self.send_error_message(string)
 
         for key in keys[1:]:
             try:
                 found = cmd.all_commands.get(key)
             except AttributeError:
-                string = await utils.maybe_coroutine(self.subcommand_not_found, cmd, self.remove_mentions(key))
+                string = await maybe_coroutine(self.subcommand_not_found, cmd, self.remove_mentions(key))
                 return await self.send_error_message(string)
             else:
                 if found is None:
-                    string = await utils.maybe_coroutine(self.subcommand_not_found, cmd, self.remove_mentions(key))
+                    string = await maybe_coroutine(self.subcommand_not_found, cmd, self.remove_mentions(key))
                     return await self.send_error_message(string)
                 cmd = found
 

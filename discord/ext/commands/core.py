@@ -1147,7 +1147,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             if cog is not None:
                 local_check = Cog._get_overridden_method(cog.cog_check)
                 if local_check is not None:
-                    ret = await discord.utils.maybe_coroutine(local_check, ctx)
+                    ret = await discord.utils.private.maybe_coroutine(local_check, ctx)
                     if not ret:
                         return False
 

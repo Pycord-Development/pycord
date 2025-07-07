@@ -35,7 +35,6 @@ from discord.utils import (
     find,
     generate_snowflake,
     get,
-    maybe_coroutine,
     snowflake_time,
     utcnow,
 )
