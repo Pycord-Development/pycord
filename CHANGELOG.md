@@ -57,6 +57,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
+- Added `ThreadAutoArchiveDuration` enum to get thread archive duration more efficiently.
+  ([#2826](https://github.com/Pycord-Development/pycord/pull/2826))
 
 ### Fixed
 

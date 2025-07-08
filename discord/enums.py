@@ -78,6 +78,7 @@ __all__ = (
     "InteractionContextType",
     "PollLayoutType",
     "MessageReferenceType",
+    "ThreadAutoArchiveDuration"
 )
 
 
@@ -1076,6 +1077,15 @@ class SubscriptionStatus(Enum):
     active = 0
     ending = 1
     inactive = 2
+
+
+class ThreadAutoArchiveDuration(Enum):
+    """Time set before the thread is auto archived"""
+
+    one_hour = 60
+    one_day = 1440
+    three_days = 4320
+    one_week = 10080
 
 
 T = TypeVar("T")

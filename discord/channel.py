@@ -41,6 +41,7 @@ from .enums import (
     StagePrivacyLevel,
     VideoQualityMode,
     VoiceRegion,
+    ThreadAutoArchiveDuration,
     try_enum,
 )
 from .errors import ClientException, InvalidArgument
@@ -1084,7 +1085,7 @@ class ForumChannel(_TextChannel):
         sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
-        default_auto_archive_duration: ThreadArchiveDuration = ...,
+        default_auto_archive_duration: ThreadArchiveDuration | ThreadAutoArchiveDuration = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
         default_reaction_emoji: GuildEmoji | int | str | None = ...,
@@ -1130,6 +1131,7 @@ class ForumChannel(_TextChannel):
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
+            **ThreadAutoArchiveDuration** enum can be used for better understanding.
         default_thread_slowmode_delay: :class:`int`
             The new default slowmode delay in seconds for threads created in this channel.
 
@@ -1172,6 +1174,12 @@ class ForumChannel(_TextChannel):
         if "require_tag" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].require_tag = options.pop("require_tag")
+
+        if "default_auto_archive_duration" in options:
+            default_auto_archive_duration = options["default_auto_archive_duration"]
+            options["default_auto_archive_duration"] = default_auto_archive_duration \
+                if isinstance(default_auto_archive_duration, (int, float)) \
+                else default_auto_archive_duration.value
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
@@ -1320,6 +1328,9 @@ class ForumChannel(_TextChannel):
             if not isinstance(file, File):
                 raise InvalidArgument("file parameter must be File")
             files = [file]
+
+        if auto_archive_duration is not None and isinstance(auto_archive_duration, ThreadAutoArchiveDuration):
+            auto_archive_duration = auto_archive_duration.value
 
         try:
             data = await state.http.start_forum_thread(
