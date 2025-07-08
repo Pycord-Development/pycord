@@ -49,6 +49,7 @@ from .public import (
     escape_mentions,
     raw_mentions,
     raw_channel_mentions,
+    raw_role_mentions,
     remove_markdown,
     escape_markdown,
 )
@@ -68,7 +69,6 @@ __all__ = (
     "raw_mentions",
     "raw_channel_mentions",
     "raw_role_mentions",
-    "as_chunks",
     "format_dt",
     "generate_snowflake",
     "basic_autocomplete",
