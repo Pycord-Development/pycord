@@ -78,7 +78,7 @@ __all__ = (
     "InteractionContextType",
     "PollLayoutType",
     "MessageReferenceType",
-    "ThreadAutoArchiveDuration"
+    "ThreadAutoArchiveDuration",
 )
 
 

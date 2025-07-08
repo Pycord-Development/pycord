@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, Iterable
 
 from .abc import Messageable, _purge_messages_helper
-from .enums import ChannelType, try_enum, ThreadAutoArchiveDuration
+from .enums import ChannelType, ThreadAutoArchiveDuration, try_enum
 from .errors import ClientException
 from .flags import ChannelFlags
 from .mixins import Hashable
@@ -602,7 +602,9 @@ class Thread(Messageable, Hashable):
         locked: bool = MISSING,
         invitable: bool = MISSING,
         slowmode_delay: int = MISSING,
-        auto_archive_duration: ThreadAutoArchiveDuration | ThreadArchiveDuration = MISSING,
+        auto_archive_duration: (
+            ThreadAutoArchiveDuration | ThreadArchiveDuration
+        ) = MISSING,
         pinned: bool = MISSING,
         applied_tags: list[ForumTag] = MISSING,
         reason: str | None = None,
@@ -663,9 +665,11 @@ class Thread(Messageable, Hashable):
         if archived is not MISSING:
             payload["archived"] = archived
         if auto_archive_duration is not MISSING:
-            payload["auto_archive_duration"] = auto_archive_duration.value \
-                if isinstance(auto_archive_duration, ThreadAutoArchiveDuration) \
+            payload["auto_archive_duration"] = (
+                auto_archive_duration.value
+                if isinstance(auto_archive_duration, ThreadAutoArchiveDuration)
                 else auto_archive_duration
+            )
         if locked is not MISSING:
             payload["locked"] = locked
         if invitable is not MISSING:

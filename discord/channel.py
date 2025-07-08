@@ -39,9 +39,9 @@ from .enums import (
     InviteTarget,
     SortOrder,
     StagePrivacyLevel,
+    ThreadAutoArchiveDuration,
     VideoQualityMode,
     VoiceRegion,
-    ThreadAutoArchiveDuration,
     try_enum,
 )
 from .errors import ClientException, InvalidArgument
@@ -1085,7 +1085,9 @@ class ForumChannel(_TextChannel):
         sync_permissions: bool = ...,
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
-        default_auto_archive_duration: ThreadArchiveDuration | ThreadAutoArchiveDuration = ...,
+        default_auto_archive_duration: (
+            ThreadArchiveDuration | ThreadAutoArchiveDuration
+        ) = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
         default_reaction_emoji: GuildEmoji | int | str | None = ...,
@@ -1177,9 +1179,11 @@ class ForumChannel(_TextChannel):
 
         if "default_auto_archive_duration" in options:
             default_auto_archive_duration = options["default_auto_archive_duration"]
-            options["default_auto_archive_duration"] = default_auto_archive_duration \
-                if isinstance(default_auto_archive_duration, (int, float)) \
+            options["default_auto_archive_duration"] = (
+                default_auto_archive_duration
+                if isinstance(default_auto_archive_duration, (int, float))
                 else default_auto_archive_duration.value
+            )
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:
@@ -1329,7 +1333,9 @@ class ForumChannel(_TextChannel):
                 raise InvalidArgument("file parameter must be File")
             files = [file]
 
-        if auto_archive_duration is not None and isinstance(auto_archive_duration, ThreadAutoArchiveDuration):
+        if auto_archive_duration is not None and isinstance(
+            auto_archive_duration, ThreadAutoArchiveDuration
+        ):
             auto_archive_duration = auto_archive_duration.value
 
         try:
