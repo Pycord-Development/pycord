@@ -2523,7 +2523,7 @@ of :class:`enum.Enum`.
 
 .. class:: ThreadArchiveDuration
 
-    Represents times before a thread is archived.
+    Represents the time before a thread is archived.
 
     .. versionadded:: 2.7
 
