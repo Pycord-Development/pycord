@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import enum
 import types
 from collections import namedtuple
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
@@ -1079,7 +1080,7 @@ class SubscriptionStatus(Enum):
     inactive = 2
 
 
-class ThreadAutoArchiveDuration(Enum):
+class ThreadAutoArchiveDuration(enum.IntEnum):
     """Time set before the thread is auto archived"""
 
     one_hour = 60

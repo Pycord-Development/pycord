@@ -1333,11 +1333,6 @@ class ForumChannel(_TextChannel):
                 raise InvalidArgument("file parameter must be File")
             files = [file]
 
-        if auto_archive_duration is not None and isinstance(
-            auto_archive_duration, ThreadAutoArchiveDuration
-        ):
-            auto_archive_duration = auto_archive_duration.value
-
         try:
             data = await state.http.start_forum_thread(
                 self.id,

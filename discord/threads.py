@@ -665,11 +665,7 @@ class Thread(Messageable, Hashable):
         if archived is not MISSING:
             payload["archived"] = archived
         if auto_archive_duration is not MISSING:
-            payload["auto_archive_duration"] = (
-                auto_archive_duration.value
-                if isinstance(auto_archive_duration, ThreadAutoArchiveDuration)
-                else auto_archive_duration
-            )
+            payload["auto_archive_duration"] = auto_archive_duration
         if locked is not MISSING:
             payload["locked"] = locked
         if invitable is not MISSING:
