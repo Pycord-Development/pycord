@@ -161,7 +161,7 @@ class RoleColours:
     secondary: Optional[:class:`Colour`]
         The secondary colour of the role.
     tertiary: Optional[:class:`Colour`]
-        The tertiary colour of the role.
+        The tertiary colour of the role. At the moment, only `16761760` is allowed.
     """
 
     def __init__(
