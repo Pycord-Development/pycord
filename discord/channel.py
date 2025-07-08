@@ -39,11 +39,13 @@ from .enums import (
     InviteTarget,
     SortOrder,
     StagePrivacyLevel,
+)
+from .enums import ThreadArchiveDuration as ThreadAutoArchiveDuration
+from .enums import (
     VideoQualityMode,
     VoiceRegion,
     try_enum,
 )
-from .enums import ThreadArchiveDuration as ThreadAutoArchiveDuration
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import ChannelFlags
