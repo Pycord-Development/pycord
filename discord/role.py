@@ -567,6 +567,7 @@ class Role(Hashable):
         color: Colour | int = MISSING,
         colours: RoleColours | None = MISSING,
         colors: RoleColours | None = MISSING,
+        holographic: bool = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         position: int = MISSING,
@@ -645,7 +646,8 @@ class Role(Hashable):
             if isinstance(colour, int):
                 colour = Colour(colour)
             colours = RoleColours(primary=colour)
-
+        if holographic:
+            colours = RoleColours.holographic()
         if colours is not MISSING:
             if not isinstance(colours, RoleColours):
                 raise InvalidArgument("colours must be a RoleColours object")

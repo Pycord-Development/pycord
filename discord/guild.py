@@ -2985,6 +2985,8 @@ class Guild(Hashable):
 
         if actual_colour not in (MISSING, None):
             actual_colours = RoleColours(primary=actual_colour)
+        elif holographic:
+            actual_colours = RoleColours.holographic()
         else:
             actual_colours = colours or colors or RoleColours.default()
 
