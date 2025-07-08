@@ -29,7 +29,7 @@ from typing import TYPE_CHECKING, Callable, Iterable
 
 from .abc import Messageable, _purge_messages_helper
 from .enums import ChannelType
-from .enums import ThreadArchiveDuration as ThreadAutoArchiveDuration
+from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
 from .enums import try_enum
 from .errors import ClientException
 from .flags import ChannelFlags
@@ -605,7 +605,7 @@ class Thread(Messageable, Hashable):
         invitable: bool = MISSING,
         slowmode_delay: int = MISSING,
         auto_archive_duration: (
-            ThreadAutoArchiveDuration | ThreadArchiveDuration
+            ThreadArchiveDurationEnum | ThreadArchiveDuration
         ) = MISSING,
         pinned: bool = MISSING,
         applied_tags: list[ForumTag] = MISSING,

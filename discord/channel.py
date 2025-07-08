@@ -40,7 +40,7 @@ from .enums import (
     SortOrder,
     StagePrivacyLevel,
 )
-from .enums import ThreadArchiveDuration as ThreadAutoArchiveDuration
+from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
 from .enums import (
     VideoQualityMode,
     VoiceRegion,
@@ -1088,7 +1088,7 @@ class ForumChannel(_TextChannel):
         category: CategoryChannel | None = ...,
         slowmode_delay: int = ...,
         default_auto_archive_duration: (
-            ThreadArchiveDuration | ThreadAutoArchiveDuration
+            ThreadArchiveDuration | ThreadArchiveDurationEnum
         ) = ...,
         default_thread_slowmode_delay: int = ...,
         default_sort_order: SortOrder = ...,
