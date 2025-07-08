@@ -79,7 +79,7 @@ __all__ = (
     "InteractionContextType",
     "PollLayoutType",
     "MessageReferenceType",
-    "ThreadAutoArchiveDuration",
+    "ThreadArchiveDuration",
 )
 
 
@@ -1080,7 +1080,7 @@ class SubscriptionStatus(Enum):
     inactive = 2
 
 
-class ThreadAutoArchiveDuration(enum.IntEnum):
+class ThreadArchiveDuration(enum.IntEnum):
     """Time set before the thread is auto archived"""
 
     one_hour = 60

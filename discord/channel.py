@@ -39,11 +39,11 @@ from .enums import (
     InviteTarget,
     SortOrder,
     StagePrivacyLevel,
-    ThreadAutoArchiveDuration,
     VideoQualityMode,
     VoiceRegion,
     try_enum,
 )
+from .enums import ThreadArchiveDuration as ThreadAutoArchiveDuration
 from .errors import ClientException, InvalidArgument
 from .file import File
 from .flags import ChannelFlags
@@ -1133,7 +1133,7 @@ class ForumChannel(_TextChannel):
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
-            **ThreadAutoArchiveDuration** enum can be used for better understanding.
+            :class:`ThreadAutoArchiveDuration` can be used alternatively.
         default_thread_slowmode_delay: :class:`int`
             The new default slowmode delay in seconds for threads created in this channel.
 
@@ -1176,14 +1176,6 @@ class ForumChannel(_TextChannel):
         if "require_tag" in options:
             options["flags"] = ChannelFlags._from_value(self.flags.value)
             options["flags"].require_tag = options.pop("require_tag")
-
-        if "default_auto_archive_duration" in options:
-            default_auto_archive_duration = options["default_auto_archive_duration"]
-            options["default_auto_archive_duration"] = (
-                default_auto_archive_duration
-                if isinstance(default_auto_archive_duration, (int, float))
-                else default_auto_archive_duration.value
-            )
 
         payload = await self._edit(options, reason=reason)
         if payload is not None:

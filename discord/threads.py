@@ -28,7 +28,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, Iterable
 
 from .abc import Messageable, _purge_messages_helper
-from .enums import ChannelType, ThreadAutoArchiveDuration, try_enum
+from .enums import ChannelType, try_enum
+from .enums import ThreadArchiveDuration as ThreadAutoArchiveDuration
 from .errors import ClientException
 from .flags import ChannelFlags
 from .mixins import Hashable
@@ -634,7 +635,7 @@ class Thread(Messageable, Hashable):
         auto_archive_duration: :class:`int`
             The new duration in minutes before a thread is automatically archived for inactivity.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
-            **ThreadAutoArchiveDuration** enum can be used for better understanding.
+            :class:`ThreadAutoArchiveDuration` can be used alternatively.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this thread, in seconds.
             A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
