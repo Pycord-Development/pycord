@@ -55,6 +55,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added conversion to `Member` in `MentionableConverter`.
+  ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
 
