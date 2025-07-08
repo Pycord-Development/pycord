@@ -2882,6 +2882,7 @@ class Guild(Hashable):
         permissions: Permissions = ...,
         colour: Colour | int = ...,
         colours: RoleColours = ...,
+        holographic: bool = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
         icon: bytes | None = MISSING,
@@ -2897,6 +2898,7 @@ class Guild(Hashable):
         permissions: Permissions = ...,
         color: Colour | int = ...,
         colors: RoleColours = ...,
+        holographic: bool = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
         icon: bytes | None = ...,
@@ -2912,6 +2914,7 @@ class Guild(Hashable):
         colour: Colour | int = MISSING,
         colors: RoleColours = MISSING,
         colours: RoleColours = MISSING,
+        holographic: bool = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         reason: str | None = None,
@@ -2990,7 +2993,6 @@ class Guild(Hashable):
                 actual_colours.secondary = None
                 actual_colours.tertiary = None
             fields["colors"] = actual_colours._to_dict()
-
         else:
             raise InvalidArgument(
                 "colours parameter must be of type RoleColours, not {0.__class__.__name__}".format(

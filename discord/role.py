@@ -211,6 +211,26 @@ class RoleColours:
         """Returns a default :class:`RoleColours` object with no colours set."""
         return cls(Colour.default(), None, None)
 
+    @classmethod
+    def holographic(cls) -> RoleColours:
+        """Returns a :class:`RoleColours` that makes the role look holographic.
+
+        Currently holographic roles are only supported with colours 11127295, 16759788, and 16761760.
+        """
+        return cls(Colour(11127295), Colour(16759788), Colour(16761760))
+
+    @property
+    def is_holographic(self) -> bool:
+        """Whether the role is holographic.
+
+        Currently roles are holographic when colours are set to 11127295, 16759788, and 16761760.
+        """
+        return (
+            self.primary.value == 11127295
+            and self.secondary.value == 16759788
+            and self.tertiary.value == 16761760
+        )
+
     def __repr__(self) -> str:
         return (
             f"<RoleColours primary={self.primary!r} "
