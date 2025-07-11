@@ -46,8 +46,6 @@ class InputText:
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
-    id: Optional[:class:`int`]
-        The input text's ID.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -123,6 +121,11 @@ class InputText:
     def style(self) -> InputTextStyle:
         """The style of the input text field."""
         return self._underlying.style
+
+    @property
+    def id(self) -> int | None:
+        """The input text's ID. If not provided by the user, it is set sequentially by Discord."""
+        return self._underlying.id
 
     @style.setter
     def style(self, value: InputTextStyle):

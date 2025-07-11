@@ -202,7 +202,7 @@ class InputText(Component):
     style: :class:`.InputTextStyle`
         The style of the input text field.
     custom_id: Optional[:class:`str`]
-        The ID of the input text field that gets received during an interaction.
+        The custom ID of the input text field that gets received during an interaction.
     label: :class:`str`
         The label for the input text field.
     placeholder: Optional[:class:`str`]
@@ -216,6 +216,8 @@ class InputText(Component):
         Whether the input text field is required or not. Defaults to `True`.
     value: Optional[:class:`str`]
         The value that has been entered in the input text field.
+    id: Optional[:class:`int`]
+        The input text's ID.
     """
 
     __slots__: tuple[str, ...] = (
@@ -228,6 +230,7 @@ class InputText(Component):
         "max_length",
         "required",
         "value",
+        "id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -235,7 +238,7 @@ class InputText(Component):
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
-        self.id: int = data.get("id")
+        self.id: int | None = data.get("id")
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
         self.label: str = data.get("label", None)
