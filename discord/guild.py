@@ -88,7 +88,7 @@ from .user import User
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("Guild",)
+__all__ = ("BanEntry", "Guild")
 
 MISSING = utils.MISSING
 
