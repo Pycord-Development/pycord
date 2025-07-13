@@ -591,6 +591,8 @@ _FETCHABLE = TypeVar(
 )
 
 
+# TODO: In version 3.0, remove the 'attr' and 'id' arguments.
+#       Also, eliminate the default 'MISSING' value for both 'object_type' and 'object_id'.
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE] = MISSING,
@@ -598,9 +600,7 @@ async def get_or_fetch(
     default: Any = MISSING,
     attr: str = MISSING,
     id: int = MISSING,
-) -> (
-    _FETCHABLE | None
-):  # TODO: Remove in 3.0 the arguments attr and id + remove the = MISSING for both object_type and object_id
+) -> _FETCHABLE | None:
     """
     Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 
@@ -646,7 +646,8 @@ async def get_or_fetch(
         "appemoji": AppEmoji,
         "role": Role,
     }
-    # backward support for attr and id, this whole if block should be removed in v3
+    # Temporary backward compatibility for 'attr' and 'id'.
+    # This entire if block should be removed in version 3.0.
     if attr is not MISSING or id is not MISSING or isinstance(object_type, str):
         warn_deprecated(
             name="get_or_fetch(obj, attr='type', id=...)",
