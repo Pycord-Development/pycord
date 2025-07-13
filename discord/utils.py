@@ -294,14 +294,24 @@ def deprecated_message(
 
     Parameters
     ----------
-    name
-    instead
-    since
-    removed
-    reference
+    name: str
+        The name of the deprecated function.
+    instead: Optional[:class:`str`]
+        A recommended alternative to the function.
+    since: Optional[:class:`str`]
+        The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
+        the patch version is optional.
+    removed: Optional[:class:`str`]
+        The version in which the function is planned to be removed. This should be in the format
+        ``major.minor(.patch)``, where the patch version is optional.
+    reference: Optional[:class:`str`]
+        A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
+        issue/PR.
 
     Returns
     -------
+    :class:`str`
+        The deprecation message.
     """
     message = f"{name} is deprecated"
     if since:
