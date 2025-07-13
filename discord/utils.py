@@ -598,7 +598,9 @@ async def get_or_fetch(
     default: Any = MISSING,
     attr: str = MISSING,
     id: int = MISSING,
-) -> _FETCHABLE | None:  # TODO: Remove in 3.0 the arguments attr and id
+) -> (
+    _FETCHABLE | None
+):  # TODO: Remove in 3.0 the arguments attr and id + remove the = MISSING for both object_type and object_id
     """
     Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 
@@ -644,12 +646,13 @@ async def get_or_fetch(
         "appemoji": AppEmoji,
         "role": Role,
     }
-
+    # backward support for attr and id, this whole if block should be removed in v3
     if attr is not MISSING or id is not MISSING or isinstance(object_type, str):
         warn_deprecated(
             name="get_or_fetch(obj, attr='type', id=...)",
             instead="get_or_fetch(obj, object_type=Type, object_id=...)",
             since="2.7",
+            removed="3.0",
         )
 
         deprecated_attr = attr if attr is not MISSING else object_type
