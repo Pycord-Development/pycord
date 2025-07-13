@@ -75,7 +75,7 @@ else:
 __all__ = (
     "parse_time",
     "warn_deprecated",
-    "deprecated",
+    "deprecated_message",
     "oauth_url",
     "snowflake_time",
     "time_snowflake",
@@ -283,6 +283,40 @@ def copy_doc(original: Callable) -> Callable[[T], T]:
     return decorator
 
 
+def deprecated_message(
+    name: str,
+    instead: str | None = None,
+    since: str | None = None,
+    removed: str | None = None,
+    reference: str | None = None,
+) -> str:
+    """
+    Generates a deprecation message, with the ability to specify details about the deprecation.
+
+    Parameters
+    ----------
+    name
+    instead
+    since
+    removed
+    reference
+
+    Returns
+    -------
+    """
+    message = f"{name} is deprecated"
+    if since:
+        message += f" since version {since}"
+    if removed:
+        message += f" and will be removed in version {removed}"
+    if instead:
+        message += f", consider using {instead} instead"
+    message += "."
+    if reference:
+        message += f" See {reference} for more information."
+    return message
+
+
 def warn_deprecated(
     name: str,
     instead: str | None = None,
@@ -313,16 +347,13 @@ def warn_deprecated(
         The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     """
     warnings.simplefilter("always", DeprecationWarning)  # turn off filter
-    message = f"{name} is deprecated"
-    if since:
-        message += f" since version {since}"
-    if removed:
-        message += f" and will be removed in version {removed}"
-    if instead:
-        message += f", consider using {instead} instead"
-    message += "."
-    if reference:
-        message += f" See {reference} for more information."
+    message = deprecated_message(
+        name=name,
+        instead=instead,
+        since=since,
+        removed=removed,
+        reference=reference,
+    )
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
     warnings.simplefilter("default", DeprecationWarning)  # reset filter
