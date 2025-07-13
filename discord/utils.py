@@ -29,7 +29,6 @@ import array
 import asyncio
 import collections.abc
 import datetime
-import functools
 import itertools
 import json
 import re
@@ -357,57 +356,6 @@ def warn_deprecated(
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
     warnings.simplefilter("default", DeprecationWarning)  # reset filter
-
-
-def deprecated(
-    instead: str | None = None,
-    since: str | None = None,
-    removed: str | None = None,
-    reference: str | None = None,
-    stacklevel: int = 3,
-    *,
-    use_qualname: bool = True,
-) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
-    """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
-    the decorated function is called.
-
-    Parameters
-    ----------
-    instead: Optional[:class:`str`]
-        A recommended alternative to the function.
-    since: Optional[:class:`str`]
-        The version in which the function was deprecated. This should be in the format ``major.minor(.patch)``, where
-        the patch version is optional.
-    removed: Optional[:class:`str`]
-        The version in which the function is planned to be removed. This should be in the format
-        ``major.minor(.patch)``, where the patch version is optional.
-    reference: Optional[:class:`str`]
-        A reference that explains the deprecation, typically a URL to a page such as a changelog entry or a GitHub
-        issue/PR.
-    stacklevel: :class:`int`
-        The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
-    use_qualname: :class:`bool`
-        Whether to use the qualified name of the function in the deprecation warning. If ``False``, the short name of
-        the function will be used instead. For example, __qualname__ will display as ``Client.login`` while __name__
-        will display as ``login``. Defaults to ``True``.
-    """
-
-    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
-        @functools.wraps(func)
-        def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
-            warn_deprecated(
-                name=func.__qualname__ if use_qualname else func.__name__,
-                instead=instead,
-                since=since,
-                removed=removed,
-                reference=reference,
-                stacklevel=stacklevel,
-            )
-            return func(*args, **kwargs)
-
-        return decorated
-
-    return actual_decorator
 
 
 def oauth_url(
