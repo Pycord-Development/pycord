@@ -150,8 +150,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Removed
 
-- Removed deprecated support for `Option` in `BridgeCommand`. Use `BridgeOption`
-  instead. ([#2731])(https://github.com/Pycord-Development/pycord/pull/2731))
+- Removed deprecated support for `Option` in `BridgeCommand`, use `BridgeOption`
+  instead. ([#2731](https://github.com/Pycord-Development/pycord/pull/2731))
 
 ## [2.6.1] - 2024-09-15
 
