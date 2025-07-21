@@ -550,7 +550,7 @@ class DecodeManager(threading.Thread, _OpusStruct):
                         data.decrypted_data
                     )
             except OpusError:
-                print("Error occurred while decoding opus frame.")
+                _log.exception("Error occurred while decoding opus frame.")
                 continue
 
             self.client.recv_decoded_audio(data)
@@ -560,7 +560,7 @@ class DecodeManager(threading.Thread, _OpusStruct):
             time.sleep(0.1)
             self.decoder = {}
             gc.collect()
-            print("Decoder Process Killed")
+            _log.info("Decoder Process Killed")
         self._end_thread.set()
 
     def get_decoder(self, ssrc):

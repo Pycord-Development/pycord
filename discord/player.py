@@ -808,8 +808,6 @@ class AudioPlayer(threading.Thread):
         elif error:
             msg = f"Exception in voice thread {self.name}"
             _log.exception(msg, exc_info=error)
-            print(msg, file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__)
 
     def stop(self) -> None:
         self._end.set()

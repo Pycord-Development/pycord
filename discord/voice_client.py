@@ -852,7 +852,7 @@ class VoiceClient(VoiceProtocol):
             ready, _, err = select.select([self.socket], [], [self.socket], 0.01)
             if not ready:
                 if err:
-                    print(f"Socket error: {err}")
+                    _log.error(f"Socket error: {err}")
                 continue
 
             try:
@@ -869,7 +869,7 @@ class VoiceClient(VoiceProtocol):
         result = callback.result()
 
         if result is not None:
-            print(result)
+            _log.info(result)
 
     def recv_decoded_audio(self, data: RawData):
         # Add silence when they were not being recorded.

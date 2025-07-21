@@ -536,11 +536,11 @@ class Client:
 
         The default error handler provided by the client.
 
-        By default, this prints to :data:`sys.stderr` however it could be
+        By default, this logs with :meth:`logging.error` however it could be
         overridden to have a different implementation.
         Check :func:`~discord.on_error` for more details.
         """
-        print(f"Ignoring exception in {event_method}", file=sys.stderr)
+        _log.error(f"Ignoring exception in {event_method}")
         traceback.print_exc()
 
     async def on_view_error(
@@ -553,27 +553,22 @@ class Client:
         This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
         """
 
-        print(
+        _log.error(
             f"Ignoring exception in view {interaction.view} for item {item}:",
-            file=sys.stderr,
-        )
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
+            exc_info=error,
         )
 
     async def on_modal_error(self, error: Exception, interaction: Interaction) -> None:
         """|coro|
 
         The default modal error handler provided by the client.
-        The default implementation prints the traceback to stderr.
+        The default implementation logs the traceback with :meth:`logging.error`.
 
         This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
         """
 
-        print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        _log.error(f"Ignoring exception in modal {interaction.modal}", exc_info=error)
+
 
     # hooks
 

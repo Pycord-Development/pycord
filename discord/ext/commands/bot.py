@@ -28,6 +28,7 @@ from __future__ import annotations
 import collections
 import collections.abc
 import sys
+import logging
 import traceback
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
@@ -50,6 +51,8 @@ __all__ = (
     "Bot",
     "AutoShardedBot",
 )
+
+_log = logging.getLogger(__name__)
 
 MISSING: Any = discord.utils.MISSING
 
@@ -156,7 +159,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
 
         The default command error handler provided by the bot.
 
-        By default, this prints to :data:`sys.stderr` however it could be
+        By default, this logs with :meth:`logging.error` however it could be
         overridden to have a different implementation.
 
         This only fires if you do not specify any listeners for command error.
@@ -172,10 +175,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         if cog and cog.has_error_handler():
             return
 
-        print(f"Ignoring exception in command {context.command}:", file=sys.stderr)
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
-        )
+        logging.error(f"Ignoring exception in command {context.command}", exc_info=exception)
 
     async def can_run(self, ctx: Context, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks
