@@ -31,7 +31,7 @@ class File(Item[V]):
     url: :class:`str`
         The URL of this file. This must be an ``attachment://`` URL referring to a local file used with :class:`~discord.File`.
     spoiler: Optional[:class:`bool`]
-        Whether this file is a spoiler.
+        Whether this file has the spoiler overlay.
     id: Optional[:class:`int`]
         The file component's ID.
     """
@@ -73,7 +73,7 @@ class File(Item[V]):
 
     @property
     def spoiler(self) -> bool:
-        """Whether the file is a spoiler. Defaults to ``False``."""
+        """Whether the file has the spoiler overlay. Defaults to ``False``."""
         return self._underlying.spoiler
 
     @spoiler.setter

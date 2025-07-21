@@ -106,7 +106,8 @@ class Component:
     type: :class:`ComponentType`
         The type of component.
     id: :class:`int`
-        The component's ID. If not provided by the user, it is automatically incremented.
+        The component's ID. If not provided by the user, it is set sequentially by Discord.
+        The ID `0` is treated as if no ID was provided.
     """
 
     __slots__: tuple[str, ...] = ("type", "id")
@@ -170,7 +171,7 @@ class ActionRow(Component):
 
     @property
     def width(self):
-        """Return the total item width that this action row uses."""
+        """Return the sum of the children's widths."""
         t = 0
         for item in self.children:
             t += 1 if item.type is ComponentType.button else 5
@@ -572,7 +573,7 @@ class SelectOption:
 class Section(Component):
     """Represents a Section from Components V2.
 
-    This is a component that groups other components together.
+    This is a component that groups other components together with an additional component to the right as the accessory.
 
     This inherits from :class:`Component`.
 
@@ -688,7 +689,7 @@ class UnfurledMediaItem(AssetMixin):
         r._state = state
         return r
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, str]:
         return {"url": self.url}
 
 
@@ -708,7 +709,7 @@ class Thumbnail(Component):
     description: Optional[:class:`str`]
         The thumbnail's description, up to 1024 characters.
     spoiler: Optional[:class:`bool`]
-        Whether the thumbnail is a spoiler.
+        Whether the thumbnail has the spoiler overlay.
     """
 
     __slots__: tuple[str, ...] = (
@@ -853,7 +854,7 @@ class FileComponent(Component):
     size: :class:`int`
         The file's size in bytes.
     spoiler: Optional[:class:`bool`]
-        Whether the file is a spoiler.
+        Whether the file has the spoiler overlay.
     """
 
     __slots__: tuple[str, ...] = (
@@ -886,7 +887,7 @@ class FileComponent(Component):
 class Separator(Component):
     """Represents a Separator from Components V2.
 
-    This is a component that separates other components.
+    This is a component that visually separates components.
 
     This inherits from :class:`Component`.
 
@@ -895,7 +896,7 @@ class Separator(Component):
     Attributes
     ----------
     divider: :class:`bool`
-        Whether the separator is a divider (provide example?)
+        Whether the separator will show a horizontal line in addition to vertical spacing.
     spacing: Optional[:class:`SeparatorSpacingSize`]
         The separator's spacing size.
     """
@@ -937,8 +938,12 @@ class Container(Component):
 
     Attributes
     ----------
-    items: List[:class:`MediaGalleryItem`]
-        The media this gallery contains.
+    components: List[:class:`Component`]
+        The components contained in this container.
+    accent_color: Optional[:class:`Colour`]
+        The accent color of the container.
+    spoiler: Optional[:class:`bool`]
+        Whether the entire container has the spoiler overlay.
     """
 
     __slots__: tuple[str, ...] = (

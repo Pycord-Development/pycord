@@ -90,7 +90,7 @@ class MediaGallery(Item[V]):
         description: Optional[:class:`str`]
             The media item's description, up to 1024 characters.
         spoiler: Optional[:class:`bool`]
-            Whether the media item is a spoiler.
+            Whether the media item has the spoiler overlay.
 
         Raises
         ------
@@ -99,7 +99,7 @@ class MediaGallery(Item[V]):
         """
 
         if len(self.items) >= 10:
-            raise ValueError("maximum number of children exceeded")
+            raise ValueError("maximum number of items exceeded")
 
         item = MediaGalleryItem(url, description=description, spoiler=spoiler)
 

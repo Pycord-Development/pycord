@@ -52,7 +52,7 @@ class Container(Item[V]):
     colour: Union[:class:`Colour`, :class:`int`]
         The accent colour of the container. Aliased to ``color`` as well.
     spoiler: Optional[:class:`bool`]
-        Whether this container is a spoiler.
+        Whether this container has the spoiler overlay.
     id: Optional[:class:`int`]
         The container's ID.
     """
@@ -173,7 +173,7 @@ class Container(Item[V]):
         return self
 
     def get_item(self, id: str | int) -> Item | None:
-        """Get a top-level item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
+        """Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
 
@@ -232,6 +232,8 @@ class Container(Item[V]):
         ----------
         content: :class:`str`
             The content of the TextDisplay
+        id: Optiona[:class:`int`]
+            The text displays' ID.
         """
 
         text = TextDisplay(content, id=id)
@@ -267,7 +269,7 @@ class Container(Item[V]):
         url: :class:`str`
             The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
         spoiler: Optional[:class:`bool`]
-            Whether the file is a spoiler. Defaults to ``False``.
+            Whether the file has the spoiler overlay. Defaults to ``False``.
         id: Optiona[:class:`int`]
             The file's ID.
         """
@@ -307,7 +309,7 @@ class Container(Item[V]):
 
     @property
     def spoiler(self) -> bool:
-        """Whether the container is a spoiler. Defaults to ``False``."""
+        """Whether the container has the spoiler overlay. Defaults to ``False``."""
         return self._underlying.spoiler
 
     @spoiler.setter

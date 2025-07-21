@@ -30,7 +30,7 @@ class Thumbnail(Item[V]):
     description: Optional[:class:`str`]
         The thumbnail's description, up to 1024 characters.
     spoiler: Optional[:class:`bool`]
-        Whether the thumbnail is a spoiler. Defaults to ``False``.
+        Whether the thumbnail has the spoiler overlay. Defaults to ``False``.
     id: Optional[:class:`int`]
         The thumbnail's ID.
     """
@@ -90,7 +90,8 @@ class Thumbnail(Item[V]):
 
     @property
     def spoiler(self) -> bool:
-        """Whether the thumbnail is a spoiler. Defaults to ``False``."""
+        """Whether the thumbnail has the spoiler overlay. Defaults to ``False``."""
+
         return self._underlying.spoiler
 
     @spoiler.setter

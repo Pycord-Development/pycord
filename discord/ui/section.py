@@ -225,7 +225,7 @@ class Section(Item[V]):
         description: Optional[:class:`str`]
             The thumbnail's description, up to 1024 characters.
         spoiler: Optional[:class:`bool`]
-            Whether the thumbnail is a spoiler. Defaults to ``False``.
+            Whether the thumbnail has the spoiler overlay. Defaults to ``False``.
         id: Optional[:class:`int`]
             The thumbnail's ID.
         """
@@ -289,7 +289,7 @@ class Section(Item[V]):
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
-        Enables all buttons and select menus in the container.
+        Enables all buttons and select menus in the section.
         At the moment, this only enables :attr:`accessory` if it is a button.
 
         Parameters
