@@ -284,8 +284,7 @@ class Button(Component):
 
     .. note::
 
-        The user constructible and usable type to create a button is :class:`discord.ui.Button`
-        not this one.
+        This class is not useable by end-users; see :class:`discord.ui.Button` instead.
 
     .. versionadded:: 2.0
 
@@ -367,8 +366,7 @@ class SelectMenu(Component):
 
     .. note::
 
-        The user constructible and usable type to create a select menu is
-        :class:`discord.ui.Select` not this one.
+        This class is not useable by end-users; see :class:`discord.ui.Select` instead.
 
     .. versionadded:: 2.0
 
@@ -577,14 +575,18 @@ class Section(Component):
 
     This inherits from :class:`Component`.
 
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Section` instead.
+
     .. versionadded:: 2.7
 
     Attributes
     ----------
     components: List[:class:`Component`]
-        The components contained in this section.
+        The components contained in this section. Currently supports :class:`TextDisplay`.
     accessory: Optional[:class:`Component`]
-        The accessory attached to this Section.
+        The accessory attached to this Section. Currently supports :class:`Button` and :class:`Thumbnail`.
     """
 
     __slots__: tuple[str, ...] = ("components", "accessory")
@@ -625,6 +627,10 @@ class TextDisplay(Component):
     This is a component that displays text.
 
     This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.TextDisplay` instead.
 
     .. versionadded:: 2.7
 
@@ -699,6 +705,10 @@ class Thumbnail(Component):
     This is a component that displays media, such as images and videos.
 
     This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Thumbnail` instead.
 
     .. versionadded:: 2.7
 
@@ -792,7 +802,7 @@ class MediaGalleryItem:
         r.media = media
         return r
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, Any]:
         payload = {"media": self.media.to_dict()}
         if self.description:
             payload["description"] = self.description
@@ -807,6 +817,10 @@ class MediaGallery(Component):
     This is a component that displays up to 10 different :class:`MediaGalleryItem` objects.
 
     This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.MediaGallery` instead.
 
     .. versionadded:: 2.7
 
@@ -842,6 +856,10 @@ class FileComponent(Component):
     This component displays a downloadable file in a message.
 
     This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.File` instead.
 
     .. versionadded:: 2.7
 
@@ -891,6 +909,10 @@ class Separator(Component):
 
     This inherits from :class:`Component`.
 
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Separator` instead.
+
     .. versionadded:: 2.7
 
     Attributes
@@ -930,9 +952,20 @@ class Container(Component):
     """Represents a Container from Components V2.
 
     This is a component that contains different :class:`Component` objects.
-    It may only contain objects of type :class:`ActionRow`, :class:`TextDisplay`, :class:`Section`, :class:`MediaGallery`, :class:`Separator`, or :class:`FileComponent`.
+    It may only contain:
+
+    - :class:`ActionRow`
+    - :class:`TextDisplay`
+    - :class:`Section`
+    - :class:`MediaGallery`
+    - :class:`Separator`
+    - :class:`FileComponent`
 
     This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Container` instead.
 
     .. versionadded:: 2.7
 
