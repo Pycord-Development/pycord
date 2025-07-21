@@ -80,8 +80,6 @@ class ApplicationContext(discord.abc.Messageable):
         The bot that the command belongs to.
     interaction: :class:`.Interaction`
         The interaction object that invoked the command.
-    command: :class:`.ApplicationCommand`
-        The command that this context belongs to.
     """
 
     def __init__(self, bot: Bot, interaction: Interaction):
@@ -89,7 +87,6 @@ class ApplicationContext(discord.abc.Messageable):
         self.interaction = interaction
 
         # below attributes will be set after initialization
-        self.command: ApplicationCommand = None  # type: ignore
         self.focused: Option = None  # type: ignore
         self.value: str = None  # type: ignore
         self.options: dict = None  # type: ignore
@@ -135,6 +132,15 @@ class ApplicationContext(discord.abc.Messageable):
             The command argument to invoke is missing.
         """
         return await command(self, *args, **kwargs)
+
+    @property
+    def command(self) -> ApplicationCommand | None:
+        """The command that this context belongs to."""
+        return self.interaction.command
+
+    @command.setter
+    def command(self, value: ApplicationCommand | None) -> None:
+        self.interaction.command = value
 
     @cached_property
     def channel(self) -> InteractionChannel | None:
@@ -384,8 +390,6 @@ class AutocompleteContext:
         The bot that the command belongs to.
     interaction: :class:`.Interaction`
         The interaction object that invoked the autocomplete.
-    command: :class:`.ApplicationCommand`
-        The command that this context belongs to.
     focused: :class:`.Option`
         The option the user is currently typing.
     value: :class:`.str`
@@ -394,13 +398,12 @@ class AutocompleteContext:
         A name to value mapping of the options that the user has selected before this option.
     """
 
-    __slots__ = ("bot", "interaction", "command", "focused", "value", "options")
+    __slots__ = ("bot", "interaction", "focused", "value", "options")
 
     def __init__(self, bot: Bot, interaction: Interaction):
         self.bot = bot
         self.interaction = interaction
 
-        self.command: ApplicationCommand = None  # type: ignore
         self.focused: Option = None  # type: ignore
         self.value: str = None  # type: ignore
         self.options: dict = None  # type: ignore
@@ -414,3 +417,12 @@ class AutocompleteContext:
             return None
 
         return self.command.cog
+
+    @property
+    def command(self) -> ApplicationCommand | None:
+        """The command that this context belongs to."""
+        return self.interaction.command
+
+    @command.setter
+    def command(self, value: ApplicationCommand | None) -> None:
+        self.interaction.command = value
