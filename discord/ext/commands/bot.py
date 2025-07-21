@@ -27,9 +27,7 @@ from __future__ import annotations
 
 import collections
 import collections.abc
-import sys
 import logging
-import traceback
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
@@ -175,7 +173,9 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         if cog and cog.has_error_handler():
             return
 
-        logging.error(f"Ignoring exception in command {context.command}", exc_info=exception)
+        logging.error(
+            f"Ignoring exception in command {context.command}", exc_info=exception
+        )
 
     async def can_run(self, ctx: Context, *, call_once: bool = False) -> bool:
         data = self._check_once if call_once else self._checks

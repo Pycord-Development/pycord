@@ -31,8 +31,6 @@ import collections.abc
 import copy
 import inspect
 import logging
-import sys
-import traceback
 from abc import ABC, abstractmethod
 from typing import (
     TYPE_CHECKING,
@@ -1255,7 +1253,9 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         if cog and cog.has_error_handler():
             return
 
-        _log.error(f"Ignoring exception in command {context.command}.", exc_info=exception)
+        _log.error(
+            f"Ignoring exception in command {context.command}.", exc_info=exception
+        )
 
     # global check registration
     # TODO: Remove these from commands.Bot

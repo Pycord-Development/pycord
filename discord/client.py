@@ -28,7 +28,6 @@ from __future__ import annotations
 import asyncio
 import logging
 import signal
-import sys
 import traceback
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
@@ -568,7 +567,6 @@ class Client:
         """
 
         _log.error(f"Ignoring exception in modal {interaction.modal}", exc_info=error)
-
 
     # hooks
 

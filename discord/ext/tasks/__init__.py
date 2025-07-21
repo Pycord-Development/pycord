@@ -28,9 +28,7 @@ from __future__ import annotations
 import asyncio
 import datetime
 import inspect
-import sys
 import logging
-import traceback
 from collections.abc import Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
@@ -49,6 +47,7 @@ FT = TypeVar("FT", bound=_func)
 ET = TypeVar("ET", bound=Callable[[Any, BaseException], Awaitable[Any]])
 
 _log = logging.getLogger(__name__)
+
 
 class SleepHandle:
     __slots__ = ("future", "loop", "handle")

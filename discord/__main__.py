@@ -37,6 +37,7 @@ import discord
 
 _log = logging.getLogger(__name__)
 
+
 def show_version() -> None:
     entries = [
         "- Python v{0.major}.{0.minor}.{0.micro}-{0.releaselevel}".format(
@@ -240,7 +241,7 @@ def newbot(parser, args) -> None:
         cogs.mkdir(exist_ok=True)
         init = cogs / "__init__.py"
         init.touch()
-    except OSError as exc:
+    except OSError:
         _log.exception(f"Could not create cogs directory.")
 
     try:
@@ -260,7 +261,7 @@ def newbot(parser, args) -> None:
         try:
             with open(str(new_directory / ".gitignore"), "w", encoding="utf-8") as fp:
                 fp.write(_gitignore_template)
-        except OSError as exc:
+        except OSError:
             _log.exception(f"Could not create .gitignore file.")
 
     print("Successfully made bot at", new_directory)
@@ -270,7 +271,7 @@ def newcog(parser, args) -> None:
     cog_dir = to_path(parser, args.directory)
     try:
         cog_dir.mkdir(exist_ok=True)
-    except OSError as exc:
+    except OSError:
         _log.exception(f"Could not create cogs directory.")
 
     directory = cog_dir / to_path(parser, args.name)
