@@ -1,6 +1,6 @@
 -r _.txt
 pylint~=3.3.7
-pytest~=8.3.5
+pytest~=8.4.0
 pytest-asyncio~=0.24.0
 # pytest-order~=1.0.1
 mypy~=1.15.0
