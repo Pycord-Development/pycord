@@ -46,7 +46,7 @@ class BaseComponent(TypedDict):
 
 class ActionRow(BaseComponent):
     type: Literal[1]
-    components: list[Component]
+    components: list[ButtonComponent, InputText, SelectMenu]
 
 
 class ButtonComponent(BaseComponent):
