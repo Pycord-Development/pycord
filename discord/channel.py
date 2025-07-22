@@ -2839,7 +2839,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         "name",
         "id",
         "guild",
-        "nsfw",
         "_state",
         "position",
         "_overwrites",
@@ -3076,12 +3075,12 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
 
     # TODO: Remove in 3.0
 
+    @property
     @utils.deprecated(
         since="2.7",
         removed="3.0",
         reference="Category NSFW was never supported by the API.",
     )
-    @property
     def nsfw(self) -> bool:
         return False
 
