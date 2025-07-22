@@ -2864,7 +2864,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         self.guild: Guild = guild
         self.name: str = data["name"]
         self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
-        self.nsfw = False
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
@@ -3076,6 +3075,15 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         return False
 
     # TODO: Remove in 3.0
+
+    @utils.deprecated(
+        since="2.7",
+        removed="3.0",
+        reference="Category NSFW was never supported by the API.",
+    )
+    @property
+    def nsfw(self) -> bool:
+        return False
 
 
 DMC = TypeVar("DMC", bound="DMChannel")
