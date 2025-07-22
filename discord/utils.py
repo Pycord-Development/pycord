@@ -98,8 +98,6 @@ __all__ = (
     "generate_snowflake",
     "basic_autocomplete",
     "filter_params",
-    "EMOJIS_MAP",
-    "UNICODE_EMOJIS",
 )
 
 DISCORD_EPOCH = 1420070400000
