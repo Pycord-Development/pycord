@@ -229,7 +229,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
 
     @property
     def _repr_attrs(self) -> tuple[str, ...]:
-        return "id", "name", "position", "nsfw", "category_id"
+        return "id", "name", "position", "category_id"
 
     def __repr__(self) -> str:
         attrs = [(val, getattr(self, val)) for val in self._repr_attrs]
