@@ -83,11 +83,11 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .interaction import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
     from .threads import Thread, ThreadMember
-    from .interaction import Interaction
     from .ui.item import Item
     from .voice_client import VoiceProtocol
 
