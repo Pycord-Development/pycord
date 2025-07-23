@@ -496,7 +496,9 @@ class VoiceClient(VoiceProtocol):
                         try:
                             await self.ws.resume()
                         except asyncio.TimeoutError:
-                            _log.info("Could not resume the voice connection... Disconnection...")
+                            _log.info(
+                                "Could not resume the voice connection... Disconnection..."
+                            )
                             if self._connected.is_set():
                                 await self.disconnect(force=True)
                         else:
