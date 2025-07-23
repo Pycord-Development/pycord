@@ -121,6 +121,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2800](https://github.com/Pycord-Development/pycord/pull/2800))
 - Fixed `VoiceClient.connect` failing to do initial connection.
   ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
+- Upgraded voice websocket version to v8.
+  ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
 
 ### Changed
 
