@@ -120,8 +120,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `VoiceClient` crashing randomly while receiving audio
   ([#2800](https://github.com/Pycord-Development/pycord/pull/2800))
 - Fixed `TypeError` when using `@option` with certain annotations and along with
-  `channel_types`.
-  ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
+  `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
 
 ### Changed
 
