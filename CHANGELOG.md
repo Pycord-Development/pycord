@@ -119,6 +119,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2781](https://github.com/Pycord-Development/pycord/pull/2781))
 - Fixed `VoiceClient` crashing randomly while receiving audio
   ([#2800](https://github.com/Pycord-Development/pycord/pull/2800))
+- Fixed `VoiceClient.connect` failing to do initial connection.
+  ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
 - Fixed Async I/O errors that could be raised when using `Client.run`.
   ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
 
@@ -140,6 +142,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Changed the default value of `ApplicationCommand.nsfw` to `False`.
   ([#2797](https://github.com/Pycord-Development/pycord/pull/2797))
+- Upgraded voice websocket version to v8.
+  ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
 
 ### Deprecated
 
@@ -152,8 +156,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Removed
 
-- Removed deprecated support for `Option` in `BridgeCommand`. Use `BridgeOption`
-  instead. ([#2731])(https://github.com/Pycord-Development/pycord/pull/2731))
+- Removed deprecated support for `Option` in `BridgeCommand`, use `BridgeOption`
+  instead. ([#2731](https://github.com/Pycord-Development/pycord/pull/2731))
 
 ## [2.6.1] - 2024-09-15
 
