@@ -247,7 +247,7 @@ class Client:
             proxy=proxy,
             proxy_auth=proxy_auth,
             unsync_clock=unsync_clock,
-            loop=self.loop,
+            loop=self._loop,
         )
 
         self._handlers: dict[str, Callable] = {"ready": self._handle_ready}
@@ -274,7 +274,7 @@ class Client:
         self._tasks = set()
 
     async def __aenter__(self) -> Client:
-        if self._loop is MISSING:
+        if self._loop is None:
             try:
                 self._loop = asyncio.get_running_loop()
             except RuntimeError:
