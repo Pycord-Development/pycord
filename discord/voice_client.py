@@ -326,11 +326,7 @@ class VoiceClient(VoiceProtocol):
             )
             return
 
-        self.endpoint, _, _ = endpoint.rpartition(":")
-        if self.endpoint.startswith("wss://"):
-            # Just in case, strip it off since we're going to add it later
-            self.endpoint = self.endpoint[6:]
-
+        self.endpoint = endpoint.removeprefix("wss://")
         # This gets set later
         self.endpoint_ip = MISSING
 
@@ -468,8 +464,8 @@ class VoiceClient(VoiceProtocol):
                     # The following close codes are undocumented, so I will document them here.
                     # 1000 - normal closure (obviously)
                     # 4014 - voice channel has been deleted.
-                    # 4015 - voice server has crashed
-                    if exc.code in (1000, 4015):
+                    # 4015 - voice server has crashed, we should resume
+                    if exc.code == 1000:
                         _log.info(
                             "Disconnecting from voice normally, close code %d.",
                             exc.code,
@@ -485,6 +481,19 @@ class VoiceClient(VoiceProtocol):
                         _log.info("Reconnect was unsuccessful, disconnecting from voice normally...")
                         await self.disconnect()
                         break
+                    if exc.code == 4015:
+                        _log.info("Disconnected from voice, trying to resume...")
+
+                        try:
+                            await self.ws.resume()
+                        except asyncio.TimeoutError:
+                            _log.info("Could not resume the voice connection... Disconnection...")
+                            if self._connected.is_set():
+                                await self.disconnect(force=True)
+                        else:
+                            _log.info("Successfully resumed voice connection")
+                            continue
+
                 if not reconnect:
                     await self.disconnect()
                     raise

@@ -48,6 +48,18 @@ class InputText:
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "label",
+        "placeholder",
+        "value",
+        "required",
+        "style",
+        "min_length",
+        "max_length",
+        "custom_id",
+        "id",
+    )
+
     def __init__(
         self,
         *,
@@ -60,6 +72,7 @@ class InputText:
         required: bool | None = True,
         value: str | None = None,
         row: int | None = None,
+        id: int | None = None,
     ):
         super().__init__()
         if len(str(label)) > 45:
@@ -86,10 +99,15 @@ class InputText:
             max_length=max_length,
             required=required,
             value=value,
+            id=id,
         )
         self._input_value = False
         self.row = row
         self._rendered_row: int | None = None
+
+    def __repr__(self) -> str:
+        attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__)
+        return f"<{self.__class__.__name__} {attrs}>"
 
     @property
     def type(self) -> ComponentType:
@@ -99,6 +117,11 @@ class InputText:
     def style(self) -> InputTextStyle:
         """The style of the input text field."""
         return self._underlying.style
+
+    @property
+    def id(self) -> int | None:
+        """The input text's ID. If not provided by the user, it is set sequentially by Discord."""
+        return self._underlying.id
 
     @style.setter
     def style(self, value: InputTextStyle):

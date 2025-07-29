@@ -148,8 +148,8 @@ class Page:
         files: list[discord.File] | None = None,
         **kwargs,
     ):
-        if content is None and embeds is None:
-            raise discord.InvalidArgument("A page cannot have both content and embeds equal to None.")
+        if content is None and embeds is None and custom_view is None:
+            raise discord.InvalidArgument("A page must at least have content, embeds, or custom_view set.")
         self._content = content
         self._embeds = embeds or []
         self._custom_view = custom_view
@@ -532,8 +532,9 @@ class Paginator(discord.ui.View):
     async def on_timeout(self) -> None:
         """Disables all buttons when the view times out."""
         if self.disable_on_timeout:
-            for item in self.children:
-                item.disabled = True
+            for item in self.walk_children():
+                if hasattr(item, "disabled"):
+                    item.disabled = True
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
@@ -558,8 +559,10 @@ class Paginator(discord.ui.View):
             The page content to show after disabling the paginator.
         """
         page = self.get_page_content(page)
-        for item in self.children:
-            if include_custom or not self.custom_view or item not in self.custom_view.children:
+        for item in self.walk_children():
+            if (include_custom or not self.custom_view or item not in self.custom_view.children) and hasattr(
+                item, "disabled"
+            ):
                 item.disabled = True
         if page:
             await self.message.edit(
@@ -841,6 +844,8 @@ class Paginator(discord.ui.View):
             return Page(content=None, embeds=[page], files=[])
         elif isinstance(page, discord.File):
             return Page(content=None, embeds=[], files=[page])
+        elif isinstance(page, discord.ui.View):
+            return Page(content=None, embeds=[], files=[], custom_view=page)
         elif isinstance(page, List):
             if all(isinstance(x, discord.Embed) for x in page):
                 return Page(content=None, embeds=page, files=[])
@@ -850,7 +855,8 @@ class Paginator(discord.ui.View):
                 raise TypeError("All list items must be embeds or files.")
         else:
             raise TypeError(
-                "Page content must be a Page object, string, an embed, a list of embeds, a file, or a list of files."
+                "Page content must be a Page object, string, an embed, a view, a list of"
+                " embeds, a file, or a list of files."
             )
 
     async def page_action(self, interaction: discord.Interaction | None = None) -> None:

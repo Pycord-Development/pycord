@@ -57,7 +57,7 @@ if TYPE_CHECKING:
 
 
 def _missing_field_factory() -> field:
-    return field(default_factory=lambda: MISSING)
+    return field(default_factory=lambda: utils.MISSING)
 
 
 @dataclass
@@ -87,13 +87,13 @@ class Flag:
         Whether multiple given values overrides the previous value.
     """
 
-    name: str | Undefined = _missing_field_factory()  # noqa: RUF009
+    name: str | utils.Undefined = _missing_field_factory()  # noqa: RUF009
     aliases: list[str] = field(default_factory=list)
-    attribute: str | Undefined = _missing_field_factory()  # noqa: RUF009
-    annotation: Any | Undefined = _missing_field_factory()  # noqa: RUF009
-    default: Any | Undefined = _missing_field_factory()  # noqa: RUF009
-    max_args: int | Undefined = _missing_field_factory()  # noqa: RUF009
-    override: bool | Undefined = _missing_field_factory()  # noqa: RUF009
+    attribute: str | utils.Undefined = _missing_field_factory()  # noqa: RUF009
+    annotation: Any | utils.Undefined = _missing_field_factory()  # noqa: RUF009
+    default: Any | utils.Undefined = _missing_field_factory()  # noqa: RUF009
+    max_args: int | utils.Undefined = _missing_field_factory()  # noqa: RUF009
+    override: bool | utils.Undefined = _missing_field_factory()  # noqa: RUF009
     cast_to_dict: bool = False
 
     @property
