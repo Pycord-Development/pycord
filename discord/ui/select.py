@@ -115,6 +115,10 @@ class Select(Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     id: Optional[:class:`int`]
         The select menu's ID.
+    timeout: Optional[:class:`float`]
+        The timeout for the button, in seconds. If set, the button will be removed after this time.
+    disable_on_timeout: :class:`bool`
+        Whether to disable the view when the timeout is reached. Defaults to ``False``.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -127,6 +131,8 @@ class Select(Item[V]):
         "disabled",
         "custom_id",
         "id",
+        "timeout",
+        "disable_on_timeout",
     )
 
     def __init__(
@@ -142,6 +148,8 @@ class Select(Item[V]):
         disabled: bool = False,
         row: int | None = None,
         id: int | None = None,
+        timeout: float | None = None,
+        disable_on_timeout: bool = False,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
@@ -173,6 +181,8 @@ class Select(Item[V]):
             id=id,
         )
         self.row = row
+        self.timeout = timeout
+        self.disable_on_timeout = disable_on_timeout
 
     @property
     def custom_id(self) -> str:

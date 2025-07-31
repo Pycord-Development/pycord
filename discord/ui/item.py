@@ -24,7 +24,10 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+import asyncio
+import time
 
+from functools import partial
 from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
 
 from ..interactions import Interaction
@@ -68,9 +71,6 @@ class Item(Generic[V]):
     __item_repr_attributes__: tuple[str, ...] = ("row",)
 
     def __init__(self):
-        self._view: V | None = None
-        self._row: int | None = None
-        self._rendered_row: int | None = None
         self._underlying: Component | None = None
         # This works mostly well but there is a gotcha with
         # the interaction with from_component, since that technically provides
@@ -79,7 +79,38 @@ class Item(Generic[V]):
         # actually affect the intended purpose of this check because from_component is
         # only called upon edit and we're mainly interested during initial creation time.
         self._provided_custom_id: bool = False
-        self.parent: Item | View | None = self.view
+        self.parent: Item | None = self.view
+        self.timeout: float | None = None
+        self.disable_on_timeout = False
+        self._message: Message | None = None
+
+    def _start_listening_from_store(self, store: ViewStore) -> None:
+        self.__cancel_callback = partial(store.remove_item)
+
+        if self.timeout:
+            loop = asyncio.get_running_loop()
+            if self.__timeout_task is not None:
+                self.__timeout_task.cancel()
+
+            self.__timeout_expiry = time.monotonic() + self.timeout
+            self.__timeout_task = loop.create_task(self.__timeout_task_impl())
+
+    async def __timeout_task_impl(self) -> None:
+        while True:
+            # Guard just in case someone changes the value of the timeout at runtime
+            if self.timeout is None:
+                return
+
+            if self.__timeout_expiry is None:
+                return self._dispatch_timeout()
+
+            # Check if we've elapsed our currently set timeout
+            now = time.monotonic()
+            if now >= self.__timeout_expiry:
+                return self._dispatch_timeout()
+
+            # Wait N seconds to see if timeout data has been refreshed
+            await asyncio.sleep(self.__timeout_expiry - now)
 
     def to_component_dict(self) -> dict[str, Any]:
         raise NotImplementedError

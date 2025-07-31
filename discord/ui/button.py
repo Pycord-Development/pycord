@@ -79,7 +79,10 @@ class Button(Item[V]):
         .. warning::
 
             This parameter does not work with V2 components or with more than 25 items in your view.
-
+    timeout: Optional[:class:`float`]
+        The timeout for the button, in seconds. If set, the button will be removed after this time.
+    disable_on_timeout: :class:`bool`
+        Whether to disable the view when the timeout is reached. Defaults to ``False``.
     id: Optional[:class:`int`]
         The button's ID.
     """
@@ -94,6 +97,8 @@ class Button(Item[V]):
         "row",
         "custom_id",
         "id",
+        "timeout",
+        "disable_on_timeout"
     )
 
     def __init__(
@@ -108,6 +113,8 @@ class Button(Item[V]):
         sku_id: int | None = None,
         row: int | None = None,
         id: int | None = None,
+        timeout: float | None = None,
+        disable_on_timeout: bool = False,
     ):
         super().__init__()
         if label and len(str(label)) > 80:
@@ -155,6 +162,8 @@ class Button(Item[V]):
             id=id,
         )
         self.row = row
+        self.timeout = timeout
+        self.disable_on_timeout = disable_on_timeout
 
     @property
     def style(self) -> ButtonStyle:

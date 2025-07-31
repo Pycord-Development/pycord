@@ -44,11 +44,6 @@ class BaseComponent(TypedDict):
     id: NotRequired[int]
 
 
-class ActionRow(BaseComponent):
-    type: Literal[1]
-    components: list[ButtonComponent, InputText, SelectMenu]
-
-
 class ButtonComponent(BaseComponent):
     custom_id: NotRequired[str]
     url: NotRequired[str]
@@ -144,14 +139,12 @@ class SeparatorComponent(BaseComponent):
     spacing: NotRequired[SeparatorSpacingSize]
 
 
-class ContainerComponent(BaseComponent):
-    type: Literal[17]
-    accent_color: NotRequired[int]
-    spoiler: NotRequired[bool]
-    components: list[AllowedContainerComponents]
+AllowedActionRowComponents = Union[ButtonComponent, InputText, SelectMenu]
 
 
-Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
+class ActionRow(BaseComponent):
+    type: Literal[1]
+    components: list[AllowedActionRowComponents]
 
 
 AllowedContainerComponents = Union[
@@ -161,4 +154,26 @@ AllowedContainerComponents = Union[
     FileComponent,
     SeparatorComponent,
     SectionComponent,
+]
+
+
+class ContainerComponent(BaseComponent):
+    type: Literal[17]
+    accent_color: NotRequired[int]
+    spoiler: NotRequired[bool]
+    components: list[AllowedContainerComponents]
+
+
+Component = Union[
+    ActionRow,
+    ButtonComponent,
+    SelectMenu,
+    InputText,
+    TextDisplayComponent,
+    SectionComponent,
+    ThumbnailComponent,
+    MediaGalleryComponent,
+    FileComponent,
+    SeparatorComponent,
+    ContainerComponent,
 ]

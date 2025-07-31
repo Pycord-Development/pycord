@@ -43,6 +43,7 @@ from typing import (
     Union,
 )
 
+import discord
 from .utils.private import parse_time, sane_wait_for
 from . import utils
 from .utils.private import get_as_snowflake
@@ -383,6 +384,9 @@ class ConnectionState:
 
     def store_view(self, view: View, message_id: int | None = None) -> None:
         self._view_store.add_view(view, message_id)
+
+    def store_component(self, component: discord.Component) -> None:
+        ...
 
     def store_modal(self, modal: Modal, message_id: int) -> None:
         self._modal_store.add_modal(modal, message_id)

@@ -60,24 +60,6 @@ if TYPE_CHECKING:
 V = TypeVar("V", bound="View", covariant=True)
 
 
-def _walk_all_components(components: list[Component]) -> Iterator[Component]:
-    for item in components:
-        if isinstance(item, ActionRowComponent):
-            yield from item.children
-        else:
-            yield item
-
-
-def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
-    for item in components:
-        if isinstance(item, ActionRowComponent):
-            yield from item.children
-        elif isinstance(item, (SectionComponent, ContainerComponent)):
-            yield from item.walk_components()
-        else:
-            yield item
-
-
 def _component_to_item(component: Component) -> Item[V]:
     if isinstance(component, ButtonComponent):
         from .button import Button  # noqa: PLC0415 # circular import
@@ -246,12 +228,6 @@ class View:
 
         loop = asyncio.get_running_loop()
         self.id: str = os.urandom(16).hex()
-        self.__cancel_callback: Callable[[View], None] | None = None
-        self.__timeout_expiry: float | None = None
-        self.__timeout_task: asyncio.Task[None] | None = None
-        self.__stopped: asyncio.Future[bool] = loop.create_future()
-        self._message: Message | InteractionMessage | None = None
-        self.parent: Interaction | None = None
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
@@ -551,7 +527,7 @@ class View:
         self.__stopped.set_result(True)
         asyncio.create_task(self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}")
 
-    def _dispatch_item(self, item: Item[V], interaction: Interaction):
+    def _dispatch_item(self, item: Item[V], interaction: Interaction):  # TODO: adapt for viewless
         if self.__stopped.done():
             return
 
@@ -694,74 +670,16 @@ class View:
     @message.setter
     def message(self, value):
         self._message = value
-
-
-class ViewStore:
-    def __init__(self, state: ConnectionState):
-        # (component_type, message_id, custom_id): (View, Item)
-        self._views: dict[tuple[int, int | None, str], tuple[View, Item[V]]] = {}
-        # message_id: View
-        self._synced_message_views: dict[int, View] = {}
-        self._state: ConnectionState = state
+        for item in self.walk_children():
+            if hasattr(item, "_message"):
+                item._message = value
 
     @property
-    def persistent_views(self) -> Sequence[View]:
-        views = {view.id: view for (_, (view, _)) in self._views.items() if view.is_persistent()}
-        return list(views.values())
+    def parent(self):
+        """The parent interaction that this view was sent from."""
+        return self._parent
 
-    def __verify_integrity(self):
-        to_remove: list[tuple[int, int | None, str]] = []
-        for k, (view, _) in self._views.items():
-            if view.is_finished():
-                to_remove.append(k)
-
-        for k in to_remove:
-            del self._views[k]
-
-    def add_view(self, view: View, message_id: int | None = None):
-        self.__verify_integrity()
-
-        view._start_listening_from_store(self)
-        for item in view.walk_children():
-            if item.is_storable():
-                self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
-
-        if message_id is not None:
-            self._synced_message_views[message_id] = view
-
-    def remove_view(self, view: View):
-        for item in view.walk_children():
-            if item.is_storable():
-                self._views.pop((item.type.value, item.custom_id), None)  # type: ignore
-
-        for key, value in self._synced_message_views.items():
-            if value.id == view.id:
-                del self._synced_message_views[key]
-                break
-
-    def dispatch(self, component_type: int, custom_id: str, interaction: Interaction):
-        self.__verify_integrity()
-        message_id: int | None = interaction.message and interaction.message.id
-        key = (component_type, message_id, custom_id)
-        # Fallback to None message_id searches in case a persistent view
-        # was added without an associated message_id
-        value = self._views.get(key) or self._views.get((component_type, None, custom_id))
-        if value is None:
-            return
-
-        view, item = value
-        interaction.view = view
-        item.refresh_state(interaction)
-        view._dispatch_item(item, interaction)
-
-    def is_message_tracked(self, message_id: int):
-        return message_id in self._synced_message_views
-
-    def remove_message_tracking(self, message_id: int) -> View | None:
-        return self._synced_message_views.pop(message_id, None)
-
-    def update_from_message(self, message_id: int, components: list[ComponentPayload]):
-        # pre-req: is_message_tracked == true
-        view = self._synced_message_views[message_id]
-        components = [_component_factory(d, state=self._state) for d in components]
-        view.refresh(components)
+    @parent.setter
+    def parent(self, value: Interaction | None):
+        """Sets the parent interaction that this view was sent from."""
+        self._parent = value
