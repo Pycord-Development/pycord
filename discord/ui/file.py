@@ -45,12 +45,12 @@ class File(Item[V]):
     def __init__(self, url: str, *, spoiler: bool = False, id: int | None = None):
         super().__init__()
 
-        file = UnfurledMediaItem(url)
+        self.file = UnfurledMediaItem(url)
 
         self._underlying = FileComponent._raw_construct(
             type=ComponentType.file,
             id=id,
-            file=file,
+            file=self.file,
             spoiler=spoiler,
         )
 
