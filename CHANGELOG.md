@@ -121,6 +121,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2800](https://github.com/Pycord-Development/pycord/pull/2800))
 - Fixed `VoiceClient.connect` failing to do initial connection.
   ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
+- Fixed Async I/O errors that could be raised when using `Client.run`.
+  ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
 
 ### Changed
 
