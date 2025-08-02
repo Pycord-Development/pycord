@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Enumerations"
 msgstr "Enumerations"
@@ -1768,4 +1768,16 @@ msgstr "The interaction is in the bot's own DM channel with the user."
 
 msgid "The interaction is in a private DM or group DM channel."
 msgstr "The interaction is in a private DM or group DM channel."
+
+msgid "Represents a subscription's status."
+msgstr "Represents a subscription's status."
+
+msgid "The subscription is active and is scheduled to renew."
+msgstr "The subscription is active and is scheduled to renew."
+
+msgid "The subscription is active but will not renew."
+msgstr "The subscription is active but will not renew."
+
+msgid "The subscription is inactive and the subscription owner is not being charged."
+msgstr "The subscription is inactive and the subscription owner is not being charged."
 
