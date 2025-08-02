@@ -63,6 +63,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
+- Added support for asynchronous functions in dynamic cooldowns.
+  ([#2823](https://github.com/Pycord-Development/pycord/pull/2823))
 
 ### Fixed
 
