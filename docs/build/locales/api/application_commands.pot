@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -572,9 +572,7 @@ msgstr ""
 #: f422915c4028467f9272f041e90ac356
 #: f422915c4028467f9272f041e90ac356
 #: cfb0e3fdd30c4752aa18bb3bb3051aa8
-#: f422915c4028467f9272f041e90ac356
-#: f422915c4028467f9272f041e90ac356
-#: f422915c4028467f9272f041e90ac356
+#: cfb0e3fdd30c4752aa18bb3bb3051aa8
 #: cfb0e3fdd30c4752aa18bb3bb3051aa8
 #: cfb0e3fdd30c4752aa18bb3bb3051aa8
 #: cfb0e3fdd30c4752aa18bb3bb3051aa8
@@ -1268,20 +1266,6 @@ msgstr ""
 msgid ":class:`.Interaction`"
 msgstr ""
 
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext:22
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:21
-#: d6f68d1b5a754d4faff41bef78e15ad3
-#: d6f68d1b5a754d4faff41bef78e15ad3
-msgid "The command that this context belongs to."
-msgstr ""
-
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext:24
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:23
-#: 731cda54c14a44f4a88a9bc501f056d7
-#: 731cda54c14a44f4a88a9bc501f056d7
-msgid ":class:`.ApplicationCommand`"
-msgstr ""
-
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.defer:1
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.edit:1
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.respond:1
@@ -1332,6 +1316,13 @@ msgstr ""
 #: ../../../discord/commands/context.py:docstring of discord.commands.context.ApplicationContext.invoke:25
 #: 5021455f669a48f38102c39a6acbab6a
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`T\\`\\`\\)`"
+msgstr ""
+
+#: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.command:1
+#: ../../../discord/commands/context.py:docstring of discord.AutocompleteContext.command:1
+#: d6f68d1b5a754d4faff41bef78e15ad3
+#: d6f68d1b5a754d4faff41bef78e15ad3
+msgid "The command that this context belongs to."
 msgstr ""
 
 #: ../../docstring of discord.ApplicationContext.channel:1
@@ -1554,8 +1545,8 @@ msgid "Sending the message failed."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_response:51
-#: a0f75187304f404fb792a05b68249126
-msgid "You specified both ``embed`` and ``embeds``."
+#: c6b8b47999374b87931c77b60a96a2d4
+msgid "You specified both ``embed`` and ``embeds``, or sent content or embeds with V2 components."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.edit:55
@@ -1703,7 +1694,7 @@ msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.send_followup:104
 #: f003bf666ab2407abfdd4416f87c1363
-msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
+msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a dispatchable view, you specified both ``thread_name`` and ``thread``,     or ``applied_tags`` was passed with neither ``thread_name`` nor ``thread`` specified."
 msgstr ""
 
 #: ../../../discord/commands/context.py:docstring of discord.ApplicationContext.defer:3
@@ -1913,32 +1904,32 @@ msgstr ""
 msgid "The interaction object that invoked the autocomplete."
 msgstr ""
 
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:27
+#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:21
 #: 59a530105ac6485197b9bf2cefe8e50a
 msgid "The option the user is currently typing."
 msgstr ""
 
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:29
+#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:23
 #: 326327f43433488a8304984c578d455b
 msgid ":class:`.Option`"
 msgstr ""
 
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:33
+#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:27
 #: 59f72990e3c14649938ce6341ee0005f
 msgid "The content of the focused option."
 msgstr ""
 
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:35
+#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:29
 #: 58801cfd58d44239a96812222e3aa822
 msgid ":class:`.str`"
 msgstr ""
 
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:39
+#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:33
 #: 4c4055bc1b5242568ae0246a1a990d13
 msgid "A name to value mapping of the options that the user has selected before this option."
 msgstr ""
 
-#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:41
+#: ../../../discord/commands/context.py:docstring of discord.commands.context.AutocompleteContext:35
 #: 808133417bf3421090c005298b52fda3
 msgid "Dict[:class:`str`, Any]"
 msgstr ""
