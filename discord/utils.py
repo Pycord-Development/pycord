@@ -615,7 +615,7 @@ async def get_or_fetch(
         ID of object to get.
 
     default : Any | None
-        A default to return instead of raising if fetch fails.
+        The value to return instead of raising if fetching fails.
 
     Returns
     -------
