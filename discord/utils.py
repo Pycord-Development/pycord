@@ -587,18 +587,7 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 _FETCHABLE = TypeVar(
     "_FETCHABLE",
-    bound=VoiceChannel
-    | TextChannel
-    | ForumChannel
-    | StageChannel
-    | CategoryChannel
-    | Thread
-    | Member
-    | User
-    | Guild
-    | Role
-    | GuildEmoji
-    | AppEmoji,
+    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | Role | GuildEmoji | AppEmoji",
 )
 _D = TypeVar("_D")
 
