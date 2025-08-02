@@ -69,7 +69,7 @@ from .template import Template
 from .threads import Thread
 from .ui.view import View
 from .user import ClientUser, User
-from .utils import _FETCHABLE, MISSING, _D
+from .utils import _D, _FETCHABLE, MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
@@ -248,9 +248,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[
-            str, list[tuple[asyncio.Future, Callable[..., bool]]]
-        ] = {}
+        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
+            {}
+        )
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
@@ -1205,13 +1205,13 @@ class Client:
 
     @overload
     async def get_or_fetch(
-        self: "Client",
+        self: Client,
         object_type: type[_FETCHABLE],
         object_id: int,
     ) -> _FETCHABLE: ...
 
     async def get_or_fetch(
-        self: "Client",
+        self: Client,
         object_type: type[_FETCHABLE],
         object_id: int | None,
         default: _D = MISSING,
