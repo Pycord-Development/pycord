@@ -587,20 +587,65 @@ def get(iterable: Iterable[T], **attrs: Any) -> T | None:
 
 _FETCHABLE = TypeVar(
     "_FETCHABLE",
-    bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | Role | GuildEmoji | AppEmoji",
+    bound=VoiceChannel
+    | TextChannel
+    | ForumChannel
+    | StageChannel
+    | CategoryChannel
+    | Thread
+    | Member
+    | User
+    | Guild
+    | Role
+    | GuildEmoji
+    | AppEmoji,
 )
+_D = TypeVar("_D")
 
 
 # TODO: In version 3.0, remove the 'attr' and 'id' arguments.
 #       Also, eliminate the default 'MISSING' value for both 'object_type' and 'object_id'.
+@overload
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: type[_FETCHABLE],
+    object_id: None,
+    default: _D = ...,
+    attr: str = ...,
+    id: int = ...,
+) -> None | _D: ...
+
+
+@overload
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: type[_FETCHABLE],
+    object_id: int,
+    default: _D,
+    attr: str = ...,
+    id: int = ...,
+) -> _FETCHABLE | _D: ...
+
+
+@overload
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: type[_FETCHABLE],
+    object_id: int,
+    *,
+    attr: str = ...,
+    id: int = ...,
+) -> _FETCHABLE: ...
+
+
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE] = MISSING,
     object_id: int | None = MISSING,
-    default: Any = MISSING,
+    default: _D = MISSING,
     attr: str = MISSING,
     id: int = MISSING,
-) -> _FETCHABLE | None:
+) -> _FETCHABLE | _D | None:
     """
     Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 
@@ -608,7 +653,7 @@ async def get_or_fetch(
     ----------
     obj : Guild | Client
         The object to operate on.
-    object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]
+    object_type: VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | Role | Member | GuildEmoji | AppEmoji
         Type of object to fetch or get.
 
     object_id: :class:`int`
@@ -620,22 +665,27 @@ async def get_or_fetch(
     Returns
     -------
 
-    Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`, :class:`AppEmoji`]]
-        The object of type that was specified or ``None`` if not found.
+    VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | Role | Member | GuildEmoji | AppEmoji | None
+        The object if found, or `default` if provided when not found.
+        Returns `None` only if `object_id` is None and no `default` is given.
 
     Raises
     ------
+    :exc:`TypeError`
+        Raised when required parameters are missing or invalid types are provided.
+    :exc:`InvalidArgument`
+        Raised when an unsupported or incompatible object type is used.
     :exc:`NotFound`
-        Invalid ID for the object
+        Invalid ID for the object.
     :exc:`HTTPException`
-        An error occurred fetching the object
+        An error occurred fetching the object.
     :exc:`Forbidden`
-        You do not have permission to fetch the object
+        You do not have permission to fetch the object.
     """
     from discord import AppEmoji, Client, Guild, Member, Role, User, abc, emoji
 
     if object_id is None:
-        return None
+        return default if default is not MISSING else None
 
     string_to_type = {
         "channel": abc.GuildChannel,

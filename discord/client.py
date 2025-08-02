@@ -39,6 +39,7 @@ from typing import (
     Generator,
     Sequence,
     TypeVar,
+    overload,
 )
 
 import aiohttp
@@ -68,7 +69,7 @@ from .template import Template
 from .threads import Thread
 from .ui.view import View
 from .user import ClientUser, User
-from .utils import _FETCHABLE, MISSING
+from .utils import _FETCHABLE, MISSING, _D
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
@@ -247,9 +248,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
-            {}
-        )
+        self._listeners: dict[
+            str, list[tuple[asyncio.Future, Callable[..., bool]]]
+        ] = {}
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
@@ -1186,37 +1187,64 @@ class Client:
 
         return await self.get_or_fetch(object_type=User, object_id=id, default=None)
 
+    @overload
     async def get_or_fetch(
         self: Client,
         object_type: type[_FETCHABLE],
+        object_id: None,
+        default: _D = ...,
+    ) -> None | _D: ...
+
+    @overload
+    async def get_or_fetch(
+        self: Client,
+        object_type: type[_FETCHABLE],
+        object_id: int,
+        default: _D,
+    ) -> _FETCHABLE | _D: ...
+
+    @overload
+    async def get_or_fetch(
+        self: "Client",
+        object_type: type[_FETCHABLE],
+        object_id: int,
+    ) -> _FETCHABLE: ...
+
+    async def get_or_fetch(
+        self: "Client",
+        object_type: type[_FETCHABLE],
         object_id: int | None,
-        default: Any = MISSING,
-    ) -> _FETCHABLE | None:
+        default: _D = MISSING,
+    ) -> _FETCHABLE | _D | None:
         """
         Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
 
         Parameters
         ----------
-        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`GuildEmoji`, :class:`AppEmoji`]
+        object_type: VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji
             Type of object to fetch or get.
-        object_id: :class:`int`
-            ID of object to get.
-        default : Any, optional
+        object_id: int | None
+            ID of object to get. If None, returns default if provided, else None.
+        default: Any, optional
             A default to return instead of raising if fetch fails.
 
         Returns
         -------
-        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`User`, :class:`Guild`, :class:`GuildEmoji`, :class:`AppEmoji`]]
-            The object of type that was specified or ``None`` if not found.
+        VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji | None
+            The object of the specified type, or default if provided and not found, or None if not found and no default is provided.
 
         Raises
         ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
         :exc:`NotFound`
-            Invalid ID for the object
+            Invalid ID for the object.
         :exc:`HTTPException`
-            An error occurred fetching the object
+            An error occurred fetching the object.
         :exc:`Forbidden`
-            You do not have permission to fetch the object
+            You do not have permission to fetch the object.
         """
         return await utils.get_or_fetch(
             obj=self, object_type=object_type, object_id=object_id, default=default

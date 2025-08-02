@@ -85,7 +85,7 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
-from .utils import _FETCHABLE
+from .utils import _FETCHABLE, _D
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
@@ -864,43 +864,72 @@ class Guild(Hashable):
         """
         return self._members.get(user_id)
 
+    @overload
+    async def get_or_fetch(
+        self: Guild,
+        object_type: type[_FETCHABLE],
+        object_id: None,
+        default: _D = ...,
+    ) -> None | _D: ...
+    @overload
+    async def get_or_fetch(
+        self: Guild,
+        object_type: type[_FETCHABLE],
+        object_id: int,
+        default: _D,
+    ) -> _FETCHABLE | _D: ...
+    @overload
+    async def get_or_fetch(
+        self: Guild,
+        object_type: type[_FETCHABLE],
+        object_id: int,
+    ) -> _FETCHABLE: ...
+
     async def get_or_fetch(
         self: Guild,
         object_type: type[_FETCHABLE],
         object_id: int | None,
-        default: Any = MISSING,
-    ) -> _FETCHABLE | None:
+        default: _D = MISSING,
+    ) -> _FETCHABLE | _D | None:
         """
-        Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
+        Shortcut method to get data from this guild either by returning the cached version,
+        or if it does not exist, attempting to fetch it from the API.
 
         Parameters
         ----------
-        object_type: Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`]
+        object_type: VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Role | Member | GuildEmoji
             Type of object to fetch or get.
 
-        object_id: :class:`int`
-            ID of object to get.
+        object_id: :class:`int` | None
+            ID of the object to get. If ``None``, returns ``default`` if provided, otherwise ``None``.
 
-        default : Any, optional
-            A default to return instead of raising if fetch fails.
+        default : Any | None
+            The value to return instead of raising if fetching fails or if ``object_id`` is ``None``.
 
         Returns
         -------
-
-        Optional[Union[:class:`VoiceChannel`, :class:`TextChannel`, :class:`ForumChannel`, :class:`StageChannel`, :class:`CategoryChannel`, :class:`Thread`, :class:`Role`, :class:`Member`, :class:`GuildEmoji`]]
-            The object of type that was specified or ``None`` if not found.
+        VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Role | Member | GuildEmoji | None
+            The object if found, or ``default`` if provided when not found.
+            Returns ``None`` only if ``object_id`` is ``None`` and no ``default`` is given.
 
         Raises
         ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
         :exc:`NotFound`
-            Invalid ID for the object
+            Invalid ID for the object.
         :exc:`HTTPException`
-            An error occurred fetching the object
+            An error occurred fetching the object.
         :exc:`Forbidden`
-            You do not have permission to fetch the object
+            You do not have permission to fetch the object.
         """
         return await utils.get_or_fetch(
-            obj=self, object_type=object_type, object_id=object_id, default=default
+            obj=self,
+            object_type=object_type,
+            object_id=object_id,
+            default=default,
         )
 
     @property
