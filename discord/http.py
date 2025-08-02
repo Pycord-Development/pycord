@@ -2014,6 +2014,7 @@ class HTTPClient:
             "name",
             "permissions",
             "color",
+            "colors",
             "hoist",
             "mentionable",
             "icon",
