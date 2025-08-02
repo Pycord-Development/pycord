@@ -1226,7 +1226,7 @@ class Client:
             Type of object to fetch or get.
         object_id: int | None
             ID of object to get. If None, returns default if provided, else None.
-        default: Any, optional
+        default: Any | None
             A default to return instead of raising if fetch fails.
 
         Returns
