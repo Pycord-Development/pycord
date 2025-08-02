@@ -63,6 +63,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Fixed
 
@@ -161,6 +163,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+- Deprecated `utils.get_or_fetch(attr, id)` in favor of
+  `utils.get_or_fetch(object_type, object_id)`.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Removed
 
