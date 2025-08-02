@@ -1230,6 +1230,7 @@ class HTTPClient:
         allowed_mentions: message.AllowedMentions | None = None,
         stickers: list[sticker.StickerItem] | None = None,
         components: list[components.Component] | None = None,
+        flags: int | None = None,
     ) -> Response[threads.Thread]:
         payload: dict[str, Any] = {
             "name": name,
@@ -1265,6 +1266,9 @@ class HTTPClient:
 
         if stickers:
             message["sticker_ids"] = stickers
+
+        if flags:
+            message["flags"] = flags
 
         if message != {}:
             payload["message"] = message
