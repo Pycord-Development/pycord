@@ -671,3 +671,13 @@ Webhooks
 
 .. autoclass:: PartialWebhookChannel()
     :members:
+
+
+
+Collectibles
+------------
+
+.. attributetable:: Nameplate
+
+.. autoclass:: Nameplate()
+    :undoc-members:
