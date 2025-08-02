@@ -63,7 +63,7 @@ class MyView(View):
 
     async def on_timeout(self):
         self.get_item(200).disabled = True
-        await self.message.edit(view=self)
+        await self.parent.edit(view=self)
 
 
 bot = Bot()
