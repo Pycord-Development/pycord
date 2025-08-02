@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3326,4 +3326,19 @@ msgstr ""
 #: ../../api/enums.rst:2521
 #: da88c67afa8d45e8965b9e7defd425cb
 msgid "The subscription is inactive and the subscription owner is not being charged."
+msgstr ""
+
+#: ../../api/enums.rst:2526
+#: df2d552101134de0b37f9bc3f1fe64a5
+msgid "Represents the padding size around a separator component."
+msgstr ""
+
+#: ../../api/enums.rst:2532
+#: 5d1855c5f1104662bfa445de38ae412d
+msgid "The separator uses small padding."
+msgstr ""
+
+#: ../../api/enums.rst:2536
+#: 7974579a64184f3f94acaca0d00878aa
+msgid "The separator uses large padding."
 msgstr ""

@@ -144,7 +144,9 @@ class Asset(AssetMixin):
 
         .. describe:: hash(x)
 
-            Returns the hash of the asset.
+            Returns the asset's url's hash.
+
+            This is equivalent to hash(:attr:`url`).
     """
 
     __slots__: tuple[str, ...] = (
