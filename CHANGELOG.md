@@ -57,12 +57,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
-- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
-  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
+- Added support for type hinting slash command options with `typing.Annotated`.
+  ([#2782](https://github.com/Pycord-Development/pycord/pull/2782))
 - Added conversion to `Member` in `MentionableConverter`.
   ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Fixed
 
