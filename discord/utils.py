@@ -31,6 +31,7 @@ import collections.abc
 import datetime
 from enum import Enum, auto
 import functools
+import importlib.resources
 import itertools
 import json
 import re
@@ -101,6 +102,15 @@ __all__ = (
 )
 
 DISCORD_EPOCH = 1420070400000
+
+with (
+    importlib.resources.files(__package__)
+    .joinpath("emojis.json")
+    .open(encoding="utf-8") as f
+):
+    EMOJIS_MAP = json.load(f)
+
+UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
 
 class Undefined(Enum):
