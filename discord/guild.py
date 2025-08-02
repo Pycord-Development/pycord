@@ -2984,6 +2984,7 @@ class Guild(Hashable):
             actual_colour = Colour(actual_colour)
 
         if actual_colour not in (MISSING, None):
+            utils.warn_deprecated("colour", "colours", "2.7")
             actual_colours = RoleColours(primary=actual_colour)
         elif holographic:
             actual_colours = RoleColours.holographic()

@@ -35,7 +35,14 @@ from .errors import InvalidArgument
 from .flags import RoleFlags
 from .mixins import Hashable
 from .permissions import Permissions
-from .utils import MISSING, _bytes_to_base64_data, _get_as_snowflake, snowflake_time
+from .utils import (
+    MISSING,
+    _bytes_to_base64_data,
+    _get_as_snowflake,
+    deprecated,
+    snowflake_time,
+    warn_deprecated,
+)
 
 __all__ = ("RoleTags", "Role", "RoleColours")
 
@@ -204,7 +211,7 @@ class RoleColours:
             "primary_color": self.primary.value,
             "secondary_color": self.secondary.value if self.secondary else None,
             "tertiary_color": self.tertiary.value if self.tertiary else None,
-        }
+        }  # type: ignore
 
     @classmethod
     def default(cls) -> RoleColours:
@@ -471,6 +478,7 @@ class Role(Hashable):
         return Permissions(self._permissions)
 
     @property
+    @deprecated("colours.primary", "2.7")
     def colour(self) -> Colour:
         """Returns the role colour. Equivalent to :attr:`colours.primary`.
         An alias exists under ``color``.
@@ -480,6 +488,7 @@ class Role(Hashable):
         return self.colours.primary
 
     @property
+    @deprecated("colors.primary", "2.7")
     def color(self) -> Colour:
         """Returns the role's primary color. Equivalent to :attr:`colors.primary`.
         An alias exists under ``colour``.
@@ -643,6 +652,7 @@ class Role(Hashable):
             colours = colors
 
         if colour is not MISSING:
+            warn_deprecated("colour", "colours", "2.7")
             if isinstance(colour, int):
                 colour = Colour(colour)
             colours = RoleColours(primary=colour)
