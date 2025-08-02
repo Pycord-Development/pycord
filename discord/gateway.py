@@ -291,6 +291,7 @@ class DiscordWebSocket:
     HELLO = 10
     HEARTBEAT_ACK = 11
     GUILD_SYNC = 12
+    REQUEST_SOUNDBOARD_SOUNDS = 31
 
     def __init__(self, socket, *, loop):
         self.socket = socket
@@ -729,6 +730,15 @@ class DiscordWebSocket:
         }
 
         _log.debug("Updating our voice state to %s.", payload)
+        await self.send_as_json(payload)
+
+    async def request_soundboard_sounds(self, guild_ids):
+        payload = {
+            "op": self.REQUEST_SOUNDBOARD_SOUNDS,
+            "d": {"guild_ids": guild_ids},
+        }
+
+        _log.debug("Requesting soundboard sounds for guilds %s.", guild_ids)
         await self.send_as_json(payload)
 
     async def close(self, code=4000):
