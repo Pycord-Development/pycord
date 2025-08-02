@@ -665,6 +665,9 @@ class UnfurledMediaItem(AssetMixin):
     def __init__(self, url: str):
         self._state = None
         self._url: str = url
+        self._static_url: str | None = (
+            url if url and url.startswith("attachment://") else None
+        )
         self.proxy_url: str | None = None
         self.height: int | None = None
         self.width: int | None = None
@@ -672,10 +675,25 @@ class UnfurledMediaItem(AssetMixin):
         self.flags: AttachmentFlags | None = None
         self.attachment_id: int | None = None
 
+    def __repr__(self) -> str:
+        return (
+            f"<UnfurledMediaItem url={self.url!r} attachment_id={self.attachment_id}>"
+        )
+
+    def __str__(self) -> str:
+        return self.url or self.__repr__()
+
     @property
     def url(self) -> str:
         """Returns this media item's url."""
         return self._url
+
+    @url.setter
+    def url(self, value: str) -> None:
+        self._url = value
+        self._static_url = (
+            value if value and value.startswith("attachment://") else None
+        )
 
     @classmethod
     def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
@@ -691,7 +709,7 @@ class UnfurledMediaItem(AssetMixin):
         return r
 
     def to_dict(self) -> dict[str, str]:
-        return {"url": self.url}
+        return {"url": self._static_url or self.url}
 
 
 class Thumbnail(Component):
