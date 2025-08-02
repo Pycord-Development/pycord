@@ -26,7 +26,6 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from ..enums import NameplatePalette
 from .snowflake import Snowflake
 
 
@@ -34,4 +33,4 @@ class Nameplate(TypedDict):
     sku_id: Snowflake
     asset: str
     label: str
-    palette: NameplatePalette
+    palette: str

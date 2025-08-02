@@ -28,7 +28,6 @@ if TYPE_CHECKING:
     from .state import ConnectionState
 
 from .asset import Asset
-from .enums import NameplatePalette
 from .types.collectibles import Nameplate as NameplatePayload
 
 
@@ -42,13 +41,13 @@ class Nameplate:
     ----------
         sku_id: int
             The SKU ID of the nameplate.
-        palette: NameplatePalette
+        palette: str
             The color palette of the nameplate.
     """
 
     def __init__(self, data: NameplatePayload, state: "ConnectionState") -> None:
         self.sku_id: int = data["sku_id"]
-        self.palette: NameplatePalette = data["palette"]
+        self.palette: str = data["palette"]
         self._label: str = data["label"]
         self._asset: str = data["asset"]
         self._state: "ConnectionState" = state
@@ -73,4 +72,4 @@ class Nameplate:
         )
 
 
-__all__ = ("Nameplate", "NameplatePalette")
+__all__ = ("Nameplate",)
