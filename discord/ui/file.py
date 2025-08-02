@@ -90,7 +90,7 @@ class File(Item[V]):
         """The size of this file in bytes, if provided by Discord."""
         return self._underlying.size
 
-    def refresh_component(self, component: Component) -> None:
+    def refresh_component(self, component: FileComponent) -> None:
         original = self._underlying.file
         component.file._static_url = original._static_url
         self._underlying = component
