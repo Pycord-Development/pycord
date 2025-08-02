@@ -614,7 +614,7 @@ async def get_or_fetch(
     object_id: :class:`int`
         ID of object to get.
 
-    default : Any, optional
+    default : Any | None
         A default to return instead of raising if fetch fails.
 
     Returns
