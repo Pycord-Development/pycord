@@ -85,7 +85,7 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
-from .utils import _FETCHABLE, _D
+from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
