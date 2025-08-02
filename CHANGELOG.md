@@ -123,6 +123,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
 - Fixed `AttributeError` when printing a File component's `__repr__`.
   ([#2843](https://github.com/Pycord-Development/pycord/pull/2843))
+- Fixed `TypeError` when using `@option` with certain annotations and along with
+  `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
 
 ### Changed
 
