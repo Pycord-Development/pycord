@@ -40,6 +40,7 @@ from typing import (
     Sequence,
     TypeVar,
     overload,
+    Literal,
 )
 
 import aiohttp
@@ -248,9 +249,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
-            {}
-        )
+        self._listeners: dict[
+            str, list[tuple[asyncio.Future, Callable[..., bool]]]
+        ] = {}
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
@@ -1191,7 +1192,7 @@ class Client:
     async def get_or_fetch(
         self: Client,
         object_type: type[_FETCHABLE],
-        object_id: None,
+        object_id: Literal[None],
         default: _D = ...,
     ) -> None | _D: ...
 

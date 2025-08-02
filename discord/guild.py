@@ -38,6 +38,7 @@ from typing import (
     Tuple,
     Union,
     overload,
+    Literal,
 )
 
 from . import abc, utils
@@ -868,7 +869,7 @@ class Guild(Hashable):
     async def get_or_fetch(
         self: Guild,
         object_type: type[_FETCHABLE],
-        object_id: None,
+        object_id: Literal[None],
         default: _D = ...,
     ) -> None | _D: ...
     @overload

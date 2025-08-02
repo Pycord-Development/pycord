@@ -598,7 +598,7 @@ _D = TypeVar("_D")
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE],
-    object_id: None,
+    object_id: Literal[None],
     default: _D = ...,
     attr: str = ...,
     id: int = ...,
@@ -782,7 +782,7 @@ async def get_or_fetch(
     try:
         return await fetcher(obj, object_id)
     except (HTTPException, ValueError):
-        if default is not None:
+        if default is not MISSING:
             return default
         raise
 
