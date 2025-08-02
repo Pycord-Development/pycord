@@ -1098,7 +1098,7 @@ class ThreadArchiveDuration(IntEnum):
     three_days = 4320
     one_week = 10080
 
-    
+
 class SeparatorSpacingSize(Enum):
     """A separator component's spacing size."""
 
