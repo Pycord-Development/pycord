@@ -25,20 +25,40 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
 
-from .enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle, try_enum
+from .asset import AssetMixin
+from .colour import Colour
+from .enums import (
+    ButtonStyle,
+    ChannelType,
+    ComponentType,
+    InputTextStyle,
+    SeparatorSpacingSize,
+    try_enum,
+)
+from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, get_slots
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
+    from .types.components import BaseComponent as BaseComponentPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
+    from .types.components import ContainerComponent as ContainerComponentPayload
+    from .types.components import FileComponent as FileComponentPayload
     from .types.components import InputText as InputTextComponentPayload
+    from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
+    from .types.components import MediaGalleryItem as MediaGalleryItemPayload
+    from .types.components import SectionComponent as SectionComponentPayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
+    from .types.components import SeparatorComponent as SeparatorComponentPayload
+    from .types.components import TextDisplayComponent as TextDisplayComponentPayload
+    from .types.components import ThumbnailComponent as ThumbnailComponentPayload
+    from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
 
 __all__ = (
     "Component",
@@ -47,6 +67,15 @@ __all__ = (
     "SelectMenu",
     "SelectOption",
     "InputText",
+    "Section",
+    "TextDisplay",
+    "Thumbnail",
+    "MediaGallery",
+    "MediaGalleryItem",
+    "UnfurledMediaItem",
+    "FileComponent",
+    "Separator",
+    "Container",
 )
 
 C = TypeVar("C", bound="Component")
@@ -55,11 +84,18 @@ C = TypeVar("C", bound="Component")
 class Component:
     """Represents a Discord Bot UI Kit Component.
 
-    Currently, the only components supported by Discord are:
+    The components supported by Discord in messages are as follows:
 
     - :class:`ActionRow`
     - :class:`Button`
     - :class:`SelectMenu`
+    - :class:`Section`
+    - :class:`TextDisplay`
+    - :class:`Thumbnail`
+    - :class:`MediaGallery`
+    - :class:`FileComponent`
+    - :class:`Separator`
+    - :class:`Container`
 
     This class is abstract and cannot be instantiated.
 
@@ -69,12 +105,16 @@ class Component:
     ----------
     type: :class:`ComponentType`
         The type of component.
+    id: :class:`int`
+        The component's ID. If not provided by the user, it is set sequentially by Discord.
+        The ID `0` is treated as if no ID was provided.
     """
 
-    __slots__: tuple[str, ...] = ("type",)
+    __slots__: tuple[str, ...] = ("type", "id")
 
     __repr_info__: ClassVar[tuple[str, ...]]
     type: ComponentType
+    versions: tuple[int, ...]
 
     def __repr__(self) -> str:
         attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__repr_info__)
@@ -94,6 +134,10 @@ class Component:
 
     def to_dict(self) -> dict[str, Any]:
         raise NotImplementedError
+
+    def is_v2(self) -> bool:
+        """Whether this component was introduced in Components V2."""
+        return self.versions and 1 not in self.versions
 
 
 class ActionRow(Component):
@@ -116,18 +160,38 @@ class ActionRow(Component):
     __slots__: tuple[str, ...] = ("children",)
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
         self.children: list[Component] = [
             _component_factory(d) for d in data.get("components", [])
         ]
 
+    @property
+    def width(self):
+        """Return the sum of the children's widths."""
+        t = 0
+        for item in self.children:
+            t += 1 if item.type is ComponentType.button else 5
+        return t
+
     def to_dict(self) -> ActionRowPayload:
         return {
             "type": int(self.type),
+            "id": self.id,
             "components": [child.to_dict() for child in self.children],
         }  # type: ignore
+
+    def walk_components(self) -> Iterator[Component]:
+        yield from self.children
+
+    @classmethod
+    def with_components(cls, *components, id=None):
+        return cls._raw_construct(
+            type=ComponentType.action_row, id=id, children=[c for c in components]
+        )
 
 
 class InputText(Component):
@@ -139,7 +203,7 @@ class InputText(Component):
     style: :class:`.InputTextStyle`
         The style of the input text field.
     custom_id: Optional[:class:`str`]
-        The ID of the input text field that gets received during an interaction.
+        The custom ID of the input text field that gets received during an interaction.
     label: :class:`str`
         The label for the input text field.
     placeholder: Optional[:class:`str`]
@@ -153,6 +217,8 @@ class InputText(Component):
         Whether the input text field is required or not. Defaults to `True`.
     value: Optional[:class:`str`]
         The value that has been entered in the input text field.
+    id: Optional[:class:`int`]
+        The input text's ID.
     """
 
     __slots__: tuple[str, ...] = (
@@ -165,12 +231,15 @@ class InputText(Component):
         "max_length",
         "required",
         "value",
+        "id",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: InputTextComponentPayload):
         self.type = ComponentType.input_text
+        self.id: int | None = data.get("id")
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
         self.label: str = data.get("label", None)
@@ -183,6 +252,7 @@ class InputText(Component):
     def to_dict(self) -> InputTextComponentPayload:
         payload = {
             "type": 4,
+            "id": self.id,
             "style": self.style.value,
             "label": self.label,
         }
@@ -214,8 +284,7 @@ class Button(Component):
 
     .. note::
 
-        The user constructible and usable type to create a button is :class:`discord.ui.Button`
-        not this one.
+        This class is not useable by end-users; see :class:`discord.ui.Button` instead.
 
     .. versionadded:: 2.0
 
@@ -249,24 +318,27 @@ class Button(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: ButtonComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
         self.style: ButtonStyle = try_enum(ButtonStyle, data["style"])
         self.custom_id: str | None = data.get("custom_id")
         self.url: str | None = data.get("url")
         self.disabled: bool = data.get("disabled", False)
         self.label: str | None = data.get("label")
         self.emoji: PartialEmoji | None
-        try:
-            self.emoji = PartialEmoji.from_dict(data["emoji"])
-        except KeyError:
+        if e := data.get("emoji"):
+            self.emoji = PartialEmoji.from_dict(e)
+        else:
             self.emoji = None
         self.sku_id: str | None = data.get("sku_id")
 
     def to_dict(self) -> ButtonComponentPayload:
         payload = {
             "type": 2,
+            "id": self.id,
             "style": int(self.style),
             "label": self.label,
             "disabled": self.disabled,
@@ -294,8 +366,7 @@ class SelectMenu(Component):
 
     .. note::
 
-        The user constructible and usable type to create a select menu is
-        :class:`discord.ui.Select` not this one.
+        This class is not useable by end-users; see :class:`discord.ui.Select` instead.
 
     .. versionadded:: 2.0
 
@@ -341,9 +412,11 @@ class SelectMenu(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2)
 
     def __init__(self, data: SelectMenuPayload):
         self.type = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
         self.custom_id: str = data["custom_id"]
         self.placeholder: str | None = data.get("placeholder")
         self.min_values: int = data.get("min_values", 1)
@@ -359,6 +432,7 @@ class SelectMenu(Component):
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
             "type": self.type.value,
+            "id": self.id,
             "custom_id": self.custom_id,
             "min_values": self.min_values,
             "max_values": self.max_values,
@@ -465,9 +539,9 @@ class SelectOption:
 
     @classmethod
     def from_dict(cls, data: SelectOptionPayload) -> SelectOption:
-        try:
-            emoji = PartialEmoji.from_dict(data["emoji"])
-        except KeyError:
+        if e := data.get("emoji"):
+            emoji = PartialEmoji.from_dict(e)
+        else:
             emoji = None
 
         return cls(
@@ -494,16 +568,503 @@ class SelectOption:
         return payload
 
 
-def _component_factory(data: ComponentPayload) -> Component:
+class Section(Component):
+    """Represents a Section from Components V2.
+
+    This is a component that groups other components together with an additional component to the right as the accessory.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Section` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    components: List[:class:`Component`]
+        The components contained in this section. Currently supports :class:`TextDisplay`.
+    accessory: Optional[:class:`Component`]
+        The accessory attached to this Section. Currently supports :class:`Button` and :class:`Thumbnail`.
+    """
+
+    __slots__: tuple[str, ...] = ("components", "accessory")
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: SectionComponentPayload, state=None):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.components: list[Component] = [
+            _component_factory(d, state=state) for d in data.get("components", [])
+        ]
+        self.accessory: Component | None = None
+        if _accessory := data.get("accessory"):
+            self.accessory = _component_factory(_accessory, state=state)
+
+    def to_dict(self) -> SectionComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "components": [c.to_dict() for c in self.components],
+        }
+        if self.accessory:
+            payload["accessory"] = self.accessory.to_dict()
+        return payload
+
+    def walk_components(self) -> Iterator[Component]:
+        r = self.components
+        if self.accessory:
+            yield from r + [self.accessory]
+        yield from r
+
+
+class TextDisplay(Component):
+    """Represents a Text Display from Components V2.
+
+    This is a component that displays text.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.TextDisplay` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    content: :class:`str`
+        The component's text content.
+    """
+
+    __slots__: tuple[str, ...] = ("content",)
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: TextDisplayComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.content: str = data.get("content")
+
+    def to_dict(self) -> TextDisplayComponentPayload:
+        return {"type": int(self.type), "id": self.id, "content": self.content}
+
+
+class UnfurledMediaItem(AssetMixin):
+    """Represents an Unfurled Media Item used in Components V2.
+
+    This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    url: :class:`str`
+        The URL of this media item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
+    """
+
+    def __init__(self, url: str):
+        self._state = None
+        self._url: str = url
+        self._static_url: str | None = (
+            url if url and url.startswith("attachment://") else None
+        )
+        self.proxy_url: str | None = None
+        self.height: int | None = None
+        self.width: int | None = None
+        self.content_type: str | None = None
+        self.flags: AttachmentFlags | None = None
+        self.attachment_id: int | None = None
+
+    def __repr__(self) -> str:
+        return (
+            f"<UnfurledMediaItem url={self.url!r} attachment_id={self.attachment_id}>"
+        )
+
+    def __str__(self) -> str:
+        return self.url or self.__repr__()
+
+    @property
+    def url(self) -> str:
+        """Returns this media item's url."""
+        return self._url
+
+    @url.setter
+    def url(self, value: str) -> None:
+        self._url = value
+        self._static_url = (
+            value if value and value.startswith("attachment://") else None
+        )
+
+    @classmethod
+    def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
+
+        r = cls(data.get("url"))
+        r.proxy_url = data.get("proxy_url")
+        r.height = data.get("height")
+        r.width = data.get("width")
+        r.content_type = data.get("content_type")
+        r.flags = AttachmentFlags._from_value(data.get("flags", 0))
+        r.attachment_id = data.get("attachment_id")
+        r._state = state
+        return r
+
+    def to_dict(self) -> dict[str, str]:
+        return {"url": self._static_url or self.url}
+
+
+class Thumbnail(Component):
+    """Represents a Thumbnail from Components V2.
+
+    This is a component that displays media, such as images and videos.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Thumbnail` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    media: :class:`UnfurledMediaItem`
+        The component's underlying media object.
+    description: Optional[:class:`str`]
+        The thumbnail's description, up to 1024 characters.
+    spoiler: Optional[:class:`bool`]
+        Whether the thumbnail has the spoiler overlay.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "media",
+        "description",
+        "spoiler",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: ThumbnailComponentPayload, state=None):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.media: UnfurledMediaItem = (
+            umi := data.get("media")
+        ) and UnfurledMediaItem.from_dict(umi, state=state)
+        self.description: str | None = data.get("description")
+        self.spoiler: bool | None = data.get("spoiler")
+
+    @property
+    def url(self) -> str:
+        """Returns the URL of this thumbnail's underlying media item."""
+        return self.media.url
+
+    def to_dict(self) -> ThumbnailComponentPayload:
+        payload = {"type": int(self.type), "id": self.id, "media": self.media.to_dict()}
+        if self.description:
+            payload["description"] = self.description
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+
+class MediaGalleryItem:
+    """Represents an item used in the :class:`MediaGallery` component.
+
+    This is used as an underlying component for other media-based components such as :class:`Thumbnail`, :class:`FileComponent`, and :class:`MediaGalleryItem`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    url: :class:`str`
+        The URL of this gallery item. This can either be an arbitrary URL or an ``attachment://`` URL to work with local files.
+    description: Optional[:class:`str`]
+        The gallery item's description, up to 1024 characters.
+    spoiler: Optional[:class:`bool`]
+        Whether the gallery item is a spoiler.
+    """
+
+    def __init__(self, url, *, description=None, spoiler=False):
+        self._state = None
+        self.media: UnfurledMediaItem = UnfurledMediaItem(url)
+        self.description: str | None = description
+        self.spoiler: bool = spoiler
+
+    @property
+    def url(self) -> str:
+        """Returns the URL of this gallery's underlying media item."""
+        return self.media.url
+
+    def is_dispatchable(self) -> bool:
+        return False
+
+    @classmethod
+    def from_dict(cls, data: MediaGalleryItemPayload, state=None) -> MediaGalleryItem:
+        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(
+            umi, state=state
+        )
+        description = data.get("description")
+        spoiler = data.get("spoiler", False)
+
+        r = cls(
+            url=media.url,
+            description=description,
+            spoiler=spoiler,
+        )
+        r._state = state
+        r.media = media
+        return r
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = {"media": self.media.to_dict()}
+        if self.description:
+            payload["description"] = self.description
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+
+class MediaGallery(Component):
+    """Represents a Media Gallery from Components V2.
+
+    This is a component that displays up to 10 different :class:`MediaGalleryItem` objects.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.MediaGallery` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    items: List[:class:`MediaGalleryItem`]
+        The media this gallery contains.
+    """
+
+    __slots__: tuple[str, ...] = ("items",)
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: MediaGalleryComponentPayload, state=None):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.items: list[MediaGalleryItem] = [
+            MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])
+        ]
+
+    def to_dict(self) -> MediaGalleryComponentPayload:
+        return {
+            "type": int(self.type),
+            "id": self.id,
+            "items": [i.to_dict() for i in self.items],
+        }
+
+
+class FileComponent(Component):
+    """Represents a File from Components V2.
+
+    This component displays a downloadable file in a message.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.File` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    file: :class:`UnfurledMediaItem`
+        The file's media item.
+    name: :class:`str`
+        The file's name.
+    size: :class:`int`
+        The file's size in bytes.
+    spoiler: Optional[:class:`bool`]
+        Whether the file has the spoiler overlay.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "file",
+        "spoiler",
+        "name",
+        "size",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: FileComponentPayload, state=None):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.name: str = data.get("name")
+        self.size: int = data.get("size")
+        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(
+            data.get("file", {}), state=state
+        )
+        self.spoiler: bool | None = data.get("spoiler")
+
+    def to_dict(self) -> FileComponentPayload:
+        payload = {"type": int(self.type), "id": self.id, "file": self.file.to_dict()}
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+
+class Separator(Component):
+    """Represents a Separator from Components V2.
+
+    This is a component that visually separates components.
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Separator` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    divider: :class:`bool`
+        Whether the separator will show a horizontal line in addition to vertical spacing.
+    spacing: Optional[:class:`SeparatorSpacingSize`]
+        The separator's spacing size.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "divider",
+        "spacing",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: SeparatorComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.divider: bool = data.get("divider")
+        self.spacing: SeparatorSpacingSize = try_enum(
+            SeparatorSpacingSize, data.get("spacing", 1)
+        )
+
+    def to_dict(self) -> SeparatorComponentPayload:
+        return {
+            "type": int(self.type),
+            "id": self.id,
+            "divider": self.divider,
+            "spacing": int(self.spacing),
+        }
+
+
+class Container(Component):
+    """Represents a Container from Components V2.
+
+    This is a component that contains different :class:`Component` objects.
+    It may only contain:
+
+    - :class:`ActionRow`
+    - :class:`TextDisplay`
+    - :class:`Section`
+    - :class:`MediaGallery`
+    - :class:`Separator`
+    - :class:`FileComponent`
+
+    This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.Container` instead.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    components: List[:class:`Component`]
+        The components contained in this container.
+    accent_color: Optional[:class:`Colour`]
+        The accent color of the container.
+    spoiler: Optional[:class:`bool`]
+        Whether the entire container has the spoiler overlay.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "accent_color",
+        "spoiler",
+        "components",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (2,)
+
+    def __init__(self, data: ContainerComponentPayload, state=None):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.accent_color: Colour | None = (c := data.get("accent_color")) and Colour(
+            c
+        )  # at this point, not adding alternative spelling
+        self.spoiler: bool | None = data.get("spoiler")
+        self.components: list[Component] = [
+            _component_factory(d, state=state) for d in data.get("components", [])
+        ]
+
+    def to_dict(self) -> ContainerComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "components": [c.to_dict() for c in self.components],
+        }
+        if self.accent_color:
+            payload["accent_color"] = self.accent_color.value
+        if self.spoiler is not None:
+            payload["spoiler"] = self.spoiler
+        return payload
+
+    def walk_components(self) -> Iterator[Component]:
+        for c in self.components:
+            if hasattr(c, "walk_components"):
+                yield from c.walk_components()
+            else:
+                yield c
+
+
+COMPONENT_MAPPINGS = {
+    1: ActionRow,
+    2: Button,
+    3: SelectMenu,
+    4: InputText,
+    5: SelectMenu,
+    6: SelectMenu,
+    7: SelectMenu,
+    8: SelectMenu,
+    9: Section,
+    10: TextDisplay,
+    11: Thumbnail,
+    12: MediaGallery,
+    13: FileComponent,
+    14: Separator,
+    17: Container,
+}
+
+STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
+
+
+def _component_factory(data: ComponentPayload, state=None) -> Component:
     component_type = data["type"]
-    if component_type == 1:
-        return ActionRow(data)
-    elif component_type == 2:
-        return Button(data)  # type: ignore
-    elif component_type == 4:
-        return InputText(data)  # type: ignore
-    elif component_type in (3, 5, 6, 7, 8):
-        return SelectMenu(data)  # type: ignore
+    if cls := COMPONENT_MAPPINGS.get(component_type):
+        if issubclass(cls, STATE_COMPONENTS):
+            return cls(data, state=state)
+        else:
+            return cls(data)
     else:
         as_enum = try_enum(ComponentType, component_type)
         return Component._raw_construct(type=as_enum)
