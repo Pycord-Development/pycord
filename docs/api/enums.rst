@@ -2521,6 +2521,7 @@ of :class:`enum.Enum`.
         The subscription is inactive and the subscription owner is not being charged.
 
 
+
 .. class:: ThreadArchiveDuration
 
     Represents the time before a thread is archived.
@@ -2542,3 +2543,18 @@ of :class:`enum.Enum`.
     .. attribute:: one_week
 
         Indicates that the thread will be archived after 1 week of inactivity.
+
+
+.. class:: SeparatorSpacingSize
+
+    Represents the padding size around a separator component.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: small
+
+        The separator uses small padding.
+
+    .. attribute:: large
+
+        The separator uses large padding.

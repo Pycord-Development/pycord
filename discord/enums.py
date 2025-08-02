@@ -80,6 +80,8 @@ __all__ = (
     "PollLayoutType",
     "MessageReferenceType",
     "ThreadArchiveDuration",
+    "SubscriptionStatus",
+    "SeparatorSpacingSize",
 )
 
 
@@ -722,6 +724,14 @@ class ComponentType(Enum):
     role_select = 6
     mentionable_select = 7
     channel_select = 8
+    section = 9
+    text_display = 10
+    thumbnail = 11
+    media_gallery = 12
+    file = 13
+    separator = 14
+    content_inventory_entry = 16
+    container = 17
 
     def __int__(self):
         return self.value
@@ -1087,6 +1097,16 @@ class ThreadArchiveDuration(IntEnum):
     one_day = 1440
     three_days = 4320
     one_week = 10080
+
+    
+class SeparatorSpacingSize(Enum):
+    """A separator component's spacing size."""
+
+    small = 1
+    large = 2
+
+    def __int__(self):
+        return self.value
 
 
 T = TypeVar("T")
