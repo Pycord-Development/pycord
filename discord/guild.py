@@ -32,13 +32,13 @@ from typing import (
     Any,
     ClassVar,
     List,
+    Literal,
     NamedTuple,
     Optional,
     Sequence,
     Tuple,
     Union,
     overload,
-    Literal,
 )
 
 from . import abc, utils
