@@ -60,6 +60,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added the ability to pass an `overlap` parameter to the `loop` decorator and `Loop`
   class, allowing concurrent iterations if enabled.
   ([#2765](https://github.com/Pycord-Development/pycord/pull/2765))
+- Added support for type hinting slash command options with `typing.Annotated`.
+  ([#2782](https://github.com/Pycord-Development/pycord/pull/2782))
 - Added conversion to `Member` in `MentionableConverter`.
   ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
