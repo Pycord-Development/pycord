@@ -63,6 +63,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
+- Added `User.nameplate` property.
+  ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
 - Added role gradients support with `Role.colours` and the `RoleColours` class.
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
 

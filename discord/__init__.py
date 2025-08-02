@@ -35,6 +35,7 @@ from .bot import *
 from .channel import *
 from .client import *
 from .cog import *
+from .collectibles import *
 from .colour import *
 from .commands import *
 from .components import *
