@@ -145,7 +145,9 @@ class Attachment(Hashable):
 
         .. describe:: hash(x)
 
-            Returns the hash of the attachment.
+            Returns the attachment's unique identifier.
+
+            This is equivalent to :attr:`id`.
 
     .. versionchanged:: 1.7
         Attachment can now be cast to :class:`str` and is hashable.
