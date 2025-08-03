@@ -1,12 +1,3 @@
-* @Pycord-Development/maintainers
-
-/tests/ @Pycord-Development/maintain-tests @Pycord-Development/maintainers
-/discord/ext/testing/ @Pycord-Development/maintain-tests @Pycord-Development/maintainers
-/discord/ext/bridge/ @Pycord-Development/maintain-ext-bridge @Pycord-Development/maintainers
-/.github/ @Pycord-Development/maintainers @Lulalaby
-/docs/locales/ @Pycord-Development/maintain-translations
-/docs/build/locales/ @Pycord-Development/maintain-translations
-/.github/workflows/docs-localization-download.yml @Pycord-Development/maintain-translations
- * @Pycord-Development/pycord-next-contributors 
+* @Pycord-Development/pycord-next-contributors 
 /.github @Lulalaby
- /crowdin.yml @Pycord-Development/maintain-translations
+/crowdin.yml @Pycord-Development/maintain-translations
