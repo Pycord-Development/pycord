@@ -139,7 +139,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `TypeError` when using `@option` with certain annotations and along with
   `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
 - Fixed `TypeError` when using `Optional[...]` or `... | None` in command option type.
-([#2852](https://github.com/Pycord-Development/pycord/pull/2852))
+  ([#2852](https://github.com/Pycord-Development/pycord/pull/2852))
 
 ### Changed
 
