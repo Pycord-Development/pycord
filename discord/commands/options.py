@@ -26,8 +26,8 @@ from __future__ import annotations
 
 import inspect
 import logging
-from enum import Enum
 import types
+from enum import Enum
 from typing import TYPE_CHECKING, Literal, Optional, Type, Union, get_args
 
 from ..abc import GuildChannel, Mentionable
