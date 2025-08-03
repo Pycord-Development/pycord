@@ -1,8 +1,8 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
-  - name: Ask a question
-    about: Ask questions and discuss with other users of the library.
-    url: https://github.com/Pycord-Development/pycord/discussions
+  - name: Main Library
+    about: Please use the main library. Pycord-next is under heavy development.
+    url: https://github.com/Pycord-Development/pycord
   - name: Discord Server
     about: Use our official Discord server to ask for help and questions as well.
     url: https://pycord.dev/discord
