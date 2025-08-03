@@ -2229,13 +2229,13 @@ class Message(Hashable):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        component = find(lambda i: getattr(i, attr, None) == id, self.components)
-        if not component:
-            for i in self.components:
-                if hasattr(i, "get_component"):
-                    if component := i.get_component(id):
-                        return component
-        return component
+        for i in self.components:
+            if getattr(i, attr, None) == id:
+                return i
+            elif hasattr(i, "get_component"):
+                if component := i.get_component(id):
+                    return component
+        return None
 
 
 class PartialMessage(Hashable):
