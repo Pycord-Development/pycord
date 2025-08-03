@@ -39,7 +39,7 @@ from .enums import (
 )
 from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, get_slots, find
+from .utils import MISSING, find, get_slots
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
