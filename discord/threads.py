@@ -30,7 +30,9 @@ from typing import TYPE_CHECKING, Callable, Iterable
 from .abc import Messageable, _purge_messages_helper
 from .enums import (
     ChannelType,
-    ThreadArchiveDuration as ThreadArchiveDurationEnum,
+)
+from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
+from .enums import (
     try_enum,
 )
 from .errors import ClientException
