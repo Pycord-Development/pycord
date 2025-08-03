@@ -50,6 +50,10 @@ def create_update_pr(commit_message: str, branch_prefix: str, title: str, body: 
         if pr.head.ref.startswith(branch_prefix):
             branch_name: str = pr.head.ref
             subprocess.run(
+                ["/usr/bin/git", "fetch", "origin", branch_name],
+                check=False,
+            )
+            subprocess.run(
                 ["/usr/bin/git", "checkout", branch_name],
                 check=False,
             )
