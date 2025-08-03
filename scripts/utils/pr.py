@@ -43,7 +43,6 @@ def create_update_pr(commit_message: str, branch_prefix: str, title: str, body: 
     ident()
     print(f"Creating/updating PR in {repo.full_name} on branch {base_branch} with prefix {branch_prefix}")
 
-    # get all prs and see if there is one whose branch starts with the branch_prefix
     prs = repo.get_pulls(state="open", sort="created", base=base_branch)
     pull_request: None | PullRequest = None
     for pr in prs:
