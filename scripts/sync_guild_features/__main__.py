@@ -6,8 +6,8 @@ from github import Github
 from github import Auth
 import re
 
-from .utils import get_features_blob, format_path, lint_path, GUILD_FEATURES_GIST_URL
-from ..utils import create_update_pr
+from .utils import get_features_blob, GUILD_FEATURES_GIST_URL
+from ..utils import create_update_pr, format_path, lint_path
 
 CI = os.environ.get("CI", "false").lower() in ("true", "1", "yes")
 

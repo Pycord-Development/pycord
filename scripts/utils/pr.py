@@ -26,10 +26,11 @@ def create_update_pr(commit_message: str, branch_prefix: str, title: str, body: 
 
     Parameters
     ----------
-        title (str): The title of the pull request.
-        branch_prefix (str): The prefix for the branch name.
-        body (str): The body of the pull request.
-        base_branch (str): The base branch to create the PR against. Defaults to "main".
+    commit_message (str): The commit message to use.
+    branch_prefix (str): The prefix for the branch name.
+    title (str): The title of the pull request.
+    body (str): The body of the pull request.
+    path (str | Path): The path or glob to the file to commit.
     """
     github = Github(os.environ["GITHUB_TOKEN"])
     repo = github.get_repo(os.environ["GITHUB_REPOSITORY"])
