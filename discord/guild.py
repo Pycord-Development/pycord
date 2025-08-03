@@ -865,32 +865,11 @@ class Guild(Hashable):
         """
         return self._members.get(user_id)
 
-    @overload
-    async def get_or_fetch(
-        self: Guild,
-        object_type: type[_FETCHABLE],
-        object_id: Literal[None],
-        default: _D = ...,
-    ) -> None | _D: ...
-    @overload
-    async def get_or_fetch(
-        self: Guild,
-        object_type: type[_FETCHABLE],
-        object_id: int,
-        default: _D,
-    ) -> _FETCHABLE | _D: ...
-    @overload
-    async def get_or_fetch(
-        self: Guild,
-        object_type: type[_FETCHABLE],
-        object_id: int,
-    ) -> _FETCHABLE: ...
-
     async def get_or_fetch(
         self: Guild,
         object_type: type[_FETCHABLE],
         object_id: int | None,
-        default: _D = MISSING,
+        default: _D = None,
     ) -> _FETCHABLE | _D | None:
         """
         Shortcut method to get data from this guild either by returning the cached version,
@@ -910,21 +889,8 @@ class Guild(Hashable):
         Returns
         -------
         VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Role | Member | GuildEmoji | None
-            The object if found, or ``default`` if provided when not found.
-            Returns ``None`` only if ``object_id`` is ``None`` and no ``default`` is given.
+            The object if found, or `default` if provided when not found.
 
-        Raises
-        ------
-        :exc:`TypeError`
-            Raised when required parameters are missing or invalid types are provided.
-        :exc:`InvalidArgument`
-            Raised when an unsupported or incompatible object type is used.
-        :exc:`NotFound`
-            Invalid ID for the object.
-        :exc:`HTTPException`
-            An error occurred fetching the object.
-        :exc:`Forbidden`
-            You do not have permission to fetch the object.
         """
         return await utils.get_or_fetch(
             obj=self,

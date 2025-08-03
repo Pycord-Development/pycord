@@ -1188,34 +1188,11 @@ class Client:
 
         return await self.get_or_fetch(object_type=User, object_id=id, default=None)
 
-    @overload
-    async def get_or_fetch(
-        self: Client,
-        object_type: type[_FETCHABLE],
-        object_id: Literal[None],
-        default: _D = ...,
-    ) -> None | _D: ...
-
-    @overload
-    async def get_or_fetch(
-        self: Client,
-        object_type: type[_FETCHABLE],
-        object_id: int,
-        default: _D,
-    ) -> _FETCHABLE | _D: ...
-
-    @overload
-    async def get_or_fetch(
-        self: Client,
-        object_type: type[_FETCHABLE],
-        object_id: int,
-    ) -> _FETCHABLE: ...
-
     async def get_or_fetch(
         self: Client,
         object_type: type[_FETCHABLE],
         object_id: int | None,
-        default: _D = MISSING,
+        default: _D = None,
     ) -> _FETCHABLE | _D | None:
         """
         Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
@@ -1232,23 +1209,13 @@ class Client:
         Returns
         -------
         VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji | None
-            The object of the specified type, or default if provided and not found, or None if not found and no default is provided.
-
-        Raises
-        ------
-        :exc:`TypeError`
-            Raised when required parameters are missing or invalid types are provided.
-        :exc:`InvalidArgument`
-            Raised when an unsupported or incompatible object type is used.
-        :exc:`NotFound`
-            Invalid ID for the object.
-        :exc:`HTTPException`
-            An error occurred fetching the object.
-        :exc:`Forbidden`
-            You do not have permission to fetch the object.
+            The object if found, or `default` if provided when not found.
         """
         return await utils.get_or_fetch(
-            obj=self, object_type=object_type, object_id=object_id, default=default
+            obj=self,
+            object_type=object_type,
+            object_id=object_id,
+            default=default,
         )
 
     # listeners/waiters

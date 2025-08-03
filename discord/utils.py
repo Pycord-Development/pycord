@@ -594,44 +594,13 @@ _D = TypeVar("_D")
 
 # TODO: In version 3.0, remove the 'attr' and 'id' arguments.
 #       Also, eliminate the default 'MISSING' value for both 'object_type' and 'object_id'.
-@overload
-async def get_or_fetch(
-    obj: Guild | Client,
-    object_type: type[_FETCHABLE],
-    object_id: Literal[None],
-    default: _D = ...,
-    attr: str = ...,
-    id: int = ...,
-) -> None | _D: ...
-
-
-@overload
-async def get_or_fetch(
-    obj: Guild | Client,
-    object_type: type[_FETCHABLE],
-    object_id: int,
-    default: _D,
-    attr: str = ...,
-    id: int = ...,
-) -> _FETCHABLE | _D: ...
-
-
-@overload
-async def get_or_fetch(
-    obj: Guild | Client,
-    object_type: type[_FETCHABLE],
-    object_id: int,
-    *,
-    attr: str = ...,
-    id: int = ...,
-) -> _FETCHABLE: ...
 
 
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE] = MISSING,
     object_id: int | None = MISSING,
-    default: _D = MISSING,
+    default: _D = None,
     attr: str = MISSING,
     id: int = MISSING,
 ) -> _FETCHABLE | _D | None:
@@ -645,7 +614,7 @@ async def get_or_fetch(
     object_type: VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | Role | Member | GuildEmoji | AppEmoji
         Type of object to fetch or get.
 
-    object_id: :class:`int`
+    object_id: int | None
         ID of object to get.
 
     default : Any | None
@@ -656,20 +625,6 @@ async def get_or_fetch(
 
     VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | Role | Member | GuildEmoji | AppEmoji | None
         The object if found, or `default` if provided when not found.
-        Returns `None` only if `object_id` is None and no `default` is given.
-
-    Raises
-    ------
-    :exc:`TypeError`
-        Raised when required parameters are missing or invalid types are provided.
-    :exc:`InvalidArgument`
-        Raised when an unsupported or incompatible object type is used.
-    :exc:`NotFound`
-        Invalid ID for the object.
-    :exc:`HTTPException`
-        An error occurred fetching the object.
-    :exc:`Forbidden`
-        You do not have permission to fetch the object.
     """
     from discord import AppEmoji, Client, Guild, Member, Role, User, abc, emoji
 
@@ -782,9 +737,7 @@ async def get_or_fetch(
     try:
         return await fetcher(obj, object_id)
     except (HTTPException, ValueError):
-        if default is not MISSING:
-            return default
-        raise
+        return default
 
 
 def _unique(iterable: Iterable[T]) -> list[T]:
