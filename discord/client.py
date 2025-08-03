@@ -1210,13 +1210,23 @@ class Client:
         -------
         VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji | None
             The object if found, or `default` if provided when not found.
+
+        Raises
+        ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
         """
-        return await utils.get_or_fetch(
-            obj=self,
-            object_type=object_type,
-            object_id=object_id,
-            default=default,
-        )
+        try:
+            return await utils.get_or_fetch(
+                obj=self,
+                object_type=object_type,
+                object_id=object_id,
+                default=default,
+            )
+        except (HTTPException, ValueError):
+            return default
 
     # listeners/waiters
 

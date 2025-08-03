@@ -594,13 +594,44 @@ _D = TypeVar("_D")
 
 # TODO: In version 3.0, remove the 'attr' and 'id' arguments.
 #       Also, eliminate the default 'MISSING' value for both 'object_type' and 'object_id'.
+@overload
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: type[_FETCHABLE],
+    object_id: Literal[None],
+    default: _D = ...,
+    attr: str = ...,
+    id: int = ...,
+) -> None | _D: ...
+
+
+@overload
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: type[_FETCHABLE],
+    object_id: int,
+    default: _D,
+    attr: str = ...,
+    id: int = ...,
+) -> _FETCHABLE | _D: ...
+
+
+@overload
+async def get_or_fetch(
+    obj: Guild | Client,
+    object_type: type[_FETCHABLE],
+    object_id: int,
+    *,
+    attr: str = ...,
+    id: int = ...,
+) -> _FETCHABLE: ...
 
 
 async def get_or_fetch(
     obj: Guild | Client,
     object_type: type[_FETCHABLE] = MISSING,
     object_id: int | None = MISSING,
-    default: _D = None,
+    default: _D = MISSING,
     attr: str = MISSING,
     id: int = MISSING,
 ) -> _FETCHABLE | _D | None:
@@ -625,6 +656,20 @@ async def get_or_fetch(
 
     VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | Role | Member | GuildEmoji | AppEmoji | None
         The object if found, or `default` if provided when not found.
+        Returns `None` only if `object_id` is None and no `default` is given.
+
+    Raises
+    ------
+    :exc:`TypeError`
+        Raised when required parameters are missing or invalid types are provided.
+    :exc:`InvalidArgument`
+        Raised when an unsupported or incompatible object type is used.
+    :exc:`NotFound`
+        Invalid ID for the object.
+    :exc:`HTTPException`
+        An error occurred fetching the object.
+    :exc:`Forbidden`
+        You do not have permission to fetch the object.
     """
     from discord import AppEmoji, Client, Guild, Member, Role, User, abc, emoji
 
@@ -672,19 +717,6 @@ async def get_or_fetch(
     if object_type is MISSING or object_id is MISSING:
         raise TypeError("required parameters: `object_type` and `object_id`.")
 
-    if issubclass(object_type, (Member, User, Guild)):
-        attr = object_type.__name__.lower()
-    elif issubclass(object_type, emoji._EmojiTag):
-        attr = "emoji"
-    elif issubclass(object_type, Role):
-        attr = "role"
-    elif issubclass(object_type, abc.GuildChannel):
-        attr = "channel"
-    else:
-        raise InvalidArgument(
-            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
-        )
-
     if isinstance(obj, Guild) and object_type is User:
         raise InvalidArgument(
             "Guild cannot get_or_fetch discord.User. Use Client instead."
@@ -728,7 +760,9 @@ async def get_or_fetch(
         )
         getter, fetcher = getter_fetcher_map[base_type]
     except KeyError:
-        raise InvalidArgument(f"Unsupported object type: {object_type.__name__}")
+        raise InvalidArgument(
+            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
+        )
 
     result = getter(obj, object_id)
     if result is not None:
@@ -737,7 +771,9 @@ async def get_or_fetch(
     try:
         return await fetcher(obj, object_id)
     except (HTTPException, ValueError):
-        return default
+        if default is not MISSING:
+            return default
+        raise
 
 
 def _unique(iterable: Iterable[T]) -> list[T]:

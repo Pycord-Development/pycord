@@ -64,7 +64,7 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .errors import ClientException, InvalidArgument, InvalidData
+from .errors import ClientException, InvalidArgument, InvalidData, HTTPException
 from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
@@ -891,13 +891,22 @@ class Guild(Hashable):
         VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Role | Member | GuildEmoji | None
             The object if found, or `default` if provided when not found.
 
+        Raises
+        ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
         """
-        return await utils.get_or_fetch(
-            obj=self,
-            object_type=object_type,
-            object_id=object_id,
-            default=default,
-        )
+        try:
+            return await utils.get_or_fetch(
+                obj=self,
+                object_type=object_type,
+                object_id=object_id,
+                default=default,
+            )
+        except (HTTPException, ValueError):
+            return default
 
     @property
     def premium_subscribers(self) -> list[Member]:
