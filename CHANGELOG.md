@@ -63,6 +63,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
+- Added `User.nameplate` property.
+  ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
+- Added role gradients support with `Role.colours` and the `RoleColours` class.
+  ([#2818](https://github.com/Pycord-Development/pycord/pull/2818
 - Added `ThreadAutoArchiveDuration` enum to improve clarity of thread archive durations.
   ([#2826](https://github.com/Pycord-Development/pycord/pull/2826))
 
@@ -121,6 +125,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2761](https://github.com/Pycord-Development/pycord/pull/2761))
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
+- Added support for emoji aliases like `:smile:` in PartialEmoji.from_str. Also applied
+  the same logic in PartialEmojiConverter.
+  ([#2815](https://github.com/Pycord-Development/pycord/pull/2815))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
   ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
 - Fixed GIF-based `Sticker` returning the wrong `url`.
