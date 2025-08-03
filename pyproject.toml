@@ -74,6 +74,9 @@ dev = [
     "pytest-asyncio~=0.24.0",
     "ruff>=0.11.9",
 ]
+ci = [
+    "pygithub>=2.7.0",
+]
 
 [tool.hatch.version]
 source = "vcs"
