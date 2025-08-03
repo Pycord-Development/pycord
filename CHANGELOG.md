@@ -65,6 +65,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
 - Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
   ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
+- Added `User.nameplate` property.
+  ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
+- Added role gradients support with `Role.colours` and the `RoleColours` class.
+  ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
 
 ### Fixed
 
@@ -121,6 +125,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2761](https://github.com/Pycord-Development/pycord/pull/2761))
 - Updated `valid_locales` to support `in` and `es-419`.
   ([#2767](https://github.com/Pycord-Development/pycord/pull/2767))
+- Added support for emoji aliases like `:smile:` in PartialEmoji.from_str. Also applied
+  the same logic in PartialEmojiConverter.
+  ([#2815](https://github.com/Pycord-Development/pycord/pull/2815))
 - Fixed `Webhook.edit` not working with `attachments=[]`.
   ([#2779](https://github.com/Pycord-Development/pycord/pull/2779))
 - Fixed GIF-based `Sticker` returning the wrong `url`.
