@@ -63,7 +63,7 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .errors import ClientException, InvalidArgument, InvalidData, HTTPException
+from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
 from .flags import SystemChannelFlags
 from .integrations import Integration, _integration_factory
