@@ -49,8 +49,8 @@ from .enums import (
     SortOrder,
     StagePrivacyLevel,
 )
-from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
 from .enums import (
+    ThreadArchiveDuration as ThreadArchiveDurationEnum,
     VideoQualityMode,
     VoiceRegion,
     try_enum,
