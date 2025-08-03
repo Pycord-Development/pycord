@@ -819,13 +819,13 @@ class FileComponent(Component[FileComponentPayload]):
         self,
         url: str | UnfurledMediaItem,
         *,
-        spoiler: bool = False,
+        spoiler: bool | None = False,
         id: int | None = None,
         size: int | None = None,
         name: int | None = None,
     ) -> None:
         self.file: UnfurledMediaItem = url if isinstance(url, UnfurledMediaItem) else UnfurledMediaItem(url)
-        self.spoiler: bool = bool(spoiler)
+        self.spoiler: bool | None = bool(spoiler) if spoiler is not None else None
         self.id = id
         self.size: int = size
         self.name: str = name
@@ -833,15 +833,13 @@ class FileComponent(Component[FileComponentPayload]):
     @classmethod
     def from_payload(cls, payload: FileComponentPayload, state=None) -> Self:
         file = UnfurledMediaItem.from_dict(payload.get("file", {}), state=state)
-        return cls(
-            file, spoiler=payload.get("spoiler", False), id=payload["id"], size=payload["size"], name=payload["name"]
-        )
+        return cls(file, spoiler=payload.get("spoiler"), id=payload["id"], size=payload["size"], name=payload["name"])
 
     def to_dict(self) -> FileComponentPayload:
         payload = {"type": int(self.type), "id": self.id, "file": self.file.to_dict()}
         if self.spoiler is not None:
             payload["spoiler"] = self.spoiler
-        return payload
+        return payload  # type: ignore
 
     @property
     def url(self) -> str:
@@ -890,6 +888,7 @@ class Separator(Component[SeparatorComponentPayload]):
             divider=payload.get("divider", False), spacing=try_enum(SeparatorSpacingSize, payload.get("spacing", 1))
         )
         self.id = payload["id"]
+        return self
 
     def to_dict(self) -> SeparatorComponentPayload:
         return {
@@ -897,7 +896,7 @@ class Separator(Component[SeparatorComponentPayload]):
             "id": self.id,
             "divider": self.divider,
             "spacing": int(self.spacing),
-        }
+        }  # type: ignore
 
 
 AllowedActionRowComponents = Button | InputText | SelectMenu
@@ -1051,4 +1050,4 @@ def _component_factory(data: ComponentPayload, state=None) -> Component:
             return cls(data)
     else:
         as_enum = try_enum(ComponentType, component_type)
-        return Component._raw_construct(type=as_enum)
+        return Component._raw_construct(type=as_enum)  # TODO: implement something else here for Unknown Components
