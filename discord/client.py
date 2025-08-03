@@ -37,10 +37,8 @@ from typing import (
     Callable,
     Coroutine,
     Generator,
-    Literal,
     Sequence,
     TypeVar,
-    overload,
 )
 
 import aiohttp

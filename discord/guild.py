@@ -32,7 +32,6 @@ from typing import (
     Any,
     ClassVar,
     List,
-    Literal,
     NamedTuple,
     Optional,
     Sequence,
@@ -890,7 +889,6 @@ class Guild(Hashable):
         -------
         VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Role | Member | GuildEmoji | None
             The object if found, or `default` if provided when not found.
-
         """
         return await utils.get_or_fetch(
             obj=self,
