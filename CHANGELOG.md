@@ -170,7 +170,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
-- Deprecated `utils.get_or_fetch(attr, id)` in favor of
+- Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favor of
   `utils.get_or_fetch(object_type, object_id)`.
   ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
