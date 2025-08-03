@@ -712,7 +712,7 @@ async def get_or_fetch(
             mapped_type = string_to_type.get(deprecated_attr.lower())
             if mapped_type is None:
                 raise InvalidArgument(
-                    f"Unknown type string '{deprecated_attr}' used. Please use a valid object class like `discord.Member` instead."
+                    f"Unknown type string '{deprecated_attr}' used. Please use a valid class like `discord.Member` instead."
                 )
             object_type = mapped_type
         elif isinstance(deprecated_attr, type):
