@@ -600,6 +600,8 @@ _FETCHABLE = TypeVar(
     bound="VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Member | User | Guild | Role | GuildEmoji | AppEmoji",
 )
 _D = TypeVar("_D")
+_Getter = Callable[[Any, int], Any]
+_Fetcher = Callable[[Any, int], Awaitable[Any]]
 
 
 # TODO: In version 3.0, remove the 'attr' and 'id' arguments.
@@ -681,20 +683,11 @@ async def get_or_fetch(
     :exc:`Forbidden`
         You do not have permission to fetch the object.
     """
-    from discord import AppEmoji, Client, Guild, Member, Role, User, abc, emoji
+    from discord import Client, Guild, Member, Role, User
 
     if object_id is None:
         return default if default is not MISSING else None
 
-    string_to_type = {
-        "channel": abc.GuildChannel,
-        "member": Member,
-        "user": User,
-        "guild": Guild,
-        "emoji": emoji._EmojiTag,
-        "appemoji": AppEmoji,
-        "role": Role,
-    }
     # Temporary backward compatibility for 'attr' and 'id'.
     # This entire if block should be removed in version 3.0.
     if attr is not MISSING or id is not MISSING or isinstance(object_type, str):
@@ -709,7 +702,7 @@ async def get_or_fetch(
         deprecated_id = id if id is not MISSING else object_id
 
         if isinstance(deprecated_attr, str):
-            mapped_type = string_to_type.get(deprecated_attr.lower())
+            mapped_type = _get_string_to_type_map().get(deprecated_attr.lower())
             if mapped_type is None:
                 raise InvalidArgument(
                     f"Unknown type string '{deprecated_attr}' used. Please use a valid class like `discord.Member` instead."
@@ -738,7 +731,47 @@ async def get_or_fetch(
     elif isinstance(obj, Guild) and object_type is Guild:
         raise InvalidArgument("Guild cannot get_or_fetch Guild. Use Client instead.")
 
-    getter_fetcher_map = {
+    try:
+        getter, fetcher = _get_getter_fetcher_map()[object_type]
+    except KeyError:
+        raise InvalidArgument(
+            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
+        )
+
+    result = getter(obj, object_id)
+    if result is not None:
+        return result
+
+    try:
+        return await fetcher(obj, object_id)
+    except (HTTPException, ValueError):
+        if default is not MISSING:
+            return default
+        raise
+
+
+@functools.lru_cache(maxsize=1)
+def _get_string_to_type_map() -> dict[str, type]:
+    """Return a cached map of lowercase strings -> discord types."""
+    from discord import Guild, Member, Role, User, abc, emoji
+
+    return {
+        "channel": abc.GuildChannel,
+        "member": Member,
+        "user": User,
+        "guild": Guild,
+        "emoji": emoji._EmojiTag,
+        "appemoji": AppEmoji,
+        "role": Role,
+    }
+
+
+@functools.lru_cache(maxsize=1)
+def _get_getter_fetcher_map() -> dict[type, tuple[_Getter, _Fetcher]]:
+    """Return a cached map of type names -> (getter, fetcher) functions."""
+    from discord import Guild, Member, Role, User, abc, emoji
+
+    base_map: dict[type, tuple[_Getter, _Fetcher]] = {
         Member: (
             lambda obj, oid: obj.get_member(oid),
             lambda obj, oid: obj.fetch_member(oid),
@@ -764,26 +797,23 @@ async def get_or_fetch(
             lambda obj, oid: obj.fetch_channel(oid),
         ),
     }
-    try:
-        base_type = next(
-            base for base in getter_fetcher_map if issubclass(object_type, base)
-        )
-        getter, fetcher = getter_fetcher_map[base_type]
-    except KeyError:
-        raise InvalidArgument(
-            f"Class {object_type.__name__} cannot be used with discord.{type(obj).__name__}.get_or_fetch()"
-        )
 
-    result = getter(obj, object_id)
-    if result is not None:
-        return result
+    expanded: dict[type, tuple[_Getter, _Fetcher]] = {}
+    for base, funcs in base_map.items():
+        expanded[base] = funcs
+        for subclass in _all_subclasses(base):
+            if subclass not in expanded:
+                expanded[subclass] = funcs
 
-    try:
-        return await fetcher(obj, object_id)
-    except (HTTPException, ValueError):
-        if default is not MISSING:
-            return default
-        raise
+    return expanded
+
+
+def _all_subclasses(cls: type) -> set[type]:
+    """Recursively collect all subclasses of a class."""
+    subs = set(cls.__subclasses__())
+    for sub in cls.__subclasses__():
+        subs |= _all_subclasses(sub)
+    return subs
 
 
 def _unique(iterable: Iterable[T]) -> list[T]:
