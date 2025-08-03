@@ -10,3 +10,5 @@
 /.github/workflows/docs-localization-upload.yml @Pycord-Development/maintain-translations
 /crowdin.yml @Pycord-Development/maintain-translations
 /requirements/_locale.txt @Pycord-Development/maintain-translations
+/pyproject.toml @Pycord-Development/maintainers @Paillat-dev
+/uv.lock @Pycord-Development/maintainers @Paillat-dev
