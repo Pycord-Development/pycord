@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -870,7 +870,7 @@ msgstr ""
 
 #: ../../../discord/webhook/async_.py:docstring of discord.webhook.async_.Webhook.send:104
 #: 24d33e686b2541a7991efe6371d53143
-msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``     was passed with neither ``thread_name`` nor ``thread`` specified."
+msgid "Either there was no token associated with this webhook, ``ephemeral`` was passed     with the improper webhook type, there was no state attached with this webhook when     giving it a dispatchable view, you specified both ``thread_name`` and ``thread``,     or ``applied_tags`` was passed with neither ``thread_name`` nor ``thread`` specified."
 msgstr ""
 
 #: ../../../discord/webhook/async_.py:docstring of discord.Webhook.avatar:1
