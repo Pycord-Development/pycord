@@ -166,7 +166,7 @@ class Interaction:
 
         .. versionadded:: 2.7
     attachment_size_limit: Optional[:class:`int`]
-        The limit size of attachment.
+        The attachment size limit.
 
         .. versionadded:: 2.7
     """
