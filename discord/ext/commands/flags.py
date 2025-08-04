@@ -98,7 +98,7 @@ class Flag:
     annotation: Any = _missing_field_factory()
     default: Any = _missing_field_factory()
     max_args: int = _missing_field_factory()
-    positional: bool = _missing_field_factory(
+    positional: bool = _missing_field_factory()
     override: bool = _missing_field_factory()
     cast_to_dict: bool = False
 
