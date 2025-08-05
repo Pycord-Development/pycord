@@ -268,6 +268,13 @@ class ApplicationContext(discord.abc.Messageable):
                 return self.command.options  # type: ignore
         return None
 
+    @cached_property
+    def attachment_size_limit(self) -> int:
+        """Returns the attachment size limit associated with this context's interaction.
+        Shorthand for :attr:`.Interaction.attachment_size_limit`.
+        """
+        return self.interaction.attachment_size_limit
+
     @property
     @discord.utils.copy_doc(InteractionResponse.send_modal)
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
