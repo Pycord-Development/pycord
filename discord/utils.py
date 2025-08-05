@@ -30,6 +30,7 @@ import asyncio
 import collections.abc
 import datetime
 import functools
+import importlib.resources
 import itertools
 import json
 import re
@@ -100,6 +101,15 @@ __all__ = (
 )
 
 DISCORD_EPOCH = 1420070400000
+
+with (
+    importlib.resources.files(__package__)
+    .joinpath("emojis.json")
+    .open(encoding="utf-8") as f
+):
+    EMOJIS_MAP = json.load(f)
+
+UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
 
 class _MissingSentinel:
@@ -933,7 +943,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     regex = _MARKDOWN_STOCK_REGEX
     if ignore_links:
         regex = f"(?:{_URL_REGEX}|{regex})"
-    return re.sub(regex, replacement, text, 0, re.MULTILINE)
+    return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE)
 
 
 def escape_markdown(
@@ -975,7 +985,7 @@ def escape_markdown(
         regex = _MARKDOWN_STOCK_REGEX
         if ignore_links:
             regex = f"(?:{_URL_REGEX}|{regex})"
-        return re.sub(regex, replacement, text, 0, re.MULTILINE | re.X)
+        return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE | re.X)
     else:
         text = re.sub(r"\\", r"\\\\", text)
         return _MARKDOWN_ESCAPE_REGEX.sub(r"\\\1", text)

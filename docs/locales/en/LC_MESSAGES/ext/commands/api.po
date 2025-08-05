@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -239,12 +239,12 @@ msgstr ""
 
 #: ../../ext/commands/api.rst 0257c75535174994a013c404eed4de3d
 #: 0aaa7547a84144fc98f8383462258a5d 227204ee62a54c638c2f8b9a91f21145
-#: 2650f6c238e74f72b4357fd0f3649d83 4518277f66b34d9ea6be92e3704fe30a
-#: 630f4288af604d4dbc8e4177a7f21fac 65b2a4bfdd9f4cc8b834d6d484ef0034
-#: 77dbba5eef11464da6e6d8561993d040 85f893142dbc4e559193fbceb66e29f8
-#: 9deb4f77a61449abb51bd5c6b99a742f discord.abc.Messageable.history
-#: discord.client.Client.entitlements discord.client.Client.fetch_guilds
-#: discord.client.Client.wait_for fd688e2c9468425f8650382857f2fe9a of
+#: 2650f6c238e74f72b4357fd0f3649d83 630f4288af604d4dbc8e4177a7f21fac
+#: 65b2a4bfdd9f4cc8b834d6d484ef0034 77dbba5eef11464da6e6d8561993d040
+#: 85f893142dbc4e559193fbceb66e29f8 9deb4f77a61449abb51bd5c6b99a742f
+#: discord.abc.Messageable.history discord.client.Client.entitlements
+#: discord.client.Client.fetch_guilds discord.client.Client.wait_for
+#: fd688e2c9468425f8650382857f2fe9a of
 msgid "Raises"
 msgstr ""
 
@@ -741,7 +741,8 @@ msgstr ""
 #: discord.client.Client.fetch_user:1 discord.client.Client.fetch_webhook:1
 #: discord.client.Client.fetch_widget:1
 #: discord.client.Client.get_or_fetch_user:1 discord.client.Client.login:1
-#: discord.client.Client.on_error:1 discord.client.Client.start:1
+#: discord.client.Client.on_error:1 discord.client.Client.on_modal_error:1
+#: discord.client.Client.on_view_error:1 discord.client.Client.start:1
 #: discord.client.Client.update_role_connection_metadata_records:1
 #: discord.client.Client.wait_for:1 discord.client.Client.wait_until_ready:1
 #: discord.ext.commands.bot.BotBase.close:1
@@ -750,6 +751,7 @@ msgstr ""
 #: discord.ext.commands.bot.BotBase.invoke:1
 #: discord.ext.commands.bot.BotBase.on_command_error:1
 #: discord.ext.commands.bot.BotBase.process_commands:1
+#: discord.ext.commands.context.Context.forward_to:1
 #: discord.ext.commands.context.Context.invoke:1
 #: discord.ext.commands.context.Context.reinvoke:1
 #: discord.ext.commands.context.Context.reply:1
@@ -1705,11 +1707,8 @@ msgstr ""
 msgid ":class:`.Member` -- A member the client can see."
 msgstr ""
 
-#: 9624b70cfbee4ca3af484bcf68e4e8ab discord.client.Client.get_all_members:12 of
-msgid ""
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
-" \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, "
-"\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#: 7d0a457d06344339819fc176a73566c2 discord.client.Client.get_all_members:12 of
+msgid ":sphinx_autodoc_typehints_type:`Generator\\[Member\\]`"
 msgstr ""
 
 #: beeb38432c18467199e1986a4a5a5802
@@ -2470,6 +2469,33 @@ msgid ""
 ":func:`~discord.on_error` for more details."
 msgstr ""
 
+#: 4bd84969508349538a18e4462fc68a75 discord.client.Client.on_modal_error:3 of
+msgid ""
+"The default modal error handler provided by the client. The default "
+"implementation prints the traceback to stderr."
+msgstr ""
+
+#: a95fc73d1af4455db17072682a05e1f1 discord.client.Client.on_modal_error:6 of
+msgid ""
+"This only fires for a modal if you did not define its "
+":func:`~discord.ui.Modal.on_error`."
+msgstr ""
+
+#: 7d0a457d06344339819fc176a73566c2 discord.client.Client.on_modal_error:12
+#: discord.client.Client.on_view_error:13 of
+msgid ":sphinx_autodoc_typehints_type:`None`"
+msgstr ""
+
+#: 62a23463e67743778ff5b5ffda0e1cb5 discord.client.Client.on_view_error:3 of
+msgid "The default view error handler provided by the client."
+msgstr ""
+
+#: 5401cf8b6fca4120bce2806abf520d45 discord.client.Client.on_view_error:5 of
+msgid ""
+"This only fires for a view if you did not define its "
+":func:`~discord.ui.View.on_error`."
+msgstr ""
+
 #: 373aeb873c344d82970e4a032b9ac217 discord.ext.commands.Bot.persistent_views:1
 #: of
 msgid "A sequence of persistent views added to the client."
@@ -3160,8 +3186,7 @@ msgid ""
 " \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
-#: 9ab1b0a34851422dab23e9815b835095 a61700d2944e4b7bb85ba47e21e2c0b7
-#: b2b6b3e05bff41358f8540d591062b2d
+#: 9ab1b0a34851422dab23e9815b835095
 #: discord.ext.commands.core.GroupMixin.walk_commands:1 of
 msgid ""
 "An iterator that recursively walks through all commands and subcommands. "
@@ -5752,6 +5777,7 @@ msgid "The message that triggered the command being executed."
 msgstr ""
 
 #: 6c79017c8b06446498c3190155904db2 discord.ext.commands.context.Context:13
+#: discord.ext.commands.context.Context.forward_to:13
 #: discord.ext.commands.context.Context.reply:9
 #: e1bc43a7b22b49f7bb9f4ba8e292f620 of
 msgid ":class:`.Message`"
@@ -6112,6 +6138,39 @@ msgstr ""
 msgid "The result of the help command, if any."
 msgstr ""
 
+#: 666fc58fd984426b9fc3697183d98530
+#: discord.ext.commands.context.Context.reply:3 of
+msgid ""
+"A shortcut method to :meth:`.abc.Messageable.send` to reply to the "
+":class:`.Message`."
+msgstr ""
+
+#: 07908514f89544cd8fadb56e8b84c9ea discord.abc.Messageable.send:99
+#: discord.ext.commands.context.Context.forward_to:12
+#: discord.ext.commands.context.Context.reply:8 of
+msgid "The message that was sent."
+msgstr ""
+
+#: 44cfdba165a2496f86c393e4ff002312 discord.abc.Messageable.send:102
+#: discord.ext.commands.context.Context.forward_to:15
+#: discord.ext.commands.context.Context.reply:11 of
+msgid "Sending the message failed."
+msgstr ""
+
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4 discord.abc.Messageable.send:103
+#: discord.ext.commands.context.Context.forward_to:16
+#: discord.ext.commands.context.Context.reply:12 of
+msgid "You do not have the proper permissions to send the message."
+msgstr ""
+
+#: dd5c11c9c7f04d8da2c0fcf683585cbd
+#: discord.ext.commands.context.Context.forward_to:17
+#: discord.ext.commands.context.Context.reply:13 of
+msgid ""
+"The ``files`` list is not of the appropriate size, or     you specified "
+"both ``file`` and ``files``."
+msgstr ""
+
 #: 2f8ba1ce6e854c78bb794c8d818a52fc discord.abc.Messageable.can_send:1 of
 msgid ""
 "Returns a :class:`bool` indicating whether you have the permissions to "
@@ -6155,6 +6214,18 @@ msgstr ""
 msgid "Retrieving the message failed."
 msgstr ""
 
+#: 666fc58fd984426b9fc3697183d98530
+#: discord.ext.commands.context.Context.forward_to:3 of
+msgid ""
+"A shortcut method to :meth:`.abc.Messageable.send` to forward the "
+":class:`.Message` to a channel."
+msgstr ""
+
+#: 9605ca58dc7540ba809f5b9944de8e93
+#: discord.ext.commands.context.Context.forward_to:9 of
+msgid "The channel to forward this to."
+msgstr ""
+
 #: c0f7203f91234dcf9b71d4aa08c2743e discord.abc.Messageable.pins:3 of
 msgid "Retrieves all messages that are currently pinned in the channel."
 msgstr ""
@@ -6176,35 +6247,6 @@ msgstr ""
 
 #: 46fce97e3e2044b9812605b7371e03c5 discord.abc.Messageable.pins:14 of
 msgid "Retrieving the pinned messages failed."
-msgstr ""
-
-#: 666fc58fd984426b9fc3697183d98530
-#: discord.ext.commands.context.Context.reply:3 of
-msgid ""
-"A shortcut method to :meth:`.abc.Messageable.send` to reply to the "
-":class:`.Message`."
-msgstr ""
-
-#: 07908514f89544cd8fadb56e8b84c9ea discord.abc.Messageable.send:99
-#: discord.ext.commands.context.Context.reply:8 of
-msgid "The message that was sent."
-msgstr ""
-
-#: 44cfdba165a2496f86c393e4ff002312 discord.abc.Messageable.send:102
-#: discord.ext.commands.context.Context.reply:11 of
-msgid "Sending the message failed."
-msgstr ""
-
-#: 1baacf7f645a4a3e98b1d53ae7e82fa4 discord.abc.Messageable.send:103
-#: discord.ext.commands.context.Context.reply:12 of
-msgid "You do not have the proper permissions to send the message."
-msgstr ""
-
-#: dd5c11c9c7f04d8da2c0fcf683585cbd
-#: discord.ext.commands.context.Context.reply:13 of
-msgid ""
-"The ``files`` list is not of the appropriate size, or     you specified "
-"both ``file`` and ``files``."
 msgstr ""
 
 #: 233e5db05eb849cc92f9a5d67a3c1cb0 discord.abc.Messageable.send:3 of
@@ -6301,10 +6343,10 @@ msgstr ""
 
 #: db923c5ea4f34a8ab38cd7fd07aa8f96 discord.abc.Messageable.send:59 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``.  .. versionadded::"
 " 1.6"
@@ -6312,10 +6354,10 @@ msgstr ""
 
 #: discord.abc.Messageable.send:59 e35ba87b49314f98b33ba3227b02d2e0 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``."
 msgstr ""
@@ -8333,5 +8375,38 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.Emoji\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+#~ " \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, "
+#~ "\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``.  .. versionadded::"
+#~ " 1.6"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``."
 #~ msgstr ""
 

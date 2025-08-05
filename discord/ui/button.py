@@ -75,6 +75,13 @@ class Button(Item[V]):
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+
+        .. warning::
+
+            This parameter does not work with V2 components or with more than 25 items in your view.
+
+    id: Optional[:class:`int`]
+        The button's ID.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -85,6 +92,8 @@ class Button(Item[V]):
         "emoji",
         "sku_id",
         "row",
+        "custom_id",
+        "id",
     )
 
     def __init__(
@@ -98,6 +107,7 @@ class Button(Item[V]):
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         sku_id: int | None = None,
         row: int | None = None,
+        id: int | None = None,
     ):
         super().__init__()
         if label and len(str(label)) > 80:
@@ -145,6 +155,7 @@ class Button(Item[V]):
             style=style,
             emoji=emoji,
             sku_id=sku_id,
+            id=id,
         )
         self.row = row
 
@@ -172,6 +183,7 @@ class Button(Item[V]):
         if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
+        self._provided_custom_id = value is not None
 
     @property
     def url(self) -> str | None:
@@ -248,6 +260,7 @@ class Button(Item[V]):
             emoji=button.emoji,
             sku_id=button.sku_id,
             row=None,
+            id=button.id,
         )
 
     @property
@@ -259,6 +272,9 @@ class Button(Item[V]):
 
     def is_dispatchable(self) -> bool:
         return self.custom_id is not None
+
+    def is_storable(self) -> bool:
+        return self.is_dispatchable()
 
     def is_persistent(self) -> bool:
         if self.style is ButtonStyle.link:
@@ -277,6 +293,7 @@ def button(
     style: ButtonStyle = ButtonStyle.secondary,
     emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a button to a component.
 
@@ -326,6 +343,7 @@ def button(
             "label": label,
             "emoji": emoji,
             "row": row,
+            "id": id,
         }
         return func
 
