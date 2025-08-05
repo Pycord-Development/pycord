@@ -203,6 +203,7 @@ class Interaction(TypedDict):
     locale: NotRequired[str]
     guild_locale: NotRequired[str]
     app_permissions: NotRequired[Permissions]
+    attachment_size_limit: NotRequired[int]
     id: Snowflake
     application_id: Snowflake
     type: InteractionType
