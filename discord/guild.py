@@ -79,7 +79,7 @@ from .mixins import Hashable
 from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
-from .role import Role
+from .role import Role, RoleColours
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
@@ -88,7 +88,7 @@ from .user import User
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("Guild",)
+__all__ = ("BanEntry", "Guild")
 
 MISSING = utils.MISSING
 
@@ -1663,6 +1663,9 @@ class Guild(Hashable):
         public_updates_channel: TextChannel | None = MISSING,
         premium_progress_bar_enabled: bool = MISSING,
         disable_invites: bool = MISSING,
+        discoverable: bool = MISSING,
+        disable_raid_alerts: bool = MISSING,
+        enable_activity_feed: bool = MISSING,
     ) -> Guild:
         r"""|coro|
 
@@ -1740,6 +1743,12 @@ class Guild(Hashable):
             Whether the guild should have premium progress bar enabled.
         disable_invites: :class:`bool`
             Whether the guild should have server invites enabled or disabled.
+        discoverable: :class:`bool`
+            Whether the guild should be discoverable in the discover tab.
+        disable_raid_alerts: :class:`bool`
+            Whether activity alerts for the guild should be disabled.
+        enable_activity_feed: class:`bool`
+            Whether the guild's user activity feed should be enabled.
         reason: Optional[:class:`str`]
             The reason for editing this guild. Shows up on the audit log.
 
@@ -1861,8 +1870,12 @@ class Guild(Hashable):
 
             fields["system_channel_flags"] = system_channel_flags.value
 
+        if premium_progress_bar_enabled is not MISSING:
+            fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
+
+        features: list[GuildFeature] = self.features.copy()
+
         if community is not MISSING:
-            features = self.features.copy()
             if community:
                 if (
                     "rules_channel_id" in fields
@@ -1872,8 +1885,7 @@ class Guild(Hashable):
                         features.append("COMMUNITY")
                 else:
                     raise InvalidArgument(
-                        "community field requires both rules_channel and"
-                        " public_updates_channel fields to be provided"
+                        "community field requires both rules_channel and public_updates_channel fields to be provided"
                     )
             else:
                 if "COMMUNITY" in features:
@@ -1883,20 +1895,43 @@ class Guild(Hashable):
                         fields["public_updates_channel_id"] = None
                     features.remove("COMMUNITY")
 
-            fields["features"] = features
-
-        if premium_progress_bar_enabled is not MISSING:
-            fields["premium_progress_bar_enabled"] = premium_progress_bar_enabled
-
         if disable_invites is not MISSING:
-            features = self.features.copy()
             if disable_invites:
-                if not "INVITES_DISABLED" in features:
+                if "INVITES_DISABLED" not in features:
                     features.append("INVITES_DISABLED")
             else:
                 if "INVITES_DISABLED" in features:
                     features.remove("INVITES_DISABLED")
 
+        if discoverable is not MISSING:
+            if discoverable:
+                if "DISCOVERABLE" not in features:
+                    features.append("DISCOVERABLE")
+            else:
+                if "DISCOVERABLE" in features:
+                    features.remove("DISCOVERABLE")
+
+        if disable_raid_alerts is not MISSING:
+            if disable_raid_alerts:
+                if "RAID_ALERTS_DISABLED" not in features:
+                    features.append("RAID_ALERTS_DISABLED")
+            else:
+                if "RAID_ALERTS_DISABLED" in features:
+                    features.remove("RAID_ALERTS_DISABLED")
+
+        if enable_activity_feed is not MISSING:
+            if enable_activity_feed:
+                if "ACTIVITY_FEED_ENABLED_BY_USER" not in features:
+                    features.append("ACTIVITY_FEED_ENABLED_BY_USER")
+                if "ACTIVITY_FEED_DISABLED_BY_USER" in features:
+                    features.remove("ACTIVITY_FEED_DISABLED_BY_USER")
+            else:
+                if "ACTIVITY_FEED_ENABLED_BY_USER" in features:
+                    features.remove("ACTIVITY_FEED_ENABLED_BY_USER")
+                if "ACTIVITY_FEED_DISABLED_BY_USER" not in features:
+                    features.append("ACTIVITY_FEED_DISABLED_BY_USER")
+
+        if self.features != features:
             fields["features"] = features
 
         data = await http.edit_guild(self.id, reason=reason, **fields)
@@ -2881,6 +2916,8 @@ class Guild(Hashable):
         name: str = ...,
         permissions: Permissions = ...,
         colour: Colour | int = ...,
+        colours: RoleColours = ...,
+        holographic: bool = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
         icon: bytes | None = MISSING,
@@ -2895,6 +2932,8 @@ class Guild(Hashable):
         name: str = ...,
         permissions: Permissions = ...,
         color: Colour | int = ...,
+        colors: RoleColours = ...,
+        holographic: bool = ...,
         hoist: bool = ...,
         mentionable: bool = ...,
         icon: bytes | None = ...,
@@ -2908,6 +2947,9 @@ class Guild(Hashable):
         permissions: Permissions = MISSING,
         color: Colour | int = MISSING,
         colour: Colour | int = MISSING,
+        colors: RoleColours = MISSING,
+        colours: RoleColours = MISSING,
+        holographic: bool = MISSING,
         hoist: bool = MISSING,
         mentionable: bool = MISSING,
         reason: str | None = None,
@@ -2971,11 +3013,30 @@ class Guild(Hashable):
         else:
             fields["permissions"] = "0"
 
-        actual_colour = colour or color or Colour.default()
+        actual_colour = colour if colour not in (MISSING, None) else color
+
         if isinstance(actual_colour, int):
-            fields["color"] = actual_colour
+            actual_colour = Colour(actual_colour)
+
+        if actual_colour not in (MISSING, None):
+            utils.warn_deprecated("colour", "colours", "2.7")
+            actual_colours = RoleColours(primary=actual_colour)
+        elif holographic:
+            actual_colours = RoleColours.holographic()
         else:
-            fields["color"] = actual_colour.value
+            actual_colours = colours or colors or RoleColours.default()
+
+        if isinstance(actual_colours, RoleColours):
+            if "ENHANCED_ROLE_COLORS" not in self.features:
+                actual_colours.secondary = None
+                actual_colours.tertiary = None
+            fields["colors"] = actual_colours._to_dict()
+        else:
+            raise InvalidArgument(
+                "colours parameter must be of type RoleColours, not {0.__class__.__name__}".format(
+                    actual_colours
+                )
+            )
 
         if hoist is not MISSING:
             fields["hoist"] = hoist

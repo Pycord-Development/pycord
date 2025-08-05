@@ -328,12 +328,17 @@ class ApplicationCommandMixin(ABC):
                             ]:
                                 # We have a difference
                                 return True
-                    elif getattr(cmd, check, None) != match.get(check):
-                        # We have a difference
-                        if (
+                    elif (attr := getattr(cmd, check, None)) != (
+                        found := match.get(check)
+                    ):
+                        # We might have a difference
+                        if "localizations" in check and bool(attr) == bool(found):
+                            # unlike other attrs, localizations are MISSING by default
+                            continue
+                        elif (
                             check == "default_permission"
-                            and getattr(cmd, check) is True
-                            and match.get(check) is None
+                            and attr is True
+                            and found is None
                         ):
                             # This is a special case
                             # TODO: Remove for perms v2
@@ -879,7 +884,7 @@ class ApplicationCommandMixin(ABC):
 
         ctx = await self.get_application_context(interaction)
         if command:
-            ctx.command = command
+            interaction.command = command
         await self.invoke_application_command(ctx)
 
     async def on_application_command_auto_complete(
@@ -887,7 +892,7 @@ class ApplicationCommandMixin(ABC):
     ) -> None:
         async def callback() -> None:
             ctx = await self.get_autocomplete_context(interaction)
-            ctx.command = command
+            interaction.command = command
             return await command.invoke_autocomplete_callback(ctx)
 
         autocomplete_task = self._bot.loop.create_task(callback())
