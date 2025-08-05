@@ -270,7 +270,7 @@ class ApplicationContext(discord.abc.Messageable):
 
     @cached_property
     def attachment_size_limit(self) -> int | None:
-        """Returns the attachment size limit associated with this context's command.
+        """Returns the attachment size limit associated with this context's interaction.
         Shorthand for :attr:`.Interaction.attachment_size_limit`.
         """
         return self.interaction.attachment_size_limit
