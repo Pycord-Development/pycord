@@ -151,11 +151,12 @@ class ContainerComponent(BaseComponent):
     spoiler: NotRequired[bool]
     components: list[AllowedContainerComponents]
 
+
 class LabelComponent(BaseComponent):
     type: Literal[18]
     label: str
     description: NotRequired[str]
-    Component: Union[SelectMenu, InputText] 
+    Component: SelectMenu | InputText
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
