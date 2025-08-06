@@ -50,6 +50,7 @@ if TYPE_CHECKING:
     from .types.components import ContainerComponent as ContainerComponentPayload
     from .types.components import FileComponent as FileComponentPayload
     from .types.components import InputText as InputTextComponentPayload
+    from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
     from .types.components import SectionComponent as SectionComponentPayload
@@ -58,7 +59,6 @@ if TYPE_CHECKING:
     from .types.components import SeparatorComponent as SeparatorComponentPayload
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
-    from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
 
 __all__ = (
@@ -437,7 +437,9 @@ class SelectMenu(Component):
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
-        self.required: bool | None = data.get("required")  # Currently defaults to False, pending change
+        self.required: bool | None = data.get(
+            "required"
+        )  # Currently defaults to False, pending change
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -1090,7 +1092,7 @@ class Label(Component):
             "id": self.id,
             "component": self.components.to_dict(),
             "label": self.label,
-            "description": self.description
+            "description": self.description,
         }
         return payload
 
