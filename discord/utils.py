@@ -29,7 +29,6 @@ import array
 import asyncio
 import collections.abc
 import datetime
-import functools
 import importlib.resources
 import itertools
 import json
