@@ -65,6 +65,7 @@ from .reaction import *
 from .role import *
 from .scheduled_events import *
 from .shard import *
+from .soundboard import *
 from .stage_instance import *
 from .sticker import *
 from .team import *
