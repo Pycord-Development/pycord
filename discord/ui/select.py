@@ -80,6 +80,11 @@ class Select(Item[V]):
         :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
         and :attr:`discord.ComponentType.channel_select`.
 
+    .. versionchanged:: 2.7
+
+        :attr:`discord.ComponentType.string_select` can now be sent in :class:`discord.ui.Modal`.
+        Added support for :attr:`label`, :attr:`description`, and :attr:`required` when being sent in modals.
+
     Parameters
     ----------
     select_type: :class:`discord.ComponentType`
@@ -126,6 +131,9 @@ class Select(Item[V]):
         "disabled",
         "custom_id",
         "id",
+        "label",
+        "description",
+        "required",
     )
 
     def __init__(
@@ -141,9 +149,14 @@ class Select(Item[V]):
         disabled: bool = False,
         row: int | None = None,
         id: int | None = None,
+        label: str | None = None,
+        description: str | None = None,
+        required: str | None = False,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
+        if (label or description or disabled) and select_type is not ComponentType.string_select:
+            raise InvalidArgument("label, description and required parameters are only valid for selects in modals")
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
@@ -161,6 +174,10 @@ class Select(Item[V]):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+
+        self.label: str | None = label
+        self.description: str | None = description
+        self.required: bool | None = required
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
@@ -450,6 +467,8 @@ class Select(Item[V]):
     def is_storable(self) -> bool:
         return True
 
+    def uses_label(self) -> bool:
+        return bool(self.label or self.description or (self.required is not None))
 
 _select_types = (
     ComponentType.string_select,

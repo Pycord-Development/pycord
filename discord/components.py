@@ -1090,7 +1090,7 @@ class Label(Component):
         payload = {
             "type": int(self.type),
             "id": self.id,
-            "component": self.components.to_dict(),
+            "component": self.component.to_dict(),
             "label": self.label,
             "description": self.description,
         }

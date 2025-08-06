@@ -44,6 +44,7 @@ from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
+from ..components import Label as LabelComponent
 from ..components import _component_factory
 from ..utils import find, get
 from .item import Item, ItemCallbackType
@@ -120,6 +121,12 @@ def _component_to_item(component: Component) -> Item[V]:
         # Handle ActionRow.children manually, or design ui.ActionRow?
 
         return component
+    if isinstance(component, LabelComponent):
+        ret = _component_to_item(component.component)
+        ret.label = component.label
+        ret.description = component.description
+        ret.required = component.required
+        return ret
     return Item.from_component(component)
 
 
@@ -391,6 +398,9 @@ class View:
 
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
+
+        if item.uses_label():
+            raise ValueError(f"cannot use label, description or required on select menus in views.")
 
         self.__weights.add_item(item)
 

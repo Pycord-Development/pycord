@@ -107,6 +107,9 @@ class Item(Generic[V]):
     def is_persistent(self) -> bool:
         return not self.is_dispatchable() or self._provided_custom_id
 
+    def uses_label(self) -> bool:
+        return False
+
     def copy_text(self) -> str:
         return ""
 

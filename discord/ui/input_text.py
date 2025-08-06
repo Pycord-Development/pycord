@@ -17,6 +17,10 @@ class InputText:
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.7
+
+        Added :attr:`description`.
+
     Parameters
     ----------
     style: :class:`~discord.InputTextStyle`
@@ -58,6 +62,7 @@ class InputText:
         "max_length",
         "custom_id",
         "id",
+        "description",
     )
 
     def __init__(
@@ -73,6 +78,7 @@ class InputText:
         value: str | None = None,
         row: int | None = None,
         id: int | None = None,
+        description: str | None = None,
     ):
         super().__init__()
         if len(str(label)) > 45:
@@ -90,6 +96,7 @@ class InputText:
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
+        self.description: str | None = description
 
         self._underlying = InputTextComponent._raw_construct(
             type=ComponentType.input_text,
@@ -236,3 +243,6 @@ class InputText:
 
     def refresh_state(self, data) -> None:
         self._input_value = data["value"]
+
+    def uses_label(self) -> bool:
+        return self.description is not None
