@@ -303,7 +303,6 @@ def warn_deprecated(
     stacklevel: :class:`int`
         The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     """
-    warnings.simplefilter("always", DeprecationWarning)  # turn off filter
     message = f"{name} is deprecated"
     if since:
         message += f" since version {since}"
@@ -316,7 +315,6 @@ def warn_deprecated(
         message += f" See {reference} for more information."
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
-    warnings.simplefilter("default", DeprecationWarning)  # reset filter
 
 
 def deprecated(
