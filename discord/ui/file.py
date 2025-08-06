@@ -45,12 +45,12 @@ class File(Item[V]):
     def __init__(self, url: str, *, spoiler: bool = False, id: int | None = None):
         super().__init__()
 
-        file = UnfurledMediaItem(url)
+        self.file = UnfurledMediaItem(url)
 
         self._underlying = FileComponent._raw_construct(
             type=ComponentType.file,
             id=id,
-            file=file,
+            file=self.file,
             spoiler=spoiler,
         )
 
@@ -89,6 +89,11 @@ class File(Item[V]):
     def size(self) -> int:
         """The size of this file in bytes, if provided by Discord."""
         return self._underlying.size
+
+    def refresh_component(self, component: FileComponent) -> None:
+        original = self._underlying.file
+        component.file._static_url = original._static_url
+        self._underlying = component
 
     def to_component_dict(self) -> FileComponentPayload:
         return self._underlying.to_dict()

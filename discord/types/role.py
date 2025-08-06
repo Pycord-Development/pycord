@@ -30,11 +30,18 @@ from typing_extensions import NotRequired, TypedDict
 from .snowflake import Snowflake
 
 
+class RoleColours(TypedDict):
+    primary_color: int
+    secondary_color: int | None
+    tertiary_color: int | None
+
+
 class Role(TypedDict):
     tags: NotRequired[RoleTags]
     id: Snowflake
     name: str
     color: int
+    colors: RoleColours
     hoist: bool
     position: int
     permissions: str

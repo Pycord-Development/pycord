@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -319,35 +319,6 @@ msgstr ""
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
-#: c776ad51021d4b88a50e1e87662bf4a5
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: ec487369222e4fca9c3158f3caec9ae7
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c776ad51021d4b88a50e1e87662bf4a5
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c776ad51021d4b88a50e1e87662bf4a5
-#: c776ad51021d4b88a50e1e87662bf4a5
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c776ad51021d4b88a50e1e87662bf4a5
-#: c776ad51021d4b88a50e1e87662bf4a5
-#: c776ad51021d4b88a50e1e87662bf4a5
-#: c08ffb6b169b4e5d9ea796330e158ba4
-#: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
@@ -371,6 +342,39 @@ msgstr ""
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c776ad51021d4b88a50e1e87662bf4a5
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c776ad51021d4b88a50e1e87662bf4a5
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
+#: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
 #: c08ffb6b169b4e5d9ea796330e158ba4
@@ -612,13 +616,6 @@ msgstr ""
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
-#: 99d7d45c973e4cab836405c222bbdf74
-#: 944756aa81e34907af880c9ea3ddd943
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: 99d7d45c973e4cab836405c222bbdf74
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
@@ -629,21 +626,32 @@ msgstr ""
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
-#: 080b97188f5a44679891cfb716d50114
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: f706cf333c1a47f1a2976aa784a20ba9
-#: 99d7d45c973e4cab836405c222bbdf74
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
-#: a32d372fc9f34a179efb70f960db2fcd
-#: 99d7d45c973e4cab836405c222bbdf74
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
+#: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
 #: f706cf333c1a47f1a2976aa784a20ba9
@@ -1097,6 +1105,8 @@ msgstr ""
 #: ../../../discord/bot.py:docstring of discord.client.Client.get_or_fetch_user:1
 #: ../../../discord/bot.py:docstring of discord.client.Client.login:1
 #: ../../../discord/bot.py:docstring of discord.client.Client.on_error:1
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_modal_error:1
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_view_error:1
 #: ../../../discord/bot.py:docstring of discord.client.Client.start:1
 #: ../../../discord/bot.py:docstring of discord.client.Client.update_role_connection_metadata_records:1
 #: ../../../discord/bot.py:docstring of discord.client.Client.wait_for:1
@@ -1128,6 +1138,8 @@ msgstr ""
 #: ../../../discord/client.py:docstring of discord.client.Client.get_or_fetch_user:1
 #: ../../../discord/client.py:docstring of discord.client.Client.login:1
 #: ../../../discord/client.py:docstring of discord.client.Client.on_error:1
+#: ../../../discord/client.py:docstring of discord.client.Client.on_modal_error:1
+#: ../../../discord/client.py:docstring of discord.client.Client.on_view_error:1
 #: ../../../discord/client.py:docstring of discord.client.Client.start:1
 #: ../../../discord/client.py:docstring of discord.client.Client.update_role_connection_metadata_records:1
 #: ../../../discord/client.py:docstring of discord.client.Client.wait_for:1
@@ -1193,9 +1205,13 @@ msgstr ""
 #: 41081b0ab799472fa6aa72c01266cc77
 #: 41081b0ab799472fa6aa72c01266cc77
 #: 41081b0ab799472fa6aa72c01266cc77
-#: a7ce19c3920f40ab91a7d270dfff2d0e
 #: 41081b0ab799472fa6aa72c01266cc77
-#: a7ce19c3920f40ab91a7d270dfff2d0e
+#: 41081b0ab799472fa6aa72c01266cc77
+#: 41081b0ab799472fa6aa72c01266cc77
+#: 41081b0ab799472fa6aa72c01266cc77
+#: 41081b0ab799472fa6aa72c01266cc77
+#: 41081b0ab799472fa6aa72c01266cc77
+#: 41081b0ab799472fa6aa72c01266cc77
 #: 41081b0ab799472fa6aa72c01266cc77
 #: 41081b0ab799472fa6aa72c01266cc77
 #: 41081b0ab799472fa6aa72c01266cc77
@@ -2620,9 +2636,9 @@ msgstr ""
 
 #: ../../../discord/bot.py:docstring of discord.client.Client.get_all_members:12
 #: ../../../discord/client.py:docstring of discord.client.Client.get_all_members:12
-#: 954c934a3ae542bd8e48d65c6872c37f
-#: 954c934a3ae542bd8e48d65c6872c37f
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#: c811a0a6a91d4b8c98daa60d8f8c78b9
+#: c811a0a6a91d4b8c98daa60d8f8c78b9
+msgid ":sphinx_autodoc_typehints_type:`Generator\\[Member\\]`"
 msgstr ""
 
 #: ../../../discord/bot.py:docstring of discord.bot.ApplicationCommandMixin.get_application_command:1
@@ -3379,6 +3395,45 @@ msgstr ""
 #: 58a09ed6103242578e6f09b9c61c0f17
 #: 58a09ed6103242578e6f09b9c61c0f17
 msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
+msgstr ""
+
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_modal_error:3
+#: ../../../discord/client.py:docstring of discord.client.Client.on_modal_error:3
+#: fb14025cdc964e5796fa74884c5d87b8
+#: f264d63d90574060bc9b34715a2e5075
+msgid "The default modal error handler provided by the client. The default implementation prints the traceback to stderr."
+msgstr ""
+
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_modal_error:6
+#: ../../../discord/client.py:docstring of discord.client.Client.on_modal_error:6
+#: 054f9eb286a249488d4516a6c9a77bbf
+#: 788863ce342a4c6fa188aae5c62ad4ae
+msgid "This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`."
+msgstr ""
+
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_modal_error:12
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_view_error:13
+#: ../../../discord/client.py:docstring of discord.client.Client.on_modal_error:12
+#: ../../../discord/client.py:docstring of discord.client.Client.on_view_error:13
+#: c811a0a6a91d4b8c98daa60d8f8c78b9
+#: c811a0a6a91d4b8c98daa60d8f8c78b9
+#: c811a0a6a91d4b8c98daa60d8f8c78b9
+#: c811a0a6a91d4b8c98daa60d8f8c78b9
+msgid ":sphinx_autodoc_typehints_type:`None`"
+msgstr ""
+
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_view_error:3
+#: ../../../discord/client.py:docstring of discord.client.Client.on_view_error:3
+#: 57179a6f7b13404b8d698521898a6d9c
+#: 57179a6f7b13404b8d698521898a6d9c
+msgid "The default view error handler provided by the client."
+msgstr ""
+
+#: ../../../discord/bot.py:docstring of discord.client.Client.on_view_error:5
+#: ../../../discord/client.py:docstring of discord.client.Client.on_view_error:5
+#: f101d9263c01410e8ef9263e0b8c3b0e
+#: 4b5db7ec08f94c5ab1f87f667b240f70
+msgid "This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`."
 msgstr ""
 
 #: ../../../discord/bot.py:docstring of discord.Bot.persistent_views:1
