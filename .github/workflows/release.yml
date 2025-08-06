@@ -16,7 +16,7 @@ jobs:
     environment: release
     steps:
       - name: "Security Check"
-        uses: Aiko-IT-Systems/execute-whitelist-action@v1.0.0
+        uses: Pycord-Development/execute-whitelist-action@v2.0.0
         with:
           whitelisted-github-ids: ${{ vars.ALLOWED_USER_IDS }}
           token: ${{ secrets.GITHUB_TOKEN }}
