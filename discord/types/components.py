@@ -36,6 +36,7 @@ from .snowflake import Snowflake
 ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
+SelectMenuDefaultValueType = Literal["channel", "role", "user"]
 SeparatorSpacingSize = Literal[1, 2]
 
 
@@ -80,6 +81,11 @@ class SelectOption(TypedDict):
     default: bool
 
 
+class SelectDefaultValue(TypedDict):
+    id: Snowflake
+    type: SelectMenuDefaultValueType
+
+
 class SelectMenu(BaseComponent):
     placeholder: NotRequired[str]
     min_values: NotRequired[int]
@@ -89,6 +95,7 @@ class SelectMenu(BaseComponent):
     options: NotRequired[list[SelectOption]]
     type: Literal[3, 5, 6, 7, 8]
     custom_id: str
+    default_values: NotRequired[list[SelectDefaultValue]]
 
 
 class TextDisplayComponent(BaseComponent):
