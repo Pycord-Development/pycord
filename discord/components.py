@@ -58,6 +58,7 @@ if TYPE_CHECKING:
     from .types.components import SeparatorComponent as SeparatorComponentPayload
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
+    from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
 
 __all__ = (
@@ -76,6 +77,7 @@ __all__ = (
     "FileComponent",
     "Separator",
     "Container",
+    "Label",
 )
 
 C = TypeVar("C", bound="Component")
@@ -375,6 +377,10 @@ class SelectMenu(Component):
         Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`,
         :attr:`ComponentType.mentionable_select`, and :attr:`ComponentType.channel_select`.
 
+    .. versionchanged:: 2.7
+
+        Added the :attr:`required` attribute for use in modals.
+
     Attributes
     ----------
     type: :class:`ComponentType`
@@ -399,6 +405,8 @@ class SelectMenu(Component):
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not.
+    required: Optional[:class:`bool`]
+        Whether the select is required or not. Only useable in modals. Defaults to ``False``.
     """
 
     __slots__: tuple[str, ...] = (
@@ -409,6 +417,7 @@ class SelectMenu(Component):
         "options",
         "channel_types",
         "disabled",
+        "required",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -428,6 +437,7 @@ class SelectMenu(Component):
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
+        self.required: bool | None = data.get("required")  # Currently defaults to False, pending change
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -445,6 +455,8 @@ class SelectMenu(Component):
             payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.placeholder:
             payload["placeholder"] = self.placeholder
+        if self.required is not None:
+            payload["required"] = self.required
 
         return payload
 
@@ -1037,6 +1049,55 @@ class Container(Component):
                 yield c
 
 
+class Label(Component):
+    """Represents a Label used in modals as the top-level component.
+
+    This is a component that holda another component alongside additional text in modals.
+    ``component`` may only be:
+
+    - :class:`InputText`
+    - :class:`SelectMenu` (string)
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    component: :class:`Component`
+        The component contained in this label. Currently supports :class:`InputText` and :class:`SelectMenu`.
+    label: :class:`str`
+        The main text associated with this label's ``component``.
+    description: Optional[:class:`str`]
+        The description associated with this label's ``component``.
+    """
+
+    __slots__: tuple[str, ...] = ("component", "label", "description")
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = ()
+
+    def __init__(self, data: LabelComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data.get("id")
+        self.component: Component = _component_factory(data.get("component", {}))
+        self.label: str = data.get("label")
+        self.description: str | None = data.get("description")
+
+    def to_dict(self) -> LabelComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "component": self.components.to_dict(),
+            "label": self.label,
+            "description": self.description
+        }
+        return payload
+
+    def walk_components(self) -> Iterator[Component]:
+        yield from [self.component]
+
+
 COMPONENT_MAPPINGS = {
     1: ActionRow,
     2: Button,
@@ -1053,6 +1114,7 @@ COMPONENT_MAPPINGS = {
     13: FileComponent,
     14: Separator,
     17: Container,
+    18: Label,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)

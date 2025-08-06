@@ -156,7 +156,7 @@ class LabelComponent(BaseComponent):
     type: Literal[18]
     label: str
     description: NotRequired[str]
-    Component: SelectMenu | InputText
+    component: SelectMenu | InputText
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
