@@ -32,28 +32,25 @@ from discord.interactions import Interaction, InteractionMessage, InteractionRes
 from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
+    from typing import Awaitable, Callable
+
     from typing_extensions import ParamSpec
 
     import discord
-    from .. import Bot
-    from ..state import ConnectionState
-    from ..voice_client import VoiceClient
 
-    from .core import ApplicationCommand, Option
-    from ..interactions import InteractionChannel
+    from .. import Bot
+    from ..client import ClientUser
+    from ..cog import Cog
     from ..guild import Guild
+    from ..interactions import InteractionChannel
     from ..member import Member
     from ..message import Message
-    from ..user import User
     from ..permissions import Permissions
-    from ..client import ClientUser
-
-    from ..cog import Cog
+    from ..state import ConnectionState
+    from ..user import User
+    from ..voice_client import VoiceClient
     from ..webhook import WebhookMessage
-
-    from typing import Callable, Awaitable
-
-from ..utils import cached_property
+    from .core import ApplicationCommand, Option
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
@@ -142,53 +139,53 @@ class ApplicationContext(discord.abc.Messageable):
     def command(self, value: ApplicationCommand | None) -> None:
         self.interaction.command = value
 
-    @cached_property
+    @property
     def channel(self) -> InteractionChannel | None:
         """Union[:class:`abc.GuildChannel`, :class:`PartialMessageable`, :class:`Thread`]:
         Returns the channel associated with this context's command. Shorthand for :attr:`.Interaction.channel`.
         """
         return self.interaction.channel
 
-    @cached_property
+    @property
     def channel_id(self) -> int | None:
         """Returns the ID of the channel associated with this context's command.
         Shorthand for :attr:`.Interaction.channel_id`.
         """
         return self.interaction.channel_id
 
-    @cached_property
+    @property
     def guild(self) -> Guild | None:
         """Returns the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild`.
         """
         return self.interaction.guild
 
-    @cached_property
+    @property
     def guild_id(self) -> int | None:
         """Returns the ID of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild_id`.
         """
         return self.interaction.guild_id
 
-    @cached_property
+    @property
     def locale(self) -> str | None:
         """Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.locale`.
         """
         return self.interaction.locale
 
-    @cached_property
+    @property
     def guild_locale(self) -> str | None:
         """Returns the locale of the guild associated with this context's command.
         Shorthand for :attr:`.Interaction.guild_locale`.
         """
         return self.interaction.guild_locale
 
-    @cached_property
+    @property
     def app_permissions(self) -> Permissions:
         return self.interaction.app_permissions
 
-    @cached_property
+    @property
     def me(self) -> Member | ClientUser | None:
         """Union[:class:`.Member`, :class:`.ClientUser`]:
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
@@ -200,14 +197,14 @@ class ApplicationContext(discord.abc.Messageable):
             else self.bot.user
         )
 
-    @cached_property
+    @property
     def message(self) -> Message | None:
         """Returns the message sent with this context's command.
         Shorthand for :attr:`.Interaction.message`, if applicable.
         """
         return self.interaction.message
 
-    @cached_property
+    @property
     def user(self) -> Member | User:
         """Returns the user that sent this context's command.
         Shorthand for :attr:`.Interaction.user`.
@@ -226,7 +223,7 @@ class ApplicationContext(discord.abc.Messageable):
 
         return self.interaction.guild.voice_client
 
-    @cached_property
+    @property
     def response(self) -> InteractionResponse:
         """Returns the response object associated with this context's command.
         Shorthand for :attr:`.Interaction.response`.
@@ -268,7 +265,7 @@ class ApplicationContext(discord.abc.Messageable):
                 return self.command.options  # type: ignore
         return None
 
-    @cached_property
+    @property
     def attachment_size_limit(self) -> int:
         """Returns the attachment size limit associated with this context's interaction.
         Shorthand for :attr:`.Interaction.attachment_size_limit`.
