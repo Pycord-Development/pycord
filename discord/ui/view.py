@@ -38,13 +38,13 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
+from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import Label as LabelComponent
 from ..components import _component_factory
 from ..utils import find, get
 from .item import Item, ItemCallbackType
@@ -400,7 +400,9 @@ class View:
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         if item.uses_label():
-            raise ValueError(f"cannot use label, description or required on select menus in views.")
+            raise ValueError(
+                f"cannot use label, description or required on select menus in views."
+            )
 
         self.__weights.add_item(item)
 

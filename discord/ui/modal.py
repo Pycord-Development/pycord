@@ -8,9 +8,9 @@ from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable
 
+from ..enums import ComponentType
 from .input_text import InputText
 from .select import Select
-from ..enums import ComponentType
 
 __all__ = (
     "Modal",
@@ -156,7 +156,10 @@ class Modal:
                     "all Modal children must be InputText or Select, not"
                     f" {item.__class__.__name__}"
                 )
-            elif isinstance(item, Select) and item.type is not ComponentType.string_select:
+            elif (
+                isinstance(item, Select)
+                and item.type is not ComponentType.string_select
+            ):
                 raise TypeError("only string selects may be added to modals")
         self._weights = _ModalWeights(self._children)
         self._children = value

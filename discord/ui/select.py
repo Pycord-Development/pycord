@@ -155,8 +155,12 @@ class Select(Item[V]):
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
-        if (label or description or disabled) and select_type is not ComponentType.string_select:
-            raise InvalidArgument("label, description and required parameters are only valid for selects in modals")
+        if (
+            label or description or disabled
+        ) and select_type is not ComponentType.string_select:
+            raise InvalidArgument(
+                "label, description and required parameters are only valid for selects in modals"
+            )
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
@@ -469,6 +473,7 @@ class Select(Item[V]):
 
     def uses_label(self) -> bool:
         return bool(self.label or self.description or (self.required is not None))
+
 
 _select_types = (
     ComponentType.string_select,
