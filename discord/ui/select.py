@@ -260,7 +260,7 @@ class Select(Item[V]):
 
     @required.setter
     def required(self, value: bool):
-        self._underlying.required = bool(value)
+        self._underlying.required = value
 
     @disabled.setter
     def disabled(self, value: bool):
