@@ -210,7 +210,7 @@ class Modal:
 
             if labels:
                 for item in children:
-                    item.append(
+                    components.append(
                         {
                             "type": 18,
                             "component": item.to_component_dict(),
