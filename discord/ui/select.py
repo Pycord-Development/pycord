@@ -156,7 +156,7 @@ class Select(Item[V]):
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
         if (
-            label or description or disabled
+            label or description or required
         ) and select_type is not ComponentType.string_select:
             raise InvalidArgument(
                 "label, description and required parameters are only valid for selects in modals"
@@ -181,7 +181,6 @@ class Select(Item[V]):
 
         self.label: str | None = label
         self.description: str | None = description
-        self.required: bool | None = required
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
@@ -195,6 +194,7 @@ class Select(Item[V]):
             options=options or [],
             channel_types=channel_types or [],
             id=id,
+            required=required,
         )
         self.row = row
 
@@ -252,6 +252,15 @@ class Select(Item[V]):
     def disabled(self) -> bool:
         """Whether the select is disabled or not."""
         return self._underlying.disabled
+
+    @property
+    def required(self) -> bool:
+        """Whether the select is required or not. Only applicable in modal selects."""
+        return self._underlying.required
+
+    @required.setter
+    def required(self, value: bool):
+        self._underlying.required = bool(value)
 
     @disabled.setter
     def disabled(self, value: bool):
@@ -459,6 +468,7 @@ class Select(Item[V]):
             disabled=component.disabled,
             row=None,
             id=component.id,
+            required=component.required,
         )
 
     @property

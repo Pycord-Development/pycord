@@ -125,7 +125,6 @@ def _component_to_item(component: Component) -> Item[V]:
         ret = _component_to_item(component.component)
         ret.label = component.label
         ret.description = component.description
-        ret.required = component.required
         return ret
     return Item.from_component(component)
 

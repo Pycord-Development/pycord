@@ -216,7 +216,6 @@ class Modal:
                             "component": item.to_component_dict(),
                             "label": item.label,
                             "description": item.description,
-                            "required": item.required,
                         }
                     )
             else:
