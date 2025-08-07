@@ -450,8 +450,8 @@ class Select(Item[V]):
     def refresh_component(self, component: SelectMenu) -> None:
         self._underlying = component
 
-    def refresh_state(self, interaction: Interaction) -> None:
-        data: ComponentInteractionData = interaction.data  # type: ignore
+    def refresh_state(self, interaction: Interaction | dict) -> None:
+        data: ComponentInteractionData = interaction.data if isinstance(interaction, Interaction) else interaction
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
