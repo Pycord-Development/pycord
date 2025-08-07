@@ -202,7 +202,7 @@ class Modal:
             labels = False
             children = []
             for item in group:
-                if item.uses_label():
+                if item.uses_label() or isinstance(item, Select):
                     labels = True
                 children.append(item)
             if not children:
