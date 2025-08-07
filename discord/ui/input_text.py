@@ -17,10 +17,6 @@ class InputText:
 
     .. versionadded:: 2.0
 
-    .. versionchanged:: 2.7
-
-        Added :attr:`description`.
-
     Parameters
     ----------
     style: :class:`~discord.InputTextStyle`
@@ -33,6 +29,8 @@ class InputText:
     description: Optional[:class:`str`]
         The description for the input text field.
         Must be 100 characters or fewer.
+
+        .. versionadded:: 2.7
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
         Must be 100 characters or fewer.
