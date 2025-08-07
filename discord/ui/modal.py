@@ -210,11 +210,13 @@ class Modal:
 
             if labels:
                 for item in children:
+                    component = item.to_component_dict()
+                    label = component.pop("label", item.label)
                     components.append(
                         {
                             "type": 18,
-                            "component": item.to_component_dict(),
-                            "label": item.label,
+                            "component": component,
+                            "label": label,
                             "description": item.description,
                         }
                     )
@@ -244,6 +246,8 @@ class Modal:
             raise TypeError(f"expected InputText or Select, not {item.__class__!r}")
         if isinstance(item, Select) and item.type is not ComponentType.string_select:
             raise TypeError("only string selects may be added to modals")
+        if not item.label:
+            raise ValueError("Item must have a label set")
 
         self._weights.add_item(item)
         self._children.append(item)
