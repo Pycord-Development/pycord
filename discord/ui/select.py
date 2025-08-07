@@ -83,7 +83,6 @@ class Select(Item[V]):
     .. versionchanged:: 2.7
 
         :attr:`discord.ComponentType.string_select` can now be sent in :class:`discord.ui.Modal`.
-        Added support for :attr:`label`, :attr:`description`, and :attr:`required` when being sent in modals.
 
     Parameters
     ----------
