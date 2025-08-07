@@ -451,7 +451,9 @@ class Select(Item[V]):
         self._underlying = component
 
     def refresh_state(self, interaction: Interaction | dict) -> None:
-        data: ComponentInteractionData = interaction.data if isinstance(interaction, Interaction) else interaction
+        data: ComponentInteractionData = (
+            interaction.data if isinstance(interaction, Interaction) else interaction
+        )
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
