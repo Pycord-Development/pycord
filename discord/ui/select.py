@@ -119,6 +119,14 @@ class Select(Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     id: Optional[:class:`int`]
         The select menu's ID.
+    label: Optional[:class:`str`]
+        The label for the select menu. Only useable in modals.
+        Must be 100 characters or fewer.
+    description: Optional[:class:`str`]
+        The description for the select menu. Only useable in modals.
+        Must be 100 characters or fewer.
+    required: Optional[:class:`bool`]
+        Whether the select is required or not. Only useable in modals. Defaults to ``False``.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -161,6 +169,10 @@ class Select(Item[V]):
             raise InvalidArgument(
                 "label, description and required parameters are only valid for selects in modals"
             )
+        if label and len(label) > 100:
+            raise ValueError("label must be 100 characters or fewer")
+        if description and len(description) > 100:
+            raise ValueError("description must be 100 characters or fewer")
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"

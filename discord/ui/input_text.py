@@ -30,6 +30,9 @@ class InputText:
     label: :class:`str`
         The label for the input text field.
         Must be 45 characters or fewer.
+    description: Optional[:class:`str`]
+        The description for the input text field.
+        Must be 100 characters or fewer.
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
         Must be 100 characters or fewer.
@@ -83,6 +86,8 @@ class InputText:
         super().__init__()
         if len(str(label)) > 45:
             raise ValueError("label must be 45 characters or fewer")
+        if description and len(description) > 100:
+            raise ValueError("description must be 100 characters or fewer")
         if min_length and (min_length < 0 or min_length > 4000):
             raise ValueError("min_length must be between 0 and 4000")
         if max_length and (max_length < 0 or max_length > 4000):
