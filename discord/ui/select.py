@@ -122,11 +122,17 @@ class Select(Item[V]):
     label: Optional[:class:`str`]
         The label for the select menu. Only useable in modals.
         Must be 45 characters or fewer.
+        
+        .. versionadded:: 2.7
     description: Optional[:class:`str`]
         The description for the select menu. Only useable in modals.
         Must be 100 characters or fewer.
+        
+        .. versionadded:: 2.7
     required: Optional[:class:`bool`]
         Whether the select is required or not. Only useable in modals. Defaults to ``False``.
+        
+        .. versionadded:: 2.7
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
