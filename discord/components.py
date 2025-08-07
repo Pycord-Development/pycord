@@ -1069,9 +1069,9 @@ class Label(Component):
     component: :class:`Component`
         The component contained in this label. Currently supports :class:`InputText` and :class:`SelectMenu`.
     label: :class:`str`
-        The main text associated with this label's ``component``.
+        The main text associated with this label's ``component``, up to 45 characters.
     description: Optional[:class:`str`]
-        The description associated with this label's ``component``.
+        The description associated with this label's ``component``, up to 100 characters.
     """
 
     __slots__: tuple[str, ...] = ("component", "label", "description")
