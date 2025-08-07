@@ -482,7 +482,7 @@ class Select(Item[V]):
         return True
 
     def uses_label(self) -> bool:
-        return bool(self.label or self.description or (self.required is not None))
+        return True
 
 
 _select_types = (
