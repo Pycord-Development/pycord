@@ -377,7 +377,7 @@ class ModalStore:
             components = [
                 component
                 for parent_component in interaction.data["components"]
-                for component in (parent_component.get("components") or ([x] if x := parent_component.get("component") else []))
+                for component in (parent_component.get("components") or ([x] if (x := parent_component.get("component")) else []))
             ]
             for component in components:
                 for child in value.children:
