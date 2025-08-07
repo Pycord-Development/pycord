@@ -193,6 +193,7 @@ class Interaction:
         "view",
         "modal",
         "attachment_size_limit",
+        "_raw_data",
         "_channel_data",
         "_message_data",
         "_guild_data",
