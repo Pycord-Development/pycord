@@ -80,6 +80,10 @@ class Select(Item[V]):
         :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
         and :attr:`discord.ComponentType.channel_select`.
 
+    .. versionchanged:: 2.7
+
+        :attr:`discord.ComponentType.string_select` can now be sent in :class:`discord.ui.Modal`.
+
     Parameters
     ----------
     select_type: :class:`discord.ComponentType`
@@ -114,6 +118,20 @@ class Select(Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     id: Optional[:class:`int`]
         The select menu's ID.
+    label: Optional[:class:`str`]
+        The label for the select menu. Only useable in modals.
+        Must be 45 characters or fewer.
+
+        .. versionadded:: 2.7
+    description: Optional[:class:`str`]
+        The description for the select menu. Only useable in modals.
+        Must be 100 characters or fewer.
+
+        .. versionadded:: 2.7
+    required: Optional[:class:`bool`]
+        Whether the select is required or not. Only useable in modals. Defaults to ``True`` in modals.
+
+        .. versionadded:: 2.7
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -126,6 +144,9 @@ class Select(Item[V]):
         "disabled",
         "custom_id",
         "id",
+        "label",
+        "description",
+        "required",
     )
 
     def __init__(
@@ -141,13 +162,28 @@ class Select(Item[V]):
         disabled: bool = False,
         row: int | None = None,
         id: int | None = None,
+        label: str | None = None,
+        description: str | None = None,
+        required: str | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
+        if (
+            label or description or required
+        ) and select_type is not ComponentType.string_select:
+            raise InvalidArgument(
+                "label, description and required parameters are only valid for selects in modals"
+            )
+        if label and len(label) > 45:
+            raise ValueError("label must be 45 characters or fewer")
+        if description and len(description) > 100:
+            raise ValueError("description must be 100 characters or fewer")
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
             )
+        if required and min_values < 1:
+            raise ValueError("min_values must be greater than 0 when required=True")
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
@@ -162,6 +198,9 @@ class Select(Item[V]):
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
 
+        self.label: str | None = label
+        self.description: str | None = description
+
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._underlying: SelectMenu = SelectMenu._raw_construct(
@@ -174,6 +213,7 @@ class Select(Item[V]):
             options=options or [],
             channel_types=channel_types or [],
             id=id,
+            required=required,
         )
         self.row = row
 
@@ -231,6 +271,15 @@ class Select(Item[V]):
     def disabled(self) -> bool:
         """Whether the select is disabled or not."""
         return self._underlying.disabled
+
+    @property
+    def required(self) -> bool:
+        """Whether the select is required or not. Only applicable in modal selects."""
+        return self._underlying.required
+
+    @required.setter
+    def required(self, value: bool):
+        self._underlying.required = value
 
     @disabled.setter
     def disabled(self, value: bool):
@@ -420,8 +469,10 @@ class Select(Item[V]):
     def refresh_component(self, component: SelectMenu) -> None:
         self._underlying = component
 
-    def refresh_state(self, interaction: Interaction) -> None:
-        data: ComponentInteractionData = interaction.data  # type: ignore
+    def refresh_state(self, interaction: Interaction | dict) -> None:
+        data: ComponentInteractionData = (
+            interaction.data if isinstance(interaction, Interaction) else interaction
+        )
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
@@ -438,6 +489,7 @@ class Select(Item[V]):
             disabled=component.disabled,
             row=None,
             id=component.id,
+            required=component.required,
         )
 
     @property
@@ -449,6 +501,9 @@ class Select(Item[V]):
 
     def is_storable(self) -> bool:
         return True
+
+    def uses_label(self) -> bool:
+        return bool(self.label or self.description or (self.required is not None))
 
 
 _select_types = (
