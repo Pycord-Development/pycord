@@ -182,6 +182,8 @@ class Select(Item[V]):
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
             )
+        if required and min_values < 1:
+            raise ValueError("min_values must be greater than 0 when required=True")
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
