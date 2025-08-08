@@ -129,7 +129,7 @@ class Select(Item[V]):
 
         .. versionadded:: 2.7
     required: Optional[:class:`bool`]
-        Whether the select is required or not. Only useable in modals. Defaults to ``False``.
+        Whether the select is required or not. Only useable in modals. Defaults to ``True`` in modals.
 
         .. versionadded:: 2.7
     """
