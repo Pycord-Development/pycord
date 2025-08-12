@@ -69,6 +69,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
 - Added `Interaction.attachment_size_limit`.
   ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
+- Added support for adding string selects to modals
+  ([#2858](https://github.com/Pycord-Development/pycord/pull/2858))
 
 ### Fixed
 
