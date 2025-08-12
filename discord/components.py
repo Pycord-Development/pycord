@@ -1081,9 +1081,9 @@ class Label(Component):
 
     def __init__(self, data: LabelComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
-        self.id: int = data.get("id")
-        self.component: Component = _component_factory(data.get("component", {}))
-        self.label: str = data.get("label")
+        self.id: int = data["id"]
+        self.component: Component = _component_factory(data["component"])
+        self.label: str = data["label"]
         self.description: str | None = data.get("description")
 
     def to_dict(self) -> LabelComponentPayload:

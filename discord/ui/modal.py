@@ -34,12 +34,12 @@ class Modal:
 
     .. versionchanged:: 2.7
 
-        :attr:`discord.ComponentType.string_select` can now be sent in modals.
+        :attr:`discord.ComponentType.string_select` can now be used in modals.
 
     Parameters
     ----------
     children: Union[:class:`InputText`, :class:`Select`]
-        The initial InputText fields or Select Menus that are displayed in the modal dialog.
+        The initial InputText or Select components that are displayed in the modal dialog.
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
