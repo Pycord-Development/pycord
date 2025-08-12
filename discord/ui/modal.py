@@ -8,7 +8,9 @@ from functools import partial
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable
 
+from ..enums import ComponentType
 from .input_text import InputText
+from .select import Select
 
 __all__ = (
     "Modal",
@@ -30,10 +32,14 @@ class Modal:
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.7
+
+        :attr:`discord.ComponentType.string_select` can now be used in modals.
+
     Parameters
     ----------
-    children: :class:`InputText`
-        The initial InputText fields that are displayed in the modal dialog.
+    children: Union[:class:`InputText`, :class:`Select`]
+        The initial InputText or Select components that are displayed in the modal dialog.
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
@@ -53,7 +59,7 @@ class Modal:
 
     def __init__(
         self,
-        *children: InputText,
+        *children: InputText | Select,
         title: str,
         custom_id: str | None = None,
         timeout: float | None = None,
@@ -67,7 +73,7 @@ class Modal:
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
-        self._children: list[InputText] = list(children)
+        self._children: list[InputText | Select] = list(children)
         self._weights = _ModalWeights(self._children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
@@ -138,18 +144,23 @@ class Modal:
         self._title = value
 
     @property
-    def children(self) -> list[InputText]:
+    def children(self) -> list[InputText | Select]:
         """The child components associated with the modal dialog."""
         return self._children
 
     @children.setter
-    def children(self, value: list[InputText]):
+    def children(self, value: list[InputText | Select]):
         for item in value:
-            if not isinstance(item, InputText):
+            if not isinstance(item, (InputText, Select)):
                 raise TypeError(
-                    "all Modal children must be InputText, not"
+                    "all Modal children must be InputText or Select, not"
                     f" {item.__class__.__name__}"
                 )
+            elif (
+                isinstance(item, Select)
+                and item.type is not ComponentType.string_select
+            ):
+                raise TypeError("only string selects may be added to modals")
         self._weights = _ModalWeights(self._children)
         self._children = value
 
@@ -182,50 +193,72 @@ class Modal:
         self.stop()
 
     def to_components(self) -> list[dict[str, Any]]:
-        def key(item: InputText) -> int:
+        def key(item: InputText | Select) -> int:
             return item._rendered_row or 0
 
         children = sorted(self._children, key=key)
         components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
-            children = [item.to_component_dict() for item in group]
+            labels = False
+            children = []
+            for item in group:
+                if item.uses_label() or isinstance(item, Select):
+                    labels = True
+                children.append(item)
             if not children:
                 continue
 
-            components.append(
-                {
-                    "type": 1,
-                    "components": children,
-                }
-            )
+            if labels:
+                for item in children:
+                    component = item.to_component_dict()
+                    label = component.pop("label", item.label)
+                    components.append(
+                        {
+                            "type": 18,
+                            "component": component,
+                            "label": label,
+                            "description": item.description,
+                        }
+                    )
+            else:
+                components.append(
+                    {
+                        "type": 1,
+                        "components": [item.to_component_dict() for item in children],
+                    }
+                )
 
         return components
 
-    def add_item(self, item: InputText) -> Self:
-        """Adds an InputText component to the modal dialog.
+    def add_item(self, item: InputText | Select) -> Self:
+        """Adds an InputText or Select component to the modal dialog.
 
         Parameters
         ----------
-        item: :class:`InputText`
+        item: Union[:class:`InputText`, :class:`Select`]
             The item to add to the modal dialog
         """
 
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
-        if not isinstance(item, InputText):
-            raise TypeError(f"expected InputText not {item.__class__!r}")
+        if not isinstance(item, (InputText, Select)):
+            raise TypeError(f"expected InputText or Select, not {item.__class__!r}")
+        if isinstance(item, Select) and item.type is not ComponentType.string_select:
+            raise TypeError("only string selects may be added to modals")
+        if not item.label:
+            raise ValueError("Item must have a label set")
 
         self._weights.add_item(item)
         self._children.append(item)
         return self
 
-    def remove_item(self, item: InputText) -> Self:
-        """Removes an InputText component from the modal dialog.
+    def remove_item(self, item: InputText | Select) -> Self:
+        """Removes an InputText or Select component from the modal dialog.
 
         Parameters
         ----------
-        item: :class:`InputText`
+        item: Union[:class:`InputText`, :class:`Select`]
             The item to remove from the modal dialog.
         """
         try:
@@ -280,7 +313,7 @@ class Modal:
 class _ModalWeights:
     __slots__ = ("weights",)
 
-    def __init__(self, children: list[InputText]):
+    def __init__(self, children: list[InputText | Select]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -289,14 +322,14 @@ class _ModalWeights:
             for item in group:
                 self.add_item(item)
 
-    def find_open_space(self, item: InputText) -> int:
+    def find_open_space(self, item: InputText | Select) -> int:
         for index, weight in enumerate(self.weights):
             if weight + item.width <= 5:
                 return index
 
         raise ValueError("could not find open space for item")
 
-    def add_item(self, item: InputText) -> None:
+    def add_item(self, item: InputText | Select) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -310,7 +343,7 @@ class _ModalWeights:
             self.weights[index] += item.width
             item._rendered_row = index
 
-    def remove_item(self, item: InputText) -> None:
+    def remove_item(self, item: InputText | Select) -> None:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
@@ -344,7 +377,14 @@ class ModalStore:
             components = [
                 component
                 for parent_component in interaction.data["components"]
-                for component in parent_component["components"]
+                for component in (
+                    parent_component.get("components")
+                    or (
+                        [parent_component.get("component")]
+                        if parent_component.get("component")
+                        else []
+                    )
+                )
             ]
             for component in components:
                 for child in value.children:
