@@ -67,7 +67,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
 - Added role gradients support with `Role.colours` and the `RoleColours` class.
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
-- Added `ThreadAutoArchiveDuration` enum to improve clarity of thread archive durations.
+- Added `ThreadArchiveDuration` enum to improve clarity of thread archive durations.
   ([#2826](https://github.com/Pycord-Development/pycord/pull/2826))
 
 ### Fixed
