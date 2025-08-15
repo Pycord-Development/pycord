@@ -1091,7 +1091,7 @@ class SubscriptionStatus(Enum):
 
 
 class ThreadArchiveDuration(IntEnum):
-    """Time set before the thread is auto archived"""
+    """The time set until a thread is automatically archived."""
 
     one_hour = 60
     one_day = 1440
