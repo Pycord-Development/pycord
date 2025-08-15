@@ -72,7 +72,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Interaction.attachment_size_limit`.
   ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
 
-
 ### Fixed
 
 - Fixed `Enum` options not setting the correct type when only one choice is available.
