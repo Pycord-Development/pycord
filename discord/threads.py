@@ -609,7 +609,7 @@ class Thread(Messageable, Hashable):
         invitable: bool = MISSING,
         slowmode_delay: int = MISSING,
         auto_archive_duration: (
-            ThreadArchiveDurationEnum | ThreadArchiveDuration
+            ThreadArchiveDuration | ThreadArchiveDurationEnum
         ) = MISSING,
         pinned: bool = MISSING,
         applied_tags: list[ForumTag] = MISSING,
