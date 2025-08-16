@@ -171,6 +171,8 @@ class BridgeCommand:
         The prefix-based version of this bridge command.
     """
 
+    __bridge__: bool = True
+
     __special_attrs__ = ["slash_variant", "ext_variant", "parent"]
 
     def __init__(self, callback, **kwargs):
