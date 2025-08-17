@@ -904,7 +904,7 @@ class Guild(Hashable):
                 object_id=object_id,
                 default=default,
             )
-        except (HTTPException, ValueError):
+        except (HTTPException, ValueError, InvalidData):
             return default
 
     @property

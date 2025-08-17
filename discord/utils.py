@@ -80,7 +80,7 @@ if TYPE_CHECKING:
         AppEmoji,
     )
 
-from .errors import HTTPException, InvalidArgument
+from .errors import HTTPException, InvalidArgument, InvalidData
 
 try:
     import msgspec
@@ -682,6 +682,8 @@ async def get_or_fetch(
         An error occurred fetching the object.
     :exc:`Forbidden`
         You do not have permission to fetch the object.
+    :exc:`InvalidData`
+        Raised when the object resolves to a different guild.
     """
     from discord import Client, Guild, Member, Role, User
 
@@ -744,7 +746,7 @@ async def get_or_fetch(
 
     try:
         return await fetcher(obj, object_id)
-    except (HTTPException, ValueError):
+    except (HTTPException, ValueError, InvalidData):
         if default is not MISSING:
             return default
         raise
