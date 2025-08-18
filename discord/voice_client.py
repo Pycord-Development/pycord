@@ -487,9 +487,7 @@ class VoiceClient(VoiceProtocol):
                         try:
                             await self.ws.resume()
                         except asyncio.TimeoutError:
-                            _log.info(
-                                "Could not resume the voice connection... Disconnection..."
-                            )
+                            _log.info("Could not resume the voice connection... Disconnection...")
                             if self._connected.is_set():
                                 await self.disconnect(force=True)
                         else:
@@ -597,11 +595,7 @@ class VoiceClient(VoiceProtocol):
         nonce[:4] = struct.pack(">I", self._lite_nonce)
         self.checked_add("_lite_nonce", 1, 4294967295)
 
-        return (
-            header
-            + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext
-            + nonce[:4]
-        )
+        return header + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext + nonce[:4]
 
     def _decrypt_xsalsa20_poly1305(self, header, data):
         # Deprecated, remove in 2.7
@@ -639,9 +633,7 @@ class VoiceClient(VoiceProtocol):
         nonce[:4] = data[-4:]
         data = data[:-4]
 
-        return self.strip_header_ext(
-            box.decrypt(bytes(data), bytes(header), bytes(nonce))
-        )
+        return self.strip_header_ext(box.decrypt(bytes(data), bytes(header), bytes(nonce)))
 
     @staticmethod
     def strip_header_ext(data):

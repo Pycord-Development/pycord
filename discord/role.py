@@ -194,12 +194,8 @@ class RoleColours:
     @classmethod
     def _from_payload(cls, data: RoleColoursPayload) -> Self:
         primary = Colour(data["primary_color"])
-        secondary = (
-            Colour(data["secondary_color"]) if data.get("secondary_color") else None
-        )
-        tertiary = (
-            Colour(data["tertiary_color"]) if data.get("tertiary_color") else None
-        )
+        secondary = Colour(data["secondary_color"]) if data.get("secondary_color") else None
+        tertiary = Colour(data["tertiary_color"]) if data.get("tertiary_color") else None
         return cls(primary, secondary, tertiary)
 
     def _to_dict(self) -> RoleColoursPayload:
@@ -229,18 +225,10 @@ class RoleColours:
 
         Currently roles are holographic when colours are set to 11127295, 16759788, and 16761760.
         """
-        return (
-            self.primary.value == 11127295
-            and self.secondary.value == 16759788
-            and self.tertiary.value == 16761760
-        )
+        return self.primary.value == 11127295 and self.secondary.value == 16759788 and self.tertiary.value == 16761760
 
     def __repr__(self) -> str:
-        return (
-            f"<RoleColours primary={self.primary!r} "
-            f"secondary={self.secondary!r} "
-            f"tertiary={self.tertiary!r}>"
-        )
+        return f"<RoleColours primary={self.primary!r} secondary={self.secondary!r} tertiary={self.tertiary!r}>"
 
 
 class Role(Hashable):

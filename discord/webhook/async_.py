@@ -655,9 +655,7 @@ def handle_message_parameters(
         payload["components"] = view.to_components() if view is not None else []
         if view and view.is_components_v2():
             if payload.get("content") or payload.get("embeds"):
-                raise TypeError(
-                    "cannot send embeds or content with a view using v2 component logic"
-                )
+                raise TypeError("cannot send embeds or content with a view using v2 component logic")
             flags.is_components_v2 = True
     if poll is not MISSING:
         payload["poll"] = poll.to_dict()
@@ -1766,14 +1764,8 @@ class Webhook(BaseWebhook):
         with_components = False
 
         if view is not MISSING:
-            if (
-                isinstance(self._state, _WebhookState)
-                and view
-                and view.is_dispatchable()
-            ):
-                raise InvalidArgument(
-                    "Dispatchable Webhook views require an associated state with the webhook"
-                )
+            if isinstance(self._state, _WebhookState) and view and view.is_dispatchable():
+                raise InvalidArgument("Dispatchable Webhook views require an associated state with the webhook")
             if ephemeral is True and view.timeout is None:
                 view.timeout = 15 * 60.0
             if not application_webhook:
@@ -1980,14 +1972,8 @@ class Webhook(BaseWebhook):
         with_components = False
 
         if view is not MISSING:
-            if (
-                isinstance(self._state, _WebhookState)
-                and view
-                and view.is_dispatchable()
-            ):
-                raise InvalidArgument(
-                    "Dispatchable Webhook views require an associated state with the webhook"
-                )
+            if isinstance(self._state, _WebhookState) and view and view.is_dispatchable():
+                raise InvalidArgument("Dispatchable Webhook views require an associated state with the webhook")
 
             self._state.prevent_view_updates_for(message_id)
             if self.type is not WebhookType.application:

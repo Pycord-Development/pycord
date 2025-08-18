@@ -540,9 +540,7 @@ class Client:
         print(f"Ignoring exception in {event_method}", file=sys.stderr)
         traceback.print_exc()
 
-    async def on_view_error(
-        self, error: Exception, item: Item, interaction: Interaction
-    ) -> None:
+    async def on_view_error(self, error: Exception, item: Item, interaction: Interaction) -> None:
         """|coro|
 
         The default view error handler provided by the client.
@@ -554,9 +552,7 @@ class Client:
             f"Ignoring exception in view {interaction.view} for item {item}:",
             file=sys.stderr,
         )
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
     async def on_modal_error(self, error: Exception, interaction: Interaction) -> None:
         """|coro|
@@ -568,9 +564,7 @@ class Client:
         """
 
         print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        traceback.print_exception(error.__class__, error, error.__traceback__, file=sys.stderr)
 
     # hooks
 

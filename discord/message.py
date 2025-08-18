@@ -985,12 +985,8 @@ class Message(Hashable):
         self.tts: bool = data["tts"]
         self.content: str = data["content"]
         self.nonce: int | str | None = data.get("nonce")
-        self.stickers: list[StickerItem] = [
-            StickerItem(data=d, state=state) for d in data.get("sticker_items", [])
-        ]
-        self.components: list[Component] = [
-            _component_factory(d, state=state) for d in data.get("components", [])
-        ]
+        self.stickers: list[StickerItem] = [StickerItem(data=d, state=state) for d in data.get("sticker_items", [])]
+        self.components: list[Component] = [_component_factory(d, state=state) for d in data.get("components", [])]
 
         try:
             # if the channel doesn't have a guild attribute, we handle that

@@ -137,9 +137,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
-        if unicode_emoji := utils.EMOJIS_MAP.get(
-            value.removeprefix(":").removesuffix(":")
-        ):
+        if unicode_emoji := utils.EMOJIS_MAP.get(value.removeprefix(":").removesuffix(":")):
             return cls(name=unicode_emoji, id=None, animated=False)
 
         match = cls._CUSTOM_EMOJI_RE.match(value)

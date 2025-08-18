@@ -97,9 +97,7 @@ class Container(Item[V]):
         self.color = colour or color
 
         for func in self.__container_children_items__:
-            item: Item = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
+            item: Item = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
             item.callback = partial(func, self, item)
             self.add_item(item)
             setattr(self, func.__name__, item)
@@ -112,9 +110,7 @@ class Container(Item[V]):
         else:
             found = False
             for row in reversed(self._underlying.components):
-                if (
-                    isinstance(row, ActionRow) and row.width + item.width <= 5
-                ):  # If a valid ActionRow exists
+                if isinstance(row, ActionRow) and row.width + item.width <= 5:  # If a valid ActionRow exists
                     row.children.append(item._underlying)
                     found = True
                 elif not isinstance(row, ActionRow):
@@ -327,10 +323,7 @@ class Container(Item[V]):
         elif isinstance(value, int):
             self._underlying.accent_color = Colour(value=value)
         else:
-            raise TypeError(
-                "Expected discord.Colour, int, or None but received"
-                f" {value.__class__.__name__} instead."
-            )
+            raise TypeError(f"Expected discord.Colour, int, or None but received {value.__class__.__name__} instead.")
 
     color = colour
 
@@ -359,17 +352,15 @@ class Container(Item[V]):
 
     def refresh_component(self, component: ContainerComponent) -> None:
         self._underlying = component
-        i = 0
         flattened = []
         for c in component.components:
             if isinstance(c, ActionRow):
                 flattened += c.children
             else:
                 flattened.append(c)
-        for y in flattened:
+        for i, y in enumerate(flattened):
             x = self.items[i]
             x.refresh_component(y)
-            i += 1
 
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
@@ -381,9 +372,7 @@ class Container(Item[V]):
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
-            if hasattr(item, "disabled") and (
-                exclusions is None or item not in exclusions
-            ):
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
                 item.disabled = True
         return self
 
@@ -397,9 +386,7 @@ class Container(Item[V]):
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():
-            if hasattr(item, "disabled") and (
-                exclusions is None or item not in exclusions
-            ):
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
                 item.disabled = False
         return self
 
@@ -416,11 +403,9 @@ class Container(Item[V]):
 
     @classmethod
     def from_component(cls: type[C], component: ContainerComponent) -> C:
-        from .view import _component_to_item
+        from .view import _component_to_item  # noqa: PLC0415
 
-        items = [
-            _component_to_item(c) for c in _walk_all_components(component.components)
-        ]
+        items = [_component_to_item(c) for c in _walk_all_components(component.components)]
         return cls(
             *items,
             colour=component.accent_color,

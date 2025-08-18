@@ -74,9 +74,7 @@ class Section(Item[V]):
             accessory=None,
         )
         for func in self.__section_accessory_item__:
-            item: Item = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
+            item: Item = func.__discord_ui_model_type__(**func.__discord_ui_model_kwargs__)
             item.callback = partial(func, self, item)
             self.set_accessory(item)
             setattr(self, func.__name__, item)
@@ -281,9 +279,7 @@ class Section(Item[V]):
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
-            if hasattr(item, "disabled") and (
-                exclusions is None or item not in exclusions
-            ):
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
                 item.disabled = True
         return self
 
@@ -298,9 +294,7 @@ class Section(Item[V]):
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():
-            if hasattr(item, "disabled") and (
-                exclusions is None or item not in exclusions
-            ):
+            if hasattr(item, "disabled") and (exclusions is None or item not in exclusions):
                 item.disabled = False
         return self
 
@@ -319,7 +313,7 @@ class Section(Item[V]):
 
     @classmethod
     def from_component(cls: type[S], component: SectionComponent) -> S:
-        from .view import _component_to_item
+        from .view import _component_to_item  # noqa: PLC0415
 
         items = [_component_to_item(c) for c in component.components]
         accessory = _component_to_item(component.accessory)

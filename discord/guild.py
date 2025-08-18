@@ -2260,7 +2260,7 @@ class Guild(Hashable):
         Forbidden
             You don't have permissions to get the templates.
         """
-        from .template import Template
+        from .template import Template  # noqa: PLC0415
 
         data = await self._state.http.guild_templates(self.id)
         return [Template(data=d, state=self._state) for d in data]
@@ -2283,7 +2283,7 @@ class Guild(Hashable):
             You don't have permissions to get the webhooks.
         """
 
-        from .webhook import Webhook
+        from .webhook import Webhook  # noqa: PLC0415
 
         data = await self._state.http.guild_webhooks(self.id)
         return [Webhook.from_state(d, state=self._state) for d in data]
@@ -2373,7 +2373,7 @@ class Guild(Hashable):
         description: :class:`str`
             The description of the template.
         """
-        from .template import Template
+        from .template import Template  # noqa: PLC0415
 
         payload = {"name": name}
 
@@ -2919,9 +2919,7 @@ class Guild(Hashable):
             fields["colors"] = actual_colours._to_dict()
         else:
             raise InvalidArgument(
-                "colours parameter must be of type RoleColours, not {0.__class__.__name__}".format(
-                    actual_colours
-                )
+                "colours parameter must be of type RoleColours, not {}".format(actual_colours.__class__.__name__)
             )
 
         if hoist is not MISSING:

@@ -28,9 +28,7 @@ class MyView(View):
     def __init__(self, user: User):
         super().__init__(timeout=30)
         text1 = TextDisplay("### This is a sample `TextDisplay` in a `Section`.")
-        text2 = TextDisplay(
-            "This section is contained in a `Container`.\nTo the right, you can see a `Thumbnail`."
-        )
+        text2 = TextDisplay("This section is contained in a `Container`.\nTo the right, you can see a `Thumbnail`.")
         thumbnail = Thumbnail(user.display_avatar.url)
 
         section = Section(text1, text2, accessory=thumbnail)
@@ -52,9 +50,7 @@ class MyView(View):
 
         self.add_item(container)
         self.add_item(gallery)
-        self.add_item(
-            TextDisplay("Above is a `MediaGallery` containing two `MediaGalleryItem`s.")
-        )
+        self.add_item(TextDisplay("Above is a `MediaGallery` containing two `MediaGalleryItem`s."))
 
     @button(label="Delete Message", style=ButtonStyle.red, id=200)
     async def delete_button(self, button: Button, interaction: Interaction):

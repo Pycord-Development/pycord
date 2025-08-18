@@ -223,7 +223,6 @@ GuildFeature = Literal[
     "VOICE_CHANNEL_EFFECTS",
     "VOICE_IN_THREADS",
     "WELCOME_SCREEN_ENABLED",
-    "ENHANCED_ROLE_COLORS",
 ]
 
 

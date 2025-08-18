@@ -79,7 +79,6 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
 
 
 def _component_to_item(component: Component) -> Item[V]:
-
     if isinstance(component, ButtonComponent):
         from .button import Button  # noqa: PLC0415
 
@@ -89,31 +88,31 @@ def _component_to_item(component: Component) -> Item[V]:
 
         return Select.from_component(component)
     if isinstance(component, SectionComponent):
-        from .section import Section
+        from .section import Section  # noqa: PLC0415
 
         return Section.from_component(component)
     if isinstance(component, TextDisplayComponent):
-        from .text_display import TextDisplay
+        from .text_display import TextDisplay  # noqa: PLC0415
 
         return TextDisplay.from_component(component)
     if isinstance(component, ThumbnailComponent):
-        from .thumbnail import Thumbnail
+        from .thumbnail import Thumbnail  # noqa: PLC0415
 
         return Thumbnail.from_component(component)
     if isinstance(component, MediaGalleryComponent):
-        from .media_gallery import MediaGallery
+        from .media_gallery import MediaGallery  # noqa: PLC0415
 
         return MediaGallery.from_component(component)
     if isinstance(component, FileComponent):
-        from .file import File
+        from .file import File  # noqa: PLC0415
 
         return File.from_component(component)
     if isinstance(component, SeparatorComponent):
-        from .separator import Separator
+        from .separator import Separator  # noqa: PLC0415
 
         return Separator.from_component(component)
     if isinstance(component, ContainerComponent):
-        from .container import Container
+        from .container import Container  # noqa: PLC0415
 
         return Container.from_component(component)
     if isinstance(component, ActionRowComponent):
@@ -139,17 +138,14 @@ class _ViewWeights:
         for index, weight in enumerate(self.weights):
             # check if open space AND (next row has no items OR this is the last row)
             if (weight + item.width <= 5) and (
-                (index < len(self.weights) - 1 and self.weights[index + 1] == 0)
-                or index == len(self.weights) - 1
+                (index < len(self.weights) - 1 and self.weights[index + 1] == 0) or index == len(self.weights) - 1
             ):
                 return index
 
         raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item[V]) -> None:
-        if (
-            item._underlying.is_v2() or not self.fits_legacy(item)
-        ) and not self.requires_v2():
+        if (item._underlying.is_v2() or not self.fits_legacy(item)) and not self.requires_v2():
             self.weights.extend([0, 0, 0, 0, 0] * 7)
 
         if item.row is not None:
@@ -289,7 +285,7 @@ class View:
             if not children:
                 continue
 
-            if any([i._underlying.is_v2() for i in items]):
+            if any(i._underlying.is_v2() for i in items):
                 components += children
             else:
                 components.append(
@@ -583,7 +579,7 @@ class View:
         for c in flattened:
             try:
                 item = self.children[i]
-            except:
+            except IndexError:
                 break
             else:
                 item.refresh_component(c)
@@ -630,10 +626,7 @@ class View:
 
         A view containing V2 components cannot be sent alongside message content or embeds.
         """
-        return (
-            any([item._underlying.is_v2() for item in self.children])
-            or self.__weights.requires_v2()
-        )
+        return any(item._underlying.is_v2() for item in self.children) or self.__weights.requires_v2()
 
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
@@ -659,9 +652,7 @@ class View:
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
-            if hasattr(child, "disabled") and (
-                exclusions is None or child not in exclusions
-            ):
+            if hasattr(child, "disabled") and (exclusions is None or child not in exclusions):
                 child.disabled = True
             if hasattr(child, "disable_all_items"):
                 child.disable_all_items(exclusions=exclusions)
@@ -677,9 +668,7 @@ class View:
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
-            if hasattr(child, "disabled") and (
-                exclusions is None or child not in exclusions
-            ):
+            if hasattr(child, "disabled") and (exclusions is None or child not in exclusions):
                 child.disabled = False
             if hasattr(child, "enable_all_items"):
                 child.enable_all_items(exclusions=exclusions)

@@ -75,9 +75,7 @@ class Modal:
         self.loop = asyncio.get_event_loop()
 
     def __repr__(self) -> str:
-        attrs = " ".join(
-            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
-        )
+        attrs = " ".join(f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__)
         return f"<{self.__class__.__name__} {attrs}>"
 
     def _start_listening_from_store(self, store: ModalStore) -> None:

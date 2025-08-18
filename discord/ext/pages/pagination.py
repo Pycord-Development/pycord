@@ -149,9 +149,7 @@ class Page:
         **kwargs,
     ):
         if content is None and embeds is None and custom_view is None:
-            raise discord.InvalidArgument(
-                "A page must at least have content, embeds, or custom_view set."
-            )
+            raise discord.InvalidArgument("A page must at least have content, embeds, or custom_view set.")
         self._content = content
         self._embeds = embeds or []
         self._custom_view = custom_view
@@ -562,11 +560,9 @@ class Paginator(discord.ui.View):
         """
         page = self.get_page_content(page)
         for item in self.walk_children():
-            if (
-                include_custom
-                or not self.custom_view
-                or item not in self.custom_view.children
-            ) and hasattr(item, "disabled"):
+            if (include_custom or not self.custom_view or item not in self.custom_view.children) and hasattr(
+                item, "disabled"
+            ):
                 item.disabled = True
         if page:
             await self.message.edit(

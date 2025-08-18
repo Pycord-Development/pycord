@@ -782,21 +782,15 @@ class SlashCommand(ApplicationCommand):
             if self._is_typing_literal(option):
                 literal_values = get_args(option)
                 if not all(isinstance(v, (str, int, float)) for v in literal_values):
-                    raise TypeError(
-                        "Literal values for choices must be str, int, or float."
-                    )
+                    raise TypeError("Literal values for choices must be str, int, or float.")
 
                 value_type = type(literal_values[0])
                 if not all(isinstance(v, value_type) for v in literal_values):
-                    raise TypeError(
-                        "All Literal values for choices must be of the same type."
-                    )
+                    raise TypeError("All Literal values for choices must be of the same type.")
 
                 option = Option(
                     value_type,
-                    choices=[
-                        OptionChoice(name=str(v), value=v) for v in literal_values
-                    ],
+                    choices=[OptionChoice(name=str(v), value=v) for v in literal_values],
                 )
 
             if self._is_typing_annotated(option):

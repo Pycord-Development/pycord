@@ -50,7 +50,7 @@ class Nameplate:
         self.palette: str = data["palette"]
         self._label: str = data["label"]
         self._asset: str = data["asset"]
-        self._state: "ConnectionState" = state
+        self._state: ConnectionState = state
 
     def __repr__(self) -> str:
         return f"<Nameplate sku_id={self.sku_id} palette={self.palette}>"

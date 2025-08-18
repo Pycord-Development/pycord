@@ -165,9 +165,7 @@ class ActionRow(Component):
     def __init__(self, data: ComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.children: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
-        ]
+        self.children: list[Component] = [_component_factory(d) for d in data.get("components", [])]
 
     @property
     def width(self):
@@ -189,9 +187,7 @@ class ActionRow(Component):
 
     @classmethod
     def with_components(cls, *components, id=None):
-        return cls._raw_construct(
-            type=ComponentType.action_row, id=id, children=[c for c in components]
-        )
+        return cls._raw_construct(type=ComponentType.action_row, id=id, children=[c for c in components])
 
 
 class InputText(Component):
@@ -592,9 +588,7 @@ class Section(Component):
     def __init__(self, data: SectionComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.components: list[Component] = [
-            _component_factory(d, state=state) for d in data.get("components", [])
-        ]
+        self.components: list[Component] = [_component_factory(d, state=state) for d in data.get("components", [])]
         self.accessory: Component | None = None
         if _accessory := data.get("accessory"):
             self.accessory = _component_factory(_accessory, state=state)
@@ -665,9 +659,7 @@ class UnfurledMediaItem(AssetMixin):
     def __init__(self, url: str):
         self._state = None
         self._url: str = url
-        self._static_url: str | None = (
-            url if url and url.startswith("attachment://") else None
-        )
+        self._static_url: str | None = url if url and url.startswith("attachment://") else None
         self.proxy_url: str | None = None
         self.height: int | None = None
         self.width: int | None = None
@@ -676,9 +668,7 @@ class UnfurledMediaItem(AssetMixin):
         self.attachment_id: int | None = None
 
     def __repr__(self) -> str:
-        return (
-            f"<UnfurledMediaItem url={self.url!r} attachment_id={self.attachment_id}>"
-        )
+        return f"<UnfurledMediaItem url={self.url!r} attachment_id={self.attachment_id}>"
 
     def __str__(self) -> str:
         return self.url or self.__repr__()
@@ -691,13 +681,10 @@ class UnfurledMediaItem(AssetMixin):
     @url.setter
     def url(self, value: str) -> None:
         self._url = value
-        self._static_url = (
-            value if value and value.startswith("attachment://") else None
-        )
+        self._static_url = value if value and value.startswith("attachment://") else None
 
     @classmethod
     def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
-
         r = cls(data.get("url"))
         r.proxy_url = data.get("proxy_url")
         r.height = data.get("height")
@@ -747,9 +734,7 @@ class Thumbnail(Component):
     def __init__(self, data: ThumbnailComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.media: UnfurledMediaItem = (
-            umi := data.get("media")
-        ) and UnfurledMediaItem.from_dict(umi, state=state)
+        self.media: UnfurledMediaItem = (umi := data.get("media")) and UnfurledMediaItem.from_dict(umi, state=state)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
@@ -800,9 +785,7 @@ class MediaGalleryItem:
 
     @classmethod
     def from_dict(cls, data: MediaGalleryItemPayload, state=None) -> MediaGalleryItem:
-        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(
-            umi, state=state
-        )
+        media = (umi := data.get("media")) and UnfurledMediaItem.from_dict(umi, state=state)
         description = data.get("description")
         spoiler = data.get("spoiler", False)
 
@@ -851,9 +834,7 @@ class MediaGallery(Component):
     def __init__(self, data: MediaGalleryComponentPayload, state=None):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
-        self.items: list[MediaGalleryItem] = [
-            MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])
-        ]
+        self.items: list[MediaGalleryItem] = [MediaGalleryItem.from_dict(d, state=state) for d in data.get("items", [])]
 
     def to_dict(self) -> MediaGalleryComponentPayload:
         return {
@@ -903,9 +884,7 @@ class FileComponent(Component):
         self.id: int = data.get("id")
         self.name: str = data.get("name")
         self.size: int = data.get("size")
-        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(
-            data.get("file", {}), state=state
-        )
+        self.file: UnfurledMediaItem = UnfurledMediaItem.from_dict(data.get("file", {}), state=state)
         self.spoiler: bool | None = data.get("spoiler")
 
     def to_dict(self) -> FileComponentPayload:
@@ -948,9 +927,7 @@ class Separator(Component):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.divider: bool = data.get("divider")
-        self.spacing: SeparatorSpacingSize = try_enum(
-            SeparatorSpacingSize, data.get("spacing", 1)
-        )
+        self.spacing: SeparatorSpacingSize = try_enum(SeparatorSpacingSize, data.get("spacing", 1))
 
     def to_dict(self) -> SeparatorComponentPayload:
         return {
@@ -1008,9 +985,7 @@ class Container(Component):
             c
         )  # at this point, not adding alternative spelling
         self.spoiler: bool | None = data.get("spoiler")
-        self.components: list[Component] = [
-            _component_factory(d, state=state) for d in data.get("components", [])
-        ]
+        self.components: list[Component] = [_component_factory(d, state=state) for d in data.get("components", [])]
 
     def to_dict(self) -> ContainerComponentPayload:
         payload = {

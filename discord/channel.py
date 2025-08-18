@@ -1269,9 +1269,7 @@ class ForumChannel(_TextChannel):
             components = view.to_components()
             if view.is_components_v2():
                 if embeds or content:
-                    raise TypeError(
-                        "cannot send embeds or content with a view using v2 component logic"
-                    )
+                    raise TypeError("cannot send embeds or content with a view using v2 component logic")
                 flags.is_components_v2 = True
         else:
             components = None
