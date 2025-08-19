@@ -465,10 +465,7 @@ class VoiceClient(VoiceProtocol):
                 await self.ws.poll_event()
             except (ConnectionClosed, asyncio.TimeoutError) as exc:
                 if isinstance(exc, ConnectionClosed):
-                    # The following close codes are undocumented, so I will document them here.
                     # 1000 - normal closure (obviously)
-                    # 4014 - voice channel has been deleted.
-                    # 4015 - voice server has crashed, we should resume
                     if exc.code == 1000:
                         _log.info(
                             "Disconnecting from voice normally, close code %d.",
@@ -476,21 +473,15 @@ class VoiceClient(VoiceProtocol):
                         )
                         await self.disconnect()
                         break
+                    # 4014 - Disconnect individual client (you were kicked, the main gateway session was dropped, etc.).
                     if exc.code == 4014:
                         _log.info(
-                            "Disconnected from voice by force... potentially"
-                            " reconnecting."
-                        )
-                        successful = await self.potential_reconnect()
-                        if successful:
-                            continue
-
-                        _log.info(
-                            "Reconnect was unsuccessful, disconnecting from voice"
-                            " normally..."
+                            "Disconnected from voice by force, close code %d.",
+                            exc.code,
                         )
                         await self.disconnect()
                         break
+                    # 4015 - The server crashed. Our bad! Try resuming.
                     if exc.code == 4015:
                         _log.info("Disconnected from voice, trying to resume...")
 
