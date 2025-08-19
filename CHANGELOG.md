@@ -140,6 +140,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2843](https://github.com/Pycord-Development/pycord/pull/2843))
 - Fixed `TypeError` when using `@option` with certain annotations and along with
   `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
+- Fixed reconnection issues with `VoiceClient` due to incorrectly trying to reconnect
+  with status code `4014`.
+  ([#2870](https://github.com/Pycord-Development/pycord/pull/2870))
 
 ### Changed
 
