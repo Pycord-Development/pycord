@@ -69,6 +69,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
 - Added `Interaction.attachment_size_limit`.
   ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
+- Added `get_component` to `Message`, `Section`, `Container` and `ActionRow`.
+  ([#2849](https://github.com/Pycord-Development/pycord/pull/2849))
 
 ### Fixed
 
