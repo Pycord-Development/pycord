@@ -1802,7 +1802,7 @@ class Messageable:
 
         Flattening into a list: ::
 
-            pins = await channel.fetch_pins(limit=None).flatten()
+            pins = await channel.pins(limit=None).flatten()
             # pins is now a list of MessagePin...
 
         All parameters are optional.
