@@ -9,6 +9,7 @@ from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable
 
 from ..enums import ComponentType
+from ..utils import find
 from .input_text import InputText
 from .select import Select
 
@@ -266,6 +267,25 @@ class Modal:
         except ValueError:
             pass
         return self
+
+    def get_item(self, id: str | int) -> Select | InputText | None:
+        """Gets an item from the modal. Roughly equal to `utils.get(modal.children, ...)`.
+        If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`int`, :class:`str`]
+            The id or custom_id of the item to get
+
+        Returns
+        -------
+        Optional[:class:`Item`]
+            The item with the matching ``custom_id`` or ``id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     def stop(self) -> None:
         """Stops listening to interaction events from the modal dialog."""
