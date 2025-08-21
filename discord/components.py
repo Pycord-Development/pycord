@@ -439,7 +439,7 @@ class SelectMenu(Component):
         ]
         self.required: bool | None = data.get(
             "required"
-        )  # Currently defaults to False, pending change
+        )
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
