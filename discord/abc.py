@@ -1754,43 +1754,7 @@ class Messageable:
         data = await self._state.http.get_message(channel.id, id)
         return self._state.create_message(channel=channel, data=data)
 
-    async def pins(self) -> list[Message]:
-        """|coro|
-
-        Retrieves all messages that are currently pinned in the channel.
-
-        .. note::
-
-            Due to a limitation with the Discord API, the :class:`.Message`
-            objects returned by this method do not contain complete
-            :attr:`.Message.reactions` data.
-
-        .. warning::
-
-            Starting from version 3.0, this will return a :class:`discord.MessagePinIterator`. See :func:`fetch_pins` for the new behavior.
-
-        Returns
-        -------
-        List[:class:`~discord.Message`]
-            The messages that are currently pinned.
-
-        Raises
-        ------
-        ~discord.HTTPException
-            Retrieving the pinned messages failed.
-        """
-        utils.warn_deprecated(
-            f"Messageable.pins() returning a list of Message",
-            since="2.7",
-            removed="3.0",
-            reference="The behavior of fetch_pins",
-        )
-        channel = await self._get_channel()
-        state = self._state
-        data = await state.http.legacy_pins_from(channel.id)
-        return [state.create_message(channel=channel, data=m) for m in data]
-
-    def fetch_pins(
+    def pins(
         self,
         *,
         limit: int | None = 50,
@@ -1799,6 +1763,10 @@ class Messageable:
         """Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages.
 
         You must have :attr:`~discord.Permissions.read_message_history` permissions to use this.
+
+        .. warning::
+
+            Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead. 
 
         Parameters
         ----------

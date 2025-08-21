@@ -42,7 +42,7 @@ from typing import (
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
-from .utils import maybe_coroutine, snowflake_time, time_snowflake
+from .utils import maybe_coroutine, snowflake_time, time_snowflake, warn_deprecated
 
 __all__ = (
     "ReactionIterator",
@@ -1276,4 +1276,10 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         return [p.message for p in pins]
 
     def __await__(self) -> Generator[Any, Any, MessagePin]:
+        warn_deprecated(
+            f"Messageable.pins() returning a list of Message",
+            since="2.7",
+            removed="3.0",
+            reference="The documentation of pins()",
+        )
         return self.retrieve_inner().__await__()
