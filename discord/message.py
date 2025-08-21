@@ -822,6 +822,9 @@ class MessagePin:
         """An aware timestamp of when the message was pinned."""
         return self._pinned_at
 
+    def __repr__(self) -> str:
+        return f"<MessagePin pinned_at={self.pinned_at!r} message={self.message!r}>"
+
 
 @flatten_handlers
 class Message(Hashable):

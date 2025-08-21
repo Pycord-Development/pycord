@@ -59,7 +59,7 @@ if TYPE_CHECKING:
     from .channel import MessageableChannel
     from .guild import BanEntry, Guild
     from .member import Member
-    from .message import Message
+    from .message import Message, MessagePin
     from .monetization import Entitlement, Subscription
     from .scheduled_events import ScheduledEvent
     from .threads import Thread
@@ -1209,7 +1209,7 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         limit: int | None,
         before: Snowflake | datetime.datetime | None = None,
     ):
-        self.channel = channel
+        self._channel = channel
         self.limit = limit
         self.http = channel._state.http
 
@@ -1245,8 +1245,12 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         if not self.has_more:
             raise NoMoreItems()
 
+        if not hasattr(self, "channel"):
+            channel = await self._channel._get_channel()
+            self.channel = channel
+
         limit = 50 if self.limit is None else max(self.limit, 50)
-        data = await self.endpoint(self.channel_id, before=self.before, limit=limit)
+        data = await self.endpoint(self.channel.id, before=self.before, limit=limit)
 
         pins: list[MessagePinPayload] = data.get("items", [])
         for d in pins:
