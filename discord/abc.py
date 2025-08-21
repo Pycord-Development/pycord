@@ -1766,7 +1766,7 @@ class Messageable:
 
         .. warning::
 
-            Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead. 
+            Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead.
 
         Parameters
         ----------
