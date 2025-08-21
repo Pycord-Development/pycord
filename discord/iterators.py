@@ -1226,10 +1226,10 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
 
         self.endpoint = self.http.pins_from
 
-        self.queue: asyncio.Queue[Thread] = asyncio.Queue()
+        self.queue: asyncio.Queue[MessagePin] = asyncio.Queue()
         self.has_more: bool = True
 
-    async def next(self) -> Thread:
+    async def next(self) -> MessagePin:
         if self.queue.empty():
             await self.fill_queue()
 

@@ -910,7 +910,7 @@ class HTTPClient:
         channel_id: Snowflake,
         limit: int | None = None,
         before: str | None = None,
-    ) -> Response[list[message.MessagePinPagination]]:
+    ) -> Response[message.MessagePinPagination]:
         r = Route("GET", "/channels/{channel_id}/messages/pins", channel_id=channel_id)
         params = {}
         if limit:
