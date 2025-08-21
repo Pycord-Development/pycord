@@ -33,6 +33,7 @@ from typing import (
     AsyncIterator,
     Awaitable,
     Callable,
+    Generator,
     List,
     TypeVar,
     Union,
