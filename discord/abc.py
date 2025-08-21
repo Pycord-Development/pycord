@@ -1778,7 +1778,7 @@ class Messageable:
 
         channel = await self._get_channel()
         state = self._state
-        data = await state.http.pins_from(channel.id)
+        data = await state.http.legacy_pins_from(channel.id)
         return [state.create_message(channel=channel, data=m) for m in data]
 
     def can_send(self, *objects) -> bool:
