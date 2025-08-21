@@ -1274,5 +1274,5 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         pins = await self.flatten()
         return [p.message for p in pins]
 
-    def __await__(self) -> asyncio.Task:
-        return asyncio.create_task(self.retrieve_inner())
+    def __await__(self) -> Generator[Any, Any, MessagePin]:
+        return self.retrieve_inner().__await__()
