@@ -8,10 +8,10 @@ Voice support for the Discord API.
 :license: MIT, see LICENSE for more details.
 """
 
-from .client import VoiceClient
 from ._types import VoiceProtocol
+from .client import VoiceClient
 
 __all__ = (
-    'VoiceClient',
-    'VoiceProtocol',
+    "VoiceClient",
+    "VoiceProtocol",
 )

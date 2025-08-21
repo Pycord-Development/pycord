@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -30,13 +31,11 @@ from typing import TYPE_CHECKING
 from .errors import VoiceGuildMismatch
 
 if TYPE_CHECKING:
+    from discord.member import VoiceState
+    from discord.types.voice import VoiceState as VoiceStatePayload
+
     from .client import VoiceClient
     from .gateway import VoiceWebsocket
-
-    from discord.member import VoiceState
-    from discord.types.voice import (
-        VoiceState as VoiceStatePayload,
-    )
 
 
 class VoiceConnectionState:
@@ -59,10 +58,7 @@ class VoiceConnectionState:
 
     @property
     def connected(self) -> bool:
-        return (
-            self._updated_server.is_set() and
-            self._updated_state.is_set()
-        )
+        return self._updated_server.is_set() and self._updated_state.is_set()
 
     @property
     def guild_id(self) -> int:
@@ -78,10 +74,10 @@ class VoiceConnectionState:
 
     def update_state(self, payload: VoiceStatePayload) -> None:
         # if we're here it means the guild is found
-        guild_id = int(payload['guild_id'])  # type: ignore
+        guild_id = int(payload["guild_id"])  # type: ignore
 
         if self.guild_id != guild_id:
             raise VoiceGuildMismatch(self.guild_id, guild_id)
 
-        self.self_mute = payload['self_mute']
-        self.self_deaf = payload['self_deaf']
+        self.self_mute = payload["self_mute"]
+        self.self_deaf = payload["self_deaf"]

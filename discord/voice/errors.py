@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from aiohttp import ClientWebSocketResponse
@@ -46,10 +47,10 @@ class VoiceConnectionClosed(ClientException):
     """
 
     __slots__ = (
-        'code',
-        'reason',
-        'channel_id',
-        'guild_id',
+        "code",
+        "reason",
+        "channel_id",
+        "guild_id",
     )
 
     def __init__(
@@ -83,8 +84,8 @@ class VoiceGuildMismatch(ClientException):
     """
 
     __slots__ = (
-        'expected',
-        'received',
+        "expected",
+        "received",
     )
 
     def __init__(self, expt: int, recv: int) -> None:

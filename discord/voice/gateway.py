@@ -22,11 +22,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable, Coroutine
 import logging
+from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
@@ -73,7 +74,7 @@ class VoiceWebsocket(DiscordWebSocket):
         pass
 
     async def send_as_json(self, data: Any) -> None:
-        _log.debug('Sending voice websocket frame: %s', data)
+        _log.debug("Sending voice websocket frame: %s", data)
         await self.ws.send_str(utils._to_json(data))
 
     send_heartbeat = send_as_json
@@ -88,5 +89,5 @@ class VoiceWebsocket(DiscordWebSocket):
                 self.ws,
                 channel_id=self.state.channel_id,
                 guild_id=self.state.guild_id,
-                reason='The library attempted a resume when it was not expected',
+                reason="The library attempted a resume when it was not expected",
             )
