@@ -437,9 +437,7 @@ class SelectMenu(Component):
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
-        self.required: bool | None = data.get(
-            "required"
-        )
+        self.required: bool | None = data.get("required")
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
