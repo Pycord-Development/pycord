@@ -1783,7 +1783,7 @@ class Messageable:
             f"Messageable.pins() returning a list of Message",
             since="2.7",
             removed="3.0",
-            reference="The behavior of fetch_pins"
+            reference="The behavior of fetch_pins",
         )
         channel = await self._get_channel()
         state = self._state
