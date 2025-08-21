@@ -920,7 +920,9 @@ class HTTPClient:
 
         return self.request(r, params=params)
 
-    def legacy_pins_from(self, channel_id: Snowflake) -> Response[list[message.Message]]:
+    def legacy_pins_from(
+        self, channel_id: Snowflake
+    ) -> Response[list[message.Message]]:
         return self.request(
             Route("GET", "/channels/{channel_id}/pins", channel_id=channel_id)
         )

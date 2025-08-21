@@ -180,7 +180,7 @@ class MessagePin(TypedDict):
     message: Message
 
 
-class MessagePinPagination(TypedDict):    
+class MessagePinPagination(TypedDict):
     items: list[MessagePin]
     has_more: bool
 

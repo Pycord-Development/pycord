@@ -84,9 +84,9 @@ if TYPE_CHECKING:
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
     from .types.message import MessageCall as MessageCallPayload
+    from .types.message import MessagePin as MessagePinPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import MessageSnapshot as MessageSnapshotPayload
-    from .types.message import MessagePin as MessagePinPayload
     from .types.message import Reaction as ReactionPayload
     from .types.poll import Poll as PollPayload
     from .types.snowflake import SnowflakeList
@@ -800,12 +800,17 @@ class MessagePin:
     .. versionadded:: 2.7
     """
 
-    def __init__(self, state: ConnectionState, channel: MessageableChannel, data: MessagePinPayload):
+    def __init__(
+        self,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePinPayload,
+    ):
         self._state: ConnectionState = state
-        self._pinned_at: datetime.datetime = utils.parse_time(
-            data["pinned_at"]
+        self._pinned_at: datetime.datetime = utils.parse_time(data["pinned_at"])
+        self._message: Message = state.create_message(
+            channel=channel, data=data["message"]
         )
-        self._message: Message = state.create_message(channel=channel, data=data["message"])
 
     @property
     def message(self) -> Message:
