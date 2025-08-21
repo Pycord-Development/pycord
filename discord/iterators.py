@@ -1269,3 +1269,10 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         from .message import MessagePin
 
         return MessagePin(state=self.channel._state, channel=self.channel, data=data)
+
+    async def retrieve_inner(self) -> list[Message]:
+        pins = await self.flatten()
+        return [p.message for p in pins]
+
+    def __await__(self) -> asyncio.Task:
+        return asyncio.create_task(self.retrieve_inner())
