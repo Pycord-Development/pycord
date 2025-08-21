@@ -1248,7 +1248,6 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
         limit = 50 if self.limit is None else max(self.limit, 50)
         data = await self.endpoint(self.channel_id, before=self.before, limit=limit)
 
-        # This stuff is obviously WIP because 'members' is always empty
         pins: list[MessagePinPayload] = data.get("items", [])
         for d in pins:
             self.queue.put_nowait(self.create_pin(d))
