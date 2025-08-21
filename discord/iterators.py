@@ -1249,7 +1249,7 @@ class MessagePinIterator(_AsyncIterator["MessagePin"]):
             channel = await self._channel._get_channel()
             self.channel = channel
 
-        limit = 50 if self.limit is None else max(self.limit, 50)
+        limit = 50 if self.limit is None else min(self.limit, 50)
         data = await self.endpoint(self.channel.id, before=self.before, limit=limit)
 
         pins: list[MessagePinPayload] = data.get("items", [])
