@@ -22,65 +22,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
-
 from __future__ import annotations
 
-from typing import Literal
-
-from typing_extensions import NotRequired, TypedDict
-
-from .member import MemberWithUser
-from .snowflake import Snowflake
-
-SupportedModes = Literal[
-    "xsalsa20_poly1305_lite",
-    "xsalsa20_poly1305_suffix",
-    "xsalsa20_poly1305",
-    "aead_xchacha20_poly1305_rtpsize",
-]
+from ._types import VoiceProtocol
 
 
-class VoiceState(TypedDict):
-    member: NotRequired[MemberWithUser]
-    self_stream: NotRequired[bool]
-    user_id: Snowflake
-    session_id: str
-    deaf: bool
-    mute: bool
-    self_deaf: bool
-    self_mute: bool
-    self_video: bool
-    suppress: bool
-    request_to_speak_timestamp: str | None
-    channel_id: Snowflake | None
-    guild_id: NotRequired[Snowflake]
+class VoiceClient(VoiceProtocol):
+    """Represents a Discord voice connection.
 
+    You do not create these, you typically get them from e.g. :meth:`VoiceChannel.connect`.
 
-class VoiceRegion(TypedDict):
-    id: str
-    name: str
-    vip: bool
-    optimal: bool
-    deprecated: bool
-    custom: bool
+    Attributes
+    ----------
+    session_id: :class:`str`
+        The voice connection session ID. You should not share this.
+    token: :class:`str`
+        The voice connection token. You should not share this.
+    endpoint: :class:`str`
+        The endpoint the current client is connected to.
+    channel: :class:`abc.Connectable`
+        The voice channel connected to.
+    loop: :class:`asyncio.AbstractEventLoop`
+        The event loop that the voice client is running on.
 
-
-class VoiceServerUpdate(TypedDict):
-    token: str
-    guild_id: Snowflake
-    endpoint: str | None
-
-
-class VoiceIdentify(TypedDict):
-    server_id: Snowflake
-    user_id: Snowflake
-    session_id: str
-    token: str
-
-
-class VoiceReady(TypedDict):
-    ssrc: int
-    ip: str
-    port: int
-    modes: list[SupportedModes]
-    heartbeat_interval: int
+    Warning
+    -------
+    In order to use PCM based AudioSources, you must have the opus library
+    installed on your system and loaded through :func:`opus.load_opus`.
+    Otherwise, your AudioSources must be opus encoded (e.g. using :class:`FFmpegOpusAudio`)
+    or the library will not be able to transmit audio.
+    """

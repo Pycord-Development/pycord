@@ -25,14 +25,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from collections.abc import ItemsView, KeysView, ValuesView
 import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
+from . import utils
 
 if TYPE_CHECKING:
-    from .abc import MessageableChannel
+    from .abc import MessageableChannel, GuildChannel
     from .guild import Guild
     from .member import Member
     from .message import Message
@@ -59,6 +61,8 @@ if TYPE_CHECKING:
         ThreadUpdateEvent,
         TypingEvent,
         VoiceChannelStatusUpdateEvent,
+        VoiceServerUpdateEvent,
+        VoiceStateEvent,
     )
     from .user import User
 
@@ -81,12 +85,16 @@ __all__ = (
     "RawAuditLogEntryEvent",
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
+    "RawVoiceServerUpdateEvent",
+    "RawVoiceStateUpdateEvent",
 )
 
 
 class _RawReprMixin:
+    __slots__: tuple[str, ...]
+
     def __repr__(self) -> str:
-        value = " ".join(f"{attr}={getattr(self, attr)!r}" for attr in self.__slots__)
+        value = " ".join(f"{attr}={getattr(self, attr)!r}" for attr in self.__slots__ if not attr.startswith('_'))
         return f"<{self.__class__.__name__} {value}>"
 
 
@@ -841,3 +849,188 @@ class RawMessagePollVoteEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+# this is for backwards compatibility because VoiceProtocol.on_voice_..._update
+# passed the raw payload instead of a raw object. Emit deprecation warning.
+class _PayloadLike(_RawReprMixin):
+    _raw_data: dict[str, Any]
+
+    @utils.deprecated(
+        'the attributes',
+        '2.7',
+        '3.0',
+    )
+    def __getitem__(self, key: str) -> Any:
+        return self._raw_data[key]
+
+    @utils.deprecated(
+        'the attributes',
+        '2.7',
+        '3.0',
+    )
+    def get(self, key: str, default: Any = None) -> Any:
+        """Gets an item from this raw event, and returns its value or ``default``.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.get(key, default)
+
+    @utils.deprecated(
+        'the attributes',
+        '2.7',
+        '3.0',
+    )
+    def items(self) -> ItemsView:
+        """Returns the (key, value) pairs of this raw event.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.items()
+
+    @utils.deprecated(
+        'the attributes',
+        '2.7',
+        '3.0',
+    )
+    def values(self) -> ValuesView:
+        """Returns the values of this raw event.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.values()
+
+    @utils.deprecated(
+        'the attributes',
+        '2.7',
+        '3.0',
+    )
+    def keys(self) -> KeysView:
+        """Returns the keys of this raw event.
+
+        .. deprecated:: 2.7
+            Use the attributes instead.
+        """
+        return self._raw_data.keys()
+
+
+class RawVoiceStateUpdateEvent(_PayloadLike):
+    """Represents the payload for a :meth:`VoiceProtocol.on_voice_state_update` event.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    deaf: :class:`bool`
+        Whether the user is guild deafened.
+    mute: :class:`bool`
+        Whether the user is guild muted.
+    self_mute: :class:`bool`
+        Whether the user has muted themselves by their own accord.
+    self_deaf: :class:`bool`
+        Whether the user has deafened themselves by their own accord.
+    self_stream: :class:`bool`
+        Whether the user is currently streaming via the 'Go Live' feature.
+    self_video: :class:`bool`
+        Whether the user is currently broadcasting video.
+    suppress: :class:`bool`
+        Whether the user is suppressed from speaking in a stage channel.
+    requested_to_speak_at: Optional[:class:`datetime.datetime`]
+        An aware datetime object that specifies when a member has requested to speak
+        in a stage channel. It will be ``None`` if they are not requesting to speak
+        anymore or have been accepted to.
+    afk: :class:`bool`
+        Whether the user is connected on the guild's AFK channel.
+    channel: Optional[Union[:class:`VoiceChannel`, :class:`StageChannel`]]
+        The voice channel that the user is currently connected to. ``None`` if the user
+        is not currently in a voice channel.
+
+        There are certain scenarios in which this is impossible to be ``None``.
+    session_id: :class:`str`
+        The voice connection session ID.
+    guild_id: Optional[:class:`int`]
+        The guild ID the user channel is from.
+    channel_id: Optional[:class:`int`]
+        The channel ID the user is connected to. Or ``None`` if not connected to any.
+    """
+
+    __slots__ = (
+        'session_id',
+        'mute',
+        'deaf',
+        'self_mute',
+        'self_deaf',
+        'self_stream',
+        'self_video',
+        'suppress',
+        'requested_to_speak_at',
+        'afk',
+        'channel',
+        'guild_id',
+        'channel_id',
+        '_state',
+        '_raw_data',
+    )
+
+    def __init__(self, *, data: VoiceStateEvent, state: ConnectionState) -> None:
+        self.session_id: str = data['session_id']
+        self._state: ConnectionState = state
+
+        self.self_mute: bool = data.get('self_mute', False)
+        self.self_deaf: bool = data.get('self_deaf', False)
+        self.mute: bool = data.get('mute', False)
+        self.deaf: bool = data.get('deaf', False)
+        self.suppress: bool = data.get('suppress', False)
+        self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(
+            data.get('request_to_speak_timestamp')
+        )
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.channel_id: int | None = utils._get_as_snowflake(data, 'channel_id')
+        self._raw_data: VoiceStateEvent = data
+
+    @property
+    def guild(self) -> Guild | None:
+        """Returns the guild channel the user is connected to, or ``None``."""
+        return self._state._get_guild(self.guild_id)
+
+    @property
+    def channel(self) -> GuildChannel | None:
+        """Returns the channel the user is connected to, or ``None``."""
+        return self._state.get_channel(self.channel_id)  # type: ignore
+
+
+class RawVoiceServerUpdateEvent(_PayloadLike):
+    """Represents the payload for a :meth:`VoiceProtocol.on_voice_server_update` event.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    token: :class:`str`
+        The voice connection token. This should not be shared.
+    guild_id: :class:`int`
+        The guild ID this token is part from.
+    endpoint: Optional[:class:`str`]
+        The voice server host to connect to.
+    """
+
+    __slots__ = (
+        'token',
+        'guild_id',
+        'endpoint',
+        '_raw_data',
+        '_state',
+    )
+
+    def __init__(self, *, data: VoiceServerUpdateEvent, state: ConnectionState) -> None:
+        self._state: ConnectionState = state
+        self.guild_id: int = int(data['guild_id'])
+        self.token: str = data['token']
+        self.endpoint: str | None = data['endpoint']
+
+    @property
+    def guild(self) -> Guild | None:
+        """Returns the guild this server update is from."""
+        return self._state._get_guild(self.guild_id)

@@ -33,6 +33,10 @@ from .member import Member
 from .snowflake import Snowflake
 from .threads import Thread, ThreadMember
 from .user import User
+from .voice import (
+    VoiceState as VoiceStateEvent,
+    VoiceServerUpdate as VoiceServerUpdateEvent,
+)
 
 
 class _MessageEventOptional(TypedDict, total=False):
