@@ -1796,7 +1796,7 @@ class Messageable:
         Usage ::
 
             counter = 0
-            async for pin in channel.fetch_pins(limit=250):
+            async for pin in channel.pins(limit=250):
                 if pin.message.author == client.user:
                     counter += 1
 
