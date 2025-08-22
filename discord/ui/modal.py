@@ -200,10 +200,13 @@ class Modal:
         components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
             labels = False
+            toplevel = False
             children = []
             for item in group:
                 if item.uses_label() or isinstance(item, Select):
                     labels = True
+                elif isinstance(item, (TextDisplay, )):
+                    toplevel = True
                 children.append(item)
             if not children:
                 continue
@@ -220,6 +223,8 @@ class Modal:
                             "description": item.description,
                         }
                     )
+            elif toplevel:
+                components += [item.to_component_dict() for item in children]
             else:
                 components.append(
                     {
