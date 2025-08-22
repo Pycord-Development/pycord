@@ -205,7 +205,7 @@ class Modal:
             for item in group:
                 if item.uses_label() or isinstance(item, Select):
                     labels = True
-                elif isinstance(item, (TextDisplay, )):
+                elif isinstance(item, (TextDisplay,)):
                     toplevel = True
                 children.append(item)
             if not children:
