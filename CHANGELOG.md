@@ -172,8 +172,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
-- Deprecated `Messageable.pins()` returning a list of `Message`; it 
-  should be used as an iterator of `MessagePin` instead.
+- Deprecated `Messageable.pins()` returning a list of `Message`; it should be used as an
+  iterator of `MessagePin` instead.
   ([#2872](https://github.com/Pycord-Development/pycord/pull/2872))
 
 ### Removed
