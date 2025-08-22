@@ -82,7 +82,7 @@ class Select(Item[V]):
 
     .. versionchanged:: 2.7
 
-        :attr:`discord.ComponentType.string_select` can now be sent in :class:`discord.ui.Modal`.
+        Can now be sent in :class:`discord.ui.Modal`.
 
     Parameters
     ----------
@@ -168,12 +168,6 @@ class Select(Item[V]):
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
-        if (
-            label or description or required
-        ) and select_type is not ComponentType.string_select:
-            raise InvalidArgument(
-                "label, description and required parameters are only valid for selects in modals"
-            )
         if label and len(label) > 45:
             raise ValueError("label must be 45 characters or fewer")
         if description and len(description) > 100:
