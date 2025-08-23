@@ -9,8 +9,8 @@ from ..enums import ComponentType, InputTextStyle
 __all__ = ("InputText",)
 
 if TYPE_CHECKING:
-    from ..types.components import InputText as InputTextComponentPayload
     from ..interactions import Interaction
+    from ..types.components import InputText as InputTextComponentPayload
 
 
 class InputText:
