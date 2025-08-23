@@ -506,6 +506,24 @@ of :class:`enum.Enum`.
 
         Represents a channel select component.
 
+.. class:: SelectMenuDefaultValueType
+
+    Represents the type of a select menu default value.
+
+    .. versionadded:: 2.7.1
+
+    .. attribute:: channel
+
+        Represents a select menu default value of type channel.
+
+    .. attribute:: role
+
+        Represents a select menu default value of type role.
+
+    .. attribute:: user
+
+        Represents a select menu default value of type user.
+
 .. class:: ButtonStyle
 
     Represents the style of the button component.

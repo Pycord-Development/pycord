@@ -27,8 +27,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
 
+from .abc import GuildChannel
 from .asset import AssetMixin
 from .colour import Colour
+from .emoji import AppEmoji, GuildEmoji
 from .enums import (
     ButtonStyle,
     ChannelType,
@@ -38,11 +40,14 @@ from .enums import (
     try_enum,
 )
 from .flags import AttachmentFlags
+from .member import Member
 from .partial_emoji import PartialEmoji, _EmojiTag
+from .role import Role
+from .threads import Thread
+from .user import User
 from .utils import MISSING, get_slots
 
 if TYPE_CHECKING:
-    from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import BaseComponent as BaseComponentPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
@@ -53,7 +58,9 @@ if TYPE_CHECKING:
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
     from .types.components import SectionComponent as SectionComponentPayload
+    from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenu as SelectMenuPayload
+    from .types.components import SelectMenuDefaultValueType
     from .types.components import SelectOption as SelectOptionPayload
     from .types.components import SeparatorComponent as SeparatorComponentPayload
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
@@ -66,6 +73,7 @@ __all__ = (
     "Button",
     "SelectMenu",
     "SelectOption",
+    "SelectDefaultValue",
     "InputText",
     "Section",
     "TextDisplay",
@@ -399,6 +407,9 @@ class SelectMenu(Component):
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
         Whether the select is disabled or not.
+    default_values: List[:class:`SelectDefaultValue`]
+        A list of options that are selected by default for select menus of type user, role, channel, and mentionable.
+        Will be an empty list for the component type :attr:`ComponentType.string_select`.
     """
 
     __slots__: tuple[str, ...] = (
@@ -409,6 +420,7 @@ class SelectMenu(Component):
         "options",
         "channel_types",
         "disabled",
+        "default_values",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -428,6 +440,24 @@ class SelectMenu(Component):
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
+        _default_values = []
+        for d in data.get("default_values", []):
+            if isinstance(d, SelectDefaultValue):
+                _default_values.append(d)
+            elif isinstance(d, dict) and "id" in d and "type" in d:
+                _default_values.append(SelectDefaultValue(id=d["id"], type=d["type"]))
+            elif isinstance(d, (User, Member)):
+                _default_values.append(SelectDefaultValue(id=d.id, type="user"))
+            elif isinstance(d, Role):
+                _default_values.append(SelectDefaultValue(id=d.id, type="role"))
+            elif isinstance(d, (GuildChannel, Thread)):
+                _default_values.append(SelectDefaultValue(id=d.id, type="channel"))
+            else:
+                raise TypeError(
+                    f"expected SelectDefaultValue, User, Member, Role, GuildChannel or Mentionable, not {d.__class__}"
+                )
+
+        self.default_values: list[SelectDefaultValue] = _default_values
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -445,6 +475,8 @@ class SelectMenu(Component):
             payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.placeholder:
             payload["placeholder"] = self.placeholder
+        if self.type is not ComponentType.string_select and self.default_values:
+            payload["default_values"] = [dv.to_dict() for dv in self.default_values]
 
         return payload
 
@@ -564,6 +596,54 @@ class SelectOption:
 
         if self.description:
             payload["description"] = self.description
+
+        return payload
+
+
+class SelectDefaultValue:
+    """Represents a :class:`discord.SelectMenu` object's default option for user, role, channel, and mentionable select
+    menu types.
+
+    These can be created by users.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The snowflake ID of the default option.
+    type: :class:`SelectMenuDefaultValueType`
+        The type of the default value. This is not displayed to users.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "id",
+        "type",
+    )
+
+    def __init__(self, *, id: int, type: SelectMenuDefaultValueType) -> None:
+        self.id = id
+        self.type = type
+
+    def __repr__(self) -> str:
+        return "<SelectDefaultValue" f" id={self.id!r} type={self.type!r}>"
+
+    def __str__(self) -> str:
+        return f"{self.id} {self.type}"
+
+    @classmethod
+    def from_dict(cls, data: SelectDefaultValuePayload) -> SelectDefaultValue:
+
+        return cls(
+            id=data["id"],
+            type=data["type"],
+        )
+
+    def to_dict(self) -> SelectDefaultValuePayload:
+        payload: SelectDefaultValuePayload = {
+            "id": self.id,
+            "type": self.type.value,
+        }
 
         return payload
 
