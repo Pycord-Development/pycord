@@ -247,5 +247,8 @@ class InputText:
     def refresh_state(self, data) -> None:
         self._input_value = data["value"]
 
+    def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
+        return self.refresh_state(data)
+
     def uses_label(self) -> bool:
         return self.description is not None

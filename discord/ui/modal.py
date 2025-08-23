@@ -406,15 +406,14 @@ class ModalStore:
                     or (
                         [parent_component.get("component")]
                         if parent_component.get("component")
-                        else []
+                        else [parent_component]
                     )
                 )
             ]
             for component in components:
                 for child in value.children:
-                    if child.custom_id == component["custom_id"]:  # type: ignore
-                        child.refresh_state(component)
-                        break
+                    child.refresh_from_modal(interaction, component)
+                    break
             await value.callback(interaction)
             self.remove_modal(value, user_id)
         except Exception as e:

@@ -470,6 +470,10 @@ class Select(Item[V]):
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
+    def refresh_from_modal(self, interaction: Interaction | dict, data: dict) -> None:
+        self._selected_values = data.get("values", [])
+        self._interaction = interaction
+
     @classmethod
     def from_component(cls: type[S], component: SelectMenu) -> S:
         return cls(

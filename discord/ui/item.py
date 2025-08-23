@@ -90,6 +90,9 @@ class Item(Generic[V]):
     def refresh_state(self, interaction: Interaction) -> None:
         return None
 
+    def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
+        return None
+
     @classmethod
     def from_component(cls: type[I], component: Component) -> I:
         return cls()
