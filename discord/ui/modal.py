@@ -410,10 +410,8 @@ class ModalStore:
                     )
                 )
             ]
-            for component in components:
-                for child in value.children:
-                    child.refresh_from_modal(interaction, component)
-                    break
+            for component, child in zip(components, value.children):
+                child.refresh_from_modal(interaction, component)
             await value.callback(interaction)
             self.remove_modal(value, user_id)
         except Exception as e:
