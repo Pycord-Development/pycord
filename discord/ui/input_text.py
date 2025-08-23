@@ -10,6 +10,7 @@ __all__ = ("InputText",)
 
 if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
+    from ..interactions import Interaction
 
 
 class InputText:
