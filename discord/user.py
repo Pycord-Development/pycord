@@ -29,13 +29,13 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
 
-from .primary_guild import PrimaryGuild
 from .asset import Asset
 from .collectibles import Nameplate
 from .colour import Colour
 from .flags import PublicUserFlags
 from .iterators import EntitlementIterator
 from .monetization import Entitlement
+from .primary_guild import PrimaryGuild
 from .utils import MISSING, _bytes_to_base64_data, snowflake_time
 
 if TYPE_CHECKING:

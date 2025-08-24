@@ -56,7 +56,7 @@ class PrimaryGuild:
 
     def __repr__(self) -> str:
         return f"<PrimaryGuild identity_guild_id={self.identity_guild_id} identity_enabled={self.identity_enabled} tag={self.tag}>"
-        
+
     @property
     def badge(self) -> Asset | None:
         """Returns the badge asset, if available.
@@ -68,7 +68,9 @@ class PrimaryGuild:
         """
         if self._badge is None:
             return None
-        return Asset._from_user_primary_guild_tag(self._state, self.identity_guild_id, self._badge)
+        return Asset._from_user_primary_guild_tag(
+            self._state, self.identity_guild_id, self._badge
+        )
 
 
 __all__ = ("PrimaryGuild",)

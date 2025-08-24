@@ -202,7 +202,9 @@ class Asset(AssetMixin):
         )
 
     @classmethod
-    def _from_user_primary_guild_tag(cls, state, identity_guild_id: int, badge_id: str) -> Asset:
+    def _from_user_primary_guild_tag(
+        cls, state, identity_guild_id: int, badge_id: str
+    ) -> Asset:
         """Creates an Asset for a user's primary guild (tag) badge.
 
         Parameters
