@@ -154,7 +154,11 @@ class BaseUser(_UserTag):
             self.nameplate = Nameplate(data=nameplate, state=self._state)
         else:
             self.nameplate = None
-        self.primary_guild = data.get("primary_guild", None)
+        primary_guild = data.get("primary_guild", None)
+        if primary_guild:
+            self.primary_guild = PrimaryGuild(data=primary_guild, state=self._state)
+        else:
+            self.primary_guild = None
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
