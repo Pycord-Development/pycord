@@ -155,7 +155,7 @@ class BaseUser(_UserTag):
         else:
             self.nameplate = None
         primary_guild = data.get("primary_guild", None)
-        if primary_guild:
+        if primary_guild and primary_guild.get("identity_enabled"):
             self.primary_guild = PrimaryGuild(data=primary_guild, state=self._state)
         else:
             self.primary_guild = None
