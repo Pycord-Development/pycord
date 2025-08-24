@@ -62,9 +62,6 @@ class PrimaryGuild:
         """Returns the badge asset, if available.
 
         .. versionadded:: 2.7
-
-        .. note::
-            This information is only available via :meth:`Client.fetch_user`.
         """
         if self._badge is None:
             return None
