@@ -29,6 +29,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
 
+from .primary_guild import PrimaryGuild
 from .asset import Asset
 from .collectibles import Nameplate
 from .colour import Colour
@@ -78,6 +79,7 @@ class BaseUser(_UserTag):
         "_avatar_decoration",
         "_state",
         "nameplate",
+        "primary_guild",
     )
 
     if TYPE_CHECKING:
@@ -94,6 +96,7 @@ class BaseUser(_UserTag):
         _avatar_decoration: dict | None
         _public_flags: int
         nameplate: Nameplate | None
+        primary_guild: PrimaryGuild | None
 
     def __init__(
         self, *, state: ConnectionState, data: UserPayload | PartialUserPayload
@@ -151,6 +154,7 @@ class BaseUser(_UserTag):
             self.nameplate = Nameplate(data=nameplate, state=self._state)
         else:
             self.nameplate = None
+        self.primary_guild = data.get("primary_guild", None)
         self._public_flags = data.get("public_flags", 0)
         self.bot = data.get("bot", False)
         self.system = data.get("system", False)
@@ -170,6 +174,7 @@ class BaseUser(_UserTag):
         self.bot = user.bot
         self._state = user._state
         self._public_flags = user._public_flags
+        self.primary_guild = user.primary_guild
 
         return self
 

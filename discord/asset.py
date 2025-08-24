@@ -202,6 +202,31 @@ class Asset(AssetMixin):
         )
 
     @classmethod
+    def _from_user_primary_guild_tag(cls, state, identity_guild_id: int, badge_id: str) -> Asset:
+        """Creates an Asset for a user's primary guild (tag) badge.
+
+        Parameters
+        ----------
+        state: ConnectionState
+            The connection state.
+        identity_guild_id: int
+            The ID of the guild.
+        badge_id: str
+            The badge hash/id.
+
+        Returns
+        -------
+        :class:`Asset`
+            The primary guild badge asset.
+        """
+        return cls(
+            state,
+            url=f"{Asset.BASE}/guild-tag-badges/{identity_guild_id}/{badge_id}.png?size=256",
+            key=badge_id,
+            animated=False,
+        )
+
+    @classmethod
     def _from_guild_avatar(
         cls, state, guild_id: int, member_id: int, avatar: str
     ) -> Asset:
