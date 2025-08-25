@@ -325,7 +325,7 @@ def deprecated(
     stacklevel: int = 3,
     *,
     use_qualname: bool = True,
-) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
+) -> Callable[[Callable[P, T]], Callable[P, T]]:
     """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
     the decorated function is called.
 
@@ -350,7 +350,7 @@ def deprecated(
         will display as ``login``. Defaults to ``True``.
     """
 
-    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
+    def actual_decorator(func: Callable[P, T]) -> Callable[P, T]:
         @functools.wraps(func)
         def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
             warn_deprecated(
