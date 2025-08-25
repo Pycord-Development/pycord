@@ -193,6 +193,7 @@ class Interaction:
         "view",
         "modal",
         "attachment_size_limit",
+        "_raw_data",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -215,6 +216,7 @@ class Interaction:
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
+        self._raw_data: InteractionPayload = data
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
         self.data: InteractionData | None = data.get("data")
