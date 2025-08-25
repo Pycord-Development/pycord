@@ -33,6 +33,7 @@ from typing import (
     AsyncIterator,
     Awaitable,
     Callable,
+    Generator,
     List,
     TypeVar,
     Union,
@@ -41,7 +42,7 @@ from typing import (
 from .audit_logs import AuditLogEntry
 from .errors import NoMoreItems
 from .object import Object
-from .utils import maybe_coroutine, snowflake_time, time_snowflake
+from .utils import maybe_coroutine, snowflake_time, time_snowflake, warn_deprecated
 
 __all__ = (
     "ReactionIterator",
@@ -56,15 +57,17 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake
+    from .channel import MessageableChannel
     from .guild import BanEntry, Guild
     from .member import Member
-    from .message import Message
+    from .message import Message, MessagePin
     from .monetization import Entitlement, Subscription
     from .scheduled_events import ScheduledEvent
     from .threads import Thread
     from .types.audit_log import AuditLog as AuditLogPayload
     from .types.guild import Guild as GuildPayload
     from .types.message import Message as MessagePayload
+    from .types.message import MessagePin as MessagePinPayload
     from .types.monetization import Entitlement as EntitlementPayload
     from .types.monetization import Subscription as SubscriptionPayload
     from .types.threads import Thread as ThreadPayload
@@ -1198,3 +1201,85 @@ class SubscriptionIterator(_AsyncIterator["Subscription"]):
                 self.limit -= retrieve
             self.after = Object(id=int(data[0]["id"]))
         return data
+
+
+class MessagePinIterator(_AsyncIterator["MessagePin"]):
+    def __init__(
+        self,
+        channel: MessageableChannel,
+        limit: int | None,
+        before: Snowflake | datetime.datetime | None = None,
+    ):
+        self._channel = channel
+        self.limit = limit
+        self.http = channel._state.http
+
+        self.before: str | None
+        if before is None:
+            self.before = None
+        elif isinstance(before, datetime.datetime):
+            self.before = before.isoformat()
+        else:
+            self.before = snowflake_time(before.id).isoformat()
+
+        self.update_before: Callable[[MessagePinPayload], str] = self.get_last_pinned
+
+        self.endpoint = self.http.pins_from
+
+        self.queue: asyncio.Queue[MessagePin] = asyncio.Queue()
+        self.has_more: bool = True
+
+    async def next(self) -> MessagePin:
+        if self.queue.empty():
+            await self.fill_queue()
+
+        try:
+            return self.queue.get_nowait()
+        except asyncio.QueueEmpty:
+            raise NoMoreItems()
+
+    @staticmethod
+    def get_last_pinned(data: MessagePinPayload) -> str:
+        return data["pinned_at"]
+
+    async def fill_queue(self) -> None:
+        if not self.has_more:
+            raise NoMoreItems()
+
+        if not hasattr(self, "channel"):
+            channel = await self._channel._get_channel()
+            self.channel = channel
+
+        limit = 50 if self.limit is None else min(self.limit, 50)
+        data = await self.endpoint(self.channel.id, before=self.before, limit=limit)
+
+        pins: list[MessagePinPayload] = data.get("items", [])
+        for d in pins:
+            self.queue.put_nowait(self.create_pin(d))
+
+        self.has_more = data.get("has_more", False)
+        if self.limit is not None:
+            self.limit -= len(pins)
+            if self.limit <= 0:
+                self.has_more = False
+
+        if self.has_more:
+            self.before = self.update_before(pins[-1])
+
+    def create_pin(self, data: MessagePinPayload) -> MessagePin:
+        from .message import MessagePin
+
+        return MessagePin(state=self.channel._state, channel=self.channel, data=data)
+
+    async def retrieve_inner(self) -> list[Message]:
+        pins = await self.flatten()
+        return [p.message for p in pins]
+
+    def __await__(self) -> Generator[Any, Any, MessagePin]:
+        warn_deprecated(
+            f"Messageable.pins() returning a list of Message",
+            since="2.7",
+            removed="3.0",
+            reference="The documentation of pins()",
+        )
+        return self.retrieve_inner().__await__()

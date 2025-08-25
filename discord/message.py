@@ -84,6 +84,7 @@ if TYPE_CHECKING:
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
     from .types.message import MessageCall as MessageCallPayload
+    from .types.message import MessagePin as MessagePinPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
@@ -791,6 +792,38 @@ def flatten_handlers(cls):
     cls._HANDLERS = handlers
     cls._CACHED_SLOTS = [attr for attr in cls.__slots__ if attr.startswith("_cs_")]
     return cls
+
+
+class MessagePin:
+    """Represents information about a pinned message.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(
+        self,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePinPayload,
+    ):
+        self._state: ConnectionState = state
+        self._pinned_at: datetime.datetime = utils.parse_time(data["pinned_at"])
+        self._message: Message = state.create_message(
+            channel=channel, data=data["message"]
+        )
+
+    @property
+    def message(self) -> Message:
+        """The pinned message."""
+        return self._message
+
+    @property
+    def pinned_at(self) -> datetime.datetime:
+        """An aware timestamp of when the message was pinned."""
+        return self._pinned_at
+
+    def __repr__(self) -> str:
+        return f"<MessagePin pinned_at={self.pinned_at!r} message={self.message!r}>"
 
 
 @flatten_handlers
@@ -1843,7 +1876,7 @@ class Message(Hashable):
 
         Pins the message.
 
-        You must have the :attr:`~Permissions.manage_messages` permission to do
+        You must have the :attr:`~Permissions.pin_messages` permission to do
         this in a non-private channel context.
 
         Parameters
@@ -1872,7 +1905,7 @@ class Message(Hashable):
 
         Unpins the message.
 
-        You must have the :attr:`~Permissions.manage_messages` permission to do
+        You must have the :attr:`~Permissions.pin_messages` permission to do
         this in a non-private channel context.
 
         Parameters

@@ -48,7 +48,7 @@ from .errors import ClientException, InvalidArgument
 from .file import File, VoiceMessage
 from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
-from .iterators import HistoryIterator
+from .iterators import HistoryIterator, MessagePinIterator
 from .mentions import AllowedMentions
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
@@ -1754,32 +1754,64 @@ class Messageable:
         data = await self._state.http.get_message(channel.id, id)
         return self._state.create_message(channel=channel, data=data)
 
-    async def pins(self) -> list[Message]:
-        """|coro|
+    def pins(
+        self,
+        *,
+        limit: int | None = 50,
+        before: SnowflakeTime | None = None,
+    ) -> MessagePinIterator:
+        """Returns a :class:`~discord.MessagePinIterator` that enables receiving the destination's pinned messages.
 
-        Retrieves all messages that are currently pinned in the channel.
+        You must have :attr:`~discord.Permissions.read_message_history` permissions to use this.
 
-        .. note::
+        .. warning::
 
-            Due to a limitation with the Discord API, the :class:`.Message`
-            objects returned by this method do not contain complete
-            :attr:`.Message.reactions` data.
+            Starting from version 3.0, `await channel.pins()` will no longer return a list of :class:`Message`. See examples below for new usage instead.
 
-        Returns
-        -------
-        List[:class:`~discord.Message`]
-            The messages that are currently pinned.
+        Parameters
+        ----------
+        limit: Optional[:class:`int`]
+            The number of pinned messages to retrieve.
+            If ``None``, retrieves every pinned message in the channel.
+        before: Optional[Union[:class:`~discord.abc.Snowflake`, :class:`datetime.datetime`]]
+            Retrieve messages pinned before this datetime.
+            If a datetime is provided, it is recommended to use a UTC aware datetime.
+            If the datetime is naive, it is assumed to be local time.
+
+        Yields
+        ------
+        :class:`~discord.MessagePin`
+            The pinned message.
 
         Raises
         ------
+        ~discord.Forbidden
+            You do not have permissions to get pinned messages.
         ~discord.HTTPException
-            Retrieving the pinned messages failed.
-        """
+            The request to get pinned messages failed.
 
-        channel = await self._get_channel()
-        state = self._state
-        data = await state.http.pins_from(channel.id)
-        return [state.create_message(channel=channel, data=m) for m in data]
+        Examples
+        --------
+
+        Usage ::
+
+            counter = 0
+            async for pin in channel.pins(limit=250):
+                if pin.message.author == client.user:
+                    counter += 1
+
+        Flattening into a list: ::
+
+            pins = await channel.pins(limit=None).flatten()
+            # pins is now a list of MessagePin...
+
+        All parameters are optional.
+        """
+        return MessagePinIterator(
+            self,
+            limit=limit,
+            before=before,
+        )
 
     def can_send(self, *objects) -> bool:
         """Returns a :class:`bool` indicating whether you have the permissions to send the object(s).
