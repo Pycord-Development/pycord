@@ -727,6 +727,11 @@ class Member(discord.abc.Messageable, _UserTag):
             > datetime.datetime.now(datetime.timezone.utc)
         )
 
+    @property
+    def jump_url(self) -> str:
+        """Returns a URL that allows the client to jump to the user."""
+        return self._user.jump_url
+
     async def ban(
         self,
         *,
