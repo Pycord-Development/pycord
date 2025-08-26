@@ -39,6 +39,8 @@ __all__ = ("Asset",)
 if TYPE_CHECKING:
     ValidStaticFormatTypes = Literal["webp", "jpeg", "jpg", "png"]
     ValidAssetFormatTypes = Literal["webp", "jpeg", "jpg", "png", "gif"]
+    from .state import ConnectionState
+
 
 VALID_STATIC_FORMATS = frozenset({"jpeg", "jpg", "webp", "png"})
 VALID_ASSET_FORMATS = VALID_STATIC_FORMATS | {"gif"}
@@ -203,7 +205,7 @@ class Asset(AssetMixin):
 
     @classmethod
     def _from_user_primary_guild_tag(
-        cls, state, identity_guild_id: int, badge_id: str
+        cls, state: ConnectionState, identity_guild_id: int, badge_id: str
     ) -> Asset:
         """Creates an Asset for a user's primary guild (tag) badge.
 
