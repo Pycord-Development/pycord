@@ -127,7 +127,7 @@ class RawMessageDeleteEvent(_RawReprMixin):
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.cached_message: Message | None = None
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: MessageDeleteEvent = data
 
 
@@ -156,7 +156,7 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
         self.message_ids: set[int] = {int(x) for x in data.get("ids", [])}
         self.channel_id: int = int(data["channel_id"])
         self.cached_messages: list[Message] = []
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: BulkMessageDeleteEvent = data
 
 
@@ -190,7 +190,7 @@ class RawMessageUpdateEvent(_RawReprMixin):
         self.channel_id: int = int(data["channel_id"])
         self.data: MessageUpdateEvent = data
         self.cached_message: Message | None = None
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
 
 class RawReactionActionEvent(_RawReprMixin):
@@ -263,7 +263,7 @@ class RawReactionActionEvent(_RawReprMixin):
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
         self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: ReactionActionEvent = data
 
 
@@ -289,7 +289,7 @@ class RawReactionClearEvent(_RawReprMixin):
     def __init__(self, data: ReactionClearEvent) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: ReactionClearEvent = data
 
 
@@ -342,7 +342,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
         self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: ReactionClearEmojiEvent = data
 
 
@@ -370,7 +370,9 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     def __init__(self, data: IntegrationDeleteEvent) -> None:
         self.integration_id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
-        self.application_id: int | None = utils._get_as_snowflake(data, 'application_id')
+        self.application_id: int | None = utils._get_as_snowflake(
+            data, "application_id"
+        )
         self.data: IntegrationDeleteEvent = data
 
 
@@ -463,7 +465,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
     def __init__(self, data: VoiceChannelStatusUpdateEvent) -> None:
         self.id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
-        self.status: str | None = data.get('status')
+        self.status: str | None = data.get("status")
         self.data: VoiceChannelStatusUpdateEvent = data
 
 
@@ -499,7 +501,7 @@ class RawTypingEvent(_RawReprMixin):
             data.get("timestamp"), tz=datetime.timezone.utc
         )
         self.member: Member | None = None
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
         self.data: TypingEvent = data
 
 
@@ -555,7 +557,7 @@ class RawScheduledEventSubscription(_RawReprMixin):
 
     def __init__(self, data: ScheduledEventSubscription, event_type: str):
         self.event_id: int = int(data["guild_scheduled_event_id"])  # type: ignore
-        self.user_id: int = int(data["user_id"])   # type: ignore
+        self.user_id: int = int(data["user_id"])  # type: ignore
         self.guild: Guild | None = None
         self.event_type: str = event_type
         self.data: ScheduledEventSubscription = data
@@ -643,16 +645,21 @@ class AutoModActionExecutionEvent:
         self.content: str | None = data.get("content", None)
         self.matched_keyword: str = data["matched_keyword"]  # type: ignore
         self.matched_content: str | None = data.get("matched_content", None)
-        self.channel_id: int | None = utils._get_as_snowflake(data, 'channel_id')
+        self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
         self.channel: MessageableChannel | None = (
-            self.channel_id and self.guild
+            self.channel_id
+            and self.guild
             and self.guild.get_channel_or_thread(self.channel_id)
         )  # type: ignore
         self.member: Member | None = self.guild and self.guild.get_member(self.user_id)
-        self.message_id: int | None = utils._get_as_snowflake(data, 'message_id')
+        self.message_id: int | None = utils._get_as_snowflake(data, "message_id")
         self.message: Message | None = state._get_message(self.message_id)
-        self.alert_system_message_id: int | None = utils._get_as_snowflake(data, 'alert_system_message_id')
-        self.alert_system_message: Message | None = state._get_message(self.alert_system_message_id)
+        self.alert_system_message_id: int | None = utils._get_as_snowflake(
+            data, "alert_system_message_id"
+        )
+        self.alert_system_message: Message | None = state._get_message(
+            self.alert_system_message_id
+        )
         self.data: AutoModActionExecution = data
 
     def __repr__(self) -> str:
@@ -789,7 +796,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         self.answer_id: int = int(data["answer_id"])
         self.data: MessagePollVoteEvent = data
         self.added: bool = added
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
 
 # this is for backwards compatibility because VoiceProtocol.on_voice_..._update
