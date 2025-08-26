@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
 
-__all__ = ("InputText",)
+__all__ = ("InputText", "TextInput")
 
 if TYPE_CHECKING:
     from ..interactions import Interaction
@@ -253,3 +253,5 @@ class InputText:
 
     def uses_label(self) -> bool:
         return self.description is not None
+
+TextInput = InputText
