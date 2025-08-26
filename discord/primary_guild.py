@@ -30,6 +30,8 @@ if TYPE_CHECKING:
 from .asset import Asset
 from .types.primary_guild import PrimaryGuild as PrimaryGuildPayload
 
+__all__ = ("PrimaryGuild",)
+
 
 class PrimaryGuild:
     """
@@ -68,6 +70,3 @@ class PrimaryGuild:
         return Asset._from_user_primary_guild_tag(
             self._state, self.identity_guild_id, self._badge
         )
-
-
-__all__ = ("PrimaryGuild",)
