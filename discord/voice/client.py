@@ -26,21 +26,21 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable, Coroutine
 import struct
+from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any, Literal, overload
 
 from discord import opus
 from discord.errors import ClientException
+from discord.sinks import RawData, Sink
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
-from discord.sinks import RawData, Sink
 
 from ._types import VoiceProtocol
-from .state import VoiceConnectionState
+from .player import AudioPlayer
 from .recorder import Recorder
 from .source import AudioSource
-from .player import AudioPlayer
+from .state import VoiceConnectionState
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -48,25 +48,26 @@ if TYPE_CHECKING:
     from discord import abc
     from discord.client import Client
     from discord.guild import Guild, VocalGuildChannel
-    from discord.state import ConnectionState
-    from discord.user import ClientUser
+    from discord.opus import APPLICATION_CTL, BAND_CTL, SIGNAL_CTL, Decoder, Encoder
     from discord.raw_models import (
-        RawVoiceStateUpdateEvent,
         RawVoiceServerUpdateEvent,
+        RawVoiceStateUpdateEvent,
     )
+    from discord.state import ConnectionState
     from discord.types.voice import SupportedModes
-    from discord.opus import Encoder, APPLICATION_CTL, BAND_CTL, SIGNAL_CTL, Decoder
+    from discord.user import ClientUser
 
     from .gateway import VoiceWebSocket
 
     AfterCallback = Callable[[Exception | None], Any]
-    P = ParamSpec('P')
+    P = ParamSpec("P")
 
 has_nacl: bool
 
 try:
     import nacl.secret
     import nacl.utils
+
     has_nacl = True
 except ImportError:
     has_nacl = False
@@ -102,9 +103,9 @@ class VoiceClient(VoiceProtocol):
     def __init__(self, client: Client, channel: abc.Connectable) -> None:
         if not has_nacl:
             raise RuntimeError(
-                'PyNaCl library is needed in order to use voice related features, '
+                "PyNaCl library is needed in order to use voice related features, "
                 'you can run "pip install py-cord[voice]" to install all voice-related '
-                'dependencies.'
+                "dependencies."
             )
 
         super().__init__(client, channel)
@@ -130,10 +131,10 @@ class VoiceClient(VoiceProtocol):
 
     warn_nacl: bool = not has_nacl
     supported_modes: tuple[SupportedModes, ...] = (
-        'aead_xchacha20_poly1305_rtpsize',
-        'xsalsa20_poly1305_lite',
-        'xsalsa20_poly1305_suffix',
-        'xsalsa20_poly1305',
+        "aead_xchacha20_poly1305_rtpsize",
+        "xsalsa20_poly1305_lite",
+        "xsalsa20_poly1305_suffix",
+        "xsalsa20_poly1305",
     )
 
     @property
@@ -224,7 +225,7 @@ class VoiceClient(VoiceProtocol):
         .. versionadded:: 1.4
         """
         ws = self.ws
-        return float('inf') if not ws else ws.latency
+        return float("inf") if not ws else ws.latency
 
     @property
     def average_latency(self) -> float:
@@ -233,7 +234,7 @@ class VoiceClient(VoiceProtocol):
         .. versionadded:: 1.4
         """
         ws = self.ws
-        return float('inf') if not ws else ws.average_latency
+        return float("inf") if not ws else ws.average_latency
 
     async def disconnect(self, *, force: bool = False) -> None:
         """|coro|
@@ -245,7 +246,9 @@ class VoiceClient(VoiceProtocol):
         await self._connection.disconnect(force=force, wait=True)
         self.cleanup()
 
-    async def move_to(self, channel: abc.Snowflake | None, *, timeout: float | None = 30.0) -> None:
+    async def move_to(
+        self, channel: abc.Snowflake | None, *, timeout: float | None = 30.0
+    ) -> None:
         """|coro|
 
         moves you to a different voice channel.
@@ -285,11 +288,11 @@ class VoiceClient(VoiceProtocol):
         # formulate rtp header
         header[0] = 0x80
         header[1] = 0x78
-        struct.pack_into('>H', header, 2, self.sequence)
-        struct.pack_into('>I', header, 4, self.timestamp)
-        struct.pack_into('>I', header, 8, self.ssrc)
+        struct.pack_into(">H", header, 2, self.sequence)
+        struct.pack_into(">I", header, 4, self.timestamp)
+        struct.pack_into(">I", header, 8, self.ssrc)
 
-        encrypt_packet = getattr(self, f'_encrypt_{self.mode}')
+        encrypt_packet = getattr(self, f"_encrypt_{self.mode}")
         return encrypt_packet(header, data)
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data: Any) -> bytes:
@@ -309,17 +312,23 @@ class VoiceClient(VoiceProtocol):
         # deprecated
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         nonce = bytearray(24)
-        nonce[:4] = struct.pack('>I', self._incr_nonce)
-        self.checked_add('_incr_nonce', 1, 4294967295)
+        nonce[:4] = struct.pack(">I", self._incr_nonce)
+        self.checked_add("_incr_nonce", 1, 4294967295)
 
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext + nonce[:4]
 
-    def _encrypt_aead_xcacha20_poly1305_rtpsize(self, header: bytes, data: Any) -> bytes:
+    def _encrypt_aead_xcacha20_poly1305_rtpsize(
+        self, header: bytes, data: Any
+    ) -> bytes:
         box = nacl.secret.Aead(bytes(self.secret_key))
         nonce = bytearray(24)
-        nonce[:4] = struct.pack('>I', self._incr_nonce)
-        self.checked_add('_incr_nonce', 1, 4294967295)
-        return header + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext + nonce[:4]
+        nonce[:4] = struct.pack(">I", self._incr_nonce)
+        self.checked_add("_incr_nonce", 1, 4294967295)
+        return (
+            header
+            + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext
+            + nonce[:4]
+        )
 
     def _decrypt_xsalsa20_poly1305(self, header: bytes, data: Any) -> bytes:
         # deprecated
@@ -349,7 +358,9 @@ class VoiceClient(VoiceProtocol):
 
         return self.strip_header_ext(box.decrypt(bytes(data), bytes(nonce)))
 
-    def _decrypt_aead_xchacha20_poly1305_rtpsize(self, header: bytes, data: Any) -> bytes:
+    def _decrypt_aead_xchacha20_poly1305_rtpsize(
+        self, header: bytes, data: Any
+    ) -> bytes:
         box = nacl.secret.Aead(bytes(self.secret_key))
 
         nonce = bytearray(24)
@@ -363,7 +374,7 @@ class VoiceClient(VoiceProtocol):
     @staticmethod
     def strip_header_ext(data: bytes) -> bytes:
         if len(data) > 4 and data[0] == 0xBE and data[1] == 0xDE:
-            _, length = struct.unpack_from('>HH', data)
+            _, length = struct.unpack_from(">HH", data)
             offset = 4 + length * 4
             data = data[offset:]
         return data
@@ -403,12 +414,12 @@ class VoiceClient(VoiceProtocol):
         source: AudioSource,
         *,
         after: AfterCallback | None = None,
-        application: APPLICATION_CTL = 'audio',
+        application: APPLICATION_CTL = "audio",
         bitrate: int = 128,
         fec: bool = True,
         expected_packet_loss: float = 0.15,
-        bandwidth: BAND_CTL = 'full',
-        signal_type: SIGNAL_CTL = 'auto',
+        bandwidth: BAND_CTL = "full",
+        signal_type: SIGNAL_CTL = "auto",
         wait_finish: bool = False,
     ) -> None | asyncio.Future[None]:
         """Plays an :class:`AudioSource`.
@@ -465,12 +476,12 @@ class VoiceClient(VoiceProtocol):
         """
 
         if not self.is_connected():
-            raise ClientException('Not connected to voice')
+            raise ClientException("Not connected to voice")
         if self.is_playing():
-            raise ClientException('Already playing audio')
+            raise ClientException("Already playing audio")
         if not isinstance(source, AudioSource):
             raise TypeError(
-                f'Source must be an AudioSource, not {source.__class__.__name__}',
+                f"Source must be an AudioSource, not {source.__class__.__name__}",
             )
         if not self.encoder and not source.is_opus():
             self.encoder = opus.Encoder(
@@ -579,10 +590,12 @@ class VoiceClient(VoiceProtocol):
         """
 
         if not self.is_connected():
-            raise RecordingException('Not connected to a voice channel')
+            raise RecordingException("Not connected to a voice channel")
         if self.recording:
-            raise RecordingException('You are already recording')
+            raise RecordingException("You are already recording")
         if not isinstance(sink, Sink):
-            raise RecordingException(f'Expected a Sink object, got {sink.__class__.__name__}')
+            raise RecordingException(
+                f"Expected a Sink object, got {sink.__class__.__name__}"
+            )
 
         self._recording_handler.empty()
