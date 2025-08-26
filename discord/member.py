@@ -51,8 +51,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
+    from .client import Client
     from .abc import Snowflake
-    from .channel import DMChannel, StageChannel, VoiceChannel
+    from .channel import DMChannel, VocalGuildChannel
     from .flags import PublicUserFlags
     from .guild import Guild
     from .message import Message
@@ -63,10 +64,8 @@ if TYPE_CHECKING:
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
-    from .types.voice import GuildVoiceState as GuildVoiceStatePayload
+    from .types.voice import VoiceState as GuildVoiceStatePayload
     from .types.voice import VoiceState as VoiceStatePayload
-
-    VocalGuildChannel = Union[VoiceChannel, StageChannel]
 
 
 class VoiceState:
@@ -164,6 +163,20 @@ class VoiceState:
         ]
         inner = " ".join("%s=%r" % t for t in attrs)
         return f"<{self.__class__.__name__} {inner}>"
+
+    @classmethod
+    def _create_default(cls, channel: VocalGuildChannel, client: Client) -> VoiceState:
+        self = cls(
+            data={
+                'channel_id': channel.id,
+                'guild_id': channel.guild.id,
+                'self_deaf': False,
+                'self_mute': False,
+                'user_id': client._connection.self_id,  # type: ignore
+            },
+            channel=channel,
+        )
+        return self
 
 
 def flatten_user(cls):

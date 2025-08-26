@@ -24,5 +24,31 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-# rn this is for typing, will be moved here in some point in the future
-from discord.voice_client import VoiceClient
+from discord.enums import Enum
+
+
+class OpCodes(Enum):
+    # fmt: off
+    identify            = 0
+    select_protocol     = 1
+    ready               = 2
+    heartbeat           = 3
+    session_description = 4
+    speaking            = 5
+    heartbeat_ack       = 6
+    resume              = 7
+    hello               = 8
+    resumed             = 9
+    client_connect      = 10
+    client_disconnect   = 11
+    # fmt: on
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, int):
+            return self.value == other
+        elif isinstance(other, self.__class__):
+            return self is other
+        return NotImplemented
+
+    def __int__(self) -> int:
+        return self.value

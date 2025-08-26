@@ -1934,6 +1934,7 @@ class Connectable(Protocol):
 
     __slots__ = ()
     _state: ConnectionState
+    id: int
 
     def _get_voice_client_key(self) -> tuple[int, str]:
         raise NotImplementedError

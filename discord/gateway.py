@@ -137,11 +137,17 @@ class KeepAliveHandler(threading.Thread):
         interval: float | None = None,
         **kwargs: Any,
     ) -> None:
-        threading.Thread.__init__(self, *args, **kwargs)
+        daemon: bool = kwargs.pop('daemon', True)
+        name: str = kwargs.pop('name', f'keep-alive-handler:shard-{shard_id}')
+        super().__init__(
+            *args,
+            **kwargs,
+            daemon=daemon,
+            name=name,
+        )
         self.ws: DiscordWebSocket = ws
         self._main_thread_id = ws.thread_id
         self.interval = interval
-        self.daemon = True
         self.shard_id = shard_id
         self.msg = "Keeping shard ID %s websocket alive with sequence %s."
         self.block_msg = "Shard ID %s heartbeat blocked for more than %s seconds."
@@ -153,7 +159,7 @@ class KeepAliveHandler(threading.Thread):
         self.latency = float("inf")
         self.heartbeat_timeout = ws._max_heartbeat_timeout
 
-    def run(self):
+    def run(self) -> None:
         while not self._stop_ev.wait(self.interval):
             if self._last_recv + self.heartbeat_timeout < time.perf_counter():
                 _log.warning(
@@ -206,16 +212,16 @@ class KeepAliveHandler(threading.Thread):
             else:
                 self._last_send = time.perf_counter()
 
-    def get_payload(self):
+    def get_payload(self) -> dict[str, Any]:
         return {"op": self.ws.HEARTBEAT, "d": self.ws.sequence}
 
-    def stop(self):
+    def stop(self) -> None:
         self._stop_ev.set()
 
-    def tick(self):
+    def tick(self) -> None:
         self._last_recv = time.perf_counter()
 
-    def ack(self):
+    def ack(self) -> None:
         ack_time = time.perf_counter()
         self._last_ack = ack_time
         self.latency = ack_time - self._last_send

@@ -230,7 +230,7 @@ class VoiceClient(VoiceProtocol):
         self._voice_server_complete.set()
 
     async def voice_connect(self) -> None:
-        await self.channel.guild.change_voice_state(channel=self.channel)
+        await self.guild.change_voice_state(channel=self.channel)
 
     async def voice_disconnect(self) -> None:
         _log.info(
