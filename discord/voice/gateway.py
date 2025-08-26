@@ -162,7 +162,7 @@ class VoiceWebSocket(DiscordWebSocket):
                 "successfully RESUMED.",
             )
         elif op == OpCodes.session_description:
-            self.state.mode = data['mode']
+            self.state.mode = data["mode"]
         elif op == OpCodes.hello:
             interval = data["heartbeat_interval"] / 1000.0
             self._keep_alive = KeepAliveHandler(
@@ -268,10 +268,10 @@ class VoiceWebSocket(DiscordWebSocket):
     async def speak(self, state: SpeakingState = SpeakingState.voice) -> None:
         await self.send_as_json(
             {
-                'op': int(OpCodes.speaking),
-                'd': {
-                    'speaking': int(state),
-                    'delay': 0,
+                "op": int(OpCodes.speaking),
+                "d": {
+                    "speaking": int(state),
+                    "delay": 0,
                 },
             },
         )
@@ -285,7 +285,7 @@ class VoiceWebSocket(DiscordWebSocket):
         hook: Callable[..., Coroutine[Any, Any, Any]] | None = None,
         seq_ack: int = -1,
     ) -> Self:
-        gateway = f'wss://{state.endpoint}/?v=8'
+        gateway = f"wss://{state.endpoint}/?v=8"
         client = state.client
         http = client._state.http
         socket = await http.ws_connect(gateway, compress=15)

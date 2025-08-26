@@ -43,7 +43,7 @@ from .sinks import RawData
 
 if TYPE_CHECKING:
     T = TypeVar("T")
-    APPLICATION_CTL = Literal['audio', 'voip', 'lowdelay']
+    APPLICATION_CTL = Literal["audio", "voip", "lowdelay"]
     BAND_CTL = Literal["narrow", "medium", "wide", "superwide", "full"]
     SIGNAL_CTL = Literal["auto", "voice", "music"]
 
@@ -81,7 +81,7 @@ _log = logging.getLogger(__name__)
 c_int_ptr = ctypes.POINTER(ctypes.c_int)
 c_int16_ptr = ctypes.POINTER(ctypes.c_int16)
 c_float_ptr = ctypes.POINTER(ctypes.c_float)
-OPUS_SILENCE = b'\xf8\xff\xfe'
+OPUS_SILENCE = b"\xf8\xff\xfe"
 
 _lib = None
 
@@ -105,9 +105,9 @@ BAD_ARG = -1
 
 # Encoder CTLs
 application_ctl: ApplicationCtl = {
-    'audio': 2049,
-    'lowdelay': 2051,
-    'voip': 2048,
+    "audio": 2049,
+    "lowdelay": 2051,
+    "voip": 2048,
 }
 
 CTL_SET_BITRATE = 4002
@@ -378,22 +378,20 @@ class Encoder(_OpusStruct):
     def __init__(
         self,
         *,
-        application: APPLICATION_CTL = 'audio',
+        application: APPLICATION_CTL = "audio",
         bitrate: int = 128,
         fec: bool = True,
         expected_packet_loss: float = 0.15,
-        bandwidth: BAND_CTL = 'full',
-        signal_type: SIGNAL_TL = 'auto',
+        bandwidth: BAND_CTL = "full",
+        signal_type: SIGNAL_TL = "auto",
     ) -> None:
         if application not in application_ctl:
-            raise ValueError(
-                'invalid application ctl type provided'
-            )
+            raise ValueError("invalid application ctl type provided")
         if not 16 <= bitrate <= 512:
-            raise ValueError('bitrate must be between 16 and 512, both included')
+            raise ValueError("bitrate must be between 16 and 512, both included")
         if not 0 < expected_packet_loss <= 1:
             raise ValueError(
-                'expected_packet_loss must be between 0 and 1, including 1',
+                "expected_packet_loss must be between 0 and 1, including 1",
             )
 
         _OpusStruct.get_opus_version()
