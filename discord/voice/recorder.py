@@ -39,7 +39,7 @@ if TYPE_CHECKING:
     from .client import VoiceClient
     from .gateway import VoiceWebSocket
 
-    VoiceClientT = TypeVar('VoiceClientT', bound=VoiceClient, covariant=True)
+    VoiceClientT = TypeVar("VoiceClientT", bound=VoiceClient, covariant=True)
 
 
 class VoiceRecorderClient(VoiceRecorderProtocol[VoiceClientT]):
@@ -67,11 +67,9 @@ class VoiceRecorderClient(VoiceRecorderProtocol[VoiceClientT]):
         """Whether the current recording is actively recording."""
         return self._recording.is_set()
 
-    async def hook(self, ws: VoiceWebSocket, data: dict[str, Any]) -> None:
-        ...
+    async def hook(self, ws: VoiceWebSocket, data: dict[str, Any]) -> None: ...
 
     def record(
         self,
         sink: Sink,
-    ) -> int:
-        ...
+    ) -> int: ...

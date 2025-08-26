@@ -205,29 +205,29 @@ class VoiceWebSocket(DiscordWebSocket):
         )
 
         _log.debug(
-            'Connected socket to %s (port %s)',
+            "Connected socket to %s (port %s)",
             state.endpoint_ip,
             state.voice_port,
         )
 
         state.ip, state.port = await self.get_ip()
 
-        modes = [mode for mode in data['modes'] if mode in self.state.supported_modes]
-        _log.debug('Received available voice connection modes: %s', modes)
+        modes = [mode for mode in data["modes"] if mode in self.state.supported_modes]
+        _log.debug("Received available voice connection modes: %s", modes)
 
         mode = modes[0]
         await self.select_protocol(state.ip, state.port, mode)
-        _log.debug('Selected voice protocol %s for this connection', mode)
+        _log.debug("Selected voice protocol %s for this connection", mode)
 
     async def select_protocol(self, ip: str, port: int, mode: str) -> None:
         payload = {
-            'op': int(OpCodes.select_protocol),
-            'd': {
-                'protocol': 'udp',
-                'data': {
-                    'address': ip,
-                    'port': port,
-                    'mode': mode,
+            "op": int(OpCodes.select_protocol),
+            "d": {
+                "protocol": "udp",
+                "data": {
+                    "address": ip,
+                    "port": port,
+                    "mode": mode,
                 },
             },
         }
@@ -346,12 +346,12 @@ class VoiceWebSocket(DiscordWebSocket):
     async def identify(self) -> None:
         state = self.state
         payload = {
-            'op': int(OpCodes.identify),
-            'd': {
-                'server_id': str(state.server_id),
-                'user_id': str(state.user.id),
-                'session_id': self.session_id,
-                'token': self.token,
+            "op": int(OpCodes.identify),
+            "d": {
+                "server_id": str(state.server_id),
+                "user_id": str(state.user.id),
+                "session_id": self.session_id,
+                "token": self.token,
             },
         }
         await self.send_as_json(payload)
