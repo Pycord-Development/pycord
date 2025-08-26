@@ -29,18 +29,18 @@ from discord.enums import Enum
 
 
 class OpCodes(Enum):
-    identify            = 0
-    select_protocol     = 1
-    ready               = 2
-    heartbeat           = 3
+    identify = 0
+    select_protocol = 1
+    ready = 2
+    heartbeat = 3
     session_description = 4
-    speaking            = 5
-    heartbeat_ack       = 6
-    resume              = 7
-    hello               = 8
-    resumed             = 9
-    client_connect      = 10
-    client_disconnect   = 11
+    speaking = 5
+    heartbeat_ack = 6
+    resume = 7
+    hello = 8
+    resumed = 9
+    client_connect = 10
+    client_disconnect = 11
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, int):
@@ -54,12 +54,12 @@ class OpCodes(Enum):
 
 
 class ConnectionFlowState(Enum):
-    disconnected            = 0
-    set_guild_voice_state   = 1
-    got_voice_state_update  = 2
+    disconnected = 0
+    set_guild_voice_state = 1
+    got_voice_state_update = 2
     got_voice_server_update = 3
-    got_both_voice_updates  = 4
-    websocket_connected     = 5
-    got_websocket_ready     = 6
-    got_ip_discovery        = 7
-    connected               = 8
+    got_both_voice_updates = 4
+    websocket_connected = 5
+    got_websocket_ready = 6
+    got_ip_discovery = 7
+    connected = 8
