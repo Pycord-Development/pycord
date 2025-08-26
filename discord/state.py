@@ -1853,7 +1853,8 @@ class ConnectionState:
             if int(data["user_id"]) == self_id:
                 voice = self._get_voice_client(guild.id)
                 if voice is not None:
-                    coro = voice.on_voice_state_update(data)
+                    payload = RawVoiceStateUpdateEvent(data=data, state=self)
+                    coro = voice.on_voice_state_update(payload)
                     asyncio.create_task(
                         logging_coroutine(
                             coro, info="Voice Protocol voice state update handler"
@@ -1890,8 +1891,9 @@ class ConnectionState:
             key_id = int(data["channel_id"])
 
         vc = self._get_voice_client(key_id)
+        payload = RawVoiceServerUpdateEvent(data=data, state=self)
         if vc is not None:
-            coro = vc.on_voice_server_update(data)
+            coro = vc.on_voice_server_update(payload)
             asyncio.create_task(
                 logging_coroutine(
                     coro, info="Voice Protocol voice server update handler"

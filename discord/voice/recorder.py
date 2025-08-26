@@ -24,45 +24,4 @@ DEALINGS IN THE SOFTWARE.
 """
 from __future__ import annotations
 
-from discord.enums import Enum
-
-
-class OpCodes(Enum):
-    # fmt: off
-    identify            = 0
-    select_protocol     = 1
-    ready               = 2
-    heartbeat           = 3
-    session_description = 4
-    speaking            = 5
-    heartbeat_ack       = 6
-    resume              = 7
-    hello               = 8
-    resumed             = 9
-    client_connect      = 10
-    client_disconnect   = 11
-    # fmt: on
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, int):
-            return self.value == other
-        elif isinstance(other, self.__class__):
-            return self is other
-        return NotImplemented
-
-    def __int__(self) -> int:
-        return self.value
-
-
-class ConnectionFlowState(Enum):
-    # fmt: off
-    disconnected            = 0
-    set_guild_voice_state   = 1
-    got_voice_state_update  = 2
-    got_voice_server_update = 3
-    got_both_voice_updates  = 4
-    websocket_connected     = 5
-    got_websocket_ready     = 6
-    got_ip_discovery        = 7
-    connected               = 8
-    # fmt: on
+# TODO: finish this

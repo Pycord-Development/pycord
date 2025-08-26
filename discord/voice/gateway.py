@@ -30,6 +30,7 @@ from collections import deque
 from collections.abc import Callable, Coroutine
 import logging
 import struct
+import threading
 import time
 from typing import TYPE_CHECKING, Any
 
@@ -43,6 +44,8 @@ from discord.gateway import DiscordWebSocket, KeepAliveHandler as KeepAliveHandl
 from .enums import OpCodes
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from .state import VoiceConnectionState
 
 _log = logging.getLogger(__name__)
@@ -106,7 +109,8 @@ class VoiceWebSocket(DiscordWebSocket):
         self.seq_ack: int = -1
         self.session_id: str | None = None
         self.state: VoiceConnectionState = state
-        self.ssrc_map: dict[str]
+        self.ssrc_map: dict[str, dict[str, Any]] = {}
+        self.token: str | None = None
 
         if hook:
             self._hook = hook  # type: ignore
@@ -153,7 +157,7 @@ class VoiceWebSocket(DiscordWebSocket):
                 'successfully RESUMED.',
             )
         elif op == OpCodes.session_description:
-            self.state.update_session_description(data)
+            self.state.mode = data['mode']
         elif op == OpCodes.hello:
             interval = data['heartbeat_interval'] / 1000.0
             self._keep_alive = KeepAliveHandler(
@@ -247,3 +251,39 @@ class VoiceWebSocket(DiscordWebSocket):
 
         self._close_code = code
         await self.ws.close(code=self._close_code)
+
+    async def speak(self, state: SpeakingState = SpeakingState.voice) -> None:
+        await self.send_as_json(
+            {
+                'op': int(OpCodes.speaking),
+                'd': {
+                    'speaking': int(state),
+                    'delay': 0,
+                },
+            },
+        )
+
+    @classmethod
+    async def from_state(
+        cls,
+        state: VoiceConnectionState,
+        *,
+        resume: bool = False,
+        hook: Callable[..., Coroutine[Any, Any, Any]] | None = None,
+        seq_ack: int = -1,
+    ) -> Self:
+        gateway = f'wss://{state.endpoint}/?v=8'
+        client = state.client
+        http = client._state.http
+        socket = await http.ws_connect(gateway, compress=15)
+        ws = cls(socket, loop=client.loop, hook=hook, state=state)
+        ws.gateway = gateway
+        ws.seq_ack = seq_ack
+        ws._max_heartbeat_timeout = 60.0
+        ws.thread_id = threading.get_ident()
+
+        if resume:
+            await ws.resume()
+        else:
+            await ws.identify()
+        return ws
