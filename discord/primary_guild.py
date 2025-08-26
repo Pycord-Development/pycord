@@ -39,12 +39,12 @@ class PrimaryGuild:
 
     Attributes
     ----------
-        identity_guild_id: int
-            The ID of the guild.
-        identity_enabled: :class:`bool`
-            Whether the primary guild is enabled.
-        tag: str
-            The tag of the primary guild.
+    identity_guild_id: int
+        The ID of the guild.
+    identity_enabled: :class:`bool`
+        Whether the primary guild is enabled.
+    tag: str
+        The tag of the primary guild.
     """
 
     def __init__(self, data: PrimaryGuildPayload, state: "ConnectionState") -> None:
