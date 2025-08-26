@@ -31,6 +31,7 @@ M = TypeVar("M", bound="Modal", covariant=True)
 
 ModalItem = Union[InputText, Item[M]]
 
+
 class Modal:
     """Represents a UI Modal dialog.
 
