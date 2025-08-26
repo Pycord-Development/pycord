@@ -6,7 +6,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union
 
 from ..enums import ComponentType
 from ..utils import find
@@ -29,6 +29,7 @@ if TYPE_CHECKING:
 
 M = TypeVar("M", bound="Modal", covariant=True)
 
+ModalItem = Union[InputText, Item[M]]
 
 class Modal:
     """Represents a UI Modal dialog.
@@ -64,7 +65,7 @@ class Modal:
 
     def __init__(
         self,
-        *children: InputText | Item[M],
+        *children: ModalItem,
         title: str,
         custom_id: str | None = None,
         timeout: float | None = None,
@@ -78,7 +79,7 @@ class Modal:
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
-        self._children: list[InputText | Item[M]] = list(children)
+        self._children: list[ModalItem] = list(children)
         self._weights = _ModalWeights(self._children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
@@ -149,12 +150,12 @@ class Modal:
         self._title = value
 
     @property
-    def children(self) -> list[InputText | Item[M]]:
+    def children(self) -> list[ModalItem]:
         """The child components associated with the modal dialog."""
         return self._children
 
     @children.setter
-    def children(self, value: list[InputText | Item[M]]):
+    def children(self, value: list[ModalItem]):
         for item in value:
             if not isinstance(item, (InputText, Item)):
                 raise TypeError(
@@ -193,7 +194,7 @@ class Modal:
         self.stop()
 
     def to_components(self) -> list[dict[str, Any]]:
-        def key(item: InputText | Item[M]) -> int:
+        def key(item: ModalItem) -> int:
             return item._rendered_row or 0
 
         children = sorted(self._children, key=key)
@@ -235,7 +236,7 @@ class Modal:
 
         return components
 
-    def add_item(self, item: InputText | Item[M]) -> Self:
+    def add_item(self, item: ModalItem) -> Self:
         """Adds a component to the modal dialog.
 
         Parameters
@@ -256,7 +257,7 @@ class Modal:
         self._children.append(item)
         return self
 
-    def remove_item(self, item: InputText | Item[M]) -> Self:
+    def remove_item(self, item: ModalItem) -> Self:
         """Removes a component from the modal dialog.
 
         Parameters
@@ -270,7 +271,7 @@ class Modal:
             pass
         return self
 
-    def get_item(self, id: str | int) -> InputText | Item[M] | None:
+    def get_item(self, id: str | int) -> ModalItem | None:
         """Gets an item from the modal. Roughly equal to `utils.get(modal.children, ...)`.
         If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -335,7 +336,7 @@ class Modal:
 class _ModalWeights:
     __slots__ = ("weights",)
 
-    def __init__(self, children: list[InputText | Item[M]]):
+    def __init__(self, children: list[ModalItem]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -344,14 +345,14 @@ class _ModalWeights:
             for item in group:
                 self.add_item(item)
 
-    def find_open_space(self, item: InputText | Item[M]) -> int:
+    def find_open_space(self, item: ModalItem) -> int:
         for index, weight in enumerate(self.weights):
             if weight + item.width <= 5:
                 return index
 
         raise ValueError("could not find open space for item")
 
-    def add_item(self, item: InputText | Item[M]) -> None:
+    def add_item(self, item: ModalItem) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -365,7 +366,7 @@ class _ModalWeights:
             self.weights[index] += item.width
             item._rendered_row = index
 
-    def remove_item(self, item: InputText | Item[M]) -> None:
+    def remove_item(self, item: ModalItem) -> None:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
