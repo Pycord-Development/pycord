@@ -794,10 +794,6 @@ class Client:
         token: str,
         *,
         reconnect: bool = True,
-        log_handler: logging.Handler | None = MISSING,
-        log_formatter: logging.Formatter = MISSING,
-        log_level: int = MISSING,
-        root_logger: bool = False,
     ) -> None:
         """A blocking call that abstracts away the event loop
         initialisation from you.
@@ -822,20 +818,10 @@ class Client:
             is blocking. That means that registration of events or anything being
             called after this function call will not execute until it returns.
         """
-        loop = self.loop
 
         async def runner():
             async with self:
                 await self.start(token, reconnect=reconnect)
-
-        if log_handler is not None:
-            utils.setup_logging(
-                handler=log_handler,
-                formatter=log_formatter,
-                level=log_level,
-                root=root_logger,
-            )
-
         try:
             asyncio.run(runner())
         except KeyboardInterrupt:
