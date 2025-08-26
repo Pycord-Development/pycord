@@ -29,7 +29,6 @@ from discord.enums import Enum
 
 
 class OpCodes(Enum):
-    # fmt: off
     identify            = 0
     select_protocol     = 1
     ready               = 2
@@ -42,7 +41,6 @@ class OpCodes(Enum):
     resumed             = 9
     client_connect      = 10
     client_disconnect   = 11
-    # fmt: on
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, int):
@@ -56,7 +54,6 @@ class OpCodes(Enum):
 
 
 class ConnectionFlowState(Enum):
-    # fmt: off
     disconnected            = 0
     set_guild_voice_state   = 1
     got_voice_state_update  = 2
@@ -66,4 +63,3 @@ class ConnectionFlowState(Enum):
     got_websocket_ready     = 6
     got_ip_discovery        = 7
     connected               = 8
-    # fmt: on
