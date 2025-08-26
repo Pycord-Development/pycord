@@ -25,3 +25,14 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 # TODO: finish this
+
+
+class Recorder:
+    """Represents a voice recorder for a voice client.
+
+    You should not construct this but instead obtain it from :attr:`VoiceClient.recorder`.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(self, client: VoiceClient) -> None:

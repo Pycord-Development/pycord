@@ -34,8 +34,10 @@ if TYPE_CHECKING:
         RawVoiceServerUpdateEvent,
         RawVoiceStateUpdateEvent,
     )
+    from discord.voice.client import VoiceClient
 
 ClientT = TypeVar("ClientT", bound="Client", covariant=True)
+VoiceClientT = TypeVar('VoiceClientT', bound='VoiceClient', covariant=True)
 
 
 class VoiceProtocol(Generic[ClientT]):
@@ -157,3 +159,6 @@ class VoiceProtocol(Generic[ClientT]):
         """
         key, _ = self.channel._get_voice_client_key()
         self.client._connection._remove_voice_client(key)
+
+
+class RecorderProtocol(Generic[VoiceClientT]):
