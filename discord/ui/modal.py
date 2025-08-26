@@ -248,9 +248,7 @@ class Modal:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
         if not isinstance(item, (InputText, Item)):
-            raise TypeError(
-                f"expected InputText or Item, not {item.__class__!r}"
-            )
+            raise TypeError(f"expected InputText or Item, not {item.__class__!r}")
         if isinstance(item, (InputText, Select)) and not item.label:
             raise ValueError("InputTexts and Selects must have a label set")
 

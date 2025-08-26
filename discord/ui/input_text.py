@@ -254,4 +254,5 @@ class InputText:
     def uses_label(self) -> bool:
         return self.description is not None
 
+
 TextInput = InputText
