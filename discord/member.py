@@ -30,7 +30,7 @@ import inspect
 import itertools
 import sys
 from operator import attrgetter
-from typing import TYPE_CHECKING, Any, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import discord.abc
 
@@ -51,9 +51,9 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from .client import Client
     from .abc import Snowflake
     from .channel import DMChannel, VocalGuildChannel
+    from .client import Client
     from .flags import PublicUserFlags
     from .guild import Guild
     from .message import Message
@@ -168,11 +168,11 @@ class VoiceState:
     def _create_default(cls, channel: VocalGuildChannel, client: Client) -> VoiceState:
         self = cls(
             data={
-                'channel_id': channel.id,
-                'guild_id': channel.guild.id,
-                'self_deaf': False,
-                'self_mute': False,
-                'user_id': client._connection.self_id,  # type: ignore
+                "channel_id": channel.id,
+                "guild_id": channel.guild.id,
+                "self_deaf": False,
+                "self_mute": False,
+                "user_id": client._connection.self_id,  # type: ignore
             },
             channel=channel,
         )

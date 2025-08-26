@@ -26,11 +26,11 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable, Coroutine
 import logging
 import select
 import socket
 import threading
+from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 from discord import utils
@@ -45,10 +45,7 @@ if TYPE_CHECKING:
     from discord.user import ClientUser
     from discord.guild import Guild
     from discord.member import VoiceState
-    from discord.types.voice import (
-        SupportedModes,
-        VoiceServerUpdate as VoiceServerUpdatePayload,
-    )
+    from discord.types.voice import SupportedModes
     from discord.raw_models import RawVoiceStateUpdateEvent, RawVoiceServerUpdateEvent
     from .client import VoiceClient
 
@@ -58,10 +55,12 @@ _log = logging.getLogger(__name__)
 
 
 class SocketEventReader(threading.Thread):
-    def __init__(self, state: VoiceConnectionState, *, start_paused: bool = True) -> None:
+    def __init__(
+        self, state: VoiceConnectionState, *, start_paused: bool = True
+    ) -> None:
         super().__init__(
             daemon=True,
-            name=f'voice-socket-reader:{id(self):#x}',
+            name=f"voice-socket-reader:{id(self):#x}",
         )
         self.state: VoiceConnectionState = state
         self.start_paused: bool = start_paused
@@ -115,7 +114,7 @@ class SocketEventReader(threading.Thread):
         try:
             self._do_run()
         except Exception:
-            _log.exception('Error while starting socket event reader at %s', self)
+            _log.exception("Error while starting socket event reader at %s", self)
         finally:
             self.stop()
             self._running.clear()
@@ -131,7 +130,7 @@ class SocketEventReader(threading.Thread):
                 readable, _, _ = select.select([self.state.socket], [], [], 30)
             except (ValueError, TypeError, OSError) as e:
                 _log.debug(
-                    'Select error handling socket in reader, this should be safe to ignore: %s: %s',
+                    "Select error handling socket in reader, this should be safe to ignore: %s: %s",
                     e.__class__.__name__,
                     e,
                 )
@@ -143,14 +142,18 @@ class SocketEventReader(threading.Thread):
             try:
                 data = self.state.socket.recv(2048)
             except OSError:
-                _log.debug('Error reading from socket in %s, this should be safe to ignore.', self, exc_info=True)
+                _log.debug(
+                    "Error reading from socket in %s, this should be safe to ignore.",
+                    self,
+                    exc_info=True,
+                )
             else:
                 for cb in self._callbacks:
                     try:
                         cb(data)
                     except Exception:
                         _log.exception(
-                            'Error while calling %s in %s',
+                            "Error while calling %s in %s",
                             cb,
                             self,
                         )

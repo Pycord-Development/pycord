@@ -26,12 +26,12 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections import deque
-from collections.abc import Callable, Coroutine
 import logging
 import struct
 import threading
 import time
+from collections import deque
+from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
@@ -39,7 +39,8 @@ import aiohttp
 from discord import utils
 from discord.enums import SpeakingState
 from discord.errors import ConnectionClosed
-from discord.gateway import DiscordWebSocket, KeepAliveHandler as KeepAliveHandlerBase
+from discord.gateway import DiscordWebSocket
+from discord.gateway import KeepAliveHandler as KeepAliveHandlerBase
 
 from .enums import OpCodes
 
@@ -59,8 +60,8 @@ class KeepAliveHandler(KeepAliveHandlerBase):
         interval: float | None = None,
         **kwargs: Any,
     ) -> None:
-        daemon: bool = kwargs.pop('daemon', True)
-        name: str = kwargs.pop('name', f'voice-keep-alive-handler:{id(self):#x}')
+        daemon: bool = kwargs.pop("daemon", True)
+        name: str = kwargs.pop("name", f"voice-keep-alive-handler:{id(self):#x}")
         super().__init__(
             *args,
             **kwargs,
@@ -70,17 +71,21 @@ class KeepAliveHandler(KeepAliveHandlerBase):
 
         self.ws: VoiceWebSocket = ws
         self.interval: float | None = interval
-        self.msg: str = 'Keeping shard ID %s voice websocket alive with timestamp %s.'
-        self.block_msg: str = 'Shard ID %s voice heartbeat blocked for more than %s seconds.'
-        self.behing_msg: str = 'High socket latency, shard ID %s heartbeat is %.1fs behind.'
+        self.msg: str = "Keeping shard ID %s voice websocket alive with timestamp %s."
+        self.block_msg: str = (
+            "Shard ID %s voice heartbeat blocked for more than %s seconds."
+        )
+        self.behing_msg: str = (
+            "High socket latency, shard ID %s heartbeat is %.1fs behind."
+        )
         self.recent_ack_latencies: deque[float] = deque(maxlen=20)
 
     def get_payload(self) -> dict[str, Any]:
         return {
-            'op': int(OpCodes.heartbeat),
-            'd': {
-                't': int(time.time() * 1000),
-                'seq_ack': self.ws.seq_ack,
+            "op": int(OpCodes.heartbeat),
+            "d": {
+                "t": int(time.time() * 1000),
+                "seq_ack": self.ws.seq_ack,
             },
         }
 
@@ -119,47 +124,47 @@ class VoiceWebSocket(DiscordWebSocket):
         pass
 
     async def send_as_json(self, data: Any) -> None:
-        _log.debug('Sending voice websocket frame: %s.', data)
+        _log.debug("Sending voice websocket frame: %s.", data)
         await self.ws.send_str(utils._to_json(data))
 
     send_heartbeat = send_as_json
 
     async def resume(self) -> None:
         payload = {
-            'op': int(OpCodes.resume),
-            'd': {
-                'token': self.token,
-                'server_id': str(self.state.server_id),
-                'session_id': self.session_id,
-                'seq_ack': self.seq_ack,
+            "op": int(OpCodes.resume),
+            "d": {
+                "token": self.token,
+                "server_id": str(self.state.server_id),
+                "session_id": self.session_id,
+                "seq_ack": self.seq_ack,
             },
         }
         await self.send_as_json(payload)
 
     async def received_message(self, msg: Any, /):
-        _log.debug('Voice websocket frame received: %s', msg)
-        op = msg['op']
-        data = msg.get('data', {})  # this key should ALWAYS be given, but guard anyways
-        self.seq_ack = data.get('seq', self.seq_ack)  # keep the seq_ack updated
+        _log.debug("Voice websocket frame received: %s", msg)
+        op = msg["op"]
+        data = msg.get("data", {})  # this key should ALWAYS be given, but guard anyways
+        self.seq_ack = data.get("seq", self.seq_ack)  # keep the seq_ack updated
 
         if op == OpCodes.ready:
             await self.ready(data)
         elif op == OpCodes.heartbeat_ack:
             if not self._keep_alive:
                 _log.error(
-                    'Received a heartbeat ACK but no keep alive handler was set.',
+                    "Received a heartbeat ACK but no keep alive handler was set.",
                 )
                 return
             self._keep_alive.ack()
         elif op == OpCodes.resumed:
             _log.info(
-                f'Voice connection on channel ID {self.state.channel_id} (guild {self.state.guild_id}) was '
-                'successfully RESUMED.',
+                f"Voice connection on channel ID {self.state.channel_id} (guild {self.state.guild_id}) was "
+                "successfully RESUMED.",
             )
         elif op == OpCodes.session_description:
             self.state.mode = data['mode']
         elif op == OpCodes.hello:
-            interval = data['heartbeat_interval'] / 1000.0
+            interval = data["heartbeat_interval"] / 1000.0
             self._keep_alive = KeepAliveHandler(
                 ws=self,
                 interval=min(interval, 5),
@@ -171,12 +176,12 @@ class VoiceWebSocket(DiscordWebSocket):
     async def ready(self, data: dict[str, Any]) -> None:
         state = self.state
 
-        state.ssrc = data['ssrc']
-        state.voice_port = data['port']
-        state.endpoint_ip = data['ip']
+        state.ssrc = data["ssrc"]
+        state.voice_port = data["port"]
+        state.endpoint_ip = data["ip"]
 
         _log.debug(
-            f'Connecting to {state.endpoint_ip} (port {state.voice_port}).',
+            f"Connecting to {state.endpoint_ip} (port {state.voice_port}).",
         )
 
         await self.loop.sock_connect(
@@ -189,11 +194,13 @@ class VoiceWebSocket(DiscordWebSocket):
     async def get_ip(self) -> tuple[str, int]:
         state = self.state
         packet = bytearray(75)
-        struct.pack_into('>H', packet, 0, 1)  # 1 = Send
-        struct.pack_into('>H', packet, 2, 70)  # 70 = Length
-        struct.pack_into('>I', packet, 4, state.ssrc)
+        struct.pack_into(">H", packet, 0, 1)  # 1 = Send
+        struct.pack_into(">H", packet, 2, 70)  # 70 = Length
+        struct.pack_into(">I", packet, 4, state.ssrc)
 
-        _log.debug(f'Sending IP discovery packet for voice in channel {state.channel_id} (guild {state.guild_id})')
+        _log.debug(
+            f"Sending IP discovery packet for voice in channel {state.channel_id} (guild {state.guild_id})"
+        )
         await self.loop.sock_sendall(state.socket, packet)
 
         fut: asyncio.Future[bytes] = self.loop.create_future()
@@ -206,31 +213,33 @@ class VoiceWebSocket(DiscordWebSocket):
         state.add_socket_listener(get_ip_packet)
         recv = await fut
 
-        _log.debug('Received IP discovery packet with data %s', recv)
+        _log.debug("Received IP discovery packet with data %s", recv)
 
         ip_start = 8
         ip_end = recv.index(0, ip_start)
-        ip = recv[ip_start:ip_end].decode('ascii')
-        port = struct.unpack_from('>H', recv, len(recv) - 2)[0]
-        _log.debug('Detected IP %s with port %s', ip, port)
+        ip = recv[ip_start:ip_end].decode("ascii")
+        port = struct.unpack_from(">H", recv, len(recv) - 2)[0]
+        _log.debug("Detected IP %s with port %s", ip, port)
 
         return ip, port
 
     @property
     def latency(self) -> float:
         heartbeat = self._keep_alive
-        return float('inf') if heartbeat is None else heartbeat.latency
+        return float("inf") if heartbeat is None else heartbeat.latency
 
     @property
     def average_latency(self) -> float:
         heartbeat = self._keep_alive
         if heartbeat is None or not heartbeat.recent_ack_latencies:
-            return float('inf')
+            return float("inf")
         return sum(heartbeat.recent_ack_latencies) / len(heartbeat.recent_ack_latencies)
 
     async def load_secret_key(self, data: dict[str, Any]) -> None:
-        _log.debug(f'Received secret key for voice connection in channel {self.state.channel_id} (guild {self.state.guild_id})')
-        self.secret_key = self.state.secret_key = data['secret_key']
+        _log.debug(
+            f"Received secret key for voice connection in channel {self.state.channel_id} (guild {self.state.guild_id})"
+        )
+        self.secret_key = self.state.secret_key = data["secret_key"]
         await self.speak(SpeakingState.none)
 
     async def poll_event(self) -> None:
@@ -239,10 +248,14 @@ class VoiceWebSocket(DiscordWebSocket):
         if msg.type is aiohttp.WSMsgType.TEXT:
             await self.received_message(utils._from_json(msg.data))
         elif msg.type is aiohttp.WSMsgType.ERROR:
-            _log.debug('Received %s', msg)
+            _log.debug("Received %s", msg)
             raise ConnectionClosed(self.ws, shard_id=None) from msg.data
-        elif msg.type in (aiohttp.WSMsgType.CLOSED, aiohttp.WSMsgType.CLOSE, aiohttp.WSMsgType.CLOSING):
-            _log.debug('Received %s', msg)
+        elif msg.type in (
+            aiohttp.WSMsgType.CLOSED,
+            aiohttp.WSMsgType.CLOSE,
+            aiohttp.WSMsgType.CLOSING,
+        ):
+            _log.debug("Received %s", msg)
             raise ConnectionClosed(self.ws, shard_id=None, code=self._close_code)
 
     async def close(self, code: int = 1000) -> None:
