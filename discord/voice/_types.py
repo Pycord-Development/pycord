@@ -237,7 +237,7 @@ class VoiceRecorderProtocol(Generic[VoiceProtocolT]):
         *callback_args: P.args,
         **callback_kwargs: P.kwargs,
     ) -> None:
-        """Start recording audio from the current voice channel in the provided sink.
+        r"""Start recording audio from the current voice channel in the provided sink.
 
         You must be in a voice channel.
 

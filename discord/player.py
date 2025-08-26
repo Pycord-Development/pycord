@@ -41,12 +41,13 @@ from math import floor
 from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
 from .errors import ClientException
+from .enums import SpeakingState
 from .oggparse import OggStream
-from .opus import Encoder as OpusEncoder
+from .opus import Encoder as OpusEncoder, OPUS_SILENCE
 from .utils import MISSING
 
 if TYPE_CHECKING:
-    from .voice_client import VoiceClient
+    from .voice import VoiceClient
 
 
 AT = TypeVar("AT", bound="AudioSource")
@@ -732,7 +733,6 @@ class AudioPlayer(threading.Thread):
         self._resumed: threading.Event = threading.Event()
         self._resumed.set()  # we are not paused
         self._current_error: Exception | None = None
-        self._connected: threading.Event = client._connected
         self._lock: threading.Lock = threading.Lock()
         self._played_frames_offset: int = 0
 
@@ -742,48 +742,50 @@ class AudioPlayer(threading.Thread):
     def _do_run(self) -> None:
         # attempt to read first audio segment from source before starting
         # some sources can take a few seconds and may cause problems
-        first_data = self.source.read()
         self.loops = 0
         self._start = time.perf_counter()
 
         # getattr lookup speed ups
-        play_audio = self.client.send_audio_packet
-        self._speak(True)
+        client = self.client
+        play_audio = client.send_audio_packet
+        self._speak(SpeakingState.voice)
 
         while not self._end.is_set():
             # are we paused?
             if not self._resumed.is_set():
+                self.send_silence()
                 # wait until we aren't
                 self._resumed.wait()
                 continue
 
-            # are we disconnected from voice?
-            if not self._connected.is_set():
-                # wait until we are connected
-                self._connected.wait()
-                # reset our internal data
-                self._played_frames_offset += self.loops
-                self.loops = 0
-                self._start = time.perf_counter()
-
-            self.loops += 1
-
-            # Send the data read from the start of the function if it is not None
-            if first_data is not None:
-                data = first_data
-                first_data = None
-            # Else read the next bit from the source
-            else:
-                data = self.source.read()
+            data = self.source.read()
 
             if not data:
                 self.stop()
                 break
 
+            # are we disconnected from voice?
+            if not client.is_connected():
+                _log.debug('Not connected, waiting for %ss...', client.timeout)
+                # wait until we are connected, but not forever
+                connected = client.wait_until_connected(client.timeout)
+                if self._end.is_set() or not connected:
+                    _log.debug('Aborting playback')
+                    return
+                _log.debug('Reconnected, resuming playback')
+                self._speak(SpeakingState.voice)
+                # reset our internal data
+                self.loops = 0
+                self._start = time.perf_counter()
+
             play_audio(data, encode=not self.source.is_opus())
+            self.loops += 1
             next_time = self._start + self.DELAY * self.loops
             delay = max(0, self.DELAY + (next_time - time.perf_counter()))
             time.sleep(delay)
+
+        if client.is_connected():
+            self.send_silence()
 
     def run(self) -> None:
         try:
@@ -792,8 +794,8 @@ class AudioPlayer(threading.Thread):
             self._current_error = exc
             self.stop()
         finally:
-            self.source.cleanup()
             self._call_after()
+            self.source.cleanup()
 
     def _call_after(self) -> None:
         error = self._current_error
@@ -802,24 +804,21 @@ class AudioPlayer(threading.Thread):
             try:
                 self.after(error)
             except Exception as exc:
-                _log.exception("Calling the after function failed.")
                 exc.__context__ = error
-                traceback.print_exception(type(exc), exc, exc.__traceback__)
+                _log.exception("Calling the after function failed.", exc_info=exc)
         elif error:
             msg = f"Exception in voice thread {self.name}"
             _log.exception(msg, exc_info=error)
-            print(msg, file=sys.stderr)
-            traceback.print_exception(type(error), error, error.__traceback__)
 
     def stop(self) -> None:
         self._end.set()
         self._resumed.set()
-        self._speak(False)
+        self._speak(SpeakingState.none)
 
     def pause(self, *, update_speaking: bool = True) -> None:
         self._resumed.clear()
         if update_speaking:
-            self._speak(False)
+            self._speak(SpeakingState.none)
 
     def resume(self, *, update_speaking: bool = True) -> None:
         self._played_frames_offset += self.loops
@@ -827,7 +826,7 @@ class AudioPlayer(threading.Thread):
         self._start = time.perf_counter()
         self._resumed.set()
         if update_speaking:
-            self._speak(True)
+            self._speak(SpeakingState.voice)
 
     def is_playing(self) -> bool:
         return self._resumed.is_set() and not self._end.is_set()
@@ -841,10 +840,10 @@ class AudioPlayer(threading.Thread):
             self.source = source
             self.resume(update_speaking=False)
 
-    def _speak(self, speaking: bool) -> None:
+    def _speak(self, state: SpeakingState) -> None:
         try:
             asyncio.run_coroutine_threadsafe(
-                self.client.ws.speak(speaking), self.client.loop
+                self.client.ws.speak(state), self.client.loop
             )
         except Exception as e:
             _log.info("Speaking call in player failed: %s", e)
@@ -852,3 +851,10 @@ class AudioPlayer(threading.Thread):
     def played_frames(self) -> int:
         """Gets the number of 20ms frames played since the start of the audio file."""
         return self._played_frames_offset + self.loops
+
+    def send_silence(self, count: int = 5) -> None:
+        try:
+            for n in range(count):
+                self.client.send_audio_packet(OPUS_SILENCE, encode=False)
+        except Exception:
+            pass

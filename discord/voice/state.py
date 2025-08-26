@@ -187,6 +187,8 @@ class VoiceConnectionState:
         self.mode: SupportedModes = MISSING
         self.socket: socket.socket = MISSING
         self.ws: VoiceWebSocket = MISSING
+        self.session_id: str | None = None
+        self.token: str | None = None
 
         self._state: ConnectionFlowState = ConnectionFlowState.disconnected
         self._expecting_disconnect: bool = False
@@ -240,22 +242,6 @@ class VoiceConnectionState:
     def self_voice_state(self) -> VoiceState | None:
         return self.guild.me.voice
 
-    @property
-    def token(self) -> str | None:
-        return self.ws.token
-
-    @token.setter
-    def token(self, token: str | None) -> None:
-        self.ws.token = token
-
-    @property
-    def session_id(self) -> str | None:
-        return self.ws.session_id
-
-    @session_id.setter
-    def session_id(self, value: str | None) -> None:
-        self.ws.session_id = value
-
     def is_connected(self) -> bool:
         return self.state is ConnectionFlowState.connected
 
@@ -275,7 +261,7 @@ class VoiceConnectionState:
                 await self.disconnect()
             return
 
-        self.ws.session_id = data["session_id"]
+        self.session_id = data["session_id"]
 
         if self.state in (
             ConnectionFlowState.set_guild_voice_state,
@@ -493,6 +479,7 @@ class VoiceConnectionState:
         if not force and not self.is_connected():
             return
 
+        _log.debug('Attempting a voice disconnect for channel %s (guild %s)', self.channel_id, self.guild_id)
         try:
             await self._voice_disconnect()
             if self.ws:

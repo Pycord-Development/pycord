@@ -73,4 +73,5 @@ class VoiceRecorderClient(VoiceRecorderProtocol[VoiceClientT]):
     def record(
         self,
         sink: Sink,
-    )
+    ) -> int:
+        ...

@@ -67,10 +67,10 @@ class KeepAliveHandler(KeepAliveHandlerBase):
             **kwargs,
             name=name,
             daemon=daemon,
+            ws=ws,
+            interval=interval,
         )
 
-        self.ws: VoiceWebSocket = ws
-        self.interval: float | None = interval
         self.msg: str = "Keeping shard ID %s voice websocket alive with timestamp %s."
         self.block_msg: str = (
             "Shard ID %s voice heartbeat blocked for more than %s seconds."
@@ -112,13 +112,27 @@ class VoiceWebSocket(DiscordWebSocket):
         self._close_code: int | None = None
         self.secret_key: list[int] | None = None
         self.seq_ack: int = -1
-        self.session_id: str | None = None
         self.state: VoiceConnectionState = state
         self.ssrc_map: dict[str, dict[str, Any]] = {}
-        self.token: str | None = None
 
         if hook:
             self._hook = hook  # type: ignore
+
+    @property
+    def token(self) -> str | None:
+        return self.state.token
+
+    @token.setter
+    def token(self, value: str | None) -> None:
+        self.state.token = value
+
+    @property
+    def session_id(self) -> str | None:
+        return self.state.session_id
+
+    @session_id.setter
+    def session_id(self, value: str | None) -> None:
+        self.state.session_id = value
 
     async def _hook(self, *args: Any) -> Any:
         pass
@@ -144,8 +158,8 @@ class VoiceWebSocket(DiscordWebSocket):
     async def received_message(self, msg: Any, /):
         _log.debug("Voice websocket frame received: %s", msg)
         op = msg["op"]
-        data = msg.get("data", {})  # this key should ALWAYS be given, but guard anyways
-        self.seq_ack = data.get("seq", self.seq_ack)  # keep the seq_ack updated
+        data = msg.get("d", {})  # this key should ALWAYS be given, but guard anyways
+        self.seq_ack = msg.get("seq", self.seq_ack)  # keep the seq_ack updated
 
         if op == OpCodes.ready:
             await self.ready(data)
@@ -163,6 +177,7 @@ class VoiceWebSocket(DiscordWebSocket):
             )
         elif op == OpCodes.session_description:
             self.state.mode = data["mode"]
+            await self.load_secret_key(data)
         elif op == OpCodes.hello:
             interval = data["heartbeat_interval"] / 1000.0
             self._keep_alive = KeepAliveHandler(
@@ -186,14 +201,41 @@ class VoiceWebSocket(DiscordWebSocket):
 
         await self.loop.sock_connect(
             state.socket,
-            (state.endpoint_id, state.voice_port),
+            (state.endpoint_ip, state.voice_port),
+        )
+
+        _log.debug(
+            'Connected socket to %s (port %s)',
+            state.endpoint_ip,
+            state.voice_port,
         )
 
         state.ip, state.port = await self.get_ip()
 
+        modes = [mode for mode in data['modes'] if mode in self.state.supported_modes]
+        _log.debug('Received available voice connection modes: %s', modes)
+
+        mode = modes[0]
+        await self.select_protocol(state.ip, state.port, mode)
+        _log.debug('Selected voice protocol %s for this connection', mode)
+
+    async def select_protocol(self, ip: str, port: int, mode: str) -> None:
+        payload = {
+            'op': int(OpCodes.select_protocol),
+            'd': {
+                'protocol': 'udp',
+                'data': {
+                    'address': ip,
+                    'port': port,
+                    'mode': mode,
+                },
+            },
+        }
+        await self.send_as_json(payload)
+
     async def get_ip(self) -> tuple[str, int]:
         state = self.state
-        packet = bytearray(75)
+        packet = bytearray(74)
         struct.pack_into(">H", packet, 0, 1)  # 1 = Send
         struct.pack_into(">H", packet, 2, 70)  # 70 = Length
         struct.pack_into(">I", packet, 4, state.ssrc)
@@ -206,7 +248,7 @@ class VoiceWebSocket(DiscordWebSocket):
         fut: asyncio.Future[bytes] = self.loop.create_future()
 
         def get_ip_packet(data: bytes) -> None:
-            if data[0] == 0x02 and len(data) == 74:
+            if data[1] == 0x02 and len(data) == 74:
                 self.loop.call_soon_threadsafe(fut.set_result, data)
 
         fut.add_done_callback(lambda f: state.remove_socket_listener(get_ip_packet))
@@ -300,3 +342,16 @@ class VoiceWebSocket(DiscordWebSocket):
         else:
             await ws.identify()
         return ws
+
+    async def identify(self) -> None:
+        state = self.state
+        payload = {
+            'op': int(OpCodes.identify),
+            'd': {
+                'server_id': str(state.server_id),
+                'user_id': str(state.user.id),
+                'session_id': self.session_id,
+                'token': self.token,
+            },
+        }
+        await self.send_as_json(payload)

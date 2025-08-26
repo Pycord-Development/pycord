@@ -972,7 +972,6 @@ class RawVoiceStateUpdateEvent(_PayloadLike):
         "suppress",
         "requested_to_speak_at",
         "afk",
-        "channel",
         "guild_id",
         "channel_id",
         "_state",

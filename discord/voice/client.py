@@ -26,20 +26,19 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import datetime
+import logging
 import struct
-from collections.abc import Callable, Coroutine
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, Literal, overload
 
 from discord import opus
 from discord.errors import ClientException
-from discord.sinks import RawData, Sink
-from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
+from discord.player import AudioSource, AudioPlayer
 
 from ._types import VoiceProtocol
-from .player import AudioPlayer
-from .recorder import VoiceRecorderClient
-from .source import AudioSource
+#from .recorder import VoiceRecorderClient
 from .state import VoiceConnectionState
 
 if TYPE_CHECKING:
@@ -61,6 +60,8 @@ if TYPE_CHECKING:
 
     AfterCallback = Callable[[Exception | None], Any]
     P = ParamSpec("P")
+
+_log = logging.getLogger(__name__)
 
 has_nacl: bool
 
@@ -133,9 +134,9 @@ class VoiceClient(VoiceProtocol):
         self._connection: VoiceConnectionState = self.create_connection_state()
 
         # voice recv things
-        self._recorder: VoiceRecorderClient | None = None
-        if use_recorder:
-            self._recorder = VoiceRecorderClient(self)
+        #self._recorder: VoiceRecorderClient | None = None
+        #if use_recorder:
+        #    self._recorder = VoiceRecorderClient(self)
 
     warn_nacl: bool = not has_nacl
     supported_modes: tuple[SupportedModes, ...] = (
@@ -195,7 +196,7 @@ class VoiceClient(VoiceProtocol):
             setattr(self, attr, val + value)
 
     def create_connection_state(self) -> VoiceConnectionState:
-        return VoiceConnectionState(self, hook=self._recorder)
+        return VoiceConnectionState(self)
 
     async def on_voice_state_update(self, data: RawVoiceStateUpdateEvent) -> None:
         await self._connection.voice_state_update(data)
@@ -325,7 +326,7 @@ class VoiceClient(VoiceProtocol):
 
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext + nonce[:4]
 
-    def _encrypt_aead_xcacha20_poly1305_rtpsize(
+    def _encrypt_aead_xchacha20_poly1305_rtpsize(
         self, header: bytes, data: Any
     ) -> bytes:
         box = nacl.secret.Aead(bytes(self.secret_key))
@@ -501,6 +502,7 @@ class VoiceClient(VoiceProtocol):
                 signal_type=signal_type,
             )
 
+        future = None
         if wait_finish:
             self._player_future = future = self.loop.create_future()
             after_callback = after
@@ -528,82 +530,70 @@ class VoiceClient(VoiceProtocol):
         self._player = None
         self._player_future = None
 
-    def unpack_audio(self, data: bytes) -> bytes | None:
-        """Takes an audio packet received from Discord and decodes it into PCM Audio data.
-        If there are no users talking in the channel, ``None`` will be returned.
+    def pause(self) -> None:
+        """Pauses the audio playing."""
+        if self._player:
+            self._player.pause()
 
-        You must be connected to receive audio.
+    def resume(self) -> None:
+        """Resumes the audio playing."""
+        if self._player:
+            self._player.resume()
 
-        .. versionadded:: 2.0
+    @property
+    def source(self) -> AudioSource | None:
+        """The audio source being player, if playing.
+
+        This property can also be used to change the audio source currently being played.
+        """
+        return self._player and self._player.source
+
+    @source.setter
+    def source(self, value: AudioSource) -> None:
+        if not isinstance(value, AudioSource):
+            raise TypeError(f'expected AudioSource, not {value.__class__.__name__}')
+
+        if self._player is None:
+            raise ValueError('the client is not playing anything')
+
+        self._player._set_source(value)
+
+    def send_audio_packet(self, data: bytes, *, encode: bool = True) -> None:
+        """Sends an audio packet composed of the ``data``.
+
+        You must be connected to play audio.
 
         Parameters
         ----------
         data: :class:`bytes`
-            Bytes received by Discord via de UDP connection used for sending and receiving voice data.
-        """
-
-        if not len(data) > 2:
-            return None
-
-        if data[1] != 0x78:
-            # We Should Ignore Any Payload Types We Do Not Understand
-            # Ref RFC 3550 5.1 payload type
-            # At Some Point We Noted That We Should Ignore Only Types 200 - 204 inclusive.
-            # They Were Marked As RTCP: Provides Information About The Connection
-            # This Was Too Broad Of A Whitelist, It Is Unclear If This Is Too Narrow Of A Whitelist
-            return None
-        if self.paused:
-            return None
-
-        raw = RawData(data, self)
-
-        if raw.decrypted_data == opus.OPUS_SILENCE:  # silenece frame
-            return None
-
-        return self.decoder.decode(raw)
-
-    def start_recording(
-        self,
-        sink: Sink,
-        callback: Callable[P, Coroutine[Any, Any, Any]],
-        sync_start: bool = False,
-        *callback_args: P.args,
-        **callback_kwargs: P.kwargs,
-    ):
-        r"""Start recording audio from the current voice channel. This function uses
-        a thread so the current code line will not be stopped. You must be in a voice
-        channel to use this, and must not be already recording.
-
-        .. versionadded:: 2.0
-
-        Parameters
-        ----------
-        sink: :class:`~discord.Sink`
-            A Sink which will "store" all the audio data.
-        callback: :ref:`coroutine <coroutine>`
-            A function which is called after the bot has stopped recording.
-        sync_start: :class:`bool`
-            If ``True``, the recordings of subsequent users will start with silence. This
-            is useful for recording audio just as it was heard.
-        \*callback_args
-            Arguments that will be passed to the callback function.
-        \*\*callback_kwargs
-            Keyword arguments that will be passed to the callback function.
+            The :term:`py:bytes-like object` denoting PCM or Opus voice data.
+        encode: :class:`bool`
+            Indicates if ``data`` should be encoded into Opus.
 
         Raises
         ------
-        RecordingException
-            Not connected to a voice channel, or you are already recording, or you
-            did not provide a Sink object.
+        ClientException
+            You are not connected.
+        opus.OpusError
+            Encoding the data failed.
         """
 
-        if not self.is_connected():
-            raise RecordingException("Not connected to a voice channel")
-        if self.recording:
-            raise RecordingException("You are already recording")
-        if not isinstance(sink, Sink):
-            raise RecordingException(
-                f"Expected a Sink object, got {sink.__class__.__name__}"
-            )
+        self.checked_add('sequence', 1, 65535)
+        if encode:
+            encoded = self.encoder.encode(data, self.encoder.SAMPLES_PER_FRAME)
+        else:
+            encoded = data
 
-        self._recording_handler.empty()
+        packet = self._get_voice_packet(encoded)
+        try:
+            self._connection.send_packet(packet)
+        except OSError:
+            _log.debug('A packet has been dropped (seq: %s, timestamp: %s)', self.sequence, self.timestamp)
+
+        self.checked_add('timestamp', opus.Encoder.SAMPLES_PER_FRAME, 4294967295)
+
+    def elapsed(self) -> datetime.timedelta:
+        """Returns the elapsed time of the playing audio."""
+        if self._player:
+            return datetime.timedelta(milliseconds=self._player.played_frames() * 20)
+        return datetime.timedelta()
