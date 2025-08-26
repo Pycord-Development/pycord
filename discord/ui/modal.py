@@ -43,8 +43,8 @@ class Modal:
 
     Parameters
     ----------
-    children: Union[:class:`InputText`, :class:`Select`, :class:`TextDisplay`]
-        The initial InputText, Select, or TextDisplay components that are displayed in the modal dialog.
+    children: Union[:class:`InputText`, :class:`Item`]
+        The initial items that are displayed in the modal dialog. Currently supports :class:`discord.ui.Select` and :class:`discord.ui.TextDisplay`.
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
