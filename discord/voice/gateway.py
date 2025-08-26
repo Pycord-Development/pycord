@@ -171,7 +171,7 @@ class VoiceWebSocket(DiscordWebSocket):
             )
             self._keep_alive.start()
 
-        await self._hook(self, msg)
+        await utils.maybe_coroutine(self._hook, self, data)
 
     async def ready(self, data: dict[str, Any]) -> None:
         state = self.state

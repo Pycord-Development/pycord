@@ -42,6 +42,8 @@ from .errors import DiscordException
 from .sinks import RawData
 
 if TYPE_CHECKING:
+    from discord.voice.recorder import VoiceRecorderClient
+
     T = TypeVar("T")
     APPLICATION_CTL = Literal["audio", "voip", "lowdelay"]
     BAND_CTL = Literal["narrow", "medium", "wide", "superwide", "full"]
@@ -548,17 +550,17 @@ class Decoder(_OpusStruct):
 
 
 class DecodeManager(threading.Thread, _OpusStruct):
-    def __init__(self, client):
+    def __init__(self, client: VoiceRecorderClient):
         super().__init__(daemon=True, name="DecodeManager")
 
-        self.client = client
-        self.decode_queue = []
+        self.client: VoiceRecorderClient = client
+        self.decode_queue: list[RawData] = []
 
-        self.decoder = {}
+        self.decoder: dict[int, Decoder] = {}
 
         self._end_thread = threading.Event()
 
-    def decode(self, opus_frame):
+    def decode(self, opus_frame: RawData):
         if not isinstance(opus_frame, RawData):
             raise TypeError("opus_frame should be a RawData object.")
         self.decode_queue.append(opus_frame)
@@ -579,20 +581,20 @@ class DecodeManager(threading.Thread, _OpusStruct):
                         data.decrypted_data
                     )
             except OpusError:
-                print("Error occurred while decoding opus frame.")
+                _log.exception("Error occurred while decoding opus frame.", exc_info=True)
                 continue
 
-            self.client.recv_decoded_audio(data)
+            self.client.receive_audio(data)
 
-    def stop(self):
+    def stop(self) -> None:
         while self.decoding:
             time.sleep(0.1)
             self.decoder = {}
             gc.collect()
-            print("Decoder Process Killed")
+            _log.debug("Decoder Process Killed")
         self._end_thread.set()
 
-    def get_decoder(self, ssrc):
+    def get_decoder(self, ssrc: int) -> Decoder:
         d = self.decoder.get(ssrc)
         if d is not None:
             return d
@@ -600,5 +602,5 @@ class DecodeManager(threading.Thread, _OpusStruct):
         return self.decoder[ssrc]
 
     @property
-    def decoding(self):
+    def decoding(self) -> bool:
         return bool(self.decode_queue)

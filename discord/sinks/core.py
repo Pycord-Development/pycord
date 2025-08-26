@@ -224,7 +224,7 @@ class Sink(Filters):
         self.audio_data = {}
 
     def init(self, vc):  # called under listen
-        self.vc: VoiceClient = vc
+        self.vc = vc
         super().init()
 
     @Filters.container

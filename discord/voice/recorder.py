@@ -25,10 +25,24 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-# TODO: finish this
+import asyncio
+import threading
+from typing import TYPE_CHECKING, Any, TypeVar
+
+from discord.opus import DecodeManager
+
+from ._types import VoiceRecorderProtocol
+
+if TYPE_CHECKING:
+    from discord.sinks import Sink
+
+    from .client import VoiceClient
+    from .gateway import VoiceWebSocket
+
+    VoiceClientT = TypeVar('VoiceClientT', bound=VoiceClient, covariant=True)
 
 
-class Recorder:
+class VoiceRecorderClient(VoiceRecorderProtocol[VoiceClientT]):
     """Represents a voice recorder for a voice client.
 
     You should not construct this but instead obtain it from :attr:`VoiceClient.recorder`.
@@ -36,4 +50,27 @@ class Recorder:
     .. versionadded:: 2.7
     """
 
-    def __init__(self, client: VoiceClient) -> None:
+    def __init__(self, client: VoiceClientT) -> None:
+        super().__init__(client)
+
+        self._paused: asyncio.Event = asyncio.Event()
+        self._recording: asyncio.Event = asyncio.Event()
+        self.decoder: DecodeManager = DecodeManager(self)
+        self.sync_start: bool = False
+        self.sinks: dict[int, tuple[Sink, threading.Thread]] = {}
+
+    def is_paused(self) -> bool:
+        """Whether the current recorder is paused."""
+        return self._paused.is_set()
+
+    def is_recording(self) -> bool:
+        """Whether the current recording is actively recording."""
+        return self._recording.is_set()
+
+    async def hook(self, ws: VoiceWebSocket, data: dict[str, Any]) -> None:
+        ...
+
+    def record(
+        self,
+        sink: Sink,
+    )

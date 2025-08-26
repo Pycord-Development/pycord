@@ -38,7 +38,7 @@ from discord.utils import MISSING
 
 from ._types import VoiceProtocol
 from .player import AudioPlayer
-from .recorder import Recorder
+from .recorder import VoiceRecorderClient
 from .source import AudioSource
 from .state import VoiceConnectionState
 
@@ -100,7 +100,13 @@ class VoiceClient(VoiceProtocol):
 
     channel: VocalGuildChannel
 
-    def __init__(self, client: Client, channel: abc.Connectable) -> None:
+    def __init__(
+        self,
+        client: Client,
+        channel: abc.Connectable,
+        *,
+        use_recorder: bool = True,
+    ) -> None:
         if not has_nacl:
             raise RuntimeError(
                 "PyNaCl library is needed in order to use voice related features, "
@@ -127,7 +133,9 @@ class VoiceClient(VoiceProtocol):
         self._connection: VoiceConnectionState = self.create_connection_state()
 
         # voice recv things
-        self._recorder: Recorder | None = None
+        self._recorder: VoiceRecorderClient | None = None
+        if use_recorder:
+            self._recorder = VoiceRecorderClient(self)
 
     warn_nacl: bool = not has_nacl
     supported_modes: tuple[SupportedModes, ...] = (
@@ -187,7 +195,7 @@ class VoiceClient(VoiceProtocol):
             setattr(self, attr, val + value)
 
     def create_connection_state(self) -> VoiceConnectionState:
-        return VoiceConnectionState(self)
+        return VoiceConnectionState(self, hook=self._recorder)
 
     async def on_voice_state_update(self, data: RawVoiceStateUpdateEvent) -> None:
         await self._connection.voice_state_update(data)
