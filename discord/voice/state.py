@@ -479,7 +479,11 @@ class VoiceConnectionState:
         if not force and not self.is_connected():
             return
 
-        _log.debug('Attempting a voice disconnect for channel %s (guild %s)', self.channel_id, self.guild_id)
+        _log.debug(
+            "Attempting a voice disconnect for channel %s (guild %s)",
+            self.channel_id,
+            self.guild_id,
+        )
         try:
             await self._voice_disconnect()
             if self.ws:

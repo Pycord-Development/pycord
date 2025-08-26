@@ -36,14 +36,14 @@ import subprocess
 import sys
 import threading
 import time
-import traceback
 from math import floor
 from typing import IO, TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
-from .errors import ClientException
 from .enums import SpeakingState
+from .errors import ClientException
 from .oggparse import OggStream
-from .opus import Encoder as OpusEncoder, OPUS_SILENCE
+from .opus import OPUS_SILENCE
+from .opus import Encoder as OpusEncoder
 from .utils import MISSING
 
 if TYPE_CHECKING:
@@ -766,13 +766,13 @@ class AudioPlayer(threading.Thread):
 
             # are we disconnected from voice?
             if not client.is_connected():
-                _log.debug('Not connected, waiting for %ss...', client.timeout)
+                _log.debug("Not connected, waiting for %ss...", client.timeout)
                 # wait until we are connected, but not forever
                 connected = client.wait_until_connected(client.timeout)
                 if self._end.is_set() or not connected:
-                    _log.debug('Aborting playback')
+                    _log.debug("Aborting playback")
                     return
-                _log.debug('Reconnected, resuming playback')
+                _log.debug("Reconnected, resuming playback")
                 self._speak(SpeakingState.voice)
                 # reset our internal data
                 self.loops = 0

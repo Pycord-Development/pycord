@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import signal
 import sys
 import traceback
 from types import TracebackType
@@ -467,7 +466,7 @@ class Client:
         return task
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
-        logging.getLogger('discord.state').debug("Dispatching event %s", event)
+        logging.getLogger("discord.state").debug("Dispatching event %s", event)
         method = f"on_{event}"
 
         listeners = self._listeners.get(event)

@@ -34,11 +34,12 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 
 from discord import opus
 from discord.errors import ClientException
+from discord.player import AudioPlayer, AudioSource
 from discord.utils import MISSING
-from discord.player import AudioSource, AudioPlayer
 
 from ._types import VoiceProtocol
-#from .recorder import VoiceRecorderClient
+
+# from .recorder import VoiceRecorderClient
 from .state import VoiceConnectionState
 
 if TYPE_CHECKING:
@@ -134,8 +135,8 @@ class VoiceClient(VoiceProtocol):
         self._connection: VoiceConnectionState = self.create_connection_state()
 
         # voice recv things
-        #self._recorder: VoiceRecorderClient | None = None
-        #if use_recorder:
+        # self._recorder: VoiceRecorderClient | None = None
+        # if use_recorder:
         #    self._recorder = VoiceRecorderClient(self)
 
     warn_nacl: bool = not has_nacl
@@ -551,10 +552,10 @@ class VoiceClient(VoiceProtocol):
     @source.setter
     def source(self, value: AudioSource) -> None:
         if not isinstance(value, AudioSource):
-            raise TypeError(f'expected AudioSource, not {value.__class__.__name__}')
+            raise TypeError(f"expected AudioSource, not {value.__class__.__name__}")
 
         if self._player is None:
-            raise ValueError('the client is not playing anything')
+            raise ValueError("the client is not playing anything")
 
         self._player._set_source(value)
 
@@ -578,7 +579,7 @@ class VoiceClient(VoiceProtocol):
             Encoding the data failed.
         """
 
-        self.checked_add('sequence', 1, 65535)
+        self.checked_add("sequence", 1, 65535)
         if encode:
             encoded = self.encoder.encode(data, self.encoder.SAMPLES_PER_FRAME)
         else:
@@ -588,9 +589,13 @@ class VoiceClient(VoiceProtocol):
         try:
             self._connection.send_packet(packet)
         except OSError:
-            _log.debug('A packet has been dropped (seq: %s, timestamp: %s)', self.sequence, self.timestamp)
+            _log.debug(
+                "A packet has been dropped (seq: %s, timestamp: %s)",
+                self.sequence,
+                self.timestamp,
+            )
 
-        self.checked_add('timestamp', opus.Encoder.SAMPLES_PER_FRAME, 4294967295)
+        self.checked_add("timestamp", opus.Encoder.SAMPLES_PER_FRAME, 4294967295)
 
     def elapsed(self) -> datetime.timedelta:
         """Returns the elapsed time of the playing audio."""
