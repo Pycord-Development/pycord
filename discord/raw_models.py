@@ -127,10 +127,7 @@ class RawMessageDeleteEvent(_RawReprMixin):
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.cached_message: Message | None = None
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
         self.data: MessageDeleteEvent = data
 
 
@@ -159,11 +156,7 @@ class RawBulkMessageDeleteEvent(_RawReprMixin):
         self.message_ids: set[int] = {int(x) for x in data.get("ids", [])}
         self.channel_id: int = int(data["channel_id"])
         self.cached_messages: list[Message] = []
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
         self.data: BulkMessageDeleteEvent = data
 
 
@@ -197,11 +190,7 @@ class RawMessageUpdateEvent(_RawReprMixin):
         self.channel_id: int = int(data["channel_id"])
         self.data: MessageUpdateEvent = data
         self.cached_message: Message | None = None
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
 
 
 class RawReactionActionEvent(_RawReprMixin):
@@ -274,11 +263,7 @@ class RawReactionActionEvent(_RawReprMixin):
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
         self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
         self.data: ReactionActionEvent = data
 
 
@@ -304,11 +289,7 @@ class RawReactionClearEvent(_RawReprMixin):
     def __init__(self, data: ReactionClearEvent) -> None:
         self.message_id: int = int(data["message_id"])
         self.channel_id: int = int(data["channel_id"])
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
         self.data: ReactionClearEvent = data
 
 
@@ -361,11 +342,7 @@ class RawReactionClearEmojiEvent(_RawReprMixin):
         self.burst_colours: list = data.get("burst_colors", [])
         self.burst_colors: list = self.burst_colours
         self.type: ReactionType = try_enum(ReactionType, data.get("type", 0))
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
         self.data: ReactionClearEmojiEvent = data
 
 
@@ -393,11 +370,7 @@ class RawIntegrationDeleteEvent(_RawReprMixin):
     def __init__(self, data: IntegrationDeleteEvent) -> None:
         self.integration_id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
-
-        try:
-            self.application_id: int | None = int(data["application_id"])
-        except KeyError:
-            self.application_id: int | None = None
+        self.application_id: int | None = utils._get_as_snowflake(data, 'application_id')
         self.data: IntegrationDeleteEvent = data
 
 
@@ -460,10 +433,10 @@ class RawThreadDeleteEvent(_RawReprMixin):
     __slots__ = ("thread_id", "thread_type", "guild_id", "parent_id", "thread", "data")
 
     def __init__(self, data: ThreadDeleteEvent) -> None:
-        self.thread_id: int = int(data["id"])
-        self.thread_type: ChannelType = try_enum(ChannelType, int(data["type"]))
-        self.guild_id: int = int(data["guild_id"])
-        self.parent_id: int = int(data["parent_id"])
+        self.thread_id: int = int(data["id"])  # type: ignore
+        self.thread_type: ChannelType = try_enum(ChannelType, int(data["type"]))  # type: ignore
+        self.guild_id: int = int(data["guild_id"])  # type: ignore
+        self.parent_id: int = int(data["parent_id"])  # type: ignore
         self.thread: Thread | None = None
         self.data: ThreadDeleteEvent = data
 
@@ -490,11 +463,7 @@ class RawVoiceChannelStatusUpdateEvent(_RawReprMixin):
     def __init__(self, data: VoiceChannelStatusUpdateEvent) -> None:
         self.id: int = int(data["id"])
         self.guild_id: int = int(data["guild_id"])
-
-        try:
-            self.status: str | None = data["status"]
-        except KeyError:
-            self.status: str | None = None
+        self.status: str | None = data.get('status')
         self.data: VoiceChannelStatusUpdateEvent = data
 
 
@@ -530,11 +499,7 @@ class RawTypingEvent(_RawReprMixin):
             data.get("timestamp"), tz=datetime.timezone.utc
         )
         self.member: Member | None = None
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
         self.data: TypingEvent = data
 
 
@@ -589,8 +554,8 @@ class RawScheduledEventSubscription(_RawReprMixin):
     __slots__ = ("event_id", "guild", "user_id", "event_type", "data")
 
     def __init__(self, data: ScheduledEventSubscription, event_type: str):
-        self.event_id: int = int(data["guild_scheduled_event_id"])
-        self.user_id: int = int(data["user_id"])
+        self.event_id: int = int(data["guild_scheduled_event_id"])  # type: ignore
+        self.user_id: int = int(data["user_id"])   # type: ignore
         self.guild: Guild | None = None
         self.event_type: str = event_type
         self.data: ScheduledEventSubscription = data
@@ -676,42 +641,18 @@ class AutoModActionExecutionEvent:
         self.guild: Guild | None = state._get_guild(self.guild_id)
         self.user_id: int = int(data["user_id"])
         self.content: str | None = data.get("content", None)
-        self.matched_keyword: str = data["matched_keyword"]
+        self.matched_keyword: str = data["matched_keyword"]  # type: ignore
         self.matched_content: str | None = data.get("matched_content", None)
-
-        if self.guild:
-            self.member: Member | None = self.guild.get_member(self.user_id)
-        else:
-            self.member: Member | None = None
-
-        try:
-            # I don't see why this would be optional, but it's documented
-            # as such, so we should treat it that way
-            self.channel_id: int | None = int(data["channel_id"])
-            self.channel: MessageableChannel | None = self.guild.get_channel_or_thread(
-                self.channel_id
-            )
-        except KeyError:
-            self.channel_id: int | None = None
-            self.channel: MessageableChannel | None = None
-
-        try:
-            self.message_id: int | None = int(data["message_id"])
-            self.message: Message | None = state._get_message(self.message_id)
-        except KeyError:
-            self.message_id: int | None = None
-            self.message: Message | None = None
-
-        try:
-            self.alert_system_message_id: int | None = int(
-                data["alert_system_message_id"]
-            )
-            self.alert_system_message: Message | None = state._get_message(
-                self.alert_system_message_id
-            )
-        except KeyError:
-            self.alert_system_message_id: int | None = None
-            self.alert_system_message: Message | None = None
+        self.channel_id: int | None = utils._get_as_snowflake(data, 'channel_id')
+        self.channel: MessageableChannel | None = (
+            self.channel_id and self.guild
+            and self.guild.get_channel_or_thread(self.channel_id)
+        )  # type: ignore
+        self.member: Member | None = self.guild and self.guild.get_member(self.user_id)
+        self.message_id: int | None = utils._get_as_snowflake(data, 'message_id')
+        self.message: Message | None = state._get_message(self.message_id)
+        self.alert_system_message_id: int | None = utils._get_as_snowflake(data, 'alert_system_message_id')
+        self.alert_system_message: Message | None = state._get_message(self.alert_system_message_id)
         self.data: AutoModActionExecution = data
 
     def __repr__(self) -> str:
@@ -848,11 +789,7 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         self.answer_id: int = int(data["answer_id"])
         self.data: MessagePollVoteEvent = data
         self.added: bool = added
-
-        try:
-            self.guild_id: int | None = int(data["guild_id"])
-        except KeyError:
-            self.guild_id: int | None = None
+        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
 
 
 # this is for backwards compatibility because VoiceProtocol.on_voice_..._update
