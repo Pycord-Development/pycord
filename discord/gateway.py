@@ -137,8 +137,8 @@ class KeepAliveHandler(threading.Thread):
         interval: float | None = None,
         **kwargs: Any,
     ) -> None:
-        daemon: bool = kwargs.pop('daemon', True)
-        name: str = kwargs.pop('name', f'keep-alive-handler:shard-{shard_id}')
+        daemon: bool = kwargs.pop("daemon", True)
+        name: str = kwargs.pop("name", f"keep-alive-handler:shard-{shard_id}")
         super().__init__(
             *args,
             **kwargs,
