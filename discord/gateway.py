@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
 import concurrent.futures
 import logging
 import struct
@@ -36,6 +35,7 @@ import time
 import traceback
 import zlib
 from collections import deque
+from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, NamedTuple
 
 import aiohttp
@@ -324,7 +324,12 @@ class DiscordWebSocket:
         shard_count: int | None
         _max_heartbeat_timeout: float
 
-    def __init__(self, socket: aiohttp.ClientWebSocketResponse, *, loop: asyncio.AbstractEventLoop) -> None:
+    def __init__(
+        self,
+        socket: aiohttp.ClientWebSocketResponse,
+        *,
+        loop: asyncio.AbstractEventLoop,
+    ) -> None:
         self.socket: aiohttp.ClientWebSocketResponse = socket
         self.loop: asyncio.AbstractEventLoop = loop
 
@@ -658,7 +663,7 @@ class DiscordWebSocket:
             elif msg.type is aiohttp.WSMsgType.BINARY:
                 await self.received_message(msg.data)
             elif msg.type is aiohttp.WSMsgType.ERROR:
-                _log.debug('Received an error %s', msg)
+                _log.debug("Received an error %s", msg)
             elif msg.type in (
                 aiohttp.WSMsgType.CLOSED,
                 aiohttp.WSMsgType.CLOSING,

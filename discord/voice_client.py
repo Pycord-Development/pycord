@@ -86,6 +86,7 @@ __all__ = (
 
 _log = logging.getLogger(__name__)
 
+
 class VoiceClient(VoiceProtocol):
     """Represents a Discord voice connection.
 

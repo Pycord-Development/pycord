@@ -25,16 +25,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from collections.abc import ItemsView, KeysView, ValuesView
 import datetime
+from collections.abc import ItemsView, KeysView, ValuesView
 from typing import TYPE_CHECKING, Any
 
+from . import utils
 from .automod import AutoModAction, AutoModTriggerType
 from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
-from . import utils
 
 if TYPE_CHECKING:
-    from .abc import MessageableChannel, GuildChannel
+    from .abc import GuildChannel, MessageableChannel
     from .guild import Guild
     from .member import Member
     from .message import Message
@@ -94,7 +94,11 @@ class _RawReprMixin:
     __slots__: tuple[str, ...]
 
     def __repr__(self) -> str:
-        value = " ".join(f"{attr}={getattr(self, attr)!r}" for attr in self.__slots__ if not attr.startswith('_'))
+        value = " ".join(
+            f"{attr}={getattr(self, attr)!r}"
+            for attr in self.__slots__
+            if not attr.startswith("_")
+        )
         return f"<{self.__class__.__name__} {value}>"
 
 
@@ -850,23 +854,24 @@ class RawMessagePollVoteEvent(_RawReprMixin):
         except KeyError:
             self.guild_id: int | None = None
 
+
 # this is for backwards compatibility because VoiceProtocol.on_voice_..._update
 # passed the raw payload instead of a raw object. Emit deprecation warning.
 class _PayloadLike(_RawReprMixin):
     _raw_data: dict[str, Any]
 
     @utils.deprecated(
-        'the attributes',
-        '2.7',
-        '3.0',
+        "the attributes",
+        "2.7",
+        "3.0",
     )
     def __getitem__(self, key: str) -> Any:
         return self._raw_data[key]
 
     @utils.deprecated(
-        'the attributes',
-        '2.7',
-        '3.0',
+        "the attributes",
+        "2.7",
+        "3.0",
     )
     def get(self, key: str, default: Any = None) -> Any:
         """Gets an item from this raw event, and returns its value or ``default``.
@@ -877,9 +882,9 @@ class _PayloadLike(_RawReprMixin):
         return self._raw_data.get(key, default)
 
     @utils.deprecated(
-        'the attributes',
-        '2.7',
-        '3.0',
+        "the attributes",
+        "2.7",
+        "3.0",
     )
     def items(self) -> ItemsView:
         """Returns the (key, value) pairs of this raw event.
@@ -890,9 +895,9 @@ class _PayloadLike(_RawReprMixin):
         return self._raw_data.items()
 
     @utils.deprecated(
-        'the attributes',
-        '2.7',
-        '3.0',
+        "the attributes",
+        "2.7",
+        "3.0",
     )
     def values(self) -> ValuesView:
         """Returns the values of this raw event.
@@ -903,9 +908,9 @@ class _PayloadLike(_RawReprMixin):
         return self._raw_data.values()
 
     @utils.deprecated(
-        'the attributes',
-        '2.7',
-        '3.0',
+        "the attributes",
+        "2.7",
+        "3.0",
     )
     def keys(self) -> KeysView:
         """Returns the keys of this raw event.
@@ -957,37 +962,37 @@ class RawVoiceStateUpdateEvent(_PayloadLike):
     """
 
     __slots__ = (
-        'session_id',
-        'mute',
-        'deaf',
-        'self_mute',
-        'self_deaf',
-        'self_stream',
-        'self_video',
-        'suppress',
-        'requested_to_speak_at',
-        'afk',
-        'channel',
-        'guild_id',
-        'channel_id',
-        '_state',
-        '_raw_data',
+        "session_id",
+        "mute",
+        "deaf",
+        "self_mute",
+        "self_deaf",
+        "self_stream",
+        "self_video",
+        "suppress",
+        "requested_to_speak_at",
+        "afk",
+        "channel",
+        "guild_id",
+        "channel_id",
+        "_state",
+        "_raw_data",
     )
 
     def __init__(self, *, data: VoiceStateEvent, state: ConnectionState) -> None:
-        self.session_id: str = data['session_id']
+        self.session_id: str = data["session_id"]
         self._state: ConnectionState = state
 
-        self.self_mute: bool = data.get('self_mute', False)
-        self.self_deaf: bool = data.get('self_deaf', False)
-        self.mute: bool = data.get('mute', False)
-        self.deaf: bool = data.get('deaf', False)
-        self.suppress: bool = data.get('suppress', False)
+        self.self_mute: bool = data.get("self_mute", False)
+        self.self_deaf: bool = data.get("self_deaf", False)
+        self.mute: bool = data.get("mute", False)
+        self.deaf: bool = data.get("deaf", False)
+        self.suppress: bool = data.get("suppress", False)
         self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(
-            data.get('request_to_speak_timestamp')
+            data.get("request_to_speak_timestamp")
         )
-        self.guild_id: int | None = utils._get_as_snowflake(data, 'guild_id')
-        self.channel_id: int | None = utils._get_as_snowflake(data, 'channel_id')
+        self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
+        self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
         self._raw_data: VoiceStateEvent = data
 
     @property
@@ -1017,18 +1022,18 @@ class RawVoiceServerUpdateEvent(_PayloadLike):
     """
 
     __slots__ = (
-        'token',
-        'guild_id',
-        'endpoint',
-        '_raw_data',
-        '_state',
+        "token",
+        "guild_id",
+        "endpoint",
+        "_raw_data",
+        "_state",
     )
 
     def __init__(self, *, data: VoiceServerUpdateEvent, state: ConnectionState) -> None:
         self._state: ConnectionState = state
-        self.guild_id: int = int(data['guild_id'])
-        self.token: str = data['token']
-        self.endpoint: str | None = data['endpoint']
+        self.guild_id: int = int(data["guild_id"])
+        self.token: str = data["token"]
+        self.endpoint: str | None = data["endpoint"]
 
     @property
     def guild(self) -> Guild | None:
