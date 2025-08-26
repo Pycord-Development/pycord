@@ -56,6 +56,9 @@ class VoiceState(TypedDict):
     guild_id: NotRequired[Snowflake]
 
 
+GuildVoiceState = VoiceState
+
+
 class VoiceRegion(TypedDict):
     id: str
     name: str
