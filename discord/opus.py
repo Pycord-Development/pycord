@@ -385,7 +385,7 @@ class Encoder(_OpusStruct):
         fec: bool = True,
         expected_packet_loss: float = 0.15,
         bandwidth: BAND_CTL = "full",
-        signal_type: SIGNAL_TL = "auto",
+        signal_type: SIGNAL_CTL = "auto",
     ) -> None:
         if application not in application_ctl:
             raise ValueError("invalid application ctl type provided")
