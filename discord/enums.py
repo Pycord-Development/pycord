@@ -1088,6 +1088,17 @@ class SubscriptionStatus(Enum):
     inactive = 2
 
 
+class SelectMenuDefaultValueType(Enum):
+    """The type of a select menu's default value."""
+
+    Channel = "channel"
+    Role = "role"
+    User = "user"
+
+    def __str__(self):
+        return self.name
+
+
 class SeparatorSpacingSize(Enum):
     """A separator component's spacing size."""
 
