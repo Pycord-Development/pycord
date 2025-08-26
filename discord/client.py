@@ -821,6 +821,7 @@ class Client:
         async def runner():
             async with self:
                 await self.start(token, reconnect=reconnect)
+
         try:
             asyncio.run(runner())
         except KeyboardInterrupt:
