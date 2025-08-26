@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
-from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
+from typing import TYPE_CHECKING, Generic, TypeVar, Union
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -39,12 +39,12 @@ if TYPE_CHECKING:
     )
     from discord.sinks import Sink
 
-    P = ParamSpec('P')
-    R = TypeVar('R')
+    P = ParamSpec("P")
+    R = TypeVar("R")
     RecordCallback = Union[Callable[P, R], Callable[P, Awaitable[R]]]
 
 ClientT = TypeVar("ClientT", bound="Client", covariant=True)
-VoiceProtocolT = TypeVar('VoiceProtocolT', bound='VoiceProtocol', covariant=True)
+VoiceProtocolT = TypeVar("VoiceProtocolT", bound="VoiceProtocol", covariant=True)
 
 
 class VoiceProtocol(Generic[ClientT]):
@@ -195,7 +195,9 @@ class VoiceRecorderProtocol(Generic[VoiceProtocolT]):
         :attr:`VoiceProtocol.channel`
     """
 
-    def __init__(self, client: VoiceProtocolT, channel: abc.Connectable | None = None) -> None:
+    def __init__(
+        self, client: VoiceProtocolT, channel: abc.Connectable | None = None
+    ) -> None:
         self.client: VoiceProtocolT = client
         self.channel: abc.Connectable = channel or client.channel
 
@@ -212,7 +214,7 @@ class VoiceRecorderProtocol(Generic[VoiceProtocolT]):
         :class:`int`
             The ssrc for the provided user ID.
         """
-        raise NotImplementedError('subclasses must implement this')
+        raise NotImplementedError("subclasses must implement this")
 
     def unpack(self, data: bytes) -> bytes | None:
         """Takes an audio packet received from Discord and decodes it.
@@ -227,7 +229,7 @@ class VoiceRecorderProtocol(Generic[VoiceProtocolT]):
         Optional[:class:`bytes`]
             The unpacked bytes, or ``None`` if they could not be unpacked.
         """
-        raise NotImplementedError('subclasses must implement this')
+        raise NotImplementedError("subclasses must implement this")
 
     def record(
         self,
@@ -259,8 +261,8 @@ class VoiceRecorderProtocol(Generic[VoiceProtocolT]):
         TypeError
             You did not pass a Sink object.
         """
-        raise NotImplementedError('subclasses must implement this')
+        raise NotImplementedError("subclasses must implement this")
 
     def stop(self) -> None:
         """Stops recording."""
-        raise NotImplementedError('subclasses must implement this')
+        raise NotImplementedError("subclasses must implement this")

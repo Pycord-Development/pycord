@@ -581,7 +581,9 @@ class DecodeManager(threading.Thread, _OpusStruct):
                         data.decrypted_data
                     )
             except OpusError:
-                _log.exception("Error occurred while decoding opus frame.", exc_info=True)
+                _log.exception(
+                    "Error occurred while decoding opus frame.", exc_info=True
+                )
                 continue
 
             self.client.receive_audio(data)
