@@ -53,6 +53,9 @@ _log = logging.getLogger(__name__)
 
 
 class KeepAliveHandler(KeepAliveHandlerBase):
+    if TYPE_CHECKING:
+        ws: VoiceWebSocket
+
     def __init__(
         self,
         *args: Any,
@@ -116,7 +119,7 @@ class VoiceWebSocket(DiscordWebSocket):
         self.ssrc_map: dict[str, dict[str, Any]] = {}
 
         if hook:
-            self._hook = hook  # type: ignore
+            self._hook = hook or state.ws_hook  # type: ignore
 
     @property
     def token(self) -> str | None:
@@ -186,7 +189,7 @@ class VoiceWebSocket(DiscordWebSocket):
             )
             self._keep_alive.start()
 
-        await utils.maybe_coroutine(self._hook, self, data)
+        await utils.maybe_coroutine(self._hook, self, msg)
 
     async def ready(self, data: dict[str, Any]) -> None:
         state = self.state

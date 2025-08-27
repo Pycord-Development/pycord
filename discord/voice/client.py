@@ -53,6 +53,7 @@ if TYPE_CHECKING:
         RawVoiceServerUpdateEvent,
         RawVoiceStateUpdateEvent,
     )
+    from discord.sinks import Sink
     from discord.state import ConnectionState
     from discord.types.voice import SupportedModes
     from discord.user import ClientUser
@@ -106,8 +107,6 @@ class VoiceClient(VoiceProtocol):
         self,
         client: Client,
         channel: abc.Connectable,
-        *,
-        use_recorder: bool = True,
     ) -> None:
         if not has_nacl:
             raise RuntimeError(
@@ -133,11 +132,6 @@ class VoiceClient(VoiceProtocol):
         self._incr_nonce: int = 0
 
         self._connection: VoiceConnectionState = self.create_connection_state()
-
-        # voice recv things
-        # self._recorder: VoiceRecorderClient | None = None
-        # if use_recorder:
-        #    self._recorder = VoiceRecorderClient(self)
 
     warn_nacl: bool = not has_nacl
     supported_modes: tuple[SupportedModes, ...] = (

@@ -25,8 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
-from typing import TYPE_CHECKING, Generic, TypeVar, Union
+from typing import TYPE_CHECKING, Generic, TypeVar
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -37,14 +36,11 @@ if TYPE_CHECKING:
         RawVoiceServerUpdateEvent,
         RawVoiceStateUpdateEvent,
     )
-    from discord.sinks import Sink
 
     P = ParamSpec("P")
     R = TypeVar("R")
-    RecordCallback = Union[Callable[P, R], Callable[P, Awaitable[R]]]
 
 ClientT = TypeVar("ClientT", bound="Client", covariant=True)
-VoiceProtocolT = TypeVar("VoiceProtocolT", bound="VoiceProtocol", covariant=True)
 
 
 class VoiceProtocol(Generic[ClientT]):
@@ -166,103 +162,3 @@ class VoiceProtocol(Generic[ClientT]):
         """
         key, _ = self.channel._get_voice_client_key()
         self.client._connection._remove_voice_client(key)
-
-
-class VoiceRecorderProtocol(Generic[VoiceProtocolT]):
-    """A class that represents a Discord voice client recorder protocol.
-
-    .. warning::
-
-        If you are an end user, you **should not construct this manually** but instead
-        take it from a :class:`VoiceProtocol` implementation, like :attr:`VoiceClient.recorder`.
-        The parameters and methods being documented here is so third party libraries can refer to it
-        when implementing their own RecorderProtocol types.
-
-    This is an abstract class. The library provides a concrete implementation under
-    :class:`VoiceRecorderClient`.
-
-    This class allows you to implement a protocol to allow for an external
-    method of receiving and handling voice data.
-
-    .. versionadded:: 2.7
-
-    Parameters
-    ----------
-    client: :class:`VoiceProtocol`
-        The voice client (or its subclasses) that are bound to this recorder.
-    channel: :class:`abc.Connectable`
-        The voice channel that is being recorder. If not provided, defaults to
-        :attr:`VoiceProtocol.channel`
-    """
-
-    def __init__(
-        self, client: VoiceProtocolT, channel: abc.Connectable | None = None
-    ) -> None:
-        self.client: VoiceProtocolT = client
-        self.channel: abc.Connectable = channel or client.channel
-
-    def get_ssrc(self, user_id: int) -> int:
-        """Gets the ssrc of a user.
-
-        Parameters
-        ----------
-        user_id: :class:`int`
-            The user ID to get the ssrc from.
-
-        Returns
-        -------
-        :class:`int`
-            The ssrc for the provided user ID.
-        """
-        raise NotImplementedError("subclasses must implement this")
-
-    def unpack(self, data: bytes) -> bytes | None:
-        """Takes an audio packet received from Discord and decodes it.
-
-        Parameters
-        ----------
-        data: :class:`bytes`
-            The bytes received by Discord.
-
-        Returns
-        -------
-        Optional[:class:`bytes`]
-            The unpacked bytes, or ``None`` if they could not be unpacked.
-        """
-        raise NotImplementedError("subclasses must implement this")
-
-    def record(
-        self,
-        sink: Sink,
-        callback: RecordCallback[P, R],
-        sync_start: bool,
-        *callback_args: P.args,
-        **callback_kwargs: P.kwargs,
-    ) -> None:
-        r"""Start recording audio from the current voice channel in the provided sink.
-
-        You must be in a voice channel.
-
-        Parameters
-        ----------
-        sink: :class:`~discord.Sink`
-            The sink to record to.
-        callback: Callable[..., Any]
-            The function called after the bot has stopped recording. This can take any arguments and
-            can return an awaitable.
-        sync_start: :class:`bool`
-            Whether the subsequent recording users will start with silence. This is useful for recording
-            audio just as it was heard.
-
-        Raises
-        ------
-        RecordingException
-            Not connected to a voice channel
-        TypeError
-            You did not pass a Sink object.
-        """
-        raise NotImplementedError("subclasses must implement this")
-
-    def stop(self) -> None:
-        """Stops recording."""
-        raise NotImplementedError("subclasses must implement this")

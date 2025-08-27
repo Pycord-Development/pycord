@@ -31,14 +31,16 @@ import select
 import socket
 import threading
 from collections.abc import Callable, Coroutine
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypedDict
 
 from discord import utils
 from discord.backoff import ExponentialBackoff
 from discord.errors import ConnectionClosed
+from discord.object import Object
 
-from .enums import ConnectionFlowState
+from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
+from .flags import SpeakingFlags
 
 if TYPE_CHECKING:
     from discord import abc
@@ -55,20 +57,29 @@ SocketReaderCallback = Callable[[bytes], Any]
 _log = logging.getLogger(__name__)
 
 
-class SocketEventReader(threading.Thread):
+class SocketReader(threading.Thread):
     def __init__(
-        self, state: VoiceConnectionState, *, start_paused: bool = True
+        self,
+        state: VoiceConnectionState,
+        name: str,
+        *,
+        start_paused: bool = True,
     ) -> None:
         super().__init__(
             daemon=True,
-            name=f"voice-socket-reader:{id(self):#x}",
+            name=name,
         )
+
         self.state: VoiceConnectionState = state
         self.start_paused: bool = start_paused
         self._callbacks: list[SocketReaderCallback] = []
         self._running: threading.Event = threading.Event()
         self._end: threading.Event = threading.Event()
         self._idle_paused: bool = True
+        self._started: threading.Event = threading.Event()
+
+    def is_running(self) -> bool:
+        return self._started.is_set()
 
     def register(self, callback: SocketReaderCallback) -> None:
         self._callbacks.append(callback)
@@ -102,10 +113,12 @@ class SocketEventReader(threading.Thread):
         self._running.set()
 
     def stop(self) -> None:
+        self._started.clear()
         self._end.set()
         self._running.set()
 
     def run(self) -> None:
+        self._started.set()
         self._end.clear()
         self._running.set()
 
@@ -115,11 +128,77 @@ class SocketEventReader(threading.Thread):
         try:
             self._do_run()
         except Exception:
-            _log.exception("Error while starting socket event reader at %s", self)
+            _log.exception(
+                'An error ocurred while running the socket reader %s',
+                self.name,
+            )
         finally:
             self.stop()
             self._running.clear()
             self._callbacks.clear()
+
+    def _do_run(self) -> None:
+        raise NotImplementedError
+
+
+class SocketVoiceRecvReader(SocketReader):
+    def __init__(
+        self, state: VoiceConnectionState, *, start_paused: bool = True,
+    ) -> None:
+        super().__init__(
+            state,
+            f'voice-recv-socket-reader:{id(self):#x}',
+            start_paused=start_paused,
+        )
+
+    def _do_run(self) -> None:
+        while not self._end.is_set():
+            if not self._running.is_set():
+                self._running.wait()
+                continue
+
+            try:
+                readable, _, _ = select.select([self.state.socket], [], [], 30)
+            except (ValueError, TypeError, OSError) as e:
+                _log.debug(
+                    "Select error handling socket in reader, this should be safe to ignore: %s: %s",
+                    e.__class__.__name__,
+                    e,
+                )
+                continue
+
+            if not readable:
+                continue
+
+            try:
+                data = self.state.socket.recv(4096)
+            except OSError:
+                _log.debug(
+                    'Error reading from socket in %s, this should be safe to ignore',
+                    self,
+                    exc_info=True,
+                )
+            else:
+                for cb in self._callbacks:
+                    try:
+                        cb(data)
+                    except Exception:
+                        _log.exception(
+                            'Error while calling %s in %s',
+                            cb,
+                            self,
+                        )
+
+
+class SocketEventReader(SocketReader):
+    def __init__(
+        self, state: VoiceConnectionState, *, start_paused: bool = True
+    ) -> None:
+        super().__init__(
+            state,
+            f'voice-socket-event-reader:{id(self):#x}',
+            start_paused=start_paused,
+        )
 
     def _do_run(self) -> None:
         while not self._end.is_set():
@@ -158,6 +237,11 @@ class SocketEventReader(threading.Thread):
                             cb,
                             self,
                         )
+
+
+class SSRC(TypedDict):
+    user_id: int
+    speaking: SpeakingFlags
 
 
 class VoiceConnectionState:
@@ -199,6 +283,42 @@ class VoiceConnectionState:
         self._connector: asyncio.Task[None] | None = None
         self._socket_reader = SocketEventReader(self)
         self._socket_reader.start()
+        self._voice_recv_socket = SocketVoiceRecvReader(self)
+        self.user_ssrc_map: dict[int, SSRC] = {}
+
+    def start_record_socket(self) -> None:
+        if self._voice_recv_socket.is_running():
+            return
+        self._voice_recv_socket.start()
+
+    def stop_record_socket(self) -> None:
+        if self._voice_recv_socket.is_running():
+            self._voice_recv_socket.stop()
+
+    def get_user_by_ssrc(self, ssrc: int) -> abc.Snowflake | None:
+        data = self.user_ssrc_map.get(ssrc)
+        if data is None:
+            return None
+
+        user = int(data['user_id'])
+        return self.guild.get_member(user) or self.client._state.get_user(user) or Object(id=user)
+
+    def ws_hook(self, ws: VoiceWebSocket, msg: dict[str, Any]) -> None:
+        op = msg['op']
+        data = msg.get('d', {})
+
+        if op == OpCodes.speaking:
+            ssrc = data['ssrc']
+            user = int(data['user_id'])
+            speaking = data['speaking']
+
+            if ssrc in self.user_ssrc_map:
+                self.user_ssrc_map[ssrc]['speaking'].value = speaking
+            else:
+                self.user_ssrc_map[ssrc] = {
+                    'user_id': user,
+                    'speaking': SpeakingFlags._from_value(speaking),
+                }
 
     @property
     def state(self) -> ConnectionFlowState:
