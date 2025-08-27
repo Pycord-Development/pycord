@@ -1052,7 +1052,7 @@ class Container(Component):
 class Label(Component):
     """Represents a Label used in modals as the top-level component.
 
-    This is a component that holda another component alongside additional text in modals.
+    This is a component that allows you to add additional text to another component.
     ``component`` may only be:
 
     - :class:`InputText`
