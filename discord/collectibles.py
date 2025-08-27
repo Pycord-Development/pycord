@@ -39,10 +39,10 @@ class Nameplate:
 
     Attributes
     ----------
-        sku_id: int
-            The SKU ID of the nameplate.
-        palette: str
-            The color palette of the nameplate.
+    sku_id: :class:`int`
+        The SKU ID of the nameplate.
+    palette: :class:`str`
+        The color palette of the nameplate.
     """
 
     def __init__(self, data: NameplatePayload, state: "ConnectionState") -> None:
