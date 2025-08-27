@@ -164,7 +164,7 @@ class Select(Item[V]):
         id: int | None = None,
         label: str | None = None,
         description: str | None = None,
-        required: str | None = None,
+        required: bool | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
