@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import datetime
 from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 
 from . import enums, utils
@@ -44,8 +45,6 @@ __all__ = (
 
 
 if TYPE_CHECKING:
-    import datetime
-
     from . import abc
     from .emoji import GuildEmoji
     from .guild import Guild
@@ -209,6 +208,14 @@ def _transform_trigger_metadata(
         return AutoModTriggerMetadata.from_dict(data)
 
 
+def _transform_communication_disabled_until(
+    entry: AuditLogEntry, data: str
+) -> datetime.datetime | None:
+    if data:
+        return datetime.datetime.fromisoformat(data)
+    return None
+
+
 class AuditLogDiff:
     def __len__(self) -> int:
         return len(self.__dict__)
@@ -281,6 +288,7 @@ class AuditLogChanges:
         "trigger_metadata": (None, _transform_trigger_metadata),
         "exempt_roles": (None, _transform_roles),
         "exempt_channels": (None, _transform_channels),
+        "communication_disabled_until": (None, _transform_communication_disabled_until),
     }
 
     def __init__(
