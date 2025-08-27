@@ -22,7 +22,7 @@ class MyModal(discord.ui.Modal):
                 label="Longer Input",
                 value="Longer Value\nSuper Long Value",
                 style=discord.InputTextStyle.long,
-                description="You can also describe the purpose of this input."
+                description="You can also describe the purpose of this input.",
             ),
             discord.ui.TextDisplay("# Personal Questions"),
             discord.ui.Select(
@@ -34,7 +34,7 @@ class MyModal(discord.ui.Modal):
                     discord.SelectOption(label="Blue", emoji="🟦"),
                 ],
                 description="If it is not listed, skip this question.",
-                required=False
+                required=False,
             ),
             *args,
             **kwargs,
@@ -83,6 +83,7 @@ async def modal_user(ctx: discord.ApplicationContext, member: discord.Member):
 async def modaltest(ctx: commands.Context):
     """Shows an example of modals being invoked from an interaction component (e.g. a button or select menu)"""
 
+
 class MyView(discord.ui.View):
     @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
     async def button_callback(
@@ -110,6 +111,7 @@ class MyView(discord.ui.View):
         modal = MyModal(title="Temporary Title")
         modal.title = select.values[0]
         await interaction.response.send_modal(modal)
+
 
 view = MyView()
 await ctx.send("Click Button, Receive Modal", view=view)
