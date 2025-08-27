@@ -83,7 +83,6 @@ async def modal_user(ctx: discord.ApplicationContext, member: discord.Member):
 async def modaltest(ctx: commands.Context):
     """Shows an example of modals being invoked from an interaction component (e.g. a button or select menu)"""
 
-
     class MyView(discord.ui.View):
         @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
         async def button_callback(
@@ -111,7 +110,6 @@ async def modaltest(ctx: commands.Context):
             modal = MyModal(title="Temporary Title")
             modal.title = select.values[0]
             await interaction.response.send_modal(modal)
-
 
     view = MyView()
     await ctx.send("Click Button, Receive Modal", view=view)
