@@ -84,37 +84,37 @@ async def modaltest(ctx: commands.Context):
     """Shows an example of modals being invoked from an interaction component (e.g. a button or select menu)"""
 
 
-class MyView(discord.ui.View):
-    @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
-    async def button_callback(
-        self, button: discord.ui.Button, interaction: discord.Interaction
-    ):
-        modal = MyModal(title="Modal Triggered from Button")
-        await interaction.response.send_modal(modal)
+    class MyView(discord.ui.View):
+        @discord.ui.button(label="Modal Test", style=discord.ButtonStyle.primary)
+        async def button_callback(
+            self, button: discord.ui.Button, interaction: discord.Interaction
+        ):
+            modal = MyModal(title="Modal Triggered from Button")
+            await interaction.response.send_modal(modal)
 
-    @discord.ui.select(
-        placeholder="Pick Your Modal",
-        min_values=1,
-        max_values=1,
-        options=[
-            discord.SelectOption(
-                label="First Modal", description="Shows the first modal"
-            ),
-            discord.SelectOption(
-                label="Second Modal", description="Shows the second modal"
-            ),
-        ],
-    )
-    async def select_callback(
-        self, select: discord.ui.Select, interaction: discord.Interaction
-    ):
-        modal = MyModal(title="Temporary Title")
-        modal.title = select.values[0]
-        await interaction.response.send_modal(modal)
+        @discord.ui.select(
+            placeholder="Pick Your Modal",
+            min_values=1,
+            max_values=1,
+            options=[
+                discord.SelectOption(
+                    label="First Modal", description="Shows the first modal"
+                ),
+                discord.SelectOption(
+                    label="Second Modal", description="Shows the second modal"
+                ),
+            ],
+        )
+        async def select_callback(
+            self, select: discord.ui.Select, interaction: discord.Interaction
+        ):
+            modal = MyModal(title="Temporary Title")
+            modal.title = select.values[0]
+            await interaction.response.send_modal(modal)
 
 
-view = MyView()
-await ctx.send("Click Button, Receive Modal", view=view)
+    view = MyView()
+    await ctx.send("Click Button, Receive Modal", view=view)
 
 
 bot.run("TOKEN")
