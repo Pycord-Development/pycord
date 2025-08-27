@@ -146,7 +146,9 @@ class Attachment(Hashable):
 
         .. describe:: hash(x)
 
-            Returns the hash of the attachment.
+            Returns the attachment's unique identifier.
+
+            This is equivalent to :attr:`id`.
 
     .. versionchanged:: 1.7
         Attachment can now be cast to :class:`str` and is hashable.
@@ -1018,7 +1020,7 @@ class Message(Hashable):
             StickerItem(data=d, state=state) for d in data.get("sticker_items", [])
         ]
         self.components: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
+            _component_factory(d, state=state) for d in data.get("components", [])
         ]
 
         try:
@@ -1261,7 +1263,7 @@ class Message(Hashable):
                     self.role_mentions.append(role)
 
     def _handle_components(self, components: list[ComponentPayload]):
-        self.components = [_component_factory(d) for d in components]
+        self.components = [_component_factory(d, state=self._state) for d in components]
 
     def _rebind_cached_references(
         self, new_guild: Guild, new_channel: TextChannel | Thread
@@ -1720,10 +1722,10 @@ class Message(Hashable):
         elif embeds is not MISSING:
             payload["embeds"] = [e.to_dict() for e in embeds]
 
+        flags = MessageFlags._from_value(self.flags.value)
+
         if suppress is not MISSING:
-            flags = MessageFlags._from_value(self.flags.value)
             flags.suppress_embeds = suppress
-            payload["flags"] = flags.value
 
         if allowed_mentions is MISSING:
             if (
@@ -1745,8 +1747,13 @@ class Message(Hashable):
         if view is not MISSING:
             self._state.prevent_view_updates_for(self.id)
             payload["components"] = view.to_components() if view else []
+            if view and view.is_components_v2():
+                flags.is_components_v2 = True
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument("cannot pass both file and files parameter to edit()")
+
+        if flags.value != self.flags.value:
+            payload["flags"] = flags.value
 
         if file is not MISSING or files is not MISSING:
             if file is not MISSING:
@@ -1782,7 +1789,9 @@ class Message(Hashable):
 
         if view and not view.is_finished():
             view.message = message
-            self._state.store_view(view, self.id)
+            view.refresh(message.components)
+            if view.is_dispatchable():
+                self._state.store_view(view, self.id)
 
         if delete_after is not None:
             await self.delete(delay=delete_after)
@@ -2423,7 +2432,9 @@ class PartialMessage(Hashable):
             msg = self._state.create_message(channel=self.channel, data=data)  # type: ignore
             if view and not view.is_finished():
                 view.message = msg
-                self._state.store_view(view, self.id)
+                view.refresh(msg.components)
+                if view.is_dispatchable():
+                    self._state.store_view(view, self.id)
             return msg
 
     async def end_poll(self) -> Message:
