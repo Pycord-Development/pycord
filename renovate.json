@@ -5,5 +5,5 @@
     ":semanticPrefixFixDepsChoreOthers",
     ":dependencyDashboard"
   ],
-  "ignoreDeps": ["@matteusan/sentro"]
+  "forkProcessing": "enabled"
 }
