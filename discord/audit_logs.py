@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from functools import cached_property
 from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 
 from . import enums, utils
@@ -644,7 +645,7 @@ class AuditLogEntry(Hashable):
         """The category of the action, if applicable."""
         return self.action.category
 
-    @property
+    @cached_property
     def changes(self) -> AuditLogChanges:
         """The list of changes this entry has."""
         obj = AuditLogChanges(self, self._changes, state=self._state)
