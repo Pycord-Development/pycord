@@ -29,7 +29,7 @@ import copy
 import functools
 import itertools
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import discord.utils
 
@@ -550,7 +550,9 @@ class HelpCommand:
             )
         return f'Command "{command.qualified_name}" has no subcommands.'
 
-    async def filter_commands(self, commands, *, sort=False, key=None):
+    async def filter_commands(
+        self, commands, *, sort=False, key=None, exclude: tuple[Any] | None = None
+    ):
         """|coro|
 
         Returns a filtered list of commands and optionally sorts them.
@@ -568,6 +570,8 @@ class HelpCommand:
             An optional key function to pass to :func:`py:sorted` that
             takes a :class:`Command` as its sole parameter. If ``sort`` is
             passed as ``True`` then this will default as the command name.
+        exclude: Optional[Tuple[Any, ...]]
+            A tuple of command types to exclude from the filter.
 
         Returns
         -------
@@ -579,15 +583,18 @@ class HelpCommand:
             key = lambda c: c.name
 
         # Ignore Application Commands because they don't have hidden/docs
-        prefix_commands = [
+        new_commands = [
             command
             for command in commands
-            if not isinstance(command, discord.commands.ApplicationCommand)
+            if not isinstance(
+                command,
+                (discord.commands.ApplicationCommand, *(exclude if exclude else ())),
+            )
         ]
         iterator = (
-            prefix_commands
+            new_commands
             if self.show_hidden
-            else filter(lambda c: not c.hidden, prefix_commands)
+            else filter(lambda c: not c.hidden, new_commands)
         )
 
         if self.verify_checks is False:
@@ -1103,11 +1110,15 @@ class DefaultHelpCommand(HelpCommand):
         await self.send_pages()
 
     async def send_cog_help(self, cog):
+        from discord.ext.bridge import BridgeExtCommand
+
         if cog.description:
             self.paginator.add_line(cog.description, empty=True)
 
         filtered = await self.filter_commands(
-            cog.get_commands(), sort=self.sort_commands
+            cog.get_commands(),
+            sort=self.sort_commands,
+            exclude=(BridgeExtCommand,),
         )
         self.add_indented_commands(filtered, heading=self.commands_heading)
 
@@ -1345,6 +1356,8 @@ class MinimalHelpCommand(HelpCommand):
         await self.send_pages()
 
     async def send_cog_help(self, cog):
+        from discord.ext.bridge import BridgeExtCommand
+
         bot = self.context.bot
         if bot.description:
             self.paginator.add_line(bot.description, empty=True)
@@ -1357,7 +1370,9 @@ class MinimalHelpCommand(HelpCommand):
             self.paginator.add_line(cog.description, empty=True)
 
         filtered = await self.filter_commands(
-            cog.get_commands(), sort=self.sort_commands
+            cog.get_commands(),
+            sort=self.sort_commands,
+            exclude=(BridgeExtCommand,),
         )
         if filtered:
             self.paginator.add_line(f"**{cog.qualified_name} {self.commands_heading}**")

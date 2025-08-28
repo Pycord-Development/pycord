@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Discord Models"
 msgstr "Discord Models"
@@ -1202,6 +1202,9 @@ msgstr "If provided, the number of seconds to wait in the background before dele
 msgid "The updated view to update this message with. If ``None`` is passed then the view is removed."
 msgstr "The updated view to update this message with. If ``None`` is passed then the view is removed."
 
+msgid "The message was not found."
+msgstr "The message was not found."
+
 msgid "Editing the message failed."
 msgstr "Editing the message failed."
 
@@ -1268,8 +1271,8 @@ msgstr "Unpinning the message failed."
 msgid "Add a reaction to the message."
 msgstr "Add a reaction to the message."
 
-msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
-msgstr "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+msgid "The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`."
+msgstr "The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`."
 
 msgid "You must have the :attr:`~Permissions.read_message_history` permission to use this. If nobody else has reacted to the message using this emoji, the :attr:`~Permissions.add_reactions` permission is required."
 msgstr "You must have the :attr:`~Permissions.read_message_history` permission to use this. If nobody else has reacted to the message using this emoji, the :attr:`~Permissions.add_reactions` permission is required."
@@ -1445,8 +1448,8 @@ msgstr "Returns the string form of the reaction's emoji."
 msgid "The reaction emoji. May be a custom emoji, or a unicode emoji."
 msgstr "The reaction emoji. May be a custom emoji, or a unicode emoji."
 
-msgid "Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]"
-msgstr "Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]"
+msgid "Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]"
+msgstr "Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]"
 
 msgid "The combined total of normal and super reactions for this emoji."
 msgstr "The combined total of normal and super reactions for this emoji."
@@ -1568,8 +1571,44 @@ msgstr ":class:`SKUFlags`"
 msgid "Returns the URL for the SKU."
 msgstr "Returns the URL for the SKU."
 
+msgid "Returns an :class:`.AsyncIterator` that enables fetching the SKU's subscriptions."
+msgstr "Returns an :class:`.AsyncIterator` that enables fetching the SKU's subscriptions."
+
+msgid "The user for which to retrieve subscriptions."
+msgstr "The user for which to retrieve subscriptions."
+
+msgid "Retrieves subscriptions before this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieves subscriptions before this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "Retrieve subscriptions after this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve subscriptions after this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "The number of subscriptions to retrieve. If ``None``, retrieves all subscriptions."
+msgstr "The number of subscriptions to retrieve. If ``None``, retrieves all subscriptions."
+
+msgid ":class:`Subscription` -- A subscription that the user has for this SKU."
+msgstr ":class:`Subscription` -- A subscription that the user has for this SKU."
+
+msgid "Getting the subscriptions failed."
+msgstr "Getting the subscriptions failed."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.SubscriptionIterator\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.SubscriptionIterator\\``"
+
+msgid "Flattening into a list ::"
+msgstr "Flattening into a list ::"
+
+msgid "All parameters except for ``user`` are optional."
+msgstr "All parameters except for ``user`` are optional."
+
 msgid "Represents a Discord entitlement."
 msgstr "Represents a Discord entitlement."
+
+msgid "As of October 1, 2024, entitlements that have been purchased will have ``ends_at`` set to ``None`` unless the parent :class:`Subscription` has been cancelled."
+msgstr "As of October 1, 2024, entitlements that have been purchased will have ``ends_at`` set to ``None`` unless the parent :class:`Subscription` has been cancelled."
+
+msgid "`See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
+msgstr "`See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
 
 msgid "The entitlement's ID."
 msgstr "The entitlement's ID."
@@ -1607,17 +1646,14 @@ msgstr "When the entitlement expires."
 msgid "The ID of the guild that owns this entitlement."
 msgstr "The ID of the guild that owns this entitlement."
 
-msgid "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not of type :attr:`EntitlementType.consumable`."
-msgstr "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not of type :attr:`EntitlementType.consumable`."
+msgid "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not from an SKU of type :attr:`SKUType.consumable`."
+msgstr "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not from an SKU of type :attr:`SKUType.consumable`."
 
 msgid "Consumes this entitlement."
 msgstr "Consumes this entitlement."
 
-msgid "This can only be done on entitlements of type :attr:`EntitlementType.consumable`."
-msgstr "This can only be done on entitlements of type :attr:`EntitlementType.consumable`."
-
-msgid "The entitlement is not consumable."
-msgstr "The entitlement is not consumable."
+msgid "This can only be done on entitlements from an SKU of type :attr:`SKUType.consumable`."
+msgstr "This can only be done on entitlements from an SKU of type :attr:`SKUType.consumable`."
 
 msgid "Consuming the entitlement failed."
 msgstr "Consuming the entitlement failed."
@@ -1630,6 +1666,57 @@ msgstr "A test entitlement is an entitlement that was created using :meth:`Guild
 
 msgid "Deleting the entitlement failed."
 msgstr "Deleting the entitlement failed."
+
+msgid "Represents a user making recurring payments for one or more SKUs."
+msgstr "Represents a user making recurring payments for one or more SKUs."
+
+msgid "Successful payments grant the user access to entitlements associated with the SKU."
+msgstr "Successful payments grant the user access to entitlements associated with the SKU."
+
+msgid "The subscription's ID."
+msgstr "The subscription's ID."
+
+msgid "The ID of the user that owns this subscription."
+msgstr "The ID of the user that owns this subscription."
+
+msgid "The IDs of the SKUs this subscription is for."
+msgstr "The IDs of the SKUs this subscription is for."
+
+msgid "List[:class:`int`]"
+msgstr "List[:class:`int`]"
+
+msgid "The IDs of the entitlements this subscription is for."
+msgstr "The IDs of the entitlements this subscription is for."
+
+msgid "The IDs of the SKUs that the buyer will be subscribed to at renewal."
+msgstr "The IDs of the SKUs that the buyer will be subscribed to at renewal."
+
+msgid "The start of the current subscription period."
+msgstr "The start of the current subscription period."
+
+msgid ":class:`datetime.datetime`"
+msgstr ":class:`datetime.datetime`"
+
+msgid "The end of the current subscription period."
+msgstr "The end of the current subscription period."
+
+msgid "The status of the subscription."
+msgstr "The status of the subscription."
+
+msgid ":class:`SubscriptionStatus`"
+msgstr ":class:`SubscriptionStatus`"
+
+msgid "When the subscription was canceled."
+msgstr "When the subscription was canceled."
+
+msgid ":class:`datetime.datetime` | ``None``"
+msgstr ":class:`datetime.datetime` | ``None``"
+
+msgid "The user that owns this subscription."
+msgstr "The user that owns this subscription."
+
+msgid "Optional[:class:`User`]"
+msgstr "Optional[:class:`User`]"
 
 msgid "Guild"
 msgstr "Guild"
@@ -1658,8 +1745,8 @@ msgstr "The guild name."
 msgid "All emojis that the guild owns."
 msgstr "All emojis that the guild owns."
 
-msgid "Tuple[:class:`Emoji`, ...]"
-msgstr "Tuple[:class:`Emoji`, ...]"
+msgid "Tuple[:class:`GuildEmoji`, ...]"
+msgstr "Tuple[:class:`GuildEmoji`, ...]"
 
 msgid "All stickers that the guild owns."
 msgstr "All stickers that the guild owns."
@@ -1780,9 +1867,6 @@ msgstr "Getting the members failed."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MemberIterator\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MemberIterator\\``"
-
-msgid "Flattening into a list ::"
-msgstr "Flattening into a list ::"
 
 msgid "Returns an :class:`AsyncIterator` that enables receiving the guild's audit logs."
 msgstr "Returns an :class:`AsyncIterator` that enables receiving the guild's audit logs."
@@ -2141,11 +2225,11 @@ msgstr "Creates a :class:`ForumChannel` for the guild."
 msgid "Creating a channel of a specified position will not update the position of other channels to follow suit. A follow-up call to :meth:`~ForumChannel.edit` will be required to update the position of the channel in the channel list."
 msgstr "Creating a channel of a specified position will not update the position of other channels to follow suit. A follow-up call to :meth:`~ForumChannel.edit` will be required to update the position of the channel in the channel list."
 
-msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: v2.5"
-msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: v2.5"
+msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: v2.5"
+msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: v2.5"
 
-msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>')."
-msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>')."
+msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>')."
+msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>')."
 
 msgid ":class:`ForumChannel`"
 msgstr ":class:`ForumChannel`"
@@ -2657,8 +2741,8 @@ msgstr "You are not allowed to delete stickers."
 msgid "An error occurred deleting the sticker."
 msgstr "An error occurred deleting the sticker."
 
-msgid "Retrieves all custom :class:`Emoji`\\s from the guild."
-msgstr "Retrieves all custom :class:`Emoji`\\s from the guild."
+msgid "Retrieves all custom :class:`GuildEmoji`\\s from the guild."
+msgstr "Retrieves all custom :class:`GuildEmoji`\\s from the guild."
 
 msgid "This method is an API call. For general usage, consider :attr:`emojis` instead."
 msgstr "This method is an API call. For general usage, consider :attr:`emojis` instead."
@@ -2669,11 +2753,11 @@ msgstr "An error occurred fetching the emojis."
 msgid "The retrieved emojis."
 msgstr "The retrieved emojis."
 
-msgid "List[:class:`Emoji`]"
-msgstr "List[:class:`Emoji`]"
+msgid "List[:class:`GuildEmoji`]"
+msgstr "List[:class:`GuildEmoji`]"
 
-msgid "Retrieves a custom :class:`Emoji` from the guild."
-msgstr "Retrieves a custom :class:`Emoji` from the guild."
+msgid "Retrieves a custom :class:`GuildEmoji` from the guild."
+msgstr "Retrieves a custom :class:`GuildEmoji` from the guild."
 
 msgid "This method is an API call. For general usage, consider iterating over :attr:`emojis` instead."
 msgstr "This method is an API call. For general usage, consider iterating over :attr:`emojis` instead."
@@ -2684,8 +2768,8 @@ msgstr "The emoji's ID."
 msgid "The retrieved emoji."
 msgstr "The retrieved emoji."
 
-msgid ":class:`Emoji`"
-msgstr ":class:`Emoji`"
+msgid ":class:`GuildEmoji`"
+msgstr ":class:`GuildEmoji`"
 
 msgid "The emoji requested could not be found."
 msgstr "The emoji requested could not be found."
@@ -2693,8 +2777,8 @@ msgstr "The emoji requested could not be found."
 msgid "An error occurred fetching the emoji."
 msgstr "An error occurred fetching the emoji."
 
-msgid "Creates a custom :class:`Emoji` for the guild."
-msgstr "Creates a custom :class:`Emoji` for the guild."
+msgid "Creates a custom :class:`GuildEmoji` for the guild."
+msgstr "Creates a custom :class:`GuildEmoji` for the guild."
 
 msgid "There is currently a limit of 50 static and animated emojis respectively per guild, unless the guild has the ``MORE_EMOJI`` feature which extends the limit to 200."
 msgstr "There is currently a limit of 50 static and animated emojis respectively per guild, unless the guild has the ``MORE_EMOJI`` feature which extends the limit to 200."
@@ -2723,8 +2807,8 @@ msgstr "An error occurred creating an emoji."
 msgid "The created emoji."
 msgstr "The created emoji."
 
-msgid "Deletes the custom :class:`Emoji` from the guild."
-msgstr "Deletes the custom :class:`Emoji` from the guild."
+msgid "Deletes the custom :class:`GuildEmoji` from the guild."
+msgstr "Deletes the custom :class:`GuildEmoji` from the guild."
 
 msgid "You must have :attr:`~Permissions.manage_emojis` permission to do this."
 msgstr "You must have :attr:`~Permissions.manage_emojis` permission to do this."
@@ -3446,6 +3530,15 @@ msgstr "For regular members this is just their avatar, but if they have a guild 
 msgid "Returns an :class:`Asset` for the guild avatar the member has. If unavailable, ``None`` is returned."
 msgstr "Returns an :class:`Asset` for the guild avatar the member has. If unavailable, ``None`` is returned."
 
+msgid "Returns the member's display banner."
+msgstr "Returns the member's display banner."
+
+msgid "For regular members this is just their banner, but if they have a guild specific banner then that is returned instead."
+msgstr "For regular members this is just their banner, but if they have a guild specific banner then that is returned instead."
+
+msgid "Returns an :class:`Asset` for the guild banner the member has. If unavailable, ``None`` is returned."
+msgstr "Returns an :class:`Asset` for the guild banner the member has. If unavailable, ``None`` is returned."
+
 msgid "Returns the primary activity the user is currently doing. Could be ``None`` if no activity is being done."
 msgstr "Returns the primary activity the user is currently doing. Could be ``None`` if no activity is being done."
 
@@ -3737,9 +3830,6 @@ msgstr "The creator of the template."
 msgid "An aware datetime in UTC representing when the template was created."
 msgstr "An aware datetime in UTC representing when the template was created."
 
-msgid ":class:`datetime.datetime`"
-msgstr ":class:`datetime.datetime`"
-
 msgid "An aware datetime in UTC representing when the template was last updated. This is referred to as \"last synced\" in the official Discord client."
 msgstr "An aware datetime in UTC representing when the template was last updated. This is referred to as \"last synced\" in the official Discord client."
 
@@ -3889,9 +3979,6 @@ msgstr "Whether this rule is enabled."
 
 msgid "The IDs of the roles that are exempt from this rule."
 msgstr "The IDs of the roles that are exempt from this rule."
-
-msgid "List[:class:`int`]"
-msgstr "List[:class:`int`]"
 
 msgid "The IDs of the channels that are exempt from this rule."
 msgstr "The IDs of the channels that are exempt from this rule."
@@ -4199,9 +4286,6 @@ msgstr "How many times the invite can be used. A value of ``0`` indicates that i
 msgid "The user who created the invite."
 msgstr "The user who created the invite."
 
-msgid "Optional[:class:`User`]"
-msgstr "Optional[:class:`User`]"
-
 msgid "The approximate number of members in the guild."
 msgstr "The approximate number of members in the guild."
 
@@ -4316,8 +4400,8 @@ msgstr "The position of the role. This number is usually positive. The bottom ro
 msgid "Multiple roles can have the same position number. As a consequence of this, comparing via role position is prone to subtle bugs if checking for role hierarchy. The recommended and correct way to compare for roles in the hierarchy is using the comparison operators on the role objects themselves."
 msgstr "Multiple roles can have the same position number. As a consequence of this, comparing via role position is prone to subtle bugs if checking for role hierarchy. The recommended and correct way to compare for roles in the hierarchy is using the comparison operators on the role objects themselves."
 
-msgid "Indicates if the role is managed by the guild through some form of integrations such as Twitch."
-msgstr "Indicates if the role is managed by the guild through some form of integrations such as Twitch."
+msgid "Indicates if the role is managed by the guild. This is true if any of :meth:`Role.is_integration`, :meth:`Role.is_premium_subscriber`, :meth:`Role.is_bot_managed` or :meth:`Role.is_guild_connections_role` is ``True``."
+msgstr "Indicates if the role is managed by the guild. This is true if any of :meth:`Role.is_integration`, :meth:`Role.is_premium_subscriber`, :meth:`Role.is_bot_managed` or :meth:`Role.is_guild_connections_role` is ``True``."
 
 msgid "Indicates if the role can be mentioned by users."
 msgstr "Indicates if the role can be mentioned by users."
@@ -4346,11 +4430,20 @@ msgstr "Whether the role is associated with a bot. :rtype: :sphinx_autodoc_typeh
 msgid "Whether the role is the premium subscriber, AKA \"boost\", role for the guild. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr "Whether the role is the premium subscriber, AKA \"boost\", role for the guild. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
-msgid "Whether the role is managed by an integration. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Whether the role is managed by an integration. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Whether the guild manages the role through some form of integrations such as Twitch or through guild subscriptions. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Whether the guild manages the role through some form of integrations such as Twitch or through guild subscriptions. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "Whether the role is able to be assigned or removed by the bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr "Whether the role is able to be assigned or removed by the bot. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid "Whether the role is available for purchase."
+msgstr "Whether the role is available for purchase."
+
+msgid "Returns ``True`` if the role is available for purchase, and ``False`` if it is not available for purchase or if the role is not linked to a guild subscription. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Returns ``True`` if the role is available for purchase, and ``False`` if it is not available for purchase or if the role is not linked to a guild subscription. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid "Whether the role is a guild connections role. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Whether the role is a guild connections role. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "Returns the role's permissions."
 msgstr "Returns the role's permissions."
@@ -4439,11 +4532,17 @@ msgstr "A role tag is a piece of extra information attached to a managed role th
 msgid "While this can be accessed, a useful interface is also provided in the :class:`Role` and :class:`Guild` classes as well."
 msgstr "While this can be accessed, a useful interface is also provided in the :class:`Role` and :class:`Guild` classes as well."
 
+msgid "Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type. We aim to improve the documentation / introduce new attributes in future. For the meantime read `this <https://discord-lib-devs.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work."
+msgstr "Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type. We aim to improve the documentation / introduce new attributes in future. For the meantime read `this <https://discord-lib-devs.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work."
+
 msgid "The bot's user ID that manages this role."
 msgstr "The bot's user ID that manages this role."
 
 msgid "The integration ID that manages the role."
 msgstr "The integration ID that manages the role."
+
+msgid "The subscription SKU and listing ID of the role."
+msgstr "The subscription SKU and listing ID of the role."
 
 msgid "Whether the role is associated with a bot."
 msgstr "Whether the role is associated with a bot."
@@ -4451,8 +4550,8 @@ msgstr "Whether the role is associated with a bot."
 msgid "Whether the role is the premium subscriber, AKA \"boost\", role for the guild."
 msgstr "Whether the role is the premium subscriber, AKA \"boost\", role for the guild."
 
-msgid "Whether the role is managed by an integration."
-msgstr "Whether the role is managed by an integration."
+msgid "Whether the guild manages the role through some form of integrations such as Twitch or through guild subscriptions."
+msgstr "Whether the guild manages the role through some form of integrations such as Twitch or through guild subscriptions."
 
 msgid "Scheduled Event"
 msgstr "Scheduled Event"
@@ -4694,6 +4793,9 @@ msgstr "The description of the channel that is shown on the welcome screen."
 msgid "The emoji of the channel that is shown on welcome screen."
 msgstr "The emoji of the channel that is shown on welcome screen."
 
+msgid "Union[:class:`GuildEmoji`, :class:`PartialEmoji`, :class:`str`]"
+msgstr "Union[:class:`GuildEmoji`, :class:`PartialEmoji`, :class:`str`]"
+
 msgid "Onboarding"
 msgstr "Onboarding"
 
@@ -4811,8 +4913,8 @@ msgstr "The roles assigned to the user when they select this option."
 msgid "The emoji displayed with the option."
 msgstr "The emoji displayed with the option."
 
-msgid "Union[:class:`Emoji`, :class:`PartialEmoji`]"
-msgstr "Union[:class:`Emoji`, :class:`PartialEmoji`]"
+msgid "Union[:class:`GuildEmoji`, :class:`PartialEmoji`]"
+msgstr "Union[:class:`GuildEmoji`, :class:`PartialEmoji`]"
 
 msgid "The option's title."
 msgstr "The option's title."
@@ -5189,8 +5291,8 @@ msgstr "This requires :attr:`Intents.members` to be properly filled. Most of the
 msgid "A list of tags applied to this thread."
 msgstr "A list of tags applied to this thread."
 
-msgid "This is only available for threads in forum channels."
-msgstr "This is only available for threads in forum channels."
+msgid "This is only available for threads in forum or media channels."
+msgstr "This is only available for threads in forum or media channels."
 
 msgid "List[:class:`ForumTag`]"
 msgstr "List[:class:`ForumTag`]"
@@ -5240,8 +5342,8 @@ msgstr "The ID for this message is the same as the thread ID."
 msgid "The message that started this thread or ``None`` if not found in the cache."
 msgstr "The message that started this thread or ``None`` if not found in the cache."
 
-msgid "Whether the thread is pinned to the top of its parent forum channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Whether the thread is pinned to the top of its parent forum channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Whether the thread is pinned to the top of its parent forum or media channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Whether the thread is pinned to the top of its parent forum or media channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "Whether the thread is a private thread."
 msgstr "Whether the thread is a private thread."
@@ -5381,8 +5483,8 @@ msgstr "The new duration in minutes before a thread is automatically archived fo
 msgid "The reason for editing this thread. Shows up on the audit log."
 msgstr "The reason for editing this thread. Shows up on the audit log."
 
-msgid "Whether to pin the thread or not. This only works if the thread is part of a forum."
-msgstr "Whether to pin the thread or not. This only works if the thread is part of a forum."
+msgid "Whether to pin the thread or not. This only works if the thread is part of a forum or media channel."
+msgstr "Whether to pin the thread or not. This only works if the thread is part of a forum or media channel."
 
 msgid "The set of tags to apply to the thread. Each tag object should have an ID set.  .. versionadded:: 2.3"
 msgstr "The set of tags to apply to the thread. Each tag object should have an ID set.  .. versionadded:: 2.3"
@@ -6131,8 +6233,8 @@ msgstr "The guild ID the interaction was sent from."
 msgid "The channel the interaction was sent from."
 msgstr "The channel the interaction was sent from."
 
-msgid "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]"
-msgstr "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]"
+msgid "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]"
+msgstr "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]"
 
 msgid "The ID of the channel the interaction was sent from."
 msgstr "The ID of the channel the interaction was sent from."
@@ -6197,8 +6299,8 @@ msgstr "Indicates whether the interaction is an application command."
 msgid "Indicates whether the interaction is a message component."
 msgstr "Indicates whether the interaction is a message component."
 
-msgid "Note that due to a Discord limitation, DM channels are not resolved since there is no data to complete them. These are :class:`PartialMessageable` instead."
-msgstr "Note that due to a Discord limitation, DM channels are not resolved since there is no data to complete them. These are :class:`PartialMessageable` instead."
+msgid "The cached channel from which the interaction was sent. DM channels are not resolved. These are :class:`PartialMessageable` instead."
+msgstr "The cached channel from which the interaction was sent. DM channels are not resolved. These are :class:`PartialMessageable` instead."
 
 msgid "The resolved permissions of the member in the channel, including overwrites."
 msgstr "The resolved permissions of the member in the channel, including overwrites."
@@ -6217,6 +6319,30 @@ msgstr "A response can only be done once. If secondary messages need to be sent,
 
 msgid "Returns the followup webhook for followup interactions."
 msgstr "Returns the followup webhook for followup interactions."
+
+msgid ":class:`bool`: Checks if the interaction is guild authorised."
+msgstr ":class:`bool`: Checks if the interaction is guild authorised."
+
+msgid "There is an alias for this called :meth:`.is_guild_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "There is an alias for this called :meth:`.is_guild_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid ":class:`bool`: Checks if the interaction is user authorised."
+msgstr ":class:`bool`: Checks if the interaction is user authorised."
+
+msgid "There is an alias for this called :meth:`.is_user_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "There is an alias for this called :meth:`.is_user_authorized`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid ":class:`bool`: Checks if the interaction is guild authorized."
+msgstr ":class:`bool`: Checks if the interaction is guild authorized."
+
+msgid "There is an alias for this called :meth:`.is_guild_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "There is an alias for this called :meth:`.is_guild_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+
+msgid ":class:`bool`: Checks if the interaction is user authorized."
+msgstr ":class:`bool`: Checks if the interaction is user authorized."
+
+msgid "There is an alias for this called :meth:`.is_user_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "There is an alias for this called :meth:`.is_user_authorised`. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "Fetches the original interaction response message associated with the interaction."
 msgstr "Fetches the original interaction response message associated with the interaction."
@@ -6629,8 +6755,8 @@ msgstr "Whether the select is disabled or not."
 msgid "Emoji"
 msgstr "Emoji"
 
-msgid "Represents a custom emoji."
-msgstr "Represents a custom emoji."
+msgid "Represents a custom emoji in a guild."
+msgstr "Represents a custom emoji in a guild."
 
 msgid "Depending on the way this object was created, some attributes can have a value of ``None``."
 msgstr "Depending on the way this object was created, some attributes can have a value of ``None``."
@@ -6671,12 +6797,6 @@ msgstr "Whether the emoji is available for use."
 msgid "The user that created the emoji. This can only be retrieved using :meth:`Guild.fetch_emoji` and having the :attr:`~Permissions.manage_emojis` permission."
 msgstr "The user that created the emoji. This can only be retrieved using :meth:`Guild.fetch_emoji` and having the :attr:`~Permissions.manage_emojis` permission."
 
-msgid "Returns the emoji's creation time in UTC."
-msgstr "Returns the emoji's creation time in UTC."
-
-msgid "Returns the URL of the emoji."
-msgstr "Returns the URL of the emoji."
-
 msgid "A :class:`list` of roles that is allowed to use this emoji."
 msgstr "A :class:`list` of roles that is allowed to use this emoji."
 
@@ -6715,6 +6835,48 @@ msgstr "An error occurred editing the emoji."
 
 msgid "The newly updated emoji."
 msgstr "The newly updated emoji."
+
+msgid "Returns the emoji's creation time in UTC."
+msgstr "Returns the emoji's creation time in UTC."
+
+msgid "Returns the URL of the emoji."
+msgstr "Returns the URL of the emoji."
+
+msgid "Represents a custom emoji from an application."
+msgstr "Represents a custom emoji from an application."
+
+msgid "The application ID the emoji belongs to, if available."
+msgstr "The application ID the emoji belongs to, if available."
+
+msgid "The user that created the emoji."
+msgstr "The user that created the emoji."
+
+msgid "The guild this emoji belongs to. This is always `None` for :class:`AppEmoji`."
+msgstr "The guild this emoji belongs to. This is always `None` for :class:`AppEmoji`."
+
+msgid "A :class:`list` of roles that is allowed to use this emoji. This is always empty for :class:`AppEmoji`."
+msgstr "A :class:`list` of roles that is allowed to use this emoji. This is always empty for :class:`AppEmoji`."
+
+msgid "Whether the bot can use this emoji."
+msgstr "Whether the bot can use this emoji."
+
+msgid "Deletes the application emoji."
+msgstr "Deletes the application emoji."
+
+msgid "You must own the emoji to do this."
+msgstr "You must own the emoji to do this."
+
+msgid "You are not allowed to delete the emoji."
+msgstr "You are not allowed to delete the emoji."
+
+msgid "Edits the application emoji."
+msgstr "Edits the application emoji."
+
+msgid "You are not allowed to edit the emoji."
+msgstr "You are not allowed to edit the emoji."
+
+msgid ":class:`AppEmoji`"
+msgstr ":class:`AppEmoji`"
 
 msgid "Represents a \"partial\" emoji."
 msgstr "Represents a \"partial\" emoji."
@@ -6953,14 +7115,14 @@ msgstr "Optional[:class:`SortOrder`]"
 msgid "The default forum reaction emoji."
 msgstr "The default forum reaction emoji."
 
-msgid "Optional[:class:`str` | :class:`discord.Emoji`]"
-msgstr "Optional[:class:`str` | :class:`discord.Emoji`]"
+msgid "Optional[:class:`str` | :class:`discord.GuildEmoji`]"
+msgstr "Optional[:class:`str` | :class:`discord.GuildEmoji`]"
 
 msgid "The channel's guidelines. An alias of :attr:`topic`."
 msgstr "The channel's guidelines. An alias of :attr:`topic`."
 
-msgid "Whether a tag is required to be specified when creating a thread in this forum channel."
-msgstr "Whether a tag is required to be specified when creating a thread in this forum channel."
+msgid "Whether a tag is required to be specified when creating a thread in this forum or media channel."
+msgstr "Whether a tag is required to be specified when creating a thread in this forum or media channel."
 
 msgid "Tags are specified in :attr:`applied_tags`."
 msgstr "Tags are specified in :attr:`applied_tags`."
@@ -6977,8 +7139,8 @@ msgstr "The default sort order type to use to order posts in this channel.  .. v
 msgid "The default sort order type to use to order posts in this channel."
 msgstr "The default sort order type to use to order posts in this channel."
 
-msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: 2.5"
-msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`Emoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: 2.5"
+msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: 2.5"
+msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').  .. versionadded:: 2.5"
 
 msgid "The set of tags that can be used in this channel. Must be less than `20`.  .. versionadded:: 2.3"
 msgstr "The set of tags that can be used in this channel. Must be less than `20`.  .. versionadded:: 2.3"
@@ -7009,6 +7171,24 @@ msgstr "A list of tags to apply to the new thread."
 
 msgid "The number of seconds a member must wait between sending messages in the new thread. A value of `0` denotes that it is disabled. Bots and users with :attr:`~Permissions.manage_channels` or :attr:`~Permissions.manage_messages` bypass slowmode. If not provided, the forum channel's default slowmode is used."
 msgstr "The number of seconds a member must wait between sending messages in the new thread. A value of `0` denotes that it is disabled. Bots and users with :attr:`~Permissions.manage_channels` or :attr:`~Permissions.manage_messages` bypass slowmode. If not provided, the forum channel's default slowmode is used."
+
+msgid "Represents a Discord media channel. Subclass of :class:`ForumChannel`."
+msgstr "Represents a Discord media channel. Subclass of :class:`ForumChannel`."
+
+msgid "Whether media download options are hidden in this media channel."
+msgstr "Whether media download options are hidden in this media channel."
+
+msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (e.g., '<a:emoji_name:emoji_id>')."
+msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (e.g., '<a:emoji_name:emoji_id>')."
+
+msgid "Whether media download options should be hidden in this media channel."
+msgstr "Whether media download options should be hidden in this media channel."
+
+msgid "The newly edited media channel. If the edit was only positional then ``None`` is returned instead."
+msgstr "The newly edited media channel. If the edit was only positional then ``None`` is returned instead."
+
+msgid "Optional[:class:`.MediaChannel`]"
+msgstr "Optional[:class:`.MediaChannel`]"
 
 msgid "Represents a Discord guild voice channel."
 msgstr "Represents a Discord guild voice channel."

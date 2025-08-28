@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "API Reference"
 msgstr "API Reference"
@@ -269,6 +269,12 @@ msgstr "The view is not persistent. A persistent view has no timeout     and all
 msgid "The allowed mention configuration."
 msgstr "The allowed mention configuration."
 
+msgid "The :class:`~discord.AppEmoji` that the connected client has."
+msgstr "The :class:`~discord.AppEmoji` that the connected client has."
+
+msgid "This is only available if `cache_app_emojis` is ``True``."
+msgstr "This is only available if `cache_app_emojis` is ``True``."
+
 msgid "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`~.Bot.add_application_command`."
 msgstr "A shortcut decorator that invokes :func:`command` and adds it to the internal command list via :meth:`~.Bot.add_application_command`."
 
@@ -374,6 +380,27 @@ msgstr "The channel that was created."
 msgid ":class:`.DMChannel`"
 msgstr ":class:`.DMChannel`"
 
+msgid "Creates a custom :class:`AppEmoji` for the application."
+msgstr "Creates a custom :class:`AppEmoji` for the application."
+
+msgid "There is currently a limit of 2000 emojis per application."
+msgstr "There is currently a limit of 2000 emojis per application."
+
+msgid "The emoji name. Must be at least 2 characters."
+msgstr "The emoji name. Must be at least 2 characters."
+
+msgid "The :term:`py:bytes-like object` representing the image data to use. Only JPG, PNG and GIF images are supported."
+msgstr "The :term:`py:bytes-like object` representing the image data to use. Only JPG, PNG and GIF images are supported."
+
+msgid "An error occurred creating an emoji."
+msgstr "An error occurred creating an emoji."
+
+msgid "The created emoji."
+msgstr "The created emoji."
+
+msgid ":class:`AppEmoji`"
+msgstr ":class:`AppEmoji`"
+
 msgid "A shortcut method that creates a slash command group with no subcommands and adds it to the internal command list via :meth:`add_application_command`."
 msgstr "A shortcut method that creates a slash command group with no subcommands and adds it to the internal command list via :meth:`add_application_command`."
 
@@ -422,6 +449,15 @@ msgstr "Guild creation failed."
 msgid "Invalid icon image format given. Must be PNG or JPG."
 msgstr "Invalid icon image format given. Must be PNG or JPG."
 
+msgid "Deletes the custom :class:`AppEmoji` from the application."
+msgstr "Deletes the custom :class:`AppEmoji` from the application."
+
+msgid "The emoji you are deleting."
+msgstr "The emoji you are deleting."
+
+msgid "An error occurred deleting the emoji."
+msgstr "An error occurred deleting the emoji."
+
 msgid "Revokes an :class:`.Invite`, URL, or ID to an invite."
 msgstr "Revokes an :class:`.Invite`, URL, or ID to an invite."
 
@@ -442,6 +478,9 @@ msgstr "Revoking the invite failed."
 
 msgid "The emojis that the connected client has."
 msgstr "The emojis that the connected client has."
+
+msgid "This only includes the application's emojis if `cache_app_emojis` is ``True``."
+msgstr "This only includes the application's emojis if `cache_app_emojis` is ``True``."
 
 msgid "Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements."
 msgstr "Returns an :class:`.AsyncIterator` that enables fetching the application's entitlements."
@@ -536,6 +575,33 @@ msgstr "Invalid Channel ID."
 msgid "You do not have permission to fetch this channel."
 msgstr "You do not have permission to fetch this channel."
 
+msgid "Retrieves a custom :class:`AppEmoji` from the application."
+msgstr "Retrieves a custom :class:`AppEmoji` from the application."
+
+msgid "The emoji's ID."
+msgstr "The emoji's ID."
+
+msgid "The retrieved emoji."
+msgstr "The retrieved emoji."
+
+msgid "The emoji requested could not be found."
+msgstr "The emoji requested could not be found."
+
+msgid "An error occurred fetching the emoji."
+msgstr "An error occurred fetching the emoji."
+
+msgid "Retrieves all custom :class:`AppEmoji`\\s from the application."
+msgstr "Retrieves all custom :class:`AppEmoji`\\s from the application."
+
+msgid "An error occurred fetching the emojis."
+msgstr "An error occurred fetching the emojis."
+
+msgid "The retrieved emojis."
+msgstr "The retrieved emojis."
+
+msgid "List[:class:`AppEmoji`]"
+msgstr "List[:class:`AppEmoji`]"
+
 msgid "Retrieves a :class:`.Guild` from an ID."
 msgstr "Retrieves a :class:`.Guild` from an ID."
 
@@ -580,6 +646,9 @@ msgstr "Retrieves guilds before this date or object. If a datetime is provided, 
 
 msgid "Retrieve guilds after this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
 msgstr "Retrieve guilds after this date or object. If a datetime is provided, it is recommended to use a UTC aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "Whether to include member count information in guilds. This fills the :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count` fields. Defaults to ``True``."
+msgstr "Whether to include member count information in guilds. This fills the :attr:`.Guild.approximate_member_count` and :attr:`.Guild.approximate_presence_count` fields. Defaults to ``True``."
 
 msgid ":class:`.Guild` -- The guild with the guild data parsed."
 msgstr ":class:`.Guild` -- The guild with the guild data parsed."
@@ -776,6 +845,9 @@ msgstr "A generator that retrieves every :class:`.abc.GuildChannel` the client c
 msgid "This is equivalent to: ::"
 msgstr "This is equivalent to: ::"
 
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+
 msgid "Just because you receive a :class:`.abc.GuildChannel` does not mean that you can communicate in said channel. :meth:`.abc.GuildChannel.permissions_for` should be used for that."
 msgstr "Just because you receive a :class:`.abc.GuildChannel` does not mean that you can communicate in said channel. :meth:`.abc.GuildChannel.permissions_for` should be used for that."
 
@@ -787,6 +859,9 @@ msgstr "Returns a generator with every :class:`.Member` the client can see."
 
 msgid ":class:`.Member` -- A member the client can see."
 msgstr ":class:`.Member` -- A member the client can see."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "Get an :class:`.ApplicationCommand` from the internal list of commands."
 msgstr "Get an :class:`.ApplicationCommand` from the internal list of commands."
@@ -920,8 +995,8 @@ msgstr "Returns an emoji with the given ID."
 msgid "The custom emoji or ``None`` if not found."
 msgstr "The custom emoji or ``None`` if not found."
 
-msgid "Optional[:class:`.Emoji`]"
-msgstr "Optional[:class:`.Emoji`]"
+msgid "Optional[:class:`.GuildEmoji` | :class:`.AppEmoji`]"
+msgstr "Optional[:class:`.GuildEmoji` | :class:`.AppEmoji`]"
 
 msgid "Returns a guild with the given ID."
 msgstr "Returns a guild with the given ID."
@@ -1019,6 +1094,9 @@ msgstr "Optional[:class:`.GuildSticker`]"
 msgid "Returns a user with the given ID."
 msgstr "Returns a user with the given ID."
 
+msgid "The :class:`~discord.GuildEmoji` that the connected client has."
+msgstr "The :class:`~discord.GuildEmoji` that the connected client has."
+
 msgid "The guilds that the connected client is a member of."
 msgstr "The guilds that the connected client is a member of."
 
@@ -1064,8 +1142,8 @@ msgstr "Whether the WebSocket is currently rate limited."
 msgid "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr "This can be useful to know when deciding whether you should query members using HTTP or via the gateway. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
-msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
-msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``."
+msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If no websocket is present, this returns ``nan``, and if no heartbeat has been received yet, this returns ``float('inf')``."
 
 msgid "This could be referred to as the Discord WebSocket protocol latency."
 msgstr "This could be referred to as the Discord WebSocket protocol latency."
@@ -1505,8 +1583,11 @@ msgstr "An iterator that recursively walks through all application commands and 
 msgid ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
 msgstr ":class:`.ApplicationCommand` -- An application command from the internal list of application commands."
 
-msgid "An iterator that recursively walks through all commands and subcommands."
-msgstr "An iterator that recursively walks through all commands and subcommands."
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+
+msgid "An iterator that recursively walks through all commands and subcommands. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr "An iterator that recursively walks through all commands and subcommands. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 
 msgid "Duplicates due to aliases are no longer returned"
 msgstr "Duplicates due to aliases are no longer returned"
@@ -1928,6 +2009,9 @@ msgstr "An iterator that recursively walks through this cog's commands and subco
 msgid "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 msgstr "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the cog."
 
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+
 msgid "A :class:`list` of commands that are defined inside this cog.  .. note::      This does not include subcommands."
 msgstr "A :class:`list` of commands that are defined inside this cog.  .. note::      This does not include subcommands."
 
@@ -2107,6 +2191,9 @@ msgstr "Whether to sort the result."
 
 msgid "An optional key function to pass to :func:`py:sorted` that takes a :class:`Command` as its sole parameter. If ``sort`` is passed as ``True`` then this will default as the command name."
 msgstr "An optional key function to pass to :func:`py:sorted` that takes a :class:`Command` as its sole parameter. If ``sort`` is passed as ``True`` then this will default as the command name."
+
+msgid "A tuple of command types to exclude from the filter."
+msgstr "A tuple of command types to exclude from the filter."
 
 msgid "A list of commands that passed the filter."
 msgstr "A list of commands that passed the filter."
@@ -3371,8 +3458,8 @@ msgstr "Added support for ``rgb`` function and 3-digit hex shortcuts"
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.colour.Colour\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.colour.Colour\\``"
 
-msgid "Converts to a :class:`~discord.Emoji`."
-msgstr "Converts to a :class:`~discord.Emoji`."
+msgid "Converts to a :class:`~discord.GuildEmoji`."
+msgstr "Converts to a :class:`~discord.GuildEmoji`."
 
 msgid "All lookups are done for the local guild first, if available. If that lookup fails, then it checks the client's global cache."
 msgstr "All lookups are done for the local guild first, if available. If that lookup fails, then it checks the client's global cache."
@@ -3383,8 +3470,8 @@ msgstr "Lookup by extracting ID from the emoji."
 msgid "Raise :exc:`.EmojiNotFound` instead of generic :exc:`.BadArgument`"
 msgstr "Raise :exc:`.EmojiNotFound` instead of generic :exc:`.BadArgument`"
 
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.Emoji\\``"
-msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.Emoji\\``"
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.GuildEmoji\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.GuildEmoji\\``"
 
 msgid "Converts to a :class:`~discord.PartialEmoji`."
 msgstr "Converts to a :class:`~discord.PartialEmoji`."

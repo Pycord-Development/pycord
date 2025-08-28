@@ -68,9 +68,11 @@ from .widget import Widget
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import DMChannel
+    from .interaction import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
+    from .ui.item import Item
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -540,6 +542,38 @@ class Client:
         """
         print(f"Ignoring exception in {event_method}", file=sys.stderr)
         traceback.print_exc()
+
+    async def on_view_error(
+        self, error: Exception, item: Item, interaction: Interaction
+    ) -> None:
+        """|coro|
+
+        The default view error handler provided by the client.
+
+        This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
+        """
+
+        print(
+            f"Ignoring exception in view {interaction.view} for item {item}:",
+            file=sys.stderr,
+        )
+        traceback.print_exception(
+            error.__class__, error, error.__traceback__, file=sys.stderr
+        )
+
+    async def on_modal_error(self, error: Exception, interaction: Interaction) -> None:
+        """|coro|
+
+        The default modal error handler provided by the client.
+        The default implementation prints the traceback to stderr.
+
+        This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+        """
+
+        print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
+        traceback.print_exception(
+            error.__class__, error, error.__traceback__, file=sys.stderr
+        )
 
     # hooks
 
@@ -2087,7 +2121,7 @@ class Client:
             The bot's SKUs.
         """
         data = await self._connection.http.list_skus(self.application_id)
-        return [SKU(data=s) for s in data]
+        return [SKU(state=self._connection, data=s) for s in data]
 
     def entitlements(
         self,

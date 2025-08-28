@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 23:44+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.16.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/data_classes.rst:6 0a78c32f65ce438ea508fc4e400c8264
 msgid "Data Classes"
@@ -82,27 +82,12 @@ msgstr ""
 msgid "The ID of the object."
 msgstr ""
 
-#: ../../docstring 022ca6f62fc649d3babfa503e9a7527d
-#: 07a6ab3ef7b647039bcefeda19b570d7 0945efcada3240758eff2c695d616f32
-#: 0a9f06d333124df0aae9049074965a81 0b6bdc9f79764717a733eb7a5958f520
-#: 0ba8abd38afb4d208cbc471b1d0baa5e 0d8cf03e305c441a937b9d418b558488
-#: 10706bbef0c04fe0bc85c95ac3cdaa67 1b41ad05a49849278911c3e2f57c8e5d
-#: 240d3aad39f04f92b476f6ba0e75007f 2842d4409acc41a2964ac2c83972b347
-#: 2d431f876ab54a9ba881a6e21b29e517 308a58630c4e48c2acc2d2a709e660fd
-#: 37389512c06c42c1b0ba531669e662b5 3cde02c1afdd471284767db5f3c67801
-#: 45420bc3f5e249dd8ef820bdb4863ddc 530e6956dbfa465a8855e5b8b2e6529f
-#: 54d86a1d1b3d4c87b667471e1a7d424f 5d194e2b41154c9abe702d59bd5d87b8
-#: 5d20cdf35cf44064b8c208f270ffa578 674e78410f3641199148d66412633ac2
-#: 6c4d566dbc03451c823e41e2f0cb5dd1 6db56029d8d0485abf50e5258830aff5
-#: 6e2e7aa2a7c449a99e8f05fdfee3dc1a 723831052aca4c2d94163331d498fab4
-#: 74d5fdba4b784f47b2373e8c543a62b3 756b428ff3f9484e91ab6d231993be61
-#: 8011db96a73b497495b8da7fd21bc04e 80c538be47764e71bee2f99f7603a06c
-#: 83632daae24b47c8b698763bdf3d970f 859d68d0649d49978f9dc52e463ae367
-#: 95e6b772d9f5492787b72ae79a2f21ba af2b5a1b3db74038a31df759ea7c8813
-#: c06aab6000c143bc9084e6898cd79330 c0b5a0d23eb144df849ae21e56e1c8cf
+#: ../../docstring 0b6bdc9f79764717a733eb7a5958f520
+#: 0d8cf03e305c441a937b9d418b558488 3cde02c1afdd471284767db5f3c67801
+#: 45420bc3f5e249dd8ef820bdb4863ddc 6c4d566dbc03451c823e41e2f0cb5dd1
+#: 723831052aca4c2d94163331d498fab4 756b428ff3f9484e91ab6d231993be61
 #: d04be24516744c6cb0d8a75985d21242 d658a315c6b74568a6988f7cbfd0bfd5
-#: df0fb4b2f1aa45beb6b6920a8e335e0c discord.ApplicationFlags.active
-#: discord.ApplicationFlags.app_commands_badge
+#: discord.ApplicationFlags.active discord.ApplicationFlags.app_commands_badge
 #: discord.ApplicationFlags.application_auto_moderation_rule_create_badge
 #: discord.ApplicationFlags.embedded
 #: discord.ApplicationFlags.gateway_guild_members
@@ -116,7 +101,8 @@ msgstr ""
 #: discord.ApplicationFlags.rpc_has_connected
 #: discord.ApplicationFlags.verification_pending_guild_limit
 #: discord.AttachmentFlags.is_clip discord.AttachmentFlags.is_remix
-#: discord.AttachmentFlags.is_thumbnail discord.ChannelFlags.pinned
+#: discord.AttachmentFlags.is_thumbnail
+#: discord.ChannelFlags.hide_media_download_options discord.ChannelFlags.pinned
 #: discord.ChannelFlags.require_tag
 #: discord.Intents.auto_moderation_configuration
 #: discord.Intents.auto_moderation_execution discord.Intents.bans
@@ -137,7 +123,8 @@ msgstr ""
 #: discord.MemberFlags.started_onboarding discord.MessageFlags.crossposted
 #: discord.MessageFlags.ephemeral
 #: discord.MessageFlags.failed_to_mention_some_roles_in_thread
-#: discord.MessageFlags.has_thread discord.MessageFlags.is_crossposted
+#: discord.MessageFlags.has_snapshot discord.MessageFlags.has_thread
+#: discord.MessageFlags.is_components_v2 discord.MessageFlags.is_crossposted
 #: discord.MessageFlags.is_voice_message discord.MessageFlags.loading
 #: discord.MessageFlags.source_message_deleted
 #: discord.MessageFlags.suppress_embeds
@@ -169,10 +156,13 @@ msgstr ""
 #: discord.Permissions.use_application_commands
 #: discord.Permissions.use_external_apps
 #: discord.Permissions.use_external_emojis
+#: discord.Permissions.use_external_sounds
 #: discord.Permissions.use_external_stickers
-#: discord.Permissions.use_slash_commands
+#: discord.Permissions.use_slash_commands discord.Permissions.use_soundboard
 #: discord.Permissions.use_voice_activation discord.Permissions.view_audit_log
-#: discord.Permissions.view_channel discord.Permissions.view_guild_insights
+#: discord.Permissions.view_channel
+#: discord.Permissions.view_creator_monetization_analytics
+#: discord.Permissions.view_guild_insights
 #: discord.PublicUserFlags.active_developer
 #: discord.PublicUserFlags.bot_http_interactions
 #: discord.PublicUserFlags.bug_hunter
@@ -195,8 +185,8 @@ msgstr ""
 #: discord.SystemChannelFlags.premium_subscriptions discord.activity.Activity
 #: discord.activity.CustomActivity discord.activity.Game
 #: discord.activity.Streaming discord.colour.Colour
-#: discord.components.SelectOption discord.embeds.Embed
-#: discord.embeds.EmbedAuthor discord.embeds.EmbedField
+#: discord.components.SelectOption discord.components.UnfurledMediaItem
+#: discord.embeds.Embed discord.embeds.EmbedAuthor discord.embeds.EmbedField
 #: discord.embeds.EmbedFooter discord.embeds.EmbedMedia
 #: discord.embeds.EmbedProvider discord.file.File
 #: discord.flags.ApplicationFlags discord.flags.AttachmentFlags
@@ -208,38 +198,30 @@ msgstr ""
 #: discord.message.MessageReference discord.message.PartialMessage
 #: discord.object.Object discord.permissions.Permissions discord.poll.Poll
 #: discord.poll.PollAnswer discord.poll.PollAnswerCount discord.poll.PollMedia
-#: discord.poll.PollResults discord.shard.ShardInfo
-#: e4011bea52634c7ba64aef6135dffbd2 e6bfdc42ce134a04bfb90118a9947aa3
-#: ea47348b77604cd6bf327c57b7ff3d6d f15f5916f3c44904946502c7f1bc41b0
-#: f2c8b1fc5b0349b3b47cf0bf7adfa959 f4b5a29e047f49c391e8f8314e7befd1
-#: ffb6921ba007446f9ef96812b7f54ea6 of
+#: discord.poll.PollResults discord.shard.ShardInfo of
 msgid "type"
 msgstr ""
 
-#: 0a3305279543462d880226cdad446ec5 47963b10a3744670a53e06986a02d383
-#: 6674934795ef4e7c9fb97e9e9883e91e 787271a8ad0043a4b44cc5a717c8b26b
-#: 83ced52f44bb4a1c95f0962207ce50dc discord.colour.Colour:32
-#: discord.embeds.EmbedMedia:22 discord.embeds.EmbedMedia:28
-#: discord.flags.ApplicationFlags:42 discord.flags.AttachmentFlags:42
-#: discord.flags.ChannelFlags:42 discord.flags.Intents:52
-#: discord.flags.MemberCacheFlags:55 discord.flags.MemberFlags:42
-#: discord.flags.MessageFlags:44 discord.flags.PublicUserFlags:43
-#: discord.flags.RoleFlags:43 discord.flags.SKUFlags:42
-#: discord.flags.SystemChannelFlags:47 discord.message.MessageReference:18
-#: discord.message.PartialMessage:42 discord.object.Object:32
-#: discord.permissions.Permissions:62 discord.poll.Poll:21
-#: discord.poll.PollAnswer:10 discord.poll.PollAnswerCount:10
-#: discord.poll.PollAnswerCount:16 discord.poll.PollResults.total_votes:4
-#: discord.shard.ShardInfo:12 of
+#: 0a3305279543462d880226cdad446ec5 787271a8ad0043a4b44cc5a717c8b26b
+#: discord.colour.Colour:32 discord.embeds.EmbedMedia:22
+#: discord.embeds.EmbedMedia:28 discord.flags.ApplicationFlags:42
+#: discord.flags.AttachmentFlags:42 discord.flags.ChannelFlags:42
+#: discord.flags.Intents:52 discord.flags.MemberCacheFlags:55
+#: discord.flags.MemberFlags:42 discord.flags.MessageFlags:44
+#: discord.flags.PublicUserFlags:43 discord.flags.RoleFlags:43
+#: discord.flags.SKUFlags:42 discord.flags.SystemChannelFlags:47
+#: discord.message.MessageReference:26 discord.message.PartialMessage:42
+#: discord.object.Object:32 discord.permissions.Permissions:62
+#: discord.poll.Poll:21 discord.poll.PollAnswer:10
+#: discord.poll.PollAnswerCount:10 discord.poll.PollAnswerCount:16
+#: discord.poll.PollResults.total_votes:4 discord.shard.ShardInfo:12 of
 msgid ":class:`int`"
 msgstr ""
 
 #: ../../api/data_classes.rst 17d3622dc479450a9951e9f01f4e961e
-#: 41838a50196b4f6281147969c43977d0 62c0635de0e14e85b11eb228a093d50b
-#: 89e6520d4ff047f18dee15ce511b202d b5ea8629223b4b5b93a1742e5a53077e
-#: bc227baf3a35408b8f5380ffa74958b7 d463224bd212438b803261a9fa1b966a
-#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters
-#: e10fd84d147f4b71b2d38959065e253c ed60de7fca634eb19790777106f69830 of
+#: 62c0635de0e14e85b11eb228a093d50b bc227baf3a35408b8f5380ffa74958b7
+#: d463224bd212438b803261a9fa1b966a discord.poll.Poll.add_answer
+#: discord.poll.PollAnswer.voters e10fd84d147f4b71b2d38959065e253c of
 msgid "Parameters"
 msgstr ""
 
@@ -259,15 +241,18 @@ msgstr ""
 msgid "Returns the increment id that made the snowflake."
 msgstr ""
 
-#: 0d8b907771e64532af760f81f51e6054 discord.components.SelectOption:1 of
+#: 0d8b907771e64532af760f81f51e6054 303f5f553a71428285d200852504cec9
+#: discord.components.SelectOption:1 of
 msgid "Represents a :class:`discord.SelectMenu`'s option."
 msgstr ""
 
-#: 836aee37573f4fb99a2e2ba8cd2ac24e discord.components.SelectOption:3 of
+#: 836aee37573f4fb99a2e2ba8cd2ac24e 8d9e3b5226b84a4d9a95bccfb7d8ccc5
+#: discord.components.SelectOption:3 of
 msgid "These can be created by users."
 msgstr ""
 
-#: b0f1217cfaff4c189043c1907c804416 discord.components.SelectOption:9 of
+#: b0f1217cfaff4c189043c1907c804416 c56b411c300a4ce08a3948b4da36a990
+#: discord.components.SelectOption:9 of
 msgid ""
 "The label of the option. This is displayed to users. Can only be up to "
 "100 characters."
@@ -276,26 +261,29 @@ msgstr ""
 #: 05be8ec42ca842988501f59cc34e4060 bf029a45ccb14764ab8bb9e4b6849d2a
 #: discord.activity.Game:31 discord.activity.Streaming:55
 #: discord.components.SelectOption:12 discord.components.SelectOption:20
-#: discord.embeds.Embed:25 discord.embeds.Embed:34 discord.embeds.Embed:42
-#: discord.embeds.Embed:49 discord.embeds.EmbedAuthor:9
-#: discord.embeds.EmbedAuthor:15 discord.embeds.EmbedAuthor:21
-#: discord.embeds.EmbedAuthor:27 discord.embeds.EmbedField:9
-#: discord.embeds.EmbedField:15 discord.embeds.EmbedFooter:9
-#: discord.embeds.EmbedFooter:15 discord.embeds.EmbedFooter:21
-#: discord.embeds.EmbedMedia:10 discord.embeds.EmbedMedia:16
-#: discord.embeds.EmbedProvider:9 discord.embeds.EmbedProvider:15
-#: discord.poll.PollMedia:9 fc861202507f4454976c8563dc3bc383 of
+#: discord.components.UnfurledMediaItem:11 discord.embeds.Embed:25
+#: discord.embeds.Embed:34 discord.embeds.Embed:42 discord.embeds.Embed:49
+#: discord.embeds.EmbedAuthor:9 discord.embeds.EmbedAuthor:15
+#: discord.embeds.EmbedAuthor:21 discord.embeds.EmbedAuthor:27
+#: discord.embeds.EmbedField:9 discord.embeds.EmbedField:15
+#: discord.embeds.EmbedFooter:9 discord.embeds.EmbedFooter:15
+#: discord.embeds.EmbedFooter:21 discord.embeds.EmbedMedia:10
+#: discord.embeds.EmbedMedia:16 discord.embeds.EmbedProvider:9
+#: discord.embeds.EmbedProvider:15 discord.poll.PollMedia:9
+#: fc861202507f4454976c8563dc3bc383 of
 msgid ":class:`str`"
 msgstr ""
 
-#: 579e6accca914c3998466750119550fe discord.components.SelectOption:16 of
+#: 11123714def448fdbeccc9ee4f80c118 579e6accca914c3998466750119550fe
+#: discord.components.SelectOption:16 of
 msgid ""
 "The value of the option. This is not displayed to users. If not provided "
 "when constructed then it defaults to the label. Can only be up to 100 "
 "characters."
 msgstr ""
 
-#: df26f5a7b24d4b6d906959574c93288e discord.components.SelectOption:24 of
+#: c56b411c300a4ce08a3948b4da36a990 df26f5a7b24d4b6d906959574c93288e
+#: discord.components.SelectOption:24 of
 msgid ""
 "An additional description of the option, if any. Can only be up to 100 "
 "characters."
@@ -312,25 +300,13 @@ msgstr ""
 msgid "Optional[:class:`str`]"
 msgstr ""
 
-#: 5c9b407cffa7482394bcebc4fc8cd412 discord.components.SelectOption:31 of
+#: 5c9b407cffa7482394bcebc4fc8cd412 discord.components.SelectOption:31
+#: e588f36be137417db4a513b55beb6351 of
 msgid "Whether this option is selected by default."
 msgstr ""
 
-#: ../../docstring 034f5658560a46a48f6392d1a929bbd7
-#: 161aa3465ff54b8eabe605b3e1effc75 1bd2fe7cfa7442648f6b9c5bd3d60b3e
-#: 1c9bcfbfabcf4447af13173772e0dba3 2c1c87d5592e4e8ba6d282a4981aaf31
-#: 326278ce171e46fb892074ec17d63e86 3461eb669bf74f97b82aada9d35a05ef
-#: 46fa3239adde4e4e8c329454531c38d3 4925fccfa0a940c8a56591683e21bb9b
-#: 5e77c1cbf15f4edbace963555bada8f4 655b339bafc8433e9aaab4de0ce88be5
-#: 7186fd1920ad48c08b8c0b576bf3e70b 7423abc3cc524d34a8f85edbe0dc35c9
-#: 77ec92f62db14901a099b1dd6847dc2c 7cdf2f906ed044deb6012048150da019
-#: 7ff8f88daaf64e81ae8e54a9a098fba8 8131de1784d84c66a45d155df88cf3cd
-#: 8b13ad081fb949e7830bf07869b61edd 97e4820420da426a91acebda9917aa78
-#: a1a7cfe5e59a4d34b6c36e5fde156571 ae44222339b04401be8bde84be82516c
-#: b152bbcee768493eaedb1704b92055be b65935e7a9214a36aba1ec7fc7c90e2a
-#: b9f49cf9cee747048835891d1c7f70f5 c66087222b144b77bfe3590882bb094c
-#: ced24460a70040d8b61a4ad0d6c78aed d45426a29b06438e91f2dd515ab9a26b
-#: d50186c464354e00bb33065cbbc894ca discord.ApplicationFlags.active:6
+#: ../../docstring 46fa3239adde4e4e8c329454531c38d3
+#: discord.ApplicationFlags.active:6
 #: discord.ApplicationFlags.app_commands_badge:6
 #: discord.ApplicationFlags.application_auto_moderation_rule_create_badge:5
 #: discord.ApplicationFlags.embedded:3
@@ -345,8 +321,9 @@ msgstr ""
 #: discord.ApplicationFlags.rpc_has_connected:3
 #: discord.ApplicationFlags.verification_pending_guild_limit:4
 #: discord.AttachmentFlags.is_clip:3 discord.AttachmentFlags.is_remix:3
-#: discord.AttachmentFlags.is_thumbnail:3 discord.ChannelFlags.pinned:3
-#: discord.ChannelFlags.require_tag:6
+#: discord.AttachmentFlags.is_thumbnail:3
+#: discord.ChannelFlags.hide_media_download_options:5
+#: discord.ChannelFlags.pinned:3 discord.ChannelFlags.require_tag:6
 #: discord.Intents.auto_moderation_configuration:9
 #: discord.Intents.auto_moderation_execution:7 discord.Intents.bans:6
 #: discord.Intents.dm_messages:27 discord.Intents.dm_polls:17
@@ -367,7 +344,9 @@ msgstr ""
 #: discord.MemberFlags.started_onboarding:3 discord.MessageFlags.crossposted:3
 #: discord.MessageFlags.ephemeral:5
 #: discord.MessageFlags.failed_to_mention_some_roles_in_thread:5
-#: discord.MessageFlags.has_thread:5 discord.MessageFlags.is_crossposted:3
+#: discord.MessageFlags.has_snapshot:5 discord.MessageFlags.has_thread:5
+#: discord.MessageFlags.is_components_v2:5
+#: discord.MessageFlags.is_crossposted:3
 #: discord.MessageFlags.is_voice_message:5 discord.MessageFlags.loading:7
 #: discord.MessageFlags.source_message_deleted:3
 #: discord.MessageFlags.suppress_embeds:3
@@ -401,10 +380,13 @@ msgstr ""
 #: discord.Permissions.use_application_commands:5
 #: discord.Permissions.use_external_apps:8
 #: discord.Permissions.use_external_emojis:5
+#: discord.Permissions.use_external_sounds:5
 #: discord.Permissions.use_external_stickers:5
 #: discord.Permissions.use_slash_commands:5
+#: discord.Permissions.use_soundboard:5
 #: discord.Permissions.use_voice_activation:3
 #: discord.Permissions.view_audit_log:3 discord.Permissions.view_channel:3
+#: discord.Permissions.view_creator_monetization_analytics:5
 #: discord.Permissions.view_guild_insights:5
 #: discord.PublicUserFlags.active_developer:5
 #: discord.PublicUserFlags.bot_http_interactions:5
@@ -430,16 +412,37 @@ msgstr ""
 #: discord.SystemChannelFlags.premium_subscriptions:3
 #: discord.components.SelectOption:33 discord.embeds.EmbedField:21
 #: discord.file.File:42 discord.mentions.AllowedMentions:11
-#: discord.mentions.AllowedMentions:40 discord.message.MessageReference:33
+#: discord.mentions.AllowedMentions:40 discord.message.MessageReference:41
 #: discord.permissions.PermissionOverwrite.is_empty:7 discord.poll.Poll:27
 #: discord.poll.PollAnswerCount:22 discord.poll.PollResults:9
-#: e1c1e64874eb4dc4b81588e9d084845b e29fe4fdd9ad421295dee23fa82019b0
-#: f2a5f2887dcb45bfb3ec1a4a0aeb18d8 fd16e79e95744fbbb4d1bb67b2d04fbe of
+#: e1c1e64874eb4dc4b81588e9d084845b e29fe4fdd9ad421295dee23fa82019b0 of
 msgid ":class:`bool`"
 msgstr ""
 
-#: 83b108a10aa446cdb6eebaab379b4174 discord.SelectOption.emoji:1 of
+#: 804bbf20fe6c4418a6f03780ed6e383d 83b108a10aa446cdb6eebaab379b4174
+#: discord.SelectOption.emoji:1 of
 msgid "The emoji of the option, if available."
+msgstr ""
+
+#: 7356eae6e80c48cabddc24248342e844 discord.components.UnfurledMediaItem:1 of
+msgid "Represents an Unfurled Media Item used in Components V2."
+msgstr ""
+
+#: 815a8f8542054043b415faafbdbedde0 discord.components.UnfurledMediaItem:3 of
+msgid ""
+"This is used as an underlying component for other media-based components "
+"such as :class:`Thumbnail`, :class:`FileComponent`, and "
+":class:`MediaGalleryItem`."
+msgstr ""
+
+#: 092b6ba6ce244e53b6ce5f7e4e9500c1 discord.components.UnfurledMediaItem:9 of
+msgid ""
+"The URL of this media item. This can either be an arbitrary URL or an "
+"``attachment://`` URL to work with local files."
+msgstr ""
+
+#: 5b063163bfaf4930af9d387ef066d6ec discord.UnfurledMediaItem.url:1 of
+msgid "Returns this media item's url."
 msgstr ""
 
 #: discord.flags.Intents:1 e2e452e939b041f88f583aded7ed5bad of
@@ -453,9 +456,8 @@ msgid ""
 "were regular bools."
 msgstr ""
 
-#: 99d045cffa884713a159060bf7b59130 c7ccca30986e43fd8e10beb3bd9d8656
-#: discord.flags.Intents:7 discord.flags.MemberCacheFlags:12
-#: discord.flags.SystemChannelFlags:7 of
+#: c7ccca30986e43fd8e10beb3bd9d8656 discord.flags.Intents:7
+#: discord.flags.MemberCacheFlags:12 discord.flags.SystemChannelFlags:7 of
 msgid ""
 "To construct an object you can pass keyword arguments denoting the flags "
 "to enable or disable."
@@ -468,17 +470,15 @@ msgid ""
 "keyword argument of :class:`Client`."
 msgstr ""
 
-#: 2723da96d9724f13aedb5348870ab7f6 4e9fe61ccd1549e88739285bf3dafd88
-#: discord.flags.AttachmentFlags:7 discord.flags.Intents:20
-#: discord.flags.MemberCacheFlags:23 discord.flags.MessageFlags:9
-#: discord.flags.SystemChannelFlags:14 of
+#: 4e9fe61ccd1549e88739285bf3dafd88 discord.flags.AttachmentFlags:7
+#: discord.flags.Intents:20 discord.flags.MemberCacheFlags:23
+#: discord.flags.MessageFlags:9 discord.flags.SystemChannelFlags:14 of
 msgid "Checks if two flags are equal."
 msgstr ""
 
-#: b6e33c093a6446c4b0db0d86d7eea46a c5b62a3820524bdaa7ffdc764a11c059
-#: discord.flags.AttachmentFlags:10 discord.flags.Intents:23
-#: discord.flags.MemberCacheFlags:26 discord.flags.MessageFlags:12
-#: discord.flags.SystemChannelFlags:17 of
+#: c5b62a3820524bdaa7ffdc764a11c059 discord.flags.AttachmentFlags:10
+#: discord.flags.Intents:23 discord.flags.MemberCacheFlags:26
+#: discord.flags.MessageFlags:12 discord.flags.SystemChannelFlags:17 of
 msgid "Checks if two flags are not equal."
 msgstr ""
 
@@ -487,74 +487,67 @@ msgstr ""
 #: discord.flags.Intents:26 discord.flags.MemberCacheFlags:29
 #: discord.flags.MemberFlags:13 discord.flags.MessageFlags:15
 #: discord.flags.PublicUserFlags:13 discord.flags.RoleFlags:13
-#: discord.flags.SKUFlags:13 discord.flags.SystemChannelFlags:20
-#: f96e957c78734f899f6a8cabbcd6e80f of
+#: discord.flags.SKUFlags:13 discord.flags.SystemChannelFlags:20 of
 msgid "Adds two flags together. Equivalent to ``x | y``."
 msgstr ""
 
-#: 0c17b2ad55124b1aaae336d3932a00a5 1cc0f99d2ad34188a3d109ca5ea135bd
-#: discord.flags.ApplicationFlags:16 discord.flags.AttachmentFlags:16
-#: discord.flags.ChannelFlags:16 discord.flags.Intents:29
-#: discord.flags.MemberCacheFlags:32 discord.flags.MemberFlags:16
-#: discord.flags.MessageFlags:18 discord.flags.PublicUserFlags:16
-#: discord.flags.RoleFlags:16 discord.flags.SKUFlags:16
-#: discord.flags.SystemChannelFlags:23 of
+#: 1cc0f99d2ad34188a3d109ca5ea135bd discord.flags.ApplicationFlags:16
+#: discord.flags.AttachmentFlags:16 discord.flags.ChannelFlags:16
+#: discord.flags.Intents:29 discord.flags.MemberCacheFlags:32
+#: discord.flags.MemberFlags:16 discord.flags.MessageFlags:18
+#: discord.flags.PublicUserFlags:16 discord.flags.RoleFlags:16
+#: discord.flags.SKUFlags:16 discord.flags.SystemChannelFlags:23 of
 msgid "Subtracts two flags from each other."
 msgstr ""
 
-#: 8682d8d121804ca78190744b3a59c4d3 dc44aea0eb8843ec89427b68ed42e355
-#: discord.flags.ApplicationFlags:19 discord.flags.AttachmentFlags:19
-#: discord.flags.ChannelFlags:19 discord.flags.Intents:32
-#: discord.flags.MemberCacheFlags:35 discord.flags.MemberFlags:19
-#: discord.flags.MessageFlags:21 discord.flags.PublicUserFlags:19
-#: discord.flags.RoleFlags:19 discord.flags.SKUFlags:19
-#: discord.flags.SystemChannelFlags:26 of
+#: dc44aea0eb8843ec89427b68ed42e355 discord.flags.ApplicationFlags:19
+#: discord.flags.AttachmentFlags:19 discord.flags.ChannelFlags:19
+#: discord.flags.Intents:32 discord.flags.MemberCacheFlags:35
+#: discord.flags.MemberFlags:19 discord.flags.MessageFlags:21
+#: discord.flags.PublicUserFlags:19 discord.flags.RoleFlags:19
+#: discord.flags.SKUFlags:19 discord.flags.SystemChannelFlags:26 of
 msgid "Returns the union of two flags. Equivalent to ``x + y``."
 msgstr ""
 
-#: 1958adb42308499f8545a94033c83764 1aa74630c59244a680d6c45bac4a40d4
-#: discord.flags.ApplicationFlags:22 discord.flags.AttachmentFlags:22
-#: discord.flags.ChannelFlags:22 discord.flags.Intents:35
-#: discord.flags.MemberCacheFlags:38 discord.flags.MemberFlags:22
-#: discord.flags.MessageFlags:24 discord.flags.PublicUserFlags:22
-#: discord.flags.RoleFlags:22 discord.flags.SKUFlags:22
-#: discord.flags.SystemChannelFlags:29 of
+#: 1aa74630c59244a680d6c45bac4a40d4 discord.flags.ApplicationFlags:22
+#: discord.flags.AttachmentFlags:22 discord.flags.ChannelFlags:22
+#: discord.flags.Intents:35 discord.flags.MemberCacheFlags:38
+#: discord.flags.MemberFlags:22 discord.flags.MessageFlags:24
+#: discord.flags.PublicUserFlags:22 discord.flags.RoleFlags:22
+#: discord.flags.SKUFlags:22 discord.flags.SystemChannelFlags:29 of
 msgid "Returns the intersection of two flags."
 msgstr ""
 
-#: 0c0d4ae9593340cc9d83a5f1bf9ae314 3f25fb08cab5411e97b911287fb3d991
-#: discord.flags.ApplicationFlags:25 discord.flags.AttachmentFlags:25
-#: discord.flags.ChannelFlags:25 discord.flags.Intents:38
-#: discord.flags.MemberCacheFlags:41 discord.flags.MemberFlags:25
-#: discord.flags.MessageFlags:27 discord.flags.PublicUserFlags:25
-#: discord.flags.RoleFlags:25 discord.flags.SKUFlags:25
-#: discord.flags.SystemChannelFlags:32 of
+#: 0c0d4ae9593340cc9d83a5f1bf9ae314 discord.flags.ApplicationFlags:25
+#: discord.flags.AttachmentFlags:25 discord.flags.ChannelFlags:25
+#: discord.flags.Intents:38 discord.flags.MemberCacheFlags:41
+#: discord.flags.MemberFlags:25 discord.flags.MessageFlags:27
+#: discord.flags.PublicUserFlags:25 discord.flags.RoleFlags:25
+#: discord.flags.SKUFlags:25 discord.flags.SystemChannelFlags:32 of
 msgid "Returns the inverse of a flag."
 msgstr ""
 
-#: 115cbdc73ead48389591b9c18de16c6e cd38184237914f6c802d8fd54c02a106
-#: discord.flags.ApplicationFlags:28 discord.flags.AttachmentFlags:28
-#: discord.flags.ChannelFlags:28 discord.flags.Intents:41
-#: discord.flags.MemberCacheFlags:44 discord.flags.MemberFlags:28
-#: discord.flags.MessageFlags:30 discord.flags.PublicUserFlags:28
-#: discord.flags.RoleFlags:28 discord.flags.SKUFlags:28
-#: discord.flags.SystemChannelFlags:35 of
+#: cd38184237914f6c802d8fd54c02a106 discord.flags.ApplicationFlags:28
+#: discord.flags.AttachmentFlags:28 discord.flags.ChannelFlags:28
+#: discord.flags.Intents:41 discord.flags.MemberCacheFlags:44
+#: discord.flags.MemberFlags:28 discord.flags.MessageFlags:30
+#: discord.flags.PublicUserFlags:28 discord.flags.RoleFlags:28
+#: discord.flags.SKUFlags:28 discord.flags.SystemChannelFlags:35 of
 msgid "Return the flag's hash."
 msgstr ""
 
-#: 7204b8ea3a9241949e0f987e6f8c8665 a99a094ce4fa417f968709af699b5323
-#: discord.flags.Intents:44 discord.flags.MemberCacheFlags:47
-#: discord.flags.MessageFlags:33 discord.flags.SystemChannelFlags:38 of
+#: a99a094ce4fa417f968709af699b5323 discord.flags.Intents:44
+#: discord.flags.MemberCacheFlags:47 discord.flags.MessageFlags:33
+#: discord.flags.SystemChannelFlags:38 of
 msgid ""
 "Returns an iterator of ``(name, value)`` pairs. This allows it to be, for"
 " example, constructed as a dict or a list of pairs."
 msgstr ""
 
-#: 82101dd125534b129f6f38b3b3ed2e27 discord.flags.ApplicationFlags:39
-#: discord.flags.AttachmentFlags:39 discord.flags.ChannelFlags:39
-#: discord.flags.Intents:49 discord.flags.MemberCacheFlags:52
-#: discord.flags.MemberFlags:39 discord.flags.SKUFlags:39
-#: f54fefdc28274d45b023ba51349e495a of
+#: discord.flags.ApplicationFlags:39 discord.flags.AttachmentFlags:39
+#: discord.flags.ChannelFlags:39 discord.flags.Intents:49
+#: discord.flags.MemberCacheFlags:52 discord.flags.MemberFlags:39
+#: discord.flags.SKUFlags:39 f54fefdc28274d45b023ba51349e495a of
 msgid ""
 "The raw value. You should query flags via the properties rather than "
 "using this raw value."
@@ -565,16 +558,12 @@ msgid "A factory method that creates a :class:`Intents` with everything enabled.
 msgstr ""
 
 #: ../../api/data_classes.rst 06117d4991d64482ab3bd74ddd051afa
-#: 2a6fff9cfbc140eea62eb86587d99e12 2aaf29a75ce048e59ab4aa068f89270e
-#: 2c65699780f042bda30498eb6d195ca1 387a935c6db343558a4e1062dc05e80b
-#: 3a69766c2ab349738d5ae59cbd70517b 3d9d7f31e3fd426c91b7da7fe211b099
-#: 4cec06d96aa540ca837c06faf1eda4aa 7afd0d20cf2940e4a0493121eb555c29
-#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters of
+#: 4cec06d96aa540ca837c06faf1eda4aa discord.poll.Poll.add_answer
+#: discord.poll.PollAnswer.voters of
 msgid "Return type"
 msgstr ""
 
-#: 20a24ced6c2f40ae97a379aac52fc31e 93072a21a8ac4f6d9051e897557acc8f
-#: 946b7c87c7b64016bc9465fb66cea03d discord.flags.Intents.all:4
+#: 93072a21a8ac4f6d9051e897557acc8f discord.flags.Intents.all:4
 #: discord.flags.Intents.default:5 discord.flags.Intents.none:4 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.flags.Intents\\``"
 msgstr ""
@@ -593,18 +582,7 @@ msgstr ""
 msgid "Whether guild related events are enabled."
 msgstr ""
 
-#: ../../docstring 127132d3c13c416cab6465e43870b9df
-#: 1844e42444c64ebfa6f6a05f49c3c034 1a8d1483207c4ba4bd66f376500bcfdd
-#: 2393f9340ef242d09a27b53fbae1d540 327cb39cf5d942c6ac5c5e9cd44b08ba
-#: 32d6ac82923b4f548a71c551421c87a9 37c77df003a04768b88e759cd73963b1
-#: 3801b1bd516a4c47a073514517ca50d4 4a9af8630afc4c228384619fc5928a2c
-#: 5ff0cc64d2464f138b63bd5bce62b0bd 6cf9973c14134f4ab3888b55623e7e55
-#: 75d1d5d26fee4f4db53f9e29a6dd8e3a 77c6b6236e1347e2b15712d37046f7b6
-#: 80ed196772fb4d43802c8a0c5f60267e 8795d49ebb62417ebcdf2989b8df1d3d
-#: 8d17e0018cf346369e05f5ed41961c83 9a80a6772ccd47a8a9d29b9ff6ee2d7d
-#: 9e703e4c3f854459b513a5973115356b be05d4647638496a85bf45edbffe3e8e
-#: d501618e47324c1793bbde3bf9ca861b
-#: discord.Intents.auto_moderation_configuration:3
+#: ../../docstring discord.Intents.auto_moderation_configuration:3
 #: discord.Intents.auto_moderation_execution:3 discord.Intents.dm_messages:5
 #: discord.Intents.dm_polls:5 discord.Intents.dm_reactions:5
 #: discord.Intents.dm_typing:5 discord.Intents.emojis_and_stickers:5
@@ -616,9 +594,7 @@ msgstr ""
 #: discord.Intents.polls:5 discord.Intents.presences:3
 #: discord.Intents.reactions:5 discord.Intents.scheduled_events:3
 #: discord.Intents.typing:5 discord.Intents.voice_states:3
-#: discord.Intents.webhooks:3 ebc4a3f5e91648288893a4a8c8f0df3c
-#: f1b1d51dfc7e4692a37d5bca93905b4d f2d60034b58848f5b50f72b0fe7480da
-#: f99607be5f7d4810a8759fd4e459a36b of
+#: discord.Intents.webhooks:3 f1b1d51dfc7e4692a37d5bca93905b4d of
 msgid "This corresponds to the following events:"
 msgstr ""
 
@@ -657,14 +633,7 @@ msgstr ""
 msgid ":func:`on_guild_channel_pins_update`"
 msgstr ""
 
-#: ../../docstring 30ce97bdd3094300a532b98ec1cf3943
-#: 31267a3f10444da2957257d6241062ac 335c852a9e4240d680003e46d01a9eb7
-#: 3d3cd245adcd4796a84d8cd0f0748f62 50006f2a61b848848d0dff60895afc77
-#: 516dddd73b2b476b82835e700c169f71 529dd704424742a38b07f200180a2068
-#: 64ea6e41a88c47cba252c5bd01944e1c 7723e1b62423446184c4541de3f89248
-#: 7945f47d88904d9a834c708ec69ca085 b1141125c5b647c18492031a0447fb6d
-#: b7a36d6a3daa4dd582d6ae4a5dee5f3a cfe6c3251c0f4e13a904e56454fbaa4a
-#: d6181ea2e5ab4d45aeabb348df9f2c88 deaad94c71c94871817abb4286d2bcef
+#: ../../docstring cfe6c3251c0f4e13a904e56454fbaa4a
 #: discord.Intents.dm_messages:13 discord.Intents.dm_polls:12
 #: discord.Intents.dm_reactions:14 discord.Intents.emojis_and_stickers:10
 #: discord.Intents.guild_messages:13 discord.Intents.guild_polls:12
@@ -802,8 +771,7 @@ msgid ""
 "<need_members_intent>`."
 msgstr ""
 
-#: ../../docstring 5f0bed46e9fd446fa11f769c2e18134d
-#: a144ff86320b4e09b37cff189bb3174c discord.Intents.members:30
+#: ../../docstring a144ff86320b4e09b37cff189bb3174c discord.Intents.members:30
 #: discord.Intents.presences:17 of
 msgid ""
 "This intent is privileged, meaning that bots in over 100 guilds that "
@@ -815,8 +783,7 @@ msgstr ""
 msgid "Alias of :attr:`.moderation`."
 msgstr ""
 
-#: ../../docstring 27a0c56e0c79468d9c88cabbab69f321
-#: bc8f8e325af24de382cf5ea080f4c8ef discord.Intents.bans:3
+#: ../../docstring 27a0c56e0c79468d9c88cabbab69f321 discord.Intents.bans:3
 #: discord.Intents.emojis:3 of
 msgid "Changed to an alias."
 msgstr ""
@@ -841,14 +808,10 @@ msgstr ""
 msgid ":func:`on_member_unban`"
 msgstr ""
 
-#: ../../docstring 20164eb2064e41b7b194bcf624744b12
-#: 49e0cca02c174ab0b3af1016f00bb680 a9a3db3038a7485ca7c791f1c7782ae9
-#: b9863a675003490b89043c31dbf28eff bbcdb3c184584751b4fce179030f686b
-#: c8d84c681fd142bf88e6ff7b096647b2 discord.Intents.dm_typing:9
+#: ../../docstring bbcdb3c184584751b4fce179030f686b discord.Intents.dm_typing:9
 #: discord.Intents.guild_typing:9 discord.Intents.integrations:10
 #: discord.Intents.invites:8 discord.Intents.moderation:9
-#: discord.Intents.typing:9 discord.Intents.webhooks:7
-#: f29f9b186eba40a0910997fe79f8b7a4 of
+#: discord.Intents.typing:9 discord.Intents.webhooks:7 of
 msgid ""
 "This does not correspond to any attributes or classes in the library in "
 "terms of cache."
@@ -875,7 +838,7 @@ msgstr ""
 
 #: ../../docstring 8d522dd4ec834c5e834a8a3a1d82637a
 #: discord.Intents.emojis_and_stickers:12 of
-msgid ":class:`Emoji`"
+msgid ":class:`GuildEmoji`"
 msgstr ""
 
 #: ../../docstring 310d885187c7483da2962fd12d7a1274
@@ -1087,8 +1050,7 @@ msgstr ""
 msgid ":func:`on_raw_message_edit` (both guilds and DMs)"
 msgstr ""
 
-#: ../../docstring 131678d976fa4452a3c6274c4a114015
-#: 3a20c463f48c465d92f7b983f9414c0f 4cc0d56ddc4341339bbabe226cfff4ea
+#: ../../docstring 3a20c463f48c465d92f7b983f9414c0f
 #: 6f70df5e3a324290889232d0395e7f0f discord.Intents.dm_messages:15
 #: discord.Intents.guild_messages:15 discord.Intents.messages:15
 #: discord.message.PartialMessage.end_poll:8
@@ -1118,26 +1080,23 @@ msgstr ""
 
 #: ../../docstring 3bdf1873d5a74fbea1e77e2f6675beba
 #: discord.Intents.dm_messages:21 discord.Intents.guild_messages:21
-#: discord.Intents.messages:21 f674049e077048a98e3783c5fb184729
-#: fc0283f014bc4a5b9324a679e0833a98 of
+#: discord.Intents.messages:21 of
 msgid ""
 "Note that due to an implicit relationship this also corresponds to the "
 "following events:"
 msgstr ""
 
 #: ../../docstring 4f0824eaddd64a2a81888d5b807b6347 discord.Intents.messages:23
-#: discord.Intents.reactions:7 ffd561d996284ac3a46639791d4fc26e of
+#: discord.Intents.reactions:7 of
 msgid ":func:`on_reaction_add` (both guilds and DMs)"
 msgstr ""
 
-#: ../../docstring 7ef5737b80aa46ff8b63044455a72240
-#: bc06530511074b05bd24b74d33bc9ff1 discord.Intents.messages:24
+#: ../../docstring 7ef5737b80aa46ff8b63044455a72240 discord.Intents.messages:24
 #: discord.Intents.reactions:8 of
 msgid ":func:`on_reaction_remove` (both guilds and DMs)"
 msgstr ""
 
-#: ../../docstring 394bfa686d5e4cddbfeb4a5eac2ae4ae
-#: 642521a6775f42d986de623796667074 discord.Intents.messages:25
+#: ../../docstring 642521a6775f42d986de623796667074 discord.Intents.messages:25
 #: discord.Intents.reactions:9 of
 msgid ":func:`on_reaction_clear` (both guilds and DMs)"
 msgstr ""
@@ -1204,21 +1163,18 @@ msgstr ""
 msgid ":meth:`Client.get_poll` (only for guilds)"
 msgstr ""
 
-#: ../../docstring 0f9dd91ef1a649588b0c988cd620e899
-#: c8df715cc6f3485fb0be9c491e646337 discord.Intents.guild_messages:23
-#: discord.Intents.guild_reactions:7 of
+#: ../../docstring c8df715cc6f3485fb0be9c491e646337
+#: discord.Intents.guild_messages:23 discord.Intents.guild_reactions:7 of
 msgid ":func:`on_reaction_add` (only for guilds)"
 msgstr ""
 
 #: ../../docstring 1c5ff802260840e5aaa934513f0f0779
-#: b51729b9d73e4397838fa22d56fdb613 discord.Intents.guild_messages:24
-#: discord.Intents.guild_reactions:8 of
+#: discord.Intents.guild_messages:24 discord.Intents.guild_reactions:8 of
 msgid ":func:`on_reaction_remove` (only for guilds)"
 msgstr ""
 
 #: ../../docstring 8c1165c7fa7941e59b5a7f5666dcd44b
-#: discord.Intents.guild_messages:25 discord.Intents.guild_reactions:9
-#: f1ea6c632a6c4141aba136ccb278bd69 of
+#: discord.Intents.guild_messages:25 discord.Intents.guild_reactions:9 of
 msgid ":func:`on_reaction_clear` (only for guilds)"
 msgstr ""
 
@@ -1230,32 +1186,27 @@ msgid ""
 msgstr ""
 
 #: ../../docstring a137ba63f3c846b3bd5d57a7bf96e78c
-#: d177535ebad849a4baae6d17fa3e786b discord.Intents.guild_messages:30
-#: discord.Intents.message_content:5 of
+#: discord.Intents.guild_messages:30 discord.Intents.message_content:5 of
 msgid ":attr:`Message.content`"
 msgstr ""
 
-#: ../../docstring 7c7118245dc842a49b2ad81bc4ba0ebb
-#: af61766b09a94aa8a75595f3be33a449 discord.Intents.guild_messages:31
-#: discord.Intents.message_content:6 of
+#: ../../docstring af61766b09a94aa8a75595f3be33a449
+#: discord.Intents.guild_messages:31 discord.Intents.message_content:6 of
 msgid ":attr:`Message.embeds`"
 msgstr ""
 
 #: ../../docstring 058da375316a46a0af5a9c3109b1f253
-#: discord.Intents.guild_messages:32 discord.Intents.message_content:7
-#: ebb75125811444e4a46f7aef8bbb23b8 of
+#: discord.Intents.guild_messages:32 discord.Intents.message_content:7 of
 msgid ":attr:`Message.attachments`"
 msgstr ""
 
-#: ../../docstring 323a68adf77442f680a96f59bea295e3
-#: 9dc7fe52d32942078f6af7ec79f3d42b discord.Intents.guild_messages:33
-#: discord.Intents.message_content:8 of
+#: ../../docstring 9dc7fe52d32942078f6af7ec79f3d42b
+#: discord.Intents.guild_messages:33 discord.Intents.message_content:8 of
 msgid ":attr:`Message.components`"
 msgstr ""
 
 #: ../../docstring 4ad7140b499a4cb89a813065e5957e41
-#: bb8eef7fe7034efc99a7fdba061ec310 discord.Intents.guild_messages:34
-#: discord.Intents.message_content:9 of
+#: discord.Intents.guild_messages:34 discord.Intents.message_content:9 of
 msgid ":attr:`Message.poll`"
 msgstr ""
 
@@ -1322,20 +1273,17 @@ msgid ":meth:`Client.get_poll` (only for DMs)"
 msgstr ""
 
 #: ../../docstring 589df8506c3445e5bb27a3f7c0e1eb13
-#: c93500c986124c1392636208ff6c21bf discord.Intents.dm_messages:23
-#: discord.Intents.dm_reactions:7 of
+#: discord.Intents.dm_messages:23 discord.Intents.dm_reactions:7 of
 msgid ":func:`on_reaction_add` (only for DMs)"
 msgstr ""
 
 #: ../../docstring 6b9d55f3802a435184fcb981cea63230
-#: discord.Intents.dm_messages:24 discord.Intents.dm_reactions:8
-#: e84e9e724cad49af88471537ded96255 of
+#: discord.Intents.dm_messages:24 discord.Intents.dm_reactions:8 of
 msgid ":func:`on_reaction_remove` (only for DMs)"
 msgstr ""
 
-#: ../../docstring 7551821d00e94b5783620a188bf47757
-#: 85eb129e0b244960ab86b6367da8d207 discord.Intents.dm_messages:25
-#: discord.Intents.dm_reactions:9 of
+#: ../../docstring 85eb129e0b244960ab86b6367da8d207
+#: discord.Intents.dm_messages:25 discord.Intents.dm_reactions:9 of
 msgid ":func:`on_reaction_clear` (only for DMs)"
 msgstr ""
 
@@ -1431,10 +1379,8 @@ msgstr ""
 msgid ":attr:`Message.reactions` (only for DM messages)"
 msgstr ""
 
-#: ../../docstring 8d8207f6f69441fba7d0f03fa6f9ff53
-#: 9ff7cfd43aa44d0193722bec92998fd9 discord.Intents.dm_typing:1
-#: discord.Intents.guild_typing:1 discord.Intents.typing:1
-#: fb5b74711cf94bc8800f3998b67e5970 of
+#: ../../docstring 8d8207f6f69441fba7d0f03fa6f9ff53 discord.Intents.dm_typing:1
+#: discord.Intents.guild_typing:1 discord.Intents.typing:1 of
 msgid "Whether guild and direct message typing related events are enabled."
 msgstr ""
 
@@ -1711,11 +1657,9 @@ msgid ""
 "not started yet."
 msgstr ""
 
-#: 49c4c30c182d4a029b0c433682a7412d 8162371196bd4d3698a8c759ead84e30
-#: 838cbbf586be4eb48c92fc8e4c675bad c99851f342584595848427fb38375fa3
-#: discord.activity.Activity:16 discord.message.MessageReference:12
-#: discord.message.MessageReference:24 discord.poll.Poll.total_votes:4
-#: discord.shard.ShardInfo:18 of
+#: c99851f342584595848427fb38375fa3 discord.activity.Activity:16
+#: discord.message.MessageReference:20 discord.message.MessageReference:32
+#: discord.poll.Poll.total_votes:4 discord.shard.ShardInfo:18 of
 msgid "Optional[:class:`int`]"
 msgstr ""
 
@@ -1723,7 +1667,7 @@ msgstr ""
 msgid "Whether the shard connection is currently closed."
 msgstr ""
 
-#: 58d0f572132547b7a1dbaf2927806124 9aca5fcb17de43ee849174bf0bd5a3f7
+#: 9aca5fcb17de43ee849174bf0bd5a3f7
 #: discord.permissions.Permissions.is_strict_subset:5
 #: discord.permissions.Permissions.is_strict_superset:5
 #: discord.permissions.Permissions.is_subset:5
@@ -1732,14 +1676,14 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: 2d31939098494f0489e8a053303107d7 336386f348c2475b83c479b3376548af
-#: 61d3fe2200f04894857f7a6b254fed20 7b6aba613fd1494aa813bfbe67e79186
+#: 336386f348c2475b83c479b3376548af 7b6aba613fd1494aa813bfbe67e79186
 #: discord.message.Message.add_reaction:1
 #: discord.message.Message.clear_reaction:1
 #: discord.message.Message.clear_reactions:1 discord.message.Message.delete:1
-#: discord.message.Message.pin:1 discord.message.Message.publish:1
-#: discord.message.Message.remove_reaction:1 discord.message.Message.reply:1
-#: discord.message.Message.unpin:1 discord.message.PartialMessage.edit:1
+#: discord.message.Message.forward_to:1 discord.message.Message.pin:1
+#: discord.message.Message.publish:1 discord.message.Message.remove_reaction:1
+#: discord.message.Message.reply:1 discord.message.Message.unpin:1
+#: discord.message.PartialMessage.edit:1
 #: discord.message.PartialMessage.end_poll:1
 #: discord.message.PartialMessage.fetch:1 discord.shard.ShardInfo.connect:1
 #: discord.shard.ShardInfo.disconnect:1 discord.shard.ShardInfo.reconnect:1 of
@@ -1757,7 +1701,6 @@ msgid "If the shard is already disconnected this does nothing."
 msgstr ""
 
 #: 2aeb0522710e4223920fd1c621bb6bb9 682dc42cdccd42f3a7f85235164dfb67
-#: 6ab82dd262114586ae1460ec0ef8949f 937a7163bad44cc0b251d6ab47e83b23
 #: discord.embeds.Embed.append_field:9 discord.embeds.Embed.clear_fields:4
 #: discord.embeds.Embed.remove_field:15 discord.message.Message.add_reaction:20
 #: discord.message.Message.clear_reaction:20
@@ -1778,10 +1721,11 @@ msgstr ""
 msgid "Connects a shard. If the shard is already connected this does nothing."
 msgstr ""
 
-#: a1f36fed4af44c01a9019cc4415319a2 discord.ShardInfo.latency:1 of
+#: 77a9f6e52669457f8060e59f51444378 discord.ShardInfo.latency:1 of
 msgid ""
 "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for "
-"this shard."
+"this shard. If no heartbeat has been received yet this returns "
+"``float('inf')``."
 msgstr ""
 
 #: 17a313ff1c1c4f18989340eb1c290ed9 discord.shard.ShardInfo.is_ws_ratelimited:1
@@ -1797,7 +1741,7 @@ msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: ../../api/data_classes.rst:40 e4e4b4653ed64e5bb6d330ca5bee9fe8
+#: ../../api/data_classes.rst:50 e4e4b4653ed64e5bb6d330ca5bee9fe8
 msgid "Message"
 msgstr ""
 
@@ -1825,8 +1769,8 @@ msgid ""
 "the message content."
 msgstr ""
 
-#: 481cf58f03144feda8cabc58d0c1e2ee 530c33a7c302431cbd3d33ded378f0ba
-#: discord.mentions.AllowedMentions:21 discord.mentions.AllowedMentions:31 of
+#: 530c33a7c302431cbd3d33ded378f0ba discord.mentions.AllowedMentions:21
+#: discord.mentions.AllowedMentions:31 of
 msgid "Union[:class:`bool`, List[:class:`abc.Snowflake`]]"
 msgstr ""
 
@@ -1869,28 +1813,38 @@ msgstr ""
 msgid "This class can now be constructed by users."
 msgstr ""
 
-#: 64f0d504dd97408ca19d5fe84a0df71b discord.message.MessageReference:10 of
+#: c5ee817b12ad456c9205ed5834d32a57 discord.message.MessageReference:10 of
+msgid ""
+"The type of message reference. If this is not provided, assume the "
+"default behavior (i.e., reply)."
+msgstr ""
+
+#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.message.MessageReference:14 of
+msgid "Optional[:class:`~discord.MessageReferenceType`]"
+msgstr ""
+
+#: 64f0d504dd97408ca19d5fe84a0df71b discord.message.MessageReference:18 of
 msgid "The id of the message referenced."
 msgstr ""
 
-#: b3465d0402d0442e829de7d9fc0c70fb discord.message.MessageReference:16 of
+#: b3465d0402d0442e829de7d9fc0c70fb discord.message.MessageReference:24 of
 msgid "The channel id of the message referenced."
 msgstr ""
 
-#: 850b11222cbb40e28037b71bde8dd57f discord.message.MessageReference:22 of
+#: 850b11222cbb40e28037b71bde8dd57f discord.message.MessageReference:30 of
 msgid "The guild id of the message referenced."
 msgstr ""
 
-#: discord.message.MessageReference:28
+#: discord.message.MessageReference:36
 #: discord.message.MessageReference.from_message:9
-#: ea0f2d067e6b4d12b130bbafb1face58 f161b3d6b9624e51af155755e2347428 of
+#: f161b3d6b9624e51af155755e2347428 of
 msgid ""
 "Whether replying to the referenced message should raise "
 ":class:`HTTPException` if the message no longer exists or Discord could "
 "not fetch the message."
 msgstr ""
 
-#: discord.message.MessageReference:37 e78e1e20c3a241d3831110a8584672ce of
+#: discord.message.MessageReference:45 e78e1e20c3a241d3831110a8584672ce of
 msgid ""
 "The message that this reference resolved to. If this is ``None`` then the"
 " original message was not fetched either due to the Discord API not "
@@ -1899,13 +1853,13 @@ msgid ""
 " deleted then this will be of type :class:`DeletedReferencedMessage`."
 msgstr ""
 
-#: b515d831ed234923be2b9bf7f76b9ae3 discord.message.MessageReference:43 of
+#: b515d831ed234923be2b9bf7f76b9ae3 discord.message.MessageReference:51 of
 msgid ""
 "Currently, this is mainly the replied to message when a user replies to a"
 " message."
 msgstr ""
 
-#: 19036d2129714259ad50409d11530f07 discord.message.MessageReference:47 of
+#: 19036d2129714259ad50409d11530f07 discord.message.MessageReference:55 of
 msgid "Optional[Union[:class:`Message`, :class:`DeletedReferencedMessage`]]"
 msgstr ""
 
@@ -1929,18 +1883,31 @@ msgid ""
 "not fetch the message.  .. versionadded:: 1.7"
 msgstr ""
 
-#: ../../api/data_classes.rst ec698da13c7a4164a882b6d5a0868fe2
-#: f298076f2da34bc6b0148276f66f26f5
+#: 9d87e15db2c9447c9e88885a3e0c7f97
+#: discord.message.MessageReference.from_message:15 of
+msgid ""
+"The type of reference to create. Defaults to "
+":attr:`MessageReferenceType.default` (reply).  .. versionadded:: 2.7"
+msgstr ""
+
+#: 0de7e18170c04f9fa198616b291658b1
+#: discord.message.MessageReference.from_message:15 of
+msgid ""
+"The type of reference to create. Defaults to "
+":attr:`MessageReferenceType.default` (reply)."
+msgstr ""
+
+#: ../../api/data_classes.rst f298076f2da34bc6b0148276f66f26f5
 msgid "Returns"
 msgstr ""
 
 #: 7440176a49d948b3838d6425ad4d9117
-#: discord.message.MessageReference.from_message:15 of
+#: discord.message.MessageReference.from_message:20 of
 msgid "A reference to the message."
 msgstr ""
 
 #: b558b9254e9b4404829ca2f6328601fb
-#: discord.message.MessageReference.from_message:16 of
+#: discord.message.MessageReference.from_message:21 of
 msgid ":class:`MessageReference`"
 msgstr ""
 
@@ -2173,7 +2140,9 @@ msgstr ""
 #: cd02277db89943ed9ee4591e8af3275f discord.message.Message.add_reaction:5
 #: discord.message.Message.clear_reaction:5
 #: discord.message.Message.remove_reaction:5 of
-msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+msgid ""
+"The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an "
+":class:`AppEmoji`."
 msgstr ""
 
 #: de4aa6f9efb64b64878511d76ccf83ff discord.message.Message.add_reaction:7 of
@@ -2295,26 +2264,41 @@ msgid ""
 ":class:`.Message`."
 msgstr ""
 
-#: 0432f057bc24436ab0c9162af0b56320 discord.message.Message.reply:8 of
+#: 0432f057bc24436ab0c9162af0b56320 discord.message.Message.forward_to:12
+#: discord.message.Message.reply:8 of
 msgid "The message that was sent."
 msgstr ""
 
-#: 815203ab4dd9447daab77ae359e85c30 discord.message.Message.reply:9 of
+#: 815203ab4dd9447daab77ae359e85c30 discord.message.Message.forward_to:13
+#: discord.message.Message.reply:9 of
 msgid ":class:`.Message`"
 msgstr ""
 
-#: d7a8c5afd03e4ba18c9c5bc654aaa52f discord.message.Message.reply:11 of
+#: d7a8c5afd03e4ba18c9c5bc654aaa52f discord.message.Message.forward_to:15
+#: discord.message.Message.reply:11 of
 msgid "Sending the message failed."
 msgstr ""
 
-#: discord.message.Message.reply:12 f58e37c02b9346ac8affda2006377756 of
+#: discord.message.Message.forward_to:16 discord.message.Message.reply:12
+#: f58e37c02b9346ac8affda2006377756 of
 msgid "You do not have the proper permissions to send the message."
 msgstr ""
 
-#: 2b6ec3e3ab574a20ae37d4d118fb1267 discord.message.Message.reply:13 of
+#: 2b6ec3e3ab574a20ae37d4d118fb1267 discord.message.Message.forward_to:17
+#: discord.message.Message.reply:13 of
 msgid ""
 "The ``files`` list is not of the appropriate size, or     you specified "
 "both ``file`` and ``files``."
+msgstr ""
+
+#: 6a803b20f30b41499a3154208e1cddbd discord.message.Message.forward_to:3 of
+msgid ""
+"A shortcut method to :meth:`.abc.Messageable.send` to forward the "
+":class:`.Message` to a channel."
+msgstr ""
+
+#: 935d9c5a268d4132998d5ab2b779a4a0 discord.message.Message.forward_to:9 of
+msgid "The channel to forward this to."
 msgstr ""
 
 #: 303f5f553a71428285d200852504cec9 discord.message.Message.to_reference:1 of
@@ -2335,11 +2319,19 @@ msgid ""
 "not fetch the message."
 msgstr ""
 
-#: ba9e9d761df54e83b387bd4522433122 discord.message.Message.to_reference:12 of
+#: 689db2ebc4e949cbad070710a8741095 discord.message.Message.to_reference:12 of
+msgid "The type of message reference. Defaults to a reply.  .. versionadded:: 2.7"
+msgstr ""
+
+#: 293efff145294d2eb01067636aec1ced discord.message.Message.to_reference:12 of
+msgid "The type of message reference. Defaults to a reply."
+msgstr ""
+
+#: ba9e9d761df54e83b387bd4522433122 discord.message.Message.to_reference:17 of
 msgid "The reference to this message."
 msgstr ""
 
-#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.message.Message.to_reference:13 of
+#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.message.Message.to_reference:18 of
 msgid ":class:`~discord.MessageReference`"
 msgstr ""
 
@@ -2532,7 +2524,7 @@ msgstr ""
 msgid "Whether the attachment is a spoiler."
 msgstr ""
 
-#: ../../api/data_classes.rst:68 5672173d06bd46829384d84e99bed65e
+#: ../../api/data_classes.rst:78 5672173d06bd46829384d84e99bed65e
 msgid "Embed"
 msgstr ""
 
@@ -3055,7 +3047,7 @@ msgstr ""
 msgid "The URL of the provider."
 msgstr ""
 
-#: ../../api/data_classes.rst:102 646f8ad2d43d4dce987005a50de9a4cf
+#: ../../api/data_classes.rst:112 646f8ad2d43d4dce987005a50de9a4cf
 msgid "Poll"
 msgstr ""
 
@@ -3220,7 +3212,9 @@ msgid ""
 msgstr ""
 
 #: b006fb5c6c854d799f871d8884228162 discord.poll.PollMedia:15 of
-msgid "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
+msgid ""
+"Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, "
+":class:`PartialEmoji`, :class:`str`]]"
 msgstr ""
 
 #: cf9a1a1afdf34f12bf876e33bccf7739 discord.poll.PollAnswer:1 of
@@ -3346,7 +3340,7 @@ msgstr ""
 msgid "The total number of votes on this poll."
 msgstr ""
 
-#: ../../api/data_classes.rst:132 43ab35acc0f9434b8e53132a073d8d22
+#: ../../api/data_classes.rst:142 43ab35acc0f9434b8e53132a073d8d22
 msgid "Flags"
 msgstr ""
 
@@ -3691,6 +3685,18 @@ msgstr ""
 msgid "Returns ``True`` if this message is a voice message."
 msgstr ""
 
+#: ../../docstring discord.MessageFlags.is_components_v2:1
+#: e59991780d57460db3e98a50cf7bdf3a of
+msgid ""
+"Returns ``True`` if this message has v2 components. This flag disables "
+"sending `content`, `embed`, and `embeds`."
+msgstr ""
+
+#: ../../docstring 649ea51ce00e42e1ad43640c7458e6b0
+#: discord.MessageFlags.has_snapshot:1 of
+msgid "Returns ``True`` if this message has a snapshot from message forwarding."
+msgstr ""
+
 #: 8dc3ce8bf77f4a4684ab876af0ddf039 discord.flags.AttachmentFlags:1 of
 msgid "Wraps up the Discord Attachment flags."
 msgstr ""
@@ -3850,6 +3856,13 @@ msgid ""
 "thread in a :class:`ForumChannel`."
 msgstr ""
 
+#: ../../docstring dd01266c445141a097c673b102981c4d
+#: discord.ChannelFlags.hide_media_download_options:1 of
+msgid ""
+"Returns ``True`` if the embedded media download options are hidden for "
+"the media channel posts."
+msgstr ""
+
 #: 32012591b7c94fc08af1f60088606c64 discord.flags.SKUFlags:1 of
 msgid "Wraps up the Discord SKU flags."
 msgstr ""
@@ -3933,7 +3946,7 @@ msgid ""
 ":class:`~discord.OnboardingPrompt`."
 msgstr ""
 
-#: ../../api/data_classes.rst:185 4d2438b9745240cd93782603979ee00b
+#: ../../api/data_classes.rst:195 4d2438b9745240cd93782603979ee00b
 msgid "Colour"
 msgstr ""
 
@@ -4260,7 +4273,7 @@ msgid ""
 "\"amoled\"."
 msgstr ""
 
-#: ../../api/data_classes.rst:193 9905f7d99ac846c088e3402bdc9a380a
+#: ../../api/data_classes.rst:203 9905f7d99ac846c088e3402bdc9a380a
 msgid "Activity"
 msgstr ""
 
@@ -4511,8 +4524,8 @@ msgstr ""
 msgid "Returns the game's name."
 msgstr ""
 
-#: 60ec9c34573a4bfd974edad2940fc120 710eb25609234a2eab35dd6ef26a8672
-#: discord.activity.Game:24 discord.activity.Game:29 of
+#: 710eb25609234a2eab35dd6ef26a8672 discord.activity.Game:24
+#: discord.activity.Game:29 of
 msgid "The game's name."
 msgstr ""
 
@@ -4644,7 +4657,7 @@ msgstr ""
 msgid "It always returns :attr:`ActivityType.custom`."
 msgstr ""
 
-#: ../../api/data_classes.rst:221 60d410b462c140fd9d5d5d85a0ca55ef
+#: ../../api/data_classes.rst:231 60d410b462c140fd9d5d5d85a0ca55ef
 msgid "Permissions"
 msgstr ""
 
@@ -4797,45 +4810,50 @@ msgstr ""
 msgid ":attr:`view_guild_insights`"
 msgstr ""
 
-#: 7b554c4be8944c03a6ef76c5b73eede5
+#: 9233959505d54774aefa37968742a69c
 #: discord.permissions.Permissions.all_channel:10 of
+msgid ":attr:`view_creator_monetization_analytics`"
+msgstr ""
+
+#: 7b554c4be8944c03a6ef76c5b73eede5
+#: discord.permissions.Permissions.all_channel:11 of
 msgid ":attr:`manage_guild`"
 msgstr ""
 
 #: 7f33532c524d48eeb208f2f316ac7879
-#: discord.permissions.Permissions.all_channel:11 of
+#: discord.permissions.Permissions.all_channel:12 of
 msgid ":attr:`change_nickname`"
 msgstr ""
 
 #: 606ad5d3e5084e568298891c3b0588e7
-#: discord.permissions.Permissions.all_channel:12 of
+#: discord.permissions.Permissions.all_channel:13 of
 msgid ":attr:`manage_nicknames`"
 msgstr ""
 
 #: 48fc50f3db1a4049aa6ed259c0016e20
-#: discord.permissions.Permissions.all_channel:13 of
+#: discord.permissions.Permissions.all_channel:14 of
 msgid ":attr:`kick_members`"
 msgstr ""
 
-#: discord.permissions.Permissions.all_channel:14
+#: discord.permissions.Permissions.all_channel:15
 #: e7d64bc06aef4cc7837d72e3051db957 of
 msgid ":attr:`ban_members`"
 msgstr ""
 
 #: c502768910914af6a4de9d4bbf12a158
-#: discord.permissions.Permissions.all_channel:15 of
+#: discord.permissions.Permissions.all_channel:16 of
 msgid ":attr:`administrator`"
 msgstr ""
 
 #: 58e62e0ef9144695b99159ad964e9797
-#: discord.permissions.Permissions.all_channel:17 of
+#: discord.permissions.Permissions.all_channel:18 of
 msgid ""
 "Added :attr:`stream`, :attr:`priority_speaker` and "
 ":attr:`use_slash_commands` permissions."
 msgstr ""
 
 #: 1ac70319723b451d9c8b3252e52b6e79
-#: discord.permissions.Permissions.all_channel:20 of
+#: discord.permissions.Permissions.all_channel:21 of
 msgid ""
 "Added :attr:`create_public_threads`, :attr:`create_private_threads`, "
 ":attr:`manage_threads`, :attr:`use_external_stickers`, "
@@ -4860,6 +4878,11 @@ msgid ""
 ":attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`,"
 " :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part "
 "of the general permissions."
+msgstr ""
+
+#: 58e62e0ef9144695b99159ad964e9797 discord.permissions.Permissions.general:11
+#: of
+msgid "Added :attr:`view_creator_monetization_analytics` permission."
 msgstr ""
 
 #: 454540f845e641959058f28badf30ad5
@@ -5217,6 +5240,25 @@ msgstr ""
 msgid "Returns ``True`` if a user can moderate members (timeout)."
 msgstr ""
 
+#: ../../docstring 19b7f1d6020a42598e0f34f2792209d2
+#: discord.Permissions.view_creator_monetization_analytics:1 of
+msgid ""
+"Returns ``True`` if a user can view creator monetization (role "
+"subscription) analytics."
+msgstr ""
+
+#: ../../docstring discord.Permissions.use_soundboard:1
+#: ee7d230c69a64cf6bd2fe7b2832f656a of
+msgid "Returns ``True`` if a user can use the soundboard in a voice channel."
+msgstr ""
+
+#: ../../docstring discord.Permissions.use_external_sounds:1
+#: ee7d230c69a64cf6bd2fe7b2832f656a of
+msgid ""
+"Returns ``True`` if a user can use external soundboard sounds in a voice "
+"channel."
+msgstr ""
+
 #: ../../docstring 21e49f2607d948d1aac14cf0bde7222d
 #: discord.Permissions.send_voice_messages:1 of
 msgid "Returns ``True`` if a member can send voice messages."
@@ -5333,7 +5375,7 @@ msgstr ""
 msgid "A list of key/value pairs to bulk update with."
 msgstr ""
 
-#: ../../api/data_classes.rst:234 9b867a9572674a3a8c8653b44c9f9b72
+#: ../../api/data_classes.rst:244 9b867a9572674a3a8c8653b44c9f9b72
 msgid "Application Role Connections"
 msgstr ""
 
@@ -5373,7 +5415,7 @@ msgid ""
 "valid locales."
 msgstr ""
 
-#: 246b61db68854beb9cb72d12dc9cfd40 4f3b424badea44d289a8fba4635a8270
+#: 246b61db68854beb9cb72d12dc9cfd40
 #: discord.application_role_connection.ApplicationRoleConnectionMetadata:23 of
 msgid ""
 "The description localizations for this metadata field. The values of this"
@@ -5386,5 +5428,20 @@ msgstr ""
 #~ "Union[:class:`TextChannel`, :class:`Thread`, "
 #~ ":class:`DMChannel`, :class:`VoiceChannel`, "
 #~ ":class:`StageChannel`]"
+#~ msgstr ""
+
+#~ msgid ":class:`Emoji`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Measures latency between a HEARTBEAT and"
+#~ " a HEARTBEAT_ACK in seconds for this"
+#~ " shard."
+#~ msgstr ""
+
+#~ msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+#~ msgstr ""
+
+#~ msgid "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
 #~ msgstr ""
 

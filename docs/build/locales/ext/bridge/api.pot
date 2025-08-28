@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 23:44+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,6 @@ msgstr ""
 #: 08bff09c730c4b5bb565bdaf3e105965
 #: d414290a24964ae2827a233b80f9d820
 #: 2712df298b134b468aa30aa758768e1d
-#: ecc99c5f64b747e49d92d73c86da310a
 #: ecc99c5f64b747e49d92d73c86da310a
 msgid "Parameters"
 msgstr ""
@@ -231,12 +230,14 @@ msgstr ""
 
 #: ../../../discord/ext/bridge/core.py:docstring of discord.ext.bridge.core.BridgeCommand:0
 #: ../../../discord/ext/bridge/core.py:docstring of discord.ext.bridge.core.BridgeCommandGroup:0
+#: ../../../discord/ext/bridge/core.py:docstring of discord.ext.bridge.core.bridge_option:0
 #: c199030b71784af6aa7369b62ea3c70a
 #: 530c706f8f2d4cde86d4b9959a708cf9
 #: 0dcaa4de42d7417ab675d15d95c0545e
 #: fcd3136ef9a54e679fb18bae06554cee
 #: 3233f6d67e434cb4930d286b1cedbf93
 #: 695ca16e39234b53a145ba1a621e6ef6
+#: c102617394d14eb786c58ca83d415312
 msgid "type"
 msgstr ""
 
@@ -658,12 +659,32 @@ msgstr ""
 
 #: ../../ext/bridge/api.rst:162
 #: be07208f849b4f75afd5cb572c0a4830
-msgid "Option"
+msgid "Options"
 msgstr ""
 
 #: ../../ext/bridge/api.rst:165
-#: 0b5ee756992f4209aeb8020d1f811b80
-msgid "BridgeOption"
+#: 1f60901eac6a457aa7223e42c10cd93f
+msgid "Shortcut Decorators"
+msgstr ""
+
+#: ../../../discord/ext/bridge/core.py:docstring of discord.ext.bridge.core.bridge_option:1
+#: 69b358da5f70406084f5cf2e5739a26c
+msgid "A decorator that can be used instead of typehinting :class:`.BridgeOption`."
+msgstr ""
+
+#: ../../../discord/ext/bridge/core.py:docstring of discord.ext.bridge.core.bridge_option:7
+#: 4ec148203eee4759923f7f7b020f695f
+msgid "The name of the target function parameter this option is mapped to. This allows you to have a separate UI ``name`` and parameter name."
+msgstr ""
+
+#: ../../../discord/ext/bridge/core.py:docstring of discord.ext.bridge.core.bridge_option:10
+#: 91b7ac886f874e52a683d4c29e70b140
+msgid ":class:`str`"
+msgstr ""
+
+#: ../../ext/bridge/api.rst:170
+#: ce259b63f70742b7a14bfb05534ee558
+msgid "Objects"
 msgstr ""
 
 #: ../../../discord/ext/bridge/core.py:docstring of discord.ext.bridge.core.BridgeOption:1

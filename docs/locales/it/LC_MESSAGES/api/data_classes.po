@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Data Classes"
 msgstr "Data Classes"
@@ -296,8 +296,8 @@ msgstr ":func:`on_guild_emojis_update`"
 msgid ":func:`on_guild_stickers_update`"
 msgstr ":func:`on_guild_stickers_update`"
 
-msgid ":class:`Emoji`"
-msgstr ":class:`Emoji`"
+msgid ":class:`GuildEmoji`"
+msgstr ":class:`GuildEmoji`"
 
 msgid ":class:`GuildSticker`"
 msgstr ":class:`GuildSticker`"
@@ -803,8 +803,8 @@ msgstr "Disconnects and then connects the shard again."
 msgid "Connects a shard. If the shard is already connected this does nothing."
 msgstr "Connects a shard. If the shard is already connected this does nothing."
 
-msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."
-msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard."
+msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard. If no heartbeat has been received yet this returns ``float('inf')``."
+msgstr "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds for this shard. If no heartbeat has been received yet this returns ``float('inf')``."
 
 msgid "Whether the websocket is currently rate limited."
 msgstr "Whether the websocket is currently rate limited."
@@ -926,6 +926,9 @@ msgstr ":meth:`VoiceChannel.get_partial_message`"
 msgid ":meth:`StageChannel.get_partial_message`"
 msgstr ":meth:`StageChannel.get_partial_message`"
 
+msgid ":meth:`PartialMessageable.get_partial_message`"
+msgstr ":meth:`PartialMessageable.get_partial_message`"
+
 msgid "Note that this class is trimmed down and has no rich attributes."
 msgstr "Note that this class is trimmed down and has no rich attributes."
 
@@ -941,8 +944,8 @@ msgstr "Returns the partial message's hash."
 msgid "The channel associated with this partial message."
 msgstr "The channel associated with this partial message."
 
-msgid "Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]"
-msgstr "Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`]"
+msgid "Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`, :class:`PartialMessageable`]"
+msgstr "Union[:class:`TextChannel`, :class:`Thread`, :class:`DMChannel`, :class:`VoiceChannel`, :class:`StageChannel`, :class:`PartialMessageable`]"
 
 msgid "The message ID."
 msgstr "The message ID."
@@ -1031,8 +1034,8 @@ msgstr "Unpinning the message failed."
 msgid "Add a reaction to the message."
 msgstr "Add a reaction to the message."
 
-msgid "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
-msgstr "The emoji may be a unicode emoji or a custom guild :class:`Emoji`."
+msgid "The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`."
+msgstr "The emoji may be a unicode emoji, a custom :class:`GuildEmoji`, or an :class:`AppEmoji`."
 
 msgid "You must have the :attr:`~Permissions.read_message_history` permission to use this. If nobody else has reacted to the message using this emoji, the :attr:`~Permissions.add_reactions` permission is required."
 msgstr "You must have the :attr:`~Permissions.read_message_history` permission to use this. If nobody else has reacted to the message using this emoji, the :attr:`~Permissions.add_reactions` permission is required."
@@ -1682,8 +1685,8 @@ msgstr "Represents a poll media object that supports both questions and answers.
 msgid "The question/answer text. May have up to 300 characters for questions and 55 characters for answers."
 msgstr "The question/answer text. May have up to 300 characters for questions and 55 characters for answers."
 
-msgid "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
-msgstr "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
+msgid "Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]]"
+msgstr "Optional[Union[:class:`GuildEmoji`, :class:`AppEmoji`, :class:`PartialEmoji`, :class:`str`]]"
 
 msgid "Represents a poll answer object."
 msgstr "Represents a poll answer object."
@@ -2038,6 +2041,9 @@ msgstr "Returns ``True`` if the thread is pinned to the top of its parent forum 
 
 msgid "Returns ``True`` if a tag is required to be specified when creating a thread in a :class:`ForumChannel`."
 msgstr "Returns ``True`` if a tag is required to be specified when creating a thread in a :class:`ForumChannel`."
+
+msgid "Returns ``True`` if the embedded media download options are hidden for the media channel posts."
+msgstr "Returns ``True`` if the embedded media download options are hidden for the media channel posts."
 
 msgid "Wraps up the Discord SKU flags."
 msgstr "Wraps up the Discord SKU flags."
@@ -2594,6 +2600,9 @@ msgstr ":attr:`view_audit_log`"
 msgid ":attr:`view_guild_insights`"
 msgstr ":attr:`view_guild_insights`"
 
+msgid ":attr:`view_creator_monetization_analytics`"
+msgstr ":attr:`view_creator_monetization_analytics`"
+
 msgid ":attr:`manage_guild`"
 msgstr ":attr:`manage_guild`"
 
@@ -2623,6 +2632,9 @@ msgstr "A factory method that creates a :class:`Permissions` with all \"General\
 
 msgid "Permission :attr:`read_messages` is now included in the general permissions, but permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part of the general permissions."
 msgstr "Permission :attr:`read_messages` is now included in the general permissions, but permissions :attr:`administrator`, :attr:`create_instant_invite`, :attr:`kick_members`, :attr:`ban_members`, :attr:`change_nickname` and :attr:`manage_nicknames` are no longer part of the general permissions."
+
+msgid "Added :attr:`view_creator_monetization_analytics` permission."
+msgstr "Added :attr:`view_creator_monetization_analytics` permission."
 
 msgid "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
 msgstr "A factory method that creates a :class:`Permissions` with all \"Membership\" permissions from the official Discord UI set to ``True``. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
@@ -2809,6 +2821,15 @@ msgstr "Returns ``True`` if a user can launch an activity flagged 'EMBEDDED' in 
 
 msgid "Returns ``True`` if a user can moderate members (timeout)."
 msgstr "Returns ``True`` if a user can moderate members (timeout)."
+
+msgid "Returns ``True`` if a user can view creator monetization (role subscription) analytics."
+msgstr "Returns ``True`` if a user can view creator monetization (role subscription) analytics."
+
+msgid "Returns ``True`` if a user can use the soundboard in a voice channel."
+msgstr "Returns ``True`` if a user can use the soundboard in a voice channel."
+
+msgid "Returns ``True`` if a user can use external soundboard sounds in a voice channel."
+msgstr "Returns ``True`` if a user can use external soundboard sounds in a voice channel."
 
 msgid "Returns ``True`` if a member can send voice messages."
 msgstr "Returns ``True`` if a member can send voice messages."

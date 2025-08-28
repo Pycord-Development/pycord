@@ -31,12 +31,11 @@ import sys
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator, Literal, Pattern, TypeVar, Union
 
-from discord.utils import MISSING, MissingField, maybe_coroutine, resolve_annotation
-
-if sys.version_info >= (3, 11):
-    _MISSING = MissingField
-else:
-    _MISSING = MISSING
+from discord.utils import (
+    MISSING,
+    maybe_coroutine,
+    resolve_annotation,
+)
 
 from .converter import run_converters
 from .errors import (
@@ -57,6 +56,10 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .context import Context
+
+
+def _missing_field_factory() -> field:
+    return field(default_factory=lambda: MISSING)
 
 
 @dataclass
@@ -86,13 +89,13 @@ class Flag:
         Whether multiple given values overrides the previous value.
     """
 
-    name: str = _MISSING
+    name: str = _missing_field_factory()
     aliases: list[str] = field(default_factory=list)
-    attribute: str = _MISSING
-    annotation: Any = _MISSING
-    default: Any = _MISSING
-    max_args: int = _MISSING
-    override: bool = _MISSING
+    attribute: str = _missing_field_factory()
+    annotation: Any = _missing_field_factory()
+    default: Any = _missing_field_factory()
+    max_args: int = _missing_field_factory()
+    override: bool = _missing_field_factory()
     cast_to_dict: bool = False
 
     @property

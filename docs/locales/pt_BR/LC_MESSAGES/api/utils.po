@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Utility Functions"
 msgstr "Utility Functions"
@@ -407,17 +407,23 @@ msgstr "This is meant to be passed into the :attr:`discord.Option.autocomplete` 
 msgid "Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`."
 msgstr "Possible values for the option. Accepts an iterable of :class:`str`, a callable (sync or async) that takes a single argument of :class:`.AutocompleteContext`, or a coroutine. Must resolve to an iterable of :class:`str`."
 
+msgid "An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments: the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.  .. versionadded:: 2.7"
+msgstr "An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments: the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive.  .. versionadded:: 2.7"
+
+msgid "An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments: the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive."
+msgstr "An optional callable (sync or async) used to filter the autocomplete options. It accepts two arguments: the :class:`.AutocompleteContext` and an item from ``values`` iteration treated as callback parameters. If ``None`` is provided, a default filter is used that includes items whose string representation starts with the user's input value, case-insensitive."
+
 msgid "A wrapped callback for the autocomplete."
 msgstr "A wrapped callback for the autocomplete."
 
 msgid "Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]"
 msgstr "Callable[[:class:`.AutocompleteContext`], Awaitable[Union[Iterable[:class:`.OptionChoice`], Iterable[:class:`str`], Iterable[:class:`int`], Iterable[:class:`float`]]]]"
 
+msgid "With filter parameter:"
+msgstr "With filter parameter:"
+
 msgid "Autocomplete cannot be used for options that have specified choices."
 msgstr "Autocomplete cannot be used for options that have specified choices."
-
-msgid "Example"
-msgstr "Example"
 
 msgid "A helper function that collects an iterator into chunks of a given size."
 msgstr "A helper function that collects an iterator into chunks of a given size."
@@ -445,6 +451,9 @@ msgstr "The initial parameters to filter."
 
 msgid "Key to value pairs where the key's contents would be moved to the value, or if the value is None, remove key's contents (see code example)."
 msgstr "Key to value pairs where the key's contents would be moved to the value, or if the value is None, remove key's contents (see code example)."
+
+msgid "Example"
+msgstr "Example"
 
 msgid "Warn about a deprecated function, with the ability to specify details about the deprecation. Emits a DeprecationWarning."
 msgstr "Warn about a deprecated function, with the ability to specify details about the deprecation. Emits a DeprecationWarning."

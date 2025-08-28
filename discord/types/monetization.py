@@ -31,9 +31,10 @@ from typing_extensions import NotRequired, TypedDict
 
 from .snowflake import Snowflake
 
-SKUType = Literal[5, 6]
-EntitlementType = Literal[8]
+SKUType = Literal[2, 3, 5, 6]
+EntitlementType = Literal[1, 2, 3, 4, 5, 6, 7, 8]
 OwnerType = Literal[1, 2]
+SubscriptionStatus = Literal[1, 2, 3]
 
 
 class SKU(TypedDict):
@@ -55,9 +56,23 @@ class Entitlement(TypedDict):
     starts_at: NotRequired[str]
     ends_at: NotRequired[str]
     guild_id: NotRequired[Snowflake]
+    consumed: NotRequired[bool]
 
 
 class CreateTestEntitlementPayload(TypedDict):
     sku_id: Snowflake
     owner_id: Snowflake
     owner_type: OwnerType
+
+
+class Subscription(TypedDict):
+    id: Snowflake
+    user_id: Snowflake
+    sku_ids: list[Snowflake]
+    entitlement_ids: list[Snowflake]
+    renewal_sku_ids: list[Snowflake]
+    current_period_start: str
+    current_period_end: str
+    status: SubscriptionStatus
+    canceled_at: str | None
+    country: NotRequired[str]

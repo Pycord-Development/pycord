@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Application Info"
 msgstr "Application Info"
@@ -62,9 +62,6 @@ msgstr "A list of RPC origin URLs, if RPC is enabled."
 msgid "Optional[List[:class:`str`]]"
 msgstr "Optional[List[:class:`str`]]"
 
-msgid "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
-msgstr "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
-
 msgid "The hex encoded key for verification in interactions and the GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_."
 msgstr "The hex encoded key for verification in interactions and the GameSDK's `GetTicket <https://discord.com/developers/docs/game-sdk/applications#getticket>`_."
 
@@ -89,6 +86,36 @@ msgstr "The application's terms of service URL, if set."
 msgid "The application's privacy policy URL, if set."
 msgstr "The application's privacy policy URL, if set."
 
+msgid "The approximate count of guilds to which the app has been added, if any."
+msgstr "The approximate count of guilds to which the app has been added, if any."
+
+msgid "The approximate count of users who have installed the application, if any."
+msgstr "The approximate count of users who have installed the application, if any."
+
+msgid "The list of redirect URIs for the application, if set."
+msgstr "The list of redirect URIs for the application, if set."
+
+msgid "The interactions endpoint URL for the application, if set."
+msgstr "The interactions endpoint URL for the application, if set."
+
+msgid "The role connection verification URL for the application, if set."
+msgstr "The role connection verification URL for the application, if set."
+
+msgid "The settings for the application's default in-app authorization link, if set."
+msgstr "The settings for the application's default in-app authorization link, if set."
+
+msgid "Optional[List[:class:`AppInstallParams`]]"
+msgstr "Optional[List[:class:`AppInstallParams`]]"
+
+msgid "The list of tags describing the content and functionality of the app, if set."
+msgstr "The list of tags describing the content and functionality of the app, if set."
+
+msgid "Maximium of 5 tags."
+msgstr "Maximium of 5 tags."
+
+msgid "The default custom authorization URL for the application, if set."
+msgstr "The default custom authorization URL for the application, if set."
+
 msgid "Parameters"
 msgstr "Parameters"
 
@@ -104,8 +131,29 @@ msgstr "This is only available if the application is a game sold on Discord."
 msgid "If this application is a game sold on Discord, this field will be the guild to which it has been linked."
 msgstr "If this application is a game sold on Discord, this field will be the guild to which it has been linked."
 
+msgid "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
+msgstr "If this application is a game sold on Discord, this field will be the summary field for the store page of its primary SKU."
+
+msgid "It currently returns an empty string."
+msgstr "It currently returns an empty string."
+
 msgid "Represents a partial AppInfo given by :func:`~discord.abc.GuildChannel.create_invite`"
 msgstr "Represents a partial AppInfo given by :func:`~discord.abc.GuildChannel.create_invite`"
+
+msgid "Represents the settings for the custom authorization URL of an application."
+msgstr "Represents the settings for the custom authorization URL of an application."
+
+msgid "The list of OAuth2 scopes for adding the application to a guild."
+msgstr "The list of OAuth2 scopes for adding the application to a guild."
+
+msgid "List[:class:`str`]"
+msgstr "List[:class:`str`]"
+
+msgid "The permissions to request for the bot role in the guild."
+msgstr "The permissions to request for the bot role in the guild."
+
+msgid ":class:`Permissions`"
+msgstr ":class:`Permissions`"
 
 msgid "Represents an application team for a bot provided by Discord."
 msgstr "Represents an application team for a bot provided by Discord."

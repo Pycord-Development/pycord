@@ -20,13 +20,13 @@ jobs:
     environment: translations
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-tags: true
       - name: "Install Python"
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
           cache: "pip"
           cache-dependency-path: "requirements/_locale.txt"
       - name: "Install Dependencies"
@@ -44,7 +44,7 @@ jobs:
           sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
         working-directory: ./docs
       - name: "Crowdin"
-        uses: crowdin/github-action@v2.5.0
+        uses: crowdin/github-action@v2.10.0
         with:
           upload_sources: true
           upload_translations: false

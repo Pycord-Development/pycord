@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:18+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1863,7 +1863,7 @@ msgstr ""
 #: ../../api/enums.rst:1203
 #: 41aeb9dc3c5840aeb56f92ec751f6cd0
 #: df5de1fd8daa4ce2a481835fc9ae71f4
-msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`Emoji` or :class:`Object` with the emoji ID."
+msgid "When this is the action, the type of :attr:`~AuditLogEntry.target` is the :class:`GuildEmoji` or :class:`Object` with the emoji ID."
 msgstr ""
 
 #: ../../api/enums.rst:1201
@@ -3306,4 +3306,39 @@ msgstr ""
 #: ../../api/enums.rst:2502
 #: 1e9f15c549cb42a1974d9ba887984e15
 msgid "The interaction is in a private DM or group DM channel."
+msgstr ""
+
+#: ../../api/enums.rst:2507
+#: 01f2e91f4fb944b997dd5067e60a8289
+msgid "Represents a subscription's status."
+msgstr ""
+
+#: ../../api/enums.rst:2513
+#: 08e8ab3b99434be989a53c61cc38f780
+msgid "The subscription is active and is scheduled to renew."
+msgstr ""
+
+#: ../../api/enums.rst:2517
+#: 778b0c4eee34445e9b6374dde9251089
+msgid "The subscription is active but will not renew."
+msgstr ""
+
+#: ../../api/enums.rst:2521
+#: da88c67afa8d45e8965b9e7defd425cb
+msgid "The subscription is inactive and the subscription owner is not being charged."
+msgstr ""
+
+#: ../../api/enums.rst:2526
+#: df2d552101134de0b37f9bc3f1fe64a5
+msgid "Represents the padding size around a separator component."
+msgstr ""
+
+#: ../../api/enums.rst:2532
+#: 5d1855c5f1104662bfa445de38ae412d
+msgid "The separator uses small padding."
+msgstr ""
+
+#: ../../api/enums.rst:2536
+#: 7974579a64184f3f94acaca0d00878aa
+msgid "The separator uses large padding."
 msgstr ""

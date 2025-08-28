@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=1; plural=0;\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Crowdin\n"
 
 msgid "discord.ext.pages"
 msgstr "discord.ext.pages"
@@ -536,14 +536,44 @@ msgstr "The ID of the button that gets received during an interaction."
 msgid "If this button is for a URL, it does not have a custom ID."
 msgstr "If this button is for a URL, it does not have a custom ID."
 
+msgid "Gets or sets the row position of this item within its parent view."
+msgstr "Gets or sets the row position of this item within its parent view."
+
+msgid "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate that no specific row is set."
+msgstr "The row position determines the vertical placement of the item in the UI. The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate that no specific row is set."
+
+msgid "The row position of the item, or ``None`` if not explicitly set."
+msgstr "The row position of the item, or ``None`` if not explicitly set."
+
+msgid "If the row value is not ``None`` and is outside the range [0, 4]."
+msgstr "If the row value is not ``None`` and is outside the range [0, 4]."
+
 msgid "The ID of the SKU this button refers to."
 msgstr "The ID of the SKU this button refers to."
 
 msgid "The URL this button sends you to."
 msgstr "The URL this button sends you to."
 
-msgid "The underlying view for this item."
-msgstr "The underlying view for this item."
+msgid "Gets the parent view associated with this item."
+msgstr "Gets the parent view associated with this item."
+
+msgid "The view refers to the container that holds this item. This is typically set automatically when the item is added to a view."
+msgstr "The view refers to the container that holds this item. This is typically set automatically when the item is added to a view."
+
+msgid "The parent view of this item, or ``None`` if the item is not attached to any view."
+msgstr "The parent view of this item, or ``None`` if the item is not attached to any view."
+
+msgid "Optional[:class:`View`]"
+msgstr "Optional[:class:`View`]"
+
+msgid "Gets the width of the item in the UI layout."
+msgstr "Gets the width of the item in the UI layout."
+
+msgid "The width determines how much horizontal space this item occupies within its row."
+msgstr "The width determines how much horizontal space this item occupies within its row."
+
+msgid "The width of the item. Defaults to 1."
+msgstr "The width of the item. Defaults to 1."
 
 msgid "PaginatorMenu"
 msgstr "PaginatorMenu"
@@ -572,8 +602,8 @@ msgstr "The value of the option. This is not displayed to users. If not given, d
 msgid "An additional description of the option, if any. Can only be up to 100 characters."
 msgstr "An additional description of the option, if any. Can only be up to 100 characters."
 
-msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
-msgstr "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji` or :class:`.Emoji`."
+msgid "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`."
+msgstr "The emoji of the option, if available. This can either be a string representing the custom or unicode emoji or an instance of :class:`.PartialEmoji`, :class:`GuildEmoji`, or :class:`AppEmoji`."
 
 msgid "Whether this option is selected by default."
 msgstr "Whether this option is selected by default."

@@ -59,7 +59,7 @@ from .invite import Invite
 from .member import Member
 from .mentions import AllowedMentions
 from .message import Message
-from .monetization import Entitlement
+from .monetization import Entitlement, Subscription
 from .object import Object
 from .partial_emoji import PartialEmoji
 from .poll import Poll, PollAnswerCount
@@ -717,6 +717,18 @@ class ConnectionState:
     def parse_entitlement_delete(self, data) -> None:
         event = Entitlement(data=data, state=self)
         self.dispatch("entitlement_delete", event)
+
+    def parse_subscription_create(self, data) -> None:
+        event = Subscription(data=data, state=self)
+        self.dispatch("subscription_create", event)
+
+    def parse_subscription_update(self, data) -> None:
+        event = Subscription(data=data, state=self)
+        self.dispatch("subscription_update", event)
+
+    def parse_subscription_delete(self, data) -> None:
+        event = Subscription(data=data, state=self)
+        self.dispatch("subscription_delete", event)
 
     def parse_message_create(self, data) -> None:
         channel, _ = self._get_guild_channel(data)

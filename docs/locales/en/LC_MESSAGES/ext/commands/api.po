@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-12 14:51+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../ext/commands/api.rst:4 4725cf896a744071a08446633365c2de
 msgid "API Reference"
@@ -109,13 +109,7 @@ msgid ""
 "group if you require group commands to be case-insensitive as well."
 msgstr ""
 
-#: 108b348c252b4fc789b680c4989870da 1448a02e23c546f4aa4a5072438e16fb
-#: 49345f7753d447cf9094bb2cdecd0929 54a780ec9c5b4270b61cb1c40f28ae63
-#: 6704eed5f747450d8dfdeaeec60cbbd4 6d8c11bb47b2404baadf295e73360b7c
-#: 723b2bd90f97499ba5dc2f350d048982 8ea34deeeeef47bea5ed8bf17d465dd5
-#: 99c61ff23a9f43c1a74a3608cf5bc810 b010c0c3b0fa454a90311a3446f9c49b
-#: bb7a8a01292b449d92d4b82befbce7c0 c68d85257a5e4af6bd219a6159648c77
-#: d6182d5081b04a73b45cdab6770e7195 de6c28dbc55944cba7b85d7aa7fcbd63
+#: 6d8c11bb47b2404baadf295e73360b7c c68d85257a5e4af6bd219a6159648c77
 #: discord.cog.CogMeta discord.ext.commands.Bot.store_url
 #: discord.ext.commands.bot.Bot discord.ext.commands.context.Context
 #: discord.ext.commands.converter.clean_content
@@ -159,17 +153,15 @@ msgstr ""
 #: discord.ext.commands.help.DefaultHelpCommand
 #: discord.ext.commands.help.HelpCommand
 #: discord.ext.commands.help.MinimalHelpCommand
-#: discord.ext.commands.help.Paginator e0d28de49a3749f3948e2f460a2bc193
-#: e20543c5f090466484011ef7bf9cb1c9 e81e864ce6e74c53a1da0ea0da311d4b
-#: ed2d367aaec844adb55fb898bbffac16 f147a85e13784370a831501af464a220 of
+#: discord.ext.commands.help.Paginator ed2d367aaec844adb55fb898bbffac16
+#: f147a85e13784370a831501af464a220 of
 msgid "type"
 msgstr ""
 
-#: 028c17ce435547ffae49bfe544b27746 276711c2a624419c9122929d2b0cdce4
-#: 8eca1380293a4e09adb2fe3078136d93 af2f1296905749558682b61c1f7363ae
-#: discord.abc.Messageable.can_send:4 discord.bot.BotBase.is_owner:18
-#: discord.ext.commands.bot.Bot:51 discord.ext.commands.bot.Bot:69
-#: discord.ext.commands.context.Context:97
+#: 276711c2a624419c9122929d2b0cdce4 8eca1380293a4e09adb2fe3078136d93
+#: af2f1296905749558682b61c1f7363ae discord.abc.Messageable.can_send:4
+#: discord.bot.BotBase.is_owner:18 discord.ext.commands.bot.Bot:51
+#: discord.ext.commands.bot.Bot:69 discord.ext.commands.context.Context:97
 #: discord.ext.commands.converter.clean_content:10
 #: discord.ext.commands.converter.clean_content:16
 #: discord.ext.commands.converter.clean_content:22
@@ -186,7 +178,7 @@ msgstr ""
 #: discord.ext.commands.help.DefaultHelpCommand:18
 #: discord.ext.commands.help.HelpCommand:24
 #: discord.ext.commands.help.MinimalHelpCommand:9
-#: e56be582fd2f43eb94adef4955c9abc0 f9b93a380a284e189dc49fa48f348b9d of
+#: f9b93a380a284e189dc49fa48f348b9d of
 msgid ":class:`bool`"
 msgstr ""
 
@@ -209,28 +201,14 @@ msgid ""
 msgstr ""
 
 #: ../../ext/commands/api.rst 024cbb8ca69e4f12a98419f0192bae96
-#: 0376d1f3354048868ddfbd60acc27c3f 0aeb5e483b864662a2c92eebe6f73d99
-#: 0d64926e9bea4ccd8315b15fc036fc4a 102f67d17332471589053ba459ce6673
-#: 108b930bfc3f4ea6bd10cbaf29718687 1801dd137def4a99846c6e603f11be1f
-#: 183496d428a34f7fa249dc88301f8431 188381798d224cf9b16d6f04651426d2
-#: 261e22506dc44e6484564a98a9ec4011 2a95458e7d8643c2ba53f80511c7fd97
-#: 31bcf378e11c4b7ab87c5037821c6bda 3750ee9874a649329aece5d76398dd35
-#: 37a692f9433046b2adc05d7f464911ab 3bc1086271a94765a82ebba9760e62e2
-#: 3dbc0c3d62ea4dd1817205318f484376 3f6507abd3334942a24533f0ac0406f9
-#: 440b7315543740c799170efcdd4c8f0e 49e2026dab654b5ca1a75e1ff2ccedc9
-#: 4d9ef44a16e243bbb935cce7d88c9077 4f4b773ec13f47708179d77079b9f6f2
-#: 558e0cf6198b497cbdb8d7560555cc5b 563e5536890b484ba2cbd0130f1fd9b2
-#: 57fb1651bc2740c48fe01620a1aed31e 5b1a773778e843eea6be076e295ca033
-#: 634b9b9ff2e24fdd91b9e3cd5b880d80 746d82f9ccbd40149262634a1f669cd2
-#: 775f4dd1f7fb4a1b9380f86b62fb8056 798fa21ae55f4282b4274758b25d4a83
-#: 812d0fca4d1549339fe98076a893d054 8ff0aa5a5bb6453aa531130a984ee93d
-#: 942d8503487448198ea61a6b6e8305d0 9e65520881584d7680f63c943351a497
-#: c30960c78b1a46e2ab2904693f41c626 c6adc9c02e9a4ce6b1595ac2630bf3b0
-#: ca919f2f99a9425793383e7999f3af1c cd224adfd8e945a795b92654c0537e46
-#: d18243f289de4f3aa562ec83d726eb9c discord.abc.Messageable.history
+#: 1801dd137def4a99846c6e603f11be1f 183496d428a34f7fa249dc88301f8431
+#: 2a95458e7d8643c2ba53f80511c7fd97 31bcf378e11c4b7ab87c5037821c6bda
+#: 3750ee9874a649329aece5d76398dd35 3bc1086271a94765a82ebba9760e62e2
+#: 558e0cf6198b497cbdb8d7560555cc5b 798fa21ae55f4282b4274758b25d4a83
+#: 812d0fca4d1549339fe98076a893d054 c30960c78b1a46e2ab2904693f41c626
+#: c6adc9c02e9a4ce6b1595ac2630bf3b0 discord.abc.Messageable.history
 #: discord.client.Client.entitlements discord.client.Client.fetch_guilds
-#: discord.client.Client.wait_for e42e172090a0442eba2ac0f76facbcb5
-#: e532d59c72474f99b0c1ce7c2be358e2 e979a2cb64c144f08aaf2803550cb543
+#: discord.client.Client.wait_for e532d59c72474f99b0c1ce7c2be358e2
 #: f49495cd4b3f496f96f84ac8aa1f87e4 fb6332a28a1242f5bede4ea1b4001c1a of
 msgid "Parameters"
 msgstr ""
@@ -259,22 +237,13 @@ msgstr ""
 msgid "The coroutine to register as the post-invoke hook."
 msgstr ""
 
-#: ../../ext/commands/api.rst 00e100a89db949b995244b5d7ea5c0e0
-#: 0257c75535174994a013c404eed4de3d 081141882b5340b1a80561ca9111ae72
-#: 0aaa7547a84144fc98f8383462258a5d 0d7bea2ab09344bda3df67dcce3ccdeb
-#: 1604d3c4c756481bb44124fe1ee7d611 227204ee62a54c638c2f8b9a91f21145
-#: 2650f6c238e74f72b4357fd0f3649d83 2d00ed43b7e24723b1c4d6801312bdce
-#: 3a49aabda5f543efb7eef2d44dc0035e 3cf4e4f8fc3944a4b6b9f023fcb9e6e1
-#: 4518277f66b34d9ea6be92e3704fe30a 5f1237616e624c018af062a4d89f032c
-#: 630f4288af604d4dbc8e4177a7f21fac 65b2a4bfdd9f4cc8b834d6d484ef0034
-#: 77dbba5eef11464da6e6d8561993d040 7ae1c7e45ccf4e3583a54ff7c5d20a74
+#: ../../ext/commands/api.rst 0257c75535174994a013c404eed4de3d
+#: 0aaa7547a84144fc98f8383462258a5d 227204ee62a54c638c2f8b9a91f21145
+#: 2650f6c238e74f72b4357fd0f3649d83 630f4288af604d4dbc8e4177a7f21fac
+#: 65b2a4bfdd9f4cc8b834d6d484ef0034 77dbba5eef11464da6e6d8561993d040
 #: 85f893142dbc4e559193fbceb66e29f8 9deb4f77a61449abb51bd5c6b99a742f
-#: b3afb24572e449de8c461403f5864f56 b49c0073b56340ec9b78c3636e71e85c
-#: bd10f9d638b347be80279e61dbb6e087 db7ea1055966404583fc0cb0b2c4d74f
-#: db8e0299f4d5440f9756cf07c76ff3d2 discord.abc.Messageable.history
-#: discord.client.Client.entitlements discord.client.Client.fetch_guilds
-#: discord.client.Client.wait_for e20c74a6209b4f6ba2e2c83d146ec9b9
-#: f601fd2e0ec94ce3a040c5466afdf390 fd1ed033251349feb65a4373c39a3112
+#: discord.abc.Messageable.history discord.client.Client.entitlements
+#: discord.client.Client.fetch_guilds discord.client.Client.wait_for
 #: fd688e2c9468425f8650382857f2fe9a of
 msgid "Raises"
 msgstr ""
@@ -332,8 +301,8 @@ msgstr ""
 #: 123407d31ff24dd999888399d8c675ba 2f0dc352e6954dfd855ac44d79767155
 #: 34a0e26f2a9f4d4dadfcba125b8d60d8 587e23d4697f4a4f94f960f265e6d788
 #: 6a9a9b160ee24cf4bfd1c63a997e9b6d 6e75c57ecbba458cbf5f3669a2924ab2
-#: d64565eb8c0f49fabf5ba8ebd0408016 discord.bot.BotBase.check:12
-#: discord.bot.BotBase.check_once:18 discord.client.Client.add_listener:15
+#: discord.bot.BotBase.check:12 discord.bot.BotBase.check_once:18
+#: discord.client.Client.add_listener:15
 #: discord.client.Client.change_presence:16 discord.client.Client.event:16
 #: discord.client.Client.listen:11 discord.ext.commands.bot.when_mentioned_or:8
 #: discord.ext.commands.core.before_invoke:11
@@ -366,20 +335,10 @@ msgid ""
 "internal command list via :meth:`~.GroupMixin.add_command`."
 msgstr ""
 
-#: ../../ext/commands/api.rst 00966068ccb2456abc827d903250b689
-#: 21b6898829444dfdb4d7580f4b8e8d68 21f49b5974d544ffa30d029b89640d48
-#: 2fccd0b36926425aa78d42b9de69dd3f 3befc35084eb4ca69d1eae3463158861
-#: 3e6b25fcdbcd450dba91025338af56fb 40cd0e3b914a4a93ba95b1043d54fb57
-#: 5112301599a2461ab64d607e13e31a0c 581f5bcbba424fdf8b15bcd0b8dc5711
-#: 60a9892afb20420f98ee9221fe525e3e 63cdadc9d8aa4bfabd4c2ebf92943762
-#: 6913a08768f04878a8aae3849f2adbcb 6a9df72d6343436e8a5d6be1812ec065
-#: 6d76557cfaf549eb9bbc18d2a380ba49 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 98009cff8e324960b08e4c96846a22ab a7e906d78e604e498c0790b35695e171
-#: ad5f35b147574d30a0a839258b537e52 ae1200f79d0048e199cda9ddbb154333
-#: b6a1edaf8c42494ba5a9e62d8f3d7a0a d0d2c521ec0e46899e9c57882edc2983
-#: dfe2da6e0d804d72b6ac73f14963c8f2 discord.client.Client.wait_for
-#: e7bb28eb3fa44f87a1b2e6c2b6fd300f ec9b0c7dd290456795aee20a50830ab1
-#: f4e36f6415c74fc8a5a3d6a231c6612a of
+#: ../../ext/commands/api.rst 21f49b5974d544ffa30d029b89640d48
+#: 3befc35084eb4ca69d1eae3463158861 60a9892afb20420f98ee9221fe525e3e
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7 dfe2da6e0d804d72b6ac73f14963c8f2
+#: discord.client.Client.wait_for of
 msgid "Returns"
 msgstr ""
 
@@ -392,30 +351,14 @@ msgid ""
 msgstr ""
 
 #: ../../ext/commands/api.rst 05d8c3f799b246739284dcbebc3d5739
-#: 09d2baeccc6b4e50adbfb853f2ddf881 0d5178bf994b44cf926dcc67b591b256
-#: 0e729c9e43cf4805bafb0bab9cc41897 10722e3a6685409b8ad039a73479cf66
-#: 123b5e5640914f0c8b4e3046caba82cd 13f3ffb767a74f8e9e764aa5a74a089a
-#: 198305646666451196d990dc353636ba 33ed8c12d23741c6880f5a1831375fdf
-#: 378dd7f9c2a64e0189299a60058beda8 3bcb056fb2e14a0fb068215205695ca6
-#: 3c4a3dc146ea4ead9cbc60eaff2e0088 3c9ab793d144498097bcfd76a5b53eac
-#: 410437ffc3e04b40a383df209d8b16f3 45ea3bdc5022438c98fa1d50fa047386
-#: 4c5fd8c24f5b4ad28a6e1aae56787d18 53e94d21edab4737b42673ee97fdb49c
-#: 55536d0434d84487aa4b5a9de46e940b 5636ea5552c544f5b61e1173aabbd424
-#: 5c50e685ec2041e597da308a07641a2c 631a53d5fb644b1dbbe93c6614a7c4f2
-#: 6cbefb296dbe48689f75969f7d94f823 747e9c0cdf2f4e9bb919c9dc427e2cc2
-#: 77e4fafb7b5f4845b9d186a0206d03e2 83f34d28e50d49638d87349d48d2369e
-#: 83f96d62a16b4d479ab2c81dd1f136f5 844194587e244cf2b26a421da5ef2919
-#: 853376070e4546b989f18c50a2d9817b 8ad6c4547b91438cac30d78cc6b56789
-#: 9014a07ae4274d518383c0faced251e7 9d5d85b51d48428ba902d02b951bcffb
-#: 9d778ca7356943e294915c2454341f4a aa13bf25f19340fc931e80e3daed2919
-#: b45285c94435415aa6a5322e8781abbd b46102d67b324fd8a3c1c4ae247fa8b3
-#: ba9d73b43cc14b0c8711857654f83f62 bf756d9820a94075834d33924e09e0e2
-#: c34bb5212e8843d885c20cbf2eb7d819 c9bc8a557c184c6d9f063626b67cc4cd
-#: cc0179f647c24dc9a5287080d1c62d99 cd347a646db3434e925a1c1ee2047412
-#: dd1387feedaf4788a91e66c7120bb6bf df0dfaebe66b4cf0840971e222e3f126
-#: discord.abc.Messageable.history discord.client.Client.entitlements
-#: discord.client.Client.fetch_guilds discord.client.Client.wait_for
-#: e33db6d356e34de5945d286505e336fa efde8f14120541b68759499f509605ce
+#: 378dd7f9c2a64e0189299a60058beda8 3c9ab793d144498097bcfd76a5b53eac
+#: 45ea3bdc5022438c98fa1d50fa047386 4c5fd8c24f5b4ad28a6e1aae56787d18
+#: 5c50e685ec2041e597da308a07641a2c 844194587e244cf2b26a421da5ef2919
+#: 8ad6c4547b91438cac30d78cc6b56789 ba9d73b43cc14b0c8711857654f83f62
+#: bf756d9820a94075834d33924e09e0e2 c9bc8a557c184c6d9f063626b67cc4cd
+#: dd1387feedaf4788a91e66c7120bb6bf discord.abc.Messageable.history
+#: discord.client.Client.entitlements discord.client.Client.fetch_guilds
+#: discord.client.Client.wait_for e33db6d356e34de5945d286505e336fa
 #: f4e246fdf7f2458baa9253a36a4045e0 fc5da63fdcca41d5a4742949f05235c9 of
 msgid "Return type"
 msgstr ""
@@ -553,13 +496,10 @@ msgstr ""
 msgid "The command to add."
 msgstr ""
 
-#: 0017e074dd134426b570354c2504b7db 2955a6e82aa6427ea4129e090d9e0e1a
-#: 5f1082c1e4e04874900a56140fe3d2cc 62d9613a1121411c960009687e8cc328
-#: 63f22bb531d541109902fec69dcfcbfc 7d0a457d06344339819fc176a73566c2
-#: 7dbaac0f1ff047cbad5ca6c2242d4dc4 7e4abed9dc9d44818dc910ae2bb0e976
-#: af9c896fbca541199d50ed6f9311ec05 bb305a7b77fe4ff9a8e70816d97d46ae
-#: d2e6da7f13ae45be9d21b97011a05d14 db30e1b1f2df4726842b6713f2dc4d6c
-#: discord.abc.Messageable.trigger_typing:8
+#: 0017e074dd134426b570354c2504b7db 5f1082c1e4e04874900a56140fe3d2cc
+#: 62d9613a1121411c960009687e8cc328 63f22bb531d541109902fec69dcfcbfc
+#: 7d0a457d06344339819fc176a73566c2 7dbaac0f1ff047cbad5ca6c2242d4dc4
+#: bb305a7b77fe4ff9a8e70816d97d46ae discord.abc.Messageable.trigger_typing:8
 #: discord.bot.ApplicationCommandMixin.add_application_command:12
 #: discord.bot.ApplicationCommandMixin.invoke_application_command:10
 #: discord.bot.ApplicationCommandMixin.process_application_commands:26
@@ -569,11 +509,12 @@ msgstr ""
 #: discord.bot.BotBase.remove_check:12 discord.client.Client.add_listener:12
 #: discord.client.Client.add_view:20
 #: discord.client.Client.before_identify_hook:18 discord.client.Client.clear:8
-#: discord.client.Client.connect:18 discord.client.Client.delete_invite:16
-#: discord.client.Client.login:14 discord.client.Client.on_error:15
-#: discord.client.Client.remove_listener:10 discord.client.Client.run:28
-#: discord.client.Client.start:11 discord.client.Client.wait_until_ready:6
-#: discord.cog.CogMixin.add_cog:24 discord.cog.CogMixin.reload_extension:26
+#: discord.client.Client.connect:18 discord.client.Client.delete_emoji:11
+#: discord.client.Client.delete_invite:16 discord.client.Client.login:14
+#: discord.client.Client.on_error:15 discord.client.Client.remove_listener:10
+#: discord.client.Client.run:28 discord.client.Client.start:11
+#: discord.client.Client.wait_until_ready:6 discord.cog.CogMixin.add_cog:24
+#: discord.cog.CogMixin.reload_extension:26
 #: discord.cog.CogMixin.unload_extension:27
 #: discord.ext.commands.bot.BotBase.close:6
 #: discord.ext.commands.bot.BotBase.invoke:10
@@ -585,8 +526,7 @@ msgstr ""
 #: discord.ext.commands.core.Command.remove_check:11
 #: discord.ext.commands.core.Command.reset_cooldown:7
 #: discord.ext.commands.core.Command.update:9
-#: discord.ext.commands.core.GroupMixin.add_command:16
-#: e03239f359674e139b092cf33b2fc6b8 of
+#: discord.ext.commands.core.GroupMixin.add_command:16 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
@@ -727,6 +667,14 @@ msgstr ""
 msgid "The allowed mention configuration."
 msgstr ""
 
+#: 1538eaf30f75407ab466133776dbc71e discord.ext.commands.Bot.app_emojis:1 of
+msgid "The :class:`~discord.AppEmoji` that the connected client has."
+msgstr ""
+
+#: 37c64c1f6261438891a797a6a574ac89 discord.ext.commands.Bot.app_emojis:5 of
+msgid "This is only available if `cache_app_emojis` is ``True``."
+msgstr ""
+
 #: 4d61bc9673774eaf9ec7b47ed96bb05c
 #: discord.bot.ApplicationCommandMixin.application_command:1 of
 msgid ""
@@ -764,18 +712,9 @@ msgid ""
 ":func:`~discord.on_connect` is called."
 msgstr ""
 
-#: 236578d5657f4b75a93140c452d6f243 25dea9a1072d49a4a52f17e137de72c3
-#: 40abc24f54c34f2298f5012fb5ee7aff 41de831c34ab4a10a10e0efcf817263c
-#: 4221da88b8e04f5daa5831179d2c8102 52ecf1b64db9436094a380bfd867b180
-#: 5718794be4e14211ae9436403f12609e 5978a98a88184e328613785e29a04c93
-#: 5b000a6fdae3492da6ed60fb279a55dd 62c513a80a3c4ec5b566f2dfe95621cb
-#: 649c19de56d047de904a5b185d87a42c 78993876a1f6444389ced7ccf1897b45
-#: 84206d2ae0324e83b7a28e37d5dc1140 8d5d8cf44a1143208772382e441a15f3
-#: a429f06c46d147308e50e9a00d3c0ebc b29f0f791885488596a5ff1ec37ba539
-#: b42983e9e7764522bb4f34f045ad1da5 d424f44f65dc4c50bc16b509389106d6
-#: d878c81f64ca41a3ba4b287fe6201669 discord.abc.Messageable.fetch_message:1
-#: discord.abc.Messageable.pins:1 discord.abc.Messageable.send:1
-#: discord.abc.Messageable.trigger_typing:1
+#: 25dea9a1072d49a4a52f17e137de72c3 62c513a80a3c4ec5b566f2dfe95621cb
+#: discord.abc.Messageable.fetch_message:1 discord.abc.Messageable.pins:1
+#: discord.abc.Messageable.send:1 discord.abc.Messageable.trigger_typing:1
 #: discord.bot.ApplicationCommandMixin.get_application_context:1
 #: discord.bot.ApplicationCommandMixin.get_autocomplete_context:1
 #: discord.bot.ApplicationCommandMixin.get_desynced_commands:1
@@ -789,8 +728,10 @@ msgstr ""
 #: discord.client.Client.application_info:1
 #: discord.client.Client.before_identify_hook:1
 #: discord.client.Client.change_presence:1 discord.client.Client.connect:1
-#: discord.client.Client.create_dm:1 discord.client.Client.create_guild:1
+#: discord.client.Client.create_dm:1 discord.client.Client.create_emoji:1
+#: discord.client.Client.create_guild:1 discord.client.Client.delete_emoji:1
 #: discord.client.Client.delete_invite:1 discord.client.Client.fetch_channel:1
+#: discord.client.Client.fetch_emoji:1 discord.client.Client.fetch_emojis:1
 #: discord.client.Client.fetch_guild:1 discord.client.Client.fetch_invite:1
 #: discord.client.Client.fetch_premium_sticker_packs:1
 #: discord.client.Client.fetch_role_connection_metadata_records:1
@@ -800,7 +741,8 @@ msgstr ""
 #: discord.client.Client.fetch_user:1 discord.client.Client.fetch_webhook:1
 #: discord.client.Client.fetch_widget:1
 #: discord.client.Client.get_or_fetch_user:1 discord.client.Client.login:1
-#: discord.client.Client.on_error:1 discord.client.Client.start:1
+#: discord.client.Client.on_error:1 discord.client.Client.on_modal_error:1
+#: discord.client.Client.on_view_error:1 discord.client.Client.start:1
 #: discord.client.Client.update_role_connection_metadata_records:1
 #: discord.client.Client.wait_for:1 discord.client.Client.wait_until_ready:1
 #: discord.ext.commands.bot.BotBase.close:1
@@ -809,6 +751,7 @@ msgstr ""
 #: discord.ext.commands.bot.BotBase.invoke:1
 #: discord.ext.commands.bot.BotBase.on_command_error:1
 #: discord.ext.commands.bot.BotBase.process_commands:1
+#: discord.ext.commands.context.Context.forward_to:1
 #: discord.ext.commands.context.Context.invoke:1
 #: discord.ext.commands.context.Context.reinvoke:1
 #: discord.ext.commands.context.Context.reply:1
@@ -847,10 +790,7 @@ msgstr ""
 #: discord.ext.commands.help.HelpCommand.send_cog_help:1
 #: discord.ext.commands.help.HelpCommand.send_command_help:1
 #: discord.ext.commands.help.HelpCommand.send_error_message:1
-#: discord.ext.commands.help.HelpCommand.send_group_help:1
-#: e3601a366188485199c64c569dddce15 e377492e6ddb4255aa4fe483b4e6eadb
-#: eb09d3aeb7ee496982cd2147e719a780 ed13365273a643888369cf52b1e8fb1a
-#: fe4bb802cda24bcca261d0efa60e2fc0 of
+#: discord.ext.commands.help.HelpCommand.send_group_help:1 of
 msgid "|coro|"
 msgstr ""
 
@@ -939,8 +879,8 @@ msgstr ""
 msgid "A read-only mapping of cog name to cog."
 msgstr ""
 
-#: 23309f092f064da6afced5088b16900c 585e5854876b422d856c9a7d7f4f3745
-#: discord.ext.commands.Bot.commands:1 discord.ext.commands.Group.commands:1
+#: 585e5854876b422d856c9a7d7f4f3745 discord.ext.commands.Bot.commands:1
+#: discord.ext.commands.Group.commands:1
 #: discord.ext.commands.GroupMixin.commands:1 of
 msgid "A unique set of commands without aliases that are registered."
 msgstr ""
@@ -993,6 +933,37 @@ msgstr ""
 msgid ":class:`.DMChannel`"
 msgstr ""
 
+#: 39474d78af2f441d818ba1b7ccdeccd0 discord.client.Client.create_emoji:3 of
+msgid "Creates a custom :class:`AppEmoji` for the application."
+msgstr ""
+
+#: 67f8e1eafadb4329933ed24dc95a313c discord.client.Client.create_emoji:5 of
+msgid "There is currently a limit of 2000 emojis per application."
+msgstr ""
+
+#: cad7e9188975461bab6898228488e849 discord.client.Client.create_emoji:8 of
+msgid "The emoji name. Must be at least 2 characters."
+msgstr ""
+
+#: 75d40bc85a17414a943100275453e7b5 discord.client.Client.create_emoji:11 of
+msgid ""
+"The :term:`py:bytes-like object` representing the image data to use. Only"
+" JPG, PNG and GIF images are supported."
+msgstr ""
+
+#: 4d5298f99ee649468bc32cbb48858423 discord.client.Client.create_emoji:15 of
+msgid "An error occurred creating an emoji."
+msgstr ""
+
+#: discord.client.Client.create_emoji:17 e62f5010bdd14887b34428f27772f090 of
+msgid "The created emoji."
+msgstr ""
+
+#: ddd2ee7b903d4405b001c528caddc533 discord.client.Client.create_emoji:18
+#: discord.client.Client.fetch_emoji:10 of
+msgid ":class:`AppEmoji`"
+msgstr ""
+
 #: 32894198e43c44e6be5d31d30af3a30d
 #: discord.bot.ApplicationCommandMixin.create_group:1 of
 msgid ""
@@ -1006,13 +977,13 @@ msgstr ""
 msgid "The name of the group to create."
 msgstr ""
 
-#: 39b074dd62fe4a2c9593642d30d91cab 70182e1186984166914ebe5256fd2312
+#: 70182e1186984166914ebe5256fd2312
 #: discord.bot.ApplicationCommandMixin.create_group:10
 #: discord.bot.ApplicationCommandMixin.group:10 of
 msgid "The description of the group to create."
 msgstr ""
 
-#: 3daecf48b7c64c31b108f8dd881ff771 46500bc4b09146558d44dcee21047fca
+#: 46500bc4b09146558d44dcee21047fca
 #: discord.bot.ApplicationCommandMixin.create_group:13
 #: discord.bot.ApplicationCommandMixin.group:13 of
 msgid ""
@@ -1025,7 +996,6 @@ msgstr ""
 msgid "Any additional keyword arguments to pass to :class:`.SlashCommandGroup`."
 msgstr ""
 
-#: 7afd9a7e1abf445c9185ee1392202fd6
 #: discord.bot.ApplicationCommandMixin.create_group:19
 #: discord.bot.ApplicationCommandMixin.group:17
 #: e95710966abe488e8ce4970bd2f35160 of
@@ -1062,9 +1032,8 @@ msgstr ""
 msgid "The guild created. This is not the same guild that is added to cache."
 msgstr ""
 
-#: 97536bb06f8049b5837ac583ff2dce33 c91fefbf98ca4abfadde5d5caadb9dc1
-#: discord.client.Client.create_guild:22 discord.client.Client.fetch_guild:26
-#: of
+#: 97536bb06f8049b5837ac583ff2dce33 discord.client.Client.create_guild:22
+#: discord.client.Client.fetch_guild:26 of
 msgid ":class:`.Guild`"
 msgstr ""
 
@@ -1074,6 +1043,18 @@ msgstr ""
 
 #: 76f88cf22b1d4c1ba41c3a09a320adf1 discord.client.Client.create_guild:25 of
 msgid "Invalid icon image format given. Must be PNG or JPG."
+msgstr ""
+
+#: 39474d78af2f441d818ba1b7ccdeccd0 discord.client.Client.delete_emoji:3 of
+msgid "Deletes the custom :class:`AppEmoji` from the application."
+msgstr ""
+
+#: c5cc8c5449904509b773a938723d081b discord.client.Client.delete_emoji:6 of
+msgid "The emoji you are deleting."
+msgstr ""
+
+#: 4d5298f99ee649468bc32cbb48858423 discord.client.Client.delete_emoji:9 of
+msgid "An error occurred deleting the emoji."
 msgstr ""
 
 #: 0149655ae5be40f8b70d5d69362b94f0 discord.client.Client.delete_invite:3 of
@@ -1104,6 +1085,12 @@ msgstr ""
 
 #: discord.ext.commands.Bot.emojis:1 f053fc31a26848abb5f0b22c31bba150 of
 msgid "The emojis that the connected client has."
+msgstr ""
+
+#: discord.ext.commands.Bot.emojis:5 ea92aef62ae14860a92b74b19f31e2fd of
+msgid ""
+"This only includes the application's emojis if `cache_app_emojis` is "
+"``True``."
 msgstr ""
 
 #: 55996a99ae5a4b76bcf2980286829ff0 discord.client.Client.entitlements:1 of
@@ -1150,14 +1137,12 @@ msgid ""
 "Defaults to ``False``."
 msgstr ""
 
-#: 1ac0e449c2064ee3872b93131ef5099f acdddbfef28f4deeba67e1c0eeae3126
 #: db580d1226264744a222ffee4584ffd4 discord.abc.Messageable.history
 #: discord.bot.ApplicationCommandMixin.walk_application_commands
 #: discord.client.Client.entitlements discord.client.Client.fetch_guilds
 #: discord.client.Client.get_all_channels discord.client.Client.get_all_members
 #: discord.ext.commands.cog.Cog.walk_commands
-#: discord.ext.commands.core.GroupMixin.walk_commands
-#: e2d006ad6c904920bebc27cd7a383901 of
+#: discord.ext.commands.core.GroupMixin.walk_commands of
 msgid "Yields"
 msgstr ""
 
@@ -1173,30 +1158,26 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.EntitlementIterator\\``"
 msgstr ""
 
-#: 1713b7f68ab24b69904742961b2e7c20 3321eb8445bb48ffb68d9cb74a155012
-#: c41d42eda335471399cd63c006bb2131 discord.abc.Messageable.history:39
-#: discord.client.Client.entitlements:40 discord.client.Client.fetch_guilds:35
+#: 3321eb8445bb48ffb68d9cb74a155012 discord.abc.Messageable.history:39
+#: discord.client.Client.entitlements:40 discord.client.Client.fetch_guilds:41
 #: discord.client.Client.wait_for:42 discord.ext.commands.core.check:37
 #: discord.ext.commands.core.check_any:20 of
 msgid "Examples"
 msgstr ""
 
-#: 94bc24f4c61e41b5964c4a1322f961f1 9c43804aa1e84f4db26daf70ceda2518
-#: c44882f2d2fa4e16be22d009df4a9e97 discord.abc.Messageable.history:40
-#: discord.client.Client.entitlements:41 discord.client.Client.fetch_guilds:36
+#: 9c43804aa1e84f4db26daf70ceda2518 discord.abc.Messageable.history:40
+#: discord.client.Client.entitlements:41 discord.client.Client.fetch_guilds:42
 #: of
 msgid "Usage ::"
 msgstr ""
 
-#: 30d73cc7fe64490fa9bc06ee689bd9ca 843417dafe404d64bc7fa228cb7035a1
-#: discord.client.Client.entitlements:46 discord.client.Client.fetch_guilds:41
-#: of
+#: 843417dafe404d64bc7fa228cb7035a1 discord.client.Client.entitlements:46
+#: discord.client.Client.fetch_guilds:47 of
 msgid "Flattening into a list ::"
 msgstr ""
 
-#: 828a83477bcd4a6481593e689e4c7a6e 890c3220aa92482a88d9eb963d89a73f
 #: discord.abc.Messageable.history:52 discord.client.Client.entitlements:50
-#: discord.client.Client.fetch_guilds:46 f3a460b6dbc644f1a519e478316d2ace of
+#: discord.client.Client.fetch_guilds:52 f3a460b6dbc644f1a519e478316d2ace of
 msgid "All parameters are optional."
 msgstr ""
 
@@ -1270,6 +1251,42 @@ msgstr ""
 
 #: 9410d10bcdb94e0b9d7c7f7c89b65810 discord.client.Client.fetch_channel:17 of
 msgid "You do not have permission to fetch this channel."
+msgstr ""
+
+#: 39474d78af2f441d818ba1b7ccdeccd0 discord.client.Client.fetch_emoji:3 of
+msgid "Retrieves a custom :class:`AppEmoji` from the application."
+msgstr ""
+
+#: d7510512f1274c79ad9b92b41e15793a discord.client.Client.fetch_emoji:6 of
+msgid "The emoji's ID."
+msgstr ""
+
+#: 16bd71de63f54315b81153e65c2efa00 discord.client.Client.fetch_emoji:9 of
+msgid "The retrieved emoji."
+msgstr ""
+
+#: discord.client.Client.fetch_emoji:12 fa27d36619154f23b87e1454acdd2c5f of
+msgid "The emoji requested could not be found."
+msgstr ""
+
+#: 4d5298f99ee649468bc32cbb48858423 discord.client.Client.fetch_emoji:13 of
+msgid "An error occurred fetching the emoji."
+msgstr ""
+
+#: 39474d78af2f441d818ba1b7ccdeccd0 discord.client.Client.fetch_emojis:3 of
+msgid "Retrieves all custom :class:`AppEmoji`\\s from the application."
+msgstr ""
+
+#: 4d5298f99ee649468bc32cbb48858423 discord.client.Client.fetch_emojis:5 of
+msgid "An error occurred fetching the emojis."
+msgstr ""
+
+#: 75e503161f364fa5a593ca4873cec071 discord.client.Client.fetch_emojis:7 of
+msgid "The retrieved emojis."
+msgstr ""
+
+#: 0722f1eb0d854e748d5363eedae8ec27 discord.client.Client.fetch_emojis:8 of
+msgid "List[:class:`AppEmoji`]"
 msgstr ""
 
 #: de71bd64cf04416ea9bf2abe61ff72ef discord.client.Client.fetch_guild:3 of
@@ -1357,15 +1374,22 @@ msgid ""
 "is assumed to be local time."
 msgstr ""
 
-#: bc466b15258f4b2aa8ac9a96e0f937d7 discord.client.Client.fetch_guilds:29 of
+#: 3b20121f198d4f388ed94fe5e12cdba9 discord.client.Client.fetch_guilds:29 of
+msgid ""
+"Whether to include member count information in guilds. This fills the "
+":attr:`.Guild.approximate_member_count` and "
+":attr:`.Guild.approximate_presence_count` fields. Defaults to ``True``."
+msgstr ""
+
+#: bc466b15258f4b2aa8ac9a96e0f937d7 discord.client.Client.fetch_guilds:35 of
 msgid ":class:`.Guild` -- The guild with the guild data parsed."
 msgstr ""
 
-#: 15f4a4f866324c7ba489cd589b442544 discord.client.Client.fetch_guilds:31 of
+#: 15f4a4f866324c7ba489cd589b442544 discord.client.Client.fetch_guilds:37 of
 msgid "Getting the guilds failed."
 msgstr ""
 
-#: 75ee4f3a774e4d8f987a57c3125133f5 discord.client.Client.fetch_guilds:32 of
+#: 75ee4f3a774e4d8f987a57c3125133f5 discord.client.Client.fetch_guilds:38 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.GuildIterator\\``"
 msgstr ""
 
@@ -1467,7 +1491,6 @@ msgstr ""
 msgid "The bot's role connection metadata records."
 msgstr ""
 
-#: 1c6038fbd90940a99452e42246965fcd
 #: discord.client.Client.fetch_role_connection_metadata_records:8
 #: discord.client.Client.update_role_connection_metadata_records:12
 #: f85d9e595c1d4f359d02d7b2baf0b555 of
@@ -1651,13 +1674,19 @@ msgid ""
 "can 'access'."
 msgstr ""
 
-#: 72d83d8cefd0467bbfcf9ddc6b6a47cf c91d10a08ad54d2980f75fb326863880
-#: discord.client.Client.get_all_channels:3
+#: 72d83d8cefd0467bbfcf9ddc6b6a47cf discord.client.Client.get_all_channels:3
 #: discord.client.Client.get_all_members:3 of
 msgid "This is equivalent to: ::"
 msgstr ""
 
-#: 32d5a41f29ab4eab83ff4181703345a6 discord.client.Client.get_all_channels:11
+#: d1219c96be1d44378e6cc2e7e6537aaa discord.client.Client.get_all_channels:8 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+" \\\\\\[\\:py\\:class\\:\\`\\~discord.abc.GuildChannel\\`\\, "
+"\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ""
+
+#: 32d5a41f29ab4eab83ff4181703345a6 discord.client.Client.get_all_channels:13
 #: of
 msgid ""
 "Just because you receive a :class:`.abc.GuildChannel` does not mean that "
@@ -1665,7 +1694,7 @@ msgid ""
 ":meth:`.abc.GuildChannel.permissions_for` should be used for that."
 msgstr ""
 
-#: 9860d3eda1264a0c8df1f138ffe0bb12 discord.client.Client.get_all_channels:15
+#: 9860d3eda1264a0c8df1f138ffe0bb12 discord.client.Client.get_all_channels:17
 #: of
 msgid ":class:`.abc.GuildChannel` -- A channel the client can 'access'."
 msgstr ""
@@ -1676,6 +1705,10 @@ msgstr ""
 
 #: af882d2cbfb6416a9e8ae82fe4d00b7d discord.client.Client.get_all_members:9 of
 msgid ":class:`.Member` -- A member the client can see."
+msgstr ""
+
+#: 7d0a457d06344339819fc176a73566c2 discord.client.Client.get_all_members:12 of
+msgid ":sphinx_autodoc_typehints_type:`Generator\\[Member\\]`"
 msgstr ""
 
 #: beeb38432c18467199e1986a4a5a5802
@@ -1945,8 +1978,8 @@ msgstr ""
 msgid "The custom emoji or ``None`` if not found."
 msgstr ""
 
-#: 1c0cbebe556443ec8b777892bbb413ca discord.client.Client.get_emoji:8 of
-msgid "Optional[:class:`.Emoji`]"
+#: 36582766bdc1404fba01c7e34a7d291e discord.client.Client.get_emoji:8 of
+msgid "Optional[:class:`.GuildEmoji` | :class:`.AppEmoji`]"
 msgstr ""
 
 #: 3c43e6dcda3848efb665d49d3cb97ad1 discord.client.Client.get_guild:1 of
@@ -2101,6 +2134,10 @@ msgstr ""
 msgid "Returns a user with the given ID."
 msgstr ""
 
+#: 1538eaf30f75407ab466133776dbc71e discord.ext.commands.Bot.guild_emojis:1 of
+msgid "The :class:`~discord.GuildEmoji` that the connected client has."
+msgstr ""
+
 #: 3c6ffdbfdb4345c6a359147783febc67 discord.ext.commands.Bot.guilds:1 of
 msgid "The guilds that the connected client is a member of."
 msgstr ""
@@ -2181,11 +2218,14 @@ msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: cd244fd94faf4a6d80340bdcbf4fa037 discord.ext.commands.Bot.latency:1 of
-msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+#: discord.ext.commands.Bot.latency:1 fdffefaa1e9b44859d2ce1db6bcea167 of
+msgid ""
+"Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds. If "
+"no websocket is present, this returns ``nan``, and if no heartbeat has "
+"been received yet, this returns ``float('inf')``."
 msgstr ""
 
-#: 68a27c5f06f046589b9966084c427b86 discord.ext.commands.Bot.latency:3 of
+#: 68a27c5f06f046589b9966084c427b86 discord.ext.commands.Bot.latency:4 of
 msgid "This could be referred to as the Discord WebSocket protocol latency."
 msgstr ""
 
@@ -2427,6 +2467,33 @@ msgid ""
 "By default, this prints to :data:`sys.stderr` however it could be "
 "overridden to have a different implementation. Check "
 ":func:`~discord.on_error` for more details."
+msgstr ""
+
+#: 4bd84969508349538a18e4462fc68a75 discord.client.Client.on_modal_error:3 of
+msgid ""
+"The default modal error handler provided by the client. The default "
+"implementation prints the traceback to stderr."
+msgstr ""
+
+#: a95fc73d1af4455db17072682a05e1f1 discord.client.Client.on_modal_error:6 of
+msgid ""
+"This only fires for a modal if you did not define its "
+":func:`~discord.ui.Modal.on_error`."
+msgstr ""
+
+#: 7d0a457d06344339819fc176a73566c2 discord.client.Client.on_modal_error:12
+#: discord.client.Client.on_view_error:13 of
+msgid ":sphinx_autodoc_typehints_type:`None`"
+msgstr ""
+
+#: 62a23463e67743778ff5b5ffda0e1cb5 discord.client.Client.on_view_error:3 of
+msgid "The default view error handler provided by the client."
+msgstr ""
+
+#: 5401cf8b6fca4120bce2806abf520d45 discord.client.Client.on_view_error:5 of
+msgid ""
+"This only fires for a view if you did not define its "
+":func:`~discord.ui.View.on_error`."
 msgstr ""
 
 #: 373aeb873c344d82970e4a032b9ac217 discord.ext.commands.Bot.persistent_views:1
@@ -3110,18 +3177,36 @@ msgid ""
 "list of application commands."
 msgstr ""
 
-#: 1456f4943caa4b34a8e69f60b5a07808
+#: 9624b70cfbee4ca3af484bcf68e4e8ab
+#: discord.bot.ApplicationCommandMixin.walk_application_commands:6 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+" "
+"\\\\\\[\\:py\\:class\\:\\`\\~discord.commands.core.ApplicationCommand\\`\\,"
+" \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ""
+
+#: 9ab1b0a34851422dab23e9815b835095
 #: discord.ext.commands.core.GroupMixin.walk_commands:1 of
-msgid "An iterator that recursively walks through all commands and subcommands."
+msgid ""
+"An iterator that recursively walks through all commands and subcommands. "
+":rtype: "
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+" \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ "
+"\\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
+"\\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\, "
+"\\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, "
+"\\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
 #: 49f59fb863cd4209bd0f1f4182299127
-#: discord.ext.commands.core.GroupMixin.walk_commands:3 of
+#: discord.ext.commands.core.GroupMixin.walk_commands:5 of
 msgid "Duplicates due to aliases are no longer returned"
 msgstr ""
 
 #: c046361221d6494fa948452872c5775c
-#: discord.ext.commands.core.GroupMixin.walk_commands:6 of
+#: discord.ext.commands.core.GroupMixin.walk_commands:8 of
 msgid ""
 "Union[:class:`.Command`, :class:`.Group`] -- A command or group from the "
 "internal list of commands."
@@ -3415,8 +3500,7 @@ msgstr ""
 msgid "The long help text for the command."
 msgstr ""
 
-#: 1cae6d584b4042669667b6b5b19e8ca7 2fa587e86d45443b9e8de44d3a40adb3
-#: discord.ext.commands.context.Context:50
+#: 2fa587e86d45443b9e8de44d3a40adb3 discord.ext.commands.context.Context:50
 #: discord.ext.commands.context.Context:63
 #: discord.ext.commands.context.Context:90 discord.ext.commands.core.Command:22
 #: discord.ext.commands.core.Command:28 discord.ext.commands.core.Command:34 of
@@ -3970,6 +4054,14 @@ msgid ""
 "cog."
 msgstr ""
 
+#: 9624b70cfbee4ca3af484bcf68e4e8ab
+#: discord.ext.commands.cog.Cog.walk_commands:6 of
+msgid ""
+":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+" \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\, "
+"\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+msgstr ""
+
 #: discord.ext.commands.cog.Cog.get_commands:1 e903471dee0946f698493b70bbd6bfff
 #: of
 msgid ""
@@ -4217,6 +4309,7 @@ msgstr ""
 
 #: 870b0c00321c4963b624a270b9ec77ad
 #: discord.ext.commands.help.HelpCommand.command_not_found:6 of
+#, python-brace-format
 msgid "Defaults to ``No command called {0} found.``"
 msgstr ""
 
@@ -4246,6 +4339,7 @@ msgstr ""
 
 #: bd93202046e7474bbfd1271fb5aebfa7
 #: discord.ext.commands.help.HelpCommand.subcommand_not_found:8 of
+#, python-brace-format
 msgid "``'Command \"{command.qualified_name}\" has no subcommands.'``"
 msgstr ""
 
@@ -4256,6 +4350,7 @@ msgstr ""
 
 #: 1bd86a8162e147a2b78964b23a6da060
 #: discord.ext.commands.help.HelpCommand.subcommand_not_found:10 of
+#, python-brace-format
 msgid ""
 "``'Command \"{command.qualified_name}\" has no subcommand named "
 "{string}'``"
@@ -4315,11 +4410,16 @@ msgstr ""
 
 #: 9f05a77eef2445268d540b4f9653f322
 #: discord.ext.commands.help.HelpCommand.filter_commands:20 of
+msgid "A tuple of command types to exclude from the filter."
+msgstr ""
+
+#: 9f05a77eef2445268d540b4f9653f322
+#: discord.ext.commands.help.HelpCommand.filter_commands:23 of
 msgid "A list of commands that passed the filter."
 msgstr ""
 
 #: 0722f1eb0d854e748d5363eedae8ec27
-#: discord.ext.commands.help.HelpCommand.filter_commands:21 of
+#: discord.ext.commands.help.HelpCommand.filter_commands:24 of
 msgid "List[:class:`Command`]"
 msgstr ""
 
@@ -4358,8 +4458,7 @@ msgid ""
 " be output."
 msgstr ""
 
-#: 0da023124b764228803413e8e928ba2e 0fff7255071443deb952fb069385e343
-#: 221263475094489f990e402ae86805f6 4c8415699f38454caa3f28ff7645e137
+#: 221263475094489f990e402ae86805f6
 #: discord.ext.commands.help.DefaultHelpCommand.get_destination:3
 #: discord.ext.commands.help.HelpCommand.get_destination:3
 #: discord.ext.commands.help.HelpCommand.send_bot_help:11
@@ -4367,8 +4466,7 @@ msgstr ""
 #: discord.ext.commands.help.HelpCommand.send_command_help:10
 #: discord.ext.commands.help.HelpCommand.send_error_message:6
 #: discord.ext.commands.help.HelpCommand.send_group_help:11
-#: discord.ext.commands.help.MinimalHelpCommand.get_destination:3
-#: f8c115ff7057440482dceb4d05d3c394 of
+#: discord.ext.commands.help.MinimalHelpCommand.get_destination:3 of
 msgid "You can override this method to customise the behaviour."
 msgstr ""
 
@@ -4407,8 +4505,7 @@ msgid ""
 ":meth:`get_destination`."
 msgstr ""
 
-#: 145f3f00a2854c308de39ac9f2935d3d 1a16d349e6b147ea8072bbe46e99443b
-#: 44d8a4471f8d46199d03cf08d9d852fb bb2b8cf7f8da4ab498331b3d6bfb0f42
+#: bb2b8cf7f8da4ab498331b3d6bfb0f42
 #: discord.ext.commands.help.HelpCommand.send_bot_help:15
 #: discord.ext.commands.help.HelpCommand.send_cog_help:15
 #: discord.ext.commands.help.HelpCommand.send_command_help:14
@@ -4453,8 +4550,7 @@ msgid ""
 "arguments."
 msgstr ""
 
-#: 2d550440e5cf4edc8ced1cacaeea627b 8733bb9051b04e2f91d902a402af6929
-#: 92cd46fd01884b549196ce7d6f3affaf d2912db2232849caa145cdcedd335057
+#: 8733bb9051b04e2f91d902a402af6929
 #: discord.ext.commands.help.HelpCommand.send_bot_help:6
 #: discord.ext.commands.help.HelpCommand.send_cog_help:6
 #: discord.ext.commands.help.HelpCommand.send_command_help:5
@@ -5124,8 +5220,7 @@ msgstr ""
 msgid "The predicate to check if the command should be invoked."
 msgstr ""
 
-#: 641aba9d9e1242ee81b39f49ea575ac7 9624b70cfbee4ca3af484bcf68e4e8ab
-#: d1219c96be1d44378e6cc2e7e6537aaa
+#: 9624b70cfbee4ca3af484bcf68e4e8ab d1219c96be1d44378e6cc2e7e6537aaa
 #: discord.ext.commands.core.bot_has_any_role:15
 #: discord.ext.commands.core.bot_has_guild_permissions:8
 #: discord.ext.commands.core.bot_has_permissions:9
@@ -5682,6 +5777,7 @@ msgid "The message that triggered the command being executed."
 msgstr ""
 
 #: 6c79017c8b06446498c3190155904db2 discord.ext.commands.context.Context:13
+#: discord.ext.commands.context.Context.forward_to:13
 #: discord.ext.commands.context.Context.reply:9
 #: e1bc43a7b22b49f7bb9f4ba8e292f620 of
 msgid ":class:`.Message`"
@@ -6042,6 +6138,39 @@ msgstr ""
 msgid "The result of the help command, if any."
 msgstr ""
 
+#: 666fc58fd984426b9fc3697183d98530
+#: discord.ext.commands.context.Context.reply:3 of
+msgid ""
+"A shortcut method to :meth:`.abc.Messageable.send` to reply to the "
+":class:`.Message`."
+msgstr ""
+
+#: 07908514f89544cd8fadb56e8b84c9ea discord.abc.Messageable.send:99
+#: discord.ext.commands.context.Context.forward_to:12
+#: discord.ext.commands.context.Context.reply:8 of
+msgid "The message that was sent."
+msgstr ""
+
+#: 44cfdba165a2496f86c393e4ff002312 discord.abc.Messageable.send:102
+#: discord.ext.commands.context.Context.forward_to:15
+#: discord.ext.commands.context.Context.reply:11 of
+msgid "Sending the message failed."
+msgstr ""
+
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4 discord.abc.Messageable.send:103
+#: discord.ext.commands.context.Context.forward_to:16
+#: discord.ext.commands.context.Context.reply:12 of
+msgid "You do not have the proper permissions to send the message."
+msgstr ""
+
+#: dd5c11c9c7f04d8da2c0fcf683585cbd
+#: discord.ext.commands.context.Context.forward_to:17
+#: discord.ext.commands.context.Context.reply:13 of
+msgid ""
+"The ``files`` list is not of the appropriate size, or     you specified "
+"both ``file`` and ``files``."
+msgstr ""
+
 #: 2f8ba1ce6e854c78bb794c8d818a52fc discord.abc.Messageable.can_send:1 of
 msgid ""
 "Returns a :class:`bool` indicating whether you have the permissions to "
@@ -6085,6 +6214,18 @@ msgstr ""
 msgid "Retrieving the message failed."
 msgstr ""
 
+#: 666fc58fd984426b9fc3697183d98530
+#: discord.ext.commands.context.Context.forward_to:3 of
+msgid ""
+"A shortcut method to :meth:`.abc.Messageable.send` to forward the "
+":class:`.Message` to a channel."
+msgstr ""
+
+#: 9605ca58dc7540ba809f5b9944de8e93
+#: discord.ext.commands.context.Context.forward_to:9 of
+msgid "The channel to forward this to."
+msgstr ""
+
 #: c0f7203f91234dcf9b71d4aa08c2743e discord.abc.Messageable.pins:3 of
 msgid "Retrieves all messages that are currently pinned in the channel."
 msgstr ""
@@ -6106,35 +6247,6 @@ msgstr ""
 
 #: 46fce97e3e2044b9812605b7371e03c5 discord.abc.Messageable.pins:14 of
 msgid "Retrieving the pinned messages failed."
-msgstr ""
-
-#: 666fc58fd984426b9fc3697183d98530
-#: discord.ext.commands.context.Context.reply:3 of
-msgid ""
-"A shortcut method to :meth:`.abc.Messageable.send` to reply to the "
-":class:`.Message`."
-msgstr ""
-
-#: 07908514f89544cd8fadb56e8b84c9ea discord.abc.Messageable.send:99
-#: discord.ext.commands.context.Context.reply:8 of
-msgid "The message that was sent."
-msgstr ""
-
-#: 44cfdba165a2496f86c393e4ff002312 discord.abc.Messageable.send:102
-#: discord.ext.commands.context.Context.reply:11 of
-msgid "Sending the message failed."
-msgstr ""
-
-#: 1baacf7f645a4a3e98b1d53ae7e82fa4 discord.abc.Messageable.send:103
-#: discord.ext.commands.context.Context.reply:12 of
-msgid "You do not have the proper permissions to send the message."
-msgstr ""
-
-#: dd5c11c9c7f04d8da2c0fcf683585cbd
-#: discord.ext.commands.context.Context.reply:13 of
-msgid ""
-"The ``files`` list is not of the appropriate size, or     you specified "
-"both ``file`` and ``files``."
 msgstr ""
 
 #: 233e5db05eb849cc92f9a5d67a3c1cb0 discord.abc.Messageable.send:3 of
@@ -6231,10 +6343,10 @@ msgstr ""
 
 #: db923c5ea4f34a8ab38cd7fd07aa8f96 discord.abc.Messageable.send:59 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``.  .. versionadded::"
 " 1.6"
@@ -6242,10 +6354,10 @@ msgstr ""
 
 #: discord.abc.Messageable.send:59 e35ba87b49314f98b33ba3227b02d2e0 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``."
 msgstr ""
@@ -6685,6 +6797,7 @@ msgstr ""
 
 #: bfabc815487148ad94863e1ac2f8634f
 #: discord.ext.commands.converter.MessageConverter:7 of
+#, python-brace-format
 msgid ""
 "Lookup by \"{channel ID}-{message ID}\" (retrieved by shift-clicking on "
 "\"Copy ID\")"
@@ -6724,6 +6837,7 @@ msgstr ""
 
 #: 85bdb7294d554afbabc5e1eb19bc11c3
 #: discord.ext.commands.converter.PartialMessageConverter:7 of
+#, python-brace-format
 msgid ""
 "By \"{channel ID}-{message ID}\" (retrieved by shift-clicking on \"Copy "
 "ID\")"
@@ -6953,9 +7067,9 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.colour.Colour\\``"
 msgstr ""
 
-#: 5fe8c3fcda8a4f62af280c4d6ab3397a
+#: 6b7a74325383465caf8f1f009428b33b
 #: discord.ext.commands.converter.EmojiConverter:1 of
-msgid "Converts to a :class:`~discord.Emoji`."
+msgid "Converts to a :class:`~discord.GuildEmoji`."
 msgstr ""
 
 #: b0e0e871ab064289a32c66c40214fd9e
@@ -6978,7 +7092,7 @@ msgstr ""
 
 #: 97ae2776efac4d31b3a7edda0567ced5
 #: discord.ext.commands.converter.EmojiConverter.convert:19 of
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.Emoji\\``"
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.GuildEmoji\\``"
 msgstr ""
 
 #: a6e1bbb66c634ba882343850f5060099
@@ -8245,4 +8359,54 @@ msgstr ""
 #: ../../ext/commands/api.rst:656 74f572dd584c4c7ead229a600acc880a
 msgid ":exc:`~.commands.CommandRegistrationError`"
 msgstr ""
+
+#~ msgid "Optional[:class:`.Emoji`]"
+#~ msgstr ""
+
+#~ msgid "Measures latency between a HEARTBEAT and a HEARTBEAT_ACK in seconds."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "An iterator that recursively walks "
+#~ "through all commands and subcommands."
+#~ msgstr ""
+
+#~ msgid "Converts to a :class:`~discord.Emoji`."
+#~ msgstr ""
+
+#~ msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.emoji.Emoji\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\"
+#~ " \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, "
+#~ "\\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``.  .. versionadded::"
+#~ " 1.6"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``."
+#~ msgstr ""
 

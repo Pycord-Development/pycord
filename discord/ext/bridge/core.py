@@ -41,7 +41,9 @@ from discord import (
 )
 
 from ...utils import MISSING, find, get, warn_deprecated
-from ..commands import BadArgument
+from ..commands import (
+    BadArgument,
+)
 from ..commands import Bot as ExtBot
 from ..commands import (
     Command,
@@ -49,6 +51,7 @@ from ..commands import (
     Converter,
     Group,
     GuildChannelConverter,
+    MemberConverter,
     RoleConverter,
     UserConverter,
 )
@@ -96,26 +99,12 @@ class BridgeExtCommand(Command):
     def __init__(self, func, **kwargs):
         super().__init__(func, **kwargs)
 
-        # TODO: v2.7: Remove backwards support for Option in bridge commands.
-        for name, option in self.params.items():
+        for option in self.params.values():
             if isinstance(option.annotation, Option) and not isinstance(
                 option.annotation, BridgeOption
             ):
-                # Warn not to do this
-                warn_deprecated(
-                    "Using Option for bridge commands",
-                    "BridgeOption",
-                    "2.5",
-                    "2.7",
-                    reference="https://github.com/Pycord-Development/pycord/pull/2417",
-                    stacklevel=6,
-                )
-                # Override the convert method of the parameter's annotated Option.
-                # We can use the convert method from BridgeOption, and bind "self"
-                # using a manual invocation of the descriptor protocol.
-                # Definitely not a good approach, but gets the job done until removal.
-                self.params[name].annotation.convert = BridgeOption.convert.__get__(
-                    self.params[name].annotation
+                raise TypeError(
+                    f"{option.annotation.__class__.__name__} is not supported in bridge commands. Use BridgeOption instead."
                 )
 
     async def dispatch_error(self, ctx: BridgeExtContext, error: Exception) -> None:
@@ -230,7 +219,7 @@ class BridgeCommand:
         except AttributeError as e:
             # if it doesn't exist, check this list, if the name of
             # the parameter is here
-            if name is self.__special_attrs__:
+            if name in self.__special_attrs__:
                 raise e
 
             # looks up the result in the variants.
@@ -578,13 +567,21 @@ def has_permissions(**perms: bool):
 
 
 class MentionableConverter(Converter):
-    """A converter that can convert a mention to a user or a role."""
+    """A converter that can convert a mention to a member, a user or a role."""
 
     async def convert(self, ctx, argument):
         try:
             return await RoleConverter().convert(ctx, argument)
         except BadArgument:
-            return await UserConverter().convert(ctx, argument)
+            pass
+
+        if ctx.guild:
+            try:
+                return await MemberConverter().convert(ctx, argument)
+            except BadArgument:
+                pass
+
+        return await UserConverter().convert(ctx, argument)
 
 
 class AttachmentConverter(Converter):
@@ -612,6 +609,7 @@ BRIDGE_CONVERTER_MAPPING = {
     SlashCommandOptionType.mentionable: MentionableConverter,
     SlashCommandOptionType.number: float,
     SlashCommandOptionType.attachment: AttachmentConverter,
+    discord.Member: MemberConverter,
 }
 
 
@@ -620,16 +618,24 @@ class BridgeOption(Option, Converter):
     command option and a prefixed command argument for bridge commands.
     """
 
+    def __init__(self, input_type, *args, **kwargs):
+        self.converter = kwargs.pop("converter", None)
+        super().__init__(input_type, *args, **kwargs)
+
+        self.converter = self.converter or BRIDGE_CONVERTER_MAPPING.get(input_type)
+
     async def convert(self, ctx, argument: str) -> Any:
         try:
             if self.converter is not None:
-                converted = await self.converter.convert(ctx, argument)
+                converted = await self.converter().convert(ctx, argument)
             else:
-                converter = BRIDGE_CONVERTER_MAPPING[self.input_type]
-                if issubclass(converter, Converter):
+                converter = BRIDGE_CONVERTER_MAPPING.get(self.input_type)
+                if isinstance(converter, type) and issubclass(converter, Converter):
                     converted = await converter().convert(ctx, argument)  # type: ignore # protocol class
-                else:
+                elif callable(converter):
                     converted = converter(argument)
+                else:
+                    raise TypeError(f"Invalid converter: {converter}")
 
             if self.choices:
                 choices_names: list[str | int | float] = [

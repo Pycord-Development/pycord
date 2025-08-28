@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-05-23 07:30-0000\\n"
-"PO-Revision-Date: 2024-05-23 07:30-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Installing Pycord"
 msgstr "Pycord installieren"
@@ -20,32 +20,32 @@ msgstr "Dies ist die Dokumentation für Pycord, eine Bibliothek für Python, die
 msgid "Prerequisites"
 msgstr "Voraussetzungen"
 
-msgid "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
-msgstr "Pycord works with Python 3.8 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.7 or lower is not supported."
+msgid "Pycord works with Python 3.9 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.8 or lower is not supported."
+msgstr "Pycord works with Python 3.9 or higher. Support for earlier versions of Python is not provided. Python 2.7 or lower is not supported. Python 3.8 or lower is not supported."
 
 msgid "Installing"
-msgstr "Installing"
+msgstr "Installieren"
 
 msgid "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
-msgstr "For new features in upcoming versions, you will need to install the pre-release until a stable version is released. ::"
+msgstr "Für neue Funktionen in kommenden Versionen müssen Sie die Vorversion installieren, bis eine stabile Version veröffentlicht ist. ::"
 
 msgid "For Windows users, this command should be used to install the pre-release: ::"
 msgstr "Für Windows-Benutzer sollte dieser Befehl verwendet werden, um die Betaversion zu installieren: ::"
 
 msgid "You can get the library directly from PyPI: ::"
-msgstr "You can get the library directly from PyPI: ::"
+msgstr "Sie können die Bibliothek direkt von PyPI erhalten: ::"
 
 msgid "If you are using Windows, then the following should be used instead: ::"
-msgstr "If you are using Windows, then the following should be used instead: ::"
+msgstr "Wenn Sie Windows verwenden, sollte stattdessen folgendes verwendet werden: ::"
 
 msgid "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
-msgstr "To install additional packages for speedup,  you should use ``py-cord[speed]`` instead of ``py-cord``, e.g."
+msgstr "Um zusätzliche Pakete für Beschleunigung zu installieren, sollten Sie  ``py-cord[speed]`` anstelle von ``py-cord`` verwenden, z.B."
 
 msgid "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
-msgstr "To get voice support, you should use ``py-cord[voice]`` instead of ``py-cord``, e.g. ::"
+msgstr "Um Sprachunterstützung zu erhalten, sollten Sie ``py-cord[voice]`` anstelle von ``py-cord`` verwenden, z. B. ::"
 
 msgid "On Linux environments, installing voice requires getting the following dependencies:"
-msgstr "On Linux environments, installing voice requires getting the following dependencies:"
+msgstr "Auf Linux-Umgebungen erfordert das Installieren der Sprachunterstützung folgende Abhängigkeiten:"
 
 msgid "`libffi <https://github.com/libffi/libffi>`_"
 msgstr "`libffi <https://github.com/libffi/libffi>`_"
@@ -57,37 +57,37 @@ msgid "`python3-dev <https://packages.debian.org/python3-dev>`_"
 msgstr "`python3-dev <https://packages.debian.org/python3-dev>`_"
 
 msgid "For a Debian-based system, the following command will get these dependencies:"
-msgstr "For a Debian-based system, the following command will get these dependencies:"
+msgstr "Für ein Debian-basiertes System erhält der folgende Befehl folgende Abhängigkeiten:"
 
 msgid "Remember to check your permissions!"
-msgstr "Remember to check your permissions!"
+msgstr "Denken Sie daran, Ihre Berechtigungen zu überprüfen!"
 
 msgid "Virtual Environments"
-msgstr "Virtual Environments"
+msgstr "Virtuelle Umgebungen"
 
 msgid "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
-msgstr "Sometimes you want to keep libraries from polluting system installs or use a different version of libraries than the ones installed on the system. You might also not have permissions to install libraries system-wide. For this purpose, the standard library as of Python 3.3 comes with a concept called \"Virtual Environment\"s to help maintain these separate versions."
+msgstr "Manchmal möchten Sie Bibliotheken davon abhalten, System Installationen zu verschmutzen oder eine andere Version von Bibliotheken als die auf dem System installierten zu verwenden. Möglicherweise haben Sie ebenfalls nicht die Berechtigung, Bibliotheken systemweit zu installieren. Zu diesem Zweck enthält die Standardbibliothek ab Python 3.3 ein Konzept mit dem Namen \"Virtuelle Umgebung\"en, um diese separaten Versionen zu unterhalten."
 
 msgid "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
-msgstr "A more in-depth tutorial is found on :doc:`py:tutorial/venv`."
+msgstr "Eine ausführlichere Anleitung finden Sie auf :doc:`py:tutorial/venv`."
 
 msgid "However, for the quick and dirty:"
-msgstr "However, for the quick and dirty:"
+msgstr "Aber für die Schnellen und Schmutzigen:"
 
 msgid "Go to your project's working directory:"
-msgstr "Go to your project's working directory:"
+msgstr "Gehen Sie zum Arbeitsverzeichnis Ihres Projekts:"
 
 msgid "Activate the virtual environment:"
-msgstr "Activate the virtual environment:"
+msgstr "Aktivieren Sie die virtuelle Umgebung:"
 
 msgid "On Windows you activate it with:"
-msgstr "On Windows you activate it with:"
+msgstr "Auf Windows aktivieren Sie diese mit:"
 
 msgid "Use pip like usual:"
-msgstr "Use pip like usual:"
+msgstr "Pip wie üblich verwenden:"
 
 msgid "Congratulations. You now have a virtual environment all set up."
-msgstr "Congratulations. You now have a virtual environment all set up."
+msgstr "Glückwunsch. Sie haben nun eine virtuelle Umgebung eingerichtet."
 
 msgid "Basic Concepts"
 msgstr "Basic Concepts"

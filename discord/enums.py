@@ -76,6 +76,10 @@ __all__ = (
     "EntitlementOwnerType",
     "IntegrationType",
     "InteractionContextType",
+    "PollLayoutType",
+    "MessageReferenceType",
+    "SubscriptionStatus",
+    "SeparatorSpacingSize",
 )
 
 
@@ -266,6 +270,12 @@ class MessageType(Enum):
     stage_raise_hand = 30
     stage_topic = 31
     guild_application_premium_subscription = 32
+    guild_incident_alert_mode_enabled = 36
+    guild_incident_alert_mode_disabled = 37
+    guild_incident_report_raid = 38
+    guild_incident_report_false_alarm = 39
+    purchase_notification = 44
+    poll_result = 46
 
 
 class VoiceRegion(Enum):
@@ -712,6 +722,14 @@ class ComponentType(Enum):
     role_select = 6
     mentionable_select = 7
     channel_select = 8
+    section = 9
+    text_display = 10
+    thumbnail = 11
+    media_gallery = 12
+    file = 13
+    separator = 14
+    content_inventory_entry = 16
+    container = 17
 
     def __int__(self):
         return self.value
@@ -825,6 +843,7 @@ class SlashCommandOptionType(Enum):
             "ThreadOption",
             "Thread",
             "ForumChannel",
+            "MediaChannel",
             "DMChannel",
         ]:
             return cls.channel
@@ -1052,6 +1071,31 @@ class PollLayoutType(Enum):
     """The poll's layout type."""
 
     default = 1
+
+
+class MessageReferenceType(Enum):
+    """The type of the message reference object"""
+
+    default = 0
+    forward = 1
+
+
+class SubscriptionStatus(Enum):
+    """The status of a subscription."""
+
+    active = 0
+    ending = 1
+    inactive = 2
+
+
+class SeparatorSpacingSize(Enum):
+    """A separator component's spacing size."""
+
+    small = 1
+    large = 2
+
+    def __int__(self):
+        return self.value
 
 
 T = TypeVar("T")

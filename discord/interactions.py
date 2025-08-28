@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import datetime
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
@@ -75,7 +76,7 @@ if TYPE_CHECKING:
         VoiceChannel,
     )
     from .client import Client
-    from .commands import OptionChoice
+    from .commands import ApplicationCommand, OptionChoice
     from .embeds import Embed
     from .mentions import AllowedMentions
     from .poll import Poll
@@ -119,7 +120,7 @@ class Interaction:
         The interaction type.
     guild_id: Optional[:class:`int`]
         The guild ID the interaction was sent from.
-    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]
+    channel: Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]
         The channel the interaction was sent from.
     channel_id: Optional[:class:`int`]
         The ID of the channel the interaction was sent from.
@@ -152,6 +153,22 @@ class Interaction:
         The context in which this command was executed.
 
         .. versionadded:: 2.6
+    command: Optional[:class:`ApplicationCommand`]
+        The command that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    view: Optional[:class:`View`]
+        The view that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    modal: Optional[:class:`Modal`]
+        The modal that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    attachment_size_limit: :class:`int`
+        The attachment size limit.
+
+        .. versionadded:: 2.7
     """
 
     __slots__: tuple[str, ...] = (
@@ -172,6 +189,10 @@ class Interaction:
         "entitlements",
         "context",
         "authorizing_integration_owners",
+        "command",
+        "view",
+        "modal",
+        "attachment_size_limit",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -224,6 +245,11 @@ class Interaction:
             else None
         )
 
+        self.command: ApplicationCommand | None = None
+        self.view: View | None = None
+        self.modal: Modal | None = None
+        self.attachment_size_limit: int = data.get("attachment_size_limit")
+
         self.message: Message | None = None
         self.channel = None
 
@@ -261,20 +287,23 @@ class Interaction:
             except KeyError:
                 pass
 
-        if channel := data.get("channel"):
-            if (ch_type := channel.get("type")) is not None:
-                factory, ch_type = _threaded_channel_factory(ch_type)
+        channel = data.get("channel")
+        data_ch_type: int | None = channel.get("type") if channel else None
 
-                if ch_type in (ChannelType.group, ChannelType.private):
-                    self.channel = factory(
-                        me=self.user, data=channel, state=self._state
-                    )
-                elif self.guild:
-                    self.channel = factory(
-                        guild=self.guild, state=self._state, data=channel
-                    )
-        else:
-            self.channel = self.cached_channel
+        if data_ch_type is not None:
+            factory, ch_type = _threaded_channel_factory(data_ch_type)
+            if ch_type in (ChannelType.group, ChannelType.private):
+                self.channel = factory(me=self.user, data=channel, state=self._state)
+
+        if self.channel is None and self.guild:
+            self.channel = self.guild._resolve_channel(self.channel_id)
+        if self.channel is None and self.channel_id is not None:
+            ch_type = (
+                ChannelType.text if self.guild_id is not None else ChannelType.private
+            )
+            self.channel = PartialMessageable(
+                state=self._state, id=self.channel_id, type=ch_type
+            )
 
         self._channel_data = channel
 
@@ -297,6 +326,11 @@ class Interaction:
             return self._guild
         return self._state and self._state._get_guild(self.guild_id)
 
+    @property
+    def created_at(self) -> datetime.datetime:
+        """Returns the interaction's creation time in UTC."""
+        return utils.snowflake_time(self.id)
+
     def is_command(self) -> bool:
         """Indicates whether the interaction is an application command."""
         return self.type == InteractionType.application_command
@@ -306,12 +340,12 @@ class Interaction:
         return self.type == InteractionType.component
 
     @utils.cached_slot_property("_cs_channel")
+    @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
     def cached_channel(self) -> InteractionChannel | None:
-        """The channel the
-        interaction was sent from.
+        """The cached channel from which the interaction was sent.
+        DM channels are not resolved. These are :class:`PartialMessageable` instead.
 
-        Note that due to a Discord limitation, DM channels are not resolved since there is
-        no data to complete them. These are :class:`PartialMessageable` instead.
+        .. deprecated:: 2.7
         """
         guild = self.guild
         channel = guild and guild._resolve_channel(self.channel_id)
@@ -568,7 +602,9 @@ class Interaction:
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             view.message = message
-            self._state.store_view(view, message.id)
+            view.refresh(message.components)
+            if view.is_dispatchable():
+                self._state.store_view(view, message.id)
 
         if delete_after is not None:
             await self.delete_original_response(delay=delete_after)
@@ -930,7 +966,7 @@ class InteractionResponse:
         HTTPException
             Sending the message failed.
         TypeError
-            You specified both ``embed`` and ``embeds``.
+            You specified both ``embed`` and ``embeds``, or sent content or embeds with V2 components.
         ValueError
             The length of ``embeds`` was invalid.
         InteractionResponded
@@ -961,6 +997,12 @@ class InteractionResponse:
 
         if view is not None:
             payload["components"] = view.to_components()
+            if view.is_components_v2():
+                if embeds or content:
+                    raise TypeError(
+                        "cannot send embeds or content with a view using v2 component logic"
+                    )
+                flags.is_components_v2 = True
 
         if poll is not None:
             payload["poll"] = poll.to_dict()
@@ -1026,7 +1068,8 @@ class InteractionResponse:
                 view.timeout = 15 * 60.0
 
             view.parent = self._parent
-            self._parent._state.store_view(view)
+            if view.is_dispatchable():
+                self._parent._state.store_view(view)
 
         self._responded = True
         if delete_after is not None:
