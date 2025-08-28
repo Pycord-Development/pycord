@@ -4,5 +4,16 @@
     "local>Pycord-Development/renovate-config",
     ":semanticPrefixFixDepsChoreOthers",
     ":dependencyDashboard"
+  ],
+  "assigneesFromCodeOwners": true,
+  "packageRules": [
+    {
+      "matchManagers": [
+        "pip_requirements"
+      ],
+      "matchPaths": [
+        "requirements/*.txt"
+      ]
+    }
   ]
 }
