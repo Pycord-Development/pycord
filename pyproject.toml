@@ -57,7 +57,7 @@ docs = [
     "levenshtein==0.27.1",
     "myst-parser[linkify]==4.0.1",
     "sphinx==8.0.2",
-    "sphinx-autodoc-typehints==2.2.3",
+    "sphinx-autodoc-typehints==2.5.0",
     "sphinx-copybutton==0.5.2",
     "sphinx-intl==2.3.2",
     "sphinxcontrib-trio==1.1.2",
