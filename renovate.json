@@ -5,5 +5,8 @@
     ":semanticPrefixFixDepsChoreOthers",
     ":dependencyDashboard"
   ],
-  "forkProcessing": "enabled"
+  "forkProcessing": "enabled",
+  "lockFileMaintenance": {
+    "enabled": true
+  }
 }
