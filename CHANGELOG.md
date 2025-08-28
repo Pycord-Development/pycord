@@ -76,6 +76,14 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
 - Added role gradients support with `Role.colours` and the `RoleColours` class.
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
+- Added `Interaction.attachment_size_limit`.
+  ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
+- Added support for selects and text displays in modals.
+  ([#2858](https://github.com/Pycord-Development/pycord/pull/2858))
+- Added `AuditLogDiff.communication_disabled_until`.
+  ([#2883](https://github.com/Pycord-Development/pycord/pull/2883))
+- Added `discord.User.primary_guild` and the `PrimaryGuild` class.
+  ([#2876](https://github.com/Pycord-Development/pycord/pull/2876))
 
 ### Fixed
 
@@ -147,6 +155,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2843](https://github.com/Pycord-Development/pycord/pull/2843))
 - Fixed `TypeError` when using `@option` with certain annotations and along with
   `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
+- Fixed `AttributeError` when accessing `AuditLogEntry.changes` more than once.
+  ([#2882])(https://github.com/Pycord-Development/pycord/pull/2882))
 
 ### Changed
 
@@ -168,6 +178,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2797](https://github.com/Pycord-Development/pycord/pull/2797))
 - Upgraded voice websocket version to v8.
   ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
+- `Messageable.pins()` now returns a `MessagePinIterator` and has new arguments.
+  ([#2872](https://github.com/Pycord-Development/pycord/pull/2872))
 
 ### Deprecated
 
@@ -177,6 +189,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+- Deprecated `Messageable.pins()` returning a list of `Message`; it should be used as an
+  iterator of `MessagePin` instead.
+  ([#2872](https://github.com/Pycord-Development/pycord/pull/2872))
 
 ### Removed
 
