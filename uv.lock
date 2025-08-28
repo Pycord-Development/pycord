@@ -1390,7 +1390,7 @@ docs = [
     { name = "sphinx-intl", specifier = "==2.3.1" },
     { name = "sphinxcontrib-trio", specifier = "==1.1.2" },
     { name = "sphinxcontrib-websupport", specifier = "==2.0.0" },
-    { name = "sphinxext-opengraph", specifier = "==0.9.1" },
+    { name = "sphinxext-opengraph", specifier = "==0.12.0" },
     { name = "typing-extensions", specifier = "==4.15.0" },
 ]
 
@@ -1926,14 +1926,14 @@ wheels = [
 
 [[package]]
 name = "sphinxext-opengraph"
-version = "0.9.1"
+version = "0.12.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sphinx" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1c/5b/4302fe33c88dbfb572e2c1cad26735164c23f16fb8dba94ddb1867d0ef06/sphinxext-opengraph-0.9.1.tar.gz", hash = "sha256:dd2868a1e7c9497977fbbf44cc0844a42af39ca65fe1bb0272518af225d06fc5", size = 1034511, upload-time = "2023-12-14T12:11:24.613Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/76/8f/6c0d869ac0fd25ae90510350800312f80bd0618d19f093e70fca3d670b32/sphinxext_opengraph-0.12.0.tar.gz", hash = "sha256:38bc17addd5d8bccc148daa7c6c13845c329c2687378ee8fdfc81942cc72a79d", size = 1026784, upload-time = "2025-08-04T21:53:36.478Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/92/0a/970b80b4fa1feeb6deb6f2e22d4cb14e388b27b315a1afdb9db930ff91a4/sphinxext_opengraph-0.9.1-py3-none-any.whl", hash = "sha256:b3b230cc6a5b5189139df937f0d9c7b23c7c204493b22646273687969dcb760e", size = 1005241, upload-time = "2023-12-14T12:11:21.608Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/26/8388918251df75086c7fcd9cd7e231f08774e3f4ce6fc911ff105a87a300/sphinxext_opengraph-0.12.0-py3-none-any.whl", hash = "sha256:f60892d5fa4cc25889b0baa5ec1c778a8ef87aa7c1f4bb5f93f11befdb0d7b9c", size = 1004063, upload-time = "2025-08-04T21:53:34.641Z" },
 ]
 
 [[package]]
