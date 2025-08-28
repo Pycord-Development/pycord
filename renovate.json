@@ -8,12 +8,8 @@
   "assigneesFromCodeOwners": true,
   "packageRules": [
     {
-      "matchManagers": [
-        "pip_requirements"
-      ],
-      "matchPaths": [
-        "requirements/*.txt"
-      ]
+      "matchManagers": ["pip_requirements"],
+      "matchFileNames": ["requirements/*.txt"]
     }
   ]
 }
