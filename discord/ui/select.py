@@ -109,7 +109,7 @@ class Select(Item[V]):
         A list of channel types that can be selected in this menu.
         Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
     disabled: :class:`bool`
-        Whether the select is disabled or not.
+        Whether the select is disabled or not. Only useable in views. Defaults to ``True`` in views.
     row: Optional[:class:`int`]
         The relative row this select menu belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
