@@ -1,6 +1,5 @@
 ci:
-  autoupdate_commit_msg: "chore(pre-commit): pre-commit autoupdate"
-  autofix_commit_msg: "style(pre-commit): auto fixes from pre-commit.com hooks"
+  autofix_prs: false # keep this false for now because there's the rest running already and it gets messy
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
