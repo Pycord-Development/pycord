@@ -63,7 +63,7 @@ docs = [
     "sphinxcontrib-trio==1.1.2",
     "sphinxcontrib-websupport==2.0.0",
     "sphinxext-opengraph==0.9.1",
-    "typing-extensions==4.13.1",
+    "typing-extensions==4.15.0",
 ]
 dev = [
     "codespell==2.4.1",
