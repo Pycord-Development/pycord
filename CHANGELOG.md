@@ -69,6 +69,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
 - Added `Interaction.attachment_size_limit`.
   ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
+- Added `AuditLogDiff.communication_disabled_until`.
+  ([#2883](https://github.com/Pycord-Development/pycord/pull/2883))
 - Added `discord.User.primary_guild` and the `PrimaryGuild` class.
   ([#2876](https://github.com/Pycord-Development/pycord/pull/2876))
 
@@ -142,6 +144,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2843](https://github.com/Pycord-Development/pycord/pull/2843))
 - Fixed `TypeError` when using `@option` with certain annotations and along with
   `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
+- Fixed `AttributeError` when accessing `AuditLogEntry.changes` more than once.
+  ([#2882])(https://github.com/Pycord-Development/pycord/pull/2882))
 
 ### Changed
 
