@@ -55,7 +55,7 @@ speed = [
 docs = [
     "furo==2024.8.6",
     "levenshtein==0.27.1",
-    "myst-parser[linkify]==4.0.0",
+    "myst-parser[linkify]==4.0.1",
     "sphinx==8.0.2",
     "sphinx-autodoc-typehints==2.2.3",
     "sphinx-copybutton==0.5.2",
