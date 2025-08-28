@@ -50,10 +50,10 @@ class PrimaryGuild:
     """
 
     def __init__(self, data: PrimaryGuildPayload, state: "ConnectionState") -> None:
-        self.identity_guild_id: int = int(data["identity_guild_id"])
+        self.identity_guild_id: int | None = int(data.get("identity_guild_id", 0)) or None
         self.identity_enabled: bool | None = data.get("identity_enabled", None)
-        self.tag: str = data["tag"]
-        self._badge: str = data["badge"]
+        self.tag: str | None = data.get("tag", None)
+        self._badge: str | None = data.get("badge", None)
         self._state: "ConnectionState" = state
 
     def __repr__(self) -> str:
