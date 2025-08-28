@@ -404,7 +404,7 @@ class SelectMenu(Component):
         Will be an empty list for all component types
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
-        Whether the select is disabled or not.
+        Whether the select is disabled or not. Only useable in views. Defaults to ``False``.
     required: Optional[:class:`bool`]
         Whether the select is required or not. Only useable in modals. Defaults to ``False``.
     """
