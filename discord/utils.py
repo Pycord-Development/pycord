@@ -124,22 +124,6 @@ class _MissingSentinel:
 
 MISSING: Any = _MissingSentinel()
 
-
-class _cached_property:
-    def __init__(self, function):
-        self.function = function
-        self.__doc__ = getattr(function, "__doc__")
-
-    def __get__(self, instance, owner):
-        if instance is None:
-            return self
-
-        value = self.function(instance)
-        setattr(instance, self.function.__name__, value)
-
-        return value
-
-
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
@@ -153,12 +137,9 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = property
-
     P = ParamSpec("P")
 
 else:
-    cached_property = _cached_property
     AutocompleteContext = Any
     OptionChoice = Any
 
