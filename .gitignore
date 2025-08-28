@@ -159,6 +159,7 @@ cython_debug/
 
 # Custom
 *.json
+!renovate.json
 *.egg-info
 .venv/
 docs/_build
