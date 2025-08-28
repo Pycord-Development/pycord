@@ -71,6 +71,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
 - Added `AuditLogDiff.communication_disabled_until`.
   ([#2883](https://github.com/Pycord-Development/pycord/pull/2883))
+- Added `discord.User.primary_guild` and the `PrimaryGuild` class.
+  ([#2876](https://github.com/Pycord-Development/pycord/pull/2876))
 
 ### Fixed
 
