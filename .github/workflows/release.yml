@@ -135,6 +135,9 @@ jobs:
     needs: [lib_release,docs_release,close_milestone,pre_config]
     environment: release
     steps:
+      - name: Sleep for 3 minutes
+        run: sleep 3m
+        shell: bash
       - name: "Notify Discord"
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
