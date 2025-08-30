@@ -537,7 +537,7 @@ class VoiceConnectionState:
             old_data = self.user_ssrc_map.get(ssrc)
             old_speaking = (old_data or {}).get("speaking", SpeakingState.none)
 
-            self._dispatch_speaking_state(old_speaking, speaking, user)
+            self.dispatch_speaking_state(old_speaking, speaking, user)
 
             if old_data is None:
                 self.user_ssrc_map[ssrc]["speaking"] = speaking
@@ -547,7 +547,14 @@ class VoiceConnectionState:
                     "speaking": speaking,
                 }
 
-    def _dispatch_speaking_state(
+    def dispatch_speaking_state(self, before: SpeakingState, after: SpeakingState, user_id: int) -> None:
+        task = self.loop.create_task(
+            self._dispatch_speaking_state(before, after, user_id),
+        )
+        self.__sink_dispatch_task_set.add(task)
+        task.add_done_callback(self.__sink_dispatch_task_set.remove)
+
+    async def _dispatch_speaking_state(
         self, before: SpeakingState, after: SpeakingState, uid: int
     ) -> None:
         resolved = self.get_user(uid)
@@ -560,7 +567,7 @@ class VoiceConnectionState:
 
             futures = [
                 self.loop.create_task(
-                    utils.maybe_coroutine(fil.filter_packet, sink, user, data)
+                    utils.maybe_coroutine(fil.filter_speaking_state, sink, resolved, before, after)
                 )
                 for fil in sink._filters
             ]
