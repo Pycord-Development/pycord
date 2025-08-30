@@ -165,6 +165,10 @@ class Interaction:
         The modal that this interaction belongs to.
 
         .. versionadded:: 2.7
+    attachment_size_limit: :class:`int`
+        The attachment size limit.
+
+        .. versionadded:: 2.7
     """
 
     __slots__: tuple[str, ...] = (
@@ -188,6 +192,8 @@ class Interaction:
         "command",
         "view",
         "modal",
+        "attachment_size_limit",
+        "_raw_data",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -210,6 +216,7 @@ class Interaction:
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
+        self._raw_data: InteractionPayload = data
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
         self.data: InteractionData | None = data.get("data")
@@ -243,6 +250,7 @@ class Interaction:
         self.command: ApplicationCommand | None = None
         self.view: View | None = None
         self.modal: Modal | None = None
+        self.attachment_size_limit: int = data.get("attachment_size_limit")
 
         self.message: Message | None = None
         self.channel = None

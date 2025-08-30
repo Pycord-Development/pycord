@@ -39,6 +39,8 @@ __all__ = ("Asset",)
 if TYPE_CHECKING:
     ValidStaticFormatTypes = Literal["webp", "jpeg", "jpg", "png"]
     ValidAssetFormatTypes = Literal["webp", "jpeg", "jpg", "png", "gif"]
+    from .state import ConnectionState
+
 
 VALID_STATIC_FORMATS = frozenset({"jpeg", "jpg", "webp", "png"})
 VALID_ASSET_FORMATS = VALID_STATIC_FORMATS | {"gif"}
@@ -199,6 +201,33 @@ class Asset(AssetMixin):
             url=f"{cls.BASE}/{endpoint}/{avatar_decoration}.png?size=1024",
             key=avatar_decoration,
             animated=animated,
+        )
+
+    @classmethod
+    def _from_user_primary_guild_tag(
+        cls, state: ConnectionState, identity_guild_id: int, badge_id: str
+    ) -> Asset:
+        """Creates an Asset for a user's primary guild (tag) badge.
+
+        Parameters
+        ----------
+        state: ConnectionState
+            The connection state.
+        identity_guild_id: int
+            The ID of the guild.
+        badge_id: str
+            The badge hash/id.
+
+        Returns
+        -------
+        :class:`Asset`
+            The primary guild badge asset.
+        """
+        return cls(
+            state,
+            url=f"{Asset.BASE}/guild-tag-badges/{identity_guild_id}/{badge_id}.png?size=256",
+            key=badge_id,
+            animated=False,
         )
 
     @classmethod
