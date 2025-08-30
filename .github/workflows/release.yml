@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
     steps:
       - name: "Checkout Repository"
         uses: actions/checkout@v5
@@ -75,7 +75,7 @@ jobs:
         shell: bash
         env:
           VERSION_BRANCH: ${{ needs.pre_config.outputs.branch_name }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         run: |
           git fetch origin
           if ! git show-ref --verify --quiet refs/heads/$VERSION_BRANCH; then
