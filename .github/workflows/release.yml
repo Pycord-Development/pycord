@@ -89,25 +89,113 @@ jobs:
             git push origin $VERSION_BRANCH
           fi
           git checkout $VERSION_BRANCH
-      - name: "Release Pycord"
-        id: pycord-release
-        uses: Aiko-IT-Systems/pycord-lib-release-action@v1.0.0
+      - name: "Setup Python"
+        id: python-setup
+        uses: actions/setup-python@v5
         with:
-          github-token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-          pypi-token: ${{ secrets.PYPI_TOKEN }}
-          git-username: "NyuwBot"
-          git-email: "nyuw@aitsys.dev"
-          version-branch-name: ${{ needs.pre_config.outputs.branch_name }}
-          ref: ${{ github.ref_name }}
-          repository: ${{ github.repository }}
           python-version: "3.13"
-          release-requirements: "requirements/_release.txt"
-          version: ${{ needs.pre_config.outputs.version }}
-          is-rc: ${{ needs.pre_config.outputs.is_rc }}
-          pypi-package: "py-cord"
+          cache: "pip"
+          cache-dependency-path: "requirements/_release.txt"
+      - name: "Install Release Dependencies"
+        id: python-install
+        env:
+          REQ_FILE: "requirements/_release.txt"
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools setuptools_scm twine build
+          pip install -r $REQ_FILE
+      - name: "Prepare and Update CHANGELOG.md"
+        id: changelog-update
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          DATE=$(date +'%Y-%m-%d')
+          sed -i "/These changes are available on the \`.*\` branch, but have not yet been released\./{N;d;}" CHANGELOG.md
+          sed -i "s/## \[Unreleased\]/## [$VERSION] - $DATE/" CHANGELOG.md
+          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n&|" CHANGELOG.md
+          sed -i "s|\[unreleased\]:.*|[unreleased]: https://github.com/$REPOSITORY/compare/v$VERSION...HEAD\n[$VERSION]: https://github.com/$REPOSITORY/compare/$(git describe --tags --abbrev=0 @^)...v$VERSION|" CHANGELOG.md
+          git add CHANGELOG.md
+          git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
+      - name: "Commit and Push Changelog to ${{ github.ref_name }}"
+        id: commit-main-branch
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          git push origin HEAD:$BRANCH -f
+      - name: "Push Changelog to Version Branch"
+        id: commit-version-branch
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          VERSION_BRANCH: ${{ needs.pre_config.outputs.branch_name }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          git push origin HEAD:$VERSION_BRANCH -f
+      - name: "Create Git Tag"
+        id: create-git-tag
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          git tag v$VERSION -m "Release version $VERSION"
+          git push origin v$VERSION -f
+      - name: "Verify Version"
+        id: python-version-verify
+        shell: bash
+        run: python -m setuptools_scm
+      - name: "Build Package"
+        id: python-version-build
+        shell: bash
+        run: |
+          python3 -m build --sdist
+          python3 -m build --wheel
+      - name: "Create GitHub Release"
+        uses: softprops/action-gh-release@v2.0.8
+        id: gh-release
+        with:
+          tag_name: "v${{ inputs.version }}"
+          name: "v${{ inputs.version }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ needs.pre_config.outputs.is_rc }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          make_latest: true
+          repository: ${{ github.repository }}
+          target_commitish: ${{ github.ref_name }}
+
+      - name: "Publish package distributions to PyPI"
+        uses: pypa/gh-action-pypi-publish@v1.12.4
+        env:
+          name: "pypi"
+          url: "https://pypi.org/p/py-cord"
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+          user: __token__
+          attestations: false
+          verify-metadata: false
+
 
       - name: "Echo release url"
-        run: echo "${{ steps.pycord-release.outputs.gh-release }}"
+        run: echo "${{ steps.gh-release.outputs.url }}"
 
   docs_release:
     runs-on: ubuntu-latest
