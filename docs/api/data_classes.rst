@@ -28,7 +28,7 @@ dynamic attributes in mind.
 
 .. attributetable:: MediaGalleryItem
 
-.. autoclass:: SelectOption
+.. autoclass:: MediaGalleryItem
     :members:
 
 .. attributetable:: UnfurledMediaItem

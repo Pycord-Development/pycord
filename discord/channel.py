@@ -2884,8 +2884,6 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         The position in the category list. This is a number that starts at 0. e.g. the
         top category is position 0. Can be ``None`` if the channel was received in an interaction.
 
-        .. note::
-
     flags: :class:`ChannelFlags`
         Extra features of the channel.
 
