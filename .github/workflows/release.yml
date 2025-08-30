@@ -5,7 +5,7 @@ on:
     inputs:
       version:
         type: string
-        description: "Version number to release (e.g., 1.2.3, 1.2.3-rc1, 1.2.0)"
+        description: "Version number to release (e.g., 1.2.3, 1.2.3rc1, 1.2.0)"
         required: true
 
 permissions: write-all
@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -41,10 +41,16 @@ jobs:
         env:
           VERSION: ${{ github.event.inputs.version }}
         run: |
+          # PEP 440 version regex
+          VALID_VERSION_REGEX='^([0-9]+\.[0-9]+\.[0-9]+((a|b|rc|\.dev|\.post)[0-9]+)?)$'
+          if ! [[ $VERSION =~ $VALID_VERSION_REGEX ]]; then
+            echo "::error::Invalid version string '$VERSION'. Must match PEP 440 (e.g. 1.2.0, 1.2.0rc1, 1.2.0.dev1, 1.2.0a1, 1.2.0b1, 1.2.0.post1)"
+            exit 1
+          fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
           echo "previous_tag=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
-          if [[ $VERSION =~ -rc ]]; then
+          if [[ $VERSION =~ rc[0-9]+$ ]]; then
             MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
             echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
             echo "is_rc=true" >> $GITHUB_OUTPUT
@@ -63,36 +69,138 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           fetch-tags: true
-
-      - name: "Release Pycord"
-        id: pycord-release
-        uses: Aiko-IT-Systems/pycord-lib-release-action@v1.0.0
+      - name: "Create version branch if missing"
+        id: conditional-create-version-branch
+        shell: bash
+        env:
+          VERSION_BRANCH: ${{ needs.pre_config.outputs.branch_name }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        run: |
+          git fetch origin
+          if ! git show-ref --verify --quiet refs/heads/$VERSION_BRANCH; then
+            git checkout -b $VERSION_BRANCH
+            git push origin $VERSION_BRANCH
+          fi
+          git checkout $VERSION_BRANCH
+      - name: "Setup Python"
+        id: python-setup
+        uses: actions/setup-python@v5
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          pypi-token: ${{ secrets.PYPI_TOKEN }}
-          version-branch-name: ${{ needs.pre_config.outputs.branch_name }}
-          ref: ${{ github.ref_name }}
-          repository: ${{ github.repository }}
           python-version: "3.13"
-          release-requirements: "requirements/_release.txt"
-          version: ${{ needs.pre_config.outputs.version }}
-          is-rc: ${{ needs.pre_config.outputs.is_rc }}
-          pypi-package: "py-cord"
+          cache: "pip"
+          cache-dependency-path: "requirements/_release.txt"
+      - name: "Install Release Dependencies"
+        id: python-install
+        env:
+          REQ_FILE: "requirements/_release.txt"
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools setuptools_scm twine build
+          pip install -r $REQ_FILE
+      - name: "Prepare and Update CHANGELOG.md"
+        id: changelog-update
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          DATE=$(date +'%Y-%m-%d')
+          sed -i "/These changes are available on the \`.*\` branch, but have not yet been released\./{N;d;}" CHANGELOG.md
+          sed -i "s/## \[Unreleased\]/## [$VERSION] - $DATE/" CHANGELOG.md
+          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n&|" CHANGELOG.md
+          sed -i "s|\[unreleased\]:.*|[unreleased]: https://github.com/$REPOSITORY/compare/v$VERSION...HEAD\n[$VERSION]: https://github.com/$REPOSITORY/compare/$(git describe --tags --abbrev=0 @^)...v$VERSION|" CHANGELOG.md
+          git add CHANGELOG.md
+          git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
+      - name: "Commit and Push Changelog to ${{ github.ref_name }}"
+        id: commit-main-branch
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          git push origin HEAD:$BRANCH -f
+      - name: "Push Changelog to Version Branch"
+        id: commit-version-branch
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          VERSION_BRANCH: ${{ needs.pre_config.outputs.branch_name }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          git push origin HEAD:$VERSION_BRANCH -f
+      - name: "Create Git Tag"
+        id: create-git-tag
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+        run: |
+          git config user.name "NyuwBot"
+          git config user.email "nyuw@aitsys.dev"
+          git tag v$VERSION -m "Release version $VERSION"
+          git push origin v$VERSION -f
+      - name: "Verify Version"
+        id: python-version-verify
+        shell: bash
+        run: python -m setuptools_scm
+      - name: "Build Package"
+        id: python-version-build
+        shell: bash
+        run: |
+          python3 -m build --sdist
+          python3 -m build --wheel
+      - name: "Create GitHub Release"
+        uses: softprops/action-gh-release@v2.3.2
+        id: gh-release
+        with:
+          tag_name: "v${{ inputs.version }}"
+          name: "v${{ inputs.version }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ needs.pre_config.outputs.is_rc }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          make_latest: true
+          repository: ${{ github.repository }}
+          target_commitish: ${{ github.ref_name }}
+
+      - name: "Publish package distributions to PyPI"
+        uses: pypa/gh-action-pypi-publish@v1.12.4
+        env:
+          name: "pypi"
+          url: "https://pypi.org/p/py-cord"
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+          user: __token__
+          attestations: false
+          verify-metadata: false
+
 
       - name: "Echo release url"
-        run: echo "${{ steps.pycord-release.outputs.gh-release }}"
+        run: echo "${{ steps.gh-release.outputs.url }}"
 
   docs_release:
     runs-on: ubuntu-latest
     needs: [lib_release,pre_config]
-    if: needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '.0-rc1'))
+    if: ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '0rc1')) }}
     environment: release
     steps:
       - name: "Sync Versions on Read the Docs"
@@ -105,11 +213,10 @@ jobs:
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          PATCH_VERSION=${VERSION##*.}
-          if [[ $PATCH_VERSION =~ ^[0-9]+$ ]]; then
-            DOCS_VERSION="v$VERSION"
+          if [[ $VERSION == *rc* ]]; then
+            DOCS_VERSION="v${MAJOR_MINOR_VERSION}.x"
           else
-            DOCS_VERSION="v$MAJOR_MINOR_VERSION.x"
+            DOCS_VERSION="v$VERSION"
           fi
           curl --location --request PATCH "https://readthedocs.org/api/v3/projects/pycord/versions/$DOCS_VERSION/" \
           --header 'Content-Type: application/json' \
@@ -121,31 +228,44 @@ jobs:
 
   inform_discord:
     runs-on: ubuntu-latest
-    needs: [lib_release,docs_release,close_milestone,pre_config]
+    needs: [lib_release,docs_release,pre_config]
     environment: release
     steps:
       - name: "Notify Discord"
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
+          if [[ $VERSION == *rc* ]]; then
+            DOCS_URL="<https://docs.pycord.dev/en/v${MAJOR_MINOR_VERSION}.x/changelog.html>"
+          else
+            DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
+          fi
           GITHUB_COMPARE_URL="<https://github.com/Pycord-Development/pycord/compare/${{ needs.pre_config.outputs.previous_tag }}...v$VERSION>"
           GITHUB_RELEASE_URL="<https://github.com/Pycord-Development/pycord/releases/tag/v$VERSION>"
           PYPI_RELEASE_URL="<https://pypi.org/project/py-cord/$VERSION/>"
-          ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} is out!\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}[@everyone]\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}Feel free to take a look at the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL) and the [PyPI release page]($PYPI_RELEASE_URL).\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+          if [[ $VERSION == *rc* ]]; then
+            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} Release Candidate ($VERSION) is available!\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}This is a pre-release (release candidate) for testing and feedback.\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}Check out the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL), and [PyPI release page]($PYPI_RELEASE_URL).\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}Please try it out and let us know your feedback or any issues!\n@here"
+          else
+            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} is out!\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}[@everyone]\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}Feel free to take a look at the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL) and the [PyPI release page]($PYPI_RELEASE_URL).\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+          fi
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d "{\"content\":\"$ANNOUNCEMENT\"}" \
+            -d "{\"content\":\"$ANNOUNCEMENT\",\"allowed_mentions\":{\"parse\": [\"everyone\"]}}" \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   determine_milestone_id:
     runs-on: ubuntu-latest
     needs: [lib_release,pre_config]
-    if: ${{ !contains(needs.pre_config.outputs.version, '-') && endsWith(needs.pre_config.outputs.version, '.0') }}
+    if: ${{ !contains(needs.pre_config.outputs.version, '-') }}
     outputs:
       old_milestone_version: ${{ steps.extract_version.outputs.old_milestone_version }}
       new_milestone_version: ${{ steps.extract_version.outputs.new_milestone_version }}
@@ -158,7 +278,8 @@ jobs:
         run: |
           gh extension install valeriobelli/gh-milestone
           VERSION=${{ needs.pre_config.outputs.version }}
-          OLD_MILESTONE_VERSION=$(gh milestone list --query "v2.7" | grep "#" | awk '{print $2}')
+          PREV_MAJOR_MINOR=$(echo $VERSION | awk -F. '{printf "v%d.%d", $1, $2-1}')
+          OLD_MILESTONE_VERSION=$(gh milestone list --query "$PREV_MAJOR_MINOR" | grep "#" | awk '{print $2}')
           NEW_MILESTONE_VERSION="v$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')"
           echo "old_milestone_version=$OLD_MILESTONE_VERSION" >> $GITHUB_OUTPUT
           echo "new_milestone_version=$NEW_MILESTONE_VERSION" >> $GITHUB_OUTPUT
@@ -166,13 +287,13 @@ jobs:
   close_milestone:
     runs-on: ubuntu-latest
     needs: [determine_milestone_id,pre_config]
-    if: ${{ !contains(needs.pre_config.outputs.version, '-') && endsWith(needs.pre_config.outputs.version, '.0') }}
+    if: ${{ !contains(needs.pre_config.outputs.version, 'rc') && endsWith(needs.pre_config.outputs.version, '.0') }}
     environment: release
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           fetch-tags: true
