@@ -1302,7 +1302,7 @@ class Guild(Hashable):
 
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            A value of `0` disables slowmode. The maximum value possible is `21600`.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
 
             .. versionadded:: 2.7
 
