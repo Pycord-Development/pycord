@@ -241,6 +241,7 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
         self._end: threading.Event = threading.Event()
 
     def decode(self, frame: RawData) -> None:
+        _log.debug('Decoding frame %s', frame)
         if not isinstance(frame, RawData):
             raise TypeError(
                 f"expected a RawData object, got {frame.__class__.__name__}"
@@ -407,6 +408,7 @@ class VoiceConnectionState:
         self.sinks.clear()
 
     def handle_voice_recv_packet(self, packet: bytes) -> None:
+        _log.debug('Handling voice packet %s', packet)
         if packet[1] != 0x78:
             # We should ignore any payload types we do not understand
             # Ref: RFC 3550 5.1 payload type
@@ -429,7 +431,7 @@ class VoiceConnectionState:
         return not self.user_voice_timestamps or not self.sync_recording_start
 
     def dispatch_packet_sinks(self, data: RawData) -> None:
-
+        _log.debug('Dispatching packet %s in all sinks', data)
         if data.ssrc not in self.user_ssrc_map:
             if self.is_first_packet():
                 self.first_received_packet_ts = data.receive_time
@@ -480,23 +482,28 @@ class VoiceConnectionState:
 
             sink.dispatch("unfiltered_voice_packet_receive", user, data)
 
-            futures = [
-                self.loop.create_task(
-                    utils.maybe_coroutine(fil.filter_packet, sink, user, data)
-                )
-                for fil in sink._filters
-            ]
-            strat = sink._filter_strat
+            if sink._filters:
+                futures = [
+                    self.loop.create_task(
+                        utils.maybe_coroutine(fil.filter_packet, sink, user, data)
+                    )
+                    for fil in sink._filters
+                ]
+                strat = sink._filter_strat
 
-            done, pending = await asyncio.wait(futures)
+                done, pending = await asyncio.wait(futures)
 
-            if pending:
-                for task in pending:
-                    task.set_result(False)
+                if pending:
+                    for task in pending:
+                        task.set_result(False)
 
-                done = (*done, *pending)
+                    done = (*done, *pending)
 
-            if strat([f.result() for f in done]):
+                result = strat([f.result() for f in done])
+            else:
+                result = True
+
+            if result:
                 sink.dispatch("voice_packet_receive", user, data)
                 sink._call_voice_packet_handlers(user, data)
 
@@ -570,25 +577,28 @@ class VoiceConnectionState:
 
             sink.dispatch("unfiltered_speaking_state_update", resolved, before, after)
 
-            futures = [
-                self.loop.create_task(
-                    utils.maybe_coroutine(
-                        fil.filter_speaking_state, sink, resolved, before, after
+            if sink._filters:
+                futures = [
+                    self.loop.create_task(
+                        utils.maybe_coroutine(fil.filter_packet, sink, resolved, before, after)
                     )
-                )
-                for fil in sink._filters
-            ]
-            strat = sink._filter_strat
+                    for fil in sink._filters
+                ]
+                strat = sink._filter_strat
 
-            done, pending = await asyncio.wait(futures)
+                done, pending = await asyncio.wait(futures)
 
-            if pending:
-                for task in pending:
-                    task.set_result(False)
+                if pending:
+                    for task in pending:
+                        task.set_result(False)
 
-                done = (*done, *pending)
+                    done = (*done, *pending)
 
-            if strat([f.result() for f in done]):
+                result = strat([f.result() for f in done])
+            else:
+                result = True
+
+            if result:
                 sink.dispatch("speaking_state_update", resolved, before, after)
                 sink._call_speaking_state_handlers(resolved, before, after)
 
