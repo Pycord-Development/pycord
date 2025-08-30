@@ -1687,7 +1687,6 @@ def command(
     ------
     TypeError
         If the function is not a coroutine or is already a command.
-
     """
     if cls is MISSING:
         cls = Command  # type: ignore
