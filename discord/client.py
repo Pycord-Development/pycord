@@ -69,7 +69,7 @@ from .widget import Widget
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import DMChannel
-    from .interaction import Interaction
+    from .interactions import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
