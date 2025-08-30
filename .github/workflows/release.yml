@@ -104,7 +104,7 @@ jobs:
   docs_release:
     runs-on: ubuntu-latest
     needs: [lib_release,pre_config]
-    if: needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '.0-rc1'))
+    if: ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '.0-rc.1')) }}
     environment: release
     steps:
       - name: "Sync Versions on Read the Docs"
