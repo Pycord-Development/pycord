@@ -58,12 +58,20 @@ class Nameplate:
 
     @cached_property
     def static_asset(self) -> Asset:
-        """The static :class:`Asset` of this nameplate."""
+        """
+        The static :class:`Asset` of this nameplate.
+
+        .. versionadded:: 2.7
+        """
         return Asset._from_collectible(self._state, self._asset)
 
     @cached_property
     def animated_asset(self) -> Asset:
-        """The animated :class:`Asset` of this nameplate."""
+        """
+        The animated :class:`Asset` of this nameplate.
+
+        .. versionadded:: 2.7
+        """
         return Asset._from_collectible(self._state, self._asset, animated=True)
 
 
