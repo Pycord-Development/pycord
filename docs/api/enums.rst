@@ -2501,6 +2501,20 @@ of :class:`enum.Enum`.
 
         The interaction is in a private DM or group DM channel.
 
+.. class:: VoiceChannelEffectAnimationType
+
+    Represents the type of animation for a voice channel effect.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: premium
+
+        The animation is a premium effect.
+
+    .. attribute:: basic
+
+        The animation is a basic effect.
+
 
 .. class:: SubscriptionStatus
 
@@ -2519,6 +2533,30 @@ of :class:`enum.Enum`.
     .. attribute:: inactive
 
         The subscription is inactive and the subscription owner is not being charged.
+
+
+
+.. class:: ThreadArchiveDuration
+
+    Represents the time before a thread is archived.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: one_hour
+
+        Indicates that the thread will be archived after 1 hour of inactivity.
+
+    .. attribute:: one_day
+
+        Indicates that the thread will be archived after 1 day of inactivity.
+
+    .. attribute:: three_days
+
+        Indicates that the thread will be archived after 3 days of inactivity.
+
+    .. attribute:: one_week
+
+        Indicates that the thread will be archived after 1 week of inactivity.
 
 
 .. class:: SeparatorSpacingSize

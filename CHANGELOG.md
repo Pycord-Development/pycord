@@ -47,6 +47,15 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2659](https://github.com/Pycord-Development/pycord/pull/2659))
 - Added `VoiceMessage` subclass of `File` to allow voice messages to be sent.
   ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))
+- Added the following soundboard-related features:
+  - Manage guild soundboard sounds with `Guild.fetch_sounds()`, `Guild.create_sound()`,
+    `SoundboardSound.edit()`, and `SoundboardSound.delete()`.
+  - Access Discord default sounds with `Client.fetch_default_sounds()`.
+  - Play sounds in voice channels with `VoiceChannel.send_soundboard_sound()`.
+  - New `on_voice_channel_effect_send` event for sound and emoji effects.
+  - Soundboard limits based on guild premium tier (8-48 slots) in
+    `Guild.soundboard_limit`.
+    ([#2623](https://github.com/Pycord-Development/pycord/pull/2623))
 - Added new `Subscription` object and related methods/events.
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Added `Message.forward_to`, `Message.snapshots`, and other related attributes.
@@ -57,6 +66,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added various missing channel parameters and allow `default_reaction_emoji` to be
+  `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added support for type hinting slash command options with `typing.Annotated`.
   ([#2782](https://github.com/Pycord-Development/pycord/pull/2782))
 - Added conversion to `Member` in `MentionableConverter`.
@@ -69,6 +80,18 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
 - Added role gradients support with `Role.colours` and the `RoleColours` class.
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
+- Added `ThreadArchiveDuration` enum to improve clarity of thread archive durations.
+  ([#2826](https://github.com/Pycord-Development/pycord/pull/2826))
+- Added `Interaction.attachment_size_limit`.
+  ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
+- Added support for selects and text displays in modals.
+  ([#2858](https://github.com/Pycord-Development/pycord/pull/2858))
+- Added `AuditLogDiff.communication_disabled_until`.
+  ([#2883](https://github.com/Pycord-Development/pycord/pull/2883))
+- Added `discord.User.primary_guild` and the `PrimaryGuild` class.
+  ([#2876](https://github.com/Pycord-Development/pycord/pull/2876))
+- Added `get_component` to `Message`, `Section`, `Container` and `ActionRow`.
+  ([#2849](https://github.com/Pycord-Development/pycord/pull/2849))
 
 ### Fixed
 
@@ -140,6 +163,15 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2843](https://github.com/Pycord-Development/pycord/pull/2843))
 - Fixed `TypeError` when using `@option` with certain annotations and along with
   `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
+- Fixed `TypeError` when using `Optional[...]` or `... | None` in command option type.
+  ([#2852](https://github.com/Pycord-Development/pycord/pull/2852))
+- Fixed type-hinting for `PermissionOverwrite.update`.
+  ([#2878](https://github.com/Pycord-Development/pycord/pull/2878))
+- Fixed `AttributeError` when accessing `AuditLogEntry.changes` more than once.
+  ([#2882])(https://github.com/Pycord-Development/pycord/pull/2882))
+- Fixed type hint for argument `start_time` and `end_time` of
+  `Guild.create_scheduled_event`
+  ([#2879](https://github.com/Pycord-Development/pycord/pull/2879))
 
 ### Changed
 
@@ -161,6 +193,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2797](https://github.com/Pycord-Development/pycord/pull/2797))
 - Upgraded voice websocket version to v8.
   ([#2812](https://github.com/Pycord-Development/pycord/pull/2812))
+- `Messageable.pins()` now returns a `MessagePinIterator` and has new arguments.
+  ([#2872](https://github.com/Pycord-Development/pycord/pull/2872))
 
 ### Deprecated
 
@@ -173,6 +207,11 @@ These changes are available on the `master` branch, but have not yet been releas
 - Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favor
   of `utils.get_or_fetch(object_type, object_id)`.
   ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
+- Deprecated `is_nsfw` for categories since it was never supported by the API.
+  ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
+- Deprecated `Messageable.pins()` returning a list of `Message`; it should be used as an
+  iterator of `MessagePin` instead.
+  ([#2872](https://github.com/Pycord-Development/pycord/pull/2872))
 
 ### Removed
 
@@ -1082,7 +1121,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.6.1...HEAD
+[2.6.1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...v2.5.0
 [2.4.1]: https://github.com/Pycord-Development/pycord/compare/v2.4.0...v2.4.1

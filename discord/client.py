@@ -61,6 +61,7 @@ from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
 from .monetization import SKU, Entitlement
 from .object import Object
+from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
@@ -88,6 +89,7 @@ if TYPE_CHECKING:
     from .message import Message
     from .poll import Poll
     from .threads import Thread, ThreadMember
+    from .soundboard import SoundboardSound
     from .ui.item import Item
     from .voice_client import VoiceProtocol
 
@@ -2373,3 +2375,46 @@ class Client:
         )
         if self._connection.cache_app_emojis and self._connection.get_emoji(emoji.id):
             self._connection.remove_emoji(emoji)
+
+    def get_sound(self, sound_id: int) -> SoundboardSound | None:
+        """Gets a :class:`.Sound` from the bot's sound cache.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        sound_id: :class:`int`
+            The ID of the sound to get.
+
+        Returns
+        -------
+        Optional[:class:`.SoundboardSound`]
+            The sound with the given ID.
+        """
+        return self._connection._get_sound(sound_id)
+
+    @property
+    def sounds(self) -> list[SoundboardSound]:
+        """A list of all the sounds the bot can see.
+
+        .. versionadded:: 2.7
+        """
+        return self._connection.sounds
+
+    async def fetch_default_sounds(self) -> list[SoundboardSound]:
+        """|coro|
+
+        Fetches the bot's default sounds.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        List[:class:`.SoundboardSound`]
+            The bot's default sounds.
+        """
+        data = await self._connection.http.get_default_sounds()
+        return [
+            SoundboardSound(http=self.http, state=self._connection, data=s)
+            for s in data
+        ]

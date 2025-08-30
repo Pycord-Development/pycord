@@ -107,11 +107,22 @@ class RawData:
         self.data = bytearray(data)
         self.client = client
 
-        self.header = data[:12]
-        self.data = self.data[12:]
-
         unpacker = struct.Struct(">xxHII")
-        self.sequence, self.timestamp, self.ssrc = unpacker.unpack_from(self.header)
+        self.sequence, self.timestamp, self.ssrc = unpacker.unpack_from(self.data[:12])
+
+        # RFC3550 5.1: RTP Fixed Header Fields
+        if self.client.mode.endswith("_rtpsize"):
+            # If It Has CSRC Chunks
+            cutoff = 12 + (data[0] & 0b00_0_0_1111) * 4
+            # If It Has A Extension
+            if data[0] & 0b00_0_1_0000:
+                cutoff += 4
+        else:
+            cutoff = 12
+
+        self.header = data[:cutoff]
+        self.data = self.data[cutoff:]
+
         self.decrypted_data = getattr(self.client, f"_decrypt_{self.client.mode}")(
             self.header, self.data
         )
