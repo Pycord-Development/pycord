@@ -111,8 +111,8 @@ if TYPE_CHECKING:
     from .types.guild import GuildFeature, MFALevel
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
-    from .types.voice import GuildVoiceState
-    from .voice_client import VoiceClient
+    from .types.voice import VoiceState as GuildVoiceState
+    from .voice import VoiceClient
     from .webhook import Webhook
 
     VocalGuildChannel = Union[VoiceChannel, StageChannel]

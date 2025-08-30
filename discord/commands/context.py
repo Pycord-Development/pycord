@@ -48,7 +48,7 @@ if TYPE_CHECKING:
     from ..permissions import Permissions
     from ..state import ConnectionState
     from ..user import User
-    from ..voice_client import VoiceClient
+    from ..voice import VoiceClient
     from ..webhook import WebhookMessage
     from .core import ApplicationCommand, Option
 

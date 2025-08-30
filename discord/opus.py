@@ -43,6 +43,7 @@ from .sinks import RawData
 
 if TYPE_CHECKING:
     T = TypeVar("T")
+    APPLICATION_CTL = Literal["audio", "voip", "lowdelay"]
     BAND_CTL = Literal["narrow", "medium", "wide", "superwide", "full"]
     SIGNAL_CTL = Literal["auto", "voice", "music"]
 
@@ -61,6 +62,12 @@ class SignalCtl(TypedDict):
     music: int
 
 
+class ApplicationCtl(TypedDict):
+    audio: int
+    voip: int
+    lowdelay: int
+
+
 __all__ = (
     "Encoder",
     "Decoder",
@@ -74,6 +81,7 @@ _log = logging.getLogger(__name__)
 c_int_ptr = ctypes.POINTER(ctypes.c_int)
 c_int16_ptr = ctypes.POINTER(ctypes.c_int16)
 c_float_ptr = ctypes.POINTER(ctypes.c_float)
+OPUS_SILENCE = b"\xf8\xff\xfe"
 
 _lib = None
 
@@ -96,9 +104,11 @@ OK = 0
 BAD_ARG = -1
 
 # Encoder CTLs
-APPLICATION_AUDIO = 2049
-APPLICATION_VOIP = 2048
-APPLICATION_LOWDELAY = 2051
+application_ctl: ApplicationCtl = {
+    "audio": 2049,
+    "lowdelay": 2051,
+    "voip": 2048,
+}
 
 CTL_SET_BITRATE = 4002
 CTL_SET_BANDWIDTH = 4008
@@ -365,16 +375,35 @@ class _OpusStruct:
 
 
 class Encoder(_OpusStruct):
-    def __init__(self, application: int = APPLICATION_AUDIO):
+    def __init__(
+        self,
+        *,
+        application: APPLICATION_CTL = "audio",
+        bitrate: int = 128,
+        fec: bool = True,
+        expected_packet_loss: float = 0.15,
+        bandwidth: BAND_CTL = "full",
+        signal_type: SIGNAL_CTL = "auto",
+    ) -> None:
+        if application not in application_ctl:
+            raise ValueError("invalid application ctl type provided")
+        if not 16 <= bitrate <= 512:
+            raise ValueError("bitrate must be between 16 and 512, both included")
+        if not 0 < expected_packet_loss <= 1:
+            raise ValueError(
+                "expected_packet_loss must be between 0 and 1, including 1",
+            )
+
         _OpusStruct.get_opus_version()
 
-        self.application: int = application
+        self.application: int = application_ctl[application]
         self._state: EncoderStruct = self._create_state()
-        self.set_bitrate(128)
-        self.set_fec(True)
-        self.set_expected_packet_loss_percent(0.15)
-        self.set_bandwidth("full")
-        self.set_signal_type("auto")
+
+        self.set_bitrate(bitrate)
+        self.set_fec(fec)
+        self.set_expected_packet_loss_percent(expected_packet_loss)
+        self.set_bandwidth(bandwidth)
+        self.set_signal_type(signal_type)
 
     def __del__(self) -> None:
         if hasattr(self, "_state"):
@@ -519,17 +548,17 @@ class Decoder(_OpusStruct):
 
 
 class DecodeManager(threading.Thread, _OpusStruct):
-    def __init__(self, client):
+    def __init__(self, client: VoiceRecorderClient):
         super().__init__(daemon=True, name="DecodeManager")
 
-        self.client = client
-        self.decode_queue = []
+        self.client: VoiceRecorderClient = client
+        self.decode_queue: list[RawData] = []
 
-        self.decoder = {}
+        self.decoder: dict[int, Decoder] = {}
 
         self._end_thread = threading.Event()
 
-    def decode(self, opus_frame):
+    def decode(self, opus_frame: RawData):
         if not isinstance(opus_frame, RawData):
             raise TypeError("opus_frame should be a RawData object.")
         self.decode_queue.append(opus_frame)
@@ -550,20 +579,22 @@ class DecodeManager(threading.Thread, _OpusStruct):
                         data.decrypted_data
                     )
             except OpusError:
-                print("Error occurred while decoding opus frame.")
+                _log.exception(
+                    "Error occurred while decoding opus frame.", exc_info=True
+                )
                 continue
 
-            self.client.recv_decoded_audio(data)
+            self.client.receive_audio(data)
 
-    def stop(self):
+    def stop(self) -> None:
         while self.decoding:
             time.sleep(0.1)
             self.decoder = {}
             gc.collect()
-            print("Decoder Process Killed")
+            _log.debug("Decoder Process Killed")
         self._end_thread.set()
 
-    def get_decoder(self, ssrc):
+    def get_decoder(self, ssrc: int) -> Decoder:
         d = self.decoder.get(ssrc)
         if d is not None:
             return d
@@ -571,5 +602,5 @@ class DecodeManager(threading.Thread, _OpusStruct):
         return self.decoder[ssrc]
 
     @property
-    def decoding(self):
+    def decoding(self) -> bool:
         return bool(self.decode_queue)
