@@ -58,6 +58,7 @@ from .enums import (
     NSFWLevel,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
+    SortOrder,
     VerificationLevel,
     VideoQualityMode,
     VoiceRegion,
