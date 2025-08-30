@@ -33,7 +33,7 @@ from discord.utils import MISSING
 
 from .core import RawData, Sink, SinkFilter, SinkHandler
 from .enums import SinkFilteringMode
-from .errors import NoUserAdio
+from .errors import NoUserAudio
 
 if TYPE_CHECKING:
     from discord import abc
@@ -166,7 +166,7 @@ class WaveSink(Sink):
         try:
             data = self.__audio_data.pop(user_id)
         except KeyError:
-            raise NoUserAdio
+            raise NoUserAudio
 
         decoder = self.client.decoder
 

@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from os import altsep
 import select
 import socket
 import struct
@@ -149,6 +148,7 @@ class SocketReader(threading.Thread):
             )
         finally:
             self.stop()
+            self._started.clear()
             self._running.clear()
             self._callbacks.clear()
 
@@ -251,13 +251,18 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
 
         self._end: threading.Event = threading.Event()
 
-    def decode(self, frame: RawData) -> None:
+    def decode(self, frame: RawData, *, left: bool = False) -> None:
         if not isinstance(frame, RawData):
             raise TypeError(
                 f"expected a RawData object, got {frame.__class__.__name__}"
             )
-        self.decode_queue.append(frame)
-        _log.debug('Added frame %s to decode queue', frame)
+
+        if left:
+            self.decode_queue.appendleft(frame)
+        else:
+            self.decode_queue.append(frame)
+        self.resume()
+        _recv_log.debug('Added frame %s to decode queue', frame)
 
     def is_running(self) -> bool:
         return self._started.is_set()
@@ -265,6 +270,11 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
     def pause(self) -> None:
         self._idle_paused = False
         self._running.clear()
+
+    def is_paused(self) -> bool:
+        return self._idle_paused or (
+            not self._running.is_set() and not self._end.is_set()
+        )
 
     def resume(self, *, force: bool = False) -> None:
         if self._running.is_set():
@@ -299,6 +309,7 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
             )
         finally:
             self.stop()
+            self._started.clear()
             self._running.clear()
             self.decode_queue.clear()
 
@@ -311,12 +322,11 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
 
     def _do_run(self) -> None:
         while not self._end.is_set():
-            if not self.decode_queue:
-                if not self._warned_queue:
+            if not self._running.is_set():
+                if self._warned_queue:
                     _recv_log.warning('No decode queue found, waiting')
                     self._warned_queue = True
-
-                time.sleep(0.01)
+                self._running.wait()
                 continue
 
             if self._warned_queue:
@@ -326,6 +336,8 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
             try:
                 data = self.decode_queue.popleft()
             except IndexError:
+                _recv_log.warning('No more voice packets found, idle pausing.')
+                self.pause()
                 continue
 
             _recv_log.debug('Popped %s from the decode queue', data)
@@ -343,6 +355,14 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
                     "Error ocurred while decoding opus frame",
                     exc_info=True,
                 )
+
+
+            _recv_log.info('Decoded frame %s to %s', data, data.decoded_data)
+
+            if data.decoded_data is MISSING:
+                _recv_log.warning('Decoded data %s is still MISSING after decode, appending it to left to decode', data)
+                self.decode(data, left=True)
+                continue
 
             self.state.dispatch_packet_sinks(data)
 
@@ -396,6 +416,7 @@ class VoiceConnectionState:
         self._voice_recv_socket = SocketVoiceRecvReader(self)
         self._voice_recv_socket.register(self.handle_voice_recv_packet)
         self._decoder_thread = DecoderThread(self)
+        self.start_record_socket()
         self.user_ssrc_map: dict[int, SSRC] = {}
         self.user_voice_timestamps: dict[int, tuple[int, float]] = {}
         self.sync_recording_start: bool = False
@@ -407,23 +428,19 @@ class VoiceConnectionState:
         self.__sink_dispatch_task_set: set[asyncio.Task[Any]] = set()
 
     def start_record_socket(self) -> None:
-        if self._voice_recv_socket.is_paused():
+        try:
+            self._voice_recv_socket.start()
+        except RuntimeError:
             self._voice_recv_socket.resume()
-            return
-        if self._voice_recv_socket.is_running():
-            return
 
-        if not self._decoder_thread.is_running():
+        try:
             self._decoder_thread.start()
-
-        self._voice_recv_socket.start()
+        except RuntimeError:
+            self._decoder_thread.resume()
 
     def stop_record_socket(self) -> None:
-        if self._voice_recv_socket.is_running():
-            self._voice_recv_socket.stop()
-
-        if self._decoder_thread.is_running():
-            self._decoder_thread.stop()
+        self._voice_recv_socket.stop()
+        self._decoder_thread.stop()
 
         for cb, args in self.recording_done_callbacks:
             task = self.loop.create_task(cb(*args))
@@ -447,13 +464,13 @@ class VoiceConnectionState:
             return
 
         if self.paused_recording():
-            _log.debug('Ignoring packet %s because recording is stopped', packet)
+            _recv_log.debug('Ignoring packet %s because recording is stopped', packet)
             return
 
         data = RawData(packet, self.client)
 
         if data.decrypted_data == opus.OPUS_SILENCE:
-            _log.debug('Ignoring packet %s because it is an opus silence frame', data)
+            _recv_log.debug('Ignoring packet %s because it is an opus silence frame', data)
             return
 
         self._decoder_thread.decode(data)

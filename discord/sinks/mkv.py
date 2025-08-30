@@ -36,7 +36,7 @@ from discord.utils import MISSING
 
 from .core import RawData, Sink, SinkFilter, SinkHandler
 from .enums import SinkFilteringMode
-from .errors import FFmpegNotFound, MaxProcessesCountReached, MKVSinkError, NoUserAdio
+from .errors import FFmpegNotFound, MaxProcessesCountReached, MKVSinkError, NoUserAudio
 
 if TYPE_CHECKING:
     from discord import abc
@@ -186,7 +186,7 @@ class MKVSink(Sink):
             data = self.__audio_data.pop(user_id)
         except KeyError:
             _log.info("There is no audio data for %s, ignoring.", user_id)
-            raise NoUserAdio
+            raise NoUserAudio
 
         args = [
             executable,

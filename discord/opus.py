@@ -42,6 +42,8 @@ from .errors import DiscordException
 from .sinks import RawData
 
 if TYPE_CHECKING:
+    from discord.voice.client import VoiceClient
+
     T = TypeVar("T")
     APPLICATION_CTL = Literal["audio", "voip", "lowdelay"]
     BAND_CTL = Literal["narrow", "medium", "wide", "superwide", "full"]
@@ -346,9 +348,9 @@ class OpusError(DiscordException):
         The error code returned.
     """
 
-    def __init__(self, code: int):
+    def __init__(self, code: int = 0, message: str | None = None):
         self.code: int = code
-        msg = _lib.opus_strerror(self.code).decode("utf-8")
+        msg = message or _lib.opus_strerror(self.code).decode("utf-8")
         _log.info('"%s" has happened', msg)
         super().__init__(msg)
 
@@ -523,7 +525,7 @@ class Decoder(_OpusStruct):
 
     def decode(self, data, *, fec=False):
         if data is None and fec:
-            raise OpusError("Invalid arguments: FEC cannot be used with null data")
+            raise OpusError(message="Invalid arguments: FEC cannot be used with null data")
 
         if data is None:
             frame_size = self._get_last_packet_duration() or self.SAMPLES_PER_FRAME
@@ -545,62 +547,3 @@ class Decoder(_OpusStruct):
         )
 
         return array.array("h", pcm[: ret * channel_count]).tobytes()
-
-
-class DecodeManager(threading.Thread, _OpusStruct):
-    def __init__(self, client: VoiceRecorderClient):
-        super().__init__(daemon=True, name="DecodeManager")
-
-        self.client: VoiceRecorderClient = client
-        self.decode_queue: list[RawData] = []
-
-        self.decoder: dict[int, Decoder] = {}
-
-        self._end_thread = threading.Event()
-
-    def decode(self, opus_frame: RawData):
-        if not isinstance(opus_frame, RawData):
-            raise TypeError("opus_frame should be a RawData object.")
-        self.decode_queue.append(opus_frame)
-
-    def run(self):
-        while not self._end_thread.is_set():
-            try:
-                data = self.decode_queue.pop(0)
-            except IndexError:
-                time.sleep(0.001)
-                continue
-
-            try:
-                if data.decrypted_data is None:
-                    continue
-                else:
-                    data.decoded_data = self.get_decoder(data.ssrc).decode(
-                        data.decrypted_data
-                    )
-            except OpusError:
-                _log.exception(
-                    "Error occurred while decoding opus frame.", exc_info=True
-                )
-                continue
-
-            self.client.receive_audio(data)
-
-    def stop(self) -> None:
-        while self.decoding:
-            time.sleep(0.1)
-            self.decoder = {}
-            gc.collect()
-            _log.debug("Decoder Process Killed")
-        self._end_thread.set()
-
-    def get_decoder(self, ssrc: int) -> Decoder:
-        d = self.decoder.get(ssrc)
-        if d is not None:
-            return d
-        self.decoder[ssrc] = Decoder()
-        return self.decoder[ssrc]
-
-    @property
-    def decoding(self) -> bool:
-        return bool(self.decode_queue)

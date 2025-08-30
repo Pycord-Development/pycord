@@ -38,7 +38,7 @@ from discord.utils import MISSING
 
 from .core import CREATE_NO_WINDOW, RawData, Sink, SinkFilter, SinkHandler
 from .enums import SinkFilteringMode
-from .errors import FFmpegNotFound, M4ASinkError, MaxProcessesCountReached, NoUserAdio
+from .errors import FFmpegNotFound, M4ASinkError, MaxProcessesCountReached, NoUserAudio
 
 if TYPE_CHECKING:
     from discord import abc
@@ -188,7 +188,7 @@ class M4ASink(Sink):
             data = self.__audio_data.pop(user_id)
         except KeyError:
             _log.info("There is no audio data for %s, ignoring.", user_id)
-            raise NoUserAdio
+            raise NoUserAudio
 
         temp_path = f"{user_id}-{time.time()}-recording.m4a.tmp"
         args = [

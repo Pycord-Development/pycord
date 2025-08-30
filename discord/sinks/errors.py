@@ -104,7 +104,7 @@ class FFmpegNotFound(SinkException):
     """
 
 
-class NoUserAdio(SinkException):
+class NoUserAudio(SinkException):
     """Exception thrown when you try to format the audio of a user not saved in a sink.
 
     .. versionadded:: 2.7
