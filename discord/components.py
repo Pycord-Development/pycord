@@ -849,7 +849,6 @@ class MediaGalleryItem:
 
     @property
     def url(self) -> str:
-        """Returns the URL of this gallery's underlying media item."""
         return self.media.url
 
     def is_dispatchable(self) -> bool:
