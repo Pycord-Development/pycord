@@ -95,6 +95,8 @@ if TYPE_CHECKING:
     CS = TypeVar("CS", bound="ConnectionState")
     Channel = Union[GuildChannel, VocalGuildChannel, PrivateChannel, PartialMessageable]
 
+MISSING = utils.MISSING
+
 
 class ChunkRequest:
     def __init__(
@@ -167,10 +169,10 @@ class ConnectionState:
         handlers: dict[str, Callable],
         hooks: dict[str, Callable],
         http: HTTPClient,
-        loop: asyncio.AbstractEventLoop,
+        loop: asyncio.AbstractEventLoop | None,
         **options: Any,
     ) -> None:
-        self.loop: asyncio.AbstractEventLoop = loop
+        self.loop: asyncio.AbstractEventLoop = loop or MISSING
         self.http: HTTPClient = http
         self.max_messages: int | None = options.get("max_messages", 1000)
         if self.max_messages is not None and self.max_messages <= 0:

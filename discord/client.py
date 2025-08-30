@@ -320,7 +320,7 @@ class Client:
             handlers=self._handlers,
             hooks=self._hooks,
             http=self.http,
-            loop=self.loop,
+            loop=self._loop,
             **options,
         )
 
@@ -839,7 +839,12 @@ class Client:
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
-    def run(self, token: str, *, reconnect: bool = True) -> None:
+    def run(
+        self,
+        token: str,
+        *,
+        reconnect: bool = True,
+    ) -> None:
         """A blocking call that abstracts away the event loop
         initialisation from you.
 
