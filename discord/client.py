@@ -553,6 +553,15 @@ class Client:
         The default view error handler provided by the client.
 
         This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
+
+        Parameters
+        ----------
+        error: :class:`Exception`
+            The exception that was raised.
+        item: :class:`Item`
+            The item that the user interacted with.
+        interaction: :class:`Interaction`
+            The interaction that was received.
         """
 
         print(
@@ -570,6 +579,13 @@ class Client:
         The default implementation prints the traceback to stderr.
 
         This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+
+        Parameters
+        ----------
+        error: :class:`Exception`
+            The exception that was raised.
+        interaction: :class:`Interaction`
+            The interaction that was received.
         """
 
         print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
