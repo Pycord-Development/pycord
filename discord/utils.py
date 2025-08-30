@@ -33,6 +33,7 @@ import functools
 import importlib.resources
 import itertools
 import json
+import logging
 import re
 import sys
 import types
@@ -100,14 +101,23 @@ __all__ = (
     "filter_params",
 )
 
+_log = logging.getLogger(__name__)
+
 DISCORD_EPOCH = 1420070400000
 
-with (
-    importlib.resources.files(__package__)
-    .joinpath("emojis.json")
-    .open(encoding="utf-8") as f
-):
-    EMOJIS_MAP = json.load(f)
+try:
+    with (
+        importlib.resources.files(__package__)
+        .joinpath("emojis.json")
+        .open(encoding="utf-8") as f
+    ):
+        EMOJIS_MAP = json.load(f)
+except FileNotFoundError:
+    _log.debug(
+        "Couldn't find emojis.json. Is the package data missing? Discord emojis names will not work.",
+    )
+    EMOJIS_MAP = {}
+
 
 UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
