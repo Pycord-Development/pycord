@@ -10,6 +10,7 @@ A place to store all officially given voice sinks.
 
 from .core import *
 from .errors import *
+from .enums import *
 from .m4a import *
 from .mka import *
 from .mkv import *

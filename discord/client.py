@@ -466,7 +466,7 @@ class Client:
         return task
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
-        logging.getLogger("discord.state").debug("Dispatching event %s", event)
+        _log.debug("Dispatching event %s", event)
         method = f"on_{event}"
 
         listeners = self._listeners.get(event)

@@ -42,8 +42,6 @@ from .errors import DiscordException
 from .sinks import RawData
 
 if TYPE_CHECKING:
-    from discord.voice.recorder import VoiceRecorderClient
-
     T = TypeVar("T")
     APPLICATION_CTL = Literal["audio", "voip", "lowdelay"]
     BAND_CTL = Literal["narrow", "medium", "wide", "superwide", "full"]

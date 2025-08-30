@@ -29,12 +29,13 @@ import asyncio
 import datetime
 import logging
 import struct
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any, Literal, overload
 
 from discord import opus
 from discord.errors import ClientException
 from discord.player import AudioPlayer, AudioSource
+from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
 from ._types import VoiceProtocol
@@ -596,3 +597,95 @@ class VoiceClient(VoiceProtocol):
         if self._player:
             return datetime.timedelta(milliseconds=self._player.played_frames() * 20)
         return datetime.timedelta()
+
+    def start_recording(
+        self,
+        sink: Sink,
+        callback: Callable[..., Coroutine[Any, Any, Any]] = MISSING,
+        *args: Any,
+        sync_start: bool = MISSING,
+    ) -> None:
+        r"""Start recording the audio from the current connected channel to the provided sink.
+
+        .. versionadded:: 2.0
+        .. versionchanged:: 2.7
+            You can now have multiple concurrent recording sinks in the same voice client.
+
+        Parameters
+        ----------
+        sink: :class:`~.Sink`
+            A Sink in which all audio packets will be processed in.
+        callback: :ref:`coroutine <coroutine>`
+            A function which is called after the bot has stopped recording.
+
+            .. versionchanged:: 2.7
+                This parameter is now optional.
+        \*args:
+            The arguments to pass to the callback coroutine.
+        sync_start: :class:`bool`
+            If ``True``, the recordings of subsequent users will start with silence.
+            This is useful for recording audio just as it was heard.
+
+            .. warning::
+
+                This is a global voice client variable, this means, you can't have individual
+                sinks with different ``sync_start`` values. If you are willing to have such
+                functionality, you should consider creating your own :class:`discord.SinkHandler`.
+
+            .. versionchanged:: 2.7
+                This now defaults to ``MISSING``.
+
+        Raises
+        ------
+        RecordingException
+            Not connected to a voice channel
+        TypeError
+            You did not provide a Sink object.
+        """
+
+        if not self.is_connected():
+            raise RecordingException('not connected to a voice channel')
+        if not isinstance(sink, Sink):
+            raise TypeError(f'expected a Sink object, got {sink.__class__.__name__}')
+
+        if sync_start is not MISSING:
+            self._connection.sync_recording_start = sync_start
+
+        sink.client = self
+        self._connection.add_sink(sink)
+        if callback is not MISSING:
+            self._connection.recording_done_callbacks.append((callback, args))
+
+    def stop_recording(
+        self,
+        *,
+        sink: Sink | None = None,
+    ) -> None:
+        """Stops the recording of the provided ``sink``, or all recording sinks.
+
+        .. versionadded:: 2.0
+
+        Paremeters
+        ----------
+        sink: :class:`discord.Sink`
+            The sink to stop recording.
+
+        Raises
+        ------
+        RecordingException
+            The provided sink is not currently recording, or if ``None``, you are not recording.
+        """
+
+        if sink is not None:
+            try:
+                self._connection.sinks.remove(sink)
+            except ValueError:
+                raise RecordingException('the provided sink is not currently recording')
+
+            sink.stop()
+            return
+        self._connection.stop_record_socket()
+
+    def is_recording(self) -> bool:
+        """Whether the current client is recording in any sink."""
+        return self._connection.is_recording()

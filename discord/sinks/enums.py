@@ -26,7 +26,11 @@ from __future__ import annotations
 
 from discord.enums import Enum
 
+__all__ = (
+    'SinkFilteringMode',
+)
 
-class FilteringMode(Enum):
+
+class SinkFilteringMode(Enum):
     all = 0
     any = 1

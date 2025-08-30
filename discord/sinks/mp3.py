@@ -22,75 +22,212 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-import io
-import subprocess
+from __future__ import annotations
 
-from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
-from .errors import MP3SinkError
+from collections import deque
+import io
+import logging
+import subprocess
+import time
+from typing import TYPE_CHECKING, Literal, overload
+
+from discord.file import File
+from discord.utils import MISSING
+
+from .core import CREATE_NO_WINDOW, SinkHandler, Sink, SinkFilter, RawData
+from .enums import SinkFilteringMode
+from .errors import FFmpegNotFound, MP3SinkError, MaxProcessesCountReached, NoUserAdio
+
+if TYPE_CHECKING:
+    from discord import abc
+
+_log = logging.getLogger(__name__)
+
+__all__ = (
+    'MP3ConverterHandler',
+    'MP3Sink',
+)
+
+
+class MP3ConverterHandler(SinkHandler['MP3Sink']):
+    def handle_packet(self, sink: MP3Sink, user: abc.Snowflake, packet: RawData) -> None:
+        data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
+        data.write(packet.decoded_data)
 
 
 class MP3Sink(Sink):
     """A special sink for .mp3 files.
 
+    This is essentially a :class:`~.Sink` with a :class:`~.MP3ConverterHandler` handler
+    passed as a default.
+
     .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    filters: List[:class:`~.SinkFilter`]
+        The filters to apply to this sink recorder.
+    filtering_mode: :class:`~.SinkFilteringMode`
+        How the filters should work. If set to :attr:`~.SinkFilteringMode.all`, all filters must go through
+        in order for an audio packet to be stored in this sink, else if it is set to :attr:`~.SinkFilteringMode.any`,
+        only one filter is required to return ``True`` in order for an audio packet to be stored in this sink.
+    handlers: List[:class:`~.SinkHandler`]
+        The sink handlers. Handlers are objects that are called after filtering, and that can be used to, for example
+        store a certain packet data in a file, or local mapping.
+    max_audio_processes_count: :class:`int`
+        The maximum of audio conversion processes that can be active concurrently. If this limit is exceeded, then
+        when calling methods like :meth:`.format_user_audio` they will raise :exc:`MaxProcessesCountReached`.
     """
 
-    def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
+    def __init__(
+        self,
+        *,
+        filters: list[SinkFilter] = MISSING,
+        filtering_mode: SinkFilteringMode = SinkFilteringMode.all,
+        handlers: list[SinkHandler] = MISSING,
+        max_audio_processes_count: int = 10,
+    ) -> None:
+        self.__audio_data: dict[int, io.BytesIO] = {}
+        self.__process_queue: deque[subprocess.Popen] = deque(maxlen=max_audio_processes_count)
+        handlers = handlers or []
+        handlers.append(MP3ConverterHandler())
 
-        self.encoding = "mp3"
-        self.vc = None
-        self.audio_data = {}
+        super().__init__(
+            filters=filters,
+            filtering_mode=filtering_mode,
+            handlers=handlers,
+        )
 
-    def format_audio(self, audio):
-        """Formats the recorded audio.
+    def get_user_audio(self, user_id: int) -> io.BytesIO | None:
+        """Gets a user's saved audio data, or ``None``."""
+        return self.__audio_data.get(user_id)
+
+    def _create_audio_packet_for(self, uid: int) -> io.BytesIO:
+        data = self.__audio_data[uid] = io.BytesIO()
+        return data
+
+    @overload
+    def format_user_audio(
+        self,
+        user_id: int,
+        *,
+        executable: str = ...,
+        as_file: Literal[True],
+    ) -> File: ...
+
+    @overload
+    def format_user_audio(
+        self,
+        user_id: int,
+        *,
+        executable: str = ...,
+        as_file: Literal[False] = ...,
+    ) -> io.BytesIO: ...
+
+    def format_user_audio(
+        self,
+        user_id: int,
+        *,
+        executable: str = 'ffmpeg',
+        as_file: bool = False,
+    ) -> io.BytesIO | File:
+        """Formats a user's saved audio data.
+
+        This should be called after the bot has stopped recording.
+
+        If this is called during recording, there could be missing audio
+        packets.
+
+        After this, the user's audio data will be resetted to 0 bytes and
+        seeked to 0.
+
+        Parameters
+        ----------
+        user_id: :class:`int`
+            The user ID of which format the audio data into a file.
+        executable: :class:`str`
+            The FFmpeg executable path to use for this formatting. It defaults
+            to ``ffmpeg``.
+        as_file: :class:`bool`
+            Whether to return a :class:`~discord.File` object instead of a :class:`io.BytesIO`.
+
+        Returns
+        -------
+        Union[:class:`io.BytesIO`, :class:`~discord.File`]
+            The user's audio saved bytes, if ``as_file`` is ``False``, else a :class:`~discord.File`
+            object with the buffer set as the audio bytes.
 
         Raises
-        ------
+        -------
+        NoUserAudio
+            You tried to format the audio of a user that was not stored in this sink.
+        FFmpegNotFound
+            The provided FFmpeg executable was not found.
+        MaxProcessesCountReached
+            You tried to go over the maximum processes count threshold.
         MP3SinkError
-            Audio may only be formatted after recording is finished.
-        MP3SinkError
-            Formatting the audio failed.
+            Any error raised while formatting, wrapped around MP3SinkError.
         """
-        if self.vc.recording:
-            raise MP3SinkError(
-                "Audio may only be formatted after recording is finished."
-            )
-        args = [
-            "ffmpeg",
-            "-f",
-            "s16le",
-            "-ar",
-            "48000",
-            "-loglevel",
-            "error",
-            "-ac",
-            "2",
-            "-i",
-            "-",
-            "-f",
-            "mp3",
-            "pipe:1",
-        ]
-        try:
-            process = subprocess.Popen(
-                args,
-                creationflags=CREATE_NO_WINDOW,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-            )
-        except FileNotFoundError:
-            raise MP3SinkError("ffmpeg was not found.") from None
-        except subprocess.SubprocessError as exc:
-            raise MP3SinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
 
-        out = process.communicate(audio.file.read())[0]
-        out = io.BytesIO(out)
-        out.seek(0)
-        audio.file = out
-        audio.on_format(self.encoding)
+        if len(self.__process_queue) >= 10:
+            raise MaxProcessesCountReached
+
+        try:
+            data = self.__audio_data.pop(user_id)
+        except KeyError:
+            _log.info('There is no audio data for %s, ignoring.', user_id)
+            raise NoUserAdio
+
+        args = [
+            executable,
+            '-f',
+            's16le',
+            '-ar',
+            '48000',
+            '-loglevel',
+            'error',
+            '-ac',
+            '2',
+            '-i',
+            '-',
+            '-f',
+            'mp3',
+            'pipe:1',
+        ]
+
+        try:
+            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            self.__process_queue.append(process)
+        except FileNotFoundError as exc:
+            raise FFmpegNotFound from exc
+        except subprocess.SubprocessError as exc:
+            raise MP3SinkError(f'Audio formatting for user {user_id} failed') from exc
+
+        out = process.communicate(data.read())[0]
+        buffer = io.BytesIO(out)
+        buffer.seek(0)
+
+        try:
+            self.__process_queue.remove(process)
+        except ValueError:
+            pass
+
+        if as_file:
+            return File(buffer, filename=f'{user_id}-{time.time()}-recording.mp3')
+        return buffer
+
+    def _clean_process(self, process: subprocess.Popen) -> None:
+        _log.debug('Cleaning process %s for sink %s', process, self)
+        process.kill()
+
+    def cleanup(self) -> None:
+        for process in self.__process_queue:
+            self._clean_process(process)
+        self.__process_queue.clear()
+
+        for _, buffer in self.__audio_data.items():
+            if not buffer.closed:
+                buffer.close()
+
+        self.__audio_data.clear()
+        super().cleanup()
