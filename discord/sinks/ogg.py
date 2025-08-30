@@ -24,19 +24,19 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from collections import deque
 import io
 import logging
 import subprocess
 import time
+from collections import deque
 from typing import TYPE_CHECKING, Literal, overload
 
 from discord.file import File
 from discord.utils import MISSING
 
-from .core import CREATE_NO_WINDOW, SinkHandler, Sink, SinkFilter, RawData
+from .core import CREATE_NO_WINDOW, RawData, Sink, SinkFilter, SinkHandler
 from .enums import SinkFilteringMode
-from .errors import FFmpegNotFound, OGGSinkError, MaxProcessesCountReached, NoUserAdio
+from .errors import FFmpegNotFound, MaxProcessesCountReached, NoUserAdio, OGGSinkError
 
 if TYPE_CHECKING:
     from discord import abc
@@ -44,13 +44,15 @@ if TYPE_CHECKING:
 _log = logging.getLogger(__name__)
 
 __all__ = (
-    'OGGConverterHandler',
-    'OGGSink',
+    "OGGConverterHandler",
+    "OGGSink",
 )
 
 
-class OGGConverterHandler(SinkHandler['OGGSink']):
-    def handle_packet(self, sink: OGGSink, user: abc.Snowflake, packet: RawData) -> None:
+class OGGConverterHandler(SinkHandler["OGGSink"]):
+    def handle_packet(
+        self, sink: OGGSink, user: abc.Snowflake, packet: RawData
+    ) -> None:
         data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
         data.write(packet.decoded_data)
 
@@ -88,7 +90,9 @@ class OGGSink(Sink):
         max_audio_processes_count: int = 10,
     ) -> None:
         self.__audio_data: dict[int, io.BytesIO] = {}
-        self.__process_queue: deque[subprocess.Popen] = deque(maxlen=max_audio_processes_count)
+        self.__process_queue: deque[subprocess.Popen] = deque(
+            maxlen=max_audio_processes_count
+        )
         handlers = handlers or []
         handlers.append(OGGConverterHandler())
 
@@ -128,7 +132,7 @@ class OGGSink(Sink):
         self,
         user_id: int,
         *,
-        executable: str = 'ffmpeg',
+        executable: str = "ffmpeg",
         as_file: bool = False,
     ) -> io.BytesIO | File:
         """Formats a user's saved audio data.
@@ -158,7 +162,7 @@ class OGGSink(Sink):
             object with the buffer set as the audio bytes.
 
         Raises
-        -------
+        ------
         NoUserAudio
             You tried to format the audio of a user that was not stored in this sink.
         FFmpegNotFound
@@ -175,33 +179,38 @@ class OGGSink(Sink):
         try:
             data = self.__audio_data.pop(user_id)
         except KeyError:
-            _log.info('There is no audio data for %s, ignoring.', user_id)
+            _log.info("There is no audio data for %s, ignoring.", user_id)
             raise NoUserAdio
 
         args = [
             executable,
-            '-f',
-            's16le',
-            '-ar',
-            '48000',
-            '-loglevel',
-            'error',
-            '-ac',
-            '2',
-            '-i',
-            '-',
-            '-f',
-            'ogg',
-            'pipe:1',
+            "-f",
+            "s16le",
+            "-ar",
+            "48000",
+            "-loglevel",
+            "error",
+            "-ac",
+            "2",
+            "-i",
+            "-",
+            "-f",
+            "ogg",
+            "pipe:1",
         ]
 
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            process = subprocess.Popen(
+                args,
+                creationflags=CREATE_NO_WINDOW,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+            )
             self.__process_queue.append(process)
         except FileNotFoundError as exc:
             raise FFmpegNotFound from exc
         except subprocess.SubprocessError as exc:
-            raise OGGSinkError(f'Audio formatting for user {user_id} failed') from exc
+            raise OGGSinkError(f"Audio formatting for user {user_id} failed") from exc
 
         out = process.communicate(data.read())[0]
         buffer = io.BytesIO(out)
@@ -213,11 +222,11 @@ class OGGSink(Sink):
             pass
 
         if as_file:
-            return File(buffer, filename=f'{user_id}-{time.time()}-recording.ogg')
+            return File(buffer, filename=f"{user_id}-{time.time()}-recording.ogg")
         return buffer
 
     def _clean_process(self, process: subprocess.Popen) -> None:
-        _log.debug('Cleaning process %s for sink %s', process, self)
+        _log.debug("Cleaning process %s for sink %s", process, self)
         process.kill()
 
     def cleanup(self) -> None:

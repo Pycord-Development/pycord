@@ -30,21 +30,23 @@ from typing import TYPE_CHECKING, Literal, overload
 from discord.file import File
 from discord.utils import MISSING
 
-from .core import RawData, Sink, SinkHandler, SinkFilter
-from .errors import NoUserAdio
+from .core import RawData, Sink, SinkFilter, SinkHandler
 from .enums import SinkFilteringMode
+from .errors import NoUserAdio
 
 if TYPE_CHECKING:
     from discord import abc
 
 __all__ = (
-    'PCMConverterHandler',
-    'PCMSink',
+    "PCMConverterHandler",
+    "PCMSink",
 )
 
 
-class PCMConverterHandler(SinkHandler['PCMSink']):
-    def handle_packet(self, sink: PCMSink, user: abc.Snowflake, packet: RawData) -> None:
+class PCMConverterHandler(SinkHandler["PCMSink"]):
+    def handle_packet(
+        self, sink: PCMSink, user: abc.Snowflake, packet: RawData
+    ) -> None:
         data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
         data.write(packet.decoded_data)
 
@@ -141,7 +143,7 @@ class PCMSink(Sink):
             object with the buffer set as the audio bytes.
 
         Raises
-        -------
+        ------
         NoUserAudio
             You tried to format the audio of a user that was not stored in this sink.
         """
@@ -154,7 +156,7 @@ class PCMSink(Sink):
         data.seek(0)
 
         if as_file:
-            return File(data, filename=f'{user_id}-recording.pcm')
+            return File(data, filename=f"{user_id}-recording.pcm")
         return data
 
     def cleanup(self) -> None:

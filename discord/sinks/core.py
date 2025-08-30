@@ -26,12 +26,12 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable, Coroutine, Iterable
-from functools import partial
 import logging
 import struct
 import sys
 import time
+from collections.abc import Callable, Coroutine, Iterable
+from functools import partial
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, overload
 
 from discord import utils
@@ -44,16 +44,17 @@ if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
     from discord import abc
+
     from ..voice.client import VoiceClient
 
-    R = TypeVar('R')
-    P = ParamSpec('P')
+    R = TypeVar("R")
+    P = ParamSpec("P")
 
 __all__ = (
     "Sink",
     "RawData",
-    'SinkFilter',
-    'SinkHandler',
+    "SinkFilter",
+    "SinkHandler",
 )
 
 
@@ -63,7 +64,7 @@ else:
     CREATE_NO_WINDOW = 0x08000000
 
 
-S = TypeVar('S', bound='Sink')
+S = TypeVar("S", bound="Sink")
 _log = logging.getLogger(__name__)
 
 
@@ -76,12 +77,16 @@ class SinkFilter(Generic[S]):
     """
 
     @overload
-    async def filter_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> bool: ...
+    async def filter_packet(
+        self, sink: S, user: abc.Snowflake, packet: RawData
+    ) -> bool: ...
 
     @overload
     def filter_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> bool: ...
 
-    def filter_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> bool | Coroutine[Any, Any, bool]:
+    def filter_packet(
+        self, sink: S, user: abc.Snowflake, packet: RawData
+    ) -> bool | Coroutine[Any, Any, bool]:
         """|maybecoro|
 
         This is called automatically everytime a voice packet is received.
@@ -102,15 +107,21 @@ class SinkFilter(Generic[S]):
         :class:`bool`
             Whether the filter was successful.
         """
-        raise NotImplementedError('subclasses must implement this')
+        raise NotImplementedError("subclasses must implement this")
 
     @overload
-    async def filter_speaking_state(self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> bool:  ...
+    async def filter_speaking_state(
+        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> bool: ...
 
     @overload
-    def filter_speaking_state(self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> bool: ...
+    def filter_speaking_state(
+        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> bool: ...
 
-    def filter_speaking_state(self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> bool | Coroutine[Any, Any, bool]:
+    def filter_speaking_state(
+        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> bool | Coroutine[Any, Any, bool]:
         """|maybecoro|
 
         This is called automatically everytime a speaking state is updated.
@@ -133,11 +144,10 @@ class SinkFilter(Generic[S]):
         :class:`bool`
             Whether the filter was successful.
         """
-        raise NotImplementedError('subclasses must implement this')
+        raise NotImplementedError("subclasses must implement this")
 
     def cleanup(self) -> None:
         """A function called when the filter is ready for cleanup."""
-        pass
 
 
 class SinkHandler(Generic[S]):
@@ -149,12 +159,16 @@ class SinkHandler(Generic[S]):
     """
 
     @overload
-    async def handle_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> Any: ...
+    async def handle_packet(
+        self, sink: S, user: abc.Snowflake, packet: RawData
+    ) -> Any: ...
 
     @overload
     def handle_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> Any: ...
 
-    def handle_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> Any | Coroutine[Any, Any, Any]:
+    def handle_packet(
+        self, sink: S, user: abc.Snowflake, packet: RawData
+    ) -> Any | Coroutine[Any, Any, Any]:
         """|maybecoro|
 
         This is called automatically everytime a voice packet which has successfully passed the filters is received.
@@ -168,15 +182,20 @@ class SinkHandler(Generic[S]):
         packet: :class:`~.RawData`
             The raw data packet.
         """
-        pass
 
     @overload
-    async def handle_speaking_state(self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> Any:  ...
+    async def handle_speaking_state(
+        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> Any: ...
 
     @overload
-    def handle_speaking_state(self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> Any: ...
+    def handle_speaking_state(
+        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> Any: ...
 
-    def handle_speaking_state(self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> Any | Coroutine[Any, Any, Any]:
+    def handle_speaking_state(
+        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> Any | Coroutine[Any, Any, Any]:
         """|maybecoro|
 
         This is called automatically everytime a speaking state update is received which has successfully passed the filters.
@@ -192,11 +211,9 @@ class SinkHandler(Generic[S]):
         after: :class:`~discord.SpeakingState`
             The speaking state after the update.
         """
-        pass
 
     def cleanup(self) -> None:
         """A function called when the handler is ready for cleanup."""
-        pass
 
 
 class RawData:
@@ -340,10 +357,12 @@ class Sink:
                 elif isinstance(value, classmethod):
                     value = partial(value.__func__, cls)
 
-                if not hasattr(value, '__listener__'):
+                if not hasattr(value, "__listener__"):
                     continue
 
-                event_name = getattr(value, '__listener_name__', elem).removeprefix('on_')
+                event_name = getattr(value, "__listener_name__", elem).removeprefix(
+                    "on_"
+                )
 
                 try:
                     listeners[event_name].append(value)
@@ -364,7 +383,9 @@ class Sink:
         self._filters: list[SinkFilter] = filters or []
         self._handlers: list[SinkHandler] = handlers or []
         self.__dispatch_set: set[asyncio.Task[Any]] = set()
-        self._listeners: dict[str, list[Callable[[Iterable[object]], bool]]] = self.__listeners__
+        self._listeners: dict[str, list[Callable[[Iterable[object]], bool]]] = (
+            self.__listeners__
+        )
 
     @property
     def filtering_mode(self) -> SinkFilteringMode:
@@ -377,13 +398,15 @@ class Sink:
         elif value is SinkFilteringMode.any:
             self._filter_strat = any
         else:
-            raise TypeError(f'expected a FilteringMode enum member, got {value.__class__.__name__}')
+            raise TypeError(
+                f"expected a FilteringMode enum member, got {value.__class__.__name__}"
+            )
 
         self.__filtering_mode = value
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> Any:
-        _log.debug('Dispatching sink %s event %s', self.__class__.__name__, event)
-        method = f'on_{event}'
+        _log.debug("Dispatching sink %s event %s", self.__class__.__name__, event)
+        method = f"on_{event}"
 
         listeners = self.__listeners__.get(event, [])
         for coro in listeners:
@@ -401,7 +424,7 @@ class Sink:
         coro: Callable[..., Coroutine[Any, Any, Any]],
         event_name: str,
         *args: Any,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         try:
             await coro(*args, **kwargs)
@@ -426,7 +449,9 @@ class Sink:
             self.__dispatch_set.add(task)
             task.add_done_callback(self.__dispatch_set.remove)
 
-    def _call_speaking_state_handlers(self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> None:
+    def _call_speaking_state_handlers(
+        self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> None:
         for handler in self._handlers:
             task = asyncio.create_task(
                 utils.maybe_coroutine(
@@ -449,13 +474,13 @@ class Sink:
     ) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
 
-        task = asyncio.create_task(wrapped, name=f'sinks: {event_name}')
+        task = asyncio.create_task(wrapped, name=f"sinks: {event_name}")
         self.__dispatch_set.add(task)
         task.add_done_callback(self.__dispatch_set.discard)
         return task
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__} id={id(self):#x}>'
+        return f"<{self.__class__.__name__} id={id(self):#x}>"
 
     def stop(self) -> None:
         """Stops this sink's recording.
@@ -499,7 +524,9 @@ class Sink:
         """
 
         if not isinstance(filter, SinkFilter):
-            raise TypeError(f'expected a Filter object, not {filter.__class__.__name__}')
+            raise TypeError(
+                f"expected a Filter object, not {filter.__class__.__name__}"
+            )
         self._filters.append(filter)
 
     def remove_filter(self, filter: SinkFilter, /) -> None:
@@ -531,7 +558,9 @@ class Sink:
         """
 
         if not isinstance(handler, SinkHandler):
-            raise TypeError(f'expected a Handler object, not {handler.__class__.__name__}')
+            raise TypeError(
+                f"expected a Handler object, not {handler.__class__.__name__}"
+            )
         self._handlers.append(handler)
 
     def remove_handler(self, handler: SinkHandler, /) -> None:
@@ -549,21 +578,15 @@ class Sink:
             pass
 
     @staticmethod
-    def listener(event: str = MISSING) -> Callable[[Callable[P, Coroutine[Any, Any, R]]], Callable[P, Coroutine[Any, Any, R]]]:
+    def listener(
+        event: str = MISSING,
+    ) -> Callable[
+        [Callable[P, Coroutine[Any, Any, R]]], Callable[P, Coroutine[Any, Any, R]]
+    ]:
         """Registers a function to be an event listener for this sink.
 
         The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised; and
         also must be inside a sink class.
-
-        Example
-        -------
-
-        .. code-block:: python3
-
-            class MySink(Sink):
-                @Sink.listener()
-                async def on_member_speaking_state_update(member, ssrc, state):
-                    pass
 
         Parameters
         ----------
@@ -574,41 +597,64 @@ class Sink:
         ------
         TypeError
             The coroutine passed is not actually a coroutine, or the listener is not in a sink class.
+
+        Example
+        -------
+
+        .. code-block:: python3
+
+            class MySink(Sink):
+                @Sink.listener()
+                async def on_member_speaking_state_update(member, ssrc, state):
+                    pass
         """
 
-        def decorator(func: Callable[P, Coroutine[Any, Any, R]]) -> Callable[P, Coroutine[Any, Any, R]]:
-            parts = func.__qualname__.split('.')
+        def decorator(
+            func: Callable[P, Coroutine[Any, Any, R]],
+        ) -> Callable[P, Coroutine[Any, Any, R]]:
+            parts = func.__qualname__.split(".")
 
             if not parts or not len(parts) > 1:
-                raise TypeError('event listeners must be declared in a Sink class')
+                raise TypeError("event listeners must be declared in a Sink class")
 
             if parts[-1] != func.__name__:
-                raise NameError('qualified name and function name mismatch, this should not happen')
+                raise NameError(
+                    "qualified name and function name mismatch, this should not happen"
+                )
 
             if not asyncio.iscoroutinefunction(func):
-                raise TypeError('event listeners must be coroutine functions')
+                raise TypeError("event listeners must be coroutine functions")
 
             func.__listener__ = True
             if event is not MISSING:
                 func.__listener_name__ = event
             return func
+
         return decorator
 
     async def on_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
         pass
 
-    async def on_unfiltered_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
+    async def on_unfiltered_voice_packet_receive(
+        self, user: abc.Snowflake, data: RawData
+    ) -> None:
         pass
 
-    async def on_speaking_state_update(self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> None:
+    async def on_speaking_state_update(
+        self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> None:
         pass
 
-    async def on_unfiltered_speaking_state_update(self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState) -> None:
+    async def on_unfiltered_speaking_state_update(
+        self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
+    ) -> None:
         pass
 
-    async def on_error(self, event: str, exception: Exception, *args: Any, **kwargs: Any) -> None:
+    async def on_error(
+        self, event: str, exception: Exception, *args: Any, **kwargs: Any
+    ) -> None:
         _log.exception(
-            'An error ocurred in sink %s while dispatching the event %s',
+            "An error ocurred in sink %s while dispatching the event %s",
             self,
             event,
             exc_info=exception,

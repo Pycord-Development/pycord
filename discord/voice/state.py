@@ -26,19 +26,19 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections import deque
 import logging
 import select
 import socket
 import struct
 import threading
-from collections.abc import Callable, Coroutine
 import time
+from collections import deque
+from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any, TypedDict
 
-from discord import utils, opus
+from discord import opus, utils
 from discord.backoff import ExponentialBackoff
-from discord.enums import try_enum, SpeakingState
+from discord.enums import SpeakingState, try_enum
 from discord.errors import ConnectionClosed
 from discord.object import Object
 from discord.sinks import RawData, Sink
@@ -51,9 +51,9 @@ if TYPE_CHECKING:
     from discord.guild import Guild
     from discord.member import VoiceState
     from discord.raw_models import RawVoiceServerUpdateEvent, RawVoiceStateUpdateEvent
+    from discord.state import ConnectionState
     from discord.types.voice import SupportedModes
     from discord.user import ClientUser
-    from discord.state import ConnectionState
 
     from .client import VoiceClient
 
@@ -109,7 +109,9 @@ class SocketReader(threading.Thread):
         self._running.clear()
 
     def is_paused(self) -> bool:
-        return self._idle_paused or (not self._running.is_set() and not self._end.is_set())
+        return self._idle_paused or (
+            not self._running.is_set() and not self._end.is_set()
+        )
 
     def resume(self, *, force: bool = False) -> None:
         if self._running.is_set():
@@ -139,7 +141,7 @@ class SocketReader(threading.Thread):
             self._do_run()
         except Exception:
             _log.exception(
-                'An error ocurred while running the socket reader %s',
+                "An error ocurred while running the socket reader %s",
                 self.name,
             )
         finally:
@@ -170,7 +172,7 @@ class SocketReader(threading.Thread):
                 data = self.state.socket.recv(self.buffer_size)
             except OSError:
                 _log.debug(
-                    'Error reading from socket in %s, this should be safe to ignore',
+                    "Error reading from socket in %s, this should be safe to ignore",
                     self,
                     exc_info=True,
                 )
@@ -180,7 +182,7 @@ class SocketReader(threading.Thread):
                         cb(data)
                     except Exception:
                         _log.exception(
-                            'Error while calling %s in %s',
+                            "Error while calling %s in %s",
                             cb,
                             self,
                         )
@@ -188,11 +190,14 @@ class SocketReader(threading.Thread):
 
 class SocketVoiceRecvReader(SocketReader):
     def __init__(
-        self, state: VoiceConnectionState, *, start_paused: bool = True,
+        self,
+        state: VoiceConnectionState,
+        *,
+        start_paused: bool = True,
     ) -> None:
         super().__init__(
             state,
-            f'voice-recv-socket-reader:{id(self):#x}',
+            f"voice-recv-socket-reader:{id(self):#x}",
             4096,
             start_paused=start_paused,
         )
@@ -204,7 +209,7 @@ class SocketEventReader(SocketReader):
     ) -> None:
         super().__init__(
             state,
-            f'voice-socket-event-reader:{id(self):#x}',
+            f"voice-socket-event-reader:{id(self):#x}",
             2048,
             start_paused=start_paused,
         )
@@ -212,11 +217,14 @@ class SocketEventReader(SocketReader):
 
 class DecoderThread(threading.Thread, opus._OpusStruct):
     def __init__(
-        self, state: VoiceConnectionState, *, start_paused: bool = True,
+        self,
+        state: VoiceConnectionState,
+        *,
+        start_paused: bool = True,
     ) -> None:
         super().__init__(
             daemon=True,
-            name=f'voice-recv-decoder-thread:{id(self):#x}',
+            name=f"voice-recv-decoder-thread:{id(self):#x}",
         )
 
         self.state: VoiceConnectionState = state
@@ -234,7 +242,9 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
 
     def decode(self, frame: RawData) -> None:
         if not isinstance(frame, RawData):
-            raise TypeError(f'expected a RawData object, got {frame.__class__.__name__}')
+            raise TypeError(
+                f"expected a RawData object, got {frame.__class__.__name__}"
+            )
         self.decode_queue.append(frame)
 
     def is_running(self) -> bool:
@@ -272,7 +282,7 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
             self._do_run()
         except Exception:
             _log.exception(
-                'An error ocurred while running the decoder thread %s',
+                "An error ocurred while running the decoder thread %s",
                 self.name,
             )
         finally:
@@ -307,7 +317,7 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
                     )
             except opus.OpusError:
                 _log.exception(
-                    'Error ocurred while decoding opus frame',
+                    "Error ocurred while decoding opus frame",
                     exc_info=True,
                 )
 
@@ -368,7 +378,9 @@ class VoiceConnectionState:
         self.sync_recording_start: bool = False
         self.first_received_packet_ts: float = MISSING
         self.sinks: list[Sink] = []
-        self.recording_done_callbacks: list[tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]] = []
+        self.recording_done_callbacks: list[
+            tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]
+        ] = []
         self.__sink_dispatch_task_set: set[asyncio.Task[Any]] = set()
 
     def start_record_socket(self) -> None:
@@ -420,9 +432,7 @@ class VoiceConnectionState:
                 self.first_received_packet_ts = data.receive_time
                 silence = 0
             else:
-                silence = (
-                    (data.receive_time - self.first_received_packet_ts) * 48000
-                )
+                silence = (data.receive_time - self.first_received_packet_ts) * 48000
         else:
             stored_timestamp, stored_recv_time = self.user_voice_timestamps[data.ssrc]
             dRT = data.receive_time - stored_recv_time * 48000
@@ -437,7 +447,7 @@ class VoiceConnectionState:
         self.user_voice_timestamps[data.ssrc] = (data.timestamp, data.receive_time)
 
         data.decoded_data = (
-            struct.pack('<h', 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
+            struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
             + data.decoded_data
         )
 
@@ -454,7 +464,7 @@ class VoiceConnectionState:
         user = self.get_user_by_ssrc(data.ssrc)
         if not user:
             _log.debug(
-                'Ignoring received packet %s because the SSRC was waited for but was not found',
+                "Ignoring received packet %s because the SSRC was waited for but was not found",
                 data,
             )
             return
@@ -465,10 +475,12 @@ class VoiceConnectionState:
             if sink.is_paused():
                 continue
 
-            sink.dispatch('unfiltered_voice_packet_receive', user, data)
+            sink.dispatch("unfiltered_voice_packet_receive", user, data)
 
             futures = [
-                self.loop.create_task(utils.maybe_coroutine(fil.filter_packet, sink, user, data))
+                self.loop.create_task(
+                    utils.maybe_coroutine(fil.filter_packet, sink, user, data)
+                )
                 for fil in sink._filters
             ]
             strat = sink._filter_strat
@@ -482,7 +494,7 @@ class VoiceConnectionState:
                 done = (*done, *pending)
 
             if strat([f.result() for f in done]):
-                sink.dispatch('voice_packet_receive', user, data)
+                sink.dispatch("voice_packet_receive", user, data)
                 sink._call_voice_packet_handlers(user, data)
 
     def is_recording(self) -> bool:
@@ -506,50 +518,50 @@ class VoiceConnectionState:
         if data is None:
             return None
 
-        user = int(data['user_id'])
+        user = int(data["user_id"])
         return self.get_user(user)
 
     def get_user(self, id: int) -> abc.Snowflake:
         state = self._connection
-        return (
-            self.guild.get_member(id) or
-            state.get_user(id) or
-            Object(id=id)
-        )
+        return self.guild.get_member(id) or state.get_user(id) or Object(id=id)
 
     def ws_hook(self, ws: VoiceWebSocket, msg: dict[str, Any]) -> None:
-        op = msg['op']
-        data = msg.get('d', {})
+        op = msg["op"]
+        data = msg.get("d", {})
 
         if op == OpCodes.speaking:
-            ssrc = data['ssrc']
-            user = int(data['user_id'])
-            raw_speaking = data['speaking']
+            ssrc = data["ssrc"]
+            user = int(data["user_id"])
+            raw_speaking = data["speaking"]
             speaking = try_enum(SpeakingState, raw_speaking)
             old_data = self.user_ssrc_map.get(ssrc)
-            old_speaking = (old_data or {}).get('speaking', SpeakingState.none)
+            old_speaking = (old_data or {}).get("speaking", SpeakingState.none)
 
             self._dispatch_speaking_state(old_speaking, speaking, user)
 
             if old_data is None:
-                self.user_ssrc_map[ssrc]['speaking'] = speaking
+                self.user_ssrc_map[ssrc]["speaking"] = speaking
             else:
                 self.user_ssrc_map[ssrc] = {
-                    'user_id': user,
-                    'speaking': speaking,
+                    "user_id": user,
+                    "speaking": speaking,
                 }
 
-    def _dispatch_speaking_state(self, before: SpeakingState, after: SpeakingState, uid: int) -> None:
+    def _dispatch_speaking_state(
+        self, before: SpeakingState, after: SpeakingState, uid: int
+    ) -> None:
         resolved = self.get_user(uid)
 
         for sink in self.sinks:
             if sink.is_paused():
                 continue
 
-            sink.dispatch('unfiltered_speaking_state_update', resolved, before, after)
+            sink.dispatch("unfiltered_speaking_state_update", resolved, before, after)
 
             futures = [
-                self.loop.create_task(utils.maybe_coroutine(fil.filter_packet, sink, user, data))
+                self.loop.create_task(
+                    utils.maybe_coroutine(fil.filter_packet, sink, user, data)
+                )
                 for fil in sink._filters
             ]
             strat = sink._filter_strat
@@ -563,7 +575,7 @@ class VoiceConnectionState:
                 done = (*done, *pending)
 
             if strat([f.result() for f in done]):
-                sink.dispatch('speaking_state_update', resolved, before, after)
+                sink.dispatch("speaking_state_update", resolved, before, after)
                 sink._call_speaking_state_handlers(resolved, before, after)
 
     @property

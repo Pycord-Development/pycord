@@ -21,21 +21,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
-from collections import deque
 import io
 import logging
 import os
 import subprocess
 import time
+from collections import deque
 from typing import TYPE_CHECKING, Literal, overload
 
 from discord import utils
 from discord.file import File
 from discord.utils import MISSING
 
-from .core import CREATE_NO_WINDOW, SinkHandler, Sink, SinkFilter, RawData
+from .core import CREATE_NO_WINDOW, RawData, Sink, SinkFilter, SinkHandler
 from .enums import SinkFilteringMode
 from .errors import FFmpegNotFound, M4ASinkError, MaxProcessesCountReached, NoUserAdio
 
@@ -45,13 +46,15 @@ if TYPE_CHECKING:
 _log = logging.getLogger(__name__)
 
 __all__ = (
-    'M4AConverterHandler',
-    'M4ASink',
+    "M4AConverterHandler",
+    "M4ASink",
 )
 
 
-class M4AConverterHandler(SinkHandler['M4ASink']):
-    def handle_packet(self, sink: M4ASink, user: abc.Snowflake, packet: RawData) -> None:
+class M4AConverterHandler(SinkHandler["M4ASink"]):
+    def handle_packet(
+        self, sink: M4ASink, user: abc.Snowflake, packet: RawData
+    ) -> None:
         data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
         data.write(packet.decoded_data)
 
@@ -89,7 +92,9 @@ class M4ASink(Sink):
         max_audio_processes_count: int = 10,
     ) -> None:
         self.__audio_data: dict[int, io.BytesIO] = {}
-        self.__process_queue: deque[tuple[str, subprocess.Popen]] = deque(maxlen=max_audio_processes_count)
+        self.__process_queue: deque[tuple[str, subprocess.Popen]] = deque(
+            maxlen=max_audio_processes_count
+        )
         handlers = handlers or []
         handlers.append(M4AConverterHandler())
 
@@ -129,7 +134,7 @@ class M4ASink(Sink):
         self,
         user_id: int,
         *,
-        executable: str = 'ffmpeg',
+        executable: str = "ffmpeg",
         as_file: bool = False,
     ) -> io.BytesIO | File:
         """Formats a user's saved audio data.
@@ -159,7 +164,7 @@ class M4ASink(Sink):
             object with the buffer set as the audio bytes.
 
         Raises
-        -------
+        ------
         NoUserAudio
             You tried to format the audio of a user that was not stored in this sink.
         FFmpegNotFound
@@ -176,24 +181,24 @@ class M4ASink(Sink):
         try:
             data = self.__audio_data.pop(user_id)
         except KeyError:
-            _log.info('There is no audio data for %s, ignoring.', user_id)
+            _log.info("There is no audio data for %s, ignoring.", user_id)
             raise NoUserAdio
 
-        temp_path = f'{user_id}-{time.time()}-recording.m4a.tmp'
+        temp_path = f"{user_id}-{time.time()}-recording.m4a.tmp"
         args = [
             executable,
-            '-f',
-            's16le',
-            '-ar',
-            '48000',
-            '-loglevel',
-            'error',
-            '-ac',
-            '2',
-            '-i',
-            '-',
-            '-f',
-            'ipod',
+            "-f",
+            "s16le",
+            "-ar",
+            "48000",
+            "-loglevel",
+            "error",
+            "-ac",
+            "2",
+            "-i",
+            "-",
+            "-f",
+            "ipod",
             temp_path,
         ]
 
@@ -202,21 +207,27 @@ class M4ASink(Sink):
             if found:
                 _, old_process = found
                 old_process.kill()
-                _log.info('Killing old process (%s) to write in %s', old_process, temp_path)
+                _log.info(
+                    "Killing old process (%s) to write in %s", old_process, temp_path
+                )
 
-            os.remove(temp_path)  # process would get stuck asking whether to overwrite, if file already exists.
+            os.remove(
+                temp_path
+            )  # process would get stuck asking whether to overwrite, if file already exists.
 
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE)
+            process = subprocess.Popen(
+                args, creationflags=CREATE_NO_WINDOW, stdin=subprocess.PIPE
+            )
             self.__process_queue.append((temp_path, process))
         except FileNotFoundError as exc:
             raise FFmpegNotFound from exc
         except subprocess.SubprocessError as exc:
-            raise M4ASinkError(f'Audio formatting for user {user_id} failed') from exc
+            raise M4ASinkError(f"Audio formatting for user {user_id} failed") from exc
 
         process.communicate(data.read())
 
-        with open(temp_path, 'rb') as file:
+        with open(temp_path, "rb") as file:
             buffer = io.BytesIO(file.read())
             buffer.seek(0)
 
@@ -226,11 +237,16 @@ class M4ASink(Sink):
             pass
 
         if as_file:
-            return File(buffer, filename=f'{user_id}-{time.time()}-recording.m4a')
+            return File(buffer, filename=f"{user_id}-{time.time()}-recording.m4a")
         return buffer
 
     def _clean_process(self, path: str, process: subprocess.Popen) -> None:
-        _log.debug('Cleaning process %s for sink %s (with temporary file at %s)', process, self, path)
+        _log.debug(
+            "Cleaning process %s for sink %s (with temporary file at %s)",
+            process,
+            self,
+            path,
+        )
         process.kill()
         if os.path.exists(path):
             os.remove(path)

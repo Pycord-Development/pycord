@@ -25,13 +25,13 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import io
-from typing import TYPE_CHECKING, Literal, overload
 import wave
+from typing import TYPE_CHECKING, Literal, overload
 
 from discord.file import File
 from discord.utils import MISSING
 
-from .core import SinkFilter, SinkHandler, RawData, Sink
+from .core import RawData, Sink, SinkFilter, SinkHandler
 from .enums import SinkFilteringMode
 from .errors import NoUserAdio
 
@@ -39,20 +39,22 @@ if TYPE_CHECKING:
     from discord import abc
 
 __all__ = (
-    'WaveConverterHandler',
-    'WavConverterHandler',
-    'WaveSink',
-    'WavSink',
+    "WaveConverterHandler",
+    "WavConverterHandler",
+    "WaveSink",
+    "WavSink",
 )
 
 
-class WaveConverterHandler(SinkHandler['WaveSink']):
-    def handle_packet(self, sink: WaveSink, user: abc.Snowflake, packet: RawData) -> None:
+class WaveConverterHandler(SinkHandler["WaveSink"]):
+    def handle_packet(
+        self, sink: WaveSink, user: abc.Snowflake, packet: RawData
+    ) -> None:
         data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
         data.write(packet.decoded_data)
 
 
-WavConverterHandler: SinkHandler['WavSink'] = WaveConverterHandler  # type: ignore
+WavConverterHandler: SinkHandler[WavSink] = WaveConverterHandler  # type: ignore
 
 
 class WaveSink(Sink):
@@ -146,7 +148,7 @@ class WaveSink(Sink):
             object with the buffer set as the audio bytes.
 
         Raises
-        -------
+        ------
         NoUserAudio
             You tried to format the audio of a user that was not stored in this sink.
         """
@@ -158,7 +160,7 @@ class WaveSink(Sink):
 
         decoder = self.client.decoder
 
-        with wave.open(data, 'wb') as f:
+        with wave.open(data, "wb") as f:
             f.setnchannels(decoder.CHANNELS)
             f.setsampwidth(decoder.SAMPLE_SIZE // decoder.CHANNELS)
             f.setframerate(decoder.SAMPLING_RATE)
@@ -166,7 +168,7 @@ class WaveSink(Sink):
         data.seek(0)
 
         if as_file:
-            return File(data, filename=f'{user_id}-recording.pcm')
+            return File(data, filename=f"{user_id}-recording.pcm")
         return data
 
     def cleanup(self) -> None:

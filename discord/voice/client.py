@@ -644,9 +644,9 @@ class VoiceClient(VoiceProtocol):
         """
 
         if not self.is_connected():
-            raise RecordingException('not connected to a voice channel')
+            raise RecordingException("not connected to a voice channel")
         if not isinstance(sink, Sink):
-            raise TypeError(f'expected a Sink object, got {sink.__class__.__name__}')
+            raise TypeError(f"expected a Sink object, got {sink.__class__.__name__}")
 
         if sync_start is not MISSING:
             self._connection.sync_recording_start = sync_start
@@ -665,22 +665,22 @@ class VoiceClient(VoiceProtocol):
 
         .. versionadded:: 2.0
 
-        Paremeters
-        ----------
-        sink: :class:`discord.Sink`
-            The sink to stop recording.
-
         Raises
         ------
         RecordingException
             The provided sink is not currently recording, or if ``None``, you are not recording.
+
+        Paremeters
+        ----------
+        sink: :class:`discord.Sink`
+            The sink to stop recording.
         """
 
         if sink is not None:
             try:
                 self._connection.sinks.remove(sink)
             except ValueError:
-                raise RecordingException('the provided sink is not currently recording')
+                raise RecordingException("the provided sink is not currently recording")
 
             sink.stop()
             return
