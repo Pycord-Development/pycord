@@ -5,7 +5,7 @@ on:
     inputs:
       version:
         type: string
-        description: "Version number to release (e.g., 1.2.3, 1.2.3-rc1, 1.2.0)"
+        description: "Version number to release (e.g., 1.2.3, 1.2.3rc1, 1.2.0)"
         required: true
 
 permissions: write-all
@@ -41,10 +41,16 @@ jobs:
         env:
           VERSION: ${{ github.event.inputs.version }}
         run: |
+          # PEP 440 version regex
+          VALID_VERSION_REGEX='^([0-9]+\.[0-9]+\.[0-9]+((a|b|rc|\.dev|\.post)[0-9]+)?)$'
+          if ! [[ $VERSION =~ $VALID_VERSION_REGEX ]]; then
+            echo "::error::Invalid version string '$VERSION'. Must match PEP 440 (e.g. 1.2.0, 1.2.0rc1, 1.2.0.dev1, 1.2.0a1, 1.2.0b1, 1.2.0.post1)"
+            exit 1
+          fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
           echo "previous_tag=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
-          if [[ $VERSION =~ -rc ]]; then
+          if [[ $VERSION =~ rc[0-9]+$ ]]; then
             MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
             echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
             echo "is_rc=true" >> $GITHUB_OUTPUT
@@ -106,7 +112,7 @@ jobs:
   docs_release:
     runs-on: ubuntu-latest
     needs: [lib_release,pre_config]
-    if: ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '.0-rc.1')) }}
+    if: ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '0rc1')) }}
     environment: release
     steps:
       - name: "Sync Versions on Read the Docs"
@@ -119,7 +125,7 @@ jobs:
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          if [[ $VERSION == *-rc* ]]; then
+          if [[ $VERSION == *rc* ]]; then
             DOCS_VERSION="v${MAJOR_MINOR_VERSION}.x"
           else
             DOCS_VERSION="v$VERSION"
@@ -144,7 +150,7 @@ jobs:
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          if [[ $VERSION == *-rc* ]]; then
+          if [[ $VERSION == *rc* ]]; then
             DOCS_URL="<https://docs.pycord.dev/en/v${MAJOR_MINOR_VERSION}.x/changelog.html>"
           else
             DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
@@ -152,7 +158,7 @@ jobs:
           GITHUB_COMPARE_URL="<https://github.com/Pycord-Development/pycord/compare/${{ needs.pre_config.outputs.previous_tag }}...v$VERSION>"
           GITHUB_RELEASE_URL="<https://github.com/Pycord-Development/pycord/releases/tag/v$VERSION>"
           PYPI_RELEASE_URL="<https://pypi.org/project/py-cord/$VERSION/>"
-          if [[ $VERSION == *-rc* ]]; then
+          if [[ $VERSION == *rc* ]]; then
             ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} Release Candidate ($VERSION) is available!\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}This is a pre-release (release candidate) for testing and feedback.\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
@@ -196,7 +202,7 @@ jobs:
   close_milestone:
     runs-on: ubuntu-latest
     needs: [determine_milestone_id,pre_config]
-    if: ${{ !contains(needs.pre_config.outputs.version, '-') && endsWith(needs.pre_config.outputs.version, '.0') }}
+    if: ${{ !contains(needs.pre_config.outputs.version, 'rc') && endsWith(needs.pre_config.outputs.version, '.0') }}
     environment: release
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
