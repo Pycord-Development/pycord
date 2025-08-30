@@ -56,6 +56,7 @@ from .enums import (
     EntitlementOwnerType,
     NotificationLevel,
     NSFWLevel,
+    OnboardingMode,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     SortOrder,
