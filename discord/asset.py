@@ -275,6 +275,18 @@ class Asset(AssetMixin):
         )
 
     @classmethod
+    def _from_collectible(
+        cls, state: ConnectionState, asset: str, animated: bool = False
+    ) -> Asset:
+        name = "static.png" if not animated else "asset.webm"
+        return cls(
+            state,
+            url=f"{cls.BASE}/assets/collectibles/{asset}{name}",
+            key=asset,
+            animated=animated,
+        )
+
+    @classmethod
     def _from_guild_image(cls, state, guild_id: int, image: str, path: str) -> Asset:
         animated = False
         format = "png"
@@ -329,6 +341,14 @@ class Asset(AssetMixin):
             url=f"{cls.BASE}/guild-events/{event_id}/{cover_hash}.png",
             key=cover_hash,
             animated=False,
+        )
+
+    @classmethod
+    def _from_soundboard_sound(cls, state, sound_id: int) -> Asset:
+        return cls(
+            state,
+            url=f"{cls.BASE}/soundboard-sounds/{sound_id}",
+            key=str(sound_id),
         )
 
     def __str__(self) -> str:
