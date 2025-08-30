@@ -1119,7 +1119,7 @@ class Client:
 
         Returns
         -------
-        Optional[:class:`Poll`]
+        Optional[:class:`.Poll`]
             The poll or ``None`` if not found.
         """
         return self._connection.get_poll(id)
