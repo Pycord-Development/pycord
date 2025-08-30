@@ -125,7 +125,7 @@ class Loop(Generic[LF]):
         self._is_being_cancelled = False
         self._has_failed = False
         self._stop_next_iteration = False
-        self._tasks: list[asyncio.Task[Any]] = []
+        self._tasks: set[asyncio.Task[Any]] = set()
 
         if self.count is not None and self.count <= 0:
             raise ValueError("count must be greater than 0 or None.")
@@ -200,8 +200,8 @@ class Loop(Generic[LF]):
                             ),
                             name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
                         )
-                        task.add_done_callback(self._tasks.remove)
-                        self._tasks.append(task)
+                        task.add_done_callback(lambda t: self._tasks.discard(t))
+                        self._tasks.add(task)
 
                     _current_loop_ctx.reset(token)
                     self._last_iteration_failed = False
