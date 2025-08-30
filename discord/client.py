@@ -1159,7 +1159,7 @@ class Client:
 
         Yields
         ------
-        :class:`Member`
+        :class:`.Member`
             A member the client can see.
         """
         for guild in self.guilds:
