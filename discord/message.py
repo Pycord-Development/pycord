@@ -1208,26 +1208,6 @@ class Message(Hashable):
         del self.reactions[index]
         return reaction
 
-    def _update(self, data):
-        # In an update scheme, 'author' key has to be handled before 'member'
-        # otherwise they overwrite each other which is undesirable.
-        # Since there's no good way to do this we have to iterate over every
-        # handler rather than iterating over the keys which is a little slower
-        for key, handler in self._HANDLERS:
-            try:
-                value = data[key]
-            except KeyError:
-                continue
-            else:
-                handler(self, value)
-
-        # clear the cached properties
-        for attr in self._CACHED_SLOTS:
-            try:
-                delattr(self, attr)
-            except AttributeError:
-                pass
-
     def _handle_edited_timestamp(self, value: str) -> None:
         self._edited_timestamp = utils.parse_time(value)
 
