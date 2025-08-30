@@ -547,7 +547,9 @@ class VoiceConnectionState:
                     "speaking": speaking,
                 }
 
-    def dispatch_speaking_state(self, before: SpeakingState, after: SpeakingState, user_id: int) -> None:
+    def dispatch_speaking_state(
+        self, before: SpeakingState, after: SpeakingState, user_id: int
+    ) -> None:
         task = self.loop.create_task(
             self._dispatch_speaking_state(before, after, user_id),
         )
@@ -567,7 +569,9 @@ class VoiceConnectionState:
 
             futures = [
                 self.loop.create_task(
-                    utils.maybe_coroutine(fil.filter_speaking_state, sink, resolved, before, after)
+                    utils.maybe_coroutine(
+                        fil.filter_speaking_state, sink, resolved, before, after
+                    )
                 )
                 for fil in sink._filters
             ]
