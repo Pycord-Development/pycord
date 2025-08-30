@@ -1538,7 +1538,7 @@ class Guild(Hashable):
             The new channel's topic.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            A value of `0` disables slowmode. The maximum value possible is `21600`.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
         nsfw: :class:`bool`
             Whether the channel is marked as NSFW.
         reason: Optional[:class:`str`]
