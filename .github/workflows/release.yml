@@ -70,7 +70,19 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-
+      - name: "Create version branch if missing"
+        id: conditional-create-version-branch
+        shell: bash
+        env:
+          VERSION_BRANCH: ${{ needs.pre_config.outputs.branch_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin
+          if ! git show-ref --verify --quiet refs/heads/$VERSION_BRANCH; then
+            git checkout -b $VERSION_BRANCH
+            git push origin $VERSION_BRANCH
+          fi
+          git checkout $VERSION_BRANCH
       - name: "Release Pycord"
         id: pycord-release
         uses: Aiko-IT-Systems/pycord-lib-release-action@v1.0.0

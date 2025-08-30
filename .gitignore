@@ -193,3 +193,4 @@ docs/build/linkcheck
 !docs/locales/*
 /build/
 /vscode/
+remote-release.yml
