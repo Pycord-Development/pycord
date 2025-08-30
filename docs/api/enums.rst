@@ -2362,7 +2362,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: advanced
 
-        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+        Both default channels and questions (``OnboardingPrompt``\s) will count towards the Onboarding requirements.
 
 .. class:: ReactionType
 

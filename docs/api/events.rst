@@ -1456,9 +1456,9 @@ Soundboard Sound
     .. versionadded:: 2.7
 
     :param before: The soundboard sound prior to being updated.
-    :type before: :class:`Soundboard
+    :type before: :class:`Soundboard`
     :param after: The soundboard sound after being updated.
-    :type after: :class:`Soundboard
+    :type after: :class:`Soundboard`
 
 .. function:: on_raw_soundboard_sound_update(after)
 
