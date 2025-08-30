@@ -170,6 +170,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2878](https://github.com/Pycord-Development/pycord/pull/2878))
 - Fixed `AttributeError` when accessing `AuditLogEntry.changes` more than once.
   ([#2882])(https://github.com/Pycord-Development/pycord/pull/2882))
+- Fixed type hint for argument `start_time` and `end_time` of
+  `Guild.create_scheduled_event`
+  ([#2879](https://github.com/Pycord-Development/pycord/pull/2879))
 
 ### Changed
 
