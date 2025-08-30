@@ -743,7 +743,6 @@ class UnfurledMediaItem(AssetMixin):
 
     @property
     def url(self) -> str:
-        """Returns this media item's url."""
         return self._url
 
     @url.setter
