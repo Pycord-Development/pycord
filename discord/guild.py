@@ -81,6 +81,7 @@ from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role, RoleColours
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
+from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
@@ -130,6 +131,7 @@ class BanEntry(NamedTuple):
 class _GuildLimit(NamedTuple):
     emoji: int
     stickers: int
+    soundboard: int
     bitrate: float
     filesize: int
 
@@ -286,14 +288,25 @@ class Guild(Hashable):
         "_threads",
         "approximate_member_count",
         "approximate_presence_count",
+        "_sounds",
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
-        None: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=10_485_760),
-        0: _GuildLimit(emoji=50, stickers=5, bitrate=96e3, filesize=10_485_760),
-        1: _GuildLimit(emoji=100, stickers=15, bitrate=128e3, filesize=10_485_760),
-        2: _GuildLimit(emoji=150, stickers=30, bitrate=256e3, filesize=52_428_800),
-        3: _GuildLimit(emoji=250, stickers=60, bitrate=384e3, filesize=104_857_600),
+        None: _GuildLimit(
+            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=10_485_760
+        ),
+        0: _GuildLimit(
+            emoji=50, stickers=5, soundboard=8, bitrate=96e3, filesize=10_485_760
+        ),
+        1: _GuildLimit(
+            emoji=100, stickers=15, soundboard=24, bitrate=128e3, filesize=10_485_760
+        ),
+        2: _GuildLimit(
+            emoji=150, stickers=30, soundboard=36, bitrate=256e3, filesize=52_428_800
+        ),
+        3: _GuildLimit(
+            emoji=250, stickers=60, soundboard=48, bitrate=384e3, filesize=104_857_600
+        ),
     }
 
     def __init__(self, *, data: GuildPayload, state: ConnectionState):
@@ -308,6 +321,7 @@ class Guild(Hashable):
         self._voice_states: dict[int, VoiceState] = {}
         self._threads: dict[int, Thread] = {}
         self._state: ConnectionState = state
+        self._sounds: dict[int, SoundboardSound] = {}
         self._from_data(data)
 
     def _add_channel(self, channel: GuildChannel, /) -> None:
@@ -550,6 +564,133 @@ class Guild(Hashable):
         for obj in guild.get("voice_states", []):
             self._update_voice_state(obj, int(obj["channel_id"]))
 
+        for sound in guild.get("soundboard_sounds", []):
+            sound = SoundboardSound(state=state, http=state.http, data=sound)
+            self._add_sound(sound)
+
+    def _add_sound(self, sound: SoundboardSound) -> None:
+        self._sounds[sound.id] = sound
+        self._state._add_sound(sound)
+
+    def _remove_sound(self, sound_id: int) -> None:
+        self._sounds.pop(sound_id, None)
+
+    async def fetch_sounds(self) -> list[SoundboardSound]:
+        """|coro|
+        Fetches all the soundboard sounds in the guild.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        List[:class:`SoundboardSound`]
+            The sounds in the guild.
+        """
+        data = await self._state.http.get_all_guild_sounds(self.id)
+        return [
+            SoundboardSound(
+                state=self._state,
+                http=self._state.http,
+                data=sound,
+            )
+            for sound in data["items"]
+        ]
+
+    async def fetch_sound(self, sound_id: int) -> SoundboardSound:
+        """|coro|
+        Fetches a soundboard sound in the guild.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        sound_id: :class:`int`
+            The ID of the sound.
+
+        Returns
+        -------
+        :class:`SoundboardSound`
+            The sound.
+        """
+        data = await self._state.http.get_guild_sound(self.id, sound_id)
+        return SoundboardSound(
+            state=self._state,
+            http=self._state.http,
+            data=data,
+        )
+
+    async def create_sound(
+        self,
+        name: str,
+        sound: bytes,
+        volume: float = 1.0,
+        emoji: PartialEmoji | GuildEmoji | str | None = None,
+        reason: str | None = None,
+    ) -> SoundboardSound:
+        """|coro|
+        Creates a :class:`SoundboardSound` in the guild.
+        You must have :attr:`Permissions.manage_expressions` permission to use this.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the sound.
+        sound: :class:`bytes`
+            The :term:`py:bytes-like object` representing the sound data.
+            Only MP3 sound files that are less than 5.2 seconds long are supported.
+        volume: :class:`float`
+            The volume of the sound. Defaults to 1.0.
+        emoji: Optional[Union[:class:`PartialEmoji`, :class:`GuildEmoji`, :class:`str`]]
+            The emoji of the sound.
+        reason: Optional[:class:`str`]
+            The reason for creating this sound. Shows up on the audit log.
+
+        Returns
+        -------
+        :class:`SoundboardSound`
+            The created sound.
+
+        Raises
+        ------
+        :exc:`HTTPException`
+            Creating the sound failed.
+        :exc:`Forbidden`
+            You do not have permissions to create sounds.
+        """
+
+        payload: dict[str, Any] = {
+            "name": name,
+            "sound": utils._bytes_to_base64_data(sound),
+            "volume": volume,
+            "emoji_id": None,
+            "emoji_name": None,
+        }
+
+        if emoji is not None:
+            if isinstance(emoji, _EmojiTag):
+                partial_emoji = emoji._to_partial()
+            elif isinstance(emoji, str):
+                partial_emoji = PartialEmoji.from_str(emoji)
+            else:
+                partial_emoji = None
+
+            if partial_emoji is not None:
+                if partial_emoji.id is None:
+                    payload["emoji_name"] = partial_emoji.name
+                else:
+                    payload["emoji_id"] = partial_emoji.id
+
+        data = await self._state.http.create_guild_sound(
+            self.id, reason=reason, **payload
+        )
+        return SoundboardSound(
+            state=self._state,
+            http=self._state.http,
+            data=data,
+        )
+
     # TODO: refactor/remove?
     def _sync(self, data: GuildPayload) -> None:
         try:
@@ -674,6 +815,17 @@ class Guild(Hashable):
         """
         r = [ch for ch in self._channels.values() if isinstance(ch, CategoryChannel)]
         r.sort(key=lambda c: (c.position or -1, c.id))
+        return r
+
+    @property
+    def sounds(self) -> list[SoundboardSound]:
+        """A list of soundboard sounds that belong to this guild.
+
+        .. versionadded:: 2.7
+
+        This is sorted by the position and are in UI order from top to bottom.
+        """
+        r = list(self._sounds.values())
         return r
 
     def by_category(self) -> list[ByCategoryItem]:
@@ -824,6 +976,17 @@ class Guild(Hashable):
         more_stickers = 60 if "MORE_STICKERS" in self.features else 0
         return max(
             more_stickers, self._PREMIUM_GUILD_LIMITS[self.premium_tier].stickers
+        )
+
+    @property
+    def soundboard_limit(self) -> int:
+        """The maximum number of soundboard slots this guild has.
+
+        .. versionadded:: 2.7
+        """
+        more_soundboard = 48 if "MORE_SOUNDBOARD" in self.features else 0
+        return max(
+            more_soundboard, self._PREMIUM_GUILD_LIMITS[self.premium_tier].soundboard
         )
 
     @property
@@ -4345,3 +4508,20 @@ class Guild(Hashable):
             guild_id=self.id,
             exclude_ended=exclude_ended,
         )
+
+    def get_sound(self, sound_id: int) -> Soundboard | None:
+        """Returns a sound with the given ID.
+
+        .. versionadded :: 2.7
+
+        Parameters
+        ----------
+        sound_id: :class:`int`
+            The ID to search for.
+
+        Returns
+        -------
+        Optional[:class:`SoundboardSound`]
+            The sound or ``None`` if not found.
+        """
+        return self._sounds.get(sound_id)

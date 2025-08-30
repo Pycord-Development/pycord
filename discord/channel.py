@@ -32,6 +32,7 @@ from typing import (
     Callable,
     Iterable,
     Mapping,
+    NamedTuple,
     Sequence,
     TypeVar,
     overload,
@@ -52,6 +53,7 @@ from .enums import (
 from .enums import ThreadArchiveDuration as ThreadArchiveDurationEnum
 from .enums import (
     VideoQualityMode,
+    VoiceChannelEffectAnimationType,
     VoiceRegion,
     try_enum,
 )
@@ -64,6 +66,7 @@ from .mixins import Hashable
 from .object import Object
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
+from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .threads import Thread
 from .utils import MISSING
@@ -79,6 +82,7 @@ __all__ = (
     "ForumChannel",
     "MediaChannel",
     "ForumTag",
+    "VoiceChannelEffectSendEvent",
 )
 
 if TYPE_CHECKING:
@@ -100,6 +104,7 @@ if TYPE_CHECKING:
     from .types.channel import StageChannel as StageChannelPayload
     from .types.channel import TextChannel as TextChannelPayload
     from .types.channel import VoiceChannel as VoiceChannelPayload
+    from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .ui.view import View
@@ -2243,6 +2248,25 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """
         await self._state.http.set_voice_channel_status(self.id, status, reason=reason)
 
+    async def send_soundboard_sound(self, sound: PartialSoundboardSound) -> None:
+        """|coro|
+
+        Sends a soundboard sound to the voice channel.
+
+        Parameters
+        ----------
+        sound: :class:`PartialSoundboardSound`
+            The soundboard sound to send.
+
+        Raises
+        ------
+        Forbidden
+            You do not have proper permissions to send the soundboard sound.
+        HTTPException
+            Sending the soundboard sound failed.
+        """
+        await self._state.http.send_soundboard_sound(self.id, sound)
+
 
 class StageChannel(discord.abc.Messageable, VocalGuildChannel):
     """Represents a Discord guild stage channel.
@@ -3489,6 +3513,84 @@ class PartialMessageable(discord.abc.Messageable, Hashable):
 
     def __repr__(self) -> str:
         return f"<PartialMessageable id={self.id} type={self.type!r}>"
+
+
+class VoiceChannelEffectAnimation(NamedTuple):
+    """Represents an animation that can be sent to a voice channel.
+
+    .. versionadded:: 2.7
+    """
+
+    id: int
+    type: VoiceChannelEffectAnimationType
+
+
+class VoiceChannelSoundEffect(PartialSoundboardSound): ...
+
+
+class VoiceChannelEffectSendEvent:
+    """Represents the payload for an :func:`on_voice_channel_effect_send`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    animation_type: :class:`int`
+        The type of animation that is being sent.
+    animation_id: :class:`int`
+        The ID of the animation that is being sent.
+    sound: Optional[:class:`SoundboardSound`]
+        The sound that is being sent, could be ``None`` if the effect is not a sound effect.
+    guild: :class:`Guild`
+        The guild in which the sound is being sent.
+    user: :class:`Member`
+        The member that sent the sound.
+    channel: :class:`VoiceChannel`
+        The voice channel in which the sound is being sent.
+    data: :class:`dict`
+        The raw data sent by the gateway.
+    """
+
+    __slots__ = (
+        "_state",
+        "animation_type",
+        "animation_id",
+        "sound",
+        "guild",
+        "user",
+        "channel",
+        "data",
+        "emoji",
+    )
+
+    def __init__(
+        self,
+        data: VoiceChannelEffectSend,
+        state: ConnectionState,
+        sound: SoundboardSound | PartialSoundboardSound | None = None,
+    ) -> None:
+        self._state = state
+        channel_id = int(data["channel_id"])
+        user_id = int(data["user_id"])
+        guild_id = int(data["guild_id"])
+        self.animation_type: VoiceChannelEffectAnimationType = try_enum(
+            VoiceChannelEffectAnimationType, data["animation_type"]
+        )
+        self.animation_id = int(data["animation_id"])
+        self.sound = sound
+        self.guild = state._get_guild(guild_id)
+        self.user = self.guild.get_member(user_id)
+        self.channel = self.guild.get_channel(channel_id)
+        self.emoji = (
+            PartialEmoji(
+                name=data["emoji"]["name"],
+                animated=data["emoji"]["animated"],
+                id=data["emoji"]["id"],
+            )
+            if data.get("emoji", None)
+            else None
+        )
+        self.data = data
 
 
 def _guild_channel_factory(channel_type: int):
