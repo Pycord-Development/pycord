@@ -56,8 +56,10 @@ from .enums import (
     EntitlementOwnerType,
     NotificationLevel,
     NSFWLevel,
+    OnboardingMode,
     ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
+    SortOrder,
     VerificationLevel,
     VideoQualityMode,
     VoiceRegion,
@@ -104,6 +106,7 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
+    from .onboarding import OnboardingPrompt
     from .permissions import Permissions
     from .state import ConnectionState
     from .template import Template
@@ -175,8 +178,6 @@ class Guild(Hashable):
         The channel that denotes the AFK channel. ``None`` if it doesn't exist.
     id: :class:`int`
         The guild's ID.
-    invites_disabled: :class:`bool`
-        Indicates if the guild invites are disabled.
     owner_id: :class:`int`
         The guild owner's ID. Use :attr:`Guild.owner` instead.
     unavailable: :class:`bool`
@@ -1190,7 +1191,7 @@ class Guild(Hashable):
 
     @property
     def invites_disabled(self) -> bool:
-        """Returns a boolean indicating if the guild invites are disabled."""
+        """A boolean indicating whether the guild invites are disabled."""
         return "INVITES_DISABLED" in self.features
 
     def get_member_named(self, name: str, /) -> Member | None:
@@ -4509,7 +4510,7 @@ class Guild(Hashable):
             exclude_ended=exclude_ended,
         )
 
-    def get_sound(self, sound_id: int) -> Soundboard | None:
+    def get_sound(self, sound_id: int) -> SoundboardSound | None:
         """Returns a sound with the given ID.
 
         .. versionadded :: 2.7
