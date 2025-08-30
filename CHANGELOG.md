@@ -57,6 +57,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added various missing channel parameters and allow `default_reaction_emoji` to be
+  `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added support for type hinting slash command options with `typing.Annotated`.
   ([#2782](https://github.com/Pycord-Development/pycord/pull/2782))
 - Added conversion to `Member` in `MentionableConverter`.
@@ -67,6 +69,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
 - Added role gradients support with `Role.colours` and the `RoleColours` class.
   ([#2818](https://github.com/Pycord-Development/pycord/pull/2818))
+- Added `ThreadArchiveDuration` enum to improve clarity of thread archive durations.
+  ([#2826](https://github.com/Pycord-Development/pycord/pull/2826))
 - Added `Interaction.attachment_size_limit`.
   ([#2854](https://github.com/Pycord-Development/pycord/pull/2854))
 - Added support for selects and text displays in modals.
@@ -75,6 +79,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2883](https://github.com/Pycord-Development/pycord/pull/2883))
 - Added `discord.User.primary_guild` and the `PrimaryGuild` class.
   ([#2876](https://github.com/Pycord-Development/pycord/pull/2876))
+- Added `get_component` to `Message`, `Section`, `Container` and `ActionRow`.
+  ([#2849](https://github.com/Pycord-Development/pycord/pull/2849))
 
 ### Fixed
 
@@ -148,6 +154,8 @@ These changes are available on the `master` branch, but have not yet been releas
   `channel_types`. ([#2835](https://github.com/Pycord-Development/pycord/pull/2835))
 - Fixed `TypeError` when using `Optional[...]` or `... | None` in command option type.
   ([#2852](https://github.com/Pycord-Development/pycord/pull/2852))
+- Fixed type-hinting for `PermissionOverwrite.update`.
+  ([#2878](https://github.com/Pycord-Development/pycord/pull/2878))
 - Fixed `AttributeError` when accessing `AuditLogEntry.changes` more than once.
   ([#2882])(https://github.com/Pycord-Development/pycord/pull/2882))
 
@@ -182,6 +190,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
+- Deprecated `is_nsfw` for categories since it was never supported by the API.
+  ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Deprecated `Messageable.pins()` returning a list of `Message`; it should be used as an
   iterator of `MessagePin` instead.
   ([#2872](https://github.com/Pycord-Development/pycord/pull/2872))

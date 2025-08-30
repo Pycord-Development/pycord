@@ -1130,6 +1130,8 @@ class Guild(Hashable):
         slowmode_delay: int = MISSING,
         nsfw: bool = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        default_thread_slowmode_delay: int | None = MISSING,
+        default_auto_archive_duration: int = MISSING,
     ) -> TextChannel:
         """|coro|
 
@@ -1166,11 +1168,21 @@ class Guild(Hashable):
             The new channel's topic.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of `0` disables slowmode. The maximum value possible is `21600`.
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
+
+        default_thread_slowmode_delay: Optional[:class:`int`]
+            The initial slowmode delay to set on newly created threads in this channel.
+
+            .. versionadded:: 2.7
+
+        default_auto_archive_duration: :class:`int`
+            The default auto archive duration in minutes for threads created in this channel.
+
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -1220,6 +1232,12 @@ class Guild(Hashable):
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
 
+        if default_thread_slowmode_delay is not MISSING:
+            options["default_thread_slowmode_delay"] = default_thread_slowmode_delay
+
+        if default_auto_archive_duration is not MISSING:
+            options["default_auto_archive_duration"] = default_auto_archive_duration
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -1246,6 +1264,8 @@ class Guild(Hashable):
         rtc_region: VoiceRegion | None = MISSING,
         video_quality_mode: VideoQualityMode = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
     ) -> VoiceChannel:
         """|coro|
 
@@ -1280,6 +1300,17 @@ class Guild(Hashable):
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
 
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
+
+            .. versionadded:: 2.7
+
+        nsfw: :class:`bool`
+            Whether the channel is marked as NSFW.
+
+            .. versionadded:: 2.7
+
         Returns
         -------
         :class:`VoiceChannel`
@@ -1310,6 +1341,12 @@ class Guild(Hashable):
         if video_quality_mode is not MISSING:
             options["video_quality_mode"] = video_quality_mode.value
 
+        if slowmode_delay is not MISSING:
+            options["rate_limit_per_user"] = slowmode_delay
+
+        if nsfw is not MISSING:
+            options["nsfw"] = nsfw
+
         data = await self._create_channel(
             name,
             overwrites=overwrites,
@@ -1333,6 +1370,12 @@ class Guild(Hashable):
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         category: CategoryChannel | None = None,
         reason: str | None = None,
+        bitrate: int = MISSING,
+        user_limit: int = MISSING,
+        rtc_region: VoiceRegion | None = MISSING,
+        video_quality_mode: VideoQualityMode = MISSING,
+        slowmode_delay: int = MISSING,
+        nsfw: bool = MISSING,
     ) -> StageChannel:
         """|coro|
 
@@ -1358,6 +1401,38 @@ class Guild(Hashable):
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
 
+        bitrate: :class:`int`
+            The channel's preferred audio bitrate in bits per second.
+
+            .. versionadded:: 2.7
+
+        user_limit: :class:`int`
+            The channel's limit for number of members that can be in a voice channel.
+
+            .. versionadded:: 2.7
+
+        rtc_region: Optional[:class:`VoiceRegion`]
+            The region for the voice channel's voice communication.
+            A value of ``None`` indicates automatic voice region detection.
+
+            .. versionadded:: 2.7
+
+        video_quality_mode: :class:`VideoQualityMode`
+            The camera video quality for the voice channel's participants.
+
+            .. versionadded:: 2.7
+
+        slowmode_delay: :class:`int`
+            Specifies the slowmode rate limit for user in this channel, in seconds.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
+
+            .. versionadded:: 2.7
+
+        nsfw: :class:`bool`
+            Whether the channel is marked as NSFW.
+
+            .. versionadded:: 2.7
+
         Returns
         -------
         :class:`StageChannel`
@@ -1378,6 +1453,24 @@ class Guild(Hashable):
         }
         if position is not MISSING:
             options["position"] = position
+
+        if bitrate is not MISSING:
+            options["bitrate"] = bitrate
+
+        if user_limit is not MISSING:
+            options["user_limit"] = user_limit
+
+        if rtc_region is not MISSING:
+            options["rtc_region"] = None if rtc_region is None else str(rtc_region)
+
+        if video_quality_mode is not MISSING:
+            options["video_quality_mode"] = video_quality_mode.value
+
+        if slowmode_delay is not MISSING:
+            options["rate_limit_per_user"] = slowmode_delay
+
+        if nsfw is not MISSING:
+            options["nsfw"] = nsfw
 
         data = await self._create_channel(
             name,
@@ -1405,6 +1498,10 @@ class Guild(Hashable):
         nsfw: bool = MISSING,
         overwrites: dict[Role | Member, PermissionOverwrite] = MISSING,
         default_reaction_emoji: GuildEmoji | int | str = MISSING,
+        available_tags: list[ForumTag] = MISSING,
+        default_sort_order: SortOrder | None = MISSING,
+        default_thread_slowmode_delay: int | None = MISSING,
+        default_auto_archive_duration: int = MISSING,
     ) -> ForumChannel:
         """|coro|
 
@@ -1441,9 +1538,9 @@ class Guild(Hashable):
             The new channel's topic.
         slowmode_delay: :class:`int`
             Specifies the slowmode rate limit for user in this channel, in seconds.
-            The maximum value possible is `21600`.
+            A value of ``0`` disables slowmode. The maximum value possible is ``21600``.
         nsfw: :class:`bool`
-            To mark the channel as NSFW or not.
+            Whether the channel is marked as NSFW.
         reason: Optional[:class:`str`]
             The reason for creating this channel. Shows up on the audit log.
         default_reaction_emoji: Optional[:class:`GuildEmoji` | :class:`int` | :class:`str`]
@@ -1452,6 +1549,26 @@ class Guild(Hashable):
             :class:`GuildEmoji`, snowflake ID, string representation (eg. '<a:emoji_name:emoji_id>').
 
             .. versionadded:: v2.5
+
+        available_tags: List[:class:`ForumTag`]
+            The set of tags that can be used in a forum channel.
+
+            .. versionadded:: 2.7
+
+        default_sort_order: Optional[:class:`SortOrder`]
+            The default sort order type used to order posts in this channel.
+
+            .. versionadded:: 2.7
+
+        default_thread_slowmode_delay: Optional[:class:`int`]
+            The initial slowmode delay to set on newly created threads in this channel.
+
+            .. versionadded:: 2.7
+
+        default_auto_archive_duration: :class:`int`
+            The default auto archive duration in minutes for threads created in this channel.
+
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -1501,6 +1618,20 @@ class Guild(Hashable):
         if nsfw is not MISSING:
             options["nsfw"] = nsfw
 
+        if available_tags is not MISSING:
+            options["available_tags"] = [tag.to_dict() for tag in available_tags]
+
+        if default_sort_order is not MISSING:
+            options["default_sort_order"] = (
+                default_sort_order.value if default_sort_order else None
+            )
+
+        if default_thread_slowmode_delay is not MISSING:
+            options["default_thread_slowmode_delay"] = default_thread_slowmode_delay
+
+        if default_auto_archive_duration is not MISSING:
+            options["default_auto_archive_duration"] = default_auto_archive_duration
+
         if default_reaction_emoji is not MISSING:
             if isinstance(
                 default_reaction_emoji, _EmojiTag
@@ -1512,13 +1643,17 @@ class Guild(Hashable):
                 )
             elif isinstance(default_reaction_emoji, str):
                 default_reaction_emoji = PartialEmoji.from_str(default_reaction_emoji)
+            elif default_reaction_emoji is None:
+                pass
             else:
                 raise InvalidArgument(
-                    "default_reaction_emoji must be of type: GuildEmoji | int | str"
+                    "default_reaction_emoji must be of type: GuildEmoji | int | str | None"
                 )
 
             options["default_reaction_emoji"] = (
                 default_reaction_emoji._to_forum_reaction_payload()
+                if default_reaction_emoji
+                else None
             )
 
         data = await self._create_channel(
