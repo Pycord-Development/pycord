@@ -52,6 +52,12 @@ __all__ = (
 
 
 class MP4ConverterHandler(SinkHandler["MP4Sink"]):
+    """Default handler to add received voice packets to the audio cache data in
+    a :class:`~.MP4Sink`.
+    
+    .. versionadded:: 2.7
+    """
+
     def handle_packet(
         self, sink: MP4Sink, user: abc.Snowflake, packet: RawData
     ) -> None:

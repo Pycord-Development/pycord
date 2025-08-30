@@ -47,6 +47,12 @@ __all__ = (
 
 
 class WaveConverterHandler(SinkHandler["WaveSink"]):
+    """Default handler to add received voice packets to the audio cache data in
+    a :class:`~.WaveSink`.
+    
+    .. versionadded:: 2.7
+    """
+
     def handle_packet(
         self, sink: WaveSink, user: abc.Snowflake, packet: RawData
     ) -> None:
@@ -55,6 +61,10 @@ class WaveConverterHandler(SinkHandler["WaveSink"]):
 
 
 WavConverterHandler: SinkHandler[WavSink] = WaveConverterHandler  # type: ignore
+"""An alias for :class:`~.WaveConverterHandler`
+
+.. versionadded:: 2.7
+"""
 
 
 class WaveSink(Sink):

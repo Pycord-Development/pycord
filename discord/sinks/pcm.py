@@ -44,6 +44,12 @@ __all__ = (
 
 
 class PCMConverterHandler(SinkHandler["PCMSink"]):
+    """Default handler to add received voice packets to the audio cache data in
+    a :class:`~.PCMSink`.
+    
+    .. versionadded:: 2.7
+    """
+
     def handle_packet(
         self, sink: PCMSink, user: abc.Snowflake, packet: RawData
     ) -> None:

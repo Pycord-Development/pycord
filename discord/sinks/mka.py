@@ -50,6 +50,12 @@ __all__ = (
 
 
 class MKAConverterHandler(SinkHandler["MKASink"]):
+    """Default handler to add received voice packets to the audio cache data in
+    a :class:`~.MKASink`.
+    
+    .. versionadded:: 2.7
+    """
+
     def handle_packet(
         self, sink: MKASink, user: abc.Snowflake, packet: RawData
     ) -> None:

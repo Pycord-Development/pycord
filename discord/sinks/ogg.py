@@ -50,6 +50,12 @@ __all__ = (
 
 
 class OGGConverterHandler(SinkHandler["OGGSink"]):
+    """Default handler to add received voice packets to the audio cache data in
+    a :class:`~.OGGSink`.
+    
+    .. versionadded:: 2.7
+    """
+
     def handle_packet(
         self, sink: OGGSink, user: abc.Snowflake, packet: RawData
     ) -> None:

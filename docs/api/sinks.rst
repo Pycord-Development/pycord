@@ -6,23 +6,26 @@ Sinks
 Core
 ----
 
-.. autoclass:: discord.sinks.Filters
-    :members:
-
 .. autoclass:: discord.sinks.Sink
-    :members:
-
-.. autoclass:: discord.sinks.AudioData
     :members:
 
 .. autoclass:: discord.sinks.RawData
     :members:
 
+.. autoclass:: discord.sinks.SinkHandler
+    :members:
 
-Sink Classes
-------------
+.. autoclass:: discord.sinks.SinkFilter
+    :members:
+
+
+Default Sinks
+-------------
 
 .. autoclass:: discord.sinks.WaveSink
+    :members:
+
+.. autoclass:: discord.sinks.WavSink
     :members:
 
 .. autoclass:: discord.sinks.MP3Sink
@@ -41,4 +44,29 @@ Sink Classes
     :members:
 
 .. autoclass:: discord.sinks.OGGSink
+    :members:
+
+
+Default Handlers
+----------------
+
+.. autoclass:: discord.sinks.WaveConverterHandler()
+    :members:
+
+.. autoclass:: discord.sinks.MP3ConverterHandler()
+    :members:
+
+.. autoclass:: discord.sinks.MP4ConverterHandler()
+    :members:
+
+.. autoclass:: discord.sinks.M4AConverterHandler()
+    :members:
+
+.. autoclass:: discord.sinks.MKVConverterHandler()
+    :members:
+
+.. autoclass:: discord.sinks.MKAConverterHandler()
+    :members:
+
+.. autoclass:: discord.sinks.OGGConverterHandler()
     :members:
