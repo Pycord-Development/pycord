@@ -446,7 +446,7 @@ class View:
         Parameters
         ----------
         custom_id: Union[:class:`str`, :class:`int`]
-            The custom_id of the item to get
+            The id of the item to get
 
         Returns
         -------
