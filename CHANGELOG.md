@@ -75,6 +75,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2883](https://github.com/Pycord-Development/pycord/pull/2883))
 - Added `discord.User.primary_guild` and the `PrimaryGuild` class.
   ([#2876](https://github.com/Pycord-Development/pycord/pull/2876))
+- Added `get_component` to `Message`, `Section`, `Container` and `ActionRow`.
+  ([#2849](https://github.com/Pycord-Development/pycord/pull/2849))
 
 ### Fixed
 
