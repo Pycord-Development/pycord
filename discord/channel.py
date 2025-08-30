@@ -3095,7 +3095,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     @utils.deprecated(
         since="2.7",
         removed="3.0",
-        reference="Category NSFW was never supported by the API.",
+        reference="NSFW categories are not available in the Discord API.",
     )
     def is_nsfw(self) -> bool:
         return False
@@ -3106,7 +3106,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
     @utils.deprecated(
         since="2.7",
         removed="3.0",
-        reference="Category NSFW was never supported by the API.",
+        reference="NSFW categories are not available in the Discord API.",
     )
     def nsfw(self) -> bool:
         return False
