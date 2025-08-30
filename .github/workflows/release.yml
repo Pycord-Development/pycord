@@ -117,11 +117,10 @@ jobs:
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          PATCH_VERSION=${VERSION##*.}
-          if [[ $PATCH_VERSION =~ ^[0-9]+$ ]]; then
-            DOCS_VERSION="v$VERSION"
+          if [[ $VERSION == *-rc* ]]; then
+            DOCS_VERSION="v${MAJOR_MINOR_VERSION}.x"
           else
-            DOCS_VERSION="v$MAJOR_MINOR_VERSION.x"
+            DOCS_VERSION="v$VERSION"
           fi
           curl --location --request PATCH "https://readthedocs.org/api/v3/projects/pycord/versions/$DOCS_VERSION/" \
           --header 'Content-Type: application/json' \
@@ -140,7 +139,11 @@ jobs:
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
+          if [[ $VERSION == *-rc* ]]; then
+            DOCS_URL="<https://docs.pycord.dev/en/v${MAJOR_MINOR_VERSION}.x/changelog.html>"
+          else
+            DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
+          fi
           GITHUB_COMPARE_URL="<https://github.com/Pycord-Development/pycord/compare/${{ needs.pre_config.outputs.previous_tag }}...v$VERSION>"
           GITHUB_RELEASE_URL="<https://github.com/Pycord-Development/pycord/releases/tag/v$VERSION>"
           PYPI_RELEASE_URL="<https://pypi.org/project/py-cord/$VERSION/>"
