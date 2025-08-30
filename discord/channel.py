@@ -1148,7 +1148,7 @@ class ForumChannel(_TextChannel):
         default_auto_archive_duration: :class:`int`
             The new default auto archive duration in minutes for threads created in this channel.
             Must be one of ``60``, ``1440``, ``4320``, or ``10080``.
-            :class:`ThreadAutoArchiveDuration` can be used alternatively.
+            :class:`ThreadArchiveDuration` can be used alternatively.
         default_thread_slowmode_delay: :class:`int`
             The new default slowmode delay in seconds for threads created in this channel.
 
