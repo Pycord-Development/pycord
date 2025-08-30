@@ -52,7 +52,7 @@ __all__ = (
 class MKVConverterHandler(SinkHandler["MKVSink"]):
     """Default handler to add received voice packets to the audio cache data in
     a :class:`~.MKVSink`.
-    
+
     .. versionadded:: 2.7
     """
 

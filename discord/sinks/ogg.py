@@ -52,7 +52,7 @@ __all__ = (
 class OGGConverterHandler(SinkHandler["OGGSink"]):
     """Default handler to add received voice packets to the audio cache data in
     a :class:`~.OGGSink`.
-    
+
     .. versionadded:: 2.7
     """
 

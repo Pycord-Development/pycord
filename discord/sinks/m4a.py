@@ -54,7 +54,7 @@ __all__ = (
 class M4AConverterHandler(SinkHandler["M4ASink"]):
     """Default handler to add received voice packets to the audio cache data in
     a :class:`~.M4ASink`.
-    
+
     .. versionadded:: 2.7
     """
 

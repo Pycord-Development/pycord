@@ -49,7 +49,7 @@ __all__ = (
 class WaveConverterHandler(SinkHandler["WaveSink"]):
     """Default handler to add received voice packets to the audio cache data in
     a :class:`~.WaveSink`.
-    
+
     .. versionadded:: 2.7
     """
 

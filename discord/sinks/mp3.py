@@ -52,7 +52,7 @@ __all__ = (
 class MP3ConverterHandler(SinkHandler["MP3Sink"]):
     """Default handler to add received voice packets to the audio cache data in
     a :class:`~.MP3Sink`.
-    
+
     .. versionadded:: 2.7
     """
 
