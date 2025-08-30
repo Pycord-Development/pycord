@@ -1188,7 +1188,7 @@ class Guild(Hashable):
 
     @property
     def invites_disabled(self) -> bool:
-        """A boolean indicating if the guild invites are disabled."""
+        """A boolean indicating whether the guild invites are disabled."""
         return "INVITES_DISABLED" in self.features
 
     def get_member_named(self, name: str, /) -> Member | None:
