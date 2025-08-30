@@ -144,14 +144,23 @@ jobs:
           GITHUB_COMPARE_URL="<https://github.com/Pycord-Development/pycord/compare/${{ needs.pre_config.outputs.previous_tag }}...v$VERSION>"
           GITHUB_RELEASE_URL="<https://github.com/Pycord-Development/pycord/releases/tag/v$VERSION>"
           PYPI_RELEASE_URL="<https://pypi.org/project/py-cord/$VERSION/>"
-          ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} is out!\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}[@everyone]\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}Feel free to take a look at the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL) and the [PyPI release page]($PYPI_RELEASE_URL).\n\n"
-          ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+          if [[ $VERSION == *-rc* ]]; then
+            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} Release Candidate ($VERSION) is available!\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}This is a pre-release (release candidate) for testing and feedback.\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}Check out the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL), and [PyPI release page]($PYPI_RELEASE_URL).\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}Please try it out and let us know your feedback or any issues!\n@here"
+          else
+            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} is out!\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}[@everyone]\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}Feel free to take a look at the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL) and the [PyPI release page]($PYPI_RELEASE_URL).\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+          fi
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d "{\"content\":\"$ANNOUNCEMENT\"}" \
+            -d "{\"content\":\"$ANNOUNCEMENT\",\"allowed_mentions\":{\"parse\": [\"everyone\"]}}" \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   determine_milestone_id:
