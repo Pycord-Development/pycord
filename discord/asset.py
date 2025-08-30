@@ -343,6 +343,14 @@ class Asset(AssetMixin):
             animated=False,
         )
 
+    @classmethod
+    def _from_soundboard_sound(cls, state, sound_id: int) -> Asset:
+        return cls(
+            state,
+            url=f"{cls.BASE}/soundboard-sounds/{sound_id}",
+            key=str(sound_id),
+        )
+
     def __str__(self) -> str:
         return self._url
 

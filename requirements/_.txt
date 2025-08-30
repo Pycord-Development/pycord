@@ -1,2 +1,2 @@
 aiohttp>=3.6.0,<4.0
-typing_extensions>=4,<5
+typing_extensions>=4.5.0,<5
