@@ -35,6 +35,7 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 from discord import opus
 from discord.errors import ClientException
 from discord.player import AudioPlayer, AudioSource
+from discord.sinks.core import Sink
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
@@ -54,7 +55,6 @@ if TYPE_CHECKING:
         RawVoiceServerUpdateEvent,
         RawVoiceStateUpdateEvent,
     )
-    from discord.sinks import Sink
     from discord.state import ConnectionState
     from discord.types.voice import SupportedModes
     from discord.user import ClientUser

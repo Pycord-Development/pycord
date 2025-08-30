@@ -384,6 +384,9 @@ class VoiceConnectionState:
         self.__sink_dispatch_task_set: set[asyncio.Task[Any]] = set()
 
     def start_record_socket(self) -> None:
+        if self._voice_recv_socket.is_paused():
+            self._voice_recv_socket.resume()
+            return
         if self._voice_recv_socket.is_running():
             return
         self._voice_recv_socket.start()
@@ -887,6 +890,7 @@ class VoiceConnectionState:
 
             if cleanup:
                 self._socket_reader.stop()
+                self.stop_record_socket()
                 self.client.stop()
 
             self._connected.set()
@@ -932,6 +936,7 @@ class VoiceConnectionState:
         finally:
             self.state = with_state
             self._socket_reader.pause()
+            self._voice_recv_socket.pause()
 
             if self.socket:
                 self.socket.close()
