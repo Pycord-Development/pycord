@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from os import altsep
 import select
 import socket
 import struct
@@ -60,6 +61,7 @@ if TYPE_CHECKING:
 MISSING = utils.MISSING
 SocketReaderCallback = Callable[[bytes], Any]
 _log = logging.getLogger(__name__)
+_recv_log = logging.getLogger('discord.voice.receiver')
 
 
 class SocketReader(threading.Thread):
@@ -84,6 +86,7 @@ class SocketReader(threading.Thread):
         self._end: threading.Event = threading.Event()
         self._idle_paused: bool = True
         self._started: threading.Event = threading.Event()
+        self._warned_wait: bool = False
 
     def is_running(self) -> bool:
         return self._started.is_set()
@@ -152,8 +155,15 @@ class SocketReader(threading.Thread):
     def _do_run(self) -> None:
         while not self._end.is_set():
             if not self._running.is_set():
+                if not self._warned_wait:
+                    _log.warning('Socket reader %s is waiting to be set as running', self.name)
+                    self._warned_wait = True
                 self._running.wait()
                 continue
+
+            if self._warned_wait:
+                _log.info('Socket reader %s was set as running', self.name)
+                self._warned_wait = False
 
             try:
                 readable, _, _ = select.select([self.state.socket], [], [], 30)
@@ -234,6 +244,7 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
         self._started: threading.Event = threading.Event()
         self._running: threading.Event = threading.Event()
         self._end: threading.Event = threading.Event()
+        self._warned_queue: bool = False
 
         self.decode_queue: deque[RawData] = deque()
         self.decoders: dict[int, opus.Decoder] = {}
@@ -241,12 +252,12 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
         self._end: threading.Event = threading.Event()
 
     def decode(self, frame: RawData) -> None:
-        _log.debug('Decoding frame %s', frame)
         if not isinstance(frame, RawData):
             raise TypeError(
                 f"expected a RawData object, got {frame.__class__.__name__}"
             )
         self.decode_queue.append(frame)
+        _log.debug('Added frame %s to decode queue', frame)
 
     def is_running(self) -> bool:
         return self._started.is_set()
@@ -300,17 +311,28 @@ class DecoderThread(threading.Thread, opus._OpusStruct):
 
     def _do_run(self) -> None:
         while not self._end.is_set():
-            if not self._running.is_set():
-                self._running.wait()
+            if not self.decode_queue:
+                if not self._warned_queue:
+                    _recv_log.warning('No decode queue found, waiting')
+                    self._warned_queue = True
+
+                time.sleep(0.01)
                 continue
+
+            if self._warned_queue:
+                _recv_log.info('Queue was filled')
+                self._warned_queue = False
 
             try:
                 data = self.decode_queue.popleft()
             except IndexError:
                 continue
 
+            _recv_log.debug('Popped %s from the decode queue', data)
+
             try:
                 if data.decrypted_data is None:
+                    _log.warning('Frame %s has no decrypted data, skipping', data)
                     continue
                 else:
                     data.decoded_data = self.get_decoder(data.ssrc).decode(
@@ -390,11 +412,18 @@ class VoiceConnectionState:
             return
         if self._voice_recv_socket.is_running():
             return
+
+        if not self._decoder_thread.is_running():
+            self._decoder_thread.start()
+
         self._voice_recv_socket.start()
 
     def stop_record_socket(self) -> None:
         if self._voice_recv_socket.is_running():
             self._voice_recv_socket.stop()
+
+        if self._decoder_thread.is_running():
+            self._decoder_thread.stop()
 
         for cb, args in self.recording_done_callbacks:
             task = self.loop.create_task(cb(*args))
@@ -408,7 +437,7 @@ class VoiceConnectionState:
         self.sinks.clear()
 
     def handle_voice_recv_packet(self, packet: bytes) -> None:
-        _log.debug('Handling voice packet %s', packet)
+        _recv_log.debug('Handling voice packet %s', packet)
         if packet[1] != 0x78:
             # We should ignore any payload types we do not understand
             # Ref: RFC 3550 5.1 payload type
@@ -418,14 +447,17 @@ class VoiceConnectionState:
             return
 
         if self.paused_recording():
+            _log.debug('Ignoring packet %s because recording is stopped', packet)
             return
 
         data = RawData(packet, self.client)
 
-        if data.decrypted_data != opus.OPUS_SILENCE:
+        if data.decrypted_data == opus.OPUS_SILENCE:
+            _log.debug('Ignoring packet %s because it is an opus silence frame', data)
             return
 
         self._decoder_thread.decode(data)
+        _recv_log.debug('Submitted frame %s to decoder thread', data)
 
     def is_first_packet(self) -> bool:
         return not self.user_voice_timestamps or not self.sync_recording_start
