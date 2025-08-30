@@ -72,6 +72,7 @@ __all__ = (
     "PromptType",
     "OnboardingMode",
     "ReactionType",
+    "VoiceChannelEffectAnimationType",
     "SKUType",
     "EntitlementType",
     "EntitlementOwnerType",
@@ -1073,6 +1074,16 @@ class PollLayoutType(Enum):
     """The poll's layout type."""
 
     default = 1
+
+
+class VoiceChannelEffectAnimationType(Enum):
+    """Voice channel effect animation type.
+
+    .. versionadded:: 2.7
+    """
+
+    premium = 0
+    basic = 1
 
 
 class MessageReferenceType(Enum):
