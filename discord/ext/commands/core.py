@@ -1877,7 +1877,7 @@ def check_any(*checks: Check) -> Callable[[T], T]:
         the :func:`check` decorator.
 
     Raises
-    -------
+    ------
     TypeError
         A check passed has not been decorated with the :func:`check`
         decorator.
@@ -1899,6 +1899,7 @@ def check_any(*checks: Check) -> Callable[[T], T]:
         @commands.check_any(commands.is_owner(), is_guild_owner())
         async def only_for_owners(ctx):
             await ctx.send('Hello mister owner!')
+
     """
 
     unwrapped = []
