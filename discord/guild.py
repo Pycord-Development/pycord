@@ -175,8 +175,6 @@ class Guild(Hashable):
         The channel that denotes the AFK channel. ``None`` if it doesn't exist.
     id: :class:`int`
         The guild's ID.
-    invites_disabled: :class:`bool`
-        Indicates if the guild invites are disabled.
     owner_id: :class:`int`
         The guild owner's ID. Use :attr:`Guild.owner` instead.
     unavailable: :class:`bool`
@@ -1190,7 +1188,7 @@ class Guild(Hashable):
 
     @property
     def invites_disabled(self) -> bool:
-        """Returns a boolean indicating if the guild invites are disabled."""
+        """A boolean indicating if the guild invites are disabled."""
         return "INVITES_DISABLED" in self.features
 
     def get_member_named(self, name: str, /) -> Member | None:
