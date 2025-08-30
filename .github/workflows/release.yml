@@ -228,12 +228,9 @@ jobs:
 
   inform_discord:
     runs-on: ubuntu-latest
-    needs: [lib_release,docs_release,close_milestone,pre_config]
+    needs: [lib_release,docs_release,pre_config]
     environment: release
     steps:
-      - name: Sleep for 3 minutes
-        run: sleep 3m
-        shell: bash
       - name: "Notify Discord"
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
