@@ -33,6 +33,7 @@ import functools
 import importlib.resources
 import itertools
 import json
+import logging
 import re
 import sys
 import types
@@ -100,14 +101,23 @@ __all__ = (
     "filter_params",
 )
 
+_log = logging.getLogger(__name__)
+
 DISCORD_EPOCH = 1420070400000
 
-with (
-    importlib.resources.files(__package__)
-    .joinpath("emojis.json")
-    .open(encoding="utf-8") as f
-):
-    EMOJIS_MAP = json.load(f)
+try:
+    with (
+        importlib.resources.files(__package__)
+        .joinpath("emojis.json")
+        .open(encoding="utf-8") as f
+    ):
+        EMOJIS_MAP = json.load(f)
+except FileNotFoundError:
+    _log.debug(
+        "Couldn't find emojis.json. Is the package data missing? Discord emojis names will not work.",
+    )
+    EMOJIS_MAP = {}
+
 
 UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
@@ -125,22 +135,6 @@ class _MissingSentinel:
 
 MISSING: Any = _MissingSentinel()
 
-
-class _cached_property:
-    def __init__(self, function):
-        self.function = function
-        self.__doc__ = getattr(function, "__doc__")
-
-    def __get__(self, instance, owner):
-        if instance is None:
-            return self
-
-        value = self.function(instance)
-        setattr(instance, self.function.__name__, value)
-
-        return value
-
-
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
 
@@ -154,12 +148,9 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = property
-
     P = ParamSpec("P")
 
 else:
-    cached_property = _cached_property
     AutocompleteContext = Any
     OptionChoice = Any
 
@@ -322,7 +313,6 @@ def warn_deprecated(
     stacklevel: :class:`int`
         The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     """
-    warnings.simplefilter("always", DeprecationWarning)  # turn off filter
     message = f"{name} is deprecated"
     if since:
         message += f" since version {since}"
@@ -335,7 +325,6 @@ def warn_deprecated(
         message += f" See {reference} for more information."
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
-    warnings.simplefilter("default", DeprecationWarning)  # reset filter
 
 
 def deprecated(
