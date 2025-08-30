@@ -87,8 +87,10 @@ jobs:
         id: pycord-release
         uses: Aiko-IT-Systems/pycord-lib-release-action@v1.0.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           pypi-token: ${{ secrets.PYPI_TOKEN }}
+          git-username: "NyuwBot"
+          git-email: "nyuw@aitsys.dev"
           version-branch-name: ${{ needs.pre_config.outputs.branch_name }}
           ref: ${{ github.ref_name }}
           repository: ${{ github.repository }}
