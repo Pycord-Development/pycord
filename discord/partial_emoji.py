@@ -123,7 +123,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         - ``name:id``
         - ``<:name:id>``
 
-        If the format does not match then it is assumed to be a unicode emoji.
+        If the format does not match then it is assumed to be a Unicode emoji block, either as Unicode characters or as a Discord alias (``:smile:``).
 
         .. versionadded:: 2.0
 
@@ -137,6 +137,9 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         :class:`PartialEmoji`
             The partial emoji from this string.
         """
+        if unicode_emoji := utils.EMOJIS_MAP.get(value.removeprefix(":").removesuffix(":")):
+            return cls(name=unicode_emoji, id=None, animated=False)
+
         match = cls._CUSTOM_EMOJI_RE.match(value)
         if match is not None:
             groups = match.groupdict()

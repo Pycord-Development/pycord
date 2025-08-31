@@ -327,11 +327,19 @@ class AsyncWebhookAdapter:
         multipart: list[dict[str, Any]] | None = None,
         files: list[File] | None = None,
         thread_id: int | None = None,
+        thread_name: str | None = None,
+        with_components: bool | None = None,
         wait: bool = False,
     ) -> Response[MessagePayload | None]:
         params = {"wait": int(wait)}
         if thread_id:
             params["thread_id"] = thread_id
+
+        if thread_name:
+            payload["thread_name"] = thread_name
+
+        if with_components is not None:
+            params["with_components"] = int(with_components)
 
         route = Route(
             "POST",
@@ -388,11 +396,15 @@ class AsyncWebhookAdapter:
         payload: dict[str, Any] | None = None,
         multipart: list[dict[str, Any]] | None = None,
         files: list[File] | None = None,
+        with_components: bool | None = None,
     ) -> Response[WebhookMessage]:
         params = {}
 
         if thread_id:
             params["thread_id"] = thread_id
+
+        if with_components is not None:
+            params["with_components"] = int(with_components)
 
         route = Route(
             "PATCH",
@@ -634,8 +646,17 @@ def handle_message_parameters(
     if attachments is not MISSING:
         _attachments = [a.to_dict() for a in attachments]
 
+    flags = MessageFlags(
+        suppress_embeds=suppress,
+        ephemeral=ephemeral,
+    )
+
     if view is not MISSING:
         payload["components"] = view.to_components() if view is not None else []
+        if view and view.is_components_v2():
+            if payload.get("content") or payload.get("embeds"):
+                raise TypeError("cannot send embeds or content with a view using v2 component logic")
+            flags.is_components_v2 = True
     if poll is not MISSING:
         payload["poll"] = poll.to_dict()
     payload["tts"] = tts
@@ -643,11 +664,6 @@ def handle_message_parameters(
         payload["avatar_url"] = str(avatar_url)
     if username:
         payload["username"] = username
-
-    flags = MessageFlags(
-        suppress_embeds=suppress,
-        ephemeral=ephemeral,
-    )
 
     if applied_tags is not MISSING:
         payload["applied_tags"] = applied_tags
@@ -1721,8 +1737,8 @@ class Webhook(BaseWebhook):
         InvalidArgument
             Either there was no token associated with this webhook, ``ephemeral`` was passed
             with the improper webhook type, there was no state attached with this webhook when
-            giving it a view, you specified both ``thread_name`` and ``thread``, or ``applied_tags``
-            was passed with neither ``thread_name`` nor ``thread`` specified.
+            giving it a dispatchable view, you specified both ``thread_name`` and ``thread``,
+            or ``applied_tags`` was passed with neither ``thread_name`` nor ``thread`` specified.
         """
 
         if self.token is None:
@@ -1745,11 +1761,15 @@ class Webhook(BaseWebhook):
         if application_webhook:
             wait = True
 
+        with_components = False
+
         if view is not MISSING:
-            if isinstance(self._state, _WebhookState):
-                raise InvalidArgument("Webhook views require an associated state with the webhook")
+            if isinstance(self._state, _WebhookState) and view and view.is_dispatchable():
+                raise InvalidArgument("Dispatchable Webhook views require an associated state with the webhook")
             if ephemeral is True and view.timeout is None:
                 view.timeout = 15 * 60.0
+            if not application_webhook:
+                with_components = True
 
         if poll is None:
             poll = MISSING
@@ -1787,6 +1807,7 @@ class Webhook(BaseWebhook):
             files=params.files,
             thread_id=thread_id,
             wait=wait,
+            with_components=with_components,
         )
 
         msg = None
@@ -1796,7 +1817,10 @@ class Webhook(BaseWebhook):
         if view is not MISSING and not view.is_finished():
             message_id = None if msg is None else msg.id
             view.message = None if msg is None else msg
-            self._state.store_view(view, message_id)
+            if msg:
+                view.refresh(msg.components)
+            if view.is_dispatchable():
+                self._state.store_view(view, message_id)
 
         if delete_after is not None:
 
@@ -1945,11 +1969,15 @@ class Webhook(BaseWebhook):
         if self.token is None:
             raise InvalidArgument("This webhook does not have a token associated with it")
 
+        with_components = False
+
         if view is not MISSING:
-            if isinstance(self._state, _WebhookState):
-                raise InvalidArgument("This webhook does not have state associated with it")
+            if isinstance(self._state, _WebhookState) and view and view.is_dispatchable():
+                raise InvalidArgument("Dispatchable Webhook views require an associated state with the webhook")
 
             self._state.prevent_view_updates_for(message_id)
+            if self.type is not WebhookType.application:
+                with_components = True
 
         previous_mentions: AllowedMentions | None = getattr(self._state, "allowed_mentions", None)
         params = handle_message_parameters(
@@ -1981,12 +2009,15 @@ class Webhook(BaseWebhook):
             payload=params.payload,
             multipart=params.multipart,
             files=params.files,
+            with_components=with_components,
         )
 
         message = self._create_message(data)
         if view and not view.is_finished():
             view.message = message
-            self._state.store_view(view, message_id)
+            view.refresh(message.components)
+            if view.is_dispatchable():
+                self._state.store_view(view, message_id)
         return message
 
     async def delete_message(self, message_id: int, *, thread_id: int | None = None) -> None:

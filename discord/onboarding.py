@@ -24,12 +24,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+from functools import cached_property
 from typing import TYPE_CHECKING, Any
 
 from .enums import OnboardingMode, PromptType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import MISSING, cached_property, generate_snowflake, get
-from discord import utils
+from .utils import MISSING, generate_snowflake, get
+from . import utils
 
 if TYPE_CHECKING:
     from .abc import Snowflake

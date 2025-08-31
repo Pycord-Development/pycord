@@ -8,12 +8,13 @@ authors = [
     {name = "Pycord Development"}
 ]
 description = "A Python wrapper for the Discord API"
-readme = "README.rst"
+readme = {content-type = "text/x-rst", file = "README.rst"}
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = "MIT"
+license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
+#    "License-Expression :: MIT",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
@@ -72,6 +73,7 @@ dev = [
     "pre-commit==4.3.0",
     "pytest~=8.4.1",
     "pytest-asyncio~=0.26.0",
+    "python-dotenv>=1.1.1",
     "ruff>=0.11.9",
 ]
 ci = [

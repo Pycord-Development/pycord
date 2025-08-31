@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -400,118 +400,35 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
 #: 3750ee9874a649329aece5d76398dd35
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
 #: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -519,10 +436,141 @@ msgstr ""
 #: 3750ee9874a649329aece5d76398dd35
 #: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
 #: 3750ee9874a649329aece5d76398dd35
 #: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
@@ -532,62 +580,17 @@ msgstr ""
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
 #: 3750ee9874a649329aece5d76398dd35
 #: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
-#: e532d59c72474f99b0c1ce7c2be358e2
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
+#: 3750ee9874a649329aece5d76398dd35
 msgid "Parameters"
 msgstr ""
 
@@ -674,19 +677,20 @@ msgstr ""
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 227204ee62a54c638c2f8b9a91f21145
-#: 227204ee62a54c638c2f8b9a91f21145
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 4518277f66b34d9ea6be92e3704fe30a
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
-#: 4518277f66b34d9ea6be92e3704fe30a
-#: 4518277f66b34d9ea6be92e3704fe30a
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
+#: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
 #: 227204ee62a54c638c2f8b9a91f21145
@@ -849,7 +853,8 @@ msgstr ""
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
-#: 21f49b5974d544ffa30d029b89640d48
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
+#: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
 #: 8e90d2f15b4941d98f8df75ea6d1f6f7
@@ -977,6 +982,89 @@ msgstr ""
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
+#: 844194587e244cf2b26a421da5ef2919
 #: fc5da63fdcca41d5a4742949f05235c9
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
@@ -1014,86 +1102,6 @@ msgstr ""
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: fc5da63fdcca41d5a4742949f05235c9
-#: fc5da63fdcca41d5a4742949f05235c9
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: 844194587e244cf2b26a421da5ef2919
-#: fc5da63fdcca41d5a4742949f05235c9
-#: fc5da63fdcca41d5a4742949f05235c9
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
 #: 844194587e244cf2b26a421da5ef2919
@@ -1534,6 +1542,8 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_or_fetch_user:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.login:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_error:1
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:1
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.start:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.update_role_connection_metadata_records:1
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.wait_for:1
@@ -1548,6 +1558,7 @@ msgstr ""
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.trigger_typing:1
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.invoke:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reinvoke:1
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:1
@@ -1637,8 +1648,6 @@ msgstr ""
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
@@ -1655,19 +1664,24 @@ msgstr ""
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 25dea9a1072d49a4a52f17e137de72c3
-#: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
-#: 62c513a80a3c4ec5b566f2dfe95621cb
-#: 62c513a80a3c4ec5b566f2dfe95621cb
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
+#: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
 #: 25dea9a1072d49a4a52f17e137de72c3
@@ -2676,8 +2690,8 @@ msgid ":class:`.Member` -- A member the client can see."
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.get_all_members:12
-#: 9624b70cfbee4ca3af484bcf68e4e8ab
-msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.member.Member\\`\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
+#: 7d0a457d06344339819fc176a73566c2
+msgid ":sphinx_autodoc_typehints_type:`Generator\\[Member\\]`"
 msgstr ""
 
 #: ../../../discord/ext/commands/bot.py:docstring of discord.bot.ApplicationCommandMixin.get_application_command:1
@@ -3427,6 +3441,33 @@ msgstr ""
 msgid "By default, this prints to :data:`sys.stderr` however it could be overridden to have a different implementation. Check :func:`~discord.on_error` for more details."
 msgstr ""
 
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:3
+#: 4bd84969508349538a18e4462fc68a75
+msgid "The default modal error handler provided by the client. The default implementation prints the traceback to stderr."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:6
+#: a95fc73d1af4455db17072682a05e1f1
+msgid "This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_modal_error:12
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:13
+#: 7d0a457d06344339819fc176a73566c2
+#: 7d0a457d06344339819fc176a73566c2
+msgid ":sphinx_autodoc_typehints_type:`None`"
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:3
+#: 62a23463e67743778ff5b5ffda0e1cb5
+msgid "The default view error handler provided by the client."
+msgstr ""
+
+#: ../../../discord/ext/commands/bot.py:docstring of discord.client.Client.on_view_error:5
+#: 5401cf8b6fca4120bce2806abf520d45
+msgid "This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`."
+msgstr ""
+
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.Bot.persistent_views:1
 #: 373aeb873c344d82970e4a032b9ac217
 msgid "A sequence of persistent views added to the client."
@@ -4071,8 +4112,8 @@ msgstr ""
 #: ../../../discord/ext/commands/bot.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:1
 #: ../../../discord/ext/commands/core.py:docstring of discord.ext.commands.core.GroupMixin.walk_commands:1
 #: 9ab1b0a34851422dab23e9815b835095
-#: b2b6b3e05bff41358f8540d591062b2d
-#: a61700d2944e4b7bb85ba47e21e2c0b7
+#: 9ab1b0a34851422dab23e9815b835095
+#: 9ab1b0a34851422dab23e9815b835095
 msgid "An iterator that recursively walks through all commands and subcommands. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Generator\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~discord.ext.commands.core.Command\\`\\\\ \\\\\\[\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ \\\\\\(\\`\\`CogT\\`\\`\\, bound\\= Cog\\)\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\, \\:py\\:data\\:\\`\\~typing.Any\\`\\]\\, \\:py\\:obj\\:\\`None\\`\\, \\:py\\:obj\\:\\`None\\`\\]`"
 msgstr ""
 
@@ -6473,8 +6514,10 @@ msgid "The message that triggered the command being executed."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context:13
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:13
 #: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:9
 #: e1bc43a7b22b49f7bb9f4ba8e292f620
+#: 6c79017c8b06446498c3190155904db2
 #: 6c79017c8b06446498c3190155904db2
 msgid ":class:`.Message`"
 msgstr ""
@@ -6787,6 +6830,45 @@ msgstr ""
 msgid "The result of the help command, if any."
 msgstr ""
 
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:3
+#: 666fc58fd984426b9fc3697183d98530
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:99
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:12
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:8
+#: 07908514f89544cd8fadb56e8b84c9ea
+#: 07908514f89544cd8fadb56e8b84c9ea
+#: 07908514f89544cd8fadb56e8b84c9ea
+msgid "The message that was sent."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:102
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:15
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:11
+#: 44cfdba165a2496f86c393e4ff002312
+#: 44cfdba165a2496f86c393e4ff002312
+#: 44cfdba165a2496f86c393e4ff002312
+msgid "Sending the message failed."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:103
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:16
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:12
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4
+#: 1baacf7f645a4a3e98b1d53ae7e82fa4
+msgid "You do not have the proper permissions to send the message."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:17
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:13
+#: dd5c11c9c7f04d8da2c0fcf683585cbd
+#: dd5c11c9c7f04d8da2c0fcf683585cbd
+msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
+msgstr ""
+
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.can_send:1
 #: 2f8ba1ce6e854c78bb794c8d818a52fc
 msgid "Returns a :class:`bool` indicating whether you have the permissions to send the object(s)."
@@ -6839,6 +6921,16 @@ msgstr ""
 msgid "Retrieving the message failed."
 msgstr ""
 
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:3
+#: 666fc58fd984426b9fc3697183d98530
+msgid "A shortcut method to :meth:`.abc.Messageable.send` to forward the :class:`.Message` to a channel."
+msgstr ""
+
+#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.forward_to:9
+#: 9605ca58dc7540ba809f5b9944de8e93
+msgid "The channel to forward this to."
+msgstr ""
+
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:3
 #: c0f7203f91234dcf9b71d4aa08c2743e
 msgid "Retrieves all messages that are currently pinned in the channel."
@@ -6862,37 +6954,6 @@ msgstr ""
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.pins:14
 #: 46fce97e3e2044b9812605b7371e03c5
 msgid "Retrieving the pinned messages failed."
-msgstr ""
-
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:3
-#: 666fc58fd984426b9fc3697183d98530
-msgid "A shortcut method to :meth:`.abc.Messageable.send` to reply to the :class:`.Message`."
-msgstr ""
-
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:99
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:8
-#: 07908514f89544cd8fadb56e8b84c9ea
-#: 07908514f89544cd8fadb56e8b84c9ea
-msgid "The message that was sent."
-msgstr ""
-
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:102
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:11
-#: 44cfdba165a2496f86c393e4ff002312
-#: 44cfdba165a2496f86c393e4ff002312
-msgid "Sending the message failed."
-msgstr ""
-
-#: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:103
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:12
-#: 1baacf7f645a4a3e98b1d53ae7e82fa4
-#: 1baacf7f645a4a3e98b1d53ae7e82fa4
-msgid "You do not have the proper permissions to send the message."
-msgstr ""
-
-#: ../../../discord/ext/commands/context.py:docstring of discord.ext.commands.context.Context.reply:13
-#: dd5c11c9c7f04d8da2c0fcf683585cbd
-msgid "The ``files`` list is not of the appropriate size, or     you specified both ``file`` and ``files``."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:3
@@ -6972,12 +7033,12 @@ msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:59
 #: db923c5ea4f34a8ab38cd7fd07aa8f96
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``.  .. versionadded:: 1.6"
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:59
 #: e35ba87b49314f98b33ba3227b02d2e0
-msgid "A reference to the :class:`~discord.Message` to which you are replying, this can be created using :meth:`~discord.Message.to_reference` or passed directly as a :class:`~discord.Message`. You can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
+msgid "A reference to the :class:`~discord.Message` being replied to or forwarded. This can be created using :meth:`~discord.Message.to_reference`. When replying, you can control whether this mentions the author of the referenced message using the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions`` or by setting ``mention_author``."
 msgstr ""
 
 #: ../../../discord/ext/commands/context.py:docstring of discord.abc.Messageable.send:68

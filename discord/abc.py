@@ -1545,6 +1545,10 @@ class Messageable:
                 raise InvalidArgument(f"view parameter must be View not {view.__class__!r}")
 
             components = view.to_components()
+            if view.is_components_v2():
+                if embeds or content:
+                    raise TypeError("cannot send embeds or content with a view using v2 component logic")
+                flags.is_components_v2 = True
         else:
             components = None
 
@@ -1605,8 +1609,10 @@ class Messageable:
 
         ret = state.create_message(channel=channel, data=data)
         if view:
-            state.store_view(view, ret.id)
+            if view.is_dispatchable():
+                state.store_view(view, ret.id)
             view.message = ret
+            view.refresh(ret.components)
 
         if delete_after is not None:
             await ret.delete(delay=delete_after)

@@ -73,9 +73,9 @@ from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
 if sys.version_info >= (3, 11):
-    from typing import Annotated, get_args, get_origin
+    from typing import Annotated, Literal, get_args, get_origin
 else:
-    from typing_extensions import Annotated, get_args, get_origin
+    from typing_extensions import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -779,6 +779,20 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
+            if self._is_typing_literal(option):
+                literal_values = get_args(option)
+                if not all(isinstance(v, (str, int, float)) for v in literal_values):
+                    raise TypeError("Literal values for choices must be str, int, or float.")
+
+                value_type = type(literal_values[0])
+                if not all(isinstance(v, value_type) for v in literal_values):
+                    raise TypeError("All Literal values for choices must be of the same type.")
+
+                option = Option(
+                    value_type,
+                    choices=[OptionChoice(name=str(v), value=v) for v in literal_values],
+                )
+
             if self._is_typing_annotated(option):
                 type_hint = get_args(option)[0]
                 metadata = option.__metadata__
@@ -865,6 +879,9 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _is_typing_literal(self, annotation):
+        return get_origin(annotation) is Literal
 
     def _is_typing_annotated(self, annotation):
         return get_origin(annotation) is Annotated

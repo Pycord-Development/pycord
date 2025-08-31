@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
+from functools import cached_property
 from typing import TYPE_CHECKING, Any
 
 from . import utils
@@ -341,7 +342,7 @@ class Poll:
         self._expiry = None
         self._message = None
 
-    @utils.cached_property
+    @cached_property
     def expiry(self) -> datetime.datetime | None:
         """An aware datetime object that specifies the date and time in UTC when the poll will end."""
         return utils.parse_time(self._expiry)

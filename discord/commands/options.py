@@ -221,7 +221,9 @@ class Option:
         self.description = description or "No description provided"
         self.channel_types: list[ChannelType] = kwargs.pop("channel_types", [])
 
-        if isinstance(input_type, SlashCommandOptionType):
+        if self.channel_types:
+            self.input_type = SlashCommandOptionType.channel
+        elif isinstance(input_type, SlashCommandOptionType):
             self.input_type = input_type
         else:
             from ..ext.commands import Converter  # noqa: PLC0415

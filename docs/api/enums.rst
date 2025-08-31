@@ -2519,3 +2519,18 @@ of :class:`enum.Enum`.
     .. attribute:: inactive
 
         The subscription is inactive and the subscription owner is not being charged.
+
+
+.. class:: SeparatorSpacingSize
+
+    Represents the padding size around a separator component.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: small
+
+        The separator uses small padding.
+
+    .. attribute:: large
+
+        The separator uses large padding.

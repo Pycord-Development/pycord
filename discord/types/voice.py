@@ -32,7 +32,12 @@ from typing_extensions import NotRequired, TypedDict
 from .member import MemberWithUser
 from .snowflake import Snowflake
 
-SupportedModes = Literal["xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"]
+SupportedModes = Literal[
+    "xsalsa20_poly1305_lite",
+    "xsalsa20_poly1305_suffix",
+    "xsalsa20_poly1305",
+    "aead_xchacha20_poly1305_rtpsize",
+]
 
 
 class _VoiceState(TypedDict):

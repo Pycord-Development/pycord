@@ -26,7 +26,16 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, TypeVar, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Iterable,
+    Mapping,
+    Sequence,
+    TypeVar,
+    overload,
+)
 
 import discord.abc
 
@@ -45,7 +54,7 @@ from .enums import (
 )
 from .errors import ClientException, InvalidArgument
 from .file import File
-from .flags import ChannelFlags
+from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
 from .iterators import ArchivedThreadIterator
 from .mixins import Hashable
@@ -71,12 +80,15 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake, SnowflakeTime
+    from .embeds import Embed
     from .guild import Guild
     from .guild import GuildChannel as GuildChannelType
     from .member import Member, VoiceState
+    from .mentions import AllowedMentions
     from .message import EmojiInputType, Message, PartialMessage
     from .role import Role
     from .state import ConnectionState
+    from .sticker import GuildSticker, StickerItem
     from .types.channel import CategoryChannel as CategoryChannelPayload
     from .types.channel import DMChannel as DMChannelPayload
     from .types.channel import ForumChannel as ForumChannelPayload
@@ -87,6 +99,7 @@ if TYPE_CHECKING:
     from .types.channel import VoiceChannel as VoiceChannelPayload
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
+    from .ui.view import View
     from .user import BaseUser, ClientUser, User
     from .webhook import Webhook
 
@@ -1137,18 +1150,20 @@ class ForumChannel(_TextChannel):
     async def create_thread(
         self,
         name: str,
-        content=None,
+        content: str | None = None,
         *,
-        embed=None,
-        embeds=None,
-        file=None,
-        files=None,
-        stickers=None,
-        delete_message_after=None,
-        nonce=None,
-        allowed_mentions=None,
-        view=None,
-        applied_tags=None,
+        embed: Embed | None = None,
+        embeds: list[Embed] | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        stickers: Sequence[GuildSticker | StickerItem] | None = None,
+        delete_message_after: float | None = None,
+        nonce: int | str | None = None,
+        allowed_mentions: AllowedMentions | None = None,
+        view: View | None = None,
+        applied_tags: list[ForumTag] | None = None,
+        suppress: bool = False,
+        silent: bool = False,
         auto_archive_duration: ThreadArchiveDuration | utils.Undefined = MISSING,
         slowmode_delay: int | utils.Undefined = MISSING,
         reason: str | None = None,
@@ -1242,11 +1257,20 @@ class ForumChannel(_TextChannel):
         else:
             allowed_mentions = allowed_mentions.to_dict()
 
+        flags = MessageFlags(
+            suppress_embeds=bool(suppress),
+            suppress_notifications=bool(silent),
+        )
+
         if view:
             if not hasattr(view, "__discord_ui_view__"):
                 raise InvalidArgument(f"view parameter must be View not {view.__class__!r}")
 
             components = view.to_components()
+            if view.is_components_v2():
+                if embeds or content:
+                    raise TypeError("cannot send embeds or content with a view using v2 component logic")
+                flags.is_components_v2 = True
         else:
             components = None
 
@@ -1282,6 +1306,7 @@ class ForumChannel(_TextChannel):
                 auto_archive_duration=auto_archive_duration or self.default_auto_archive_duration,
                 rate_limit_per_user=slowmode_delay or self.slowmode_delay,
                 applied_tags=applied_tags,
+                flags=flags.value,
                 reason=reason,
             )
         finally:
@@ -1291,7 +1316,7 @@ class ForumChannel(_TextChannel):
 
         ret = Thread(guild=self.guild, state=self._state, data=data)
         msg = ret.get_partial_message(int(data["last_message_id"]))
-        if view:
+        if view and view.is_dispatchable():
             state.store_view(view, msg.id)
 
         if delete_message_after is not None:

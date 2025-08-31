@@ -406,12 +406,12 @@ class AutoModRule(Hashable):
     def __str__(self) -> str:
         return self.name
 
-    @cached_property
+    @property
     def guild(self) -> Guild | None:
         """The guild this rule belongs to."""
         return self._state._get_guild(self.guild_id)
 
-    @cached_property
+    @property
     def creator(self) -> Member | None:
         """The member who created this rule."""
         if self.guild is None:
