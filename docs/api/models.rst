@@ -374,7 +374,7 @@ Interactions
     :members:
 
 Message Components
-------------
+------------------
 
 .. attributetable:: Component
 

@@ -743,7 +743,6 @@ class UnfurledMediaItem(AssetMixin):
 
     @property
     def url(self) -> str:
-        """Returns this media item's url."""
         return self._url
 
     @url.setter
@@ -850,7 +849,6 @@ class MediaGalleryItem:
 
     @property
     def url(self) -> str:
-        """Returns the URL of this gallery's underlying media item."""
         return self.media.url
 
     def is_dispatchable(self) -> bool:
