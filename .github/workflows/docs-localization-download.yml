@@ -15,7 +15,7 @@ jobs:
       pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: "Setup Python"
         uses: actions/setup-python@v5
         with:
@@ -41,7 +41,7 @@ jobs:
         working-directory: ./docs
       - name: "Crowdin"
         id: crowdin
-        uses: crowdin/github-action@v2.7.1
+        uses: crowdin/github-action@v2.10.0
         with:
           upload_sources: false
           upload_translations: false
@@ -75,7 +75,7 @@ jobs:
     environment: translations
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: "Refresh Pull"
         run: |
           git fetch --all
