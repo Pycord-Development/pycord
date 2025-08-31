@@ -385,7 +385,9 @@ class Option:
                 raise TypeError("Option type cannot be only NoneType")
             if len(filtered) == 1:
                 return filtered[0]
+              
             return filtered
+
         return input_type
 
     def to_dict(self) -> dict:
