@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 from discord import opus
 from discord.errors import ClientException
 from discord.player import AudioPlayer, AudioSource
-from discord.sinks.core import Sink
+from discord.sinks.core import Sink, RawData, is_rtcp
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
@@ -300,6 +300,8 @@ class VoiceClient(VoiceProtocol):
         encrypt_packet = getattr(self, f"_encrypt_{self.mode}")
         return encrypt_packet(header, data)
 
+    # encryption methods
+
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data: Any) -> bytes:
         # deprecated
         box = nacl.secret.SecretBox(bytes(self.secret_key))
@@ -335,54 +337,134 @@ class VoiceClient(VoiceProtocol):
             + nonce[:4]
         )
 
-    def _decrypt_xsalsa20_poly1305(self, header: bytes, data: Any) -> bytes:
-        # deprecated
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
+    # decryption methods
 
+    def _decrypt_rtp_xsalsa20_poly1305(self, data: bytes) -> bytes:
+        packet = RawData(data, self)
         nonce = bytearray(24)
-        nonce[:12] = header
+        nonce[:12] = packet.header
 
-        return self.strip_header_ext(box.decrypt(bytes(data), bytes(nonce)))
-
-    def _decrypt_xsalsa20_poly1305_suffix(self, header: bytes, data: Any) -> bytes:
-        # deprecated
         box = nacl.secret.SecretBox(bytes(self.secret_key))
+        result = box.decrypt(bytes(packet.data), bytes(nonce))
 
-        nonce_size = nacl.secret.SecretBox.NONCE_SIZE
-        nonce = data[-nonce_size:]
+        if packet.extended:
+            offset = packet.update_headers(result)
+            result = result[offset:]
 
-        return self.strip_header_ext(box.decrypt(bytes(data[:-nonce_size]), nonce))
+        return result
 
-    def _decrypt_xsalsa20_poly1305_lite(self, header: bytes, data: Any) -> bytes:
-        # deprecated
+    def _decrypt_rtcp_xsalsa20_poly1305(self, data: bytes) -> bytes:
+        nonce = bytearray(24)
+        nonce[:8] = data[:8]
+
         box = nacl.secret.SecretBox(bytes(self.secret_key))
+        result = box.decrypt(data[8:], bytes(nonce))
 
+        return data[:8] + result
+
+    def _decrypt_xsalsa20_poly1305(self, data: bytes) -> bytes:
+        if is_rtcp(data):
+            func = self._decrypt_rtcp_xsalsa20_poly1305
+        else:
+            func = self._decrypt_rtp_xsalsa20_poly1305
+        return func(data)
+
+    def _decrypt_rtp_xsalsa20_poly1305_suffix(self, data: bytes) -> bytes:
+        packet = RawData(data, self)
+        nonce = packet.data[-24:]
+        voice_data = packet.data[:-24]
+
+        box = nacl.secret.SecretBox(bytes(self.secret_key))
+        result = box.decrypt(bytes(voice_data), bytes(nonce))
+
+        if packet.extended:
+            offset = packet.update_headers(result)
+            result = result[offset:]
+
+        return result
+
+    def _decrypt_rtcp_xsalsa20_poly1305_suffix(self, data: bytes) -> bytes:
+        nonce = data[-24:]
+        header = data[:8]
+
+        box = nacl.secret.SecretBox(bytes(self.secret_key))
+        result = box.decrypt(data[8:-24], nonce)
+
+        return header + result
+
+    def _decrypt_xsalsa20_poly1305_suffix(self, data: bytes) -> bytes:
+        if is_rtcp(data):
+            func = self._decrypt_rtcp_xsalsa20_poly1305_suffix
+        else:
+            func = self._decrypt_rtp_xsalsa20_poly1305_suffix
+        return func(data)
+
+    def _decrypt_rtp_xsalsa20_poly1305_lite(self, data: bytes) -> bytes:
+        packet = RawData(data, self)
+        nonce = bytearray(24)
+        nonce[:4] = packet.data[-4:]
+        voice_data = packet.data[:-4]
+        
+        box = nacl.secret.SecretBox(bytes(self.secret_key))
+        result = box.decrypt(bytes(voice_data), bytes(nonce))
+
+        if packet.extended:
+            offset = packet.update_headers(result)
+            result = result[offset:]
+
+        return result
+
+    def _decrypt_rtcp_xsalsa20_poly1305_lite(self, data: bytes) -> bytes:
         nonce = bytearray(24)
         nonce[:4] = data[-4:]
-        data = data[:-4]
+        header = data[:8]
 
-        return self.strip_header_ext(box.decrypt(bytes(data), bytes(nonce)))
+        box = nacl.secret.SecretBox(bytes(self.secret_key))
+        result = box.decrypt(data[8:-4], bytes(nonce))
 
-    def _decrypt_aead_xchacha20_poly1305_rtpsize(
-        self, header: bytes, data: Any
-    ) -> bytes:
+        return header + result
+
+    def _decrypt_xsalsa20_poly1305_lite(self, data: bytes) -> bytes:
+        if is_rtcp(data):
+            func = self._decrypt_rtcp_xsalsa20_poly1305_lite
+        else:
+            func = self._decrypt_rtp_xsalsa20_poly1305_lite
+        return func(data)
+
+    def _decrypt_rtp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
+        packet = RawData(data, self)
+        packet.adjust_rtpsize()
+
+        nonce = bytearray(24)
+        nonce[:4] = packet.nonce
+        voice_data = packet.data
+
+        # Blob vomit
         box = nacl.secret.Aead(bytes(self.secret_key))
+        result = box.decrypt(bytes(voice_data), bytes(packet.header), bytes(nonce))
 
+        if packet.extended:
+            offset = packet.update_headers(result)
+            result = result[offset:]
+
+        return result
+
+    def _decrypt_rtcp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
         nonce = bytearray(24)
         nonce[:4] = data[-4:]
-        data = data[:-4]
+        header = data[:8]
 
-        return self.strip_header_ext(
-            box.decrypt(bytes(data), bytes(header), bytes(nonce))
-        )
+        box = nacl.secret.Aead(bytes(self.secret_key))
+        result = box.decrypt(data[8:-4], bytes(header), bytes(nonce))
 
-    @staticmethod
-    def strip_header_ext(data: bytes) -> bytes:
-        if len(data) > 4 and data[0] == 0xBE and data[1] == 0xDE:
-            _, length = struct.unpack_from(">HH", data)
-            offset = 4 + length * 4
-            data = data[offset:]
-        return data
+        return header + result
+
+    def _decrypt_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
+        if is_rtcp(data):
+            func = self._decrypt_rtcp_aead_xchacha20_poly1305_rtpsize
+        else:
+            func = self._decrypt_rtp_aead_xchacha20_poly1305_rtpsize
+        return func(data)
 
     @overload
     def play(

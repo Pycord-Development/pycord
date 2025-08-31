@@ -189,7 +189,9 @@ class SocketReader(threading.Thread):
             else:
                 for cb in self._callbacks:
                     try:
-                        cb(data)
+                        task = self.state.loop.create_task(utils.maybe_coroutine(cb, data))
+                        self.state._sink_dispatch_task_set.add(task)
+                        task.add_done_callback(self.state._sink_dispatch_task_set.discard)
                     except Exception:
                         _log.exception(
                             "Error while calling %s in %s",
@@ -223,148 +225,6 @@ class SocketEventReader(SocketReader):
             2048,
             start_paused=start_paused,
         )
-
-
-class DecoderThread(threading.Thread, opus._OpusStruct):
-    def __init__(
-        self,
-        state: VoiceConnectionState,
-        *,
-        start_paused: bool = True,
-    ) -> None:
-        super().__init__(
-            daemon=True,
-            name=f"voice-recv-decoder-thread:{id(self):#x}",
-        )
-
-        self.state: VoiceConnectionState = state
-        self.client: VoiceClient = state.client
-        self.start_paused: bool = start_paused
-        self._idle_paused: bool = True
-        self._started: threading.Event = threading.Event()
-        self._running: threading.Event = threading.Event()
-        self._end: threading.Event = threading.Event()
-        self._warned_queue: bool = False
-
-        self.decode_queue: deque[RawData] = deque()
-        self.decoders: dict[int, opus.Decoder] = {}
-
-        self._end: threading.Event = threading.Event()
-
-    def decode(self, frame: RawData, *, left: bool = False) -> None:
-        if not isinstance(frame, RawData):
-            raise TypeError(
-                f"expected a RawData object, got {frame.__class__.__name__}"
-            )
-
-        if left:
-            self.decode_queue.appendleft(frame)
-        else:
-            self.decode_queue.append(frame)
-        self.resume()
-        _recv_log.debug('Added frame %s to decode queue', frame)
-
-    def is_running(self) -> bool:
-        return self._started.is_set()
-
-    def pause(self) -> None:
-        self._idle_paused = False
-        self._running.clear()
-
-    def is_paused(self) -> bool:
-        return self._idle_paused or (
-            not self._running.is_set() and not self._end.is_set()
-        )
-
-    def resume(self, *, force: bool = False) -> None:
-        if self._running.is_set():
-            return
-
-        if not force and not self.decode_queue:
-            self._idle_paused = True
-            return
-
-        self._idle_paused = False
-        self._running.set()
-
-    def stop(self) -> None:
-        self._started.clear()
-        self._end.set()
-        self._running.set()
-
-    def run(self) -> None:
-        self._started.set()
-        self._end.clear()
-        self._running.set()
-
-        if self.start_paused:
-            self.pause()
-
-        try:
-            self._do_run()
-        except Exception:
-            _log.exception(
-                "An error ocurred while running the decoder thread %s",
-                self.name,
-            )
-        finally:
-            self.stop()
-            self._started.clear()
-            self._running.clear()
-            self.decode_queue.clear()
-
-    def get_decoder(self, ssrc: int) -> opus.Decoder:
-        try:
-            return self.decoders[ssrc]
-        except KeyError:
-            d = self.decoders[ssrc] = opus.Decoder()
-            return d
-
-    def _do_run(self) -> None:
-        while not self._end.is_set():
-            if not self._running.is_set():
-                if self._warned_queue:
-                    _recv_log.warning('No decode queue found, waiting')
-                    self._warned_queue = True
-                self._running.wait()
-                continue
-
-            if self._warned_queue:
-                _recv_log.info('Queue was filled')
-                self._warned_queue = False
-
-            try:
-                data = self.decode_queue.popleft()
-            except IndexError:
-                _recv_log.warning('No more voice packets found, idle pausing.')
-                self.pause()
-                continue
-
-            _recv_log.debug('Popped %s from the decode queue', data)
-
-            try:
-                if data.decrypted_data is None:
-                    _log.warning('Frame %s has no decrypted data, skipping', data)
-                    continue
-                else:
-                    data.decoded_data = self.get_decoder(data.ssrc).decode(
-                        data.decrypted_data,
-                    )
-            except opus.OpusError:
-                _log.exception(
-                    "Error ocurred while decoding opus frame",
-                    exc_info=True,
-                )
-
-
-            _recv_log.info('Decoded frame %s to %s', data, data.decoded_data)
-
-            if data.decoded_data is MISSING:
-                _recv_log.warning('Decoded data %s is still MISSING after decode, appending it to left to decode', data)
-                self.decode(data, left=True)
-                continue
-
-            self.state.dispatch_packet_sinks(data)
 
 
 class SSRC(TypedDict):
@@ -415,17 +275,20 @@ class VoiceConnectionState:
         self._socket_reader.start()
         self._voice_recv_socket = SocketVoiceRecvReader(self)
         self._voice_recv_socket.register(self.handle_voice_recv_packet)
-        self._decoder_thread = DecoderThread(self)
         self.start_record_socket()
         self.user_ssrc_map: dict[int, SSRC] = {}
         self.user_voice_timestamps: dict[int, tuple[int, float]] = {}
         self.sync_recording_start: bool = False
         self.first_received_packet_ts: float = MISSING
-        self.sinks: list[Sink] = []
+        self._sinks: dict[int, Sink] = {}
         self.recording_done_callbacks: list[
             tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]
         ] = []
-        self.__sink_dispatch_task_set: set[asyncio.Task[Any]] = set()
+        self._sink_dispatch_task_set: set[asyncio.Task[Any]] = set()
+
+    @property
+    def sinks(self) -> list[Sink]:
+        return list(self._sinks.values())
 
     def start_record_socket(self) -> None:
         try:
@@ -433,19 +296,13 @@ class VoiceConnectionState:
         except RuntimeError:
             self._voice_recv_socket.resume()
 
-        try:
-            self._decoder_thread.start()
-        except RuntimeError:
-            self._decoder_thread.resume()
-
     def stop_record_socket(self) -> None:
         self._voice_recv_socket.stop()
-        self._decoder_thread.stop()
 
         for cb, args in self.recording_done_callbacks:
             task = self.loop.create_task(cb(*args))
-            self.__sink_dispatch_task_set.add(task)
-            task.add_done_callback(self.__sink_dispatch_task_set.remove)
+            self._sink_dispatch_task_set.add(task)
+            task.add_done_callback(self._sink_dispatch_task_set.remove)
 
         for sink in self.sinks:
             sink.stop()
@@ -453,7 +310,7 @@ class VoiceConnectionState:
         self.recording_done_callbacks.clear()
         self.sinks.clear()
 
-    def handle_voice_recv_packet(self, packet: bytes) -> None:
+    async def handle_voice_recv_packet(self, packet: bytes) -> None:
         _recv_log.debug('Handling voice packet %s', packet)
         if packet[1] != 0x78:
             # We should ignore any payload types we do not understand
@@ -473,8 +330,7 @@ class VoiceConnectionState:
             _recv_log.debug('Ignoring packet %s because it is an opus silence frame', data)
             return
 
-        self._decoder_thread.decode(data)
-        _recv_log.debug('Submitted frame %s to decoder thread', data)
+        await data.decode()
 
     def is_first_packet(self) -> bool:
         return not self.user_voice_timestamps or not self.sync_recording_start
@@ -505,14 +361,17 @@ class VoiceConnectionState:
             + data.decoded_data
         )
 
+        sleep_time = 0.01
         while data.ssrc not in self.user_ssrc_map:
-            time.sleep(0.05)
+            time.sleep(sleep_time)
+            # duplicate sleep time, just for testing
+            sleep_time *= 2
 
         task = self.loop.create_task(
             self._dispatch_packet(data),
         )
-        self.__sink_dispatch_task_set.add(task)
-        task.add_done_callback(self.__sink_dispatch_task_set.remove)
+        self._sink_dispatch_task_set.add(task)
+        task.add_done_callback(self._sink_dispatch_task_set.discard)
 
     async def _dispatch_packet(self, data: RawData) -> None:
         user = self.get_user_by_ssrc(data.ssrc)
@@ -563,13 +422,13 @@ class VoiceConnectionState:
         return self._voice_recv_socket.is_paused()
 
     def add_sink(self, sink: Sink) -> None:
-        self.sinks.append(sink)
+        self._sinks[id(sink)] = sink
         self.start_record_socket()
 
     def remove_sink(self, sink: Sink) -> None:
         try:
-            self.sinks.remove(sink)
-        except ValueError:
+            self._sinks.pop(id(sink))
+        except KeyError:
             pass
 
     def get_user_by_ssrc(self, ssrc: int) -> abc.Snowflake | None:
@@ -605,6 +464,12 @@ class VoiceConnectionState:
                     "user_id": user,
                     "speaking": speaking,
                 }
+        elif op == OpCodes.client_connect:
+            user_ids = [int(uid) for uid in data['user_ids']]
+
+            for uid in user_ids:
+                user = self.get_user(uid)
+                self.dispatch_user_connect(user)
 
     def dispatch_speaking_state(
         self, before: SpeakingState, after: SpeakingState, user_id: int
@@ -612,8 +477,46 @@ class VoiceConnectionState:
         task = self.loop.create_task(
             self._dispatch_speaking_state(before, after, user_id),
         )
-        self.__sink_dispatch_task_set.add(task)
-        task.add_done_callback(self.__sink_dispatch_task_set.remove)
+        self._sink_dispatch_task_set.add(task)
+        task.add_done_callback(self._sink_dispatch_task_set.discard)
+
+    def dispatch_user_connect(self, user: abc.Snowflake) -> None:
+        task = self.loop.create_task(
+            self._dispatch_user_connect(self.channel_id, user),
+        )
+        self._sink_dispatch_task_set.add(task)
+        task.add_done_callback(self._sink_dispatch_task_set.discard)
+
+    async def _dispatch_user_connect(self, chid: int | None, user: abc.Snowflake) -> None:
+        channel = self.guild._resolve_channel(chid) or Object(id=chid or 0)
+
+        for sink in self.sinks:
+            if sink.is_paused():
+                continue
+
+            sink.dispatch('unfiltered_user_connect', user, channel)
+
+            if sink._filters:
+                futures = [
+                    self.loop.create_task(
+                        utils.maybe_coroutine(fil.filter_user_connect, user, channel)
+                    ) for fil in sink._filters
+                ]
+                strat = sink._filter_strat
+
+                done, pending = await asyncio.wait(futures)
+
+                if pending:
+                    for task in pending:
+                        task.cancel()
+
+                result = strat([f.result() for f in done])
+            else:
+                result = True
+
+            if result:
+                sink.dispatch('user_connect', user, channel)
+                sink._call_user_connect_handlers(user, channel)
 
     async def _dispatch_speaking_state(
         self, before: SpeakingState, after: SpeakingState, uid: int
@@ -638,10 +541,10 @@ class VoiceConnectionState:
                 done, pending = await asyncio.wait(futures)
 
                 if pending:
+                    # there should not be any pending futures
+                    # but if there are, simply discard them
                     for task in pending:
-                        task.set_result(False)
-
-                    done = (*done, *pending)
+                        task.cancel()
 
                 result = strat([f.result() for f in done])
             else:

@@ -26,15 +26,17 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+from collections import namedtuple
 import logging
 import struct
 import sys
 import time
 from collections.abc import Callable, Coroutine, Iterable
 from functools import partial
+import threading
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, overload
 
-from discord import utils
+from discord import utils, opus
 from discord.enums import SpeakingState
 from discord.utils import MISSING
 
@@ -66,6 +68,10 @@ else:
 
 S = TypeVar("S", bound="Sink")
 _log = logging.getLogger(__name__)
+
+
+def is_rtcp(data: bytes) -> bool:
+    return 200 <= data[1] <= 204
 
 
 class SinkFilter(Generic[S]):
@@ -146,6 +152,42 @@ class SinkFilter(Generic[S]):
         """
         raise NotImplementedError("subclasses must implement this")
 
+    @overload
+    async def filter_user_connect(
+        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> bool: ...
+
+    @overload
+    def filter_user_connect(
+        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> bool: ...
+
+    def filter_user_connect(
+        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> bool | Coroutine[Any, Any, bool]:
+        """|maybecoro|
+
+        This is called automatically everytime a speaking state is updated.
+
+        Depending on what bool-like this returns, it will dispatch some events in the parent ``sink``.
+
+        Parameters
+        ----------
+        sink: :class:`~.Sink`
+            The sink the packet was received from, if the filter check goes through.
+        user: :class:`~discord.abc.Snowflake`
+            The user that the packet was received from.
+        channel: :class:`~discord.abc.Snowflake`
+            The channel the user has connected to. This is usually resolved into the proper guild channel type, but
+            defaults to a :class:`~discord.Object` when not found.
+
+        Returns
+        -------
+        :class:`bool`
+            Whether the filter was successful.
+        """
+        raise NotImplementedError("subclasses must implement this")
+
     def cleanup(self) -> None:
         """A function called when the filter is ready for cleanup."""
 
@@ -212,6 +254,34 @@ class SinkHandler(Generic[S]):
             The speaking state after the update.
         """
 
+    @overload
+    async def handle_user_connect(
+        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> Any: ...
+
+    @overload
+    def handle_user_connect(
+        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> Any: ...
+
+    def handle_user_connect(
+        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> Any | Coroutine[Any, Any, Any]:
+        """|maybecoro|
+
+        This is called automatically everytime a user has connected a voice channel which has successfully passed the filters.
+
+        Parameters
+        ----------
+        sink: :class:`~.Sink`
+            The sink the packet was received from, if the filter check goes through.
+        user: :class:`~discord.abc.Snowflake`
+            The user that the packet was received from.
+        channel: :class:`~discord.abc.Snowflake`
+            The channel the user has connected to. This is usually resolved into the proper guild channel type, but
+            defaults to a :class:`~discord.Object` when not found.
+        """
+
     def cleanup(self) -> None:
         """A function called when the handler is ready for cleanup."""
 
@@ -222,38 +292,107 @@ class RawData:
     .. versionadded:: 2.0
     """
 
+    unpacker = struct.Struct('>xxHII')
+    _ext_header = namedtuple('Extension', 'profile length values')
+    _ext_magic = b'\xbe\xde'
+
     if TYPE_CHECKING:
         sequence: int
         timestamp: int
         ssrc: int
 
-    def __init__(self, data: bytes, client: VoiceClient):
-        self.data: bytearray = bytearray(data)
+    def __init__(self, raw_data: bytes, client: VoiceClient):
+        data: bytearray = bytearray(raw_data)
         self.client: VoiceClient = client
 
-        unpacker = struct.Struct(">xxHII")
-        self.sequence, self.timestamp, self.ssrc = unpacker.unpack_from(self.data[:12])
+        self.version: int = data[0] >> 6
+        self.padding: bool = bool(data[0] & 0b00100000)
+        self.extended: bool = bool(data[0] & 0b00010000)
+        self.cc: int = data[0] & 0b00001111
+        self.marker: bool = bool(data[1] & 0b10000000)
+        self.payload: int = data[1] & 0b01111111
 
-        # RFC3550 5.1: RTP Fixed Header Fields
-        if self.client.mode.endswith("_rtpsize"):
-            # If It Has CSRC Chunks
-            cutoff = 12 + (data[0] & 0b00_0_0_1111) * 4
-            # If It Has A Extension
-            if data[0] & 0b00_0_1_0000:
-                cutoff += 4
-        else:
-            cutoff = 12
+        self.sequence, self.timestamp, self.ssrc = self.unpacker.unpack_from(data)
+        self.csrcs: tuple[int, ...] = ()
+        self.extension = None
+        self.extension_data: dict[int, bytes] = {}
 
-        self.header: bytes = data[:cutoff]
-        self.data = self.data[cutoff:]
-
-        self.decrypted_data: bytes = getattr(
-            self.client, f"_decrypt_{self.client.mode}"
-        )(self.header, self.data)
+        self.header = data[:12]
+        self.data = data[12:]
+        self.decrypted_data: bytes | None = None
         self.decoded_data: bytes = MISSING
 
-        self.user_id: int | None = None
+        self.nonce: bytes = b''
+        self._rtpsize: bool = False
+
+        self._decoder: opus.Decoder = opus.Decoder()
         self.receive_time: float = time.perf_counter()
+
+        if self.cc:
+            fmt = '>%sI' % self.cc
+            offset = struct.calcsize(fmt) + 12
+            self.csrcs = struct.unpack(fmt, data[12:offset])
+            self.data = data[offset:]
+
+    def adjust_rtpsize(self) -> None:
+        self._rtpsize = True
+        self.nonce = self.data[-4:]
+
+        if not self.extended:
+            self.data = self.data[:-4]
+
+        self.header += self.data[:4]
+        self.data = self.data[4:-4]
+
+    def update_headers(self, data: bytes) -> int:
+        if not self.extended:
+            return 0
+
+        if self._rtpsize:
+            data = self.header[-4:] + data
+
+        profile, length = struct.unpack_from('>2sH', data)
+
+        if profile == self._ext_magic:
+            self._parse_bede_header(data, length)
+
+        values = struct.unpack('>%sI' % length, data[4 : 4 + length * 4])
+        self.extension = self._ext_header(profile, length, values)
+
+        offset = 4 + length * 4
+        if self._rtpsize:
+            offset -= 4
+        return offset
+
+    def _parse_bede_header(self, data: bytes, length: int) -> None:
+        offset = 4
+        n = 0
+
+        while n < length:
+            next_byte = data[offset : offset + 1]
+
+            if next_byte == b'\x00':
+                offset += 1
+                continue
+
+            header = struct.unpack('>B', next_byte)[0]
+
+            element_id = header >> 4
+            element_len = 1 + (header & 0b0000_1111)
+
+            self.extension_data[element_id] = data[offset + 1 : offset + 1 + element_len]
+            offset += 1 + element_len
+            n += 1
+
+    async def decode(self) -> bytes:
+        if not self.decrypted_data:
+            _log.debug('Attempted to decode an empty decrypted data frame')
+            return b''
+
+        return await asyncio.to_thread(
+            self._decoder.decode,
+            self.decrypted_data,
+        )
 
 
 class Sink:
@@ -275,66 +414,6 @@ class Sink:
     handlers: List[:class:`~.SinkHandler`]
         The sink handlers. Handlers are objects that are called after filtering, and that can be used to, for example
         store a certain packet data in a file, or local mapping.
-
-    Events
-    ------
-
-    These section outlines all the available sink events.
-
-    .. function:: on_voice_packet_receive(user, data)
-        Called when a voice packet is received from a member.
-
-        This is called **after** the filters went through.
-
-        :param user: The user the packet is from. This can sometimes be a :class:`~discord.Object` object.
-        :type user: :class:`~discord.abc.Snowflake`
-        :param data: The RawData of the packet.
-        :type data: :class:`~.RawData`
-
-    .. function:: on_unfiltered_voice_packet_receive(user, data)
-        Called when a voice packet is received from a member.
-
-        Unlike ``on_voice_packet_receive``, this is called **before any filters** are called.
-
-        :param user: The user the packet is from. This can sometimes be a :class:`~discord.Object` object.
-        :type user: :class:`~discord.abc.Snowflake`
-        :param data: The RawData of the packet.
-        :type data: :class:`~.RawData`
-
-    .. function:: on_speaking_state_update(user, before, after)
-        Called when a member's voice state changes.
-
-        This is called **after** the filters went through.
-
-        :param user: The user which speaking state has changed. This can sometimes be a :class:`~discord.Object` object.
-        :type user: :class:`~discord.abc.Snowflake`
-        :param before: The user's state before it was updated.
-        :type before: :class:`~discord.SpeakingFlags`
-        :param after: The user's state after it was updated.
-        :type after: :class:`~discord.SpeakingFlags`
-
-    .. function:: on_unfiltered_speaking_state_update(user, before, after)
-        Called when a voice packet is received from a member.
-
-        Unlike ``on_speaking_state_update``, this is called **before any filters** are called.
-
-        :param user: The user which speaking state has changed. This can sometimes be a :class:`~discord.Object` object.
-        :type user: :class:`~discord.abc.Snowflake`
-        :param before: The user's state before it was updated.
-        :type before: :class:`~discord.SpeakingFlags`
-        :param after: The user's state after it was updated.
-        :type after: :class:`~discord.SpeakingFlags`
-
-    .. function:: on_error(event, exception, \*args, \*\*kwargs)
-        Called when an error ocurrs in any of the events above. The default implementation logs the exception
-        to stdout.
-
-        :param event: The event in which the error ocurred.
-        :type event: :class:`str`
-        :param exception: The exception that ocurred.
-        :type exception: :class:`Exception`
-        :param \*args: The arguments that were passed to the event.
-        :param \*\*kwargs: The key-word arguments that were passed to the event.
     """
 
     if TYPE_CHECKING:
@@ -447,7 +526,22 @@ class Sink:
                 )
             )
             self.__dispatch_set.add(task)
-            task.add_done_callback(self.__dispatch_set.remove)
+            task.add_done_callback(self.__dispatch_set.discard)
+
+    def _call_user_connect_handlers(
+        self, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> None:
+        for handler in self._handlers:
+            task = asyncio.create_task(
+                utils.maybe_coroutine(
+                    handler.handle_user_connect,
+                    self,
+                    user,
+                    channel,
+                ),
+            )
+            self.__dispatch_set.add(task)
+            task.add_done_callback(self.__dispatch_set.discard)
 
     def _call_speaking_state_handlers(
         self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
@@ -463,7 +557,7 @@ class Sink:
                 ),
             )
             self.__dispatch_set.add(task)
-            task.add_done_callback(self.__dispatch_set.remove)
+            task.add_done_callback(self.__dispatch_set.discard)
 
     def _schedule_event(
         self,
@@ -498,16 +592,13 @@ class Sink:
         for task in list(self.__dispatch_set):
             if task.done():
                 continue
-            task.set_result(None)
+            task.cancel()
 
         for filter in self._filters:
             filter.cleanup()
 
         for handler in self._handlers:
             handler.cleanup()
-
-    def __del__(self) -> None:
-        self.cleanup()
 
     def add_filter(self, filter: SinkFilter, /) -> None:
         """Adds a filter to this sink.
@@ -650,6 +741,16 @@ class Sink:
     ) -> None:
         pass
 
+    async def on_user_connect(
+        self, user: abc.Snowflake, channel: abc.Snowflake,
+    ) -> None:
+        pass
+
+    async def on_unfiltered_user_connect(
+        self, user: abc.Snowflake, channel: abc.Snowflake
+    ) -> None:
+        pass
+
     async def on_error(
         self, event: str, exception: Exception, *args: Any, **kwargs: Any
     ) -> None:
@@ -663,7 +764,7 @@ class Sink:
     def is_recording(self) -> bool:
         """Whether this sink is currently available to record, and doing so."""
         state = self.client._connection
-        return state.is_recording() and self in state.sinks
+        return state.is_recording() and id(self) in state._sinks
 
     def is_paused(self) -> bool:
         """Whether this sink is currently paused from recording."""

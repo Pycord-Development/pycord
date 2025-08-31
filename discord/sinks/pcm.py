@@ -35,33 +35,17 @@ from .enums import SinkFilteringMode
 from .errors import NoUserAudio
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from discord import abc
 
 __all__ = (
-    "PCMConverterHandler",
     "PCMSink",
 )
 
 
-class PCMConverterHandler(SinkHandler["PCMSink"]):
-    """Default handler to add received voice packets to the audio cache data in
-    a :class:`~.PCMSink`.
-
-    .. versionadded:: 2.7
-    """
-
-    def handle_packet(
-        self, sink: PCMSink, user: abc.Snowflake, packet: RawData
-    ) -> None:
-        data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
-        data.write(packet.decoded_data)
-
-
 class PCMSink(Sink):
     """A special sink for .pcm files.
-
-    This is essentially a :class:`~.Sink` with a :class:`.PCMConverterHandler` handler
-    passed as a default.
 
     .. versionadded:: 2.0
 
@@ -81,14 +65,11 @@ class PCMSink(Sink):
     def __init__(
         self,
         *,
-        filters: list[SinkFilter] = MISSING,
+        filters: list[SinkFilter[Self]] = MISSING,
         filtering_mode: SinkFilteringMode = SinkFilteringMode.all,
-        handlers: list[SinkHandler] = MISSING,
+        handlers: list[SinkHandler[Self]] = MISSING,
     ) -> None:
         self.__audio_data: dict[int, io.BytesIO] = {}
-        handlers = handlers or []
-        handlers.append(PCMConverterHandler())
-
         super().__init__(
             filters=filters,
             filtering_mode=filtering_mode,
@@ -172,3 +153,7 @@ class PCMSink(Sink):
 
         self.__audio_data.clear()
         super().cleanup()
+
+    async def on_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
+        buffer = self.get_user_audio(user.id) or self._create_audio_packet_for(user.id)
+        buffer.write(data.decoded_data)

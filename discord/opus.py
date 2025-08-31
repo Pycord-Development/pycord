@@ -536,10 +536,11 @@ class Decoder(_OpusStruct):
             samples_per_frame = self.packet_get_samples_per_frame(data)
             frame_size = frames * samples_per_frame
 
-        pcm = (
-            ctypes.c_int16
-            * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16))
-        )()
+        # pcm = (
+        #     ctypes.c_int16
+        #     * (frame_size * channel_count * ctypes.sizeof(ctypes.c_int16))
+        # )()
+        pcm = (ctypes.c_int16 * (frame_size * channel_count))()
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)
 
         ret = _lib.opus_decode(

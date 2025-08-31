@@ -36,41 +36,18 @@ from .enums import SinkFilteringMode
 from .errors import NoUserAudio
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from discord import abc
 
 __all__ = (
-    "WaveConverterHandler",
-    "WavConverterHandler",
     "WaveSink",
     "WavSink",
 )
 
 
-class WaveConverterHandler(SinkHandler["WaveSink"]):
-    """Default handler to add received voice packets to the audio cache data in
-    a :class:`~.WaveSink`.
-
-    .. versionadded:: 2.7
-    """
-
-    def handle_packet(
-        self, sink: WaveSink, user: abc.Snowflake, packet: RawData
-    ) -> None:
-        data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
-        data.write(packet.decoded_data)
-
-
-WavConverterHandler: SinkHandler[WavSink] = WaveConverterHandler  # type: ignore
-"""An alias for :class:`~.WaveConverterHandler`
-
-.. versionadded:: 2.7
-"""
-
-
 class WaveSink(Sink):
     """A special sink for .wav(e) files.
-
-    This is essentially a :class:`~.Sink` with a :class:`.WaveConverterHandler` handler.
 
     .. versionadded:: 2.0
 
@@ -90,14 +67,11 @@ class WaveSink(Sink):
     def __init__(
         self,
         *,
-        filters: list[SinkFilter] = MISSING,
+        filters: list[SinkFilter[Self]] = MISSING,
         filtering_mode: SinkFilteringMode = SinkFilteringMode.all,
-        handlers: list[SinkHandler] = MISSING,
+        handlers: list[SinkHandler[Self]] = MISSING,
     ) -> None:
         self.__audio_data: dict[int, io.BytesIO] = {}
-        handlers = handlers or []
-        handlers.append(WaveConverterHandler())
-
         super().__init__(
             filters=filters,
             filtering_mode=filtering_mode,
@@ -188,6 +162,10 @@ class WaveSink(Sink):
 
         self.__audio_data.clear()
         super().cleanup()
+
+    async def on_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
+        buffer = self.get_user_audio(user.id) or self._create_audio_packet_for(user.id)
+        buffer.write(data.decoded_data)
 
 
 WavSink = WaveSink

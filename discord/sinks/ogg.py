@@ -39,35 +39,19 @@ from .enums import SinkFilteringMode
 from .errors import FFmpegNotFound, MaxProcessesCountReached, NoUserAudio, OGGSinkError
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from discord import abc
 
 _log = logging.getLogger(__name__)
 
 __all__ = (
-    "OGGConverterHandler",
     "OGGSink",
 )
 
 
-class OGGConverterHandler(SinkHandler["OGGSink"]):
-    """Default handler to add received voice packets to the audio cache data in
-    a :class:`~.OGGSink`.
-
-    .. versionadded:: 2.7
-    """
-
-    def handle_packet(
-        self, sink: OGGSink, user: abc.Snowflake, packet: RawData
-    ) -> None:
-        data = sink.get_user_audio(user.id) or sink._create_audio_packet_for(user.id)
-        data.write(packet.decoded_data)
-
-
 class OGGSink(Sink):
     """A special sink for .ogg files.
-
-    This is essentially a :class:`~.Sink` with a :class:`~.OGGConverterHandler` handler
-    passed as a default.
 
     .. versionadded:: 2.0
 
@@ -90,18 +74,15 @@ class OGGSink(Sink):
     def __init__(
         self,
         *,
-        filters: list[SinkFilter] = MISSING,
+        filters: list[SinkFilter[Self]] = MISSING,
         filtering_mode: SinkFilteringMode = SinkFilteringMode.all,
-        handlers: list[SinkHandler] = MISSING,
+        handlers: list[SinkHandler[Self]] = MISSING,
         max_audio_processes_count: int = 10,
     ) -> None:
         self.__audio_data: dict[int, io.BytesIO] = {}
         self.__process_queue: deque[subprocess.Popen] = deque(
             maxlen=max_audio_processes_count
         )
-        handlers = handlers or []
-        handlers.append(OGGConverterHandler())
-
         super().__init__(
             filters=filters,
             filtering_mode=filtering_mode,
@@ -246,3 +227,7 @@ class OGGSink(Sink):
 
         self.__audio_data.clear()
         super().cleanup()
+
+    async def on_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
+        buffer = self.get_user_audio(user.id) or self._create_audio_packet_for(user.id)
+        buffer.write(data.decoded_data)
