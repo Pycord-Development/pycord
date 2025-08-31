@@ -200,7 +200,7 @@ class Loop(Generic[LF]):
                             ),
                             name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
                         )
-                        task.add_done_callback(lambda t: self._tasks.discard(t))
+                        task.add_done_callback(self._tasks.discard)
                         self._tasks.add(task)
 
                     _current_loop_ctx.reset(token)
