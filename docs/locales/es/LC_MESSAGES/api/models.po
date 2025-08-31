@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Crowdin\n"
 
 msgid "Discord Models"
 msgstr "Discord Models"
@@ -1571,8 +1571,44 @@ msgstr ":class:`SKUFlags`"
 msgid "Returns the URL for the SKU."
 msgstr "Returns the URL for the SKU."
 
+msgid "Returns an :class:`.AsyncIterator` that enables fetching the SKU's subscriptions."
+msgstr "Returns an :class:`.AsyncIterator` that enables fetching the SKU's subscriptions."
+
+msgid "The user for which to retrieve subscriptions."
+msgstr "The user for which to retrieve subscriptions."
+
+msgid "Retrieves subscriptions before this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieves subscriptions before this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "Retrieve subscriptions after this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+msgstr "Retrieve subscriptions after this date or object. If a datetime is provided, it is recommended to use a UTC-aware datetime. If the datetime is naive, it is assumed to be local time."
+
+msgid "The number of subscriptions to retrieve. If ``None``, retrieves all subscriptions."
+msgstr "The number of subscriptions to retrieve. If ``None``, retrieves all subscriptions."
+
+msgid ":class:`Subscription` -- A subscription that the user has for this SKU."
+msgstr ":class:`Subscription` -- A subscription that the user has for this SKU."
+
+msgid "Getting the subscriptions failed."
+msgstr "Getting the subscriptions failed."
+
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.SubscriptionIterator\\``"
+msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.SubscriptionIterator\\``"
+
+msgid "Flattening into a list ::"
+msgstr "Flattening into a list ::"
+
+msgid "All parameters except for ``user`` are optional."
+msgstr "All parameters except for ``user`` are optional."
+
 msgid "Represents a Discord entitlement."
 msgstr "Represents a Discord entitlement."
+
+msgid "As of October 1, 2024, entitlements that have been purchased will have ``ends_at`` set to ``None`` unless the parent :class:`Subscription` has been cancelled."
+msgstr "As of October 1, 2024, entitlements that have been purchased will have ``ends_at`` set to ``None`` unless the parent :class:`Subscription` has been cancelled."
+
+msgid "`See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
+msgstr "`See the Discord changelog. <https://discord.com/developers/docs/change-log#premium-apps-entitlement-migration-and-new-subscription-api>`_"
 
 msgid "The entitlement's ID."
 msgstr "The entitlement's ID."
@@ -1610,17 +1646,14 @@ msgstr "When the entitlement expires."
 msgid "The ID of the guild that owns this entitlement."
 msgstr "The ID of the guild that owns this entitlement."
 
-msgid "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not of type :attr:`EntitlementType.consumable`."
-msgstr "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not of type :attr:`EntitlementType.consumable`."
+msgid "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not from an SKU of type :attr:`SKUType.consumable`."
+msgstr "Whether or not this entitlement has been consumed. This will always be ``False`` for entitlements that are not from an SKU of type :attr:`SKUType.consumable`."
 
 msgid "Consumes this entitlement."
 msgstr "Consumes this entitlement."
 
-msgid "This can only be done on entitlements of type :attr:`EntitlementType.consumable`."
-msgstr "This can only be done on entitlements of type :attr:`EntitlementType.consumable`."
-
-msgid "The entitlement is not consumable."
-msgstr "The entitlement is not consumable."
+msgid "This can only be done on entitlements from an SKU of type :attr:`SKUType.consumable`."
+msgstr "This can only be done on entitlements from an SKU of type :attr:`SKUType.consumable`."
 
 msgid "Consuming the entitlement failed."
 msgstr "Consuming the entitlement failed."
@@ -1633,6 +1666,57 @@ msgstr "A test entitlement is an entitlement that was created using :meth:`Guild
 
 msgid "Deleting the entitlement failed."
 msgstr "Deleting the entitlement failed."
+
+msgid "Represents a user making recurring payments for one or more SKUs."
+msgstr "Represents a user making recurring payments for one or more SKUs."
+
+msgid "Successful payments grant the user access to entitlements associated with the SKU."
+msgstr "Successful payments grant the user access to entitlements associated with the SKU."
+
+msgid "The subscription's ID."
+msgstr "The subscription's ID."
+
+msgid "The ID of the user that owns this subscription."
+msgstr "The ID of the user that owns this subscription."
+
+msgid "The IDs of the SKUs this subscription is for."
+msgstr "The IDs of the SKUs this subscription is for."
+
+msgid "List[:class:`int`]"
+msgstr "List[:class:`int`]"
+
+msgid "The IDs of the entitlements this subscription is for."
+msgstr "The IDs of the entitlements this subscription is for."
+
+msgid "The IDs of the SKUs that the buyer will be subscribed to at renewal."
+msgstr "The IDs of the SKUs that the buyer will be subscribed to at renewal."
+
+msgid "The start of the current subscription period."
+msgstr "The start of the current subscription period."
+
+msgid ":class:`datetime.datetime`"
+msgstr ":class:`datetime.datetime`"
+
+msgid "The end of the current subscription period."
+msgstr "The end of the current subscription period."
+
+msgid "The status of the subscription."
+msgstr "The status of the subscription."
+
+msgid ":class:`SubscriptionStatus`"
+msgstr ":class:`SubscriptionStatus`"
+
+msgid "When the subscription was canceled."
+msgstr "When the subscription was canceled."
+
+msgid ":class:`datetime.datetime` | ``None``"
+msgstr ":class:`datetime.datetime` | ``None``"
+
+msgid "The user that owns this subscription."
+msgstr "The user that owns this subscription."
+
+msgid "Optional[:class:`User`]"
+msgstr "Optional[:class:`User`]"
 
 msgid "Guild"
 msgstr "Guild"
@@ -1783,9 +1867,6 @@ msgstr "Getting the members failed."
 
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MemberIterator\\``"
 msgstr ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.MemberIterator\\``"
-
-msgid "Flattening into a list ::"
-msgstr "Flattening into a list ::"
 
 msgid "Returns an :class:`AsyncIterator` that enables receiving the guild's audit logs."
 msgstr "Returns an :class:`AsyncIterator` that enables receiving the guild's audit logs."
@@ -3749,9 +3830,6 @@ msgstr "The creator of the template."
 msgid "An aware datetime in UTC representing when the template was created."
 msgstr "An aware datetime in UTC representing when the template was created."
 
-msgid ":class:`datetime.datetime`"
-msgstr ":class:`datetime.datetime`"
-
 msgid "An aware datetime in UTC representing when the template was last updated. This is referred to as \"last synced\" in the official Discord client."
 msgstr "An aware datetime in UTC representing when the template was last updated. This is referred to as \"last synced\" in the official Discord client."
 
@@ -3901,9 +3979,6 @@ msgstr "Whether this rule is enabled."
 
 msgid "The IDs of the roles that are exempt from this rule."
 msgstr "The IDs of the roles that are exempt from this rule."
-
-msgid "List[:class:`int`]"
-msgstr "List[:class:`int`]"
 
 msgid "The IDs of the channels that are exempt from this rule."
 msgstr "The IDs of the channels that are exempt from this rule."
@@ -4211,9 +4286,6 @@ msgstr "How many times the invite can be used. A value of ``0`` indicates that i
 msgid "The user who created the invite."
 msgstr "The user who created the invite."
 
-msgid "Optional[:class:`User`]"
-msgstr "Optional[:class:`User`]"
-
 msgid "The approximate number of members in the guild."
 msgstr "The approximate number of members in the guild."
 
@@ -4460,8 +4532,8 @@ msgstr "A role tag is a piece of extra information attached to a managed role th
 msgid "While this can be accessed, a useful interface is also provided in the :class:`Role` and :class:`Guild` classes as well."
 msgstr "While this can be accessed, a useful interface is also provided in the :class:`Role` and :class:`Guild` classes as well."
 
-msgid "Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type. We aim to improve the documentation / introduce new attributes in future. For the meantime read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work."
-msgstr "Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type. We aim to improve the documentation / introduce new attributes in future. For the meantime read `this <https://lulalaby.notion.site/Special-Roles-Documentation-17411d3839e680abbb1eff63c51bd7a7?pvs=4>`_ if you need detailed information about how role tags work."
+msgid "Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type. We aim to improve the documentation / introduce new attributes in future. For the meantime read `this <https://discord-lib-devs.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work."
+msgstr "Role tags are a fairly complex topic, since it's usually hard to determine which role tag combination represents which role type. We aim to improve the documentation / introduce new attributes in future. For the meantime read `this <https://discord-lib-devs.notion.site/special-roles-role-tags>`_ if you need detailed information about how role tags work."
 
 msgid "The bot's user ID that manages this role."
 msgstr "The bot's user ID that manages this role."
@@ -5219,8 +5291,8 @@ msgstr "This requires :attr:`Intents.members` to be properly filled. Most of the
 msgid "A list of tags applied to this thread."
 msgstr "A list of tags applied to this thread."
 
-msgid "This is only available for threads in forum channels."
-msgstr "This is only available for threads in forum channels."
+msgid "This is only available for threads in forum or media channels."
+msgstr "This is only available for threads in forum or media channels."
 
 msgid "List[:class:`ForumTag`]"
 msgstr "List[:class:`ForumTag`]"
@@ -5270,8 +5342,8 @@ msgstr "The ID for this message is the same as the thread ID."
 msgid "The message that started this thread or ``None`` if not found in the cache."
 msgstr "The message that started this thread or ``None`` if not found in the cache."
 
-msgid "Whether the thread is pinned to the top of its parent forum channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
-msgstr "Whether the thread is pinned to the top of its parent forum channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgid "Whether the thread is pinned to the top of its parent forum or media channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+msgstr "Whether the thread is pinned to the top of its parent forum or media channel. :rtype: :sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 
 msgid "Whether the thread is a private thread."
 msgstr "Whether the thread is a private thread."
@@ -5411,8 +5483,8 @@ msgstr "The new duration in minutes before a thread is automatically archived fo
 msgid "The reason for editing this thread. Shows up on the audit log."
 msgstr "The reason for editing this thread. Shows up on the audit log."
 
-msgid "Whether to pin the thread or not. This only works if the thread is part of a forum."
-msgstr "Whether to pin the thread or not. This only works if the thread is part of a forum."
+msgid "Whether to pin the thread or not. This only works if the thread is part of a forum or media channel."
+msgstr "Whether to pin the thread or not. This only works if the thread is part of a forum or media channel."
 
 msgid "The set of tags to apply to the thread. Each tag object should have an ID set.  .. versionadded:: 2.3"
 msgstr "The set of tags to apply to the thread. Each tag object should have an ID set.  .. versionadded:: 2.3"
@@ -6161,8 +6233,8 @@ msgstr "The guild ID the interaction was sent from."
 msgid "The channel the interaction was sent from."
 msgstr "The channel the interaction was sent from."
 
-msgid "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]"
-msgstr "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`]]"
+msgid "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]"
+msgstr "Optional[Union[:class:`abc.GuildChannel`, :class:`abc.PrivateChannel`, :class:`Thread`, :class:`PartialMessageable`]]"
 
 msgid "The ID of the channel the interaction was sent from."
 msgstr "The ID of the channel the interaction was sent from."
@@ -6227,8 +6299,8 @@ msgstr "Indicates whether the interaction is an application command."
 msgid "Indicates whether the interaction is a message component."
 msgstr "Indicates whether the interaction is a message component."
 
-msgid "Note that due to a Discord limitation, DM channels are not resolved since there is no data to complete them. These are :class:`PartialMessageable` instead."
-msgstr "Note that due to a Discord limitation, DM channels are not resolved since there is no data to complete them. These are :class:`PartialMessageable` instead."
+msgid "The cached channel from which the interaction was sent. DM channels are not resolved. These are :class:`PartialMessageable` instead."
+msgstr "The cached channel from which the interaction was sent. DM channels are not resolved. These are :class:`PartialMessageable` instead."
 
 msgid "The resolved permissions of the member in the channel, including overwrites."
 msgstr "The resolved permissions of the member in the channel, including overwrites."
@@ -7049,8 +7121,8 @@ msgstr "Optional[:class:`str` | :class:`discord.GuildEmoji`]"
 msgid "The channel's guidelines. An alias of :attr:`topic`."
 msgstr "The channel's guidelines. An alias of :attr:`topic`."
 
-msgid "Whether a tag is required to be specified when creating a thread in this forum channel."
-msgstr "Whether a tag is required to be specified when creating a thread in this forum channel."
+msgid "Whether a tag is required to be specified when creating a thread in this forum or media channel."
+msgstr "Whether a tag is required to be specified when creating a thread in this forum or media channel."
 
 msgid "Tags are specified in :attr:`applied_tags`."
 msgstr "Tags are specified in :attr:`applied_tags`."
@@ -7099,6 +7171,24 @@ msgstr "A list of tags to apply to the new thread."
 
 msgid "The number of seconds a member must wait between sending messages in the new thread. A value of `0` denotes that it is disabled. Bots and users with :attr:`~Permissions.manage_channels` or :attr:`~Permissions.manage_messages` bypass slowmode. If not provided, the forum channel's default slowmode is used."
 msgstr "The number of seconds a member must wait between sending messages in the new thread. A value of `0` denotes that it is disabled. Bots and users with :attr:`~Permissions.manage_channels` or :attr:`~Permissions.manage_messages` bypass slowmode. If not provided, the forum channel's default slowmode is used."
+
+msgid "Represents a Discord media channel. Subclass of :class:`ForumChannel`."
+msgstr "Represents a Discord media channel. Subclass of :class:`ForumChannel`."
+
+msgid "Whether media download options are hidden in this media channel."
+msgstr "Whether media download options are hidden in this media channel."
+
+msgid "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (e.g., '<a:emoji_name:emoji_id>')."
+msgstr "The default reaction emoji. Can be a unicode emoji or a custom emoji in the forms: :class:`GuildEmoji`, snowflake ID, string representation (e.g., '<a:emoji_name:emoji_id>')."
+
+msgid "Whether media download options should be hidden in this media channel."
+msgstr "Whether media download options should be hidden in this media channel."
+
+msgid "The newly edited media channel. If the edit was only positional then ``None`` is returned instead."
+msgstr "The newly edited media channel. If the edit was only positional then ``None`` is returned instead."
+
+msgid "Optional[:class:`.MediaChannel`]"
+msgstr "Optional[:class:`.MediaChannel`]"
 
 msgid "Represents a Discord guild voice channel."
 msgstr "Represents a Discord guild voice channel."

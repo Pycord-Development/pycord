@@ -26,8 +26,9 @@ from __future__ import annotations
 
 import inspect
 import logging
+import types
 from enum import Enum
-from typing import TYPE_CHECKING, Literal, Optional, Type, Union
+from typing import TYPE_CHECKING, Literal, Optional, Type, Union, get_args
 
 from ..abc import GuildChannel, Mentionable
 from ..channel import (
@@ -196,6 +197,7 @@ class Option:
         if self.name is not None:
             self.name = str(self.name)
         self._parameter_name = self.name  # default
+        input_type = self._strip_none_type(input_type)
         self._raw_type: InputType | tuple = input_type
 
         enum_choices = []
@@ -225,7 +227,9 @@ class Option:
         self.description = description or "No description provided"
         self.channel_types: list[ChannelType] = kwargs.pop("channel_types", [])
 
-        if isinstance(input_type, SlashCommandOptionType):
+        if self.channel_types:
+            self.input_type = SlashCommandOptionType.channel
+        elif isinstance(input_type, SlashCommandOptionType):
             self.input_type = input_type
         else:
             from ..ext.commands import Converter
@@ -362,6 +366,30 @@ class Option:
 
         if input_type is None:
             raise TypeError("input_type cannot be NoneType.")
+
+    @staticmethod
+    def _strip_none_type(input_type):
+        if input_type is type(None):
+            raise TypeError("Option type cannot be only NoneType")
+
+        args = ()
+        if isinstance(input_type, types.UnionType):
+            args = get_args(input_type)
+        elif getattr(input_type, "__origin__", None) is Union:
+            args = get_args(input_type)
+        elif isinstance(input_type, tuple):
+            args = input_type
+
+        if args:
+            filtered = tuple(t for t in args if t is not type(None))
+            if not filtered:
+                raise TypeError("Option type cannot be only NoneType")
+            if len(filtered) == 1:
+                return filtered[0]
+
+            return filtered
+
+        return input_type
 
     def to_dict(self) -> dict:
         as_dict = {

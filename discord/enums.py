@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import types
 from collections import namedtuple
+from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
 __all__ = (
@@ -71,6 +72,7 @@ __all__ = (
     "PromptType",
     "OnboardingMode",
     "ReactionType",
+    "VoiceChannelEffectAnimationType",
     "SKUType",
     "EntitlementType",
     "EntitlementOwnerType",
@@ -78,6 +80,9 @@ __all__ = (
     "InteractionContextType",
     "PollLayoutType",
     "MessageReferenceType",
+    "ThreadArchiveDuration",
+    "SubscriptionStatus",
+    "SeparatorSpacingSize",
 )
 
 
@@ -720,6 +725,14 @@ class ComponentType(Enum):
     role_select = 6
     mentionable_select = 7
     channel_select = 8
+    section = 9
+    text_display = 10
+    thumbnail = 11
+    media_gallery = 12
+    file = 13
+    separator = 14
+    content_inventory_entry = 16
+    container = 17
 
     def __int__(self):
         return self.value
@@ -1063,6 +1076,16 @@ class PollLayoutType(Enum):
     default = 1
 
 
+class VoiceChannelEffectAnimationType(Enum):
+    """Voice channel effect animation type.
+
+    .. versionadded:: 2.7
+    """
+
+    premium = 0
+    basic = 1
+
+
 class MessageReferenceType(Enum):
     """The type of the message reference object"""
 
@@ -1076,6 +1099,25 @@ class SubscriptionStatus(Enum):
     active = 0
     ending = 1
     inactive = 2
+
+
+class ThreadArchiveDuration(IntEnum):
+    """The time set until a thread is automatically archived."""
+
+    one_hour = 60
+    one_day = 1440
+    three_days = 4320
+    one_week = 10080
+
+
+class SeparatorSpacingSize(Enum):
+    """A separator component's spacing size."""
+
+    small = 1
+    large = 2
+
+    def __int__(self):
+        return self.value
 
 
 T = TypeVar("T")

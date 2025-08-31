@@ -35,6 +35,7 @@ import time
 import traceback
 import zlib
 from collections import deque, namedtuple
+from typing import TYPE_CHECKING
 
 import aiohttp
 
@@ -208,6 +209,9 @@ class KeepAliveHandler(threading.Thread):
 
 
 class VoiceKeepAliveHandler(KeepAliveHandler):
+    if TYPE_CHECKING:
+        ws: DiscordVoiceWebSocket
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.recent_ack_latencies = deque(maxlen=20)
@@ -216,7 +220,10 @@ class VoiceKeepAliveHandler(KeepAliveHandler):
         self.behind_msg = "High socket latency, shard ID %s heartbeat is %.1fs behind"
 
     def get_payload(self):
-        return {"op": self.ws.HEARTBEAT, "d": int(time.time() * 1000)}
+        return {
+            "op": self.ws.HEARTBEAT,
+            "d": {"t": int(time.time() * 1000), "seq_ack": self.ws.seq_ack},
+        }
 
     def ack(self):
         ack_time = time.perf_counter()
@@ -284,6 +291,7 @@ class DiscordWebSocket:
     HELLO = 10
     HEARTBEAT_ACK = 11
     GUILD_SYNC = 12
+    REQUEST_SOUNDBOARD_SOUNDS = 31
 
     def __init__(self, socket, *, loop):
         self.socket = socket
@@ -724,6 +732,15 @@ class DiscordWebSocket:
         _log.debug("Updating our voice state to %s.", payload)
         await self.send_as_json(payload)
 
+    async def request_soundboard_sounds(self, guild_ids):
+        payload = {
+            "op": self.REQUEST_SOUNDBOARD_SOUNDS,
+            "d": {"guild_ids": guild_ids},
+        }
+
+        _log.debug("Requesting soundboard sounds for guilds %s.", guild_ids)
+        await self.send_as_json(payload)
+
     async def close(self, code=4000):
         if self._keep_alive:
             self._keep_alive.stop()
@@ -784,6 +801,7 @@ class DiscordVoiceWebSocket:
         self._close_code = None
         self.secret_key = None
         self.ssrc_map = {}
+        self.seq_ack: int = -1
         if hook:
             self._hook = hook
 
@@ -804,6 +822,9 @@ class DiscordVoiceWebSocket:
                 "token": state.token,
                 "server_id": str(state.server_id),
                 "session_id": state.session_id,
+                # this seq_ack will allow for us to do buffered resume, which is, receive the
+                # lost voice packets while trying to resume the reconnection
+                "seq_ack": self.seq_ack,
             },
         }
         await self.send_as_json(payload)
@@ -824,7 +845,7 @@ class DiscordVoiceWebSocket:
     @classmethod
     async def from_client(cls, client, *, resume=False, hook=None):
         """Creates a voice websocket for the :class:`VoiceClient`."""
-        gateway = f"wss://{client.endpoint}/?v=4"
+        gateway = f"wss://{client.endpoint}/?v=8"
         http = client._state.http
         socket = await http.ws_connect(gateway, compress=15)
         ws = cls(socket, loop=client.loop, hook=hook)
@@ -860,7 +881,13 @@ class DiscordVoiceWebSocket:
         await self.send_as_json(payload)
 
     async def speak(self, state=SpeakingState.voice):
-        payload = {"op": self.SPEAKING, "d": {"speaking": int(state), "delay": 0}}
+        payload = {
+            "op": self.SPEAKING,
+            "d": {
+                "speaking": int(state),
+                "delay": 0,
+            },
+        }
 
         await self.send_as_json(payload)
 
@@ -868,6 +895,7 @@ class DiscordVoiceWebSocket:
         _log.debug("Voice websocket frame received: %s", msg)
         op = msg["op"]
         data = msg.get("d")
+        self.seq_ack = data.get("seq", self.seq_ack)
 
         if op == self.READY:
             await self.initial_connection(data)

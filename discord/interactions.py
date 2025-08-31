@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import datetime
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
 from . import utils
@@ -76,7 +77,7 @@ if TYPE_CHECKING:
         VoiceChannel,
     )
     from .client import Client
-    from .commands import OptionChoice
+    from .commands import ApplicationCommand, OptionChoice
     from .embeds import Embed
     from .mentions import AllowedMentions
     from .poll import Poll
@@ -157,6 +158,22 @@ class Interaction:
     callback: Optional[:class:`InteractionCallback`]
         The callback of the interaction. Contains information about the status of the interaction response.
         Will be `None` until the interaction is responded to.
+        
+        .. versionadded:: 2.7
+    command: Optional[:class:`ApplicationCommand`]
+        The command that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    view: Optional[:class:`View`]
+        The view that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    modal: Optional[:class:`Modal`]
+        The modal that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    attachment_size_limit: :class:`int`
+        The attachment size limit.
 
         .. versionadded:: 2.7
     """
@@ -180,6 +197,11 @@ class Interaction:
         "context",
         "authorizing_integration_owners",
         "callback",
+        "command",
+        "view",
+        "modal",
+        "attachment_size_limit",
+        "_raw_data",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -203,6 +225,7 @@ class Interaction:
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
+        self._raw_data: InteractionPayload = data
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
         self.data: InteractionData | None = data.get("data")
@@ -232,6 +255,11 @@ class Interaction:
             if "context" in data
             else None
         )
+
+        self.command: ApplicationCommand | None = None
+        self.view: View | None = None
+        self.modal: Modal | None = None
+        self.attachment_size_limit: int = data.get("attachment_size_limit")
 
         self.message: Message | None = None
         self.channel = None
@@ -308,6 +336,11 @@ class Interaction:
         if self._guild:
             return self._guild
         return self._state and self._state._get_guild(self.guild_id)
+
+    @property
+    def created_at(self) -> datetime.datetime:
+        """Returns the interaction's creation time in UTC."""
+        return utils.snowflake_time(self.id)
 
     def is_command(self) -> bool:
         """Indicates whether the interaction is an application command."""
@@ -580,7 +613,9 @@ class Interaction:
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view and not view.is_finished():
             view.message = message
-            self._state.store_view(view, message.id)
+            view.refresh(message.components)
+            if view.is_dispatchable():
+                self._state.store_view(view, message.id)
 
         if delete_after is not None:
             await self.delete_original_response(delay=delete_after)
@@ -964,7 +999,7 @@ class InteractionResponse:
         HTTPException
             Sending the message failed.
         TypeError
-            You specified both ``embed`` and ``embeds``.
+            You specified both ``embed`` and ``embeds``, or sent content or embeds with V2 components.
         ValueError
             The length of ``embeds`` was invalid.
         InteractionResponded
@@ -995,6 +1030,12 @@ class InteractionResponse:
 
         if view is not None:
             payload["components"] = view.to_components()
+            if view.is_components_v2():
+                if embeds or content:
+                    raise TypeError(
+                        "cannot send embeds or content with a view using v2 component logic"
+                    )
+                flags.is_components_v2 = True
 
         if poll is not None:
             payload["poll"] = poll.to_dict()
@@ -1062,7 +1103,8 @@ class InteractionResponse:
                 view.timeout = 15 * 60.0
 
             view.parent = self._parent
-            self._parent._state.store_view(view)
+            if view.is_dispatchable():
+                self._parent._state.store_view(view)
 
         self._responded = True
         await self._process_callback_response(callback_response)

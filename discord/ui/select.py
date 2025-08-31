@@ -54,6 +54,8 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from ..abc import GuildChannel
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
@@ -77,6 +79,10 @@ class Select(Item[V]):
         Added support for :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
         :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
         and :attr:`discord.ComponentType.channel_select`.
+
+    .. versionchanged:: 2.7
+
+        Can now be sent in :class:`discord.ui.Modal`.
 
     Parameters
     ----------
@@ -103,13 +109,29 @@ class Select(Item[V]):
         A list of channel types that can be selected in this menu.
         Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
     disabled: :class:`bool`
-        Whether the select is disabled or not.
+        Whether the select is disabled or not. Only useable in views. Defaults to ``True`` in views.
     row: Optional[:class:`int`]
         The relative row this select menu belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+    id: Optional[:class:`int`]
+        The select menu's ID.
+    label: Optional[:class:`str`]
+        The label for the select menu. Only useable in modals.
+        Must be 45 characters or fewer.
+
+        .. versionadded:: 2.7
+    description: Optional[:class:`str`]
+        The description for the select menu. Only useable in modals.
+        Must be 100 characters or fewer.
+
+        .. versionadded:: 2.7
+    required: Optional[:class:`bool`]
+        Whether the select is required or not. Only useable in modals. Defaults to ``True`` in modals.
+
+        .. versionadded:: 2.7
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -120,6 +142,11 @@ class Select(Item[V]):
         "options",
         "channel_types",
         "disabled",
+        "custom_id",
+        "id",
+        "label",
+        "description",
+        "required",
     )
 
     def __init__(
@@ -134,13 +161,23 @@ class Select(Item[V]):
         channel_types: list[ChannelType] | None = None,
         disabled: bool = False,
         row: int | None = None,
+        id: int | None = None,
+        label: str | None = None,
+        description: str | None = None,
+        required: bool | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
+        if label and len(label) > 45:
+            raise ValueError("label must be 45 characters or fewer")
+        if description and len(description) > 100:
+            raise ValueError("description must be 100 characters or fewer")
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
             )
+        if required and min_values < 1:
+            raise ValueError("min_values must be greater than 0 when required=True")
         super().__init__()
         self._selected_values: list[str] = []
         self._interaction: Interaction | None = None
@@ -155,6 +192,9 @@ class Select(Item[V]):
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
 
+        self.label: str | None = label
+        self.description: str | None = description
+
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self._underlying: SelectMenu = SelectMenu._raw_construct(
@@ -166,6 +206,8 @@ class Select(Item[V]):
             disabled=disabled,
             options=options or [],
             channel_types=channel_types or [],
+            id=id,
+            required=required,
         )
         self.row = row
 
@@ -181,6 +223,7 @@ class Select(Item[V]):
         if len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._underlying.custom_id = value
+        self._provided_custom_id = value is not None
 
     @property
     def placeholder(self) -> str | None:
@@ -223,6 +266,15 @@ class Select(Item[V]):
         """Whether the select is disabled or not."""
         return self._underlying.disabled
 
+    @property
+    def required(self) -> bool:
+        """Whether the select is required or not. Only applicable in modal selects."""
+        return self._underlying.required
+
+    @required.setter
+    def required(self, value: bool):
+        self._underlying.required = value
+
     @disabled.setter
     def disabled(self, value: bool):
         self._underlying.disabled = bool(value)
@@ -262,7 +314,7 @@ class Select(Item[V]):
         description: str | None = None,
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         default: bool = False,
-    ):
+    ) -> Self:
         """Adds an option to the select menu.
 
         To append a pre-existing :class:`discord.SelectOption` use the
@@ -301,9 +353,9 @@ class Select(Item[V]):
             default=default,
         )
 
-        self.append_option(option)
+        return self.append_option(option)
 
-    def append_option(self, option: SelectOption):
+    def append_option(self, option: SelectOption) -> Self:
         """Appends an option to the select menu.
 
         Parameters
@@ -323,6 +375,7 @@ class Select(Item[V]):
             raise ValueError("maximum number of options already provided")
 
         self._underlying.options.append(option)
+        return self
 
     @property
     def values(
@@ -410,8 +463,14 @@ class Select(Item[V]):
     def refresh_component(self, component: SelectMenu) -> None:
         self._underlying = component
 
-    def refresh_state(self, interaction: Interaction) -> None:
-        data: ComponentInteractionData = interaction.data  # type: ignore
+    def refresh_state(self, interaction: Interaction | dict) -> None:
+        data: ComponentInteractionData = (
+            interaction.data if isinstance(interaction, Interaction) else interaction
+        )
+        self._selected_values = data.get("values", [])
+        self._interaction = interaction
+
+    def refresh_from_modal(self, interaction: Interaction | dict, data: dict) -> None:
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
@@ -427,6 +486,8 @@ class Select(Item[V]):
             channel_types=component.channel_types,
             disabled=component.disabled,
             row=None,
+            id=component.id,
+            required=component.required,
         )
 
     @property
@@ -435,6 +496,12 @@ class Select(Item[V]):
 
     def is_dispatchable(self) -> bool:
         return True
+
+    def is_storable(self) -> bool:
+        return True
+
+    def uses_label(self) -> bool:
+        return bool(self.label or self.description or (self.required is not None))
 
 
 _select_types = (
@@ -457,6 +524,7 @@ def select(
     channel_types: list[ChannelType] = MISSING,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A decorator that attaches a select menu to a component.
 
@@ -504,6 +572,8 @@ def select(
         Defaults to all channel types.
     disabled: :class:`bool`
         Whether the select is disabled or not. Defaults to ``False``.
+    id: Optional[:class:`int`]
+        The select menu's ID.
     """
     if select_type not in _select_types:
         raise ValueError(
@@ -531,6 +601,7 @@ def select(
             "min_values": min_values,
             "max_values": max_values,
             "disabled": disabled,
+            "id": id,
         }
         if options:
             model_kwargs["options"] = options
@@ -554,6 +625,7 @@ def string_select(
     options: list[SelectOption] = MISSING,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.string_select`.
 
@@ -568,6 +640,7 @@ def string_select(
         options=options,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -579,6 +652,7 @@ def user_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.user_select`.
 
@@ -592,6 +666,7 @@ def user_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -603,6 +678,7 @@ def role_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
@@ -616,6 +692,7 @@ def role_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -627,6 +704,7 @@ def mentionable_select(
     max_values: int = 1,
     disabled: bool = False,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
@@ -640,6 +718,7 @@ def mentionable_select(
         max_values=max_values,
         disabled=disabled,
         row=row,
+        id=id,
     )
 
 
@@ -652,6 +731,7 @@ def channel_select(
     disabled: bool = False,
     channel_types: list[ChannelType] = MISSING,
     row: int | None = None,
+    id: int | None = None,
 ) -> Callable[[ItemCallbackType], ItemCallbackType]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
@@ -666,4 +746,5 @@ def channel_select(
         disabled=disabled,
         channel_types=channel_types,
         row=row,
+        id=id,
     )

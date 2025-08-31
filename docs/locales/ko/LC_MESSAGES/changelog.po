@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pycord Documentation\\n"
-"POT-Creation-Date: 2024-10-21 07:10-0000\\n"
-"PO-Revision-Date: 2024-10-21 07:10-0000\\n"
-"Last-Translator: \\n"
-"Language-Team: none\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"Plural-Forms: nplurals=1; plural=0;\\n"
-"X-Generator: Crowdin\\n"
+"Project-Id-Version: Pycord Documentation\n"
+"POT-Creation-Date: 2025-06-24 08:32-0000\n"
+"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"Last-Translator: \n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Crowdin\n"
 
 msgid "Changelog"
 msgstr "Changelog"
@@ -62,6 +62,9 @@ msgstr "Added missing `with_counts` parameter to `fetch_guilds` method. ([#2615]
 msgid "Added the following missing permissions: `Permissions.use_soundboard`, `Permissions.use_external_sounds`, and `Permissions.view_creator_monetization_analytics`. ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))"
 msgstr "Added the following missing permissions: `Permissions.use_soundboard`, `Permissions.use_external_sounds`, and `Permissions.view_creator_monetization_analytics`. ([#2620](https://github.com/Pycord-Development/pycord/pull/2620))"
 
+msgid "Added `MediaChannel` channel type. ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))"
+msgstr "Added `MediaChannel` channel type. ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))"
+
 msgid "Added `Message._raw_data` attribute. ([#2670](https://github.com/Pycord-Development/pycord/pull/2670))"
 msgstr "Added `Message._raw_data` attribute. ([#2670](https://github.com/Pycord-Development/pycord/pull/2670))"
 
@@ -70,6 +73,12 @@ msgstr "Added helper methods to determine the authorizing party of an `Interacti
 
 msgid "Added `VoiceMessage` subclass of `File` to allow voice messages to be sent. ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))"
 msgstr "Added `VoiceMessage` subclass of `File` to allow voice messages to be sent. ([#2579](https://github.com/Pycord-Development/pycord/pull/2579))"
+
+msgid "Added new `Subscription` object and related methods/events. ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))"
+msgstr "Added new `Subscription` object and related methods/events. ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))"
+
+msgid "Added ability to change the API's base URL with `Route.API_BASE_URL`. ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))"
+msgstr "Added ability to change the API's base URL with `Route.API_BASE_URL`. ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))"
 
 msgid "Fixed"
 msgstr "Fixed"
@@ -104,17 +113,35 @@ msgstr "Fixed `TypeError` when passing `skus` parameter in `Client.entitlements(
 msgid "Fixed `AttributeError` when sending polls with `PartialWebook`. ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))"
 msgstr "Fixed `AttributeError` when sending polls with `PartialWebook`. ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))"
 
+msgid "Fixed editing `ForumChannel` flags not working. ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))"
+msgstr "Fixed editing `ForumChannel` flags not working. ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))"
+
 msgid "Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))"
 msgstr "Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))"
 
 msgid "Fixed type annotations of cached properties. ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))"
 msgstr "Fixed type annotations of cached properties. ([#2635](https://github.com/Pycord-Development/pycord/issues/2635))"
 
+msgid "Fixed malformed properties in `Interaction.channel`. ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))"
+msgstr "Fixed malformed properties in `Interaction.channel`. ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))"
+
 msgid "Fixed an error when responding non-ephemerally with a `Paginator` to an ephemerally deferred interaction. ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))"
 msgstr "Fixed an error when responding non-ephemerally with a `Paginator` to an ephemerally deferred interaction. ([#2661](https://github.com/Pycord-Development/pycord/pull/2661))"
 
 msgid "Fixed attachment metadata being set incorrectly in interaction responses causing the metadata to be ignored by Discord. ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))"
 msgstr "Fixed attachment metadata being set incorrectly in interaction responses causing the metadata to be ignored by Discord. ([#2679](https://github.com/Pycord-Development/pycord/pull/2679))"
+
+msgid "Fixed unexpected backoff behavior in the handling of task failures ([#2700](https://github.com/Pycord-Development/pycord/pull/2700))."
+msgstr "Fixed unexpected backoff behavior in the handling of task failures ([#2700](https://github.com/Pycord-Development/pycord/pull/2700))."
+
+msgid "Fixed `BridgeCommand` duplicate in default help command. ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))"
+msgstr "Fixed `BridgeCommand` duplicate in default help command. ([#2656](https://github.com/Pycord-Development/pycord/pull/2656))"
+
+msgid "Fixed `AttributeError` when trying to consume a consumable entitlement. ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))"
+msgstr "Fixed `AttributeError` when trying to consume a consumable entitlement. ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))"
+
+msgid "Fixed `Subscription.renewal_sku_ids` not accepting `None` from the received payload. ([#2709](https://github.com/Pycord-Development/pycord/pull/2709))"
+msgstr "Fixed `Subscription.renewal_sku_ids` not accepting `None` from the received payload. ([#2709](https://github.com/Pycord-Development/pycord/pull/2709))"
 
 msgid "Changed"
 msgstr "Changed"
@@ -134,6 +161,9 @@ msgstr "Replaced audioop (deprecated module) implementation of `PCMVolumeTransfo
 msgid "Updated `Guild.filesize_limit` to 10 MB instead of 25 MB following Discord's API changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))"
 msgstr "Updated `Guild.filesize_limit` to 10 MB instead of 25 MB following Discord's API changes. ([#2671](https://github.com/Pycord-Development/pycord/pull/2671))"
 
+msgid "`Entitlement.ends_at` can now be `None`. ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))"
+msgstr "`Entitlement.ends_at` can now be `None`. ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))"
+
 msgid "Deprecated"
 msgstr "Deprecated"
 
@@ -142,6 +172,9 @@ msgstr "Deprecated `AppInfo.summary` in favor of `AppInfo.description`. ([#2520]
 
 msgid "Deprecated `Emoji` in favor of `GuildEmoji`. ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))"
 msgstr "Deprecated `Emoji` in favor of `GuildEmoji`. ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))"
+
+msgid "Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`. ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))"
+msgstr "Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`. ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))"
 
 msgid "[2.6.1] - 2024-09-15"
 msgstr "[2.6.1] - 2024-09-15"

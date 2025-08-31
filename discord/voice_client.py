@@ -271,6 +271,7 @@ class VoiceClient(VoiceProtocol):
         "xsalsa20_poly1305_lite",
         "xsalsa20_poly1305_suffix",
         "xsalsa20_poly1305",
+        "aead_xchacha20_poly1305_rtpsize",
     )
 
     @property
@@ -325,11 +326,7 @@ class VoiceClient(VoiceProtocol):
             )
             return
 
-        self.endpoint, _, _ = endpoint.rpartition(":")
-        if self.endpoint.startswith("wss://"):
-            # Just in case, strip it off since we're going to add it later
-            self.endpoint = self.endpoint[6:]
-
+        self.endpoint = endpoint.removeprefix("wss://")
         # This gets set later
         self.endpoint_ip = MISSING
 
@@ -471,8 +468,8 @@ class VoiceClient(VoiceProtocol):
                     # The following close codes are undocumented, so I will document them here.
                     # 1000 - normal closure (obviously)
                     # 4014 - voice channel has been deleted.
-                    # 4015 - voice server has crashed
-                    if exc.code in (1000, 4015):
+                    # 4015 - voice server has crashed, we should resume
+                    if exc.code == 1000:
                         _log.info(
                             "Disconnecting from voice normally, close code %d.",
                             exc.code,
@@ -494,6 +491,21 @@ class VoiceClient(VoiceProtocol):
                         )
                         await self.disconnect()
                         break
+                    if exc.code == 4015:
+                        _log.info("Disconnected from voice, trying to resume...")
+
+                        try:
+                            await self.ws.resume()
+                        except asyncio.TimeoutError:
+                            _log.info(
+                                "Could not resume the voice connection... Disconnection..."
+                            )
+                            if self._connected.is_set():
+                                await self.disconnect(force=True)
+                        else:
+                            _log.info("Successfully resumed voice connection")
+                            continue
+
                 if not reconnect:
                     await self.disconnect()
                     raise
@@ -565,6 +577,7 @@ class VoiceClient(VoiceProtocol):
         return encrypt_packet(header, data)
 
     def _encrypt_xsalsa20_poly1305(self, header: bytes, data) -> bytes:
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         nonce = bytearray(24)
         nonce[:12] = header
@@ -572,12 +585,14 @@ class VoiceClient(VoiceProtocol):
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext
 
     def _encrypt_xsalsa20_poly1305_suffix(self, header: bytes, data) -> bytes:
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         nonce = nacl.utils.random(nacl.secret.SecretBox.NONCE_SIZE)
 
         return header + box.encrypt(bytes(data), nonce).ciphertext + nonce
 
     def _encrypt_xsalsa20_poly1305_lite(self, header: bytes, data) -> bytes:
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         nonce = bytearray(24)
 
@@ -586,7 +601,22 @@ class VoiceClient(VoiceProtocol):
 
         return header + box.encrypt(bytes(data), bytes(nonce)).ciphertext + nonce[:4]
 
+    def _encrypt_aead_xchacha20_poly1305_rtpsize(self, header: bytes, data) -> bytes:
+        # Required as of Nov 18 2024
+        box = nacl.secret.Aead(bytes(self.secret_key))
+        nonce = bytearray(24)
+
+        nonce[:4] = struct.pack(">I", self._lite_nonce)
+        self.checked_add("_lite_nonce", 1, 4294967295)
+
+        return (
+            header
+            + box.encrypt(bytes(data), bytes(header), bytes(nonce)).ciphertext
+            + nonce[:4]
+        )
+
     def _decrypt_xsalsa20_poly1305(self, header, data):
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
 
         nonce = bytearray(24)
@@ -595,6 +625,7 @@ class VoiceClient(VoiceProtocol):
         return self.strip_header_ext(box.decrypt(bytes(data), bytes(nonce)))
 
     def _decrypt_xsalsa20_poly1305_suffix(self, header, data):
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
 
         nonce_size = nacl.secret.SecretBox.NONCE_SIZE
@@ -603,6 +634,7 @@ class VoiceClient(VoiceProtocol):
         return self.strip_header_ext(box.decrypt(bytes(data[:-nonce_size]), nonce))
 
     def _decrypt_xsalsa20_poly1305_lite(self, header, data):
+        # Deprecated, remove in 2.7
         box = nacl.secret.SecretBox(bytes(self.secret_key))
 
         nonce = bytearray(24)
@@ -611,9 +643,21 @@ class VoiceClient(VoiceProtocol):
 
         return self.strip_header_ext(box.decrypt(bytes(data), bytes(nonce)))
 
+    def _decrypt_aead_xchacha20_poly1305_rtpsize(self, header, data):
+        # Required as of Nov 18 2024
+        box = nacl.secret.Aead(bytes(self.secret_key))
+
+        nonce = bytearray(24)
+        nonce[:4] = data[-4:]
+        data = data[:-4]
+
+        return self.strip_header_ext(
+            box.decrypt(bytes(data), bytes(header), bytes(nonce))
+        )
+
     @staticmethod
     def strip_header_ext(data):
-        if data[0] == 0xBE and data[1] == 0xDE and len(data) > 4:
+        if len(data) > 4 and data[0] == 0xBE and data[1] == 0xDE:
             _, length = struct.unpack_from(">HH", data)
             offset = 4 + length * 4
             data = data[offset:]
@@ -729,11 +773,12 @@ class VoiceClient(VoiceProtocol):
         data: :class:`bytes`
             Bytes received by Discord via the UDP connection used for sending and receiving voice data.
         """
-        if 200 <= data[1] <= 204:
-            # RTCP received.
-            # RTCP provides information about the connection
-            # as opposed to actual audio data, so it's not
-            # important at the moment.
+        if data[1] != 0x78:
+            # We Should Ignore Any Payload Types We Do Not Understand
+            # Ref RFC 3550 5.1 payload type
+            # At Some Point We Noted That We Should Ignore Only Types 200 - 204 inclusive.
+            # They Were Marked As RTCP: Provides Information About The Connection
+            # This Was Too Broad Of A Whitelist, It Is Unclear If This Is Too Narrow Of A Whitelist
             return
         if self.paused:
             return

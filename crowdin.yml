@@ -5,7 +5,7 @@ preserve_hierarchy: true
 
 commit_message: "docs: Update translations"
 
-export_languages: ["de", "ja", "fr", "it", "hi", "ko", "pt-BR", "es-ES", "zh-CN"]
+export_languages: ["de", "ja", "fr", "it", "hi", "ko", "pt-BR", "es-ES", "zh-CN", "tr"]
 
 bundles:
   - 1

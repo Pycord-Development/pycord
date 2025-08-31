@@ -59,7 +59,7 @@ from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
-from .utils import MISSING, escape_mentions
+from .utils import MISSING, escape_mentions, find
 
 if TYPE_CHECKING:
     from .abc import (
@@ -84,6 +84,7 @@ if TYPE_CHECKING:
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
     from .types.message import MessageCall as MessageCallPayload
+    from .types.message import MessagePin as MessagePinPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
@@ -146,7 +147,9 @@ class Attachment(Hashable):
 
         .. describe:: hash(x)
 
-            Returns the hash of the attachment.
+            Returns the attachment's unique identifier.
+
+            This is equivalent to :attr:`id`.
 
     .. versionchanged:: 1.7
         Attachment can now be cast to :class:`str` and is hashable.
@@ -791,6 +794,38 @@ def flatten_handlers(cls):
     return cls
 
 
+class MessagePin:
+    """Represents information about a pinned message.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(
+        self,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePinPayload,
+    ):
+        self._state: ConnectionState = state
+        self._pinned_at: datetime.datetime = utils.parse_time(data["pinned_at"])
+        self._message: Message = state.create_message(
+            channel=channel, data=data["message"]
+        )
+
+    @property
+    def message(self) -> Message:
+        """The pinned message."""
+        return self._message
+
+    @property
+    def pinned_at(self) -> datetime.datetime:
+        """An aware timestamp of when the message was pinned."""
+        return self._pinned_at
+
+    def __repr__(self) -> str:
+        return f"<MessagePin pinned_at={self.pinned_at!r} message={self.message!r}>"
+
+
 @flatten_handlers
 class Message(Hashable):
     r"""Represents a message from Discord.
@@ -1018,7 +1053,7 @@ class Message(Hashable):
             StickerItem(data=d, state=state) for d in data.get("sticker_items", [])
         ]
         self.components: list[Component] = [
-            _component_factory(d) for d in data.get("components", [])
+            _component_factory(d, state=state) for d in data.get("components", [])
         ]
 
         try:
@@ -1281,7 +1316,7 @@ class Message(Hashable):
                     self.role_mentions.append(role)
 
     def _handle_components(self, components: list[ComponentPayload]):
-        self.components = [_component_factory(d) for d in components]
+        self.components = [_component_factory(d, state=self._state) for d in components]
 
     def _rebind_cached_references(
         self, new_guild: Guild, new_channel: TextChannel | Thread
@@ -1740,10 +1775,10 @@ class Message(Hashable):
         elif embeds is not MISSING:
             payload["embeds"] = [e.to_dict() for e in embeds]
 
+        flags = MessageFlags._from_value(self.flags.value)
+
         if suppress is not MISSING:
-            flags = MessageFlags._from_value(self.flags.value)
             flags.suppress_embeds = suppress
-            payload["flags"] = flags.value
 
         if allowed_mentions is MISSING:
             if (
@@ -1765,8 +1800,13 @@ class Message(Hashable):
         if view is not MISSING:
             self._state.prevent_view_updates_for(self.id)
             payload["components"] = view.to_components() if view else []
+            if view and view.is_components_v2():
+                flags.is_components_v2 = True
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument("cannot pass both file and files parameter to edit()")
+
+        if flags.value != self.flags.value:
+            payload["flags"] = flags.value
 
         if file is not MISSING or files is not MISSING:
             if file is not MISSING:
@@ -1802,7 +1842,9 @@ class Message(Hashable):
 
         if view and not view.is_finished():
             view.message = message
-            self._state.store_view(view, self.id)
+            view.refresh(message.components)
+            if view.is_dispatchable():
+                self._state.store_view(view, self.id)
 
         if delete_after is not None:
             await self.delete(delay=delete_after)
@@ -1834,7 +1876,7 @@ class Message(Hashable):
 
         Pins the message.
 
-        You must have the :attr:`~Permissions.manage_messages` permission to do
+        You must have the :attr:`~Permissions.pin_messages` permission to do
         this in a non-private channel context.
 
         Parameters
@@ -1863,7 +1905,7 @@ class Message(Hashable):
 
         Unpins the message.
 
-        You must have the :attr:`~Permissions.manage_messages` permission to do
+        You must have the :attr:`~Permissions.pin_messages` permission to do
         this in a non-private channel context.
 
         Parameters
@@ -2202,6 +2244,32 @@ class Message(Hashable):
 
         return data
 
+    def get_component(self, id: str | int) -> Component | None:
+        """Gets a component from this message. Roughly equal to `utils.get(message.components, ...)`.
+        If an :class:`int` is provided, the component will be retrieved by ``id``, otherwise by  ``custom_id``.
+        This method will also search nested components.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The id or custom_id the item to get
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``custom_id`` or ``id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        for i in self.components:
+            if getattr(i, attr, None) == id:
+                return i
+            elif hasattr(i, "get_component"):
+                if component := i.get_component(id):
+                    return component
+        return None
+
 
 class PartialMessage(Hashable):
     """Represents a partial message to aid with working messages when only
@@ -2443,7 +2511,9 @@ class PartialMessage(Hashable):
             msg = self._state.create_message(channel=self.channel, data=data)  # type: ignore
             if view and not view.is_finished():
                 view.message = msg
-                self._state.store_view(view, self.id)
+                view.refresh(msg.components)
+                if view.is_dispatchable():
+                    self._state.store_view(view, self.id)
             return msg
 
     async def end_poll(self) -> Message:
