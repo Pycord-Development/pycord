@@ -398,7 +398,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The invocation context to reset the cooldown under.
         """
         if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)
+            bucket = await self._buckets.get_bucket(ctx)
             bucket.reset()
 
     def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
