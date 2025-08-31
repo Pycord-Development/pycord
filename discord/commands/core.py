@@ -365,7 +365,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
             raise
 
-    def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
+    async def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
         """Checks whether the command is currently on cooldown.
 
         .. note::
@@ -385,7 +385,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if not self._buckets.valid:
             return False
 
-        bucket = self._buckets.get_bucket(ctx)  # type: ignore
+        bucket = await self._buckets.get_bucket(ctx)  # type: ignore
         current = utcnow().timestamp()
         return bucket.get_tokens(current) == 0
 
@@ -920,9 +920,7 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_union(self, annotation):
         return getattr(annotation, "__origin__", None) is Union or type(
             annotation
-        ) is getattr(
-            types, "UnionType", Union
-        )  # type: ignore
+        ) is getattr(types, "UnionType", Union)  # type: ignore
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore

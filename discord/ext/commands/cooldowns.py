@@ -33,6 +33,7 @@ from typing import TYPE_CHECKING, Any, Awaitable, Callable, Deque, TypeVar
 
 import discord.abc
 from discord.enums import Enum
+from discord import utils
 
 from ...abc import PrivateChannel
 from .errors import MaxConcurrencyReached
@@ -307,15 +308,7 @@ class DynamicCooldownMapping(CooldownMapping):
     async def create_bucket(
         self, ctx: Context | ApplicationContext | Message
     ) -> Cooldown:
-        from ...ext.commands import Context
-
-        if isinstance(ctx, Context):
-            result = self._factory(ctx.message)
-        else:
-            result = self._factory(ctx)
-        if inspect.isawaitable(result):
-            return await result
-        return result
+        return await utils.maybe_coroutine(self._factory, ctx)
 
 
 class _Semaphore:

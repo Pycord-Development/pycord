@@ -893,7 +893,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
     def cooldown(self) -> Cooldown | None:
         return self._buckets._cooldown
 
-    def is_on_cooldown(self, ctx: Context) -> bool:
+    async def is_on_cooldown(self, ctx: Context) -> bool:
         """Checks whether the command is currently on cooldown.
 
         Parameters
@@ -909,7 +909,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         if not self._buckets.valid:
             return False
 
-        bucket = self._buckets.get_bucket(ctx.message)
+        bucket = await self._buckets.get_bucket(ctx.message)
         dt = ctx.message.edited_at or ctx.message.created_at
         current = dt.replace(tzinfo=datetime.timezone.utc).timestamp()
         return bucket.get_tokens(current) == 0
@@ -1086,9 +1086,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
         return (
             getattr(annotation, "__origin__", None) is Union
             or type(annotation) is getattr(types, "UnionType", Union)
-        ) and type(
-            None
-        ) in annotation.__args__  # type: ignore
+        ) and type(None) in annotation.__args__  # type: ignore
 
     @property
     def signature(self) -> str:
