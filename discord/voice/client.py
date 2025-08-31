@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 from discord import opus
 from discord.errors import ClientException
 from discord.player import AudioPlayer, AudioSource
-from discord.sinks.core import Sink, RawData, is_rtcp
+from discord.sinks.core import RawData, Sink, is_rtcp
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
@@ -404,7 +404,7 @@ class VoiceClient(VoiceProtocol):
         nonce = bytearray(24)
         nonce[:4] = packet.data[-4:]
         voice_data = packet.data[:-4]
-        
+
         box = nacl.secret.SecretBox(bytes(self.secret_key))
         result = box.decrypt(bytes(voice_data), bytes(nonce))
 

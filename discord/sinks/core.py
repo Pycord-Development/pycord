@@ -26,17 +26,16 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections import namedtuple
 import logging
 import struct
 import sys
 import time
+from collections import namedtuple
 from collections.abc import Callable, Coroutine, Iterable
 from functools import partial
-import threading
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, overload
 
-from discord import utils, opus
+from discord import opus, utils
 from discord.enums import SpeakingState
 from discord.utils import MISSING
 
@@ -154,16 +153,25 @@ class SinkFilter(Generic[S]):
 
     @overload
     async def filter_user_connect(
-        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        sink: S,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> bool: ...
 
     @overload
     def filter_user_connect(
-        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        sink: S,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> bool: ...
 
     def filter_user_connect(
-        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        sink: S,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> bool | Coroutine[Any, Any, bool]:
         """|maybecoro|
 
@@ -256,16 +264,25 @@ class SinkHandler(Generic[S]):
 
     @overload
     async def handle_user_connect(
-        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        sink: S,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> Any: ...
 
     @overload
     def handle_user_connect(
-        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        sink: S,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> Any: ...
 
     def handle_user_connect(
-        self, sink: S, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        sink: S,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> Any | Coroutine[Any, Any, Any]:
         """|maybecoro|
 
@@ -292,9 +309,9 @@ class RawData:
     .. versionadded:: 2.0
     """
 
-    unpacker = struct.Struct('>xxHII')
-    _ext_header = namedtuple('Extension', 'profile length values')
-    _ext_magic = b'\xbe\xde'
+    unpacker = struct.Struct(">xxHII")
+    _ext_header = namedtuple("Extension", "profile length values")
+    _ext_magic = b"\xbe\xde"
 
     if TYPE_CHECKING:
         sequence: int
@@ -322,14 +339,14 @@ class RawData:
         self.decrypted_data: bytes | None = None
         self.decoded_data: bytes = MISSING
 
-        self.nonce: bytes = b''
+        self.nonce: bytes = b""
         self._rtpsize: bool = False
 
         self._decoder: opus.Decoder = opus.Decoder()
         self.receive_time: float = time.perf_counter()
 
         if self.cc:
-            fmt = '>%sI' % self.cc
+            fmt = ">%sI" % self.cc
             offset = struct.calcsize(fmt) + 12
             self.csrcs = struct.unpack(fmt, data[12:offset])
             self.data = data[offset:]
@@ -351,12 +368,12 @@ class RawData:
         if self._rtpsize:
             data = self.header[-4:] + data
 
-        profile, length = struct.unpack_from('>2sH', data)
+        profile, length = struct.unpack_from(">2sH", data)
 
         if profile == self._ext_magic:
             self._parse_bede_header(data, length)
 
-        values = struct.unpack('>%sI' % length, data[4 : 4 + length * 4])
+        values = struct.unpack(">%sI" % length, data[4 : 4 + length * 4])
         self.extension = self._ext_header(profile, length, values)
 
         offset = 4 + length * 4
@@ -371,23 +388,25 @@ class RawData:
         while n < length:
             next_byte = data[offset : offset + 1]
 
-            if next_byte == b'\x00':
+            if next_byte == b"\x00":
                 offset += 1
                 continue
 
-            header = struct.unpack('>B', next_byte)[0]
+            header = struct.unpack(">B", next_byte)[0]
 
             element_id = header >> 4
             element_len = 1 + (header & 0b0000_1111)
 
-            self.extension_data[element_id] = data[offset + 1 : offset + 1 + element_len]
+            self.extension_data[element_id] = data[
+                offset + 1 : offset + 1 + element_len
+            ]
             offset += 1 + element_len
             n += 1
 
     async def decode(self) -> bytes:
         if not self.decrypted_data:
-            _log.debug('Attempted to decode an empty decrypted data frame')
-            return b''
+            _log.debug("Attempted to decode an empty decrypted data frame")
+            return b""
 
         return await asyncio.to_thread(
             self._decoder.decode,
@@ -529,7 +548,9 @@ class Sink:
             task.add_done_callback(self.__dispatch_set.discard)
 
     def _call_user_connect_handlers(
-        self, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> None:
         for handler in self._handlers:
             task = asyncio.create_task(
@@ -742,7 +763,9 @@ class Sink:
         pass
 
     async def on_user_connect(
-        self, user: abc.Snowflake, channel: abc.Snowflake,
+        self,
+        user: abc.Snowflake,
+        channel: abc.Snowflake,
     ) -> None:
         pass
 

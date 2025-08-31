@@ -39,9 +39,7 @@ if TYPE_CHECKING:
 
     from discord import abc
 
-__all__ = (
-    "PCMSink",
-)
+__all__ = ("PCMSink",)
 
 
 class PCMSink(Sink):

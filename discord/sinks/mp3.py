@@ -45,9 +45,7 @@ if TYPE_CHECKING:
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
-    "MP3Sink",
-)
+__all__ = ("MP3Sink",)
 
 
 class MP3Sink(Sink):
@@ -92,12 +90,12 @@ class MP3Sink(Sink):
     def get_user_audio(self, user_id: int) -> io.BytesIO | None:
         """Gets a user's saved audio data, or ``None``."""
         ret = self.__audio_data.get(user_id)
-        _log.debug('Found stored user ID %s with buffer %s', user_id, ret)
+        _log.debug("Found stored user ID %s with buffer %s", user_id, ret)
         return ret
 
     def _create_audio_packet_for(self, uid: int) -> io.BytesIO:
         data = self.__audio_data[uid] = io.BytesIO()
-        _log.debug('Created user ID %s buffer', uid)
+        _log.debug("Created user ID %s buffer", uid)
         return data
 
     @overload

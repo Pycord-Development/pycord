@@ -45,9 +45,7 @@ if TYPE_CHECKING:
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
-    "MKVSink",
-)
+__all__ = ("MKVSink",)
 
 
 class MKVSink(Sink):

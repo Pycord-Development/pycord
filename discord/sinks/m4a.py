@@ -47,9 +47,7 @@ if TYPE_CHECKING:
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
-    "M4ASink",
-)
+__all__ = ("M4ASink",)
 
 
 class M4ASink(Sink):

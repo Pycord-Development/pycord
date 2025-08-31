@@ -32,7 +32,6 @@ import socket
 import struct
 import threading
 import time
-from collections import deque
 from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any, TypedDict
 
@@ -60,7 +59,7 @@ if TYPE_CHECKING:
 MISSING = utils.MISSING
 SocketReaderCallback = Callable[[bytes], Any]
 _log = logging.getLogger(__name__)
-_recv_log = logging.getLogger('discord.voice.receiver')
+_recv_log = logging.getLogger("discord.voice.receiver")
 
 
 class SocketReader(threading.Thread):
@@ -156,13 +155,15 @@ class SocketReader(threading.Thread):
         while not self._end.is_set():
             if not self._running.is_set():
                 if not self._warned_wait:
-                    _log.warning('Socket reader %s is waiting to be set as running', self.name)
+                    _log.warning(
+                        "Socket reader %s is waiting to be set as running", self.name
+                    )
                     self._warned_wait = True
                 self._running.wait()
                 continue
 
             if self._warned_wait:
-                _log.info('Socket reader %s was set as running', self.name)
+                _log.info("Socket reader %s was set as running", self.name)
                 self._warned_wait = False
 
             try:
@@ -189,9 +190,13 @@ class SocketReader(threading.Thread):
             else:
                 for cb in self._callbacks:
                     try:
-                        task = self.state.loop.create_task(utils.maybe_coroutine(cb, data))
+                        task = self.state.loop.create_task(
+                            utils.maybe_coroutine(cb, data)
+                        )
                         self.state._sink_dispatch_task_set.add(task)
-                        task.add_done_callback(self.state._sink_dispatch_task_set.discard)
+                        task.add_done_callback(
+                            self.state._sink_dispatch_task_set.discard
+                        )
                     except Exception:
                         _log.exception(
                             "Error while calling %s in %s",
@@ -311,7 +316,7 @@ class VoiceConnectionState:
         self.sinks.clear()
 
     async def handle_voice_recv_packet(self, packet: bytes) -> None:
-        _recv_log.debug('Handling voice packet %s', packet)
+        _recv_log.debug("Handling voice packet %s", packet)
         if packet[1] != 0x78:
             # We should ignore any payload types we do not understand
             # Ref: RFC 3550 5.1 payload type
@@ -321,13 +326,15 @@ class VoiceConnectionState:
             return
 
         if self.paused_recording():
-            _recv_log.debug('Ignoring packet %s because recording is stopped', packet)
+            _recv_log.debug("Ignoring packet %s because recording is stopped", packet)
             return
 
         data = RawData(packet, self.client)
 
         if data.decrypted_data == opus.OPUS_SILENCE:
-            _recv_log.debug('Ignoring packet %s because it is an opus silence frame', data)
+            _recv_log.debug(
+                "Ignoring packet %s because it is an opus silence frame", data
+            )
             return
 
         await data.decode()
@@ -336,7 +343,7 @@ class VoiceConnectionState:
         return not self.user_voice_timestamps or not self.sync_recording_start
 
     def dispatch_packet_sinks(self, data: RawData) -> None:
-        _log.debug('Dispatching packet %s in all sinks', data)
+        _log.debug("Dispatching packet %s in all sinks", data)
         if data.ssrc not in self.user_ssrc_map:
             if self.is_first_packet():
                 self.first_received_packet_ts = data.receive_time
@@ -465,7 +472,7 @@ class VoiceConnectionState:
                     "speaking": speaking,
                 }
         elif op == OpCodes.client_connect:
-            user_ids = [int(uid) for uid in data['user_ids']]
+            user_ids = [int(uid) for uid in data["user_ids"]]
 
             for uid in user_ids:
                 user = self.get_user(uid)
@@ -487,20 +494,23 @@ class VoiceConnectionState:
         self._sink_dispatch_task_set.add(task)
         task.add_done_callback(self._sink_dispatch_task_set.discard)
 
-    async def _dispatch_user_connect(self, chid: int | None, user: abc.Snowflake) -> None:
+    async def _dispatch_user_connect(
+        self, chid: int | None, user: abc.Snowflake
+    ) -> None:
         channel = self.guild._resolve_channel(chid) or Object(id=chid or 0)
 
         for sink in self.sinks:
             if sink.is_paused():
                 continue
 
-            sink.dispatch('unfiltered_user_connect', user, channel)
+            sink.dispatch("unfiltered_user_connect", user, channel)
 
             if sink._filters:
                 futures = [
                     self.loop.create_task(
                         utils.maybe_coroutine(fil.filter_user_connect, user, channel)
-                    ) for fil in sink._filters
+                    )
+                    for fil in sink._filters
                 ]
                 strat = sink._filter_strat
 
@@ -515,7 +525,7 @@ class VoiceConnectionState:
                 result = True
 
             if result:
-                sink.dispatch('user_connect', user, channel)
+                sink.dispatch("user_connect", user, channel)
                 sink._call_user_connect_handlers(user, channel)
 
     async def _dispatch_speaking_state(
@@ -532,7 +542,9 @@ class VoiceConnectionState:
             if sink._filters:
                 futures = [
                     self.loop.create_task(
-                        utils.maybe_coroutine(fil.filter_packet, sink, resolved, before, after)
+                        utils.maybe_coroutine(
+                            fil.filter_packet, sink, resolved, before, after
+                        )
                     )
                     for fil in sink._filters
                 ]

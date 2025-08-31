@@ -47,9 +47,7 @@ if TYPE_CHECKING:
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
-    "MP4Sink",
-)
+__all__ = ("MP4Sink",)
 
 
 class MP4Sink(Sink):
