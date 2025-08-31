@@ -104,7 +104,6 @@ These changes are available on the `master` branch, but have not yet been releas
   `Interaction.callback.is_loading()` and `Interaction.callback.is_ephemeral()`.
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
 
-
 ### Fixed
 
 - Fixed `Enum` options not setting the correct type when only one choice is available.

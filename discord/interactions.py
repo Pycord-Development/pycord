@@ -158,7 +158,7 @@ class Interaction:
     callback: Optional[:class:`InteractionCallback`]
         The callback of the interaction. Contains information about the status of the interaction response.
         Will be `None` until the interaction is responded to.
-        
+
         .. versionadded:: 2.7
     command: Optional[:class:`ApplicationCommand`]
         The command that this interaction belongs to.
