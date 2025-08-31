@@ -63,7 +63,7 @@ class BucketType(Enum):
     category = 5
     role = 6
 
-    def get_key(self, ctx: Context | ApplicationContext) -> Any:
+    def get_key(self, ctx: Context | ApplicationContext | Message) -> Any:
         if self is BucketType.user:
             return ctx.author.id
         elif self is BucketType.guild:
@@ -90,7 +90,7 @@ class BucketType(Enum):
                 else ctx.author.top_role
             ).id  # type: ignore
 
-    def __call__(self, ctx: Context | ApplicationContext) -> Any:
+    def __call__(self, ctx: Context | ApplicationContext | Message) -> Any:
         return self.get_key(ctx)
 
 
@@ -215,14 +215,14 @@ class CooldownMapping:
     def __init__(
         self,
         original: Cooldown | None,
-        type: Callable[[Context | ApplicationContext], Any],
+        type: Callable[[Context | ApplicationContext | Message], Any],
     ) -> None:
         if not callable(type):
             raise TypeError("Cooldown type must be a BucketType or callable")
 
         self._cache: dict[Any, Cooldown] = {}
         self._cooldown: Cooldown | None = original
-        self._type: Callable[[Context | ApplicationContext], Any] = type
+        self._type: Callable[[Context | ApplicationContext | Message], Any] = type
 
     def copy(self) -> CooldownMapping:
         ret = CooldownMapping(self._cooldown, self._type)
@@ -234,14 +234,14 @@ class CooldownMapping:
         return self._cooldown is not None
 
     @property
-    def type(self) -> Callable[[Context | ApplicationContext], Any]:
+    def type(self) -> Callable[[Context | ApplicationContext | Message], Any]:
         return self._type
 
     @classmethod
     def from_cooldown(cls: type[C], rate, per, type) -> C:
         return cls(Cooldown(rate, per), type)
 
-    def _bucket_key(self, ctx: Context | ApplicationContext) -> Any:
+    def _bucket_key(self, ctx: Context | ApplicationContext | Message) -> Any:
         return self._type(ctx)
 
     def _verify_cache_integrity(self, current: float | None = None) -> None:
@@ -253,11 +253,11 @@ class CooldownMapping:
         for k in dead_keys:
             del self._cache[k]
 
-    async def create_bucket(self, ctx: Context | ApplicationContext) -> Cooldown:
+    async def create_bucket(self, ctx: Context | ApplicationContext | Message) -> Cooldown:
         return self._cooldown.copy()  # type: ignore
 
     async def get_bucket(
-        self, ctx: Context | ApplicationContext, current: float | None = None
+        self, ctx: Context | ApplicationContext | Message, current: float | None = None
     ) -> Cooldown:
         if self._type is BucketType.default:
             return self._cooldown  # type: ignore
@@ -274,7 +274,7 @@ class CooldownMapping:
         return bucket
 
     async def update_rate_limit(
-        self, ctx: Context | ApplicationContext, current: float | None = None
+        self, ctx: Context | ApplicationContext | Message, current: float | None = None
     ) -> float | None:
         bucket = await self.get_bucket(ctx, current)
         return bucket.update_rate_limit(current)
@@ -284,13 +284,13 @@ class DynamicCooldownMapping(CooldownMapping):
     def __init__(
         self,
         factory: Callable[
-            [Context | ApplicationContext], Cooldown | Awaitable[Cooldown]
+            [Context | ApplicationContext | Message], Cooldown | Awaitable[Cooldown]
         ],
-        type: Callable[[Context | ApplicationContext], Any],
+        type: Callable[[Context | ApplicationContext | Message], Any],
     ) -> None:
         super().__init__(None, type)
         self._factory: Callable[
-            [Context | ApplicationContext], Cooldown | Awaitable[Cooldown]
+            [Context | ApplicationContext | Message], Cooldown | Awaitable[Cooldown]
         ] = factory
 
     def copy(self) -> DynamicCooldownMapping:
@@ -302,7 +302,7 @@ class DynamicCooldownMapping(CooldownMapping):
     def valid(self) -> bool:
         return True
 
-    async def create_bucket(self, ctx: Context | ApplicationContext) -> Cooldown:
+    async def create_bucket(self, ctx: Context | ApplicationContext | Message) -> Cooldown:
         from ...ext.commands import Context
 
         if isinstance(ctx, Context):
@@ -399,10 +399,10 @@ class MaxConcurrency:
             f"<MaxConcurrency per={self.per!r} number={self.number} wait={self.wait}>"
         )
 
-    def get_key(self, ctx: Context | ApplicationContext) -> Any:
+    def get_key(self, ctx: Context | ApplicationContext | Message) -> Any:
         return self.per.get_key(ctx)
 
-    async def acquire(self, ctx: Context | ApplicationContext) -> None:
+    async def acquire(self, ctx: Context | ApplicationContext | Message) -> None:
         key = self.get_key(ctx)
 
         try:
@@ -414,7 +414,7 @@ class MaxConcurrency:
         if not acquired:
             raise MaxConcurrencyReached(self.number, self.per)
 
-    async def release(self, ctx: Context | ApplicationContext) -> None:
+    async def release(self, ctx: Context | ApplicationContext | Message) -> None:
         # Technically there's no reason for this function to be async
         # But it might be more useful in the future
         key = self.get_key(ctx)

@@ -2360,18 +2360,18 @@ def cooldown(
 
 def dynamic_cooldown(
     cooldown: Callable[
-        [Context | ApplicationContext], Cooldown | Awaitable[Cooldown] | None
+        [Context | ApplicationContext | Message], Cooldown | Awaitable[Cooldown] | None
     ],
     type: BucketType = BucketType.default,
 ) -> Callable[[T], T]:
     """A decorator that adds a dynamic cooldown to a command.
 
     This supports both sync and async cooldown factories and accepts either
-    a :class:`discord.Message` or :class:`discord.ApplicationContext`.
+    a :class:`discord.Message`, :class:`discord.ApplicationContext`, or :class:`~.Context`.
 
     Parameters
     ----------
-    cooldown: Callable[[Union[Message, ApplicationContext]], Union[Cooldown, Awaitable[Cooldown], None]]
+    cooldown: Callable[[Union[:class:`~discord.Message`, :class:`~.Context`, :class:`~discord.ApplicationContext`]], Union[:class:`~.Cooldown`, Awaitable[:class:`~.Cooldown`], None]]
         A function that takes a message or context and returns a cooldown
         to apply for that invocation or ``None`` to bypass.
     type: :class:`BucketType`
