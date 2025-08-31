@@ -744,7 +744,7 @@ def loop(
     time: datetime.time | Sequence[datetime.time] = MISSING,
     count: int | None = None,
     reconnect: bool = True,
-    loop: asyncio.AbstractEventLoop = MISSING,
+    loop: asyncio.AbstractEventLoop | None = None,
     name: str | None = MISSING,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
@@ -778,9 +778,15 @@ def loop(
         Whether to handle errors and restart the task
         using an exponential back-off algorithm similar to the
         one used in :meth:`discord.Client.connect`.
-    loop: :class:`asyncio.AbstractEventLoop`
-        The loop to use to register the task, if not given
-        defaults to :func:`asyncio.get_event_loop`.
+    loop: Optional[:class:`asyncio.AbstractEventLoop`]
+        The loop to use to register the task, defaults to ``None``.
+
+        .. versionchanged:: 2.7
+            This can now be ``None``
+    name: Optional[:class:`str`]
+        The name to create the task with, defaults to ``None``.
+
+        .. versionadded:: 2.7
 
     Raises
     ------
