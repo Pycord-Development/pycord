@@ -253,7 +253,9 @@ class CooldownMapping:
         for k in dead_keys:
             del self._cache[k]
 
-    async def create_bucket(self, ctx: Context | ApplicationContext | Message) -> Cooldown:
+    async def create_bucket(
+        self, ctx: Context | ApplicationContext | Message
+    ) -> Cooldown:
         return self._cooldown.copy()  # type: ignore
 
     async def get_bucket(
@@ -302,7 +304,9 @@ class DynamicCooldownMapping(CooldownMapping):
     def valid(self) -> bool:
         return True
 
-    async def create_bucket(self, ctx: Context | ApplicationContext | Message) -> Cooldown:
+    async def create_bucket(
+        self, ctx: Context | ApplicationContext | Message
+    ) -> Cooldown:
         from ...ext.commands import Context
 
         if isinstance(ctx, Context):
