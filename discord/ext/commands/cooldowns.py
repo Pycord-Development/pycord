@@ -26,14 +26,13 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import inspect
 import time
 from collections import deque
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Deque, TypeVar
 
 import discord.abc
-from discord.enums import Enum
 from discord import utils
+from discord.enums import Enum
 
 from ...abc import PrivateChannel
 from .errors import MaxConcurrencyReached
