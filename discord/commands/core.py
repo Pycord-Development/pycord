@@ -922,9 +922,7 @@ class SlashCommand(ApplicationCommand):
     def _is_typing_union(self, annotation):
         return getattr(annotation, "__origin__", None) is Union or type(
             annotation
-        ) is getattr(
-            types, "UnionType", Union
-        )  # type: ignore
+        ) is getattr(types, "UnionType", Union)  # type: ignore
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore

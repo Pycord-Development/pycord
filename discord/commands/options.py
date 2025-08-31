@@ -197,6 +197,7 @@ class Option:
         if self.name is not None:
             self.name = str(self.name)
         self._parameter_name = self.name  # default
+        input_type = Option._strip_none_type(input_type)
         self._raw_type: InputType | tuple = input_type
 
         enum_choices = []
