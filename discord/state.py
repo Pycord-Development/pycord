@@ -66,6 +66,7 @@ from .poll import Poll, PollAnswerCount
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent
+from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
@@ -283,6 +284,7 @@ class ConnectionState:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)
         self._voice_clients: dict[int, VoiceClient] = {}
+        self._sounds: dict[int, SoundboardSound] = {}
 
         # LRU of max size 128
         self._private_channels: OrderedDict[int, PrivateChannel] = OrderedDict()
@@ -651,6 +653,7 @@ class ConnectionState:
         except asyncio.CancelledError:
             pass
         else:
+            await self._add_default_sounds()
             # dispatch the event
             self.call_handlers("ready")
             self.dispatch("ready")
@@ -2011,6 +2014,83 @@ class ConnectionState:
         data: MessagePayload,
     ) -> Message:
         return Message(state=self, channel=channel, data=data)
+
+    def parse_voice_channel_effect_send(self, data) -> None:
+        if sound_id := int(data.get("sound_id", 0)):
+            sound = self._get_sound(sound_id)
+            if sound is None:
+                sound = PartialSoundboardSound(data, self, self.http)
+            raw = VoiceChannelEffectSendEvent(data, self, sound)
+        else:
+            raw = VoiceChannelEffectSendEvent(data, self, None)
+
+        self.dispatch("voice_channel_effect_send", raw)
+
+    def _get_sound(self, sound_id: int) -> SoundboardSound | None:
+        return self._sounds.get(sound_id)
+
+    def _update_sound(self, sound: SoundboardSound) -> SoundboardSound | None:
+        before = self._sounds.get(sound.id)
+        self._sounds[sound.id] = sound
+        return before
+
+    def parse_soundboard_sounds(self, data) -> None:
+        guild_id = int(data["guild_id"])
+        for sound_data in data["soundboard_sounds"]:
+            self._add_sound(
+                SoundboardSound(
+                    state=self, http=self.http, data=sound_data, guild_id=guild_id
+                )
+            )
+
+    def parse_guild_soundboard_sounds_update(self, data):
+        before_sounds = []
+        after_sounds = []
+        for sound_data in data["soundboard_sounds"]:
+            after = SoundboardSound(state=self, http=self.http, data=sound_data)
+            if before := self._update_sound(after):
+                before_sounds.append(before)
+            after_sounds.append(after)
+        if len(before_sounds) == len(after_sounds):
+            self.dispatch("soundboard_sounds_update", before_sounds, after_sounds)
+        self.dispatch("raw_soundboard_sounds_update", after_sounds)
+
+    def parse_guild_soundboard_sound_update(self, data):
+        after = SoundboardSound(state=self, http=self.http, data=data)
+        if before := self._update_sound(after):
+            self.dispatch("soundboard_sound_update", before, after)
+        self.dispatch("raw_soundboard_sound_update", after)
+
+    def parse_guild_soundboard_sound_create(self, data):
+        sound = SoundboardSound(state=self, http=self.http, data=data)
+        self._add_sound(sound)
+        self.dispatch("soundboard_sound_create", sound)
+
+    def parse_guild_soundboard_sound_delete(self, data):
+        sound_id = int(data["sound_id"])
+        sound = self._get_sound(sound_id)
+        if sound is not None:
+            self._remove_sound(sound)
+            self.dispatch("soundboard_sound_delete", sound)
+        self.dispatch(
+            "raw_soundboard_sound_delete", RawSoundboardSoundDeleteEvent(data)
+        )
+
+    async def _add_default_sounds(self) -> None:
+        default_sounds = await self.http.get_default_sounds()
+        for default_sound in default_sounds:
+            sound = SoundboardSound(state=self, http=self.http, data=default_sound)
+            self._add_sound(sound)
+
+    def _add_sound(self, sound: SoundboardSound) -> None:
+        self._sounds[sound.id] = sound
+
+    def _remove_sound(self, sound: SoundboardSound) -> None:
+        self._sounds.pop(sound.id, None)
+
+    @property
+    def sounds(self) -> list[SoundboardSound]:
+        return list(self._sounds.values())
 
 
 class AutoShardedConnectionState(ConnectionState):

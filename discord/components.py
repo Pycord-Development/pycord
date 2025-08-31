@@ -39,7 +39,7 @@ from .enums import (
 )
 from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, get_slots
+from .utils import MISSING, find, get_slots
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
@@ -50,6 +50,7 @@ if TYPE_CHECKING:
     from .types.components import ContainerComponent as ContainerComponentPayload
     from .types.components import FileComponent as FileComponentPayload
     from .types.components import InputText as InputTextComponentPayload
+    from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
     from .types.components import SectionComponent as SectionComponentPayload
@@ -76,6 +77,7 @@ __all__ = (
     "FileComponent",
     "Separator",
     "Container",
+    "Label",
 )
 
 C = TypeVar("C", bound="Component")
@@ -186,6 +188,25 @@ class ActionRow(Component):
 
     def walk_components(self) -> Iterator[Component]:
         yield from self.children
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     @classmethod
     def with_components(cls, *components, id=None):
@@ -375,6 +396,10 @@ class SelectMenu(Component):
         Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`,
         :attr:`ComponentType.mentionable_select`, and :attr:`ComponentType.channel_select`.
 
+    .. versionchanged:: 2.7
+
+        Added the :attr:`required` attribute for use in modals.
+
     Attributes
     ----------
     type: :class:`ComponentType`
@@ -398,7 +423,9 @@ class SelectMenu(Component):
         Will be an empty list for all component types
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
-        Whether the select is disabled or not.
+        Whether the select is disabled or not. Not usable in modals. Defaults to ``False``.
+    required: Optional[:class:`bool`]
+        Whether the select is required or not. Only useable in modals. Defaults to ``True``.
     """
 
     __slots__: tuple[str, ...] = (
@@ -409,6 +436,7 @@ class SelectMenu(Component):
         "options",
         "channel_types",
         "disabled",
+        "required",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -428,6 +456,7 @@ class SelectMenu(Component):
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
+        self.required: bool | None = data.get("required")
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -445,6 +474,8 @@ class SelectMenu(Component):
             payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.placeholder:
             payload["placeholder"] = self.placeholder
+        if self.required is not None:
+            payload["required"] = self.required
 
         return payload
 
@@ -620,6 +651,28 @@ class Section(Component):
             yield from r + [self.accessory]
         yield from r
 
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        if self.accessory and id == getattr(self.accessory, attr, None):
+            return self.accessory
+        component = find(lambda i: getattr(i, attr, None) == id, self.components)
+        return component
+
 
 class TextDisplay(Component):
     """Represents a Text Display from Components V2.
@@ -690,7 +743,6 @@ class UnfurledMediaItem(AssetMixin):
 
     @property
     def url(self) -> str:
-        """Returns this media item's url."""
         return self._url
 
     @url.setter
@@ -797,7 +849,6 @@ class MediaGalleryItem:
 
     @property
     def url(self) -> str:
-        """Returns the URL of this gallery's underlying media item."""
         return self.media.url
 
     def is_dispatchable(self) -> bool:
@@ -1036,6 +1087,81 @@ class Container(Component):
             else:
                 yield c
 
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this container. Roughly equivalent to `utils.get(container.components, ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+        This method will also search for nested components.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        for i in self.components:
+            if getattr(i, attr, None) == id:
+                return i
+            elif hasattr(i, "get_component"):
+                if component := i.get_component(id):
+                    return component
+        return None
+
+
+class Label(Component):
+    """Represents a Label used in modals as the top-level component.
+
+    This is a component that allows you to add additional text to another component.
+    ``component`` may only be:
+
+    - :class:`InputText`
+    - :class:`SelectMenu` (string)
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    component: :class:`Component`
+        The component contained in this label. Currently supports :class:`InputText` and :class:`SelectMenu`.
+    label: :class:`str`
+        The main text associated with this label's ``component``, up to 45 characters.
+    description: Optional[:class:`str`]
+        The description associated with this label's ``component``, up to 100 characters.
+    """
+
+    __slots__: tuple[str, ...] = ("component", "label", "description")
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = ()
+
+    def __init__(self, data: LabelComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data["id"]
+        self.component: Component = _component_factory(data["component"])
+        self.label: str = data["label"]
+        self.description: str | None = data.get("description")
+
+    def to_dict(self) -> LabelComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "component": self.component.to_dict(),
+            "label": self.label,
+            "description": self.description,
+        }
+        return payload
+
+    def walk_components(self) -> Iterator[Component]:
+        yield from [self.component]
+
 
 COMPONENT_MAPPINGS = {
     1: ActionRow,
@@ -1053,6 +1179,7 @@ COMPONENT_MAPPINGS = {
     13: FileComponent,
     14: Separator,
     17: Container,
+    18: Label,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)
