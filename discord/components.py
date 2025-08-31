@@ -39,7 +39,7 @@ from .enums import (
 )
 from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, get_slots
+from .utils import MISSING, find, get_slots
 
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
@@ -188,6 +188,25 @@ class ActionRow(Component):
 
     def walk_components(self) -> Iterator[Component]:
         yield from self.children
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     @classmethod
     def with_components(cls, *components, id=None):
@@ -632,6 +651,28 @@ class Section(Component):
             yield from r + [self.accessory]
         yield from r
 
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        if self.accessory and id == getattr(self.accessory, attr, None):
+            return self.accessory
+        component = find(lambda i: getattr(i, attr, None) == id, self.components)
+        return component
+
 
 class TextDisplay(Component):
     """Represents a Text Display from Components V2.
@@ -702,7 +743,6 @@ class UnfurledMediaItem(AssetMixin):
 
     @property
     def url(self) -> str:
-        """Returns this media item's url."""
         return self._url
 
     @url.setter
@@ -809,7 +849,6 @@ class MediaGalleryItem:
 
     @property
     def url(self) -> str:
-        """Returns the URL of this gallery's underlying media item."""
         return self.media.url
 
     def is_dispatchable(self) -> bool:
@@ -1047,6 +1086,32 @@ class Container(Component):
                 yield from c.walk_components()
             else:
                 yield c
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this container. Roughly equivalent to `utils.get(container.components, ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+        This method will also search for nested components.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        for i in self.components:
+            if getattr(i, attr, None) == id:
+                return i
+            elif hasattr(i, "get_component"):
+                if component := i.get_component(id):
+                    return component
+        return None
 
 
 class Label(Component):

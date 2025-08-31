@@ -804,6 +804,7 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
+            option = Option._strip_none_type(option)
             if self._is_typing_literal(option):
                 literal_values = get_args(option)
                 if not all(isinstance(v, (str, int, float)) for v in literal_values):

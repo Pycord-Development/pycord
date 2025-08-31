@@ -59,7 +59,7 @@ from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
-from .utils import MISSING, escape_mentions
+from .utils import MISSING, escape_mentions, find
 
 if TYPE_CHECKING:
     from .abc import (
@@ -2243,6 +2243,32 @@ class Message(Hashable):
             data["guild_id"] = self.guild.id
 
         return data
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Gets a component from this message. Roughly equal to `utils.get(message.components, ...)`.
+        If an :class:`int` is provided, the component will be retrieved by ``id``, otherwise by  ``custom_id``.
+        This method will also search nested components.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The id or custom_id the item to get
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``custom_id`` or ``id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        for i in self.components:
+            if getattr(i, attr, None) == id:
+                return i
+            elif hasattr(i, "get_component"):
+                if component := i.get_component(id):
+                    return component
+        return None
 
 
 class PartialMessage(Hashable):
