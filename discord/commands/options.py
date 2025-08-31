@@ -386,9 +386,9 @@ class Option:
                 raise TypeError("Option type cannot be only NoneType")
             if len(filtered) == 1:
                 return filtered[0]
-            if all(getattr(t, "__origin__", None) is Literal for t in filtered):
-                return Union[filtered]
-            return Union[filtered]
+
+            return filtered
+
         return input_type
 
     def to_dict(self) -> dict:
