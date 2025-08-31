@@ -90,11 +90,13 @@ class Loop(Generic[LF]):
         time: datetime.time | Sequence[datetime.time],
         count: int | None,
         reconnect: bool,
-        loop: asyncio.AbstractEventLoop,
+        loop: asyncio.AbstractEventLoop | None,
+        name: str | None,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
-        self.loop: asyncio.AbstractEventLoop = loop
+        self.loop: asyncio.AbstractEventLoop | None = loop
+        self.name: str = f'pycord-ext-task ({id(self):#x}): {coro.__qualname__}' if name in (None, MISSING) else name
         self.count: int | None = count
         self._current_loop = 0
         self._handle: SleepHandle = MISSING
@@ -145,8 +147,15 @@ class Loop(Generic[LF]):
         if name.endswith("_loop"):
             setattr(self, f"_{name}_running", False)
 
+    def _create_task(self, *args: Any, **kwargs: Any) -> asyncio.Task[None]:
+        if self.loop is None:
+            meth = asyncio.create_task
+        else:
+            meth = self.loop.create_task
+        return meth(self._loop(*args, **kwargs), name=self.name)
+
     def _try_sleep_until(self, dt: datetime.datetime):
-        self._handle = SleepHandle(dt=dt, loop=self.loop)
+        self._handle = SleepHandle(dt=dt, loop=asyncio.get_running_loop())
         return self._handle.wait()
 
     async def _loop(self, *args: Any, **kwargs: Any) -> None:
@@ -218,6 +227,7 @@ class Loop(Generic[LF]):
             count=self.count,
             reconnect=self.reconnect,
             loop=self.loop,
+            name=self.name,
         )
         copy._injected = obj
         copy._before_loop = self._before_loop
@@ -330,10 +340,7 @@ class Loop(Generic[LF]):
         if self._injected is not None:
             args = (self._injected, *args)
 
-        if self.loop is MISSING:
-            self.loop = asyncio.get_event_loop()
-
-        self._task = self.loop.create_task(self._loop(*args, **kwargs))
+        self._task = self._create_task(*args, **kwargs)
         return self._task
 
     def stop(self) -> None:
@@ -738,6 +745,7 @@ def loop(
     count: int | None = None,
     reconnect: bool = True,
     loop: asyncio.AbstractEventLoop = MISSING,
+    name: str | None = MISSING,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
     optional reconnect logic. The decorator returns a :class:`Loop`.
@@ -793,6 +801,7 @@ def loop(
             time=time,
             reconnect=reconnect,
             loop=loop,
+            name=name,
         )
 
     return decorator
