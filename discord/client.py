@@ -52,6 +52,7 @@ from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
 from .monetization import SKU, Entitlement
 from .object import Object
+from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
@@ -71,6 +72,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .poll import Poll
+    from .soundboard import SoundboardSound
     from .ui.item import Item
     from .voice import VoiceProtocol
 
@@ -550,6 +552,15 @@ class Client:
         The default view error handler provided by the client.
 
         This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
+
+        Parameters
+        ----------
+        error: :class:`Exception`
+            The exception that was raised.
+        item: :class:`Item`
+            The item that the user interacted with.
+        interaction: :class:`Interaction`
+            The interaction that was received.
         """
 
         print(
@@ -567,6 +578,13 @@ class Client:
         The default implementation prints the traceback to stderr.
 
         This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+
+        Parameters
+        ----------
+        error: :class:`Exception`
+            The exception that was raised.
+        interaction: :class:`Interaction`
+            The interaction that was received.
         """
 
         print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
@@ -1276,7 +1294,7 @@ class Client:
         TypeError
             The ``func`` parameter is not a coroutine function.
         ValueError
-            The ``name`` (event name) does not start with 'on_'
+            The ``name`` (event name) does not start with ``on_``.
 
         Example
         -------
@@ -1340,7 +1358,7 @@ class Client:
         TypeError
             The function being listened to is not a coroutine.
         ValueError
-            The ``name`` (event name) does not start with 'on_'
+            The ``name`` (event name) does not start with ``on_``.
 
         Example
         -------
@@ -2293,3 +2311,46 @@ class Client:
         )
         if self._connection.cache_app_emojis and self._connection.get_emoji(emoji.id):
             self._connection.remove_emoji(emoji)
+
+    def get_sound(self, sound_id: int) -> SoundboardSound | None:
+        """Gets a :class:`.Sound` from the bot's sound cache.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        sound_id: :class:`int`
+            The ID of the sound to get.
+
+        Returns
+        -------
+        Optional[:class:`.SoundboardSound`]
+            The sound with the given ID.
+        """
+        return self._connection._get_sound(sound_id)
+
+    @property
+    def sounds(self) -> list[SoundboardSound]:
+        """A list of all the sounds the bot can see.
+
+        .. versionadded:: 2.7
+        """
+        return self._connection.sounds
+
+    async def fetch_default_sounds(self) -> list[SoundboardSound]:
+        """|coro|
+
+        Fetches the bot's default sounds.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        List[:class:`.SoundboardSound`]
+            The bot's default sounds.
+        """
+        data = await self._connection.http.get_default_sounds()
+        return [
+            SoundboardSound(http=self.http, state=self._connection, data=s)
+            for s in data
+        ]

@@ -175,6 +175,16 @@ class Message(TypedDict):
     message_snapshots: NotRequired[list[MessageSnapshot]]
 
 
+class MessagePin(TypedDict):
+    pinned_at: str
+    message: Message
+
+
+class MessagePinPagination(TypedDict):
+    items: list[MessagePin]
+    has_more: bool
+
+
 AllowedMentionType = Literal["roles", "users", "everyone"]
 
 

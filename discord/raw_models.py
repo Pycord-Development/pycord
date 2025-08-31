@@ -31,7 +31,12 @@ from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
+from .enums import (
+    AuditLogAction,
+    ChannelType,
+    ReactionType,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, MessageableChannel
@@ -39,6 +44,7 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
+    from .soundboard import PartialSoundboardSound
     from .state import ConnectionState
     from .threads import Thread
     from .types.raw_models import (
@@ -85,6 +91,7 @@ __all__ = (
     "RawAuditLogEntryEvent",
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
+    "RawSoundboardSoundDeleteEvent",
     "RawVoiceServerUpdateEvent",
     "RawVoiceStateUpdateEvent",
 )
@@ -982,3 +989,17 @@ class RawVoiceServerUpdateEvent(_PayloadLike):
     def guild(self) -> Guild | None:
         """Returns the guild this server update is from."""
         return self._state._get_guild(self.guild_id)
+
+
+class RawSoundboardSoundDeleteEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_soundboard_sound_delete`.
+
+    .. versionadded 2.7
+    """
+
+    __slots__ = ("sound_id", "guild_id", "data")
+
+    def __init__(self, data: PartialSoundboardSound) -> None:
+        self.sound_id: int = int(data["sound_id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.data: PartialSoundboardSound = data
