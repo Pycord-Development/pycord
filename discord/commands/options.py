@@ -197,7 +197,6 @@ class Option:
         if self.name is not None:
             self.name = str(self.name)
         self._parameter_name = self.name  # default
-        input_type = self._strip_none_type(input_type)
         self._raw_type: InputType | tuple = input_type
 
         enum_choices = []
@@ -386,9 +385,7 @@ class Option:
                 raise TypeError("Option type cannot be only NoneType")
             if len(filtered) == 1:
                 return filtered[0]
-            if all(getattr(t, "__origin__", None) is Literal for t in filtered):
-                return Union[filtered]
-            return Union[filtered]
+            return filtered
         return input_type
 
     def to_dict(self) -> dict:
