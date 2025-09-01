@@ -572,9 +572,7 @@ class SelectDefaultValue:
             self.id = id
             self.type = type
         else:
-            raise TypeError(
-                "you must provide an object model, or an id and type"
-            )
+            raise TypeError("you must provide an object model, or an id and type")
 
     @classmethod
     def _from_data(
@@ -588,9 +586,14 @@ class SelectDefaultValue:
         ]
 
     @classmethod
-    def _handle_model(cls, model: abc.Snowflake, select_type: ComponentType | None = None, inst: SelectDefaultValue | None = None) -> SelectDefaultValue:
+    def _handle_model(
+        cls,
+        model: abc.Snowflake,
+        select_type: ComponentType | None = None,
+        inst: SelectDefaultValue | None = None,
+    ) -> SelectDefaultValue:
         # preventing >circular imports<
-        from discord import abc, Role, User, Member, Object
+        from discord import Member, Object, Role, User, abc
 
         instances_mapping: dict[
             type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]

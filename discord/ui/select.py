@@ -477,7 +477,9 @@ class Select(Item[V]):
             value = SelectDefaultValue._handle_model(value)
 
         if not isinstance(value, SelectDefaultValue):
-            raise TypeError(f"expected a SelectDefaultValue object, got {value.__class__.__name__}")
+            raise TypeError(
+                f"expected a SelectDefaultValue object, got {value.__class__.__name__}"
+            )
 
         self._underlying.default_values.append(value)
         return self
