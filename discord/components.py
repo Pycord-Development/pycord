@@ -574,6 +574,9 @@ class SelectDefaultValue:
         else:
             raise TypeError("you must provide an object model, or an id and type")
 
+    def __repr__(self) -> str:
+        return f'<SelectDefaultValue id={self.id} type={self.type}>'
+
     @classmethod
     def _from_data(
         cls, default_values: list[SelectDefaultValuePayload] | None
