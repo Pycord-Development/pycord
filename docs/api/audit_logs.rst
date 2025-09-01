@@ -524,11 +524,17 @@ this goal, it must make use of a couple of data classes that aid in this goal.
 
         :type: :class:`str`
 
-   .. attribute:: image
+    .. attribute:: image
 
-      The cover image of a :class:`ScheduledEvent`.
+        The cover image of a :class:`ScheduledEvent`.
 
-      :type: :class:`str`
+        :type: :class:`str`
+
+    .. attribute:: communication_disabled_until
+
+        Until when a :class:`Member` will be timed out
+
+        :type: :class:`datetime.datetime` | :data:`None`
 
 .. this is currently missing the following keys: reason and application_id
    I'm not sure how to about porting these

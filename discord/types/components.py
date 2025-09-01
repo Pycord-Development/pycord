@@ -33,7 +33,7 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17]
+ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
@@ -69,7 +69,7 @@ class InputText(BaseComponent):
     type: Literal[4]
     style: InputTextStyle
     custom_id: str
-    label: str
+    label: NotRequired[str]
 
 
 class SelectOption(TypedDict):
@@ -89,6 +89,7 @@ class SelectMenu(BaseComponent):
     options: NotRequired[list[SelectOption]]
     type: Literal[3, 5, 6, 7, 8]
     custom_id: str
+    required: NotRequired[bool]
 
 
 class TextDisplayComponent(BaseComponent):
@@ -149,6 +150,13 @@ class ContainerComponent(BaseComponent):
     accent_color: NotRequired[int]
     spoiler: NotRequired[bool]
     components: list[AllowedContainerComponents]
+
+
+class LabelComponent(BaseComponent):
+    type: Literal[18]
+    label: str
+    description: NotRequired[str]
+    component: SelectMenu | InputText
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
