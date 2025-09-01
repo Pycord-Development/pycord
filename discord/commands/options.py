@@ -375,17 +375,21 @@ class Option:
         if input_type is type(None):
             raise TypeError("Option type cannot be only NoneType")
 
-        if isinstance(input_type, (types.UnionType, tuple)):
-            args = (
-                get_args(input_type)
-                if isinstance(input_type, types.UnionType)
-                else input_type
-            )
+        args = ()
+        if isinstance(input_type, types.UnionType):
+            args = get_args(input_type)
+        elif getattr(input_type, "__origin__", None) is Union:
+            args = get_args(input_type)
+        elif isinstance(input_type, tuple):
+            args = input_type
+
+        if args:
             filtered = tuple(t for t in args if t is not type(None))
             if not filtered:
                 raise TypeError("Option type cannot be only NoneType")
             if len(filtered) == 1:
                 return filtered[0]
+
             return filtered
 
         return input_type
