@@ -68,7 +68,12 @@ def is_imaginary(dt: datetime.datetime) -> bool:
 
     tz = dt.tzinfo
     dt = dt.replace(tzinfo=None)
-    roundtrip = dt.replace(tzinfo=tz).astimezone(datetime.timezone.utc).astimezone(tz).replace(tzinfo=None)
+    roundtrip = (
+        dt.replace(tzinfo=tz)
+        .astimezone(datetime.timezone.utc)
+        .astimezone(tz)
+        .replace(tzinfo=None)
+    )
     return dt != roundtrip
 
 
@@ -91,7 +96,9 @@ class SleepHandle:
     def recalculate(self, dt: datetime.datetime) -> None:
         self.handle.cancel()
         relative_delta = discord.utils.compute_timedelta(dt)
-        self.handle = self.loop.call_later(relative_delta, self._safe_result, self.future)
+        self.handle = self.loop.call_later(
+            relative_delta, self._safe_result, self.future
+        )
 
     def wait(self) -> asyncio.Future[Any]:
         return self.future
@@ -134,7 +141,11 @@ class Loop(Generic[LF]):
 
         self.loop: asyncio.AbstractEventLoop | None = loop
 
-        self.name: str = f'pycord-ext-task ({id(self):#x}): {coro.__qualname__}' if name in (None, MISSING) else name
+        self.name: str = (
+            f"pycord-ext-task ({id(self):#x}): {coro.__qualname__}"
+            if name in (None, MISSING)
+            else name
+        )
         self.count: int | None = count
         self._current_loop = 0
         self._handle: SleepHandle = MISSING
@@ -219,9 +230,12 @@ class Loop(Generic[LF]):
                     self._last_iteration = self._next_iteration
                     self._next_iteration = self._get_next_sleep_time()
 
-                    while self._expl_time() and self._next_iteration <= self._last_iteration:
+                    while (
+                        self._expl_time()
+                        and self._next_iteration <= self._last_iteration
+                    ):
                         _log.warning(
-                            'Task %s woke up at %s, which was before expected (%s). Sleeping again to fix it...',
+                            "Task %s woke up at %s, which was before expected (%s). Sleeping again to fix it...",
                             self.coro.__name__,
                             discord.utils.utcnow(),
                             self._next_iteration,
@@ -238,7 +252,7 @@ class Loop(Generic[LF]):
 
                     delay = backoff.delay()
                     _log.warning(
-                        'Received an exception which was in the valid exception set. Task will run again in %s.2f seconds',
+                        "Received an exception which was in the valid exception set. Task will run again in %s.2f seconds",
                         self.coro.__name__,
                         delay,
                         exc_info=exc,
@@ -640,7 +654,9 @@ class Loop(Generic[LF]):
         self._error = coro  # type: ignore
         return coro
 
-    def _get_next_sleep_time(self, now: datetime.datetime = MISSING) -> datetime.datetime:
+    def _get_next_sleep_time(
+        self, now: datetime.datetime = MISSING
+    ) -> datetime.datetime:
         if self._sleep is not MISSING:
             return self._last_iteration + datetime.timedelta(seconds=self._sleep)
 
