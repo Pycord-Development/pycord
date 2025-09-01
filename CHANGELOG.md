@@ -10,6 +10,19 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+### Added
+
+### Changed
+
+### Fixed
+
+- Manage silence for new SSRC with existing user_id.
+  ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
+
+### Removed
+
+## [2.7.0rc1] - 2025-08-30
+
 ⚠️ **This version removes support for Python 3.8.** ⚠️
 
 ### Added
@@ -167,6 +180,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2878](https://github.com/Pycord-Development/pycord/pull/2878))
 - Fixed `AttributeError` when accessing `AuditLogEntry.changes` more than once.
   ([#2882])(https://github.com/Pycord-Development/pycord/pull/2882))
+- Fixed type hint for argument `start_time` and `end_time` of
+  `Guild.create_scheduled_event`
+  ([#2879](https://github.com/Pycord-Development/pycord/pull/2879))
 
 ### Changed
 
@@ -1113,7 +1129,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.6.1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...HEAD
+[2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1
 [2.6.1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/Pycord-Development/pycord/compare/v2.4.1...v2.5.0

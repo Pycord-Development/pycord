@@ -2362,7 +2362,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: advanced
 
-        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+        Both default channels and questions (``OnboardingPrompt``\s) will count towards the Onboarding requirements.
 
 .. class:: ReactionType
 
@@ -2572,3 +2572,15 @@ of :class:`enum.Enum`.
     .. attribute:: large
 
         The separator uses large padding.
+
+.. class:: SortOrder
+
+    Used to represent the default sort order for posts in :class:`ForumChannel` and :class:`MediaChannel`.
+
+    .. attribute:: latest_activity
+
+        Sort by latest activity.
+
+    .. attribute:: creation_date
+
+        Sort by post creation date.

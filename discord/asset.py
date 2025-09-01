@@ -275,6 +275,18 @@ class Asset(AssetMixin):
         )
 
     @classmethod
+    def _from_collectible(
+        cls, state: ConnectionState, asset: str, animated: bool = False
+    ) -> Asset:
+        name = "static.png" if not animated else "asset.webm"
+        return cls(
+            state,
+            url=f"{cls.BASE}/assets/collectibles/{asset}{name}",
+            key=asset,
+            animated=animated,
+        )
+
+    @classmethod
     def _from_guild_image(cls, state, guild_id: int, image: str, path: str) -> Asset:
         animated = False
         format = "png"
