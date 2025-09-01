@@ -32,7 +32,7 @@ import logging
 import sys
 import traceback
 from collections.abc import Sequence
-from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
+from typing import Any, Awaitable, Callable, Generic, TypeVar
 
 import aiohttp
 
@@ -120,18 +120,19 @@ class Loop(Generic[LF]):
         count: int | None,
         reconnect: bool,
         loop: asyncio.AbstractEventLoop | None,
+        create_loop: bool,
         name: str | None,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
 
-        if loop is None:
+        if create_loop is True and loop is None:
             try:
                 loop = asyncio.get_running_loop()
             except RuntimeError:
                 loop = asyncio.new_event_loop()
 
-        self.loop = loop
+        self.loop: asyncio.AbstractEventLoop | None = loop
 
         self.name: str = f'pycord-ext-task ({id(self):#x}): {coro.__qualname__}' if name in (None, MISSING) else name
         self.count: int | None = count
@@ -146,6 +147,7 @@ class Loop(Generic[LF]):
             aiohttp.ClientError,
             asyncio.TimeoutError,
         )
+        self._create_loop = create_loop
 
         self._before_loop = None
         self._after_loop = None
@@ -167,6 +169,9 @@ class Loop(Generic[LF]):
             raise TypeError(
                 f"Expected coroutine function, not {type(self.coro).__name__!r}."
             )
+
+        if loop is None and not create_loop:
+            discord.Client._pending_loops.add_loop(self)
 
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, f"_{name}")
@@ -280,6 +285,7 @@ class Loop(Generic[LF]):
             reconnect=self.reconnect,
             name=self.name,
             loop=self.loop,
+            create_loop=self._create_loop,
         )
         copy._injected = obj
         copy._before_loop = self._before_loop
@@ -365,7 +371,7 @@ class Loop(Generic[LF]):
 
         return await self.coro(*args, **kwargs)
 
-    def start(self, *args: Any, **kwargs: Any) -> asyncio.Task[None]:
+    def start(self, *args: Any, **kwargs: Any) -> asyncio.Task[None] | None:
         r"""Starts the internal task in the event loop.
 
         Parameters
@@ -386,13 +392,21 @@ class Loop(Generic[LF]):
             The task that has been created.
         """
 
+        if self.loop is None:
+            _log.warning(
+                f"The task {self.name} has been set to be bound to a discord.Client instance, and will start running automatically "
+                "when the client starts. If you want this task to be executed without it being bound to a discord.Client, "
+                "set the create_loop parameter in the decorator to True, and don't forget to set the client.loop to the loop.loop"
+            )
+            return None
+
         if self._task is not MISSING and not self._task.done():
             raise RuntimeError("Task is already launched and is not completed.")
 
         if self._injected is not None:
             args = (self._injected, *args)
 
-        self._task = self.loop.create_task(self._loop(*args, **kwargs), name=self.name)
+        self._task = asyncio.ensure_future(self.loop.create_task(self._loop(*args, **kwargs), name=self.name))
         return self._task
 
     def stop(self) -> None:
@@ -760,15 +774,9 @@ class Loop(Generic[LF]):
             self._time = self._get_time_parameter(time)
             self._sleep = self._seconds = self._minutes = self._hours = MISSING
 
-        if self.is_running() and not (
-            self._before_loop_running or self._after_loop_running
-        ):
-            if self._time is not MISSING:
-                # prepare the next time index starting from after the last iteration
-                self._prepare_time_index(now=self._last_iteration)
-
+        if self.is_running() and self._last_iteration is not MISSING:
             self._next_iteration = self._get_next_sleep_time()
-            if not self._handle.done():
+            if self._handle and not self._handle.done():
                 # the loop is sleeping, recalculate based on new interval
                 self._handle.recalculate(self._next_iteration)
 
@@ -783,6 +791,7 @@ def loop(
     reconnect: bool = True,
     loop: asyncio.AbstractEventLoop | None = None,
     name: str | None = MISSING,
+    create_loop: bool = False,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
     optional reconnect logic. The decorator returns a :class:`Loop`.
@@ -821,6 +830,11 @@ def loop(
         The name to create the task with, defaults to ``None``.
 
         .. versionadded:: 2.7
+    create_loop: :class:`bool`
+        Whether this task should create their own event loop to start running it
+        without a client bound to it.
+
+        .. versionadded:: 2.7
 
     Raises
     ------
@@ -842,6 +856,7 @@ def loop(
             reconnect=reconnect,
             name=name,
             loop=loop,
+            create_loop=create_loop,
         )
 
     return decorator

@@ -178,7 +178,7 @@ class ConnectionState:
         if self.max_messages is not None and self.max_messages <= 0:
             self.max_messages = 1000
 
-        self.dispatch: Callable = dispatch
+        self._dispatch: Callable = dispatch
         self.handlers: dict[str, Callable] = handlers
         self.hooks: dict[str, Callable] = hooks
         self.shard_count: int | None = None
@@ -262,6 +262,10 @@ class ConnectionState:
                 parsers[attr[6:].upper()] = func
 
         self.clear()
+
+    def dispatch(self, event: str, *args: Any, **kwargs: Any) -> Any:
+        _log.debug('Dispatching event %s', event)
+        return self._dispatch(event, *args, **kwargs)
 
     def clear(self, *, views: bool = True) -> None:
         self.user: ClientUser | None = None

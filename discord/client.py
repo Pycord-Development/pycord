@@ -75,6 +75,7 @@ if TYPE_CHECKING:
     from .soundboard import SoundboardSound
     from .ui.item import Item
     from .voice_client import VoiceProtocol
+    from .ext.tasks import Loop as TaskLoop
 
 __all__ = ("Client",)
 
@@ -117,6 +118,27 @@ def _cleanup_loop(loop: asyncio.AbstractEventLoop) -> None:
     finally:
         _log.info("Closing the event loop.")
         loop.close()
+
+
+class LoopTaskSet:
+    def __init__(self) -> None:
+        self.tasks: set[TaskLoop] = set()
+        self.client: Client | None = None
+
+    def add_loop(self, loop: TaskLoop) -> None:
+        if self.client is not None:
+            running = asyncio.get_running_loop()
+            loop.loop = running
+            loop.start()
+        else:
+            self.tasks.add(loop)
+
+    def start(self, client: Client) -> None:
+        self.client = client
+        for task in self.tasks:
+            loop = client.loop
+            task.loop = loop
+            task.start()
 
 
 class Client:
@@ -227,6 +249,8 @@ class Client:
         The event loop that the client uses for asynchronous operations.
     """
 
+    _pending_loops = LoopTaskSet()
+
     def __init__(
         self,
         *,
@@ -297,6 +321,7 @@ class Client:
                 # Maybe handle different system event loop policies?
                 self._loop = asyncio.new_event_loop()
 
+        self._pending_loops.start(self)
         self.http.loop = self.loop
         self._connection.loop = self.loop
 
@@ -506,7 +531,6 @@ class Client:
         return task
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> None:
-        _log.debug("Dispatching event %s", event)
         method = f"on_{event}"
 
         listeners = self._listeners.get(event)
