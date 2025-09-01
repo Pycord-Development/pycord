@@ -25,14 +25,14 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 import inspect
 import os
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, Callable, TypeVar
 
 from .. import abc
 from ..channel import _threaded_guild_channel_factory
-from ..components import SelectMenu, SelectOption, SelectDefaultValue
+from ..components import SelectDefaultValue, SelectMenu, SelectOption
 from ..emoji import AppEmoji, GuildEmoji
 from ..enums import ChannelType, ComponentType, SelectDefaultValueType
 from ..errors import InvalidArgument
@@ -248,18 +248,37 @@ class Select(Item[V]):
         )
         self.row = row
 
-    def _handle_default_values(self, default_values: Sequence[abc.Snowflake] | None, select_type: ComponentType) -> list[SelectDefaultValue]:
+    def _handle_default_values(
+        self, default_values: Sequence[abc.Snowflake] | None, select_type: ComponentType
+    ) -> list[SelectDefaultValue]:
         if not default_values:
             return []
 
         ret = []
 
-        instances_mapping: dict[type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]] = {
-            Role: ((ComponentType.role_select, ComponentType.mentionable_select), SelectDefaultValueType.role),
-            User: ((ComponentType.user_select, ComponentType.mentionable_select), SelectDefaultValueType.user),
-            Member: ((ComponentType.user_select, ComponentType.mentionable_select), SelectDefaultValueType.user),
-            abc.User: ((ComponentType.user_select, ComponentType.mentionable_select), SelectDefaultValueType.user),
-            abc.GuildChannel: ((ComponentType.channel_select,), SelectDefaultValueType.channel),
+        instances_mapping: dict[
+            type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]
+        ] = {
+            Role: (
+                (ComponentType.role_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.role,
+            ),
+            User: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            Member: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            abc.User: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            abc.GuildChannel: (
+                (ComponentType.channel_select,),
+                SelectDefaultValueType.channel,
+            ),
         }
 
         for dv in default_values:
@@ -276,10 +295,14 @@ class Select(Item[V]):
             try:
                 sel_type, def_type = instances_mapping[obj_type]
             except KeyError:
-                raise TypeError(f'{dv.__class__.__name__} is not a valid instance for default_values')
+                raise TypeError(
+                    f"{dv.__class__.__name__} is not a valid instance for default_values"
+                )
 
             if select_type not in sel_type:
-                raise TypeError(f'{dv.__class__.__name__} objects can not be set as a default value for {select_type.value} selects')
+                raise TypeError(
+                    f"{dv.__class__.__name__} objects can not be set as a default value for {select_type.value} selects"
+                )
 
             ret.append(SelectDefaultValue(id=obj_id, type=def_type))
 
@@ -390,7 +413,9 @@ class Select(Item[V]):
         return self._underlying.default_values
 
     @default_values.setter
-    def default_values(self, values: list[SelectDefaultValue | abc.Snowflake] | None) -> None:
+    def default_values(
+        self, values: list[SelectDefaultValue | abc.Snowflake] | None
+    ) -> None:
         default_values = self._handle_default_values(values, self.type)
         self._underlying.default_values = default_values
 
@@ -424,7 +449,9 @@ class Select(Item[V]):
             The number of default select values exceeds 25.
         """
         if type is MISSING and self.type is ComponentType.mentionable_select:
-            raise TypeError('type is required when select is of type mentionable_select')
+            raise TypeError(
+                "type is required when select is of type mentionable_select"
+            )
 
         types = {
             ComponentType.user_select: SelectDefaultValueType.user,
@@ -784,7 +811,9 @@ def select(
         raise TypeError("channel_types may only be specified for channel selects")
 
     if default_values is not None and select_type is ComponentType.string_select:
-        raise TypeError("default_values may only be specified for selects other than string selects")
+        raise TypeError(
+            "default_values may only be specified for selects other than string selects"
+        )
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
         if not inspect.iscoroutinefunction(func):
