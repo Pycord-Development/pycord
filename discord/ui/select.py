@@ -137,7 +137,7 @@ class Select(Item[V]):
     default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
         The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
-        This can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue`
+        These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
         instances.
 
         Below, is a table defining the model instance type and the default value type it will be mapped:
@@ -255,57 +255,11 @@ class Select(Item[V]):
 
         ret = []
 
-        from discord import abc  # > circular import <
-
-        instances_mapping: dict[
-            type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]
-        ] = {
-            Role: (
-                (ComponentType.role_select, ComponentType.mentionable_select),
-                SelectDefaultValueType.role,
-            ),
-            User: (
-                (ComponentType.user_select, ComponentType.mentionable_select),
-                SelectDefaultValueType.user,
-            ),
-            Member: (
-                (ComponentType.user_select, ComponentType.mentionable_select),
-                SelectDefaultValueType.user,
-            ),
-            abc.User: (
-                (ComponentType.user_select, ComponentType.mentionable_select),
-                SelectDefaultValueType.user,
-            ),
-            abc.GuildChannel: (
-                (ComponentType.channel_select,),
-                SelectDefaultValueType.channel,
-            ),
-        }
-
         for dv in default_values:
             if isinstance(dv, SelectDefaultValue):
                 ret.append(dv)
                 continue
-
-            obj_id = dv.id
-            obj_type = dv.__class__
-
-            if isinstance(dv, Object):
-                obj_type = dv.type
-
-            try:
-                sel_type, def_type = instances_mapping[obj_type]
-            except KeyError:
-                raise TypeError(
-                    f"{dv.__class__.__name__} is not a valid instance for default_values"
-                )
-
-            if select_type not in sel_type:
-                raise TypeError(
-                    f"{dv.__class__.__name__} objects can not be set as a default value for {select_type.value} selects"
-                )
-
-            ret.append(SelectDefaultValue(id=obj_id, type=def_type))
+            ret.append(SelectDefaultValue._handle_model(dv, select_type))
 
         return ret
 
@@ -466,7 +420,7 @@ class Select(Item[V]):
 
     def append_default_value(
         self,
-        value: SelectDefaultValue,
+        value: SelectDefaultValue | Snowflake,
         /,
     ) -> Self:
         """Appends a default value to this select menu.
@@ -475,8 +429,35 @@ class Select(Item[V]):
 
         Parameters
         ----------
-        value: :class:`discord.SelectDefaultValue`
+        value: Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]
             The default value to append to this select.
+
+            These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue`
+            instances.
+
+            Below, is a table defining the model instance type and the default value type it will be mapped:
+
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | Model Type                        | Default Value Type                                                       |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above |
+            +-----------------------------------+--------------------------------------------------------------------------+
+
+            If you pass a model that is not defined in the table, ``TypeError`` will be raised.
+
+            .. note::
+
+                The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,
+                :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change
+                based of the new channel types Discord adds.
 
         Raises
         ------
@@ -491,6 +472,12 @@ class Select(Item[V]):
 
         if len(self.default_values) >= 25:
             raise ValueError("maximum number of default values exceeded (25)")
+
+        if not isinstance(value, SelectDefaultValue):
+            value = SelectDefaultValue._handle_model(value)
+
+        if not isinstance(value, SelectDefaultValue):
+            raise TypeError(f"expected a SelectDefaultValue object, got {value.__class__.__name__}")
 
         self._underlying.default_values.append(value)
         return self

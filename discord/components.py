@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -43,6 +43,7 @@ from .partial_emoji import PartialEmoji, _EmojiTag
 from .utils import MISSING, find, get_slots
 
 if TYPE_CHECKING:
+    from . import abc
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
@@ -497,21 +498,83 @@ class SelectDefaultValue:
 
     Parameters
     ----------
+    object: :class:`abc.Snowflake`
+        The model type this select default value is based of.
+
+        Below, is a table defining the model instance type and the default value type it will be mapped:
+
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | Model Type                        | Default Value Type                                                       |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above |
+        +-----------------------------------+--------------------------------------------------------------------------+
+
+        If you pass a model that is not defined in the table, ``TypeError`` will be raised.
+
+        .. note::
+
+            The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,
+            :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change
+            based of the new channel types Discord adds.
+
     id: :class:`int`
-        The ID of the default value.
+        The ID of the default value. This cannot be used with ``object``.
     type: :class:`SelectDefaultValueType`
-        The default value type.
+        The default value type. This cannot be used with ``object``.
+
+    Raises
+    ------
+    TypeError
+        You did not provide any parameter, you provided all parameters, or you provided ``id`` but not ``type``.
     """
 
     __slots__ = ("id", "type")
 
+    @overload
     def __init__(
         self,
+        object: abc.Snowflake,
+        /,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        /,
+        *,
         id: int,
         type: SelectDefaultValueType,
+    ) -> None: ...
+
+    def __init__(
+        self,
+        object: abc.Snowflake = MISSING,
+        /,
+        *,
+        id: int = MISSING,
+        type: SelectDefaultValueType = MISSING,
     ) -> None:
         self.id: int = id
         self.type: SelectDefaultValueType = type
+        if object is not MISSING:
+            if any(p is not MISSING for p in (id, type)):
+                raise TypeError("you cannot pass id or type when passing object")
+            self._handle_model(object, inst=self)
+        elif id is not MISSING and type is not MISSING:
+            self.id = id
+            self.type = type
+        else:
+            raise TypeError(
+                "you must provide an object model, or an id and type"
+            )
 
     @classmethod
     def _from_data(
@@ -523,6 +586,62 @@ class SelectDefaultValue:
             cls(id=int(d["id"]), type=try_enum(SelectDefaultValueType, d["type"]))
             for d in default_values
         ]
+
+    @classmethod
+    def _handle_model(cls, model: abc.Snowflake, select_type: ComponentType | None = None, inst: SelectDefaultValue | None = None) -> SelectDefaultValue:
+        # preventing >circular imports<
+        from discord import abc, Role, User, Member, Object
+
+        instances_mapping: dict[
+            type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]
+        ] = {
+            Role: (
+                (ComponentType.role_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.role,
+            ),
+            User: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            Member: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            abc.User: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            abc.GuildChannel: (
+                (ComponentType.channel_select,),
+                SelectDefaultValueType.channel,
+            ),
+        }
+
+        obj_id = model.id
+        obj_type = model.__class__
+
+        if isinstance(model, Object):
+            obj_type = model.type
+
+        try:
+            sel_types, def_type = instances_mapping[obj_type]
+        except KeyError:
+            raise TypeError(
+                f"{model.__class__.__name__} is not a valid instance for a select default value",
+            )
+
+        # we can't actually check select types when not in a select context
+        if select_type is not None and select_type not in sel_types:
+            raise TypeError(
+                f"{model.__class__.__name__} objects can not be set as a default value for {select_type.value} selects",
+            )
+
+        if inst is None:
+            return cls(id=obj_id, type=def_type)
+        else:
+            inst.id = obj_id
+            inst.type = def_type
+            return inst
 
     def to_dict(self) -> SelectDefaultValuePayload:
         return {
