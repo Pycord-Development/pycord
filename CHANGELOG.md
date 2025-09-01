@@ -16,6 +16,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Manage silence for new SSRC with existing user_id.
+  ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
+
 ### Removed
 
 ## [2.7.0rc1] - 2025-08-30
