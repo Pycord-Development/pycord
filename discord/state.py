@@ -264,7 +264,7 @@ class ConnectionState:
         self.clear()
 
     def dispatch(self, event: str, *args: Any, **kwargs: Any) -> Any:
-        _log.debug('Dispatching event %s', event)
+        _log.debug("Dispatching event %s", event)
         return self._dispatch(event, *args, **kwargs)
 
     def clear(self, *, views: bool = True) -> None:

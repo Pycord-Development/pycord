@@ -68,6 +68,7 @@ from .widget import Widget
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
     from .channel import DMChannel
+    from .ext.tasks import Loop as TaskLoop
     from .interactions import Interaction
     from .member import Member
     from .message import Message
@@ -75,7 +76,6 @@ if TYPE_CHECKING:
     from .soundboard import SoundboardSound
     from .ui.item import Item
     from .voice_client import VoiceProtocol
-    from .ext.tasks import Loop as TaskLoop
 
 __all__ = ("Client",)
 

@@ -420,7 +420,9 @@ class Loop(Generic[LF]):
         if self._injected is not None:
             args = (self._injected, *args)
 
-        self._task = asyncio.ensure_future(self.loop.create_task(self._loop(*args, **kwargs), name=self.name))
+        self._task = asyncio.ensure_future(
+            self.loop.create_task(self._loop(*args, **kwargs), name=self.name)
+        )
         return self._task
 
     def stop(self) -> None:
