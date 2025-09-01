@@ -16,6 +16,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Manage silence for new SSRC with existing user_id.
+  ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
+- Fixed Async I/O errors that could be raised when using `Client.run`.
+  ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
+
 ### Removed
 
 ## [2.7.0rc1] - 2025-08-30
@@ -126,8 +131,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2624](https://github.com/Pycord-Development/pycord/pull/2624))
 - Fixed editing `ForumChannel` flags not working.
   ([#2641](https://github.com/Pycord-Development/pycord/pull/2641))
-- Fixed Async I/O errors that could be raised when using `Client.run`.
-  ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
 - Fixed `AttributeError` when accessing `Member.guild_permissions` for user installed
   apps. ([#2650](https://github.com/Pycord-Development/pycord/pull/2650))
 - Fixed type annotations of cached properties.
