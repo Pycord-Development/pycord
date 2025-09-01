@@ -924,9 +924,7 @@ class InteractionResponse:
     async def _process_callback_response(
         self, callback_response: InteractionCallbackResponse
     ):
-        if callback_response.get("resource", {}).get(
-            "message"
-        ):
+        if callback_response.get("resource", {}).get("message"):
             # TODO: fix later to not raise?
             channel = self._parent.channel
             if channel is None:
