@@ -924,7 +924,7 @@ class InteractionResponse:
     async def _process_callback_response(
         self, callback_response: InteractionCallbackResponse
     ):
-        if callback_response.get("resource") and callback_response["resource"].get(
+        if callback_response.get("resource", {}).get(
             "message"
         ):
             # TODO: fix later to not raise?
@@ -1411,10 +1411,18 @@ class InteractionResponse:
         coro: Coroutine[Any]
             The coroutine to wrap.
 
+        Returns
+        -------
+        Any
+            The result of the coroutine.
+
         Raises
         ------
         InteractionResponded
             This interaction has already been responded to before.
+
+        .. versionchanged:: 2.7
+            Return the result of the coroutine
         """
         async with self._response_lock:
             if self.is_done():
