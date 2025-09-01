@@ -247,7 +247,9 @@ class Select(Item[V]):
         )
         self.row = row
 
-    def _handle_default_values(self, default_values: Sequence[Snowflake] | None, select_type: ComponentType) -> list[SelectDefaultValue]:
+    def _handle_default_values(
+        self, default_values: Sequence[Snowflake] | None, select_type: ComponentType
+    ) -> list[SelectDefaultValue]:
         if not default_values:
             return []
 
@@ -412,7 +414,9 @@ class Select(Item[V]):
         return self._underlying.default_values
 
     @default_values.setter
-    def default_values(self, values: list[SelectDefaultValue | Snowflake] | None) -> None:
+    def default_values(
+        self, values: list[SelectDefaultValue | Snowflake] | None
+    ) -> None:
         default_values = self._handle_default_values(values, self.type)
         self._underlying.default_values = default_values
 
