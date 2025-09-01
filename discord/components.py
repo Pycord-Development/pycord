@@ -34,6 +34,7 @@ from .enums import (
     ChannelType,
     ComponentType,
     InputTextStyle,
+    SelectDefaultValueType,
     SeparatorSpacingSize,
     try_enum,
 )
@@ -44,7 +45,6 @@ from .utils import MISSING, find, get_slots
 if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
-    from .types.components import BaseComponent as BaseComponentPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
     from .types.components import ContainerComponent as ContainerComponentPayload
@@ -60,6 +60,7 @@ if TYPE_CHECKING:
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
+    from .types.components import SelectDefaultValue as SelectDefaultValuePayload
 
 __all__ = (
     "Component",
@@ -437,6 +438,7 @@ class SelectMenu(Component):
         "channel_types",
         "disabled",
         "required",
+        "default_values",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -457,6 +459,7 @@ class SelectMenu(Component):
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
         self.required: bool | None = data.get("required")
+        self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(data.get("default_values"))
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -476,8 +479,48 @@ class SelectMenu(Component):
             payload["placeholder"] = self.placeholder
         if self.required is not None:
             payload["required"] = self.required
+        if self.type is not ComponentType.string_select:
+            payload["default_values"] = [dv.to_dict() for dv in self.default_values]
 
         return payload
+
+
+class SelectDefaultValue:
+    r"""Represents a :class:`discord.SelectMenu`\s default value.
+
+    This is only applicable to selects of type other than :attr:`ComponentType.string_select`.
+
+    .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    id: :class:`int`
+        The ID of the default value.
+    type: :class:`SelectDefaultValueType`
+        The default value type.
+    """
+
+    __slots__ = ("id", "type")
+
+    def __init__(
+        self,
+        id: int,
+        type: SelectDefaultValueType,
+    ) -> None:
+        self.id: int = id
+        self.type: SelectDefaultValueType = type
+
+    @classmethod
+    def _from_data(cls, default_values: list[SelectDefaultValuePayload] | None) -> list[SelectDefaultValue]:
+        if not default_values:
+            return []
+        return [cls(id=int(d['id']), type=try_enum(SelectDefaultValueType, d['type'])) for d in default_values]
+
+    def to_dict(self) -> SelectDefaultValuePayload:
+        return {
+            "id": self.id,
+            "type": self.type.value,
+        }
 
 
 class SelectOption:

@@ -13,9 +13,11 @@ class DropdownView(discord.ui.View):
     async def channel_select_dropdown(
         self, select: discord.ui.Select, interaction: discord.Interaction
     ) -> None:
+        # update the select default values to the chosen values
+        select.default_values = select.values  # this is a list of GuildChannels
         await interaction.response.send_message(
-            f"You selected the following channels:"
-            + f", ".join(f"{channel.mention}" for channel in select.values)
+            "You selected the following channels:"
+            + ", ".join(f"{channel.mention}" for channel in select.values)
         )
 
 

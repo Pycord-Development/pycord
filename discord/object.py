@@ -28,6 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, SupportsInt, Union
 
 from . import utils
+from .abc import Snowflake
 from .mixins import Hashable
 
 if TYPE_CHECKING:
@@ -70,9 +71,11 @@ class Object(Hashable):
     ----------
     id: :class:`int`
         The ID of the object.
+    type: type[:class:`abc.Snowflake`]
+        The model this object's ID is based off.
     """
 
-    def __init__(self, id: SupportsIntCast):
+    def __init__(self, id: SupportsIntCast, type: type[Snowflake] = utils.MISSING):
         try:
             id = int(id)
         except ValueError:
@@ -81,6 +84,7 @@ class Object(Hashable):
             ) from None
         else:
             self.id = id
+        self.type: type[Snowflake] = type or self.__class__
 
     def __repr__(self) -> str:
         return f"<Object id={self.id!r}>"
