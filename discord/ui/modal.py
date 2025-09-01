@@ -4,12 +4,16 @@ import asyncio
 import os
 import sys
 import time
-import traceback
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union
 
+from ..enums import ComponentType
+from ..utils import find
 from .input_text import InputText
+from .item import Item
+from .select import Select
+from .text_display import TextDisplay
 
 __all__ = (
     "Modal",
@@ -18,8 +22,14 @@ __all__ = (
 
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from ..interactions import Interaction
     from ..state import ConnectionState
+
+M = TypeVar("M", bound="Modal", covariant=True)
+
+ModalItem = Union[InputText, Item[M]]
 
 
 class Modal:
@@ -29,10 +39,14 @@ class Modal:
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.7
+
+        :class:`discord.ui.Select` and :class:`discord.ui.TextDisplay` can now be used in modals.
+
     Parameters
     ----------
-    children: :class:`InputText`
-        The initial InputText fields that are displayed in the modal dialog.
+    children: Union[:class:`InputText`, :class:`Item`]
+        The initial items that are displayed in the modal dialog. Currently supports :class:`discord.ui.Select` and :class:`discord.ui.TextDisplay`.
     title: :class:`str`
         The title of the modal dialog.
         Must be 45 characters or fewer.
@@ -44,9 +58,15 @@ class Modal:
         If ``None`` then there is no timeout.
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "title",
+        "children",
+        "timeout",
+    )
+
     def __init__(
         self,
-        *children: InputText,
+        *children: ModalItem,
         title: str,
         custom_id: str | None = None,
         timeout: float | None = None,
@@ -60,7 +80,7 @@ class Modal:
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._title = title
-        self._children: list[InputText] = list(children)
+        self._children: list[ModalItem] = list(children)
         self._weights = _ModalWeights(self._children)
         loop = asyncio.get_running_loop()
         self._stopped: asyncio.Future[bool] = loop.create_future()
@@ -68,6 +88,12 @@ class Modal:
         self.__timeout_expiry: float | None = None
         self.__timeout_task: asyncio.Task[None] | None = None
         self.loop = asyncio.get_event_loop()
+
+    def __repr__(self) -> str:
+        attrs = " ".join(
+            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
+        )
+        return f"<{self.__class__.__name__} {attrs}>"
 
     def _start_listening_from_store(self, store: ModalStore) -> None:
         self.__cancel_callback = partial(store.remove_modal)
@@ -125,16 +151,16 @@ class Modal:
         self._title = value
 
     @property
-    def children(self) -> list[InputText]:
+    def children(self) -> list[ModalItem]:
         """The child components associated with the modal dialog."""
         return self._children
 
     @children.setter
-    def children(self, value: list[InputText]):
+    def children(self, value: list[ModalItem]):
         for item in value:
-            if not isinstance(item, InputText):
+            if not isinstance(item, (InputText, Item)):
                 raise TypeError(
-                    "all Modal children must be InputText, not"
+                    "all Modal children must be InputText or Item, not"
                     f" {item.__class__.__name__}"
                 )
         self._weights = _ModalWeights(self._children)
@@ -169,55 +195,101 @@ class Modal:
         self.stop()
 
     def to_components(self) -> list[dict[str, Any]]:
-        def key(item: InputText) -> int:
+        def key(item: ModalItem) -> int:
             return item._rendered_row or 0
 
         children = sorted(self._children, key=key)
         components: list[dict[str, Any]] = []
         for _, group in groupby(children, key=key):
-            children = [item.to_component_dict() for item in group]
+            labels = False
+            toplevel = False
+            children = []
+            for item in group:
+                if item.uses_label() or isinstance(item, Select):
+                    labels = True
+                elif isinstance(item, (TextDisplay,)):
+                    toplevel = True
+                children.append(item)
             if not children:
                 continue
 
-            components.append(
-                {
-                    "type": 1,
-                    "components": children,
-                }
-            )
+            if labels:
+                for item in children:
+                    component = item.to_component_dict()
+                    label = component.pop("label", item.label)
+                    components.append(
+                        {
+                            "type": 18,
+                            "component": component,
+                            "label": label,
+                            "description": item.description,
+                        }
+                    )
+            elif toplevel:
+                components += [item.to_component_dict() for item in children]
+            else:
+                components.append(
+                    {
+                        "type": 1,
+                        "components": [item.to_component_dict() for item in children],
+                    }
+                )
 
         return components
 
-    def add_item(self, item: InputText):
-        """Adds an InputText component to the modal dialog.
+    def add_item(self, item: ModalItem) -> Self:
+        """Adds a component to the modal dialog.
 
         Parameters
         ----------
-        item: :class:`InputText`
+        item: Union[class:`InputText`, :class:`Item`]
             The item to add to the modal dialog
         """
 
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
-        if not isinstance(item, InputText):
-            raise TypeError(f"expected InputText not {item.__class__!r}")
+        if not isinstance(item, (InputText, Item)):
+            raise TypeError(f"expected InputText or Item, not {item.__class__!r}")
+        if isinstance(item, (InputText, Select)) and not item.label:
+            raise ValueError("InputTexts and Selects must have a label set")
 
         self._weights.add_item(item)
         self._children.append(item)
+        return self
 
-    def remove_item(self, item: InputText):
-        """Removes an InputText component from the modal dialog.
+    def remove_item(self, item: ModalItem) -> Self:
+        """Removes a component from the modal dialog.
 
         Parameters
         ----------
-        item: :class:`InputText`
+        item: Union[class:`InputText`, :class:`Item`]
             The item to remove from the modal dialog.
         """
         try:
             self._children.remove(item)
         except ValueError:
             pass
+        return self
+
+    def get_item(self, id: str | int) -> ModalItem | None:
+        """Gets an item from the modal. Roughly equal to `utils.get(modal.children, ...)`.
+        If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`int`, :class:`str`]
+            The id or custom_id of the item to get
+
+        Returns
+        -------
+        Optional[Union[class:`InputText`, :class:`Item`]]
+            The item with the matching ``custom_id`` or ``id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     def stop(self) -> None:
         """Stops listening to interaction events from the modal dialog."""
@@ -253,10 +325,7 @@ class Modal:
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        print(f"Ignoring exception in modal {self}:", file=sys.stderr)
-        traceback.print_exception(
-            error.__class__, error, error.__traceback__, file=sys.stderr
-        )
+        interaction.client.dispatch("modal_error", error, interaction)
 
     async def on_timeout(self) -> None:
         """|coro|
@@ -268,7 +337,7 @@ class Modal:
 class _ModalWeights:
     __slots__ = ("weights",)
 
-    def __init__(self, children: list[InputText]):
+    def __init__(self, children: list[ModalItem]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -277,14 +346,14 @@ class _ModalWeights:
             for item in group:
                 self.add_item(item)
 
-    def find_open_space(self, item: InputText) -> int:
+    def find_open_space(self, item: ModalItem) -> int:
         for index, weight in enumerate(self.weights):
             if weight + item.width <= 5:
                 return index
 
         raise ValueError("could not find open space for item")
 
-    def add_item(self, item: InputText) -> None:
+    def add_item(self, item: ModalItem) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -298,7 +367,7 @@ class _ModalWeights:
             self.weights[index] += item.width
             item._rendered_row = index
 
-    def remove_item(self, item: InputText) -> None:
+    def remove_item(self, item: ModalItem) -> None:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
@@ -326,18 +395,23 @@ class ModalStore:
         value = self._modals.get(key)
         if value is None:
             return
+        interaction.modal = value
 
         try:
             components = [
                 component
                 for parent_component in interaction.data["components"]
-                for component in parent_component["components"]
+                for component in (
+                    parent_component.get("components")
+                    or (
+                        [parent_component.get("component")]
+                        if parent_component.get("component")
+                        else [parent_component]
+                    )
+                )
             ]
-            for component in components:
-                for child in value.children:
-                    if child.custom_id == component["custom_id"]:  # type: ignore
-                        child.refresh_state(component)
-                        break
+            for component, child in zip(components, value.children):
+                child.refresh_from_modal(interaction, component)
             await value.callback(interaction)
             self.remove_modal(value, user_id)
         except Exception as e:

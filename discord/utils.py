@@ -30,8 +30,10 @@ import asyncio
 import collections.abc
 import datetime
 import functools
+import importlib.resources
 import itertools
 import json
+import logging
 import re
 import sys
 import types
@@ -39,7 +41,6 @@ import unicodedata
 import warnings
 from base64 import b64encode
 from bisect import bisect_left
-from dataclasses import field
 from inspect import isawaitable as _isawaitable
 from inspect import signature as _signature
 from operator import attrgetter
@@ -100,7 +101,25 @@ __all__ = (
     "filter_params",
 )
 
+_log = logging.getLogger(__name__)
+
 DISCORD_EPOCH = 1420070400000
+
+try:
+    with (
+        importlib.resources.files(__package__)
+        .joinpath("emojis.json")
+        .open(encoding="utf-8") as f
+    ):
+        EMOJIS_MAP = json.load(f)
+except FileNotFoundError:
+    _log.debug(
+        "Couldn't find emojis.json. Is the package data missing? Discord emojis names will not work.",
+    )
+    EMOJIS_MAP = {}
+
+
+UNICODE_EMOJIS = set(EMOJIS_MAP.values())
 
 
 class _MissingSentinel:
@@ -115,27 +134,6 @@ class _MissingSentinel:
 
 
 MISSING: Any = _MissingSentinel()
-# As of 3.11, directly setting a dataclass field to MISSING causes a ValueError. Using
-# field(default=MISSING) produces the same error, but passing a lambda to
-# default_factory produces the same behavior as default=MISSING and does not raise an
-# error.
-MissingField = field(default_factory=lambda: MISSING)
-
-
-class _cached_property:
-    def __init__(self, function):
-        self.function = function
-        self.__doc__ = getattr(function, "__doc__")
-
-    def __get__(self, instance, owner):
-        if instance is None:
-            return self
-
-        value = self.function(instance)
-        setattr(instance, self.function.__name__, value)
-
-        return value
-
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -150,12 +148,9 @@ if TYPE_CHECKING:
     class _RequestLike(Protocol):
         headers: Mapping[str, Any]
 
-    cached_property = property
-
     P = ParamSpec("P")
 
 else:
-    cached_property = _cached_property
     AutocompleteContext = Any
     OptionChoice = Any
 
@@ -318,7 +313,6 @@ def warn_deprecated(
     stacklevel: :class:`int`
         The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     """
-    warnings.simplefilter("always", DeprecationWarning)  # turn off filter
     message = f"{name} is deprecated"
     if since:
         message += f" since version {since}"
@@ -331,7 +325,6 @@ def warn_deprecated(
         message += f" See {reference} for more information."
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
-    warnings.simplefilter("default", DeprecationWarning)  # reset filter
 
 
 def deprecated(
@@ -646,7 +639,7 @@ def _get_as_snowflake(data: Any, key: str) -> int | None:
         return value and int(value)
 
 
-def _get_mime_type_for_image(data: bytes):
+def _get_mime_type_for_file(data: bytes):
     if data.startswith(b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a"):
         return "image/png"
     elif data[0:3] == b"\xff\xd8\xff" or data[6:10] in (b"JFIF", b"Exif"):
@@ -655,13 +648,15 @@ def _get_mime_type_for_image(data: bytes):
         return "image/gif"
     elif data.startswith(b"RIFF") and data[8:12] == b"WEBP":
         return "image/webp"
+    elif data.startswith(b"\x49\x44\x33") or data.startswith(b"\xff\xfb"):
+        return "audio/mpeg"
     else:
-        raise InvalidArgument("Unsupported image type given")
+        raise InvalidArgument("Unsupported file type given")
 
 
 def _bytes_to_base64_data(data: bytes) -> str:
     fmt = "data:{mime};base64,{data}"
-    mime = _get_mime_type_for_image(data)
+    mime = _get_mime_type_for_file(data)
     b64 = b64encode(data).decode("ascii")
     return fmt.format(mime=mime, data=b64)
 
@@ -939,7 +934,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     regex = _MARKDOWN_STOCK_REGEX
     if ignore_links:
         regex = f"(?:{_URL_REGEX}|{regex})"
-    return re.sub(regex, replacement, text, 0, re.MULTILINE)
+    return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE)
 
 
 def escape_markdown(
@@ -981,7 +976,7 @@ def escape_markdown(
         regex = _MARKDOWN_STOCK_REGEX
         if ignore_links:
             regex = f"(?:{_URL_REGEX}|{regex})"
-        return re.sub(regex, replacement, text, 0, re.MULTILINE | re.X)
+        return re.sub(regex, replacement, text, count=0, flags=re.MULTILINE | re.X)
     else:
         text = re.sub(r"\\", r"\\\\", text)
         return _MARKDOWN_ESCAPE_REGEX.sub(r"\\\1", text)

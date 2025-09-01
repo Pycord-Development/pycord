@@ -55,6 +55,48 @@ Objects
     :members:
     :inherited-members:
 
+.. attributetable:: discord.ui.Section
+
+.. autoclass:: discord.ui.Section
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.TextDisplay
+
+.. autoclass:: discord.ui.TextDisplay
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.Thumbnail
+
+.. autoclass:: discord.ui.Thumbnail
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.MediaGallery
+
+.. autoclass:: discord.ui.MediaGallery
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.File
+
+.. autoclass:: discord.ui.File
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.Separator
+
+.. autoclass:: discord.ui.Separator
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.Container
+
+.. autoclass:: discord.ui.Container
+    :members:
+    :inherited-members:
+
 .. attributetable:: discord.ui.Modal
 
 .. autoclass:: discord.ui.Modal

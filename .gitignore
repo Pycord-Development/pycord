@@ -159,6 +159,7 @@ cython_debug/
 
 # Custom
 *.json
+!renovate.json
 *.egg-info
 .venv/
 docs/_build
@@ -192,3 +193,4 @@ docs/build/linkcheck
 !docs/locales/*
 /build/
 /vscode/
+remote-release.yml

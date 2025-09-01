@@ -35,6 +35,7 @@ from .bot import *
 from .channel import *
 from .client import *
 from .cog import *
+from .collectibles import *
 from .colour import *
 from .commands import *
 from .components import *
@@ -64,6 +65,7 @@ from .reaction import *
 from .role import *
 from .scheduled_events import *
 from .shard import *
+from .soundboard import *
 from .stage_instance import *
 from .sticker import *
 from .team import *

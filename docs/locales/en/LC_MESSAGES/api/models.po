@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -75,32 +75,22 @@ msgstr ""
 msgid "Checks if the asset is not equal to another asset."
 msgstr ""
 
-#: 08223d7368fe4ec1ae8fb6b483cef2ac discord.asset.Asset:23 of
-msgid "Returns the hash of the asset."
+#: 594c0f99676c49e082bb82c19c0f7d6e discord.asset.Asset:23 of
+msgid "Returns the asset's url's hash."
 msgstr ""
 
-#: ../../api/models.rst 021c63b182bb4e81a6b50633e6be8d94
-#: 0c17b7715600433fac4d35bf0017e7b7 1000e6e5e6224041a432ab22340c6a22
-#: 12d301f98b5e48a3873512211a277fb8 2a4d60ac337a46c0bed1bc26c226038f
-#: 2c7f28585a7445caa3375c657bfa10fe 47cf29f45d094211a6159f29fd08d82d
-#: 6836891e883c423481ebac9ffd750fa1 7c47ce6d35854eabae233cb4388c1b7c
-#: 7cc43cf3dd184cd686b8bf1ec6c776c2 7eeef0117d73468bbf069e0735089439
-#: 8183ff58df9b4e73bc33a30fb382eb7b 868a9098949744cf9fcf7c6f42e516f7
-#: 883bef32346f462e98c0bdec679b1efc 9b463aa7bf23454dbdca8aa23cc8539b
-#: 9d168ece95784b269773220dae484295 a24c93013f654f39aec619169aee3ffd
-#: b168fffcce71401eb693e9e18b66c905 b22c89b9409f45538c044c97893adb19
-#: bb58123a93434a7d923686db2691d9bf be92e79b8562492497e0d816d28b3038
-#: c2cf03ff152a4746a445c6e09c4ecf4d c46eadcf6cc141368f08bb53bfa5ea54
-#: c7ef03b91163401782f9a92f6ce2c03d c831fa537f414a13a0b6020ed358e961
-#: cf2ef7aba94a4080be66ea0480c20921 d2e07740ec32449eb410f0bdef8452b3
-#: de160c5eabbc4424aa90922d81f49f99 discord.abc.Messageable.history
+#: discord.asset.Asset:25 e2124f67ec9f4267908985a925d278ed of
+msgid "This is equivalent to hash(:attr:`url`)."
+msgstr ""
+
+#: ../../api/models.rst b168fffcce71401eb693e9e18b66c905
+#: c831fa537f414a13a0b6020ed358e961 discord.abc.Messageable.history
 #: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
 #: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
 #: discord.guild.Guild.bans discord.guild.Guild.fetch_members
 #: discord.monetization.SKU.fetch_subscriptions discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
-#: discord.threads.Thread.purge e4bba7ea10be4e9ea126e3aa6e9ad74a
-#: faad64e33270420d9540268e1052426c of
+#: discord.threads.Thread.purge of
 msgid "Parameters"
 msgstr ""
 
@@ -116,38 +106,23 @@ msgstr ""
 msgid "Returns whether the asset is animated."
 msgstr ""
 
-#: ../../api/models.rst 0309d5bc75b4441c897a10094b96ac4a
-#: 0640e492b57342b5a13994bcb5450a85 0ad9dd6e25d24167a508024ae35d87da
-#: 0c09c04ca6c24f37b7befefc1e27c108 16749d2b71db4335acddc773be0d2f0a
-#: 19c515ba3ce24f398e966d395a7bab86 261deaa002874837a2c0c7f43b420d08
-#: 2862e3ccc6274017a74b9196f3154985 350fcc488876465bad13a5796135bdf2
-#: 407ca03640e945a485ddf6039c4290d7 4bd018c62f114816b1848122761f0c79
-#: 4f8209b09da140ffa3202f93b7b6bf97 506e955535214cac83087478241a0b1b
-#: 522f4898e55c4556a060f6a8f63bdcd5 536e3251a836422fac526839f75dc3c3
-#: 5987f3ee200f4d81a08e1d344e30d1d7 5aa46d39cf93485795e2b3966ca802e2
-#: 668a7f8b61594196a848b31c1eb2f132 6a593fc9f66142829114c6c0fed61c9b
-#: 86bfec4746ab4883a54583e29dafe33d 8f1345380b4e4342a090f0d5cd984869
-#: 9fbc068a17a84765ab1cdd7a4092661d a19f99d9ba494816a26f530dcd4d3024
-#: b4bd8df1935644ce9c0489c8542cd1af bac9870e0e33411ba53fb5c16935ecb0
-#: c6a7d99157e3423285c53b00b65eef1b ca57d95ea26c4194994d202c3ff3ec2a
-#: cbcd88ced77f4597bfb0d4fd48bf4f58 cd8afe5f874a4ed893d57cd0f29bb9a6
-#: dda4d63fbd664297808f901fc4957b29 discord.abc.Messageable.history
+#: ../../api/models.rst 8f1345380b4e4342a090f0d5cd984869
+#: cbcd88ced77f4597bfb0d4fd48bf4f58 discord.abc.Messageable.history
 #: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
 #: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
 #: discord.guild.Guild.bans discord.guild.Guild.fetch_members
 #: discord.monetization.SKU.fetch_subscriptions discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
-#: discord.threads.Thread.purge e819402188e744ca884c8ba6b1a852d5
-#: f31cbc6d18c4492d8d39476d33e60215 of
+#: discord.threads.Thread.purge of
 msgid "Return type"
 msgstr ""
 
-#: 1264fee836bb466f89b4f893c7bf697a 1fad9e42f9844177a0e09f9e5f6e4592
-#: b3d373e32ad24fc09945543962ca1e3a discord.asset.Asset.is_animated:4
+#: 1fad9e42f9844177a0e09f9e5f6e4592 discord.asset.Asset.is_animated:4
 #: discord.channel.CategoryChannel.is_nsfw:4
 #: discord.channel.StageChannel.is_nsfw:4 discord.channel.TextChannel.is_news:4
 #: discord.channel.VoiceChannel.is_nsfw:4
-#: discord.channel._TextChannel.is_nsfw:4 discord.emoji.AppEmoji.is_usable:4
+#: discord.channel._TextChannel.is_nsfw:4 discord.components.Component.is_v2:4
+#: discord.emoji.AppEmoji.is_usable:4
 #: discord.interactions.Interaction.is_command:4
 #: discord.interactions.Interaction.is_component:4
 #: discord.interactions.InteractionResponse.is_done:6
@@ -167,8 +142,8 @@ msgstr ""
 msgid "Returns a new asset with the passed components replaced."
 msgstr ""
 
-#: cd7840d7e7a84dfa84a627eb4b3760cc daa2f1c92cda42ddae693df8ce5553ce
-#: discord.asset.Asset.replace:4 discord.asset.Asset.with_size:4 of
+#: daa2f1c92cda42ddae693df8ce5553ce discord.asset.Asset.replace:4
+#: discord.asset.Asset.with_size:4 of
 msgid "The new size of the asset."
 msgstr ""
 
@@ -184,21 +159,10 @@ msgid ""
 "either 'webp', 'jpeg', 'jpg', or 'png'."
 msgstr ""
 
-#: ../../api/models.rst 0996753e5e124f77b30e61a42df820c1
-#: 0a5c812ff0c04eea82c6fa3bb63067e0 0edeaf6b803640c28054b2e619ddd802
-#: 1d273c9af8b04078a7f814a612b7af22 25f5699c89f544419e402558052f5325
-#: 27f96ff5ae5b4e83ab6648c6154d02e1 362375f37b194a349214ed5fc7c0f203
-#: 433e78d93a284222b29b7c5c27f30975 4db57c6eb2ff45e683de729c56067875
-#: 51d0460ea52747fe85f7df2cb0591858 57f07e810e7a4586855dc28481b0158a
-#: 5b7671b931944b139d39fd1e649e4371 647c16affa9946b1954e30a98d48817e
-#: 76becbf11cbf44e694d2b1ae7e64f923 83705baf8a864eec9f13163564e7cf6f
-#: 86821b65aab74584ad8c55849a601d14 9f601fe77c824a16b0956178e383143e
-#: b2f1da5ff55c4a3b9346d3b6e1f1adaf c9b9dc712a914abf8f2219351eeff240
-#: d158caf1186e48c8a38e8020bc046db6 d49a124f37e64f348e59d79ea1e601dc
-#: d8969dd93df444019b67ca16bb4ef691 discord.channel.StageChannel.purge
-#: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
-#: discord.threads.Thread.purge ecd9fdca3e544014953f89c1e94c68f0
-#: f88c908a6f4c41fabacd70ad58cdf52a of
+#: ../../api/models.rst 57f07e810e7a4586855dc28481b0158a
+#: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
+#: discord.channel._TextChannel.purge discord.threads.Thread.purge
+#: ecd9fdca3e544014953f89c1e94c68f0 of
 msgid "Returns"
 msgstr ""
 
@@ -206,33 +170,20 @@ msgstr ""
 msgid "The newly updated asset."
 msgstr ""
 
-#: 11fc898438104a268cae9f6320a66331 7decbb31cbe34e0591ee991814ce097d
-#: dee5733170884301b654b93e85996bf0 discord.asset.Asset.replace:16
-#: discord.asset.Asset.with_format:8 discord.asset.Asset.with_size:8
-#: discord.asset.Asset.with_static_format:11 fd507c401cdc4f5ea3a0dc7c779df1d2
-#: of
+#: discord.asset.Asset.replace:16 discord.asset.Asset.with_format:8
+#: discord.asset.Asset.with_size:8 discord.asset.Asset.with_static_format:11
+#: fd507c401cdc4f5ea3a0dc7c779df1d2 of
 msgid ":class:`Asset`"
 msgstr ""
 
 #: ../../api/models.rst 05260df1bd954c5caa25ff09f602f59d
-#: 08e736d0ebcb4f969f5b6c1e9b37778c 2472859665d2470bb065bfc0b93027e1
-#: 3c681436fcb64600ad5b441e2331589b 3df56f6e1f9a4a4999cbaaf11a1cd473
-#: 44b8d1766516447fb8c88325249d39b0 5298538313c0410689ffa672c5266090
-#: 699b6b4ff6544f7faeeb9f52f295dba8 6b49644c0a984cefa8ad37bd37e25c6c
-#: 6c88abffe12448c7999d0268dd98391d 6e2bbeaa9dbf4d0095fcab664be6f5ad
-#: 6f136f8c5e6d4b7088fce1fed9753458 8448a10ed39946c9814070a5a8747f5b
-#: a093e145386d4741a3c32f63e3d1b3b7 a747b811291345929a132043b534d8f7
-#: acf65750771442a785e04917545d20bc b8530b14839d4c8c8d553f5ecd20f041
-#: c2ea625207034985b0c360f2a82bcb33 c68960e6aa504d848baa9d228f79b622
-#: d80bc37cab244a838dc6b22f210108fd discord.abc.Messageable.history
-#: discord.channel.StageChannel.purge discord.channel.VoiceChannel.purge
-#: discord.channel._TextChannel.purge discord.guild.Guild.audit_logs
-#: discord.guild.Guild.bans discord.guild.Guild.fetch_members
+#: discord.abc.Messageable.history discord.channel.StageChannel.purge
+#: discord.channel.VoiceChannel.purge discord.channel._TextChannel.purge
+#: discord.guild.Guild.audit_logs discord.guild.Guild.bans
+#: discord.guild.Guild.fetch_members
 #: discord.monetization.SKU.fetch_subscriptions discord.reaction.Reaction.users
 #: discord.scheduled_events.ScheduledEvent.subscribers
-#: discord.threads.Thread.purge e0eacc7163104667a12355c978c322ca
-#: f5bccbd888d048908de44bba82b6968a fb44d6093f9241de967bd1a6a92c87d8
-#: fb7a0c154ac948c6bb5db13e5ec9280f of
+#: discord.threads.Thread.purge fb7a0c154ac948c6bb5db13e5ec9280f of
 msgid "Raises"
 msgstr ""
 
@@ -244,7 +195,6 @@ msgstr ""
 msgid "Returns a new asset with the specified size."
 msgstr ""
 
-#: 0745ca1b6ee24362a4d64ca7427632bc 7d4b2761dbd546be90d9bb9950d4e9b3
 #: 9adf62b3d3dd496d8296e2f28fb3db26 discord.asset.Asset.with_format:7
 #: discord.asset.Asset.with_size:7 discord.asset.Asset.with_static_format:10 of
 msgid "The new updated asset."
@@ -285,17 +235,10 @@ msgstr ""
 msgid "The asset had an invalid format."
 msgstr ""
 
-#: 0ca18e9a7adf4b6f9bfcce46aa9e3c6f 16bc1d11ba1242fcaaa2d5f3a231382b
-#: 3db17b50b5c94a2e910ca4e66e1a92d6 5d4f482bbf7846e59a2374c6ee3eb3ad
-#: 6ca83568bdad40798ecbdd6239c77a81 704cb3891c8f40fd82c41a6e73d45468
-#: 7ad00ffb5bab447ca72c6844703a96e9 81253fd018124062b2e6978ba7f46e1c
-#: 867ac713660943d69dbd98f2164d01b6 97d7c3ed4fdb465b963224edb1f96c40
-#: a228bf8cd1194556b2d999730fc00b47 a5c07649e5ae469886fe90f590944332
-#: b41df4171ce3487289ea11713cb69daf b7eba1a9a94b4abca974be4cda3b9439
-#: bf7d7300665a42d4b2d8623f113713f2 c126483eaf8f483ea012ef62bb4ca9a5
-#: discord.abc.Connectable.connect:1 discord.abc.GuildChannel.create_invite:1
-#: discord.abc.GuildChannel.delete:1 discord.abc.GuildChannel.invites:1
-#: discord.abc.GuildChannel.move:1 discord.abc.GuildChannel.set_permissions:1
+#: 867ac713660943d69dbd98f2164d01b6 discord.abc.Connectable.connect:1
+#: discord.abc.GuildChannel.create_invite:1 discord.abc.GuildChannel.delete:1
+#: discord.abc.GuildChannel.invites:1 discord.abc.GuildChannel.move:1
+#: discord.abc.GuildChannel.set_permissions:1
 #: discord.abc.Messageable.fetch_message:1 discord.abc.Messageable.pins:1
 #: discord.abc.Messageable.send:1 discord.abc.Messageable.trigger_typing:1
 #: discord.asset.AssetMixin.read:1 discord.asset.AssetMixin.save:1
@@ -390,9 +333,10 @@ msgstr ""
 #: discord.message.Message.clear_reactions:1
 #: discord.message.Message.create_thread:1 discord.message.Message.delete:1
 #: discord.message.Message.edit:1 discord.message.Message.end_poll:1
-#: discord.message.Message.pin:1 discord.message.Message.publish:1
-#: discord.message.Message.remove_reaction:1 discord.message.Message.reply:1
-#: discord.message.Message.unpin:1 discord.monetization.Entitlement.consume:1
+#: discord.message.Message.forward_to:1 discord.message.Message.pin:1
+#: discord.message.Message.publish:1 discord.message.Message.remove_reaction:1
+#: discord.message.Message.reply:1 discord.message.Message.unpin:1
+#: discord.monetization.Entitlement.consume:1
 #: discord.monetization.Entitlement.delete:1
 #: discord.onboarding.Onboarding.add_prompt:1
 #: discord.onboarding.Onboarding.append_prompt:1
@@ -420,55 +364,48 @@ msgstr ""
 #: discord.threads.Thread.unarchive:1 discord.user.ClientUser.edit:1
 #: discord.user.User.create_dm:1 discord.user.User.create_test_entitlement:1
 #: discord.welcome_screen.WelcomeScreen.edit:1
-#: discord.widget.Widget.fetch_invite:1 e36857d00d4a4b03a1a0dde15176d0f7
-#: e9daf36896ce457cbddfeb00139760dd ff88a521f3414956bb0ae0fb0241dcbc of
+#: discord.widget.Widget.fetch_invite:1 e9daf36896ce457cbddfeb00139760dd of
 msgid "|coro|"
 msgstr ""
 
-#: 0a45793fa09947b5b76f788948db618b 4dcd15b67bf147479ba86c1113f22610
-#: discord.asset.AssetMixin.read:3 discord.partial_emoji.PartialEmoji.read:3 of
+#: 4dcd15b67bf147479ba86c1113f22610 discord.asset.AssetMixin.read:3
+#: discord.partial_emoji.PartialEmoji.read:3 of
 msgid "Retrieves the content of this asset as a :class:`bytes` object."
 msgstr ""
 
-#: 61bde54de96944b9b82f92d99b94300f 65febeca148b4be9994734d258af10f6
-#: discord.asset.AssetMixin.read:5 discord.partial_emoji.PartialEmoji.read:5 of
+#: 65febeca148b4be9994734d258af10f6 discord.asset.AssetMixin.read:5
+#: discord.partial_emoji.PartialEmoji.read:5 of
 msgid "The content of the asset."
 msgstr ""
 
-#: 54bfde75f0f943679d7db0a7aaac127e 5dda9975005547e4beb396e3191f0db8
 #: d3b229e6d8534eceb97a2d8228c54f0f discord.asset.AssetMixin.read:6
 #: discord.message.Attachment.read:17 discord.partial_emoji.PartialEmoji.read:6
 #: of
 msgid ":class:`bytes`"
 msgstr ""
 
-#: 2d8757c0cd4949059cba01c2a5b8f8f6 34973bc8542a42cd997c216b94cce104
-#: b83fb92fb53945bba9a45e6f0fe3f9d7 discord.asset.AssetMixin.read:8
+#: 2d8757c0cd4949059cba01c2a5b8f8f6 discord.asset.AssetMixin.read:8
 #: discord.asset.AssetMixin.save:18 discord.partial_emoji.PartialEmoji.read:8
 #: of
 msgid "There was no internal connection state."
 msgstr ""
 
-#: 0926c1a57e1d42ca8306857809e2bbf9 2e3e6e96952c4e09959ea48ab64f6bb9
 #: a1e890fa41674e048ecbd57d80238a69 discord.asset.AssetMixin.read:9
 #: discord.asset.AssetMixin.save:19 discord.partial_emoji.PartialEmoji.read:9
 #: of
 msgid "Downloading the asset failed."
 msgstr ""
 
-#: 4401ecb89712474fb7bfe8e694cbfee2 9178ef81aa534252b75195e5f2fe0095
-#: 9cdae5cd0ee548be87ed7cba9ee65aff discord.asset.AssetMixin.read:10
+#: 4401ecb89712474fb7bfe8e694cbfee2 discord.asset.AssetMixin.read:10
 #: discord.asset.AssetMixin.save:20 discord.partial_emoji.PartialEmoji.read:10
 #: of
 msgid "The asset was deleted."
 msgstr ""
 
-#: 4cbc6c1c6cba4159a0d4a5b6c0d718b8 53a10fbce32c4c78adf94540d77378d2
-#: discord.asset.AssetMixin.save:3 of
+#: 4cbc6c1c6cba4159a0d4a5b6c0d718b8 discord.asset.AssetMixin.save:3 of
 msgid "Saves this asset into a file-like object."
 msgstr ""
 
-#: 7b493c556a40473db9b99d2c953c19d8 7bc5cf8ede5a45639de67d42ca5aca08
 #: 83de373e758a4e4681957b8ec406b431 discord.asset.AssetMixin.save:6
 #: discord.message.Attachment.save:6 of
 msgid ""
@@ -477,24 +414,19 @@ msgid ""
 "used instead."
 msgstr ""
 
-#: 046ad38efb79459fbf2a3ecd8b279567 148b8fad8702458e82dda1d1d36058f9
-#: c4ec62dcfb8546f5b32ef163c4e401e4 discord.asset.AssetMixin.save:11
+#: 046ad38efb79459fbf2a3ecd8b279567 discord.asset.AssetMixin.save:11
 #: discord.message.Attachment.save:11 of
 msgid ""
 "Whether to seek to the beginning of the file after saving is successfully"
 " done."
 msgstr ""
 
-#: 05679ca6d69e48cd90a4c771b4725c81 aede6c3b17ae4ee08ab6dafed6701d9a
-#: b4b183e053614b16a4b57382139bccb2 discord.asset.AssetMixin.save:15
+#: aede6c3b17ae4ee08ab6dafed6701d9a discord.asset.AssetMixin.save:15
 #: discord.message.Attachment.save:23 of
 msgid "The number of bytes written."
 msgstr ""
 
-#: 42faf5a34414420fa7c8b306f914946c 5191b22157d04bf4bc0a54a5f2b92103
-#: 5f353ab23d4e42d19a2257f9ead36a65 60c6d421be604ba494cc3d95066a7282
-#: 66016977cc094ded920608f03478efe9 6b01df183fb34aff8d8ff8f39fcd123f
-#: 940c35d806714f3490c1706f2b5e9387 a29ea8b8246a43af9b40003208bbc391
+#: 42faf5a34414420fa7c8b306f914946c 940c35d806714f3490c1706f2b5e9387
 #: cf2159859c6247b487751085c8eca2ab discord.asset.AssetMixin.save:16
 #: discord.automod.AutoModActionMetadata:12 discord.automod.AutoModRule:27
 #: discord.automod.AutoModRule:39 discord.automod.AutoModTriggerMetadata:60
@@ -508,8 +440,9 @@ msgstr ""
 #: discord.channel.TextChannel:37 discord.channel.TextChannel:72
 #: discord.channel.TextChannel:90 discord.channel.VoiceChannel:37
 #: discord.channel.VoiceChannel:56 discord.channel.VoiceChannel:62
-#: discord.channel.VoiceChannel:98 discord.components.SelectMenu:41
-#: discord.components.SelectMenu:48 discord.emoji.AppEmoji:41
+#: discord.channel.VoiceChannel:98 discord.components.Component:31
+#: discord.components.FileComponent:29 discord.components.SelectMenu:40
+#: discord.components.SelectMenu:47 discord.emoji.AppEmoji:41
 #: discord.emoji.GuildEmoji:39 discord.emoji.GuildEmoji:63
 #: discord.guild.Guild:47 discord.guild.Guild:59 discord.guild.Guild:71
 #: discord.guild.Guild:119 discord.guild.Guild:152 discord.guild.Guild:158
@@ -523,7 +456,7 @@ msgstr ""
 #: discord.interactions.MessageInteraction:19 discord.invite.Invite:53
 #: discord.invite.Invite:90 discord.invite.Invite:97
 #: discord.invite.PartialInviteChannel:34 discord.invite.PartialInviteGuild:34
-#: discord.message.Attachment:28 discord.message.Attachment:34
+#: discord.message.Attachment:30 discord.message.Attachment:36
 #: discord.message.Attachment.save:24 discord.message.Message:119
 #: discord.monetization.Entitlement:16 discord.monetization.Entitlement:22
 #: discord.monetization.Entitlement:28 discord.monetization.SKU:9
@@ -582,7 +515,7 @@ msgstr ""
 #: discord.user.User:31 discord.webhook.async_.PartialWebhookChannel:11
 #: discord.webhook.async_.PartialWebhookGuild:11 discord.widget.Widget:21
 #: discord.widget.WidgetChannel:25 discord.widget.WidgetChannel:37
-#: discord.widget.WidgetMember:25 ed30d7077e91479b8d8bca2fbdbe9c9c of
+#: discord.widget.WidgetMember:25 of
 msgid ":class:`int`"
 msgstr ""
 
@@ -623,8 +556,8 @@ msgstr ""
 msgid "When the user started listening in UTC."
 msgstr ""
 
-#: 2198a9c9e1f54df38b83ca3b1209747b 66c0095a60a34c59a3390d2c9df00d73
-#: discord.Spotify.color:1 discord.Spotify.colour:1 of
+#: 66c0095a60a34c59a3390d2c9df00d73 discord.Spotify.color:1
+#: discord.Spotify.colour:1 of
 msgid "Returns the Spotify integration colour, as a :class:`Colour`."
 msgstr ""
 
@@ -698,37 +631,8 @@ msgstr ""
 msgid "Indicates if the user is currently deafened by the guild."
 msgstr ""
 
-#: ../../api/models.rst ../../docstring 022d0104c2db48bc9630f70a4304365e
-#: 02722029b4644ccbb2826596fdd7d4f2 03a5eb78e95e41108576c4db355fe914
-#: 03e71a7ef3c74ac7aeab4c072e40f78d 06df0be9e38d4672b7997b4b6bed681c
-#: 095f7ca30ce74014962ea2b3236a9c3a 09eec61105ed4161b45e3ffdafd48bb1
-#: 0d3d1607e68844609eed1db5d315d17c 0d7fa3aefcb74cbda495ff8a7ba6fbc6
-#: 176e4886bf9f4105b2c77ab49bff6956 1b2606ff5e8b4524989753c9ad467b97
-#: 1bdb2cabcf67495ebdc667608c720a06 22065b2145c345fcbc326d89075ec35b
-#: 22ac68d587fe4abc9f96441f06046dd9 272747f7539542f3b8a44148c72e26ea
-#: 2a608fc04cba49d98e1f1ddaeb64d63c 2cfabf5b7fef435e84dfb3fc2787f1ac
-#: 338106e55c8240eab14065502b864dfc 35a8b82808b8453db119ab7ba0ebcdd1
-#: 495f29871fc9457e9d2309a9a716f0d5 4ab61677a7bb4b46a38295c13b89b84c
-#: 4dee2a1342b24edcbb70f7c373b370a3 4e47f55a759e4da2818894aa503b7ee5
-#: 5d2422bd8d6c40aaa09875550353f8d8 614ea7004bc04ea0b4e031051f813524
-#: 655791b8ec334318a71371e38c2748ad 69cefcf03e884ac7b5fc11b7d1d29cf3
-#: 6d94e4d6b4274516b6b9f993418424ab 7693963e34644ca1bd2effa6f88d8b9e
-#: 77b5c1a970774a8ebeabdf892fe59af6 784be10dac3d459faa6de5dc766fca6b
-#: 7a27fafabfe045e1830b6e6d3c6728b6 7c45525c2a804ee983410a85d2856c72
-#: 7e3d3537787f4909a3f533956a0b2114 8387e2278a404919af843b93e8115ab7
-#: 9173191c27e6484794007b6452c643b8 998a56ee903a43baa0dcd25155351a0b
-#: 9cfa3c015b574cc9879d457ec5fb2607 9f597ce69b054fe48d2922e85db0c3af
-#: a79f925772d5431288f420c483672dff a7eb34de6a7544ba80ac451d76e97de2
-#: a854241a48da4657ac4191293b46900d a90d060620ea4f589990c3d137e2fd63
-#: ab173d33d46744e6a0cb8b961e49e23d abb9957168004deb9b0b16726211ec29
-#: ad846a914f534e62aa1a0fa410b7ffb3 b2584d98803a488da58a6cfeeb4ff514
-#: b337c6dc8c414befa7850e212ce7d7eb b89ba10007ff47f0a80093f54be43e16
-#: b99c99a9aae44872b07a6e5714355931 ba3676ed311e42e99fd2a599b2467dba
-#: bc3aa6d4529e45068a1e542de6b4fb17 bee43d44de1540dd8308d7840112e7ea
-#: bf0d57cc45cc4633bb0cc7df070c4418 c265aacd65f544b7b53d69cd86c1a6c9
-#: c776312038584368bc9ecec0c0ad8dbf d1bbad3b31bd49bfaea28fbc02d6c4ab
-#: d4b6e88a914c4f039e215ddeec921bd5 d7244d7c36304984b34b1f7bc9f77171
-#: da073de05b9e4f528d3dc81a9e6ac777 discord.AuthorizingIntegrationOwners.guild
+#: ../../api/models.rst ../../docstring 09eec61105ed4161b45e3ffdafd48bb1
+#: discord.AuthorizingIntegrationOwners.guild
 #: discord.AuthorizingIntegrationOwners.user
 #: discord.InteractionMetadata.interacted_message
 #: discord.InteractionMetadata.original_response_message discord.SKU.url
@@ -741,8 +645,11 @@ msgstr ""
 #: discord.channel.StageChannel discord.channel.TextChannel
 #: discord.channel.VoiceChannel discord.components.ActionRow
 #: discord.components.Button discord.components.Component
-#: discord.components.SelectMenu discord.emoji.AppEmoji
-#: discord.emoji.GuildEmoji discord.guild.Guild
+#: discord.components.Container discord.components.FileComponent
+#: discord.components.MediaGallery discord.components.Section
+#: discord.components.SelectMenu discord.components.Separator
+#: discord.components.TextDisplay discord.components.Thumbnail
+#: discord.emoji.AppEmoji discord.emoji.GuildEmoji discord.guild.Guild
 #: discord.integrations.BotIntegration discord.integrations.Integration
 #: discord.integrations.IntegrationAccount
 #: discord.integrations.IntegrationApplication
@@ -785,36 +692,22 @@ msgstr ""
 #: discord.welcome_screen.WelcomeScreen
 #: discord.welcome_screen.WelcomeScreenChannel discord.widget.Widget
 #: discord.widget.WidgetChannel discord.widget.WidgetMember
-#: e18c8d576865486dbf7e1e5055f5ce7c e4ebc8ba68aa48d1ad1e4703697409ce
-#: ea5702097679494cbc117ca53b79b9d1 ebfd2a17c7c64a649b40a97c0397f08d
-#: f40b4138a7f643cdad4ff34785e7a1a6 f619d28bcac54b87b9826c65caaa95d4
-#: f893de4cfff14b6fad708001d112c886 f8d9a7bee8654e418338d5153f0346e0
-#: fc1703444c8e43aeb6b207c0f0770564 fd31d6e51ff848fbaa774b695fb45f96
-#: fdd925840fb24e89b0f94205c0acc9fb of
+#: f40b4138a7f643cdad4ff34785e7a1a6 of
 msgid "type"
 msgstr ""
 
-#: 086298bde6d3427996bb79be49ab9aec 105352a161e5411ba6f61e2fc15386f2
-#: 1073ecfb4a744835bbfaeda3378c9886 11c2f9ea736642a693a9574bc0b22721
-#: 12dadc55d4ba4391961b514f8a8f42cb 200ce5183d284487b83477bba2b7c24f
-#: 3033e6f13ed54783b7677f34108bf609 4003d244e62a42b7ab7815a5cfe25417
-#: 55766eb1c16d48b9a0c2abbf506e9b9e 5fa3865947e547d3861918f336602cc1
-#: 60abce50c46249439a7420028aa5b862 6afc41742da04070adb35652a57c9da3
-#: 789166acd786435a96c38745c7816111 7e4e194346944a07bc961f3e35ff72bd
-#: 91ee58c33d2848ed8446bec74e5c8c94 94f78f94eef14c5eab8e517a73ffd096
-#: 975fd0fa469044a8a9710bc449dee9bc 9c07a12592d74668bddd9fa2ad17b925
-#: ae2156faa6f64461abb53909ccabe94a c0f57792bcc94fe6a59671a5e2fb01b3
-#: c553482c64d74d31a199dacf7d704993 df0105c172b14940b0ce5d8fb044beee
+#: 55766eb1c16d48b9a0c2abbf506e9b9e 91ee58c33d2848ed8446bec74e5c8c94
 #: discord.abc.Messageable.can_send:4 discord.automod.AutoModRule:69
 #: discord.channel.CategoryChannel:56 discord.channel.ForumChannel:86
 #: discord.channel.MediaChannel:88 discord.channel.TextChannel:82
-#: discord.components.Button:35 discord.components.SelectMenu:70
-#: discord.emoji.AppEmoji:47 discord.emoji.AppEmoji:53
-#: discord.emoji.AppEmoji:59 discord.emoji.AppEmoji:71
-#: discord.emoji.GuildEmoji:45 discord.emoji.GuildEmoji:51
-#: discord.emoji.GuildEmoji:57 discord.emoji.GuildEmoji:69
-#: discord.guild.Guild:65 discord.guild.Guild:81 discord.guild.Guild:166
-#: discord.integrations.BotIntegration:33 discord.integrations.Integration:33
+#: discord.components.Button:34 discord.components.SelectMenu:69
+#: discord.components.Separator:17 discord.emoji.AppEmoji:47
+#: discord.emoji.AppEmoji:53 discord.emoji.AppEmoji:59
+#: discord.emoji.AppEmoji:71 discord.emoji.GuildEmoji:45
+#: discord.emoji.GuildEmoji:51 discord.emoji.GuildEmoji:57
+#: discord.emoji.GuildEmoji:69 discord.guild.Guild:65 discord.guild.Guild:81
+#: discord.guild.Guild:166 discord.integrations.BotIntegration:33
+#: discord.integrations.Integration:33
 #: discord.integrations.StreamIntegration:33
 #: discord.integrations.StreamIntegration:39 discord.invite.Invite:71
 #: discord.invite.Invite:84 discord.member.Member:62
@@ -822,7 +715,7 @@ msgstr ""
 #: discord.member.VoiceState:13 discord.member.VoiceState:19
 #: discord.member.VoiceState:25 discord.member.VoiceState:33
 #: discord.member.VoiceState:39 discord.member.VoiceState:49
-#: discord.member.VoiceState:67 discord.message.Attachment:90
+#: discord.member.VoiceState:67 discord.message.Attachment:92
 #: discord.message.Message:23 discord.message.Message:85
 #: discord.message.Message:138 discord.monetization.Entitlement:46
 #: discord.monetization.Entitlement:72 discord.onboarding.Onboarding:15
@@ -839,8 +732,7 @@ msgstr ""
 #: discord.threads.Thread:108 discord.user.BaseUser.mentioned_in:8
 #: discord.user.ClientUser:55 discord.user.ClientUser:63
 #: discord.user.ClientUser:69 discord.user.ClientUser:81 discord.user.User:55
-#: discord.user.User:61 discord.widget.WidgetMember:43
-#: e0e606cdfb3344ea9a2910bb9d83e6de ef47610b7fd44937a5ef4143f95f5fc0 of
+#: discord.user.User:61 discord.widget.WidgetMember:43 of
 msgid ":class:`bool`"
 msgstr ""
 
@@ -883,10 +775,10 @@ msgstr ""
 msgid "Only applicable to stage channels."
 msgstr ""
 
-#: 0dd0b8ab160843ff8798020ac2f60772 bd59fe44ce914d0285c9bd326f4f62ad
-#: discord.invite.Invite:125 discord.member.Member:30 discord.member.Member:69
-#: discord.member.Member:77 discord.member.VoiceState:61
-#: discord.scheduled_events.ScheduledEvent:51 discord.threads.Thread:128 of
+#: bd59fe44ce914d0285c9bd326f4f62ad discord.invite.Invite:125
+#: discord.member.Member:30 discord.member.Member:69 discord.member.Member:77
+#: discord.member.VoiceState:61 discord.scheduled_events.ScheduledEvent:51
+#: discord.threads.Thread:128 of
 msgid "Optional[:class:`datetime.datetime`]"
 msgstr ""
 
@@ -944,99 +836,82 @@ msgstr ""
 msgid "Optional[:class:`ChannelType`]"
 msgstr ""
 
-#: 2047ab6ff868447b8b80f9ec9ec486df a55a872065654b93971d8c6ecb32ddcf
 #: discord.abc.Messageable.can_send:1 ee064c6766394f2fa4a28f0119527874 of
 msgid ""
 "Returns a :class:`bool` indicating whether you have the permissions to "
 "send the object(s)."
 msgstr ""
 
-#: 14d2bfd03a6e469d8ee65a8d101afb5f 2e7906ec63d841a4878301bd49409146
-#: 8d0ce9e20b7c4622b2f7c96ac7e3f046 discord.abc.Messageable.can_send:3 of
+#: 14d2bfd03a6e469d8ee65a8d101afb5f discord.abc.Messageable.can_send:3 of
 msgid "Indicates whether you have the permissions to send the object(s)."
 msgstr ""
 
-#: 0384c1134c80472eac35ba53c22d90ff b05306d39e7845898a8908e0817898fb
-#: discord.abc.Messageable.can_send:6 f3e0f8c526b743fdb038573a85012d71 of
+#: 0384c1134c80472eac35ba53c22d90ff discord.abc.Messageable.can_send:6 of
 msgid "An invalid type has been passed."
 msgstr ""
 
-#: 0dec3dbb162842d78a61e2d1f4a0da1d 25b6541bc41841ccbf8b1649f85a1f9d
-#: 5d3bd874ef084f87ab4ac6c6d08cb08a discord.abc.Messageable.fetch_message:3 of
+#: 0dec3dbb162842d78a61e2d1f4a0da1d discord.abc.Messageable.fetch_message:3 of
 msgid "Retrieves a single :class:`~discord.Message` from the destination."
 msgstr ""
 
-#: 4ae78ba5a69f45d4a4ae83d62b4802f3 800b0904653841ea8964dbb973b192ae
-#: discord.abc.Messageable.fetch_message:6 fdbcb5604d10415c86135acc54b67c0c of
+#: 4ae78ba5a69f45d4a4ae83d62b4802f3 discord.abc.Messageable.fetch_message:6 of
 msgid "The message ID to look for."
 msgstr ""
 
-#: 11df635629de48ef8f9d38590f9f8676 c2f7f6b8b80e4041818f55005ce8b67a
-#: discord.abc.Messageable.fetch_message:9 e18b1b81cff840a99be2aaac63a6f05e of
+#: c2f7f6b8b80e4041818f55005ce8b67a discord.abc.Messageable.fetch_message:9 of
 msgid "The message asked for."
 msgstr ""
 
-#: 0e44b08a661a4e4cb8977253c1a1fce1 54db8105f8b44c2cb4f23b1d50d1686f
-#: 6e0a7e5d3ecd440881fcaf5c610130f0 discord.abc.Messageable.fetch_message:10
-#: discord.abc.Messageable.send:100 e0e1920c1d0342bab09dc720dc295044
-#: eeb551cbf2bc4573a7518a774f0ab3e2 of
+#: 0e44b08a661a4e4cb8977253c1a1fce1 discord.abc.Messageable.fetch_message:10
+#: discord.abc.Messageable.send:100 of
 msgid ":class:`~discord.Message`"
 msgstr ""
 
-#: 6f8b6217053e47479783af39a2aff1f6 818359f01e9b4e949e0d69159449dd63
 #: 9ae4e78f4cbb4eab83ecc6f4fabaf8cc discord.abc.Messageable.fetch_message:12 of
 msgid "The specified message was not found."
 msgstr ""
 
-#: 013831d1e99644938c6dd757927e6079 1c4b5de6d0084edfb0c36ddc586cd125
-#: 87b677120b8244279256a5f0d5ba6cb3 discord.abc.Messageable.fetch_message:13 of
+#: 1c4b5de6d0084edfb0c36ddc586cd125 discord.abc.Messageable.fetch_message:13 of
 msgid "You do not have the permissions required to get a message."
 msgstr ""
 
-#: 1e046de530f5431fa8a01caec3544a8a 72cd9cf4d7734dba8283d21a3e6a2960
-#: a04b7c15a11f4d91b3ef716d191fc2e5 discord.abc.Messageable.fetch_message:14 of
+#: 1e046de530f5431fa8a01caec3544a8a discord.abc.Messageable.fetch_message:14 of
 msgid "Retrieving the message failed."
 msgstr ""
 
-#: 34a4d40c3a264dc996c94056170a151d a2b5b9f3f9864954a6c95353f0840647
-#: d62bbb3b47734dc5a98c28915226ceb7 discord.abc.Messageable.history:1 of
+#: a2b5b9f3f9864954a6c95353f0840647 discord.abc.Messageable.history:1 of
 msgid ""
 "Returns an :class:`~discord.AsyncIterator` that enables receiving the "
 "destination's message history."
 msgstr ""
 
-#: 1e013f815e324252ba499008afce7129 d846b20a22f54d4bbaf1433acb092177
-#: discord.abc.Messageable.history:3 eeab1364847b4490bc5bf659ea280f89 of
+#: 1e013f815e324252ba499008afce7129 discord.abc.Messageable.history:3 of
 msgid ""
 "You must have :attr:`~discord.Permissions.read_message_history` "
 "permissions to use this."
 msgstr ""
 
-#: 2325531f3a304ef38fa74dc2ae0ffc0d 62c477d54eab4eb5b3303b8b364c89c4
-#: cedec68e61774ccd965a29d9620bb85b discord.abc.Messageable.history:6 of
+#: 62c477d54eab4eb5b3303b8b364c89c4 discord.abc.Messageable.history:6 of
 msgid ""
 "The number of messages to retrieve. If ``None``, retrieves every message "
 "in the channel. Note, however, that this would make it a slow operation."
 msgstr ""
 
-#: ad959063203140e2a8fec35d19f3b2c1 b18b7dbe82754883974c8fb7505d4715
-#: d447181fcf274a4f8318c716bd49fd73 discord.abc.Messageable.history:11 of
+#: ad959063203140e2a8fec35d19f3b2c1 discord.abc.Messageable.history:11 of
 msgid ""
 "Retrieve messages before this date or message. If a datetime is provided,"
 " it is recommended to use a UTC aware datetime. If the datetime is naive,"
 " it is assumed to be local time."
 msgstr ""
 
-#: aacb6953371648ccb5e72a11bdaabbe0 ad29354d07e7456d9ac05382a07917a3
-#: discord.abc.Messageable.history:16 f56ba8bbb92847e0817c7e5cf592bfae of
+#: aacb6953371648ccb5e72a11bdaabbe0 discord.abc.Messageable.history:16 of
 msgid ""
 "Retrieve messages after this date or message. If a datetime is provided, "
 "it is recommended to use a UTC aware datetime. If the datetime is naive, "
 "it is assumed to be local time."
 msgstr ""
 
-#: 94944dd5859741c495b946a77434e4b3 da844572f0ee4e3db1ab88bc0ae53ace
-#: ddf1d1beab504636ab1745bb2a90b04f discord.abc.Messageable.history:21 of
+#: da844572f0ee4e3db1ab88bc0ae53ace discord.abc.Messageable.history:21 of
 msgid ""
 "Retrieve messages around this date or message. If a datetime is provided,"
 " it is recommended to use a UTC aware datetime. If the datetime is naive,"
@@ -1045,15 +920,13 @@ msgid ""
 "return at most limit + 1 messages."
 msgstr ""
 
-#: 2158e52532114f00b4b65cd0423df2af 2bf2f78c9c8f4a729d8f42921b489c38
-#: 5755a7ad7f454b7cac7a362f9721ba8b discord.abc.Messageable.history:28 of
+#: 2158e52532114f00b4b65cd0423df2af discord.abc.Messageable.history:28 of
 msgid ""
 "If set to ``True``, return messages in oldest->newest order. Defaults to "
 "``True`` if ``after`` is specified, otherwise ``False``."
 msgstr ""
 
-#: 27a00c698a184861a3e79a26f6bebd2e 978ec7ef1794400e84a2dba4651a187b
-#: a56a4e26f11646db9973fb9a82041c86 c7f12b2d61ff4ddeac3d4e82b620a453
+#: 978ec7ef1794400e84a2dba4651a187b a56a4e26f11646db9973fb9a82041c86
 #: discord.abc.Messageable.history
 #: discord.channel._TextChannel.archived_threads discord.guild.Guild.audit_logs
 #: discord.guild.Guild.bans discord.guild.Guild.entitlements
@@ -1065,28 +938,24 @@ msgstr ""
 msgid "Yields"
 msgstr ""
 
-#: 1362e64547b04b19aa2381aeab3e61a4 4d8cd2cb40d64e9d8476dc4f2f34ff2e
 #: a02393114810463a8e9d4c9c7191362e discord.abc.Messageable.history:32 of
 msgid ":class:`~discord.Message` -- The message with the message data parsed."
 msgstr ""
 
-#: 08bc04473e1c44da9381c5b7866fb287 1a061777efb3481fada5ffff633a266f
 #: aabc54e6131b4d4a81f580c6c926badb discord.abc.Messageable.history:34 of
 msgid "You do not have permissions to get channel message history."
 msgstr ""
 
-#: 55b54bcf5eca44b1a17570404a0fe8b5 discord.abc.Messageable.history:35
-#: f2f1efc2d20a4530b8075de51578d2a5 f77840d45e1943359bf5aa4d7cbafd58 of
+#: discord.abc.Messageable.history:35 f2f1efc2d20a4530b8075de51578d2a5 of
 msgid "The request to get message history failed."
 msgstr ""
 
-#: 3e3b6a5f5b8c4f55ae00cb8003b37981 71713b3b7da14660975590d847fa9ea1
-#: discord.abc.Messageable.history:36 ed437085f8744eecbf24ae254b3e43af of
+#: 71713b3b7da14660975590d847fa9ea1 discord.abc.Messageable.history:36 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.HistoryIterator\\``"
 msgstr ""
 
 #: 25bd697769214744832fa1612bc8518a 966fbbaa61a846aa9b633dbfc1ee5c60
-#: ad7ad919296e43aa91303b7877fb6571 discord.abc.GuildChannel.set_permissions:25
+#: discord.abc.GuildChannel.set_permissions:25
 #: discord.abc.Messageable.history:39 discord.channel.StageChannel.purge:48
 #: discord.channel.VoiceChannel.purge:48 discord.channel._TextChannel.purge:48
 #: discord.guild.Guild.audit_logs:35 discord.guild.Guild.bans:35
@@ -1100,64 +969,53 @@ msgstr ""
 msgid "Examples"
 msgstr ""
 
-#: 51b8dfbb15bb43ef95c144c7a5d3f6ba 745ca57186c14e1785a2e80ce870df80
-#: discord.abc.Messageable.history:40 discord.guild.Guild.bans:36
-#: discord.guild.Guild.fetch_members:30
+#: 51b8dfbb15bb43ef95c144c7a5d3f6ba discord.abc.Messageable.history:40
+#: discord.guild.Guild.bans:36 discord.guild.Guild.fetch_members:30
 #: discord.monetization.SKU.fetch_subscriptions:29
 #: discord.reaction.Reaction.users:28
-#: discord.scheduled_events.ScheduledEvent.subscribers:39
-#: f95b2fa403dc4f92a794b30158d2f431 of
+#: discord.scheduled_events.ScheduledEvent.subscribers:39 of
 msgid "Usage ::"
 msgstr ""
 
-#: 154df22c3326437ebd9a4d0421852b9e 976781fce2904a7ea929a7f179bad61a
-#: ab788cd1146c42759b597d948a21f602 discord.abc.Messageable.history:47
+#: 154df22c3326437ebd9a4d0421852b9e discord.abc.Messageable.history:47
 #: discord.reaction.Reaction.users:34
 #: discord.scheduled_events.ScheduledEvent.subscribers:44 of
 msgid "Flattening into a list: ::"
 msgstr ""
 
-#: 4e0136f8359346d6ae9e6d3eb61aa0d7 ace68b84a7ee43cbb3d166231f224751
-#: discord.abc.Messageable.history:52 discord.guild.Guild.bans:16
-#: discord.guild.Guild.fetch_members:10 discord.member.Member.edit:35
-#: f55d483d8f7243539066e1a0a2e89189 of
+#: 4e0136f8359346d6ae9e6d3eb61aa0d7 discord.abc.Messageable.history:52
+#: discord.guild.Guild.bans:16 discord.guild.Guild.fetch_members:10
+#: discord.member.Member.edit:35 of
 msgid "All parameters are optional."
 msgstr ""
 
-#: 4f0650134f1040c6b9ae6622883f8748 8ca3f84c6e354ac5a6abcc0bf696e629
-#: dc000ded9dd346c096a38a8956dfdc6a discord.abc.Messageable.pins:3 of
+#: 4f0650134f1040c6b9ae6622883f8748 discord.abc.Messageable.pins:3 of
 msgid "Retrieves all messages that are currently pinned in the channel."
 msgstr ""
 
-#: 08b2f9ec55a44bf8a9f0ca1e3fd0c560 5219c84db278497aafcba6d6e944b9fc
-#: 816eb61199e34968bfdbee4f24a84ba5 discord.abc.Messageable.pins:7 of
+#: 5219c84db278497aafcba6d6e944b9fc discord.abc.Messageable.pins:7 of
 msgid ""
 "Due to a limitation with the Discord API, the :class:`.Message` objects "
 "returned by this method do not contain complete "
 ":attr:`.Message.reactions` data."
 msgstr ""
 
-#: 549042b4685847aba193e422e7789a14 da415a879e4147c4a0af1d630cc81346
-#: discord.abc.Messageable.pins:11 e283aaccd4144d6e95f83432985ac90c of
+#: 549042b4685847aba193e422e7789a14 discord.abc.Messageable.pins:11 of
 msgid "The messages that are currently pinned."
 msgstr ""
 
-#: 1b6e9a8893454a5db4741c00c3bc8031 64745f109e7948b0a14d1d21ddb9a3ec
 #: 875dee04a4ff4712a8b83bd629d6ad29 discord.abc.Messageable.pins:12 of
 msgid "List[:class:`~discord.Message`]"
 msgstr ""
 
-#: 2bc50ccd657f46209917f5d9f4099650 5f422bc795f7480fa14af883be52f572
-#: b2f62ff86c1d4e9eaf9d1ea62937f171 discord.abc.Messageable.pins:14 of
+#: 2bc50ccd657f46209917f5d9f4099650 discord.abc.Messageable.pins:14 of
 msgid "Retrieving the pinned messages failed."
 msgstr ""
 
-#: 2a04455df66145088795dfb431c2b0e9 66d2246603944b76b2b9c3683d1e1363
-#: discord.abc.Messageable.send:3 ed69aa77f03b4955bbe3d5671c0e8088 of
+#: 2a04455df66145088795dfb431c2b0e9 discord.abc.Messageable.send:3 of
 msgid "Sends a message to the destination with the content given."
 msgstr ""
 
-#: 33cd3f176f8f4a66aa1bb1de515d839a bb15699719b54825b8d487d07891ab85
 #: d514a06a45d546b5af908df5d43dc2cb discord.abc.Messageable.send:5 of
 msgid ""
 "The content must be a type that can convert to a string through "
@@ -1165,8 +1023,7 @@ msgid ""
 "the ``embed`` parameter must be provided."
 msgstr ""
 
-#: 70aab3326d8f44e7bacd069c736a0420 724dcfafc4784a6e9190169d5b4ff6fc
-#: ac929a3b993642c4959eb60a184fa042 discord.abc.Messageable.send:9 of
+#: 70aab3326d8f44e7bacd069c736a0420 discord.abc.Messageable.send:9 of
 msgid ""
 "To upload a single file, the ``file`` parameter should be used with a "
 "single :class:`~discord.File` object. To upload multiple files, the "
@@ -1175,8 +1032,7 @@ msgid ""
 " an exception**."
 msgstr ""
 
-#: 12384d2719ae45da97444ff82dc4f2d6 5d8119f4a9344fd8bb519aebe2645bff
-#: 71fcdcc413ae47cb8f3aee3a55f10402 discord.abc.Messageable.send:14 of
+#: 5d8119f4a9344fd8bb519aebe2645bff discord.abc.Messageable.send:14 of
 msgid ""
 "To upload a single embed, the ``embed`` parameter should be used with a "
 "single :class:`~discord.Embed` object. To upload multiple embeds, the "
@@ -1185,69 +1041,58 @@ msgid ""
 "to an exception**."
 msgstr ""
 
-#: 1f03d90af71148a9a80d108cb0925c4f 67ccce517035472ea66a0b51302a98cb
 #: db5a50cea2b24ff4bca646659c4d8cc6 discord.abc.Messageable.send:20
 #: discord.channel.ForumChannel.create_thread:14
 #: discord.interactions.InteractionResponse.send_message:6 of
 msgid "The content of the message to send."
 msgstr ""
 
-#: 6af57bec404e422082a79e523a309932 9fce481c33fe4f38ae23dab3e4faf570
-#: af87dc0d04b748c4a8a24c800c8496bf discord.abc.Messageable.send:23
+#: 6af57bec404e422082a79e523a309932 discord.abc.Messageable.send:23
 #: discord.interactions.InteractionResponse.send_message:17 of
 msgid "Indicates if the message should be sent using text-to-speech."
 msgstr ""
 
-#: 270d2242a6ec45928378eb596ae18294 8ee729028d6946f9aa0cc6b36c0941c6
 #: 96484f4d35624bdd83b5e136d83bb9ad discord.abc.Messageable.send:26
 #: discord.channel.ForumChannel.create_thread:17 of
 msgid "The rich embed for the content."
 msgstr ""
 
-#: 06f3de9c7238498a8af9d93d7325365a 8cb56dd64e2c4c6199d7efaee33d3c2f
-#: discord.abc.Messageable.send:29
+#: 06f3de9c7238498a8af9d93d7325365a discord.abc.Messageable.send:29
 #: discord.channel.ForumChannel.create_thread:23
-#: discord.interactions.InteractionResponse.send_message:36
-#: e16b27219fda4529824444922c14f332 of
+#: discord.interactions.InteractionResponse.send_message:36 of
 msgid "The file to upload."
 msgstr ""
 
-#: 3a17a09c33884706a4449b3f40d6cdd6 71a4376c8faa43328c788c7021c3cf72
 #: 9b87132b9bb447f8af98bd5da3e604f8 discord.abc.Messageable.send:32
 #: discord.channel.ForumChannel.create_thread:26
 #: discord.interactions.InteractionResponse.send_message:39 of
 msgid "A list of files to upload. Must be a maximum of 10."
 msgstr ""
 
-#: 55c2f9866dc74139b0feab43272e038d 88a081070fd044f1962c54e034ac21e6
-#: b70a45a4cce344acb40ad3072b10fb24 discord.abc.Messageable.send:35
+#: 55c2f9866dc74139b0feab43272e038d discord.abc.Messageable.send:35
 #: discord.channel.ForumChannel.create_thread:35 of
 msgid ""
 "The nonce to use for sending this message. If the message was "
 "successfully sent, then the message will have a nonce with this value."
 msgstr ""
 
-#: 0682ef24bd354948b962042a67084324 0f48f9d6b3e741e88aa2c3bc7d806b59
-#: 926fcea09e55478190f384b73306866a discord.abc.Messageable.send:39 of
+#: 0682ef24bd354948b962042a67084324 discord.abc.Messageable.send:39 of
 msgid "Whether :attr:`nonce` is enforced to be validated.  .. versionadded:: 2.5"
 msgstr ""
 
-#: 33fb702867244946add0e91965debb6d ab8ae4adffea4ea1ad666e6619212c31
-#: d3f5fee321ed4c12b0d13ef20bc64ede discord.abc.Messageable.send:39 of
+#: ab8ae4adffea4ea1ad666e6619212c31 discord.abc.Messageable.send:39 of
 msgid "Whether :attr:`nonce` is enforced to be validated."
 msgstr ""
 
-#: 4e5d6a26919f4ecbbf31c7688e4a63ed 75b7f2ddb4c744648d05f3e322561b4c
-#: a316e7fd64e540af960514409d0e2f77 discord.abc.Messageable.send:44 of
+#: 75b7f2ddb4c744648d05f3e322561b4c discord.abc.Messageable.send:44 of
 msgid ""
 "If provided, the number of seconds to wait in the background before "
 "deleting the message we just sent. If the deletion fails, then it is "
 "silently ignored."
 msgstr ""
 
-#: 14f1d3c69b914877a492f43e66ec40b1 1d43d14e53314fd98fb480f4c227d8c2
-#: 7837a952a01b4658b8eaca483bdf5339 a046f5017f4b49e8b01e1a6448f58d41
-#: discord.abc.Messageable.send:49 discord.message.Message.edit:46 of
+#: a046f5017f4b49e8b01e1a6448f58d41 discord.abc.Messageable.send:49
+#: discord.message.Message.edit:46 of
 msgid ""
 "Controls the mentions being processed in this message. If this is passed,"
 " then the object is merged with :attr:`~discord.Client.allowed_mentions`."
@@ -1258,11 +1103,10 @@ msgid ""
 "used instead.  .. versionadded:: 1.4"
 msgstr ""
 
-#: 1ff05d97ab3c410cbfab12ff72fc439a 76e68b02a3534b59bb633ccfab46cc5b
-#: d8b69682b7294cac8417eaa4662fb1fb discord.abc.Messageable.send:49
+#: 76e68b02a3534b59bb633ccfab46cc5b discord.abc.Messageable.send:49
 #: discord.channel.ForumChannel.create_thread:39
 #: discord.interactions.InteractionResponse.edit_message:40
-#: discord.message.Message.edit:46 f47f15229801436fa9101633e7c271e3 of
+#: discord.message.Message.edit:46 of
 msgid ""
 "Controls the mentions being processed in this message. If this is passed,"
 " then the object is merged with :attr:`~discord.Client.allowed_mentions`."
@@ -1273,77 +1117,67 @@ msgid ""
 "used instead."
 msgstr ""
 
-#: 12ae0cd2debd436ba454389a57dd9578 2aa113aa350843c58a84928aff36e57e
-#: 4637e02b33794bb39d8bbf9635ea207f discord.abc.Messageable.send:59 of
+#: 2aa113aa350843c58a84928aff36e57e discord.abc.Messageable.send:59 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``.  .. versionadded::"
 " 1.6"
 msgstr ""
 
-#: 0da0de0227bd4c8b9819086cd5d59cf0 6e42ff8967e144e3ae89f80e28a26b06
-#: d16e5a003d5c4a35b2f276da520d2469 discord.abc.Messageable.send:59 of
+#: 6e42ff8967e144e3ae89f80e28a26b06 discord.abc.Messageable.send:59 of
 msgid ""
-"A reference to the :class:`~discord.Message` to which you are replying, "
-"this can be created using :meth:`~discord.Message.to_reference` or passed"
-" directly as a :class:`~discord.Message`. You can control whether this "
-"mentions the author of the referenced message using the "
+"A reference to the :class:`~discord.Message` being replied to or "
+"forwarded. This can be created using "
+":meth:`~discord.Message.to_reference`. When replying, you can control "
+"whether this mentions the author of the referenced message using the "
 ":attr:`~discord.AllowedMentions.replied_user` attribute of "
 "``allowed_mentions`` or by setting ``mention_author``."
 msgstr ""
 
-#: 27c40492605d46f4b6d1ec39f44617cb a203a5bbf16240e6b0b6018534cfb6cb
-#: discord.abc.Messageable.send:68 fa82c635e540411192f7b2397d7c3910 of
+#: 27c40492605d46f4b6d1ec39f44617cb discord.abc.Messageable.send:68 of
 msgid ""
 "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` "
 "attribute of ``allowed_mentions``.  .. versionadded:: 1.6"
 msgstr ""
 
-#: 5a1768e861e9461f8e873b9caaaafbe3 aaeebba9d9a64174b83aa7be6aae9540
-#: discord.abc.Messageable.send:68 f3fbe7c7e9574f468a6adc37e05b90a0 of
+#: aaeebba9d9a64174b83aa7be6aae9540 discord.abc.Messageable.send:68 of
 msgid ""
 "If set, overrides the :attr:`~discord.AllowedMentions.replied_user` "
 "attribute of ``allowed_mentions``."
 msgstr ""
 
-#: 34faeb47cd6d48c5bbd1a5beafac4e49 bd4855af588b4e1988b99aac83ede6de
-#: cf005a229e6e4514a0a1788d1edc0f3e discord.abc.Messageable.send:73
+#: bd4855af588b4e1988b99aac83ede6de discord.abc.Messageable.send:73
 #: discord.channel.ForumChannel.create_thread:47 of
 msgid "A Discord UI View to add to the message."
 msgstr ""
 
-#: 00099963c8a84315afd165852b85479e bcf7573f6fb444e38ceeeb4e08a9b320
 #: discord.abc.Messageable.send:76 ed29a8c13ec640fa92a87f37475ac04c of
 msgid ""
 "A list of embeds to upload. Must be a maximum of 10.  .. versionadded:: "
 "2.0"
 msgstr ""
 
-#: 1fa752ebb98b48968581074edbd1b6e1 discord.abc.Messageable.send:76
+#: discord.abc.Messageable.send:76
 #: discord.channel.ForumChannel.create_thread:20
-#: f103ebfe04b44e86849a58ad2e1e0dfe f324a93551a240b98f56ccda5ac85d13 of
+#: f103ebfe04b44e86849a58ad2e1e0dfe of
 msgid "A list of embeds to upload. Must be a maximum of 10."
 msgstr ""
 
-#: 4fb386188eb34f18a71304f7add2e62b b1d45afa98b64e6fa0ac204136beeb14
-#: discord.abc.Messageable.send:81 fef9be1b0ddc4247beb8c8dbc4822665 of
+#: b1d45afa98b64e6fa0ac204136beeb14 discord.abc.Messageable.send:81 of
 msgid ""
 "A list of stickers to upload. Must be a maximum of 3.  .. versionadded:: "
 "2.0"
 msgstr ""
 
-#: 291f28b0846e48b18cf6bf41c291be37 50a1e07e506e41859f67cc406b77ce5b
-#: discord.abc.Messageable.send:81
-#: discord.channel.ForumChannel.create_thread:29
-#: f0058a94c72e4c99a07b8ed475f56cd5 of
+#: 50a1e07e506e41859f67cc406b77ce5b discord.abc.Messageable.send:81
+#: discord.channel.ForumChannel.create_thread:29 of
 msgid "A list of stickers to upload. Must be a maximum of 3."
 msgstr ""
 
-#: 5fd776e27b6b4fd59ec695fbd41b251a a5e4c6e0b2894fd0a8ecc23a1c4d3b5a
 #: discord.abc.Messageable.send:86
 #: discord.interactions.Interaction.edit_original_response:46
 #: discord.interactions.InteractionMessage.edit:40
@@ -1352,53 +1186,45 @@ msgstr ""
 msgid "Whether to suppress embeds for the message."
 msgstr ""
 
-#: 1bfc49ed975b4dd6803c578b5a1b9a11 7b98f69bb68f41769f08d7f4087f8aca
-#: 98f82715cfdd4551a4255c4314e32cf3 discord.abc.Messageable.send:89 of
+#: 1bfc49ed975b4dd6803c578b5a1b9a11 discord.abc.Messageable.send:89 of
 msgid ""
 "Whether to suppress push and desktop notifications for the message.  .. "
 "versionadded:: 2.4"
 msgstr ""
 
-#: 1f656b33b85f44f1b8d7ef979f3fb091 6f0bd7ae71044d439a4aacd4001103f2
-#: c5df4f33c29747b78f070b6c57fe5c31 discord.abc.Messageable.send:89 of
+#: 1f656b33b85f44f1b8d7ef979f3fb091 discord.abc.Messageable.send:89 of
 msgid "Whether to suppress push and desktop notifications for the message."
 msgstr ""
 
-#: 172e6867a25d47b49adfa19666d2445a b141ceeb37ae4582a08741b71a2246bd
-#: d552d88161fd406dbd970c7e913296af discord.abc.Messageable.send:94
+#: b141ceeb37ae4582a08741b71a2246bd discord.abc.Messageable.send:94
 #: discord.interactions.InteractionResponse.send_message:42 of
 msgid "The poll to send.  .. versionadded:: 2.6"
 msgstr ""
 
-#: 4d02fb8bd44244f4ab7c7a7edcc06076 d267e037031c49eb8e18cccf60f0c73f
-#: discord.abc.Messageable.send:94
-#: discord.interactions.InteractionResponse.send_message:42
-#: e130dcbd42754c9f8dad4109bb0a107b of
+#: d267e037031c49eb8e18cccf60f0c73f discord.abc.Messageable.send:94
+#: discord.interactions.InteractionResponse.send_message:42 of
 msgid "The poll to send."
 msgstr ""
 
-#: 3a4f436feb9b4de4a168d2d5a14fbb8d 4e9295f65811429bad49c668d0b4d63c
-#: 529869019b26467eabd9b22c54f8a337 discord.abc.Messageable.send:99
-#: discord.message.Message.reply:8 of
+#: 3a4f436feb9b4de4a168d2d5a14fbb8d discord.abc.Messageable.send:99
+#: discord.message.Message.forward_to:12 discord.message.Message.reply:8 of
 msgid "The message that was sent."
 msgstr ""
 
-#: 27d01e18735f42969e57b866ee44ac34 88c91e15b9a246d7ba6c0a0c4a8cd3ca
 #: discord.abc.Messageable.send:102
 #: discord.interactions.InteractionResponse.premium_required:11
 #: discord.interactions.InteractionResponse.send_message:50
-#: discord.message.Message.reply:11 e115079242b5446f93fb52a4a2929591 of
+#: discord.message.Message.forward_to:15 discord.message.Message.reply:11
+#: e115079242b5446f93fb52a4a2929591 of
 msgid "Sending the message failed."
 msgstr ""
 
-#: 11607a716ca841198785219e0ca22b26 653f7d3602144d8e976bf3697fca85f6
 #: ae8d9e25950748d7b741fcc4d782933b discord.abc.Messageable.send:103
-#: discord.message.Message.reply:12 of
+#: discord.message.Message.forward_to:16 discord.message.Message.reply:12 of
 msgid "You do not have the proper permissions to send the message."
 msgstr ""
 
-#: 604cb5ce8f63403583ed85ead7908ba4 922ccd9a531a4fc2a1b337e4b5b65624
-#: cd2845f86cc544029fe38f244567082a discord.abc.Messageable.send:104 of
+#: 604cb5ce8f63403583ed85ead7908ba4 discord.abc.Messageable.send:104 of
 msgid ""
 "The ``files`` list is not of the appropriate size,     you specified both"
 " ``file`` and ``files``,     or you specified both ``embed`` and "
@@ -1407,19 +1233,16 @@ msgid ""
 ":class:`~discord.PartialMessage`."
 msgstr ""
 
-#: 0256a90926ae4ba39c97264975e6f972 433a232ac737443cadd8e5f32c10aea4
-#: da262d70dc734e058487c9d9d7fb55da discord.abc.Messageable.trigger_typing:3 of
+#: 433a232ac737443cadd8e5f32c10aea4 discord.abc.Messageable.trigger_typing:3 of
 msgid "Triggers a *typing* indicator to the destination."
 msgstr ""
 
-#: 10bacd45da084132bd3fef9ed8d250ca 7fa85cc40e9a4280a73c347dfd23b6c1
-#: 9e7da29277964bc586866aee221c4d5a discord.abc.Messageable.trigger_typing:5 of
+#: 10bacd45da084132bd3fef9ed8d250ca discord.abc.Messageable.trigger_typing:5 of
 msgid ""
 "*Typing* indicator will go away after 10 seconds, or after a message is "
 "sent."
 msgstr ""
 
-#: 27bc06838ac848c3b0fe0336815bbeac 75890795eb3141649ba62f2337421e6d
 #: 86bbc2437e30463eba135081562d8883 9b4d5894f2f7434e8f7a6db8d32e038b
 #: discord.abc.GuildChannel.delete:16 discord.abc.GuildChannel.move:51
 #: discord.abc.Messageable.trigger_typing:8
@@ -1466,34 +1289,30 @@ msgstr ""
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
-#: 0d3a00bc83d3498495522af06e5f9829 507759ccb3074f54855e48e5f971d798
-#: 82ac5b60c6c54cc69673118552352f27 discord.abc.Messageable.typing:1 of
+#: 507759ccb3074f54855e48e5f971d798 discord.abc.Messageable.typing:1 of
 msgid ""
 "Returns a context manager that allows you to type for an indefinite "
 "period of time."
 msgstr ""
 
-#: 8a9ffc24518f4de293cc4b65774a51d8 ae5e1f660cfe4a0b92ae7b946305dec5
-#: b115df81ecdf400cb4077a062bac2160 discord.abc.Messageable.typing:3 of
+#: 8a9ffc24518f4de293cc4b65774a51d8 discord.abc.Messageable.typing:3 of
 msgid ""
 "This is useful for denoting long computations in your bot. :rtype: "
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.context\\_managers.Typing\\``"
 msgstr ""
 
-#: 9267e098f8054f019857c139f7175481 a59c82762ab04a37b73a0ad680efb1c5
 #: discord.abc.Messageable.typing:9 f38b5698c9964d15a7dd0e1ff97642fd of
 msgid ""
 "This is both a regular context manager and an async context manager. This"
 " means that both ``with`` and ``async with`` work with this."
 msgstr ""
 
-#: 5a69aa7fa8774768bebc130243d33f24 a9a905b97c2a48ebbf86176eaeee6469
-#: c30c993c97f54668907dcea50623c843 discord.abc.Messageable.typing:12
+#: a9a905b97c2a48ebbf86176eaeee6469 discord.abc.Messageable.typing:12
 #: discord.guild.Guild.bulk_ban:10 of
 msgid "Example Usage: ::"
 msgstr ""
 
-#: 715e396d169947279c18eb2f259bd903 9b14b15d4eb74f3f82993eca73ef83e5
+#: 715e396d169947279c18eb2f259bd903
 #: discord.channel.DMChannel.get_partial_message:1
 #: discord.channel.PartialMessageable.get_partial_message:1
 #: discord.channel.StageChannel.get_partial_message:1
@@ -1503,7 +1322,7 @@ msgstr ""
 msgid "Creates a :class:`PartialMessage` from the message ID."
 msgstr ""
 
-#: 67179488c7744e83bfcf423722415b13 823983a7d48b436491e7c7d6c382dd49
+#: 67179488c7744e83bfcf423722415b13
 #: discord.channel.DMChannel.get_partial_message:3
 #: discord.channel.PartialMessageable.get_partial_message:3
 #: discord.channel.StageChannel.get_partial_message:3
@@ -1515,7 +1334,7 @@ msgid ""
 "without doing an unnecessary API call."
 msgstr ""
 
-#: 843df377ee7c4084b88787836abc669e 98efec157ebb473c808aae14f50e6d61
+#: 843df377ee7c4084b88787836abc669e
 #: discord.channel.DMChannel.get_partial_message:9
 #: discord.channel.PartialMessageable.get_partial_message:7
 #: discord.channel.StageChannel.get_partial_message:9
@@ -1525,7 +1344,7 @@ msgstr ""
 msgid "The message ID to create a partial message for."
 msgstr ""
 
-#: 02f2a7118c294c018c9461a938ec529b 6f2827dab3174ceba9c167c94f8e8b01
+#: 6f2827dab3174ceba9c167c94f8e8b01
 #: discord.channel.DMChannel.get_partial_message:12
 #: discord.channel.PartialMessageable.get_partial_message:10
 #: discord.channel.StageChannel.get_partial_message:12
@@ -1535,7 +1354,7 @@ msgstr ""
 msgid "The partial message."
 msgstr ""
 
-#: 125d07572d5c4fa4bafff84e471385ed 5d6e1bf5a673406c9a939d94eda6212d
+#: 125d07572d5c4fa4bafff84e471385ed
 #: discord.channel.DMChannel.get_partial_message:13
 #: discord.channel.PartialMessageable.get_partial_message:11
 #: discord.channel.StageChannel.get_partial_message:13
@@ -1553,41 +1372,37 @@ msgstr ""
 msgid "Represents your Discord user."
 msgstr ""
 
-#: 8528f633c43f4dfba2b972dc62785542 bb87a910467b4f62bb1f394dd32e6575
-#: discord.user.ClientUser:7 discord.user.User:7 of
+#: 8528f633c43f4dfba2b972dc62785542 discord.user.ClientUser:7
+#: discord.user.User:7 of
 msgid "Checks if two users are equal."
 msgstr ""
 
-#: 85c8883463c64892b2d113641e57cfc0 b8d07fcfe0c44217895443aebd19f908
-#: discord.user.ClientUser:11 discord.user.User:11 of
+#: 85c8883463c64892b2d113641e57cfc0 discord.user.ClientUser:11
+#: discord.user.User:11 of
 msgid "Checks if two users are not equal."
 msgstr ""
 
-#: 50bf005b5c574b58839952b19464b208 d143943b4ab946ab950eb1f7171cd587
-#: discord.user.ClientUser:15 discord.user.User:15 of
+#: d143943b4ab946ab950eb1f7171cd587 discord.user.ClientUser:15
+#: discord.user.User:15 of
 msgid "Return the user's hash."
 msgstr ""
 
-#: 1add853063144abda929fa08b980265c 28a3ceb054d74237b1ad21a28be2a934
-#: discord.user.ClientUser:19 discord.user.User:19 of
+#: 1add853063144abda929fa08b980265c discord.user.ClientUser:19
+#: discord.user.User:19 of
 msgid "Returns the user's name with discriminator or global_name."
 msgstr ""
 
-#: 094c51e2dd284606a8ffe35e059f9d9e df577759b9bb40b891e952c0fc8d7856
-#: discord.user.ClientUser:23 discord.user.User:23 of
+#: df577759b9bb40b891e952c0fc8d7856 discord.user.ClientUser:23
+#: discord.user.User:23 of
 msgid "The user's username."
 msgstr ""
 
-#: 23e632a55bcf4949b35edf2b13661d83 34f8a3e93d424eff88254983dd3736a7
-#: 3a3a7e1226884523b0ba2364ba0ceaf7 67c2d7ad9e4f432590e0941a54d9e9be
-#: 6ab9e38fee2f4f6cb94faa9a8b05a91c 829531878901473f909b329033e932a3
-#: 8cdd313032d24f41a003933efa33756e 956a1abeaf574fbfba3816ea1bfa1d1b
-#: b181e837ebe24f42aed74532d371c2d6 cd70408c99084152b7be0bcf7f009b7e
-#: d8bb4e332f9e4288aa8952e99c0043df discord.SKU.url:3
+#: b181e837ebe24f42aed74532d371c2d6 discord.SKU.url:3
 #: discord.automod.AutoModActionMetadata:27 discord.automod.AutoModRule:33
 #: discord.channel.CategoryChannel:27 discord.channel.ForumChannel:25
 #: discord.channel.MediaChannel:27 discord.channel.StageChannel:27
 #: discord.channel.TextChannel:25 discord.channel.VoiceChannel:25
+#: discord.components.FileComponent:23 discord.components.TextDisplay:17
 #: discord.emoji.AppEmoji:35 discord.emoji.GuildEmoji:33 discord.guild.Guild:27
 #: discord.integrations.BotIntegration:15
 #: discord.integrations.BotIntegration:27 discord.integrations.Integration:15
@@ -1603,8 +1418,8 @@ msgstr ""
 #: discord.interactions.Interaction:79
 #: discord.interactions.MessageInteraction:31 discord.invite.Invite:59
 #: discord.invite.PartialInviteChannel:28 discord.invite.PartialInviteGuild:28
-#: discord.message.Attachment:52 discord.message.Attachment:68
-#: discord.message.Attachment:76 discord.message.Attachment:130
+#: discord.message.Attachment:54 discord.message.Attachment:70
+#: discord.message.Attachment:78 discord.message.Attachment:132
 #: discord.message.Message:43 discord.monetization.SKU:27
 #: discord.monetization.SKU:33 discord.onboarding.OnboardingPrompt:21
 #: discord.onboarding.PromptOption:33
@@ -1630,17 +1445,17 @@ msgstr ""
 #: discord.welcome_screen.WelcomeScreen:9
 #: discord.welcome_screen.WelcomeScreenChannel:15 discord.widget.Widget:27
 #: discord.widget.WidgetChannel:31 discord.widget.WidgetMember:31
-#: discord.widget.WidgetMember:37 e3867aa2a5734ede9dfd2b008ef82ff6 of
+#: discord.widget.WidgetMember:37 of
 msgid ":class:`str`"
 msgstr ""
 
-#: 7d59402a16e54f61a97fdc966dfa756c db789a3e10764d59b4328ce02560ff1f
-#: discord.user.ClientUser:29 discord.user.User:29 of
+#: 7d59402a16e54f61a97fdc966dfa756c discord.user.ClientUser:29
+#: discord.user.User:29 of
 msgid "The user's unique ID."
 msgstr ""
 
-#: 095164b434774a8bad94f6e92b646e03 4fe49248ca6a4cf19931a37f31753734
-#: discord.user.ClientUser:35 discord.user.User:35 of
+#: 4fe49248ca6a4cf19931a37f31753734 discord.user.ClientUser:35
+#: discord.user.User:35 of
 msgid "The user's discriminator. This is given when the username has conflicts."
 msgstr ""
 
@@ -1651,17 +1466,17 @@ msgid ""
 msgstr ""
 
 #: ced530d2472048d0a529cf1cf1c91d86 discord.user.ClientUser:45
-#: discord.user.User:45 f5d700742ed5457cbd1652439db6a54f of
+#: discord.user.User:45 of
 msgid "The user's global name."
 msgstr ""
 
-#: 6f1c81c727e7490db10e1647ddc6868b 855b4c1de89b43c29aea9b3c7d9b52cd
-#: discord.user.ClientUser:53 discord.user.User:53 of
+#: 6f1c81c727e7490db10e1647ddc6868b discord.user.ClientUser:53
+#: discord.user.User:53 of
 msgid "Specifies if the user is a bot account."
 msgstr ""
 
-#: ca90bc81cd8c464bb9df1041c691bbba discord.user.ClientUser:59
-#: discord.user.User:59 e5ec8e04dabb4b16903f766258769106 of
+#: discord.user.ClientUser:59 discord.user.User:59
+#: e5ec8e04dabb4b16903f766258769106 of
 msgid ""
 "Specifies if the user is a system user (i.e. represents Discord "
 "officially)."
@@ -1675,20 +1490,19 @@ msgstr ""
 msgid "The IETF language tag used to identify the language the user is using."
 msgstr ""
 
-#: ../../api/models.rst:145 7a2d9ca6781d4f33b2f9fa33a78e4bcc
-#: 7c77b2ea3750497e96dc19203a13f276 9c465eb7704a47f9811d7160f3bd5935
-#: cdc5ce07494d46818ca2ced81397e2b3 dc1d35b84de04aa694c7b09e76c9f5ab
+#: ../../api/models.rst:145 dc1d35b84de04aa694c7b09e76c9f5ab
 #: discord.channel.ForumChannel:53 discord.channel.GroupChannel:57
 #: discord.channel.MediaChannel:55 discord.channel.StageChannel:45
 #: discord.channel.TextChannel:49 discord.channel.VoiceChannel:106
-#: discord.components.Button:23 discord.components.Button:29
-#: discord.components.Button:41 discord.components.SelectMenu:28
-#: discord.components.SelectMenu:34 discord.guild.Guild:111
-#: discord.guild.Guild:173 discord.integrations.IntegrationApplication:21
+#: discord.components.Button:22 discord.components.Button:28
+#: discord.components.Button:40 discord.components.SelectMenu:27
+#: discord.components.SelectMenu:33 discord.components.Thumbnail:23
+#: discord.guild.Guild:111 discord.guild.Guild:173
+#: discord.integrations.IntegrationApplication:21
 #: discord.interactions.Interaction:85 discord.invite.PartialInviteGuild:52
-#: discord.member.Member:54 discord.message.Attachment:61
-#: discord.message.Attachment:82 discord.message.Attachment:98
-#: discord.message.Attachment:114 discord.onboarding.PromptOption:39
+#: discord.member.Member:54 discord.message.Attachment:63
+#: discord.message.Attachment:84 discord.message.Attachment:100
+#: discord.message.Attachment:116 discord.onboarding.PromptOption:39
 #: discord.partial_emoji.PartialEmoji:32
 #: discord.raw_models.RawAuditLogEntryEvent:39
 #: discord.raw_models.RawVoiceChannelStatusUpdateEvent:21 discord.role.Role:104
@@ -1763,108 +1577,92 @@ msgstr ""
 msgid "Wrong image format passed for ``avatar`` or ``banner``."
 msgstr ""
 
-#: 5d42054d5da84f4fbd5c7a1c1f650136 6a0f951102c042f1967a6cc3fb063826
-#: 6ab96fcf4f29436e858954fbce53796b discord.ClientUser.accent_color:1
+#: 6a0f951102c042f1967a6cc3fb063826 discord.ClientUser.accent_color:1
 #: discord.User.accent_color:1 discord.WidgetMember.accent_color:1 of
 msgid "Returns the user's accent color, if applicable."
 msgstr ""
 
-#: 1938cce6bef44a45a48d698878cba477 98620bb2a1034ce2a564fe642e2417c6
-#: dbfa0f2b4d2542e2855ee6b9d62771be discord.ClientUser.accent_color:3
+#: 98620bb2a1034ce2a564fe642e2417c6 discord.ClientUser.accent_color:3
 #: discord.User.accent_color:3 discord.WidgetMember.accent_color:3 of
 msgid "There is an alias for this named :attr:`accent_colour`."
 msgstr ""
 
-#: 4ee137d17b6a442dac436b0e7e6e7913 5b13b7de5a524b0aaf9cc1784c3e14eb
-#: 6e1597cc41fb43719f34c784e37f64e7 80debc8bc8b242619b4535eff3c20814
-#: 877cf2f74fcf407a8e16e91d17876d07 c08cdcb663f141e5b59ef6b7054e737d
-#: discord.ClientUser.accent_color:9 discord.ClientUser.accent_colour:9
-#: discord.ClientUser.banner:6 discord.User.accent_color:9
-#: discord.User.accent_colour:9 discord.User.banner:6
-#: discord.WidgetMember.accent_color:9 discord.WidgetMember.accent_colour:9
-#: discord.WidgetMember.banner:6 e0bc6b1e888d4fa680977bfd269d8d8a of
+#: 5b13b7de5a524b0aaf9cc1784c3e14eb discord.ClientUser.accent_color:9
+#: discord.ClientUser.accent_colour:9 discord.ClientUser.banner:6
+#: discord.User.accent_color:9 discord.User.accent_colour:9
+#: discord.User.banner:6 discord.WidgetMember.accent_color:9
+#: discord.WidgetMember.accent_colour:9 discord.WidgetMember.banner:6 of
 msgid "This information is only available via :meth:`Client.fetch_user`."
 msgstr ""
 
-#: 89e0f07e8f4b42c18a916c2fee3a14a4 c59947f63fe941bf84cf9f07cdfe2593
-#: discord.ClientUser.accent_colour:1 discord.User.accent_colour:1
-#: discord.WidgetMember.accent_colour:1 fc1973771c3e423ab34b16ab10b22619 of
+#: c59947f63fe941bf84cf9f07cdfe2593 discord.ClientUser.accent_colour:1
+#: discord.User.accent_colour:1 discord.WidgetMember.accent_colour:1 of
 msgid "Returns the user's accent colour, if applicable."
 msgstr ""
 
-#: 04e4c72d96d64ecd921c375be4339ac8 6b7360e798ae481c9c1808160c5bb033
-#: a090b4fb330747bd92cc59742138225c discord.ClientUser.accent_colour:3
+#: 04e4c72d96d64ecd921c375be4339ac8 discord.ClientUser.accent_colour:3
 #: discord.User.accent_colour:3 discord.WidgetMember.accent_colour:3 of
 msgid "There is an alias for this named :attr:`accent_color`."
 msgstr ""
 
-#: 501c4f6cbdbf42769fff2a35d112d118 80ce4b40e1d34abdace629cb7a571a4d
-#: discord.ClientUser.avatar:1 discord.User.avatar:1 of
+#: 501c4f6cbdbf42769fff2a35d112d118 discord.ClientUser.avatar:1
+#: discord.User.avatar:1 of
 msgid "Returns an :class:`Asset` for the avatar the user has."
 msgstr ""
 
-#: 10382ad8465644e3bc34b20641256a9c a26030435155406dac323efb28927fe9
-#: discord.ClientUser.avatar:3 discord.User.avatar:3 of
+#: a26030435155406dac323efb28927fe9 discord.ClientUser.avatar:3
+#: discord.User.avatar:3 of
 msgid ""
 "If the user does not have a traditional avatar, ``None`` is returned. If "
 "you want the avatar that a user has displayed, consider "
 ":attr:`display_avatar`."
 msgstr ""
 
-#: 4e65e66d65cf422f984e2dc18da32a72 af7c151a269941859b5eb927d1052e49
 #: c03fc269038746299c68c4ff20bdcb43 discord.ClientUser.avatar_decoration:1
 #: discord.User.avatar_decoration:1 discord.WidgetMember.avatar_decoration:1 of
 msgid "Returns the user's avatar decoration, if available."
 msgstr ""
 
-#: 55fa34cde7fb4b2c86ad88d8033f125e 9c4d8e995e424d76994802eb84438e29
 #: be1ed8a944cf42bebfcd8d4c6878cdcb discord.ClientUser.banner:1
 #: discord.User.banner:1 discord.WidgetMember.banner:1 of
 msgid "Returns the user's banner asset, if available."
 msgstr ""
 
-#: 0d50a75dd5aa40f4a61fc98fd5b2e577 10d4742b9b8f4d08b8afb6128d733ad0
-#: ca3f1b9b592542c08357b2c0269e41dc discord.ClientUser.color:1
+#: 0d50a75dd5aa40f4a61fc98fd5b2e577 discord.ClientUser.color:1
 #: discord.User.color:1 discord.WidgetMember.color:1 of
 msgid ""
 "A property that returns a color denoting the rendered color for the user."
 " This always returns :meth:`Colour.default`."
 msgstr ""
 
-#: 4a11e8cca87344baa2a0b654de88fa39 624b0e883b1d48839b0128ffaafa47e8
 #: d5b77dfdb6414af4bd41ae7661eca6e5 discord.ClientUser.color:4
 #: discord.Member.color:5 discord.User.color:4 discord.WidgetMember.color:4 of
 msgid "There is an alias for this named :attr:`colour`."
 msgstr ""
 
-#: 2cf635b79df3473c90ac23f164a0427c 9cec23c320d8469ea36f43da369ed102
-#: discord.ClientUser.colour:1 discord.User.colour:1
-#: discord.WidgetMember.colour:1 e69af87a44364eaf9b5b69d3f66864c7 of
+#: 9cec23c320d8469ea36f43da369ed102 discord.ClientUser.colour:1
+#: discord.User.colour:1 discord.WidgetMember.colour:1 of
 msgid ""
 "A property that returns a colour denoting the rendered colour for the "
 "user. This always returns :meth:`Colour.default`."
 msgstr ""
 
-#: 2d5f274e11504b99938c8ba60c312acb 4e371cae01aa4766ab17cff8f76e1efe
 #: discord.ClientUser.colour:4 discord.Member.colour:5 discord.User.colour:4
 #: discord.WidgetMember.colour:4 e2124f67ec9f4267908985a925d278ed of
 msgid "There is an alias for this named :attr:`color`."
 msgstr ""
 
-#: 242c9dfc04694b489e2f7d80df59ded7 437b006882224342968fb4c368487fe6
 #: b36550ba16734b24b4466af739ed85aa discord.ClientUser.created_at:1
 #: discord.User.created_at:1 discord.WidgetMember.created_at:1 of
 msgid "Returns the user's creation time in UTC."
 msgstr ""
 
-#: 50f3e4ffe5384958b891922303c4be12 8221e054b3a6494e9dcbb094d3c44517
-#: c13d536b60be48f5b31de078b4b756b6 discord.ClientUser.created_at:3
+#: 8221e054b3a6494e9dcbb094d3c44517 discord.ClientUser.created_at:3
 #: discord.User.created_at:3 discord.WidgetMember.created_at:3 of
 msgid "This is when the user's Discord account was created."
 msgstr ""
 
-#: 038c62b751b84784986d6e29a5dc57c1 224eea430fc345f5baaceb1fd1705c4a
-#: d4d393857fb64b7e914cd07558fd6602 discord.ClientUser.default_avatar:1
+#: 224eea430fc345f5baaceb1fd1705c4a discord.ClientUser.default_avatar:1
 #: discord.User.default_avatar:1 discord.WidgetMember.default_avatar:1 of
 msgid ""
 "Returns the default avatar for a given user. This is calculated by the "
@@ -1872,62 +1670,53 @@ msgid ""
 "discriminator."
 msgstr ""
 
-#: 3c9e57b8c879411eb7b0a5bce8837eaa 613adc4ebb9d487bb1c10b1b831c265a
-#: 91a80ca04f9845d782a0aec709e6342d discord.ClientUser.display_avatar:1
+#: 3c9e57b8c879411eb7b0a5bce8837eaa discord.ClientUser.display_avatar:1
 #: discord.User.display_avatar:1 discord.WidgetMember.display_avatar:1 of
 msgid "Returns the user's display avatar."
 msgstr ""
 
-#: b73981c9e34846df86edd23a8b06acba d2b170adae3f48cfaca8949892f73fc4
 #: discord.ClientUser.display_avatar:3 discord.User.display_avatar:3
 #: discord.WidgetMember.display_avatar:3 fb3482d25d174a26b778b9faf87546c8 of
 msgid "For regular users this is just their default avatar or uploaded avatar."
 msgstr ""
 
-#: 590fc14655784aab8f2ee70767655abb b7f12013710249f19b27a29d414d549f
-#: discord.ClientUser.display_name:1 discord.User.display_name:1 of
+#: 590fc14655784aab8f2ee70767655abb discord.ClientUser.display_name:1
+#: discord.User.display_name:1 of
 msgid ""
 "Returns the user's display name. This will be their global name if set, "
 "otherwise their username."
 msgstr ""
 
-#: 75913c2943e244da9f912797c9315548 83b3d21571f541efa5c11b1df2216c78
 #: 98d46180481045ac91439bb582984225 discord.ClientUser.is_migrated:1
 #: discord.User.is_migrated:1 discord.WidgetMember.is_migrated:1 of
 msgid "Checks whether the user is already migrated to global name."
 msgstr ""
 
-#: 71803c743ab04f6487bcc7cd7592ab5c a6aab4a6f73b4a558e5a99f75d9d6f09
 #: discord.ClientUser.jump_url:1 discord.User.jump_url:1
 #: discord.WidgetMember.jump_url:1 ed344f416d38414faf37aa0952f5119b of
 msgid "Returns a URL that allows the client to jump to the user."
 msgstr ""
 
-#: 2e4ec00b99904f72a3847aca88c7a818 7000b4f254244a50968882f86aa22812
 #: 952afd71f7ee40ee923e5d57e9666246 discord.ClientUser.mention:1
 #: discord.User.mention:1 discord.WidgetMember.mention:1 of
 msgid "Returns a string that allows you to mention the given user."
 msgstr ""
 
-#: 54594e8767054e72946033269b0c3592 93d3ff64137447f39e0019c80c4df9d2
 #: discord.user.BaseUser.mentioned_in:1 fd752e6addca4ab6b4f098137fa9ce29 of
 msgid "Checks if the user is mentioned in the specified message."
 msgstr ""
 
-#: aeae96f3b68e4982bf78bbc2036c04e5 d7be525e0b7b494d9f5b256e3f118474
 #: discord.member.Member.mentioned_in:4 discord.user.BaseUser.mentioned_in:4
 #: f59645c800104853b49db0b8b46edcbf of
 msgid "The message to check if you're mentioned in."
 msgstr ""
 
-#: 1cf28790dcb441a19baba9858f83391c 8f7489e0344546199a8c5c066f41a5c2
-#: bc66413bce7f498bac19576ed4b6fbd0 discord.user.BaseUser.mentioned_in:7 of
+#: 8f7489e0344546199a8c5c066f41a5c2 discord.user.BaseUser.mentioned_in:7 of
 msgid "Indicates if the user is mentioned in the message."
 msgstr ""
 
-#: 921c002b550040f8b20f075deecaa7e6 93632cb243b348e9956831b21bdc22a9
-#: discord.ClientUser.public_flags:1 discord.User.public_flags:1
-#: discord.WidgetMember.public_flags:1 ea58197e31bb4b41884a157342d514cc of
+#: 93632cb243b348e9956831b21bdc22a9 discord.ClientUser.public_flags:1
+#: discord.User.public_flags:1 discord.WidgetMember.public_flags:1 of
 msgid "The publicly available flags the user has."
 msgstr ""
 
@@ -1959,13 +1748,12 @@ msgstr ""
 msgid "This will only return mutual guilds within the client's internal cache."
 msgstr ""
 
-#: 463038c5ef3f43cd807215436ae90bd7 5d3cf60bddbc4c6fad29b9c300b60469
+#: 5d3cf60bddbc4c6fad29b9c300b60469
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:3
 #: discord.user.User.create_dm:3 of
 msgid "Creates a :class:`DMChannel` with this user."
 msgstr ""
 
-#: 7eb7c88b11764472a09211f3e8271341
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:5
 #: discord.user.User.create_dm:5 e099032e034b487db2a951a186656094 of
 msgid ""
@@ -1973,8 +1761,7 @@ msgid ""
 "people."
 msgstr ""
 
-#: 34c3db924cfe4afba20d42849d8a1d7b 7f0c8d792b204d7eb76a4f9cdbbc9b4a
-#: discord.channel.CategoryChannel.clone:19
+#: 34c3db924cfe4afba20d42849d8a1d7b discord.channel.CategoryChannel.clone:19
 #: discord.channel.StageChannel.clone:19 discord.channel.VoiceChannel.clone:19
 #: discord.channel._TextChannel.clone:19
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:8
@@ -1982,33 +1769,32 @@ msgstr ""
 msgid "The channel that was created."
 msgstr ""
 
-#: 827186088d1d4f689ad318127cf593a4 b6cefe350c984fc3b0fdd3b0b59ea5e6
+#: 827186088d1d4f689ad318127cf593a4
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:9
 #: discord.user.User.create_dm:9 of
 msgid ":class:`.DMChannel`"
 msgstr ""
 
-#: 6f3a14dd55e94eff97233f7cdb9ddded ad1e53c4d8a74c90aea9eac9056fa9a8
+#: 6f3a14dd55e94eff97233f7cdb9ddded
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:3
 #: discord.user.User.create_test_entitlement:3 of
 msgid "Creates a test entitlement for the user."
 msgstr ""
 
-#: 2812004ba59d451cacbb47175f8796f9 52b7f3d178ba45879ca736db726309ac
+#: 52b7f3d178ba45879ca736db726309ac
 #: discord.guild.Guild.create_test_entitlement:6
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:6
 #: discord.user.User.create_test_entitlement:6 of
 msgid "The SKU to create a test entitlement for."
 msgstr ""
 
-#: 31ce2a2adcdb4fc0adc3e688aed0d2b0 688251e620db45399e35182ab313f053
+#: 688251e620db45399e35182ab313f053
 #: discord.guild.Guild.create_test_entitlement:9
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:9
 #: discord.user.User.create_test_entitlement:9 of
 msgid "The created entitlement."
 msgstr ""
 
-#: 6473a06d5de84d299e4903e3cb389bac
 #: discord.guild.Guild.create_test_entitlement:10
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:10
 #: discord.user.User.create_test_entitlement:10
@@ -2016,7 +1802,7 @@ msgstr ""
 msgid ":class:`Entitlement`"
 msgstr ""
 
-#: 024d66d0841244cab9d49a97deb4c5e5 ae059b12f7be4225823a1ebe75b9caa2
+#: ae059b12f7be4225823a1ebe75b9caa2
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:1
 #: discord.user.User.entitlements:1 of
 msgid ""
@@ -2026,21 +1812,19 @@ msgstr ""
 
 #: 73ee380e8eaa49b1985d9e76d0ce3011
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:3
-#: discord.user.User.entitlements:3 e10285f0eb4f48e8b6564c9263859412 of
+#: discord.user.User.entitlements:3 of
 msgid ""
 "This is identical to :meth:`Client.entitlements` with the ``user`` "
 "parameter."
 msgstr ""
 
-#: 191945eb971249b586dd09f0a363f167 8a837858c9c74dd78408d01365b40b96
-#: discord.guild.Guild.entitlements:8
+#: 191945eb971249b586dd09f0a363f167 discord.guild.Guild.entitlements:8
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:8
 #: discord.user.User.entitlements:8 of
 msgid "Limit the fetched entitlements to entitlements that are for these SKUs."
 msgstr ""
 
-#: 19c5cfcf169d466a949ae4cad69dd539 6aa172e940f144f98ef4d69e388b7e00
-#: discord.guild.Guild.entitlements:11
+#: 6aa172e940f144f98ef4d69e388b7e00 discord.guild.Guild.entitlements:11
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:11
 #: discord.user.User.entitlements:11 of
 msgid ""
@@ -2049,8 +1833,7 @@ msgid ""
 "it is assumed to be local time."
 msgstr ""
 
-#: 3be018fd0820429f800ddf00c58423ea 960251d52e934e4c92c9bd0a0aa77ea8
-#: discord.guild.Guild.entitlements:16
+#: 3be018fd0820429f800ddf00c58423ea discord.guild.Guild.entitlements:16
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:16
 #: discord.user.User.entitlements:16 of
 msgid ""
@@ -2059,8 +1842,7 @@ msgid ""
 "is assumed to be local time."
 msgstr ""
 
-#: 2f95d22d8cda40e587765c256f57bfe6 ccc5662bbccc488a8bd98f228735b700
-#: discord.guild.Guild.entitlements:21
+#: 2f95d22d8cda40e587765c256f57bfe6 discord.guild.Guild.entitlements:21
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:21
 #: discord.user.User.entitlements:21 of
 msgid ""
@@ -2068,8 +1850,7 @@ msgid ""
 "entitlement, which may be slow. Defaults to ``100``."
 msgstr ""
 
-#: 45683405846449d59048c3085f095887 cb8af2a165a445fa87148c0efa867904
-#: discord.guild.Guild.entitlements:26
+#: cb8af2a165a445fa87148c0efa867904 discord.guild.Guild.entitlements:26
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:26
 #: discord.user.User.entitlements:26 of
 msgid ""
@@ -2077,22 +1858,21 @@ msgid ""
 "Defaults to ``False``."
 msgstr ""
 
-#: 2fcb0d10765c4c01b53a633d1e7749f0 c089af58b0c7402cb4dee2dcb39632a4
-#: discord.guild.Guild.entitlements:30
+#: 2fcb0d10765c4c01b53a633d1e7749f0 discord.guild.Guild.entitlements:30
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:30
 #: discord.user.User.entitlements:30 of
 msgid ":class:`.Entitlement` -- The application's entitlements."
 msgstr ""
 
-#: 4477dcd6cf974b189ffa8308bef5b349 7a9d13bf49744fff9c9bf9f66c88f6bc
-#: dfae8467fd154ea5b8777569e61e764e discord.guild.Guild.entitlements:32
+#: 4477dcd6cf974b189ffa8308bef5b349 dfae8467fd154ea5b8777569e61e764e
+#: discord.guild.Guild.entitlements:32
 #: discord.member.flatten_user.<locals>.generate_function.<locals>.general:32
 #: discord.user.User.entitlements:32 of
 msgid "Retrieving the entitlements failed."
 msgstr ""
 
-#: 87e7437ba3dd4295bcf7317cc8932738 add5fc2b3b474b48963f5e2d57af8ad3
-#: discord.guild.Guild.entitlements:34 discord.user.User.entitlements:34 of
+#: add5fc2b3b474b48963f5e2d57af8ad3 discord.guild.Guild.entitlements:34
+#: discord.user.User.entitlements:34 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~discord.iterators.EntitlementIterator\\``"
 msgstr ""
 
@@ -2116,27 +1896,30 @@ msgstr ""
 msgid "Checks if the attachment is not equal to another attachment."
 msgstr ""
 
-#: 54133d6dd993488ba10e3caf08a4c2fc discord.message.Attachment:19 of
-msgid "Returns the hash of the attachment."
+#: 48caa2a52a4144049a492c2f01a7eff0 discord.message.Attachment:19 of
+msgid "Returns the attachment's unique identifier."
 msgstr ""
 
-#: 0c575e35aef5425b94a0dff90e2e0231 discord.message.Attachment:21 of
+#: cf3459c60a5448888d44092d532857cb discord.message.Attachment:21 of
+msgid "This is equivalent to :attr:`id`."
+msgstr ""
+
+#: 0c575e35aef5425b94a0dff90e2e0231 discord.message.Attachment:23 of
 msgid "Attachment can now be cast to :class:`str` and is hashable."
 msgstr ""
 
-#: 8c174bbfd44147ecb1d712933fa3aa4e discord.message.Attachment:26 of
+#: 8c174bbfd44147ecb1d712933fa3aa4e discord.message.Attachment:28 of
 msgid "The attachment ID."
 msgstr ""
 
-#: cad88e03745e4898b486276d5648803c discord.message.Attachment:32 of
+#: cad88e03745e4898b486276d5648803c discord.message.Attachment:34 of
 msgid "The attachment size in bytes."
 msgstr ""
 
-#: a2938bf7c9b44e4e9bca2663a729afaf discord.message.Attachment:38 of
+#: a2938bf7c9b44e4e9bca2663a729afaf discord.message.Attachment:40 of
 msgid "The attachment's height, in pixels. Only applicable to images and videos."
 msgstr ""
 
-#: 32bfaad9dc0e42aba5a769f9c2139168 4eda47990854400088b81bf7ad06b60b
 #: 8a0504dbcaec4f5ca2890730091a5b6a discord.Thread.category_id:4
 #: discord.channel.CategoryChannel:46 discord.channel.ForumChannel:43
 #: discord.channel.ForumChannel:60 discord.channel.ForumChannel:67
@@ -2147,15 +1930,15 @@ msgstr ""
 #: discord.channel.TextChannel:43 discord.channel.TextChannel:56
 #: discord.channel.TextChannel:63 discord.channel.TextChannel:106
 #: discord.channel.VoiceChannel:43 discord.channel.VoiceChannel:50
-#: discord.channel.VoiceChannel:87 discord.components.Button:53
+#: discord.channel.VoiceChannel:87 discord.components.Button:52
 #: discord.emoji.AppEmoji:65 discord.guild.Guild:87 discord.guild.Guild:97
 #: discord.guild.Guild:105 discord.guild.Guild:190 discord.guild.Guild:201
 #: discord.guild.Guild.prune_members:42 discord.interactions.Interaction:24
 #: discord.interactions.Interaction:36
 #: discord.interactions.InteractionMetadata:35
 #: discord.interactions.InteractionMetadata:42 discord.invite.Invite:109
-#: discord.invite.Invite:116 discord.message.Attachment:40
-#: discord.message.Attachment:46 discord.message.Message:126
+#: discord.invite.Invite:116 discord.message.Attachment:42
+#: discord.message.Attachment:48 discord.message.Message:126
 #: discord.partial_emoji.PartialEmoji:44
 #: discord.raw_models.AutoModActionExecutionEvent:53
 #: discord.raw_models.AutoModActionExecutionEvent:66
@@ -2173,72 +1956,72 @@ msgstr ""
 #: discord.role.RoleTags:25 discord.role.RoleTags:33
 #: discord.scheduled_events.ScheduledEvent:70
 #: discord.scheduled_events.ScheduledEvent:78 discord.threads.Thread:61
-#: f50b8fb8640844a6933c62864952effb f55fe32c1fb5446182de1835f38e3e5f of
+#: f50b8fb8640844a6933c62864952effb of
 msgid "Optional[:class:`int`]"
 msgstr ""
 
-#: 5ef4f4ec93704176ab793181a849f05f discord.message.Attachment:44 of
+#: 5ef4f4ec93704176ab793181a849f05f discord.message.Attachment:46 of
 msgid "The attachment's width, in pixels. Only applicable to images and videos."
 msgstr ""
 
-#: 1578fbf5297d4be08834fd1ee5ef1fe5 discord.message.Attachment:50 of
+#: 1578fbf5297d4be08834fd1ee5ef1fe5 discord.message.Attachment:52 of
 msgid "The attachment's filename."
 msgstr ""
 
-#: 958d5b5f3b08410aa5055b2450fc39f1 discord.message.Attachment:56 of
+#: 958d5b5f3b08410aa5055b2450fc39f1 discord.message.Attachment:58 of
 msgid ""
 "The attachment's title. This is equal to the original :attr:`filename` "
 "(without an extension) if special characters were filtered from it."
 msgstr ""
 
-#: discord.message.Attachment:65 ee16dbcd50b74902b088cad9dcd1cccf of
+#: discord.message.Attachment:67 ee16dbcd50b74902b088cad9dcd1cccf of
 msgid ""
 "The attachment URL. If the message this attachment was attached to is "
 "deleted, then this will 404."
 msgstr ""
 
-#: 992e18f11a9c4994b41a6e9c411d60de discord.message.Attachment:72 of
+#: 992e18f11a9c4994b41a6e9c411d60de discord.message.Attachment:74 of
 msgid ""
 "The proxy URL. This is a cached version of the :attr:`~Attachment.url` in"
 " the case of images. When the message is deleted, this URL might be valid"
 " for a few minutes or not valid at all."
 msgstr ""
 
-#: 3afcc47a746b41ef962d8970c735e85c discord.message.Attachment:80 of
+#: 3afcc47a746b41ef962d8970c735e85c discord.message.Attachment:82 of
 msgid "The attachment's `media type <https://en.wikipedia.org/wiki/Media_type>`_."
 msgstr ""
 
-#: 1bc86b04dd0e4e3ab62f5abb1fa5a191 discord.message.Attachment:86 of
+#: 1bc86b04dd0e4e3ab62f5abb1fa5a191 discord.message.Attachment:88 of
 msgid "Whether the attachment is ephemeral or not."
 msgstr ""
 
-#: 3f39cbfb9d7b4acdbbbbb44af1a4a044 discord.message.Attachment:94 of
+#: 3f39cbfb9d7b4acdbbbbb44af1a4a044 discord.message.Attachment:96 of
 msgid "The attachment's description."
 msgstr ""
 
-#: 41a146e92e5c4b14b97610c414598c5f discord.message.Attachment:102 of
+#: 41a146e92e5c4b14b97610c414598c5f discord.message.Attachment:104 of
 msgid "The duration of the audio file (currently for voice messages)."
 msgstr ""
 
-#: 5e36ab69e24a4e9281fef9f23b4e9417 discord.message.Attachment:106 of
+#: 5e36ab69e24a4e9281fef9f23b4e9417 discord.message.Attachment:108 of
 msgid "Optional[:class:`float`]"
 msgstr ""
 
-#: discord.message.Attachment:110 eff44c3749674e1fbbf4b67f51584aa1 of
+#: discord.message.Attachment:112 eff44c3749674e1fbbf4b67f51584aa1 of
 msgid ""
 "The base64 encoded bytearray representing a sampled waveform (currently "
 "for voice messages)."
 msgstr ""
 
-#: 8d72571d6ca849d6a35b59f075db944f discord.message.Attachment:118 of
+#: 8d72571d6ca849d6a35b59f075db944f discord.message.Attachment:120 of
 msgid "Extra attributes of the attachment."
 msgstr ""
 
-#: ab0f888b90cd441e98e12a4233f6a5ca discord.message.Attachment:122 of
+#: ab0f888b90cd441e98e12a4233f6a5ca discord.message.Attachment:124 of
 msgid ":class:`AttachmentFlags`"
 msgstr ""
 
-#: discord.message.Attachment:126 eb66ce493d6144a692880c2d020256d8 of
+#: discord.message.Attachment:128 eb66ce493d6144a692880c2d020256d8 of
 msgid "The unique signature of this attachment's instance."
 msgstr ""
 
@@ -2258,8 +2041,7 @@ msgstr ""
 msgid "Saves this attachment into a file-like object."
 msgstr ""
 
-#: 2b5ead79700145a382d76f44023473e0 7aa4f610913d4f9b9a7d74ae16d69eb5
-#: abdf57698eb34d8982ba647f6da17306 discord.message.Attachment.read:8
+#: 2b5ead79700145a382d76f44023473e0 discord.message.Attachment.read:8
 #: discord.message.Attachment.save:15 discord.message.Attachment.to_file:9 of
 msgid ""
 "Whether to use :attr:`proxy_url` rather than :attr:`url` when downloading"
@@ -2274,7 +2056,6 @@ msgstr ""
 msgid "Saving the attachment failed."
 msgstr ""
 
-#: 38a5651d049e4b7e9f01bb38e9760855 ab9fdda4d9474a1086b411042447c7f8
 #: d18abb0c844745c2807b072262ea7789 discord.message.Attachment.read:21
 #: discord.message.Attachment.save:27 discord.message.Attachment.to_file:29 of
 msgid "The attachment was deleted."
@@ -2288,13 +2069,13 @@ msgstr ""
 msgid "The contents of the attachment."
 msgstr ""
 
-#: 4db1799592a342b69f4dff05cb3399aa 50fc85816460419987fd4b9d6f35c1e0
-#: discord.message.Attachment.read:19 discord.message.Attachment.to_file:27 of
+#: 50fc85816460419987fd4b9d6f35c1e0 discord.message.Attachment.read:19
+#: discord.message.Attachment.to_file:27 of
 msgid "Downloading the attachment failed."
 msgstr ""
 
-#: 852f492f157c49a49a538a015d3dc7f6 93df4e1ae9c44fe4ab4e94a66887ed45
-#: discord.message.Attachment.read:20 discord.message.Attachment.to_file:28 of
+#: 852f492f157c49a49a538a015d3dc7f6 discord.message.Attachment.read:20
+#: discord.message.Attachment.to_file:28 of
 msgid "You do not have permissions to access this attachment"
 msgstr ""
 
@@ -2536,8 +2317,8 @@ msgstr ""
 msgid "``party_id``: The party ID associated with the party."
 msgstr ""
 
-#: 11c75525785d4c429178a7a718d68f80 discord.message.Message:164
-#: discord.message.Message:178 f3f5b79ae0264c59b2b8f18457a33604 of
+#: discord.message.Message:164 discord.message.Message:178
+#: f3f5b79ae0264c59b2b8f18457a33604 of
 msgid "Optional[:class:`dict`]"
 msgstr ""
 
@@ -2581,8 +2362,9 @@ msgstr ""
 msgid "A list of components in the message."
 msgstr ""
 
-#: 67814d733bdf4049865a606a8b8f8cc5 84f37565d5b54049bca37476a10434b3
-#: discord.components.ActionRow:19 discord.message.Message:194 of
+#: 67814d733bdf4049865a606a8b8f8cc5 discord.components.ActionRow:19
+#: discord.components.Container:25 discord.components.Section:17
+#: discord.message.Message:194 of
 msgid "List[:class:`Component`]"
 msgstr ""
 
@@ -2590,8 +2372,7 @@ msgstr ""
 msgid "The guild that the message belongs to, if applicable."
 msgstr ""
 
-#: ../../docstring 9dd1e8c3b999410fa6625ba6f279c7c7
-#: c721db13a7b146019d639a9f3f834bf5
+#: ../../docstring c721db13a7b146019d639a9f3f834bf5
 #: discord.AuthorizingIntegrationOwners.guild:4 discord.message.Message:200
 #: discord.raw_models.AutoModActionExecutionEvent:35
 #: discord.raw_models.RawScheduledEventSubscription:22 of
@@ -2614,8 +2395,8 @@ msgstr ""
 msgid "The interaction metadata associated with the message, if applicable."
 msgstr ""
 
-#: 465b6273c1434cdf84d1bf9d0bec35d1 bc296a912770482a81cf365b4076d957
-#: discord.interactions.InteractionMetadata:49 discord.message.Message:218 of
+#: bc296a912770482a81cf365b4076d957 discord.interactions.InteractionMetadata:49
+#: discord.message.Message:218 of
 msgid "Optional[:class:`InteractionMetadata`]"
 msgstr ""
 
@@ -2623,9 +2404,8 @@ msgstr ""
 msgid "The thread created from this message, if applicable."
 msgstr ""
 
-#: aac45b2defac480591d4ff80dd368aa8 d8d7b5cabb804112945544dd9fce00a3
-#: discord.channel._TextChannel.get_thread:10 discord.guild.Guild.get_thread:10
-#: discord.message.Message:226 of
+#: d8d7b5cabb804112945544dd9fce00a3 discord.channel._TextChannel.get_thread:10
+#: discord.guild.Guild.get_thread:10 discord.message.Message:226 of
 msgid "Optional[:class:`Thread`]"
 msgstr ""
 
@@ -2643,6 +2423,14 @@ msgstr ""
 
 #: 2e405f4e197f4b0ba5d54391a69b0d71 discord.message.Message:242 of
 msgid "Optional[:class:`MessageCall`]"
+msgstr ""
+
+#: 976df015627c468c81e129d00a058565 discord.message.Message:246 of
+msgid "The snapshots attached to this message, if applicable."
+msgstr ""
+
+#: 4229c74086434a8da37f74044d1d1104 discord.message.Message:250 of
+msgid "Optional[List[:class:`MessageSnapshots`]]"
 msgstr ""
 
 #: ../../docstring d59d70f0cbd743578391ed22b87a8517
@@ -2729,11 +2517,11 @@ msgstr ""
 msgid ""
 "In the case of :attr:`MessageType.default` and "
 ":attr:`MessageType.reply`\\, this just returns the regular "
-":attr:`Message.content`. Otherwise, this returns an English message "
-"denoting the contents of the system message."
+":attr:`Message.content`, and forwarded messages will display the original"
+" message's content from :attr:`Message.snapshots`. Otherwise, this "
+"returns an English message denoting the contents of the system message."
 msgstr ""
 
-#: ad8810e402c64d56a4003b1747b42550
 #: discord.interactions.InteractionMessage.delete:3
 #: discord.message.Message.delete:3 f3ebcd5f2ae04e4995b614f305c52ccf of
 msgid "Deletes the message."
@@ -2762,7 +2550,7 @@ msgstr ""
 
 #: 31dae9bdaac8430bab6b0a5bad06b2c3
 #: discord.interactions.InteractionMessage.delete:10
-#: discord.message.Message.delete:20 f075f7ddf459448486db289bb7a664c8 of
+#: discord.message.Message.delete:20 of
 msgid "You do not have proper permissions to delete the message."
 msgstr ""
 
@@ -2770,8 +2558,7 @@ msgstr ""
 msgid "The message was deleted already"
 msgstr ""
 
-#: 11626a89e9754d98b9e406dee995ee11 120db33a3735472ab0570bbc976c4428
-#: 918b2eb266e64d8b92a504fe13d28665
+#: 11626a89e9754d98b9e406dee995ee11 918b2eb266e64d8b92a504fe13d28665
 #: discord.interactions.Interaction.delete_original_message:3
 #: discord.interactions.Interaction.delete_original_response:13
 #: discord.interactions.InteractionMessage.delete:12
@@ -2779,7 +2566,7 @@ msgstr ""
 msgid "Deleting the message failed."
 msgstr ""
 
-#: 6ed53c62bf794126a8bcd24d3fd2a19e 99ff3a0b34044b0aa7c00d20adca1974
+#: 6ed53c62bf794126a8bcd24d3fd2a19e
 #: discord.interactions.InteractionMessage.edit:3
 #: discord.message.Message.edit:3 of
 msgid "Edits the message."
@@ -2827,7 +2614,7 @@ msgstr ""
 msgid "New files to add to the message."
 msgstr ""
 
-#: 30fc507352f2434c88bf8dae92a030f3 37250a2ca1734906b0f17639a4ca5a55
+#: 37250a2ca1734906b0f17639a4ca5a55
 #: discord.interactions.Interaction.edit_original_response:29
 #: discord.interactions.InteractionMessage.edit:23
 #: discord.interactions.InteractionResponse.edit_message:24
@@ -2845,7 +2632,7 @@ msgid ""
 ":attr:`~.Permissions.manage_messages`."
 msgstr ""
 
-#: 1b1c8d98c40d4a1db673aba02af8ab84 a865ae969b7e4cd1aa10292adaa53422
+#: a865ae969b7e4cd1aa10292adaa53422
 #: discord.interactions.Interaction.edit_original_response:41
 #: discord.interactions.InteractionMessage.edit:35
 #: discord.interactions.InteractionResponse.edit_message:32
@@ -2856,7 +2643,7 @@ msgid ""
 "silently ignored."
 msgstr ""
 
-#: 14c5970e926b4bdba9cf225c428573be 66bd52e02f594816b9a3876ee0003e20
+#: 66bd52e02f594816b9a3876ee0003e20
 #: discord.interactions.Interaction.edit_original_response:37
 #: discord.interactions.InteractionMessage.edit:31
 #: discord.interactions.InteractionResponse.edit_message:28
@@ -3175,14 +2962,26 @@ msgid ""
 ":class:`.Message`."
 msgstr ""
 
-#: 8fb0c77645f547c6872c4b243378a15d discord.message.Message.reply:9 of
+#: 8fb0c77645f547c6872c4b243378a15d discord.message.Message.forward_to:13
+#: discord.message.Message.reply:9 of
 msgid ":class:`.Message`"
 msgstr ""
 
-#: 407cc6ed96864a86a0c521ed428b7511 discord.message.Message.reply:13 of
+#: 407cc6ed96864a86a0c521ed428b7511 discord.message.Message.forward_to:17
+#: discord.message.Message.reply:13 of
 msgid ""
 "The ``files`` list is not of the appropriate size, or     you specified "
 "both ``file`` and ``files``."
+msgstr ""
+
+#: discord.message.Message.forward_to:3 fbd67ff4c215400ea4a271748c5dc77c of
+msgid ""
+"A shortcut method to :meth:`.abc.Messageable.send` to forward the "
+":class:`.Message` to a channel."
+msgstr ""
+
+#: discord.message.Message.forward_to:9 f884e37b37a34004b7a60715f9c7e323 of
+msgid "The channel to forward this to."
 msgstr ""
 
 #: 3dafec6926db4c4d81092ac287d3d107 discord.message.Message.end_poll:3 of
@@ -3226,11 +3025,19 @@ msgid ""
 "not fetch the message."
 msgstr ""
 
-#: 8a8ab09da0a9465bb681ee6462a156b6 discord.message.Message.to_reference:12 of
+#: discord.message.Message.to_reference:12 f7c3557ed02049ffa29494923a1632a1 of
+msgid "The type of message reference. Defaults to a reply.  .. versionadded:: 2.7"
+msgstr ""
+
+#: bc8530e934df4b92844df9fc397447a6 discord.message.Message.to_reference:12 of
+msgid "The type of message reference. Defaults to a reply."
+msgstr ""
+
+#: 8a8ab09da0a9465bb681ee6462a156b6 discord.message.Message.to_reference:17 of
 msgid "The reference to this message."
 msgstr ""
 
-#: discord.message.Message.to_reference:13 f06595a3a15743dcbeae344ccd5daf42 of
+#: discord.message.Message.to_reference:18 f06595a3a15743dcbeae344ccd5daf42 of
 msgid ":class:`~discord.MessageReference`"
 msgstr ""
 
@@ -4869,27 +4676,39 @@ msgstr ""
 msgid "Whether the guild should have server invites enabled or disabled."
 msgstr ""
 
-#: 226196ae337f47ba9ed1b2641b83f3df discord.guild.Guild.edit:96 of
+#: ab83fdbf1e0e4760b895cdc4cf06ee7e discord.guild.Guild.edit:96 of
+msgid "Whether the guild should be discoverable in the discover tab."
+msgstr ""
+
+#: 203e2e85a6de4714bcf5108fc81cba3f discord.guild.Guild.edit:99 of
+msgid "Whether activity alerts for the guild should be disabled."
+msgstr ""
+
+#: 387f2c8ecb814ef79b4d196dc73a9991 discord.guild.Guild.edit:102 of
+msgid "Whether the guild's user activity feed should be enabled."
+msgstr ""
+
+#: 226196ae337f47ba9ed1b2641b83f3df discord.guild.Guild.edit:105 of
 msgid "The reason for editing this guild. Shows up on the audit log."
 msgstr ""
 
-#: discord.guild.Guild.edit:99 f2ec2f8365b0482f88522cb620b9f3c2 of
+#: discord.guild.Guild.edit:108 f2ec2f8365b0482f88522cb620b9f3c2 of
 msgid "You do not have permissions to edit the guild."
 msgstr ""
 
-#: 7026e8922b26447f903df8f0411dae38 discord.guild.Guild.edit:100
+#: 7026e8922b26447f903df8f0411dae38 discord.guild.Guild.edit:109
 #: discord.integrations.StreamIntegration.edit:19 of
 msgid "Editing the guild failed."
 msgstr ""
 
-#: ae815105c2f445988a7245f534d3ec20 discord.guild.Guild.edit:101 of
+#: ae815105c2f445988a7245f534d3ec20 discord.guild.Guild.edit:110 of
 msgid ""
 "The image format passed in to ``icon`` is invalid. It must be     PNG or "
 "JPG. This is also raised if you are not the owner of the     guild and "
 "request an ownership transfer."
 msgstr ""
 
-#: cf020628c49b457ab63b2155e49a9aa1 discord.guild.Guild.edit:103 of
+#: cf020628c49b457ab63b2155e49a9aa1 discord.guild.Guild.edit:112 of
 msgid ""
 "The newly updated guild. Note that this has the same limitations as "
 "mentioned in :meth:`Client.fetch_guild` and may not have full data."
@@ -4898,7 +4717,7 @@ msgstr ""
 #: 276f56a64f5843658e8be434f64806d5 discord.channel.CategoryChannel:33
 #: discord.channel.ForumChannel:31 discord.channel.MediaChannel:33
 #: discord.channel.StageChannel:33 discord.channel.TextChannel:31
-#: discord.channel.VoiceChannel:31 discord.guild.Guild.edit:105
+#: discord.channel.VoiceChannel:31 discord.guild.Guild.edit:114
 #: discord.integrations.BotIntegration:21 discord.integrations.Integration:21
 #: discord.integrations.StreamIntegration:21 discord.member.Member:48
 #: discord.role.Role:53 discord.scheduled_events.ScheduledEvent:27
@@ -7333,9 +7152,11 @@ msgstr ""
 msgid "Whether the template has unsynced changes."
 msgstr ""
 
-#: ad7ae992e9464d198f1ab9b5ae6b4efa discord.integrations.StreamIntegration:45
-#: discord.template.Template:60 discord.widget.WidgetMember:73
-#: discord.widget.WidgetMember:79 discord.widget.WidgetMember:85 of
+#: ad7ae992e9464d198f1ab9b5ae6b4efa discord.components.Container:37
+#: discord.components.FileComponent:35 discord.components.Thumbnail:29
+#: discord.integrations.StreamIntegration:45 discord.template.Template:60
+#: discord.widget.WidgetMember:73 discord.widget.WidgetMember:79
+#: discord.widget.WidgetMember:85 of
 msgid "Optional[:class:`bool`]"
 msgstr ""
 
@@ -11624,12 +11445,40 @@ msgstr ""
 msgid "Optional[:class:`InteractionContextType`]"
 msgstr ""
 
+#: 9d152ca0b57c4831a63ac4f3ba694587 discord.interactions.Interaction:113 of
+msgid "The command that this interaction belongs to."
+msgstr ""
+
+#: bc296a912770482a81cf365b4076d957 discord.interactions.Interaction:117 of
+msgid "Optional[:class:`ApplicationCommand`]"
+msgstr ""
+
+#: 9d152ca0b57c4831a63ac4f3ba694587 discord.interactions.Interaction:121 of
+msgid "The view that this interaction belongs to."
+msgstr ""
+
+#: discord.interactions.Interaction:125 f3f5b79ae0264c59b2b8f18457a33604 of
+msgid "Optional[:class:`View`]"
+msgstr ""
+
+#: 9d152ca0b57c4831a63ac4f3ba694587 discord.interactions.Interaction:129 of
+msgid "The modal that this interaction belongs to."
+msgstr ""
+
+#: b70aff860e5a4c0092f8bc6056c6c429 discord.interactions.Interaction:133 of
+msgid "Optional[:class:`Modal`]"
+msgstr ""
+
 #: 4464cbbf3555444890e48eaf0e78176d discord.Interaction.client:1 of
 msgid "Returns the client that sent the interaction."
 msgstr ""
 
 #: 55c70be45b73482ca42cefdb013a99f3 discord.Interaction.guild:1 of
 msgid "The guild the interaction was sent from."
+msgstr ""
+
+#: b017f2694c78454e89e712049f8fc4c0 discord.Interaction.created_at:1 of
+msgid "Returns the interaction's creation time in UTC."
 msgstr ""
 
 #: bd66fcea2cc64e7793c0f6867ab2d4f3
@@ -12122,10 +11971,11 @@ msgstr ""
 msgid ":class:`.Interaction`"
 msgstr ""
 
-#: discord.interactions.InteractionResponse.edit_message:49
-#: discord.interactions.InteractionResponse.send_message:51
-#: e2024a8f3ffb496d9c436a8a62f58ff2 of
-msgid "You specified both ``embed`` and ``embeds``."
+#: d13f7e34dd204807a23d8f242e6cfd40
+#: discord.interactions.InteractionResponse.send_message:51 of
+msgid ""
+"You specified both ``embed`` and ``embeds``, or sent content or embeds "
+"with V2 components."
 msgstr ""
 
 #: bf8a8d7d68404c6c8dc528e78ef7571b
@@ -12152,6 +12002,11 @@ msgstr ""
 msgid ""
 "A list of new files to add to the message. Must be a maximum of 10. This "
 "cannot be mixed with the ``file`` parameter."
+msgstr ""
+
+#: discord.interactions.InteractionResponse.edit_message:49
+#: e2024a8f3ffb496d9c436a8a62f58ff2 of
+msgid "You specified both ``embed`` and ``embeds``."
 msgstr ""
 
 #: 32c68b7cc33841258ae96c0c02aa2da0
@@ -12354,15 +12209,20 @@ msgid ""
 "is not in cache, or if :attr:`guild_id` is ``0`` or ``None``."
 msgstr ""
 
+#: ../../api/models.rst:372 f81c11da386445dbbb02292e3bc450c1
+msgid "Message Components"
+msgstr ""
+
 #: 325eccff689b463a930829aa10f85c86 discord.components.Component:1 of
 msgid "Represents a Discord Bot UI Kit Component."
 msgstr ""
 
-#: 2d12acff11104cfdae9f7130c251450e discord.components.Component:3 of
-msgid "Currently, the only components supported by Discord are:"
+#: c94a1b5cbea24b01a9797e6870ae5ea4 discord.components.Component:3 of
+msgid "The components supported by Discord in messages are as follows:"
 msgstr ""
 
-#: 709fc995d26b4c83ac251992b4d0284c discord.components.Component:5 of
+#: 709fc995d26b4c83ac251992b4d0284c discord.components.Component:5
+#: discord.components.Container:6 of
 msgid ":class:`ActionRow`"
 msgstr ""
 
@@ -12374,18 +12234,61 @@ msgstr ""
 msgid ":class:`SelectMenu`"
 msgstr ""
 
-#: c058b048558c41e796780dc8fd7e13b3 discord.components.Component:9 of
+#: 0c5375d482ec498eaa71bfd03f2a8133 discord.components.Component:8
+#: discord.components.Container:8 of
+msgid ":class:`Section`"
+msgstr ""
+
+#: 8b6a84cc25c349419c31de47c2303d96 discord.components.Component:9
+#: discord.components.Container:7 of
+msgid ":class:`TextDisplay`"
+msgstr ""
+
+#: 972be385b13d440092cdccd620111c7a discord.components.Component:10 of
+msgid ":class:`Thumbnail`"
+msgstr ""
+
+#: 6c7e533bdc934532a1a9ed62d9dd677c discord.components.Component:11
+#: discord.components.Container:9 of
+msgid ":class:`MediaGallery`"
+msgstr ""
+
+#: c7fa145264a345959a3d9ee21d0d3f9b discord.components.Component:12
+#: discord.components.Container:11 of
+msgid ":class:`FileComponent`"
+msgstr ""
+
+#: 972be385b13d440092cdccd620111c7a discord.components.Component:13
+#: discord.components.Container:10 of
+msgid ":class:`Separator`"
+msgstr ""
+
+#: 8eabd9ce697640f598d06c0958ad8883 discord.components.Component:14 of
+msgid ":class:`Container`"
+msgstr ""
+
+#: c058b048558c41e796780dc8fd7e13b3 discord.components.Component:16 of
 msgid "This class is abstract and cannot be instantiated."
 msgstr ""
 
-#: discord.components.ActionRow:11 discord.components.Component:15
+#: discord.components.ActionRow:11 discord.components.Component:22
 #: f81c11da386445dbbb02292e3bc450c1 of
 msgid "The type of component."
 msgstr ""
 
 #: c7fa145264a345959a3d9ee21d0d3f9b discord.components.ActionRow:13
-#: discord.components.Component:17 discord.components.SelectMenu:22 of
+#: discord.components.Component:24 discord.components.SelectMenu:21 of
 msgid ":class:`ComponentType`"
+msgstr ""
+
+#: dab8f5f51cc74edcbf9388ef88b46108 discord.components.Component:28 of
+msgid ""
+"The component's ID. If not provided by the user, it is set sequentially "
+"by Discord. The ID `0` is treated as if no ID was provided."
+msgstr ""
+
+#: 52afa1f78ae7497c8060bdb4a963d379 discord.components.Component.is_v2:1 of
+msgid "Whether this component was introduced in Components V2."
 msgstr ""
 
 #: 9f7d8de88aed40a08872c3374e05f049 discord.components.ActionRow:1 of
@@ -12397,12 +12300,19 @@ msgid "This is a component that holds up to 5 children components in a row."
 msgstr ""
 
 #: 93341d8aa4fb44959bf727bb0998ab94 discord.components.ActionRow:5
-#: discord.components.Button:3 of
+#: discord.components.Button:3 discord.components.Container:13
+#: discord.components.FileComponent:5 discord.components.MediaGallery:5
+#: discord.components.Section:5 discord.components.Separator:5
+#: discord.components.TextDisplay:5 discord.components.Thumbnail:5 of
 msgid "This inherits from :class:`Component`."
 msgstr ""
 
 #: 3248a4ea4e8c4849a1e3cfd557671f33 discord.components.ActionRow:17 of
 msgid "The children components that this holds, if any."
+msgstr ""
+
+#: aeebdd818d504901bd5f56b41ddea95e discord.ActionRow.width:1 of
+msgid "Return the sum of the children's widths."
 msgstr ""
 
 #: discord.components.Button:1 e0b3fcd3375d4bfb8695df0a7104c162 of
@@ -12411,45 +12321,45 @@ msgstr ""
 
 #: discord.components.Button:7 e84696cb443c46b1a00676610ca02b0d of
 msgid ""
-"The user constructible and usable type to create a button is "
-":class:`discord.ui.Button` not this one."
+"This class is not useable by end-users; see :class:`discord.ui.Button` "
+"instead."
 msgstr ""
 
-#: 17316ef8cf2e41eea87856713d44d589 discord.components.Button:14 of
+#: 17316ef8cf2e41eea87856713d44d589 discord.components.Button:13 of
 msgid "The style of the button."
 msgstr ""
 
-#: 9b26c0ad72604068a56d44df8deaf10e discord.components.Button:16 of
+#: 9b26c0ad72604068a56d44df8deaf10e discord.components.Button:15 of
 msgid ":class:`.ButtonStyle`"
 msgstr ""
 
-#: 3e0bad6d875e4b708e06d95b7bc848df discord.components.Button:20 of
+#: 3e0bad6d875e4b708e06d95b7bc848df discord.components.Button:19 of
 msgid ""
 "The ID of the button that gets received during an interaction. If this "
 "button is for a URL, it does not have a custom ID."
 msgstr ""
 
-#: dbc3fc6e82d449c498ff55cedadec8f1 discord.components.Button:27 of
+#: dbc3fc6e82d449c498ff55cedadec8f1 discord.components.Button:26 of
 msgid "The URL this button sends you to."
 msgstr ""
 
-#: 92ad8e5b06b44eaeb61e9ec6fe198505 discord.components.Button:33 of
+#: 92ad8e5b06b44eaeb61e9ec6fe198505 discord.components.Button:32 of
 msgid "Whether the button is disabled or not."
 msgstr ""
 
-#: cf2143a753e04aaba2c533fd326bcdbd discord.components.Button:39 of
+#: cf2143a753e04aaba2c533fd326bcdbd discord.components.Button:38 of
 msgid "The label of the button, if any."
 msgstr ""
 
-#: a1bedc695439492f85e0988db64713a1 discord.components.Button:45 of
+#: a1bedc695439492f85e0988db64713a1 discord.components.Button:44 of
 msgid "The emoji of the button, if available."
 msgstr ""
 
-#: 2f8502a4187e40f597d6496424c5ac3a discord.components.Button:47 of
+#: 2f8502a4187e40f597d6496424c5ac3a discord.components.Button:46 of
 msgid "Optional[:class:`PartialEmoji`]"
 msgstr ""
 
-#: 76a7eb849b774f21a8d3351ab54c814a discord.components.Button:51 of
+#: 76a7eb849b774f21a8d3351ab54c814a discord.components.Button:50 of
 msgid "The ID of the SKU this button refers to."
 msgstr ""
 
@@ -12465,11 +12375,11 @@ msgstr ""
 
 #: discord.components.SelectMenu:8 fc6946db0ea245a69657a6935ca95a1a of
 msgid ""
-"The user constructible and usable type to create a select menu is "
-":class:`discord.ui.Select` not this one."
+"This class is not useable by end-users; see :class:`discord.ui.Select` "
+"instead."
 msgstr ""
 
-#: 1f0a74344d894d50bbcf2e95bba368ca discord.components.SelectMenu:15 of
+#: 1f0a74344d894d50bbcf2e95bba368ca discord.components.SelectMenu:14 of
 msgid ""
 "Added support for :attr:`ComponentType.user_select`, "
 ":attr:`ComponentType.role_select`, "
@@ -12477,56 +12387,255 @@ msgid ""
 ":attr:`ComponentType.channel_select`."
 msgstr ""
 
-#: 2102950811c74486ab9b1026c9caddb1 discord.components.SelectMenu:20 of
+#: 2102950811c74486ab9b1026c9caddb1 discord.components.SelectMenu:19 of
 msgid "The select menu's type."
 msgstr ""
 
-#: b88d7aba2c9f46f88b681a6b575cb84e discord.components.SelectMenu:26 of
+#: b88d7aba2c9f46f88b681a6b575cb84e discord.components.SelectMenu:25 of
 msgid "The ID of the select menu that gets received during an interaction."
 msgstr ""
 
-#: c13453267e014bf98fe6f803e5a076c7 discord.components.SelectMenu:32 of
+#: c13453267e014bf98fe6f803e5a076c7 discord.components.SelectMenu:31 of
 msgid "The placeholder text that is shown if nothing is selected, if any."
 msgstr ""
 
-#: 3fdc6cc88eee4898b8468f5a5a44e7d2 discord.components.SelectMenu:38 of
+#: 3fdc6cc88eee4898b8468f5a5a44e7d2 discord.components.SelectMenu:37 of
 msgid ""
 "The minimum number of items that must be chosen for this select menu. "
 "Defaults to 1 and must be between 0 and 25."
 msgstr ""
 
-#: 33a222b1a7e9441f86f5ce875be10c72 discord.components.SelectMenu:45 of
+#: 33a222b1a7e9441f86f5ce875be10c72 discord.components.SelectMenu:44 of
 msgid ""
 "The maximum number of items that must be chosen for this select menu. "
 "Defaults to 1 and must be between 1 and 25."
 msgstr ""
 
-#: d4e8136b7e634c6daa20e200a532bc0d discord.components.SelectMenu:52 of
+#: d4e8136b7e634c6daa20e200a532bc0d discord.components.SelectMenu:51 of
 msgid ""
 "A list of options that can be selected in this menu. Will be an empty "
 "list for all component types except for "
 ":attr:`ComponentType.string_select`."
 msgstr ""
 
-#: d343089d09514315960da0c7bf2b3de2 discord.components.SelectMenu:56 of
+#: d343089d09514315960da0c7bf2b3de2 discord.components.SelectMenu:55 of
 msgid "List[:class:`SelectOption`]"
 msgstr ""
 
-#: 5352d7de29a64f59834df1c06284439b discord.components.SelectMenu:60 of
+#: 5352d7de29a64f59834df1c06284439b discord.components.SelectMenu:59 of
 msgid ""
 "A list of channel types that can be selected. Will be an empty list for "
 "all component types except for :attr:`ComponentType.channel_select`."
 msgstr ""
 
-#: 1c0857ba83824e07ae47f6b53750d2fa discord.components.SelectMenu:64 of
+#: 1c0857ba83824e07ae47f6b53750d2fa discord.components.SelectMenu:63 of
 msgid "List[:class:`ChannelType`]"
 msgstr ""
 
-#: 4d0bc3e8202f4bea84931cee7392c89d discord.components.SelectMenu:68 of
+#: 4d0bc3e8202f4bea84931cee7392c89d discord.components.SelectMenu:67 of
 msgid "Whether the select is disabled or not."
 msgstr ""
 
-#: ../../api/models.rst:394 c885c2e7084646b998c51b1c9bafc0aa
+#: 443e4a7e83794c9ca6b03288c36bc0db discord.components.Section:1 of
+msgid "Represents a Section from Components V2."
+msgstr ""
+
+#: d1b1d6306c5642368f524be77fcabba5 discord.components.Section:3 of
+msgid ""
+"This is a component that groups other components together with an "
+"additional component to the right as the accessory."
+msgstr ""
+
+#: discord.components.Section:9 fc6946db0ea245a69657a6935ca95a1a of
+msgid ""
+"This class is not useable by end-users; see :class:`discord.ui.Section` "
+"instead."
+msgstr ""
+
+#: 284762119e18477ab2efe9ed5517f6d5 discord.components.Section:15 of
+msgid ""
+"The components contained in this section. Currently supports "
+":class:`TextDisplay`."
+msgstr ""
+
+#: ce9e23d6e762427c8f8036499c6d159f discord.components.Section:21 of
+msgid ""
+"The accessory attached to this Section. Currently supports "
+":class:`Button` and :class:`Thumbnail`."
+msgstr ""
+
+#: discord.components.Section:23 ea5ce4db5209427392e12d73651f271b of
+msgid "Optional[:class:`Component`]"
+msgstr ""
+
+#: a7dc168070fb49c3a3446ea00d0e15df discord.components.TextDisplay:1 of
+msgid "Represents a Text Display from Components V2."
+msgstr ""
+
+#: 3248a4ea4e8c4849a1e3cfd557671f33 discord.components.TextDisplay:3 of
+msgid "This is a component that displays text."
+msgstr ""
+
+#: discord.components.TextDisplay:9 fc6946db0ea245a69657a6935ca95a1a of
+msgid ""
+"This class is not useable by end-users; see "
+":class:`discord.ui.TextDisplay` instead."
+msgstr ""
+
+#: 96484f4d35624bdd83b5e136d83bb9ad discord.components.TextDisplay:15 of
+msgid "The component's text content."
+msgstr ""
+
+#: 325eccff689b463a930829aa10f85c86 discord.components.Thumbnail:1 of
+msgid "Represents a Thumbnail from Components V2."
+msgstr ""
+
+#: 52afa1f78ae7497c8060bdb4a963d379 discord.components.Thumbnail:3 of
+msgid "This is a component that displays media, such as images and videos."
+msgstr ""
+
+#: discord.components.Thumbnail:9 e84696cb443c46b1a00676610ca02b0d of
+msgid ""
+"This class is not useable by end-users; see :class:`discord.ui.Thumbnail`"
+" instead."
+msgstr ""
+
+#: 941badf662e24af6bdb04e39a1020079 discord.components.Thumbnail:15 of
+msgid "The component's underlying media object."
+msgstr ""
+
+#: 7d438bff37c749b3950ffe589d702f9f discord.components.FileComponent:17
+#: discord.components.Thumbnail:17 of
+msgid ":class:`UnfurledMediaItem`"
+msgstr ""
+
+#: b83cc1df192e44cfa969e71988e5677c discord.components.Thumbnail:21 of
+msgid "The thumbnail's description, up to 1024 characters."
+msgstr ""
+
+#: 1c3d15b96df6417498447cf15dd2b44c discord.components.Thumbnail:27 of
+msgid "Whether the thumbnail has the spoiler overlay."
+msgstr ""
+
+#: cec5a91670184d8594a8168b49e63c77 discord.Thumbnail.url:1 of
+msgid "Returns the URL of this thumbnail's underlying media item."
+msgstr ""
+
+#: 325eccff689b463a930829aa10f85c86 discord.components.MediaGallery:1 of
+msgid "Represents a Media Gallery from Components V2."
+msgstr ""
+
+#: 52afa1f78ae7497c8060bdb4a963d379 discord.components.MediaGallery:3 of
+msgid ""
+"This is a component that displays up to 10 different "
+":class:`MediaGalleryItem` objects."
+msgstr ""
+
+#: discord.components.MediaGallery:9 fc6946db0ea245a69657a6935ca95a1a of
+msgid ""
+"This class is not useable by end-users; see "
+":class:`discord.ui.MediaGallery` instead."
+msgstr ""
+
+#: 3bb2c4499f774c7db3a93a7a4840b242 discord.components.MediaGallery:15 of
+msgid "The media this gallery contains."
+msgstr ""
+
+#: bd86ecd15cc848a8b57ef5dbb7c6f4d4 discord.components.MediaGallery:17 of
+msgid "List[:class:`MediaGalleryItem`]"
+msgstr ""
+
+#: 325eccff689b463a930829aa10f85c86 discord.components.FileComponent:1 of
+msgid "Represents a File from Components V2."
+msgstr ""
+
+#: 5c638f47368d4db5882b325512edf336 discord.components.FileComponent:3 of
+msgid "This component displays a downloadable file in a message."
+msgstr ""
+
+#: discord.components.FileComponent:9 fc6946db0ea245a69657a6935ca95a1a of
+msgid ""
+"This class is not useable by end-users; see :class:`discord.ui.File` "
+"instead."
+msgstr ""
+
+#: 7621b825fc6848199afd96d57cdb3c46 discord.components.FileComponent:15 of
+msgid "The file's media item."
+msgstr ""
+
+#: ca774a304f9a4d4baa6329ce8e864eef discord.components.FileComponent:21 of
+msgid "The file's name."
+msgstr ""
+
+#: cad88e03745e4898b486276d5648803c discord.components.FileComponent:27 of
+msgid "The file's size in bytes."
+msgstr ""
+
+#: ac21dc598e304ef99add56eb017be309 discord.components.FileComponent:33 of
+msgid "Whether the file has the spoiler overlay."
+msgstr ""
+
+#: 325eccff689b463a930829aa10f85c86 discord.components.Separator:1 of
+msgid "Represents a Separator from Components V2."
+msgstr ""
+
+#: 52afa1f78ae7497c8060bdb4a963d379 discord.components.Separator:3 of
+msgid "This is a component that visually separates components."
+msgstr ""
+
+#: discord.components.Separator:9 fc6946db0ea245a69657a6935ca95a1a of
+msgid ""
+"This class is not useable by end-users; see :class:`discord.ui.Separator`"
+" instead."
+msgstr ""
+
+#: 71708c2052ef460cbf50e18eff7472ff discord.components.Separator:15 of
+msgid ""
+"Whether the separator will show a horizontal line in addition to vertical"
+" spacing."
+msgstr ""
+
+#: 93e6016595cd40a7b1d0dab443a478a8 discord.components.Separator:21 of
+msgid "The separator's spacing size."
+msgstr ""
+
+#: 149351b7df664788a413093688677723 discord.components.Separator:23 of
+msgid "Optional[:class:`SeparatorSpacingSize`]"
+msgstr ""
+
+#: d4f2fb2b97b0466daffc259ba311fa14 discord.components.Container:1 of
+msgid "Represents a Container from Components V2."
+msgstr ""
+
+#: 0f7bbf2e0e7348d5b0454af500605c7f discord.components.Container:3 of
+msgid ""
+"This is a component that contains different :class:`Component` objects. "
+"It may only contain:"
+msgstr ""
+
+#: discord.components.Container:17 fc6946db0ea245a69657a6935ca95a1a of
+msgid ""
+"This class is not useable by end-users; see :class:`discord.ui.Container`"
+" instead."
+msgstr ""
+
+#: 3d2f746f188b48fcaa0c20d7e321d9b1 discord.components.Container:23 of
+msgid "The components contained in this container."
+msgstr ""
+
+#: 851fad41cfa943068fdd9dc3ce016772 discord.components.Container:29 of
+msgid "The accent color of the container."
+msgstr ""
+
+#: 5e36ab69e24a4e9281fef9f23b4e9417 discord.components.Container:31 of
+msgid "Optional[:class:`Colour`]"
+msgstr ""
+
+#: 8f055d7ad1d3409c9bc0a6982a4df3d5 discord.components.Container:35 of
+msgid "Whether the entire container has the spoiler overlay."
+msgstr ""
+
+#: ../../api/models.rst:439 c885c2e7084646b998c51b1c9bafc0aa
 msgid "Emoji"
 msgstr ""
 
@@ -12835,7 +12944,7 @@ msgstr ""
 msgid "If this isn't a custom emoji then an empty string is returned"
 msgstr ""
 
-#: ../../api/models.rst:415 a26c3fb538cc4eae85bc9b01ec610081
+#: ../../api/models.rst:460 a26c3fb538cc4eae85bc9b01ec610081
 msgid "Channels"
 msgstr ""
 
@@ -13684,7 +13793,7 @@ msgstr ""
 msgid "Leaving the group failed."
 msgstr ""
 
-#: ../../api/models.rst:481 209e72461fff4eaeb235cc21aa5f1997
+#: ../../api/models.rst:526 209e72461fff4eaeb235cc21aa5f1997
 msgid "Stickers"
 msgstr ""
 
@@ -13924,7 +14033,7 @@ msgstr ""
 msgid "An error occurred editing the sticker."
 msgstr ""
 
-#: ../../api/models.rst:509 fa3209921266443fb19f43b396c4c0a6
+#: ../../api/models.rst:554 fa3209921266443fb19f43b396c4c0a6
 msgid "Events"
 msgstr ""
 
@@ -14650,7 +14759,7 @@ msgid ""
 "status-update>`_."
 msgstr ""
 
-#: ../../api/models.rst:594 eae4e206e45a463f80727bc3e3eee504
+#: ../../api/models.rst:639 eae4e206e45a463f80727bc3e3eee504
 msgid "Webhooks"
 msgstr ""
 
@@ -14804,5 +14913,62 @@ msgstr ""
 #~ " in the forms: :class:`Emoji`, snowflake"
 #~ " ID, string representation (eg. "
 #~ "'<a:emoji_name:emoji_id>').  .. versionadded:: 2.5"
+#~ msgstr ""
+
+#~ msgid "Returns the hash of the asset."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``.  .. versionadded::"
+#~ " 1.6"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A reference to the :class:`~discord.Message`"
+#~ " to which you are replying, this "
+#~ "can be created using "
+#~ ":meth:`~discord.Message.to_reference` or passed "
+#~ "directly as a :class:`~discord.Message`. You"
+#~ " can control whether this mentions "
+#~ "the author of the referenced message "
+#~ "using the :attr:`~discord.AllowedMentions.replied_user`"
+#~ " attribute of ``allowed_mentions`` or by"
+#~ " setting ``mention_author``."
+#~ msgstr ""
+
+#~ msgid "Returns the hash of the attachment."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "In the case of :attr:`MessageType.default` "
+#~ "and :attr:`MessageType.reply`\\, this just "
+#~ "returns the regular :attr:`Message.content`. "
+#~ "Otherwise, this returns an English "
+#~ "message denoting the contents of the "
+#~ "system message."
+#~ msgstr ""
+
+#~ msgid "Currently, the only components supported by Discord are:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The user constructible and usable type"
+#~ " to create a button is "
+#~ ":class:`discord.ui.Button` not this one."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The user constructible and usable type"
+#~ " to create a select menu is "
+#~ ":class:`discord.ui.Select` not this one."
 #~ msgstr ""
 
