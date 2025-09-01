@@ -79,6 +79,7 @@ __all__ = (
     "Separator",
     "Container",
     "Label",
+    "SelectDefaultValue",
 )
 
 C = TypeVar("C", bound="Component")
