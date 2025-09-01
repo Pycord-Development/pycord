@@ -119,7 +119,7 @@ jobs:
           DATE=$(date +'%Y-%m-%d')
           sed -i "/These changes are available on the \`.*\` branch, but have not yet been released\./{N;d;}" CHANGELOG.md
           sed -i "s/## \[Unreleased\]/## [$VERSION] - $DATE/" CHANGELOG.md
-          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n&|" CHANGELOG.md
+          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Deprecated\n\n### Removed\n\n&|" CHANGELOG.md
           sed -i "s|\[unreleased\]:.*|[unreleased]: https://github.com/$REPOSITORY/compare/v$VERSION...HEAD\n[$VERSION]: https://github.com/$REPOSITORY/compare/$(git describe --tags --abbrev=0 @^)...v$VERSION|" CHANGELOG.md
           git add CHANGELOG.md
           git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
