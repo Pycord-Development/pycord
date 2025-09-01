@@ -29,50 +29,47 @@ if TYPE_CHECKING:
     from .state import ConnectionState
 
 from .asset import Asset
-from .types.collectibles import Nameplate as NameplatePayload
+from .types.primary_guild import PrimaryGuild as PrimaryGuildPayload
+
+__all__ = ("PrimaryGuild",)
 
 
-class Nameplate:
+class PrimaryGuild:
     """
-    Represents a Discord Nameplate.
+    Represents a Discord Primary Guild.
 
     .. versionadded:: 2.7
 
     Attributes
     ----------
-    sku_id: :class:`int`
-        The SKU ID of the nameplate.
-    palette: :class:`str`
-        The color palette of the nameplate.
+    identity_guild_id: int
+        The ID of the guild.
+    identity_enabled: :class:`bool`
+        Whether the primary guild is enabled.
+    tag: str
+        The tag of the primary guild.
     """
 
-    def __init__(self, data: NameplatePayload, state: "ConnectionState") -> None:
-        self.sku_id: int = data["sku_id"]
-        self.palette: str = data["palette"]
-        self._label: str = data["label"]
-        self._asset: str = data["asset"]
+    def __init__(self, data: PrimaryGuildPayload, state: "ConnectionState") -> None:
+        self.identity_guild_id: int | None = (
+            int(data.get("identity_guild_id") or 0) or None
+        )
+        self.identity_enabled: bool | None = data.get("identity_enabled", None)
+        self.tag: str | None = data.get("tag", None)
+        self._badge: str | None = data.get("badge", None)
         self._state: "ConnectionState" = state
 
     def __repr__(self) -> str:
-        return f"<Nameplate sku_id={self.sku_id} palette={self.palette}>"
+        return f"<PrimaryGuild identity_guild_id={self.identity_guild_id} identity_enabled={self.identity_enabled} tag={self.tag}>"
 
     @cached_property
-    def static_asset(self) -> Asset:
-        """
-        The static :class:`Asset` of this nameplate.
+    def badge(self) -> Asset | None:
+        """Returns the badge asset, if available.
 
         .. versionadded:: 2.7
         """
-        return Asset._from_collectible(self._state, self._asset)
-
-    @cached_property
-    def animated_asset(self) -> Asset:
-        """
-        The animated :class:`Asset` of this nameplate.
-
-        .. versionadded:: 2.7
-        """
-        return Asset._from_collectible(self._state, self._asset, animated=True)
-
-
-__all__ = ("Nameplate",)
+        if self._badge is None:
+            return None
+        return Asset._from_user_primary_guild_tag(
+            self._state, self.identity_guild_id, self._badge
+        )

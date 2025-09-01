@@ -1,7 +1,6 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,68 +24,19 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
-
 from typing_extensions import NotRequired, TypedDict
 
-from .member import MemberWithUser
+from discord.types.user import User
+
 from .snowflake import Snowflake
 
-SupportedModes = Literal[
-    "xsalsa20_poly1305_lite",
-    "xsalsa20_poly1305_suffix",
-    "xsalsa20_poly1305",
-    "aead_xchacha20_poly1305_rtpsize",
-]
 
-
-class _VoiceState(TypedDict):
-    member: NotRequired[MemberWithUser]
-    self_stream: NotRequired[bool]
-    user_id: Snowflake
-    session_id: str
-    deaf: bool
-    mute: bool
-    self_deaf: bool
-    self_mute: bool
-    self_video: bool
-    suppress: bool
-
-
-class GuildVoiceState(_VoiceState):
-    channel_id: Snowflake
-
-
-class VoiceState(_VoiceState, total=False):
-    channel_id: Snowflake | None
-    guild_id: Snowflake
-
-
-class VoiceRegion(TypedDict):
-    id: str
+class SoundboardSound(TypedDict):
     name: str
-    vip: bool
-    optimal: bool
-    deprecated: bool
-    custom: bool
-
-
-class VoiceServerUpdate(TypedDict):
-    token: str
-    guild_id: Snowflake
-    endpoint: str | None
-
-
-class VoiceIdentify(TypedDict):
-    server_id: Snowflake
-    user_id: Snowflake
-    session_id: str
-    token: str
-
-
-class VoiceReady(TypedDict):
-    ssrc: int
-    ip: str
-    port: int
-    modes: list[SupportedModes]
-    heartbeat_interval: int
+    sound_id: Snowflake | int
+    volume: float
+    emoji_name: str | None
+    emoji_id: Snowflake | None
+    guild_id: NotRequired[Snowflake]
+    user: NotRequired[User]
+    available: bool

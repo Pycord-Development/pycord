@@ -180,7 +180,7 @@ class Permissions(BaseFlags):
         """A factory method that creates a :class:`Permissions` with all
         permissions set to ``True``.
         """
-        return cls(0b1111111111111111111111111111111111111111111111111)
+        return cls(~(~1 << 51))
 
     @classmethod
     def all_channel(cls: type[P]) -> P:
@@ -394,11 +394,11 @@ class Permissions(BaseFlags):
 
     @flag_value
     def manage_messages(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user can delete or pin messages in a text channel.
+        """:class:`bool`: Returns ``True`` if a user can delete messages in a text channel.
 
-        .. note::
+        .. warning::
 
-            Note that there are currently no ways to edit other people's messages.
+            Starting from January 12th 2026, this will no longer grant the ability to pin/unpin messages. Use :attr:`pin_messages` instead.
         """
         return 1 << 13
 
@@ -672,6 +672,14 @@ class Permissions(BaseFlags):
         """
         return 1 << 50
 
+    @flag_value
+    def pin_messages(self) -> int:
+        """:class:`bool`: Returns ``True`` if a member can pin/unpin messages.
+
+        .. versionadded:: 2.7
+        """
+        return 1 << 51
+
 
 PO = TypeVar("PO", bound="PermissionOverwrite")
 
@@ -795,6 +803,7 @@ class PermissionOverwrite:
         set_voice_channel_status: bool | None
         send_polls: bool | None
         use_external_apps: bool | None
+        pin_messages: bool | None
 
     def __init__(self, **kwargs: bool | None):
         self._values: dict[str, bool | None] = {}
@@ -860,7 +869,7 @@ class PermissionOverwrite:
         """
         return len(self._values) == 0
 
-    def update(self, **kwargs: bool) -> None:
+    def update(self, **kwargs: bool | None) -> None:
         r"""Bulk updates this permission overwrite object.
 
         Allows you to set multiple attributes by using keyword
