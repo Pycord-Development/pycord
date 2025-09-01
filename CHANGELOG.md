@@ -12,12 +12,21 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
+
 ### Changed
 
 ### Fixed
 
 - Manage silence for new SSRC with existing user_id.
   ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
+
+### Deprecated
+
+- Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favor
+  of `utils.get_or_fetch(object_type, object_id)`.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Removed
 
@@ -87,8 +96,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2775](https://github.com/Pycord-Development/pycord/pull/2775))
 - Added `discord.Interaction.created_at`.
   ([#2801](https://github.com/Pycord-Development/pycord/pull/2801))
-- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
-  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 - Added `User.nameplate` property.
   ([#2817](https://github.com/Pycord-Development/pycord/pull/2817))
 - Added role gradients support with `Role.colours` and the `RoleColours` class.
@@ -217,9 +224,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2501](https://github.com/Pycord-Development/pycord/pull/2501))
 - Deprecated `Interaction.cached_channel` in favor of `Interaction.channel`.
   ([#2658](https://github.com/Pycord-Development/pycord/pull/2658))
-- Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favor
-  of `utils.get_or_fetch(object_type, object_id)`.
-  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 - Deprecated `is_nsfw` for categories since it was never supported by the API.
   ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Deprecated `Messageable.pins()` returning a list of `Message`; it should be used as an
