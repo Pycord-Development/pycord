@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `RawMessageUpdateEvent.new_message` - message update events now contain full
+  message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
+
 ### Changed
 
 ### Fixed
@@ -79,8 +82,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
-- Added `RawMessageUpdateEvent.new_message` - message update events now contain full
-  message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
 - Added various missing channel parameters and allow `default_reaction_emoji` to be
   `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added support for type hinting slash command options with `typing.Annotated`.
