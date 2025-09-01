@@ -64,8 +64,43 @@ jobs:
             echo "is_rc=false" >> $GITHUB_OUTPUT
           fi
 
+  branch_protection_rename:
+    needs: [safety_check]
+    runs-on: ubuntu-latest
+    environment: release
+    env:
+      GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+    outputs:
+      master_rule_id: ${{ steps.get_rule_ids.outputs.master_rule_id }}
+      master_pattern: ${{ steps.get_rule_ids.outputs.master_pattern }}
+      v_rule_id: ${{ steps.get_rule_ids.outputs.v_rule_id }}
+      v_pattern: ${{ steps.get_rule_ids.outputs.v_pattern }}
+    steps:
+      - name: Get branch protection rule IDs
+        id: get_rule_ids
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules > rules.json
+          MASTER_ID=$(jq -r '.[] | select(.pattern == "master") | .id' rules.json)
+          MASTER_PATTERN=$(jq -r '.[] | select(.pattern == "master") | .pattern' rules.json)
+          V_ID=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .id' rules.json)
+          V_PATTERN=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .pattern' rules.json)
+          echo "master_rule_id=$MASTER_ID" >> $GITHUB_OUTPUT
+          echo "master_pattern=$MASTER_PATTERN" >> $GITHUB_OUTPUT
+          echo "v_rule_id=$V_ID" >> $GITHUB_OUTPUT
+          echo "v_pattern=$V_PATTERN" >> $GITHUB_OUTPUT
+      - name: Rename master protection to temp-master
+        if: ${{ steps.get_rule_ids.outputs.master_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.master_rule_id }} \
+            -X PATCH -F pattern="temp-master"
+      - name: Rename v*.* protection to temp-v
+        if: ${{ steps.get_rule_ids.outputs.v_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.v_rule_id }} \
+            -X PATCH -F pattern="temp-v"
+
   lib_release:
-    needs: [safety_check,pre_config]
+    needs: [safety_check, pre_config, branch_protection_rename]
     runs-on: ubuntu-latest
     environment: release
     env:
@@ -119,7 +154,7 @@ jobs:
           DATE=$(date +'%Y-%m-%d')
           sed -i "/These changes are available on the \`.*\` branch, but have not yet been released\./{N;d;}" CHANGELOG.md
           sed -i "s/## \[Unreleased\]/## [$VERSION] - $DATE/" CHANGELOG.md
-          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n&|" CHANGELOG.md
+          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Deprecated\n\n### Removed\n\n&|" CHANGELOG.md
           sed -i "s|\[unreleased\]:.*|[unreleased]: https://github.com/$REPOSITORY/compare/v$VERSION...HEAD\n[$VERSION]: https://github.com/$REPOSITORY/compare/$(git describe --tags --abbrev=0 @^)...v$VERSION|" CHANGELOG.md
           git add CHANGELOG.md
           git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
@@ -193,14 +228,15 @@ jobs:
           attestations: false
           verify-metadata: false
 
-
       - name: "Echo release url"
         run: echo "${{ steps.gh-release.outputs.url }}"
 
   docs_release:
     runs-on: ubuntu-latest
-    needs: [lib_release,pre_config]
-    if: ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '0rc1')) }}
+    needs: [lib_release, pre_config, branch_protection_rename, safety_check]
+    if:
+      ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc
+      == 'true' && endsWith(needs.pre_config.outputs.version, '0rc1')) }}
     environment: release
     steps:
       - name: "Sync Versions on Read the Docs"
@@ -228,7 +264,8 @@ jobs:
 
   inform_discord:
     runs-on: ubuntu-latest
-    needs: [lib_release,docs_release,pre_config]
+    needs:
+      [lib_release, docs_release, pre_config, branch_protection_rename, safety_check]
     environment: release
     steps:
       - name: "Notify Discord"
@@ -264,7 +301,7 @@ jobs:
 
   determine_milestone_id:
     runs-on: ubuntu-latest
-    needs: [lib_release,pre_config]
+    needs: [lib_release, pre_config, branch_protection_rename, safety_check]
     if: ${{ !contains(needs.pre_config.outputs.version, '-') }}
     outputs:
       old_milestone_version: ${{ steps.extract_version.outputs.old_milestone_version }}
@@ -286,8 +323,10 @@ jobs:
 
   close_milestone:
     runs-on: ubuntu-latest
-    needs: [determine_milestone_id,pre_config]
-    if: ${{ !contains(needs.pre_config.outputs.version, 'rc') && endsWith(needs.pre_config.outputs.version, '.0') }}
+    needs: [determine_milestone_id, pre_config, branch_protection_rename, safety_check]
+    if:
+      ${{ !contains(needs.pre_config.outputs.version, 'rc') &&
+      endsWith(needs.pre_config.outputs.version, '.0') }}
     environment: release
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -308,3 +347,30 @@ jobs:
         run: |
           gh extension install valeriobelli/gh-milestone
           gh milestone create "${{ needs.determine_milestone_id.outputs.new_milestone_version }}"
+
+  branch_protection_restore:
+    runs-on: ubuntu-latest
+    needs:
+      [
+        branch_protection_rename,
+        lib_release,
+        docs_release,
+        inform_discord,
+        determine_milestone_id,
+        close_milestone,
+      ]
+    environment: release
+    if: always()
+    env:
+      GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+    steps:
+      - name: Restore master protection pattern
+        if: ${{ needs.branch_protection_rename.outputs.master_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ needs.branch_protection_rename.outputs.master_rule_id }} \
+            -X PATCH -F pattern="${{ needs.branch_protection_rename.outputs.master_pattern }}"
+      - name: Restore v*.* protection pattern
+        if: ${{ needs.branch_protection_rename.outputs.v_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ needs.branch_protection_rename.outputs.v_rule_id }} \
+            -X PATCH -F pattern="${{ needs.branch_protection_rename.outputs.v_pattern }}"
