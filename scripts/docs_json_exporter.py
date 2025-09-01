@@ -1,10 +1,12 @@
-
-import os
 import json
+import os
+
 from bs4 import BeautifulSoup
+
 
 def log(msg):
     print(f"::notice::{msg}")
+
 
 log("Starting docs JSON export...")
 folders = [
@@ -35,10 +37,16 @@ try:
                         if not class_name:
                             class_name = dt.text.split(":")[-1].strip() if dt else None
                         members = []
-                        for member_dl in class_dl.find_all("dl", class_=["attribute", "method"]):
+                        for member_dl in class_dl.find_all(
+                            "dl", class_=["attribute", "method"]
+                        ):
                             for member_dt in member_dl.find_all("dt"):
                                 member_id = member_dt.get("id")
-                                member_name = member_id.split(".")[-1] if member_id else member_dt.text.split(":")[-1].strip()
+                                member_name = (
+                                    member_id.split(".")[-1]
+                                    if member_id
+                                    else member_dt.text.split(":")[-1].strip()
+                                )
                                 if member_name:
                                     members.append(member_name)
                         page_index[class_name] = members
