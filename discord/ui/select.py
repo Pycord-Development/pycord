@@ -37,7 +37,6 @@ from ..enums import ChannelType, ComponentType, SelectDefaultValueType
 from ..errors import InvalidArgument
 from ..interactions import Interaction
 from ..member import Member
-from ..object import Object
 from ..partial_emoji import PartialEmoji
 from ..role import Role
 from ..threads import Thread
