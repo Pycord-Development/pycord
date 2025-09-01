@@ -421,7 +421,8 @@ class Loop(Generic[LF]):
             args = (self._injected, *args)
 
         self._task = asyncio.ensure_future(
-            self.loop.create_task(self._loop(*args, **kwargs), name=self.name)
+            self.loop.create_task(self._loop(*args, **kwargs), name=self.name),
+            loop=self.loop,
         )
         return self._task
 
