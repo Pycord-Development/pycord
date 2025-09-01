@@ -477,7 +477,9 @@ class Interaction:
         # TODO: fix later to not raise?
         channel = self.channel
         if channel is None:
-            raise ClientException("Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error.")
+            raise ClientException(
+                "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+            )
 
         adapter = async_context.get()
         http = self._state.http
@@ -928,7 +930,9 @@ class InteractionResponse:
             # TODO: fix later to not raise?
             channel = self._parent.channel
             if channel is None:
-                raise ClientException("Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error.")
+                raise ClientException(
+                    "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+                )
             state = _InteractionMessageState(self._parent, self._parent._state)
             message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
             self._parent._original_response = message
