@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import inspect
 import logging
 import sys
 import traceback
@@ -1396,7 +1397,7 @@ class Client:
         if not name.startswith("on_"):
             raise ValueError("The 'name' parameter must start with 'on_'")
 
-        if not asyncio.iscoroutinefunction(func):
+        if not inspect.iscoroutinefunction(func):
             raise TypeError("Listeners must be coroutines")
 
         if name in self._event_handlers:
@@ -1476,7 +1477,7 @@ class Client:
             self.add_listener(func, name)
             return func
 
-        if asyncio.iscoroutinefunction(name):
+        if inspect.iscoroutinefunction(name):
             coro = name
             name = coro.__name__
             return decorator(coro)
@@ -1511,7 +1512,7 @@ class Client:
                 print('Ready!')
         """
 
-        if not asyncio.iscoroutinefunction(coro):
+        if not inspect.iscoroutinefunction(coro):
             raise TypeError("event registered must be a coroutine function")
 
         setattr(self, coro.__name__, coro)

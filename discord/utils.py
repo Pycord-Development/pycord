@@ -31,6 +31,7 @@ import collections.abc
 import datetime
 import functools
 import importlib.resources
+import inspect
 import itertools
 import json
 import logging
@@ -1377,7 +1378,7 @@ def basic_autocomplete(
 
             gen = (val for val in _values if _filter(ctx, val))
 
-        elif asyncio.iscoroutinefunction(filter):
+        elif inspect.iscoroutinefunction(filter):
             gen = (val for val in _values if await filter(ctx, val))
 
         elif callable(filter):
