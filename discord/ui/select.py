@@ -30,7 +30,6 @@ import inspect
 import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
-from .. import abc
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectMenu, SelectOption, SelectDefaultValue
 from ..emoji import AppEmoji, GuildEmoji
@@ -59,7 +58,7 @@ __all__ = (
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..abc import GuildChannel
+    from ..abc import GuildChannel, Snowflake
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .view import View
@@ -200,7 +199,7 @@ class Select(Item[V]):
         label: str | None = None,
         description: str | None = None,
         required: bool | None = None,
-        default_values: Sequence[SelectDefaultValue | abc.Snowflake] | None = None,
+        default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
@@ -248,11 +247,13 @@ class Select(Item[V]):
         )
         self.row = row
 
-    def _handle_default_values(self, default_values: Sequence[abc.Snowflake] | None, select_type: ComponentType) -> list[SelectDefaultValue]:
+    def _handle_default_values(self, default_values: Sequence[Snowflake] | None, select_type: ComponentType) -> list[SelectDefaultValue]:
         if not default_values:
             return []
 
         ret = []
+
+        from discord import abc  # > circular import <
 
         instances_mapping: dict[type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]] = {
             Role: ((ComponentType.role_select, ComponentType.mentionable_select), SelectDefaultValueType.role),
@@ -390,7 +391,7 @@ class Select(Item[V]):
         return self._underlying.default_values
 
     @default_values.setter
-    def default_values(self, values: list[SelectDefaultValue | abc.Snowflake] | None) -> None:
+    def default_values(self, values: list[SelectDefaultValue | Snowflake] | None) -> None:
         default_values = self._handle_default_values(values, self.type)
         self._underlying.default_values = default_values
 
@@ -687,7 +688,7 @@ def select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-    default_values: Sequence[SelectDefaultValue | abc.Snowflake] | None = None,
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
 ) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A decorator that attaches a select menu to a component.
 
@@ -851,7 +852,7 @@ def user_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-    default_values: Sequence[SelectDefaultValue | abc.Snowflake] | None = None,
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
 ) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.user_select`.
 
@@ -879,7 +880,7 @@ def role_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-    default_values: Sequence[SelectDefaultValue | abc.Snowflake] | None = None,
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
 ) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
@@ -907,7 +908,7 @@ def mentionable_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-    default_values: Sequence[SelectDefaultValue | abc.Snowflake] | None = None,
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
 ) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
@@ -936,7 +937,7 @@ def channel_select(
     channel_types: list[ChannelType] = MISSING,
     row: int | None = None,
     id: int | None = None,
-    default_values: Sequence[SelectDefaultValue | abc.Snowflake] | None = None,
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
 ) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
