@@ -54,13 +54,13 @@ if TYPE_CHECKING:
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
     from .types.components import SectionComponent as SectionComponentPayload
+    from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
     from .types.components import SeparatorComponent as SeparatorComponentPayload
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
-    from .types.components import SelectDefaultValue as SelectDefaultValuePayload
 
 __all__ = (
     "Component",
@@ -459,7 +459,9 @@ class SelectMenu(Component):
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
         self.required: bool | None = data.get("required")
-        self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(data.get("default_values"))
+        self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(
+            data.get("default_values")
+        )
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -511,10 +513,15 @@ class SelectDefaultValue:
         self.type: SelectDefaultValueType = type
 
     @classmethod
-    def _from_data(cls, default_values: list[SelectDefaultValuePayload] | None) -> list[SelectDefaultValue]:
+    def _from_data(
+        cls, default_values: list[SelectDefaultValuePayload] | None
+    ) -> list[SelectDefaultValue]:
         if not default_values:
             return []
-        return [cls(id=int(d['id']), type=try_enum(SelectDefaultValueType, d['type'])) for d in default_values]
+        return [
+            cls(id=int(d["id"]), type=try_enum(SelectDefaultValueType, d["type"]))
+            for d in default_values
+        ]
 
     def to_dict(self) -> SelectDefaultValuePayload:
         return {
