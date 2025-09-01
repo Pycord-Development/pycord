@@ -235,6 +235,13 @@ class Client:
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
+
+        if loop is None:
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                pass
+
         self._loop: asyncio.AbstractEventLoop | None = loop
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
