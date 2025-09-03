@@ -11,9 +11,8 @@ from .button import Button
 from .file import File
 from .item import Item, ItemCallbackType
 from .select import Select
-from .view import _walk_all_components
 
-__all__ = ("Container",)
+__all__ = ("ActionRow",)
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -334,7 +333,7 @@ class ActionRow(Item[V]):
 
     @classmethod
     def from_component(cls: type[A], component: ActionRowComponent) -> A:
-        from .view import _component_to_item
+        from .view import _component_to_item, _walk_all_components
 
         items = [
             _component_to_item(c) for c in _walk_all_components(component.components)

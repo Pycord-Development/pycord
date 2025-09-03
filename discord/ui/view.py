@@ -428,7 +428,7 @@ class View:
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            item.parent.remove_item(item)
+            self.children.remove(item)
         except ValueError:
             pass
         else:
