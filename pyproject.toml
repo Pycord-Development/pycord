@@ -89,8 +89,8 @@ version-file = "discord/_version.py"
 [tool.hatch.build.targets.wheel]
 only-packages = true
 packages = ["discord"]
-only-include = ["discord", "LICENSE", "pyproject.toml", "discord/bin/*.dll"]
-artifacts = ["discord/bin/*.dll"]
+only-include = ["discord", "LICENSE", "pyproject.toml", "discord/bin/*.dll", "discord/ibanner.txt", "discord/banner.txt", "discord/chan/ART.txt"]
+artifacts = ["discord/bin/*.dll", "discord/ibanner.txt", "discord/banner.txt", "discord/chan/ART.txt"]
 
 [tool.hatch.build.targets.sdist]
 only-packages = true
