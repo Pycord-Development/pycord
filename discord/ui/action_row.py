@@ -3,18 +3,14 @@ from __future__ import annotations
 from functools import partial
 from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
 
-from ..colour import Colour
 from ..components import ActionRow as ActionRowComponent
-from ..components import Container as ContainerComponent
-from ..components import _component_factory
-from ..enums import ComponentType, SeparatorSpacingSize
+from ..components import _component_factory, SelectOption
+from ..enums import ComponentType, ButtonStyle, ChannelType
 from ..utils import find, get
 from .file import File
+from .button import Button
+from .select import Select
 from .item import Item, ItemCallbackType
-from .media_gallery import MediaGallery
-from .section import Section
-from .separator import Separator
-from .text_display import TextDisplay
 from .view import _walk_all_components
 
 __all__ = ("Container",)
@@ -22,22 +18,23 @@ __all__ = ("Container",)
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..types.components import ContainerComponent as ContainerComponentPayload
+    from ..emoji import AppEmoji, GuildEmoji
+    from ..types.components import ActionRow as ActionRowPayload
+    from ..partial_emoji import PartialEmoji, _EmojiTag
     from .view import View
 
 
-AC = TypeVar("A", bound="ActionRow")
+A = TypeVar("A", bound="ActionRow")
 V = TypeVar("V", bound="View", covariant=True)
 
 
 class ActionRow(Item[V]):
-    """Represents a UI Action Row.
+    """Represents a UI Action Row used in :class:`discord.ui.View`.
 
     The items supported are as follows:
 
     - :class:`discord.ui.Select`
-    - :class:`discord.ui.Button` (in views)
-    - :class:`discord.ui.InputText` (in modals)
+    - :class:`discord.ui.Button`
 
     .. versionadded:: 2.7
 
@@ -162,7 +159,13 @@ class ActionRow(Item[V]):
     def add_button(
         self,
         *,
-        accessory: Item,
+        style: ButtonStyle = ButtonStyle.secondary,
+        label: str | None = None,
+        disabled: bool = False,
+        custom_id: str | None = None,
+        url: str | None = None,
+        emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
+        sku_id: int | None = None,
         id: int | None = None,
     ) -> Self:
         """Adds a :class:`Button` to the action row.
@@ -172,38 +175,96 @@ class ActionRow(Item[V]):
 
         Parameters
         ----------
-        *items: :class:`Item`
-            The items contained in this section, up to 3.
-            Currently only supports :class:`~discord.ui.TextDisplay`.
-        accessory: Optional[:class:`Item`]
-            The section's accessory. This is displayed in the top right of the section.
-            Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        style: :class:`discord.ButtonStyle`
+            The style of the button.
+        custom_id: Optional[:class:`str`]
+            The custom ID of the button that gets received during an interaction.
+            If this button is for a URL, it does not have a custom ID.
+        url: Optional[:class:`str`]
+            The URL this button sends you to.
+        disabled: :class:`bool`
+            Whether the button is disabled or not.
+        label: Optional[:class:`str`]
+            The label of the button, if any. Maximum of 80 chars.
+        emoji: Optional[Union[:class:`.PartialEmoji`, :class:`GuildEmoji`, :class:`AppEmoji`, :class:`str`]]
+            The emoji of the button, if any.
+        sku_id: Optional[Union[:class:`int`]]
+            The ID of the SKU this button refers to.
         id: Optional[:class:`int`]
-            The section's ID.
+            The button's ID.
         """
 
-        section = Section(*items, accessory=accessory, id=id)
+        button = Button(
+            style=style,
+            label=label,
+            disabled=disabled,
+            custom_id=custom_id,
+            url=url,
+            emoji=emoji,
+            sku_id=sku_id,
+            id=id,
+        )
 
-        return self.add_item(section)
+        return self.add_item(button)
 
     def add_select(
-        self, url: str, spoiler: bool = False, id: int | None = None
+        self,
+        select_type: ComponentType = ComponentType.string_select,
+        *,
+        custom_id: str | None = None,
+        placeholder: str | None = None,
+        min_values: int = 1,
+        max_values: int = 1,
+        options: list[SelectOption] | None = None,
+        channel_types: list[ChannelType] | None = None,
+        disabled: bool = False,
+        id: int | None = None,
     ) -> Self:
         """Adds a :class:`TextDisplay` to the container.
 
         Parameters
         ----------
-        url: :class:`str`
-            The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
-        spoiler: Optional[:class:`bool`]
-            Whether the file has the spoiler overlay. Defaults to ``False``.
-        id: Optiona[:class:`int`]
-            The file's ID.
+        select_type: :class:`discord.ComponentType`
+            The type of select to create. Must be one of
+            :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
+            :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
+            or :attr:`discord.ComponentType.channel_select`.
+        custom_id: :class:`str`
+            The custom ID of the select menu that gets received during an interaction.
+            If not given then one is generated for you.
+        placeholder: Optional[:class:`str`]
+            The placeholder text that is shown if nothing is selected, if any.
+        min_values: :class:`int`
+            The minimum number of items that must be chosen for this select menu.
+            Defaults to 1 and must be between 1 and 25.
+        max_values: :class:`int`
+            The maximum number of items that must be chosen for this select menu.
+            Defaults to 1 and must be between 1 and 25.
+        options: List[:class:`discord.SelectOption`]
+            A list of options that can be selected in this menu.
+            Only valid for selects of type :attr:`discord.ComponentType.string_select`.
+        channel_types: List[:class:`discord.ChannelType`]
+            A list of channel types that can be selected in this menu.
+            Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
+        disabled: :class:`bool`
+            Whether the select is disabled or not. Defaults to ``False``.
+        id: Optional[:class:`int`]
+            The select menu's ID.
         """
 
-        f = File(url, spoiler=spoiler, id=id)
+        select = Select(
+            select_type=select_type,
+            custom_id=custom_id,
+            placeholder=placeholder,
+            min_values=min_values,
+            max_values=max_values,
+            options=options or [],
+            channel_types=channel_types or [],
+            disabled=disabled,
+            id=id,
+        )
 
-        return self.add_item(f)
+        return self.add_item(select)
 
     @Item.view.setter
     def view(self, value):
@@ -236,12 +297,12 @@ class ActionRow(Item[V]):
 
     def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
-        Disables all items in this row.
+        Disables all items in the row.
 
         Parameters
         ----------
         exclusions: Optional[List[:class:`Item`]]
-            A list of items in `self.items` to not disable from the view.
+            A list of items in `self.items` to not disable.
         """
         for item in self.walk_items():
             if exclusions is None or item not in exclusions:
@@ -250,12 +311,12 @@ class ActionRow(Item[V]):
 
     def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
         """
-        Enables all buttons and select menus in the container.
+        Enables all items in the row.
 
         Parameters
         ----------
         exclusions: Optional[List[:class:`Item`]]
-            A list of items in `self.items` to not enable from the view.
+            A list of items in `self.items` to not enable.
         """
         for item in self.walk_items():
             if hasattr(item, "disabled") and (
@@ -267,12 +328,12 @@ class ActionRow(Item[V]):
     def walk_items(self) -> Iterator[Item]:
         yield from self.items
 
-    def to_component_dict(self) -> ContainerComponentPayload:
+    def to_component_dict(self) -> ActionRowPayload:
         self._set_components(self.items)
         return self._underlying.to_dict()
 
     @classmethod
-    def from_component(cls: type[C], component: ActionRowComponent) -> C:
+    def from_component(cls: type[A], component: ActionRowComponent) -> A:
         from .view import _component_to_item
 
         items = [
