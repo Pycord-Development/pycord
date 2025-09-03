@@ -136,6 +136,14 @@ Poll
 .. autoclass:: PollResults
     :members:
 
+Scheduled Event Recurrence rule
+-------------------------------
+
+.. attributetable:: ScheduledEventRecurrenceRule
+
+.. autoclass:: ScheduledEventRecurrenceRule
+    :members:
+
 
 
 Flags
