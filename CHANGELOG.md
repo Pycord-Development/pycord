@@ -21,7 +21,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Manage silence for new SSRC with existing user_id.
   ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
-
+- Unbound `raw` reference in `parse_message_update` causing errors on message edits.
+  ([#2905](https://github.com/Pycord-Development/pycord/pull/2905))
 ### Removed
 
 ## [2.7.0rc1] - 2025-08-30
