@@ -373,7 +373,9 @@ class DesignerView:
 
         A view containing V2 components cannot be sent alongside message content or embeds.
         """
-        return len(self.children) > 5 or any(i.is_components_v2() for i in self.children)
+        return len(self.children) > 5 or any(
+            i.is_components_v2() for i in self.children
+        )
 
     def disable_all_items(self, *, exclusions: list[Item[V]] | None = None) -> None:
         """
