@@ -27,11 +27,8 @@ from __future__ import annotations
 
 import asyncio
 import os
-import sys
-import time
-from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Iterator, TypeVar
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
@@ -47,8 +44,8 @@ from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..utils import find, get
-from .item import Item, ItemCallbackType
 from .action_row import ActionRow
+from .item import Item, ItemCallbackType
 from .view import View
 
 __all__ = ("DesignerView", "_component_to_item", "_walk_all_components")
@@ -56,6 +53,7 @@ __all__ = ("DesignerView", "_component_to_item", "_walk_all_components")
 
 if TYPE_CHECKING:
     from typing_extensions import Self
+
     from ..interactions import Interaction, InteractionMessage
     from ..message import Message
     from ..state import ConnectionState
@@ -325,7 +323,7 @@ class DesignerView:
                     if child := i.get_item(id):
                         return child
         return child
-    
+
     __timeout_task_impl = View._View__timeout_task_impl
     _expires_at = view._expires_at
     _scheduled_task = View._scheduled_task
@@ -374,7 +372,7 @@ class DesignerView:
         """Whether the view contains V2 components.
 
         A view containing V2 components cannot be sent alongside message content or embeds.
-        This always returns ``True`` in :class:`DesignerView`, regardless of its :attr:`items` 
+        This always returns ``True`` in :class:`DesignerView`, regardless of its :attr:`items`
         """
         return True
 
