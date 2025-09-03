@@ -545,6 +545,10 @@ class AsyncWebhookAdapter:
             webhook_token=token,
         )
 
+        params: dict[str, Any] = {
+            "with_response": "true",
+        }
+
         return self.request(
             route,
             session=session,
@@ -552,6 +556,7 @@ class AsyncWebhookAdapter:
             proxy_auth=proxy_auth,
             files=files,
             multipart=form,
+            params=params,
         )
 
     def get_original_interaction_response(
