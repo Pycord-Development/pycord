@@ -4,13 +4,13 @@ from functools import partial
 from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
 
 from ..components import ActionRow as ActionRowComponent
-from ..components import _component_factory, SelectOption
-from ..enums import ComponentType, ButtonStyle, ChannelType
+from ..components import SelectOption, _component_factory
+from ..enums import ButtonStyle, ChannelType, ComponentType
 from ..utils import find, get
-from .file import File
 from .button import Button
-from .select import Select
+from .file import File
 from .item import Item, ItemCallbackType
+from .select import Select
 from .view import _walk_all_components
 
 __all__ = ("Container",)
@@ -19,8 +19,8 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..emoji import AppEmoji, GuildEmoji
-    from ..types.components import ActionRow as ActionRowPayload
     from ..partial_emoji import PartialEmoji, _EmojiTag
+    from ..types.components import ActionRow as ActionRowPayload
     from .view import View
 
 
