@@ -3,7 +3,8 @@
   "extends": [
     "local>Pycord-Development/renovate-config",
     ":semanticPrefixFixDepsChoreOthers",
-    ":dependencyDashboard"
+    ":dependencyDashboard",
+    ":enablePreCommit"
   ],
   "forkProcessing": "enabled",
   "lockFileMaintenance": {
