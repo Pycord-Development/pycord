@@ -185,7 +185,7 @@ class RawMessageUpdateEvent(_RawReprMixin):
     cached_message: Optional[:class:`Message`]
         The cached message, if found in the internal message cache. Represents the message before
         it is modified by the data in :attr:`RawMessageUpdateEvent.data`.
-    new_message: Optional[:class:`Message`]
+    new_message: :class:`Message`
         The new message object. Represents the message after it is modified by the data in
         :attr:`RawMessageUpdateEvent.data`.
 
