@@ -369,12 +369,11 @@ class DesignerView:
         )
 
     def is_components_v2(self) -> bool:
-        """Whether the view contains V2 components.
+        """Whether the view contains V2 components or requires the V2 flag.
 
         A view containing V2 components cannot be sent alongside message content or embeds.
-        This always returns ``True`` in :class:`DesignerView`, regardless of its :attr:`items`
         """
-        return True
+        return len(self.children) > 5 or any(i.is_components_v2() for i in self.children)
 
     def disable_all_items(self, *, exclusions: list[Item[V]] | None = None) -> None:
         """
