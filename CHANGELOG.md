@@ -21,6 +21,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Manage silence for new SSRC with existing user_id.
   ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
+- Fixed Async I/O errors that could be raised when using `Client.run`.
+  ([#2645](https://github.com/Pycord-Development/pycord/pull/2645))
 
 ### Removed
 
