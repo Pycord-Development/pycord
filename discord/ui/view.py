@@ -169,6 +169,9 @@ class _ViewWeights:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
+        if len(self.weights) > 5:  # attempt to downgrade view
+            if all(x == 0 for x in self.weights[5:]):
+                self.weights = self.weights[:5]
 
     def clear(self) -> None:
         self.weights = [0, 0, 0, 0, 0]
