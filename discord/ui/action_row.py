@@ -186,7 +186,9 @@ class ActionRow(Item[V]):
 
         return self.add_item(section)
 
-    def add_select(self, url: str, spoiler: bool = False, id: int | None = None) -> Self:
+    def add_select(
+        self, url: str, spoiler: bool = False, id: int | None = None
+    ) -> Self:
         """Adds a :class:`TextDisplay` to the container.
 
         Parameters
@@ -263,8 +265,7 @@ class ActionRow(Item[V]):
         return self
 
     def walk_items(self) -> Iterator[Item]:
-        for item in self.items:
-            yield item
+        yield from self.items
 
     def to_component_dict(self) -> ContainerComponentPayload:
         self._set_components(self.items)
