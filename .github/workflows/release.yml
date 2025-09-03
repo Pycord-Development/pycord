@@ -41,31 +41,63 @@ jobs:
         env:
           VERSION: ${{ github.event.inputs.version }}
         run: |
-          # PEP 440 version regex
           VALID_VERSION_REGEX='^([0-9]+\.[0-9]+\.[0-9]+((a|b|rc|\.dev|\.post)[0-9]+)?)$'
           if ! [[ $VERSION =~ $VALID_VERSION_REGEX ]]; then
             echo "::error::Invalid version string '$VERSION'. Must match PEP 440 (e.g. 1.2.0, 1.2.0rc1, 1.2.0.dev1, 1.2.0a1, 1.2.0b1, 1.2.0.post1)"
             exit 1
           fi
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+rc[0-9]+$ ]]; then
+            echo "::error::Unsupported version string '$VERSION'. Only normal releases (e.g. 1.2.3) and rc (e.g. 1.2.3rc1) are supported at this time."
+            exit 1
+          fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
           echo "previous_tag=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
-          if [[ $VERSION =~ rc[0-9]+$ ]]; then
-            MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-            echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
+          MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
+          echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
+          if [[ $VERSION == *rc* ]]; then
             echo "is_rc=true" >> $GITHUB_OUTPUT
-          elif [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-            echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
-            echo "is_rc=false" >> $GITHUB_OUTPUT
           else
-            MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-            echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
             echo "is_rc=false" >> $GITHUB_OUTPUT
           fi
 
+  branch_protection_rename:
+    needs: [safety_check]
+    runs-on: ubuntu-latest
+    environment: release
+    env:
+      GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+    outputs:
+      master_rule_id: ${{ steps.get_rule_ids.outputs.master_rule_id }}
+      master_pattern: ${{ steps.get_rule_ids.outputs.master_pattern }}
+      v_rule_id: ${{ steps.get_rule_ids.outputs.v_rule_id }}
+      v_pattern: ${{ steps.get_rule_ids.outputs.v_pattern }}
+    steps:
+      - name: Get branch protection rule IDs
+        id: get_rule_ids
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules > rules.json
+          MASTER_ID=$(jq -r '.[] | select(.pattern == "master") | .id' rules.json)
+          MASTER_PATTERN=$(jq -r '.[] | select(.pattern == "master") | .pattern' rules.json)
+          V_ID=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .id' rules.json)
+          V_PATTERN=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .pattern' rules.json)
+          echo "master_rule_id=$MASTER_ID" >> $GITHUB_OUTPUT
+          echo "master_pattern=$MASTER_PATTERN" >> $GITHUB_OUTPUT
+          echo "v_rule_id=$V_ID" >> $GITHUB_OUTPUT
+          echo "v_pattern=$V_PATTERN" >> $GITHUB_OUTPUT
+      - name: Rename master protection to temp-master
+        if: ${{ steps.get_rule_ids.outputs.master_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.master_rule_id }} \
+            -X PATCH -F pattern="temp-master"
+      - name: Rename v*.* protection to temp-v
+        if: ${{ steps.get_rule_ids.outputs.v_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.v_rule_id }} \
+            -X PATCH -F pattern="temp-v"
+
   lib_release:
-    needs: [safety_check,pre_config]
+    needs: [pre_config, branch_protection_rename]
     runs-on: ubuntu-latest
     environment: release
     env:
@@ -119,7 +151,7 @@ jobs:
           DATE=$(date +'%Y-%m-%d')
           sed -i "/These changes are available on the \`.*\` branch, but have not yet been released\./{N;d;}" CHANGELOG.md
           sed -i "s/## \[Unreleased\]/## [$VERSION] - $DATE/" CHANGELOG.md
-          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n&|" CHANGELOG.md
+          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Deprecated\n\n### Removed\n\n&|" CHANGELOG.md
           sed -i "s|\[unreleased\]:.*|[unreleased]: https://github.com/$REPOSITORY/compare/v$VERSION...HEAD\n[$VERSION]: https://github.com/$REPOSITORY/compare/$(git describe --tags --abbrev=0 @^)...v$VERSION|" CHANGELOG.md
           git add CHANGELOG.md
           git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
@@ -193,14 +225,15 @@ jobs:
           attestations: false
           verify-metadata: false
 
-
       - name: "Echo release url"
         run: echo "${{ steps.gh-release.outputs.url }}"
 
   docs_release:
     runs-on: ubuntu-latest
-    needs: [lib_release,pre_config]
-    if: ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc == 'true' && endsWith(needs.pre_config.outputs.version, '0rc1')) }}
+    needs: [lib_release, pre_config]
+    if:
+      ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc
+      == 'true' && endsWith(needs.pre_config.outputs.version, '0rc1')) }}
     environment: release
     steps:
       - name: "Sync Versions on Read the Docs"
@@ -213,6 +246,7 @@ jobs:
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
+          HIDDEN=$([[ $VERSION == *rc* ]] && echo true || echo false)
           if [[ $VERSION == *rc* ]]; then
             DOCS_VERSION="v${MAJOR_MINOR_VERSION}.x"
           else
@@ -223,48 +257,45 @@ jobs:
           --header "Authorization: Token ${{ secrets.READTHEDOCS_TOKEN }}" \
           --data '{
               "active": true,
-              "hidden": false
+              "hidden": $HIDDEN
           }'
 
   inform_discord:
     runs-on: ubuntu-latest
-    needs: [lib_release,docs_release,pre_config]
+    needs: [docs_release, lib_release, pre_config]
     environment: release
     steps:
       - name: "Notify Discord"
         run: |
           VERSION=${{ needs.pre_config.outputs.version }}
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          if [[ $VERSION == *rc* ]]; then
-            DOCS_URL="<https://docs.pycord.dev/en/v${MAJOR_MINOR_VERSION}.x/changelog.html>"
-          else
-            DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
-          fi
+          DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
           GITHUB_COMPARE_URL="<https://github.com/Pycord-Development/pycord/compare/${{ needs.pre_config.outputs.previous_tag }}...v$VERSION>"
           GITHUB_RELEASE_URL="<https://github.com/Pycord-Development/pycord/releases/tag/v$VERSION>"
           PYPI_RELEASE_URL="<https://pypi.org/project/py-cord/$VERSION/>"
           if [[ $VERSION == *rc* ]]; then
-            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} Release Candidate ($VERSION) is available!\n\n"
+            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v$VERSION Release Candidate ($MAJOR_MINOR_VERSION) is available!\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}@here\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}This is a pre-release (release candidate) for testing and feedback.\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}Check out the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL), and [PyPI release page]($PYPI_RELEASE_URL).\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}Please try it out and let us know your feedback or any issues!\n@here"
+            ANNOUNCEMENT="${ANNOUNCEMENT}Please try it out and let us know your feedback or any issues!"
           else
-            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${MAJOR_MINOR_VERSION} is out!\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}[@everyone]\n\n"
+            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${VERSION} is out!\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}@everyone\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
             ANNOUNCEMENT="${ANNOUNCEMENT}Feel free to take a look at the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL) and the [PyPI release page]($PYPI_RELEASE_URL).\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
+            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`"
           fi
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d "{\"content\":\"$ANNOUNCEMENT\",\"allowed_mentions\":{\"parse\": [\"everyone\"]}}" \
+            -d "{\"content\":\"$ANNOUNCEMENT\",\"allowed_mentions\":{\"parse\":[\"everyone\",\"roles\"]}}" \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   determine_milestone_id:
     runs-on: ubuntu-latest
-    needs: [lib_release,pre_config]
+    needs: [lib_release, pre_config]
     if: ${{ !contains(needs.pre_config.outputs.version, '-') }}
     outputs:
       old_milestone_version: ${{ steps.extract_version.outputs.old_milestone_version }}
@@ -286,8 +317,10 @@ jobs:
 
   close_milestone:
     runs-on: ubuntu-latest
-    needs: [determine_milestone_id,pre_config]
-    if: ${{ !contains(needs.pre_config.outputs.version, 'rc') && endsWith(needs.pre_config.outputs.version, '.0') }}
+    needs: [determine_milestone_id, pre_config]
+    if:
+      ${{ !contains(needs.pre_config.outputs.version, 'rc') &&
+      endsWith(needs.pre_config.outputs.version, '.0') }}
     environment: release
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -308,3 +341,22 @@ jobs:
         run: |
           gh extension install valeriobelli/gh-milestone
           gh milestone create "${{ needs.determine_milestone_id.outputs.new_milestone_version }}"
+
+  branch_protection_restore:
+    runs-on: ubuntu-latest
+    needs: [branch_protection_rename, lib_release, docs_release, inform_discord, determine_milestone_id, close_milestone]
+    environment: release
+    if: always()
+    env:
+      GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+    steps:
+      - name: Restore master protection pattern
+        if: ${{ needs.branch_protection_rename.outputs.master_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ needs.branch_protection_rename.outputs.master_rule_id }} \
+            -X PATCH -F pattern="${{ needs.branch_protection_rename.outputs.master_pattern }}"
+      - name: Restore v*.* protection pattern
+        if: ${{ needs.branch_protection_rename.outputs.v_rule_id != '' }}
+        run: |
+          gh api repos/${{ github.repository }}/branch-protection-rules/${{ needs.branch_protection_rename.outputs.v_rule_id }} \
+            -X PATCH -F pattern="${{ needs.branch_protection_rename.outputs.v_pattern }}"

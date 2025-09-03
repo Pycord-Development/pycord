@@ -12,9 +12,15 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `RawMessageUpdateEvent.new_message` - message update events now contain full
+  message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
+
 ### Changed
 
 ### Fixed
+
+- Manage silence for new SSRC with existing user_id.
+  ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
 
 ### Removed
 
