@@ -13,9 +13,12 @@ class DropdownView(discord.ui.View):
     async def role_select_dropdown(
         self, select: discord.ui.Select, interaction: discord.Interaction
     ) -> None:
+        # update the select default values to set them to the select ones
+        select.default_values = select.values  # this is a list of Role
         await interaction.response.send_message(
-            f"You selected the following roles:"
-            + f", ".join(f"{role.mention}" for role in select.values)
+            "You selected the following roles:"
+            + ", ".join(f"{role.mention}" for role in select.values),
+            view=self,
         )
 
 

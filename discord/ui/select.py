@@ -27,12 +27,13 @@ from __future__ import annotations
 
 import inspect
 import os
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, Callable, TypeVar
 
 from ..channel import _threaded_guild_channel_factory
-from ..components import SelectMenu, SelectOption
+from ..components import SelectDefaultValue, SelectMenu, SelectOption
 from ..emoji import AppEmoji, GuildEmoji
-from ..enums import ChannelType, ComponentType
+from ..enums import ChannelType, ComponentType, SelectDefaultValueType
 from ..errors import InvalidArgument
 from ..interactions import Interaction
 from ..member import Member
@@ -56,7 +57,7 @@ __all__ = (
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from ..abc import GuildChannel
+    from ..abc import GuildChannel, Snowflake
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .view import View
@@ -132,6 +133,37 @@ class Select(Item[V]):
         Whether the select is required or not. Only useable in modals. Defaults to ``True`` in modals.
 
         .. versionadded:: 2.7
+    default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+        The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
+
+        These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
+        instances.
+
+        Below, is a table defining the model instance type and the default value type it will be mapped:
+
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | Model Type                        | Default Value Type                                                       |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above |
+        +-----------------------------------+--------------------------------------------------------------------------+
+
+        If you pass a model that is not defined in the table, ``TypeError`` will be raised.
+
+        .. note::
+
+            The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,
+            :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change
+            based of the new channel types Discord adds.
+
+        .. versionadded:: 2.7
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -147,6 +179,7 @@ class Select(Item[V]):
         "label",
         "description",
         "required",
+        "default_values",
     )
 
     def __init__(
@@ -165,6 +198,7 @@ class Select(Item[V]):
         label: str | None = None,
         description: str | None = None,
         required: bool | None = None,
+        default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
@@ -208,8 +242,25 @@ class Select(Item[V]):
             channel_types=channel_types or [],
             id=id,
             required=required,
+            default_values=self._handle_default_values(default_values, select_type),
         )
         self.row = row
+
+    def _handle_default_values(
+        self, default_values: Sequence[Snowflake] | None, select_type: ComponentType
+    ) -> list[SelectDefaultValue]:
+        if not default_values:
+            return []
+
+        ret = []
+
+        for dv in default_values:
+            if isinstance(dv, SelectDefaultValue):
+                ret.append(dv)
+                continue
+            ret.append(SelectDefaultValue._handle_model(dv, select_type))
+
+        return ret
 
     @property
     def custom_id(self) -> str:
@@ -305,6 +356,132 @@ class Select(Item[V]):
             raise TypeError("all list items must subclass SelectOption")
 
         self._underlying.options = value
+
+    @property
+    def default_values(self) -> list[SelectDefaultValue]:
+        """A list of the select's default values. This is only applicable if
+        the select type is not :attr:`discord.ComponentType.string_select`.
+
+        .. versionadded:: 2.7
+        """
+        return self._underlying.default_values
+
+    @default_values.setter
+    def default_values(
+        self, values: list[SelectDefaultValue | Snowflake] | None
+    ) -> None:
+        default_values = self._handle_default_values(values, self.type)
+        self._underlying.default_values = default_values
+
+    def add_default_value(
+        self,
+        *,
+        id: int,
+        type: SelectDefaultValueType = MISSING,
+    ) -> Self:
+        """Adds a default value to the select menu.
+
+        To append a pre-existing :class:`discord.SelectDefaultValue` use the
+        :meth:`append_default_value` method instead.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the entity to add as a default.
+        type: :class:`discord.SelectDefaultValueType`
+            The default value type of the ID. This is only required if :attr:`.type` is of
+            type :attr:`discord.ComponentType.mentionable_select`.
+
+        Raises
+        ------
+        TypeError
+            The select type is a mentionable_select and type was not provided, or the select
+            type is string_select.
+        ValueError
+            The number of default select values exceeds 25.
+        """
+        if type is MISSING and self.type is ComponentType.mentionable_select:
+            raise TypeError(
+                "type is required when select is of type mentionable_select"
+            )
+
+        types = {
+            ComponentType.user_select: SelectDefaultValueType.user,
+            ComponentType.role_select: SelectDefaultValueType.role,
+            ComponentType.channel_select: SelectDefaultValueType.channel,
+        }
+
+        def_type = types.get(self.type, type)
+        self.append_default_value(SelectDefaultValue(id=id, type=def_type))
+        return self
+
+    def append_default_value(
+        self,
+        value: SelectDefaultValue | Snowflake,
+        /,
+    ) -> Self:
+        """Appends a default value to this select menu.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        value: Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]
+            The default value to append to this select.
+
+            These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue`
+            instances.
+
+            Below, is a table defining the model instance type and the default value type it will be mapped:
+
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | Model Type                        | Default Value Type                                                       |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           |
+            +-----------------------------------+--------------------------------------------------------------------------+
+            | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above |
+            +-----------------------------------+--------------------------------------------------------------------------+
+
+            If you pass a model that is not defined in the table, ``TypeError`` will be raised.
+
+            .. note::
+
+                The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,
+                :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change
+                based of the new channel types Discord adds.
+
+        Raises
+        ------
+        TypeError
+            The select type is string_select, which does not allow for default_values
+        ValueError
+            The number of default select values exceeds 25.
+        """
+
+        if self.type is ComponentType.string_select:
+            raise TypeError("string_select selects do not allow default_values")
+
+        if len(self.default_values) >= 25:
+            raise ValueError("maximum number of default values exceeded (25)")
+
+        if not isinstance(value, SelectDefaultValue):
+            value = SelectDefaultValue._handle_model(value)
+
+        if not isinstance(value, SelectDefaultValue):
+            raise TypeError(
+                f"expected a SelectDefaultValue object, got {value.__class__.__name__}"
+            )
+
+        self._underlying.default_values.append(value)
+        return self
 
     def add_option(
         self,
@@ -488,6 +665,7 @@ class Select(Item[V]):
             row=None,
             id=component.id,
             required=component.required,
+            default_values=component.default_values,
         )
 
     @property
@@ -525,7 +703,8 @@ def select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
+) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A decorator that attaches a select menu to a component.
 
     The function being decorated should have three parameters, ``self`` representing
@@ -574,6 +753,37 @@ def select(
         Whether the select is disabled or not. Defaults to ``False``.
     id: Optional[:class:`int`]
         The select menu's ID.
+    default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+        The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
+
+        This can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue`
+        instances.
+
+        Below, is a table defining the model instance type and the default value type it will be mapped:
+
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | Model Type                        | Default Value Type                                                       |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above |
+        +-----------------------------------+--------------------------------------------------------------------------+
+
+        If you pass a model that is not defined in the table, ``TypeError`` will be raised.
+
+        .. note::
+
+            The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,
+            :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change
+            based of the new channel types Discord adds.
+
+        .. versionadded:: 2.7
     """
     if select_type not in _select_types:
         raise ValueError(
@@ -589,6 +799,11 @@ def select(
     if channel_types is not MISSING and select_type is not ComponentType.channel_select:
         raise TypeError("channel_types may only be specified for channel selects")
 
+    if default_values is not None and select_type is ComponentType.string_select:
+        raise TypeError(
+            "default_values may only be specified for selects other than string selects"
+        )
+
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
         if not inspect.iscoroutinefunction(func):
             raise TypeError("select function must be a coroutine function")
@@ -602,6 +817,7 @@ def select(
             "max_values": max_values,
             "disabled": disabled,
             "id": id,
+            "default_values": default_values,
         }
         if options:
             model_kwargs["options"] = options
@@ -613,7 +829,7 @@ def select(
 
         return func
 
-    return decorator
+    return decorator  # type: ignore # lie to the type checkers because after a View is instated the select callback is converted into a Select instance
 
 
 def string_select(
@@ -626,7 +842,7 @@ def string_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.string_select`.
 
     .. versionadded:: 2.3
@@ -653,7 +869,8 @@ def user_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
+) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.user_select`.
 
     .. versionadded:: 2.3
@@ -667,6 +884,7 @@ def user_select(
         disabled=disabled,
         row=row,
         id=id,
+        default_values=default_values,
     )
 
 
@@ -679,7 +897,8 @@ def role_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
+) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
     .. versionadded:: 2.3
@@ -693,6 +912,7 @@ def role_select(
         disabled=disabled,
         row=row,
         id=id,
+        default_values=default_values,
     )
 
 
@@ -705,7 +925,8 @@ def mentionable_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
+) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
     .. versionadded:: 2.3
@@ -719,6 +940,7 @@ def mentionable_select(
         disabled=disabled,
         row=row,
         id=id,
+        default_values=default_values,
     )
 
 
@@ -732,7 +954,8 @@ def channel_select(
     channel_types: list[ChannelType] = MISSING,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+    default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
+) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
     .. versionadded:: 2.3
@@ -747,4 +970,5 @@ def channel_select(
         channel_types=channel_types,
         row=row,
         id=id,
+        default_values=default_values,
     )

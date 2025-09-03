@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added support for select default values.
+  ([#2899](https://github.com/Pycord-Development/pycord/pull/2899))
+
 ### Changed
 
 ### Fixed
