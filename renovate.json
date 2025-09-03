@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>Pycord-Development/renovate-config",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":dependencyDashboard"
+  ],
+  "assigneesFromCodeOwners": true,
+  "packageRules": [
+    {
+      "matchManagers": ["pip_requirements"],
+      "matchFileNames": ["requirements/*.txt"]
+    }
+  ]
+}
