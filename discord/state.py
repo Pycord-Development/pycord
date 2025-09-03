@@ -777,10 +777,10 @@ class ConnectionState:
 
     def parse_message_update(self, data) -> None:
         old_message = self._get_message(int(data["id"]))
-        if old_message is not None:
-            self._messages.remove(old_message)
         channel, _ = self._get_guild_channel(data)
         message = Message(channel=channel, data=data, state=self)
+        if old_message is not None:
+            self._messages.remove(old_message)
         self._messages.append(message)
         raw = RawMessageUpdateEvent(data, message)
         self.dispatch("raw_message_edit", raw)
