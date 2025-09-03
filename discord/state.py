@@ -781,21 +781,19 @@ class ConnectionState:
                 self._messages.remove(msg)  # type: ignore
 
     def parse_message_update(self, data) -> None:
-        raw = RawMessageUpdateEvent(data)
-        message = self._get_message(raw.message_id)
-        if message is not None:
-            older_message = copy.copy(message)
-            raw.cached_message = older_message
-            self.dispatch("raw_message_edit", raw)
-            message._update(data)
-            # Coerce the `after` parameter to take the new updated Member
-            # ref: #5999
-            older_message.author = message.author
-            self.dispatch("message_edit", older_message, message)
+        old_message = self._get_message(raw.message_id)
+        if old_message is not None:
+            self._messages.remove(old_message)
+        channel, _ = self._get_guild_channel(data)
+        message = Message(channel=channel, data=data, state=self)
+        self._messages.append(message)
+        raw = RawMessageUpdateEvent(data, message)
+        self.dispatch("raw_message_edit", raw)
+        if old_message is not None:
+            self.dispatch("message_edit", old_message, message)
         else:
             if poll_data := data.get("poll"):
                 self.store_raw_poll(poll_data, raw)
-            self.dispatch("raw_message_edit", raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
             self._view_store.update_from_message(raw.message_id, data["components"])
