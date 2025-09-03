@@ -1770,6 +1770,11 @@ class InteractionCallback:
             "response_message_ephemeral", False
         )
 
+    def __repr__(self):
+        return (f"<InteractionCallback "
+                f"_response_message_loading={self._response_message_loading} "
+                f"_response_message_ephemeral={self._response_message_ephemeral}>")
+
     def is_loading(self) -> bool:
         """Indicates whether the response message is in a loading state."""
         return self._response_message_loading
