@@ -165,7 +165,7 @@ class DesignerView:
         self.timeout = timeout
         self.disable_on_timeout = disable_on_timeout
         self.items: list[Item[V]] = []
-        for item in items:
+        for item in children:
             self.add_item(item)
 
         loop = asyncio.get_running_loop()
@@ -325,7 +325,7 @@ class DesignerView:
         return child
 
     __timeout_task_impl = View._View__timeout_task_impl
-    _expires_at = view._expires_at
+    _expires_at = View._expires_at
     _scheduled_task = View._scheduled_task
     _start_listening_from_store = View._start_listening_from_store
     _dispatch_timeout = View._dispatch_timeout
