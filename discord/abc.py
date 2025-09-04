@@ -41,6 +41,7 @@ from typing import (
     runtime_checkable,
 )
 
+from .utils.private import warn_deprecated
 from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
@@ -724,7 +725,7 @@ class GuildChannel:
             if obj.is_default():
                 return base
 
-            overwrite = utils.get(self._overwrites, type=_Overwrites.ROLE, id=obj.id)
+            overwrite = utils.find(lambda o: o.type == _Overwrites.ROLE and o.id == obj.id, self._overwrites)
             if overwrite is not None:
                 base.handle_overwrite(overwrite.allow, overwrite.deny)
 
@@ -1529,7 +1530,7 @@ class Messageable:
                 from .message import MessageReference  # noqa: PLC0415
 
                 if not isinstance(reference, MessageReference):
-                    utils.warn_deprecated(
+                    warn_deprecated(
                         f"Passing {type(reference).__name__} to reference",
                         "MessageReference",
                         "2.7",

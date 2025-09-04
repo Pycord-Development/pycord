@@ -39,7 +39,7 @@ from .errors import InvalidArgument, ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
-from .utils import warn_deprecated
+from .utils.private import warn_deprecated, get_as_snowflake, bytes_to_base64_data
 
 __all__ = (
     "ScheduledEvent",
@@ -206,7 +206,7 @@ class ScheduledEvent(Hashable):
         self.end_time: datetime.datetime | None = end_time
         self.status: ScheduledEventStatus = try_enum(ScheduledEventStatus, data.get("status"))
         self.subscriber_count: int | None = data.get("user_count", None)
-        self.creator_id: int | None = utils._get_as_snowflake(data, "creator_id")
+        self.creator_id: int | None = get_as_snowflake(data, "creator_id")
         self.creator: Member | None = creator
 
         entity_metadata = data.get("entity_metadata")
@@ -361,7 +361,7 @@ class ScheduledEvent(Hashable):
             if image is None:
                 payload["image"] = None
             else:
-                payload["image"] = utils._bytes_to_base64_data(image)
+                payload["image"] = bytes_to_base64_data(image)
 
         if location is not MISSING:
             if not isinstance(location, (ScheduledEventLocation, utils.Undefined)):

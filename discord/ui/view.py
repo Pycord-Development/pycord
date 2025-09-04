@@ -45,7 +45,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..utils import find, get
+from .. import utils
 from .item import Item, ItemCallbackType
 
 __all__ = ("View", "_component_to_item", "_walk_all_components")
@@ -418,7 +418,7 @@ class View:
         return self
 
     def get_item(self, custom_id: str | int) -> Item[V] | None:
-        """Gets an item from the view. Roughly equal to `utils.get(view.children, ...)`.
+        """Gets an item from the view. Roughly equal to `utils.find(lambda i: i.custom_id == custom_id, self.children)`.
         If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by  ``custom_id``.
         This method will also search nested items.
 
@@ -435,7 +435,7 @@ class View:
         if not custom_id:
             return None
         attr = "id" if isinstance(custom_id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
+        child = utils.find(lambda i: getattr(i, attr, None) == custom_id, self.children)
         if not child:
             for i in self.children:
                 if hasattr(i, "get_item"):

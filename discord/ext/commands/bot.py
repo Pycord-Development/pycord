@@ -33,6 +33,7 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
 from discord.utils import Undefined
+from discord.utils.private import copy_doc, maybe_awaitable, async_all
 
 from . import errors
 from .context import Context
@@ -132,7 +133,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         self.help_command = DefaultHelpCommand() if help_command is MISSING else help_command
         self.strip_after_prefix = options.get("strip_after_prefix", False)
 
-    @discord.utils.copy_doc(discord.Client.close)
+    @copy_doc(discord.Client.close)
     async def close(self) -> None:
         for extension in tuple(self.__extensions):
             try:
@@ -179,7 +180,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
             return True
 
         # type-checker doesn't distinguish between functions and methods
-        return await discord.utils.async_all(f(ctx) for f in data)  # type: ignore
+        return await async_all(f(ctx) for f in data)  # type: ignore
 
     # help command stuff
 
@@ -223,7 +224,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         """
         prefix = ret = self.command_prefix
         if callable(prefix):
-            ret = await discord.utils.maybe_coroutine(prefix, self, message)
+            ret = await maybe_awaitable(prefix, self, message)
 
         if not isinstance(ret, str):
             try:

@@ -39,6 +39,7 @@ from typing import (
 
 import discord.abc
 
+from .utils.private import bytes_to_base64_data, get_as_snowflake, copy_doc
 from . import utils
 from .asset import Asset
 from .emoji import GuildEmoji
@@ -170,7 +171,7 @@ class ForumTag(Hashable):
         self.moderated = data.get("moderated", False)
 
         emoji_name = data["emoji_name"] or ""
-        emoji_id = utils._get_as_snowflake(data, "emoji_id") or None
+        emoji_id = get_as_snowflake(data, "emoji_id") or None
         self.emoji = PartialEmoji.with_state(state=state, name=emoji_name, id=emoji_id)
         return self
 
@@ -232,7 +233,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
-        self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.category_id: int | None = get_as_snowflake(data, "parent_id")
         self._type: int = data["type"]
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
@@ -243,7 +244,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
             self.slowmode_delay: int = data.get("rate_limit_per_user", 0)
             self.default_auto_archive_duration: ThreadArchiveDuration = data.get("default_auto_archive_duration", 1440)
             self.default_thread_slowmode_delay: int | None = data.get("default_thread_rate_limit_per_user")
-            self.last_message_id: int | None = utils._get_as_snowflake(data, "last_message_id")
+            self.last_message_id: int | None = get_as_snowflake(data, "last_message_id")
             self.flags: ChannelFlags = ChannelFlags._from_value(data.get("flags", 0))
             self._fill_overwrites(data)
 
@@ -256,7 +257,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
     def _sorting_bucket(self) -> int:
         return ChannelType.text.value
 
-    @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
+    @copy_doc(discord.abc.GuildChannel.permissions_for)
     def permissions_for(self, obj: Member | Role, /) -> Permissions:
         base = super().permissions_for(obj)
 
@@ -307,7 +308,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         """Edits the channel."""
         raise NotImplementedError
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> TextChannel:
         return await self._clone_impl(
             {
@@ -511,7 +512,7 @@ class _TextChannel(discord.abc.GuildChannel, Hashable):
         from .webhook import Webhook  # noqa: PLC0415
 
         if avatar is not None:
-            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+            avatar = bytes_to_base64_data(avatar)  # type: ignore
 
         data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
         return Webhook.from_state(data, state=self._state)
@@ -1014,9 +1015,7 @@ class ForumChannel(_TextChannel):
             if emoji_name is not None:
                 self.default_reaction_emoji = reaction_emoji_ctx["emoji_name"]
             else:
-                self.default_reaction_emoji = self._state.get_emoji(
-                    utils._get_as_snowflake(reaction_emoji_ctx, "emoji_id")
-                )
+                self.default_reaction_emoji = self._state.get_emoji(get_as_snowflake(reaction_emoji_ctx, "emoji_id"))
 
     @property
     def guidelines(self) -> str | None:
@@ -1039,7 +1038,7 @@ class ForumChannel(_TextChannel):
 
         .. versionadded:: 2.3
         """
-        return utils.get(self.available_tags, id=id)
+        return utils.find(lambda t: t.id == id, self.available_tags)
 
     @overload
     async def edit(
@@ -1554,14 +1553,14 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
         # This data will always exist
         self.guild = guild
         self.name: str = data["name"]
-        self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.category_id: int | None = get_as_snowflake(data, "parent_id")
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
             rtc = data.get("rtc_region")
             self.rtc_region: VoiceRegion | None = try_enum(VoiceRegion, rtc) if rtc is not None else None
             self.video_quality_mode: VideoQualityMode = try_enum(VideoQualityMode, data.get("video_quality_mode", 1))
-            self.last_message_id: int | None = utils._get_as_snowflake(data, "last_message_id")
+            self.last_message_id: int | None = get_as_snowflake(data, "last_message_id")
             self.position: int = data.get("position")
             self.slowmode_delay = data.get("rate_limit_per_user", 0)
             self.bitrate: int = data.get("bitrate")
@@ -1607,7 +1606,7 @@ class VocalGuildChannel(discord.abc.Connectable, discord.abc.GuildChannel, Hasha
             if value.channel and value.channel.id == self.id
         }
 
-    @utils.copy_doc(discord.abc.GuildChannel.permissions_for)
+    @copy_doc(discord.abc.GuildChannel.permissions_for)
     def permissions_for(self, obj: Member | Role, /) -> Permissions:
         base = super().permissions_for(obj)
 
@@ -1961,7 +1960,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         from .webhook import Webhook  # noqa: PLC0415
 
         if avatar is not None:
-            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+            avatar = bytes_to_base64_data(avatar)  # type: ignore
 
         data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
         return Webhook.from_state(data, state=self._state)
@@ -1971,7 +1970,7 @@ class VoiceChannel(discord.abc.Messageable, VocalGuildChannel):
         """The channel's Discord type."""
         return ChannelType.voice
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> VoiceChannel:
         return await self._clone_impl(
             {"bitrate": self.bitrate, "user_limit": self.user_limit},
@@ -2488,7 +2487,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         from .webhook import Webhook  # noqa: PLC0415
 
         if avatar is not None:
-            avatar = utils._bytes_to_base64_data(avatar)  # type: ignore
+            avatar = bytes_to_base64_data(avatar)  # type: ignore
 
         data = await self._state.http.create_webhook(self.id, name=str(name), avatar=avatar, reason=reason)
         return Webhook.from_state(data, state=self._state)
@@ -2507,7 +2506,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
         """The channel's Discord type."""
         return ChannelType.stage_voice
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> StageChannel:
         return await self._clone_impl({}, name=name, reason=reason)
 
@@ -2517,7 +2516,7 @@ class StageChannel(discord.abc.Messageable, VocalGuildChannel):
 
         .. versionadded:: 2.0
         """
-        return utils.get(self.guild.stage_instances, channel_id=self.id)
+        return utils.find(lambda s: s.channel_id == self.id, self.guild.stage_instances)
 
     async def create_instance(
         self,
@@ -2748,7 +2747,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         # This data will always exist
         self.guild: Guild = guild
         self.name: str = data["name"]
-        self.category_id: int | None = utils._get_as_snowflake(data, "parent_id")
+        self.category_id: int | None = get_as_snowflake(data, "parent_id")
 
         # This data may be missing depending on how this object is being created/updated
         if not data.pop("_invoke_flag", False):
@@ -2770,7 +2769,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
         """Checks if the category is NSFW."""
         return self.nsfw
 
-    @utils.copy_doc(discord.abc.GuildChannel.clone)
+    @copy_doc(discord.abc.GuildChannel.clone)
     async def clone(self, *, name: str | None = None, reason: str | None = None) -> CategoryChannel:
         return await self._clone_impl({"nsfw": self.nsfw}, name=name, reason=reason)
 
@@ -2836,7 +2835,7 @@ class CategoryChannel(discord.abc.GuildChannel, Hashable):
             # the payload will always be the proper channel payload
             return self.__class__(state=self._state, guild=self.guild, data=payload)  # type: ignore
 
-    @utils.copy_doc(discord.abc.GuildChannel.move)
+    @copy_doc(discord.abc.GuildChannel.move)
     async def move(self, **kwargs):
         kwargs.pop("category", None)
         await super().move(**kwargs)
@@ -3138,7 +3137,7 @@ class GroupChannel(discord.abc.Messageable, Hashable):
         self._update_group(data)
 
     def _update_group(self, data: GroupChannelPayload) -> None:
-        self.owner_id: int | None = utils._get_as_snowflake(data, "owner_id")
+        self.owner_id: int | None = get_as_snowflake(data, "owner_id")
         self._icon: str | None = data.get("icon")
         self.name: str | None = data.get("name")
         self.recipients: list[User] = [self._state.store_user(u) for u in data.get("recipients", [])]

@@ -31,7 +31,8 @@ import itertools
 import re
 from typing import TYPE_CHECKING, Any
 
-import discord.utils
+from discord import utils
+from discord.utils.private import string_width, maybe_awaitable
 
 from .core import Command, Group
 from .errors import CommandError
@@ -335,7 +336,7 @@ class HelpCommand:
         self.command_attrs = attrs = options.pop("command_attrs", {})
         attrs.setdefault("name", "help")
         attrs.setdefault("help", "Shows this message")
-        self.context: Context = discord.utils.MISSING
+        self.context: Context = utils.MISSING
         self._command_impl = _HelpCommandImpl(self, **self.command_attrs)
 
     def copy(self):
@@ -570,12 +571,14 @@ class HelpCommand:
             key = lambda c: c.name
 
         # Ignore Application Commands because they don't have hidden/docs
+        from discord import ApplicationCommand  # noqa: PLC0415
+
         new_commands = [
             command
             for command in commands
             if not isinstance(
                 command,
-                (discord.commands.ApplicationCommand, *(exclude if exclude else ())),
+                (ApplicationCommand, *(exclude if exclude else ())),
             )
         ]
         iterator = new_commands if self.show_hidden else filter(lambda c: not c.hidden, new_commands)
@@ -620,7 +623,7 @@ class HelpCommand:
             The maximum width of the commands.
         """
 
-        as_lengths = (discord.utils._string_width(c.name) for c in commands)
+        as_lengths = (string_width(c.name) for c in commands)
         return max(as_lengths, default=0)
 
     def get_destination(self):
@@ -858,8 +861,6 @@ class HelpCommand:
         if cog is not None:
             return await self.send_cog_help(cog)
 
-        maybe_coro = discord.utils.maybe_coroutine
-
         # If it's not a cog then it's a command.
         # Since we want to have detailed errors when someone
         # passes an invalid subcommand, we need to walk through
@@ -867,18 +868,18 @@ class HelpCommand:
         keys = command.split(" ")
         cmd = bot.all_commands.get(keys[0])
         if cmd is None:
-            string = await maybe_coro(self.command_not_found, self.remove_mentions(keys[0]))
+            string = await maybe_awaitable(self.command_not_found, self.remove_mentions(keys[0]))
             return await self.send_error_message(string)
 
         for key in keys[1:]:
             try:
                 found = cmd.all_commands.get(key)
             except AttributeError:
-                string = await maybe_coro(self.subcommand_not_found, cmd, self.remove_mentions(key))
+                string = await maybe_awaitable(self.subcommand_not_found, cmd, self.remove_mentions(key))
                 return await self.send_error_message(string)
             else:
                 if found is None:
-                    string = await maybe_coro(self.subcommand_not_found, cmd, self.remove_mentions(key))
+                    string = await maybe_awaitable(self.subcommand_not_found, cmd, self.remove_mentions(key))
                     return await self.send_error_message(string)
                 cmd = found
 
@@ -984,10 +985,9 @@ class DefaultHelpCommand(HelpCommand):
         self.paginator.add_line(heading)
         max_size = max_size or self.get_max_size(commands)
 
-        get_width = discord.utils._string_width
         for command in commands:
             name = command.name
-            width = max_size - (get_width(name) - len(name))
+            width = max_size - (string_width(name) - len(name))
             entry = f"{self.indent * ' '}{name:<{width}} {command.short_doc}"
             self.paginator.add_line(self.shorten_text(entry))
 

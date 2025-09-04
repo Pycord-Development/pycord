@@ -43,6 +43,7 @@ from typing import (
 )
 
 import discord
+from discord.utils.private import evaluate_annotation, async_all, maybe_awaitable
 from discord import utils
 from discord.utils import Undefined
 
@@ -138,7 +139,6 @@ def get_signature_parameters(function: Callable[..., Any], globalns: dict[str, A
     signature = inspect.signature(function)
     params = {}
     cache: dict[str, Any] = {}
-    eval_annotation = discord.utils.evaluate_annotation
     for name, parameter in signature.parameters.items():
         annotation = parameter.annotation
         if annotation is parameter.empty:
@@ -148,7 +148,7 @@ def get_signature_parameters(function: Callable[..., Any], globalns: dict[str, A
             params[name] = parameter.replace(annotation=type(None))
             continue
 
-        annotation = eval_annotation(annotation, globalns, globalns, cache)
+        annotation = evaluate_annotation(annotation, globalns, globalns, cache)
         if annotation is Greedy:
             raise TypeError("Unparameterized Greedy[...] is disallowed in signature.")
 
@@ -1146,7 +1146,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             if cog is not None:
                 local_check = Cog._get_overridden_method(cog.cog_check)
                 if local_check is not None:
-                    ret = await discord.utils.maybe_coroutine(local_check, ctx)
+                    ret = await maybe_awaitable(local_check, ctx)
                     if not ret:
                         return False
 
@@ -1155,7 +1155,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                 # since we have no checks, then we just return True.
                 return True
 
-            return await discord.utils.async_all(predicate(ctx) for predicate in predicates)  # type: ignore
+            return await async_all(predicate(ctx) for predicate in predicates)  # type: ignore
         finally:
             ctx.command = original
 
@@ -1865,9 +1865,9 @@ def has_role(item: int | str) -> Callable[[T], T]:
 
         # ctx.guild is None doesn't narrow ctx.author to Member
         if isinstance(item, int):
-            role = discord.utils.get(ctx.author.roles, id=item)  # type: ignore
+            role = discord.utils.find(lambda r: r.id == item, ctx.author.roles)  # type: ignore
         else:
-            role = discord.utils.get(ctx.author.roles, name=item)  # type: ignore
+            role = discord.utils.find(lambda r: r.name == item, ctx.author.roles)  # type: ignore
         if role is None:
             raise MissingRole(item)
         return True
@@ -1912,9 +1912,14 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
             raise NoPrivateMessage()
 
         # ctx.guild is None doesn't narrow ctx.author to Member
-        getter = functools.partial(discord.utils.get, ctx.author.roles)  # type: ignore
+        getter = functools.partial(discord.utils.find, seq=ctx.author.roles)  # type: ignore
         if any(
-            (getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None) for item in items
+            (
+                getter(lambda e: e.id == item) is not None
+                if isinstance(item, int)
+                else getter(lambda e: e.name == item) is not None
+            )
+            for item in items
         ):
             return True
         raise MissingAnyRole(list(items))
@@ -1942,9 +1947,9 @@ def bot_has_role(item: int) -> Callable[[T], T]:
 
         me = ctx.me
         if isinstance(item, int):
-            role = discord.utils.get(me.roles, id=item)
+            role = discord.utils.find(lambda r: r.id == item, me.roles)
         else:
-            role = discord.utils.get(me.roles, name=item)
+            role = discord.utils.find(lambda r: r.name == item, me.roles)
         if role is None:
             raise BotMissingRole(item)
         return True
@@ -1971,9 +1976,14 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
             raise NoPrivateMessage()
 
         me = ctx.me
-        getter = functools.partial(discord.utils.get, me.roles)
+        getter = functools.partial(discord.utils.find, seq=me.roles)
         if any(
-            (getter(id=item) is not None if isinstance(item, int) else getter(name=item) is not None) for item in items
+            (
+                getter(lambda e: e.id == item) is not None
+                if isinstance(item, int)
+                else getter(lambda e: e.name == item) is not None
+            )
+            for item in items
         ):
             return True
         raise BotMissingAnyRole(list(items))

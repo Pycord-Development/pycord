@@ -31,7 +31,8 @@ from typing import TYPE_CHECKING, Any
 from .enums import ExpireBehaviour, try_enum
 from .errors import InvalidArgument
 from .user import User
-from .utils import MISSING, _get_as_snowflake, parse_time
+from .utils import MISSING
+from .utils.private import get_as_snowflake, parse_time
 from discord import utils
 
 __all__ = (
@@ -207,7 +208,7 @@ class StreamIntegration(Integration):
         self.expire_behaviour: ExpireBehaviour = try_enum(ExpireBehaviour, data["expire_behavior"])
         self.expire_grace_period: int = data["expire_grace_period"]
         self.synced_at: datetime.datetime = parse_time(data["synced_at"])
-        self._role_id: int | None = _get_as_snowflake(data, "role_id")
+        self._role_id: int | None = get_as_snowflake(data, "role_id")
         self.syncing: bool = data["syncing"]
         self.enable_emoticons: bool = data["enable_emoticons"]
         self.subscriber_count: int = data["subscriber_count"]

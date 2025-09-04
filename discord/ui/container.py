@@ -8,7 +8,7 @@ from ..components import ActionRow
 from ..components import Container as ContainerComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
-from ..utils import find, get
+from ..utils import find
 from .file import File
 from .item import Item, ItemCallbackType
 from .media_gallery import MediaGallery

@@ -28,7 +28,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from .guild import Guild
-from .utils import MISSING, Undefined, _bytes_to_base64_data, parse_time
+from .utils import MISSING, Undefined
+from .utils.private import bytes_to_base64_data, parse_time
 
 __all__ = ("Template",)
 
@@ -195,7 +196,7 @@ class Template:
             Invalid icon image format given. Must be PNG or JPG.
         """
         if icon is not None:
-            icon = _bytes_to_base64_data(icon)
+            icon = bytes_to_base64_data(icon)
 
         data = await self._state.http.create_from_template(self.code, name, icon)
         return Guild(data=data, state=self._state)

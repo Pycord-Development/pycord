@@ -36,6 +36,7 @@ from urllib.parse import quote as urlquote
 
 import aiohttp
 
+from ..utils.private import bytes_to_base64_data, get_as_snowflake, parse_ratelimit_header, to_json
 from .. import utils
 from ..asset import Asset
 from ..channel import ForumChannel, PartialMessageable
@@ -134,7 +135,7 @@ class AsyncWebhookAdapter:
 
         if payload is not None:
             headers["Content-Type"] = "application/json"
-            to_send = utils._to_json(payload)
+            to_send = to_json(payload)
 
         if auth_token is not None:
             headers["Authorization"] = f"Bot {auth_token}"
@@ -181,7 +182,7 @@ class AsyncWebhookAdapter:
 
                         remaining = response.headers.get("X-Ratelimit-Remaining")
                         if remaining == "0" and response.status != 429:
-                            delta = utils._parse_ratelimit_header(response)
+                            delta = parse_ratelimit_header(response)
                             _log.debug(
                                 ("Webhook ID %s has been pre-emptively rate limited, waiting %.2f seconds"),
                                 webhook_id,
@@ -520,7 +521,7 @@ class AsyncWebhookAdapter:
             )
         if attachments:
             payload["data"]["attachments"] = attachments
-        form[0]["value"] = utils._to_json(payload)
+        form[0]["value"] = to_json(payload)
 
         route = Route(
             "POST",
@@ -716,7 +717,7 @@ def handle_message_parameters(
         payload["thread_name"] = thread_name
 
     if multipart_files:
-        multipart.append({"name": "payload_json", "value": utils._to_json(payload)})
+        multipart.append({"name": "payload_json", "value": to_json(payload)})
         payload = None
         multipart += multipart_files
 
@@ -1022,8 +1023,8 @@ class BaseWebhook(Hashable):
     def _update(self, data: WebhookPayload | FollowerWebhookPayload):
         self.id = int(data["id"])
         self.type = try_enum(WebhookType, int(data["type"]))
-        self.channel_id = utils._get_as_snowflake(data, "channel_id")
-        self.guild_id = utils._get_as_snowflake(data, "guild_id")
+        self.channel_id = get_as_snowflake(data, "channel_id")
+        self.guild_id = get_as_snowflake(data, "guild_id")
         self.name = data.get("name")
         self._avatar = data.get("avatar")
         self.token = data.get("token")
@@ -1509,7 +1510,7 @@ class Webhook(BaseWebhook):
             payload["name"] = str(name) if name is not None else None
 
         if avatar is not MISSING:
-            payload["avatar"] = utils._bytes_to_base64_data(avatar) if avatar is not None else None
+            payload["avatar"] = bytes_to_base64_data(avatar) if avatar is not None else None
 
         adapter = async_context.get()
 

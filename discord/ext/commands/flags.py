@@ -32,7 +32,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Iterator, Literal, Pattern, TypeVar, Union
 
 from discord import utils
-from discord.utils import MISSING, Undefined, maybe_coroutine, resolve_annotation
+from discord.utils import MISSING, Undefined
+from discord.utils.private import resolve_annotation, maybe_awaitable
 
 from .converter import run_converters
 from .errors import (
@@ -489,7 +490,7 @@ class FlagConverter(metaclass=FlagsMeta):
         flags = cls.__commands_flags__
         for flag in flags.values():
             if callable(flag.default):
-                default = await maybe_coroutine(flag.default, ctx)
+                default = await maybe_awaitable(flag.default, ctx)
                 setattr(self, flag.attribute, default)
             else:
                 setattr(self, flag.attribute, flag.default)
@@ -588,7 +589,7 @@ class FlagConverter(metaclass=FlagsMeta):
                     raise MissingRequiredFlag(flag)
                 else:
                     if callable(flag.default):
-                        default = await maybe_coroutine(flag.default, ctx)
+                        default = await maybe_awaitable(flag.default, ctx)
                         setattr(self, flag.attribute, default)
                     else:
                         setattr(self, flag.attribute, flag.default)

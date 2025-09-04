@@ -32,7 +32,8 @@ from .asset import Asset, AssetMixin
 from .enums import StickerFormatType, StickerType, try_enum
 from .errors import InvalidData
 from .mixins import Hashable
-from .utils import MISSING, Undefined, cached_slot_property, find, get, snowflake_time
+from .utils import MISSING, Undefined, find, snowflake_time
+from .utils.private import cached_slot_property
 
 __all__ = (
     "StickerPack",
@@ -119,7 +120,7 @@ class StickerPack(Hashable):
         self.name: str = data["name"]
         self.sku_id: int = int(data["sku_id"])
         self.cover_sticker_id: int = int(data["cover_sticker_id"])
-        self.cover_sticker: StandardSticker = get(self.stickers, id=self.cover_sticker_id)  # type: ignore
+        self.cover_sticker: StandardSticker = find(lambda s: s.id == self.cover_sticker_id, self.stickers)  # type: ignore
         self.description: str = data["description"]
         self._banner: int = int(data["banner_asset_id"])
 

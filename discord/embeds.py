@@ -28,6 +28,7 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Any, Mapping, TypeVar
 
+from .utils.private import parse_time
 from . import utils
 from .colour import Colour
 
@@ -437,7 +438,7 @@ class Embed:
             pass
 
         try:
-            self._timestamp = utils.parse_time(data["timestamp"])
+            self._timestamp = parse_time(data["timestamp"])
         except KeyError:
             pass
 

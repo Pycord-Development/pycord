@@ -35,7 +35,8 @@ from .colour import Colour
 from .flags import PublicUserFlags
 from .iterators import EntitlementIterator
 from .monetization import Entitlement
-from .utils import MISSING, Undefined, _bytes_to_base64_data, snowflake_time
+from .utils import MISSING, Undefined, snowflake_time
+from .utils.private import bytes_to_base64_data
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -478,12 +479,12 @@ class ClientUser(BaseUser):
         if avatar is None:
             payload["avatar"] = None
         elif avatar is not MISSING:
-            payload["avatar"] = _bytes_to_base64_data(avatar)
+            payload["avatar"] = bytes_to_base64_data(avatar)
 
         if banner is None:
             payload["banner"] = None
         elif banner is not MISSING:
-            payload["banner"] = _bytes_to_base64_data(banner)
+            payload["banner"] = bytes_to_base64_data(banner)
 
         data: UserPayload = await self._state.http.edit_profile(payload)
         return ClientUser(state=self._state, data=data)

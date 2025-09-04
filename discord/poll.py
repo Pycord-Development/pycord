@@ -27,7 +27,9 @@ from __future__ import annotations
 import datetime
 from functools import cached_property
 from typing import TYPE_CHECKING, Any
+from functools import cached_property
 
+from .utils.private import parse_time
 from . import utils
 from .enums import PollLayoutType, try_enum
 from .iterators import VoteIterator
@@ -144,7 +146,7 @@ class PollAnswer:
             return None
         if self._poll.results is None:
             return None  # Unknown vote count.
-        _count = self._poll.results and utils.get(self._poll.results.answer_counts, id=self.id)
+        _count = self._poll.results and utils.find(lambda p: p.id == self.id, self._poll.results.answer_counts)
         if _count:
             return _count.count
         return 0  # If an answer isn't in answer_counts, it has 0 votes.
@@ -345,7 +347,7 @@ class Poll:
     @cached_property
     def expiry(self) -> datetime.datetime | None:
         """An aware datetime object that specifies the date and time in UTC when the poll will end."""
-        return utils.parse_time(self._expiry)
+        return parse_time(self._expiry)
 
     def to_dict(self) -> PollPayload:
         dict_ = {
@@ -426,7 +428,7 @@ class Poll:
         Optional[:class:`.PollAnswer`]
             The returned answer or ``None`` if not found.
         """
-        return utils.get(self.answers, id=id)
+        return utils.find(lambda a: a.id == id, self.answers)
 
     def add_answer(
         self,

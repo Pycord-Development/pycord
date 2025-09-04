@@ -28,6 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from . import utils
+from .utils.private import get_as_snowflake
 from .asset import Asset
 from .enums import TeamMembershipState, try_enum
 from .user import BaseUser
@@ -68,7 +69,7 @@ class Team:
         self.id: int = int(data["id"])
         self.name: str = data["name"]
         self._icon: str | None = data["icon"]
-        self.owner_id: int | None = utils._get_as_snowflake(data, "owner_user_id")
+        self.owner_id: int | None = get_as_snowflake(data, "owner_user_id")
         self.members: list[TeamMember] = [TeamMember(self, self._state, member) for member in data["members"]]
 
     def __repr__(self) -> str:
@@ -84,7 +85,7 @@ class Team:
     @property
     def owner(self) -> TeamMember | None:
         """The team's owner."""
-        return utils.get(self.members, id=self.owner_id)
+        return utils.find(lambda m: m.id == self.owner_id, self.members)
 
 
 class TeamMember(BaseUser):

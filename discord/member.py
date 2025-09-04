@@ -44,6 +44,7 @@ from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
+from .utils.private import parse_time, SnowflakeList, copy_doc
 
 __all__ = (
     "VoiceState",
@@ -148,7 +149,7 @@ class VoiceState:
         self.mute: bool = data.get("mute", False)
         self.deaf: bool = data.get("deaf", False)
         self.suppress: bool = data.get("suppress", False)
-        self.requested_to_speak_at: datetime.datetime | None = utils.parse_time(data.get("request_to_speak_timestamp"))
+        self.requested_to_speak_at: datetime.datetime | None = parse_time(data.get("request_to_speak_timestamp"))
         self.channel: VocalGuildChannel | None = channel
 
     def __repr__(self) -> str:
@@ -200,7 +201,7 @@ def flatten_user(cls):
                 return general
 
             func = generate_function(attr)
-            func = utils.copy_doc(value)(func)
+            func = copy_doc(value)(func)
             setattr(cls, attr, func)
 
     return cls
@@ -309,16 +310,16 @@ class Member(discord.abc.Messageable, _UserTag):
         self._state: ConnectionState = state
         self._user: User = state.store_user(data["user"])
         self.guild: Guild = guild
-        self.joined_at: datetime.datetime | None = utils.parse_time(data.get("joined_at"))
-        self.premium_since: datetime.datetime | None = utils.parse_time(data.get("premium_since"))
-        self._roles: utils.SnowflakeList = utils.SnowflakeList(map(int, data["roles"]))
+        self.joined_at: datetime.datetime | None = parse_time(data.get("joined_at"))
+        self.premium_since: datetime.datetime | None = parse_time(data.get("premium_since"))
+        self._roles: SnowflakeList = SnowflakeList(map(int, data["roles"]))
         self._client_status: dict[str | None, str] = {None: "offline"}
         self.activities: tuple[ActivityTypes, ...] = ()
         self.nick: str | None = data.get("nick", None)
         self.pending: bool = data.get("pending", False)
         self._avatar: str | None = data.get("avatar")
         self._banner: str | None = data.get("banner")
-        self.communication_disabled_until: datetime.datetime | None = utils.parse_time(
+        self.communication_disabled_until: datetime.datetime | None = parse_time(
             data.get("communication_disabled_until")
         )
         self.flags: MemberFlags = MemberFlags._from_value(data.get("flags", 0))
@@ -359,9 +360,9 @@ class Member(discord.abc.Messageable, _UserTag):
         return cls(data=data, guild=message.guild, state=message._state)  # type: ignore
 
     def _update_from_message(self, data: MemberPayload) -> None:
-        self.joined_at = utils.parse_time(data.get("joined_at"))
-        self.premium_since = utils.parse_time(data.get("premium_since"))
-        self._roles = utils.SnowflakeList(map(int, data["roles"]))
+        self.joined_at = parse_time(data.get("joined_at"))
+        self.premium_since = parse_time(data.get("premium_since"))
+        self._roles = SnowflakeList(map(int, data["roles"]))
         self.nick = data.get("nick", None)
         self.pending = data.get("pending", False)
 
@@ -386,7 +387,7 @@ class Member(discord.abc.Messageable, _UserTag):
     def _copy(cls: type[M], member: M) -> M:
         self: M = cls.__new__(cls)  # to bypass __init__
 
-        self._roles = utils.SnowflakeList(member._roles, is_sorted=True)
+        self._roles = SnowflakeList(member._roles, is_sorted=True)
         self.joined_at = member.joined_at
         self.premium_since = member.premium_since
         self._client_status = member._client_status.copy()
@@ -422,11 +423,11 @@ class Member(discord.abc.Messageable, _UserTag):
         except KeyError:
             pass
 
-        self.premium_since = utils.parse_time(data.get("premium_since"))
-        self._roles = utils.SnowflakeList(map(int, data["roles"]))
+        self.premium_since = parse_time(data.get("premium_since"))
+        self._roles = SnowflakeList(map(int, data["roles"]))
         self._avatar = data.get("avatar")
         self._banner = data.get("banner")
-        self.communication_disabled_until = utils.parse_time(data.get("communication_disabled_until"))
+        self.communication_disabled_until = parse_time(data.get("communication_disabled_until"))
         self.flags = MemberFlags._from_value(data.get("flags", 0))
 
     def _presence_update(self, data: PartialPresenceUpdate, user: UserPayload) -> tuple[User, User] | None:
@@ -1047,7 +1048,7 @@ class Member(discord.abc.Messageable, _UserTag):
         """
 
         if not atomic:
-            new_roles = utils._unique(Object(id=r.id) for s in (self.roles[1:], roles) for r in s)
+            new_roles = list({Object(id=r.id) for s in (self.roles[1:], roles) for r in s})
             await self.edit(roles=new_roles, reason=reason)
         else:
             req = self._state.http.add_role

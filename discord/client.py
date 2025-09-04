@@ -38,6 +38,7 @@ import aiohttp
 from discord.banners import print_banner, start_logging
 
 from . import utils
+from .utils.private import resolve_invite, resolve_template, bytes_to_base64_data, SequenceProxy
 from .activity import ActivityTypes, BaseActivity, create_activity
 from .appinfo import AppInfo, PartialAppInfo
 from .application_role_connection import ApplicationRoleConnectionMetadata
@@ -386,7 +387,7 @@ class Client:
 
         .. versionadded:: 1.1
         """
-        return utils.SequenceProxy(self._connection._messages or [])
+        return SequenceProxy(self._connection._messages or [])
 
     @property
     def private_channels(self) -> list[PrivateChannel]:
@@ -1570,7 +1571,7 @@ class Client:
         :exc:`HTTPException`
             Getting the template failed.
         """
-        code = utils.resolve_template(code)
+        code = resolve_template(code)
         data = await self.http.get_template(code)
         return Template(data=data, state=self._connection)  # type: ignore
 
@@ -1654,7 +1655,7 @@ class Client:
             Invalid icon image format given. Must be PNG or JPG.
         """
         if icon is not MISSING:
-            icon_base64 = utils._bytes_to_base64_data(icon)
+            icon_base64 = bytes_to_base64_data(icon)
         else:
             icon_base64 = None
 
@@ -1746,7 +1747,7 @@ class Client:
             Getting the invite failed.
         """
 
-        invite_id = utils.resolve_invite(url)
+        invite_id = resolve_invite(url)
         data = await self.http.get_invite(
             invite_id,
             with_counts=with_counts,
@@ -1778,7 +1779,7 @@ class Client:
             Revoking the invite failed.
         """
 
-        invite_id = utils.resolve_invite(invite)
+        invite_id = resolve_invite(invite)
         await self.http.delete_invite(invite_id)
 
     # Miscellaneous stuff
@@ -2254,7 +2255,7 @@ class Client:
             The created emoji.
         """
 
-        img = utils._bytes_to_base64_data(image)
+        img = bytes_to_base64_data(image)
         data = await self._connection.http.create_application_emoji(self.application_id, name, img)
         return self._connection.maybe_store_app_emoji(self.application_id, data)
 

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
 from ..components import Section as SectionComponent
 from ..components import _component_factory
 from ..enums import ComponentType
-from ..utils import find, get
+from ..utils import find
 from .button import Button
 from .item import Item, ItemCallbackType
 from .text_display import TextDisplay

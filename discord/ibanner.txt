@@ -1,3 +1,2 @@
   ${bold_red}Wel${reset}${blue}come${reset} ${bold_blue}to${reset} ${yellow}Pycord v${version}${reset}
   ${bold_white}It's currently ${current_time}, running on Python ${py_version}${reset}
-

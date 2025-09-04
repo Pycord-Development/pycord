@@ -34,6 +34,7 @@ from urllib.parse import quote as _uriquote
 
 import aiohttp
 
+from .utils.private import get_mime_type_for_image, to_json, from_json
 from . import __version__, utils
 from .errors import (
     DiscordServerError,
@@ -46,7 +47,8 @@ from .errors import (
 )
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
-from .utils import MISSING, warn_deprecated
+from .utils import MISSING
+from .utils.private import warn_deprecated
 
 _log = logging.getLogger(__name__)
 
@@ -96,7 +98,7 @@ async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str
     text = await response.text(encoding="utf-8")
     try:
         if response.headers["content-type"] == "application/json":
-            return utils._from_json(text)
+            return from_json(text)
     except KeyError:
         # Thanks Cloudflare
         pass
@@ -259,7 +261,7 @@ class HTTPClient:
         # some checking if it's a JSON request
         if "json" in kwargs:
             headers["Content-Type"] = "application/json"
-            kwargs["data"] = utils._to_json(kwargs.pop("json"))
+            kwargs["data"] = to_json(kwargs.pop("json"))
 
         try:
             reason = kwargs.pop("reason")
@@ -567,7 +569,7 @@ class HTTPClient:
                 }
             )
         payload["attachments"] = attachments
-        form[0]["value"] = utils._to_json(payload)
+        form[0]["value"] = to_json(payload)
         return self.request(route, form=form, files=files)
 
     def send_files(
@@ -640,7 +642,7 @@ class HTTPClient:
             payload["attachments"] = attachments
         else:
             payload["attachments"].extend(attachments)
-        form[0]["value"] = utils._to_json(payload)
+        form[0]["value"] = to_json(payload)
 
         return self.request(route, form=form, files=files)
 
@@ -1244,7 +1246,7 @@ class HTTPClient:
                 )
 
             payload["attachments"] = attachments
-            form[0]["value"] = utils._to_json(payload)
+            form[0]["value"] = to_json(payload)
             return self.request(route, form=form, reason=reason)
         return self.request(route, json=payload, reason=reason)
 
@@ -1653,7 +1655,7 @@ class HTTPClient:
         initial_bytes = file.fp.read(16)
 
         try:
-            mime_type = utils._get_mime_type_for_image(initial_bytes)
+            mime_type = get_mime_type_for_image(initial_bytes)
         except InvalidArgument:
             if initial_bytes.startswith(b"{"):
                 mime_type = "application/json"
@@ -2592,7 +2594,7 @@ class HTTPClient:
         form: list[dict[str, Any]] = [
             {
                 "name": "payload_json",
-                "value": utils._to_json(payload),
+                "value": to_json(payload),
             }
         ]
 

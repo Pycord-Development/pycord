@@ -30,7 +30,8 @@ from typing import TYPE_CHECKING, Any, Iterator
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .user import User
-from .utils import MISSING, SnowflakeList, Undefined, snowflake_time
+from .utils import MISSING, Undefined, snowflake_time
+from .utils.private import SnowflakeList
 
 __all__ = (
     "Emoji",

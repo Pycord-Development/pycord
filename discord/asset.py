@@ -47,6 +47,11 @@ VALID_ASSET_FORMATS = VALID_STATIC_FORMATS | {"gif"}
 MISSING = utils.MISSING
 
 
+def _valid_icon_size(size: int) -> bool:
+    """Icons must be power of 2 within [16, 4096]."""
+    return not size & (size - 1) and 4096 >= size >= 16
+
+
 class AssetMixin:
     url: str
     _state: Any | None
@@ -373,7 +378,7 @@ class Asset(AssetMixin):
             url = url.with_path(f"{path}.{static_format}")
 
         if size is not MISSING:
-            if not utils.valid_icon_size(size):
+            if not _valid_icon_size(size):
                 raise InvalidArgument("size must be a power of 2 between 16 and 4096")
             url = url.with_query(size=size)
         else:
@@ -400,7 +405,7 @@ class Asset(AssetMixin):
         InvalidArgument
             The asset had an invalid size.
         """
-        if not utils.valid_icon_size(size):
+        if not _valid_icon_size(size):
             raise InvalidArgument("size must be a power of 2 between 16 and 4096")
 
         url = str(yarl.URL(self._url).with_query(size=size))

@@ -32,7 +32,7 @@ from .asset import Asset
 from .colour import Colour
 from .enums import ActivityType, try_enum
 from .partial_emoji import PartialEmoji
-from .utils import _get_as_snowflake
+from .utils.private import get_as_snowflake
 
 __all__ = (
     "BaseActivity",
@@ -226,7 +226,7 @@ class Activity(BaseActivity):
         self.timestamps: ActivityTimestamps = kwargs.pop("timestamps", {})
         self.assets: ActivityAssets = kwargs.pop("assets", {})
         self.party: ActivityParty = kwargs.pop("party", {})
-        self.application_id: int | None = _get_as_snowflake(kwargs, "application_id")
+        self.application_id: int | None = get_as_snowflake(kwargs, "application_id")
         self.url: str | None = kwargs.pop("url", None)
         self.flags: int = kwargs.pop("flags", 0)
         self.sync_id: str | None = kwargs.pop("sync_id", None)

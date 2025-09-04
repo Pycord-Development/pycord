@@ -56,6 +56,7 @@ from .gateway import *
 from .player import AudioPlayer, AudioSource
 from .sinks import RawData, RecordingException, Sink
 from .utils import MISSING
+from .utils.private import sane_wait_for
 
 if TYPE_CHECKING:
     from . import abc
@@ -389,7 +390,7 @@ class VoiceClient(VoiceProtocol):
             await self.voice_connect()
 
             try:
-                await utils.sane_wait_for(futures, timeout=timeout)
+                await sane_wait_for(futures, timeout=timeout)
             except asyncio.TimeoutError:
                 await self.disconnect(force=True)
                 raise

@@ -31,7 +31,8 @@ from .enums import EntitlementType, SKUType, SubscriptionStatus, try_enum
 from .flags import SKUFlags
 from .iterators import SubscriptionIterator
 from .mixins import Hashable
-from .utils import MISSING, _get_as_snowflake, parse_time
+from .utils import MISSING
+from .utils.private import get_as_snowflake, parse_time
 
 if TYPE_CHECKING:
     from datetime import datetime
@@ -226,12 +227,12 @@ class Entitlement(Hashable):
         self.id: int = int(data["id"])
         self.sku_id: int = int(data["sku_id"])
         self.application_id: int = int(data["application_id"])
-        self.user_id: int | MISSING = _get_as_snowflake(data, "user_id") or MISSING
+        self.user_id: int | MISSING = get_as_snowflake(data, "user_id") or MISSING
         self.type: EntitlementType = try_enum(EntitlementType, data["type"])
         self.deleted: bool = data["deleted"]
         self.starts_at: datetime | MISSING = parse_time(data.get("starts_at")) or MISSING
         self.ends_at: datetime | MISSING | None = parse_time(ea) if (ea := data.get("ends_at")) is not None else MISSING
-        self.guild_id: int | MISSING = _get_as_snowflake(data, "guild_id") or MISSING
+        self.guild_id: int | MISSING = get_as_snowflake(data, "guild_id") or MISSING
         self.consumed: bool = data.get("consumed", False)
 
     def __repr__(self) -> str:

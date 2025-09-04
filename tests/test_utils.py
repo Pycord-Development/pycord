@@ -30,15 +30,9 @@ import pytest
 
 from discord.utils import (
     MISSING,
-    _parse_ratelimit_header,
-    _unique,
-    async_all,
-    copy_doc,
     find,
-    get,
-    maybe_coroutine,
+    generate_snowflake,
     snowflake_time,
-    time_snowflake,
     utcnow,
 )
 
@@ -77,7 +71,6 @@ def test_temporary():
 #     assert MISSING != object()
 #     assert not MISSING
 #     assert repr(MISSING) == '...'
-#
 #
 # def test_find_get() -> None:
 #     class Obj:
