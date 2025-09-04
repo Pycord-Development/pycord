@@ -19,7 +19,7 @@ These changes are available on the `master` branch, but have not yet been releas
   message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
 - Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
   ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
- 
+
 ### Changed
 
 ### Fixed
