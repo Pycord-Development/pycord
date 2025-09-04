@@ -39,12 +39,12 @@ from .activity import ActivityTypes, create_activity
 from .asset import Asset
 from .colour import Colour
 from .enums import Status, try_enum
+from .errors import InvalidArgument
 from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
-from .errors import InvalidArgument
 
 __all__ = (
     "VoiceState",
@@ -945,7 +945,6 @@ class Member(discord.abc.Messageable, _UserTag):
             flags.bypasses_verification = bypass_verification
             payload["flags"] = flags.value
 
-
         if avatar is not MISSING:
             if avatar is None:
                 bot_payload["avatar"] = None
@@ -962,8 +961,10 @@ class Member(discord.abc.Messageable, _UserTag):
             bot_payload["bio"] = bio or ""
 
         if bot_payload and not me:
-            raise InvalidArgument("Can only edit avatar, banner, or bio for the bot's member.")
-        
+            raise InvalidArgument(
+                "Can only edit avatar, banner, or bio for the bot's member."
+            )
+
         if not payload and not bot_payload:
             return None
 
@@ -971,9 +972,8 @@ class Member(discord.abc.Messageable, _UserTag):
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
         else:
             data = await http.edit_member(guild_id, "@me", reason=reason, **bot_payload)
-    
-        return Member(data=data, guild=self.guild, state=self._state)
 
+        return Member(data=data, guild=self.guild, state=self._state)
 
     async def timeout(
         self, until: datetime.datetime | None, *, reason: str | None = None

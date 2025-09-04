@@ -1045,7 +1045,12 @@ class HTTPClient:
         reason: str | None = None,
         **fields: Any,
     ) -> Response[member.MemberWithUser]:
-        r = Route("PATCH", "/guilds/{guild_id}/members/{user_id}", guild_id=guild_id, user_id=user_id)
+        r = Route(
+            "PATCH",
+            "/guilds/{guild_id}/members/{user_id}",
+            guild_id=guild_id,
+            user_id=user_id,
+        )
         return self.request(r, json=fields, reason=reason)
 
     # Channel management
