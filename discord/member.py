@@ -44,6 +44,7 @@ from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
+from .errors import InvalidArgument
 
 __all__ = (
     "VoiceState",
@@ -769,6 +770,9 @@ class Member(discord.abc.Messageable, _UserTag):
         reason: str | None = None,
         communication_disabled_until: datetime.datetime | None = MISSING,
         bypass_verification: bool | None = MISSING,
+        banner: bytes | None = MISSING,
+        avatar: bytes | None = MISSING,
+        bio: str | None = MISSING,
     ) -> Member | None:
         """|coro|
 
@@ -803,6 +807,14 @@ class Member(discord.abc.Messageable, _UserTag):
             - Client has :attr:`Permissions.manage_roles`
 
             - Client has ALL THREE of :attr:`Permissions.moderate_members`, :attr:`Permissions.kick_members`, and :attr:`Permissions.ban_members`
+
+        .. note::
+
+            The following parameters are only available when editing the bot's own member:
+
+            - ``avatar``
+            - ``banner``
+            - ``bio``
 
         All parameters are optional.
 
@@ -841,6 +853,26 @@ class Member(discord.abc.Messageable, _UserTag):
             Indicates if the member should bypass the guild's verification requirements.
 
             .. versionadded:: 2.6
+        banner: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the banner.
+            Could be ``None`` to denote removal of the banner.
+
+            This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
+
+            .. versionadded:: 2.7
+        avatar: Optional[:class:`bytes`]
+            A :term:`py:bytes-like object` representing the avatar.
+            Could be ``None`` to denote removal of the avatar.
+
+            This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
+
+            .. versionadded:: 2.7
+        bio: Optional[:class:`str`]
+            The new bio for the member. Could be ``None`` to denote removal of the bio.
+
+            This is only available when editing the bot's own member (i.e. :attr:`Guild.me`).
+
+            .. versionadded:: 2.7
 
         Returns
         -------
@@ -854,16 +886,19 @@ class Member(discord.abc.Messageable, _UserTag):
             You do not have the proper permissions to the action requested.
         HTTPException
             The operation failed.
+        InvalidArgument
+            You tried to edit the avatar, banner, or bio of a member that is not the bot.
         """
         http = self._state.http
         guild_id = self.guild.id
         me = self._state.self_id == self.id
         payload: dict[str, Any] = {}
+        bot_payload: dict[str, Any] = {}
 
         if nick is not MISSING:
             nick = nick or ""
             if me:
-                await http.change_my_nickname(guild_id, nick, reason=reason)
+                bot_payload["nick"] = nick
             else:
                 payload["nick"] = nick
 
@@ -910,9 +945,35 @@ class Member(discord.abc.Messageable, _UserTag):
             flags.bypasses_verification = bypass_verification
             payload["flags"] = flags.value
 
+
+        if avatar is not MISSING:
+            if avatar is None:
+                bot_payload["avatar"] = None
+            else:
+                bot_payload["avatar"] = utils._bytes_to_base64_data(avatar)
+
+        if banner is not MISSING:
+            if banner is None:
+                bot_payload["banner"] = None
+            else:
+                bot_payload["banner"] = utils._bytes_to_base64_data(banner)
+
+        if bio is not MISSING:
+            bot_payload["bio"] = bio or ""
+
+        if bot_payload and not me:
+            raise InvalidArgument("Can only edit avatar, banner, or bio for the bot's member.")
+        
+        if not payload and not bot_payload:
+            return None
+
         if payload:
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
-            return Member(data=data, guild=self.guild, state=self._state)
+        else:
+            data = await http.edit_member(guild_id, "@me", reason=reason, **bot_payload)
+    
+        return Member(data=data, guild=self.guild, state=self._state)
+
 
     async def timeout(
         self, until: datetime.datetime | None, *, reason: str | None = None
