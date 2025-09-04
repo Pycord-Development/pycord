@@ -17,7 +17,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
 - Added `RawMessageUpdateEvent.new_message` - message update events now contain full
   message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
-- Added support for setting guild-specfic `avatar`, `banner`, and `bio` for the bot user
+- Added support for setting guild-specific `avatar`, `banner`, and `bio` for the bot user
   through `Member.edit`.
   ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
 
