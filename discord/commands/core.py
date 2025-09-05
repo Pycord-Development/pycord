@@ -333,10 +333,10 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
                 InteractionContextType.private_channel,
             }
 
-    def _prepare_cooldowns(self, ctx: ApplicationContext):
+    async def _prepare_cooldowns(self, ctx: ApplicationContext):
         if self._buckets.valid:
             current = datetime.datetime.now().timestamp()
-            bucket = self._buckets.get_bucket(ctx, current)  # type: ignore # ctx instead of non-existent message
+            bucket = await self._buckets.get_bucket(ctx, current)
 
             if bucket is not None:
                 retry_after = bucket.update_rate_limit(current)
@@ -356,18 +356,16 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             )
 
         if self._max_concurrency is not None:
-            # For this application, context can be duck-typed as a Message
-            await self._max_concurrency.acquire(ctx)  # type: ignore # ctx instead of non-existent message
-
+            await self._max_concurrency.acquire(ctx)
         try:
-            self._prepare_cooldowns(ctx)
+            await self._prepare_cooldowns(ctx)
             await self.call_before_hooks(ctx)
         except:
             if self._max_concurrency is not None:
                 await self._max_concurrency.release(ctx)  # type: ignore # ctx instead of non-existent message
             raise
 
-    def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
+    async def is_on_cooldown(self, ctx: ApplicationContext) -> bool:
         """Checks whether the command is currently on cooldown.
 
         .. note::
@@ -387,7 +385,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
         if not self._buckets.valid:
             return False
 
-        bucket = self._buckets.get_bucket(ctx)  # type: ignore
+        bucket = await self._buckets.get_bucket(ctx)  # type: ignore
         current = utcnow().timestamp()
         return bucket.get_tokens(current) == 0
 
@@ -400,7 +398,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             The invocation context to reset the cooldown under.
         """
         if self._buckets.valid:
-            bucket = self._buckets.get_bucket(ctx)  # type: ignore # ctx instead of non-existent message
+            bucket = await self._buckets.get_bucket(ctx)
             bucket.reset()
 
     def get_cooldown_retry_after(self, ctx: ApplicationContext) -> float:
