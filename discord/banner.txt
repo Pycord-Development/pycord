@@ -1,18 +1,18 @@
 
 
-  ${bold_white}                                                                                                ${reset}    ${blue}   ````'````````````````````````'`
-  ${bold_white}                                                                                                ${reset}    ${bold_blue} `.                              `-
-  ${bold_white}                                                                                          O88888${reset}    ${yellow}''                                 _
-  ${bold_white}u@@@@@@@@@@@BG!                                                                           O@@@@8${reset}    ${bold_yellow}_           ${reset}${bold_white}:oQ@@@@@@#Rr${reset}${bold_yellow}           `-
-  ${bold_white}u@@@@@@@@@@@@@@O.                                                                         O@@@@8${reset}    ${red}-          ${reset}${bold_white}k@@@@#dWQ@@@@D`${reset}${red}          .
-  ${bold_white}u@@@@@`  'I@@@@@a`O9999r    V6996u   ,LaEQQQDUv.      :}P$QQ8OI?.    V9999L_H8Qc  !y0QQRY.O@@@@8${reset}    ${bold_red}-          ${reset}${bold_white}Vkkk}    E@@@@:${reset}${bold_red}          .
-  ${bold_white}u@@@@@`   :@@@@@R I@@@@Q`  ^@@@@@" -M@@@@@@@@@@@q   ,Q@@@@@@@@@@@V`  O@@@@Q#@@@G-0@@@@@@@##@@@@8${reset}    ${purple}-              ${reset}${bold_white}-m3HQ@@@0r${reset}${purple}           .
-  ${bold_white}u@@@@@}iYz#@@@@@) `$@@@@}  O@@@@j -B@@@@Q    \@@@T ,#@@@@K_`=#@@@@q  O@@@@@8]*);E@@@@@V::V@@@@@8${reset}    ${bold_purple}-              ${reset}${bold_white}:@@@@@#$z;${reset}${bold_purple}           .
-  ${bold_white}u@@@@@@@@@@@@@O!   ,#@@@B.*@@@@0` L@@@@@           T@@@@@`   y@@@@@: O@@@@Q`    @@@@@H    G@@@@8${reset}    ${black}-               ${reset}${bold_white}```=D@@@@P${reset}${black}          .
-  ${bold_white}u@@@@@6OOOMj]!      x@@@@}9@@@#!  x@@@@@           }@@@@@.   U@@@@@, O@@@@$     #@@@@b    d@@@@8${reset}    ${bold_black}-         ${reset}${bold_white},####0~` :6@@@@8${reset}${bold_black}          .
-  ${bold_white}u@@@@@`              K@@@#@@@@x   `0@@@@#    /@@|  .Q@@@@0r~Y@@@@@w  O@@@@$     P@@@@@OxxO@@@@@8${reset}    ${blue}-          ${reset}${bold_white}c#@@@@@@@@@@@Q=${reset}${blue}          .
-  ${bold_white}u@@@@@`              `#@@@@@@g     `c@@@@@@@@@@#T   `M@@@@@@@@@@#)   O@@@@$     `z@@@@@@@QQ@@@@8${reset}    ${bold_blue}_           ${reset}${bold_white}`rz0QBBB8bV:${reset}${bold_blue}           `-
-  ${bold_white}=yyyyV                x@@@@@#:       `~YI5MWIx!       `^}m5MGwx:     |yyyyv       `*w33y~ )yyyyx${reset}    ${yellow}.`                                 -
-                     ${bold_white}=gEB@@@@#r                                                                   ${reset}    ${bold_yellow} '.                               .`
-                    ${bold_white}`g@@@@@#X_                                                                    ${reset}    ${blue}   '`````'''''''''''''''''''````'`
+  ${bold_white}                                                                                                ${reset}
+  ${bold_white}                                                                                                ${reset}
+  ${bold_white}                                                                                          O88888${reset}
+  ${bold_white}u@@@@@@@@@@@BG!                                                                           O@@@@8${reset}
+  ${bold_white}u@@@@@@@@@@@@@@O.                                                                         O@@@@8${reset}
+  ${bold_white}u@@@@@`  'I@@@@@a`O9999r    V6996u   ,LaEQQQDUv.      :}P$QQ8OI?.    V9999L_H8Qc  !y0QQRY.O@@@@8${reset}
+  ${bold_white}u@@@@@`   :@@@@@R I@@@@Q`  ^@@@@@" -M@@@@@@@@@@@q   ,Q@@@@@@@@@@@V`  O@@@@Q#@@@G-0@@@@@@@##@@@@8${reset}
+  ${bold_white}u@@@@@}iYz#@@@@@) `$@@@@}  O@@@@j -B@@@@Q    \@@@T ,#@@@@K_`=#@@@@q  O@@@@@8]*);E@@@@@V::V@@@@@8${reset}
+  ${bold_white}u@@@@@@@@@@@@@O!   ,#@@@B.*@@@@0` L@@@@@           T@@@@@`   y@@@@@: O@@@@Q`    @@@@@H    G@@@@8${reset}
+  ${bold_white}u@@@@@6OOOMj]!      x@@@@}9@@@#!  x@@@@@           }@@@@@.   U@@@@@, O@@@@$     #@@@@b    d@@@@8${reset}
+  ${bold_white}u@@@@@`              K@@@#@@@@x   `0@@@@#    /@@|  .Q@@@@0r~Y@@@@@w  O@@@@$     P@@@@@OxxO@@@@@8${reset}
+  ${bold_white}u@@@@@`              `#@@@@@@g     `c@@@@@@@@@@#T   `M@@@@@@@@@@#)   O@@@@$     `z@@@@@@@QQ@@@@8${reset}
+  ${bold_white}=yyyyV                x@@@@@#:       `~YI5MWIx!       `^}m5MGwx:     |yyyyv       `*w33y~ )yyyyx${reset}
+                     ${bold_white}=gEB@@@@#r                                                                   ${reset}
+                    ${bold_white}`g@@@@@#X_                                                                    ${reset}
                      ${bold_white}`-":_`
