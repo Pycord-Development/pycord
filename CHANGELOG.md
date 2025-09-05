@@ -81,6 +81,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Added `Message.forward_to`, `Message.snapshots`, and other related attributes.
   ([#2598](https://github.com/Pycord-Development/pycord/pull/2598))
+- Added the ability to use functions with any number of optional arguments and functions
+  returning an awaitable as `Option.autocomplete`.
+  ([#2669](https://github.com/Pycord-Development/pycord/pull/2669))
 - Add missing `Guild` feature flags and `Guild.edit` parameters.
   ([#2672](https://github.com/Pycord-Development/pycord/pull/2672))
 - Added the ability to change the API's base URL with `Route.API_BASE_URL`.
