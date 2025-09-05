@@ -36,7 +36,9 @@ __all__ = ("__version__", "VersionInfo", "version_info")
 
 from typing import Literal, NamedTuple
 
-from .utils import deprecated
+from typing_extensions import deprecated
+
+from .utils import deprecated_message
 
 try:
     __version__ = version("py-cord")
@@ -84,27 +86,27 @@ class VersionInfo(NamedTuple):
         _advanced = value
 
     @property
-    @deprecated("releaselevel", "2.4")
+    @deprecated(deprecated_message("release_level", "releaselevel", "2.4"))
     def release_level(self) -> Literal["alpha", "beta", "candidate", "final"]:
         return self.releaselevel
 
     @property
-    @deprecated('.advanced["serial"]', "2.4")
+    @deprecated(deprecated_message("serial", '.advanced["serial"]', "2.4"))
     def serial(self) -> int:
         return self.advanced["serial"]
 
     @property
-    @deprecated('.advanced["build"]', "2.4")
+    @deprecated(deprecated_message("build", '.advanced["build"]', "2.4"))
     def build(self) -> int | None:
         return self.advanced["build"]
 
     @property
-    @deprecated('.advanced["commit"]', "2.4")
+    @deprecated(deprecated_message("commit", '.advanced["commit"]', "2.4"))
     def commit(self) -> str | None:
         return self.advanced["commit"]
 
     @property
-    @deprecated('.advanced["date"]', "2.4")
+    @deprecated(deprecated_message("date", '.advanced["date"]', "2.4"))
     def date(self) -> datetime.date | None:
         return self.advanced["date"]
 
