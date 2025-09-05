@@ -291,6 +291,7 @@ class Option:
         self.default = kwargs.pop("default", None)
 
         self._autocomplete: AutocompleteFunction | None = None
+        self.autocomplete = kwargs.pop("autocomplete", None)
         if len(enum_choices) > 25:
             self.choices: list[OptionChoice] = []
             for e in enum_choices:
