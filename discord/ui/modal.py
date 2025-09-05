@@ -316,7 +316,7 @@ class Modal:
 
         A callback that is called when the modal's callback fails with an error.
 
-        The default implementation prints the traceback to stderr.
+        The default implementation logs the traceback with the logging module.
 
         Parameters
         ----------
