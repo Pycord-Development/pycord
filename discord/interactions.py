@@ -61,6 +61,7 @@ __all__ = (
     "MessageInteraction",
     "InteractionMetadata",
     "AuthorizingIntegrationOwners",
+    "InteractionCallback",
 )
 
 if TYPE_CHECKING:
@@ -83,7 +84,8 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
-    from .types.interactions import InteractionData
+    from .types.interactions import InteractionCallback as InteractionCallbackPayload
+    from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
@@ -153,6 +155,11 @@ class Interaction:
         The context in which this command was executed.
 
         .. versionadded:: 2.6
+    callback: Optional[:class:`InteractionCallback`]
+        The callback of the interaction. Contains information about the status of the interaction response.
+        Will be `None` until the interaction is responded to.
+
+        .. versionadded:: 2.7
     command: Optional[:class:`ApplicationCommand`]
         The command that this interaction belongs to.
 
@@ -163,6 +170,10 @@ class Interaction:
         .. versionadded:: 2.7
     modal: Optional[:class:`Modal`]
         The modal that this interaction belongs to.
+
+        .. versionadded:: 2.7
+    attachment_size_limit: :class:`int`
+        The attachment size limit.
 
         .. versionadded:: 2.7
     """
@@ -185,9 +196,12 @@ class Interaction:
         "entitlements",
         "context",
         "authorizing_integration_owners",
+        "callback",
         "command",
         "view",
         "modal",
+        "attachment_size_limit",
+        "_raw_data",
         "_channel_data",
         "_message_data",
         "_guild_data",
@@ -207,9 +221,11 @@ class Interaction:
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
+        self.callback: InteractionCallback | None = None
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
+        self._raw_data: InteractionPayload = data
         self.id: int = int(data["id"])
         self.type: InteractionType = try_enum(InteractionType, data["type"])
         self.data: InteractionData | None = data.get("data")
@@ -243,6 +259,7 @@ class Interaction:
         self.command: ApplicationCommand | None = None
         self.view: View | None = None
         self.modal: Modal | None = None
+        self.attachment_size_limit: int = data.get("attachment_size_limit")
 
         self.message: Message | None = None
         self.channel = None
@@ -460,7 +477,9 @@ class Interaction:
         # TODO: fix later to not raise?
         channel = self.channel
         if channel is None:
-            raise ClientException("Channel for message could not be resolved")
+            raise ClientException(
+                "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+            )
 
         adapter = async_context.get()
         http = self._state.http
@@ -852,18 +871,21 @@ class InteractionResponse:
         if defer_type:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=defer_type,
-                    data=data,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=defer_type,
+                        data=data,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                    )
                 )
             )
             self._responded = True
+            await self._process_callback_response(callback_response)
 
     async def pong(self) -> None:
         """|coro|
@@ -886,17 +908,36 @@ class InteractionResponse:
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    type=InteractionResponseType.pong.value,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        type=InteractionResponseType.pong.value,
+                    )
                 )
             )
             self._responded = True
+            await self._process_callback_response(callback_response)
+
+    async def _process_callback_response(
+        self, callback_response: InteractionCallbackResponse
+    ):
+        if callback_response.get("resource", {}).get("message"):
+            # TODO: fix later to not raise?
+            channel = self._parent.channel
+            if channel is None:
+                raise ClientException(
+                    "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+                )
+            state = _InteractionMessageState(self._parent, self._parent._state)
+            message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
+            self._parent._original_response = message
+
+        self._parent.callback = InteractionCallback(callback_response["interaction"])
 
     async def send_message(
         self,
@@ -1040,16 +1081,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.channel_message.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.channel_message.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
@@ -1066,6 +1109,7 @@ class InteractionResponse:
                 self._parent._state.store_view(view)
 
         self._responded = True
+        await self._process_callback_response(callback_response)
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
         return self._parent
@@ -1205,16 +1249,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.message_update.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.message_update.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
@@ -1227,6 +1273,7 @@ class InteractionResponse:
             state.store_view(view, message_id)
 
         self._responded = True
+        await self._process_callback_response(callback_response)
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
 
@@ -1262,7 +1309,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1275,6 +1322,7 @@ class InteractionResponse:
         )
 
         self._responded = True
+        await self._process_callback_response(callback_response)
 
     async def send_modal(self, modal: Modal) -> Interaction:
         """|coro|
@@ -1301,7 +1349,7 @@ class InteractionResponse:
         payload = modal.to_dict()
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1313,6 +1361,7 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        await self._process_callback_response(callback_response)
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
@@ -1340,7 +1389,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1351,9 +1400,10 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        await self._process_callback_response(callback_response)
         return self._parent
 
-    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> None:
+    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> Any:
         """|coro|
 
         Wraps a response and makes sure that it's locked while executing.
@@ -1363,16 +1413,24 @@ class InteractionResponse:
         coro: Coroutine[Any]
             The coroutine to wrap.
 
+        Returns
+        -------
+        Any
+            The result of the coroutine.
+
         Raises
         ------
         InteractionResponded
             This interaction has already been responded to before.
+
+        .. versionchanged:: 2.7
+            Return the result of the coroutine
         """
         async with self._response_lock:
             if self.is_done():
                 coro.close()  # cleanup un-awaited coroutine
                 raise InteractionResponded(self._parent)
-            await coro
+            return await coro
 
 
 class _InteractionMessageState:
@@ -1696,3 +1754,36 @@ class AuthorizingIntegrationOwners:
         if not self.guild_id:
             return None
         return self._state._get_guild(self.guild_id)
+
+
+class InteractionCallback:
+    """Information about the status of the interaction response.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(self, data: InteractionCallbackPayload):
+        self._response_message_loading: bool = data.get(
+            "response_message_loading", False
+        )
+        self._response_message_ephemeral: bool = data.get(
+            "response_message_ephemeral", False
+        )
+
+    def __repr__(self):
+        return (
+            f"<InteractionCallback "
+            f"_response_message_loading={self._response_message_loading} "
+            f"_response_message_ephemeral={self._response_message_ephemeral}>"
+        )
+
+    def is_loading(self) -> bool:
+        """Indicates whether the response message is in a loading state."""
+        return self._response_message_loading
+
+    def is_ephemeral(self) -> bool:
+        """Indicates whether the response message is ephemeral.
+
+        This might be useful for determining if the message was forced to be ephemeral.
+        """
+        return self._response_message_ephemeral

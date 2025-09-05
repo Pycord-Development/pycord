@@ -221,6 +221,11 @@ Role
 .. autoclass:: RoleTags()
     :members:
 
+.. attributetable:: RoleColours
+
+.. autoclass:: RoleColours
+    :members:
+
 Scheduled Event
 ~~~~~~~~~~~~~~~
 
@@ -368,8 +373,13 @@ Interactions
 .. autoclass:: AuthorizingIntegrationOwners()
     :members:
 
+.. attributetable:: InteractionCallback
+
+.. autoclass:: InteractionCallback()
+    :members:
+
 Message Components
-------------
+------------------
 
 .. attributetable:: Component
 
@@ -550,6 +560,20 @@ Stickers
 .. autoclass:: GuildSticker()
     :members:
 
+Soundboard
+----------
+
+.. attributetable:: PartialSoundboardSound
+
+.. autoclass:: PartialSoundboardSound()
+    :members:
+
+.. attributetable:: SoundboardSound
+
+.. autoclass:: SoundboardSound()
+    :members:
+    :inherited-members:
+
 Events
 ------
 
@@ -633,6 +657,11 @@ Events
 .. autoclass:: RawVoiceChannelStatusUpdateEvent()
     :members:
 
+.. attributetable:: VoiceChannelEffectSendEvent
+
+.. autoclass:: VoiceChannelEffectSendEvent()
+    :members:
+
 
 
 Webhooks
@@ -647,3 +676,13 @@ Webhooks
 
 .. autoclass:: PartialWebhookChannel()
     :members:
+
+
+
+Collectibles
+------------
+
+.. attributetable:: Nameplate
+
+.. autoclass:: Nameplate()
+    :undoc-members:

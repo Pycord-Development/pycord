@@ -1,7 +1,6 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,30 +26,17 @@ from __future__ import annotations
 
 from typing_extensions import NotRequired, TypedDict
 
+from discord.types.user import User
+
 from .snowflake import Snowflake
 
 
-class RoleColours(TypedDict):
-    primary_color: int
-    secondary_color: int | None
-    tertiary_color: int | None
-
-
-class Role(TypedDict):
-    tags: NotRequired[RoleTags]
-    id: Snowflake
+class SoundboardSound(TypedDict):
     name: str
-    color: int
-    colors: RoleColours
-    hoist: bool
-    position: int
-    permissions: str
-    managed: bool
-    mentionable: bool
-    flags: int
-
-
-class RoleTags(TypedDict, total=False):
-    bot_id: Snowflake
-    integration_id: Snowflake
-    premium_subscriber: None
+    sound_id: Snowflake | int
+    volume: float
+    emoji_name: str | None
+    emoji_id: Snowflake | None
+    guild_id: NotRequired[Snowflake]
+    user: NotRequired[User]
+    available: bool

@@ -82,6 +82,8 @@ GuildFeature = Literal[
     "MEMBER_VERIFICATION_GATE_ENABLED",
     "MONETIZATION_ENABLED",
     "MORE_EMOJI",
+    "MORE_SOUNDBOARD",
+    "SOUNDBOARD",
     "MORE_STICKERS",
     "NEWS",
     "NEW_THREAD_PERMISSIONS",
@@ -101,6 +103,7 @@ GuildFeature = Literal[
     "VERIFIED",
     "VIP_REGIONS",
     "WELCOME_SCREEN_ENABLED",
+    "ENHANCED_ROLE_COLORS",
 ]
 
 

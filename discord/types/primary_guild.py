@@ -1,7 +1,6 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 Rapptz
 Copyright (c) 2021-present Pycord Development
 
 Permission is hereby granted, free of charge, to any person obtaining a
@@ -25,32 +24,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
 
 from .snowflake import Snowflake
 
 
-class RoleColours(TypedDict):
-    primary_color: int
-    secondary_color: int | None
-    tertiary_color: int | None
-
-
-class Role(TypedDict):
-    tags: NotRequired[RoleTags]
-    id: Snowflake
-    name: str
-    color: int
-    colors: RoleColours
-    hoist: bool
-    position: int
-    permissions: str
-    managed: bool
-    mentionable: bool
-    flags: int
-
-
-class RoleTags(TypedDict, total=False):
-    bot_id: Snowflake
-    integration_id: Snowflake
-    premium_subscriber: None
+class PrimaryGuild(TypedDict):
+    identity_guild_id: Snowflake
+    identity_enabled: bool | None
+    tag: str
+    badge: str
