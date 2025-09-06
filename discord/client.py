@@ -1216,16 +1216,18 @@ class Client:
 
         Parameters
         ----------
-        object_type: VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji
+        object_type: :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji`
             Type of object to fetch or get.
-        object_id: int | None
-            ID of object to get. If None, returns default if provided, else None.
-        default: Any | None
+
+        object_id: :class:`int` | :data:`None`
+            ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`.
+
+        default: Any | :data:`None`
             A default to return instead of raising if fetch fails.
 
         Returns
         -------
-        VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | GuildEmoji | AppEmoji | None
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`
             The object if found, or `default` if provided when not found.
 
         Raises

@@ -1040,18 +1040,18 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        object_type: VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Role | Member | GuildEmoji
+        object_type: :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji`
             Type of object to fetch or get.
 
-        object_id: :class:`int` | None
-            ID of the object to get. If ``None``, returns ``default`` if provided, otherwise ``None``.
+        object_id: :class:`int` | :data:`None`
+            ID of the object to get. If :data:`None`, returns `default` if provided, otherwise :data:`None`.
 
-        default : Any | None
-            The value to return instead of raising if fetching fails or if ``object_id`` is ``None``.
+        default : Any | :data:`None`
+            The value to return instead of raising if fetching fails or if `object_id` is :data:`None`.
 
         Returns
         -------
-        VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | Role | Member | GuildEmoji | None
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :data:`None`
             The object if found, or `default` if provided when not found.
 
         Raises

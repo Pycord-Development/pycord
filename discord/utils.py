@@ -641,23 +641,23 @@ async def get_or_fetch(
 
     Parameters
     ----------
-    obj : Guild | Client
+    obj : :class:`Guild` | :class:`Client`
         The object to operate on.
-    object_type: VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | Role | Member | GuildEmoji | AppEmoji
+
+    object_type: :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :class:`AppEmoji`
         Type of object to fetch or get.
 
-    object_id: int | None
+    object_id: :class:`int` | :data:`None`
         ID of object to get.
 
-    default : Any | None
+    default : Any | :data:`None`
         The value to return instead of raising if fetching fails.
 
     Returns
     -------
-
-    VoiceChannel | TextChannel | ForumChannel | StageChannel | CategoryChannel | Thread | User | Guild | Role | Member | GuildEmoji | AppEmoji | None
+    :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`
         The object if found, or `default` if provided when not found.
-        Returns `None` only if `object_id` is None and no `default` is given.
+        Returns :data:`None` only if `object_id` is :data:`None` and no `default` is given.
 
     Raises
     ------
