@@ -26,7 +26,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
 - Unbound `raw` reference in `parse_message_update` causing errors on message updates.
   ([#2905](https://github.com/Pycord-Development/pycord/pull/2905))
-- `View=None` in `Webhook.send` causing an AttributeError.
+- `view=None` in various methods causing an AttributeError.
   ([#2915](https://github.com/Pycord-Development/pycord/pull/2915))
 
 ### Removed
