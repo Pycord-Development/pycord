@@ -629,12 +629,17 @@ class SelectDefaultValue:
         if isinstance(model, Object):
             obj_type = model.type
 
-        try:
-            sel_types, def_type = instances_mapping[obj_type]
-        except KeyError:
-            raise TypeError(
-                f"{model.__class__.__name__} is not a valid instance for a select default value",
-            )
+        sel_types = None
+        def_type = None
+
+        for typ, (st, dt) in instances_mapping.items():
+            if isinstance(model, typ):
+                sel_types = st
+                def_type = dt
+                break
+
+        if sel_types is None or def_type is None:
+            raise TypeError(f"{obj_type.__name__} is not a valid instance for a select default value")
 
         # we can't actually check select types when not in a select context
         if select_type is not None and select_type not in sel_types:
