@@ -876,7 +876,7 @@ class Client:
                 self._loop = asyncio.get_running_loop()
             except RuntimeError:
                 self._loop = asyncio.new_event_loop()
-    
+
             self._pending_loops.start(self)
             self.http.loop = self.loop
             self._connection.loop = self.loop
