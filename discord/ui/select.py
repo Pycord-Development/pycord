@@ -251,7 +251,9 @@ class Select(Generic[V, ST], Item[V]):
         self.row = row
 
     def _handle_default_values(
-        self, default_values: Sequence[Snowflake | ST] | None, select_type: ComponentType
+        self,
+        default_values: Sequence[Snowflake | ST] | None,
+        select_type: ComponentType,
     ) -> list[SelectDefaultValue]:
         if not default_values:
             return []
@@ -262,7 +264,10 @@ class Select(Generic[V, ST], Item[V]):
             ComponentType.user_select: (SelectDefaultValueType.user,),
             ComponentType.role_select: (SelectDefaultValueType.role,),
             ComponentType.channel_select: (SelectDefaultValueType.channel,),
-            ComponentType.mentionable_select: (SelectDefaultValueType.user, SelectDefaultValueType.role),
+            ComponentType.mentionable_select: (
+                SelectDefaultValueType.user,
+                SelectDefaultValueType.role,
+            ),
         }
 
         for dv in default_values:
@@ -270,10 +275,14 @@ class Select(Generic[V, ST], Item[V]):
                 try:
                     valid_types = valid_default_types[select_type]
                 except KeyError:
-                    raise TypeError(f"select default values are not allowed for this select type ({select_type.name})")
+                    raise TypeError(
+                        f"select default values are not allowed for this select type ({select_type.name})"
+                    )
 
                 if dv.type not in valid_types:
-                    raise TypeError(f"{dv.type.name} is not a valid select default value for selects of type {select_type.name}")
+                    raise TypeError(
+                        f"{dv.type.name} is not a valid select default value for selects of type {select_type.name}"
+                    )
 
                 ret.append(dv)
                 continue
@@ -390,9 +399,7 @@ class Select(Generic[V, ST], Item[V]):
         return self._underlying.default_values
 
     @default_values.setter
-    def default_values(
-        self, values: Sequence[SelectDefaultValue | ST] | None
-    ) -> None:
+    def default_values(self, values: Sequence[SelectDefaultValue | ST] | None) -> None:
         default_values = self._handle_default_values(values, self.type)
         self._underlying.default_values = default_values
 
@@ -948,7 +955,9 @@ def mentionable_select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V, Role | User | Member]]], Select[V, Role | User | Member]]:
+) -> Callable[
+    [ItemCallbackType[Select[V, Role | User | Member]]], Select[V, Role | User | Member]
+]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
     .. versionadded:: 2.3

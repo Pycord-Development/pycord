@@ -639,7 +639,9 @@ class SelectDefaultValue:
                 break
 
         if sel_types is None or def_type is None:
-            raise TypeError(f"{obj_type.__name__} is not a valid instance for a select default value")
+            raise TypeError(
+                f"{obj_type.__name__} is not a valid instance for a select default value"
+            )
 
         # we can't actually check select types when not in a select context
         if select_type is not None and select_type not in sel_types:
