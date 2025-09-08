@@ -28,7 +28,7 @@ from __future__ import annotations
 import inspect
 import os
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectDefaultValue, SelectMenu, SelectOption
@@ -62,11 +62,15 @@ if TYPE_CHECKING:
     from ..types.interactions import ComponentInteractionData
     from .view import View
 
+    ST = TypeVar("ST", bound=Snowflake | str, covariant=True, default=Any)
+else:
+    ST = TypeVar("ST", bound="Snowflake | str", covariant=True)
+
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="View", covariant=True)
 
 
-class Select(Item[V]):
+class Select(Generic[V, ST], Item[V]):
     """Represents a UI select menu.
 
     This is usually represented as a drop down menu.
@@ -198,7 +202,7 @@ class Select(Item[V]):
         label: str | None = None,
         description: str | None = None,
         required: bool | None = None,
-        default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
+        default_values: Sequence[SelectDefaultValue | ST] | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
@@ -247,7 +251,7 @@ class Select(Item[V]):
         self.row = row
 
     def _handle_default_values(
-        self, default_values: Sequence[Snowflake] | None, select_type: ComponentType
+        self, default_values: Sequence[Snowflake | ST] | None, select_type: ComponentType
     ) -> list[SelectDefaultValue]:
         if not default_values:
             return []
@@ -320,7 +324,7 @@ class Select(Item[V]):
     @property
     def required(self) -> bool:
         """Whether the select is required or not. Only applicable in modal selects."""
-        return self._underlying.required
+        return bool(self._underlying.required)
 
     @required.setter
     def required(self, value: bool):
@@ -368,7 +372,7 @@ class Select(Item[V]):
 
     @default_values.setter
     def default_values(
-        self, values: list[SelectDefaultValue | Snowflake] | None
+        self, values: Sequence[SelectDefaultValue | ST] | None
     ) -> None:
         default_values = self._handle_default_values(values, self.type)
         self._underlying.default_values = default_values
@@ -555,29 +559,25 @@ class Select(Item[V]):
         return self
 
     @property
-    def values(
-        self,
-    ) -> (
-        list[str]
-        | list[Member | User]
-        | list[Role]
-        | list[Member | User | Role]
-        | list[GuildChannel | Thread]
-    ):
+    def values(self) -> list[ST]:
         """List[:class:`str`] | List[:class:`discord.Member` | :class:`discord.User`]] | List[:class:`discord.Role`]] |
         List[:class:`discord.Member` | :class:`discord.User` | :class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None:
         A list of values that have been selected by the user. This will be ``None`` if the select has not been interacted with yet.
         """
-        if self._interaction is None:
+        if self._interaction is None or self._interaction.data is None:
             # The select has not been interacted with yet
-            return None
+            return []
         select_type = self._underlying.type
         if select_type is ComponentType.string_select:
-            return self._selected_values
+            return self._selected_values  # type: ignore # ST is str
         resolved = []
         selected_values = list(self._selected_values)
         state = self._interaction._state
         guild = self._interaction.guild
+
+        if guild is None:
+            return []
+
         resolved_data = self._interaction.data.get("resolved", {})
         if select_type is ComponentType.channel_select:
             for channel_id, _data in resolved_data.get("channels", {}).items():
@@ -602,6 +602,9 @@ class Select(Item[V]):
                     # For threads, if this fallback occurs, info like thread owner id, message count,
                     # flags, and more will be missing due to a lack of data sent by Discord.
                     obj_type = _threaded_guild_channel_factory(_data["type"])[0]
+                    if obj_type is None:
+                        # should not be None, but assert anyways
+                        continue
                     result = obj_type(state=state, data=_data, guild=guild)
                 resolved.append(result)
         elif select_type in (
@@ -642,7 +645,7 @@ class Select(Item[V]):
 
     def refresh_state(self, interaction: Interaction | dict) -> None:
         data: ComponentInteractionData = (
-            interaction.data if isinstance(interaction, Interaction) else interaction
+            interaction.data if isinstance(interaction, Interaction) else interaction  # type: ignore
         )
         self._selected_values = data.get("values", [])
         self._interaction = interaction
@@ -704,7 +707,7 @@ def select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
+) -> Callable[[ItemCallbackType[Select[V, ST]]], Select[V, ST]]:
     """A decorator that attaches a select menu to a component.
 
     The function being decorated should have three parameters, ``self`` representing
@@ -842,7 +845,7 @@ def string_select(
     disabled: bool = False,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
+) -> Callable[[ItemCallbackType[Select[V, str]]], Select[V, str]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.string_select`.
 
     .. versionadded:: 2.3
@@ -870,7 +873,7 @@ def user_select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
+) -> Callable[[ItemCallbackType[Select[V, User | Member]]], Select[V, User | Member]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.user_select`.
 
     .. versionadded:: 2.3
@@ -898,7 +901,7 @@ def role_select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
+) -> Callable[[ItemCallbackType[Select[V, Any]]], Select[V, Role]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
     .. versionadded:: 2.3
@@ -926,7 +929,7 @@ def mentionable_select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
+) -> Callable[[ItemCallbackType[Select[V, Role | User | Member]]], Select[V, Role | User | Member]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 
     .. versionadded:: 2.3
@@ -955,7 +958,7 @@ def channel_select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V]]], Select[V]]:
+) -> Callable[[ItemCallbackType[Select[V, GuildChannel]]], Select[V, GuildChannel]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
     .. versionadded:: 2.3
