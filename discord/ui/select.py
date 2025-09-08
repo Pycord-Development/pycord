@@ -262,6 +262,10 @@ class Select(Generic[V, ST], Item[V]):
             if isinstance(dv, SelectDefaultValue):
                 ret.append(dv)
                 continue
+            if isinstance(dv, str):
+                # this should not be here anyways, but guarding it
+                continue
+
             ret.append(SelectDefaultValue._handle_model(dv, select_type))
 
         return ret
