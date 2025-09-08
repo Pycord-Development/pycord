@@ -633,7 +633,7 @@ class SelectDefaultValue:
         def_type = None
 
         for typ, (st, dt) in instances_mapping.items():
-            if isinstance(model, typ):
+            if issubclass(obj_type, typ):
                 sel_types = st
                 def_type = dt
                 break
