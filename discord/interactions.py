@@ -1100,7 +1100,6 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-
         self._responded = True
         await self._process_callback_response(callback_response)
         if view and not view.is_finished():
@@ -1270,7 +1269,6 @@ class InteractionResponse:
             if files:
                 for file in files:
                     file.close()
-
 
         self._responded = True
         await self._process_callback_response(callback_response)
