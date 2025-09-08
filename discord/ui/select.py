@@ -258,8 +258,23 @@ class Select(Generic[V, ST], Item[V]):
 
         ret = []
 
+        valid_default_types = {
+            ComponentType.user_select: (SelectDefaultValueType.user,),
+            ComponentType.role_select: (SelectDefaultValueType.role,),
+            ComponentType.channel_select: (SelectDefaultValueType.channel,),
+            ComponentType.mentionable_select: (SelectDefaultValueType.user, SelectDefaultValueType.role),
+        }
+
         for dv in default_values:
             if isinstance(dv, SelectDefaultValue):
+                try:
+                    valid_types = valid_default_types[select_type]
+                except KeyError:
+                    raise TypeError(f"select default values are not allowed for this select type ({select_type.name})")
+
+                if dv.type not in valid_types:
+                    raise TypeError(f"{dv.type.name} is not a valid select default value for selects of type {select_type.name}")
+
                 ret.append(dv)
                 continue
             if isinstance(dv, str):
