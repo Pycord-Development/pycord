@@ -369,6 +369,9 @@ class Option:
 
     @staticmethod
     def _strip_none_type(input_type):
+        if isinstance(input_type, SlashCommandOptionType):
+            return input_type
+
         if input_type is type(None):
             raise TypeError("Option type cannot be only NoneType")
 

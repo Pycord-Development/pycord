@@ -604,7 +604,6 @@ class ConnectionState:
             raise
 
     async def _delay_ready(self) -> None:
-
         if self.cache_app_emojis and self.application_id:
             data = await self.http.get_all_application_emojis(self.application_id)
             for e in data.get("items", []):
@@ -677,7 +676,9 @@ class ConnectionState:
             else:
                 self.application_id = utils._get_as_snowflake(application, "id")
                 # flags will always be present here
-                self.application_flags = ApplicationFlags._from_value(application["flags"])  # type: ignore
+                self.application_flags = ApplicationFlags._from_value(
+                    application["flags"]
+                )  # type: ignore
 
         for guild_data in data["guilds"]:
             self._add_guild_from_data(guild_data)
@@ -775,21 +776,19 @@ class ConnectionState:
                 self._messages.remove(msg)  # type: ignore
 
     def parse_message_update(self, data) -> None:
-        raw = RawMessageUpdateEvent(data)
-        message = self._get_message(raw.message_id)
-        if message is not None:
-            older_message = copy.copy(message)
-            raw.cached_message = older_message
-            self.dispatch("raw_message_edit", raw)
-            message._update(data)
-            # Coerce the `after` parameter to take the new updated Member
-            # ref: #5999
-            older_message.author = message.author
-            self.dispatch("message_edit", older_message, message)
+        old_message = self._get_message(int(data["id"]))
+        channel, _ = self._get_guild_channel(data)
+        message = Message(channel=channel, data=data, state=self)
+        if old_message is not None:
+            self._messages.remove(old_message)
+        self._messages.append(message)
+        raw = RawMessageUpdateEvent(data, message)
+        self.dispatch("raw_message_edit", raw)
+        if old_message is not None:
+            self.dispatch("message_edit", old_message, message)
         else:
             if poll_data := data.get("poll"):
                 self.store_raw_poll(poll_data, raw)
-            self.dispatch("raw_message_edit", raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
             self._view_store.update_from_message(raw.message_id, data["components"])
@@ -1378,7 +1377,9 @@ class ConnectionState:
         for emoji in before_stickers:
             self._stickers.pop(emoji.id, None)
         # guild won't be None here
-        guild.stickers = tuple(map(lambda d: self.store_sticker(guild, d), data["stickers"]))  # type: ignore
+        guild.stickers = tuple(
+            map(lambda d: self.store_sticker(guild, d), data["stickers"])
+        )  # type: ignore
         self.dispatch("guild_stickers_update", guild, before_stickers, guild.stickers)
 
     def _get_create_guild(self, data):
@@ -1583,7 +1584,10 @@ class ConnectionState:
         presences = data.get("presences", [])
 
         # the guild won't be None here
-        members = [Member(guild=guild, data=member, state=self) for member in data.get("members", [])]  # type: ignore
+        members = [
+            Member(guild=guild, data=member, state=self)
+            for member in data.get("members", [])
+        ]  # type: ignore
         _log.debug(
             "Processed a chunk for %s members in guild ID %s.", len(members), guild_id
         )
