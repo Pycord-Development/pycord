@@ -301,6 +301,7 @@ class Client:
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
         self._event_handlers: dict[str, list[Coro]] = {}
+        self._in_context: bool = False
 
         if VoiceClient.warn_nacl:
             VoiceClient.warn_nacl = False
@@ -310,6 +311,7 @@ class Client:
         self._tasks = set()
 
     async def __aenter__(self) -> Client:
+        self._in_context = True
         if self._loop is None:
             try:
                 self._loop = asyncio.get_running_loop()
@@ -337,6 +339,7 @@ class Client:
         exc_v: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
+        self._in_context = False
         if not self.is_closed():
             await self.close()
 
@@ -867,7 +870,20 @@ class Client:
         TypeError
             An unexpected keyword argument was received.
         """
-        # Update the loop to get the running one in case the one set is MISSING
+        if not self._in_context and self._loop is None:
+            # Update the loop to get the running one in case the one set is MISSING
+            try:
+                self._loop = asyncio.get_running_loop()
+            except RuntimeError:
+                self._loop = asyncio.new_event_loop()
+    
+            self._pending_loops.start(self)
+            self.http.loop = self.loop
+            self._connection.loop = self.loop
+
+            self._ready = asyncio.Event()
+            self._closed = asyncio.Event()
+
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
