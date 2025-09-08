@@ -1030,7 +1030,7 @@ class InteractionResponse:
 
         flags = MessageFlags(ephemeral=ephemeral)
 
-        if view is not None:
+        if view:
             payload["components"] = view.to_components()
             if view.is_components_v2():
                 if embeds or content:
@@ -1100,7 +1100,10 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view is not None:
+
+        self._responded = True
+        await self._process_callback_response(callback_response)
+        if view and not view.is_finished():
             if ephemeral and view.timeout is None:
                 view.timeout = 15 * 60.0
 
@@ -1108,8 +1111,8 @@ class InteractionResponse:
             if view.is_dispatchable():
                 self._parent._state.store_view(view)
 
-        self._responded = True
-        await self._process_callback_response(callback_response)
+            view.message = await self._parent.original_response()
+
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
         return self._parent
@@ -1268,12 +1271,13 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view and not view.is_finished():
-            view.message = msg
-            state.store_view(view, message_id)
 
         self._responded = True
         await self._process_callback_response(callback_response)
+        if view and not view.is_finished():
+            view.message = msg or await parent.original_response()
+            state.store_view(view, message_id)
+
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
 
