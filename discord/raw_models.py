@@ -188,15 +188,21 @@ class RawMessageUpdateEvent(_RawReprMixin):
     cached_message: Optional[:class:`Message`]
         The cached message, if found in the internal message cache. Represents the message before
         it is modified by the data in :attr:`RawMessageUpdateEvent.data`.
+    new_message: :class:`Message`
+        The new message object. Represents the message after it is modified by the data in
+        :attr:`RawMessageUpdateEvent.data`.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = ("message_id", "channel_id", "guild_id", "data", "cached_message")
 
-    def __init__(self, data: MessageUpdateEvent) -> None:
+    def __init__(self, data: MessageUpdateEvent, new_message: Message) -> None:
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.data: MessageUpdateEvent = data
         self.cached_message: Message | None = None
+        self.new_message: Message = new_message
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
 

@@ -273,3 +273,24 @@ ApplicationIntegrationType = Literal[0, 1]
 _StringApplicationIntegrationType = Literal["0", "1"]
 
 AuthorizingIntegrationOwners = Dict[_StringApplicationIntegrationType, Snowflake]
+
+
+class InteractionCallbackResponse(TypedDict):
+    interaction: InteractionCallback
+    resource: NotRequired[InteractionCallbackResource]
+
+
+class InteractionCallback(TypedDict):
+    id: Snowflake
+    type: InteractionType
+    activity_instance_id: NotRequired[str]
+    response_message_id: NotRequired[Snowflake]
+    response_message_loading: NotRequired[bool]
+    response_message_ephemeral: NotRequired[bool]
+
+
+class InteractionCallbackResource(TypedDict):
+    type: InteractionResponseType
+    # This is not fully typed as activities are out of scope
+    activity_instance: NotRequired[dict]
+    message: NotRequired[Message]

@@ -1,7 +1,7 @@
 import os
 
 cur_path = os.getcwd()
-ignore_set = {"__init__.py", "count_sourcelines.py"}
+ignore_set = {"__init__.py", "count_sourcelines.py", "docs-json-exporter.py"}
 
 loc_list = []
 
