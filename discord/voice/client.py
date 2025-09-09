@@ -241,6 +241,14 @@ class VoiceClient(VoiceProtocol):
         ws = self.ws
         return float("inf") if not ws else ws.average_latency
 
+    @property
+    def privacy_code(self) -> str | None:
+        """Returns the current voice session's privacy code, only available if the call has upgraded to use the
+        DAVE protocol
+        """
+        session = self._connection.dave_session
+        return session and session.voice_privacy_code
+
     async def disconnect(self, *, force: bool = False) -> None:
         """|coro|
 
@@ -288,6 +296,10 @@ class VoiceClient(VoiceProtocol):
     # audio related
 
     def _get_voice_packet(self, data: Any) -> bytes:
+
+        session = self._connection.dave_session
+        packet = session.encrypt_opus(data) if session and session.ready else data
+
         header = bytearray(12)
 
         # formulate rtp header
@@ -298,7 +310,7 @@ class VoiceClient(VoiceProtocol):
         struct.pack_into(">I", header, 8, self.ssrc)
 
         encrypt_packet = getattr(self, f"_encrypt_{self.mode}")
-        return encrypt_packet(header, data)
+        return encrypt_packet(header, packet)
 
     # encryption methods
 

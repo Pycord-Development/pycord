@@ -41,7 +41,6 @@ import aiohttp
 
 from . import utils
 from .activity import BaseActivity
-from .enums import SpeakingState
 from .errors import ConnectionClosed, InvalidArgument
 
 if TYPE_CHECKING:
@@ -55,8 +54,6 @@ _log = logging.getLogger(__name__)
 __all__ = (
     "DiscordWebSocket",
     "KeepAliveHandler",
-    "VoiceKeepAliveHandler",
-    "DiscordVoiceWebSocket",
     "ReconnectWebSocket",
 )
 
@@ -226,31 +223,6 @@ class KeepAliveHandler(threading.Thread):
         self.latency = ack_time - self._last_send
         if self.latency > 10:
             _log.warning(self.behind_msg, self.shard_id, self.latency)
-
-
-class VoiceKeepAliveHandler(KeepAliveHandler):
-    if TYPE_CHECKING:
-        ws: DiscordVoiceWebSocket
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.recent_ack_latencies = deque(maxlen=20)
-        self.msg = "Keeping shard ID %s voice websocket alive with timestamp %s."
-        self.block_msg = "Shard ID %s voice heartbeat blocked for more than %s seconds"
-        self.behind_msg = "High socket latency, shard ID %s heartbeat is %.1fs behind"
-
-    def get_payload(self):
-        return {
-            "op": self.ws.HEARTBEAT,
-            "d": {"t": int(time.time() * 1000), "seq_ack": self.ws.seq_ack},
-        }
-
-    def ack(self):
-        ack_time = time.perf_counter()
-        self._last_ack = ack_time
-        self._last_recv = ack_time
-        self.latency = ack_time - self._last_send
-        self.recent_ack_latencies.append(self.latency)
 
 
 class DiscordClientWebSocketResponse(aiohttp.ClientWebSocketResponse):

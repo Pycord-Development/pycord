@@ -42,6 +42,8 @@ from discord.errors import ConnectionClosed
 from discord.object import Object
 from discord.sinks import RawData, Sink
 
+import davey
+
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
 
@@ -60,6 +62,7 @@ MISSING = utils.MISSING
 SocketReaderCallback = Callable[[bytes], Any]
 _log = logging.getLogger(__name__)
 _recv_log = logging.getLogger("discord.voice.receiver")
+DAVE_PROTOCOL_VERSION = davey.DAVE_PROTOCOL_VERSION
 
 
 class SocketReader(threading.Thread):
@@ -291,9 +294,23 @@ class VoiceConnectionState:
         ] = []
         self._sink_dispatch_task_set: set[asyncio.Task[Any]] = set()
 
+        if not self._connection.self_id:
+            raise RuntimeError("client self ID is not set")
+        if not self.channel_id:
+            raise RuntimeError("client channel being connected to is not set")
+
+        self.dave_session: davey.DaveSession | None = None
+        self.dave_protocol_version: int = 0
+        self.dave_pending_transition: dict[str, int] | None = None
+        self.downgraded_dave = False
+
     @property
     def sinks(self) -> list[Sink]:
         return list(self._sinks.values())
+
+    @property
+    def max_dave_proto_version(self) -> int:
+        return davey.DAVE_PROTOCOL_VERSION
 
     def start_record_socket(self) -> None:
         try:
@@ -1011,6 +1028,7 @@ class VoiceConnectionState:
         await self.client.channel.guild.change_voice_state(channel=None)
         self._expecting_disconnect = True
         self._disconnected.clear()
+        self.ws._identified = False
 
     async def _connect_websocket(self, resume: bool) -> VoiceWebSocket:
         seq_ack = -1
@@ -1187,3 +1205,69 @@ class VoiceConnectionState:
 
     def _update_voice_channel(self, channel_id: int | None) -> None:
         self.client.channel = channel_id and self.guild.get_channel(channel_id)  # type: ignore
+
+    async def reinit_dave_session(self) -> None:
+        session = self.dave_session
+
+        if self.dave_protocol_version > 0:
+            if session:
+                session.reinit(self.dave_protocol_version, self.user.id, self.channel_id)
+            else:
+                session = self.dave_session = davey.DaveSession(
+                    self.dave_protocol_version,
+                    self.user.id,
+                    self.channel_id,
+                )
+
+            await self.ws.send_as_bytes(
+                int(OpCodes.mls_key_package),
+                session.get_serialized_key_package(),
+            )
+        elif session:
+            session.reset()
+            session.set_passthrough_mode(True, 10)
+
+    async def recover_dave_from_invalid_commit(self, transition: int) -> None:
+        payload = {
+            "op": int(OpCodes.mls_invalid_commit_welcome),
+            "d": {"transition_id": transition},
+        }
+        await self.ws.send_as_json(payload)
+        await self.reinit_dave_session()
+
+    async def execute_dave_transition(self, transition: int) -> None:
+        _log.debug("Executing DAVE transition with id %s", transition)
+
+        if not self.dave_pending_transition:
+            _log.warning(
+                "Attempted to execute a transition without having a pending transition for id %s, "
+                "this is a Discord bug.",
+                transition,
+            )
+            return
+
+        pending_transition = self.dave_pending_transition["transition_id"]
+        pending_proto = self.dave_pending_transition["protocol_version"]
+
+        session = self.dave_session
+
+        if transition == pending_transition:
+            old_version = self.dave_protocol_version
+            self.dave_protocol_version = pending_proto
+
+            if old_version != self.dave_protocol_version and self.dave_protocol_version == 0:
+                _log.warning("DAVE was downgraded, voice client non-e2ee session has been deprecated since 2.7")
+                self.downgraded_dave = True
+            elif transition > 0 and self.downgraded_dave:
+                self.downgraded_dave = False
+                if session:
+                    session.set_passthrough_mode(True, 10)
+                _log.info("Upgraded voice session to use DAVE")
+        else:
+            _log.debug(
+                "Received an execute transition id %s when expected was %s, ignoring",
+                transition,
+                pending_proto,
+            )
+
+        self.dave_pending_transition = None

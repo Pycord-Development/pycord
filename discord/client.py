@@ -50,7 +50,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
-from .monetization import SKU, Entitlement
+from .monetization import SKU
 from .object import Object
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance

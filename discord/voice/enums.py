@@ -42,6 +42,19 @@ class OpCodes(Enum):
     client_connect = 10
     client_disconnect = 11
 
+    # dave protocol stuff
+    dave_prepare_transition = 21
+    dave_execute_transition = 22
+    dave_transition_ready = 23
+    dave_prepare_epoch = 24
+    mls_external_sender_package = 25
+    mls_key_package = 26
+    mls_proposals = 27
+    mls_commit_welcome = 28
+    mls_commit_transition = 29
+    mls_welcome = 30
+    mls_invalid_commit_welcome = 31
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, int):
             return self.value == other
