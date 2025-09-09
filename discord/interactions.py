@@ -1115,7 +1115,6 @@ class InteractionResponse:
 
             view.message = await self._parent.original_response()
 
-
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
         return self._parent
