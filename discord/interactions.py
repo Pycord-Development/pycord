@@ -613,11 +613,13 @@ class Interaction:
         # The message channel types should always match
         state = _InteractionMessageState(self, self._state)
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
-        if view and not view.is_finished():
+        if view:
+            if not view.is_finished():
+                view.refresh(message.components)
+                if view.is_dispatchable():
+                    self._state.store_view(view, message.id)
+
             view.message = message
-            view.refresh(message.components)
-            if view.is_dispatchable():
-                self._state.store_view(view, message.id)
 
         if delete_after is not None:
             await self.delete_original_response(delay=delete_after)
@@ -1102,15 +1104,17 @@ class InteractionResponse:
 
         self._responded = True
         await self._process_callback_response(callback_response)
-        if view and not view.is_finished():
-            if ephemeral and view.timeout is None:
-                view.timeout = 15 * 60.0
+        if view:
+            if not view.is_finished():
+                if ephemeral and view.timeout is None:
+                    view.timeout = 15 * 60.0
 
-            view.parent = self._parent
-            if view.is_dispatchable():
-                self._parent._state.store_view(view)
+                view.parent = self._parent
+                if view.is_dispatchable():
+                    self._parent._state.store_view(view)
 
             view.message = await self._parent.original_response()
+
 
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
@@ -1272,9 +1276,10 @@ class InteractionResponse:
 
         self._responded = True
         await self._process_callback_response(callback_response)
-        if view and not view.is_finished():
+        if view:
+            if not view.is_finished():
+                state.store_view(view, message_id)
             view.message = msg or await parent.original_response()
-            state.store_view(view, message_id)
 
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
