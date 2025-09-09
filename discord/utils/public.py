@@ -5,8 +5,8 @@ import re
 import datetime
 from enum import Enum, auto
 import itertools
-from collections.abc import Awaitable, Callable, Iterable
-from typing import TYPE_CHECKING, Any, Literal, Iterable, TypeVar
+from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING, Any, Literal, Iterable, TypeVar, Match, cast
 
 if TYPE_CHECKING:
     from ..abc import Snowflake
@@ -46,14 +46,16 @@ def utcnow() -> datetime.datetime:
     return datetime.datetime.now(datetime.timezone.utc)
 
 
-V = Iterable["OptionChoice"] | Iterable[str] | Iterable[int] | Iterable[float]
+V = Iterable[OptionChoice] | Iterable[str] | Iterable[int] | Iterable[float]
 AV = Awaitable[V]
-Values = V | Callable[["AutocompleteContext"], V | AV] | AV
-AutocompleteFunc = Callable[["AutocompleteContext"], AV]
-FilterFunc = Callable[["AutocompleteContext", Any], bool | Awaitable[bool]]
+Values = V | Callable[[AutocompleteContext], V | AV] | AV
+AutocompleteFunc = Callable[[AutocompleteContext], AV]
+FilterFunc = Callable[[AutocompleteContext, Any], bool | Awaitable[bool]]
 
 
-def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> AutocompleteFunc:
+def basic_autocomplete(
+    values: Values, *, filter: FilterFunc | None = None
+) -> AutocompleteFunc:
     """A helper function to make a basic autocomplete for slash commands. This is a pretty standard autocomplete and
     will return any options that start with the value from the user, case-insensitive. If the ``values`` parameter is
     callable, it will be called with the AutocompleteContext.
@@ -119,16 +121,23 @@ def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> A
         if asyncio.iscoroutine(_values):
             _values = await _values
 
+        _values = cast(V, _values)
         if filter is None:
 
-            def _filter(ctx: AutocompleteContext, item: Any) -> bool:
+            def _filter(
+                ctx: AutocompleteContext, item: OptionChoice | str | int | float
+            ) -> bool:
                 item = getattr(item, "name", item)
                 return str(item).lower().startswith(str(ctx.value or "").lower())
 
             gen = (val for val in _values if _filter(ctx, val))
 
         elif asyncio.iscoroutinefunction(filter):
-            gen = (val for val in _values if await filter(ctx, val))
+            filtered_values: list[OptionChoice | str | int | float] = []
+            for val in _values:
+                if await filter(ctx, val):
+                    filtered_values.append(val)
+            gen = (val for val in _values)
 
         elif callable(filter):
             gen = (val for val in _values if filter(ctx, val))
@@ -136,7 +145,7 @@ def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> A
         else:
             raise TypeError("``filter`` must be callable.")
 
-        return iter(itertools.islice(gen, 25))
+        return cast(V, iter(itertools.islice(gen, 25)))
 
     return autocomplete_callback
 
@@ -267,7 +276,9 @@ def oauth_url(
 TimestampStyle = Literal["f", "F", "d", "D", "t", "T", "R"]
 
 
-def format_dt(dt: datetime.datetime | datetime.time, /, style: TimestampStyle | None = None) -> str:
+def format_dt(
+    dt: datetime.datetime | datetime.time, /, style: TimestampStyle | None = None
+) -> str:
     """A helper function to format a :class:`datetime.datetime` for presentation within Discord.
 
     This allows for a locale-independent way of presenting data using Discord specific Markdown.
@@ -406,7 +417,9 @@ def raw_role_mentions(text: str) -> list[int]:
     return [int(x) for x in RAW_ROLE_PATTERN.findall(text)]
 
 
-_MARKDOWN_ESCAPE_SUBREGEX = "|".join(r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|"))
+_MARKDOWN_ESCAPE_SUBREGEX = "|".join(
+    r"\{0}(?=([\s\S]*((?<!\{0})\{0})))".format(c) for c in ("*", "`", "_", "~", "|")
+)
 
 # regular expression for finding and escaping links in markdown
 # note: technically, brackets are allowed in link text.
@@ -457,7 +470,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
         The text with the markdown special characters removed.
     """
 
-    def replacement(match):
+    def replacement(match: Match[str]):
         groupdict = match.groupdict()
         return groupdict.get("url", "")
 
@@ -467,7 +480,9 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
     return re.sub(regex, replacement, text, 0, re.MULTILINE)
 
 
-def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = True) -> str:
+def escape_markdown(
+    text: str, *, as_needed: bool = False, ignore_links: bool = True
+) -> str:
     r"""A helper function that escapes Discord's markdown.
 
     Parameters
@@ -494,7 +509,7 @@ def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = 
 
     if not as_needed:
 
-        def replacement(match):
+        def replacement(match: Match[str]):
             groupdict = match.groupdict()
             is_url = groupdict.get("url")
             if is_url:
