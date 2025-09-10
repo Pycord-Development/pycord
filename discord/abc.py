@@ -235,7 +235,7 @@ class User(Snowflake, Protocol):
     name: str
     discriminator: str
     global_name: str | None
-    avatar: Asset
+    avatar: Asset | None
     bot: bool
 
     @property
@@ -299,6 +299,7 @@ class _Overwrites:
 
 
 GCH = TypeVar("GCH", bound="GuildChannel")
+
 
 
 class GuildChannel:
