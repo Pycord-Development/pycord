@@ -30,7 +30,7 @@ import os
 import sys
 from collections.abc import Sequence
 from functools import partial
-from typing import TYPE_CHECKING, Any, Callable, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Generic, Literal, TypeVar, overload
 
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectDefaultValue, SelectMenu, SelectOption
@@ -195,6 +195,61 @@ class Select(Generic[V, ST], Item[V]):
         "required",
         "default_values",
     )
+
+    @overload
+    def __init__(
+        self,
+        select_type: Literal[ComponentType.string_select] = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        options: list[SelectOption] | None = ...,
+        disabled: bool = ...,
+        row: int | None = ...,
+        id: int | None = ...,
+        label: str | None = ...,
+        description: str | None = ...,
+        required: bool | None = ...,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        select_type: Literal[ComponentType.channel_select],
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        channel_types: list[ChannelType] | None = ...,
+        disabled: bool = ...,
+        row: int | None = ...,
+        id: int | None = ...,
+        label: str | None = ...,
+        description: str | None = ...,
+        required: bool | None = ...,
+        default_values: Sequence[SelectDefaultValue | ST] | None = ...,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        select_type: Literal[ComponentType.user_select, ComponentType.role_select, ComponentType.mentionable_select],
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        disabled: bool = ...,
+        row: int | None = ...,
+        id: int | None = ...,
+        label: str | None = ...,
+        description: str | None = ...,
+        required: bool | None = ...,
+        default_values: Sequence[SelectDefaultValue | ST] | None = ...,
+    ) -> None: ...
 
     def __init__(
         self,
