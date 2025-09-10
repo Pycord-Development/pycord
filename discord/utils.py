@@ -641,7 +641,7 @@ async def get_or_fetch(
 
     Parameters
     ----------
-    obj : :class:`Guild` | :class:`Client`
+    obj: :class:`Guild` | :class:`Client`
         The object to operate on.
 
     object_type: :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :class:`AppEmoji`
@@ -650,7 +650,7 @@ async def get_or_fetch(
     object_id: :class:`int` | :data:`None`
         ID of object to get.
 
-    default : Any | :data:`None`
+    default: Any | :data:`None`
         The value to return instead of raising if fetching fails.
 
     Returns
