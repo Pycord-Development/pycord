@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+from collections.abc import Iterator
 import datetime
 import functools
 import inspect
@@ -50,9 +51,7 @@ from ..enums import Enum as DiscordEnum
 from ..enums import (
     IntegrationType,
     InteractionContextType,
-    MessageType,
     SlashCommandOptionType,
-    try_enum,
 )
 from ..errors import (
     ApplicationCommandError,
@@ -62,13 +61,12 @@ from ..errors import (
     InvalidArgument,
     ValidationError,
 )
-from ..member import Member
 from ..message import Attachment, Message
 from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_deprecated
+from ..utils import MISSING, async_all, find, maybe_coroutine, resolve_annotation, utcnow, warn_deprecated
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -101,7 +99,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
-Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
+Coro = Coroutine[Any, Any, T]
 
 if TYPE_CHECKING:
     P = ParamSpec("P")
@@ -190,7 +188,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping
 
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
@@ -314,7 +312,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "2.6",
             reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
         )
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return self.contexts is not None and InteractionContextType.guild in self.contexts and len(self.contexts) == 1
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
@@ -779,32 +777,35 @@ class SlashCommand(ApplicationCommand):
         else:
             self.options = self._parse_options(params)
 
-    def _check_required_params(self, params):
-        params = iter(params.items())
+    def _check_required_params(self, params: OrderedDict[str, inspect.Parameter]) -> Iterator[tuple[str, inspect.Parameter]]:
+        params_iter = iter(params.items())
         required_params = (
             ["self", "context"] if self.attached_to_group or self.cog else ["context"]
         )
         for p in required_params:
             try:
-                next(params)
+                next(params_iter)
             except StopIteration:
                 raise ClientException(
                     f'Callback for {self.name} command is missing "{p}" parameter.'
                 )
 
-        return params
+        return params_iter
 
-    def _parse_options(self, params, *, check_params: bool = True) -> list[Option]:
+    def _parse_options(self, params: OrderedDict[str, inspect.Parameter], *, check_params: bool = True) -> list[Option]:
         if check_params:
-            params = self._check_required_params(params)
+            params_iter = self._check_required_params(params)
         else:
-            params = iter(params.items())
+            params_iter = iter(params.items())
 
         final_options = []
-        for p_name, p_obj in params:
+        cache = {}
+        for p_name, p_obj in params_iter:
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
+
+            option = resolve_annotation(option, globals(), locals(), cache)
 
             option = Option._strip_none_type(option)
             if self._is_typing_literal(option):
