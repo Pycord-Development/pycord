@@ -790,11 +790,19 @@ if TYPE_CHECKING:
     ChannelSelect = Select[V, GuildChannel | Thread]
     """A typed alias for :class:`Select` for channel values."""
 else:
-    StringSelect: Select[V, str] = partial(Select, select_type=ComponentType.string_select)
-    UserSelect: Select[V, User | Member] = partial(Select, select_type=ComponentType.user_select)
+    StringSelect: Select[V, str] = partial(
+        Select, select_type=ComponentType.string_select
+    )
+    UserSelect: Select[V, User | Member] = partial(
+        Select, select_type=ComponentType.user_select
+    )
     RoleSelect: Select[V, Role] = partial(Select, select_type=ComponentType.role_select)
-    MentionableSelect: Select[V, Role | User | Member] = partial(Select, select_type=ComponentType.mentionable_select)
-    ChannelSelect: Select[V, GuildChannel | Thread] = partial(Select, select_type=ComponentType.channel_select)
+    MentionableSelect: Select[V, Role | User | Member] = partial(
+        Select, select_type=ComponentType.mentionable_select
+    )
+    ChannelSelect: Select[V, GuildChannel | Thread] = partial(
+        Select, select_type=ComponentType.channel_select
+    )
 
 
 _select_types = (
@@ -1042,7 +1050,8 @@ def mentionable_select(
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
 ) -> Callable[
-    [ItemCallbackType[MentionableSelect[V]]], MentionableSelect[V],
+    [ItemCallbackType[MentionableSelect[V]]],
+    MentionableSelect[V],
 ]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.mentionable_select`.
 

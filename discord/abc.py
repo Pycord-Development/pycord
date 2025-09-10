@@ -301,7 +301,6 @@ class _Overwrites:
 GCH = TypeVar("GCH", bound="GuildChannel")
 
 
-
 class GuildChannel:
     """An ABC that details the common operations on a Discord guild channel.
 
