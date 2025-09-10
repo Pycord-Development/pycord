@@ -17,6 +17,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
 - Added `RawMessageUpdateEvent.new_message` - message update events now contain full
   message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Changed
 
@@ -28,6 +30,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2905](https://github.com/Pycord-Development/pycord/pull/2905))
 - `view=None` in various methods causing an AttributeError.
   ([#2915](https://github.com/Pycord-Development/pycord/pull/2915))
+
+### Deprecated
+
+- Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favour
+  of `utils.get_or_fetch(object_type, object_id)`.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Removed
 
