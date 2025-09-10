@@ -303,3 +303,7 @@ ignore_errors = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+[tool.basedpyright]
+typeCheckingMode = "strict"
+
