@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import inspect
 import os
+import sys
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any, Callable, Generic, TypeVar
 
@@ -64,7 +65,10 @@ if TYPE_CHECKING:
 
     ST = TypeVar("ST", bound=Snowflake | str, covariant=True, default=Any)
 else:
-    ST = TypeVar("ST", bound="Snowflake | str", covariant=True)
+    if sys.version_info >= (3, 13):
+        ST = TypeVar("ST", bound="Snowflake | str", covariant=True, default=Any)
+    else:
+        ST = TypeVar("ST", bound="Snowflake | str", covariant=True)
 
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="View", covariant=True)
@@ -114,7 +118,7 @@ class Select(Generic[V, ST], Item[V]):
         A list of channel types that can be selected in this menu.
         Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
     disabled: :class:`bool`
-        Whether the select is disabled or not. Only useable in views. Defaults to ``True`` in views.
+        Whether the select is disabled or not. Only useable in views. Defaults to ``False`` in views.
     row: Optional[:class:`int`]
         The relative row this select menu belongs to. A Discord component can only have 5
         rows. By default, items are arranged automatically into those 5 rows. If you'd
@@ -778,7 +782,7 @@ def select(
     default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
         The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
 
-        This can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultvalue`
+        This can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
         instances.
 
         Below, is a table defining the model instance type and the default value type it will be mapped:
