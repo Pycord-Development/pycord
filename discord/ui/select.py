@@ -236,7 +236,11 @@ class Select(Generic[V, ST], Item[V]):
     @overload
     def __init__(
         self,
-        select_type: Literal[ComponentType.user_select, ComponentType.role_select, ComponentType.mentionable_select],
+        select_type: Literal[
+            ComponentType.user_select,
+            ComponentType.role_select,
+            ComponentType.mentionable_select,
+        ],
         *,
         custom_id: str | None = ...,
         placeholder: str | None = ...,
