@@ -28,6 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2905](https://github.com/Pycord-Development/pycord/pull/2905))
 - `view=None` in various methods causing an AttributeError.
   ([#2915](https://github.com/Pycord-Development/pycord/pull/2915))
+- Commands not properly parsing string-like / forward references annotations.
+  ([#2919](https://github.com/Pycord-Development/pycord/pull/2919))
 
 ### Removed
 
