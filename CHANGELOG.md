@@ -19,6 +19,12 @@ These changes are available on the `master` branch, but have not yet been releas
   message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
 - Added support for select default values.
   ([#2899](https://github.com/Pycord-Development/pycord/pull/2899))
+  - Adds a new generic parameter to selects to type `ui.Select.values` return type.
+  - Adds `SelectDefaultValue` object to create select default values.
+  - Adds `SelectDefaultValueType` enum.
+  - Adds pre-typed and pre-constructed `ui.Select` aliases for the different select
+    types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`, `ui.MentionableSelect`,
+    and `ui.ChannelSelect`.
 
 ### Changed
 
