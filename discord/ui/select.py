@@ -403,7 +403,7 @@ class Select(Generic[V, ST], Item[V]):
         return self._underlying.default_values
 
     @default_values.setter
-    def default_values(self, values: Sequence[SelectDefaultValue | ST] | None) -> None:
+    def default_values(self, values: Sequence[SelectDefaultValue | Snowflake] | None) -> None:
         default_values = self._handle_default_values(values, self.type)
         self._underlying.default_values = default_values
 
@@ -931,7 +931,7 @@ def role_select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V, Any]]], Select[V, Role]]:
+) -> Callable[[ItemCallbackType[Select[V, Role]]], Select[V, Role]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.role_select`.
 
     .. versionadded:: 2.3
@@ -990,7 +990,7 @@ def channel_select(
     row: int | None = None,
     id: int | None = None,
     default_values: Sequence[SelectDefaultValue | Snowflake] | None = None,
-) -> Callable[[ItemCallbackType[Select[V, GuildChannel]]], Select[V, GuildChannel]]:
+) -> Callable[[ItemCallbackType[Select[V, GuildChannel | Thread]]], Select[V, GuildChannel | Thread]]:
     """A shortcut for :meth:`discord.ui.select` with select type :attr:`discord.ComponentType.channel_select`.
 
     .. versionadded:: 2.3
