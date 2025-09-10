@@ -3050,7 +3050,7 @@ class Guild(Hashable):
         Parameters
         ----------
         emoji_id: int
-            The ID to search for.
+            The ID to get.
 
         Returns
         -------
