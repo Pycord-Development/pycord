@@ -22,7 +22,7 @@ These changes are available on the `master` branch, but have not yet been releas
   - Adds a new generic parameter to selects to type `ui.Select.values` return type.
   - Adds `SelectDefaultValue` object to create select default values.
   - Adds `SelectDefaultValueType` enum.
-  - Adds pre-typed and pre-constructed `ui.Select` aliases for the different select
+  - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the different select
     types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`, `ui.MentionableSelect`,
     and `ui.ChannelSelect`.
 
