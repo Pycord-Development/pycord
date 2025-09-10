@@ -1046,7 +1046,7 @@ class Guild(Hashable):
         object_id: :class:`int` | :data:`None`
             ID of the object to get. If :data:`None`, returns `default` if provided, otherwise :data:`None`.
 
-        default : Any | :data:`None`
+        default: Any | :data:`None`
             The value to return instead of raising if fetching fails or if `object_id` is :data:`None`.
 
         Returns
