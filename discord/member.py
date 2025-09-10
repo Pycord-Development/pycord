@@ -965,7 +965,6 @@ class Member(discord.abc.Messageable, _UserTag):
                 "Can only edit avatar, banner, or bio for the bot's member."
             )
 
-        print(payload, bot_payload)
         if payload:
             data = await http.edit_member(guild_id, self.id, reason=reason, **payload)
         elif bot_payload:
