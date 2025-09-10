@@ -27,8 +27,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, overload
 
-from .partial_emoji import _EmojiTag
 from . import utils
+from .partial_emoji import _EmojiTag
 from .utils.private import get_as_snowflake
 
 if TYPE_CHECKING:

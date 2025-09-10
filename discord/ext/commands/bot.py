@@ -33,7 +33,7 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Iterable, TypeVar
 
 import discord
 from discord.utils import Undefined
-from discord.utils.private import copy_doc, maybe_awaitable, async_all
+from discord.utils.private import async_all, copy_doc, maybe_awaitable
 
 from . import errors
 from .context import Context
@@ -229,7 +229,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
         if not isinstance(ret, str):
             try:
                 ret = list(ret)
-            except TypeError:
+            except TypeError as e:
                 # It's possible that a generator raised this exception.  Don't
                 # replace it with our own error if that's the case.
                 if isinstance(ret, collections.abc.Iterable):
@@ -238,7 +238,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 raise TypeError(
                     "command_prefix must be plain string, iterable of strings, or"
                     f" callable returning either of these, not {ret.__class__.__name__}"
-                )
+                ) from e
 
             if not ret:
                 raise ValueError("Iterable command_prefix must contain at least one prefix")
@@ -296,11 +296,11 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                 else:
                     return ctx
 
-            except TypeError:
+            except TypeError as e:
                 if not isinstance(prefix, list):
                     raise TypeError(
                         f"get_prefix must return either a string or a list of string, not {prefix.__class__.__name__}"
-                    )
+                    ) from e
 
                 # It's possible a bad command_prefix got us here.
                 for value in prefix:
@@ -309,7 +309,7 @@ class BotBase(GroupMixin, discord.cog.CogMixin):
                             "Iterable command_prefix or list returned from get_prefix"
                             " must contain only strings, not"
                             f" {value.__class__.__name__}"
-                        )
+                        ) from e
 
                 # Getting here shouldn't happen
                 raise

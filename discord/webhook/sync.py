@@ -41,7 +41,6 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 from urllib.parse import quote as urlquote
 
 from .. import utils
-from ..utils.private import parse_ratelimit_header, bytes_to_base64_data, to_json
 from ..channel import PartialMessageable
 from ..errors import (
     DiscordServerError,
@@ -54,6 +53,7 @@ from ..http import Route
 from ..message import Message
 from ..object import Object
 from ..threads import Thread
+from ..utils.private import bytes_to_base64_data, parse_ratelimit_header, to_json
 from .async_ import BaseWebhook, _WebhookState, handle_message_parameters
 
 __all__ = (

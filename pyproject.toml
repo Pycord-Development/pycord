@@ -96,11 +96,8 @@ only-packages = true
 packages = ["discord"]
 only-include = ["discord", "README.rst", "LICENSE", "pyproject.toml", "discord/bin/*.dll", "discord/emojis.json", "discord/ibanner.txt", "discord/banner.txt", "discord/chan/ART.txt",]
 
-[tool.black]
-target-version = ['py310', 'py311', 'py312', 'py313']
-
 [tool.ruff]
-target-version = "py39"
+target-version = "py310"
 line-length = 120
 indent-width = 4
 
@@ -140,17 +137,6 @@ extend-ignore = [
     "ARG004",
     "ARG005",
     "ASYNC230",
-    "B006",
-    "B007",
-    "B009",
-    "B010",
-    "B012",
-    "B018",
-    "B023",
-    "B026",
-    "B034",
-    "B039",
-    "B904",
     "BLE001",
     "C416",
     "C417",
@@ -201,7 +187,6 @@ extend-ignore = [
     "FIX002",
     "FURB167",
     "FURB188",
-    "I001",
     "ISC001",
     "N801",
     "N803",

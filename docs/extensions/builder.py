@@ -40,7 +40,7 @@ class DPYStandaloneHTMLBuilder(StandaloneHTMLBuilder):
         if self.config.html_split_index:
             self.handle_page("genindex", genindexcontext, "genindex-split.html")
             self.handle_page("genindex-all", genindexcontext, "genindex.html")
-            for (key, entries), count in zip(genindex, indexcounts):
+            for (key, entries), count in zip(genindex, indexcounts, strict=False):
                 ctx = {
                     "key": key,
                     "entries": entries,

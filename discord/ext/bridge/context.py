@@ -190,7 +190,7 @@ class BridgeExtContext(BridgeContext, Context):
             await self._original_response_message.delete(delay=delay, reason=reason)
 
 
-Context = Union[BridgeExtContext, BridgeApplicationContext]
+Context = BridgeExtContext | BridgeApplicationContext
 """
 A Union class for either :class:`BridgeExtContext` or :class:`BridgeApplicationContext`.
 Can be used as a type hint for Context for bridge commands.

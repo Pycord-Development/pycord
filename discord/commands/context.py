@@ -52,8 +52,6 @@ if TYPE_CHECKING:
     from ..webhook import WebhookMessage
     from .core import ApplicationCommand, Option
 
-    from typing import Callable, Awaitable
-
 from ..utils.private import copy_doc
 
 T = TypeVar("T")

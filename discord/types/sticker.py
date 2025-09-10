@@ -62,7 +62,7 @@ class GuildSticker(BaseSticker):
     guild_id: Snowflake
 
 
-Sticker = Union[BaseSticker, StandardSticker, GuildSticker]
+Sticker = BaseSticker | StandardSticker | GuildSticker
 
 
 class StickerPack(TypedDict):

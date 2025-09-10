@@ -23,7 +23,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import List, Union
+from typing import List
 
-Snowflake = Union[str, int]
+Snowflake = str | int
 SnowflakeList = List[Snowflake]

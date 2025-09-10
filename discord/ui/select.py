@@ -29,6 +29,8 @@ import inspect
 import os
 from typing import TYPE_CHECKING, Callable, TypeVar
 
+from discord import utils
+
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectMenu, SelectOption
 from ..emoji import AppEmoji, GuildEmoji
@@ -42,7 +44,6 @@ from ..threads import Thread
 from ..user import User
 from ..utils import MISSING
 from .item import Item, ItemCallbackType
-from discord import utils
 
 __all__ = (
     "Select",

@@ -34,7 +34,6 @@ from urllib.parse import quote as _uriquote
 
 import aiohttp
 
-from .utils.private import get_mime_type_for_image, to_json, from_json
 from . import __version__, utils
 from .errors import (
     DiscordServerError,
@@ -48,7 +47,7 @@ from .errors import (
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .utils import MISSING
-from .utils.private import warn_deprecated
+from .utils.private import from_json, get_mime_type_for_image, to_json, warn_deprecated
 
 _log = logging.getLogger(__name__)
 

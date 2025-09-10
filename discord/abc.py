@@ -41,7 +41,6 @@ from typing import (
     runtime_checkable,
 )
 
-from .utils.private import warn_deprecated
 from . import utils
 from .context_managers import Typing
 from .enums import ChannelType
@@ -56,6 +55,7 @@ from .permissions import PermissionOverwrite, Permissions
 from .role import Role
 from .scheduled_events import ScheduledEvent
 from .sticker import GuildSticker, StickerItem
+from .utils.private import warn_deprecated
 from .voice_client import VoiceClient, VoiceProtocol
 
 __all__ = (
@@ -99,9 +99,9 @@ if TYPE_CHECKING:
     from .ui.view import View
     from .user import ClientUser
 
-    PartialMessageableChannel = Union[TextChannel, VoiceChannel, StageChannel, Thread, DMChannel, PartialMessageable]
-    MessageableChannel = Union[PartialMessageableChannel, GroupChannel]
-    SnowflakeTime = Union["Snowflake", datetime]
+    PartialMessageableChannel = TextChannel | VoiceChannel | StageChannel | Thread | DMChannel | PartialMessageable
+    MessageableChannel = PartialMessageableChannel | GroupChannel
+    SnowflakeTime = "Snowflake" | datetime
 
 MISSING = utils.MISSING
 
@@ -912,8 +912,8 @@ class GuildChannel:
                 raise InvalidArgument("No overwrite provided.")
             try:
                 overwrite = PermissionOverwrite(**permissions)
-            except (ValueError, TypeError):
-                raise InvalidArgument("Invalid permissions given to keyword arguments.")
+            except (ValueError, TypeError) as e:
+                raise InvalidArgument("Invalid permissions given to keyword arguments.") from e
         elif len(permissions) > 0:
             raise InvalidArgument("Cannot mix overwrite and keyword arguments.")
 
@@ -1753,8 +1753,8 @@ class Messageable:
                     if obj.guild_id == channel.guild.id:
                         continue
 
-            except (KeyError, AttributeError):
-                raise TypeError(f"The object {obj} is of an invalid type.")
+            except (KeyError, AttributeError) as e:
+                raise TypeError(f"The object {obj} is of an invalid type.") from e
 
             if not getattr(channel.permissions_for(channel.guild.me), permission):
                 return False

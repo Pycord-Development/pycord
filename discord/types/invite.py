@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -91,4 +91,4 @@ class GatewayInviteDelete(TypedDict):
     code: str
 
 
-GatewayInvite = Union[GatewayInviteCreate, GatewayInviteDelete]
+GatewayInvite = GatewayInviteCreate | GatewayInviteDelete

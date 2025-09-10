@@ -145,15 +145,7 @@ class ThreadChannel(_BaseChannel):
     total_message_sent: int
 
 
-GuildChannel = Union[
-    TextChannel,
-    NewsChannel,
-    VoiceChannel,
-    CategoryChannel,
-    StageChannel,
-    ThreadChannel,
-    ForumChannel,
-]
+GuildChannel = TextChannel | NewsChannel | VoiceChannel | CategoryChannel | StageChannel | ThreadChannel | ForumChannel
 
 
 class DMChannel(TypedDict):
@@ -169,7 +161,7 @@ class GroupDMChannel(_BaseChannel):
     owner_id: Snowflake
 
 
-Channel = Union[GuildChannel, DMChannel, GroupDMChannel]
+Channel = GuildChannel | DMChannel | GroupDMChannel
 
 PrivacyLevel = Literal[1, 2]
 

@@ -28,12 +28,13 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Any
 
+from discord import utils
+
 from .enums import ExpireBehaviour, try_enum
 from .errors import InvalidArgument
 from .user import User
 from .utils import MISSING
 from .utils.private import get_as_snowflake, parse_time
-from discord import utils
 
 __all__ = (
     "IntegrationAccount",

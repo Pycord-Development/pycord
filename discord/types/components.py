@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -151,14 +151,9 @@ class ContainerComponent(BaseComponent):
     components: list[AllowedContainerComponents]
 
 
-Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
+Component = ActionRow | ButtonComponent | SelectMenu | InputText
 
 
-AllowedContainerComponents = Union[
-    ActionRow,
-    TextDisplayComponent,
-    MediaGalleryComponent,
-    FileComponent,
-    SeparatorComponent,
-    SectionComponent,
-]
+AllowedContainerComponents = (
+    ActionRow | TextDisplayComponent | MediaGalleryComponent | FileComponent | SeparatorComponent | SectionComponent
+)

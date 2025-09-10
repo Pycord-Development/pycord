@@ -88,7 +88,7 @@ async def notify(ctx: commands.Context, target: ChannelOrMemberConverter):
 
 
 @bot.command()
-async def ignore(ctx: commands.Context, target: Union[discord.Member, discord.TextChannel]):
+async def ignore(ctx: commands.Context, target: discord.Member | discord.TextChannel):
     # This command signature utilises the `typing.Union` typehint.
     # The `commands` framework attempts a conversion of each type in this Union *in order*.
     # So, it will attempt to convert whatever is passed to `target` to a `discord.Member` instance.

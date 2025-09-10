@@ -41,7 +41,6 @@ from typing import (
 )
 from urllib.parse import parse_qs, urlparse
 
-from .utils.private import get_as_snowflake, parse_time, warn_deprecated, delay_task, cached_slot_property
 from . import utils
 from .channel import PartialMessageable
 from .components import _component_factory
@@ -61,6 +60,7 @@ from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
 from .utils import MISSING, escape_mentions
+from .utils.private import cached_slot_property, delay_task, get_as_snowflake, parse_time, warn_deprecated
 
 if TYPE_CHECKING:
     from .abc import (
@@ -96,7 +96,7 @@ if TYPE_CHECKING:
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
-    EmojiInputType = Union[GuildEmoji, AppEmoji, PartialEmoji, str]
+    EmojiInputType = GuildEmoji | AppEmoji | PartialEmoji | str
 
 __all__ = (
     "Attachment",
@@ -1121,7 +1121,7 @@ class Message(Hashable):
 
     def _clear_emoji(self, emoji) -> Reaction | None:
         to_check = str(emoji)
-        for index, reaction in enumerate(self.reactions):
+        for index, reaction in enumerate(self.reactions):  # noqa: B007
             if str(reaction.emoji) == to_check:
                 break
         else:

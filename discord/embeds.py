@@ -28,9 +28,9 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING, Any, Mapping, TypeVar
 
-from .utils.private import parse_time
 from . import utils
 from .colour import Colour
+from .utils.private import parse_time
 
 __all__ = (
     "Embed",
@@ -999,8 +999,8 @@ class Embed:
 
         try:
             field = self._fields[index]
-        except (TypeError, IndexError):
-            raise IndexError("field index out of range")
+        except (TypeError, IndexError) as e:
+            raise IndexError("field index out of range") from e
 
         field.name = str(name)
         field.value = str(value)

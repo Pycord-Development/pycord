@@ -31,22 +31,22 @@ from typing import (
 
 from ..errors import HTTPException
 from .public import (
-    basic_autocomplete,
-    generate_snowflake,
-    utcnow,
-    find,
-    snowflake_time,
-    oauth_url,
-    Undefined,
     MISSING,
-    format_dt,
+    UNICODE_EMOJIS,
+    Undefined,
+    basic_autocomplete,
+    escape_markdown,
     escape_mentions,
-    raw_mentions,
+    find,
+    format_dt,
+    generate_snowflake,
+    oauth_url,
     raw_channel_mentions,
+    raw_mentions,
     raw_role_mentions,
     remove_markdown,
-    escape_markdown,
-    UNICODE_EMOJIS,
+    snowflake_time,
+    utcnow,
 )
 
 DISCORD_EPOCH = 1420070400000
@@ -121,10 +121,10 @@ async def get_or_fetch(obj, attr: str, id: int, *, default: Any = MISSING) -> An
     if getter is None:
         try:
             getter = await getattr(obj, f"fetch_{attr}")(id)
-        except AttributeError:
+        except AttributeError as e:
             getter = await getattr(obj, f"_fetch_{attr}")(id)
             if getter is None:
-                raise ValueError(f"Could not find {attr} with id {id} on {obj}")
+                raise ValueError(f"Could not find {attr} with id {id} on {obj}") from e
         except (HTTPException, ValueError):
             if default is not MISSING:
                 return default

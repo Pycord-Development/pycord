@@ -16,23 +16,22 @@ from inspect import isawaitable, signature
 from typing import (
     TYPE_CHECKING,
     Any,
-    overload,
-    Callable,
-    TypeVar,
-    ParamSpec,
-    Iterable,
-    Literal,
-    ForwardRef,
-    Union,
-    Coroutine,
     Awaitable,
-    reveal_type,
+    Callable,
+    Coroutine,
+    ForwardRef,
     Generic,
-    Sequence,
+    Iterable,
     Iterator,
+    Literal,
+    ParamSpec,
+    Sequence,
+    TypeVar,
+    Union,
+    overload,
 )
 
-from ..errors import InvalidArgument, HTTPException
+from ..errors import HTTPException, InvalidArgument
 
 if TYPE_CHECKING:
     from ..invite import Invite
@@ -331,7 +330,7 @@ def evaluate_annotation(
         args = tp.__args__
         if not hasattr(tp, "__origin__"):
             if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
-                converted = Union[args]  # type: ignore
+                converted = Union[args]  # type: ignore  # noqa: UP007
                 return evaluate_annotation(converted, globals, locals, cache)
 
             return tp
@@ -494,7 +493,7 @@ class CachedSlotProperty(Generic[T, T_co]):
     def __init__(self, name: str, function: Callable[[T], T_co]) -> None:
         self.name = name
         self.function = function
-        self.__doc__ = getattr(function, "__doc__")
+        self.__doc__ = function.__doc__
 
     @overload
     def __get__(self, instance: None, owner: type[T]) -> CachedSlotProperty[T, T_co]: ...

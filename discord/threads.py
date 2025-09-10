@@ -27,6 +27,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable, Iterable
 
+from discord import utils
+
 from .abc import Messageable, _purge_messages_helper
 from .enums import ChannelType, try_enum
 from .errors import ClientException
@@ -34,7 +36,6 @@ from .flags import ChannelFlags
 from .mixins import Hashable
 from .utils import MISSING
 from .utils.private import get_as_snowflake, parse_time
-from discord import utils
 
 __all__ = (
     "Thread",
@@ -52,9 +53,8 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .types.snowflake import SnowflakeList
     from .types.threads import Thread as ThreadPayload
-    from .types.threads import ThreadArchiveDuration
+    from .types.threads import ThreadArchiveDuration, ThreadMetadata
     from .types.threads import ThreadMember as ThreadMemberPayload
-    from .types.threads import ThreadMetadata
 
 
 class Thread(Messageable, Hashable):

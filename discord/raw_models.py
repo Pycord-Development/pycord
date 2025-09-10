@@ -41,9 +41,6 @@ if TYPE_CHECKING:
     from .threads import Thread
     from .types.raw_models import (
         AuditLogEntryEvent,
-    )
-    from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
-    from .types.raw_models import (
         BulkMessageDeleteEvent,
         IntegrationDeleteEvent,
         MemberRemoveEvent,
@@ -60,6 +57,7 @@ if TYPE_CHECKING:
         TypingEvent,
         VoiceChannelStatusUpdateEvent,
     )
+    from .types.raw_models import AutoModActionExecutionEvent as AutoModActionExecution
     from .user import User
 
 

@@ -31,8 +31,8 @@ from typing import TYPE_CHECKING, Any, Generic, TypeVar, Union
 
 import discord.abc
 from discord.message import Message
+from discord.utils import MISSING, Undefined
 from discord.utils.private import copy_doc
-from discord.utils import Undefined, MISSING
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -53,7 +53,7 @@ __all__ = ("Context",)
 
 
 T = TypeVar("T")
-BotT = TypeVar("BotT", bound="Union[Bot, AutoShardedBot]")
+BotT = TypeVar("BotT", bound="Bot | AutoShardedBot")
 CogT = TypeVar("CogT", bound="Cog")
 
 if TYPE_CHECKING:
@@ -374,9 +374,8 @@ class Context(discord.abc.Messageable, Generic[BotT]):
         if entity is None:
             return None
 
-        try:
-            entity.qualified_name
-        except AttributeError:
+        if not hasattr(entity, "qualified_name"):
+            # TODO: this is ugly shit please make it better like isinstance idk
             # if we're here then it's not a cog, group, or command.
             return None
 

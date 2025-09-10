@@ -805,7 +805,7 @@ class CustomActivity(BaseActivity):
         return f"<CustomActivity name={self.name!r} emoji={self.emoji!r}>"
 
 
-ActivityTypes = Union[Activity, Game, CustomActivity, Streaming, Spotify]
+ActivityTypes = Activity | Game | CustomActivity | Streaming | Spotify
 
 
 @overload

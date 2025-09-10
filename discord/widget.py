@@ -32,7 +32,7 @@ from .enums import Status, try_enum
 from .invite import Invite
 from .user import BaseUser
 from .utils import snowflake_time
-from .utils.private import resolve_invite, get_as_snowflake
+from .utils.private import get_as_snowflake, resolve_invite
 
 if TYPE_CHECKING:
     import datetime

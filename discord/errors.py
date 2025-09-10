@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     try:
         from requests import Response
 
-        _ResponseType = Union[ClientResponse, Response]
+        _ResponseType = ClientResponse | Response
     except ModuleNotFoundError:
         _ResponseType = ClientResponse
 

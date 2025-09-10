@@ -74,7 +74,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 OT = TypeVar("OT")
-_Func = Callable[[T], Union[OT, Awaitable[OT]]]
+_Func = Callable[[T], OT | Awaitable[OT]]
 
 OLDEST_OBJECT = Object(id=0)
 
@@ -113,8 +113,8 @@ class _AsyncIterator(AsyncIterator[T]):
     async def __anext__(self) -> T:
         try:
             return await self.next()
-        except NoMoreItems:
-            raise StopAsyncIteration()
+        except NoMoreItems as e:
+            raise StopAsyncIteration() from e
 
 
 def _identity(x):
@@ -193,8 +193,8 @@ class ReactionIterator(_AsyncIterator[Union["User", "Member"]]):
 
         try:
             return self.users.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     async def fill_users(self):
         # this is a hack because >circular imports<
@@ -248,8 +248,8 @@ class VoteIterator(_AsyncIterator[Union["User", "Member"]]):
 
         try:
             return self.users.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     async def fill_users(self):
         # import here to prevent circular imports
@@ -377,8 +377,8 @@ class HistoryIterator(_AsyncIterator["Message"]):
 
         try:
             return self.messages.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self) -> bool:
         l = self.limit
@@ -501,8 +501,8 @@ class AuditLogIterator(_AsyncIterator["AuditLogEntry"]):
 
         try:
             return self.entries.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self):
         l = self.limit
@@ -595,8 +595,8 @@ class GuildIterator(_AsyncIterator["Guild"]):
 
         try:
             return self.guilds.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self):
         l = self.limit
@@ -668,8 +668,8 @@ class MemberIterator(_AsyncIterator["Member"]):
 
         try:
             return self.members.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self):
         l = self.limit
@@ -720,8 +720,8 @@ class BanIterator(_AsyncIterator["BanEntry"]):
 
         try:
             return self.bans.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self):
         l = self.limit
@@ -812,8 +812,8 @@ class ArchivedThreadIterator(_AsyncIterator["Thread"]):
 
         try:
             return self.queue.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     @staticmethod
     def get_archive_timestamp(data: ThreadPayload) -> str:
@@ -879,8 +879,8 @@ class ScheduledEventSubscribersIterator(_AsyncIterator[Union["User", "Member"]])
 
         try:
             return self.subscribers.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self):
         l = self.limit
@@ -984,8 +984,8 @@ class EntitlementIterator(_AsyncIterator["Entitlement"]):
 
         try:
             return self.entitlements.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self):
         l = self.limit
@@ -1098,8 +1098,8 @@ class SubscriptionIterator(_AsyncIterator["Subscription"]):
 
         try:
             return self.subscriptions.get_nowait()
-        except asyncio.QueueEmpty:
-            raise NoMoreItems()
+        except asyncio.QueueEmpty as e:
+            raise NoMoreItems() from e
 
     def _get_retrieve(self):
         l = self.limit

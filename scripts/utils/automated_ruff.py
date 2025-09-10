@@ -1,5 +1,6 @@
 import subprocess
 from pathlib import Path
+
 from ruff.__main__ import (  # type: ignore[import-untyped]
     find_ruff_bin,
 )

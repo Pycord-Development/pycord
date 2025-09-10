@@ -43,9 +43,9 @@ from typing import (
 )
 
 import discord
-from discord.utils.private import evaluate_annotation, async_all, maybe_awaitable
 from discord import utils
 from discord.utils import Undefined
+from discord.utils.private import async_all, evaluate_annotation, maybe_awaitable
 
 from ...commands import (
     ApplicationCommand,
@@ -741,13 +741,15 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
             try:
                 next(iterator)
             except StopIteration:
-                raise discord.ClientException(f'Callback for {self.name} command is missing "self" parameter.')
+                raise discord.ClientException(
+                    f'Callback for {self.name} command is missing "self" parameter.'
+                ) from None
 
         # next we have the 'ctx' as the next parameter
         try:
             next(iterator)
         except StopIteration:
-            raise discord.ClientException(f'Callback for {self.name} command is missing "ctx" parameter.')
+            raise discord.ClientException(f'Callback for {self.name} command is missing "ctx" parameter.') from None
 
         for name, param in iterator:
             ctx.current_parameter = param
@@ -1370,7 +1372,7 @@ class GroupMixin(Generic[CogT]):
 
         def decorator(func: Callable[Concatenate[ContextT, P], Coro[Any]]) -> CommandT:
             kwargs.setdefault("parent", self)
-            result = command(name=name, cls=cls, *args, **kwargs)(func)
+            result = command(name=name, cls=cls, *args, **kwargs)(func)  # noqa: B026
             self.add_command(result)
             return result
 
@@ -1415,7 +1417,7 @@ class GroupMixin(Generic[CogT]):
 
         def decorator(func: Callable[Concatenate[ContextT, P], Coro[Any]]) -> GroupT:
             kwargs.setdefault("parent", self)
-            result = group(name=name, cls=cls, *args, **kwargs)(func)
+            result = group(name=name, cls=cls, *args, **kwargs)(func)  # noqa: B026
             self.add_command(result)
             return result
 
@@ -1912,16 +1914,13 @@ def has_any_role(*items: int | str) -> Callable[[T], T]:
             raise NoPrivateMessage()
 
         # ctx.guild is None doesn't narrow ctx.author to Member
-        getter = functools.partial(discord.utils.find, seq=ctx.author.roles)  # type: ignore
-        if any(
-            (
-                getter(lambda e: e.id == item) is not None
-                if isinstance(item, int)
-                else getter(lambda e: e.name == item) is not None
-            )
-            for item in items
-        ):
-            return True
+        for item in items:
+            if isinstance(item, int):
+                if any(role.id == item for role in ctx.author.roles):
+                    return True
+            else:
+                if any(role.name == item for role in ctx.author.roles):
+                    return True
         raise MissingAnyRole(list(items))
 
     return check(predicate)
@@ -1976,16 +1975,14 @@ def bot_has_any_role(*items: int) -> Callable[[T], T]:
             raise NoPrivateMessage()
 
         me = ctx.me
-        getter = functools.partial(discord.utils.find, seq=me.roles)
-        if any(
-            (
-                getter(lambda e: e.id == item) is not None
-                if isinstance(item, int)
-                else getter(lambda e: e.name == item) is not None
-            )
-            for item in items
-        ):
-            return True
+        for item in items:
+            if isinstance(item, int):
+                if any(role.id == item for role in me.roles):
+                    return True
+            else:
+                if any(role.name == item for role in me.roles):
+                    return True
+
         raise BotMissingAnyRole(list(items))
 
     return check(predicate)

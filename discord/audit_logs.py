@@ -25,10 +25,9 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 from functools import cached_property
+from typing import TYPE_CHECKING, Any, Callable, ClassVar, Generator, TypeVar
 
-from .utils.private import get_as_snowflake
 from . import enums, utils
 from .asset import Asset
 from .automod import AutoModAction, AutoModTriggerMetadata
@@ -37,6 +36,7 @@ from .invite import Invite
 from .mixins import Hashable
 from .object import Object
 from .permissions import PermissionOverwrite, Permissions
+from .utils.private import get_as_snowflake
 
 __all__ = (
     "AuditLogDiff",
@@ -383,7 +383,7 @@ class AuditLogChanges:
         elem: list[RolePayload],
     ) -> None:
         if not hasattr(first, "roles"):
-            setattr(first, "roles", [])
+            first.roles = []
 
         data = []
         g: Guild = entry.guild  # type: ignore
@@ -398,7 +398,7 @@ class AuditLogChanges:
 
             data.append(role)
 
-        setattr(second, "roles", data)
+        second.roles = data
 
     def _handle_trigger_metadata(
         self,
@@ -409,13 +409,13 @@ class AuditLogChanges:
         attr: str,
     ) -> None:
         if not hasattr(first, "trigger_metadata"):
-            setattr(first, "trigger_metadata", None)
+            first.trigger_metadata = None
 
         key = attr.split("_", 1)[-1]
         data = {key: elem}
         tm = AutoModTriggerMetadata.from_dict(data)
 
-        setattr(second, "trigger_metadata", tm)
+        second.trigger_metadata = tm
 
 
 class _AuditLogProxyMemberPrune:

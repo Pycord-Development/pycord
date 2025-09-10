@@ -11,10 +11,11 @@ import sys
 import time
 import warnings
 from typing import Sequence
-from . import __version__
 
 import colorlog
 import colorlog.escape_codes
+
+from . import __version__
 
 __all__: Sequence[str] = ("start_logging", "print_banner")
 

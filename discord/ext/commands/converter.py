@@ -405,10 +405,10 @@ class MessageConverter(IDConverter[discord.Message]):
             raise ChannelNotFound(channel_id)
         try:
             return await channel.fetch_message(message_id)
-        except discord.NotFound:
-            raise MessageNotFound(argument)
-        except discord.Forbidden:
-            raise ChannelNotReadable(channel)
+        except discord.NotFound as e:
+            raise MessageNotFound(argument) from e
+        except discord.Forbidden as e:
+            raise ChannelNotReadable(channel) from e
 
 
 class GuildChannelConverter(IDConverter[discord.abc.GuildChannel]):
@@ -633,7 +633,7 @@ class ColourConverter(Converter[discord.Colour]):
             if not (0 <= value <= 0xFFFFFF):
                 raise BadColourArgument(argument)
         except ValueError:
-            raise BadColourArgument(argument)
+            raise BadColourArgument(argument) from None
         else:
             return discord.Color(value=value)
 

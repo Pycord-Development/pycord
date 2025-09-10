@@ -577,7 +577,7 @@ class FFmpegOpusAudio(FFmpegAudio):
         else:
             _log.info("Probe found codec=%s, bitrate=%s", codec, bitrate)
         finally:
-            return codec, bitrate
+            return codec, bitrate  # noqa: B012
 
     @staticmethod
     def _probe_codec_native(source, executable: str = "ffmpeg") -> tuple[str | None, int | None]:

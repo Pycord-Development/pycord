@@ -33,7 +33,7 @@ from .mixins import Hashable
 if TYPE_CHECKING:
     import datetime
 
-    SupportsIntCast = Union[SupportsInt, str, bytes, bytearray]
+    SupportsIntCast = SupportsInt | str | bytes | bytearray
 
 __all__ = ("Object",)
 

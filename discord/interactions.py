@@ -29,7 +29,6 @@ import asyncio
 import datetime
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
-from .utils.private import get_as_snowflake, deprecated, delay_task, cached_slot_property
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import (
@@ -48,6 +47,7 @@ from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
 from .user import User
+from .utils.private import cached_slot_property, delay_task, deprecated, get_as_snowflake
 from .webhook.async_ import (
     Webhook,
     WebhookMessage,
@@ -90,17 +90,17 @@ if TYPE_CHECKING:
     from .ui.modal import Modal
     from .ui.view import View
 
-    InteractionChannel = Union[
-        VoiceChannel,
-        StageChannel,
-        TextChannel,
-        ForumChannel,
-        CategoryChannel,
-        Thread,
-        DMChannel,
-        GroupChannel,
-        PartialMessageable,
-    ]
+    InteractionChannel = (
+        VoiceChannel
+        | StageChannel
+        | TextChannel
+        | ForumChannel
+        | CategoryChannel
+        | Thread
+        | DMChannel
+        | GroupChannel
+        | PartialMessageable
+    )
 
 MISSING: Any = utils.MISSING
 

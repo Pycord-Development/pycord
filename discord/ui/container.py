@@ -4,9 +4,8 @@ from functools import partial
 from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
 
 from ..colour import Colour
-from ..components import ActionRow
+from ..components import ActionRow, _component_factory
 from ..components import Container as ContainerComponent
-from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find
 from .file import File

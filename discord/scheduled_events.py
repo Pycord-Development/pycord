@@ -39,7 +39,7 @@ from .errors import InvalidArgument, ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
-from .utils.private import warn_deprecated, get_as_snowflake, bytes_to_base64_data
+from .utils.private import bytes_to_base64_data, get_as_snowflake, warn_deprecated
 
 __all__ = (
     "ScheduledEvent",

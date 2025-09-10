@@ -1,13 +1,13 @@
 from __future__ import annotations
-import os
-import sys
+
 import datetime
+import os
 import subprocess
+import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from github import Github
-from github import Auth
+from github import Auth, Github
 
 if TYPE_CHECKING:
     from github.PullRequest import PullRequest

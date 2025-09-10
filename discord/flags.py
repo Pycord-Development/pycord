@@ -147,8 +147,8 @@ class BaseFlags:
     def __add__(self, other):
         try:
             return self | other
-        except TypeError:
-            raise TypeError(f"'+' not supported between instances of {type(self)} and {type(other)}")
+        except TypeError as e:
+            raise TypeError(f"'+' not supported between instances of {type(self)} and {type(other)}") from e
 
     def __sub__(self, other):
         if isinstance(other, self.__class__):

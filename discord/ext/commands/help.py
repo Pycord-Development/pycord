@@ -32,7 +32,7 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from discord import utils
-from discord.utils.private import string_width, maybe_awaitable
+from discord.utils.private import maybe_awaitable, string_width
 
 from .core import Command, Group
 from .errors import CommandError

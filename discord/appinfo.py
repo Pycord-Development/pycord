@@ -27,10 +27,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .utils.private import warn_deprecated, get_as_snowflake
 from . import utils
 from .asset import Asset
 from .permissions import Permissions
+from .utils.private import get_as_snowflake, warn_deprecated
 
 if TYPE_CHECKING:
     from .guild import Guild

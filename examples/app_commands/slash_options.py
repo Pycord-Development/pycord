@@ -35,13 +35,13 @@ async def hello(
 @bot.slash_command(name="channel")
 @option(
     "channel",
-    Union[discord.TextChannel, discord.VoiceChannel],
-    # You can specify allowed channel types by passing a union of them like this.
+    [discord.TextChannel, discord.VoiceChannel],
+    # You can specify allowed channel types by passing a list of them like this.
     description="Select a channel",
 )
 async def select_channel(
     ctx: discord.ApplicationContext,
-    channel: Union[discord.TextChannel, discord.VoiceChannel],
+    channel: discord.TextChannel | discord.VoiceChannel,
 ):
     await ctx.respond(f"Hi! You selected {channel.mention} channel.")
 

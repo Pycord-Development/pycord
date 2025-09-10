@@ -1,13 +1,13 @@
-import os
-import sys
 import json
-from pathlib import Path
-from github import Github
-from github import Auth
+import os
 import re
+import sys
+from pathlib import Path
 
-from .utils import get_features_blob, GUILD_FEATURES_GIST_URL
+from github import Auth, Github
+
 from ..utils import create_update_pr, format_path, lint_path
+from .utils import GUILD_FEATURES_GIST_URL, get_features_blob
 
 CI = os.environ.get("CI", "false").lower() in ("true", "1", "yes")
 

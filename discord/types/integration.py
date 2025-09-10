@@ -80,4 +80,4 @@ class BotIntegration(BaseIntegration):
     application: IntegrationApplication
 
 
-Integration = Union[BaseIntegration, StreamIntegration, BotIntegration]
+Integration = BaseIntegration | StreamIntegration | BotIntegration

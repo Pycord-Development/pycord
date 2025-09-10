@@ -151,7 +151,7 @@ def build_lookup_table(env):
         "class",
     }
 
-    for fullname, _, objtype, docname, _, _ in domain.get_objects():
+    for fullname, _, objtype, _, _, _ in domain.get_objects():
         if objtype in ignored:
             continue
 
@@ -257,7 +257,7 @@ def class_results_to_node(key, elements):
             internal=True,
             refuri=f"#{element.fullname}",
             anchorname="",
-            *[nodes.Text(element.label)],
+            *[nodes.Text(element.label)],  # noqa: B026
         )
         para = addnodes.compact_paragraph("", "", ref)
         if element.badge is not None:

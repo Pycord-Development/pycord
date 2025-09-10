@@ -28,10 +28,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from . import utils
-from .utils.private import get_as_snowflake
 from .asset import Asset
 from .enums import TeamMembershipState, try_enum
 from .user import BaseUser
+from .utils.private import get_as_snowflake
 
 if TYPE_CHECKING:
     from .state import ConnectionState

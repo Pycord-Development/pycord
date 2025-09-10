@@ -54,8 +54,8 @@ if TYPE_CHECKING:
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .user import User
 
-    InviteGuildType = Union[Guild, "PartialInviteGuild", Object]
-    InviteChannelType = Union[GuildChannel, "PartialInviteChannel", Object]
+    InviteGuildType = Guild | "PartialInviteGuild" | Object
+    InviteChannelType = GuildChannel | "PartialInviteChannel" | Object
 
     import datetime
 

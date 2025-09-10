@@ -40,7 +40,6 @@ from typing import (
     overload,
 )
 
-from .utils.private import get_as_snowflake, bytes_to_base64_data
 from . import abc, utils
 from .asset import Asset
 from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
@@ -86,6 +85,7 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
+from .utils.private import bytes_to_base64_data, get_as_snowflake
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
@@ -116,9 +116,9 @@ if TYPE_CHECKING:
     from .voice_client import VoiceClient
     from .webhook import Webhook
 
-    VocalGuildChannel = Union[VoiceChannel, StageChannel]
-    GuildChannel = Union[VoiceChannel, StageChannel, TextChannel, ForumChannel, CategoryChannel]
-    ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
+    VocalGuildChannel = VoiceChannel | StageChannel
+    GuildChannel = VoiceChannel | StageChannel | TextChannel | ForumChannel | CategoryChannel
+    ByCategoryItem = Tuple[CategoryChannel | None, List[GuildChannel]]
 
 
 class BanEntry(NamedTuple):
