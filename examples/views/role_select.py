@@ -1,4 +1,3 @@
-from typing import Self
 import discord
 
 # Role selects (dropdowns) are a new type of select menu/dropdown Discord has added so people can select server roles from a dropdown.
