@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Iterator
 import datetime
 import functools
 import inspect
@@ -34,6 +33,7 @@ import re
 import sys
 import types
 from collections import OrderedDict
+from collections.abc import Iterator
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -66,7 +66,15 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import MISSING, async_all, find, maybe_coroutine, resolve_annotation, utcnow, warn_deprecated
+from ..utils import (
+    MISSING,
+    async_all,
+    find,
+    maybe_coroutine,
+    resolve_annotation,
+    utcnow,
+    warn_deprecated,
+)
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -312,7 +320,11 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "2.6",
             reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
         )
-        return self.contexts is not None and InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
@@ -777,7 +789,9 @@ class SlashCommand(ApplicationCommand):
         else:
             self.options = self._parse_options(params)
 
-    def _check_required_params(self, params: OrderedDict[str, inspect.Parameter]) -> Iterator[tuple[str, inspect.Parameter]]:
+    def _check_required_params(
+        self, params: OrderedDict[str, inspect.Parameter]
+    ) -> Iterator[tuple[str, inspect.Parameter]]:
         params_iter = iter(params.items())
         required_params = (
             ["self", "context"] if self.attached_to_group or self.cog else ["context"]
@@ -792,7 +806,9 @@ class SlashCommand(ApplicationCommand):
 
         return params_iter
 
-    def _parse_options(self, params: OrderedDict[str, inspect.Parameter], *, check_params: bool = True) -> list[Option]:
+    def _parse_options(
+        self, params: OrderedDict[str, inspect.Parameter], *, check_params: bool = True
+    ) -> list[Option]:
         if check_params:
             params_iter = self._check_required_params(params)
         else:
