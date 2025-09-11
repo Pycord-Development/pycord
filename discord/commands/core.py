@@ -821,7 +821,8 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
-            option = resolve_annotation(option, globals(), locals(), cache)
+            if isinstance(option, str):
+                option = resolve_annotation(option, globals(), locals(), cache)
 
             option = Option._strip_none_type(option)
             if self._is_typing_literal(option):
