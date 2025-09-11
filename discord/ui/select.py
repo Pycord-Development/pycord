@@ -107,7 +107,7 @@ class Select(Generic[V, ST], Item[V]):
         :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
         or :attr:`discord.ComponentType.channel_select`.
 
-        The default is :attr:`discord.ComponentType.string`, but if this is created using any of the provided
+        The default is :attr:`discord.ComponentType.string_select`, but if this is created using any of the provided
         aliases: :class:`StringSelect`, :class:`RoleSelect`, :class:`UserSelect`, :class:`MentionableSelect`, or
         :class:`ChannelSelect`, the default will be its respective select type.
     custom_id: :class:`str`
