@@ -852,8 +852,6 @@ else:
     as its default ``select_type``.
     """
 
-    select_partial.__bases__ = (Select, partial)  # lie to checkers
-
 
 _select_types = (
     ComponentType.string_select,
