@@ -55,6 +55,17 @@ Objects
     :members:
     :inherited-members:
 
+
+.. autoclass:: discord.ui.StringSelect
+
+.. autoclass:: discord.ui.UserSelect
+
+.. autoclass:: discord.ui.RoleSelect
+
+.. autoclass:: discord.ui.MentionableSelect
+
+.. autoclass:: discord.ui.ChannelSelect
+
 .. attributetable:: discord.ui.Section
 
 .. autoclass:: discord.ui.Section

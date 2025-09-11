@@ -106,6 +106,10 @@ class Select(Generic[V, ST], Item[V]):
         :attr:`discord.ComponentType.string_select`, :attr:`discord.ComponentType.user_select`,
         :attr:`discord.ComponentType.role_select`, :attr:`discord.ComponentType.mentionable_select`,
         or :attr:`discord.ComponentType.channel_select`.
+
+        The default is :attr:`discord.ComponentType.string`, but if this is created using any of the provided
+        aliases: :class:`StringSelect`, :class:`RoleSelect`, :class:`UserSelect`, :class:`MentionableSelect`, or
+        :class:`ChannelSelect`, the default will be its respective select type.
     custom_id: :class:`str`
         The ID of the select menu that gets received during an interaction.
         If not given then one is generated for you.
@@ -217,7 +221,7 @@ class Select(Generic[V, ST], Item[V]):
     @overload
     def __init__(
         self,
-        select_type: Literal[ComponentType.channel_select],
+        select_type: Literal[ComponentType.channel_select] = ...,
         *,
         custom_id: str | None = ...,
         placeholder: str | None = ...,
@@ -240,7 +244,7 @@ class Select(Generic[V, ST], Item[V]):
             ComponentType.user_select,
             ComponentType.role_select,
             ComponentType.mentionable_select,
-        ],
+        ] = ...,
         *,
         custom_id: str | None = ...,
         placeholder: str | None = ...,
@@ -766,7 +770,7 @@ class Select(Generic[V, ST], Item[V]):
             id=component.id,
             required=component.required,
             default_values=component.default_values,
-        )
+        )  # type: ignore
 
     @property
     def type(self) -> ComponentType:
@@ -784,29 +788,71 @@ class Select(Generic[V, ST], Item[V]):
 
 if TYPE_CHECKING:
     StringSelect = Select[V, str]
-    """A typed alias for :class:`Select` for string values."""
+    """A typed alias for :class:`Select` for string values.
+
+    When creating an instance with this, it will automatically provide the ``select_type``
+    parameter as a :attr:`discord.ComponentType.string_select`.
+    """
     UserSelect = Select[V, User | Member]
-    """A typed alias for :class:`Select` for user-like values."""
+    """A typed alias for :class:`Select` for user-like values.
+
+    When creating an instance with this, it will automatically provide the ``select_type``
+    parameter as a :attr:`discord.ComponentType.user_select`.
+    """
     RoleSelect = Select[V, Role]
-    """A typed alias for :class:`Select` for role values."""
+    """A typed alias for :class:`Select` for role values.
+
+    When creating an instance with this, it will automatically provide the ``select_type``
+    parameter as a :attr:`discord.ComponentType.role_select`.
+    """
     MentionableSelect = Select[V, User | Member | Role]
-    """A typed alias for :class:`Select` for mentionable (role and user-like) values."""
+    """A typed alias for :class:`Select` for mentionable (role and user-like) values.
+
+    When creating an instance with this, it will automatically provide the ``select_type``
+    parameter as a :attr:`discord.ComponentType.mentionable_select`.
+    """
     ChannelSelect = Select[V, GuildChannel | Thread]
-    """A typed alias for :class:`Select` for channel values."""
+    """A typed alias for :class:`Select` for channel values.
+
+    When creating an instance with this, it will automatically provide the ``select_type``
+    parameter as a :attr:`discord.ComponentType.channel_select`.
+    """
 else:
-    StringSelect: Select[V, str] = partial(
+    class select_partial(partial):
+        @property
+        def __class__(self) -> type[Select]:
+            return Select
+
+    StringSelect: Select[V, str] = select_partial(
         Select, select_type=ComponentType.string_select
     )
-    UserSelect: Select[V, User | Member] = partial(
+    """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.string_select`
+    as its default ``select_type``.
+    """
+    UserSelect: Select[V, User | Member] = select_partial(
         Select, select_type=ComponentType.user_select
     )
-    RoleSelect: Select[V, Role] = partial(Select, select_type=ComponentType.role_select)
-    MentionableSelect: Select[V, Role | User | Member] = partial(
+    """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.user_select`
+    as its default ``select_type``.
+    """
+    RoleSelect: Select[V, Role] = select_partial(Select, select_type=ComponentType.role_select)
+    """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.role_select`
+    as its default ``select_type``.
+    """
+    MentionableSelect: Select[V, Role | User | Member] = select_partial(
         Select, select_type=ComponentType.mentionable_select
     )
-    ChannelSelect: Select[V, GuildChannel | Thread] = partial(
+    """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.mentionable_select`
+    as its default ``select_type``.
+    """
+    ChannelSelect: Select[V, GuildChannel | Thread] = select_partial(
         Select, select_type=ComponentType.channel_select
     )
+    """An alias for :class:`Select` that will pass :attr:`discord.ComponentType.channel_select`
+    as its default ``select_type``.
+    """
+
+    select_partial.__bases__ = (Select, partial)  # lie to checkers
 
 
 _select_types = (
