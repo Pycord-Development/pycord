@@ -39,8 +39,9 @@ class OpCodes(Enum):
     resume = 7
     hello = 8
     resumed = 9
-    client_connect = 10
-    client_disconnect = 11
+    clients_connect = 11
+    client_connect = 12
+    client_disconnect = 13
 
     # dave protocol stuff
     dave_prepare_transition = 21

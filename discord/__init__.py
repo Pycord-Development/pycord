@@ -72,9 +72,10 @@ from .team import *
 from .template import *
 from .threads import *
 from .user import *
-from .voice import *
 from .webhook import *
 from .welcome_screen import *
 from .widget import *
+from ._voice_aliases import *
+
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

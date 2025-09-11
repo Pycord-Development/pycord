@@ -23,13 +23,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from __future__ import annotations
-
-from discord.enums import Enum
-
-__all__ = ("SinkFilteringMode",)
+def gap_wrapped(a: int, b: int, *, wrap: int = 65536) -> int:
+    return (b - (a + 1) + wrap) % wrap
 
 
-class SinkFilteringMode(Enum):
-    all = 0
-    any = 1
+def add_wrapped(a: int, b: int, *, wrap: int = 65536) -> int:
+    return (a + b) % wrap

@@ -36,11 +36,23 @@ import struct
 import sys
 from typing import TYPE_CHECKING, Any, Callable, Literal, TypedDict, TypeVar
 
+from discord.voice.packets.rtp import FakePacket
+from discord.voice.utils.wrapped import gap_wrapped, add_wrapped
+from discord.voice.utils.buffer import JitterBuffer
+
+import davey
+
 from .errors import DiscordException
 from .sinks import RawData
 
 if TYPE_CHECKING:
+    from discord.user import User
+    from discord.member import Member
     from discord.voice.client import VoiceClient
+    from discord.voice.receive.router import PacketRouter
+    from discord.voice.packets.core import Packet
+    from discord.voice.packets import VoiceData
+    from discord.sinks.core import Sink
 
     T = TypeVar("T")
     APPLICATION_CTL = Literal["audio", "voip", "lowdelay"]
@@ -102,6 +114,12 @@ DecoderStructPtr = ctypes.POINTER(DecoderStruct)
 # Error codes
 OK = 0
 BAD_ARG = -1
+BUFF_TOO_SMALL = -2
+INTERNAL_ERROR = -3
+INVALID_PACKET = -4
+UNIMPLEMENTED = -5
+INVALID_STATE = -6
+ALLOC_FAIL = -7
 
 # Encoder CTLs
 application_ctl: ApplicationCtl = {
@@ -449,11 +467,14 @@ class Encoder(_OpusStruct):
     def set_expected_packet_loss_percent(self, percentage: float) -> None:
         _lib.opus_encoder_ctl(self._state, CTL_SET_PLP, min(100, max(0, int(percentage * 100))))  # type: ignore
 
-    def encode(self, pcm: bytes, frame_size: int) -> bytes:
+    def encode(self, pcm: bytes, frame_size: int | None = None) -> bytes:
         max_data_bytes = len(pcm)
         # bytes can be used to reference pointer
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)  # type: ignore
         data = (ctypes.c_char * max_data_bytes)()
+
+        if frame_size is None:
+            frame_size = self.FRAME_SIZE
 
         ret = _lib.opus_encode(self._state, pcm_ptr, frame_size, data, max_data_bytes)
 
@@ -462,7 +483,7 @@ class Encoder(_OpusStruct):
 
 
 class Decoder(_OpusStruct):
-    def __init__(self):
+    def __init__(self) -> None:
         _OpusStruct.get_opus_version()
 
         self._state = self._create_state()
@@ -521,18 +542,18 @@ class Decoder(_OpusStruct):
         _lib.opus_decoder_ctl(self._state, CTL_LAST_PACKET_DURATION, ctypes.byref(ret))
         return ret.value
 
-    def decode(self, data, *, fec=False):
+    def decode(self, data: bytes | None, *, fec: bool = True):
         if data is None and fec:
             raise OpusError(
                 message="Invalid arguments: FEC cannot be used with null data"
             )
 
+        channel_count = self.CHANNELS
+
         if data is None:
             frame_size = self._get_last_packet_duration() or self.SAMPLES_PER_FRAME
-            channel_count = self.CHANNELS
         else:
             frames = self.packet_get_nb_frames(data)
-            channel_count = self.CHANNELS
             samples_per_frame = self.packet_get_samples_per_frame(data)
             frame_size = frames * samples_per_frame
 
@@ -542,9 +563,150 @@ class Decoder(_OpusStruct):
         # )()
         pcm = (ctypes.c_int16 * (frame_size * channel_count))()
         pcm_ptr = ctypes.cast(pcm, c_int16_ptr)
+        pcm_ptr = ctypes.cast(
+            pcm,
+            c_int16_ptr,
+        )
 
         ret = _lib.opus_decode(
             self._state, data, len(data) if data else 0, pcm_ptr, frame_size, fec
         )
 
         return array.array("h", pcm[: ret * channel_count]).tobytes()
+
+
+class PacketDecoder:
+    def __init__(self, router: PacketRouter, ssrc: int) -> None:
+        self.router: PacketRouter = router
+        self.ssrc: int = ssrc
+
+        self._decoder: Decoder | None = None if self.sink.is_opus() else Decoder()
+        self._buffer: JitterBuffer = JitterBuffer()
+        self._cached_id: int | None = None
+
+        self._last_seq: int = -1
+        self._last_ts: int = -1
+
+    @property
+    def sink(self) -> Sink:
+        return self.router.sink
+
+    def _get_user(self, user_id: int) -> User | Member | None:
+        vc: VoiceClient = self.sink.client  # type: ignore
+        return vc.guild.get_member(user_id) or vc.client.get_user(user_id)
+
+    def _get_cached_member(self) -> User | Member | None:
+        return self._get_user(self._cached_id) if self._cached_id else None
+
+    def _flag_ready_state(self) -> None:
+        if self._buffer.peek():
+            self.router.waiter.register(self)
+        else:
+            self.router.waiter.unregister(self)
+
+    def push_packet(self, packet: Packet) -> None:
+        self._buffer.push(packet)
+        self._flag_ready_state()
+
+    def pop_data(self, *, timeout: float = 0) -> VoiceData | None:
+        packet = self._get_next_packet(timeout)
+        self._flag_ready_state()
+
+        if packet is None:
+            return None
+        return self._process_packet(packet)
+
+    def set_user_id(self, user_id: int) -> None:
+        self._cached_id = user_id
+
+    def reset(self) -> None:
+        self._buffer.reset()
+        self._decoder = None if self.sink.is_opus() else Decoder()
+        self._last_seq = self._last_ts = -1
+        self._flag_ready_state()
+
+    def destroy(self) -> None:
+        self._buffer.reset()
+        self._decoder = None
+        self._flag_ready_state()
+
+    def _get_next_packet(self, timeout: float) -> Packet | None:
+        packet = self._buffer.pop(timeout=timeout)
+
+        if packet is None:
+            if self._buffer:
+                packets = self._buffer.flush()
+                if any(packets[1:]):
+                    _log.warning(
+                        "%s packets were lost being flushed in decoder-%s",
+                        len(packets) - 1,
+                        self.ssrc,
+                    )
+                return packets[0]
+            return
+        elif not packet:
+            packet = self._make_fakepacket()
+        return packet
+
+    def _make_fakepacket(self) -> FakePacket:
+        seq = add_wrapped(self._last_seq, 1)
+        ts = add_wrapped(self._last_ts, Decoder.SAMPLES_PER_FRAME, wrap=2**32)
+        return FakePacket(self.ssrc, seq, ts)
+
+    def _process_packet(self, packet: Packet) -> VoiceData:
+        from discord.object import Object
+
+        pcm = None
+
+        if not self.sink.is_opus():
+            packet, pcm = self._decode_packet(packet)
+
+        member = self._get_cached_member()
+
+        if member is None:
+            self._cached_id = self.sink.client._connection._get_id_from_ssrc(self.ssrc)
+            member = self._get_cached_member()
+
+        # yet still none, use Object
+        if member is None and self._cached_id:
+            member = Object(id=self._cached_id)
+
+        data = VoiceData(packet, member, pcm=pcm)
+        self._last_seq = packet.sequence
+        self._last_ts = packet.timestamp
+        return data
+
+    def _decode_packet(self, packet: Packet) -> tuple[Packet, bytes]:
+        assert self._decoder is not None
+        assert self.sink.client
+
+        user_id: int | None  = self._cached_id
+        dave: davey.DaveSession | None = self.sink.client._connection.dave_session
+        in_dave = dave is not None
+
+        # personally, the best variable
+        other_code = True
+
+        if packet:
+            other_code = False
+            pcm = self._decoder.decode(packet.decrypted_data, fec=False)
+
+        if other_code:
+            next_packet = self._buffer.peek_next()
+
+            if next_packet is not None:
+                nextdata: bytes = next_packet.decrypted_data  # type: ignore
+
+                _log.debug(
+                    "Generating fec packet: fake=%s, fec=%s",
+                    packet.sequence,
+                    next_packet.sequence,
+                )
+                pcm = self._decoder.decode(nextdata, fec=True)
+            else:
+                pcm = self._decoder.decode(None, fec=False)
+
+        if user_id is not None and in_dave and dave.can_passthrough(user_id):
+            pcm = dave.decrypt(user_id, davey.MediaType.audio, pcm)
+
+        return packet, pcm

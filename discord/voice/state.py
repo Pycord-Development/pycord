@@ -42,7 +42,12 @@ from discord.errors import ConnectionClosed
 from discord.object import Object
 from discord.sinks import RawData, Sink
 
-import davey
+try:
+    import davey
+except ImportError:
+    import warnings
+
+    warnings.warn_explicit()
 
 from .enums import ConnectionFlowState, OpCodes
 from .gateway import VoiceWebSocket
@@ -193,12 +198,15 @@ class SocketReader(threading.Thread):
             else:
                 for cb in self._callbacks:
                     try:
-                        task = self.state.loop.create_task(
-                            utils.maybe_coroutine(cb, data)
+                        task = asyncio.ensure_future(
+                            self.state.loop.create_task(
+                                utils.maybe_coroutine(cb, data)
+                            ),
+                            loop=self.state.loop,
                         )
-                        self.state._sink_dispatch_task_set.add(task)
+                        self.state._dispatch_task_set.add(task)
                         task.add_done_callback(
-                            self.state._sink_dispatch_task_set.discard
+                            self.state._dispatch_task_set.discard
                         )
                     except Exception:
                         _log.exception(
@@ -206,21 +214,6 @@ class SocketReader(threading.Thread):
                             cb,
                             self,
                         )
-
-
-class SocketVoiceRecvReader(SocketReader):
-    def __init__(
-        self,
-        state: VoiceConnectionState,
-        *,
-        start_paused: bool = True,
-    ) -> None:
-        super().__init__(
-            state,
-            f"voice-recv-socket-reader:{id(self):#x}",
-            4096,
-            start_paused=start_paused,
-        )
 
 
 class SocketEventReader(SocketReader):
@@ -233,11 +226,6 @@ class SocketEventReader(SocketReader):
             2048,
             start_paused=start_paused,
         )
-
-
-class SSRC(TypedDict):
-    user_id: int
-    speaking: SpeakingState
 
 
 class VoiceConnectionState:
@@ -281,18 +269,10 @@ class VoiceConnectionState:
         self._connector: asyncio.Task[None] | None = None
         self._socket_reader = SocketEventReader(self)
         self._socket_reader.start()
-        self._voice_recv_socket = SocketVoiceRecvReader(self)
-        self._voice_recv_socket.register(self.handle_voice_recv_packet)
-        self.start_record_socket()
-        self.user_ssrc_map: dict[int, SSRC] = {}
-        self.user_voice_timestamps: dict[int, tuple[int, float]] = {}
-        self.sync_recording_start: bool = False
-        self.first_received_packet_ts: float = MISSING
-        self._sinks: dict[int, Sink] = {}
         self.recording_done_callbacks: list[
             tuple[Callable[..., Coroutine[Any, Any, Any]], tuple[Any, ...]]
         ] = []
-        self._sink_dispatch_task_set: set[asyncio.Task[Any]] = set()
+        self._dispatch_task_set: set[asyncio.Task] = set()
 
         if not self._connection.self_id:
             raise RuntimeError("client self ID is not set")
@@ -305,283 +285,12 @@ class VoiceConnectionState:
         self.downgraded_dave = False
 
     @property
-    def sinks(self) -> list[Sink]:
-        return list(self._sinks.values())
+    def user_ssrc_map(self) -> dict[int, int]:
+        return self.client._id_to_ssrc
 
     @property
     def max_dave_proto_version(self) -> int:
         return davey.DAVE_PROTOCOL_VERSION
-
-    def start_record_socket(self) -> None:
-        try:
-            self._voice_recv_socket.start()
-        except RuntimeError:
-            self._voice_recv_socket.resume()
-
-    def stop_record_socket(self) -> None:
-        self._voice_recv_socket.stop()
-
-        for cb, args in self.recording_done_callbacks:
-            task = self.loop.create_task(cb(*args))
-            self._sink_dispatch_task_set.add(task)
-            task.add_done_callback(self._sink_dispatch_task_set.remove)
-
-        for sink in self.sinks:
-            sink.stop()
-
-        self.recording_done_callbacks.clear()
-        self.sinks.clear()
-
-    async def handle_voice_recv_packet(self, packet: bytes) -> None:
-        _recv_log.debug("Handling voice packet %s", packet)
-        if packet[1] != 0x78:
-            # We should ignore any payload types we do not understand
-            # Ref: RFC 3550 5.1 payload type
-            # At some point we noted that we should ignore only types 200 - 204 inclusive.
-            # They were marked as RTCP: provides information about the connection
-            # this was too broad of a whitelist, it is unclear if this is too narrow of a whitelist
-            return
-
-        if self.paused_recording():
-            _recv_log.debug("Ignoring packet %s because recording is stopped", packet)
-            return
-
-        data = RawData(packet, self.client)
-
-        if data.decrypted_data == opus.OPUS_SILENCE:
-            _recv_log.debug(
-                "Ignoring packet %s because it is an opus silence frame", data
-            )
-            return
-
-        await data.decode()
-
-    def is_first_packet(self) -> bool:
-        return not self.user_voice_timestamps or not self.sync_recording_start
-
-    def dispatch_packet_sinks(self, data: RawData) -> None:
-        _log.debug("Dispatching packet %s in all sinks", data)
-        if data.ssrc not in self.user_ssrc_map:
-            if self.is_first_packet():
-                self.first_received_packet_ts = data.receive_time
-                silence = 0
-            else:
-                silence = (data.receive_time - self.first_received_packet_ts) * 48000
-        else:
-            stored_timestamp, stored_recv_time = self.user_voice_timestamps[data.ssrc]
-            dRT = data.receive_time - stored_recv_time * 48000
-            dT = data.timestamp - stored_timestamp
-            diff = abs(100 - dT * 100 / dRT)
-
-            if diff > 60 and dT != 960:
-                silence = dRT - 960
-            else:
-                silence = dT - 960
-
-        self.user_voice_timestamps[data.ssrc] = (data.timestamp, data.receive_time)
-
-        data.decoded_data = (
-            struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS
-            + data.decoded_data
-        )
-
-        sleep_time = 0.01
-        while data.ssrc not in self.user_ssrc_map:
-            time.sleep(sleep_time)
-            # duplicate sleep time, just for testing
-            sleep_time *= 2
-
-        task = self.loop.create_task(
-            self._dispatch_packet(data),
-        )
-        self._sink_dispatch_task_set.add(task)
-        task.add_done_callback(self._sink_dispatch_task_set.discard)
-
-    async def _dispatch_packet(self, data: RawData) -> None:
-        user = self.get_user_by_ssrc(data.ssrc)
-        if not user:
-            _log.debug(
-                "Ignoring received packet %s because the SSRC was waited for but was not found",
-                data,
-            )
-            return
-
-        data.user_id = user.id
-
-        for sink in self.sinks:
-            if sink.is_paused():
-                continue
-
-            sink.dispatch("unfiltered_voice_packet_receive", user, data)
-
-            if sink._filters:
-                futures = [
-                    self.loop.create_task(
-                        utils.maybe_coroutine(fil.filter_packet, sink, user, data)
-                    )
-                    for fil in sink._filters
-                ]
-                strat = sink._filter_strat
-
-                done, pending = await asyncio.wait(futures)
-
-                if pending:
-                    for task in pending:
-                        task.set_result(False)
-
-                    done = (*done, *pending)
-
-                result = strat([f.result() for f in done])
-            else:
-                result = True
-
-            if result:
-                sink.dispatch("voice_packet_receive", user, data)
-                sink._call_voice_packet_handlers(user, data)
-
-    def is_recording(self) -> bool:
-        return self._voice_recv_socket.is_running()
-
-    def paused_recording(self) -> bool:
-        return self._voice_recv_socket.is_paused()
-
-    def add_sink(self, sink: Sink) -> None:
-        self._sinks[id(sink)] = sink
-        self.start_record_socket()
-
-    def remove_sink(self, sink: Sink) -> None:
-        try:
-            self._sinks.pop(id(sink))
-        except KeyError:
-            pass
-
-    def get_user_by_ssrc(self, ssrc: int) -> abc.Snowflake | None:
-        data = self.user_ssrc_map.get(ssrc)
-        if data is None:
-            return None
-
-        user = int(data["user_id"])
-        return self.get_user(user)
-
-    def get_user(self, id: int) -> abc.Snowflake:
-        state = self._connection
-        return self.guild.get_member(id) or state.get_user(id) or Object(id=id)
-
-    def ws_hook(self, ws: VoiceWebSocket, msg: dict[str, Any]) -> None:
-        op = msg["op"]
-        data = msg.get("d", {})
-
-        if op == OpCodes.speaking:
-            ssrc = data["ssrc"]
-            user = int(data["user_id"])
-            raw_speaking = data["speaking"]
-            speaking = try_enum(SpeakingState, raw_speaking)
-            old_data = self.user_ssrc_map.get(ssrc)
-            old_speaking = (old_data or {}).get("speaking", SpeakingState.none)
-
-            self.dispatch_speaking_state(old_speaking, speaking, user)
-
-            if old_data is None:
-                self.user_ssrc_map[ssrc]["speaking"] = speaking
-            else:
-                self.user_ssrc_map[ssrc] = {
-                    "user_id": user,
-                    "speaking": speaking,
-                }
-        elif op == OpCodes.client_connect:
-            user_ids = [int(uid) for uid in data["user_ids"]]
-
-            for uid in user_ids:
-                user = self.get_user(uid)
-                self.dispatch_user_connect(user)
-
-    def dispatch_speaking_state(
-        self, before: SpeakingState, after: SpeakingState, user_id: int
-    ) -> None:
-        task = self.loop.create_task(
-            self._dispatch_speaking_state(before, after, user_id),
-        )
-        self._sink_dispatch_task_set.add(task)
-        task.add_done_callback(self._sink_dispatch_task_set.discard)
-
-    def dispatch_user_connect(self, user: abc.Snowflake) -> None:
-        task = self.loop.create_task(
-            self._dispatch_user_connect(self.channel_id, user),
-        )
-        self._sink_dispatch_task_set.add(task)
-        task.add_done_callback(self._sink_dispatch_task_set.discard)
-
-    async def _dispatch_user_connect(
-        self, chid: int | None, user: abc.Snowflake
-    ) -> None:
-        channel = self.guild._resolve_channel(chid) or Object(id=chid or 0)
-
-        for sink in self.sinks:
-            if sink.is_paused():
-                continue
-
-            sink.dispatch("unfiltered_user_connect", user, channel)
-
-            if sink._filters:
-                futures = [
-                    self.loop.create_task(
-                        utils.maybe_coroutine(fil.filter_user_connect, user, channel)
-                    )
-                    for fil in sink._filters
-                ]
-                strat = sink._filter_strat
-
-                done, pending = await asyncio.wait(futures)
-
-                if pending:
-                    for task in pending:
-                        task.cancel()
-
-                result = strat([f.result() for f in done])
-            else:
-                result = True
-
-            if result:
-                sink.dispatch("user_connect", user, channel)
-                sink._call_user_connect_handlers(user, channel)
-
-    async def _dispatch_speaking_state(
-        self, before: SpeakingState, after: SpeakingState, uid: int
-    ) -> None:
-        resolved = self.get_user(uid)
-
-        for sink in self.sinks:
-            if sink.is_paused():
-                continue
-
-            sink.dispatch("unfiltered_speaking_state_update", resolved, before, after)
-
-            if sink._filters:
-                futures = [
-                    self.loop.create_task(
-                        utils.maybe_coroutine(
-                            fil.filter_packet, sink, resolved, before, after
-                        )
-                    )
-                    for fil in sink._filters
-                ]
-                strat = sink._filter_strat
-
-                done, pending = await asyncio.wait(futures)
-
-                if pending:
-                    # there should not be any pending futures
-                    # but if there are, simply discard them
-                    for task in pending:
-                        task.cancel()
-
-                result = strat([f.result() for f in done])
-            else:
-                result = True
-
-            if result:
-                sink.dispatch("speaking_state_update", resolved, before, after)
-                sink._call_speaking_state_handlers(resolved, before, after)
 
     @property
     def state(self) -> ConnectionFlowState:
@@ -881,7 +590,6 @@ class VoiceConnectionState:
 
             if cleanup:
                 self._socket_reader.stop()
-                self.stop_record_socket()
                 self.client.stop()
 
             self._connected.set()
@@ -927,7 +635,6 @@ class VoiceConnectionState:
         finally:
             self.state = with_state
             self._socket_reader.pause()
-            self._voice_recv_socket.pause()
 
             if self.socket:
                 self.socket.close()
@@ -1028,7 +735,6 @@ class VoiceConnectionState:
         await self.client.channel.guild.change_voice_state(channel=None)
         self._expecting_disconnect = True
         self._disconnected.clear()
-        self.ws._identified = False
 
     async def _connect_websocket(self, resume: bool) -> VoiceWebSocket:
         seq_ack = -1
@@ -1207,25 +913,23 @@ class VoiceConnectionState:
         self.client.channel = channel_id and self.guild.get_channel(channel_id)  # type: ignore
 
     async def reinit_dave_session(self) -> None:
-        session = self.dave_session
-
         if self.dave_protocol_version > 0:
-            if session:
-                session.reinit(self.dave_protocol_version, self.user.id, self.channel_id)
+            if self.dave_session:
+                self.dave_session.reinit(self.dave_protocol_version, self.user.id, self.channel_id)
             else:
-                session = self.dave_session = davey.DaveSession(
+                self.dave_session = davey.DaveSession(
                     self.dave_protocol_version,
                     self.user.id,
                     self.channel_id,
                 )
 
             await self.ws.send_as_bytes(
-                int(OpCodes.mls_key_package),
-                session.get_serialized_key_package(),
+                OpCodes.mls_key_package,
+                self.dave_session.get_serialized_key_package(),
             )
-        elif session:
-            session.reset()
-            session.set_passthrough_mode(True, 10)
+        elif self.dave_session:
+            self.dave_session.reset()
+            self.dave_session.set_passthrough_mode(True, 10)
 
     async def recover_dave_from_invalid_commit(self, transition: int) -> None:
         payload = {

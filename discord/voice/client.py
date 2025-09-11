@@ -29,19 +29,18 @@ import asyncio
 import datetime
 import logging
 import struct
-from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any, Literal, overload
+import warnings
 
 from discord import opus
 from discord.errors import ClientException
 from discord.player import AudioPlayer, AudioSource
-from discord.sinks.core import RawData, Sink, is_rtcp
+from discord.sinks.core import Sink
 from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
 from ._types import VoiceProtocol
-
-# from .recorder import VoiceRecorderClient
+from .receive import AudioReader
 from .state import VoiceConnectionState
 
 if TYPE_CHECKING:
@@ -50,18 +49,19 @@ if TYPE_CHECKING:
     from discord import abc
     from discord.client import Client
     from discord.guild import Guild, VocalGuildChannel
-    from discord.opus import APPLICATION_CTL, BAND_CTL, SIGNAL_CTL, Decoder, Encoder
+    from discord.opus import APPLICATION_CTL, BAND_CTL, SIGNAL_CTL, Encoder
     from discord.raw_models import (
         RawVoiceServerUpdateEvent,
         RawVoiceStateUpdateEvent,
     )
     from discord.state import ConnectionState
     from discord.types.voice import SupportedModes
-    from discord.user import ClientUser
+    from discord.user import ClientUser, User
+    from discord.member import Member
 
     from .gateway import VoiceWebSocket
+    from .receive.reader import AfterCallback
 
-    AfterCallback = Callable[[Exception | None], Any]
     P = ParamSpec("P")
 
 _log = logging.getLogger(__name__)
@@ -75,6 +75,10 @@ try:
     has_nacl = True
 except ImportError:
     has_nacl = False
+
+__all__ = (
+    "VoiceClient",
+)
 
 
 class VoiceClient(VoiceProtocol):
@@ -129,10 +133,14 @@ class VoiceClient(VoiceProtocol):
         self._player: AudioPlayer | None = None
         self._player_future: asyncio.Future[None] | None = None
         self.encoder: Encoder = MISSING
-        self.decoder: Decoder = MISSING
         self._incr_nonce: int = 0
 
         self._connection: VoiceConnectionState = self.create_connection_state()
+
+        self._ssrc_to_id: dict[int, int] = {}
+        self._id_to_ssrc: dict[int, int] = {}
+        self._event_listeners: dict[str, list] = {}
+        self._reader: AudioReader = MISSING
 
     warn_nacl: bool = not has_nacl
     supported_modes: tuple[SupportedModes, ...] = (
@@ -192,13 +200,39 @@ class VoiceClient(VoiceProtocol):
             setattr(self, attr, val + value)
 
     def create_connection_state(self) -> VoiceConnectionState:
-        return VoiceConnectionState(self)
+        return VoiceConnectionState(self, hook=self._recv_hook)
 
     async def on_voice_state_update(self, data: RawVoiceStateUpdateEvent) -> None:
+        old_channel_id = self.channel.id if self.channel else None
         await self._connection.voice_state_update(data)
+
+        if data.channel_id is None:
+            return
+
+        if self._reader and data.channel_id != old_channel_id:
+            _log.debug("Destroying voice receive decoders in guild %s", self.guild.id)
+            self._reader.packet_router.destroy_all_decoders()
 
     async def on_voice_server_update(self, data: RawVoiceServerUpdateEvent) -> None:
         await self._connection.voice_server_update(data)
+
+    def _dispatch_sink(self, event: str, /, *args: Any, **kwargs: Any) -> None:
+        if self._reader:
+            self._reader.event_router.dispatch(event, *args, **kwargs)
+
+    def _add_ssrc(self, user_id: int, ssrc: int) -> None:
+        self._ssrc_to_id[ssrc] = user_id
+        self._id_to_ssrc[user_id] = ssrc
+
+        if self._reader:
+            self._reader.packet_router.set_user_id(ssrc, user_id)
+
+    def _remove_ssrc(self, *, user_id: int) -> None:
+        ssrc = self._id_to_ssrc.pop(user_id, None)
+
+        if ssrc:
+            self._reader.speaking_timer.drop_ssrc(ssrc)
+            self._ssrc_to_id.pop(ssrc, None)
 
     async def connect(
         self,
@@ -349,135 +383,6 @@ class VoiceClient(VoiceProtocol):
             + nonce[:4]
         )
 
-    # decryption methods
-
-    def _decrypt_rtp_xsalsa20_poly1305(self, data: bytes) -> bytes:
-        packet = RawData(data, self)
-        nonce = bytearray(24)
-        nonce[:12] = packet.header
-
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
-        result = box.decrypt(bytes(packet.data), bytes(nonce))
-
-        if packet.extended:
-            offset = packet.update_headers(result)
-            result = result[offset:]
-
-        return result
-
-    def _decrypt_rtcp_xsalsa20_poly1305(self, data: bytes) -> bytes:
-        nonce = bytearray(24)
-        nonce[:8] = data[:8]
-
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
-        result = box.decrypt(data[8:], bytes(nonce))
-
-        return data[:8] + result
-
-    def _decrypt_xsalsa20_poly1305(self, data: bytes) -> bytes:
-        if is_rtcp(data):
-            func = self._decrypt_rtcp_xsalsa20_poly1305
-        else:
-            func = self._decrypt_rtp_xsalsa20_poly1305
-        return func(data)
-
-    def _decrypt_rtp_xsalsa20_poly1305_suffix(self, data: bytes) -> bytes:
-        packet = RawData(data, self)
-        nonce = packet.data[-24:]
-        voice_data = packet.data[:-24]
-
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
-        result = box.decrypt(bytes(voice_data), bytes(nonce))
-
-        if packet.extended:
-            offset = packet.update_headers(result)
-            result = result[offset:]
-
-        return result
-
-    def _decrypt_rtcp_xsalsa20_poly1305_suffix(self, data: bytes) -> bytes:
-        nonce = data[-24:]
-        header = data[:8]
-
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
-        result = box.decrypt(data[8:-24], nonce)
-
-        return header + result
-
-    def _decrypt_xsalsa20_poly1305_suffix(self, data: bytes) -> bytes:
-        if is_rtcp(data):
-            func = self._decrypt_rtcp_xsalsa20_poly1305_suffix
-        else:
-            func = self._decrypt_rtp_xsalsa20_poly1305_suffix
-        return func(data)
-
-    def _decrypt_rtp_xsalsa20_poly1305_lite(self, data: bytes) -> bytes:
-        packet = RawData(data, self)
-        nonce = bytearray(24)
-        nonce[:4] = packet.data[-4:]
-        voice_data = packet.data[:-4]
-
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
-        result = box.decrypt(bytes(voice_data), bytes(nonce))
-
-        if packet.extended:
-            offset = packet.update_headers(result)
-            result = result[offset:]
-
-        return result
-
-    def _decrypt_rtcp_xsalsa20_poly1305_lite(self, data: bytes) -> bytes:
-        nonce = bytearray(24)
-        nonce[:4] = data[-4:]
-        header = data[:8]
-
-        box = nacl.secret.SecretBox(bytes(self.secret_key))
-        result = box.decrypt(data[8:-4], bytes(nonce))
-
-        return header + result
-
-    def _decrypt_xsalsa20_poly1305_lite(self, data: bytes) -> bytes:
-        if is_rtcp(data):
-            func = self._decrypt_rtcp_xsalsa20_poly1305_lite
-        else:
-            func = self._decrypt_rtp_xsalsa20_poly1305_lite
-        return func(data)
-
-    def _decrypt_rtp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
-        packet = RawData(data, self)
-        packet.adjust_rtpsize()
-
-        nonce = bytearray(24)
-        nonce[:4] = packet.nonce
-        voice_data = packet.data
-
-        # Blob vomit
-        box = nacl.secret.Aead(bytes(self.secret_key))
-        result = box.decrypt(bytes(voice_data), bytes(packet.header), bytes(nonce))
-
-        if packet.extended:
-            offset = packet.update_headers(result)
-            result = result[offset:]
-
-        return result
-
-    def _decrypt_rtcp_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
-        nonce = bytearray(24)
-        nonce[:4] = data[-4:]
-        header = data[:8]
-
-        box = nacl.secret.Aead(bytes(self.secret_key))
-        result = box.decrypt(data[8:-4], bytes(header), bytes(nonce))
-
-        return header + result
-
-    def _decrypt_aead_xchacha20_poly1305_rtpsize(self, data: bytes) -> bytes:
-        if is_rtcp(data):
-            func = self._decrypt_rtcp_aead_xchacha20_poly1305_rtpsize
-        else:
-            func = self._decrypt_rtp_aead_xchacha20_poly1305_rtpsize
-        return func(data)
-
     @overload
     def play(
         self,
@@ -616,6 +521,9 @@ class VoiceClient(VoiceProtocol):
             for cb, _ in self._player_future._callbacks:
                 self._player_future.remove_done_callback(cb)
             self._player_future.set_result(None)
+        if self._reader:
+            self._reader.stop()
+            self._reader = MISSING
 
         self._player = None
         self._player_future = None
@@ -646,7 +554,7 @@ class VoiceClient(VoiceProtocol):
         if self._player is None:
             raise ValueError("the client is not playing anything")
 
-        self._player._set_source(value)
+        self._player.set_source(value)
 
     def send_audio_packet(self, data: bytes, *, encode: bool = True) -> None:
         """Sends an audio packet composed of the ``data``.
@@ -695,7 +603,7 @@ class VoiceClient(VoiceProtocol):
     def start_recording(
         self,
         sink: Sink,
-        callback: Callable[..., Coroutine[Any, Any, Any]] = MISSING,
+        callback: AfterCallback | None = None,
         *args: Any,
         sync_start: bool = MISSING,
     ) -> None:
@@ -709,25 +617,23 @@ class VoiceClient(VoiceProtocol):
         ----------
         sink: :class:`~.Sink`
             A Sink in which all audio packets will be processed in.
-        callback: :ref:`coroutine <coroutine>`
-            A function which is called after the bot has stopped recording.
+        callback: Callable[[:class:`Exception` | None], Any]
+            A function which is called after the bot has stopped recording. This must take exactly one positonal(-only)
+            parameter, ``exception``, which is the exception that was raised during the recording of the Sink.
 
             .. versionchanged:: 2.7
-                This parameter is now optional.
+                This parameter is now optional, and must take exactly one parameter, ``exception``.
         \*args:
             The arguments to pass to the callback coroutine.
+
+            .. deprecated:: 2.7
+                Passing custom arguments to the callback is now deprecated and ignored.
         sync_start: :class:`bool`
             If ``True``, the recordings of subsequent users will start with silence.
             This is useful for recording audio just as it was heard.
 
-            .. warning::
-
-                This is a global voice client variable, this means, you can't have individual
-                sinks with different ``sync_start`` values. If you are willing to have such
-                functionality, you should consider creating your own :class:`discord.SinkHandler`.
-
-            .. versionchanged:: 2.7
-                This now defaults to ``MISSING``.
+            .. deprecated:: 2.7
+                This parameter is now ignored and deprecated.
 
         Raises
         ------
@@ -742,19 +648,18 @@ class VoiceClient(VoiceProtocol):
         if not isinstance(sink, Sink):
             raise TypeError(f"expected a Sink object, got {sink.__class__.__name__}")
 
+        if self.is_recording():
+            raise ClientException("Already recording audio")
+
+        if len(args) > 0:
+            warnings.warn("'args' parameter is deprecated since 2.7 and will be removed in 3.0")
         if sync_start is not MISSING:
-            self._connection.sync_recording_start = sync_start
+            warnings.warn("'sync_tart' parameter is deprecated since 2.7 and will be removed in 3.0")
 
-        sink.client = self
-        self._connection.add_sink(sink)
-        if callback is not MISSING:
-            self._connection.recording_done_callbacks.append((callback, args))
+        self._reader = AudioReader(sink, self, after=callback)
+        self._reader.start()
 
-    def stop_recording(
-        self,
-        *,
-        sink: Sink | None = None,
-    ) -> None:
+    def stop_recording(self) -> None:
         """Stops the recording of the provided ``sink``, or all recording sinks.
 
         .. versionadded:: 2.0
@@ -762,24 +667,29 @@ class VoiceClient(VoiceProtocol):
         Raises
         ------
         RecordingException
-            The provided sink is not currently recording, or if ``None``, you are not recording.
-
-        Paremeters
-        ----------
-        sink: :class:`discord.Sink`
-            The sink to stop recording.
+            You are not recording.
         """
-
-        if sink is not None:
-            try:
-                self._connection.sinks.remove(sink)
-            except ValueError:
-                raise RecordingException("the provided sink is not currently recording")
-
-            sink.stop()
-            return
-        self._connection.stop_record_socket()
+        if self._reader:
+            self._reader.stop()
+            self._reader = MISSING
+        else:
+            raise RecordingException("You are not recording")
 
     def is_recording(self) -> bool:
         """Whether the current client is recording in any sink."""
-        return self._connection.is_recording()
+        return self._reader and self._reader.is_listening()
+
+    def is_speaking(self, member: Member | User) -> bool | None:
+        """Whether a user is speaking.
+
+        This is an approximate calculation and may have outdated or wrong data.
+
+        If the member speaking status has not been yet saved, it returns ``None``.
+
+        .. versionadded:: 2.7
+        """
+        ssrc = self._id_to_ssrc.get(member.id)
+        if ssrc is None:
+            return None
+        if self._reader:
+            return self._reader.speaking_timer.get_speaking(ssrc)

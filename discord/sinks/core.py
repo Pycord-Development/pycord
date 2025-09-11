@@ -25,26 +25,24 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import asyncio
 import logging
-import struct
 import sys
-import time
-from collections import namedtuple
-from collections.abc import Callable, Coroutine, Iterable
-from functools import partial
-from typing import TYPE_CHECKING, Any, Generic, TypeVar, overload
+from collections.abc import Callable, Generator, Sequence
+import inspect
+import subprocess
+import shlex
+import threading
+from typing import IO, TYPE_CHECKING, Any, Literal, TypeVar
 
-from discord import opus, utils
-from discord.enums import SpeakingState
-from discord.utils import MISSING
-
-from .enums import SinkFilteringMode
+from discord.utils import MISSING, SequenceProxy
+from discord.player import FFmpegAudio
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
+    from typing_extensions import ParamSpec, Self
 
-    from discord import abc
+    from discord.user import User
+    from discord.member import Member
+    from discord.voice.packets import VoiceData
 
     from ..voice.client import VoiceClient
 
@@ -54,8 +52,6 @@ if TYPE_CHECKING:
 __all__ = (
     "Sink",
     "RawData",
-    "SinkFilter",
-    "SinkHandler",
 )
 
 
@@ -69,747 +65,465 @@ S = TypeVar("S", bound="Sink")
 _log = logging.getLogger(__name__)
 
 
-def is_rtcp(data: bytes) -> bool:
-    return 200 <= data[1] <= 204
-
-
-class SinkFilter(Generic[S]):
-    """Represents a filter for a :class:`~.Sink`.
-
-    This has to be inherited in order to provide a filter to a sink.
-
-    .. versionadded:: 2.7
+class SinkBase:
+    """Represents an audio sink in which user's audios are stored.
     """
 
-    @overload
-    async def filter_packet(
-        self, sink: S, user: abc.Snowflake, packet: RawData
-    ) -> bool: ...
+    __sink_listeners__: list[tuple[str, str]]
 
-    @overload
-    def filter_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> bool: ...
+    _client: VoiceClient | None
 
-    def filter_packet(
-        self, sink: S, user: abc.Snowflake, packet: RawData
-    ) -> bool | Coroutine[Any, Any, bool]:
-        """|maybecoro|
-
-        This is called automatically everytime a voice packet is received.
-
-        Depending on what bool-like this returns, it will dispatch some events in the parent ``sink``.
-
-        Parameters
-        ----------
-        sink: :class:`~.Sink`
-            The sink the packet was received from, if the filter check goes through.
-        user: :class:`~discord.abc.Snowflake`
-            The user that the packet was received from.
-        packet: :class:`~.RawData`
-            The raw data packet.
-
-        Returns
-        -------
-        :class:`bool`
-            Whether the filter was successful.
-        """
-        raise NotImplementedError("subclasses must implement this")
-
-    @overload
-    async def filter_speaking_state(
-        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> bool: ...
-
-    @overload
-    def filter_speaking_state(
-        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> bool: ...
-
-    def filter_speaking_state(
-        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> bool | Coroutine[Any, Any, bool]:
-        """|maybecoro|
-
-        This is called automatically everytime a speaking state is updated.
-
-        Depending on what bool-like this returns, it will dispatch some events in the parent ``sink``.
-
-        Parameters
-        ----------
-        sink: :class:`~.Sink`
-            The sink the packet was received from, if the filter check goes through.
-        user: :class:`~discord.abc.Snowflake`
-            The user that the packet was received from.
-        before: :class:`~discord.SpeakingState`
-            The speaking state before the update.
-        after: :class:`~discord.SpeakingState`
-            The speaking state after the update.
-
-        Returns
-        -------
-        :class:`bool`
-            Whether the filter was successful.
-        """
-        raise NotImplementedError("subclasses must implement this")
-
-    @overload
-    async def filter_user_connect(
-        self,
-        sink: S,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
-    ) -> bool: ...
-
-    @overload
-    def filter_user_connect(
-        self,
-        sink: S,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
-    ) -> bool: ...
-
-    def filter_user_connect(
-        self,
-        sink: S,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
-    ) -> bool | Coroutine[Any, Any, bool]:
-        """|maybecoro|
-
-        This is called automatically everytime a speaking state is updated.
-
-        Depending on what bool-like this returns, it will dispatch some events in the parent ``sink``.
-
-        Parameters
-        ----------
-        sink: :class:`~.Sink`
-            The sink the packet was received from, if the filter check goes through.
-        user: :class:`~discord.abc.Snowflake`
-            The user that the packet was received from.
-        channel: :class:`~discord.abc.Snowflake`
-            The channel the user has connected to. This is usually resolved into the proper guild channel type, but
-            defaults to a :class:`~discord.Object` when not found.
-
-        Returns
-        -------
-        :class:`bool`
-            Whether the filter was successful.
-        """
-        raise NotImplementedError("subclasses must implement this")
-
-    def cleanup(self) -> None:
-        """A function called when the filter is ready for cleanup."""
-
-
-class SinkHandler(Generic[S]):
-    """Represents a handler for a :class:`~.Sink`.
-
-    This has to be inherited in order to provide a handler to a sink.
-
-    .. versionadded:: 2.7
-    """
-
-    @overload
-    async def handle_packet(
-        self, sink: S, user: abc.Snowflake, packet: RawData
-    ) -> Any: ...
-
-    @overload
-    def handle_packet(self, sink: S, user: abc.Snowflake, packet: RawData) -> Any: ...
-
-    def handle_packet(
-        self, sink: S, user: abc.Snowflake, packet: RawData
-    ) -> Any | Coroutine[Any, Any, Any]:
-        """|maybecoro|
-
-        This is called automatically everytime a voice packet which has successfully passed the filters is received.
-
-        Parameters
-        ----------
-        sink: :class:`~.Sink`
-            The sink the packet was received from, if the filter check goes through.
-        user: :class:`~discord.abc.Snowflake`
-            The user that the packet is from.
-        packet: :class:`~.RawData`
-            The raw data packet.
-        """
-
-    @overload
-    async def handle_speaking_state(
-        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> Any: ...
-
-    @overload
-    def handle_speaking_state(
-        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> Any: ...
-
-    def handle_speaking_state(
-        self, sink: S, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> Any | Coroutine[Any, Any, Any]:
-        """|maybecoro|
-
-        This is called automatically everytime a speaking state update is received which has successfully passed the filters.
-
-        Parameters
-        ----------
-        sink: :class:`~.Sink`
-            The sink the packet was received from, if the filter check goes through.
-        user: :class:`~discord.abc.Snowflake`
-            The user that the packet was received from.
-        before: :class:`~discord.SpeakingState`
-            The speaking state before the update.
-        after: :class:`~discord.SpeakingState`
-            The speaking state after the update.
-        """
-
-    @overload
-    async def handle_user_connect(
-        self,
-        sink: S,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
-    ) -> Any: ...
-
-    @overload
-    def handle_user_connect(
-        self,
-        sink: S,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
-    ) -> Any: ...
-
-    def handle_user_connect(
-        self,
-        sink: S,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
-    ) -> Any | Coroutine[Any, Any, Any]:
-        """|maybecoro|
-
-        This is called automatically everytime a user has connected a voice channel which has successfully passed the filters.
-
-        Parameters
-        ----------
-        sink: :class:`~.Sink`
-            The sink the packet was received from, if the filter check goes through.
-        user: :class:`~discord.abc.Snowflake`
-            The user that the packet was received from.
-        channel: :class:`~discord.abc.Snowflake`
-            The channel the user has connected to. This is usually resolved into the proper guild channel type, but
-            defaults to a :class:`~discord.Object` when not found.
-        """
-
-    def cleanup(self) -> None:
-        """A function called when the handler is ready for cleanup."""
-
-
-class RawData:
-    """Handles raw data from Discord so that it can be decrypted and decoded to be used.
-
-    .. versionadded:: 2.0
-    """
-
-    unpacker = struct.Struct(">xxHII")
-    _ext_header = namedtuple("Extension", "profile length values")
-    _ext_magic = b"\xbe\xde"
-
-    if TYPE_CHECKING:
-        sequence: int
-        timestamp: int
-        ssrc: int
-
-    def __init__(self, raw_data: bytes, client: VoiceClient):
-        data: bytearray = bytearray(raw_data)
-        self.client: VoiceClient = client
-
-        self.version: int = data[0] >> 6
-        self.padding: bool = bool(data[0] & 0b00100000)
-        self.extended: bool = bool(data[0] & 0b00010000)
-        self.cc: int = data[0] & 0b00001111
-        self.marker: bool = bool(data[1] & 0b10000000)
-        self.payload: int = data[1] & 0b01111111
-
-        self.sequence, self.timestamp, self.ssrc = self.unpacker.unpack_from(data)
-        self.csrcs: tuple[int, ...] = ()
-        self.extension = None
-        self.extension_data: dict[int, bytes] = {}
-
-        self.header = data[:12]
-        self.data = data[12:]
-        self.decrypted_data: bytes | None = None
-        self.decoded_data: bytes = MISSING
-
-        self.nonce: bytes = b""
-        self._rtpsize: bool = False
-
-        self._decoder: opus.Decoder = opus.Decoder()
-        self.receive_time: float = time.perf_counter()
-
-        if self.cc:
-            fmt = ">%sI" % self.cc
-            offset = struct.calcsize(fmt) + 12
-            self.csrcs = struct.unpack(fmt, data[12:offset])
-            self.data = data[offset:]
-
-    def adjust_rtpsize(self) -> None:
-        self._rtpsize = True
-        self.nonce = self.data[-4:]
-
-        if not self.extended:
-            self.data = self.data[:-4]
-
-        self.header += self.data[:4]
-        self.data = self.data[4:-4]
-
-    def update_headers(self, data: bytes) -> int:
-        if not self.extended:
-            return 0
-
-        if self._rtpsize:
-            data = self.header[-4:] + data
-
-        profile, length = struct.unpack_from(">2sH", data)
-
-        if profile == self._ext_magic:
-            self._parse_bede_header(data, length)
-
-        values = struct.unpack(">%sI" % length, data[4 : 4 + length * 4])
-        self.extension = self._ext_header(profile, length, values)
-
-        offset = 4 + length * 4
-        if self._rtpsize:
-            offset -= 4
-        return offset
-
-    def _parse_bede_header(self, data: bytes, length: int) -> None:
-        offset = 4
-        n = 0
-
-        while n < length:
-            next_byte = data[offset : offset + 1]
-
-            if next_byte == b"\x00":
-                offset += 1
-                continue
-
-            header = struct.unpack(">B", next_byte)[0]
-
-            element_id = header >> 4
-            element_len = 1 + (header & 0b0000_1111)
-
-            self.extension_data[element_id] = data[
-                offset + 1 : offset + 1 + element_len
-            ]
-            offset += 1 + element_len
-            n += 1
-
-    async def decode(self) -> bytes:
-        if not self.decrypted_data:
-            _log.debug("Attempted to decode an empty decrypted data frame")
-            return b""
-
-        return await asyncio.to_thread(
-            self._decoder.decode,
-            self.decrypted_data,
-        )
-
-
-class Sink:
-    r"""Represents a sink for voice recording.
-
-    This is used as a way of "storing" the recordings.
-
-    This class is abstracted, and must be subclassed in order to apply functionalities to
-    it.
-
-    Parameters
-    ----------
-    filters: List[:class:`~.SinkFilter`]
-        The filters to apply to this sink recorder.
-    filtering_mode: :class:`~.SinkFilteringMode`
-        How the filters should work. If set to :attr:`~.SinkFilteringMode.all`, all filters must go through
-        in order for an audio packet to be stored in this sink, else if it is set to :attr:`~.SinkFilteringMode.any`,
-        only one filter is required to return ``True`` in order for an audio packet to be stored in this sink.
-    handlers: List[:class:`~.SinkHandler`]
-        The sink handlers. Handlers are objects that are called after filtering, and that can be used to, for example
-        store a certain packet data in a file, or local mapping.
-    """
-
-    if TYPE_CHECKING:
-        __filtering_mode: SinkFilteringMode
-        _filter_strat: Callable[..., bool]
-        client: VoiceClient
-
-    __listeners__: dict[str, list[Callable[..., Any]]] = {}
-
-    def __init_subclass__(cls) -> None:
-        listeners: dict[str, list[Callable[..., Any]]] = {}
+    def __new__(cls) -> Self:
+        listeners = {}
 
         for base in reversed(cls.__mro__):
             for elem, value in base.__dict__.items():
                 if elem in listeners:
                     del listeners[elem]
 
-                if isinstance(value, staticmethod):
+                is_static = isinstance(value, staticmethod)
+                if is_static:
                     value = value.__func__
-                elif isinstance(value, classmethod):
-                    value = partial(value.__func__, cls)
 
-                if not hasattr(value, "__listener__"):
+                if not hasattr(value, '__sink_listener__'):
                     continue
 
-                event_name = getattr(value, "__listener_name__", elem).removeprefix(
-                    "on_"
-                )
+                listeners[elem] = value
 
-                try:
-                    listeners[event_name].append(value)
-                except KeyError:
-                    listeners[event_name] = [value]
+        listeners_list = []
+        for listener in listeners.values():
+            for listener_name in listener.__sink_listener_names__:
+                listeners_list.append((listener_name, listener.__name__))
 
-        cls.__listeners__ = listeners
+        cls.__sink_listeners__ = listeners_list
+        return super().__new__(cls)
 
+    @property
+    def root(self) -> Sink:
+        """Returns the root parent of this sink."""
+        return self  # type: ignore
+
+    @property
+    def parent(self) -> Sink | None:
+        """Returns the parent of this sink."""
+        raise NotImplementedError
+
+    @property
+    def child(self) -> Sink | None:
+        """Returns this sink's child."""
+        raise NotImplementedError
+
+    @property
+    def children(self) -> Sequence[Sink]:
+        """Returns the full list of children of this sink."""
+        raise NotImplementedError
+
+    @property
+    def client(self) -> VoiceClient | None:
+        """Returns the voice client this sink is connected to."""
+        return self._client
+
+    def is_opus(self) -> bool:
+        """Returns whether this sink is opus."""
+        return False
+
+    def write(self, user: User | Member | None, data: VoiceData) -> None:
+        """Writes the provided ``data`` into the ``user`` map."""
+        raise NotImplementedError
+
+    def cleanup(self) -> None:
+        """Cleans this sink."""
+        raise NotImplementedError
+
+    def _register_child(self, child: Sink) -> None:
+        """Registers a child to this sink."""
+        raise NotImplementedError
+
+    def walk_children(self, *, with_self: bool = False) -> Generator[Sink, None, None]:
+        """Iterates through all the children of this sink, including nested."""
+        if with_self:
+            yield self  # type: ignore
+
+        for child in self.children:
+            yield child
+            yield from child.walk_children()
+
+    def __del__(self) -> None:
+        self.cleanup()
+
+
+class Sink(SinkBase):
+    """Object that stores the recordings of the audio data.
+
+    Can be subclassed for extra customizability.
+
+    .. versionadded:: 2.0
+    """
+
+    _parent: Sink | None = None
+    _child: Sink | None = None
+    _client = None
+
+    def __init__(self, *, dest: Sink | None = None) -> None:
+        if dest is not None:
+            self._register_child(dest)
+        else:
+            self._child = dest
+
+    def _register_child(self, child: Sink) -> None:
+        if child in self.root.walk_children():
+            raise RuntimeError("Sink is already registered")
+        self._child = child
+        child._parent = self
+
+    @property
+    def root(self) -> Sink:
+        if self.parent is None:
+            return self
+        return self.parent
+
+    @property
+    def parent(self) -> Sink | None:
+        return self._parent
+
+    @property
+    def child(self) -> Sink | None:
+        return self._child
+
+    @property
+    def children(self) -> Sequence[Sink]:
+        return [self._child] if self._child else []
+
+    @property
+    def client(self) -> VoiceClient | None:
+        if self.parent is not None:
+            return self.parent.client
+        else:
+            return self._client
+
+    @classmethod
+    def listener(cls, name: str = MISSING):
+        """Registers a sink method as a listener.
+
+        You can stack this decorator and pass the ``name`` parameter to mark the same function
+        to listen to various events.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the event, must not be prefixed with ``on_``. Defaults to the function name.
+        """
+
+        if name is not MISSING and not isinstance(name, str):
+            raise TypeError(f"expected a str for listener name, got {name.__class__.__name__} instead")
+
+        def decorator(func):
+            actual = func
+
+            if isinstance(actual, staticmethod):
+                actual = actual.__func__
+
+            if inspect.iscoroutinefunction(actual):
+                raise TypeError("listener functions must not be coroutines")
+
+            actual.__sink_listener__ = True
+            to_assign = name or actual.__name__.removeprefix("on_")
+
+            try:
+                actual.__sink_listener_names__.append(to_assign)
+            except AttributeError:
+                actual.__sink_listener_names__ = [to_assign]
+
+            return func
+        return decorator
+
+
+class MultiSink(Sink):
+    """A sink that can handle multiple sinks concurrently.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(self, *destinations: Sink) -> None:
+        for dest in destinations:
+            self._register_child(dest)
+        self._children: list[Sink] = list(destinations)
+
+    def _register_child(self, child: Sink) -> None:
+        if child in self.root.walk_children():
+            raise RuntimeError("Sink is already registered")
+        child._parent = self
+
+    @property
+    def child(self) -> Sink | None:
+        return self._children[0] if self._children else None
+
+    @property
+    def children(self) -> Sequence[Sink]:
+        return SequenceProxy(self._children)
+
+    def add_destination(self, dest: Sink, /) -> None:
+        """Adds a sink to be dispatched in this sink.
+
+        Parameters
+        ----------
+        dest: :class:`Sink`
+            The sink to register as this one's child.
+
+        Raises
+        ------
+        RuntimeError
+            The sink is already registered.
+        """
+        self._register_child(dest)
+
+    def remove_destination(self, dest: Sink, /) -> None:
+        """Removes a sink from this sink dispatch.
+
+        Parameters
+        ----------
+        dest: :class:`Sink`
+            The sink to remove.
+        """
+
+        try:
+            self._children.remove(dest)
+        except ValueError:
+            pass
+        else:
+            dest._parent = None
+
+
+if TYPE_CHECKING:
+    from typing_extensions import deprecated
+
+    @deprecated(
+        "RawData has been deprecated and will be removed in 3.0 in favour of VoiceData",
+        category=DeprecationWarning,
+    )
+    def RawData(**kwargs: Any) -> Any:
+        """Deprecated since version 2.7, use :class:`VoiceData` instead."""
+else:
+    class RawData:
+        def __init__(self, **kwargs: Any) -> None:
+            raise DeprecationWarning("RawData has been deprecated in favour of VoiceData")
+
+
+class _FFmpegSink(Sink):
     def __init__(
         self,
         *,
-        filters: list[SinkFilter] = MISSING,
-        filtering_mode: SinkFilteringMode = SinkFilteringMode.all,
-        handlers: list[SinkHandler] = MISSING,
+        filename: str = MISSING,
+        buffer: IO[bytes] = MISSING,
+        executable: str = 'ffmpeg',
+        stderr: IO[bytes] | None = None,
+        before_options: str | None = None,
+        options: str | None = None,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = None,
     ) -> None:
-        self._paused: bool = False
-        self.filtering_mode = filtering_mode
-        self._filters: list[SinkFilter] = filters or []
-        self._handlers: list[SinkHandler] = handlers or []
-        self.__dispatch_set: set[asyncio.Task[Any]] = set()
-        self._listeners: dict[str, list[Callable[[Iterable[object]], bool]]] = (
-            self.__listeners__
-        )
+        super().__init__()
 
-    @property
-    def filtering_mode(self) -> SinkFilteringMode:
-        return self.__filtering_mode
+        self.filename: str = filename or "pipe:1"
+        self.buffer: IO[bytes] = buffer
 
-    @filtering_mode.setter
-    def filtering_mode(self, value: SinkFilteringMode) -> None:
-        if value is SinkFilteringMode.all:
-            self._filter_strat = all
-        elif value is SinkFilteringMode.any:
-            self._filter_strat = any
-        else:
-            raise TypeError(
-                f"expected a FilteringMode enum member, got {value.__class__.__name__}"
-            )
+        self.on_error = error_hook or self._on_error
 
-        self.__filtering_mode = value
+        args = [executable, "-hide_banner"]
+        subprocess_kwargs: dict[str, Any] = {"stdin": subprocess.PIPE}
+        if self.buffer is not MISSING:
+            subprocess_kwargs["stdout"] = subprocess.PIPE
 
-    def dispatch(self, event: str, *args: Any, **kwargs: Any) -> Any:
-        _log.debug("Dispatching sink %s event %s", self.__class__.__name__, event)
-        method = f"on_{event}"
-
-        listeners = self.__listeners__.get(event, [])
-        for coro in listeners:
-            self._schedule_event(coro, method, *args, **kwargs)
-
-        try:
-            coro = getattr(self, method)
-        except AttributeError:
-            pass
-        else:
-            self._schedule_event(coro, method, *args, **kwargs)
-
-    async def _run_event(
-        self,
-        coro: Callable[..., Coroutine[Any, Any, Any]],
-        event_name: str,
-        *args: Any,
-        **kwargs: Any,
-    ) -> None:
-        try:
-            await coro(*args, **kwargs)
-        except asyncio.CancelledError:
-            pass
-        except Exception as exc:
+        piping_stderr = False
+        if stderr is not None:
             try:
-                await self.on_error(event_name, exc, *args, **kwargs)
-            except asyncio.CancelledError:
-                pass
+                stderr.fileno()
+            except Exception:
+                piping_stderr = True
+                subprocess_kwargs["stderr"] = subprocess.PIPE
 
-    def _call_voice_packet_handlers(self, user: abc.Snowflake, packet: RawData) -> None:
-        for handler in self._handlers:
-            task = asyncio.create_task(
-                utils.maybe_coroutine(
-                    handler.handle_packet,
-                    self,
-                    user,
-                    packet,
-                )
-            )
-            self.__dispatch_set.add(task)
-            task.add_done_callback(self.__dispatch_set.discard)
+        if isinstance(before_options, str):
+            args.extend(shlex.split(before_options))
 
-    def _call_user_connect_handlers(
-        self,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
-    ) -> None:
-        for handler in self._handlers:
-            task = asyncio.create_task(
-                utils.maybe_coroutine(
-                    handler.handle_user_connect,
-                    self,
-                    user,
-                    channel,
-                ),
-            )
-            self.__dispatch_set.add(task)
-            task.add_done_callback(self.__dispatch_set.discard)
+        args.extend({
+            "-f": "s161e",
+            "-ar": "48000",
+            "-ac": "2",
+            "-i": "pipe:0",
+            "-loglevel": "warning",
+            "-blocksize": str(FFmpegAudio.BLOCKSIZE)
+        })
 
-    def _call_speaking_state_handlers(
-        self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> None:
-        for handler in self._handlers:
-            task = asyncio.create_task(
-                utils.maybe_coroutine(
-                    handler.handle_speaking_state,
-                    self,
-                    user,
-                    before,
-                    after,
-                ),
-            )
-            self.__dispatch_set.add(task)
-            task.add_done_callback(self.__dispatch_set.discard)
+        if isinstance(options, str):
+            args.extend(shlex.split(options))
 
-    def _schedule_event(
-        self,
-        coro: Callable[..., Coroutine[Any, Any, Any]],
-        event_name: str,
-        *args: Any,
-        **kwargs: Any,
-    ) -> asyncio.Task:
-        wrapped = self._run_event(coro, event_name, *args, **kwargs)
+        args.append(self.filename)
 
-        task = asyncio.create_task(wrapped, name=f"sinks: {event_name}")
-        self.__dispatch_set.add(task)
-        task.add_done_callback(self.__dispatch_set.discard)
-        return task
+        self._process: subprocess.Popen = MISSING
+        self._process = self._spawn_process(args, **subprocess_kwargs)
 
-    def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} id={id(self):#x}>"
+        self._stdin: IO[bytes] = self._process.stdin  # type: ignore
+        self._stdout: IO[bytes] | None = None
+        self._stderr: IO[bytes] | None = None
+        self._stdout_reader_thread: threading.Thread | None = None
+        self._stderr_reader_thread: threading.Thread | None = None
 
-    def stop(self) -> None:
-        """Stops this sink's recording.
+        if self.buffer:
+            n = f"popen-stdout-reader:pid-{self._process.pid}"
+            self._stdout = self._process.stdout
+            _args = (self._stdout, self.buffer)
+            self._stdout_reader_thread = threading.Thread(target=self._pipe_reader, args=_args, daemon=True, name=n)
+            self._stdout_reader_thread.start()
 
-        This is the place where :meth:`.cleanup` should be called.
-        """
-        self.cleanup()
-
-    def cleanup(self) -> None:
-        """Cleans all the data in this sink.
-
-        This should be called when you won't be performing any more operations in this sink.
-        """
-
-        for task in list(self.__dispatch_set):
-            if task.done():
-                continue
-            task.cancel()
-
-        for filter in self._filters:
-            filter.cleanup()
-
-        for handler in self._handlers:
-            handler.cleanup()
-
-    def add_filter(self, filter: SinkFilter, /) -> None:
-        """Adds a filter to this sink.
-
-        Parameters
-        ----------
-        filter: :class:`~.SinkFilter`
-            The filter to add.
-
-        Raises
-        ------
-        TypeError
-            You did not provide a Filter object.
-        """
-
-        if not isinstance(filter, SinkFilter):
-            raise TypeError(
-                f"expected a Filter object, not {filter.__class__.__name__}"
-            )
-        self._filters.append(filter)
-
-    def remove_filter(self, filter: SinkFilter, /) -> None:
-        """Removes a filter from this sink.
-
-        Parameters
-        ----------
-        filter: :class:`~.SinkFilter`
-            The filter to remove.
-        """
-
-        try:
-            self._filters.remove(filter)
-        except ValueError:
-            pass
-
-    def add_handler(self, handler: SinkHandler, /) -> None:
-        """Adds a handler to this sink.
-
-        Parameters
-        ----------
-        handler: :class:`~.SinkHandler`
-            The handler to add.
-
-        Raises
-        ------
-        TypeError
-            You did not provide a Handler object.
-        """
-
-        if not isinstance(handler, SinkHandler):
-            raise TypeError(
-                f"expected a Handler object, not {handler.__class__.__name__}"
-            )
-        self._handlers.append(handler)
-
-    def remove_handler(self, handler: SinkHandler, /) -> None:
-        """Removes a handler from this sink.
-
-        Parameters
-        ----------
-        handler: :class:`~.SinkHandler`
-            The handler to remove.
-        """
-
-        try:
-            self._handlers.remove(handler)
-        except ValueError:
-            pass
+        if piping_stderr:
+            n = f"popen-stderr-reader:pid-{self._process.pid}"
+            self._stderr = self._process.stderr
+            _args = (self._stderr, stderr)
+            self._stderr_reader_thread = threading.Thread(target=self._pipe_reader, args=_args, daemon=True, name=n)
+            self._stderr_reader_thread.start()
 
     @staticmethod
-    def listener(
-        event: str = MISSING,
-    ) -> Callable[
-        [Callable[P, Coroutine[Any, Any, R]]], Callable[P, Coroutine[Any, Any, R]]
-    ]:
-        """Registers a function to be an event listener for this sink.
+    def _on_error(_self: _FFmpegSink, error: Exception, data: VoiceData | None) -> None:
+        _self.client.stop_recording()  # type: ignore
 
-        The events must be a :ref:`coroutine <coroutine>`, if not, :exc:`TypeError` is raised; and
-        also must be inside a sink class.
+    def is_opus(self) -> bool:
+        return False
 
-        Parameters
-        ----------
-        event: :class:`str`
-            The event name to listen to. If not provided, defaults to the function name.
+    def cleanup(self) -> None:
+        self._kill_processes()
+        self._process = self._stdout = self._stdin = self._stderr = MISSING
 
-        Raises
-        ------
-        TypeError
-            The coroutine passed is not actually a coroutine, or the listener is not in a sink class.
+    def write(self, user: User | Member | None, data: VoiceData) -> None:
+        if self._process and not self._stdin.closed:
+            audio = data.opus if self.is_opus() else data.pcm
+            assert audio is not None
 
-        Example
-        -------
+            try:
+                self._stdin.write(audio)
+            except Exception as exc:
+                _log.exception("Error while writing audio data to stdin ffmpeg")
+                self._kill_processes()
+                self.on_error(self, exc, data)
 
-        .. code-block:: python3
+    def _spawn_process(self, args: Any, **subprocess_kwargs: Any) -> subprocess.Popen:
+        _log.debug("Spawning ffmpeg process with command %s and kwargs %s", args, subprocess_kwargs)
+        process = None
 
-            class MySink(Sink):
-                @Sink.listener()
-                async def on_member_speaking_state_update(member, ssrc, state):
-                    pass
-        """
+        try:
+            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, **subprocess_kwargs)
+        except FileNotFoundError:
+            executable = args.partition(' ')[0] if isinstance(args, str) else args[0]
+            raise Exception(f"{executable!r} executable was not found") from None
+        except subprocess.SubprocessError as exc:
+            raise Exception(f"Popen failed: {exc.__class__.__name__}: {exc}") from exc
+        else:
+            return process
 
-        def decorator(
-            func: Callable[P, Coroutine[Any, Any, R]],
-        ) -> Callable[P, Coroutine[Any, Any, R]]:
-            parts = func.__qualname__.split(".")
+    def _kill_processes(self) -> None:
+        proc: subprocess.Popen = getattr(self, "_process", MISSING)
 
-            if not parts or not len(parts) > 1:
-                raise TypeError("event listeners must be declared in a Sink class")
+        if proc is MISSING:
+            return
 
-            if parts[-1] != func.__name__:
-                raise NameError(
-                    "qualified name and function name mismatch, this should not happen"
-                )
+        _log.debug("Terminating ffmpeg process %s", proc.pid)
 
-            if not asyncio.iscoroutinefunction(func):
-                raise TypeError("event listeners must be coroutine functions")
+        try:
+            self._stdin.close()
+        except Exception:
+            pass
 
-            func.__listener__ = True
-            if event is not MISSING:
-                func.__listener_name__ = event
-            return func
+        _log.debug("Waiting for ffmpeg process %s", proc.pid)
 
-        return decorator
+        try:
+            proc.wait(5)
+        except Exception:
+            pass
 
-    async def on_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
-        pass
+        try:
+            proc.kill()
+        except Exception as exc:
+            _log.exception(
+                "Ignoring exception while killing Popen process %s",
+                proc.pid,
+                exc_info=exc,
+            )
 
-    async def on_unfiltered_voice_packet_receive(
-        self, user: abc.Snowflake, data: RawData
-    ) -> None:
-        pass
+        if proc.poll() is None:
+            _log.info("ffmpeg process %s has not terminated. Waiting to terminate...", proc.pid)
+            proc.communicate()
+            _log.info("ffmpeg process %s should have terminated with a return code of %s", proc.pid, proc.returncode)
+        else:
+            _log.info("ffmpeg process %s successfully terminated with return code of %s", proc.pid, proc.returncode)
 
-    async def on_speaking_state_update(
-        self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> None:
-        pass
+        self._process = MISSING
 
-    async def on_unfiltered_speaking_state_update(
-        self, user: abc.Snowflake, before: SpeakingState, after: SpeakingState
-    ) -> None:
-        pass
+    def _pipe_reader(self, source: IO[bytes], dest: IO[bytes]) -> None:
+        while self._process:
+            if source.closed:
+                return
 
-    async def on_user_connect(
+            try:
+                data = source.read(FFmpegAudio.BLOCKSIZE)
+            except (OSError, ValueError) as exc:
+                _log.debug("FFmpeg stdin pipe closed with exception %s", exc)
+                return
+            except Exception:
+                _log.debug("An error ocurred in %s, this can be ignored", self, exc_info=True)
+                return
+
+            if data is None:
+                return
+
+            try:
+                dest.write(data)
+            except Exception as exc:
+                _log.exception("Error while writing to destination pipe %s", self, exc_info=exc)
+                self._kill_processes()
+                self.on_error(self, exc, None)
+                return
+
+
+class FilterSink(Sink):
+    r"""A sink that calls filtering callbacks before writing.
+
+    .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    destination: :class:`Sink`
+        The sink that is being filtered.
+    filters: Sequence[Callable[[:class:`User` | :class`Member` | :data:`None`, :class:`VoiceData`], :class:`bool`]]
+        The filters of this sink.
+    filtering_mode: Literal["all", "any"]
+        How the filters should work, if ``all`, all filters must be successful in order for
+        a voice data packet to be written. Using ``any`` will make it so only one filter is
+        required to be successful in order for a voice data packet to be written.
+    """
+
+    def __init__(
         self,
-        user: abc.Snowflake,
-        channel: abc.Snowflake,
+        destination: Sink,
+        filters: Sequence[Callable[[User | Member | None, VoiceData], bool]],
+        *,
+        filtering_mode: Literal["all", "any"] = "all",
     ) -> None:
-        pass
+        if not filters:
+            raise ValueError("filters must have at least one callback")
 
-    async def on_unfiltered_user_connect(
-        self, user: abc.Snowflake, channel: abc.Snowflake
-    ) -> None:
-        pass
+        if not isinstance(destination, SinkBase):
+            raise TypeError(f"expected a Sink object, got {destination.__class__.__name__}")
 
-    async def on_error(
-        self, event: str, exception: Exception, *args: Any, **kwargs: Any
-    ) -> None:
-        _log.exception(
-            "An error ocurred in sink %s while dispatching the event %s",
-            self,
-            event,
-            exc_info=exception,
-        )
+        self._filter_strat = all if filtering_mode == "all" else any
+        self.filters: Sequence[Callable[[User | Member | None, VoiceData], bool]] = filters
+        self.destination: Sink = destination
+        super().__init__(dest=destination)
 
-    def is_recording(self) -> bool:
-        """Whether this sink is currently available to record, and doing so."""
-        state = self.client._connection
-        return state.is_recording() and id(self) in state._sinks
+    def is_opus(self) -> bool:
+        return self.destination.is_opus()
 
-    def is_paused(self) -> bool:
-        """Whether this sink is currently paused from recording."""
-        return self._paused
+    def write(self, user: User | Member | None, data: VoiceData) -> None:
+        if self._filter_strat(f(user, data) for f in self.filters):
+            self.destination.write(user, data)
 
-    def pause(self) -> None:
-        """Pauses the recording of this sink.
-
-        No filter or handlers will be called when a sink is paused, and no
-        event will be dispatched.
-
-        Pending events _could still be called_ even when a sink is paused,
-        so make sure you pause a sink when there are not current packets being
-        handled.
-
-        You can resume the recording of this sink with :meth:`.resume`.
-        """
-        self._paused = True
-
-    def resume(self) -> None:
-        """Resumes the recording of this sink.
-
-        You can pause the recording of this sink with :meth:`.pause`.
-        """
-        self._paused = False
+    def cleanup(self) -> None:
+        self.filters = []
+        self.destination.cleanup()

@@ -47,6 +47,7 @@ from .enums import OpCodes
 
 if TYPE_CHECKING:
     from typing_extensions import Self
+    from _typeshed import ConvertibleToInt
 
     from .state import VoiceConnectionState
 
@@ -140,23 +141,21 @@ class VoiceWebSocket(DiscordWebSocket):
         self.state.session_id = value
 
     @property
-    def dave_session(self) -> davey.DaveSession | None:
-        return self.state.dave_session
-
-    @property
     def self_id(self) -> int:
         return self._connection.self_id
 
     async def _hook(self, *args: Any) -> Any:
         pass
 
-    async def send_as_bytes(self, op: int, data: bytes) -> None:
-        packet = bytes(op) + data
-        _log.debug("Sending voice websocket binary frame: op: %s data: %s", op, str(data))
+    async def send_as_bytes(self, op: ConvertibleToInt, data: bytes) -> None:
+        packet = bytes([int(op)]) + data
+        _log.debug("Sending voice websocket binary frame: op: %s size: %d", op, len(data))
         await self.ws.send_bytes(packet)
 
     async def send_as_json(self, data: Any) -> None:
         _log.debug("Sending voice websocket frame: %s.", data)
+        if data.get('op', None) == OpCodes.identify:
+            _log.info("Identifying ourselves: %s", data)
         await self.ws.send_str(utils._to_json(data))
 
     send_heartbeat = send_as_json
@@ -206,9 +205,9 @@ class VoiceWebSocket(DiscordWebSocket):
                 interval=min(interval, 5),
             )
             self._keep_alive.start()
-        elif self.dave_session:
+        elif state.dave_session:
             if op == OpCodes.dave_prepare_transition:
-                _log.info("Preparing to upgrade to a DAVE connection for channel %s", state.channel_id)
+                _log.info("Preparing to upgrade to a DAVE connection for channel %s for transition %d proto version %d", state.channel_id, data["transition_id"], data["protocol_version"])
                 state.dave_pending_transition = data
 
                 transition_id = data["transition_id"]
@@ -216,8 +215,8 @@ class VoiceWebSocket(DiscordWebSocket):
                 if transition_id == 0:
                     await state.execute_dave_transition(data["transition_id"])
                 else:
-                    if data["protocol_version"] == 0:
-                        self.dave_session.set_passthrough_mode(True, 120)
+                    if data["protocol_version"] == 0 and state.dave_session:
+                        state.dave_session.set_passthrough_mode(True, 120)
                     await self.send_dave_transition_ready(transition_id)
             elif op == OpCodes.dave_execute_transition:
                 _log.info("Upgrading to DAVE connection for channel %s", state.channel_id)
@@ -241,33 +240,36 @@ class VoiceWebSocket(DiscordWebSocket):
 
         state = self.state
 
-        if not self.dave_session:
+        if not state.dave_session:
             return
 
         if op == OpCodes.mls_external_sender_package:
-            self.dave_session.set_external_sender(msg[3:])
+            state.dave_session.set_external_sender(msg[3:])
         elif op == OpCodes.mls_proposals:
             op_type = msg[3]
-            result = self.dave_session.process_proposals(
+            result = state.dave_session.process_proposals(
                 davey.ProposalsOperationType.append if op_type == 0 else davey.ProposalsOperationType.revoke,
                 msg[4:],
             )
 
             if isinstance(result, davey.CommitWelcome):
+                data = (result.commit + result.welcome) if result.welcome else result.commit
+                _log.debug("Sending MLS key package with data: %s", data)
                 await self.send_as_bytes(
-                    OpCodes.mls_key_package.value,
-                    (result.commit + result.welcome) if result.welcome else result.commit,
+                    OpCodes.mls_commit_welcome,
+                    data,
                 )
-            _log.debug("Processed MLS proposals for current dave session")
+            _log.debug("Processed MLS proposals for current dave session: %r", result)
         elif op == OpCodes.mls_commit_transition:
             transt_id = struct.unpack_from(">H", msg, 3)[0]
             try:
-                self.dave_session.process_commit(msg[5:])
+                state.dave_session.process_commit(msg[5:])
                 if transt_id != 0:
                     state.dave_pending_transition = {
                         "transition_id": transt_id,
                         "protocol_version": state.dave_protocol_version,
                     }
+                    _log.debug("Sending DAVE transition ready from MLS commit transition with data: %s", state.dave_pending_transition)
                     await self.send_dave_transition_ready(transt_id)
                 _log.debug("Processed MLS commit for transition %s", transt_id)
             except Exception as exc:
@@ -276,12 +278,13 @@ class VoiceWebSocket(DiscordWebSocket):
         elif op == OpCodes.mls_welcome:
             transt_id = struct.unpack_from(">H", msg, 3)[0]
             try:
-                self.dave_session.process_welcome(msg[5:])
+                state.dave_session.process_welcome(msg[5:])
                 if transt_id != 0:
                     state.dave_pending_transition = {
                         "transition_id": transt_id,
                         "protocol_version": state.dave_protocol_version,
                     }
+                    _log.debug("Sending DAVE transition ready from MLS welcome with data: %s", state.dave_pending_transition)
                     await self.send_dave_transition_ready(transt_id)
                 _log.debug("Processed MLS welcome for transition %s", transt_id)
             except Exception as exc:
@@ -329,7 +332,6 @@ class VoiceWebSocket(DiscordWebSocket):
                     "port": port,
                     "mode": mode,
                 },
-                "dave_protocol_version": self.state.dave_protocol_version,
             },
         }
         await self.send_as_json(payload)
@@ -389,8 +391,10 @@ class VoiceWebSocket(DiscordWebSocket):
         msg = await asyncio.wait_for(self.ws.receive(), timeout=30)
 
         if msg.type is aiohttp.WSMsgType.TEXT:
+            _log.debug("Received text payload: %s", msg.data)
             await self.received_message(utils._from_json(msg.data))
         elif msg.type is aiohttp.WSMsgType.BINARY:
+            _log.debug("Received binary payload: size: %d", len(msg.data))
             await self.received_binary_message(msg.data)
         elif msg.type is aiohttp.WSMsgType.ERROR:
             _log.debug("Received %s", msg)
@@ -455,7 +459,7 @@ class VoiceWebSocket(DiscordWebSocket):
                 "user_id": str(state.user.id),
                 "session_id": self.session_id,
                 "token": self.token,
-                "max_dave_protocol_version": self.state.max_dave_proto_version,
+                "max_dave_protocol_version": state.max_dave_proto_version,
             },
         }
         await self.send_as_json(payload)
