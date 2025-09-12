@@ -25,15 +25,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-from discord.opus import Decoder, _lib
-
 if TYPE_CHECKING:
     from typing_extensions import Final
-
-if _lib is None:
-    DECODER = None
-else:
-    DECODER = Decoder()
 
 OPUS_SILENCE: Final = b'\xf8\xff\xfe'
 

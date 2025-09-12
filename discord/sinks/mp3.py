@@ -116,3 +116,4 @@ class MP3Sink(FFmpegSink):
             options=options,
             error_hook=error_hook,
         )  # type: ignore
+        

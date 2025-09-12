@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .utils import warn_deprecated
+from .utils import deprecated
 
 """
 since discord.voice raises an error when importing it without having the
@@ -60,12 +60,12 @@ if TYPE_CHECKING:
     def VoiceProtocol(client, channel) -> VoiceProtocolC:
         ...
 else:
-    @warn_deprecated("discord.VoiceClient", "discord.voice.VoiceClient", "2.7", "3.0")
+    @deprecated("discord.VoiceClient", "discord.voice.VoiceClient", "2.7", "3.0")
     def VoiceClient(client, channel):
         from discord.voice import VoiceClient
         return VoiceClient(client, channel)
 
-    @warn_deprecated("discord.VoiceProtocol", "discord.voice.VoiceProtocol", "2.7", "3.0")
+    @deprecated("discord.VoiceProtocol", "discord.voice.VoiceProtocol", "2.7", "3.0")
     def VoiceProtocol(client, channel):
         from discord.voice import VoiceProtocol
         return VoiceProtocol(client, channel)

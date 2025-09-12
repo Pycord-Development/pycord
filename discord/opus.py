@@ -28,7 +28,6 @@ from __future__ import annotations
 import array
 import ctypes
 import ctypes.util
-import gc
 import logging
 import math
 import os.path
@@ -37,13 +36,12 @@ import sys
 from typing import TYPE_CHECKING, Any, Callable, Literal, TypedDict, TypeVar
 
 from discord.voice.packets.rtp import FakePacket
-from discord.voice.utils.wrapped import gap_wrapped, add_wrapped
+from discord.voice.utils.wrapped import add_wrapped
 from discord.voice.utils.buffer import JitterBuffer
 
 import davey
 
 from .errors import DiscordException
-from .sinks import RawData
 
 if TYPE_CHECKING:
     from discord.user import User

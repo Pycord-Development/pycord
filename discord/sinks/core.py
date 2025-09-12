@@ -71,15 +71,9 @@ S = TypeVar("S", bound="Sink")
 _log = logging.getLogger(__name__)
 
 
-class SinkBase:
-    """Represents an audio sink in which user's audios are stored.
-    """
 
-    __sink_listeners__: list[tuple[str, str]]
-
-    _client: VoiceClient | None
-
-    def __new__(cls) -> Self:
+class SinkMeta(type):
+    def __new__(cls, *args, **kwargs):
         listeners = {}
 
         for base in reversed(cls.__mro__):
@@ -102,7 +96,15 @@ class SinkBase:
                 listeners_list.append((listener_name, listener.__name__))
 
         cls.__sink_listeners__ = listeners_list
-        return super().__new__(cls)
+        return super().__new__(cls, *args, **kwargs)
+
+
+class SinkBase(metaclass=SinkMeta):
+    """Represents an audio sink in which user's audios are stored.
+    """
+
+    __sink_listeners__: list[tuple[str, str]]
+    _client: VoiceClient | None
 
     @property
     def root(self) -> Sink:
@@ -381,7 +383,7 @@ class FFmpegSink(Sink):
         options: str | None = None,
         error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = None,
     ) -> None:
-        super().__init__()
+        super().__init__(dest=None)
 
         if filename is not MISSING and buffer is not MISSING:
             raise TypeError("can't mix filename and buffer parameters")

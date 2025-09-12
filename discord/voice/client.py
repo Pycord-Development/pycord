@@ -33,6 +33,7 @@ from typing import TYPE_CHECKING, Any, Literal, overload
 import warnings
 
 from discord import opus
+from discord.enums import SpeakingState, try_enum
 from discord.errors import ClientException
 from discord.player import AudioPlayer, AudioSource
 from discord.sinks.core import Sink
@@ -42,6 +43,7 @@ from discord.utils import MISSING
 from ._types import VoiceProtocol
 from .receive import AudioReader
 from .state import VoiceConnectionState
+from .enums import OpCodes
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -201,6 +203,68 @@ class VoiceClient(VoiceProtocol):
 
     def create_connection_state(self) -> VoiceConnectionState:
         return VoiceConnectionState(self, hook=self._recv_hook)
+
+    async def _recv_hook(self, ws: VoiceWebSocket, msg: dict[str, Any]) -> None:
+        op = msg["op"]
+        data = msg.get("d", {})
+
+        if op == OpCodes.ready:
+            self._add_ssrc(self.guild.me.id, data["ssrc"])
+        elif op == OpCodes.speaking:
+            uid = int(data["user_id"])
+            ssrc = data["ssrc"]
+
+            self._add_ssrc(uid, ssrc)
+
+            member = self.guild.get_member(uid)
+            state = try_enum(SpeakingState, data["speaking"])
+            self.dispatch("member_speaking_state_update", member, ssrc, state)
+        elif op == OpCodes.clients_connect:
+            uids = list(map(int, data["user_ids"]))
+
+            for uid in uids:
+                member = self.guild.get_member(uid)
+                if not member:
+                    _log.warning("Skipping member referencing ID %d on member_connect", uid)
+                    continue
+                self.dispatch("member_connect", member)
+        elif op == OpCodes.client_disconnect:
+            uid = int(data["user_id"])
+            ssrc = self._id_to_ssrc.get(uid)
+
+            if self._reader and ssrc is not None:
+                _log.debug("Destroying decoder for user %d, ssrc=%d", uid, ssrc)
+                self._reader.packet_router.destroy_decoder(ssrc)
+
+            self._remove_ssrc(user_id=uid)
+            member = self.guild.get_member(uid)
+            self.dispatch("member_disconnect", member, ssrc)
+
+        # maybe handle video and such things?
+
+    async def _run_event(self, coro, event_name: str, *args: Any, **kwargs: Any) -> None:
+        try:
+            await coro(*args, **kwargs)
+        except asyncio.CancelledError:
+            pass
+        except Exception:
+            _log.exception("Error calling %s", event_name)
+
+    def _schedule_event(self, coro, event_name: str, *args: Any, **kwargs: Any) -> asyncio.Task:
+        wrapped = self._run_event(coro, event_name, *args, **kwargs)
+        return self.client.loop.create_task(wrapped, name=f"voice-receiver-event-dispatch: {event_name}")
+
+    def dispatch(self, event: str, /, *args: Any, **kwargs: Any) -> None:
+        _log.debug("Dispatching voice_client event %s", event)
+
+        event_name = f"on_{event}"
+        for coro in self._event_listeners.get(event_name, []):
+            task = self._schedule_event(coro, event_name, *args, **kwargs)
+            self._connection._dispatch_task_set.add(task)
+            task.add_done_callback(self._connection._dispatch_task_set.discard)
+
+        self._dispatch_sink(event, *args, **kwargs)
+        self.client.dispatch(event, *args, **kwargs)
 
     async def on_voice_state_update(self, data: RawVoiceStateUpdateEvent) -> None:
         old_channel_id = self.channel.id if self.channel else None
