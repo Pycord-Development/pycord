@@ -33,6 +33,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2915](https://github.com/Pycord-Development/pycord/pull/2915))
 - `View.message` being `None` when it had not been interacted with yet.
   ([#2916](https://github.com/Pycord-Development/pycord/pull/2916))
+- Fixed a crash when processing message edit events while message cache was disabled.
+  ([#2924](https://github.com/Pycord-Development/pycord/pull/2924))
 
 ### Removed
 
