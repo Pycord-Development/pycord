@@ -73,10 +73,14 @@ _log = logging.getLogger(__name__)
 
 
 class SinkMeta(type):
-    def __new__(cls, *args, **kwargs):
+    __sink_listeners__: list[tuple[str, str]]
+
+    def __new__(cls, name, bases, attr, **kwargs):
         listeners = {}
 
-        for base in reversed(cls.__mro__):
+        inst = super().__new__(cls, name, bases, attr, **kwargs)
+
+        for base in reversed(inst.__mro__):
             for elem, value in base.__dict__.items():
                 if elem in listeners:
                     del listeners[elem]
@@ -95,8 +99,8 @@ class SinkMeta(type):
             for listener_name in listener.__sink_listener_names__:
                 listeners_list.append((listener_name, listener.__name__))
 
-        cls.__sink_listeners__ = listeners_list
-        return super().__new__(cls, *args, **kwargs)
+        inst.__sink_listeners__ = listeners_list
+        return inst
 
 
 class SinkBase(metaclass=SinkMeta):

@@ -653,23 +653,30 @@ class PacketDecoder:
 
     def _process_packet(self, packet: Packet) -> VoiceData:
         from discord.object import Object
+        from discord.voice import VoiceData
+
+        assert self.sink.client
 
         pcm = None
-
-        if not self.sink.is_opus():
-            packet, pcm = self._decode_packet(packet)
 
         member = self._get_cached_member()
 
         if member is None:
-            self._cached_id = self.sink.client._connection._get_id_from_ssrc(self.ssrc)
+            self._cached_id = self.sink.client._ssrc_to_id.get(self.ssrc)
             member = self._get_cached_member()
+        else:
+            self._cached_id = member.id
 
         # yet still none, use Object
         if member is None and self._cached_id:
             member = Object(id=self._cached_id)
 
-        data = VoiceData(packet, member, pcm=pcm)
+        if not self.sink.is_opus():
+            _log.debug("Decoding packet %s (type %s)", packet, type(packet))
+            packet, pcm = self._decode_packet(packet)
+
+
+        data = VoiceData(packet, member, pcm=pcm)  # type: ignore
         self._last_seq = packet.sequence
         self._last_ts = packet.timestamp
         return data

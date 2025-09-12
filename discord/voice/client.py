@@ -585,7 +585,7 @@ class VoiceClient(VoiceProtocol):
             for cb, _ in self._player_future._callbacks:
                 self._player_future.remove_done_callback(cb)
             self._player_future.set_result(None)
-        if self._reader:
+        if self._reader is not MISSING:
             self._reader.stop()
             self._reader = MISSING
 
@@ -733,7 +733,7 @@ class VoiceClient(VoiceProtocol):
         RecordingException
             You are not recording.
         """
-        if self._reader:
+        if self._reader is not MISSING:
             self._reader.stop()
             self._reader = MISSING
         else:

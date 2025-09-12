@@ -204,6 +204,7 @@ class RTCPPacket(Packet):
 
         self.version: int = head >> 6
         self.padding: bool = bool(head & 0b00100000)
+        setattr(self, "report_count", head & 0b00011111)
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} version={self.version} padding={self.padding} length={self.length}>"
