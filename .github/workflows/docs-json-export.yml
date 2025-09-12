@@ -26,7 +26,7 @@ jobs:
         id: install-deps
         run: |
           python -m pip install -U pip
-          pip install ".[docs]"
+          pip install ".[docs,voice]"
           pip install beautifulsoup4
       - name: Build Sphinx HTML docs
         id: build-sphinx
