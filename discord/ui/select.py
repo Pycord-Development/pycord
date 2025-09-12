@@ -425,7 +425,7 @@ class Select(Generic[V, ST], Item[V]):
     @property
     def required(self) -> bool:
         """Whether the select is required or not. Only applicable in modal selects."""
-        return bool(self._underlying.required)
+        return self._underlying.required
 
     @required.setter
     def required(self, value: bool):
