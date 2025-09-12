@@ -22,13 +22,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing_extensions import Final
 
-OPUS_SILENCE: Final = b'\xf8\xff\xfe'
+OPUS_SILENCE: Final = b"\xf8\xff\xfe"
 
 
 class Packet:
@@ -57,25 +59,31 @@ class Packet:
         if not isinstance(other, self.__class__):
             return NotImplemented
         if self.ssrc != other.ssrc:
-            raise TypeError(f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})")
+            raise TypeError(
+                f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})"
+            )
         return self.sequence == other.sequence and self.timestamp == other.timestamp
 
     def __gt__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
         if self.ssrc != other.ssrc:
-            raise TypeError(f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})")
+            raise TypeError(
+                f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})"
+            )
         return self.sequence > other.sequence and self.timestamp > other.timestamp
 
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             return NotImplemented
         if self.ssrc != other.ssrc:
-            raise TypeError(f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})")
+            raise TypeError(
+                f"cannot compare two packets from different ssrc ({self.ssrc=}, {other.ssrc=})"
+            )
         return self.sequence < other.sequence and self.timestamp < other.timestamp
 
     def is_silence(self) -> bool:
-        data = getattr(self, 'decrypted_data', None)
+        data = getattr(self, "decrypted_data", None)
         return data == OPUS_SILENCE
 
     def __hash__(self) -> int:

@@ -29,8 +29,8 @@ import asyncio
 import datetime
 import logging
 import struct
-from typing import TYPE_CHECKING, Any, Literal, overload
 import warnings
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 from discord import opus
 from discord.enums import SpeakingState, try_enum
@@ -41,9 +41,9 @@ from discord.sinks.errors import RecordingException
 from discord.utils import MISSING
 
 from ._types import VoiceProtocol
+from .enums import OpCodes
 from .receive import AudioReader
 from .state import VoiceConnectionState
-from .enums import OpCodes
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec
@@ -51,6 +51,7 @@ if TYPE_CHECKING:
     from discord import abc
     from discord.client import Client
     from discord.guild import Guild, VocalGuildChannel
+    from discord.member import Member
     from discord.opus import APPLICATION_CTL, BAND_CTL, SIGNAL_CTL, Encoder
     from discord.raw_models import (
         RawVoiceServerUpdateEvent,
@@ -59,7 +60,6 @@ if TYPE_CHECKING:
     from discord.state import ConnectionState
     from discord.types.voice import SupportedModes
     from discord.user import ClientUser, User
-    from discord.member import Member
 
     from .gateway import VoiceWebSocket
     from .receive.reader import AfterCallback
@@ -78,9 +78,7 @@ try:
 except ImportError:
     has_nacl = False
 
-__all__ = (
-    "VoiceClient",
-)
+__all__ = ("VoiceClient",)
 
 
 class VoiceClient(VoiceProtocol):
@@ -225,7 +223,9 @@ class VoiceClient(VoiceProtocol):
             for uid in uids:
                 member = self.guild.get_member(uid)
                 if not member:
-                    _log.warning("Skipping member referencing ID %d on member_connect", uid)
+                    _log.warning(
+                        "Skipping member referencing ID %d on member_connect", uid
+                    )
                     continue
                 self.dispatch("member_connect", member)
         elif op == OpCodes.client_disconnect:
@@ -242,7 +242,9 @@ class VoiceClient(VoiceProtocol):
 
         # maybe handle video and such things?
 
-    async def _run_event(self, coro, event_name: str, *args: Any, **kwargs: Any) -> None:
+    async def _run_event(
+        self, coro, event_name: str, *args: Any, **kwargs: Any
+    ) -> None:
         try:
             await coro(*args, **kwargs)
         except asyncio.CancelledError:
@@ -250,9 +252,13 @@ class VoiceClient(VoiceProtocol):
         except Exception:
             _log.exception("Error calling %s", event_name)
 
-    def _schedule_event(self, coro, event_name: str, *args: Any, **kwargs: Any) -> asyncio.Task:
+    def _schedule_event(
+        self, coro, event_name: str, *args: Any, **kwargs: Any
+    ) -> asyncio.Task:
         wrapped = self._run_event(coro, event_name, *args, **kwargs)
-        return self.client.loop.create_task(wrapped, name=f"voice-receiver-event-dispatch: {event_name}")
+        return self.client.loop.create_task(
+            wrapped, name=f"voice-receiver-event-dispatch: {event_name}"
+        )
 
     def dispatch(self, event: str, /, *args: Any, **kwargs: Any) -> None:
         _log.debug("Dispatching voice_client event %s", event)
@@ -716,9 +722,13 @@ class VoiceClient(VoiceProtocol):
             raise ClientException("Already recording audio")
 
         if len(args) > 0:
-            warnings.warn("'args' parameter is deprecated since 2.7 and will be removed in 3.0")
+            warnings.warn(
+                "'args' parameter is deprecated since 2.7 and will be removed in 3.0"
+            )
         if sync_start is not MISSING:
-            warnings.warn("'sync_tart' parameter is deprecated since 2.7 and will be removed in 3.0")
+            warnings.warn(
+                "'sync_tart' parameter is deprecated since 2.7 and will be removed in 3.0"
+            )
 
         self._reader = AudioReader(sink, self, after=callback)
         self._reader.start()

@@ -25,26 +25,26 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import logging
-import sys
-from collections.abc import Callable, Generator, Sequence
 import inspect
-import subprocess
+import logging
 import shlex
+import subprocess
+import sys
 import threading
+from collections.abc import Callable, Generator, Sequence
 from typing import IO, TYPE_CHECKING, Any, Literal, TypeVar, overload
 
 from discord.file import File
-from discord.utils import MISSING, SequenceProxy
 from discord.player import FFmpegAudio
+from discord.utils import MISSING, SequenceProxy
 
 from .errors import FFmpegNotFound
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec, Self
 
-    from discord.user import User
     from discord.member import Member
+    from discord.user import User
     from discord.voice.packets import VoiceData
 
     from ..voice.client import VoiceClient
@@ -71,7 +71,6 @@ S = TypeVar("S", bound="Sink")
 _log = logging.getLogger(__name__)
 
 
-
 class SinkMeta(type):
     __sink_listeners__: list[tuple[str, str]]
 
@@ -89,7 +88,7 @@ class SinkMeta(type):
                 if is_static:
                     value = value.__func__
 
-                if not hasattr(value, '__sink_listener__'):
+                if not hasattr(value, "__sink_listener__"):
                     continue
 
                 listeners[elem] = value
@@ -104,8 +103,7 @@ class SinkMeta(type):
 
 
 class SinkBase(metaclass=SinkMeta):
-    """Represents an audio sink in which user's audios are stored.
-    """
+    """Represents an audio sink in which user's audios are stored."""
 
     __sink_listeners__: list[tuple[str, str]]
     _client: VoiceClient | None
@@ -151,7 +149,7 @@ class SinkBase(metaclass=SinkMeta):
         """Registers a child to this sink."""
         raise NotImplementedError
 
-    def walk_children(self, *, with_self: bool = False) -> Generator[Sink, None, None]:
+    def walk_children(self, *, with_self: bool = False) -> Generator[Sink]:
         """Iterates through all the children of this sink, including nested."""
         if with_self:
             yield self  # type: ignore
@@ -227,7 +225,9 @@ class Sink(SinkBase):
         """
 
         if name is not MISSING and not isinstance(name, str):
-            raise TypeError(f"expected a str for listener name, got {name.__class__.__name__} instead")
+            raise TypeError(
+                f"expected a str for listener name, got {name.__class__.__name__} instead"
+            )
 
         def decorator(func):
             actual = func
@@ -247,6 +247,7 @@ class Sink(SinkBase):
                 actual.__sink_listener_names__ = [to_assign]
 
             return func
+
         return decorator
 
 
@@ -315,10 +316,14 @@ if TYPE_CHECKING:
     )
     def RawData(**kwargs: Any) -> Any:
         """Deprecated since version 2.7, use :class:`VoiceData` instead."""
+
 else:
+
     class RawData:
         def __init__(self, **kwargs: Any) -> None:
-            raise DeprecationWarning("RawData has been deprecated in favour of VoiceData")
+            raise DeprecationWarning(
+                "RawData has been deprecated in favour of VoiceData"
+            )
 
 
 class FFmpegSink(Sink):
@@ -413,14 +418,16 @@ class FFmpegSink(Sink):
         if isinstance(before_options, str):
             args.extend(shlex.split(before_options))
 
-        args.extend({
-            "-f": "s16le",
-            "-ar": "48000",
-            "-ac": "2",
-            "-i": "pipe:0",
-            "-loglevel": "warning",
-            "-blocksize": str(FFmpegAudio.BLOCKSIZE)
-        })
+        args.extend(
+            {
+                "-f": "s16le",
+                "-ar": "48000",
+                "-ac": "2",
+                "-i": "pipe:0",
+                "-loglevel": "warning",
+                "-blocksize": str(FFmpegAudio.BLOCKSIZE),
+            }
+        )
 
         if isinstance(options, str):
             args.extend(shlex.split(options))
@@ -440,14 +447,18 @@ class FFmpegSink(Sink):
             n = f"popen-stdout-reader:pid-{self._process.pid}"
             self._stdout = self._process.stdout
             _args = (self._stdout, self.buffer)
-            self._stdout_reader_thread = threading.Thread(target=self._pipe_reader, args=_args, daemon=True, name=n)
+            self._stdout_reader_thread = threading.Thread(
+                target=self._pipe_reader, args=_args, daemon=True, name=n
+            )
             self._stdout_reader_thread.start()
 
         if piping_stderr:
             n = f"popen-stderr-reader:pid-{self._process.pid}"
             self._stderr = self._process.stderr
             _args = (self._stderr, stderr)
-            self._stderr_reader_thread = threading.Thread(target=self._pipe_reader, args=_args, daemon=True, name=n)
+            self._stderr_reader_thread = threading.Thread(
+                target=self._pipe_reader, args=_args, daemon=True, name=n
+            )
             self._stderr_reader_thread.start()
 
     @staticmethod
@@ -473,8 +484,9 @@ class FFmpegSink(Sink):
                 self._kill_processes()
                 self.on_error(self, exc, data)
 
-    
-    def to_file(self, filename: str, /, *, description: str | None = None, spoiler: bool = False) -> File | None:
+    def to_file(
+        self, filename: str, /, *, description: str | None = None, spoiler: bool = False
+    ) -> File | None:
         """Returns the :class:`discord.File` of this sink.
 
         This is only applicable if this sink uses a ``buffer`` instead of a ``filename``.
@@ -484,18 +496,29 @@ class FFmpegSink(Sink):
             This should be used only after the sink has stopped recording.
         """
         if self.buffer is not MISSING:
-            fp = File(self.buffer.read(), filename=filename, description=description, spoiler=spoiler)
+            fp = File(
+                self.buffer.read(),
+                filename=filename,
+                description=description,
+                spoiler=spoiler,
+            )
             return fp
         return None
 
     def _spawn_process(self, args: Any, **subprocess_kwargs: Any) -> subprocess.Popen:
-        _log.debug("Spawning ffmpeg process with command %s and kwargs %s", args, subprocess_kwargs)
+        _log.debug(
+            "Spawning ffmpeg process with command %s and kwargs %s",
+            args,
+            subprocess_kwargs,
+        )
         process = None
 
         try:
-            process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, **subprocess_kwargs)
+            process = subprocess.Popen(
+                args, creationflags=CREATE_NO_WINDOW, **subprocess_kwargs
+            )
         except FileNotFoundError:
-            executable = args.partition(' ')[0] if isinstance(args, str) else args[0]
+            executable = args.partition(" ")[0] if isinstance(args, str) else args[0]
             raise FFmpegNotFound(f"{executable!r} executable was not found") from None
         except subprocess.SubprocessError as exc:
             raise Exception(f"Popen failed: {exc.__class__.__name__}: {exc}") from exc
@@ -532,11 +555,22 @@ class FFmpegSink(Sink):
             )
 
         if proc.poll() is None:
-            _log.info("ffmpeg process %s has not terminated. Waiting to terminate...", proc.pid)
+            _log.info(
+                "ffmpeg process %s has not terminated. Waiting to terminate...",
+                proc.pid,
+            )
             proc.communicate()
-            _log.info("ffmpeg process %s should have terminated with a return code of %s", proc.pid, proc.returncode)
+            _log.info(
+                "ffmpeg process %s should have terminated with a return code of %s",
+                proc.pid,
+                proc.returncode,
+            )
         else:
-            _log.info("ffmpeg process %s successfully terminated with return code of %s", proc.pid, proc.returncode)
+            _log.info(
+                "ffmpeg process %s successfully terminated with return code of %s",
+                proc.pid,
+                proc.returncode,
+            )
 
         self._process = MISSING
 
@@ -551,7 +585,9 @@ class FFmpegSink(Sink):
                 _log.debug("FFmpeg stdin pipe closed with exception %s", exc)
                 return
             except Exception:
-                _log.debug("An error ocurred in %s, this can be ignored", self, exc_info=True)
+                _log.debug(
+                    "An error ocurred in %s, this can be ignored", self, exc_info=True
+                )
                 return
 
             if data is None:
@@ -560,7 +596,9 @@ class FFmpegSink(Sink):
             try:
                 dest.write(data)
             except Exception as exc:
-                _log.exception("Error while writing to destination pipe %s", self, exc_info=exc)
+                _log.exception(
+                    "Error while writing to destination pipe %s", self, exc_info=exc
+                )
                 self._kill_processes()
                 self.on_error(self, exc, None)
                 return
@@ -594,10 +632,14 @@ class FilterSink(Sink):
             raise ValueError("filters must have at least one callback")
 
         if not isinstance(destination, SinkBase):
-            raise TypeError(f"expected a Sink object, got {destination.__class__.__name__}")
+            raise TypeError(
+                f"expected a Sink object, got {destination.__class__.__name__}"
+            )
 
         self._filter_strat = all if filtering_mode == "all" else any
-        self.filters: Sequence[Callable[[User | Member | None, VoiceData], bool]] = filters
+        self.filters: Sequence[Callable[[User | Member | None, VoiceData], bool]] = (
+            filters
+        )
         self.destination: Sink = destination
         super().__init__(dest=destination)
 

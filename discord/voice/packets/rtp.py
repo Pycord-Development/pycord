@@ -22,10 +22,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
-from collections import namedtuple
 import struct
+from collections import namedtuple
 from typing import TYPE_CHECKING, Any, Literal
 
 from .core import OPUS_SILENCE, Packet
@@ -33,8 +34,8 @@ from .core import OPUS_SILENCE, Packet
 if TYPE_CHECKING:
     from typing_extensions import Final
 
-MAX_UINT_32 = 0xffffffff
-MAX_UINT_16 = 0xffff
+MAX_UINT_32 = 0xFFFFFFFF
+MAX_UINT_16 = 0xFFFF
 
 RTP_PACKET_TYPE_VOICE = 120
 
@@ -46,8 +47,8 @@ def decode(data: bytes) -> Packet:
 
 
 class FakePacket(Packet):
-    data = b''
-    decrypted_data: bytes = b''
+    data = b""
+    decrypted_data: bytes = b""
     extension_data: dict = {}
 
     def __init__(
@@ -116,11 +117,11 @@ class RTPPacket(Packet):
         self.data = data[12:]
         self.decrypted_data: bytes | None = None
 
-        self.nonce: bytes = b''
+        self.nonce: bytes = b""
         self._rtpsize: bool = False
 
         if self.cc:
-            fmt = '>%sI' % self.cc
+            fmt = ">%sI" % self.cc
             offset = struct.calcsize(fmt) + 12
             self.csrcs = struct.unpack(fmt, data[12:offset])
             self.data = data[offset:]
@@ -152,7 +153,7 @@ class RTPPacket(Packet):
         if profile == self._ext_magic:
             self._parse_bede_header(data, length)
 
-        values = struct.unpack(">%sI" % length, data[4: 4 + length * 4])
+        values = struct.unpack(">%sI" % length, data[4 : 4 + length * 4])
         self.extension = self._ext_header(profile, length, values)
 
         offset = 4 + length * 4
@@ -168,7 +169,7 @@ class RTPPacket(Packet):
         while n < length:
             next_byte = data[offset : offset + 1]
 
-            if next_byte == b'\x00':
+            if next_byte == b"\x00":
                 offset += 1
                 continue
 
@@ -216,11 +217,11 @@ class RTCPPacket(Packet):
 
 
 def _parse_low(x: int, bitlen: int = 32) -> float:
-    return x / 2.0 ** bitlen
+    return x / 2.0**bitlen
 
 
 def _to_low(x: float, bitlen: int = 32) -> int:
-    return int(x * 2.0 ** bitlen)
+    return int(x * 2.0**bitlen)
 
 
 class SenderReportPacket(RTCPPacket):
@@ -228,7 +229,9 @@ class SenderReportPacket(RTCPPacket):
     _report_fmt = struct.Struct(">IB3x4I")
     _24bit_int_fmt = struct.Struct(">4xI")
     _info = namedtuple("RRSenderInfo", "ntp_ts rtp_ts packet_count octet_count")
-    _report = namedtuple("RReport", "ssrc perc_loss total_lost last_seq jitter lsr dlsr")
+    _report = namedtuple(
+        "RReport", "ssrc perc_loss total_lost last_seq jitter lsr dlsr"
+    )
     type = 200
 
     if TYPE_CHECKING:
@@ -265,7 +268,9 @@ class SenderReportPacket(RTCPPacket):
 class ReceiverReportPacket(RTCPPacket):
     _report_fmt = struct.Struct(">IB3x4I")
     _24bit_int_fmt = struct.Struct(">4xI")
-    _report = namedtuple("RReport", "ssrc perc_loss total_loss last_seq jitter lsr dlsr")
+    _report = namedtuple(
+        "RReport", "ssrc perc_loss total_loss last_seq jitter lsr dlsr"
+    )
     type = 201
 
     reports: tuple[_report, ...]

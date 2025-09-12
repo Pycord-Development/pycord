@@ -35,8 +35,8 @@ from collections.abc import Callable, Coroutine
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-
 import davey
+
 from discord import utils
 from discord.enums import SpeakingState
 from discord.errors import ConnectionClosed
@@ -46,8 +46,8 @@ from discord.gateway import KeepAliveHandler as KeepAliveHandlerBase
 from .enums import OpCodes
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
     from _typeshed import ConvertibleToInt
+    from typing_extensions import Self
 
     from .state import VoiceConnectionState
 
@@ -149,12 +149,14 @@ class VoiceWebSocket(DiscordWebSocket):
 
     async def send_as_bytes(self, op: ConvertibleToInt, data: bytes) -> None:
         packet = bytes([int(op)]) + data
-        _log.debug("Sending voice websocket binary frame: op: %s size: %d", op, len(data))
+        _log.debug(
+            "Sending voice websocket binary frame: op: %s size: %d", op, len(data)
+        )
         await self.ws.send_bytes(packet)
 
     async def send_as_json(self, data: Any) -> None:
         _log.debug("Sending voice websocket frame: %s.", data)
-        if data.get('op', None) == OpCodes.identify:
+        if data.get("op", None) == OpCodes.identify:
             _log.info("Identifying ourselves: %s", data)
         await self.ws.send_str(utils._to_json(data))
 
@@ -207,7 +209,12 @@ class VoiceWebSocket(DiscordWebSocket):
             self._keep_alive.start()
         elif state.dave_session:
             if op == OpCodes.dave_prepare_transition:
-                _log.info("Preparing to upgrade to a DAVE connection for channel %s for transition %d proto version %d", state.channel_id, data["transition_id"], data["protocol_version"])
+                _log.info(
+                    "Preparing to upgrade to a DAVE connection for channel %s for transition %d proto version %d",
+                    state.channel_id,
+                    data["transition_id"],
+                    data["protocol_version"],
+                )
                 state.dave_pending_transition = data
 
                 transition_id = data["transition_id"]
@@ -219,11 +226,17 @@ class VoiceWebSocket(DiscordWebSocket):
                         state.dave_session.set_passthrough_mode(True, 120)
                     await self.send_dave_transition_ready(transition_id)
             elif op == OpCodes.dave_execute_transition:
-                _log.info("Upgrading to DAVE connection for channel %s", state.channel_id)
+                _log.info(
+                    "Upgrading to DAVE connection for channel %s", state.channel_id
+                )
                 await state.execute_dave_transition(data["transition_id"])
             elif op == OpCodes.dave_prepare_epoch:
                 epoch = data["epoch"]
-                _log.debug("Preparing for DAVE epoch in channel %s: %s", state.channel_id, epoch)
+                _log.debug(
+                    "Preparing for DAVE epoch in channel %s: %s",
+                    state.channel_id,
+                    epoch,
+                )
                 # if epoch is 1 then a new MLS group is to be created for the proto version
                 if epoch == 1:
                     state.dave_protocol_version = data["protocol_version"]
@@ -236,7 +249,12 @@ class VoiceWebSocket(DiscordWebSocket):
     async def received_binary_message(self, msg: bytes) -> None:
         self.seq_ack = struct.unpack_from(">H", msg, 0)[0]
         op = msg[2]
-        _log.debug("Voice websocket binary frame received: %d bytes, seq: %s, op: %s", len(msg), self.seq_ack, op)
+        _log.debug(
+            "Voice websocket binary frame received: %d bytes, seq: %s, op: %s",
+            len(msg),
+            self.seq_ack,
+            op,
+        )
 
         state = self.state
 
@@ -248,12 +266,20 @@ class VoiceWebSocket(DiscordWebSocket):
         elif op == OpCodes.mls_proposals:
             op_type = msg[3]
             result = state.dave_session.process_proposals(
-                davey.ProposalsOperationType.append if op_type == 0 else davey.ProposalsOperationType.revoke,
+                (
+                    davey.ProposalsOperationType.append
+                    if op_type == 0
+                    else davey.ProposalsOperationType.revoke
+                ),
                 msg[4:],
             )
 
             if isinstance(result, davey.CommitWelcome):
-                data = (result.commit + result.welcome) if result.welcome else result.commit
+                data = (
+                    (result.commit + result.welcome)
+                    if result.welcome
+                    else result.commit
+                )
                 _log.debug("Sending MLS key package with data: %s", data)
                 await self.send_as_bytes(
                     OpCodes.mls_commit_welcome,
@@ -269,11 +295,17 @@ class VoiceWebSocket(DiscordWebSocket):
                         "transition_id": transt_id,
                         "protocol_version": state.dave_protocol_version,
                     }
-                    _log.debug("Sending DAVE transition ready from MLS commit transition with data: %s", state.dave_pending_transition)
+                    _log.debug(
+                        "Sending DAVE transition ready from MLS commit transition with data: %s",
+                        state.dave_pending_transition,
+                    )
                     await self.send_dave_transition_ready(transt_id)
                 _log.debug("Processed MLS commit for transition %s", transt_id)
             except Exception as exc:
-                _log.debug("An exception ocurred while processing a MLS commit, this should be safe to ignore: %s", exc)
+                _log.debug(
+                    "An exception ocurred while processing a MLS commit, this should be safe to ignore: %s",
+                    exc,
+                )
                 await state.recover_dave_from_invalid_commit(transt_id)
         elif op == OpCodes.mls_welcome:
             transt_id = struct.unpack_from(">H", msg, 3)[0]
@@ -284,11 +316,17 @@ class VoiceWebSocket(DiscordWebSocket):
                         "transition_id": transt_id,
                         "protocol_version": state.dave_protocol_version,
                     }
-                    _log.debug("Sending DAVE transition ready from MLS welcome with data: %s", state.dave_pending_transition)
+                    _log.debug(
+                        "Sending DAVE transition ready from MLS welcome with data: %s",
+                        state.dave_pending_transition,
+                    )
                     await self.send_dave_transition_ready(transt_id)
                 _log.debug("Processed MLS welcome for transition %s", transt_id)
             except Exception as exc:
-                _log.debug("An exception ocurred while processing a MLS welcome, this should be safe to ignore: %s", exc)
+                _log.debug(
+                    "An exception ocurred while processing a MLS welcome, this should be safe to ignore: %s",
+                    exc,
+                )
                 await state.recover_dave_from_invalid_commit(transt_id)
 
     async def ready(self, data: dict[str, Any]) -> None:

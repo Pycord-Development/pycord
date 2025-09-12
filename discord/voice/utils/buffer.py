@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 import heapq
@@ -29,10 +30,8 @@ import logging
 import threading
 from typing import Protocol, TypeVar
 
-from .wrapped import gap_wrapped, add_wrapped
-
 from ..packets import Packet
-
+from .wrapped import add_wrapped, gap_wrapped
 
 __all__ = (
     "Buffer",
@@ -82,7 +81,9 @@ class BaseBuff(Buffer[PacketT]):
 class JitterBuffer(BaseBuff[PacketT]):
     _threshold: int = 10000
 
-    def __init__(self, max_size: int = 10, *, pref_size: int = 1, prefill: int = 1) -> None:
+    def __init__(
+        self, max_size: int = 10, *, pref_size: int = 1, prefill: int = 1
+    ) -> None:
         if max_size < 1:
             raise ValueError(f"max_size must be greater than 1, not {max_size}")
 
@@ -95,7 +96,7 @@ class JitterBuffer(BaseBuff[PacketT]):
         self._prefill: int = prefill
         self._last_tx_seq: int = -1
         self._has_item: threading.Event = threading.Event()
-        #self._lock: threading.Lock = threading.Lock()
+        # self._lock: threading.Lock = threading.Lock()
         self._buffer: list[Packet] = []
 
     def _push(self, packet: Packet) -> None:
@@ -122,19 +123,26 @@ class JitterBuffer(BaseBuff[PacketT]):
         sequential = add_wrapped(self._last_tx_seq, 1) == next_packet.sequence
         positive_seq = self._last_tx_seq >= 0
 
-        if (sequential and positive_seq) or not positive_seq or len(self._buffer) >= self.max_size:
+        if (
+            (sequential and positive_seq)
+            or not positive_seq
+            or len(self._buffer) >= self.max_size
+        ):
             self._has_item.set()
         else:
             self._has_item.clear()
 
     def _cleanup(self) -> None:
         while len(self._buffer) > self.max_size:
-            packet = heapq.heappop(self._buffer)
+            heapq.heappop(self._buffer)
 
     def push(self, packet: Packet) -> bool:
         seq = packet.sequence
 
-        if gap_wrapped(self._last_tx_seq, seq) > self._threshold and self._last_tx_seq != -1:
+        if (
+            gap_wrapped(self._last_tx_seq, seq) > self._threshold
+            and self._last_tx_seq != -1
+        ):
             _log.debug("Dropping old packet %s", packet)
             return False
 
@@ -178,7 +186,10 @@ class JitterBuffer(BaseBuff[PacketT]):
         if packet is None:
             return None
 
-        if packet.sequence == add_wrapped(self._last_tx_seq, 1) or self._last_tx_seq < 0:
+        if (
+            packet.sequence == add_wrapped(self._last_tx_seq, 1)
+            or self._last_tx_seq < 0
+        ):
             return packet
 
     def gap(self) -> int:

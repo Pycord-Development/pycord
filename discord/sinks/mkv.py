@@ -62,7 +62,7 @@ class MKVSink(FFmpegSink):
         .. versionadded:: 2.7
     stderr: IO[:class:`bytes`] | :data:`None`
         The stderr buffer in which will be written. Defaults to ``None``.
-    
+
         .. versionadded:: 2.7
     options: :class:`str` | :data:`None`
         The options to append to the ffmpeg executable flags. You should not

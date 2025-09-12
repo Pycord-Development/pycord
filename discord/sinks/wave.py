@@ -29,10 +29,11 @@ import logging
 import wave
 from typing import TYPE_CHECKING
 
-from discord.opus import Decoder
 from discord.file import File
+from discord.opus import Decoder
 
 from .core import Sink
+
 if TYPE_CHECKING:
     from discord import abc
     from discord.voice import VoiceData
@@ -95,7 +96,9 @@ class WaveSink(Sink):
     def write(self, user: abc.User | None, data: VoiceData) -> None:
         self._file.writeframes(data.pcm)
 
-    def to_file(self, filename: str, /, *, description: str | None = None, spoiler: bool = False) -> File | None:
+    def to_file(
+        self, filename: str, /, *, description: str | None = None, spoiler: bool = False
+    ) -> File | None:
         """Returns the :class:`discord.File` of this sink.
 
         .. warning::
@@ -105,13 +108,18 @@ class WaveSink(Sink):
 
         f = wave.open(self._destination, "rb")
         data = f.readframes(f.getnframes())
-        return File(io.BytesIO(data), filename, description=description, spoiler=spoiler)
+        return File(
+            io.BytesIO(data), filename, description=description, spoiler=spoiler
+        )
 
     def cleanup(self) -> None:
         try:
             self._file.close()
         except Exception as exc:
-            _log.warning("An error ocurred while closing the wave writing file on cleanup", exc_info=exc)
+            _log.warning(
+                "An error ocurred while closing the wave writing file on cleanup",
+                exc_info=exc,
+            )
 
 
 WavSink = WaveSink

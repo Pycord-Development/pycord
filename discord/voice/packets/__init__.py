@@ -8,11 +8,19 @@ Sink packet handlers.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
 from .core import Packet
-from .rtp import RTPPacket, RTCPPacket, FakePacket, ReceiverReportPacket, SenderReportPacket, SilencePacket
+from .rtp import (
+    FakePacket,
+    ReceiverReportPacket,
+    RTCPPacket,
+    RTPPacket,
+    SenderReportPacket,
+    SilencePacket,
+)
 
 if TYPE_CHECKING:
-    from discord import User, Member
+    from discord import Member, User
 
 __all__ = (
     "Packet",
@@ -41,10 +49,12 @@ class VoiceData:
         The PCM bytes of this source.
     """
 
-    def __init__(self, packet: Packet, source: User | Member | None, *, pcm: bytes | None = None) -> None:
+    def __init__(
+        self, packet: Packet, source: User | Member | None, *, pcm: bytes | None = None
+    ) -> None:
         self.packet: Packet = packet
         self.source: User | Member | None = source
-        self.pcm: bytes = pcm if pcm else b''
+        self.pcm: bytes = pcm if pcm else b""
 
     @property
     def opus(self) -> bytes | None:

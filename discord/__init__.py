@@ -25,6 +25,7 @@ from ._version import *
 
 
 from . import abc, opus, sinks, ui, utils
+from ._voice_aliases import *
 from .activity import *
 from .appinfo import *
 from .application_role_connection import *
@@ -75,7 +76,5 @@ from .user import *
 from .webhook import *
 from .welcome_screen import *
 from .widget import *
-from ._voice_aliases import *
-
 
 logging.getLogger(__name__).addHandler(logging.NullHandler())

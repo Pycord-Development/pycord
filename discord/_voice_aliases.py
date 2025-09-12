@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -42,30 +43,32 @@ __all__ = ("VoiceProtocol", "VoiceClient")
 if TYPE_CHECKING:
     from typing_extensions import deprecated
 
-    from discord.voice import VoiceProtocolC, VoiceClientC
+    from discord.voice import VoiceClientC, VoiceProtocolC
 
     @deprecated(
         "discord.VoiceClient is deprecated in favour "
         "of discord.voice.VoiceClient since 2.7 and "
         "will be removed in 3.0",
     )
-    def VoiceClient(client, channel) -> VoiceClientC:
-        ...
+    def VoiceClient(client, channel) -> VoiceClientC: ...
 
     @deprecated(
         "discord.VoiceProtocol is deprecated in favour "
         "of discord.voice.VoiceProtocol since 2.7 and "
         "will be removed in 3.0",
     )
-    def VoiceProtocol(client, channel) -> VoiceProtocolC:
-        ...
+    def VoiceProtocol(client, channel) -> VoiceProtocolC: ...
+
 else:
+
     @deprecated("discord.VoiceClient", "discord.voice.VoiceClient", "2.7", "3.0")
     def VoiceClient(client, channel):
         from discord.voice import VoiceClient
+
         return VoiceClient(client, channel)
 
     @deprecated("discord.VoiceProtocol", "discord.voice.VoiceProtocol", "2.7", "3.0")
     def VoiceProtocol(client, channel):
         from discord.voice import VoiceProtocol
+
         return VoiceProtocol(client, channel)

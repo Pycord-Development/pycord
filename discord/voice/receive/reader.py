@@ -22,26 +22,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
-from collections.abc import Callable
 import logging
-from operator import itemgetter
 import threading
 import time
+from collections.abc import Callable
+from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
 import davey
+
 from discord.opus import PacketDecoder
 
+from ..packets.rtp import ReceiverReportPacket, decode
 from .router import PacketRouter, SinkEventRouter
-from ..packets.rtp import decode, ReceiverReportPacket
 
 try:
     import nacl.secret
     from nacl.exceptions import CryptoError
 except ImportError as exc:
-    raise RuntimeError("can't use voice receiver without PyNaCl installed, please install it with the 'py-cord[voice]' extra.") from exc
+    raise RuntimeError(
+        "can't use voice receiver without PyNaCl installed, please install it with the 'py-cord[voice]' extra."
+    ) from exc
 
 
 if TYPE_CHECKING:
@@ -60,9 +64,7 @@ if TYPE_CHECKING:
 
 _log = logging.getLogger(__name__)
 
-__all__ = (
-    "AudioReader",
-)
+__all__ = ("AudioReader",)
 
 
 def is_rtcp(data: bytes) -> bool:
@@ -70,9 +72,13 @@ def is_rtcp(data: bytes) -> bool:
 
 
 class AudioReader:
-    def __init__(self, sink: Sink, client: VoiceClient, *, after: AfterCallback | None = None) -> None:
+    def __init__(
+        self, sink: Sink, client: VoiceClient, *, after: AfterCallback | None = None
+    ) -> None:
         if after is not None and not callable(after):
-            raise TypeError(f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead")
+            raise TypeError(
+                f"expected a callable for the 'after' parameter, got {after.__class__.__name__!r} instead"
+            )
 
         self.sink: Sink = sink
         self.client: VoiceClient = client
@@ -84,7 +90,9 @@ class AudioReader:
         self.error: Exception | None = None
         self.packet_router: PacketRouter = PacketRouter(self.sink, self)
         self.event_router: SinkEventRouter = SinkEventRouter(self.sink, self)
-        self.decryptor: PacketDecryptor = PacketDecryptor(client.mode, bytes(client.secret_key), client)
+        self.decryptor: PacketDecryptor = PacketDecryptor(
+            client.mode, bytes(client.secret_key), client
+        )
         self.speaking_timer: SpeakingTimer = SpeakingTimer(self)
         self.keep_alive: UDPKeepAlive = UDPKeepAlive(client)
 
@@ -115,7 +123,9 @@ class AudioReader:
         self.active = False
         self.speaking_timer.notify()
 
-        threading.Thread(target=self._stop, name=f"voice-receiver-audio-reader-stop:{id(self):#x}").start()
+        threading.Thread(
+            target=self._stop, name=f"voice-receiver-audio-reader-stop:{id(self):#x}"
+        ).start()
 
     def _stop(self) -> None:
         try:
@@ -137,7 +147,9 @@ class AudioReader:
             try:
                 self.after(self.error)
             except Exception:
-                _log.exception("An error ocurred while calling the after callback on audio reader")
+                _log.exception(
+                    "An error ocurred while calling the after callback on audio reader"
+                )
 
         for sink in self.sink.root.walk_children(with_self=True):
             try:
@@ -168,7 +180,11 @@ class AudioReader:
                 packet = rtcp_packet = decode(packet_data)
 
                 if not isinstance(packet, ReceiverReportPacket):
-                    _log.info("Received unexpected rtcp packet type=%s, %s", packet.type, type(packet))
+                    _log.info(
+                        "Received unexpected rtcp packet type=%s, %s",
+                        packet.type,
+                        type(packet),
+                    )
         except CryptoError as exc:
             _log.error("CryptoError while decoding a voice packet", exc_info=exc)
             return
@@ -176,7 +192,9 @@ class AudioReader:
             if self._is_ip_discovery_packet(packet_data):
                 _log.debug("Received an IP Discovery Packet, ignoring...")
                 return
-            _log.exception("An exception ocurred while decoding voice packets", exc_info=exc)
+            _log.exception(
+                "An exception ocurred while decoding voice packets", exc_info=exc
+            )
         finally:
             if self.error:
                 self.stop()
@@ -193,14 +211,18 @@ class AudioReader:
                 if rtp_packet.is_silence():
                     return
                 else:
-                    _log.info("Received a packet for unknown SSRC %s: %s", ssrc, rtp_packet)
+                    _log.info(
+                        "Received a packet for unknown SSRC %s: %s", ssrc, rtp_packet
+                    )
 
             self.speaking_timer.notify(ssrc)
 
             try:
                 self.packet_router.feed_rtp(rtp_packet)  # type: ignore
             except Exception as exc:
-                _log.exception("An error ocurred while processing RTP packet %s", rtp_packet)
+                _log.exception(
+                    "An error ocurred while processing RTP packet %s", rtp_packet
+                )
                 self.error = exc
                 self.stop()
 
@@ -213,13 +235,15 @@ class PacketDecryptor:
         "xsalsa20_poly1305_suffix",
     ]
 
-    def __init__(self, mode: SupportedModes, secret_key: bytes, client: VoiceClient) -> None:
+    def __init__(
+        self, mode: SupportedModes, secret_key: bytes, client: VoiceClient
+    ) -> None:
         self.mode: SupportedModes = mode
         self.client: VoiceClient = client
 
         try:
-            self._decryptor_rtp: DecryptRTP = getattr(self, '_decrypt_rtp_' + mode)
-            self._decryptor_rtcp: DecryptRTCP = getattr(self, '_decrypt_rtcp_' + mode)
+            self._decryptor_rtp: DecryptRTP = getattr(self, "_decrypt_rtp_" + mode)
+            self._decryptor_rtcp: DecryptRTCP = getattr(self, "_decrypt_rtcp_" + mode)
         except AttributeError as exc:
             raise NotImplementedError(mode) from exc
 
@@ -237,7 +261,9 @@ class PacketDecryptor:
         data = self._decryptor_rtp(packet)
 
         if dave is not None and dave.ready and packet.ssrc in state.user_ssrc_map:
-            return dave.decrypt(state.user_ssrc_map[packet.ssrc], davey.MediaType.audio, data)
+            return dave.decrypt(
+                state.user_ssrc_map[packet.ssrc], davey.MediaType.audio, data
+            )
         return data
 
     def decrypt_rtcp(self, packet: bytes) -> bytes:
@@ -445,7 +471,9 @@ class UDPKeepAlive(threading.Thread):
                 continue
 
             try:
-                vc._connection.socket.sendto(packet, (vc._connection.endpoint_ip, vc._connection.voice_port))
+                vc._connection.socket.sendto(
+                    packet, (vc._connection.endpoint_ip, vc._connection.voice_port)
+                )
             except Exception as exc:
                 _log.debug(
                     "Error while sending udp keep alive to socket %s at %s:%s",

@@ -35,22 +35,22 @@ import struct
 import sys
 from typing import TYPE_CHECKING, Any, Callable, Literal, TypedDict, TypeVar
 
-from discord.voice.packets.rtp import FakePacket
-from discord.voice.utils.wrapped import add_wrapped
-from discord.voice.utils.buffer import JitterBuffer
-
 import davey
+
+from discord.voice.packets.rtp import FakePacket
+from discord.voice.utils.buffer import JitterBuffer
+from discord.voice.utils.wrapped import add_wrapped
 
 from .errors import DiscordException
 
 if TYPE_CHECKING:
-    from discord.user import User
     from discord.member import Member
-    from discord.voice.client import VoiceClient
-    from discord.voice.receive.router import PacketRouter
-    from discord.voice.packets.core import Packet
-    from discord.voice.packets import VoiceData
     from discord.sinks.core import Sink
+    from discord.user import User
+    from discord.voice.client import VoiceClient
+    from discord.voice.packets import VoiceData
+    from discord.voice.packets.core import Packet
+    from discord.voice.receive.router import PacketRouter
 
     T = TypeVar("T")
     APPLICATION_CTL = Literal["audio", "voip", "lowdelay"]
@@ -675,7 +675,6 @@ class PacketDecoder:
             _log.debug("Decoding packet %s (type %s)", packet, type(packet))
             packet, pcm = self._decode_packet(packet)
 
-
         data = VoiceData(packet, member, pcm=pcm)  # type: ignore
         self._last_seq = packet.sequence
         self._last_ts = packet.timestamp
@@ -685,7 +684,7 @@ class PacketDecoder:
         assert self._decoder is not None
         assert self.sink.client
 
-        user_id: int | None  = self._cached_id
+        user_id: int | None = self._cached_id
         dave: davey.DaveSession | None = self.sink.client._connection.dave_session
         in_dave = dave is not None
 

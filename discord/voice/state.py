@@ -29,11 +29,9 @@ import asyncio
 import logging
 import select
 import socket
-import struct
 import threading
-import time
 from collections.abc import Callable, Coroutine
-from typing import TYPE_CHECKING, Any, TypedDict
+from typing import TYPE_CHECKING, Any
 
 from discord import opus, utils
 from discord.backoff import ExponentialBackoff
@@ -205,9 +203,7 @@ class SocketReader(threading.Thread):
                             loop=self.state.loop,
                         )
                         self.state._dispatch_task_set.add(task)
-                        task.add_done_callback(
-                            self.state._dispatch_task_set.discard
-                        )
+                        task.add_done_callback(self.state._dispatch_task_set.discard)
                     except Exception:
                         _log.exception(
                             "Error while calling %s in %s",
@@ -915,7 +911,9 @@ class VoiceConnectionState:
     async def reinit_dave_session(self) -> None:
         if self.dave_protocol_version > 0:
             if self.dave_session:
-                self.dave_session.reinit(self.dave_protocol_version, self.user.id, self.channel_id)
+                self.dave_session.reinit(
+                    self.dave_protocol_version, self.user.id, self.channel_id
+                )
             else:
                 self.dave_session = davey.DaveSession(
                     self.dave_protocol_version,
@@ -959,8 +957,13 @@ class VoiceConnectionState:
             old_version = self.dave_protocol_version
             self.dave_protocol_version = pending_proto
 
-            if old_version != self.dave_protocol_version and self.dave_protocol_version == 0:
-                _log.warning("DAVE was downgraded, voice client non-e2ee session has been deprecated since 2.7")
+            if (
+                old_version != self.dave_protocol_version
+                and self.dave_protocol_version == 0
+            ):
+                _log.warning(
+                    "DAVE was downgraded, voice client non-e2ee session has been deprecated since 2.7"
+                )
                 self.downgraded_dave = True
             elif transition > 0 and self.downgraded_dave:
                 self.downgraded_dave = False

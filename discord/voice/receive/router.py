@@ -22,14 +22,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
+
 from __future__ import annotations
 
+import logging
+import queue
+import threading
 from collections import deque
 from collections.abc import Callable
-import threading
-import logging
 from typing import TYPE_CHECKING, Any
-import queue
 
 from discord.opus import PacketDecoder
 
@@ -38,8 +39,8 @@ from ..utils.multidataevent import MultiDataEvent
 if TYPE_CHECKING:
     from discord.sinks import Sink
 
+    from ..packets import RTCPPacket, RTPPacket
     from .reader import AudioReader
-    from ..packets import RTPPacket, RTCPPacket
 
     EventCB = Callable[..., Any]
     EventData = tuple[str, tuple[Any, ...], dict[str, Any]]
@@ -51,7 +52,7 @@ class PacketRouter(threading.Thread):
     def __init__(self, sink: Sink, reader: AudioReader) -> None:
         super().__init__(
             daemon=True,
-            name=f'voice-receiver-packet-router:{id(self):#x}',
+            name=f"voice-receiver-packet-router:{id(self):#x}",
         )
 
         self.sink: Sink = sink
@@ -75,7 +76,7 @@ class PacketRouter(threading.Thread):
     def feed_rtcp(self, packet: RTCPPacket) -> None:
         guild = self.sink.client.guild if self.sink.client else None
         event_router = self.reader.event_router
-        event_router.dispatch('rtcp_packet', packet, guild)
+        event_router.dispatch("rtcp_packet", packet, guild)
 
     def get_decoder(self, ssrc: int) -> PacketDecoder | None:
         with self._lock:
@@ -136,7 +137,9 @@ class PacketRouter(threading.Thread):
 
 class SinkEventRouter(threading.Thread):
     def __init__(self, sink: Sink, reader: AudioReader) -> None:
-        super().__init__(daemon=True, name=f"voice-receiver-sink-event-router:{id(self):#x}")
+        super().__init__(
+            daemon=True, name=f"voice-receiver-sink-event-router:{id(self):#x}"
+        )
 
         self.sink: Sink = sink
         self.reader: AudioReader = reader
@@ -197,7 +200,13 @@ class SinkEventRouter(threading.Thread):
             try:
                 listener(*args, **kwargs)
             except Exception as exc:
-                _log.exception("Unhandled exception while dispatching event %s (args: %s; kwargs: %s)", event, args, kwargs, exc_info=exc)
+                _log.exception(
+                    "Unhandled exception while dispatching event %s (args: %s; kwargs: %s)",
+                    event,
+                    args,
+                    kwargs,
+                    exc_info=exc,
+                )
 
     def stop(self) -> None:
         self._end_thread.set()

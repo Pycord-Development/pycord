@@ -42,9 +42,7 @@ if TYPE_CHECKING:
 
 ClientT = TypeVar("ClientT", bound="Client", covariant=True)
 
-__all__ = (
-    "VoiceProtocol",
-)
+__all__ = ("VoiceProtocol",)
 
 
 class VoiceProtocol(Generic[ClientT]):
