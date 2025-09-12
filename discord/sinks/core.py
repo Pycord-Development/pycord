@@ -32,10 +32,13 @@ import inspect
 import subprocess
 import shlex
 import threading
-from typing import IO, TYPE_CHECKING, Any, Literal, TypeVar
+from typing import IO, TYPE_CHECKING, Any, Literal, TypeVar, overload
 
+from discord.file import File
 from discord.utils import MISSING, SequenceProxy
 from discord.player import FFmpegAudio
+
+from .errors import FFmpegNotFound
 
 if TYPE_CHECKING:
     from typing_extensions import ParamSpec, Self
@@ -52,6 +55,9 @@ if TYPE_CHECKING:
 __all__ = (
     "Sink",
     "RawData",
+    "FFmpegSink",
+    "FilterSink",
+    "MultiSink",
 )
 
 
@@ -309,19 +315,76 @@ else:
             raise DeprecationWarning("RawData has been deprecated in favour of VoiceData")
 
 
-class _FFmpegSink(Sink):
+class FFmpegSink(Sink):
+    """A :class:`Sink` built to use ffmpeg executables.
+
+    You can find default implementations of this sink in:
+
+    - :class:`M4ASink`
+    - :class:`MKASink`
+
+    .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    filename: :class:`str`
+        The file in which the ffmpeg buffer should be saved to.
+        Can not be mixed with ``buffer``.
+    buffer: IO[:class:`bytes`]
+        The buffer in which the ffmpeg result would be written to.
+        Can not be mixed with ``filename``.
+    executable: :class:`str`
+        The executable in which ``ffmpeg`` is in.
+    stderr: IO[:class:`bytes`] | :data:`None`
+        The stderr buffer in whcih will be written. Defaults to ``None``.
+    before_options: :class:`str` | :data:`None`
+        The options to append **before** the default ones.
+    options: :class:`str` | :data:`None`
+        The options to append **after** the default ones. You can override the
+        default ones with this.
+    error_hook: Callable[[:class:`FFmpegSink`, :class:`Exception`, :class:`discord.voice.VoiceData` | :data:`None`], Any] | :data:`None`
+        The callback to call when an error ocurrs with this sink.
+    """
+
+    @overload
+    def __init__(
+        self,
+        *,
+        filename: str,
+        executable: str = ...,
+        stderr: IO[bytes] = ...,
+        before_options: str | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        *,
+        buffer: IO[bytes],
+        executable: str = ...,
+        stderr: IO[bytes] = ...,
+        before_options: str | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
+
     def __init__(
         self,
         *,
         filename: str = MISSING,
         buffer: IO[bytes] = MISSING,
-        executable: str = 'ffmpeg',
+        executable: str = "ffmpeg",
         stderr: IO[bytes] | None = None,
         before_options: str | None = None,
         options: str | None = None,
         error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = None,
     ) -> None:
         super().__init__()
+
+        if filename is not MISSING and buffer is not MISSING:
+            raise TypeError("can't mix filename and buffer parameters")
 
         self.filename: str = filename or "pipe:1"
         self.buffer: IO[bytes] = buffer
@@ -345,7 +408,7 @@ class _FFmpegSink(Sink):
             args.extend(shlex.split(before_options))
 
         args.extend({
-            "-f": "s161e",
+            "-f": "s16le",
             "-ar": "48000",
             "-ac": "2",
             "-i": "pipe:0",
@@ -382,7 +445,7 @@ class _FFmpegSink(Sink):
             self._stderr_reader_thread.start()
 
     @staticmethod
-    def _on_error(_self: _FFmpegSink, error: Exception, data: VoiceData | None) -> None:
+    def _on_error(_self: FFmpegSink, error: Exception, data: VoiceData | None) -> None:
         _self.client.stop_recording()  # type: ignore
 
     def is_opus(self) -> bool:
@@ -404,6 +467,21 @@ class _FFmpegSink(Sink):
                 self._kill_processes()
                 self.on_error(self, exc, data)
 
+    
+    def to_file(self, filename: str, /, *, description: str | None = None, spoiler: bool = False) -> File | None:
+        """Returns the :class:`discord.File` of this sink.
+
+        This is only applicable if this sink uses a ``buffer`` instead of a ``filename``.
+
+        .. warning::
+
+            This should be used only after the sink has stopped recording.
+        """
+        if self.buffer is not MISSING:
+            fp = File(self.buffer.read(), filename=filename, description=description, spoiler=spoiler)
+            return fp
+        return None
+
     def _spawn_process(self, args: Any, **subprocess_kwargs: Any) -> subprocess.Popen:
         _log.debug("Spawning ffmpeg process with command %s and kwargs %s", args, subprocess_kwargs)
         process = None
@@ -412,7 +490,7 @@ class _FFmpegSink(Sink):
             process = subprocess.Popen(args, creationflags=CREATE_NO_WINDOW, **subprocess_kwargs)
         except FileNotFoundError:
             executable = args.partition(' ')[0] if isinstance(args, str) else args[0]
-            raise Exception(f"{executable!r} executable was not found") from None
+            raise FFmpegNotFound(f"{executable!r} executable was not found") from None
         except subprocess.SubprocessError as exc:
             raise Exception(f"Popen failed: {exc.__class__.__name__}: {exc}") from exc
         else:

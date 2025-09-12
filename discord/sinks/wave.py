@@ -25,20 +25,19 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import io
+import logging
 import wave
-from typing import TYPE_CHECKING, Literal, overload
+from typing import TYPE_CHECKING
 
+from discord.opus import Decoder
 from discord.file import File
-from discord.utils import MISSING
 
-from .core import RawData, Sink, SinkFilter, SinkHandler
-from .enums import SinkFilteringMode
-from .errors import NoUserAudio
-
+from .core import Sink
 if TYPE_CHECKING:
-    from typing_extensions import Self
-
     from discord import abc
+    from discord.voice import VoiceData
+
+_log = logging.getLogger(__name__)
 
 __all__ = (
     "WaveSink",
@@ -53,119 +52,66 @@ class WaveSink(Sink):
 
     Parameters
     ----------
-    filters: List[:class:`~.SinkFilter`]
-        The filters to apply to this sink recorder.
-    filtering_mode: :class:`~.SinkFilteringMode`
-        How the filters should work. If set to :attr:`~.SinkFilteringMode.all`, all filters must go through
-        in order for an audio packet to be stored in this sink, else if it is set to :attr:`~.SinkFilteringMode.any`,
-        only one filter is required to return ``True`` in order for an audio packet to be stored in this sink.
-    handlers: List[:class:`~.SinkHandler`]
-        The sink handlers. Handlers are objects that are called after filtering, and that can be used to, for example
-        store a certain packet data in a file, or local mapping.
+    destination: :class:`str` | :term:`py:bytes-like object`
+        The destination in which the data should be saved into.
+
+        If this is a filename, then it is saved into that. Else, treats
+        it like a buffer.
+
+        .. versionadded:: 2.7
+    channels: :class:`int`
+        The amount of channels.
+
+        .. versionadded:: 2.7
+    sample_width: :class:`int`
+        The sample width to "n" bytes.
+
+        .. versionadded:: 2.7
+    sampling_rate: :class:`int`
+        The frame rate. A non-integral input is rounded to the nearest int.
+
+        .. versionadded:: 2.7
     """
 
     def __init__(
         self,
+        destination: wave._File,
         *,
-        filters: list[SinkFilter[Self]] = MISSING,
-        filtering_mode: SinkFilteringMode = SinkFilteringMode.all,
-        handlers: list[SinkHandler[Self]] = MISSING,
+        channels: int = Decoder.CHANNELS,
+        sample_width: int = Decoder.SAMPLE_SIZE // Decoder.CHANNELS,
+        sampling_rate: int = Decoder.SAMPLING_RATE,
     ) -> None:
-        self.__audio_data: dict[int, io.BytesIO] = {}
-        super().__init__(
-            filters=filters,
-            filtering_mode=filtering_mode,
-            handlers=handlers,
-        )
+        super().__init__()
 
-    def get_user_audio(self, user_id: int) -> io.BytesIO | None:
-        """Gets a user's saved audiop data, or ``None``."""
-        return self.__audio_data.get(user_id)
+        self._destination: wave._File = destination
+        self._file: wave.Wave_write = wave.open(destination, "wb")
+        self._file.setnchannels(channels)
+        self._file.setsampwidth(sample_width)
+        self._file.setframerate(sampling_rate)
 
-    def _create_audio_packet_for(self, uid: int) -> io.BytesIO:
-        data = self.__audio_data[uid] = io.BytesIO()
-        return data
+    def is_opus(self) -> bool:
+        return False
 
-    @overload
-    def format_user_audio(
-        self,
-        user_id: int,
-        *,
-        as_file: Literal[True],
-    ) -> File: ...
+    def write(self, user: abc.User | None, data: VoiceData) -> None:
+        self._file.writeframes(data.pcm)
 
-    @overload
-    def format_user_audio(
-        self,
-        user_id: int,
-        *,
-        as_file: Literal[False] = ...,
-    ) -> io.BytesIO: ...
+    def to_file(self, filename: str, /, *, description: str | None = None, spoiler: bool = False) -> File | None:
+        """Returns the :class:`discord.File` of this sink.
 
-    def format_user_audio(
-        self,
-        user_id: int,
-        *,
-        as_file: bool = False,
-    ) -> io.BytesIO | File:
-        """Formats a user's saved audio data.
+        .. warning::
 
-        This should be called after the bot has stopped recording.
-
-        If this is called during recording, there could be missing audio
-        packets.
-
-        After this, the user's audio data will be resetted to 0 bytes and
-        seeked to 0.
-
-        Parameters
-        ----------
-        user_id: :class:`int`
-            The user ID of which format the audio data into a file.
-        as_file: :class:`bool`
-            Whether to return a :class:`~discord.File` object instead of a :class:`io.BytesIO`.
-
-        Returns
-        -------
-        Union[:class:`io.BytesIO`, :class:`~discord.File`]
-            The user's audio saved bytes, if ``as_file`` is ``False``, else a :class:`~discord.File`
-            object with the buffer set as the audio bytes.
-
-        Raises
-        ------
-        NoUserAudio
-            You tried to format the audio of a user that was not stored in this sink.
+            This should be used only after the sink has stopped recording.
         """
 
-        try:
-            data = self.__audio_data.pop(user_id)
-        except KeyError:
-            raise NoUserAudio
-
-        decoder = self.client.decoder
-
-        with wave.open(data, "wb") as f:
-            f.setnchannels(decoder.CHANNELS)
-            f.setsampwidth(decoder.SAMPLE_SIZE // decoder.CHANNELS)
-            f.setframerate(decoder.SAMPLING_RATE)
-
-        data.seek(0)
-
-        if as_file:
-            return File(data, filename=f"{user_id}-recording.pcm")
-        return data
+        f = wave.open(self._destination, "rb")
+        data = f.readframes(f.getnframes())
+        return File(io.BytesIO(data), filename, description=description, spoiler=spoiler)
 
     def cleanup(self) -> None:
-        for _, buffer in self.__audio_data.items():
-            if not buffer.closed:
-                buffer.close()
-
-        self.__audio_data.clear()
-        super().cleanup()
-
-    async def on_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
-        buffer = self.get_user_audio(user.id) or self._create_audio_packet_for(user.id)
-        buffer.write(data.decoded_data)
+        try:
+            self._file.close()
+        except Exception as exc:
+            _log.warning("An error ocurred while closing the wave writing file on cleanup", exc_info=exc)
 
 
 WavSink = WaveSink

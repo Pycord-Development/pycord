@@ -24,211 +24,95 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import io
-import logging
-import subprocess
-import time
-from collections import deque
-from typing import TYPE_CHECKING, Literal, overload
+from collections.abc import Callable
+from typing import IO, TYPE_CHECKING, Any, overload
 
-from discord.file import File
 from discord.utils import MISSING
 
-from .core import CREATE_NO_WINDOW, RawData, Sink, SinkFilter, SinkHandler
-from .enums import SinkFilteringMode
-from .errors import FFmpegNotFound, MaxProcessesCountReached, MP3SinkError, NoUserAudio
+from .core import FFmpegSink
 
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-    from discord import abc
-
-_log = logging.getLogger(__name__)
+    from discord.voice import VoiceData
 
 __all__ = ("MP3Sink",)
 
 
-class MP3Sink(Sink):
+class MP3Sink(FFmpegSink):
     """A special sink for .mp3 files.
 
     .. versionadded:: 2.0
 
     Parameters
     ----------
-    filters: List[:class:`~.SinkFilter`]
-        The filters to apply to this sink recorder.
-    filtering_mode: :class:`~.SinkFilteringMode`
-        How the filters should work. If set to :attr:`~.SinkFilteringMode.all`, all filters must go through
-        in order for an audio packet to be stored in this sink, else if it is set to :attr:`~.SinkFilteringMode.any`,
-        only one filter is required to return ``True`` in order for an audio packet to be stored in this sink.
-    handlers: List[:class:`~.SinkHandler`]
-        The sink handlers. Handlers are objects that are called after filtering, and that can be used to, for example
-        store a certain packet data in a file, or local mapping.
-    max_audio_processes_count: :class:`int`
-        The maximum of audio conversion processes that can be active concurrently. If this limit is exceeded, then
-        when calling methods like :meth:`.format_user_audio` they will raise :exc:`MaxProcessesCountReached`.
+    filename: :class:`str`
+        The file in which the recording will be saved into.
+        This can't be mixed with ``buffer``.
+
+        .. versionadded:: 2.7
+    buffer: IO[:class:`bytes`]
+        The buffer in which the recording will be saved into.
+        This can't be mixed with ``filename``.
+
+        .. verionadded:: 2.7
+    executable: :class:`str`
+        The executable in which ``ffmpeg`` is in.
+
+        .. versionadded:: 2.7
+    stderr: IO[:class:`bytes`] | :data:`None`
+        The stderr buffer in which will be written. Defaults to ``None``.
+    
+        .. versionadded:: 2.7
+    options: :class:`str` | :data:`None`
+        The options to append to the ffmpeg executable flags. You should not
+        use this because you may override any already-provided flag.
+
+        .. versionadded:: 2.7
+    error_hook: Callable[[:class:`FFmpegSink`, :class:`Exception`, :class:`discord.voice.VoiceData` | :data:`None`], Any] | :data:`None`
+        The callback to call when an error ocurrs with this sink.
+
+        .. versionadded:: 2.7
     """
+
+    @overload
+    def __init__(
+        self,
+        *,
+        filename: str,
+        executable: str = ...,
+        stderr: IO[bytes] | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        *,
+        buffer: IO[bytes],
+        executable: str = ...,
+        stderr: IO[bytes] | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
 
     def __init__(
         self,
         *,
-        filters: list[SinkFilter[Self]] = MISSING,
-        filtering_mode: SinkFilteringMode = SinkFilteringMode.all,
-        handlers: list[SinkHandler[Self]] = MISSING,
-        max_audio_processes_count: int = 10,
-    ) -> None:
-        self.__audio_data: dict[int, io.BytesIO] = {}
-        self.__process_queue: deque[subprocess.Popen] = deque(
-            maxlen=max_audio_processes_count
-        )
-        super().__init__(
-            filters=filters,
-            filtering_mode=filtering_mode,
-            handlers=handlers,
-        )
-
-    def get_user_audio(self, user_id: int) -> io.BytesIO | None:
-        """Gets a user's saved audio data, or ``None``."""
-        ret = self.__audio_data.get(user_id)
-        _log.debug("Found stored user ID %s with buffer %s", user_id, ret)
-        return ret
-
-    def _create_audio_packet_for(self, uid: int) -> io.BytesIO:
-        data = self.__audio_data[uid] = io.BytesIO()
-        _log.debug("Created user ID %s buffer", uid)
-        return data
-
-    @overload
-    def format_user_audio(
-        self,
-        user_id: int,
-        *,
-        executable: str = ...,
-        as_file: Literal[True],
-    ) -> File: ...
-
-    @overload
-    def format_user_audio(
-        self,
-        user_id: int,
-        *,
-        executable: str = ...,
-        as_file: Literal[False] = ...,
-    ) -> io.BytesIO: ...
-
-    def format_user_audio(
-        self,
-        user_id: int,
-        *,
+        filename: str = MISSING,
+        buffer: IO[bytes] = MISSING,
         executable: str = "ffmpeg",
-        as_file: bool = False,
-    ) -> io.BytesIO | File:
-        """Formats a user's saved audio data.
-
-        This should be called after the bot has stopped recording.
-
-        If this is called during recording, there could be missing audio
-        packets.
-
-        After this, the user's audio data will be resetted to 0 bytes and
-        seeked to 0.
-
-        Parameters
-        ----------
-        user_id: :class:`int`
-            The user ID of which format the audio data into a file.
-        executable: :class:`str`
-            The FFmpeg executable path to use for this formatting. It defaults
-            to ``ffmpeg``.
-        as_file: :class:`bool`
-            Whether to return a :class:`~discord.File` object instead of a :class:`io.BytesIO`.
-
-        Returns
-        -------
-        Union[:class:`io.BytesIO`, :class:`~discord.File`]
-            The user's audio saved bytes, if ``as_file`` is ``False``, else a :class:`~discord.File`
-            object with the buffer set as the audio bytes.
-
-        Raises
-        ------
-        NoUserAudio
-            You tried to format the audio of a user that was not stored in this sink.
-        FFmpegNotFound
-            The provided FFmpeg executable was not found.
-        MaxProcessesCountReached
-            You tried to go over the maximum processes count threshold.
-        MP3SinkError
-            Any error raised while formatting, wrapped around MP3SinkError.
-        """
-
-        if len(self.__process_queue) >= 10:
-            raise MaxProcessesCountReached
-
-        try:
-            data = self.__audio_data.pop(user_id)
-        except KeyError:
-            _log.info("There is no audio data for %s, ignoring.", user_id)
-            raise NoUserAudio
-
-        args = [
-            executable,
-            "-f",
-            "s16le",
-            "-ar",
-            "48000",
-            "-loglevel",
-            "error",
-            "-ac",
-            "2",
-            "-i",
-            "-",
-            "-f",
-            "mp3",
-            "pipe:1",
-        ]
-
-        try:
-            process = subprocess.Popen(
-                args,
-                creationflags=CREATE_NO_WINDOW,
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-            )
-            self.__process_queue.append(process)
-        except FileNotFoundError as exc:
-            raise FFmpegNotFound from exc
-        except subprocess.SubprocessError as exc:
-            raise MP3SinkError(f"Audio formatting for user {user_id} failed") from exc
-
-        out = process.communicate(data.read())[0]
-        buffer = io.BytesIO(out)
-        buffer.seek(0)
-
-        try:
-            self.__process_queue.remove(process)
-        except ValueError:
-            pass
-
-        if as_file:
-            return File(buffer, filename=f"{user_id}-{time.time()}-recording.mp3")
-        return buffer
-
-    def _clean_process(self, process: subprocess.Popen) -> None:
-        _log.debug("Cleaning process %s for sink %s", process, self)
-        process.kill()
-
-    def cleanup(self) -> None:
-        for process in self.__process_queue:
-            self._clean_process(process)
-        self.__process_queue.clear()
-
-        for _, buffer in self.__audio_data.items():
-            if not buffer.closed:
-                buffer.close()
-
-        self.__audio_data.clear()
-        super().cleanup()
-
-    async def on_voice_packet_receive(self, user: abc.Snowflake, data: RawData) -> None:
-        buffer = self.get_user_audio(user.id) or self._create_audio_packet_for(user.id)
-        buffer.write(data.decoded_data)
+        stderr: IO[bytes] | None = None,
+        options: str | None = None,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = None,
+    ) -> None:
+        super().__init__(
+            executable=executable,
+            before_options="-f mp3 -loglevel error",
+            filename=filename,
+            buffer=buffer,
+            stderr=stderr,
+            options=options,
+            error_hook=error_hook,
+        )  # type: ignore

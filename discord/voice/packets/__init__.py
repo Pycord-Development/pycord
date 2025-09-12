@@ -45,3 +45,7 @@ class VoiceData:
         self.packet: Packet = packet
         self.source: User | Member | None = source
         self.pcm: bytes = pcm if pcm else b''
+
+    @property
+    def opus(self) -> bytes | None:
+        self.packet.decrypted_data
