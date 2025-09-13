@@ -20,6 +20,14 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for setting guild-specific `avatar`, `banner`, and `bio` for the bot
   user through `Member.edit`.
   ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
+- Added support for select default values.
+  ([#2899](https://github.com/Pycord-Development/pycord/pull/2899))
+  - Adds a new generic parameter to selects to type `ui.Select.values` return type.
+  - Adds `SelectDefaultValue` object to create select default values.
+  - Adds `SelectDefaultValueType` enum.
+  - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
+    different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
+    `ui.MentionableSelect`, and `ui.ChannelSelect`.
 
 ### Changed
 
