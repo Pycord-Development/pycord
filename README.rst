@@ -1,4 +1,4 @@
-⚠️ This is a testing repository, and should not be used in production.
+⚠️ This is a testing repository, and should not be used in production ⚠️
 
 Please use the main repository: https://github.com/Pycord-Development/pycord
 
