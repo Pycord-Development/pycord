@@ -107,7 +107,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T")
 CogT = TypeVar("CogT", bound="Cog")
-Coro = Coroutine[Any, Any, T]
+Coro = TypeVar("Coro", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 if TYPE_CHECKING:
     P = ParamSpec("P")
@@ -196,7 +196,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
     cog = None
 
     def __init__(self, func: Callable, **kwargs) -> None:
-        from ..ext.commands.cooldowns import BucketType, CooldownMapping
+        from ..ext.commands.cooldowns import BucketType, CooldownMapping, MaxConcurrency
 
         cooldown = getattr(func, "__commands_cooldown__", kwargs.get("cooldown"))
 
