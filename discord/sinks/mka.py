@@ -22,75 +22,97 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-import io
-import subprocess
+from __future__ import annotations
 
-from .core import CREATE_NO_WINDOW, Filters, Sink, default_filters
-from .errors import MKASinkError
+from collections.abc import Callable
+from typing import IO, TYPE_CHECKING, Any, overload
+
+from discord.utils import MISSING
+
+from .core import FFmpegSink
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
+
+    from discord.voice import VoiceData
+
+__all__ = ("MKASink",)
 
 
-class MKASink(Sink):
+class MKASink(FFmpegSink):
     """A special sink for .mka files.
 
     .. versionadded:: 2.0
+
+    Parameters
+    ----------
+    filename: :class:`str`
+        The file in which the recording will be saved into.
+        This can't be mixed with ``buffer``.
+
+        .. versionadded:: 2.7
+    buffer: IO[:class:`bytes`]
+        The buffer in which the recording will be saved into.
+        This can't be mixed with ``filename``.
+
+        .. verionadded:: 2.7
+    executable: :class:`str`
+        The executable in which ``ffmpeg`` is in.
+
+        .. versionadded:: 2.7
+    stderr: IO[:class:`bytes`] | :data:`None`
+        The stderr buffer in which will be written. Defaults to ``None``.
+
+        .. versionadded:: 2.7
+    options: :class:`str` | :data:`None`
+        The options to append to the ffmpeg executable flags. You should not
+        use this because you may override any already-provided flag.
+
+        .. versionadded:: 2.7
+    error_hook: Callable[[:class:`FFmpegSink`, :class:`Exception`, :class:`discord.voice.VoiceData` | :data:`None`], Any] | :data:`None`
+        The callback to call when an error ocurrs with this sink.
+
+        .. versionadded:: 2.7
     """
 
-    def __init__(self, *, filters=None):
-        if filters is None:
-            filters = default_filters
-        self.filters = filters
-        Filters.__init__(self, **self.filters)
+    @overload
+    def __init__(
+        self,
+        *,
+        filename: str,
+        executable: str = ...,
+        stderr: IO[bytes] | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
 
-        self.encoding = "mka"
-        self.vc = None
-        self.audio_data = {}
+    @overload
+    def __init__(
+        self,
+        *,
+        buffer: IO[bytes],
+        executable: str = ...,
+        stderr: IO[bytes] | None = ...,
+        options: str | None = ...,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = ...,
+    ) -> None: ...
 
-    def format_audio(self, audio):
-        """Formats the recorded audio.
-
-        Raises
-        ------
-        MKASinkError
-            Audio may only be formatted after recording is finished.
-        MKASinkError
-            Formatting the audio failed.
-        """
-        if self.vc.recording:
-            raise MKASinkError(
-                "Audio may only be formatted after recording is finished."
-            )
-        args = [
-            "ffmpeg",
-            "-f",
-            "s16le",
-            "-ar",
-            "48000",
-            "-loglevel",
-            "error",
-            "-ac",
-            "2",
-            "-i",
-            "-",
-            "-f",
-            "matroska",
-            "pipe:1",
-        ]
-        try:
-            process = subprocess.Popen(
-                args,
-                creationflags=CREATE_NO_WINDOW,
-                stdout=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-            )
-        except FileNotFoundError:
-            raise MKASinkError("ffmpeg was not found.") from None
-        except subprocess.SubprocessError as exc:
-            raise MKASinkError(
-                "Popen failed: {0.__class__.__name__}: {0}".format(exc)
-            ) from exc
-
-        out = process.communicate(audio.file.read())[0]
-        out = io.BytesIO(out)
-        out.seek(0)
-        audio.file = out
-        audio.on_format(self.encoding)
+    def __init__(
+        self,
+        *,
+        filename: str = MISSING,
+        buffer: IO[bytes] = MISSING,
+        executable: str = "ffmpeg",
+        stderr: IO[bytes] | None = None,
+        options: str | None = None,
+        error_hook: Callable[[Self, Exception, VoiceData | None], Any] | None = None,
+    ) -> None:
+        super().__init__(
+            executable=executable,
+            before_options="-f matroska -loglevel error",
+            filename=filename,
+            buffer=buffer,
+            stderr=stderr,
+            options=options,
+            error_hook=error_hook,
+        )  # type: ignore

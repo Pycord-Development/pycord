@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import signal
 import sys
 import traceback
 from types import TracebackType
@@ -51,7 +50,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
-from .monetization import SKU, Entitlement
+from .monetization import SKU
 from .object import Object
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
@@ -62,7 +61,7 @@ from .threads import Thread
 from .ui.view import View
 from .user import ClientUser, User
 from .utils import MISSING
-from .voice_client import VoiceClient
+from .voice import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
 
@@ -75,7 +74,7 @@ if TYPE_CHECKING:
     from .poll import Poll
     from .soundboard import SoundboardSound
     from .ui.item import Item
-    from .voice_client import VoiceProtocol
+    from .voice import VoiceProtocol
 
 __all__ = ("Client",)
 
@@ -807,7 +806,12 @@ class Client:
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
-    def run(self, *args: Any, **kwargs: Any) -> None:
+    def run(
+        self,
+        token: str,
+        *,
+        reconnect: bool = True,
+    ) -> None:
         """A blocking call that abstracts away the event loop
         initialisation from you.
 
@@ -831,41 +835,18 @@ class Client:
             is blocking. That means that registration of events or anything being
             called after this function call will not execute until it returns.
         """
-        loop = self.loop
-
-        try:
-            loop.add_signal_handler(signal.SIGINT, loop.stop)
-            loop.add_signal_handler(signal.SIGTERM, loop.stop)
-        except (NotImplementedError, RuntimeError):
-            pass
 
         async def runner():
-            try:
-                await self.start(*args, **kwargs)
-            finally:
-                if not self.is_closed():
-                    await self.close()
+            async with self:
+                await self.start(token, reconnect=reconnect)
 
-        def stop_loop_on_completion(f):
-            loop.stop()
-
-        future = asyncio.ensure_future(runner(), loop=loop)
-        future.add_done_callback(stop_loop_on_completion)
         try:
-            loop.run_forever()
+            asyncio.run(runner())
         except KeyboardInterrupt:
-            _log.info("Received signal to terminate bot and event loop.")
-        finally:
-            future.remove_done_callback(stop_loop_on_completion)
-            _log.info("Cleaning up tasks.")
-            _cleanup_loop(loop)
-
-        if not future.cancelled():
-            try:
-                return future.result()
-            except KeyboardInterrupt:
-                # I am unsure why this gets raised here but suppress it anyway
-                return None
+            # nothing to do here
+            # `asyncio.run` handles the loop cleanup
+            # and `self.start` closes all sockets and the HTTPClient instance.
+            return
 
     # properties
 
