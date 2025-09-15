@@ -5,7 +5,7 @@ myst-parser[linkify]==4.0.1
 sphinxext-opengraph==0.12.0
 sphinx-copybutton==0.5.2
 furo==2024.8.6
-sphinx-autodoc-typehints==2.2.3
+sphinx-autodoc-typehints==2.5.0
 sphinx-intl==2.3.2
 typing_extensions==4.15.0
 levenshtein==0.27.1
