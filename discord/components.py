@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, TypeVar, overload
 
 from .asset import AssetMixin
 from .colour import Colour
@@ -34,25 +34,28 @@ from .enums import (
     ChannelType,
     ComponentType,
     InputTextStyle,
+    SelectDefaultValueType,
     SeparatorSpacingSize,
     try_enum,
 )
 from .flags import AttachmentFlags
 from .partial_emoji import PartialEmoji, _EmojiTag
-from .utils import MISSING, get_slots
+from .utils import MISSING, find, get_slots
 
 if TYPE_CHECKING:
+    from . import abc
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
-    from .types.components import BaseComponent as BaseComponentPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
     from .types.components import Component as ComponentPayload
     from .types.components import ContainerComponent as ContainerComponentPayload
     from .types.components import FileComponent as FileComponentPayload
     from .types.components import InputText as InputTextComponentPayload
+    from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
     from .types.components import SectionComponent as SectionComponentPayload
+    from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenu as SelectMenuPayload
     from .types.components import SelectOption as SelectOptionPayload
     from .types.components import SeparatorComponent as SeparatorComponentPayload
@@ -76,6 +79,8 @@ __all__ = (
     "FileComponent",
     "Separator",
     "Container",
+    "Label",
+    "SelectDefaultValue",
 )
 
 C = TypeVar("C", bound="Component")
@@ -186,6 +191,25 @@ class ActionRow(Component):
 
     def walk_components(self) -> Iterator[Component]:
         yield from self.children
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        return find(lambda i: getattr(i, attr, None) == id, self.children)
 
     @classmethod
     def with_components(cls, *components, id=None):
@@ -375,6 +399,10 @@ class SelectMenu(Component):
         Added support for :attr:`ComponentType.user_select`, :attr:`ComponentType.role_select`,
         :attr:`ComponentType.mentionable_select`, and :attr:`ComponentType.channel_select`.
 
+    .. versionchanged:: 2.7
+
+        Added the :attr:`required` attribute for use in modals.
+
     Attributes
     ----------
     type: :class:`ComponentType`
@@ -398,7 +426,9 @@ class SelectMenu(Component):
         Will be an empty list for all component types
         except for :attr:`ComponentType.channel_select`.
     disabled: :class:`bool`
-        Whether the select is disabled or not.
+        Whether the select is disabled or not. Not usable in modals. Defaults to ``False``.
+    required: Optional[:class:`bool`]
+        Whether the select is required or not. Only useable in modals. Defaults to ``True``.
     """
 
     __slots__: tuple[str, ...] = (
@@ -409,6 +439,8 @@ class SelectMenu(Component):
         "options",
         "channel_types",
         "disabled",
+        "required",
+        "default_values",
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
@@ -428,6 +460,10 @@ class SelectMenu(Component):
         self.channel_types: list[ChannelType] = [
             try_enum(ChannelType, ct) for ct in data.get("channel_types", [])
         ]
+        self.required: bool | None = data.get("required")
+        self.default_values: list[SelectDefaultValue] = SelectDefaultValue._from_data(
+            data.get("default_values")
+        )
 
     def to_dict(self) -> SelectMenuPayload:
         payload: SelectMenuPayload = {
@@ -445,8 +481,187 @@ class SelectMenu(Component):
             payload["channel_types"] = [ct.value for ct in self.channel_types]
         if self.placeholder:
             payload["placeholder"] = self.placeholder
+        if self.required is not None:
+            payload["required"] = self.required
+        if self.type is not ComponentType.string_select:
+            payload["default_values"] = [dv.to_dict() for dv in self.default_values]
 
         return payload
+
+
+class SelectDefaultValue:
+    r"""Represents a :class:`discord.SelectMenu`\s default value.
+
+    This is only applicable to selects of type other than :attr:`ComponentType.string_select`.
+
+    .. versionadded:: 2.7
+
+    Parameters
+    ----------
+    object: :class:`abc.Snowflake`
+        The model type this select default value is based of.
+
+        Below, is a table defining the model instance type and the default value type it will be mapped:
+
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | Model Type                        | Default Value Type                                                       |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.User`             | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Member`           | :attr:`discord.SelectDefaultValueType.user`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Role`             | :attr:`discord.SelectDefaultValueType.role`                              |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.abc.GuildChannel` | :attr:`discord.SelectDefaultValueType.channel`                           |
+        +-----------------------------------+--------------------------------------------------------------------------+
+        | :class:`discord.Object`           | depending on :attr:`discord.Object.type`, it will be mapped to any above |
+        +-----------------------------------+--------------------------------------------------------------------------+
+
+        If you pass a model that is not defined in the table, ``TypeError`` will be raised.
+
+        .. note::
+
+            The :class:`discord.abc.GuildChannel` protocol includes :class:`discord.TextChannel`, :class:`discord.VoiceChannel`, :class:`discord.StageChannel`,
+            :class:`discord.ForumChannel`, :class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not exhaustive, and is bound to change
+            based of the new channel types Discord adds.
+
+    id: :class:`int`
+        The ID of the default value. This cannot be used with ``object``.
+    type: :class:`SelectDefaultValueType`
+        The default value type. This cannot be used with ``object``.
+
+    Raises
+    ------
+    TypeError
+        You did not provide any parameter, you provided all parameters, or you provided ``id`` but not ``type``.
+    """
+
+    __slots__ = ("id", "type")
+
+    @overload
+    def __init__(
+        self,
+        object: abc.Snowflake,
+        /,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        /,
+        *,
+        id: int,
+        type: SelectDefaultValueType,
+    ) -> None: ...
+
+    def __init__(
+        self,
+        object: abc.Snowflake = MISSING,
+        /,
+        *,
+        id: int = MISSING,
+        type: SelectDefaultValueType = MISSING,
+    ) -> None:
+        self.id: int = id
+        self.type: SelectDefaultValueType = type
+        if object is not MISSING:
+            if any(p is not MISSING for p in (id, type)):
+                raise TypeError("you cannot pass id or type when passing object")
+            self._handle_model(object, inst=self)
+        elif id is not MISSING and type is not MISSING:
+            self.id = id
+            self.type = type
+        else:
+            raise TypeError("you must provide an object model, or an id and type")
+
+    def __repr__(self) -> str:
+        return f"<SelectDefaultValue id={self.id} type={self.type}>"
+
+    @classmethod
+    def _from_data(
+        cls, default_values: list[SelectDefaultValuePayload] | None
+    ) -> list[SelectDefaultValue]:
+        if not default_values:
+            return []
+        return [
+            cls(id=int(d["id"]), type=try_enum(SelectDefaultValueType, d["type"]))
+            for d in default_values
+        ]
+
+    @classmethod
+    def _handle_model(
+        cls,
+        model: abc.Snowflake,
+        select_type: ComponentType | None = None,
+        inst: SelectDefaultValue | None = None,
+    ) -> SelectDefaultValue:
+        # preventing >circular imports<
+        from discord import Member, Object, Role, User, abc
+        from discord.user import _UserTag
+
+        instances_mapping: dict[
+            type, tuple[tuple[ComponentType, ...], SelectDefaultValueType]
+        ] = {
+            Role: (
+                (ComponentType.role_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.role,
+            ),
+            User: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            Member: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            _UserTag: (
+                (ComponentType.user_select, ComponentType.mentionable_select),
+                SelectDefaultValueType.user,
+            ),
+            abc.GuildChannel: (
+                (ComponentType.channel_select,),
+                SelectDefaultValueType.channel,
+            ),
+        }
+
+        obj_id = model.id
+        obj_type = model.__class__
+
+        if isinstance(model, Object):
+            obj_type = model.type
+
+        sel_types = None
+        def_type = None
+
+        for typ, (st, dt) in instances_mapping.items():
+            if issubclass(obj_type, typ):
+                sel_types = st
+                def_type = dt
+                break
+
+        if sel_types is None or def_type is None:
+            raise TypeError(
+                f"{obj_type.__name__} is not a valid instance for a select default value"
+            )
+
+        # we can't actually check select types when not in a select context
+        if select_type is not None and select_type not in sel_types:
+            raise TypeError(
+                f"{model.__class__.__name__} objects can not be set as a default value for {select_type.value} selects",
+            )
+
+        if inst is None:
+            return cls(id=obj_id, type=def_type)
+        else:
+            inst.id = obj_id
+            inst.type = def_type
+            return inst
+
+    def to_dict(self) -> SelectDefaultValuePayload:
+        return {
+            "id": self.id,
+            "type": self.type.value,
+        }
 
 
 class SelectOption:
@@ -620,6 +835,28 @@ class Section(Component):
             yield from r + [self.accessory]
         yield from r
 
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this section. Roughly equivalent to `utils.get(section.walk_components(), ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        if self.accessory and id == getattr(self.accessory, attr, None):
+            return self.accessory
+        component = find(lambda i: getattr(i, attr, None) == id, self.components)
+        return component
+
 
 class TextDisplay(Component):
     """Represents a Text Display from Components V2.
@@ -690,7 +927,6 @@ class UnfurledMediaItem(AssetMixin):
 
     @property
     def url(self) -> str:
-        """Returns this media item's url."""
         return self._url
 
     @url.setter
@@ -797,7 +1033,6 @@ class MediaGalleryItem:
 
     @property
     def url(self) -> str:
-        """Returns the URL of this gallery's underlying media item."""
         return self.media.url
 
     def is_dispatchable(self) -> bool:
@@ -1036,6 +1271,81 @@ class Container(Component):
             else:
                 yield c
 
+    def get_component(self, id: str | int) -> Component | None:
+        """Get a component from this container. Roughly equivalent to `utils.get(container.components, ...)`.
+        If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
+        This method will also search for nested components.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The custom_id or id of the component to get.
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``id`` or ``custom_id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        for i in self.components:
+            if getattr(i, attr, None) == id:
+                return i
+            elif hasattr(i, "get_component"):
+                if component := i.get_component(id):
+                    return component
+        return None
+
+
+class Label(Component):
+    """Represents a Label used in modals as the top-level component.
+
+    This is a component that allows you to add additional text to another component.
+    ``component`` may only be:
+
+    - :class:`InputText`
+    - :class:`SelectMenu` (string)
+
+    This inherits from :class:`Component`.
+
+    .. versionadded:: 2.7
+
+    Attributes
+    ----------
+    component: :class:`Component`
+        The component contained in this label. Currently supports :class:`InputText` and :class:`SelectMenu`.
+    label: :class:`str`
+        The main text associated with this label's ``component``, up to 45 characters.
+    description: Optional[:class:`str`]
+        The description associated with this label's ``component``, up to 100 characters.
+    """
+
+    __slots__: tuple[str, ...] = ("component", "label", "description")
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = ()
+
+    def __init__(self, data: LabelComponentPayload):
+        self.type: ComponentType = try_enum(ComponentType, data["type"])
+        self.id: int = data["id"]
+        self.component: Component = _component_factory(data["component"])
+        self.label: str = data["label"]
+        self.description: str | None = data.get("description")
+
+    def to_dict(self) -> LabelComponentPayload:
+        payload = {
+            "type": int(self.type),
+            "id": self.id,
+            "component": self.component.to_dict(),
+            "label": self.label,
+            "description": self.description,
+        }
+        return payload
+
+    def walk_components(self) -> Iterator[Component]:
+        yield from [self.component]
+
 
 COMPONENT_MAPPINGS = {
     1: ActionRow,
@@ -1053,6 +1363,7 @@ COMPONENT_MAPPINGS = {
     13: FileComponent,
     14: Separator,
     17: Container,
+    18: Label,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)

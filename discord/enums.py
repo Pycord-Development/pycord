@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import types
 from collections import namedtuple
+from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
 __all__ = (
@@ -71,6 +72,7 @@ __all__ = (
     "PromptType",
     "OnboardingMode",
     "ReactionType",
+    "VoiceChannelEffectAnimationType",
     "SKUType",
     "EntitlementType",
     "EntitlementOwnerType",
@@ -78,8 +80,10 @@ __all__ = (
     "InteractionContextType",
     "PollLayoutType",
     "MessageReferenceType",
+    "ThreadArchiveDuration",
     "SubscriptionStatus",
     "SeparatorSpacingSize",
+    "SelectDefaultValueType",
 )
 
 
@@ -1073,6 +1077,16 @@ class PollLayoutType(Enum):
     default = 1
 
 
+class VoiceChannelEffectAnimationType(Enum):
+    """Voice channel effect animation type.
+
+    .. versionadded:: 2.7
+    """
+
+    premium = 0
+    basic = 1
+
+
 class MessageReferenceType(Enum):
     """The type of the message reference object"""
 
@@ -1088,6 +1102,15 @@ class SubscriptionStatus(Enum):
     inactive = 2
 
 
+class ThreadArchiveDuration(IntEnum):
+    """The time set until a thread is automatically archived."""
+
+    one_hour = 60
+    one_day = 1440
+    three_days = 4320
+    one_week = 10080
+
+
 class SeparatorSpacingSize(Enum):
     """A separator component's spacing size."""
 
@@ -1096,6 +1119,14 @@ class SeparatorSpacingSize(Enum):
 
     def __int__(self):
         return self.value
+
+
+class SelectDefaultValueType(Enum):
+    """Represents the default value type of a select menu."""
+
+    channel = "channel"
+    role = "role"
+    user = "user"
 
 
 T = TypeVar("T")

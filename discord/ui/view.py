@@ -38,6 +38,7 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
+from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
@@ -45,7 +46,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..utils import find, get
+from ..utils import find
 from .item import Item, ItemCallbackType
 
 __all__ = ("View", "_component_to_item", "_walk_all_components")
@@ -120,6 +121,11 @@ def _component_to_item(component: Component) -> Item[V]:
         # Handle ActionRow.children manually, or design ui.ActionRow?
 
         return component
+    if isinstance(component, LabelComponent):
+        ret = _component_to_item(component.component)
+        ret.label = component.label
+        ret.description = component.description
+        return ret
     return Item.from_component(component)
 
 
@@ -392,6 +398,11 @@ class View:
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
+        if item.uses_label():
+            raise ValueError(
+                f"cannot use label, description or required on select menus in views."
+            )
+
         self.__weights.add_item(item)
 
         item.parent = self
@@ -434,8 +445,8 @@ class View:
 
         Parameters
         ----------
-        custom_id: :class:`str`
-            The custom_id of the item to get
+        custom_id: Union[:class:`str`, :class:`int`]
+            The id of the item to get
 
         Returns
         -------

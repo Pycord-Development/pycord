@@ -159,7 +159,7 @@ BridgeContext Subclasses
     Alias of :data:`typing.Union` [ :class:`.BridgeExtContext`, :class:`.BridgeApplicationContext` ] for typing convenience.
 
 Options
-------
+-------
 
 Shortcut Decorators
 ~~~~~~~~~~~~~~~~~~~

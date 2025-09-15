@@ -33,10 +33,11 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17]
+ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
+SelectDefaultValueType = Literal["channel", "role", "user"]
 
 
 class BaseComponent(TypedDict):
@@ -46,7 +47,7 @@ class BaseComponent(TypedDict):
 
 class ActionRow(BaseComponent):
     type: Literal[1]
-    components: list[ButtonComponent, InputText, SelectMenu]
+    components: list[ButtonComponent | InputText | SelectMenu]
 
 
 class ButtonComponent(BaseComponent):
@@ -69,7 +70,7 @@ class InputText(BaseComponent):
     type: Literal[4]
     style: InputTextStyle
     custom_id: str
-    label: str
+    label: NotRequired[str]
 
 
 class SelectOption(TypedDict):
@@ -78,6 +79,11 @@ class SelectOption(TypedDict):
     label: str
     value: str
     default: bool
+
+
+class SelectDefaultValue(TypedDict):
+    id: Snowflake
+    type: SelectDefaultValueType
 
 
 class SelectMenu(BaseComponent):
@@ -89,6 +95,8 @@ class SelectMenu(BaseComponent):
     options: NotRequired[list[SelectOption]]
     type: Literal[3, 5, 6, 7, 8]
     custom_id: str
+    required: NotRequired[bool]
+    default_values: NotRequired[list[SelectDefaultValue]]
 
 
 class TextDisplayComponent(BaseComponent):
@@ -99,7 +107,7 @@ class TextDisplayComponent(BaseComponent):
 class SectionComponent(BaseComponent):
     type: Literal[9]
     components: list[TextDisplayComponent]
-    accessory: NotRequired[ThumbnailComponent, ButtonComponent]
+    accessory: NotRequired[ThumbnailComponent | ButtonComponent]
 
 
 class UnfurledMediaItem(TypedDict):
@@ -149,6 +157,13 @@ class ContainerComponent(BaseComponent):
     accent_color: NotRequired[int]
     spoiler: NotRequired[bool]
     components: list[AllowedContainerComponents]
+
+
+class LabelComponent(BaseComponent):
+    type: Literal[18]
+    label: str
+    description: NotRequired[str]
+    component: SelectMenu | InputText
 
 
 Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]

@@ -59,7 +59,7 @@ from .poll import Poll
 from .reaction import Reaction
 from .sticker import StickerItem
 from .threads import Thread
-from .utils import MISSING, escape_mentions
+from .utils import MISSING, escape_mentions, find
 
 if TYPE_CHECKING:
     from .abc import (
@@ -84,6 +84,7 @@ if TYPE_CHECKING:
     from .types.message import MessageActivity as MessageActivityPayload
     from .types.message import MessageApplication as MessageApplicationPayload
     from .types.message import MessageCall as MessageCallPayload
+    from .types.message import MessagePin as MessagePinPayload
     from .types.message import MessageReference as MessageReferencePayload
     from .types.message import MessageSnapshot as MessageSnapshotPayload
     from .types.message import Reaction as ReactionPayload
@@ -793,6 +794,38 @@ def flatten_handlers(cls):
     return cls
 
 
+class MessagePin:
+    """Represents information about a pinned message.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(
+        self,
+        state: ConnectionState,
+        channel: MessageableChannel,
+        data: MessagePinPayload,
+    ):
+        self._state: ConnectionState = state
+        self._pinned_at: datetime.datetime = utils.parse_time(data["pinned_at"])
+        self._message: Message = state.create_message(
+            channel=channel, data=data["message"]
+        )
+
+    @property
+    def message(self) -> Message:
+        """The pinned message."""
+        return self._message
+
+    @property
+    def pinned_at(self) -> datetime.datetime:
+        """An aware timestamp of when the message was pinned."""
+        return self._pinned_at
+
+    def __repr__(self) -> str:
+        return f"<MessagePin pinned_at={self.pinned_at!r} message={self.message!r}>"
+
+
 @flatten_handlers
 class Message(Hashable):
     r"""Represents a message from Discord.
@@ -1174,26 +1207,6 @@ class Message(Hashable):
 
         del self.reactions[index]
         return reaction
-
-    def _update(self, data):
-        # In an update scheme, 'author' key has to be handled before 'member'
-        # otherwise they overwrite each other which is undesirable.
-        # Since there's no good way to do this we have to iterate over every
-        # handler rather than iterating over the keys which is a little slower
-        for key, handler in self._HANDLERS:
-            try:
-                value = data[key]
-            except KeyError:
-                continue
-            else:
-                handler(self, value)
-
-        # clear the cached properties
-        for attr in self._CACHED_SLOTS:
-            try:
-                delattr(self, attr)
-            except AttributeError:
-                pass
 
     def _handle_edited_timestamp(self, value: str) -> None:
         self._edited_timestamp = utils.parse_time(value)
@@ -1843,7 +1856,7 @@ class Message(Hashable):
 
         Pins the message.
 
-        You must have the :attr:`~Permissions.manage_messages` permission to do
+        You must have the :attr:`~Permissions.pin_messages` permission to do
         this in a non-private channel context.
 
         Parameters
@@ -1872,7 +1885,7 @@ class Message(Hashable):
 
         Unpins the message.
 
-        You must have the :attr:`~Permissions.manage_messages` permission to do
+        You must have the :attr:`~Permissions.pin_messages` permission to do
         this in a non-private channel context.
 
         Parameters
@@ -2210,6 +2223,32 @@ class Message(Hashable):
             data["guild_id"] = self.guild.id
 
         return data
+
+    def get_component(self, id: str | int) -> Component | None:
+        """Gets a component from this message. Roughly equal to `utils.get(message.components, ...)`.
+        If an :class:`int` is provided, the component will be retrieved by ``id``, otherwise by  ``custom_id``.
+        This method will also search nested components.
+
+        Parameters
+        ----------
+        id: Union[:class:`str`, :class:`int`]
+            The id or custom_id the item to get
+
+        Returns
+        -------
+        Optional[:class:`Component`]
+            The component with the matching ``custom_id`` or ``id`` if it exists.
+        """
+        if not id:
+            return None
+        attr = "id" if isinstance(id, int) else "custom_id"
+        for i in self.components:
+            if getattr(i, attr, None) == id:
+                return i
+            elif hasattr(i, "get_component"):
+                if component := i.get_component(id):
+                    return component
+        return None
 
 
 class PartialMessage(Hashable):
