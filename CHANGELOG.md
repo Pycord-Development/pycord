@@ -17,6 +17,17 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
 - Added `RawMessageUpdateEvent.new_message` - message update events now contain full
   message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
+- Added support for setting guild-specific `avatar`, `banner`, and `bio` for the bot
+  user through `Member.edit`.
+  ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
+- Added support for select default values.
+  ([#2899](https://github.com/Pycord-Development/pycord/pull/2899))
+  - Adds a new generic parameter to selects to type `ui.Select.values` return type.
+  - Adds `SelectDefaultValue` object to create select default values.
+  - Adds `SelectDefaultValueType` enum.
+  - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
+    different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
+    `ui.MentionableSelect`, and `ui.ChannelSelect`.
 
 ### Changed
 
@@ -28,6 +39,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2905](https://github.com/Pycord-Development/pycord/pull/2905))
 - `view=None` in various methods causing an AttributeError.
   ([#2915](https://github.com/Pycord-Development/pycord/pull/2915))
+- `View.message` being `None` when it had not been interacted with yet.
+  ([#2916](https://github.com/Pycord-Development/pycord/pull/2916))
+- Fixed a crash when processing message edit events while message cache was disabled.
+  ([#2924](https://github.com/Pycord-Development/pycord/pull/2924))
 
 ### Removed
 
