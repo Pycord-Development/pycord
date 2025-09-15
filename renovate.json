@@ -7,8 +7,6 @@
   ],
   "assigneesFromCodeOwners": true,
   "pip_requirements": {
-    "managerFilePatterns": [
-      "requirements/*.txt"
-    ]
+    "managerFilePatterns": ["requirements/*.txt"]
   }
 }
