@@ -686,3 +686,11 @@ Collectibles
 
 .. autoclass:: Nameplate()
     :undoc-members:
+
+Others
+------
+
+.. attributetable:: PrimaryGuild
+
+.. autoclass:: PrimaryGuild()
+    :members:
