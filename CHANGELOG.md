@@ -28,6 +28,9 @@ These changes are available on the `master` branch, but have not yet been releas
   - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
     different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
     `ui.MentionableSelect`, and `ui.ChannelSelect`.
+- Added the ability to use functions with any number of optional arguments and functions
+  returning an awaitable as `Option.autocomplete`.
+  ([#2669](https://github.com/Pycord-Development/pycord/pull/2914))
 
 ### Changed
 
@@ -45,6 +48,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2924](https://github.com/Pycord-Development/pycord/pull/2924))
 - Fixed OPUS Decode Error when recording audio.
   ([#2925](https://github.com/Pycord-Development/pycord/pull/2925))
+- Fixed autocomplete crashing when using an async static method
+  ([#2669](https://github.com/Pycord-Development/pycord/pull/2914))
 
 ### Removed
 
@@ -100,9 +105,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2564](https://github.com/Pycord-Development/pycord/pull/2564))
 - Added `Message.forward_to`, `Message.snapshots`, and other related attributes.
   ([#2598](https://github.com/Pycord-Development/pycord/pull/2598))
-- Added the ability to use functions with any number of optional arguments and functions
-  returning an awaitable as `Option.autocomplete`.
-  ([#2669](https://github.com/Pycord-Development/pycord/pull/2669))
 - Add missing `Guild` feature flags and `Guild.edit` parameters.
   ([#2672](https://github.com/Pycord-Development/pycord/pull/2672))
 - Added the ability to change the API's base URL with `Route.API_BASE_URL`.
