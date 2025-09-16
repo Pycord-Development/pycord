@@ -219,7 +219,7 @@ async def food_autocomplete(
     "Pick a fruit",
     autocomplete=partial(food_autocomplete, food_type="fruit"),
 )
-async def get_fruit(self, ctx: discord.ApplicationContext, choice: str):
+async def get_fruit(ctx: discord.ApplicationContext, choice: str):
     await ctx.respond(f'You picked "{choice}"')
 
 
@@ -229,7 +229,7 @@ async def get_fruit(self, ctx: discord.ApplicationContext, choice: str):
     "Pick a vegetable",
     autocomplete=partial(food_autocomplete, food_type="vegetable"),
 )
-async def get_vegetable(self, ctx: discord.ApplicationContext, choice: str):
+async def get_vegetable(ctx: discord.ApplicationContext, choice: str):
     await ctx.respond(f'You picked "{choice}"')
 
 
