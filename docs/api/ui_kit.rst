@@ -55,6 +55,27 @@ Objects
     :members:
     :inherited-members:
 
+
+.. class:: discord.ui.StringSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.string_select`.
+
+.. class:: discord.ui.UserSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.user_select`.
+
+.. class:: discord.ui.RoleSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.role_select`.
+
+.. class:: discord.ui.MentionableSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.mentionable_select`.
+
+.. class:: discord.ui.ChannelSelect
+
+    An alias for :class:`Select` with ``select_type`` as :attr:`discord.ComponentType.channel_select`.
+
 .. attributetable:: discord.ui.Section
 
 .. autoclass:: discord.ui.Section

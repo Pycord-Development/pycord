@@ -15,7 +15,7 @@ jobs:
         id: checkout
         uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         id: setup-python
         with:
           python-version: "3.13"
