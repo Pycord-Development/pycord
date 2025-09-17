@@ -1,7 +1,7 @@
 sphinx==8.0.2
 sphinxcontrib_trio==1.1.2
 sphinxcontrib-websupport==2.0.0
-myst-parser[linkify]==4.0.0
+myst-parser[linkify]==4.0.1
 sphinxext-opengraph==0.12.0
 sphinx-copybutton==0.5.2
 furo==2024.8.6
