@@ -147,7 +147,7 @@ class FileUpload:
     def max_values(self, value: int | None):
         if value and not isinstance(value, int):
             raise TypeError(f"max_values must be None or int not {value.__class__.__name__}")  # type: ignore
-        if value and (value <= 0 or value > 10):
+        if value and (value < 1 or value > 10):
             raise ValueError("max_values must be between 1 and 10")
         self._underlying.max_values = value
 
