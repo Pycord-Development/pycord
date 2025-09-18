@@ -26,9 +26,14 @@ dynamic attributes in mind.
 .. autoclass:: SelectOption
     :members:
 
+.. attributetable:: SelectDefaultValue
+
+.. autoclass:: SelectDefaultValue
+    :members:
+
 .. attributetable:: MediaGalleryItem
 
-.. autoclass:: SelectOption
+.. autoclass:: MediaGalleryItem
     :members:
 
 .. attributetable:: UnfurledMediaItem

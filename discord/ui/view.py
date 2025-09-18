@@ -46,7 +46,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..utils import find, get
+from ..utils import find
 from .item import Item, ItemCallbackType
 
 __all__ = ("View", "_component_to_item", "_walk_all_components")
@@ -445,8 +445,8 @@ class View:
 
         Parameters
         ----------
-        custom_id: :class:`str`
-            The custom_id of the item to get
+        custom_id: Union[:class:`str`, :class:`int`]
+            The id of the item to get
 
         Returns
         -------

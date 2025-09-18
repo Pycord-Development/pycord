@@ -22,6 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from functools import cached_property
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -55,21 +56,23 @@ class Nameplate:
     def __repr__(self) -> str:
         return f"<Nameplate sku_id={self.sku_id} palette={self.palette}>"
 
-    def get_asset(self, animated: bool = False) -> Asset:
-        """Returns the asset of the nameplate.
-
-        Parameters
-        ----------
-        animated: :class:`bool`
-            Whether to return the animated version of the asset, in webm version. Defaults to ``False``.
+    @cached_property
+    def static_asset(self) -> Asset:
         """
-        fn = "static.png" if not animated else "asset.webm"
-        return Asset(
-            state=self._state,
-            url=f"{Asset.BASE}/assets/collectibles/{self._asset}{fn}",
-            key=self._asset.split("/")[-1],
-            animated=animated,
-        )
+        The static :class:`Asset` of this nameplate.
+
+        .. versionadded:: 2.7
+        """
+        return Asset._from_collectible(self._state, self._asset)
+
+    @cached_property
+    def animated_asset(self) -> Asset:
+        """
+        The animated :class:`Asset` of this nameplate.
+
+        .. versionadded:: 2.7
+        """
+        return Asset._from_collectible(self._state, self._asset, animated=True)
 
 
 __all__ = ("Nameplate",)

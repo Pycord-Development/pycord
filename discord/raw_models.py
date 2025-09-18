@@ -29,7 +29,13 @@ import datetime
 from typing import TYPE_CHECKING
 
 from .automod import AutoModAction, AutoModTriggerType
-from .enums import AuditLogAction, ChannelType, ReactionType, try_enum
+from .enums import (
+    AuditLogAction,
+    ChannelType,
+    ReactionType,
+    VoiceChannelEffectAnimationType,
+    try_enum,
+)
 
 if TYPE_CHECKING:
     from .abc import MessageableChannel
@@ -37,8 +43,10 @@ if TYPE_CHECKING:
     from .member import Member
     from .message import Message
     from .partial_emoji import PartialEmoji
+    from .soundboard import PartialSoundboardSound, SoundboardSound
     from .state import ConnectionState
     from .threads import Thread
+    from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.raw_models import (
         AuditLogEntryEvent,
     )
@@ -81,6 +89,7 @@ __all__ = (
     "RawAuditLogEntryEvent",
     "RawVoiceChannelStatusUpdateEvent",
     "RawMessagePollVoteEvent",
+    "RawSoundboardSoundDeleteEvent",
 )
 
 
@@ -176,15 +185,21 @@ class RawMessageUpdateEvent(_RawReprMixin):
     cached_message: Optional[:class:`Message`]
         The cached message, if found in the internal message cache. Represents the message before
         it is modified by the data in :attr:`RawMessageUpdateEvent.data`.
+    new_message: :class:`Message`
+        The new message object. Represents the message after it is modified by the data in
+        :attr:`RawMessageUpdateEvent.data`.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = ("message_id", "channel_id", "guild_id", "data", "cached_message")
 
-    def __init__(self, data: MessageUpdateEvent) -> None:
+    def __init__(self, data: MessageUpdateEvent, new_message: Message) -> None:
         self.message_id: int = int(data["id"])
         self.channel_id: int = int(data["channel_id"])
         self.data: MessageUpdateEvent = data
         self.cached_message: Message | None = None
+        self.new_message: Message = new_message
 
         try:
             self.guild_id: int | None = int(data["guild_id"])
@@ -841,3 +856,17 @@ class RawMessagePollVoteEvent(_RawReprMixin):
             self.guild_id: int | None = int(data["guild_id"])
         except KeyError:
             self.guild_id: int | None = None
+
+
+class RawSoundboardSoundDeleteEvent(_RawReprMixin):
+    """Represents the payload for an :func:`on_raw_soundboard_sound_delete`.
+
+    .. versionadded 2.7
+    """
+
+    __slots__ = ("sound_id", "guild_id", "data")
+
+    def __init__(self, data: PartialSoundboardSound) -> None:
+        self.sound_id: int = int(data["sound_id"])
+        self.guild_id: int = int(data["guild_id"])
+        self.data: PartialSoundboardSound = data
