@@ -1350,7 +1350,12 @@ class Label(Component):
 
 class FileUpload(Component):
     """Represents an File Upload field from the Discord Bot UI Kit.
+
     This inherits from :class:`Component`.
+
+    .. note::
+
+        This class is not useable by end-users; see :class:`discord.ui.FileUpload` instead.
 
     .. versionadded:: 2.7
 
@@ -1392,10 +1397,10 @@ class FileUpload(Component):
     def to_dict(self) -> FileUploadComponentPayload:
         payload = {
             "type": 19,
-            "id": self.id,
+            "custom_id": self.custom_id,
         }
-        if self.custom_id:
-            payload["custom_id"] = self.custom_id
+        if self.id is not None:
+            payload["id"] = self.id
 
         if self.min_values:
             payload["min_values"] = self.min_values
