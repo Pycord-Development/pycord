@@ -141,10 +141,28 @@ class Loop(Generic[LF]):
             )
         if not isinstance(overlap, (bool, int)):
             raise TypeError("overlap must be a bool or a positive integer.")
-        elif not isinstance(overlap, bool) and isinstance(overlap, int):
+
+        if isinstance(overlap, bool):
+            if overlap is True:
+                self._run_with_semaphore = self._run_direct
+        else:
             if overlap <= 1:
                 raise ValueError("overlap as an integer must be greater than 1.")
             self._semaphore = asyncio.Semaphore(overlap)
+            self._run_with_semaphore = self._make_semaphore_runner()
+
+    async def _run_direct(self, *args: Any, **kwargs: Any) -> None:
+        """Run the coroutine directly."""
+        await self.coro(*args, **kwargs)
+
+    def _make_semaphore_runner(self) -> Callable[..., Awaitable[None]]:
+        """Return a function that runs the coroutine with a semaphore."""
+
+        async def runner(*args: Any, **kwargs: Any) -> None:
+            async with self._semaphore:
+                await self.coro(*args, **kwargs)
+
+        return runner
 
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, f"_{name}")
@@ -187,17 +205,8 @@ class Loop(Generic[LF]):
                     if not self.overlap:
                         await self.coro(*args, **kwargs)
                     else:
-
-                        async def run_with_semaphore():
-                            async with self._semaphore:
-                                await self.coro(*args, **kwargs)
-
                         task = asyncio.create_task(
-                            (
-                                self.coro(*args, **kwargs)
-                                if self.overlap is True
-                                else run_with_semaphore()
-                            ),
+                            self._run_with_semaphore(*args, **kwargs),
                             name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
                         )
                         task.add_done_callback(self._tasks.remove)
