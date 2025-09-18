@@ -60,6 +60,7 @@ if TYPE_CHECKING:
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
+    from .types.components import FileUploadComponent as FileUploadComponentPayload
 
 __all__ = (
     "Component",
@@ -754,7 +755,6 @@ class UnfurledMediaItem(AssetMixin):
 
     @classmethod
     def from_dict(cls, data: UnfurledMediaItemPayload, state=None) -> UnfurledMediaItem:
-
         r = cls(data.get("url"))
         r.proxy_url = data.get("proxy_url")
         r.height = data.get("height")
@@ -805,8 +805,8 @@ class Thumbnail(Component):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.media: UnfurledMediaItem = (
-            umi := data.get("media")
-        ) and UnfurledMediaItem.from_dict(umi, state=state)
+                                            umi := data.get("media")
+                                        ) and UnfurledMediaItem.from_dict(umi, state=state)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
@@ -1163,6 +1163,65 @@ class Label(Component):
         yield from [self.component]
 
 
+class FileUpload(Component):
+    """Represents an File Upload field from the Discord Bot UI Kit.
+    This inherits from :class:`Component`.
+
+    Attributes
+    ----------
+    custom_id: Optional[:class:`str`]
+        The custom ID of the file upload field that gets received during an interaction.
+    min_values: Optional[:class:`int`]
+        The minimum number of files that must be uploaded.
+        Defaults to 0.
+    max_values: Optional[:class:`int`]
+        The maximum number of files that can be uploaded.
+    required: Optional[:class:`bool`]
+        Whether the file upload field is required or not. Defaults to `True`.
+    id: Optional[:class:`int`]
+        The file upload's ID.
+    """
+
+    __slots__: tuple[str, ...] = (
+        "type",
+        "custom_id",
+        "min_values",
+        "max_values",
+        "required",
+        "id",
+    )
+
+    __repr_info__: ClassVar[tuple[str, ...]] = __slots__
+    versions: tuple[int, ...] = (1, 2)
+
+    def __init__(self, data: FileUploadComponentPayload):
+        self.type = ComponentType.file_upload
+        self.id: int | None = data.get("id")
+        self.custom_id = data["custom_id"]
+        self.min_values: int | None = data.get("min_values", None)
+        self.max_values: int | None = data.get("max_values", None)
+        self.required: bool = data.get("required", True)
+
+    def to_dict(self) -> FileUploadComponentPayload:
+        payload = {
+            "type": 19,
+            "id": self.id,
+        }
+        if self.custom_id:
+            payload["custom_id"] = self.custom_id
+
+        if self.min_values:
+            payload["min_values"] = self.min_values
+
+        if self.max_values:
+            payload["max_values"] = self.max_values
+
+        if not self.required:
+            payload["required"] = self.required
+
+        return payload  # type: ignore
+
+
 COMPONENT_MAPPINGS = {
     1: ActionRow,
     2: Button,
@@ -1180,6 +1239,7 @@ COMPONENT_MAPPINGS = {
     14: Separator,
     17: Container,
     18: Label,
+    19: FileUpload,
 }
 
 STATE_COMPONENTS = (Section, Container, Thumbnail, MediaGallery, FileComponent)

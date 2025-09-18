@@ -33,7 +33,7 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18]
+ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
@@ -159,7 +159,15 @@ class LabelComponent(BaseComponent):
     component: SelectMenu | InputText
 
 
-Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText]
+class FileUploadComponent(BaseComponent):
+    type: Literal[19]
+    custom_id: str
+    max_values: NotRequired[int]
+    max_values: NotRequired[int]
+    required: NotRequired[bool]
+
+
+Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText, FileUploadComponent]
 
 
 AllowedContainerComponents = Union[
