@@ -129,3 +129,9 @@ Objects
 .. autoclass:: discord.ui.InputText
     :members:
     :inherited-members:
+
+.. attributetable:: discord.ui.FileUpload
+
+.. autoclass:: discord.ui.FileUpload
+    :members:
+    :inherited-members:

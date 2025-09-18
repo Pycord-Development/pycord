@@ -246,7 +246,7 @@ class InputText:
         return self._underlying.to_dict()
 
     def refresh_state(self, data) -> None:
-        self._input_value = data["value"]
+        self._input_value = data.get("value", None)
 
     def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
         return self.refresh_state(data)

@@ -378,7 +378,7 @@ Interactions
 .. autoclass:: InteractionCallback()
     :members:
 
-Message Components
+UI Components
 ------------------
 
 .. attributetable:: Component
@@ -442,6 +442,12 @@ Message Components
 .. attributetable:: Container
 
 .. autoclass:: Container()
+    :members:
+    :inherited-members:
+
+.. attributetable:: FileUpload
+
+.. autoclass:: FileUpload()
     :members:
     :inherited-members:
 
