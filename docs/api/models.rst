@@ -445,6 +445,12 @@ Message Components
     :members:
     :inherited-members:
 
+.. attributetable:: FileUpload
+
+.. autoclass:: FileUpload()
+    :members:
+    :inherited-members:
+
 Emoji
 -----
 
