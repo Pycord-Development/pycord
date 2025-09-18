@@ -2584,3 +2584,19 @@ of :class:`enum.Enum`.
     .. attribute:: creation_date
 
         Sort by post creation date.
+
+.. class:: SelectDefaultValueType
+
+    Represents the default value type of a select menu.
+
+    .. attribute:: channel
+
+        The default value is a channel.
+
+    .. attribute:: role
+
+        The default value is a role.
+
+    .. attribute:: user
+
+        The default value is a user.
