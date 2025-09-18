@@ -249,9 +249,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
-            {}
-        )
+        self._listeners: dict[
+            str, list[tuple[asyncio.Future, Callable[..., bool]]]
+        ] = {}
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
