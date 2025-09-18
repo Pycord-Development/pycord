@@ -84,7 +84,6 @@ if TYPE_CHECKING:
         TextChannel,
         VoiceChannel,
     )
-    from .interaction import Interaction
     from .interactions import Interaction
     from .member import Member
     from .message import Message
@@ -250,9 +249,9 @@ class Client:
         self.loop: asyncio.AbstractEventLoop = (
             asyncio.get_event_loop() if loop is None else loop
         )
-        self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
-            {}
-        )
+        self._listeners: dict[
+            str, list[tuple[asyncio.Future, Callable[..., bool]]]
+        ] = {}
         self.shard_id: int | None = options.get("shard_id")
         self.shard_count: int | None = options.get("shard_count")
 
