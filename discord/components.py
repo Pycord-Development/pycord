@@ -1352,6 +1352,8 @@ class FileUpload(Component):
     """Represents an File Upload field from the Discord Bot UI Kit.
     This inherits from :class:`Component`.
 
+    .. versionadded:: 2.7
+
     Attributes
     ----------
     custom_id: Optional[:class:`str`]
