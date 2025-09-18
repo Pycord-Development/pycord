@@ -82,6 +82,7 @@ __all__ = (
     "Container",
     "Label",
     "SelectDefaultValue",
+    "FileUpload",
 )
 
 C = TypeVar("C", bound="Component")
