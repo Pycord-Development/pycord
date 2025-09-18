@@ -3,9 +3,9 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from ..message import Attachment
 from ..components import FileUpload as FileUploadComponent
 from ..enums import ComponentType
+from ..message import Attachment
 
 __all__ = ("FileUpload",)
 
@@ -171,8 +171,12 @@ class FileUpload:
         attachments = []
         for attachment_id in self._values:
             print(attachment_id)
-            attachment_data = self._interaction.data["resolved"]["attachments"][attachment_id]
-            attachments.append(Attachment(state=self._interaction._state, data=attachment_data))
+            attachment_data = self._interaction.data["resolved"]["attachments"][
+                attachment_id
+            ]
+            attachments.append(
+                Attachment(state=self._interaction._state, data=attachment_data)
+            )
         return attachments
 
     @property
@@ -190,4 +194,3 @@ class FileUpload:
     @staticmethod
     def uses_label() -> bool:
         return True
-

@@ -174,7 +174,9 @@ class FileUploadComponent(BaseComponent):
     required: NotRequired[bool]
 
 
-Component = Union[ActionRow, ButtonComponent, SelectMenu, InputText, FileUploadComponent]
+Component = Union[
+    ActionRow, ButtonComponent, SelectMenu, InputText, FileUploadComponent
+]
 
 
 AllowedContainerComponents = Union[

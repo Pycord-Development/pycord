@@ -251,9 +251,13 @@ class Modal:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
         if not isinstance(item, (InputText, FileUpload, Item)):
-            raise TypeError(f"expected InputText, FileUpload, or Item, not {item.__class__!r}")
+            raise TypeError(
+                f"expected InputText, FileUpload, or Item, not {item.__class__!r}"
+            )
         if isinstance(item, (InputText, FileUpload, Select)) and not item.label:
-            raise ValueError("InputTexts, FileUploads, and Selects must have a label set")
+            raise ValueError(
+                "InputTexts, FileUploads, and Selects must have a label set"
+            )
 
         self._weights.add_item(item)
         self._children.append(item)

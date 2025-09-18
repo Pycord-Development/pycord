@@ -50,6 +50,7 @@ if TYPE_CHECKING:
     from .types.components import Component as ComponentPayload
     from .types.components import ContainerComponent as ContainerComponentPayload
     from .types.components import FileComponent as FileComponentPayload
+    from .types.components import FileUploadComponent as FileUploadComponentPayload
     from .types.components import InputText as InputTextComponentPayload
     from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
@@ -62,7 +63,6 @@ if TYPE_CHECKING:
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
-    from .types.components import FileUploadComponent as FileUploadComponentPayload
 
 __all__ = (
     "Component",
@@ -989,8 +989,8 @@ class Thumbnail(Component):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
         self.id: int = data.get("id")
         self.media: UnfurledMediaItem = (
-                                            umi := data.get("media")
-                                        ) and UnfurledMediaItem.from_dict(umi, state=state)
+            umi := data.get("media")
+        ) and UnfurledMediaItem.from_dict(umi, state=state)
         self.description: str | None = data.get("description")
         self.spoiler: bool | None = data.get("spoiler")
 
