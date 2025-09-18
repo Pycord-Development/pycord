@@ -21,11 +21,11 @@ class FileUpload:
 
     Parameters
     ----------
-    custom_id: Optional[:class:`str`]
-        The ID of the input text field that gets received during an interaction.
     label: :class:`str`
         The label for the file upload field.
         Must be 45 characters or fewer.
+    custom_id: Optional[:class:`str`]
+        The ID of the input text field that gets received during an interaction.
     description: Optional[:class:`str`]
         The description for the file upload field.
         Must be 100 characters or fewer.
@@ -58,8 +58,8 @@ class FileUpload:
     def __init__(
         self,
         *,
-        custom_id: str | None = None,
         label: str,
+        custom_id: str | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
         required: bool | None = True,
@@ -76,7 +76,7 @@ class FileUpload:
             raise ValueError("min_values must be between 0 and 10")
         if max_values and (max_values < 1 or max_values > 10):
             raise ValueError("max_length must be between 1 and 10")
-        if not isinstance(custom_id, str) and custom_id is not None:
+        if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
@@ -92,8 +92,7 @@ class FileUpload:
             required=required,
             id=id,
         )
-        self._interaction: Interaction | None = None
-        self._values: list[str] | None = None
+        self._attachments: list[Attachment] | None = None
         self.row = row
         self._rendered_row: int | None = None
 
@@ -165,17 +164,7 @@ class FileUpload:
     @property
     def values(self) -> list[Attachment] | None:
         """The files that were uploaded to the field."""
-        if self._interaction is None:
-            return None
-        attachments = []
-        for attachment_id in self._values:
-            attachment_data = self._interaction.data["resolved"]["attachments"][
-                attachment_id
-            ]
-            attachments.append(
-                Attachment(state=self._interaction._state, data=attachment_data)
-            )
-        return attachments
+        return self._attachments
 
     @property
     def width(self) -> int:
@@ -185,8 +174,13 @@ class FileUpload:
         return self._underlying.to_dict()
 
     def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
-        self._interaction = interaction
-        self._values = data.get("values", [])
+        values = data.get("values", [])
+        self._attachments = [
+            Attachment(
+                state=interaction._state,
+                data=interaction.data["resolved"]["attachments"][attachment_id]
+            ) for attachment_id in values
+        ]
 
     @staticmethod
     def uses_label() -> bool:
