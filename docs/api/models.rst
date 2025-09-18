@@ -378,7 +378,7 @@ Interactions
 .. autoclass:: InteractionCallback()
     :members:
 
-Message Components
+UI Components
 ------------------
 
 .. attributetable:: Component
