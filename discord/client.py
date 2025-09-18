@@ -85,7 +85,6 @@ if TYPE_CHECKING:
         VoiceChannel,
     )
     from .interaction import Interaction
-    from .interactions import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
