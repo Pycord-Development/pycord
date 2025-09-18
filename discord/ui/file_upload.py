@@ -87,7 +87,6 @@ class FileUpload:
         self._underlying: FileUploadComponent = FileUploadComponent._raw_construct(
             type=ComponentType.file_upload,
             custom_id=custom_id,
-            label=label,
             min_values=min_values,
             max_values=max_values,
             required=required,
@@ -170,7 +169,6 @@ class FileUpload:
             return None
         attachments = []
         for attachment_id in self._values:
-            print(attachment_id)
             attachment_data = self._interaction.data["resolved"]["attachments"][
                 attachment_id
             ]
@@ -187,7 +185,6 @@ class FileUpload:
         return self._underlying.to_dict()
 
     def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
-        print(data)
         self._interaction = interaction
         self._values = data.get("values", [])
 
