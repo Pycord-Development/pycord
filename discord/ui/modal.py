@@ -418,12 +418,8 @@ class ModalStore:
             # match component by id
             for component in components:
                 item = value.get_item(component.get("custom_id") or component.get("id"))
-                print(component, item)
                 if item is not None:
                     item.refresh_from_modal(interaction, component)
-
-            # for component, child in zip(components, value.children):
-            #     child.refresh_from_modal(interaction, component)
             await value.callback(interaction)
             self.remove_modal(value, user_id)
         except Exception as e:
