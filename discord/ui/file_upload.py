@@ -178,8 +178,9 @@ class FileUpload:
         self._attachments = [
             Attachment(
                 state=interaction._state,
-                data=interaction.data["resolved"]["attachments"][attachment_id]
-            ) for attachment_id in values
+                data=interaction.data["resolved"]["attachments"][attachment_id],
+            )
+            for attachment_id in values
         ]
 
     @staticmethod
