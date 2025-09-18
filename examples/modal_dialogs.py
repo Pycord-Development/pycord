@@ -66,7 +66,7 @@ class MyModal(discord.ui.Modal):
         attachment = self.children[3].values[0] if self.children[3].values else None
         if attachment:
             embed.set_image(url=f"attachments://{attachment.filename}")
-        await interaction.response.send_message(
+        await interaction.followup.send(
             embeds=[embed],
             files=[await attachment.to_file()] if attachment else [],
         )
