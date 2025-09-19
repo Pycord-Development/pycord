@@ -139,23 +139,22 @@ class Loop(Generic[LF]):
             raise TypeError(
                 f"Expected coroutine function, not {type(self.coro).__name__!r}."
             )
-        if not isinstance(overlap, (bool, int)):
-            raise TypeError("overlap must be a bool or a positive integer.")
-
         if isinstance(overlap, bool):
-            if overlap is True:
+            if overlap:
                 self._run_with_semaphore = self._run_direct
-        else:
+        elif isinstance(overlap, int):
             if overlap <= 1:
                 raise ValueError("overlap as an integer must be greater than 1.")
             self._semaphore = asyncio.Semaphore(overlap)
-            self._run_with_semaphore = self._make_semaphore_runner()
+            self._run_with_semaphore = self._semaphore_runner_factory()
+        else:
+            raise TypeError("overlap must be a bool or a positive integer.")
 
     async def _run_direct(self, *args: Any, **kwargs: Any) -> None:
         """Run the coroutine directly."""
         await self.coro(*args, **kwargs)
 
-    def _make_semaphore_runner(self) -> Callable[..., Awaitable[None]]:
+    def _semaphore_runner_factory(self) -> Callable[..., Awaitable[None]]:
         """Return a function that runs the coroutine with a semaphore."""
 
         async def runner(*args: Any, **kwargs: Any) -> None:
