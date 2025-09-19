@@ -680,6 +680,14 @@ class Permissions(BaseFlags):
         """
         return 1 << 51
 
+    @flag_value
+    def bypass_slowmode(self) -> int:
+        """:class:`bool`: Returns ``True`` if a user can bypass slowmode.
+
+        .. versionadded:: tbd
+        """
+        return 1 << 52
+
 
 PO = TypeVar("PO", bound="PermissionOverwrite")
 
