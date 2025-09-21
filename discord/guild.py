@@ -534,7 +534,7 @@ class Guild(Hashable):
         if "channels" in data:
             channels = data["channels"]
             for c in channels:
-                factory, ch_type = _guild_channel_factory(c["type"])
+                factory, _ch_type = _guild_channel_factory(c["type"])
                 if factory:
                     self._add_channel(factory(guild=self, data=c, state=self._state))  # type: ignore
 
@@ -1885,7 +1885,7 @@ class Guild(Hashable):
         data = await self._state.http.get_all_guild_channels(self.id)
 
         def convert(d):
-            factory, ch_type = _guild_channel_factory(d["type"])
+            factory, _ch_type = _guild_channel_factory(d["type"])
             if factory is None:
                 raise InvalidData("Unknown channel type {type} for channel ID {id}.".format_map(d))
 

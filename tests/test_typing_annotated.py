@@ -77,7 +77,7 @@ def test_typing_annotated_cog_slashgroup():
 
 
 def test_typing_annotated_optional():
-    async def echo(ctx, txt: Annotated[Optional[str], discord.Option()]):
+    async def echo(ctx, txt: Annotated[str | None, discord.Option()]):
         await ctx.respond(txt)
 
     cmd = SlashCommand(echo)
