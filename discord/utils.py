@@ -641,10 +641,10 @@ async def get_or_fetch(
 
     Parameters
     ----------
-    obj: :class:`Guild` | :class:`Client`
+    obj: :class:`~discord.Guild` | :class:`~discord.Client`
         The object to operate on.
 
-    object_type: :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :class:`AppEmoji`
+    object_type: Type[:class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | :class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | :class:`~discord.CategoryChannel` | :class:`~discord.Thread` | :class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role` | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | :class:`~discord.AppEmoji`]
         Type of object to fetch or get.
 
     object_id: :class:`int` | :data:`None`
@@ -655,7 +655,7 @@ async def get_or_fetch(
 
     Returns
     -------
-    :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`
+    :class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | :class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | :class:`~discord.CategoryChannel` | :class:`~discord.Thread` | :class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role` | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | :class:`~discord.AppEmoji` | :data:`None`
         The object if found, or `default` if provided when not found.
         Returns :data:`None` only if `object_id` is :data:`None` and no `default` is given.
 
