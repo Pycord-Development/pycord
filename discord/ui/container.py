@@ -9,6 +9,7 @@ from ..components import Container as ContainerComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find, get
+from .action_row import ActionRow
 from .file import File
 from .item import Item, ItemCallbackType
 from .media_gallery import MediaGallery
@@ -35,8 +36,7 @@ class Container(Item[V]):
 
     The current items supported are as follows:
 
-    - :class:`discord.ui.Button`
-    - :class:`discord.ui.Select`
+    - :class:`discord.ui.ActionRow`
     - :class:`discord.ui.Section`
     - :class:`discord.ui.TextDisplay`
     - :class:`discord.ui.MediaGallery`
@@ -64,17 +64,6 @@ class Container(Item[V]):
         "id",
     )
 
-    __container_children_items__: ClassVar[list[ItemCallbackType]] = []
-
-    def __init_subclass__(cls) -> None:
-        children: list[ItemCallbackType] = []
-        for base in reversed(cls.__mro__):
-            for member in base.__dict__.values():
-                if hasattr(member, "__discord_ui_model_type__"):
-                    children.append(member)
-
-        cls.__container_children_items__ = children
-
     def __init__(
         self,
         *items: Item,
@@ -95,34 +84,11 @@ class Container(Item[V]):
             spoiler=spoiler,
         )
         self.color = colour or color
-
-        for func in self.__container_children_items__:
-            item: Item = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
-            item.callback = partial(func, self, item)
-            self.add_item(item)
-            setattr(self, func.__name__, item)
         for i in items:
             self.add_item(i)
 
     def _add_component_from_item(self, item: Item):
-        if item._underlying.is_v2():
-            self._underlying.components.append(item._underlying)
-        else:
-            found = False
-            for row in reversed(self._underlying.components):
-                if (
-                    isinstance(row, ActionRow) and row.width + item.width <= 5
-                ):  # If a valid ActionRow exists
-                    row.children.append(item._underlying)
-                    found = True
-                elif not isinstance(row, ActionRow):
-                    # create new row if last component is v2
-                    break
-            if not found:
-                row = ActionRow.with_components(item._underlying)
-                self._underlying.components.append(row)
+        self._underlying.components.append(item._underlying)
 
     def _set_components(self, items: list[Item]):
         self._underlying.components.clear()
@@ -146,6 +112,9 @@ class Container(Item[V]):
         if not isinstance(item, Item):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
+        if isinstance(item, (Button, Select)):
+            raise TypeError(f"{item.__class__!r} cannot be added directly. Use ActionRow instead.")
+
         item._view = self.view
         if hasattr(item, "items"):
             item.view = self
@@ -167,7 +136,10 @@ class Container(Item[V]):
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            self.items.remove(item)
+            if isinstance(item, Container):
+                self.items.remove(item)
+            else:
+                item.parent.remove_item(item)
         except ValueError:
             pass
         return self
@@ -197,6 +169,27 @@ class Container(Item[V]):
                     if child := i.get_item(id):
                         return child
         return child
+
+    def add_row(
+        self,
+        *items: Item,
+        id: int | None = None,
+    ) -> Self:
+        """Adds an :class:`ActionRow` to the container.
+
+        To append a pre-existing :class:`ActionRow`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        *items: Union[:class:`Button`, :class:`Select`]
+            The items this action row contains.
+        id: Optiona[:class:`int`]
+            The action row's ID.
+        """
+
+        a = ActionRow(*items, id=id)
+
+        return self.add_item(a)
 
     def add_section(
         self,
@@ -340,16 +333,12 @@ class Container(Item[V]):
         for item in self.items:
             item.parent = self
             item._view = value
-            if hasattr(item, "items"):
+            if hasattr(item, "items") or hasattr(item, "children"):
                 item.view = value
 
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
-
-    @property
-    def width(self) -> int:
-        return 5
 
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.items)
@@ -360,13 +349,7 @@ class Container(Item[V]):
     def refresh_component(self, component: ContainerComponent) -> None:
         self._underlying = component
         i = 0
-        flattened = []
-        for c in component.components:
-            if isinstance(c, ActionRow):
-                flattened += c.children
-            else:
-                flattened.append(c)
-        for y in flattened:
+        for y in component.components:
             x = self.items[i]
             x.refresh_component(y)
             i += 1
