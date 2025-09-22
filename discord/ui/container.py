@@ -10,11 +10,11 @@ from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find, get
 from .action_row import ActionRow
 from .button import Button
-from .select import Select
 from .file import File
 from .item import Item, ItemCallbackType
 from .media_gallery import MediaGallery
 from .section import Section
+from .select import Select
 from .separator import Separator
 from .text_display import TextDisplay
 from .view import _walk_all_components
