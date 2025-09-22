@@ -97,7 +97,7 @@ class Select(Generic[V, ST], Item[V]):
 
     .. versionchanged:: 2.7
 
-        Can now be sent in :class:`discord.ui.Modal`.
+        Can now be sent in :class:`discord.ui.DesignerModal`.
 
     Parameters
     ----------
@@ -137,16 +137,6 @@ class Select(Generic[V, ST], Item[V]):
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     id: Optional[:class:`int`]
         The select menu's ID.
-    label: Optional[:class:`str`]
-        The label for the select menu. Only useable in modals.
-        Must be 45 characters or fewer.
-
-        .. versionadded:: 2.7
-    description: Optional[:class:`str`]
-        The description for the select menu. Only useable in modals.
-        Must be 100 characters or fewer.
-
-        .. versionadded:: 2.7
     required: Optional[:class:`bool`]
         Whether the select is required or not. Only useable in modals. Defaults to ``True`` in modals.
 
@@ -194,8 +184,6 @@ class Select(Generic[V, ST], Item[V]):
         "disabled",
         "custom_id",
         "id",
-        "label",
-        "description",
         "required",
         "default_values",
     )
@@ -213,8 +201,6 @@ class Select(Generic[V, ST], Item[V]):
         disabled: bool = ...,
         row: int | None = ...,
         id: int | None = ...,
-        label: str | None = ...,
-        description: str | None = ...,
         required: bool | None = ...,
     ) -> None: ...
 
@@ -231,8 +217,6 @@ class Select(Generic[V, ST], Item[V]):
         disabled: bool = ...,
         row: int | None = ...,
         id: int | None = ...,
-        label: str | None = ...,
-        description: str | None = ...,
         required: bool | None = ...,
         default_values: Sequence[SelectDefaultValue | ST] | None = ...,
     ) -> None: ...
@@ -253,8 +237,6 @@ class Select(Generic[V, ST], Item[V]):
         disabled: bool = ...,
         row: int | None = ...,
         id: int | None = ...,
-        label: str | None = ...,
-        description: str | None = ...,
         required: bool | None = ...,
         default_values: Sequence[SelectDefaultValue | ST] | None = ...,
     ) -> None: ...
@@ -272,17 +254,11 @@ class Select(Generic[V, ST], Item[V]):
         disabled: bool = False,
         row: int | None = None,
         id: int | None = None,
-        label: str | None = None,
-        description: str | None = None,
         required: bool | None = None,
         default_values: Sequence[SelectDefaultValue | ST] | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
-        if label and len(label) > 45:
-            raise ValueError("label must be 45 characters or fewer")
-        if description and len(description) > 100:
-            raise ValueError("description must be 100 characters or fewer")
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
@@ -302,9 +278,6 @@ class Select(Generic[V, ST], Item[V]):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
-
-        self.label: str | None = label
-        self.description: str | None = description
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
@@ -781,9 +754,6 @@ class Select(Generic[V, ST], Item[V]):
 
     def is_storable(self) -> bool:
         return True
-
-    def uses_label(self) -> bool:
-        return bool(self.label or self.description or (self.required is not None))
 
 
 if TYPE_CHECKING:
