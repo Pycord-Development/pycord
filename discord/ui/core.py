@@ -32,7 +32,7 @@ from typing import TYPE_CHECKING, Any, Callable
 from ..utils import find, get
 from .item import Item, ItemCallbackType
 
-__all__ = ("ItemInterface", )
+__all__ = ("ItemInterface",)
 
 
 if TYPE_CHECKING:
