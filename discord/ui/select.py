@@ -724,7 +724,9 @@ class Select(Generic[V, ST], Item[V]):
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
-    def refresh_from_modal(self, interaction: Interaction | dict, data: SelectMenuPayload) -> None:
+    def refresh_from_modal(
+        self, interaction: Interaction | dict, data: SelectMenuPayload
+    ) -> None:
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 

@@ -238,7 +238,9 @@ class InputText:
     def refresh_state(self, data) -> None:
         self._input_value = data["value"]
 
-    def refresh_from_modal(self, interaction: Interaction, data: InputTextComponentPayload) -> None:
+    def refresh_from_modal(
+        self, interaction: Interaction, data: InputTextComponentPayload
+    ) -> None:
         return self.refresh_state(data)
 
 
