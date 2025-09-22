@@ -178,7 +178,7 @@ class ActionRow(Item[V]):
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         sku_id: int | None = None,
         id: int | None = None,
-        priority: int | None = None
+        priority: int | None = None,
     ) -> Self:
         """Adds a :class:`Button` to the action row.
 
@@ -219,7 +219,7 @@ class ActionRow(Item[V]):
             emoji=emoji,
             sku_id=sku_id,
             id=id,
-            priority=priority
+            priority=priority,
         )
 
         return self.add_item(button)

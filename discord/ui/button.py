@@ -363,7 +363,7 @@ def button(
             "emoji": emoji,
             "row": row,
             "id": id,
-            "priority": priority
+            "priority": priority,
         }
         return func
 
