@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import os
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable, Iterator, TypeVar
+from typing import TYPE_CHECKING, Any, Callable
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
@@ -47,7 +46,7 @@ from .action_row import ActionRow
 from .item import Item, ItemCallbackType
 from .view import View
 
-__all__ = ("ComponentUI")
+__all__ = "ComponentUI"
 
 
 if TYPE_CHECKING:
@@ -57,6 +56,7 @@ if TYPE_CHECKING:
     from ..message import Message
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
+
 
 class ComponentUI:
     """The base structure for classes that contain :class:`~discord.ui.Item`.

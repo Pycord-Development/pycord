@@ -47,8 +47,8 @@ from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..utils import find
-from .item import Item, ItemCallbackType
 from .core import ComponentUI
+from .item import Item, ItemCallbackType
 
 __all__ = ("BaseView", "View", "DesignerView", "_component_to_item", "_walk_all_components")
 
@@ -674,7 +674,7 @@ class View(BaseView):
             for i in item.children:
                 self.add_item(i)
             return self
-        
+
         super().add_item(item)
         self.__weights.add_item(item)
         return self
