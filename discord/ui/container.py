@@ -9,6 +9,8 @@ from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find, get
 from .action_row import ActionRow
+from .button import Button
+from .select import Select
 from .file import File
 from .item import Item, ItemCallbackType
 from .media_gallery import MediaGallery
