@@ -65,6 +65,12 @@ class Container(Item[V]):
         "id",
     )
 
+    def __init_subclass__(cls) -> None:
+        for base in reversed(cls.__mro__):
+            for member in base.__dict__.values():
+                if hasattr(member, "__discord_ui_model_type__"):
+                    raise ValueError("The @button and @select decorators are incompatible with Container. Use ActionRow instead.")
+
     def __init__(
         self,
         *items: Item,

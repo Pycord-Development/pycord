@@ -78,10 +78,14 @@ class Button(Item[V]):
 
         .. warning::
 
-            This parameter does not work with V2 components or with more than 25 items in your view.
+            This parameter does not work in :class:`ActionRow`.
 
     id: Optional[:class:`int`]
         The button's ID.
+    priority: Optional[:class:`int`]
+        Only works in :class:`ActionRow`. Any integer greater than 0. If specified, decides the position
+        of the button in this row instead of going by order of addition. The lower this number, the earlier its position.
+        The ActionRow's children will be reordered when the View containing this button is sent.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -94,6 +98,7 @@ class Button(Item[V]):
         "row",
         "custom_id",
         "id",
+        "priority",
     )
 
     def __init__(
@@ -108,6 +113,7 @@ class Button(Item[V]):
         sku_id: int | None = None,
         row: int | None = None,
         id: int | None = None,
+        priority: int | None = None,
     ):
         super().__init__()
         if label and len(str(label)) > 80:
@@ -120,11 +126,14 @@ class Button(Item[V]):
             raise TypeError("cannot mix both url and sku_id with Button")
         if custom_id is not None and sku_id is not None:
             raise TypeError("cannot mix both sku_id and custom_id with Button")
+        if priority and (priority < 0 or not isinstance(priority, int)):
+            raise ValueError("priority must be an integer greater than 0")
 
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+        self.priority: int | None = priority
 
         self._provided_custom_id = custom_id is not None
         if url is None and custom_id is None and sku_id is None:
@@ -294,6 +303,7 @@ def button(
     emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
     row: int | None = None,
     id: int | None = None,
+    priority: int | None = None,
 ) -> Callable[[ItemCallbackType[Button[V]]], Button[V]]:
     """A decorator that attaches a button to a component.
 
@@ -328,6 +338,15 @@ def button(
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+
+        .. warning::
+
+            This parameter does not work in :class:`ActionRow`.
+
+    priority: Optional[:class:`int`]
+        Only works in :class:`ActionRow`. Any integer greater than 0. If specified, decides the position
+        of the button in this row instead of going by order of addition. The lower this number, the earlier its position.
+        The ActionRow's children will be reordered when the View containing it is sent. A priority of ``None`` will be ordered after any specified priority.
     """
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
@@ -344,6 +363,7 @@ def button(
             "emoji": emoji,
             "row": row,
             "id": id,
+            "priority": priority
         }
         return func
 

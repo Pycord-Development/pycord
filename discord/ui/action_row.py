@@ -91,6 +91,14 @@ class ActionRow(Item[V]):
 
     def _set_components(self, items: list[Item]):
         self._underlying.components.clear()
+        if not any(isinstance(b, Select) for b in self.children):
+            a, b = [], []
+            for i in items:
+                if i.priority is None:
+                    b.append(i)
+                else:
+                    a.append(i)
+            items = sorted(a, key=lambda b: b.priority) + b
         for item in items:
             self._add_component_from_item(item)
 
@@ -108,8 +116,12 @@ class ActionRow(Item[V]):
             An :class:`Item` was not passed.
         """
 
-        if not isinstance(item, Item):
-            raise TypeError(f"expected Item not {item.__class__!r}")
+        if not isinstance(item, (Select, Button)):
+            raise TypeError(f"expected Select or Button, not {item.__class__!r}")
+        if item.row:
+            raise ValueError(f"{item.__class__!r}.row is not supported in ActionRow")
+        if self.width + item.width > 5:
+            raise ValueError(f"Not enough space left on this ActionRow")
 
         item._view = self.view
         item.parent = self
@@ -166,6 +178,7 @@ class ActionRow(Item[V]):
         emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
         sku_id: int | None = None,
         id: int | None = None,
+        priority: int | None = None
     ) -> Self:
         """Adds a :class:`Button` to the action row.
 
@@ -191,6 +204,10 @@ class ActionRow(Item[V]):
             The ID of the SKU this button refers to.
         id: Optional[:class:`int`]
             The button's ID.
+        priority: Optional[:class:`int`]
+            An integer greater than 0. If specified, decides the position
+            of the button in this row instead of going by order of addition. The lower this number, the earlier its position.
+            This ActionRow's children will be reordered when the View containing it is sent. A priority of ``None`` will be ordered after any specified priority.
         """
 
         button = Button(
@@ -202,6 +219,7 @@ class ActionRow(Item[V]):
             emoji=emoji,
             sku_id=sku_id,
             id=id,
+            priority=priority
         )
 
         return self.add_item(button)
@@ -319,6 +337,14 @@ class ActionRow(Item[V]):
             ):
                 item.disabled = False
         return self
+
+    @property
+    def width(self):
+        """Return the sum of the items' widths."""
+        t = 0
+        for item in self.children:
+            t += 1 if item._underlying.type is ComponentType.button else 5
+        return t
 
     def walk_items(self) -> Iterator[Item]:
         yield from self.children
