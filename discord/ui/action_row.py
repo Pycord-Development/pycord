@@ -73,7 +73,7 @@ class ActionRow(Item[V]):
         self._underlying = ActionRowComponent._raw_construct(
             type=ComponentType.action_row,
             id=id,
-            components=[],
+            children=[],
         )
 
         for func in self.__row_children_items__:
