@@ -68,7 +68,7 @@ class ActionRow(Item[V]):
     ):
         super().__init__()
 
-        self.items: list[Item] = []
+        self.children: list[Item] = []
 
         self._underlying = ActionRowComponent._raw_construct(
             type=ComponentType.action_row,
@@ -114,7 +114,7 @@ class ActionRow(Item[V]):
         item._view = self.view
         item.parent = self
 
-        self.items.append(item)
+        self.children.append(item)
         self._add_component_from_item(item)
         return self
 
@@ -130,13 +130,13 @@ class ActionRow(Item[V]):
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            self.items.remove(item)
+            self.children.remove(item)
         except ValueError:
             pass
         return self
 
     def get_item(self, id: str | int) -> Item | None:
-        """Get an item from this action row. Roughly equivalent to `utils.get(row.items, ...)`.
+        """Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
 
         Parameters
@@ -152,7 +152,7 @@ class ActionRow(Item[V]):
         if not id:
             return None
         attr = "id" if isinstance(id, int) else "custom_id"
-        child = find(lambda i: getattr(i, attr, None) == id, self.items)
+        child = find(lambda i: getattr(i, attr, None) == id, self.children)
         return child
 
     def add_button(
@@ -268,7 +268,7 @@ class ActionRow(Item[V]):
     @Item.view.setter
     def view(self, value):
         self._view = value
-        for item in self.items:
+        for item in self.children:
             item.parent = self
             item._view = value
 
@@ -276,21 +276,17 @@ class ActionRow(Item[V]):
     def type(self) -> ComponentType:
         return self._underlying.type
 
-    @property
-    def width(self) -> int:
-        return 5
-
     def is_dispatchable(self) -> bool:
-        return any(item.is_dispatchable() for item in self.items)
+        return any(item.is_dispatchable() for item in self.children)
 
     def is_persistent(self) -> bool:
-        return all(item.is_persistent() for item in self.items)
+        return all(item.is_persistent() for item in self.children)
 
     def refresh_component(self, component: ActionRowComponent) -> None:
         self._underlying = component
         i = 0
         for y in component.components:
-            x = self.items[i]
+            x = self.children[i]
             x.refresh_component(y)
             i += 1
 
@@ -301,7 +297,7 @@ class ActionRow(Item[V]):
         Parameters
         ----------
         exclusions: Optional[List[:class:`Item`]]
-            A list of items in `self.items` to not disable.
+            A list of items in `self.children` to not disable.
         """
         for item in self.walk_items():
             if exclusions is None or item not in exclusions:
@@ -315,7 +311,7 @@ class ActionRow(Item[V]):
         Parameters
         ----------
         exclusions: Optional[List[:class:`Item`]]
-            A list of items in `self.items` to not enable.
+            A list of items in `self.children` to not enable.
         """
         for item in self.walk_items():
             if hasattr(item, "disabled") and (
@@ -325,10 +321,10 @@ class ActionRow(Item[V]):
         return self
 
     def walk_items(self) -> Iterator[Item]:
-        yield from self.items
+        yield from self.children
 
     def to_component_dict(self) -> ActionRowPayload:
-        self._set_components(self.items)
+        self._set_components(self.children)
         return self._underlying.to_dict()
 
     @classmethod

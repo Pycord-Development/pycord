@@ -516,6 +516,10 @@ class View(BaseView):
 
     .. versionadded:: 2.0
 
+    .. versionchanged:: 2.7
+
+        Now inherits from :class:`BaseView`
+
     Parameters
     ----------
     *items: :class:`Item`

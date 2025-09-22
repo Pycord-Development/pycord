@@ -86,7 +86,7 @@ class ComponentUI:
         *items: Item,
         timeout: float | None = 180.0,
     ):
-        self.timeout = timeout
+        self.timeout: float | None = timeout
         self.children: list[Item] = []
         for item in items:
             self.add_item(item)

@@ -266,7 +266,7 @@ class InputText(Component):
         self.id: int | None = data.get("id")
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
-        self.label: str = data.get("label", None)
+        self.label: str | None = data.get("label", None)
         self.placeholder: str | None = data.get("placeholder", None)
         self.min_length: int | None = data.get("min_length", None)
         self.max_length: int | None = data.get("max_length", None)
@@ -278,7 +278,6 @@ class InputText(Component):
             "type": 4,
             "id": self.id,
             "style": self.style.value,
-            "label": self.label,
         }
         if self.custom_id:
             payload["custom_id"] = self.custom_id
@@ -297,6 +296,9 @@ class InputText(Component):
 
         if self.value:
             payload["value"] = self.value
+
+        if self.label:
+            payload["label"] = self.label
 
         return payload  # type: ignore
 
@@ -1305,7 +1307,7 @@ class Label(Component):
     ``component`` may only be:
 
     - :class:`InputText`
-    - :class:`SelectMenu` (string)
+    - :class:`SelectMenu`
 
     This inherits from :class:`Component`.
 

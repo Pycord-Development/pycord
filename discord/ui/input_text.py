@@ -27,11 +27,6 @@ class InputText:
     label: :class:`str`
         The label for the input text field.
         Must be 45 characters or fewer.
-    description: Optional[:class:`str`]
-        The description for the input text field.
-        Must be 100 characters or fewer.
-
-        .. versionadded:: 2.7
     placeholder: Optional[:class:`str`]
         The placeholder text that is shown if nothing is selected, if any.
         Must be 100 characters or fewer.
@@ -64,7 +59,6 @@ class InputText:
         "max_length",
         "custom_id",
         "id",
-        "description",
     )
 
     def __init__(
@@ -72,7 +66,7 @@ class InputText:
         *,
         style: InputTextStyle = InputTextStyle.short,
         custom_id: str | None = None,
-        label: str,
+        label: str | None = None,
         placeholder: str | None = None,
         min_length: int | None = None,
         max_length: int | None = None,
@@ -80,13 +74,10 @@ class InputText:
         value: str | None = None,
         row: int | None = None,
         id: int | None = None,
-        description: str | None = None,
     ):
         super().__init__()
-        if len(str(label)) > 45:
+        if label and len(str(label)) > 45:
             raise ValueError("label must be 45 characters or fewer")
-        if description and len(description) > 100:
-            raise ValueError("description must be 100 characters or fewer")
         if min_length and (min_length < 0 or min_length > 4000):
             raise ValueError("min_length must be between 0 and 4000")
         if max_length and (max_length < 0 or max_length > 4000):
@@ -100,7 +91,6 @@ class InputText:
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        self.description: str | None = description
 
         self._underlying = InputTextComponent._raw_construct(
             type=ComponentType.input_text,
@@ -250,9 +240,6 @@ class InputText:
 
     def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
         return self.refresh_state(data)
-
-    def uses_label(self) -> bool:
-        return self.description is not None
 
 
 TextInput = InputText
