@@ -10,8 +10,8 @@ UI Kit helper for the Discord API
 
 from .action_row import *
 from .button import *
-from .core import *
 from .container import *
+from .core import *
 from .file import *
 from .input_text import *
 from .item import *
