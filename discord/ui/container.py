@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, Iterator, TypeVar
 
 from ..colour import Colour
 from ..components import ActionRow
@@ -113,7 +112,9 @@ class Container(Item[V]):
             raise TypeError(f"expected Item not {item.__class__!r}")
 
         if isinstance(item, (Button, Select)):
-            raise TypeError(f"{item.__class__!r} cannot be added directly. Use ActionRow instead.")
+            raise TypeError(
+                f"{item.__class__!r} cannot be added directly. Use ActionRow instead."
+            )
 
         item._view = self.view
         if hasattr(item, "items"):
