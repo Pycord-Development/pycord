@@ -58,7 +58,7 @@ class Label(Item[V]):
 
     def __init__(
         self,
-        item: Item,
+        item: Item = None,
         *,
         label: str,
         description: str | None = None,
@@ -76,7 +76,8 @@ class Label(Item[V]):
             description=description,
         )
 
-        self.set_item(item)
+        if item:
+            self.set_item(item)
 
     def _set_component_from_item(self, item: Item):
         self._underlying.component = item._underlying
@@ -193,7 +194,7 @@ class Label(Item[V]):
         max_values: int = 1,
         options: list[SelectOption] | None = None,
         channel_types: list[ChannelType] | None = None,
-        disabled: bool = False,
+        required: bool = True,
         id: int | None = None,
     ) -> Self:
         """Set this label's item to a select menu.
@@ -222,8 +223,8 @@ class Label(Item[V]):
         channel_types: List[:class:`discord.ChannelType`]
             A list of channel types that can be selected in this menu.
             Only valid for selects of type :attr:`discord.ComponentType.channel_select`.
-        disabled: :class:`bool`
-            Whether the select is disabled or not. Defaults to ``False``.
+        required: :class:`bool`
+            Whether the select is required or not. Defaults to ``True``.
         id: Optional[:class:`int`]
             The select menu's ID.
         """
@@ -236,7 +237,7 @@ class Label(Item[V]):
             max_values=max_values,
             options=options or [],
             channel_types=channel_types or [],
-            disabled=disabled,
+            required=required,
             id=id,
         )
 
