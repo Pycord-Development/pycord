@@ -31,7 +31,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Sequence, TypeVar, Self
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Self, Sequence, TypeVar
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
