@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, Iterator, TypeVar
 
 from ..components import Label as LabelComponent
 from ..components import SelectOption, _component_factory
 from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
+from .input_text import InputText
 from .item import Item, ItemCallbackType
 from .select import Select
-from .input_text import InputText
 
 __all__ = ("Label",)
 
@@ -280,7 +279,7 @@ class Label(Item[V]):
             item,
             id=component.id,
             label=component.label,
-            description=component.description
+            description=component.description,
         )
 
     callback = None

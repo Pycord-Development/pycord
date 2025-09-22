@@ -6,7 +6,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union
+from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from ..enums import ComponentType
 from ..utils import find
@@ -171,13 +171,13 @@ class BaseModal(ComponentUI):
         Parameters
         ----------
         item: Union[class:`InputText`, :class:`Item`]
-            The item to add to the modal 
+            The item to add to the modal
         """
 
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal.")
 
-        if not isinstance(item, (Item, )):
+        if not isinstance(item, (Item,)):
             raise TypeError(f"expected Item, not {item.__class__!r}")
 
         self._children.append(item)
@@ -238,6 +238,7 @@ class BaseModal(ComponentUI):
 
         A callback that is called when a modal's timeout elapses without being explicitly stopped.
         """
+
 
 class Modal(BaseModal):
     """Represents a UI modal for InputText components.
@@ -338,6 +339,7 @@ class Modal(BaseModal):
             pass
         return self
 
+
 class DesignerModal(BaseModal):
     """Represents a UI modal compatible with all modal features.
 
@@ -388,8 +390,10 @@ class DesignerModal(BaseModal):
             The item to add to the modal
         """
 
-        if isinstance(item, (InputText, )):
-            raise TypeError(f"DesignerModal does not accept InputText directly. Use Label instead.")
+        if isinstance(item, (InputText,)):
+            raise TypeError(
+                f"DesignerModal does not accept InputText directly. Use Label instead."
+            )
 
         super().add_item(item)
         return self

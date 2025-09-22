@@ -196,11 +196,10 @@ class Item(Generic[V]):
             The parent view of this item, or ``None`` if the item is not attached to any view.
         """
         return self._view
-    
+
     @view.setter
     def view(self, value) -> None:
         self._view = value
-    
 
     async def callback(self, interaction: Interaction):
         """|coro|
