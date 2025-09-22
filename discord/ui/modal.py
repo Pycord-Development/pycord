@@ -489,7 +489,7 @@ class ModalStore:
     async def dispatch(self, user_id: int, custom_id: str, interaction: Interaction):
         key = (user_id, custom_id)
         modal = self._modals.get(key)
-        if value is None:
+        if modal is None:
             return
         interaction.modal = modal
 
