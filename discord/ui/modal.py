@@ -92,14 +92,14 @@ class BaseModal(ItemInterface):
         return f"<{self.__class__.__name__} {attrs}>"
 
     def _start_listening_from_store(self, store: ModalStore) -> None:
-        self.__cancel_callback = partial(store.remove_modal)
+        self._cancel_callback = partial(store.remove_modal)
         if self.timeout:
             loop = asyncio.get_running_loop()
-            if self.__timeout_task is not None:
-                self.__timeout_task.cancel()
+            if self._timeout_task is not None:
+                self._timeout_task.cancel()
 
-            self.__timeout_expiry = time.monotonic() + self.timeout
-            self.__timeout_task = loop.create_task(self.__timeout_task_impl())
+            self._timeout_expiry = time.monotonic() + self.timeout
+            self._timeout_task = loop.create_task(self._timeout_task_impl())
 
     def _dispatch_timeout(self):
         if self._stopped.done():
@@ -208,10 +208,10 @@ class BaseModal(ItemInterface):
         """Stops listening to interaction events from the modal."""
         if not self._stopped.done():
             self._stopped.set_result(True)
-        self.__timeout_expiry = None
-        if self.__timeout_task is not None:
-            self.__timeout_task.cancel()
-            self.__timeout_task = None
+        self._timeout_expiry = None
+        if self._timeout_task is not None:
+            self._timeout_task.cancel()
+            self._timeout_task = None
 
     async def wait(self) -> bool:
         """Waits for the modal to be submitted."""

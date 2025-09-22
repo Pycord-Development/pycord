@@ -72,30 +72,30 @@ class ItemInterface:
             self.add_item(item)
 
         loop = asyncio.get_running_loop()
-        self.__cancel_callback: Callable[[View], None] | None = None
-        self.__timeout_expiry: float | None = None
-        self.__timeout_task: asyncio.Task[None] | None = None
-        self.__stopped: asyncio.Future[bool] = loop.create_future()
+        self._cancel_callback: Callable[[View], None] | None = None
+        self._timeout_expiry: float | None = None
+        self._timeout_task: asyncio.Task[None] | None = None
+        self._stopped: asyncio.Future[bool] = loop.create_future()
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"
 
-    async def __timeout_task_impl(self) -> None:
+    async def _timeout_task_impl(self) -> None:
         while True:
             # Guard just in case someone changes the value of the timeout at runtime
             if self.timeout is None:
                 return
 
-            if self.__timeout_expiry is None:
+            if self._timeout_expiry is None:
                 return self._dispatch_timeout()
 
             # Check if we've elapsed our currently set timeout
             now = time.monotonic()
-            if now >= self.__timeout_expiry:
+            if now >= self._timeout_expiry:
                 return self._dispatch_timeout()
 
             # Wait N seconds to see if timeout data has been refreshed
-            await asyncio.sleep(self.__timeout_expiry - now)
+            await asyncio.sleep(self._timeout_expiry - now)
 
     @property
     def _expires_at(self) -> float | None:

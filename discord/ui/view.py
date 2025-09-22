@@ -360,7 +360,7 @@ class BaseView(ItemInterface):
     async def _scheduled_task(self, item: Item[V], interaction: Interaction):
         try:
             if self.timeout:
-                self.__timeout_expiry = time.monotonic() + self.timeout
+                self._timeout_expiry = time.monotonic() + self.timeout
 
             allow = await self.interaction_check(interaction)
             if not allow:
@@ -371,26 +371,26 @@ class BaseView(ItemInterface):
             return await self.on_error(e, item, interaction)
 
     def _start_listening_from_store(self, store: ViewStore) -> None:
-        self.__cancel_callback = partial(store.remove_view)
+        self._cancel_callback = partial(store.remove_view)
         if self.timeout:
             loop = asyncio.get_running_loop()
-            if self.__timeout_task is not None:
-                self.__timeout_task.cancel()
+            if self._timeout_task is not None:
+                self._timeout_task.cancel()
 
-            self.__timeout_expiry = time.monotonic() + self.timeout
-            self.__timeout_task = loop.create_task(self.__timeout_task_impl())
+            self._timeout_expiry = time.monotonic() + self.timeout
+            self._timeout_task = loop.create_task(self._timeout_task_impl())
 
     def _dispatch_timeout(self):
-        if self.__stopped.done():
+        if self._stopped.done():
             return
 
-        self.__stopped.set_result(True)
+        self._stopped.set_result(True)
         asyncio.create_task(
             self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}"
         )
 
     def _dispatch_item(self, item: Item[V], interaction: Interaction):
-        if self.__stopped.done():
+        if self._stopped.done():
             return
 
         if interaction.message:
@@ -403,14 +403,14 @@ class BaseView(ItemInterface):
 
     def is_finished(self) -> bool:
         """Whether the view has finished interacting."""
-        return self.__stopped.done()
+        return self._stopped.done()
 
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.children)
 
     def is_dispatching(self) -> bool:
         """Whether the view has been added for dispatching purposes."""
-        return self.__cancel_callback is not None
+        return self._cancel_callback is not None
 
     def is_persistent(self) -> bool:
         """Whether the view is set up as persistent.
@@ -427,17 +427,17 @@ class BaseView(ItemInterface):
 
         This operation cannot be undone.
         """
-        if not self.__stopped.done():
-            self.__stopped.set_result(False)
+        if not self._stopped.done():
+            self._stopped.set_result(False)
 
-        self.__timeout_expiry = None
-        if self.__timeout_task is not None:
-            self.__timeout_task.cancel()
-            self.__timeout_task = None
+        self._timeout_expiry = None
+        if self._timeout_task is not None:
+            self._timeout_task.cancel()
+            self._timeout_task = None
 
-        if self.__cancel_callback:
-            self.__cancel_callback(self)
-            self.__cancel_callback = None
+        if self._cancel_callback:
+            self._cancel_callback(self)
+            self._cancel_callback = None
 
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
@@ -451,7 +451,7 @@ class BaseView(ItemInterface):
             If ``True``, then the view timed out. If ``False`` then
             the view finished normally.
         """
-        return await self.__stopped
+        return await self._stopped
 
     def disable_all_items(self, *, exclusions: list[Item[V]] | None = None) -> Self:
         """
