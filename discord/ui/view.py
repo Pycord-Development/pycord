@@ -547,6 +547,7 @@ class View(BaseView):
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
     """
+
     __view_children_items__: ClassVar[list[ItemCallbackType]] = []
     MAX_ITEMS: int = 25
 
