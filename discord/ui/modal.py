@@ -178,7 +178,13 @@ class BaseModal(ItemInterface):
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal.")
 
-        if not isinstance(item, (Item, InputText, )):
+        if not isinstance(
+            item,
+            (
+                Item,
+                InputText,
+            ),
+        ):
             raise TypeError(f"expected Item, not {item.__class__!r}")
 
         self._children.append(item)
