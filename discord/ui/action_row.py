@@ -91,16 +91,21 @@ class ActionRow(Item[V]):
 
     def _set_components(self, items: list[Item]):
         self._underlying.components.clear()
-        if not any(isinstance(b, Select) for b in self.children):
+        for item in items:
+            self._add_component_from_item(item)
+
+    def _reorder(self):
+        items = self.children
+        if not any([isinstance(b, Select) for b in self.children]):
             a, b = [], []
             for i in items:
                 if i.priority is None:
                     b.append(i)
                 else:
                     a.append(i)
-            items = sorted(a, key=lambda b: b.priority) + b
-        for item in items:
-            self._add_component_from_item(item)
+            items = sorted(a, key=lambda c: c.priority) + b
+        self.children = items
+        self._set_components(items)
 
     def add_item(self, item: Item) -> Self:
         """Adds an item to the action row.
@@ -350,7 +355,7 @@ class ActionRow(Item[V]):
         yield from self.children
 
     def to_component_dict(self) -> ActionRowPayload:
-        self._set_components(self.children)
+        self._reorder()
         return self._underlying.to_dict()
 
     @classmethod
