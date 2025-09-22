@@ -737,6 +737,12 @@ class View(BaseView):
         self.children = children
 
     def is_components_v2(self) -> bool:
+        """Whether the view contains V2 components.
+
+        A view containing V2 components cannot be sent alongside message content or embeds.
+
+        This is always ``False`` for :class:`View`.
+        """
         return False
 
 
@@ -883,13 +889,7 @@ class DesignerView(BaseView):
                 i += 1
 
     def is_components_v2(self) -> bool:
-        """Whether the view contains V2 components or requires the V2 flag.
-
-        A view containing V2 components cannot be sent alongside message content or embeds.
-        """
-        return len(self.children) > 5 or any(
-            i.is_components_v2() for i in self.children
-        )
+        return len(self.children) > 5 or super().is_components_v2()
 
 
 class ViewStore:

@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 
     from ..interactions import Interaction
     from ..state import ConnectionState
+    from ..types.components import Component as ComponentPayload
 
 M = TypeVar("M", bound="Modal", covariant=True)
 
@@ -343,6 +344,18 @@ class Modal(BaseModal):
             pass
         return self
 
+    def refresh(self, interaction: Interaction, data: list[ComponentPayload]):
+        components = [
+            component
+            for parent_component in data
+            for component in parent_component["components"]
+        ]
+        for component in components:
+            for child in self.children:
+                if child.custom_id == component["custom_id"]:  # type: ignore
+                    child.refresh_from_modal(interaction, component)
+                    break
+
 
 class DesignerModal(BaseModal):
     """Represents a UI modal compatible with all modal features.
@@ -406,6 +419,10 @@ class DesignerModal(BaseModal):
         super().add_item(item)
         return self
 
+    def refresh(self, interaction: Interaction, data: list[ComponentPayload]):
+        for component, child in zip(data, self.children):
+            child.refresh_from_modal(interaction, component)
+
 
 class _ModalWeights:
     __slots__ = ("weights",)
@@ -465,27 +482,15 @@ class ModalStore:
 
     async def dispatch(self, user_id: int, custom_id: str, interaction: Interaction):
         key = (user_id, custom_id)
-        value = self._modals.get(key)
+        modal = self._modals.get(key)
         if value is None:
             return
-        interaction.modal = value
+        interaction.modal = modal
 
         try:
-            components = [
-                component
-                for parent_component in interaction.data["components"]
-                for component in (
-                    parent_component.get("components")
-                    or (
-                        [parent_component.get("component")]
-                        if parent_component.get("component")
-                        else [parent_component]
-                    )
-                )
-            ]
-            for component, child in zip(components, value.children):
-                child.refresh_from_modal(interaction, component)
-            await value.callback(interaction)
-            self.remove_modal(value, user_id)
+            components = interaction.data["components"]
+            modal.refresh(interaction, components)
+            await modal.callback(interaction)
+            self.remove_modal(modal, user_id)
         except Exception as e:
-            return await value.on_error(e, interaction)
+            return await modal.on_error(e, interaction)

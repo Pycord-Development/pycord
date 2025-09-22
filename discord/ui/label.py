@@ -270,6 +270,9 @@ class Label(Item[V]):
         self._set_component_from_item(self.item)
         return self._underlying.to_dict()
 
+    def refresh_from_modal(self, interaction: Interaction, data: LabelPayload) -> None:
+        return self.item.refresh_from_modal(interaction, data.get("component", {}))
+
     @classmethod
     def from_component(cls: type[L], component: LabelComponent) -> L:
         from .view import _component_to_item
