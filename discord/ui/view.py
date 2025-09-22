@@ -31,7 +31,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Sequence, TypeVar
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
@@ -50,7 +50,13 @@ from ..utils import find
 from .core import ComponentUI
 from .item import Item, ItemCallbackType
 
-__all__ = ("BaseView", "View", "DesignerView", "_component_to_item", "_walk_all_components")
+__all__ = (
+    "BaseView",
+    "View",
+    "DesignerView",
+    "_component_to_item",
+    "_walk_all_components",
+)
 
 
 if TYPE_CHECKING:
@@ -190,6 +196,7 @@ class _ViewWeights:
         if item.row is not None:
             return item.row <= 4
         return self.weights[-1] + item.width <= 5
+
 
 class BaseView(ComponentUI):
     """The base class for UI views used in messages."""
@@ -501,6 +508,7 @@ class BaseView(ComponentUI):
     def message(self, value):
         self._message = value
 
+
 class View(BaseView):
     """Represents a UI view for v1 components :class:`~discord.ui.Button` and :class:`~discord.ui.Select`.
 
@@ -726,6 +734,7 @@ class View(BaseView):
 
     def is_components_v2(self) -> bool:
         return False
+
 
 class DesignerView(BaseView):
     """Represents a UI view compatible with v2 components.

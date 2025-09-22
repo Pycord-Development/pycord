@@ -10,11 +10,11 @@ from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union
 
 from ..enums import ComponentType
 from ..utils import find
+from .core import ComponentUI
 from .input_text import InputText
 from .item import Item
 from .select import Select
 from .text_display import TextDisplay
-from .core import ComponentUI
 
 __all__ = (
     "BaseModal",
@@ -33,6 +33,7 @@ if TYPE_CHECKING:
 M = TypeVar("M", bound="Modal", covariant=True)
 
 ModalItem = Union[InputText, Item[M]]
+
 
 class BaseModal(ComponentUI):
     """Represents a UI Modal dialog.
@@ -330,6 +331,7 @@ class BaseModal(ComponentUI):
 
         A callback that is called when a modal's timeout elapses without being explicitly stopped.
         """
+
 
 class Modal(Modal):
     """Represents a UI Modal dialog.
