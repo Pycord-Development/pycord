@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any, TypeVar, Union
 
 from ..enums import ComponentType
 from ..utils import find
-from .core import ComponentUI
+from .core import ItemInterface
 from .input_text import InputText
 from .item import Item
 from .label import Label
@@ -36,7 +36,7 @@ M = TypeVar("M", bound="Modal", covariant=True)
 ModalItem = Union[Item[M]]
 
 
-class BaseModal(ComponentUI):
+class BaseModal(ItemInterface):
     """Represents a UI modal.
 
     This object must be inherited to create a UI within Discord.
@@ -130,9 +130,9 @@ class BaseModal(ComponentUI):
     @children.setter
     def children(self, value: list[ModalItem]):
         for item in value:
-            if not isinstance(item, (InputText, Item)):
+            if not isinstance(item, Item):
                 raise TypeError(
-                    "all Modal children must be InputText or Item, not"
+                    "all BaseModal children must be Item, not"
                     f" {item.__class__.__name__}"
                 )
         self._children = value
@@ -268,7 +268,7 @@ class Modal(BaseModal):
 
     def __init__(
         self,
-        *children: ModalItem,
+        *children: InputText,
         title: str,
         custom_id: str | None = None,
         timeout: float | None = None,
@@ -276,8 +276,12 @@ class Modal(BaseModal):
         super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout)
         self._weights = _ModalWeights(self._children)
 
+    @property
+    def children(self) -> list[InputText]:
+        return self._children
+
     @children.setter
-    def children(self, value: list[ModalItem]):
+    def children(self, value: list[InputText]):
         for item in value:
             if not isinstance(item, InputText):
                 raise TypeError(
@@ -323,12 +327,12 @@ class Modal(BaseModal):
         super().add_item(item)
         return self
 
-    def remove_item(self, item: ModalItem) -> Self:
-        """Removes a component from the modal.
+    def remove_item(self, item: InputText) -> Self:
+        """Removes an InputText from the modal.
 
         Parameters
         ----------
-        item: Union[class:`InputText`, :class:`Item`]
+        item: Union[class:`InputText`]
             The item to remove from the modal.
         """
 
@@ -370,6 +374,10 @@ class DesignerModal(BaseModal):
         timeout: float | None = None,
     ) -> None:
         super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout)
+
+    @property
+    def children(self) -> list[ModalItem]:
+        return self._children
 
     @children.setter
     def children(self, value: list[ModalItem]):

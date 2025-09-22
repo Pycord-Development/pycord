@@ -31,7 +31,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, ClassVar, Iterator, Sequence, TypeVar, Self
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
@@ -47,7 +47,7 @@ from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..utils import find
-from .core import ComponentUI
+from .core import ItemInterface
 from .item import Item, ItemCallbackType
 
 __all__ = (
@@ -198,7 +198,7 @@ class _ViewWeights:
         return self.weights[-1] + item.width <= 5
 
 
-class BaseView(ComponentUI):
+class BaseView(ItemInterface):
     """The base class for UI views used in messages."""
 
     MAX_ITEMS: int

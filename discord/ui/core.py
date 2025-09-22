@@ -47,7 +47,7 @@ from .action_row import ActionRow
 from .item import Item, ItemCallbackType
 from .view import View
 
-__all__ = "ComponentUI"
+__all__ = "ItemInterface"
 
 
 if TYPE_CHECKING:
@@ -59,7 +59,7 @@ if TYPE_CHECKING:
     from ..types.components import Component as ComponentPayload
 
 
-class ComponentUI:
+class ItemInterface:
     """The base structure for classes that contain :class:`~discord.ui.Item`.
 
     .. versionadded:: 2.7
