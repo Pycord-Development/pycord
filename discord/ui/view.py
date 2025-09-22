@@ -390,6 +390,7 @@ class BaseView(ComponentUI):
         asyncio.create_task(
             self._scheduled_task(item, interaction),
             name=f"discord-ui-view-dispatch-{self.id}",
+        )
 
     def is_finished(self) -> bool:
         """Whether the view has finished interacting."""
