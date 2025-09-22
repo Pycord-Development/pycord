@@ -192,6 +192,10 @@ class ActionRow(Component):
     def walk_components(self) -> Iterator[Component]:
         yield from self.children
 
+    @property
+    def components(self) -> list[Component]:
+        return self.children
+
     def get_component(self, id: str | int) -> Component | None:
         """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the component will be retrieved by ``id``, otherwise by ``custom_id``.
