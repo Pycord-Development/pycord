@@ -429,7 +429,6 @@ class BaseView(ComponentUI):
         if self.__cancel_callback:
             self.__cancel_callback(self)
             self.__cancel_callback = None
-        )
 
     async def wait(self) -> bool:
         """Waits until the view has finished interacting.
