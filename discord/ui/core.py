@@ -29,34 +29,14 @@ import time
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable
 
-from ..components import ActionRow as ActionRowComponent
-from ..components import Button as ButtonComponent
-from ..components import Component
-from ..components import Container as ContainerComponent
-from ..components import FileComponent
-from ..components import Label as LabelComponent
-from ..components import MediaGallery as MediaGalleryComponent
-from ..components import Section as SectionComponent
-from ..components import SelectMenu as SelectComponent
-from ..components import Separator as SeparatorComponent
-from ..components import TextDisplay as TextDisplayComponent
-from ..components import Thumbnail as ThumbnailComponent
-from ..components import _component_factory
 from ..utils import find, get
-from .action_row import ActionRow
 from .item import Item, ItemCallbackType
-from .view import View
 
 __all__ = "ItemInterface"
 
 
 if TYPE_CHECKING:
     from typing_extensions import Self
-
-    from ..interactions import Interaction, InteractionMessage
-    from ..message import Message
-    from ..state import ConnectionState
-    from ..types.components import Component as ComponentPayload
 
 
 class ItemInterface:
