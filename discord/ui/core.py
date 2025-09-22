@@ -37,6 +37,7 @@ __all__ = ("ItemInterface",)
 
 if TYPE_CHECKING:
     from typing_extensions import Self
+    from .view import View
 
 
 class ItemInterface:
