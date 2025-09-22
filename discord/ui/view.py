@@ -203,6 +203,7 @@ class _ViewWeights:
 class BaseView(ItemInterface):
     """The base class for UI views used in messages."""
 
+    __discord_ui_view__: ClassVar[bool] = True
     MAX_ITEMS: int
 
     def __init__(
@@ -546,8 +547,6 @@ class View(BaseView):
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
     """
-
-    __discord_ui_view__: ClassVar[bool] = True
     __view_children_items__: ClassVar[list[ItemCallbackType]] = []
     MAX_ITEMS: int = 25
 

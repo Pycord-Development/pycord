@@ -1328,7 +1328,7 @@ class ForumChannel(_TextChannel):
         if view:
             if not hasattr(view, "__discord_ui_view__"):
                 raise InvalidArgument(
-                    f"view parameter must be View not {view.__class__!r}"
+                    f"view parameter must be BaseView not {view.__class__!r}"
                 )
 
             components = view.to_components()
