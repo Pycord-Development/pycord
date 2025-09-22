@@ -62,10 +62,6 @@ class TextDisplay(Item[V]):
     def content(self, value: str) -> None:
         self._underlying.content = value
 
-    @property
-    def width(self) -> int:
-        return 5
-
     def to_component_dict(self) -> TextDisplayComponentPayload:
         return self._underlying.to_dict()
 

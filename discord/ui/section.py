@@ -251,10 +251,6 @@ class Section(Item[V]):
     def type(self) -> ComponentType:
         return self._underlying.type
 
-    @property
-    def width(self) -> int:
-        return 5
-
     def is_dispatchable(self) -> bool:
         return self.accessory and self.accessory.is_dispatchable()
 

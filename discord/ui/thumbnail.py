@@ -67,10 +67,6 @@ class Thumbnail(Item[V]):
         return self._underlying.type
 
     @property
-    def width(self) -> int:
-        return 5
-
-    @property
     def url(self) -> str:
         """The URL of this thumbnail's media. This can either be an arbitrary URL or an ``attachment://`` URL."""
         return self._underlying.media and self._underlying.media.url

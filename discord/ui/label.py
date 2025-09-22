@@ -42,11 +42,9 @@ class Label(Item[V]):
     item: :class:`Item`
         The initial item in this label.
     label: :class:`str`
-        The label text.
-        Must be 45 characters or fewer.
+        The label text. Must be 45 characters or fewer.
     description: Optional[:class:`str`]
-        The description for this label.
-        Must be 100 characters or fewer.
+        The description for this label. Must be 100 characters or fewer.
     id: Optional[:class:`int`]
         The label's ID.
     """
@@ -253,6 +251,24 @@ class Label(Item[V]):
     @property
     def type(self) -> ComponentType:
         return self._underlying.type
+
+    @property
+    def label(self) -> str:
+        """The label text. Must be 45 characters or fewer."""
+        return self._underlying.label
+
+    @label.setter
+    def label(self, value: str) -> None:
+        self._underlying.label = value
+
+    @property
+    def description(self) -> str | None:
+        """The description for this label. Must be 100 characters or fewer."""
+        return self._underlying.description
+
+    @description.setter
+    def description(self, value: str | None) -> None:
+        self._underlying.description = value
 
     def is_dispatchable(self) -> bool:
         return self.item.is_dispatchable()

@@ -228,10 +228,6 @@ class InputText:
             raise ValueError("value must be 4000 characters or fewer")
         self._underlying.value = value
 
-    @property
-    def width(self) -> int:
-        return 5
-
     def to_component_dict(self) -> InputTextComponentPayload:
         return self._underlying.to_dict()
 

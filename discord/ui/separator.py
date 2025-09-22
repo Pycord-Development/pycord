@@ -77,10 +77,6 @@ class Separator(Item[V]):
     def spacing(self, value: SeparatorSpacingSize) -> None:
         self._underlying.spacing = value
 
-    @property
-    def width(self) -> int:
-        return 5
-
     def to_component_dict(self) -> SeparatorComponentPayload:
         return self._underlying.to_dict()
 
