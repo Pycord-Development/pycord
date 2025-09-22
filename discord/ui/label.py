@@ -88,7 +88,7 @@ class Label(Item[V]):
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: Union[:class:`Item`, :class:`InputText`]
             The item to set.
             Currently only supports :class:`~discord.ui.Select` and :class:`~discord.ui.InputText`.
 
@@ -98,7 +98,7 @@ class Label(Item[V]):
             An :class:`Item` was not passed.
         """
 
-        if not isinstance(item, Item):
+        if not isinstance(item, (Item, InputText)):
             raise TypeError(f"expected Item not {item.__class__!r}")
         if isinstance(item, InputText) and item.label:
             raise ValueError(f"InputText.label cannot be set inside Label")
