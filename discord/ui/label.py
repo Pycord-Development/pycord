@@ -58,9 +58,9 @@ class Label(Item[V]):
 
     def __init__(
         self,
+        label: str,
         item: Item = None,
         *,
-        label: str,
         description: str | None = None,
         id: int | None = None,
     ):

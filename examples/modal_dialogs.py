@@ -14,21 +14,22 @@ bot = commands.Bot(
 class MyModal(discord.ui.DesignerModal):
     def __init__(self, *args, **kwargs) -> None:
         first_input = discord.ui.Label(
+            "Short Input",
             discord.ui.InputText(
                 placeholder="Placeholder Test",
             ),
-            label="Short Input",
         )
         second_input = discord.ui.Label(
+            "Longer Input",
             discord.ui.InputText(
                 placeholder="Placeholder Test",
                 value="Longer Value\nSuper Long Value",
                 style=discord.InputTextStyle.long,
             ),
-            label="Longer Input",
             description="You can also describe the purpose of this input.",
         )
         select = discord.ui.Label(
+            "What's your favorite color?",
             discord.ui.Select(
                 placeholder="Select a color",
                 options=[
@@ -38,7 +39,6 @@ class MyModal(discord.ui.DesignerModal):
                 ],
                 required=False,
             ),
-            label="What's your favorite color?",
             description="If it is not listed, skip this question.",
         )
         super().__init__(
