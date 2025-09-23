@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from functools import partial
 from collections.abc import Sequence
+from functools import partial
 from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
 
 from ..components import ActionRow as ActionRowComponent
-from ..components import SelectOption, SelectDefaultValue, _component_factory
+from ..components import SelectDefaultValue, SelectOption, _component_factory
 from ..enums import ButtonStyle, ChannelType, ComponentType
 from ..utils import find, get
 from .button import Button
@@ -322,7 +322,7 @@ class ActionRow(Item[V]):
             channel_types=channel_types or [],
             disabled=disabled,
             id=id,
-            default_values=default_values
+            default_values=default_values,
         )
 
         return self.add_item(select)

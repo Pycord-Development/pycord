@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator, TypeVar
 from collections.abc import Sequence
+from typing import TYPE_CHECKING, Iterator, TypeVar
 
 from ..components import Label as LabelComponent
-from ..components import SelectOption, SelectDefaultValue, _component_factory
+from ..components import SelectDefaultValue, SelectOption, _component_factory
 from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
@@ -293,7 +293,7 @@ class Label(Item[V]):
             channel_types=channel_types or [],
             required=required,
             id=id,
-            default_values=default_values
+            default_values=default_values,
         )
 
         return self.set_item(select)
