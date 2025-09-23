@@ -11,31 +11,41 @@ bot = commands.Bot(
 )
 
 
-class MyModal(discord.ui.Modal):
+class MyModal(discord.ui.DesignerModal):
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(
+        first_input = discord.ui.Label(
             discord.ui.InputText(
-                label="Short Input",
                 placeholder="Placeholder Test",
             ),
+            label="Short Input"
+        )
+        second_input = discord.ui.Label(
             discord.ui.InputText(
-                label="Longer Input",
+                placeholder="Placeholder Test",
                 value="Longer Value\nSuper Long Value",
                 style=discord.InputTextStyle.long,
-                description="You can also describe the purpose of this input.",
             ),
-            discord.ui.TextDisplay("# Personal Questions"),
+            label="Longer Input",
+            description="You can also describe the purpose of this input.",
+        )
+        select = discord.ui.Label(
             discord.ui.Select(
-                label="What's your favorite color?",
                 placeholder="Select a color",
                 options=[
                     discord.SelectOption(label="Red", emoji="🟥"),
                     discord.SelectOption(label="Green", emoji="🟩"),
                     discord.SelectOption(label="Blue", emoji="🟦"),
                 ],
-                description="If it is not listed, skip this question.",
                 required=False,
             ),
+            label="What's your favorite color?",
+            description="If it is not listed, skip this question.",
+        )
+        super().__init__(
+            first_input,
+            second_input,
+            discord.ui.TextDisplay("# Personal Questions"),  # TextDisplay does NOT use Label
+            select,
             *args,
             **kwargs,
         )
@@ -45,10 +55,10 @@ class MyModal(discord.ui.Modal):
             title="Your Modal Results",
             fields=[
                 discord.EmbedField(
-                    name="First Input", value=self.children[0].value, inline=False
+                    name="First Input", value=self.children[0].item.value, inline=False
                 ),
                 discord.EmbedField(
-                    name="Second Input", value=self.children[1].value, inline=False
+                    name="Second Input", value=self.children[1].item.value, inline=False
                 ),
             ],
             color=discord.Color.random(),
