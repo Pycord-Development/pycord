@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterator, TypeVar
+from collections.abc import Sequence
 
 from ..components import Label as LabelComponent
-from ..components import SelectOption, _component_factory
+from ..components import SelectOption, SelectDefaultValue, _component_factory
 from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
@@ -184,6 +185,53 @@ class Label(Item[V]):
 
         return self.set_item(text)
 
+    @overload
+    def set_select(
+        self,
+        select_type: Literal[ComponentType.string_select] = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        options: list[SelectOption] | None = ...,
+        required: bool = ...,
+        id: int | None = ...,
+    ) -> None: ...
+
+    @overload
+    def set_select(
+        self,
+        select_type: Literal[ComponentType.channel_select] = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        channel_types: list[ChannelType] | None = ...,
+        required: bool = ...,
+        id: int | None = ...,
+        default_values: Sequence[SelectDefaultValue] | None = ...,
+    ) -> None: ...
+
+    @overload
+    def set_select(
+        self,
+        select_type: Literal[
+            ComponentType.user_select,
+            ComponentType.role_select,
+            ComponentType.mentionable_select,
+        ] = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        required: bool = ...,
+        id: int | None = ...,
+        default_values: Sequence[SelectDefaultValue] | None = ...,
+    ) -> None: ...
+
     def set_select(
         self,
         select_type: ComponentType = ComponentType.string_select,
@@ -196,6 +244,7 @@ class Label(Item[V]):
         channel_types: list[ChannelType] | None = None,
         required: bool = True,
         id: int | None = None,
+        default_values: Sequence[SelectDefaultValue] | None = ...,
     ) -> Self:
         """Set this label's item to a select menu.
 
@@ -227,6 +276,11 @@ class Label(Item[V]):
             Whether the select is required or not. Defaults to ``True``.
         id: Optional[:class:`int`]
             The select menu's ID.
+        default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+            The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
+
+            These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
+            instances.
         """
 
         select = Select(
@@ -239,6 +293,7 @@ class Label(Item[V]):
             channel_types=channel_types or [],
             required=required,
             id=id,
+            default_values=default_values
         )
 
         return self.set_item(select)

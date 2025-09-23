@@ -134,11 +134,11 @@ class Select(Generic[V, ST], Item[V]):
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+        ordering. The row number must be between 0 and 4 (i.e. zero indexed). Does not work in :class:`ActionRow` or :class:`Label`.
     id: Optional[:class:`int`]
         The select menu's ID.
     required: Optional[:class:`bool`]
-        Whether the select is required or not. Only useable in modals. Defaults to ``True`` in modals.
+        Whether the select is required or not. Only useable when added to :class:`Label` for modals. Defaults to ``True`` in modals.
 
         .. versionadded:: 2.7
     default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]

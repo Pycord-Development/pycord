@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from functools import partial
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
 
 from ..components import ActionRow as ActionRowComponent
-from ..components import SelectOption, _component_factory
+from ..components import SelectOption, SelectDefaultValue, _component_factory
 from ..enums import ButtonStyle, ChannelType, ComponentType
 from ..utils import find, get
 from .button import Button
@@ -210,6 +211,53 @@ class ActionRow(Item[V]):
 
         return self.add_item(button)
 
+    @overload
+    def add_select(
+        self,
+        select_type: Literal[ComponentType.string_select] = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        options: list[SelectOption] | None = ...,
+        disabled: bool = ...,
+        id: int | None = ...,
+    ) -> None: ...
+
+    @overload
+    def add_select(
+        self,
+        select_type: Literal[ComponentType.channel_select] = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        channel_types: list[ChannelType] | None = ...,
+        disabled: bool = ...,
+        id: int | None = ...,
+        default_values: Sequence[SelectDefaultValue] | None = ...,
+    ) -> None: ...
+
+    @overload
+    def add_select(
+        self,
+        select_type: Literal[
+            ComponentType.user_select,
+            ComponentType.role_select,
+            ComponentType.mentionable_select,
+        ] = ...,
+        *,
+        custom_id: str | None = ...,
+        placeholder: str | None = ...,
+        min_values: int = ...,
+        max_values: int = ...,
+        disabled: bool = ...,
+        id: int | None = ...,
+        default_values: Sequence[SelectDefaultValue] | None = ...,
+    ) -> None: ...
+
     def add_select(
         self,
         select_type: ComponentType = ComponentType.string_select,
@@ -222,6 +270,7 @@ class ActionRow(Item[V]):
         channel_types: list[ChannelType] | None = None,
         disabled: bool = False,
         id: int | None = None,
+        default_values: Sequence[SelectDefaultValue] | None = None,
     ) -> Self:
         """Adds a :class:`Select` to the container.
 
@@ -256,6 +305,11 @@ class ActionRow(Item[V]):
             Whether the select is disabled or not. Defaults to ``False``.
         id: Optional[:class:`int`]
             The select menu's ID.
+        default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
+            The default values of this select. Only applicable if :attr:`.select_type` is not :attr:`discord.ComponentType.string_select`.
+
+            These can be either :class:`discord.SelectDefaultValue` instances or models, which will be converted into :class:`discord.SelectDefaultValue`
+            instances.
         """
 
         select = Select(
@@ -268,6 +322,7 @@ class ActionRow(Item[V]):
             channel_types=channel_types or [],
             disabled=disabled,
             id=id,
+            default_values=default_values
         )
 
         return self.add_item(select)
