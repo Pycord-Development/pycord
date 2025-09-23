@@ -29,7 +29,7 @@ V = TypeVar("V", bound="View", covariant=True)
 
 
 class ActionRow(Item[V]):
-    """Represents a UI Action Row used in :class:`discord.ui.View`.
+    """Represents a UI Action Row used in :class:`discord.ui.DesignerView`.
 
     The items supported are as follows:
 
