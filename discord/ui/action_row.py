@@ -87,10 +87,10 @@ class ActionRow(Item[V]):
             self.add_item(i)
 
     def _add_component_from_item(self, item: Item):
-        self._underlying.components.append(item._underlying)
+        self._underlying.children.append(item._underlying)
 
     def _set_components(self, items: list[Item]):
-        self._underlying.components.clear()
+        self._underlying.children.clear()
         for item in items:
             self._add_component_from_item(item)
 
@@ -174,7 +174,7 @@ class ActionRow(Item[V]):
         """Adds a :class:`Button` to the action row.
 
         To append a pre-existing :class:`Button`, use the
-        :meth:`add_item` method, instead.
+        :meth:`add_item` method instead.
 
         Parameters
         ----------
@@ -223,7 +223,10 @@ class ActionRow(Item[V]):
         disabled: bool = False,
         id: int | None = None,
     ) -> Self:
-        """Adds a :class:`TextDisplay` to the container.
+        """Adds a :class:`Select` to the container.
+
+        To append a pre-existing :class:`Select`, use the
+        :meth:`add_item` method instead.
 
         Parameters
         ----------
