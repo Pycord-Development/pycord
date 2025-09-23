@@ -11,18 +11,19 @@ from discord import (
     User,
 )
 from discord.ui import (
+    ActionRow,
     Button,
     Container,
+    DesignerView,
     MediaGallery,
     Section,
     Select,
     Separator,
     TextDisplay,
     Thumbnail,
-    DesignerView,
-    ActionRow,
     button,
 )
+
 
 class MyRow(ActionRow):
 
@@ -30,6 +31,7 @@ class MyRow(ActionRow):
     async def delete_button(self, button: Button, interaction: Interaction):
         await interaction.response.defer(invisible=True)
         await interaction.message.delete()
+
 
 class MyView(DesignerView):
     def __init__(self, user: User):

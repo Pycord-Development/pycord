@@ -17,7 +17,7 @@ class MyModal(discord.ui.DesignerModal):
             discord.ui.InputText(
                 placeholder="Placeholder Test",
             ),
-            label="Short Input"
+            label="Short Input",
         )
         second_input = discord.ui.Label(
             discord.ui.InputText(
@@ -44,7 +44,9 @@ class MyModal(discord.ui.DesignerModal):
         super().__init__(
             first_input,
             second_input,
-            discord.ui.TextDisplay("# Personal Questions"),  # TextDisplay does NOT use Label
+            discord.ui.TextDisplay(
+                "# Personal Questions"
+            ),  # TextDisplay does NOT use Label
             select,
             *args,
             **kwargs,
