@@ -162,11 +162,6 @@ class _ViewWeights:
         raise ValueError("could not find open space for item")
 
     def add_item(self, item: Item[V]) -> None:
-        if (
-            item._underlying.is_v2() or not self.fits_legacy(item)
-        ) and not self.requires_v2():
-            self.weights.extend([0, 0, 0, 0, 0] * 7)
-
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -184,20 +179,9 @@ class _ViewWeights:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
-        if len(self.weights) > 5:  # attempt to downgrade view
-            if all(x == 0 for x in self.weights[5:]):
-                self.weights = self.weights[:5]
 
     def clear(self) -> None:
         self.weights = [0, 0, 0, 0, 0]
-
-    def requires_v2(self) -> bool:
-        return sum(w > 0 for w in self.weights) > 5 or len(self.weights) > 5
-
-    def fits_legacy(self, item) -> bool:
-        if item.row is not None:
-            return item.row <= 4
-        return self.weights[-1] + item.width <= 5
 
 
 class BaseView(ItemInterface):
