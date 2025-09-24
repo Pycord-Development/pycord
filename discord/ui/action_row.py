@@ -376,7 +376,7 @@ class ActionRow(Item[V]):
             A list of items in `self.children` to not enable.
         """
         for item in self.walk_items():
-            if exclusions is None or item not in exclusions
+            if exclusions is None or item not in exclusions:
                 item.disabled = False
         return self
 

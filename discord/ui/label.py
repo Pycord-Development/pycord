@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import TYPE_CHECKING, Iterator, TypeVar
+from typing import TYPE_CHECKING, Iterator, TypeVar, Literal, overload
 
 from ..components import Label as LabelComponent
 from ..components import SelectDefaultValue, SelectOption, _component_factory
