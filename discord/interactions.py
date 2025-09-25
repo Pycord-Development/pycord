@@ -89,7 +89,7 @@ if TYPE_CHECKING:
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
-    from .ui.view import View
+    from .ui.view import BaseView
 
     InteractionChannel = Union[
         VoiceChannel,
@@ -164,7 +164,7 @@ class Interaction:
         The command that this interaction belongs to.
 
         .. versionadded:: 2.7
-    view: Optional[:class:`View`]
+    view: Optional[:class:`BaseView`]
         The view that this interaction belongs to.
 
         .. versionadded:: 2.7
@@ -257,7 +257,7 @@ class Interaction:
         )
 
         self.command: ApplicationCommand | None = None
-        self.view: View | None = None
+        self.view: BaseView | None = None
         self.modal: Modal | None = None
         self.attachment_size_limit: int = data.get("attachment_size_limit")
 
@@ -522,7 +522,7 @@ class Interaction:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool = False,
@@ -557,7 +557,7 @@ class Interaction:
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -947,7 +947,7 @@ class InteractionResponse:
         *,
         embed: Embed = None,
         embeds: list[Embed] = None,
-        view: View = None,
+        view: BaseView = None,
         tts: bool = False,
         ephemeral: bool = False,
         allowed_mentions: AllowedMentions = None,
@@ -972,7 +972,7 @@ class InteractionResponse:
             ``embeds`` parameter.
         tts: :class:`bool`
             Indicates if the message should be sent using text-to-speech.
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             The view to send with the message.
         ephemeral: :class:`bool`
             Indicates if the message should only be visible to the user who started the interaction.
@@ -1128,7 +1128,7 @@ class InteractionResponse:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
@@ -1155,7 +1155,7 @@ class InteractionResponse:
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -1486,7 +1486,7 @@ class InteractionMessage(Message):
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
@@ -1515,7 +1515,7 @@ class InteractionMessage(Message):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]

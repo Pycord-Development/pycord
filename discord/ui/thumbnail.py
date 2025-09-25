@@ -11,11 +11,11 @@ __all__ = ("Thumbnail",)
 
 if TYPE_CHECKING:
     from ..types.components import ThumbnailComponent as ThumbnailComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 T = TypeVar("T", bound="Thumbnail")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
 class Thumbnail(Item[V]):

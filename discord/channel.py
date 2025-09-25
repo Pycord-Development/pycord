@@ -107,7 +107,7 @@ if TYPE_CHECKING:
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
-    from .ui.view import View
+    from .ui.view import BaseView
     from .user import BaseUser, ClientUser, User
     from .webhook import Webhook
 
@@ -1217,7 +1217,7 @@ class ForumChannel(_TextChannel):
         delete_message_after: float | None = None,
         nonce: int | str | None = None,
         allowed_mentions: AllowedMentions | None = None,
-        view: View | None = None,
+        view: BaseView | None = None,
         applied_tags: list[ForumTag] | None = None,
         suppress: bool = False,
         silent: bool = False,
@@ -1262,7 +1262,7 @@ class ForumChannel(_TextChannel):
             to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
             If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
             are used instead.
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             A Discord UI View to add to the message.
         applied_tags: List[:class:`discord.ForumTag`]
             A list of tags to apply to the new thread.

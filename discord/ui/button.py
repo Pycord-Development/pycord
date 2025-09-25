@@ -41,10 +41,10 @@ __all__ = (
 
 if TYPE_CHECKING:
     from ..emoji import AppEmoji, GuildEmoji
-    from .view import View
+    from .view import BaseView
 
 B = TypeVar("B", bound="Button")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="BaseView", covariant=True)
 
 
 class Button(Item[V]):
@@ -298,7 +298,7 @@ def button(
     """A decorator that attaches a button to a component.
 
     The function being decorated should have three parameters, ``self`` representing
-    the :class:`discord.ui.View`, the :class:`discord.ui.Button` being pressed and
+    the :class:`discord.ui.View`, :class:`discord.ui.ActionRow` or :class:`discord.ui.Section`, the :class:`discord.ui.Button` being pressed, and
     the :class:`discord.Interaction` you receive.
 
     .. note::

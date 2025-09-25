@@ -11,11 +11,11 @@ __all__ = ("File",)
 
 if TYPE_CHECKING:
     from ..types.components import FileComponent as FileComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 F = TypeVar("F", bound="File")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
 class File(Item[V]):

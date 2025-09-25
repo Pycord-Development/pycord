@@ -21,11 +21,11 @@ if TYPE_CHECKING:
     from ..emoji import AppEmoji, GuildEmoji
     from ..partial_emoji import PartialEmoji, _EmojiTag
     from ..types.components import ActionRow as ActionRowPayload
-    from .view import View
+    from .view import DesignerView
 
 
 A = TypeVar("A", bound="ActionRow")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
 class ActionRow(Item[V]):

@@ -33,15 +33,31 @@ Shortcut decorators
 Objects
 -------
 
+.. attributetable:: discord.ui.BaseView
+
+.. autoclass:: discord.ui.BaseView
+    :members:
+
 .. attributetable:: discord.ui.View
 
 .. autoclass:: discord.ui.View
+    :members:
+
+.. attributetable:: discord.ui.DesignerView
+
+.. autoclass:: discord.ui.DesignerView
     :members:
 
 .. attributetable:: discord.ui.Item
 
 .. autoclass:: discord.ui.Item
     :members:
+
+.. attributetable:: discord.ui.ActionRow
+
+.. autoclass:: discord.ui.ActionRow
+    :members:
+    :inherited-members:
 
 .. attributetable:: discord.ui.Button
 
@@ -118,9 +134,27 @@ Objects
     :members:
     :inherited-members:
 
+.. attributetable:: discord.ui.BaseModal
+
+.. autoclass:: discord.ui.BaseModal
+    :members:
+    :inherited-members:
+
 .. attributetable:: discord.ui.Modal
 
 .. autoclass:: discord.ui.Modal
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.DesignerModal
+
+.. autoclass:: discord.ui.DesignerModal
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.Label
+
+.. autoclass:: discord.ui.Label
     :members:
     :inherited-members:
 

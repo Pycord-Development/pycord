@@ -67,7 +67,7 @@ if TYPE_CHECKING:
     from ..abc import GuildChannel, Snowflake
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
-    from .view import View
+    from .view import BaseView
 
     ST = TypeVar("ST", bound=Snowflake | str, covariant=True, default=Any)
 else:
@@ -77,7 +77,7 @@ else:
         ST = TypeVar("ST", bound="Snowflake | str", covariant=True)
 
 S = TypeVar("S", bound="Select")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="BaseView", covariant=True)
 
 
 class Select(Generic[V, ST], Item[V]):
@@ -846,7 +846,7 @@ def select(
     """A decorator that attaches a select menu to a component.
 
     The function being decorated should have three parameters, ``self`` representing
-    the :class:`discord.ui.View`, the :class:`discord.ui.Select` being pressed and
+    the :class:`discord.ui.View`, :class:`discord.ui.ActionRow` or :class:`discord.ui.Section`, the :class:`discord.ui.Select` being pressed and
     the :class:`discord.Interaction` you receive.
 
     In order to get the selected items that the user has chosen within the callback

@@ -13,11 +13,11 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..types.components import MediaGalleryComponent as MediaGalleryComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 M = TypeVar("M", bound="MediaGallery")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
 class MediaGallery(Item[V]):

@@ -34,22 +34,22 @@ __all__ = ("Item",)
 if TYPE_CHECKING:
     from ..components import Component
     from ..enums import ComponentType
-    from .view import View
+    from .view import BaseView
 
 I = TypeVar("I", bound="Item")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="BaseView", covariant=True)
 ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 
 
 class Item(Generic[V]):
     """Represents the base UI item that all UI components inherit from.
 
-    The following are the original items:
+    The following are the original items supported in :class:`discord.ui.View`:
 
     - :class:`discord.ui.Button`
     - :class:`discord.ui.Select`
 
-    And the following are new items under the "Components V2" specification:
+    And the following are new items under the "Components V2" specification for use in :class:`discord.ui.DesignerView`:
 
     - :class:`discord.ui.Section`
     - :class:`discord.ui.TextDisplay`
@@ -79,7 +79,7 @@ class Item(Generic[V]):
         # actually affect the intended purpose of this check because from_component is
         # only called upon edit and we're mainly interested during initial creation time.
         self._provided_custom_id: bool = False
-        self.parent: Item | View | None = self.view
+        self.parent: Item | BaseView | None = self.view
 
     def to_component_dict(self) -> dict[str, Any]:
         raise NotImplementedError
@@ -192,7 +192,7 @@ class Item(Generic[V]):
 
         Returns
         -------
-        Optional[:class:`View`]
+        Optional[:class:`BaseView`]
             The parent view of this item, or ``None`` if the item is not attached to any view.
         """
         return self._view

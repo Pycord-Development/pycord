@@ -11,14 +11,14 @@ __all__ = ("TextDisplay",)
 
 if TYPE_CHECKING:
     from ..types.components import TextDisplayComponent as TextDisplayComponentPayload
-    from .view import View
+    from .core import ItemInterface
 
 
 T = TypeVar("T", bound="TextDisplay")
-V = TypeVar("V", bound="View", covariant=True)
+I = TypeVar("I", bound="ItemInterface", covariant=True)
 
 
-class TextDisplay(Item[V]):
+class TextDisplay(Item[I]):
     """Represents a UI text display. A message can have up to 4000 characters across all :class:`TextDisplay` objects combined.
 
     .. versionadded:: 2.7

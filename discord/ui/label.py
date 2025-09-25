@@ -21,14 +21,14 @@ if TYPE_CHECKING:
     from ..interaction import Interaction
     from ..partial_emoji import PartialEmoji, _EmojiTag
     from ..types.components import Label as LabelPayload
-    from .view import View
+    from .modal import DesignerModal
 
 
 L = TypeVar("L", bound="Label")
-V = TypeVar("V", bound="View", covariant=True)
+M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class Label(Item[V]):
+class Label(Item[M]):
     """Represents a UI Label used in :class:`discord.ui.DesignerModal`.
 
     The items currently supported are as follows:
@@ -297,12 +297,6 @@ class Label(Item[V]):
         )
 
         return self.set_item(select)
-
-    @Item.view.setter
-    def view(self, value):
-        self._view = value
-        self.item.parent = self
-        self.item._view = value
 
     @property
     def type(self) -> ComponentType:

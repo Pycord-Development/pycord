@@ -95,7 +95,7 @@ if TYPE_CHECKING:
     from .types.channel import GuildChannel as GuildChannelPayload
     from .types.channel import OverwriteType
     from .types.channel import PermissionOverwrite as PermissionOverwritePayload
-    from .ui.view import View
+    from .ui.view import BaseView
     from .user import ClientUser
 
     PartialMessageableChannel = Union[
@@ -1355,7 +1355,7 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
@@ -1376,7 +1376,7 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
@@ -1397,7 +1397,7 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
@@ -1418,7 +1418,7 @@ class Messageable:
         allowed_mentions: AllowedMentions = ...,
         reference: Message | MessageReference | PartialMessage = ...,
         mention_author: bool = ...,
-        view: View = ...,
+        view: BaseView = ...,
         poll: Poll = ...,
         suppress: bool = ...,
         silent: bool = ...,
@@ -1509,7 +1509,7 @@ class Messageable:
             If set, overrides the :attr:`~discord.AllowedMentions.replied_user` attribute of ``allowed_mentions``.
 
             .. versionadded:: 1.6
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             A Discord UI View to add to the message.
         embeds: List[:class:`~discord.Embed`]
             A list of embeds to upload. Must be a maximum of 10.

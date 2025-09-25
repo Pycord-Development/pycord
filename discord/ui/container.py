@@ -25,11 +25,11 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..types.components import ContainerComponent as ContainerComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 C = TypeVar("C", bound="Container")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
 class Container(Item[V]):

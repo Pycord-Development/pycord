@@ -18,11 +18,11 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..types.components import SectionComponent as SectionComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 S = TypeVar("S", bound="Section")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
 class Section(Item[V]):

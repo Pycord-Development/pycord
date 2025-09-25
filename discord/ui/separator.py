@@ -11,11 +11,11 @@ __all__ = ("Separator",)
 
 if TYPE_CHECKING:
     from ..types.components import SeparatorComponent as SeparatorComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 S = TypeVar("S", bound="Separator")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
 class Separator(Item[V]):

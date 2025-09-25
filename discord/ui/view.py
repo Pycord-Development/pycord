@@ -67,7 +67,7 @@ if TYPE_CHECKING:
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
 
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="BaseView", covariant=True)
 
 
 def _walk_all_components(components: list[Component]) -> Iterator[Component]:
