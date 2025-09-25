@@ -10,7 +10,7 @@ repos:
       - id: end-of-file-fixer
         exclude: \.(po|pot|yml|yaml)$
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.1
+    rev: v0.13.2
     hooks:
       - id: ruff
         args: [ --fix ]
