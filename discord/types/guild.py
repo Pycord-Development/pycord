@@ -121,6 +121,7 @@ GuildFeature = Literal[
     "FEATURABLE",
     "FORCE_RELAY",
     "FORWARDING_DISABLED",
+    "GAME_SERVERS",
     "GAME_SERVER_HOSTING",
     "GENSHIN_L30",
     "GUESTS_ENABLED",
