@@ -127,14 +127,13 @@ def _component_to_item(component: Component) -> Item[V]:
 
         return Container.from_component(component)
     if isinstance(component, ActionRowComponent):
-        # Handle ActionRow.children manually, or design ui.ActionRow?
+        from .action_row import ActionRow
 
-        return component
+        return ActionRow.from_component(component)
     if isinstance(component, LabelComponent):
-        ret = _component_to_item(component.component)
-        ret.label = component.label
-        ret.description = component.description
-        return ret
+        from .label import Label
+
+        return Label.from_component(component)
     return Item.from_component(component)
 
 
