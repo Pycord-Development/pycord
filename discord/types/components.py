@@ -170,7 +170,7 @@ class FileUploadComponent(BaseComponent):
     type: Literal[19]
     custom_id: str
     max_values: NotRequired[int]
-    max_values: NotRequired[int]
+    min_values: NotRequired[int]
     required: NotRequired[bool]
 
 
