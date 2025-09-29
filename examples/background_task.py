@@ -1,4 +1,5 @@
 import asyncio
+import random
 from datetime import time, timezone
 
 import discord
@@ -37,7 +38,7 @@ class MyClient(discord.Client):
     async def before_my_task(self):
         await self.wait_until_ready()  # Wait until the bot logs in
 
-    # Schedule every 10s; each run takes ~15s. With overlap=2, at most 2 runs
+    # Schedule every 10s; each run takes between 5 to 20s. With overlap=2, at most 2 runs
     # execute concurrently so we don't build an ever-growing backlog.
     @tasks.loop(seconds=10, overlap=2)
     async def fetch_status_task(self):
@@ -45,27 +46,23 @@ class MyClient(discord.Client):
         Practical overlap use-case:
 
         Poll an external service and post a short summary. Each poll may take
-        ~15s due to network latency or rate limits, but we want fresh data
+        between 5 to 20s due to network latency or rate limits, but we want fresh data
         every 10s. Allowing a small amount of overlap avoids drifting schedules
         without opening the floodgates to unlimited concurrency.
         """
-        # Book-keeping so we can show concurrency in logs/messages
-        run_no = self.fetch_status_task.current_loop
+        print(f"[status] start run #{self.fetch_status_task.current_loop}")
 
-        try:
-            print(f"[status] start run #{run_no}")
+        # Simulate slow I/O (e.g., HTTP requests, DB queries, file I/O)
+        await asyncio.sleep(random.randint(5, 20))
 
-            # Simulate slow I/O (e.g., HTTP requests, DB queries, file I/O)
-            await asyncio.sleep(15)
+        channel = self.get_channel(1234567)  # Replace with your channel ID
+        msg = f"[status] run #{self.fetch_status_task.current_loop} complete"
+        if channel:
+            await channel.send(msg)
+        else:
+            print(msg)
 
-            channel = self.get_channel(1234567)  # Replace with your channel ID
-            msg = f"[status] run #{run_no} complete"
-            if channel:
-                await channel.send(msg)
-            else:
-                print(msg)
-        finally:
-            print(f"[status] end run #{run_no}")
+        print(f"[status] end run #{self.fetch_status_task.current_loop}")
 
 
 client = MyClient()
