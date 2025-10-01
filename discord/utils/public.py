@@ -8,14 +8,13 @@ import json
 import re
 from collections.abc import Awaitable, Callable, Iterable
 from enum import Enum, auto
-from typing import TYPE_CHECKING, Any, Literal, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, cast
 
 if TYPE_CHECKING:
     from ..abc import Snowflake
     from ..commands.context import AutocompleteContext
     from ..commands.options import OptionChoice
     from ..permissions import Permissions
-
 
 T = TypeVar("T")
 
@@ -121,16 +120,21 @@ def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> A
         if asyncio.iscoroutine(_values):
             _values = await _values
 
+        _values = cast(V, _values)
         if filter is None:
 
-            def _filter(ctx: AutocompleteContext, item: Any) -> bool:
+            def _filter(ctx: AutocompleteContext, item: OptionChoice | str | int | float) -> bool:
                 item = getattr(item, "name", item)
                 return str(item).lower().startswith(str(ctx.value or "").lower())
 
             gen = (val for val in _values if _filter(ctx, val))
 
         elif asyncio.iscoroutinefunction(filter):
-            gen = (val for val in _values if await filter(ctx, val))
+            filtered_values: list[OptionChoice | str | int | float] = []
+            for val in _values:
+                if await filter(ctx, val):
+                    filtered_values.append(val)
+            gen = (val for val in _values)
 
         elif callable(filter):
             gen = (val for val in _values if filter(ctx, val))
@@ -138,7 +142,7 @@ def basic_autocomplete(values: Values, *, filter: FilterFunc | None = None) -> A
         else:
             raise TypeError("``filter`` must be callable.")
 
-        return iter(itertools.islice(gen, 25))
+        return cast(V, iter(itertools.islice(gen, 25)))
 
     return autocomplete_callback
 
@@ -459,7 +463,7 @@ def remove_markdown(text: str, *, ignore_links: bool = True) -> str:
         The text with the markdown special characters removed.
     """
 
-    def replacement(match):
+    def replacement(match: re.Match[str]):
         groupdict = match.groupdict()
         return groupdict.get("url", "")
 
@@ -496,7 +500,7 @@ def escape_markdown(text: str, *, as_needed: bool = False, ignore_links: bool = 
 
     if not as_needed:
 
-        def replacement(match):
+        def replacement(match: re.Match[str]):
             groupdict = match.groupdict()
             is_url = groupdict.get("url")
             if is_url:

@@ -63,7 +63,12 @@ from .threads import Thread
 from .ui.view import View
 from .user import ClientUser, User
 from .utils import MISSING
-from .utils.private import SequenceProxy, bytes_to_base64_data, resolve_invite, resolve_template
+from .utils.private import (
+    SequenceProxy,
+    bytes_to_base64_data,
+    resolve_invite,
+    resolve_template,
+)
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
@@ -629,7 +634,10 @@ class Client:
         data = await self.http.static_login(token.strip())
         self._connection.user = ClientUser(state=self._connection, data=data)
 
-        print_banner(bot_name=self._connection.user.display_name, module=self._banner_module or "discord")
+        print_banner(
+            bot_name=self._connection.user.display_name,
+            module=self._banner_module or "discord",
+        )
         start_logging(self._flavor, debug=self._debug)
 
     async def connect(self, *, reconnect: bool = True) -> None:
@@ -1129,24 +1137,6 @@ class Client:
         """
         for guild in self.guilds:
             yield from guild.members
-
-    async def get_or_fetch_user(self, id: int, /) -> User | None:
-        """|coro|
-
-        Looks up a user in the user cache or fetches if not found.
-
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID to search for.
-
-        Returns
-        -------
-        Optional[:class:`~discord.User`]
-            The user or ``None`` if not found.
-        """
-
-        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
 
     # listeners/waiters
 

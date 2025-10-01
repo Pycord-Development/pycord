@@ -28,6 +28,7 @@ from typing import (
     Sequence,
     TypeVar,
     Union,
+    get_args,
     overload,
 )
 
@@ -69,9 +70,6 @@ def resolve_invite(invite: Invite | str) -> str:
     return invite
 
 
-__all__ = ("resolve_invite",)
-
-
 def get_as_snowflake(data: Any, key: str) -> int | None:
     try:
         value = data[key]
@@ -111,7 +109,7 @@ def parse_ratelimit_header(request: Any, *, use_clock: bool = False) -> float:
     return (reset - now).total_seconds()
 
 
-def string_width(string: str, *, _IS_ASCII=_IS_ASCII) -> int:
+def string_width(string: str, *, _IS_ASCII: re.Pattern[str] = _IS_ASCII) -> int:
     """Returns string's width."""
     match = _IS_ASCII.match(string)
     if match:
@@ -138,7 +136,7 @@ def resolve_template(code: Template | str) -> str:
     :class:`str`
         The template code.
     """
-    from ..template import Template  # noqa: PLC0415 # circular import
+    from ..template import Template  # noqa: PLC0415
 
     if isinstance(code, Template):
         return code.code
@@ -165,10 +163,6 @@ def parse_time(timestamp: None) -> None: ...
 
 @overload
 def parse_time(timestamp: str) -> datetime.datetime: ...
-
-
-@overload
-def parse_time(timestamp: str | None) -> datetime.datetime | None: ...
 
 
 def parse_time(timestamp: str | None) -> datetime.datetime | None:
@@ -218,7 +212,6 @@ def warn_deprecated(
     stacklevel: :class:`int`
         The stacklevel kwarg passed to :func:`warnings.warn`. Defaults to 3.
     """
-    warnings.simplefilter("always", DeprecationWarning)  # turn off filter
     message = f"{name} is deprecated"
     if since:
         message += f" since version {since}"
@@ -231,7 +224,6 @@ def warn_deprecated(
         message += f" See {reference} for more information."
 
     warnings.warn(message, stacklevel=stacklevel, category=DeprecationWarning)
-    warnings.simplefilter("default", DeprecationWarning)  # reset filter
 
 
 def deprecated(
@@ -242,7 +234,7 @@ def deprecated(
     stacklevel: int = 3,
     *,
     use_qualname: bool = True,
-) -> Callable[[Callable[[P], T]], Callable[[P], T]]:
+) -> Callable[[Callable[P, T]], Callable[P, T]]:
     """A decorator implementation of :func:`warn_deprecated`. This will automatically call :func:`warn_deprecated` when
     the decorated function is called.
 
@@ -267,7 +259,7 @@ def deprecated(
         will display as ``login``. Defaults to ``True``.
     """
 
-    def actual_decorator(func: Callable[[P], T]) -> Callable[[P], T]:
+    def actual_decorator(func: Callable[P, T]) -> Callable[P, T]:
         @functools.wraps(func)
         def decorated(*args: P.args, **kwargs: P.kwargs) -> T:
             warn_deprecated(
@@ -289,11 +281,11 @@ PY_310 = sys.version_info >= (3, 10)
 
 
 def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    params = []
+    params: list[Any] = []
     literal_cls = type(Literal[0])
     for p in parameters:
         if isinstance(p, literal_cls):
-            params.extend(p.__args__)
+            params.extend(get_args(p))
         else:
             params.append(p)
     return tuple(params)
@@ -311,7 +303,7 @@ def evaluate_annotation(
     cache: dict[str, Any],
     *,
     implicit_str: bool = True,
-):
+) -> Any:
     if isinstance(tp, ForwardRef):
         tp = tp.__forward_arg__
         # ForwardRefs always evaluate their internals
@@ -329,8 +321,8 @@ def evaluate_annotation(
         is_literal = False
         args = tp.__args__
         if not hasattr(tp, "__origin__"):
-            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
-                converted = Union[args]  # type: ignore  # noqa: UP007
+            if PY_310 and tp.__class__ is types.UnionType:
+                converted = Union[args]  # noqa: UP007
                 return evaluate_annotation(converted, globals, locals, cache)
 
             return tp
@@ -381,7 +373,7 @@ def resolve_annotation(
     return evaluate_annotation(annotation, globalns, locals, cache)
 
 
-def delay_task(delay: float, func: Coroutine):
+def delay_task(delay: float, func: Coroutine[Any, Any, Any]):
     async def inner_call():
         await asyncio.sleep(delay)
         try:
@@ -408,7 +400,7 @@ async def maybe_awaitable(f: Callable[P, T | Awaitable[T]], *args: P.args, **kwa
     return value
 
 
-async def sane_wait_for(futures: Iterable[Awaitable[T]], *, timeout: float) -> set[asyncio.Future[T]]:
+async def sane_wait_for(futures: Iterable[Awaitable[T]], *, timeout: float) -> set[asyncio.Task[T]]:
     ensured = [asyncio.ensure_future(fut) for fut in futures]
     done, pending = await asyncio.wait(ensured, timeout=timeout, return_when=asyncio.ALL_COMPLETED)
 
@@ -418,7 +410,7 @@ async def sane_wait_for(futures: Iterable[Awaitable[T]], *, timeout: float) -> s
     return done
 
 
-class SnowflakeList(array.array):
+class SnowflakeList(array.array[int]):
     """Internal data storage class to efficiently store a list of snowflakes.
 
     This should have the following characteristics:
@@ -437,7 +429,7 @@ class SnowflakeList(array.array):
         def __init__(self, data: Iterable[int], *, is_sorted: bool = False): ...
 
     def __new__(cls, data: Iterable[int], *, is_sorted: bool = False):
-        return array.array.__new__(cls, "Q", data if is_sorted else sorted(data))  # type: ignore
+        return super().__new__(cls, "Q", data if is_sorted else sorted(data))
 
     def add(self, element: int) -> None:
         i = bisect_left(self, element)
@@ -452,22 +444,27 @@ class SnowflakeList(array.array):
         return i != len(self) and self[i] == element
 
 
-def copy_doc(original: Callable) -> Callable[[T], T]:
+def copy_doc(original: Callable[..., object]) -> Callable[[T], T]:
     def decorator(overridden: T) -> T:
         overridden.__doc__ = original.__doc__
-        overridden.__signature__ = signature(original)  # type: ignore
+        overridden.__signature__ = signature(original)  # type: ignore[reportAttributeAccessIssue]
         return overridden
 
     return decorator
 
 
-class SequenceProxy(collections.abc.Sequence, Generic[T_co]):
+class SequenceProxy(collections.abc.Sequence[T_co], Generic[T_co]):
     """Read-only proxy of a Sequence."""
 
     def __init__(self, proxied: Sequence[T_co]):
         self.__proxied = proxied
 
-    def __getitem__(self, idx: int) -> T_co:
+    @overload
+    def __getitem__(self, idx: int) -> T_co: ...
+    @overload
+    def __getitem__(self, idx: slice) -> Sequence[T_co]: ...
+
+    def __getitem__(self, idx: int | slice) -> T_co | Sequence[T_co]:
         return self.__proxied[idx]
 
     def __len__(self) -> int:
@@ -482,7 +479,7 @@ class SequenceProxy(collections.abc.Sequence, Generic[T_co]):
     def __reversed__(self) -> Iterator[T_co]:
         return reversed(self.__proxied)
 
-    def index(self, value: Any, *args, **kwargs) -> int:
+    def index(self, value: Any, *args: Any, **kwargs: Any) -> int:
         return self.__proxied.index(value, *args, **kwargs)
 
     def count(self, value: Any) -> int:
@@ -515,10 +512,10 @@ class CachedSlotProperty(Generic[T, T_co]):
 
 def get_slots(cls: type[Any]) -> Iterator[str]:
     for mro in reversed(cls.__mro__):
-        try:
-            yield from mro.__slots__
-        except AttributeError:
+        slots = getattr(mro, "__slots__", None)
+        if slots is None:
             continue
+        yield from slots
 
 
 def cached_slot_property(
@@ -533,15 +530,15 @@ def cached_slot_property(
 try:
     import msgspec
 
-    def to_json(obj: Any) -> str:  # type: ignore
+    def to_json(obj: Any) -> str:  # type: ignore[reportUnusedFunction]
         return msgspec.json.encode(obj).decode("utf-8")
 
-    from_json = msgspec.json.decode  # type: ignore
+    from_json = msgspec.json.decode
 
 except ModuleNotFoundError:
     import json
 
-    def to_json(obj: Any) -> str:
+    def to_json(obj: Any) -> str:  # type: ignore[reportUnusedFunction]
         return json.dumps(obj, separators=(",", ":"), ensure_ascii=True)
 
     from_json = json.loads

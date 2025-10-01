@@ -1020,7 +1020,10 @@ class Guild(Hashable):
 
             # do the actual lookup and return if found
             # if it isn't found then we'll do a full name lookup below.
-            result = utils.find(lambda m: m.name == name[:-5] and discriminator == potential_discriminator, members)
+            result = utils.find(
+                lambda m: m.name == name[:-5] and discriminator == potential_discriminator,
+                members,
+            )
             if result is not None:
                 return result
 
@@ -3312,7 +3315,10 @@ class Guild(Hashable):
         return Widget(state=self._state, data=data)
 
     async def edit_widget(
-        self, *, enabled: bool | utils.Undefined = MISSING, channel: Snowflake | None | utils.Undefined = MISSING
+        self,
+        *,
+        enabled: bool | utils.Undefined = MISSING,
+        channel: Snowflake | None | utils.Undefined = MISSING,
     ) -> None:
         """|coro|
 
