@@ -58,14 +58,14 @@ class MyModal(discord.ui.Modal):
                     name="Second Input", value=self.children[1].value, inline=False
                 ),
                 discord.EmbedField(
-                    name="Favorite Color", value=self.children[2].value, inline=False
+                    name="Favorite Color", value=self.children[3].values[0], inline=False
                 ),
             ],
             color=discord.Color.random(),
         )
-        attachment = self.children[3].values[0] if self.children[3].values else None
+        attachment = self.children[4].values[0] if self.children[4].values else None
         if attachment:
-            embed.set_image(url=f"attachments://{attachment.filename}")
+            embed.set_image(url=f"attachment://{attachment.filename}")
         await interaction.followup.send(
             embeds=[embed],
             files=[await attachment.to_file()] if attachment else [],
