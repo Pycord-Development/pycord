@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import inspect
 import os
-import sys
 from collections.abc import Sequence
 from functools import partial
 from typing import TYPE_CHECKING, Any, Callable, Generic, Literal, overload
