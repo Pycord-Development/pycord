@@ -58,7 +58,9 @@ class MyModal(discord.ui.Modal):
                     name="Second Input", value=self.children[1].value, inline=False
                 ),
                 discord.EmbedField(
-                    name="Favorite Color", value=self.children[3].values[0], inline=False
+                    name="Favorite Color",
+                    value=self.children[3].values[0],
+                    inline=False,
                 ),
             ],
             color=discord.Color.random(),
