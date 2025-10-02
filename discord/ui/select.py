@@ -69,7 +69,6 @@ if TYPE_CHECKING:
     from .view import View
 
 ST = TypeVar("ST", bound=Snowflake | str, covariant=True, default=Any)
-
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="View", covariant=True)
 
