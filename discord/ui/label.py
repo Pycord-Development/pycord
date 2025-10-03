@@ -109,7 +109,7 @@ class Label(ModalItem[M]):
         if isinstance(item, InputText) and item.label:
             raise ValueError(f"InputText.label cannot be set inside Label")
         if self.modal:
-            item._modal = self.modal
+            item.modal = self.modal
         item.parent = self
 
         self.item = item
