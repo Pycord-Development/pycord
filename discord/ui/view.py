@@ -50,7 +50,7 @@ from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..utils import find
 from .core import ItemInterface
-from .item import ViewItem, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 
 __all__ = (
     "BaseView",
@@ -888,7 +888,9 @@ class DesignerView(BaseView):
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (BaseView, ViewItem)
-        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = {}
+        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = (
+            {}
+        )
         # message_id: View
         self._synced_message_views: dict[int, BaseView] = {}
         self._state: ConnectionState = state

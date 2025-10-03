@@ -44,7 +44,7 @@ from ..role import Role
 from ..threads import Thread
 from ..user import User
 from ..utils import MISSING
-from .item import ViewItem, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 
 __all__ = (
     "Select",

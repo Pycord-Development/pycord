@@ -8,7 +8,7 @@ from ..components import _component_factory
 from ..enums import ComponentType
 from ..utils import find, get
 from .button import Button
-from .item import ViewItem, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 from .text_display import TextDisplay
 from .thumbnail import Thumbnail
 
@@ -61,7 +61,9 @@ class Section(ViewItem[V]):
 
         cls.__section_accessory_item__ = accessory
 
-    def __init__(self, *items: ViewItem, accessory: ViewItem = None, id: int | None = None):
+    def __init__(
+        self, *items: ViewItem, accessory: ViewItem = None, id: int | None = None
+    ):
         super().__init__()
 
         self.items: list[ViewItem] = []

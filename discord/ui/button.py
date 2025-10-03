@@ -32,7 +32,7 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 from ..components import Button as ButtonComponent
 from ..enums import ButtonStyle, ComponentType
 from ..partial_emoji import PartialEmoji, _EmojiTag
-from .item import ViewItem, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 
 __all__ = (
     "Button",

@@ -11,7 +11,7 @@ from ..utils import find, get
 from .action_row import ActionRow
 from .button import Button
 from .file import File
-from .item import ViewItem, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 from .media_gallery import MediaGallery
 from .section import Section
 from .select import Select

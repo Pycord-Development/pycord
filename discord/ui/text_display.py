@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import _component_factory
 from ..enums import ComponentType
-from .item import ViewItem, ModalItem
+from .item import ModalItem, ViewItem
 
 __all__ = ("TextDisplay",)
 
