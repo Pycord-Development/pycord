@@ -41,8 +41,8 @@ __all__ = (
 
 if TYPE_CHECKING:
     from ..emoji import AppEmoji, GuildEmoji
-    from .view import BaseView
     from ..types.components import ButtonComponent as ButtonComponentPayload
+    from .view import BaseView
 
 B = TypeVar("B", bound="Button")
 V = TypeVar("V", bound="BaseView", covariant=True)

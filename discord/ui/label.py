@@ -339,7 +339,9 @@ class Label(ModalItem[M]):
         self._set_component_from_item(self.item)
         return super().to_component_dict()
 
-    def refresh_from_modal(self, interaction: Interaction, data: LabelComponentPayload) -> None:
+    def refresh_from_modal(
+        self, interaction: Interaction, data: LabelComponentPayload
+    ) -> None:
         return self.item.refresh_from_modal(interaction, data.get("component", {}))
 
     @classmethod
