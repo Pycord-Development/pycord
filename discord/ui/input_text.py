@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
+from .item import ModalItem
 
 __all__ = ("InputText", "TextInput")
 
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
     from ..types.components import InputText as InputTextComponentPayload
 
 
-class InputText:
+class InputText(ModalItem):
     """Represents a UI text input field.
 
     .. versionadded:: 2.0

@@ -29,19 +29,23 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
 
 from ..interactions import Interaction
 
-__all__ = ("Item",)
+__all__ = ("Item", "ViewItem", "ModalItem", )
 
 if TYPE_CHECKING:
     from ..components import Component
     from ..enums import ComponentType
+    from .core import ItemInterface
+    from .modal import BaseModal
     from .view import BaseView
 
 I = TypeVar("I", bound="Item")
+T = TypeVar("IF", bound="ItemInterface", covariant=True)
 V = TypeVar("V", bound="BaseView", covariant=True)
+M = TypeVar("M", bound="BaseModal", covariant=True)
 ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 
 
-class Item(Generic[V]):
+class Item(Generic[T]):
     """Represents the base UI item that all UI components inherit from.
 
     The following are the original items supported in :class:`discord.ui.View`:
@@ -65,21 +69,12 @@ class Item(Generic[V]):
         Added V2 Components.
     """
 
-    __item_repr_attributes__: tuple[str, ...] = ("row",)
+    __item_repr_attributes__: tuple[str, ...] = ("id",)
 
     def __init__(self):
-        self._view: V | None = None
-        self._row: int | None = None
-        self._rendered_row: int | None = None
         self._underlying: Component | None = None
-        # This works mostly well but there is a gotcha with
-        # the interaction with from_component, since that technically provides
-        # a custom_id most dispatchable items would get this set to True even though
-        # it might not be provided by the library user. However, this edge case doesn't
-        # actually affect the intended purpose of this check because from_component is
-        # only called upon edit and we're mainly interested during initial creation time.
         self._provided_custom_id: bool = False
-        self.parent: Item | BaseView | None = self.view
+        self.parent: Item | ItemInterface | None = None
 
     def to_component_dict(self) -> dict[str, Any]:
         raise NotImplementedError
@@ -88,9 +83,6 @@ class Item(Generic[V]):
         self._underlying = component
 
     def refresh_state(self, interaction: Interaction) -> None:
-        return None
-
-    def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
         return None
 
     @classmethod
@@ -110,9 +102,6 @@ class Item(Generic[V]):
     def is_persistent(self) -> bool:
         return not self.is_dispatchable() or self._provided_custom_id
 
-    def uses_label(self) -> bool:
-        return False
-
     def copy_text(self) -> str:
         return ""
 
@@ -121,6 +110,55 @@ class Item(Generic[V]):
             f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
         )
         return f"<{self.__class__.__name__} {attrs}>"
+
+    @property
+    def id(self) -> int | None:
+        """Gets this item's ID.
+
+        This can be set by the user when constructing an Item. If not, Discord will automatically provide one when the item's parent is sent.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The ID of this item, or ``None`` if the user didn't set one.
+        """
+        return self._underlying and self._underlying.id
+
+    @id.setter
+    def id(self, value) -> None:
+        if not self._underlying:
+            return
+        self._underlying.id = value
+
+class ViewItem(Item[V]):
+    """Represents an item used in Views.
+
+    The following are the original items supported in :class:`discord.ui.View`:
+
+    - :class:`discord.ui.Button`
+    - :class:`discord.ui.Select`
+
+    And the following are new items under the "Components V2" specification for use in :class:`discord.ui.DesignerView`:
+
+    - :class:`discord.ui.Section`
+    - :class:`discord.ui.TextDisplay`
+    - :class:`discord.ui.Thumbnail`
+    - :class:`discord.ui.MediaGallery`
+    - :class:`discord.ui.File`
+    - :class:`discord.ui.Separator`
+    - :class:`discord.ui.Container`
+
+    Additionally, :class:`discord.ui.ActionRow` should be used in :class:`discord.ui.DesignerView` to support :class:`discord.ui.Button` and :class:`discord.ui.Select`.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._view: V | None = None
+        self._row: int | None = None
+        self._rendered_row: int | None = None
+        self.parent: Item | BaseView | None = self.view
 
     @property
     def row(self) -> int | None:
@@ -165,29 +203,10 @@ class Item(Generic[V]):
         return 1
 
     @property
-    def id(self) -> int | None:
-        """Gets this item's ID.
-
-        This can be set by the user when constructing an Item. If not, Discord will automatically provide one when the View is sent.
-
-        Returns
-        -------
-        Optional[:class:`int`]
-            The ID of this item, or ``None`` if the user didn't set one.
-        """
-        return self._underlying and self._underlying.id
-
-    @id.setter
-    def id(self, value) -> None:
-        if not self._underlying:
-            return
-        self._underlying.id = value
-
-    @property
     def view(self) -> V | None:
         """Gets the parent view associated with this item.
 
-        The view refers to the container that holds this item. This is typically set
+        The view refers to the structure that holds this item. This is typically set
         automatically when the item is added to a view.
 
         Returns
@@ -213,3 +232,40 @@ class Item(Generic[V]):
         interaction: :class:`.Interaction`
             The interaction that triggered this UI item.
         """
+
+class ModalItem(Item[M]):
+    """Represents an item used in Modals.
+
+    :class:`discord.ui.InputText` is the original item supported in :class:`discord.ui.Modal`.
+
+    The following are newly available in :class:`discord.ui.DesignerModal`:
+
+    - :class:`discord.ui.Label`
+    - :class:`discord.ui.TextDisplay`
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(self):
+        super().__init__()
+        self._modal: V | None = None
+        self.parent: Item | BaseModal | None = self.modal
+
+    def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
+        return None
+
+    @property
+    def modal(self) -> V | None:
+        """Gets the parent modal associated with this item. This is typically set
+        automatically when the item is added to a modal.
+
+        Returns
+        -------
+        Optional[:class:`BaseModal`]
+            The parent modal of this item, or ``None`` if the item is not attached to any modal.
+        """
+        return self._modal
+
+    @modal.setter
+    def modal(self, value) -> None:
+        self._modal = value

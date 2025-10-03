@@ -9,7 +9,7 @@ from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
 from .input_text import InputText
-from .item import Item, ItemCallbackType
+from .item import ModalItem, ItemCallbackType
 from .select import Select
 
 __all__ = ("Label",)
@@ -28,7 +28,7 @@ L = TypeVar("L", bound="Label")
 M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class Label(Item[M]):
+class Label(ModalItem[M]):
     """Represents a UI Label used in :class:`discord.ui.DesignerModal`.
 
     The items currently supported are as follows:
@@ -351,5 +351,3 @@ class Label(Item[M]):
             label=component.label,
             description=component.description,
         )
-
-    callback = None
