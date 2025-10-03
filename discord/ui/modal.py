@@ -124,7 +124,7 @@ class BaseModal(ItemInterface):
 
     @property
     def children(self) -> list[ModalItem]:
-        """The child components associated with the modal."""
+        """The child items attached to the modal."""
         return self._children
 
     @children.setter
