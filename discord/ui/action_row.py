@@ -10,7 +10,7 @@ from ..enums import ButtonStyle, ChannelType, ComponentType
 from ..utils import find, get
 from .button import Button
 from .file import File
-from .item import ViewItem, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 from .select import Select
 
 __all__ = ("ActionRow",)
