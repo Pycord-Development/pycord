@@ -116,10 +116,6 @@ class InputText(ModalItem):
         return f"<{self.__class__.__name__} {attrs}>"
 
     @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
     def style(self) -> InputTextStyle:
         """The style of the input text field."""
         return self._underlying.style

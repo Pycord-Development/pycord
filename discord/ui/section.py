@@ -249,10 +249,6 @@ class Section(ViewItem[V]):
         """
         return "\n".join(t for i in self.items if (t := i.copy_text()))
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
     def is_dispatchable(self) -> bool:
         return self.accessory and self.accessory.is_dispatchable()
 

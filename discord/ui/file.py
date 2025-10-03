@@ -55,10 +55,6 @@ class File(ViewItem[V]):
         )
 
     @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
     def url(self) -> str:
         """The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`."""
         return self._underlying.file and self._underlying.file.url

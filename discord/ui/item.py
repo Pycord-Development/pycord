@@ -95,7 +95,9 @@ class Item(Generic[T]):
 
     @property
     def type(self) -> ComponentType:
-        raise NotImplementedError
+        if not self._underlying:
+            raise NotImplementedError
+        return self._underlying.type
 
     def is_dispatchable(self) -> bool:
         return False

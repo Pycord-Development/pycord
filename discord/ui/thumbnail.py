@@ -63,10 +63,6 @@ class Thumbnail(ViewItem[V]):
         )
 
     @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
     def url(self) -> str:
         """The URL of this thumbnail's media. This can either be an arbitrary URL or an ``attachment://`` URL."""
         return self._underlying.media and self._underlying.media.url

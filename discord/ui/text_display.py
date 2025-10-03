@@ -53,10 +53,6 @@ class TextDisplay(ViewItem[V], ModalItem[M]):
         )
 
     @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
     def content(self) -> str:
         """The text display's content."""
         return self._underlying.content

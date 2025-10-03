@@ -347,10 +347,6 @@ class Container(ViewItem[V]):
             if hasattr(item, "items") or hasattr(item, "children"):
                 item.view = value
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.items)
 

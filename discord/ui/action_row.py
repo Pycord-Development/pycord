@@ -334,10 +334,6 @@ class ActionRow(ViewItem[V]):
             item.parent = self
             item._view = value
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.children)
 

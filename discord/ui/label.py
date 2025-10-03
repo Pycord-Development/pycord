@@ -305,10 +305,6 @@ class Label(ModalItem[M]):
         return self.set_item(select)
 
     @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
     def label(self) -> str:
         """The label text. Must be 45 characters or fewer."""
         return self._underlying.label

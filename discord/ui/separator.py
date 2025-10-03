@@ -56,10 +56,6 @@ class Separator(ViewItem[V]):
         )
 
     @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
     def divider(self) -> bool:
         """Whether the separator is a divider. Defaults to ``True``."""
         return self._underlying.divider

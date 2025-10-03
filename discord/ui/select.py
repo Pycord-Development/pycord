@@ -749,10 +749,6 @@ class Select(Generic[V, M, ST], ViewItem[V], ModalItem[M]):
             default_values=component.default_values,
         )  # type: ignore
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
     def is_dispatchable(self) -> bool:
         return True
 
