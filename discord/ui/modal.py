@@ -70,7 +70,6 @@ class BaseModal(ItemInterface):
         custom_id: str | None = None,
         timeout: float | None = None,
     ) -> None:
-        self._children: list[ModalItem] = list(children)
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -79,6 +78,8 @@ class BaseModal(ItemInterface):
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         super().__init__(timeout=timeout)
+        for item in children:
+            self.add_item(item)
         self._title = title
         self.loop = asyncio.get_event_loop()
 
