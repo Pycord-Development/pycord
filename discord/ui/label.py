@@ -108,8 +108,8 @@ class Label(ModalItem[M]):
             raise TypeError(f"expected ModalItem not {item.__class__!r}")
         if isinstance(item, InputText) and item.label:
             raise ValueError(f"InputText.label cannot be set inside Label")
-        if self.view:
-            item._view = self.view
+        if self.modal:
+            item._modal = self.modal
         item.parent = self
 
         self.item = item
