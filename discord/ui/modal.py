@@ -78,7 +78,7 @@ class BaseModal(ItemInterface):
         self._custom_id: str | None = custom_id or os.urandom(16).hex()
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
-        super().__init__(*children, timeout=timeout)
+        super().__init__(timeout=timeout)
         self._title = title
         self.loop = asyncio.get_event_loop()
 
