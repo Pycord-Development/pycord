@@ -40,8 +40,8 @@ class Label(ModalItem[M]):
 
     Parameters
     ----------
-    item: :class:`Item`
-        The initial item in this label.
+    item: :class:`ModalItem`
+        The initial item attached to this label.
     label: :class:`str`
         The label text. Must be 45 characters or fewer.
     description: Optional[:class:`str`]
@@ -60,14 +60,14 @@ class Label(ModalItem[M]):
     def __init__(
         self,
         label: str,
-        item: Item = None,
+        item: ModalItem = None,
         *,
         description: str | None = None,
         id: int | None = None,
     ):
         super().__init__()
 
-        self.item: Item = None
+        self.item: ModalItem = None
 
         self._underlying = LabelComponent._raw_construct(
             type=ComponentType.label,
@@ -80,26 +80,32 @@ class Label(ModalItem[M]):
         if item:
             self.set_item(item)
 
-    def _set_component_from_item(self, item: Item):
+    @ModalItem.modal.setter
+    def modal(self, value):
+        self._modal = value
+        if self.item:
+            self.item.modal = value
+
+    def _set_component_from_item(self, item: ModalItem):
         self._underlying.component = item._underlying
 
-    def set_item(self, item: Item) -> Self:
+    def set_item(self, item: ModalItem) -> Self:
         """Set this label's item.
 
         Parameters
         ----------
-        item: Union[:class:`Item`, :class:`InputText`]
+        item: Union[:class:`ModalItem`, :class:`InputText`]
             The item to set.
             Currently only supports :class:`~discord.ui.Select` and :class:`~discord.ui.InputText`.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            A :class:`ModalItem` was not passed.
         """
 
-        if not isinstance(item, (Item, InputText)):
-            raise TypeError(f"expected Item not {item.__class__!r}")
+        if not isinstance(item, ModalItem):
+            raise TypeError(f"expected ModalItem not {item.__class__!r}")
         if isinstance(item, InputText) and item.label:
             raise ValueError(f"InputText.label cannot be set inside Label")
         if self.view:
@@ -110,7 +116,7 @@ class Label(ModalItem[M]):
         self._set_component_from_item(item)
         return self
 
-    def get_item(self, id: str | int) -> Item | None:
+    def get_item(self, id: str | int) -> ModalItem | None:
         """Get the item from this label if it matches the provided id.
         If an ``int`` is provided, the item will match by ``id``, otherwise by ``custom_id``.
 
@@ -121,7 +127,7 @@ class Label(ModalItem[M]):
 
         Returns
         -------
-        Optional[:class:`Item`]
+        Optional[:class:`ModalItem`]
             The item if its ``id`` or ``custom_id`` matches.
         """
         if not id:
@@ -330,7 +336,7 @@ class Label(ModalItem[M]):
         self._underlying = component
         self.item.refresh_component(component.component)
 
-    def walk_items(self) -> Iterator[Item]:
+    def walk_items(self) -> Iterator[ModalItem]:
         yield from [self.item]
 
     def to_component_dict(self) -> LabelPayload:

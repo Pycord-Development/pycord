@@ -10,7 +10,7 @@ from ..enums import ButtonStyle, ChannelType, ComponentType
 from ..utils import find, get
 from .button import Button
 from .file import File
-from .item import Item, ItemCallbackType
+from .item import ViewItem, ItemCallbackType
 from .select import Select
 
 __all__ = ("ActionRow",)
@@ -28,7 +28,7 @@ A = TypeVar("A", bound="ActionRow")
 V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class ActionRow(Item[V]):
+class ActionRow(ViewItem[V]):
     """Represents a UI Action Row used in :class:`discord.ui.DesignerView`.
 
     The items supported are as follows:
@@ -40,7 +40,7 @@ class ActionRow(Item[V]):
 
     Parameters
     ----------
-    *items: :class:`Item`
+    *items: :class:`ViewItem`
         The initial items in this action row.
     id: Optional[:class:`int`]
         The action's ID.
@@ -64,12 +64,12 @@ class ActionRow(Item[V]):
 
     def __init__(
         self,
-        *items: Item,
+        *items: ViewItem,
         id: int | None = None,
     ):
         super().__init__()
 
-        self.children: list[Item] = []
+        self.children: list[ViewItem] = []
 
         self._underlying = ActionRowComponent._raw_construct(
             type=ComponentType.action_row,
@@ -78,7 +78,7 @@ class ActionRow(Item[V]):
         )
 
         for func in self.__row_children_items__:
-            item: Item = func.__discord_ui_model_type__(
+            item: ViewItem = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
@@ -87,26 +87,26 @@ class ActionRow(Item[V]):
         for i in items:
             self.add_item(i)
 
-    def _add_component_from_item(self, item: Item):
+    def _add_component_from_item(self, item: ViewItem):
         self._underlying.children.append(item._underlying)
 
-    def _set_components(self, items: list[Item]):
+    def _set_components(self, items: list[ViewItem]):
         self._underlying.children.clear()
         for item in items:
             self._add_component_from_item(item)
 
-    def add_item(self, item: Item) -> Self:
+    def add_item(self, item: ViewItem) -> Self:
         """Adds an item to the action row.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to add to the action row.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            A :class:`ViewItem` was not passed.
         """
 
         if not isinstance(item, (Select, Button)):
@@ -123,12 +123,12 @@ class ActionRow(Item[V]):
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: Item | str | int) -> Self:
+    def remove_item(self, item: ViewItem | str | int) -> Self:
         """Removes an item from the action row. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, ``id``, or item ``custom_id`` to remove from the action row.
         """
 
@@ -140,7 +140,7 @@ class ActionRow(Item[V]):
             pass
         return self
 
-    def get_item(self, id: str | int) -> Item | None:
+    def get_item(self, id: str | int) -> ViewItem | None:
         """Get an item from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
 
@@ -151,7 +151,7 @@ class ActionRow(Item[V]):
 
         Returns
         -------
-        Optional[:class:`Item`]
+        Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -327,7 +327,7 @@ class ActionRow(Item[V]):
 
         return self.add_item(select)
 
-    @Item.view.setter
+    @ViewItem.view.setter
     def view(self, value):
         self._view = value
         for item in self.children:
@@ -352,13 +352,13 @@ class ActionRow(Item[V]):
             x.refresh_component(y)
             i += 1
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Disables all items in the row.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.children` to not disable.
         """
         for item in self.walk_items():
@@ -366,13 +366,13 @@ class ActionRow(Item[V]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Enables all items in the row.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.children` to not enable.
         """
         for item in self.walk_items():
@@ -388,7 +388,7 @@ class ActionRow(Item[V]):
             t += 1 if item._underlying.type is ComponentType.button else 5
         return t
 
-    def walk_items(self) -> Iterator[Item]:
+    def walk_items(self) -> Iterator[ViewItem]:
         yield from self.children
 
     def to_component_dict(self) -> ActionRowPayload:
