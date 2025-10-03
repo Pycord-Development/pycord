@@ -12,6 +12,8 @@ __all__ = ("TextDisplay",)
 if TYPE_CHECKING:
     from ..types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .core import ItemInterface
+    from .modal import DesignerModal
+    from .view import DesignerView
 
 
 T = TypeVar("T", bound="TextDisplay")

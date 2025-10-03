@@ -44,7 +44,7 @@ from ..role import Role
 from ..threads import Thread
 from ..user import User
 from ..utils import MISSING
-from .item import ItemCallbackType, ViewItem
+from .item import ItemCallbackType, ViewItem, ModalItem
 
 __all__ = (
     "Select",
@@ -68,6 +68,7 @@ if TYPE_CHECKING:
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .view import BaseView
+    from .modal import DesignerModal
 
     ST = TypeVar("ST", bound=Snowflake | str, covariant=True, default=Any)
 else:
