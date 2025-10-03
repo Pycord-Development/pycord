@@ -29,7 +29,11 @@ from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
 
 from ..interactions import Interaction
 
-__all__ = ("Item", "ViewItem", "ModalItem", )
+__all__ = (
+    "Item",
+    "ViewItem",
+    "ModalItem",
+)
 
 if TYPE_CHECKING:
     from ..components import Component
@@ -129,6 +133,7 @@ class Item(Generic[T]):
         if not self._underlying:
             return
         self._underlying.id = value
+
 
 class ViewItem(Item[V]):
     """Represents an item used in Views.
@@ -232,6 +237,7 @@ class ViewItem(Item[V]):
         interaction: :class:`.Interaction`
             The interaction that triggered this UI item.
         """
+
 
 class ModalItem(Item[M]):
     """Represents an item used in Modals.

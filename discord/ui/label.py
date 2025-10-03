@@ -9,7 +9,7 @@ from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
 from .input_text import InputText
-from .item import ModalItem, ItemCallbackType
+from .item import ItemCallbackType, ModalItem
 from .select import Select
 
 __all__ = ("Label",)
