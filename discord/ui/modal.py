@@ -231,7 +231,7 @@ class BaseModal(ItemInterface):
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        interaction.client.dispatch("modal_error", error, self, interaction)
+        interaction.client.dispatch("modal_error", error, interaction)
 
     async def on_timeout(self) -> None:
         """|coro|
