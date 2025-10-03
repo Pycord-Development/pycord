@@ -77,6 +77,7 @@ class BaseModal(ItemInterface):
         self._custom_id: str | None = custom_id or os.urandom(16).hex()
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
+        self._children: list[ModalItem] = []
         super().__init__(timeout=timeout)
         for item in children:
             self.add_item(item)
