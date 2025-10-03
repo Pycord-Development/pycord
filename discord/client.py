@@ -572,9 +572,7 @@ class Client:
             error.__class__, error, error.__traceback__, file=sys.stderr
         )
 
-    async def on_modal_error(
-        self, error: Exception, interaction: Interaction
-    ) -> None:
+    async def on_modal_error(self, error: Exception, interaction: Interaction) -> None:
         """|coro|
 
         The default modal error handler provided by the client.
