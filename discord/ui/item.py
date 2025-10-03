@@ -163,7 +163,7 @@ class ViewItem(Item[V]):
         self._view: V | None = None
         self._row: int | None = None
         self._rendered_row: int | None = None
-        self.parent: Item | BaseView | None = self.view
+        self.parent: ViewItem | BaseView | None = self.view
 
     @property
     def row(self) -> int | None:
@@ -254,14 +254,14 @@ class ModalItem(Item[M]):
 
     def __init__(self):
         super().__init__()
-        self._modal: V | None = None
-        self.parent: Item | BaseModal | None = self.modal
+        self._modal: M | None = None
+        self.parent: ModalItem | BaseModal | None = self.modal
 
     def refresh_from_modal(self, interaction: Interaction, data: dict) -> None:
         return None
 
     @property
-    def modal(self) -> V | None:
+    def modal(self) -> M | None:
         """Gets the parent modal associated with this item. This is typically set
         automatically when the item is added to a modal.
 

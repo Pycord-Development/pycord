@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import _component_factory
 from ..enums import ComponentType
-from .item import Item
+from .item import ViewItem, ModalItem
 
 __all__ = ("TextDisplay",)
 
@@ -15,10 +15,11 @@ if TYPE_CHECKING:
 
 
 T = TypeVar("T", bound="TextDisplay")
-I = TypeVar("I", bound="ItemInterface", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
+M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class TextDisplay(Item[I]):
+class TextDisplay(ViewItem[V], ModalItem[M]):
     """Represents a UI text display. A message can have up to 4000 characters across all :class:`TextDisplay` objects combined.
 
     .. versionadded:: 2.7

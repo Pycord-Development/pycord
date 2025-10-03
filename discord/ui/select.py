@@ -44,7 +44,7 @@ from ..role import Role
 from ..threads import Thread
 from ..user import User
 from ..utils import MISSING
-from .item import Item, ItemCallbackType
+from .item import ViewItem, ItemCallbackType
 
 __all__ = (
     "Select",
@@ -78,9 +78,10 @@ else:
 
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="BaseView", covariant=True)
+M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class Select(Generic[V, ST], Item[V]):
+class Select(Generic[V, ST], ViewItem[V], ModalItem[M]):
     """Represents a UI select menu.
 
     This is usually represented as a drop down menu.

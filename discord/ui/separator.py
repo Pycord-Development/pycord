@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import Separator as SeparatorComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
-from .item import Item
+from .item import ViewItem
 
 __all__ = ("Separator",)
 
@@ -18,7 +18,7 @@ S = TypeVar("S", bound="Separator")
 V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class Separator(Item[V]):
+class Separator(ViewItem[V]):
     """Represents a UI Separator.
 
     .. versionadded:: 2.7

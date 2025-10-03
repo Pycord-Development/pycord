@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from ..components import FileComponent, UnfurledMediaItem, _component_factory
 from ..enums import ComponentType
-from .item import Item
+from .item import ViewItem
 
 __all__ = ("File",)
 
@@ -18,7 +18,7 @@ F = TypeVar("F", bound="File")
 V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class File(Item[V]):
+class File(ViewItem[V]):
     """Represents a UI File.
 
     .. note::

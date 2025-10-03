@@ -12,7 +12,7 @@ from ..enums import ComponentType
 from ..utils import find
 from .core import ItemInterface
 from .input_text import InputText
-from .item import Item
+from .item import ModalItem
 from .label import Label
 from .select import Select
 from .text_display import TextDisplay
@@ -34,8 +34,6 @@ if TYPE_CHECKING:
 
 M = TypeVar("M", bound="Modal", covariant=True)
 
-ModalItem = Union[Item[M]]
-
 
 class BaseModal(ItemInterface):
     """Represents a UI modal.
@@ -46,7 +44,7 @@ class BaseModal(ItemInterface):
 
     Parameters
     ----------
-    children: Union[:class:`Item`]
+    children: :class:`ModalItem`
         The initial items that are displayed in the modal.
     title: :class:`str`
         The title of the modal.
@@ -131,9 +129,9 @@ class BaseModal(ItemInterface):
     @children.setter
     def children(self, value: list[ModalItem]):
         for item in value:
-            if not isinstance(item, Item):
+            if not isinstance(item, ModalItem):
                 raise TypeError(
-                    "all BaseModal children must be Item, not"
+                    "all BaseModal children must be ModalItem, not"
                     f" {item.__class__.__name__}"
                 )
         self._children = value
@@ -171,21 +169,15 @@ class BaseModal(ItemInterface):
 
         Parameters
         ----------
-        item: Union[class:`InputText`, :class:`Item`]
+        item: Union[class:`InputText`, :class:`ModalItem`]
             The item to add to the modal
         """
 
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal.")
 
-        if not isinstance(
-            item,
-            (
-                Item,
-                InputText,
-            ),
-        ):
-            raise TypeError(f"expected Item, not {item.__class__!r}")
+        if not isinstance(item, ModalItem):
+            raise TypeError(f"expected ModalItem, not {item.__class__!r}")
 
         self._children.append(item)
         return self
@@ -195,7 +187,7 @@ class BaseModal(ItemInterface):
 
         Parameters
         ----------
-        item: Union[class:`InputText`, :class:`Item`]
+        item: :class:`ModalItem`
             The item to remove from the modal.
         """
         try:
@@ -235,10 +227,12 @@ class BaseModal(ItemInterface):
         ----------
         error: :class:`Exception`
             The exception that was raised.
+        modal: :class:`BaseModal`
+            The modal that failed the dispatch.
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
-        interaction.client.dispatch("modal_error", error, interaction)
+        interaction.client.dispatch("modal_error", error, self, interaction)
 
     async def on_timeout(self) -> None:
         """|coro|
@@ -372,7 +366,7 @@ class DesignerModal(BaseModal):
 
     Parameters
     ----------
-    children: Union[:class:`Item`]
+    children: Union[:class:`ModalItem`]
         The initial items that are displayed in the modal..
     title: :class:`str`
         The title of the modal.
@@ -401,10 +395,14 @@ class DesignerModal(BaseModal):
     @children.setter
     def children(self, value: list[ModalItem]):
         for item in value:
-            if not isinstance(item, Item):
+            if not isinstance(item, ModalItem):
                 raise TypeError(
-                    "all DesignerModal children must be Item, not"
+                    "all DesignerModal children must be ModalItem, not"
                     f" {item.__class__.__name__}"
+                )
+            if isinstance(item, (InputText,)):
+                raise TypeError(
+                    f"DesignerModal does not accept InputText directly. Use Label instead."
                 )
         self._children = value
 
@@ -413,7 +411,7 @@ class DesignerModal(BaseModal):
 
         Parameters
         ----------
-        item: Union[:class:`Item`]
+        item: Union[:class:`ModalItem`]
             The item to add to the modal
         """
 

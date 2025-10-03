@@ -11,7 +11,7 @@ from ..utils import find, get
 from .action_row import ActionRow
 from .button import Button
 from .file import File
-from .item import Item, ItemCallbackType
+from .item import ViewItem, ItemCallbackType
 from .media_gallery import MediaGallery
 from .section import Section
 from .select import Select
@@ -32,7 +32,7 @@ C = TypeVar("C", bound="Container")
 V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class Container(Item[V]):
+class Container(ViewItem[V]):
     """Represents a UI Container.
 
     The current items supported are as follows:
@@ -48,7 +48,7 @@ class Container(Item[V]):
 
     Parameters
     ----------
-    *items: :class:`Item`
+    *items: :class:`ViewItem`
         The initial items in this container.
     colour: Union[:class:`Colour`, :class:`int`]
         The accent colour of the container. Aliased to ``color`` as well.
@@ -75,7 +75,7 @@ class Container(Item[V]):
 
     def __init__(
         self,
-        *items: Item,
+        *items: ViewItem,
         colour: int | Colour | None = None,
         color: int | Colour | None = None,
         spoiler: bool = False,
@@ -83,7 +83,7 @@ class Container(Item[V]):
     ):
         super().__init__()
 
-        self.items: list[Item] = []
+        self.items: list[ViewItem] = []
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
@@ -96,30 +96,30 @@ class Container(Item[V]):
         for i in items:
             self.add_item(i)
 
-    def _add_component_from_item(self, item: Item):
+    def _add_component_from_item(self, item: ViewItem):
         self._underlying.components.append(item._underlying)
 
-    def _set_components(self, items: list[Item]):
+    def _set_components(self, items: list[ViewItem]):
         self._underlying.components.clear()
         for item in items:
             self._add_component_from_item(item)
 
-    def add_item(self, item: Item) -> Self:
+    def add_item(self, item: ViewItem) -> Self:
         """Adds an item to the container.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to add to the container.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            A :class:`ViewItem` was not passed.
         """
 
-        if not isinstance(item, Item):
-            raise TypeError(f"expected Item not {item.__class__!r}")
+        if not isinstance(item, ViewItem):
+            raise TypeError(f"expected ViewItem not {item.__class__!r}")
 
         if isinstance(item, (Button, Select)):
             raise TypeError(
@@ -135,12 +135,12 @@ class Container(Item[V]):
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: Item | str | int) -> Self:
+    def remove_item(self, item: ViewItem | str | int) -> Self:
         """Removes an item from the container. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, ``id``, or item ``custom_id`` to remove from the container.
         """
 
@@ -155,7 +155,7 @@ class Container(Item[V]):
             pass
         return self
 
-    def get_item(self, id: str | int) -> Item | None:
+    def get_item(self, id: str | int) -> ViewItem | None:
         """Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
@@ -167,7 +167,7 @@ class Container(Item[V]):
 
         Returns
         -------
-        Optional[:class:`Item`]
+        Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -183,7 +183,7 @@ class Container(Item[V]):
 
     def add_row(
         self,
-        *items: Item,
+        *items: ViewItem,
         id: int | None = None,
     ) -> Self:
         """Adds an :class:`ActionRow` to the container.
@@ -204,8 +204,8 @@ class Container(Item[V]):
 
     def add_section(
         self,
-        *items: Item,
-        accessory: Item,
+        *items: ViewItem,
+        accessory: ViewItem,
         id: int | None = None,
     ) -> Self:
         """Adds a :class:`Section` to the container.
@@ -215,10 +215,10 @@ class Container(Item[V]):
 
         Parameters
         ----------
-        *items: :class:`Item`
+        *items: :class:`ViewItem`
             The items contained in this section, up to 3.
             Currently only supports :class:`~discord.ui.TextDisplay`.
-        accessory: Optional[:class:`Item`]
+        accessory: Optional[:class:`ViewItem`]
             The section's accessory. This is displayed in the top right of the section.
             Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
         id: Optional[:class:`int`]
@@ -246,7 +246,7 @@ class Container(Item[V]):
 
     def add_gallery(
         self,
-        *items: Item,
+        *items: ViewItem,
         id: int | None = None,
     ) -> Self:
         """Adds a :class:`MediaGallery` to the container.
@@ -338,7 +338,7 @@ class Container(Item[V]):
 
     color = colour
 
-    @Item.view.setter
+    @ViewItem.view.setter
     def view(self, value):
         self._view = value
         for item in self.items:
@@ -365,13 +365,13 @@ class Container(Item[V]):
             x.refresh_component(y)
             i += 1
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Disables all buttons and select menus in the container.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
@@ -381,13 +381,13 @@ class Container(Item[V]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Enables all buttons and select menus in the container.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():
@@ -397,7 +397,7 @@ class Container(Item[V]):
                 item.disabled = False
         return self
 
-    def walk_items(self) -> Iterator[Item]:
+    def walk_items(self) -> Iterator[ViewItem]:
         for item in self.items:
             if hasattr(item, "walk_items"):
                 yield from item.walk_items()

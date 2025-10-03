@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import UnfurledMediaItem, _component_factory
 from ..enums import ComponentType
-from .item import Item
+from .item import ViewItem
 
 __all__ = ("Thumbnail",)
 
@@ -18,7 +18,7 @@ T = TypeVar("T", bound="Thumbnail")
 V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class Thumbnail(Item[V]):
+class Thumbnail(ViewItem[V]):
     """Represents a UI Thumbnail.
 
     .. versionadded:: 2.7

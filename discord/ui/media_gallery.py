@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import MediaGalleryItem
 from ..enums import ComponentType
-from .item import Item
+from .item import ViewItem
 
 __all__ = ("MediaGallery",)
 
@@ -20,7 +20,7 @@ M = TypeVar("M", bound="MediaGallery")
 V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class MediaGallery(Item[V]):
+class MediaGallery(ViewItem[V]):
     """Represents a UI Media Gallery. Galleries may contain up to 10 :class:`MediaGalleryItem` objects.
 
     .. versionadded:: 2.7
@@ -104,10 +104,6 @@ class MediaGallery(Item[V]):
         item = MediaGalleryItem(url, description=description, spoiler=spoiler)
 
         return self.append_item(item)
-
-    @Item.view.setter
-    def view(self, value):
-        self._view = value
 
     @property
     def type(self) -> ComponentType:

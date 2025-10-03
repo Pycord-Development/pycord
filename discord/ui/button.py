@@ -32,7 +32,7 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 from ..components import Button as ButtonComponent
 from ..enums import ButtonStyle, ComponentType
 from ..partial_emoji import PartialEmoji, _EmojiTag
-from .item import Item, ItemCallbackType
+from .item import ViewItem, ItemCallbackType
 
 __all__ = (
     "Button",
@@ -47,7 +47,7 @@ B = TypeVar("B", bound="Button")
 V = TypeVar("V", bound="BaseView", covariant=True)
 
 
-class Button(Item[V]):
+class Button(ViewItem[V]):
     """Represents a UI button.
 
     .. versionadded:: 2.0

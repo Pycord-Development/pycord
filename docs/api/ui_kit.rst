@@ -42,16 +42,30 @@ Objects
 
 .. autoclass:: discord.ui.View
     :members:
+    :inherited-members:
 
 .. attributetable:: discord.ui.DesignerView
 
 .. autoclass:: discord.ui.DesignerView
     :members:
+    :inherited-members:
 
 .. attributetable:: discord.ui.Item
 
 .. autoclass:: discord.ui.Item
     :members:
+
+.. attributetable:: discord.ui.ViewItem
+
+.. autoclass:: discord.ui.ViewItem
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.ModalItem
+
+.. autoclass:: discord.ui.ModalItem
+    :members:
+    :inherited-members:
 
 .. attributetable:: discord.ui.ActionRow
 

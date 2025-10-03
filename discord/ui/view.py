@@ -50,7 +50,7 @@ from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..utils import find
 from .core import ItemInterface
-from .item import Item, ItemCallbackType
+from .item import ViewItem, ItemCallbackType
 
 __all__ = (
     "BaseView",
@@ -88,7 +88,7 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
             yield item
 
 
-def _component_to_item(component: Component) -> Item[V]:
+def _component_to_item(component: Component) -> ViewItem[V]:
 
     if isinstance(component, ButtonComponent):
         from .button import Button
@@ -134,13 +134,13 @@ def _component_to_item(component: Component) -> Item[V]:
         from .label import Label
 
         return Label.from_component(component)
-    return Item.from_component(component)
+    return ViewItem.from_component(component)
 
 
 class _ViewWeights:
     __slots__ = ("weights",)
 
-    def __init__(self, children: list[Item[V]]):
+    def __init__(self, children: list[ViewItem[V]]):
         self.weights: list[int] = [0, 0, 0, 0, 0]
 
         key = lambda i: sys.maxsize if i.row is None else i.row
@@ -149,7 +149,7 @@ class _ViewWeights:
             for item in group:
                 self.add_item(item)
 
-    def find_open_space(self, item: Item[V]) -> int:
+    def find_open_space(self, item: ViewItem[V]) -> int:
         for index, weight in enumerate(self.weights):
             # check if open space AND (next row has no items OR this is the last row)
             if (weight + item.width <= 5) and (
@@ -160,7 +160,7 @@ class _ViewWeights:
 
         raise ValueError("could not find open space for item")
 
-    def add_item(self, item: Item[V]) -> None:
+    def add_item(self, item: ViewItem[V]) -> None:
         if item.row is not None:
             total = self.weights[item.row] + item.width
             if total > 5:
@@ -174,7 +174,7 @@ class _ViewWeights:
             self.weights[index] += item.width
             item._rendered_row = index
 
-    def remove_item(self, item: Item[V]) -> None:
+    def remove_item(self, item: ViewItem[V]) -> None:
         if item._rendered_row is not None:
             self.weights[item._rendered_row] -= item.width
             item._rendered_row = None
@@ -191,7 +191,7 @@ class BaseView(ItemInterface):
 
     def __init__(
         self,
-        *items: Item[V],
+        *items: ViewItem[V],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
     ):
@@ -201,18 +201,18 @@ class BaseView(ItemInterface):
         self._message: Message | InteractionMessage | None = None
         self.parent: Interaction | None = None
 
-    def add_item(self, item: Item[V]) -> Self:
+    def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the view.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to add to the view.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            An :class:`ViewItem` was not passed.
         ValueError
             Maximum number of children has been exceeded
         """
@@ -220,21 +220,21 @@ class BaseView(ItemInterface):
         if len(self.children) >= self.MAX_ITEMS:
             raise ValueError("maximum number of children exceeded")
 
-        if not isinstance(item, Item):
-            raise TypeError(f"expected Item not {item.__class__!r}")
+        if not isinstance(item, ViewItem):
+            raise TypeError(f"expected ViewItem not {item.__class__!r}")
 
         item.parent = self
         item._view = self
         self.children.append(item)
         return self
 
-    def remove_item(self, item: Item[V] | int | str) -> None:
+    def remove_item(self, item: ViewItem[V] | int | str) -> None:
         """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
-        the item will be removed by Item ``id`` or ``custom_id`` respectively.
+        the item will be removed by ViewItem ``id`` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, item ``id``, or item ``custom_id`` to remove from the view.
         """
 
@@ -314,7 +314,7 @@ class BaseView(ItemInterface):
         """
 
     async def on_error(
-        self, error: Exception, item: Item[V], interaction: Interaction
+        self, error: Exception, item: ViewItem[V], interaction: Interaction
     ) -> None:
         """|coro|
 
@@ -327,7 +327,7 @@ class BaseView(ItemInterface):
         ----------
         error: :class:`Exception`
             The exception that was raised.
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item that failed the dispatch.
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
@@ -341,7 +341,7 @@ class BaseView(ItemInterface):
         """
         return any([item._underlying.is_v2() for item in self.children])
 
-    async def _scheduled_task(self, item: Item[V], interaction: Interaction):
+    async def _scheduled_task(self, item: ViewItem[V], interaction: Interaction):
         try:
             if self.timeout:
                 self._timeout_expiry = time.monotonic() + self.timeout
@@ -373,7 +373,7 @@ class BaseView(ItemInterface):
             self.on_timeout(), name=f"discord-ui-view-timeout-{self.id}"
         )
 
-    def _dispatch_item(self, item: Item[V], interaction: Interaction):
+    def _dispatch_item(self, item: ViewItem[V], interaction: Interaction):
         if self._stopped.done():
             return
 
@@ -437,13 +437,13 @@ class BaseView(ItemInterface):
         """
         return await self._stopped
 
-    def disable_all_items(self, *, exclusions: list[Item[V]] | None = None) -> Self:
+    def disable_all_items(self, *, exclusions: list[ViewItem[V]] | None = None) -> Self:
         """
         Disables all buttons and select menus in the view.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.children` to not disable from the view.
         """
         for child in self.children:
@@ -455,13 +455,13 @@ class BaseView(ItemInterface):
                 child.disable_all_items(exclusions=exclusions)
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item[V]] | None = None) -> Self:
+    def enable_all_items(self, *, exclusions: list[ViewItem[V]] | None = None) -> Self:
         """
         Enables all buttons and select menus in the view.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.children` to not enable from the view.
         """
         for child in self.children:
@@ -479,7 +479,7 @@ class BaseView(ItemInterface):
         """
         return "\n".join(t for i in self.children if (t := i.copy_text()))
 
-    def walk_children(self) -> Iterator[Item]:
+    def walk_children(self) -> Iterator[ViewItem]:
         for item in self.children:
             if hasattr(item, "walk_items"):
                 yield from item.walk_items()
@@ -508,7 +508,7 @@ class View(BaseView):
 
     Parameters
     ----------
-    *items: :class:`Item`
+    *items: :class:`ViewItem`
         The initial items attached to this view.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
@@ -519,7 +519,7 @@ class View(BaseView):
     timeout: Optional[:class:`float`]
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
-    children: List[:class:`Item`]
+    children: List[:class:`ViewItem`]
         The list of children attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view when the timeout is reached. Defaults to ``False``.
@@ -548,14 +548,14 @@ class View(BaseView):
 
     def __init__(
         self,
-        *items: Item[V],
+        *items: ViewItem[V],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
     ):
         super().__init__(timeout=timeout, disable_on_timeout=disable_on_timeout)
 
         for func in self.__view_children_items__:
-            item: Item[V] = func.__discord_ui_model_type__(
+            item: ViewItem[V] = func.__discord_ui_model_type__(
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
@@ -569,7 +569,7 @@ class View(BaseView):
             self.add_item(item)
 
     def to_components(self) -> list[dict[str, Any]]:
-        def key(item: Item[V]) -> int:
+        def key(item: ViewItem[V]) -> int:
             return item._rendered_row or 0
 
         children = sorted(self.children, key=key)
@@ -646,18 +646,18 @@ class View(BaseView):
         for component in _walk_all_components(components):
             view.add_item(_component_to_item(component))
 
-    def add_item(self, item: Item[V]) -> Self:
+    def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the view. Attempting to add a :class:`~discord.ui.ActionRow` will add its children instead.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to add to the view.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            An :class:`ViewItem` was not passed.
         ValueError
             Maximum number of children has been exceeded (25)
             or the row the item is trying to be added to is full.
@@ -676,13 +676,13 @@ class View(BaseView):
         self.__weights.add_item(item)
         return self
 
-    def remove_item(self, item: Item[V] | int | str) -> None:
+    def remove_item(self, item: ViewItem[V] | int | str) -> None:
         """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
         the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, item ``id``, or item ``custom_id`` to remove from the view.
         """
 
@@ -701,10 +701,10 @@ class View(BaseView):
 
     def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
-        old_state: dict[tuple[int, str], Item[V]] = {
+        old_state: dict[tuple[int, str], ViewItem[V]] = {
             (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
         }
-        children: list[Item[V]] = [
+        children: list[ViewItem[V]] = [
             item for item in self.children if not item.is_dispatchable()
         ]
         for component in _walk_all_components(components):
@@ -740,7 +740,7 @@ class DesignerView(BaseView):
 
     Parameters
     ----------
-    *items: :class:`Item`
+    *items: :class:`ViewItem`
         The initial items attached to this view.
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
@@ -751,7 +751,7 @@ class DesignerView(BaseView):
     timeout: Optional[:class:`float`]
         Timeout from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
-    children: List[:class:`Item`]
+    children: List[:class:`ViewItem`]
         The list of items attached to this view.
     disable_on_timeout: :class:`bool`
         Whether to disable the view's items when the timeout is reached. Defaults to ``False``.
@@ -775,7 +775,7 @@ class DesignerView(BaseView):
 
     def __init__(
         self,
-        *items: Item[V],
+        *items: ViewItem[V],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
     ):
@@ -839,18 +839,18 @@ class DesignerView(BaseView):
             view.add_item(_component_to_item(component))
         return view
 
-    def add_item(self, item: Item[V]) -> Self:
+    def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the view.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to add to the view.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            An :class:`ViewItem` was not passed.
         ValueError
             Maximum number of items has been exceeded (40)
         """
@@ -887,8 +887,8 @@ class DesignerView(BaseView):
 
 class ViewStore:
     def __init__(self, state: ConnectionState):
-        # (component_type, message_id, custom_id): (BaseView, Item)
-        self._views: dict[tuple[int, int | None, str], tuple[BaseView, Item[V]]] = {}
+        # (component_type, message_id, custom_id): (BaseView, ViewItem)
+        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = {}
         # message_id: View
         self._synced_message_views: dict[int, BaseView] = {}
         self._state: ConnectionState = state
