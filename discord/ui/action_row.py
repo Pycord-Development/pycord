@@ -392,7 +392,7 @@ class ActionRow(Item[V]):
         yield from self.children
 
     def to_component_dict(self) -> ActionRowPayload:
-        self._set_components()
+        self._set_components(self.items)
         return self._underlying.to_dict()
 
     @classmethod
