@@ -75,7 +75,6 @@ if TYPE_CHECKING:
     from .poll import Poll
     from .soundboard import SoundboardSound
     from .ui.item import Item, ViewItem
-    from .ui.modal import BaseModal
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -574,7 +573,7 @@ class Client:
         )
 
     async def on_modal_error(
-        self, error: Exception, modal: BaseModal, interaction: Interaction
+        self, error: Exception, interaction: Interaction
     ) -> None:
         """|coro|
 
@@ -587,13 +586,11 @@ class Client:
         ----------
         error: :class:`Exception`
             The exception that was raised.
-        modal: :class:`BaseModal`
-            The modal that failed the dispatch.
         interaction: :class:`Interaction`
             The interaction that was received.
         """
 
-        print(f"Ignoring exception in modal {modal}:", file=sys.stderr)
+        print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
         traceback.print_exception(
             error.__class__, error, error.__traceback__, file=sys.stderr
         )
