@@ -80,7 +80,6 @@ class BaseModal(ItemInterface):
             raise ValueError("title must be 45 characters or fewer")
         super().__init__(*children, timeout=timeout)
         self._title = title
-        self._weights = _ModalWeights(self._children)
         self.loop = asyncio.get_event_loop()
 
     def __repr__(self) -> str:
