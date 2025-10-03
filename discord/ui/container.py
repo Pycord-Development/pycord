@@ -402,7 +402,7 @@ class Container(ViewItem[V]):
 
     def to_component_dict(self) -> ContainerComponentPayload:
         self._set_components(self.items)
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[C], component: ContainerComponent) -> C:

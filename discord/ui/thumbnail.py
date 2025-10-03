@@ -91,7 +91,7 @@ class Thumbnail(ViewItem[V]):
         self._underlying.spoiler = spoiler
 
     def to_component_dict(self) -> ThumbnailComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[T], component: ThumbnailComponent) -> T:

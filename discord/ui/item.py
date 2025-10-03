@@ -81,7 +81,9 @@ class Item(Generic[T]):
         self.parent: Item | ItemInterface | None = None
 
     def to_component_dict(self) -> dict[str, Any]:
-        raise NotImplementedError
+        if not self._underlying:
+            raise NotImplementedError
+        return self._underlying.to_dict()
 
     def refresh_component(self, component: Component) -> None:
         self._underlying = component

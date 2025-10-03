@@ -714,7 +714,7 @@ class Select(Generic[V, M, ST], ViewItem[V], ModalItem[M]):
         return 5
 
     def to_component_dict(self) -> SelectMenuPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     def refresh_component(self, component: SelectMenu) -> None:
         self._underlying = component

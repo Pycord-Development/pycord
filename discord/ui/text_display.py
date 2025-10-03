@@ -62,7 +62,7 @@ class TextDisplay(ViewItem[V], ModalItem[M]):
         self._underlying.content = value
 
     def to_component_dict(self) -> TextDisplayComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     def copy_text(self) -> str:
         """Returns the content of this text display. Equivalent to the `Copy Text` option on Discord clients."""

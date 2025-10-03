@@ -309,7 +309,7 @@ class Section(ViewItem[V]):
         self._set_components(self.items)
         if self.accessory:
             self.set_accessory(self.accessory)
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[S], component: SectionComponent) -> S:

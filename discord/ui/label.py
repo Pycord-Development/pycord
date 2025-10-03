@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from ..emoji import AppEmoji, GuildEmoji
     from ..interaction import Interaction
     from ..partial_emoji import PartialEmoji, _EmojiTag
-    from ..types.components import Label as LabelPayload
+    from ..types.components import LabelComponent as LabelComponentPayload
     from .modal import DesignerModal
 
 
@@ -335,11 +335,11 @@ class Label(ModalItem[M]):
     def walk_items(self) -> Iterator[ModalItem]:
         yield from [self.item]
 
-    def to_component_dict(self) -> LabelPayload:
+    def to_component_dict(self) -> LabelComponentPayload:
         self._set_component_from_item(self.item)
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
-    def refresh_from_modal(self, interaction: Interaction, data: LabelPayload) -> None:
+    def refresh_from_modal(self, interaction: Interaction, data: LabelComponentPayload) -> None:
         return self.item.refresh_from_modal(interaction, data.get("component", {}))
 
     @classmethod

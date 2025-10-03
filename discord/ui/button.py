@@ -42,6 +42,7 @@ __all__ = (
 if TYPE_CHECKING:
     from ..emoji import AppEmoji, GuildEmoji
     from .view import BaseView
+    from ..types.components import ButtonComponent as ButtonComponentPayload
 
 B = TypeVar("B", bound="Button")
 V = TypeVar("V", bound="BaseView", covariant=True)
@@ -263,8 +264,8 @@ class Button(ViewItem[V]):
             id=button.id,
         )
 
-    def to_component_dict(self):
-        return self._underlying.to_dict()
+    def to_component_dict(self) -> ButtonComponentPayload:
+        return super().to_component_dict()
 
     def is_dispatchable(self) -> bool:
         return self.custom_id is not None

@@ -74,7 +74,7 @@ class Separator(ViewItem[V]):
         self._underlying.spacing = value
 
     def to_component_dict(self) -> SeparatorComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[S], component: SeparatorComponent) -> S:

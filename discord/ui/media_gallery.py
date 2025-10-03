@@ -106,7 +106,7 @@ class MediaGallery(ViewItem[V]):
         return self.append_item(item)
 
     def to_component_dict(self) -> MediaGalleryComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[M], component: MediaGalleryComponent) -> M:

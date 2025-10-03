@@ -88,7 +88,7 @@ class File(ViewItem[V]):
         self._underlying = component
 
     def to_component_dict(self) -> FileComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[F], component: FileComponent) -> F:

@@ -120,11 +120,6 @@ class InputText(ModalItem):
         """The style of the input text field."""
         return self._underlying.style
 
-    @property
-    def id(self) -> int | None:
-        """The input text's ID. If not provided by the user, it is set sequentially by Discord."""
-        return self._underlying.id
-
     @style.setter
     def style(self, value: InputTextStyle):
         if not isinstance(value, InputTextStyle):
@@ -225,8 +220,12 @@ class InputText(ModalItem):
             raise ValueError("value must be 4000 characters or fewer")
         self._underlying.value = value
 
+    @property
+    def width(self) -> int:
+        return 5
+
     def to_component_dict(self) -> InputTextComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     def refresh_state(self, data) -> None:
         self._input_value = data["value"]
