@@ -82,7 +82,7 @@ V = TypeVar("V", bound="BaseView", covariant=True)
 M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class Select(Generic[V, ST], ViewItem[V], ModalItem[M]):
+class Select(Generic[V, M, ST], ViewItem[V], ModalItem[M]):
     """Represents a UI select menu.
 
     This is usually represented as a drop down menu.
