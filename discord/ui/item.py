@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from .view import BaseView
 
 I = TypeVar("I", bound="Item")
-T = TypeVar("IF", bound="ItemInterface", covariant=True)
+T = TypeVar("T", bound="ItemInterface", covariant=True)
 V = TypeVar("V", bound="BaseView", covariant=True)
 M = TypeVar("M", bound="BaseModal", covariant=True)
 ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
@@ -52,25 +52,10 @@ ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 class Item(Generic[T]):
     """Represents the base UI item that all UI components inherit from.
 
-    The following are the original items supported in :class:`discord.ui.View`:
-
-    - :class:`discord.ui.Button`
-    - :class:`discord.ui.Select`
-
-    And the following are new items under the "Components V2" specification for use in :class:`discord.ui.DesignerView`:
-
-    - :class:`discord.ui.Section`
-    - :class:`discord.ui.TextDisplay`
-    - :class:`discord.ui.Thumbnail`
-    - :class:`discord.ui.MediaGallery`
-    - :class:`discord.ui.File`
-    - :class:`discord.ui.Separator`
-    - :class:`discord.ui.Container`
-
     .. versionadded:: 2.0
 
     .. versionchanged:: 2.7
-        Added V2 Components.
+        Now used as base class for :class:`ViewItem` and :class:`ModalItem`.
     """
 
     __item_repr_attributes__: tuple[str, ...] = ("id",)
@@ -252,6 +237,10 @@ class ModalItem(Item[M]):
 
     - :class:`discord.ui.Label`
     - :class:`discord.ui.TextDisplay`
+
+    And :class:`discord.ui.Label` should be used in :class:`discord.ui.DesignerModal` to support the following items:
+    - :class:`discord.ui.InputText`
+    - :class:`discord.ui.Select`
 
     .. versionadded:: 2.7
     """
