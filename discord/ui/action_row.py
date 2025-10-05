@@ -366,11 +366,9 @@ class ActionRow(ViewItem[V]):
 
     def refresh_component(self, component: ActionRowComponent) -> None:
         self._underlying = component
-        i = 0
-        for y in component.components:
+        for i, y in enumerate(component.components):
             x = self.children[i]
             x.refresh_component(y)
-            i += 1
 
     def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
@@ -412,7 +410,7 @@ class ActionRow(ViewItem[V]):
         yield from self.children
 
     def to_component_dict(self) -> ActionRowPayload:
-        self._set_components(self.items)
+        self._set_components(self.children)
         return super().to_component_dict()
 
     @classmethod
