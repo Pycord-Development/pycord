@@ -1037,6 +1037,7 @@ class BaseWebhook(Hashable):
         "source_channel",
         "source_guild",
         "_state",
+        "parent",
     )
 
     def __init__(
