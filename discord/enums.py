@@ -93,11 +93,32 @@ class Enum(EnumBase):
     def __init_subclass__(cls, *, comparable: bool = False) -> None:
         super().__init_subclass__()
 
-        if comparable is True:
-            cls.__lt__ = lambda self, other: isinstance(other, self.__class__) and self.value < other.value
-            cls.__gt__ = lambda self, other: isinstance(other, self.__class__) and self.value > other.value
-            cls.__le__ = lambda self, other: isinstance(other, self.__class__) and self.value <= other.value
-            cls.__ge__ = lambda self, other: isinstance(other, self.__class__) and self.value >= other.value
+        if comparable:
+
+            def __lt__(self: Enum, other: object) -> bool:
+                if not isinstance(other, cls):
+                    return NotImplemented
+                return self.value < other.value
+
+            def __gt__(self: Enum, other: object) -> bool:
+                if not isinstance(other, cls):
+                    return NotImplemented
+                return self.value > other.value
+
+            def __le__(self: Enum, other: object) -> bool:
+                if not isinstance(other, cls):
+                    return NotImplemented
+                return self.value <= other.value
+
+            def __ge__(self: Enum, other: object) -> bool:
+                if not isinstance(other, cls):
+                    return NotImplemented
+                return self.value >= other.value
+
+            cls.__lt__ = __lt__
+            cls.__gt__ = __gt__
+            cls.__le__ = __le__
+            cls.__ge__ = __ge__
 
     @classmethod
     def _missing_(cls, value: Any) -> Self:

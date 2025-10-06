@@ -192,6 +192,7 @@ extend-ignore = [
     "N803",
     "N804",
     "N806",
+    "N807", # Function name should not start and end with `__` (dunder)
     "N811",
     "N818",
     "PERF102",
