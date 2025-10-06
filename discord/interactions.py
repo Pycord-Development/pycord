@@ -403,7 +403,7 @@ class Interaction:
             "type": 3,
             "token": self.token,
         }
-        return Webhook.from_state(data=payload, state=self._state)
+        return Webhook.from_state(data=payload, state=self._state, parent=self)
 
     def is_guild_authorised(self) -> bool:
         """:class:`bool`: Checks if the interaction is guild authorised.
@@ -1105,11 +1105,11 @@ class InteractionResponse:
         self._responded = True
         await self._process_callback_response(callback_response)
         if view:
+            view.parent = self._parent
             if not view.is_finished():
                 if ephemeral and view.timeout is None:
                     view.timeout = 15 * 60.0
 
-                view.parent = self._parent
                 if view.is_dispatchable():
                     self._parent._state.store_view(view)
 

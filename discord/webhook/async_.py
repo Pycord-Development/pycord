@@ -74,6 +74,7 @@ if TYPE_CHECKING:
     from ..file import File
     from ..guild import Guild
     from ..http import Response
+    from ..interactions import Interaction
     from ..mentions import AllowedMentions
     from ..poll import Poll
     from ..state import ConnectionState
@@ -1203,6 +1204,12 @@ class Webhook(BaseWebhook):
         Only given if :attr:`type` is :attr:`WebhookType.channel_follower`.
 
         .. versionadded:: 2.0
+
+    parent: Optional[:class:`Interaction`]
+        The interaction this webhook belongs to.
+        Only set if :attr:`type` is :attr:`WebhookType.application`.
+
+        .. versionadded:: 2.7
     """
 
     __slots__: tuple[str, ...] = ("session", "proxy", "proxy_auth")
@@ -1215,11 +1222,13 @@ class Webhook(BaseWebhook):
         proxy_auth: aiohttp.BasicAuth | None = None,
         token: str | None = None,
         state=None,
+        parent: Interaction | None = None
     ):
         super().__init__(data, token, state)
         self.session = session
         self.proxy: str | None = proxy
         self.proxy_auth: aiohttp.BasicAuth | None = proxy_auth
+        self.parent: Interaction | None = parent
 
     def __repr__(self):
         return f"<Webhook id={self.id!r}>"
@@ -1867,6 +1876,8 @@ class Webhook(BaseWebhook):
         if view and not view.is_finished():
             message_id = None if msg is None else msg.id
             view.message = None if msg is None else msg
+            if self.parent and not view.parent:
+                view.parent = self.parent
             if msg:
                 view.refresh(msg.components)
             if view.is_dispatchable():
