@@ -398,12 +398,7 @@ class Interaction:
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
         """Returns the followup webhook for followup interactions."""
-        payload = {
-            "id": self.application_id,
-            "type": 3,
-            "token": self.token,
-        }
-        return Webhook.from_state(data=payload, state=self._state, parent=self)
+        return Webhook.from_interaction(interaction=self)
 
     def is_guild_authorised(self) -> bool:
         """:class:`bool`: Checks if the interaction is guild authorised.

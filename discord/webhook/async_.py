@@ -1380,6 +1380,28 @@ class Webhook(BaseWebhook):
             token=state.http.token,
         )
 
+    @classmethod
+    def from_interaction(cls, interaction) -> Webhook:
+        state = interaction._state
+        data = {
+            "id": interaction.application_id,
+            "type": 3,
+            "token": interaction.token,
+        }
+        http = state.http
+        session = http._HTTPClient__session
+        proxy_auth = http.proxy_auth
+        proxy = http.proxy
+        return cls(
+            data,
+            session=session,
+            state=state,
+            proxy_auth=proxy_auth,
+            proxy=proxy,
+            token=state.http.token,
+            parent=interaction,
+        )
+
     async def fetch(self, *, prefer_auth: bool = True) -> Webhook:
         """|coro|
 
