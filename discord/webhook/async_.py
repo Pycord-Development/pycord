@@ -1222,7 +1222,7 @@ class Webhook(BaseWebhook):
         proxy_auth: aiohttp.BasicAuth | None = None,
         token: str | None = None,
         state=None,
-        parent: Interaction | None = None
+        parent: Interaction | None = None,
     ):
         super().__init__(data, token, state)
         self.session = session
