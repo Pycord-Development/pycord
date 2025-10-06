@@ -71,7 +71,7 @@ class ActionRow(ViewItem[V]):
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
-        "items",
+        "children",
         "id",
     )
 
