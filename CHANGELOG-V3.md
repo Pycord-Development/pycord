@@ -9,6 +9,8 @@ release.
 
 ### Changed
 
+- Removed the custom `enums.Enum` implementation in favor of a stdlib `enum.Enum` subclass.
+
 ### Deprecated
 
 ### Removed
