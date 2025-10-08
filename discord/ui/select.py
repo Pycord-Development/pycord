@@ -27,10 +27,11 @@ from __future__ import annotations
 
 import inspect
 import os
-import sys
 from collections.abc import Sequence
 from functools import partial
-from typing import TYPE_CHECKING, Any, Callable, Generic, Literal, TypeVar, overload
+from typing import TYPE_CHECKING, Any, Callable, Generic, Literal, overload
+
+from typing_extensions import Self, TypeVar
 
 from ..channel import _threaded_guild_channel_factory
 from ..components import SelectDefaultValue, SelectMenu, SelectOption
@@ -62,27 +63,19 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
-
     from ..abc import GuildChannel, Snowflake
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
     from .modal import DesignerModal
     from .view import BaseView
 
-    ST = TypeVar("ST", bound=Snowflake | str, covariant=True, default=Any)
-else:
-    if sys.version_info >= (3, 13):
-        ST = TypeVar("ST", bound="Snowflake | str", covariant=True, default=Any)
-    else:
-        ST = TypeVar("ST", bound="Snowflake | str", covariant=True)
-
+ST = TypeVar("ST", bound="Snowflake | str", covariant=True, default=Any)
 S = TypeVar("S", bound="Select")
 V = TypeVar("V", bound="BaseView", covariant=True)
 M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class Select(Generic[V, M, ST], ViewItem[V], ModalItem[M]):
+class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     """Represents a UI select menu.
 
     This is usually represented as a drop down menu.

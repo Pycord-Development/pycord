@@ -45,6 +45,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2924](https://github.com/Pycord-Development/pycord/pull/2924))
 - Fixed OPUS Decode Error when recording audio.
   ([#2925](https://github.com/Pycord-Development/pycord/pull/2925))
+- Fixed a `TypeError` when typing `ui.Select` without providing optional type arguments.
+  ([#2943](https://github.com/Pycord-Development/pycord/pull/2943))
 
 ### Removed
 
