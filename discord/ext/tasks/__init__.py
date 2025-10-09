@@ -252,7 +252,7 @@ class Loop(Generic[LF]):
 
                     delay = backoff.delay()
                     _log.warning(
-                        "Received an exception which was in the valid exception set. Task will run again in %s.2f seconds",
+                        "Received an exception which was in the valid exception set. Task will run again in %.2f seconds",
                         self.coro.__name__,
                         delay,
                         exc_info=exc,
