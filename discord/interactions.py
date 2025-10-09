@@ -1186,7 +1186,8 @@ class InteractionResponse:
         if parent.type not in (InteractionType.component, InteractionType.modal_submit):
             return
 
-        flags = MessageFlags._from_value(self._parent.message.flags.value)
+        is_cv2 = None
+
         payload = {}
         if content is not MISSING:
             payload["content"] = None if content is None else str(content)
@@ -1205,7 +1206,7 @@ class InteractionResponse:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
             if view and view.is_components_v2():
-                flags.is_components_v2 = True
+                is_cv2 = True
 
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument(
@@ -1232,8 +1233,12 @@ class InteractionResponse:
                 # we keep previous attachments when adding new files
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
-        if suppress is not MISSING:
-            flags.suppress_embeds = suppress
+        if suppress is not MISSING or is_cv2:
+            flags = MessageFlags._from_value(msg.flags.value)
+            if is_cv2:
+                flags.is_components_v2 = True
+            if suppress is not MISSING:
+                flags.suppress_embeds = suppress
             payload["flags"] = flags.value
 
         if allowed_mentions is None:
