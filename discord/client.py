@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import inspect
 import logging
 import sys
@@ -262,10 +263,8 @@ class Client:
         self.ws: DiscordWebSocket = None  # type: ignore
 
         if loop is None:
-            try:
+            with contextlib.suppress(RuntimeError):
                 loop = asyncio.get_running_loop()
-            except RuntimeError:
-                pass
 
         self._loop: asyncio.AbstractEventLoop | None = loop
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
