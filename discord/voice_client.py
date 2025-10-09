@@ -265,6 +265,7 @@ class VoiceClient(VoiceProtocol):
         self.sink = None
         self.starting_time = None
         self.stopping_time = None
+        self.temp_queued_data: dict[int, list] = {}
 
     warn_nacl = not has_nacl
     supported_modes: tuple[SupportedModes, ...] = (
@@ -651,9 +652,10 @@ class VoiceClient(VoiceProtocol):
         nonce[:4] = data[-4:]
         data = data[:-4]
 
-        return self.strip_header_ext(
-            box.decrypt(bytes(data), bytes(header), bytes(nonce))
-        )
+        r = box.decrypt(bytes(data), bytes(header), bytes(nonce))
+        # Discord adds 8 bytes of data before the opus data.
+        # This can be removed, and at this time, discarded as it is unclear what they are for.
+        return r[8:]
 
     @staticmethod
     def strip_header_ext(data):
@@ -773,7 +775,7 @@ class VoiceClient(VoiceProtocol):
         data: :class:`bytes`
             Bytes received by Discord via the UDP connection used for sending and receiving voice data.
         """
-        if data[1] != 0x78:
+        if data[1] & 0x78 != 0x78:
             # We Should Ignore Any Payload Types We Do Not Understand
             # Ref RFC 3550 5.1 payload type
             # At Some Point We Noted That We Should Ignore Only Types 200 - 204 inclusive.
@@ -890,7 +892,7 @@ class VoiceClient(VoiceProtocol):
         # it by user, handles pcm files and
         # silence that should be added.
 
-        self.user_timestamps: dict[int, tuple[int, float]] = {}
+        self.user_timestamps: dict[int, tuple[int, int, float]] = {}
         self.starting_time = time.perf_counter()
         self.first_packet_timestamp: float
         while self.recording:
@@ -918,7 +920,30 @@ class VoiceClient(VoiceProtocol):
 
     def recv_decoded_audio(self, data: RawData):
         # Add silence when they were not being recorded.
-        if data.ssrc not in self.user_timestamps:  # First packet from user
+        data.user_id = self.ws.ssrc_map.get(data.ssrc, {}).get("user_id")
+
+        if data.user_id is None:
+            _log.debug(
+                f"DEBUG: received packet with SSRC {data.ssrc} not linked to a user_id."
+                f"Queueing for later processing."
+            )
+            self.temp_queued_data.setdefault(data.ssrc, []).append(data)
+            return
+        elif data.ssrc in self.temp_queued_data:
+            _log.debug(
+                "DEBUG: We got %d packet(s) in queue for SSRC %d",
+                len(self.temp_queued_data[data.ssrc]),
+                data.ssrc,
+            )
+            queued_packets = self.temp_queued_data.pop(data.ssrc)
+            for q_packet in queued_packets:
+                q_packet.user_id = data.user_id
+                self._process_audio_packet(q_packet)
+
+        self._process_audio_packet(data)
+
+    def _process_audio_packet(self, data: RawData):
+        if data.user_id not in self.user_timestamps:  # First packet from user
             if (
                 not self.user_timestamps or not self.sync_start
             ):  # First packet from anyone
@@ -931,19 +956,33 @@ class VoiceClient(VoiceProtocol):
                 ) - 960
 
         else:  # Previously received a packet from user
-            dRT = (
-                data.receive_time - self.user_timestamps[data.ssrc][1]
-            ) * 48000  # delta receive time
-            dT = data.timestamp - self.user_timestamps[data.ssrc][0]  # delta timestamp
-            diff = abs(100 - dT * 100 / dRT)
-            if (
-                diff > 60 and dT != 960
-            ):  # If the difference in change is more than 60% threshold
-                silence = dRT - 960
-            else:
-                silence = dT - 960
+            prev_ssrc = self.user_timestamps[data.user_id][0]
+            prev_timestamp = self.user_timestamps[data.user_id][1]
+            prev_receive_time = self.user_timestamps[data.user_id][2]
 
-        self.user_timestamps.update({data.ssrc: (data.timestamp, data.receive_time)})
+            if data.ssrc != prev_ssrc:
+                _log.info(
+                    f"Received audio data from USER_ID {data.user_id} with a previous SSRC {prev_ssrc} and new "
+                    f"SSRC {data.ssrc}."
+                )
+                dRT = (data.receive_time - prev_receive_time) * 1000
+                silence = max(0, int(dRT / (1000 / 48000))) - 960
+            else:
+                dRT = (
+                    data.receive_time - prev_receive_time
+                ) * 48000  # delta receive time
+                dT = data.timestamp - prev_timestamp  # delta timestamp
+                diff = abs(100 - dT * 100 / dRT)
+                if (
+                    diff > 60 and dT != 960
+                ):  # If the difference in change is more than 60% threshold
+                    silence = dRT - 960
+                else:
+                    silence = dT - 960
+
+        self.user_timestamps.update(
+            {data.user_id: (data.ssrc, data.timestamp, data.receive_time)}
+        )
 
         data.decoded_data = (
             struct.pack("<h", 0) * max(0, int(silence)) * opus._OpusStruct.CHANNELS

@@ -373,8 +373,13 @@ Interactions
 .. autoclass:: AuthorizingIntegrationOwners()
     :members:
 
+.. attributetable:: InteractionCallback
+
+.. autoclass:: InteractionCallback()
+    :members:
+
 Message Components
-------------
+------------------
 
 .. attributetable:: Component
 

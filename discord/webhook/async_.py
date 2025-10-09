@@ -545,6 +545,10 @@ class AsyncWebhookAdapter:
             webhook_token=token,
         )
 
+        params: dict[str, Any] = {
+            "with_response": "true",
+        }
+
         return self.request(
             route,
             session=session,
@@ -552,6 +556,7 @@ class AsyncWebhookAdapter:
             proxy_auth=proxy_auth,
             files=files,
             multipart=form,
+            params=params,
         )
 
     def get_original_interaction_response(
@@ -1859,7 +1864,7 @@ class Webhook(BaseWebhook):
         if wait:
             msg = self._create_message(data)
 
-        if view is not MISSING and not view.is_finished():
+        if view and not view.is_finished():
             message_id = None if msg is None else msg.id
             view.message = None if msg is None else msg
             if msg:
