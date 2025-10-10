@@ -1365,7 +1365,6 @@ class FileUpload(Component):
         The custom ID of the file upload field that gets received during an interaction.
     min_values: Optional[:class:`int`]
         The minimum number of files that must be uploaded.
-        Defaults to 0.
     max_values: Optional[:class:`int`]
         The maximum number of files that can be uploaded.
     required: Optional[:class:`bool`]
