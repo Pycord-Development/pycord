@@ -1401,10 +1401,10 @@ class FileUpload(Component):
         if self.id is not None:
             payload["id"] = self.id
 
-        if self.min_values:
+        if self.min_values is not None:
             payload["min_values"] = self.min_values
 
-        if self.max_values:
+        if self.max_values is not None:
             payload["max_values"] = self.max_values
 
         if not self.required:
