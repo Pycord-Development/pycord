@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class FileUpload:
-    """Represents a UI File Upload component
+    """Represents a UI File Upload component.
 
     .. versionadded:: 2.7
 
