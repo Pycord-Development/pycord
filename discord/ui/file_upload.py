@@ -108,12 +108,12 @@ class FileUpload:
 
     @property
     def id(self) -> int | None:
-        """The file upload's ID. If not provided by the user, it is set sequentially by Discord."""
+        """The ID of this component. If not provided by the user, it is set sequentially by Discord."""
         return self._underlying.id
 
     @property
     def custom_id(self) -> str:
-        """The ID of the file upload field that gets received during an interaction."""
+        """The custom id that gets received during an interaction."""
         return self._underlying.custom_id
 
     @custom_id.setter
