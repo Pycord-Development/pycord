@@ -1349,7 +1349,7 @@ class Label(Component):
 
 
 class FileUpload(Component):
-    """Represents an File Upload field from the Discord Bot UI Kit.
+    """Represents an File Upload component from the Discord Bot UI Kit.
 
     This inherits from :class:`Component`.
 
