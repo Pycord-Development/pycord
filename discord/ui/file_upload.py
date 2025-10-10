@@ -60,9 +60,9 @@ class FileUpload:
         *,
         label: str,
         custom_id: str | None = None,
-        min_values: int | None = None,
-        max_values: int | None = None,
-        required: bool | None = True,
+        min_values: int | None = 0,
+        max_values: int | None = 1,
+        required: bool = True,
         row: int | None = None,
         id: int | None = None,
         description: str | None = None,
@@ -80,6 +80,8 @@ class FileUpload:
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
+        if not isinstance(required, bool):
+            raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self.label: str = str(label)
         self.description: str | None = description
@@ -151,12 +153,12 @@ class FileUpload:
         self._underlying.max_values = value
 
     @property
-    def required(self) -> bool | None:
+    def required(self) -> bool:
         """Whether the input file upload is required or not. Defaults to ``True``."""
         return self._underlying.required
 
     @required.setter
-    def required(self, value: bool | None):
+    def required(self, value: bool):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
         self._underlying.required = bool(value)
