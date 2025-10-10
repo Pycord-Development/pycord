@@ -22,7 +22,7 @@ class FileUpload:
     Parameters
     ----------
     label: :class:`str`
-        The label for the file upload field.
+        The label for this component
         Must be 45 characters or fewer.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
