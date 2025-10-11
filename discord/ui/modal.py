@@ -93,6 +93,7 @@ class BaseModal(ItemInterface):
         title: str,
         custom_id: str | None = None,
         timeout: float | None = None,
+        store: bool = True,
     ) -> None:
         if not isinstance(custom_id, str) and custom_id is not None:
             raise TypeError(
@@ -102,7 +103,7 @@ class BaseModal(ItemInterface):
         if len(title) > 45:
             raise ValueError("title must be 45 characters or fewer")
         self._children: list[ModalItem] = []
-        super().__init__(timeout=timeout)
+        super().__init__(timeout=timeout, store=store)
         for item in children:
             self.add_item(item)
         self._title = title
@@ -290,6 +291,8 @@ class Modal(BaseModal):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 
     def __init__(
@@ -298,8 +301,9 @@ class Modal(BaseModal):
         title: str,
         custom_id: str | None = None,
         timeout: float | None = None,
+        store: bool = True,
     ) -> None:
-        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout)
+        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout, store=store)
         self._weights = _ModalWeights(self._children)
 
     @property
@@ -402,6 +406,8 @@ class DesignerModal(BaseModal):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this modal should be stored for callback listening. Setting it to ``False`` will ignore its callback and prevent item values from being refreshed. Defaults to ``True``.
     """
 
     def __init__(
@@ -410,8 +416,9 @@ class DesignerModal(BaseModal):
         title: str,
         custom_id: str | None = None,
         timeout: float | None = None,
+        store: bool = True,
     ) -> None:
-        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout)
+        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout, store=store)
 
     @property
     def children(self) -> list[ModalItem]:
@@ -502,6 +509,8 @@ class ModalStore:
         self._state: ConnectionState = state
 
     def add_modal(self, modal: BaseModal, user_id: int):
+        if not modal._store:
+            return
         self._modals[(user_id, modal.custom_id)] = modal
         modal._start_listening_from_store(self)
 

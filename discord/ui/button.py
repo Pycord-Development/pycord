@@ -268,7 +268,7 @@ class Button(ViewItem[V]):
         return super().to_component_dict()
 
     def is_dispatchable(self) -> bool:
-        return self.custom_id is not None
+        return (self.custom_id is not None) and (bool(self.view._store) if self.view else True)
 
     def is_storable(self) -> bool:
         return self.is_dispatchable()

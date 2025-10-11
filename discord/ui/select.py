@@ -743,10 +743,10 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         )  # type: ignore
 
     def is_dispatchable(self) -> bool:
-        return True
+        return (bool(self.view._store) if self.view else True) and (bool(self.modal._store) if self.modal else True)
 
     def is_storable(self) -> bool:
-        return True
+        return self.is_dispatchable()
 
 
 if TYPE_CHECKING:

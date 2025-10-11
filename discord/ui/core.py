@@ -61,12 +61,15 @@ class ItemInterface:
         If ``None`` then there is no timeout.
     children: List[:class:`Item`]
         The list of children attached to this structure.
+    store: Optional[:class:`bool`]
+        Whether this interface should be stored for callback listening. Setting it to ``False`` will ignore callbacks and prevent item values from being refreshed. Defaults to ``True``.
     """
 
     def __init__(
         self,
         *items: Item,
         timeout: float | None = 180.0,
+        store: bool = True,
     ):
         self.timeout: float | None = timeout
         self.children: list[Item] = []
@@ -78,6 +81,7 @@ class ItemInterface:
         self._timeout_expiry: float | None = None
         self._timeout_task: asyncio.Task[None] | None = None
         self._stopped: asyncio.Future[bool] = loop.create_future()
+        self._store = store
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} timeout={self.timeout} children={len(self.children)}>"

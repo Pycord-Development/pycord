@@ -194,8 +194,9 @@ class BaseView(ItemInterface):
         *items: ViewItem[V],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
+        store: bool = True,
     ):
-        super().__init__(*items, timeout=timeout)
+        super().__init__(*items, timeout=timeout, store=store)
         self.disable_on_timeout = disable_on_timeout
         self.id: str = os.urandom(16).hex()
         self._message: Message | InteractionMessage | None = None
@@ -529,6 +530,8 @@ class View(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     __view_children_items__: ClassVar[list[ItemCallbackType]] = []
@@ -551,8 +554,9 @@ class View(BaseView):
         *items: ViewItem[V],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
+        store: bool = True,
     ):
-        super().__init__(timeout=timeout, disable_on_timeout=disable_on_timeout)
+        super().__init__(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
 
         for func in self.__view_children_items__:
             item: ViewItem[V] = func.__discord_ui_model_type__(
@@ -761,6 +765,8 @@ class DesignerView(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     MAX_ITEMS: int = 40
@@ -778,8 +784,9 @@ class DesignerView(BaseView):
         *items: ViewItem[V],
         timeout: float | None = 180.0,
         disable_on_timeout: bool = False,
+        store: bool = True,
     ):
-        super().__init__(*items, timeout=timeout, disable_on_timeout=disable_on_timeout)
+        super().__init__(*items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
 
     @classmethod
     def from_message(
@@ -914,6 +921,8 @@ class ViewStore:
             del self._views[k]
 
     def add_view(self, view: BaseView, message_id: int | None = None):
+        if not view._store:
+            return
         self.__verify_integrity()
 
         view._start_listening_from_store(self)
