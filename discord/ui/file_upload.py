@@ -81,7 +81,7 @@ class FileUpload:
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
         if not isinstance(required, bool):
-            raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
+            raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
         self.label: str = str(label)
         self.description: str | None = description
