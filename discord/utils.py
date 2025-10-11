@@ -769,7 +769,7 @@ def _get_getter_fetcher_map() -> dict[type, tuple[_Getter, _Fetcher]]:
         ),
         Role: (
             lambda obj, oid: obj.get_role(oid),
-            lambda obj, oid: obj._fetch_role(oid),
+            lambda obj, oid: obj.fetch_role(oid),
         ),
         User: (
             lambda obj, oid: obj.get_user(oid),
