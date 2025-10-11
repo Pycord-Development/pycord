@@ -184,7 +184,10 @@ class _ViewWeights:
 
 
 class BaseView(ItemInterface):
-    """The base class for UI views used in messages."""
+    """The base class for UI views used in messages.
+
+    .. versionadded:: 2.7
+    """
 
     __discord_ui_view__: ClassVar[bool] = True
     MAX_ITEMS: int

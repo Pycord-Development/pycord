@@ -60,25 +60,9 @@ M = TypeVar("M", bound="Modal", covariant=True)
 
 
 class BaseModal(ItemInterface):
-    """Represents a UI modal.
-
-    This object must be inherited to create a UI within Discord.
+    """The base class for creating pop-up modals.
 
     .. versionadded:: 2.7
-
-    Parameters
-    ----------
-    children: :class:`ModalItem`
-        The initial items that are displayed in the modal.
-    title: :class:`str`
-        The title of the modal.
-        Must be 45 characters or fewer.
-    custom_id: Optional[:class:`str`]
-        The ID of the modal that gets received during an interaction.
-        Must be 100 characters or fewer.
-    timeout: Optional[:class:`float`]
-        Timeout in seconds from last interaction with the UI before no longer accepting input.
-        If ``None`` then there is no timeout.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
