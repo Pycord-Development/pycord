@@ -721,6 +721,8 @@ async def get_or_fetch(
         raise InvalidArgument("Client cannot get_or_fetch Role. Use Guild instead.")
     elif isinstance(obj, Guild) and object_type is Guild:
         raise InvalidArgument("Guild cannot get_or_fetch Guild. Use Client instead.")
+    elif isinstance(obj, Guild) and object_type is AppEmoji:
+        raise InvalidArgument("Guild cannot get_or_fetch AppEmoji. Use Client instead.")
 
     try:
         getter, fetcher = _get_getter_fetcher_map()[object_type]
