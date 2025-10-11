@@ -674,7 +674,7 @@ async def get_or_fetch(
     :exc:`InvalidData`
         Raised when the object resolves to a different guild.
     """
-    from discord import Client, Guild, Member, Role, User
+    from discord import Client, Guild, Member, Role, User, AppEmoji
 
     if object_id is None:
         return default if default is not MISSING else None
