@@ -303,7 +303,9 @@ class Modal(BaseModal):
         timeout: float | None = None,
         store: bool = True,
     ) -> None:
-        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout, store=store)
+        super().__init__(
+            *children, title=title, custom_id=custom_id, timeout=timeout, store=store
+        )
         self._weights = _ModalWeights(self._children)
 
     @property
@@ -418,7 +420,9 @@ class DesignerModal(BaseModal):
         timeout: float | None = None,
         store: bool = True,
     ) -> None:
-        super().__init__(*children, title=title, custom_id=custom_id, timeout=timeout, store=store)
+        super().__init__(
+            *children, title=title, custom_id=custom_id, timeout=timeout, store=store
+        )
 
     @property
     def children(self) -> list[ModalItem]:

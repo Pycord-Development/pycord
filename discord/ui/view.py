@@ -556,7 +556,9 @@ class View(BaseView):
         disable_on_timeout: bool = False,
         store: bool = True,
     ):
-        super().__init__(timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
+        super().__init__(
+            timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
+        )
 
         for func in self.__view_children_items__:
             item: ViewItem[V] = func.__discord_ui_model_type__(
@@ -786,7 +788,9 @@ class DesignerView(BaseView):
         disable_on_timeout: bool = False,
         store: bool = True,
     ):
-        super().__init__(*items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store)
+        super().__init__(
+            *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
+        )
 
     @classmethod
     def from_message(
