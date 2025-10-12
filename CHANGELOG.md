@@ -47,6 +47,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2925](https://github.com/Pycord-Development/pycord/pull/2925))
 - Fixed a `TypeError` when typing `ui.Select` without providing optional type arguments.
   ([#2943](https://github.com/Pycord-Development/pycord/pull/2943))
+- Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
+  parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
 
 ### Removed
 
