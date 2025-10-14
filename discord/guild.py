@@ -116,11 +116,9 @@ if TYPE_CHECKING:
     from .types.guild import Guild as GuildPayload
     from .types.guild import (
         GuildFeature,
-    )
-    from .types.guild import ModifyIncidents as ModifyIncidentsPayload
-    from .types.guild import (
         MFALevel,
     )
+    from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState

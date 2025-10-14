@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 from typing import TYPE_CHECKING
+
 from .utils import parse_time
 
 if TYPE_CHECKING:
