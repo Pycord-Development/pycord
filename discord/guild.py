@@ -4436,10 +4436,10 @@ class Guild(Hashable):
 
         Parameters
         ----------
-        invites_disabled_until: Optional[:class:`str`]
+        invites_disabled_until: Optional[:class:`datetime.datetime`]
             ISO8601 timestamp indicating when invites will be enabled again, or
             ``None`` to disable.
-        dms_disabled_until: Optional[:class:`str`]
+        dms_disabled_until: Optional[:class:`datetime.datetime`]
             ISO8601 timestamp indicating when DMs will be enabled again, or
             ``None`` to disable.
         reason: Optional[:class:`str`]
