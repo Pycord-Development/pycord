@@ -296,7 +296,7 @@ class Guild(Hashable):
         "approximate_member_count",
         "approximate_presence_count",
         "_sounds",
-        "incidents",
+        "incidents_data",
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
