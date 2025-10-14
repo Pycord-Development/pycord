@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 from typing import TYPE_CHECKING
+from .utils import parse_time
 
 if TYPE_CHECKING:
     from .guild import Guild
@@ -36,28 +37,20 @@ class IncidentsData:
     def __init__(self, data: IncidentsDataPayload, guild: Guild | None = None):
         self.guild = guild
 
-        self.invites_disabled_until: datetime.datetime | None = (
-            datetime.datetime.fromisoformat(s)
-            if (s := data.get("invites_disabled_until"))
-            else None
+        self.invites_disabled_until: datetime.datetime | None = parse_time(
+            data.get("invites_disabled_until")
         )
 
-        self.dms_disabled_until: datetime.datetime | None = (
-            datetime.datetime.fromisoformat(s)
-            if (s := data.get("dms_disabled_until"))
-            else None
+        self.dms_disabled_until: datetime.datetime | None = parse_time(
+            data.get("dms_disabled_until")
         )
 
-        self.dm_spam_detected_at: datetime.datetime | None = (
-            datetime.datetime.fromisoformat(s)
-            if (s := data.get("dm_spam_detected_at"))
-            else None
+        self.dm_spam_detected_at: datetime.datetime | None = parse_time(
+            data.get("dm_spam_detected_at")
         )
 
-        self.raid_detected_at: datetime.datetime | None = (
-            datetime.datetime.fromisoformat(s)
-            if (s := data.get("raid_detected_at"))
-            else None
+        self.raid_detected_at: datetime.datetime | None = parse_time(
+            data.get("raid_detected_at")
         )
 
     def to_dict(self) -> IncidentsDataPayload:
