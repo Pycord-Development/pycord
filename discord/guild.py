@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import copy
+import datetime
 import unicodedata
 from typing import (
     TYPE_CHECKING,
@@ -80,6 +81,7 @@ from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
 from .onboarding import Onboarding
+from .incidents import IncidentsData
 from .permissions import PermissionOverwrite
 from .role import Role, RoleColours
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
@@ -111,7 +113,10 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .template import Template
     from .types.guild import Ban as BanPayload
-    from .types.guild import Guild as GuildPayload
+    from .types.guild import (
+        Guild as GuildPayload,
+        IncidentsData as IncidentsDataPayload,
+    )
     from .types.guild import GuildFeature, MFALevel
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
@@ -290,6 +295,7 @@ class Guild(Hashable):
         "approximate_member_count",
         "approximate_presence_count",
         "_sounds",
+        "incidents",
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
@@ -568,6 +574,13 @@ class Guild(Hashable):
         for sound in guild.get("soundboard_sounds", []):
             sound = SoundboardSound(state=state, http=state.http, data=sound)
             self._add_sound(sound)
+
+        incidents_payload = guild.get("incidents_data")
+        self.incidents: IncidentsData | None = (
+            IncidentsData(data=incidents_payload, guild=self)
+            if incidents_payload is not None
+            else None
+        )
 
     def _add_sound(self, sound: SoundboardSound) -> None:
         self._sounds[sound.id] = sound
@@ -4404,6 +4417,52 @@ class Guild(Hashable):
 
         new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
         return Onboarding(data=new, guild=self)
+
+    async def modify_incident_actions(
+        self,
+        *,
+        invites_disabled_until: datetime.datetime | None = MISSING,
+        dms_disabled_until: datetime.datetime | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> IncidentsData:
+        """|coro|
+
+        Modify the guild's incident actions (invites or DMs disabled until a
+        given ISO8601 timestamp). Supplying ``None`` disables the respective
+        action. Requires :attr:`~Permissions.manage_guild`.
+
+        Parameters
+        ----------
+        invites_disabled_until: Optional[:class:`str`]
+            ISO8601 timestamp indicating when invites will be enabled again, or
+            ``None`` to disable.
+        dms_disabled_until: Optional[:class:`str`]
+            ISO8601 timestamp indicating when DMs will be enabled again, or
+            ``None`` to disable.
+        reason: Optional[:class:`str`]
+            Audit log reason.
+
+        Returns
+        -------
+        :class:`IncidentsData`
+            The updated incidents data for the guild.
+        """
+
+        fields: IncidentsDataPayload = {}
+        if invites_disabled_until is not MISSING:
+            fields["invites_disabled_until"] = (
+                invites_disabled_until and invites_disabled_until.isoformat()
+            )
+
+        if dms_disabled_until is not MISSING:
+            fields["dms_disabled_until"] = (
+                dms_disabled_until and dms_disabled_until.isoformat()
+            )
+
+        new = await self._state.http.modify_guild_incident_actions(
+            self.id, fields, reason=reason
+        )
+        return IncidentsData(data=new, guild=self)
 
     async def delete_auto_moderation_rule(
         self,

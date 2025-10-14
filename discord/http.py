@@ -47,7 +47,7 @@ from .errors import (
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .soundboard import PartialSoundboardSound, SoundboardSound
-from .utils import MISSING, warn_deprecated
+from .utils import MISSING
 
 _log = logging.getLogger(__name__)
 
@@ -3131,6 +3131,19 @@ class HTTPClient:
         payload = {key: val for key, val in payload.items() if key in keys}
         return self.request(
             Route("PUT", "/guilds/{guild_id}/onboarding", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
+
+    def modify_guild_incident_actions(
+        self,
+        guild_id: Snowflake,
+        payload: guild.IncidentsData,
+        *,
+        reason: str | None = None,
+    ) -> Response[guild.IncidentsData]:
+        return self.request(
+            Route("PUT", "/guilds/{guild_id}/incident-actions", guild_id=guild_id),
             json=payload,
             reason=reason,
         )
