@@ -576,7 +576,7 @@ class Guild(Hashable):
             self._add_sound(sound)
 
         incidents_payload = guild.get("incidents_data")
-        self.incidents: IncidentsData | None = (
+        self.incidents_data: IncidentsData | None = (
             IncidentsData(data=incidents_payload, guild=self)
             if incidents_payload is not None
             else None
