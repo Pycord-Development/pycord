@@ -117,7 +117,7 @@ if TYPE_CHECKING:
     from .types.guild import (
         GuildFeature,
     )
-    from .types.guild import IncidentsData as IncidentsDataPayload
+    from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.guild import (
         MFALevel,
     )
@@ -4430,20 +4430,20 @@ class Guild(Hashable):
     ) -> IncidentsData:
         """|coro|
 
-        Modify the guild's incident actions (invites or DMs disabled until a
-        given ISO8601 timestamp). Supplying ``None`` disables the respective
-        action. Requires :attr:`~Permissions.manage_guild`.
+        Modify the guild's incident actions, controlling when invites or DMs
+        are re-enabled after being temporarily disabled. Requires
+        :attr:`~Permissions.manage_guild`.
 
         Parameters
         ----------
         invites_disabled_until: Optional[:class:`datetime.datetime`]
-            ISO8601 timestamp indicating when invites will be enabled again, or
-            ``None`` to disable.
+            The ISO8601 timestamp indicating when invites will be enabled again,
+            or ``None`` to enable invites immediately.
         dms_disabled_until: Optional[:class:`datetime.datetime`]
-            ISO8601 timestamp indicating when DMs will be enabled again, or
-            ``None`` to disable.
+            The ISO8601 timestamp indicating when DMs will be enabled again,
+            or ``None`` to enable DMs immediately.
         reason: Optional[:class:`str`]
-            Audit log reason.
+            The reason for this action, used for the audit log.
 
         Returns
         -------
@@ -4451,7 +4451,7 @@ class Guild(Hashable):
             The updated incidents data for the guild.
         """
 
-        fields: IncidentsDataPayload = {}
+        fields: ModifyIncidentsPayload = {}
         if invites_disabled_until is not MISSING:
             fields["invites_disabled_until"] = (
                 invites_disabled_until and invites_disabled_until.isoformat()
@@ -4465,7 +4465,7 @@ class Guild(Hashable):
         new = await self._state.http.modify_guild_incident_actions(
             self.id, fields, reason=reason
         )
-        return IncidentsData(data=new, guild=self)
+        return IncidentsData(data=new)
 
     async def delete_auto_moderation_rule(
         self,

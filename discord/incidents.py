@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 from .utils import parse_time
 
 if TYPE_CHECKING:
-    from .guild import Guild
     from .types.guild import IncidentsData as IncidentsDataPayload
 
 __all__ = ("IncidentsData",)
@@ -34,9 +33,7 @@ class IncidentsData:
         "raid_detected_at",
     )
 
-    def __init__(self, data: IncidentsDataPayload, guild: Guild | None = None):
-        self.guild = guild
-
+    def __init__(self, data: IncidentsDataPayload = None):
         self.invites_disabled_until: datetime.datetime | None = parse_time(
             data.get("invites_disabled_until")
         )
