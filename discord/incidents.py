@@ -33,7 +33,7 @@ class IncidentsData:
         "raid_detected_at",
     )
 
-    def __init__(self, data: IncidentsDataPayload, guild: Optional[Guild] = None):
+    def __init__(self, data: IncidentsDataPayload, guild: Guild | None = None):
         self.guild = guild
 
         self.invites_disabled_until: datetime.datetime | None = (
