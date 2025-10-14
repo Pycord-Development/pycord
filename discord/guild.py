@@ -69,6 +69,7 @@ from .enums import (
 from .errors import ClientException, InvalidArgument, InvalidData
 from .file import File
 from .flags import SystemChannelFlags
+from .incidents import IncidentsData
 from .integrations import Integration, _integration_factory
 from .invite import Invite
 from .iterators import (
@@ -81,7 +82,6 @@ from .member import Member, VoiceState
 from .mixins import Hashable
 from .monetization import Entitlement
 from .onboarding import Onboarding
-from .incidents import IncidentsData
 from .permissions import PermissionOverwrite
 from .role import Role, RoleColours
 from .scheduled_events import ScheduledEvent, ScheduledEventLocation
@@ -113,11 +113,14 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .template import Template
     from .types.guild import Ban as BanPayload
+    from .types.guild import Guild as GuildPayload
     from .types.guild import (
-        Guild as GuildPayload,
-        IncidentsData as IncidentsDataPayload,
+        GuildFeature,
     )
-    from .types.guild import GuildFeature, MFALevel
+    from .types.guild import IncidentsData as IncidentsDataPayload
+    from .types.guild import (
+        MFALevel,
+    )
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState

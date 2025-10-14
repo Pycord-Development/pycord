@@ -47,6 +47,7 @@ from .file import *
 from .flags import *
 from .guild import *
 from .http import *
+from .incidents import *
 from .integrations import *
 from .interactions import *
 from .invite import *
@@ -56,7 +57,6 @@ from .message import *
 from .monetization import *
 from .object import *
 from .onboarding import *
-from .incidents import *
 from .partial_emoji import *
 from .permissions import *
 from .player import *
