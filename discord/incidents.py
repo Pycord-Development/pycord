@@ -27,14 +27,13 @@ class IncidentsData:
     """
 
     __slots__ = (
-        "guild",
         "invites_disabled_until",
         "dms_disabled_until",
         "dm_spam_detected_at",
         "raid_detected_at",
     )
 
-    def __init__(self, data: IncidentsDataPayload = None):
+    def __init__(self, data: IncidentsDataPayload):
         self.invites_disabled_until: datetime.datetime | None = parse_time(
             data.get("invites_disabled_until")
         )
