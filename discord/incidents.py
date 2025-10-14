@@ -61,7 +61,6 @@ class IncidentsData:
         )
 
     def to_dict(self) -> IncidentsDataPayload:
-        """Converts this object back to a raw payload suitable for API use."""
         return {
             "invites_disabled_until": self.invites_disabled_until
             and self.invites_disabled_until.isoformat(),
