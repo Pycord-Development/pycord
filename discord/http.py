@@ -3138,7 +3138,7 @@ class HTTPClient:
     def modify_guild_incident_actions(
         self,
         guild_id: Snowflake,
-        payload: guild.IncidentsData,
+        payload: guild.ModifyIncidents,
         *,
         reason: str | None = None,
     ) -> Response[guild.IncidentsData]:
