@@ -578,7 +578,7 @@ class Guild(Hashable):
 
         incidents_payload = guild.get("incidents_data")
         self.incidents_data: IncidentsData | None = (
-            IncidentsData(data=incidents_payload, guild=self)
+            IncidentsData(data=incidents_payload)
             if incidents_payload is not None
             else None
         )
