@@ -32,13 +32,13 @@ from os import PathLike
 from typing import (
     TYPE_CHECKING,
     Any,
+    AsyncGenerator,
     Callable,
     ClassVar,
     Sequence,
     TypeVar,
     Union,
     overload,
-    AsyncGenerator
 )
 from urllib.parse import parse_qs, urlparse
 
@@ -291,7 +291,7 @@ class Attachment(Hashable):
         *,
         seek_begin: bool = True,
         use_cached: bool = False,
-        chunksize: int | None = None
+        chunksize: int | None = None,
     ) -> int:
         """|coro|
 
@@ -390,7 +390,9 @@ class Attachment(Hashable):
         data = await self._http.get_from_cdn(url)
         return data
 
-    async def read_chunked(self, *, use_cached: bool = False, chunksize: int | None = None) -> AsyncGenerator[bytes, None]:
+    async def read_chunked(
+        self, *, use_cached: bool = False, chunksize: int | None = None
+    ) -> AsyncGenerator[bytes]:
         """|coro|
 
         Retrieves the content of this attachment in chunks as a :class:`AsyncGenerator` object of bytes.

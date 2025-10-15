@@ -29,7 +29,15 @@ import asyncio
 import logging
 import sys
 import weakref
-from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar, AsyncGenerator
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    Coroutine,
+    Iterable,
+    Sequence,
+    TypeVar,
+)
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -405,8 +413,10 @@ class HTTPClient:
                 raise Forbidden(resp, "cannot retrieve asset")
             else:
                 raise HTTPException(resp, "failed to get asset")
-    
-    async def get_from_cdn_stream(self, url: str, chunksize: int) -> AsyncGenerator[bytes, None]:
+
+    async def get_from_cdn_stream(
+        self, url: str, chunksize: int
+    ) -> AsyncGenerator[bytes]:
         if chunksize < 1:
             raise InvalidArgument("The chunksize must be a positive number.")
 
