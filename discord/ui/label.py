@@ -32,10 +32,10 @@ from ..components import SelectDefaultValue, SelectOption, _component_factory
 from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
+from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ItemCallbackType, ModalItem
 from .select import Select
-from .file_upload import FileUpload
 
 __all__ = ("Label",)
 
