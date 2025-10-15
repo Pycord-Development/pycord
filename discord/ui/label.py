@@ -35,6 +35,7 @@ from .button import Button
 from .input_text import InputText
 from .item import ItemCallbackType, ModalItem
 from .select import Select
+from .file_upload import FileUpload
 
 __all__ = ("Label",)
 
@@ -59,6 +60,7 @@ class Label(ModalItem[M]):
 
     - :class:`discord.ui.Select`
     - :class:`discord.ui.InputText`
+    - :class:`discord.ui.FileUpload`
 
     .. versionadded:: 2.7
 
@@ -118,9 +120,8 @@ class Label(ModalItem[M]):
 
         Parameters
         ----------
-        item: Union[:class:`ModalItem`, :class:`InputText`]
+        item: Union[:class:`ModalItem`]
             The item to set.
-            Currently only supports :class:`~discord.ui.Select` and :class:`~discord.ui.InputText`.
 
         Raises
         ------
@@ -327,6 +328,46 @@ class Label(ModalItem[M]):
         )
 
         return self.set_item(select)
+
+    def set_file_upload(
+        self,
+        *,
+        custom_id: str | None = None,
+        min_values: int | None = None,
+        max_values: int | None = None,
+        required: bool | None = True,
+        id: int | None = None,
+    ) -> Self:
+        """Set this label's item to a file upload.
+
+        To set a pre-existing :class:`FileUpload`, use the
+        :meth:`set_item` method, instead.
+
+        Parameters
+        ----------
+        custom_id: Optional[:class:`str`]
+            The ID of the input text field that gets received during an interaction.
+        min_values: Optional[:class:`int`]
+            The minimum number of files that must be uploaded.
+            Defaults to 0 and must be between 0 and 10, inclusive.
+        max_values: Optional[:class:`int`]
+            The maximum number of files that can be uploaded.
+            Must be between 1 and 10, inclusive.
+        required: Optional[:class:`bool`]
+            Whether the file upload field is required or not. Defaults to ``True``.
+        id: Optional[:class:`int`]
+            The file upload field's ID.
+        """
+
+        upload = FileUpload(
+            custom_id=custom_id,
+            min_values=min_values,
+            max_values=max_values,
+            required=required,
+            id=id,
+        )
+
+        return self.set_item(upload)
 
     @property
     def label(self) -> str:

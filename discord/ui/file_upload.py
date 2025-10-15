@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 from ..components import FileUpload as FileUploadComponent
 from ..enums import ComponentType
 from ..message import Attachment
+from .item import ModalItem
 
 __all__ = ("FileUpload",)
 
@@ -14,21 +15,15 @@ if TYPE_CHECKING:
     from ..types.components import FileUploadComponent as FileUploadComponentPayload
 
 
-class FileUpload:
+class FileUpload(ModalItem):
     """Represents a UI File Upload component.
 
     .. versionadded:: 2.7
 
     Parameters
     ----------
-    label: :class:`str`
-        The label for this component
-        Must be 45 characters or fewer.
     custom_id: Optional[:class:`str`]
         The ID of the input text field that gets received during an interaction.
-    description: Optional[:class:`str`]
-        The description for the file upload field.
-        Must be 100 characters or fewer.
     min_values: Optional[:class:`int`]
         The minimum number of files that must be uploaded.
         Defaults to 0 and must be between 0 and 10, inclusive.
@@ -37,41 +32,28 @@ class FileUpload:
         Must be between 1 and 10, inclusive.
     required: Optional[:class:`bool`]
         Whether the file upload field is required or not. Defaults to ``True``.
-    row: Optional[:class:`int`]
-        The relative row this file upload field belongs to. A modal dialog can only have 5
-        rows. By default, items are arranged automatically into those 5 rows. If you'd
-        like to control the relative positioning of the row then passing an index is advised.
-        For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+    id: Optional[:class:`int`]
+        The file upload field's ID.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
-        "label",
         "required",
         "min_values",
         "max_values",
         "custom_id",
         "id",
-        "description",
     )
 
     def __init__(
         self,
         *,
-        label: str,
         custom_id: str | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
         required: bool = True,
-        row: int | None = None,
         id: int | None = None,
-        description: str | None = None,
     ):
         super().__init__()
-        if len(str(label)) > 45:
-            raise ValueError("label must be 45 characters or fewer")
-        if description and len(description) > 100:
-            raise ValueError("description must be 100 characters or fewer")
         if min_values and (min_values < 0 or min_values > 10):
             raise ValueError("min_values must be between 0 and 10")
         if max_values and (max_values < 1 or max_values > 10):
@@ -83,8 +65,6 @@ class FileUpload:
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        self.label: str = str(label)
-        self.description: str | None = description
 
         self._underlying: FileUploadComponent = FileUploadComponent._raw_construct(
             type=ComponentType.file_upload,
@@ -168,10 +148,6 @@ class FileUpload:
         """The files that were uploaded to the field."""
         return self._attachments
 
-    @property
-    def width(self) -> int:
-        return 5
-
     def to_component_dict(self) -> FileUploadComponentPayload:
         return self._underlying.to_dict()
 
@@ -184,7 +160,3 @@ class FileUpload:
             )
             for attachment_id in values
         ]
-
-    @staticmethod
-    def uses_label() -> bool:
-        return True
