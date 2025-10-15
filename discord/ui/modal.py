@@ -253,7 +253,7 @@ class BaseModal(ItemInterface):
 
 
 class Modal(BaseModal):
-    """Represents a UI modal for InputText components.
+    """Represents a legacy UI modal for InputText components.
 
     This object must be inherited to create a UI within Discord.
 

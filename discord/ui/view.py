@@ -500,7 +500,7 @@ class BaseView(ItemInterface):
 
 
 class View(BaseView):
-    """Represents a UI view for v1 components :class:`~discord.ui.Button` and :class:`~discord.ui.Select`.
+    """Represents a legacy UI view for V1 components :class:`~discord.ui.Button` and :class:`~discord.ui.Select`.
 
     This object must be inherited to create a UI within Discord.
 

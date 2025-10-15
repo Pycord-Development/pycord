@@ -74,7 +74,7 @@ class MyModal(discord.ui.DesignerModal):
                 ),
                 discord.EmbedField(
                     name="Favorite Color",
-                    value=self.children[3].values[0],
+                    value=self.children[3].item.values[0],
                     inline=False,
                 ),
             ],
