@@ -56,6 +56,7 @@ class MyModal(discord.ui.DesignerModal):
                 "# Personal Questions"
             ),  # TextDisplay does NOT use Label
             select,
+            file,
             *args,
             **kwargs,
         )
@@ -79,7 +80,7 @@ class MyModal(discord.ui.DesignerModal):
             ],
             color=discord.Color.random(),
         )
-        attachment = self.children[4].values[0] if self.children[4].values else None
+        attachment = self.children[4].item.values[0] if self.children[4].item.values else None
         if attachment:
             embed.set_image(url=f"attachment://{attachment.filename}")
         await interaction.followup.send(
