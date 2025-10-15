@@ -75,8 +75,6 @@ class FileUpload(ModalItem):
             id=id,
         )
         self._attachments: list[Attachment] | None = None
-        self.row = row
-        self._rendered_row: int | None = None
 
     def __repr__(self) -> str:
         attrs = " ".join(
