@@ -29,7 +29,7 @@ import asyncio
 import logging
 import sys
 import weakref
-from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
+from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar, AsyncGenerator
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -399,6 +399,21 @@ class HTTPClient:
         async with self.__session.get(url) as resp:
             if resp.status == 200:
                 return await resp.read()
+            elif resp.status == 404:
+                raise NotFound(resp, "asset not found")
+            elif resp.status == 403:
+                raise Forbidden(resp, "cannot retrieve asset")
+            else:
+                raise HTTPException(resp, "failed to get asset")
+    
+    async def get_from_cdn_stream(self, url: str, chunksize: int) -> AsyncGenerator[bytes, None]:
+        if chunksize < 1:
+            raise InvalidArgument("The chunksize must be a positive number.")
+
+        async with self.__session.get(url) as resp:
+            if resp.status == 200:
+                async for chunk in resp.content.iter_chunked(chunksize):
+                    yield chunk
             elif resp.status == 404:
                 raise NotFound(resp, "asset not found")
             elif resp.status == 403:
