@@ -735,6 +735,7 @@ class ComponentType(Enum):
     content_inventory_entry = 16
     container = 17
     label = 18
+    file_upload = 19
 
     def __int__(self):
         return self.value

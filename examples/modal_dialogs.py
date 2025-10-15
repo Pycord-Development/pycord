@@ -41,6 +41,14 @@ class MyModal(discord.ui.DesignerModal):
             ),
             description="If it is not listed, skip this question.",
         )
+        file = discord.ui.Label(
+            "What's your favorite picture?",
+            discord.ui.FileUpload(
+                max_values=1,
+                required=False,
+            ),
+            description="You may only pick one! Chose wisely!",
+        )
         super().__init__(
             first_input,
             second_input,
@@ -53,6 +61,7 @@ class MyModal(discord.ui.DesignerModal):
         )
 
     async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         embed = discord.Embed(
             title="Your Modal Results",
             fields=[
@@ -62,10 +71,21 @@ class MyModal(discord.ui.DesignerModal):
                 discord.EmbedField(
                     name="Second Input", value=self.children[1].item.value, inline=False
                 ),
+                discord.EmbedField(
+                    name="Favorite Color",
+                    value=self.children[3].values[0],
+                    inline=False,
+                ),
             ],
             color=discord.Color.random(),
         )
-        await interaction.response.send_message(embeds=[embed])
+        attachment = self.children[4].values[0] if self.children[4].values else None
+        if attachment:
+            embed.set_image(url=f"attachment://{attachment.filename}")
+        await interaction.followup.send(
+            embeds=[embed],
+            files=[await attachment.to_file()] if attachment else [],
+        )
 
 
 @bot.slash_command(name="modaltest")

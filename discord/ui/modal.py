@@ -35,6 +35,7 @@ from typing import TYPE_CHECKING, Any, TypeVar
 from ..enums import ComponentType
 from ..utils import find
 from .core import ItemInterface
+from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ModalItem
 from .label import Label
@@ -179,11 +180,11 @@ class BaseModal(ItemInterface):
 
         Parameters
         ----------
-        item: Union[class:`InputText`, :class:`ModalItem`]
+        item: Union[:class:`ModalItem`]
             The item to add to the modal
         """
 
-        if len(self._children) > 5:
+        if len(self._children) >= 5:
             raise ValueError("You can only have up to 5 items in a modal.")
 
         if not isinstance(item, ModalItem):

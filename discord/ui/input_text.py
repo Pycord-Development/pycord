@@ -252,7 +252,7 @@ class InputText(ModalItem):
         return super().to_component_dict()
 
     def refresh_state(self, data) -> None:
-        self._input_value = data["value"]
+        self._input_value = data.get("value", None)
 
     def refresh_from_modal(
         self, interaction: Interaction, data: InputTextComponentPayload

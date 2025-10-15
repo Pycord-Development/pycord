@@ -13,6 +13,7 @@ from .button import *
 from .container import *
 from .core import *
 from .file import *
+from .file_upload import *
 from .input_text import *
 from .item import *
 from .label import *
