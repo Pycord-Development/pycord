@@ -241,6 +241,7 @@ class ModalItem(Item[M]):
     And :class:`discord.ui.Label` should be used in :class:`discord.ui.DesignerModal` to support the following items:
     - :class:`discord.ui.InputText`
     - :class:`discord.ui.Select`
+    - :class:`discord.ui.FileUpload`
 
     .. versionadded:: 2.7
     """
