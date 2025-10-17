@@ -28,6 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
   - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
     different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
     `ui.MentionableSelect`, and `ui.ChannelSelect`.
+- Added `ui.FileUpload` for modals and the `FileUpload` component.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 
 ### Changed
 
@@ -47,6 +49,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2925](https://github.com/Pycord-Development/pycord/pull/2925))
 - Fixed a `TypeError` when typing `ui.Select` without providing optional type arguments.
   ([#2943](https://github.com/Pycord-Development/pycord/pull/2943))
+- Fixed modal input values being misordered when using the `row` parameter and inserting
+  items out of row order.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed a KeyError when a text input is left blank in a modal.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
   parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
 
