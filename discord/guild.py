@@ -4430,7 +4430,7 @@ class Guild(Hashable):
 
         Modify the guild's incident actions, controlling when invites or DMs
         are re-enabled after being temporarily disabled. Requires
-        :attr:`~Permissions.manage_guild`.
+        the :attr:`~Permissions.manage_guild` permission.
 
         Parameters
         ----------
