@@ -53,9 +53,20 @@ __all__ = (
     "FlagConverter",
 )
 
-
+# Typing helpers for the MISSING sentinel (no runtime behavior change)
+# We give type-checkers a concrete Missing type and a generic Maybe[T] = T | Missing
+# without requiring changes to discord.utils.
 if TYPE_CHECKING:
     from .context import Context
+    class _MissingType:  # only exists for type-checkers
+        ...
+    Missing = _MissingType
+else:
+    # at runtime we don't care; this keeps annotations import-safe
+    Missing = type(MISSING)
+
+T = TypeVar("T")
+Maybe = Union[T, Missing]
 
 
 def _missing_field_factory() -> field:
@@ -89,13 +100,14 @@ class Flag:
         Whether multiple given values overrides the previous value.
     """
 
-    name: str = _missing_field_factory()
+    # NOTE: Fields that can be the sentinel are typed as Maybe[...]
+    name: Maybe[str] = _missing_field_factory()
     aliases: list[str] = field(default_factory=list)
-    attribute: str = _missing_field_factory()
-    annotation: Any = _missing_field_factory()
-    default: Any = _missing_field_factory()
-    max_args: int = _missing_field_factory()
-    override: bool = _missing_field_factory()
+    attribute: Maybe[str] = _missing_field_factory()
+    annotation: Maybe[Any] = _missing_field_factory()
+    default: Maybe[Any] = _missing_field_factory()
+    max_args: Maybe[int] = _missing_field_factory()
+    override: Maybe[bool] = _missing_field_factory()
     cast_to_dict: bool = False
 
     @property
@@ -109,11 +121,11 @@ class Flag:
 
 def flag(
     *,
-    name: str = MISSING,
-    aliases: list[str] = MISSING,
-    default: Any = MISSING,
-    max_args: int = MISSING,
-    override: bool = MISSING,
+    name: Maybe[str] = MISSING,
+    aliases: Maybe[list[str]] = MISSING,
+    default: Maybe[Any] = MISSING,
+    max_args: Maybe[int] = MISSING,
+    override: Maybe[bool] = MISSING,
 ) -> Any:
     """Override default functionality and parameters of the underlying :class:`FlagConverter`
     class attributes.
@@ -138,7 +150,7 @@ def flag(
     """
     return Flag(
         name=name,
-        aliases=aliases,
+        aliases=aliases if aliases is not MISSING else MISSING,  # keep old behavior
         default=default,
         max_args=max_args,
         override=override,
@@ -247,24 +259,24 @@ def get_flags(
             flag.override = False
 
         # Validate flag names are unique
-        name = flag.name.casefold() if case_insensitive else flag.name
-        if name in names:
+        name_key = flag.name.casefold() if case_insensitive else flag.name
+        if name_key in names:
             raise TypeError(
                 f"{flag.name!r} flag conflicts with previous flag or alias."
             )
         else:
-            names.add(name)
+            names.add(name_key)
 
         for alias in flag.aliases:
             # Validate alias is unique
-            alias = alias.casefold() if case_insensitive else alias
-            if alias in names:
+            alias_key = alias.casefold() if case_insensitive else alias
+            if alias_key in names:
                 raise TypeError(
                     f"{flag.name!r} flag alias {alias!r} conflicts with previous flag"
                     " or alias."
                 )
             else:
-                names.add(alias)
+                names.add(alias_key)
 
         flags[flag.name] = flag
 
@@ -287,9 +299,9 @@ class FlagsMeta(type):
         bases: tuple[type, ...],
         attrs: dict[str, Any],
         *,
-        case_insensitive: bool = MISSING,
-        delimiter: str = MISSING,
-        prefix: str = MISSING,
+        case_insensitive: Maybe[bool] = MISSING,
+        delimiter: Maybe[str] = MISSING,
+        prefix: Maybe[str] = MISSING,
     ):
         attrs["__commands_is_flag__"] = True
 
@@ -330,28 +342,28 @@ class FlagsMeta(type):
                     ]
 
         if case_insensitive is not MISSING:
-            attrs["__commands_flag_case_insensitive__"] = case_insensitive
+            attrs["__commands_flag_case_insensitive__"] = case_insensitive  # type: ignore[assignment]
         if delimiter is not MISSING:
-            attrs["__commands_flag_delimiter__"] = delimiter
+            attrs["__commands_flag_delimiter__"] = delimiter  # type: ignore[assignment]
         if prefix is not MISSING:
-            attrs["__commands_flag_prefix__"] = prefix
+            attrs["__commands_flag_prefix__"] = prefix  # type: ignore[assignment]
 
-        case_insensitive = attrs.setdefault("__commands_flag_case_insensitive__", False)
-        delimiter = attrs.setdefault("__commands_flag_delimiter__", ":")
-        prefix = attrs.setdefault("__commands_flag_prefix__", "")
+        case_insensitive_val = attrs.setdefault("__commands_flag_case_insensitive__", False)
+        delimiter_val = attrs.setdefault("__commands_flag_delimiter__", ":")
+        prefix_val = attrs.setdefault("__commands_flag_prefix__", "")
 
-        for flag_name, flag in get_flags(attrs, global_ns, local_ns).items():
-            flags[flag_name] = flag
-            aliases.update({alias_name: flag_name for alias_name in flag.aliases})
+        for flag_name, flg in get_flags(attrs, global_ns, local_ns).items():
+            flags[flag_name] = flg
+            aliases.update({alias_name: flag_name for alias_name in flg.aliases})
 
-        forbidden = set(delimiter).union(prefix)
+        forbidden = set(delimiter_val).union(prefix_val)
         for flag_name in flags:
             validate_flag_name(flag_name, forbidden)
         for alias_name in aliases:
             validate_flag_name(alias_name, forbidden)
 
         regex_flags = 0
-        if case_insensitive:
+        if case_insensitive_val:
             flags = {key.casefold(): value for key, value in flags.items()}
             aliases = {
                 key.casefold(): value.casefold() for key, value in aliases.items()
@@ -364,7 +376,7 @@ class FlagsMeta(type):
 
         joined = "|".join(keys)
         pattern = re.compile(
-            f"(({re.escape(prefix)})(?P<flag>{joined}){re.escape(delimiter)})",
+            f"(({re.escape(prefix_val)})(?P<flag>{joined}){re.escape(delimiter_val)})",
             regex_flags,
         )
         attrs["__commands_flag_regex__"] = pattern
@@ -375,7 +387,7 @@ class FlagsMeta(type):
 
 
 async def tuple_convert_all(
-    ctx: Context, argument: str, flag: Flag, converter: Any
+    ctx: "Context", argument: str, flag: Flag, converter: Any
 ) -> tuple[Any, ...]:
     view = StringView(argument)
     results = []
@@ -402,7 +414,7 @@ async def tuple_convert_all(
 
 
 async def tuple_convert_flag(
-    ctx: Context, argument: str, flag: Flag, converters: Any
+    ctx: "Context", argument: str, flag: Flag, converters: Any
 ) -> tuple[Any, ...]:
     view = StringView(argument)
     results = []
@@ -454,7 +466,7 @@ async def convert_flag(ctx, argument: str, flag: Flag, annotation: Any = None) -
             return await convert_flag(ctx, argument, flag, annotation)
         elif origin is Union and annotation.__args__[-1] is type(None):
             # typing.Optional[x]
-            annotation = Union[annotation.__args__[:-1]]
+            annotation = Union[annotation.__args__[:-1]]  # type: ignore[index]
             return await run_converters(ctx, annotation, argument, param)
         elif origin is dict:
             # typing.Dict[K, V] -> typing.Tuple[K, V]
@@ -517,7 +529,7 @@ class FlagConverter(metaclass=FlagsMeta):
             yield flag.name, getattr(self, flag.attribute)
 
     @classmethod
-    async def _construct_default(cls: type[F], ctx: Context) -> F:
+    async def _construct_default(cls: type[F], ctx: "Context") -> F:
         self: F = cls.__new__(cls)
         flags = cls.__commands_flags__
         for flag in flags.values():
@@ -588,7 +600,7 @@ class FlagConverter(metaclass=FlagsMeta):
         return result
 
     @classmethod
-    async def convert(cls: type[F], ctx: Context, argument: str) -> F:
+    async def convert(cls: type[F], ctx: "Context", argument: str) -> F:
         """|coro|
 
         The method that actually converters an argument to the flag mapping.
@@ -618,30 +630,30 @@ class FlagConverter(metaclass=FlagsMeta):
         flags = cls.__commands_flags__
 
         self: F = cls.__new__(cls)
-        for name, flag in flags.items():
+        for name, flg in flags.items():
             try:
                 values = arguments[name]
             except KeyError:
-                if flag.required:
-                    raise MissingRequiredFlag(flag)
+                if flg.required:
+                    raise MissingRequiredFlag(flg)
                 else:
-                    if callable(flag.default):
-                        default = await maybe_coroutine(flag.default, ctx)
-                        setattr(self, flag.attribute, default)
+                    if callable(flg.default):
+                        default = await maybe_coroutine(flg.default, ctx)
+                        setattr(self, flg.attribute, default)
                     else:
-                        setattr(self, flag.attribute, flag.default)
+                        setattr(self, flg.attribute, flg.default)
                     continue
 
-            if 0 < flag.max_args < len(values):
-                if flag.override:
-                    values = values[-flag.max_args :]
+            if 0 < flg.max_args < len(values):  # type: ignore[operator]
+                if flg.override:  # type: ignore[truthy-function]
+                    values = values[-flg.max_args :]  # type: ignore[index]
                 else:
-                    raise TooManyFlags(flag, values)
+                    raise TooManyFlags(flg, values)
 
             # Special case:
-            if flag.max_args == 1:
-                value = await convert_flag(ctx, values[0], flag)
-                setattr(self, flag.attribute, value)
+            if flg.max_args == 1:  # type: ignore[comparison-overlap]
+                value = await convert_flag(ctx, values[0], flg)
+                setattr(self, flg.attribute, value)
                 continue
 
             # Another special case, tuple parsing.
@@ -649,11 +661,11 @@ class FlagConverter(metaclass=FlagsMeta):
             # So, given flag: hello 20 as the input and Tuple[str, int] as the type hint
             # We would receive ('hello', 20) as the resulting value
             # This uses the same whitespace and quoting rules as regular parameters.
-            values = [await convert_flag(ctx, value, flag) for value in values]
+            values = [await convert_flag(ctx, value, flg) for value in values]
 
-            if flag.cast_to_dict:
+            if flg.cast_to_dict:
                 values = dict(values)  # type: ignore
 
-            setattr(self, flag.attribute, values)
+            setattr(self, flg.attribute, values)
 
         return self
