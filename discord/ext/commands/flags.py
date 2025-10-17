@@ -58,8 +58,10 @@ __all__ = (
 # without requiring changes to discord.utils.
 if TYPE_CHECKING:
     from .context import Context
+
     class _MissingType:  # only exists for type-checkers
         ...
+
     Missing = _MissingType
 else:
     # at runtime we don't care; this keeps annotations import-safe
@@ -348,7 +350,9 @@ class FlagsMeta(type):
         if prefix is not MISSING:
             attrs["__commands_flag_prefix__"] = prefix  # type: ignore[assignment]
 
-        case_insensitive_val = attrs.setdefault("__commands_flag_case_insensitive__", False)
+        case_insensitive_val = attrs.setdefault(
+            "__commands_flag_case_insensitive__", False
+        )
         delimiter_val = attrs.setdefault("__commands_flag_delimiter__", ":")
         prefix_val = attrs.setdefault("__commands_flag_prefix__", "")
 
@@ -387,7 +391,7 @@ class FlagsMeta(type):
 
 
 async def tuple_convert_all(
-    ctx: "Context", argument: str, flag: Flag, converter: Any
+    ctx: Context, argument: str, flag: Flag, converter: Any
 ) -> tuple[Any, ...]:
     view = StringView(argument)
     results = []
@@ -414,7 +418,7 @@ async def tuple_convert_all(
 
 
 async def tuple_convert_flag(
-    ctx: "Context", argument: str, flag: Flag, converters: Any
+    ctx: Context, argument: str, flag: Flag, converters: Any
 ) -> tuple[Any, ...]:
     view = StringView(argument)
     results = []
@@ -529,7 +533,7 @@ class FlagConverter(metaclass=FlagsMeta):
             yield flag.name, getattr(self, flag.attribute)
 
     @classmethod
-    async def _construct_default(cls: type[F], ctx: "Context") -> F:
+    async def _construct_default(cls: type[F], ctx: Context) -> F:
         self: F = cls.__new__(cls)
         flags = cls.__commands_flags__
         for flag in flags.values():
@@ -600,7 +604,7 @@ class FlagConverter(metaclass=FlagsMeta):
         return result
 
     @classmethod
-    async def convert(cls: type[F], ctx: "Context", argument: str) -> F:
+    async def convert(cls: type[F], ctx: Context, argument: str) -> F:
         """|coro|
 
         The method that actually converters an argument to the flag mapping.
