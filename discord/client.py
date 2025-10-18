@@ -301,7 +301,8 @@ class Client:
         self._connection._get_websocket = self._get_websocket
         self._connection._get_client = lambda: self
         self._event_handlers: dict[str, list[Coro]] = {}
-        self._in_context: bool = False
+        self._setup_done: asyncio.Event = asyncio.Event()
+        self._setup_lock: asyncio.Lock = asyncio.Lock()
 
         if VoiceClient.warn_nacl:
             VoiceClient.warn_nacl = False
@@ -310,27 +311,32 @@ class Client:
         # Used to hard-reference tasks so they don't get garbage collected (discarded with done_callbacks)
         self._tasks = set()
 
+    async def _async_setup(self) -> None:
+        async with self._setup_lock:
+            if self._setup_done.is_set():
+                return
+
+            if self._loop is None:
+                try:
+                    l = asyncio.get_running_loop()
+                except RuntimeError:
+                    # No event loop was found, this should not happen
+                    # because entering on this context manager means a
+                    # loop is already active, but we need to handle it
+                    # anyways just to prevent future errors.
+                    l = asyncio.new_event_loop()
+
+                self._loop = l
+                self.http.loop = l
+                self._connection.loop = l
+
+            self._ready = asyncio.Event()
+            self._closed = asyncio.Event()
+
+            self._setup_done.set()
+
     async def __aenter__(self) -> Client:
-        self._in_context = True
-        if self._loop is None:
-            try:
-                self._loop = asyncio.get_running_loop()
-            except RuntimeError:
-                # No event loop was found, this should not happen
-                # because entering on this context manager means a
-                # loop is already active, but we need to handle it
-                # anyways just to prevent future errors.
-
-                # Maybe handle different system event loop policies?
-                self._loop = asyncio.new_event_loop()
-
-        self._pending_loops.start(self)
-        self.http.loop = self.loop
-        self._connection.loop = self.loop
-
-        self._ready = asyncio.Event()
-        self._closed = asyncio.Event()
-
+        await self._async_setup()
         return self
 
     async def __aexit__(
@@ -339,7 +345,6 @@ class Client:
         exc_v: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        self._in_context = False
         if not self.is_closed():
             await self.close()
 
@@ -721,6 +726,7 @@ class Client:
                 f"token must be of type str, not {token.__class__.__name__}"
             )
 
+        await self._async_setup()
         _log.info("logging in using static token")
 
         data = await self.http.static_login(token.strip())
@@ -750,6 +756,8 @@ class Client:
         :exc:`ConnectionClosed`
             The WebSocket connection has been terminated.
         """
+
+        await self._async_setup()
 
         backoff = ExponentialBackoff()
         ws_params = {
@@ -847,6 +855,7 @@ class Client:
 
             self._ready.clear()
             self._closed.set()
+            self._setup_done.clear()
 
     def clear(self) -> None:
         """Clears the internal state of the bot.
@@ -857,6 +866,7 @@ class Client:
         """
         self._closed.clear()
         self._ready.clear()
+        self._setup_done.clear()
         self._connection.clear()
         self.http.recreate()
 
@@ -870,20 +880,6 @@ class Client:
         TypeError
             An unexpected keyword argument was received.
         """
-        if not self._in_context and self._loop is None:
-            # Update the loop to get the running one in case the one set is MISSING
-            try:
-                self._loop = asyncio.get_running_loop()
-            except RuntimeError:
-                self._loop = asyncio.new_event_loop()
-    
-            self._pending_loops.start(self)
-            self.http.loop = self.loop
-            self._connection.loop = self.loop
-
-            self._ready = asyncio.Event()
-            self._closed = asyncio.Event()
-
         await self.login(token)
         await self.connect(reconnect=reconnect)
 
