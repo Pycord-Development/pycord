@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import datetime
 import inspect
 import logging
@@ -133,11 +134,12 @@ class Loop(Generic[LF]):
         self.coro: LF = coro
         self.reconnect: bool = reconnect
 
-        if create_loop is True and loop is None:
+        if loop is None:
             try:
                 loop = asyncio.get_running_loop()
             except RuntimeError:
-                loop = asyncio.new_event_loop()
+                if create_loop:
+                    loop = asyncio.new_event_loop()
 
         self.loop: asyncio.AbstractEventLoop | None = loop
 
@@ -388,6 +390,11 @@ class Loop(Generic[LF]):
     def start(self, *args: Any, **kwargs: Any) -> asyncio.Task[None] | None:
         r"""Starts the internal task in the event loop.
 
+        If this loop was created with the ``create_loop`` parameter set as ``False`` and
+        no running loop is found (eg this method is not called from an async context),
+        then this task will be started automatically when any kind of :class:`~discord.Client`
+        (subclasses included) starts.
+
         Parameters
         ------------
         \*args
@@ -405,6 +412,13 @@ class Loop(Generic[LF]):
         :class:`asyncio.Task`
             The task that has been created.
         """
+
+        loop = None
+        with contextlib.suppress(RuntimeError):
+            loop = asyncio.get_running_loop()
+
+        if loop:
+            self.loop = loop
 
         if self.loop is None:
             _log.warning(
@@ -850,8 +864,13 @@ def loop(
 
         .. versionadded:: 2.7
     create_loop: :class:`bool`
-        Whether this task should create their own event loop to start running it
-        without a client bound to it.
+        Whether this task should create its own :class:`asyncio.AbstractEventLoop` to run if
+        no already running one is found.
+
+        Loops must be in an async context in order to run, this means :meth:`Loop.start` should be
+        called from an async context (e.g. coroutines).
+
+        Defaults to ``False``.
 
         .. versionadded:: 2.7
 
