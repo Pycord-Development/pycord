@@ -652,9 +652,10 @@ class VoiceClient(VoiceProtocol):
         nonce[:4] = data[-4:]
         data = data[:-4]
 
-        return self.strip_header_ext(
-            box.decrypt(bytes(data), bytes(header), bytes(nonce))
-        )
+        r = box.decrypt(bytes(data), bytes(header), bytes(nonce))
+        # Discord adds 8 bytes of data before the opus data.
+        # This can be removed, and at this time, discarded as it is unclear what they are for.
+        return r[8:]
 
     @staticmethod
     def strip_header_ext(data):
@@ -774,7 +775,7 @@ class VoiceClient(VoiceProtocol):
         data: :class:`bytes`
             Bytes received by Discord via the UDP connection used for sending and receiving voice data.
         """
-        if data[1] != 0x78:
+        if data[1] & 0x78 != 0x78:
             # We Should Ignore Any Payload Types We Do Not Understand
             # Ref RFC 3550 5.1 payload type
             # At Some Point We Noted That We Should Ignore Only Types 200 - 204 inclusive.

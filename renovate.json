@@ -6,10 +6,7 @@
     ":dependencyDashboard"
   ],
   "assigneesFromCodeOwners": true,
-  "packageRules": [
-    {
-      "matchManagers": ["pip_requirements"],
-      "matchFileNames": ["requirements/*.txt"]
-    }
-  ]
+  "pip_requirements": {
+    "managerFilePatterns": ["requirements/*.txt"]
+  }
 }
