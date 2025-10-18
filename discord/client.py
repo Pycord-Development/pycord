@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
-import contextlib
 import inspect
 import logging
 import sys
@@ -52,7 +51,7 @@ from .http import HTTPClient
 from .invite import Invite
 from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
-from .monetization import SKU, Entitlement
+from .monetization import SKU
 from .object import Object
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
@@ -261,10 +260,6 @@ class Client:
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-
-        if loop is None:
-            with contextlib.suppress(RuntimeError):
-                loop = asyncio.get_running_loop()
 
         self._loop: asyncio.AbstractEventLoop | None = loop
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
