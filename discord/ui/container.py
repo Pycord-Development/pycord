@@ -431,9 +431,7 @@ class Container(ViewItem[V]):
     def from_component(cls: type[C], component: ContainerComponent) -> C:
         from .view import _component_to_item
 
-        items = [
-            _component_to_item(c) for c in component.components
-        ]
+        items = [_component_to_item(c) for c in component.components]
         return cls(
             *items,
             colour=component.accent_color,
