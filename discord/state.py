@@ -402,6 +402,9 @@ class ConnectionState:
     def store_view(self, view: BaseView, message_id: int | None = None) -> None:
         self._view_store.add_view(view, message_id)
 
+    def purge_message_view(self, message_id: int) -> None:
+        self._view_store.remove_message_view(message_id)
+
     def store_modal(self, modal: Modal, message_id: int) -> None:
         self._modal_store.add_modal(modal, message_id)
 
