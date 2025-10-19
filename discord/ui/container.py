@@ -41,7 +41,6 @@ from .section import Section
 from .select import Select
 from .separator import Separator
 from .text_display import TextDisplay
-from .view import _walk_all_components
 
 __all__ = ("Container",)
 
@@ -433,7 +432,7 @@ class Container(ViewItem[V]):
         from .view import _component_to_item
 
         items = [
-            _component_to_item(c) for c in _walk_all_components(component.components)
+            _component_to_item(c) for c in component.components
         ]
         return cls(
             *items,
