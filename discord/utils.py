@@ -712,9 +712,7 @@ async def get_or_fetch(
         raise TypeError("required parameters: `object_type` and `object_id`.")
 
     if isinstance(obj, Guild) and object_type is User:
-        raise InvalidArgument(
-            "Guild cannot get_or_fetch User. Use Client instead."
-        )
+        raise InvalidArgument("Guild cannot get_or_fetch User. Use Client instead.")
     elif isinstance(obj, Client) and object_type is Member:
         raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
     elif isinstance(obj, Client) and object_type is Role:
