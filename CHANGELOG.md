@@ -60,7 +60,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Deprecated
 
 - Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favour
-  of `utils.get_or_fetch(object_type, object_id)`.
+  of `utils.get_or_fetch(object_type, object_id)` and `Client.get_or_fetch(User, id)`.
   ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Removed
