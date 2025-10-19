@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any, Callable, TypeVar, Union
 
 from ..enums import ComponentType
 from ..utils import find
+from .file_upload import FileUpload
 from .input_text import InputText
 from .item import Item
 from .select import Select
@@ -29,7 +30,7 @@ if TYPE_CHECKING:
 
 M = TypeVar("M", bound="Modal", covariant=True)
 
-ModalItem = Union[InputText, Item[M]]
+ModalItem = Union[InputText, FileUpload, Item[M]]
 
 
 class Modal:
@@ -249,10 +250,14 @@ class Modal:
         if len(self._children) > 5:
             raise ValueError("You can only have up to 5 items in a modal dialog.")
 
-        if not isinstance(item, (InputText, Item)):
-            raise TypeError(f"expected InputText or Item, not {item.__class__!r}")
-        if isinstance(item, (InputText, Select)) and not item.label:
-            raise ValueError("InputTexts and Selects must have a label set")
+        if not isinstance(item, (InputText, FileUpload, Item)):
+            raise TypeError(
+                f"expected InputText, FileUpload, or Item, not {item.__class__!r}"
+            )
+        if isinstance(item, (InputText, FileUpload, Select)) and not item.label:
+            raise ValueError(
+                "InputTexts, FileUploads, and Selects must have a label set"
+            )
 
         self._weights.add_item(item)
         self._children.append(item)
@@ -410,8 +415,11 @@ class ModalStore:
                     )
                 )
             ]
-            for component, child in zip(components, value.children):
-                child.refresh_from_modal(interaction, component)
+            # match component by id
+            for component in components:
+                item = value.get_item(component.get("custom_id") or component.get("id"))
+                if item is not None:
+                    item.refresh_from_modal(interaction, component)
             await value.callback(interaction)
             self.remove_modal(value, user_id)
         except Exception as e:

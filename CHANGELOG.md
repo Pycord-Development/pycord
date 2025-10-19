@@ -31,6 +31,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added the ability to use functions with any number of optional arguments and functions
   returning an awaitable as `Option.autocomplete`.
   ([#2669](https://github.com/Pycord-Development/pycord/pull/2914))
+- Added `ui.FileUpload` for modals and the `FileUpload` component.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 
 ### Changed
 
@@ -52,6 +54,11 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2669](https://github.com/Pycord-Development/pycord/pull/2914))
 - Fixed a `TypeError` when typing `ui.Select` without providing optional type arguments.
   ([#2943](https://github.com/Pycord-Development/pycord/pull/2943))
+- Fixed modal input values being misordered when using the `row` parameter and inserting
+  items out of row order.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed a KeyError when a text input is left blank in a modal.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 
 ### Removed
 
