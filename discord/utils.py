@@ -713,7 +713,7 @@ async def get_or_fetch(
 
     if isinstance(obj, Guild) and object_type is User:
         raise InvalidArgument(
-            "Guild cannot get_or_fetch discord.User. Use Client instead."
+            "Guild cannot get_or_fetch User. Use Client instead."
         )
     elif isinstance(obj, Client) and object_type is Member:
         raise InvalidArgument("Client cannot get_or_fetch Member. Use Guild instead.")
