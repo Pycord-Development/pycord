@@ -949,7 +949,7 @@ class ViewStore:
             if value.id == view.id:
                 self.remove_message_view(key)
                 break
-    
+
     def remove_message_view(self, message_id)
         del self._synced_message_views[message_id]
 
