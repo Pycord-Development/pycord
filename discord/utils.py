@@ -746,7 +746,7 @@ async def get_or_fetch(
 @functools.lru_cache(maxsize=1)
 def _get_string_to_type_map() -> dict[str, type]:
     """Return a cached map of lowercase strings -> discord types."""
-    from discord import Guild, Member, Role, User, abc, emoji
+    from discord import Guild, Member, Role, User, abc, emoji, AppEmoji
 
     return {
         "channel": abc.GuildChannel,
