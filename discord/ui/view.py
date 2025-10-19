@@ -950,7 +950,7 @@ class ViewStore:
                 self.remove_message_view(key)
                 break
 
-    def remove_message_view(self, message_id)
+    def remove_message_view(self, message_id):
         del self._synced_message_views[message_id]
 
     def dispatch(self, component_type: int, custom_id: str, interaction: Interaction):
