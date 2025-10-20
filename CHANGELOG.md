@@ -28,6 +28,8 @@ These changes are available on the `master` branch, but have not yet been releas
   - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
     different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
     `ui.MentionableSelect`, and `ui.ChannelSelect`.
+- Added `ui.FileUpload` for modals and the `FileUpload` component.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Added `Permissions.bypass_slowmode`.
   ([#2939](https://github.com/Pycord-Development/pycord/pull/2939))
 
@@ -47,6 +49,15 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2924](https://github.com/Pycord-Development/pycord/pull/2924))
 - Fixed OPUS Decode Error when recording audio.
   ([#2925](https://github.com/Pycord-Development/pycord/pull/2925))
+- Fixed a `TypeError` when typing `ui.Select` without providing optional type arguments.
+  ([#2943](https://github.com/Pycord-Development/pycord/pull/2943))
+- Fixed modal input values being misordered when using the `row` parameter and inserting
+  items out of row order.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed a KeyError when a text input is left blank in a modal.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
+  parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
 
 ### Removed
 
@@ -108,6 +119,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added the ability to pass an `overlap` parameter to the `loop` decorator and `Loop`
+  class, allowing concurrent iterations if enabled.
+  ([#2765](https://github.com/Pycord-Development/pycord/pull/2765))
 - Added various missing channel parameters and allow `default_reaction_emoji` to be
   `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added support for type hinting slash command options with `typing.Annotated`.
