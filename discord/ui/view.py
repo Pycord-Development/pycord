@@ -31,16 +31,16 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing_extensions import Self
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     ClassVar,
     Iterator,
     Sequence,
     TypeVar,
 )
+
+from typing_extensions import Self
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent

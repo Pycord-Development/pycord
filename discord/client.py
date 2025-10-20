@@ -89,8 +89,8 @@ if TYPE_CHECKING:
     from .message import Message
     from .poll import Poll
     from .soundboard import SoundboardSound
-    from .ui.item import Item, ViewItem
     from .threads import Thread, ThreadMember
+    from .ui.item import Item, ViewItem
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
