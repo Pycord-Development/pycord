@@ -43,9 +43,9 @@ from .errors import InvalidArgument
 from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
+from .primary_guild import PrimaryGuild
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
-from .primary_guild import PrimaryGuild
 
 __all__ = (
     "VoiceState",
