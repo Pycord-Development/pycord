@@ -294,7 +294,7 @@ def button(
     emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+) -> Callable[[ItemCallbackType[Button[V]]], Button[V]]:
     """A decorator that attaches a button to a component.
 
     The function being decorated should have three parameters, ``self`` representing
@@ -347,4 +347,4 @@ def button(
         }
         return func
 
-    return decorator
+    return decorator  # type: ignore # lie to the type checkers, because after a View is instated, the button callback is converted into a Button instance

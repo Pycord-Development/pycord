@@ -3,13 +3,11 @@
   "extends": [
     "local>Pycord-Development/renovate-config",
     ":semanticPrefixFixDepsChoreOthers",
-    ":dependencyDashboard"
+    ":dependencyDashboard",
+    ":enablePreCommit"
   ],
   "assigneesFromCodeOwners": true,
-  "packageRules": [
-    {
-      "matchManagers": ["pip_requirements"],
-      "matchFileNames": ["requirements/*.txt"]
-    }
-  ]
+  "pip_requirements": {
+    "managerFilePatterns": ["requirements/*.txt"]
+  }
 }

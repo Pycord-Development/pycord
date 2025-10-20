@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import copy
+import datetime
 import unicodedata
 from typing import (
     TYPE_CHECKING,
@@ -65,9 +66,10 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .errors import ClientException, InvalidArgument, InvalidData
+from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
 from .file import File
 from .flags import SystemChannelFlags
+from .incidents import IncidentsData
 from .integrations import Integration, _integration_factory
 from .invite import Invite
 from .iterators import (
@@ -92,6 +94,7 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .user import User
+from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
@@ -116,7 +119,11 @@ if TYPE_CHECKING:
     from .template import Template
     from .types.guild import Ban as BanPayload
     from .types.guild import Guild as GuildPayload
-    from .types.guild import GuildFeature, MFALevel
+    from .types.guild import (
+        GuildFeature,
+        MFALevel,
+    )
+    from .types.guild import ModifyIncidents as ModifyIncidentsPayload
     from .types.member import Member as MemberPayload
     from .types.threads import Thread as ThreadPayload
     from .types.voice import GuildVoiceState
@@ -248,6 +255,11 @@ class Guild(Hashable):
         with ``with_counts=True``.
 
         .. versionadded:: 2.0
+
+    incidents_data: Optional[:class:`IncidentsData`]
+        The incidents data for the guild.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -294,6 +306,7 @@ class Guild(Hashable):
         "approximate_member_count",
         "approximate_presence_count",
         "_sounds",
+        "incidents_data",
     )
 
     _PREMIUM_GUILD_LIMITS: ClassVar[dict[int | None, _GuildLimit]] = {
@@ -572,6 +585,13 @@ class Guild(Hashable):
         for sound in guild.get("soundboard_sounds", []):
             sound = SoundboardSound(state=state, http=state.http, data=sound)
             self._add_sound(sound)
+
+        incidents_payload = guild.get("incidents_data")
+        self.incidents_data: IncidentsData | None = (
+            IncidentsData(data=incidents_payload)
+            if incidents_payload is not None
+            else None
+        )
 
     def _add_sound(self, sound: SoundboardSound) -> None:
         self._sounds[sound.id] = sound
@@ -1030,6 +1050,49 @@ class Guild(Hashable):
             The member or ``None`` if not found.
         """
         return self._members.get(user_id)
+
+    async def get_or_fetch(
+        self: Guild,
+        object_type: type[_FETCHABLE],
+        object_id: int | None,
+        default: _D = None,
+    ) -> _FETCHABLE | _D | None:
+        """
+        Shortcut method to get data from this guild either by returning the cached version,
+        or if it does not exist, attempting to fetch it from the API.
+
+        Parameters
+        ----------
+        object_type: Type[:class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji`]
+            Type of object to fetch or get.
+
+        object_id: :class:`int` | :data:`None`
+            ID of the object to get. If :data:`None`, returns `default` if provided, otherwise :data:`None`.
+
+        default: Any | :data:`None`
+            The value to return instead of raising if fetching fails or if `object_id` is :data:`None`.
+
+        Returns
+        -------
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`Role` | :class:`Member` | :class:`GuildEmoji` | :data:`None`
+            The object if found, or `default` if provided when not found.
+
+        Raises
+        ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
+        """
+        try:
+            return await utils.get_or_fetch(
+                obj=self,
+                object_type=object_type,
+                object_id=object_id,
+                default=default,
+            )
+        except (HTTPException, ValueError, InvalidData):
+            return default
 
     @property
     def premium_subscribers(self) -> list[Member]:
@@ -3002,6 +3065,26 @@ class Guild(Hashable):
         """
         await self._state.http.delete_guild_sticker(self.id, sticker.id, reason)
 
+    def get_emoji(self, emoji_id: int, /) -> GuildEmoji | None:
+        """Returns an emoji with the given ID.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        emoji_id: int
+            The ID to get.
+
+        Returns
+        -------
+        Optional[:class:`Emoji`]
+            The returned Emoji or ``None`` if not found.
+        """
+        emoji = self._state.get_emoji(emoji_id)
+        if emoji and emoji.guild == self:
+            return emoji
+        return None
+
     async def fetch_emojis(self) -> list[GuildEmoji]:
         r"""|coro|
 
@@ -4420,6 +4503,52 @@ class Guild(Hashable):
 
         new = await self._state.http.edit_onboarding(self.id, fields, reason=reason)
         return Onboarding(data=new, guild=self)
+
+    async def modify_incident_actions(
+        self,
+        *,
+        invites_disabled_until: datetime.datetime | None = MISSING,
+        dms_disabled_until: datetime.datetime | None = MISSING,
+        reason: str | None = MISSING,
+    ) -> IncidentsData:
+        """|coro|
+
+        Modify the guild's incident actions, controlling when invites or DMs
+        are re-enabled after being temporarily disabled. Requires
+        the :attr:`~Permissions.manage_guild` permission.
+
+        Parameters
+        ----------
+        invites_disabled_until: Optional[:class:`datetime.datetime`]
+            The ISO8601 timestamp indicating when invites will be enabled again,
+            or ``None`` to enable invites immediately.
+        dms_disabled_until: Optional[:class:`datetime.datetime`]
+            The ISO8601 timestamp indicating when DMs will be enabled again,
+            or ``None`` to enable DMs immediately.
+        reason: Optional[:class:`str`]
+            The reason for this action, used for the audit log.
+
+        Returns
+        -------
+        :class:`IncidentsData`
+            The updated incidents data for the guild.
+        """
+
+        fields: ModifyIncidentsPayload = {}
+        if invites_disabled_until is not MISSING:
+            fields["invites_disabled_until"] = (
+                invites_disabled_until and invites_disabled_until.isoformat()
+            )
+
+        if dms_disabled_until is not MISSING:
+            fields["dms_disabled_until"] = (
+                dms_disabled_until and dms_disabled_until.isoformat()
+            )
+
+        new = await self._state.http.modify_guild_incident_actions(
+            self.id, fields, reason=reason
+        )
+        return IncidentsData(data=new)
 
     async def delete_auto_moderation_rule(
         self,

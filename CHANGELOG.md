@@ -14,6 +14,32 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added support getting and setting recurrence rules on `ScheduledEvent`s.
   ([#2749](https://github.com/Pycord-Development/pycord/pull/2749))
+- Implemented `with_response` for interaction callbacks, adding
+  `Interaction.callback.is_loading()` and `Interaction.callback.is_ephemeral()`.
+  ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
+- Added `RawMessageUpdateEvent.new_message` - message update events now contain full
+  message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
+- Added support for setting guild-specific `avatar`, `banner`, and `bio` for the bot
+  user through `Member.edit`.
+  ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
+- Added support for select default values.
+  ([#2899](https://github.com/Pycord-Development/pycord/pull/2899))
+  - Adds a new generic parameter to selects to type `ui.Select.values` return type.
+  - Adds `SelectDefaultValue` object to create select default values.
+  - Adds `SelectDefaultValueType` enum.
+  - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
+    different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
+    `ui.MentionableSelect`, and `ui.ChannelSelect`.
+- Added the ability to use functions with any number of optional arguments and functions
+  returning an awaitable as `Option.autocomplete`.
+  ([#2914](https://github.com/Pycord-Development/pycord/pull/2914))
+- Added `ui.FileUpload` for modals and the `FileUpload` component.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Added support for Guild Incidents via `Guild.incidents_data` and
+  `Guild.modify_incident_actions()`.
+  ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
 
 ### Changed
 
@@ -21,6 +47,33 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Manage silence for new SSRC with existing user_id.
   ([#2808](https://github.com/Pycord-Development/pycord/pull/2808))
+- Unbound `raw` reference in `parse_message_update` causing errors on message updates.
+  ([#2905](https://github.com/Pycord-Development/pycord/pull/2905))
+- `view=None` in various methods causing an AttributeError.
+  ([#2915](https://github.com/Pycord-Development/pycord/pull/2915))
+- `View.message` being `None` when it had not been interacted with yet.
+  ([#2916](https://github.com/Pycord-Development/pycord/pull/2916))
+- Fixed a crash when processing message edit events while message cache was disabled.
+  ([#2924](https://github.com/Pycord-Development/pycord/pull/2924))
+- Fixed OPUS Decode Error when recording audio.
+  ([#2925](https://github.com/Pycord-Development/pycord/pull/2925))
+- Fixed a `TypeError` when typing `ui.Select` without providing optional type arguments.
+  ([#2943](https://github.com/Pycord-Development/pycord/pull/2943))
+- Fixed modal input values being misordered when using the `row` parameter and inserting
+  items out of row order.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed a KeyError when a text input is left blank in a modal.
+  ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
+  parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
+- Fixed autocomplete crashing when using an async staticmethod.
+  ([#2966](https://github.com/Pycord-Development/pycord/pull/2966))
+
+### Deprecated
+
+- Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favour
+  of `utils.get_or_fetch(object_type, object_id)` and `Client.get_or_fetch(User, id)`.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Removed
 
@@ -82,6 +135,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added the ability to pass an `overlap` parameter to the `loop` decorator and `Loop`
+  class, allowing concurrent iterations if enabled.
+  ([#2765](https://github.com/Pycord-Development/pycord/pull/2765))
 - Added various missing channel parameters and allow `default_reaction_emoji` to be
   `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added support for type hinting slash command options with `typing.Annotated`.

@@ -31,7 +31,16 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Iterator, Sequence, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    ClassVar,
+    Iterator,
+    Self,
+    Sequence,
+    TypeVar,
+)
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
@@ -46,7 +55,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..utils import find, get
+from ..utils import find
 from .item import Item, ItemCallbackType
 
 __all__ = ("View", "_component_to_item", "_walk_all_components")
@@ -375,7 +384,7 @@ class View:
             return time.monotonic() + self.timeout
         return None
 
-    def add_item(self, item: Item[V]) -> None:
+    def add_item(self, item: Item[V]) -> Self:
         """Adds an item to the view.
 
         Parameters

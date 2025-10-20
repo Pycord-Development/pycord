@@ -71,6 +71,11 @@ Users
     .. automethod:: typing
         :async-with:
 
+.. attributetable:: PrimaryGuild
+
+.. autoclass:: PrimaryGuild()
+    :members:
+
 Messages
 --------
 
@@ -373,7 +378,12 @@ Interactions
 .. autoclass:: AuthorizingIntegrationOwners()
     :members:
 
-Message Components
+.. attributetable:: InteractionCallback
+
+.. autoclass:: InteractionCallback()
+    :members:
+
+UI Components
 ------------------
 
 .. attributetable:: Component
@@ -437,6 +447,12 @@ Message Components
 .. attributetable:: Container
 
 .. autoclass:: Container()
+    :members:
+    :inherited-members:
+
+.. attributetable:: FileUpload
+
+.. autoclass:: FileUpload()
     :members:
     :inherited-members:
 
