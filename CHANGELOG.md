@@ -54,6 +54,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Fixed a KeyError when a text input is left blank in a modal.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
+  parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
 
 ### Removed
 
