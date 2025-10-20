@@ -71,6 +71,11 @@ Users
     .. automethod:: typing
         :async-with:
 
+.. attributetable:: PrimaryGuild
+
+.. autoclass:: PrimaryGuild()
+    :members:
+
 Messages
 --------
 

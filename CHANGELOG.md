@@ -17,6 +17,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
 - Added `RawMessageUpdateEvent.new_message` - message update events now contain full
   message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 - Added support for setting guild-specific `avatar`, `banner`, and `bio` for the bot
   user through `Member.edit`.
   ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
@@ -34,6 +36,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
 - Added `ui.FileUpload` for modals and the `FileUpload` component.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Added support for Guild Incidents via `Guild.incidents_data` and
+  `Guild.modify_incident_actions()`.
+  ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
 
 ### Changed
 
@@ -75,6 +80,16 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Fixed a KeyError when a text input is left blank in a modal.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
+  parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
+- Fixed autocomplete crashing when using an async staticmethod.
+  ([#2966](https://github.com/Pycord-Development/pycord/pull/2966))
+
+### Deprecated
+
+- Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favour
+  of `utils.get_or_fetch(object_type, object_id)` and `Client.get_or_fetch(User, id)`.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Removed
 
@@ -136,6 +151,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2714](https://github.com/Pycord-Development/pycord/pull/2714))
 - Added the ability to pass a `datetime.time` object to `format_dt`.
   ([#2747](https://github.com/Pycord-Development/pycord/pull/2747))
+- Added the ability to pass an `overlap` parameter to the `loop` decorator and `Loop`
+  class, allowing concurrent iterations if enabled.
+  ([#2765](https://github.com/Pycord-Development/pycord/pull/2765))
 - Added various missing channel parameters and allow `default_reaction_emoji` to be
   `None`. ([#2772](https://github.com/Pycord-Development/pycord/pull/2772))
 - Added support for type hinting slash command options with `typing.Annotated`.
