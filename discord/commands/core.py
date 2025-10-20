@@ -1125,7 +1125,7 @@ class SlashCommand(ApplicationCommand):
                 else:
                     result = option.autocomplete(ctx)
 
-                if asyncio.iscoroutinefunction(option.autocomplete):
+                if inspect.isawaitable(result):
                     result = await result
 
                 choices = [
