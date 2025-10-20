@@ -12,7 +12,7 @@ authors = [
 ]
 description = "A Python wrapper for the Discord API"
 readme = {content-type = "text/x-rst", file = "README.rst"}
-requires-python = ">=3.9"
+requires-python = ">=3.9, <3.14"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
