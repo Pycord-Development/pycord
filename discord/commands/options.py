@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import inspect
 import logging
+import sys
 import types
 from enum import Enum
 from typing import (
@@ -33,10 +34,14 @@ from typing import (
     Literal,
     Optional,
     Type,
-    TypeAliasType,
     Union,
     get_args,
 )
+
+if sys.version_info >= (3, 12):
+    from typing import TypeAliasType
+else:
+    from typing_extensions import TypeAliasType
 
 from ..abc import GuildChannel, Mentionable
 from ..channel import (
