@@ -125,7 +125,7 @@ jobs:
         id: python-setup
         uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: "pip"
           cache-dependency-path: "requirements/_release.txt"
       - name: "Install Release Dependencies"
@@ -198,7 +198,7 @@ jobs:
           python3 -m build --sdist
           python3 -m build --wheel
       - name: "Create GitHub Release"
-        uses: softprops/action-gh-release@v2.3.3
+        uses: softprops/action-gh-release@v2.4.1
         id: gh-release
         with:
           tag_name: "v${{ inputs.version }}"
