@@ -125,7 +125,7 @@ jobs:
         id: python-setup
         uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: "pip"
           cache-dependency-path: "requirements/_release.txt"
       - name: "Install Release Dependencies"
