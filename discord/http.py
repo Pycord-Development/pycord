@@ -414,9 +414,7 @@ class HTTPClient:
             else:
                 raise HTTPException(resp, "failed to get asset")
 
-    async def stream_from_cdn(
-        self, url: str, chunksize: int
-    ) -> AsyncGenerator[bytes]:
+    async def stream_from_cdn(self, url: str, chunksize: int) -> AsyncGenerator[bytes]:
         if not isinstance(chunksize, int) or chunksize < 1:
             raise InvalidArgument("The chunksize must be a positive integer.")
 
