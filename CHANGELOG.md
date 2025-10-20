@@ -35,6 +35,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2914](https://github.com/Pycord-Development/pycord/pull/2914))
 - Added `ui.FileUpload` for modals and the `FileUpload` component.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Added support for Guild Incidents via `Guild.incidents_data` and
+  `Guild.modify_incident_actions()`.
+  ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
 
 ### Changed
 
@@ -61,6 +64,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
   parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
+- Fixed autocomplete crashing when using an async staticmethod.
+  ([#2966](https://github.com/Pycord-Development/pycord/pull/2966))
 
 ### Deprecated
 

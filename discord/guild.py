@@ -251,6 +251,11 @@ class Guild(Hashable):
         with ``with_counts=True``.
 
         .. versionadded:: 2.0
+
+    incidents_data: Optional[:class:`IncidentsData`]
+        The incidents data for the guild.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
