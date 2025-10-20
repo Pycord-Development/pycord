@@ -419,7 +419,7 @@ class Permissions(BaseFlags):
 
     @flag_value
     def mention_everyone(self) -> int:
-        """:class:`bool`: Returns ``True`` if a user's @everyone or @here will mention everyone in the text channel."""
+        """:class:`bool`: Returns ``True`` if a user's ``@everyone``, ``@here`` or role mentions will mention in the text channel."""
         return 1 << 17
 
     @flag_value

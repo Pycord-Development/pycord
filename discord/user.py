@@ -557,6 +557,10 @@ class User(BaseUser, discord.abc.Messageable):
         The user's nameplate, if the user has one.
 
         .. versionadded:: 2.7
+    primary_guild: Optional[:class:`PrimaryGuild`]
+        The user's primary guild, if the user has one. Represent what guild the user's tag is from.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = ("_stored",)

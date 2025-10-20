@@ -80,7 +80,7 @@ class MediaGallery(Item[V]):
         *,
         description: str = None,
         spoiler: bool = False,
-    ) -> None:
+    ) -> Self:
         """Adds a new media item to the gallery.
 
         Parameters
