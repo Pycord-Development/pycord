@@ -30,7 +30,7 @@ These changes are available on the `master` branch, but have not yet been releas
     `ui.MentionableSelect`, and `ui.ChannelSelect`.
 - Added the ability to use functions with any number of optional arguments and functions
   returning an awaitable as `Option.autocomplete`.
-  ([#2669](https://github.com/Pycord-Development/pycord/pull/2914))
+  ([#2914](https://github.com/Pycord-Development/pycord/pull/2914))
 - Added `ui.FileUpload` for modals and the `FileUpload` component.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 
@@ -50,8 +50,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2924](https://github.com/Pycord-Development/pycord/pull/2924))
 - Fixed OPUS Decode Error when recording audio.
   ([#2925](https://github.com/Pycord-Development/pycord/pull/2925))
-- Fixed autocomplete crashing when using an async static method.
-  ([#2669](https://github.com/Pycord-Development/pycord/pull/2914))
 - Fixed a `TypeError` when typing `ui.Select` without providing optional type arguments.
   ([#2943](https://github.com/Pycord-Development/pycord/pull/2943))
 - Fixed modal input values being misordered when using the `row` parameter and inserting
