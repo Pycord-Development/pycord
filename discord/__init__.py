@@ -47,6 +47,7 @@ from .file import *
 from .flags import *
 from .guild import *
 from .http import *
+from .incidents import *
 from .integrations import *
 from .interactions import *
 from .invite import *
