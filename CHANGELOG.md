@@ -30,6 +30,9 @@ These changes are available on the `master` branch, but have not yet been releas
   - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
     different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
     `ui.MentionableSelect`, and `ui.ChannelSelect`.
+- Added the ability to use functions with any number of optional arguments and functions
+  returning an awaitable as `Option.autocomplete`.
+  ([#2914](https://github.com/Pycord-Development/pycord/pull/2914))
 - Added `ui.FileUpload` for modals and the `FileUpload` component.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Added support for Guild Incidents via `Guild.incidents_data` and
