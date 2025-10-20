@@ -29,7 +29,17 @@ import logging
 import types
 from collections.abc import Awaitable, Callable, Iterable
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Literal, Optional, Type, TypeVar, Union, get_args
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Literal,
+    Optional,
+    Type,
+    TypeAliasType,
+    TypeVar,
+    Union,
+    get_args,
+)
 
 from ..abc import GuildChannel, Mentionable
 from ..channel import (
@@ -209,6 +219,7 @@ class Option:
         if self.name is not None:
             self.name = str(self.name)
         self._parameter_name = self.name  # default
+        input_type = self._parse_type_alias(input_type)
         input_type = self._strip_none_type(input_type)
         self._raw_type: InputType | tuple = input_type
 
@@ -379,6 +390,12 @@ class Option:
 
         if input_type is None:
             raise TypeError("input_type cannot be NoneType.")
+
+    @staticmethod
+    def _parse_type_alias(input_type: InputType) -> InputType:
+        if isinstance(input_type, TypeAliasType):
+            return input_type.__value__
+        return input_type
 
     @staticmethod
     def _strip_none_type(input_type):
