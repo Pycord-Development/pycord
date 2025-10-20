@@ -45,6 +45,7 @@ from .object import Object
 from .permissions import Permissions
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
+from .primary_guild import PrimaryGuild
 
 __all__ = (
     "VoiceState",
@@ -311,6 +312,7 @@ class Member(discord.abc.Messageable, _UserTag):
         accent_color: Colour | None
         accent_colour: Colour | None
         communication_disabled_until: datetime.datetime | None
+        primary_guild: PrimaryGuild | None
 
     def __init__(
         self, *, data: MemberWithUserPayload, guild: Guild, state: ConnectionState
@@ -449,7 +451,8 @@ class Member(discord.abc.Messageable, _UserTag):
     ) -> tuple[User, User] | None:
         self.activities = tuple(map(create_activity, data["activities"]))
         self._client_status = {
-            sys.intern(key): sys.intern(value) for key, value in data.get("client_status", {}).items()  # type: ignore
+            sys.intern(key): sys.intern(value)
+            for key, value in data.get("client_status", {}).items()  # type: ignore
         }
         self._client_status[None] = sys.intern(data["status"])
 

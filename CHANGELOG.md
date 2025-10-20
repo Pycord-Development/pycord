@@ -32,6 +32,8 @@ These changes are available on the `master` branch, but have not yet been releas
     `ui.MentionableSelect`, and `ui.ChannelSelect`.
 - Added `ui.FileUpload` for modals and the `FileUpload` component.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
+- Added support for Guild Incidents via `Guild.incidents_data` and `Guild.modify_incident_actions()`.
+  ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
 
 ### Changed
 
