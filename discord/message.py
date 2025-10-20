@@ -406,7 +406,7 @@ class Attachment(Hashable):
             after the message is deleted. Note that this can still fail to download
             deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
-        chunksize: class:`int`
+        chunksize: :class:`int`
             The maximum size of each chunk to process.
 
         Returns
