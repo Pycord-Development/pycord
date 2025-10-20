@@ -414,7 +414,7 @@ class HTTPClient:
             else:
                 raise HTTPException(resp, "failed to get asset")
 
-    async def get_from_cdn_stream(
+    async def stream_from_cdn(
         self, url: str, chunksize: int
     ) -> AsyncGenerator[bytes]:
         if chunksize < 1:

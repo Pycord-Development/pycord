@@ -426,7 +426,7 @@ class Attachment(Hashable):
             Argument `chunksize` is less than 1.
         """
         url = self.proxy_url if use_cached else self.url
-        async for chunk in self._http.get_from_cdn_stream(url, chunksize):
+        async for chunk in self._http.stream_from_cdn(url, chunksize):
             yield chunk
 
     async def to_file(self, *, use_cached: bool = False, spoiler: bool = False) -> File:
