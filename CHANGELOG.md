@@ -34,6 +34,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
 - Added `Webhook.parent` and `Webhook.from_interaction`
   ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
+- Added the ability to use functions with any number of optional arguments and functions
+  returning an awaitable as `Option.autocomplete`.
+  ([#2914](https://github.com/Pycord-Development/pycord/pull/2914))
 - Added `ui.FileUpload` for modals and the `FileUpload` component.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Added support for Guild Incidents via `Guild.incidents_data` and
