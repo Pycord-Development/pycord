@@ -17,6 +17,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
 - Added `RawMessageUpdateEvent.new_message` - message update events now contain full
   message objects ([#2780](https://github.com/Pycord-Development/pycord/pull/2780))
+- Added `Guild.get_or_fetch()` and `Client.get_or_fetch()` shortcut methods.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 - Added support for setting guild-specific `avatar`, `banner`, and `bio` for the bot
   user through `Member.edit`.
   ([#2908](https://github.com/Pycord-Development/pycord/pull/2908))
@@ -59,6 +61,12 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
 - Fixed `TypeError` when using Python 3.12+ `type` syntax for typing slash command
   parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
+
+### Deprecated
+
+- Deprecated `utils.get_or_fetch(attr, id)` and `Client.get_or_fetch_user(id)` in favour
+  of `utils.get_or_fetch(object_type, object_id)` and `Client.get_or_fetch(User, id)`.
+  ([#2776](https://github.com/Pycord-Development/pycord/pull/2776))
 
 ### Removed
 
