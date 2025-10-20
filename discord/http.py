@@ -417,8 +417,8 @@ class HTTPClient:
     async def stream_from_cdn(
         self, url: str, chunksize: int
     ) -> AsyncGenerator[bytes]:
-        if chunksize < 1:
-            raise InvalidArgument("The chunksize must be a positive number.")
+        if not isinstance(chunksize, int) or chunksize < 1:
+            raise InvalidArgument("The chunksize must be a positive integer.")
 
         async with self.__session.get(url) as resp:
             if resp.status == 200:
