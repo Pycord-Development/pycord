@@ -71,6 +71,11 @@ Users
     .. automethod:: typing
         :async-with:
 
+.. attributetable:: PrimaryGuild
+
+.. autoclass:: PrimaryGuild()
+    :members:
+
 Messages
 --------
 
@@ -686,11 +691,3 @@ Collectibles
 
 .. autoclass:: Nameplate()
     :undoc-members:
-
-Others
-------
-
-.. attributetable:: PrimaryGuild
-
-.. autoclass:: PrimaryGuild()
-    :members:
