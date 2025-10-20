@@ -1,4 +1,4 @@
-sphinx==8.0.2
+sphinx==8.2.3
 sphinxcontrib_trio==1.1.2
 sphinxcontrib-websupport==2.0.0
 myst-parser[linkify]==4.0.1
