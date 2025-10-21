@@ -178,7 +178,7 @@ class ActionRow(Component):
 
     @property
     def width(self):
-        """Return the sum of the items' widths."""
+        """Returns the sum of the item's widths."""
         t = 0
         for item in self.children:
             t += 1 if item.type is ComponentType.button else 5
