@@ -66,11 +66,12 @@ from .poll import Poll, PollAnswerCount
 from .raw_models import *
 from .role import Role
 from .scheduled_events import ScheduledEvent
+from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .ui.modal import Modal, ModalStore
-from .ui.view import View, ViewStore
+from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
 
 if TYPE_CHECKING:
@@ -283,6 +284,7 @@ class ConnectionState:
             self._view_store: ViewStore = ViewStore(self)
         self._modal_store: ModalStore = ModalStore(self)
         self._voice_clients: dict[int, VoiceClient] = {}
+        self._sounds: dict[int, SoundboardSound] = {}
 
         # LRU of max size 128
         self._private_channels: OrderedDict[int, PrivateChannel] = OrderedDict()
@@ -397,17 +399,20 @@ class ConnectionState:
         self._stickers[sticker_id] = sticker = GuildSticker(state=self, data=data)
         return sticker
 
-    def store_view(self, view: View, message_id: int | None = None) -> None:
+    def store_view(self, view: BaseView, message_id: int | None = None) -> None:
         self._view_store.add_view(view, message_id)
+
+    def purge_message_view(self, message_id: int) -> None:
+        self._view_store.remove_message_view(message_id)
 
     def store_modal(self, modal: Modal, message_id: int) -> None:
         self._modal_store.add_modal(modal, message_id)
 
-    def prevent_view_updates_for(self, message_id: int) -> View | None:
+    def prevent_view_updates_for(self, message_id: int) -> BaseView | None:
         return self._view_store.remove_message_tracking(message_id)
 
     @property
-    def persistent_views(self) -> Sequence[View]:
+    def persistent_views(self) -> Sequence[BaseView]:
         return self._view_store.persistent_views
 
     @property
@@ -602,7 +607,6 @@ class ConnectionState:
             raise
 
     async def _delay_ready(self) -> None:
-
         if self.cache_app_emojis and self.application_id:
             data = await self.http.get_all_application_emojis(self.application_id)
             for e in data.get("items", []):
@@ -651,6 +655,7 @@ class ConnectionState:
         except asyncio.CancelledError:
             pass
         else:
+            await self._add_default_sounds()
             # dispatch the event
             self.call_handlers("ready")
             self.dispatch("ready")
@@ -674,7 +679,9 @@ class ConnectionState:
             else:
                 self.application_id = utils._get_as_snowflake(application, "id")
                 # flags will always be present here
-                self.application_flags = ApplicationFlags._from_value(application["flags"])  # type: ignore
+                self.application_flags = ApplicationFlags._from_value(
+                    application["flags"]
+                )  # type: ignore
 
         for guild_data in data["guilds"]:
             self._add_guild_from_data(guild_data)
@@ -772,21 +779,20 @@ class ConnectionState:
                 self._messages.remove(msg)  # type: ignore
 
     def parse_message_update(self, data) -> None:
-        raw = RawMessageUpdateEvent(data)
-        message = self._get_message(raw.message_id)
-        if message is not None:
-            older_message = copy.copy(message)
-            raw.cached_message = older_message
-            self.dispatch("raw_message_edit", raw)
-            message._update(data)
-            # Coerce the `after` parameter to take the new updated Member
-            # ref: #5999
-            older_message.author = message.author
-            self.dispatch("message_edit", older_message, message)
+        old_message = self._get_message(int(data["id"]))
+        channel, _ = self._get_guild_channel(data)
+        message = Message(channel=channel, data=data, state=self)
+        if self._messages is not None:
+            if old_message is not None:
+                self._messages.remove(old_message)
+            self._messages.append(message)
+        raw = RawMessageUpdateEvent(data, message)
+        self.dispatch("raw_message_edit", raw)
+        if old_message is not None:
+            self.dispatch("message_edit", old_message, message)
         else:
             if poll_data := data.get("poll"):
                 self.store_raw_poll(poll_data, raw)
-            self.dispatch("raw_message_edit", raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
             self._view_store.update_from_message(raw.message_id, data["components"])
@@ -1375,7 +1381,9 @@ class ConnectionState:
         for emoji in before_stickers:
             self._stickers.pop(emoji.id, None)
         # guild won't be None here
-        guild.stickers = tuple(map(lambda d: self.store_sticker(guild, d), data["stickers"]))  # type: ignore
+        guild.stickers = tuple(
+            map(lambda d: self.store_sticker(guild, d), data["stickers"])
+        )  # type: ignore
         self.dispatch("guild_stickers_update", guild, before_stickers, guild.stickers)
 
     def _get_create_guild(self, data):
@@ -1580,7 +1588,10 @@ class ConnectionState:
         presences = data.get("presences", [])
 
         # the guild won't be None here
-        members = [Member(guild=guild, data=member, state=self) for member in data.get("members", [])]  # type: ignore
+        members = [
+            Member(guild=guild, data=member, state=self)
+            for member in data.get("members", [])
+        ]  # type: ignore
         _log.debug(
             "Processed a chunk for %s members in guild ID %s.", len(members), guild_id
         )
@@ -2011,6 +2022,83 @@ class ConnectionState:
         data: MessagePayload,
     ) -> Message:
         return Message(state=self, channel=channel, data=data)
+
+    def parse_voice_channel_effect_send(self, data) -> None:
+        if sound_id := int(data.get("sound_id", 0)):
+            sound = self._get_sound(sound_id)
+            if sound is None:
+                sound = PartialSoundboardSound(data, self, self.http)
+            raw = VoiceChannelEffectSendEvent(data, self, sound)
+        else:
+            raw = VoiceChannelEffectSendEvent(data, self, None)
+
+        self.dispatch("voice_channel_effect_send", raw)
+
+    def _get_sound(self, sound_id: int) -> SoundboardSound | None:
+        return self._sounds.get(sound_id)
+
+    def _update_sound(self, sound: SoundboardSound) -> SoundboardSound | None:
+        before = self._sounds.get(sound.id)
+        self._sounds[sound.id] = sound
+        return before
+
+    def parse_soundboard_sounds(self, data) -> None:
+        guild_id = int(data["guild_id"])
+        for sound_data in data["soundboard_sounds"]:
+            self._add_sound(
+                SoundboardSound(
+                    state=self, http=self.http, data=sound_data, guild_id=guild_id
+                )
+            )
+
+    def parse_guild_soundboard_sounds_update(self, data):
+        before_sounds = []
+        after_sounds = []
+        for sound_data in data["soundboard_sounds"]:
+            after = SoundboardSound(state=self, http=self.http, data=sound_data)
+            if before := self._update_sound(after):
+                before_sounds.append(before)
+            after_sounds.append(after)
+        if len(before_sounds) == len(after_sounds):
+            self.dispatch("soundboard_sounds_update", before_sounds, after_sounds)
+        self.dispatch("raw_soundboard_sounds_update", after_sounds)
+
+    def parse_guild_soundboard_sound_update(self, data):
+        after = SoundboardSound(state=self, http=self.http, data=data)
+        if before := self._update_sound(after):
+            self.dispatch("soundboard_sound_update", before, after)
+        self.dispatch("raw_soundboard_sound_update", after)
+
+    def parse_guild_soundboard_sound_create(self, data):
+        sound = SoundboardSound(state=self, http=self.http, data=data)
+        self._add_sound(sound)
+        self.dispatch("soundboard_sound_create", sound)
+
+    def parse_guild_soundboard_sound_delete(self, data):
+        sound_id = int(data["sound_id"])
+        sound = self._get_sound(sound_id)
+        if sound is not None:
+            self._remove_sound(sound)
+            self.dispatch("soundboard_sound_delete", sound)
+        self.dispatch(
+            "raw_soundboard_sound_delete", RawSoundboardSoundDeleteEvent(data)
+        )
+
+    async def _add_default_sounds(self) -> None:
+        default_sounds = await self.http.get_default_sounds()
+        for default_sound in default_sounds:
+            sound = SoundboardSound(state=self, http=self.http, data=default_sound)
+            self._add_sound(sound)
+
+    def _add_sound(self, sound: SoundboardSound) -> None:
+        self._sounds[sound.id] = sound
+
+    def _remove_sound(self, sound: SoundboardSound) -> None:
+        self._sounds.pop(sound.id, None)
+
+    @property
+    def sounds(self) -> list[SoundboardSound]:
+        return list(self._sounds.values())
 
 
 class AutoShardedConnectionState(ConnectionState):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,6 @@ msgstr ""
 #: 08bff09c730c4b5bb565bdaf3e105965
 #: d414290a24964ae2827a233b80f9d820
 #: 2712df298b134b468aa30aa758768e1d
-#: ecc99c5f64b747e49d92d73c86da310a
 #: ecc99c5f64b747e49d92d73c86da310a
 msgid "Parameters"
 msgstr ""

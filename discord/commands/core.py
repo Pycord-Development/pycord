@@ -73,9 +73,9 @@ from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
 if sys.version_info >= (3, 11):
-    from typing import Annotated, get_args, get_origin
+    from typing import Annotated, Literal, get_args, get_origin
 else:
-    from typing_extensions import Annotated, get_args, get_origin
+    from typing_extensions import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -233,7 +233,7 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "__default_member_permissions__",
             kwargs.get("default_member_permissions", None),
         )
-        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", None))
+        self.nsfw: bool | None = getattr(func, "__nsfw__", kwargs.get("nsfw", False))
 
         integration_types = getattr(
             func, "__integration_types__", kwargs.get("integration_types", None)
@@ -808,6 +808,27 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
+            option = Option._strip_none_type(option)
+            if self._is_typing_literal(option):
+                literal_values = get_args(option)
+                if not all(isinstance(v, (str, int, float)) for v in literal_values):
+                    raise TypeError(
+                        "Literal values for choices must be str, int, or float."
+                    )
+
+                value_type = type(literal_values[0])
+                if not all(isinstance(v, value_type) for v in literal_values):
+                    raise TypeError(
+                        "All Literal values for choices must be of the same type."
+                    )
+
+                option = Option(
+                    value_type,
+                    choices=[
+                        OptionChoice(name=str(v), value=v) for v in literal_values
+                    ],
+                )
+
             if self._is_typing_annotated(option):
                 type_hint = get_args(option)[0]
                 metadata = option.__metadata__
@@ -909,6 +930,9 @@ class SlashCommand(ApplicationCommand):
 
     def _is_typing_optional(self, annotation):
         return self._is_typing_union(annotation) and type(None) in annotation.__args__  # type: ignore
+
+    def _is_typing_literal(self, annotation):
+        return get_origin(annotation) is Literal
 
     def _is_typing_annotated(self, annotation):
         return get_origin(annotation) is Annotated
@@ -1097,13 +1121,13 @@ class SlashCommand(ApplicationCommand):
                 ctx.value = op.get("value")
                 ctx.options = values
 
-                if len(inspect.signature(option.autocomplete).parameters) == 2:
+                if option.autocomplete._is_instance_method:
                     instance = getattr(option.autocomplete, "__self__", ctx.cog)
                     result = option.autocomplete(instance, ctx)
                 else:
                     result = option.autocomplete(ctx)
 
-                if asyncio.iscoroutinefunction(option.autocomplete):
+                if inspect.isawaitable(result):
                     result = await result
 
                 choices = [
@@ -1257,7 +1281,7 @@ class SlashCommandGroup(ApplicationCommand):
         self.default_member_permissions: Permissions | None = kwargs.get(
             "default_member_permissions", None
         )
-        self.nsfw: bool | None = kwargs.get("nsfw", None)
+        self.nsfw: bool | None = kwargs.get("nsfw", False)
 
         integration_types = kwargs.get("integration_types", None)
         contexts = kwargs.get("contexts", None)

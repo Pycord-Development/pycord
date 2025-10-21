@@ -283,28 +283,28 @@ class Context(discord.abc.Messageable, Generic[BotT]):
             return None
         return self.command.cog
 
-    @discord.utils.cached_property
+    @property
     def guild(self) -> Guild | None:
         """Returns the guild associated with this context's command.
         None if not available.
         """
         return self.message.guild
 
-    @discord.utils.cached_property
+    @property
     def channel(self) -> MessageableChannel:
         """Returns the channel associated with this context's command.
         Shorthand for :attr:`.Message.channel`.
         """
         return self.message.channel
 
-    @discord.utils.cached_property
+    @property
     def author(self) -> User | Member:
         """Union[:class:`~discord.User`, :class:`.Member`]:
         Returns the author associated with this context's command. Shorthand for :attr:`.Message.author`
         """
         return self.message.author
 
-    @discord.utils.cached_property
+    @property
     def me(self) -> Member | ClientUser:
         """Union[:class:`.Member`, :class:`.ClientUser`]:
         Similar to :attr:`.Guild.me` except it may return the :class:`.ClientUser` in private message
@@ -403,3 +403,9 @@ class Context(discord.abc.Messageable, Generic[BotT]):
     @discord.utils.copy_doc(Message.reply)
     async def reply(self, content: str | None = None, **kwargs: Any) -> Message:
         return await self.message.reply(content, **kwargs)
+
+    @discord.utils.copy_doc(Message.forward_to)
+    async def forward_to(
+        self, channel: discord.abc.Messageable, **kwargs: Any
+    ) -> Message:
+        return await self.message.forward_to(channel, **kwargs)

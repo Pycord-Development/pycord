@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2025-08-02 04:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -51,15 +51,8 @@ msgid ""
 msgstr ""
 
 #: ../../api/ui_kit.rst 0eb33b6aec414778a7e06b676fd526f3
-#: 0fde91581db244e9a38eaa1298517198 196110ed1f174bbc90e8e7f376d23b2d
-#: 26b856f134bd43d89d7bd04e9508cec1 31274878cbf8429eb4cbbaab562f687a
-#: 53499c7c38dd43799b5780dfd21b3b02 68f0e04b65fd43ccad6348c57bad93ba
-#: 7075cd32ada643e1afe2b1b1e2540a78 7c40b29c39174637a4378923ab36d01b
-#: 87b1f760ee304fdcb8d3158dad1f9687 89289390586d4a4cab63303506125e33
-#: 8ca8779b464a40069954fb8439451723 99b19d97768746f6aad0d4c9f04602fc
-#: beefc8c24f164c63a80136a8c5e5e925 ca073ce612814d8abbb2857a4f7c31cc
-#: de7bcf10bc5947e99f4931c26c17c8c2 e6eacbc6685647afaa993a9e034c2c9e
-#: f4f99caceafc4e0b857149cb71c15de8 ffbafb20b66d44b193637453dd85a141
+#: 53499c7c38dd43799b5780dfd21b3b02 beefc8c24f164c63a80136a8c5e5e925
+#: de7bcf10bc5947e99f4931c26c17c8c2
 msgid "Parameters"
 msgstr ""
 
@@ -100,28 +93,16 @@ msgid ""
 msgstr ""
 
 #: ../../api/ui_kit.rst 4847b534d3c14deba4061b428620b95b
-#: 48dd419af0df473f93e5e713b7748656 4d44fb14e809440e8f7f915460300e06
-#: 67269ff08c06462b82bff968f744feea 69ca8cba0b9a411d8e19abd29f7f1ed4
-#: 74e20e420edc4715b4995ab7938b2023 76d49544901349599337569d52510ee9
-#: 787aeffb30b548a38cbe20f0a065de37 79d2f21642c04d77b8bce27656a52f8f
-#: 9764068d3bfa4df68a9821f82609e559 9b9d0befc3c64fb9bae98aba514956f0
-#: a0b7807032194a53a18ea1511e4f67d3 ae8f754f5d1a446e866e9443cd10081d
-#: b1890cceac0449368e45eca0e3cc227a b96d252eb71246cba2ed7ce0fa575e98
-#: d36c9dfb2e944d03935e93d529a40227 e1405bf6c4334211ba770e0674f150f9
+#: 76d49544901349599337569d52510ee9 787aeffb30b548a38cbe20f0a065de37
 #: e5ecb31082e14aa3861296ff5854437a e6251a3992ae4babb7e79b06a31ea11d
-#: e6517eae45a3404e899c0bdfabdf3aea f041071e4093433a9cac0a03ce5ab140
-#: f360a94646744e36b9934341c7885ed7 f66852d0a07246dbb596fa01e203d767
-#: f8f0d423ecf24626a1247f45667e5bfd
 msgid "Return type"
 msgstr ""
 
-#: 15a54ae1a66549eab609150b6dc69f6b 2e9d4fbae0e54c02b65dcc5c67eccab2
 #: 8b2126220f0a40489f72fbb6541865ab 9d801d79daf4416b8d3f256723d14e9e
-#: bedc28aed63d4c35821a3df7a988ceba da524bc45bed4882b24144a6de72d3b3
-#: discord.ui.button.button:39 discord.ui.select.channel_select:19
-#: discord.ui.select.mentionable_select:17 discord.ui.select.role_select:17
-#: discord.ui.select.select:55 discord.ui.select.string_select:19
-#: discord.ui.select.user_select:17 fd120175bb8541ecb5ca7146883b6156 of
+#: discord.ui.button.button:41 discord.ui.select.channel_select:21
+#: discord.ui.select.mentionable_select:19 discord.ui.select.role_select:19
+#: discord.ui.select.select:58 discord.ui.select.string_select:21
+#: discord.ui.select.user_select:19 of
 msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\"
 " \\\\\\[\\\\\\[\\:py\\:data\\:\\`\\~typing.Callable\\`\\\\ "
@@ -229,6 +210,11 @@ msgstr ""
 msgid "Whether the select is disabled or not. Defaults to ``False``."
 msgstr ""
 
+#: 3e0672a1b2d64d418a64a8f5033f2572 discord.ui.select.Select:55
+#: discord.ui.select.select:55 of
+msgid "The select menu's ID."
+msgstr ""
+
 #: 17e132379dad4798922af2a9271f7996 discord.ui.select.string_select:1 of
 msgid ""
 "A shortcut for :meth:`discord.ui.select` with select type "
@@ -268,7 +254,7 @@ msgid "Represents a UI view."
 msgstr ""
 
 #: 16b83c8a92c745c8b399ffc3a72f0772 discord.ui.modal.Modal:3
-#: discord.ui.view.View:3 ef81e6ce764b40beb46714a774f98ce0 of
+#: discord.ui.view.View:3 of
 msgid "This object must be inherited to create a UI within Discord."
 msgstr ""
 
@@ -288,9 +274,7 @@ msgid ""
 "input. If ``None`` then there is no timeout."
 msgstr ""
 
-#: 3bb28eba0b6e4a33bf70e6ec23f7f0ce 480fbf0b10fa416d83a78fe20327dbce
-#: 869c217ef1fb4f1bb558c0c275307664 90ac82a2463949f8a34cca59e7616985
-#: c0f3dd62da99471bbbb9ef04603415f0 discord.ui.view.View of
+#: 480fbf0b10fa416d83a78fe20327dbce discord.ui.view.View of
 msgid "type"
 msgstr ""
 
@@ -312,8 +296,7 @@ msgid ""
 "``False``."
 msgstr ""
 
-#: 4d45955820034f44b44354116cd9d1f7 81901a6370e14b888c56185b26f75c5c
-#: a20a4215e0ea431eb8fb5f8afaff44f3 discord.ui.view.View:32
+#: 4d45955820034f44b44354116cd9d1f7 discord.ui.view.View:32
 #: discord.ui.view.View.interaction_check:23 discord.ui.view.View.wait:8 of
 msgid ":class:`bool`"
 msgstr ""
@@ -354,24 +337,33 @@ msgstr ""
 msgid "The message with components to convert into a view."
 msgstr ""
 
-#: b159c65de392440fac77f0ec9989f160 discord.ui.view.View.from_message:12 of
+#: b159c65de392440fac77f0ec9989f160 discord.ui.view.View.from_dict:7
+#: discord.ui.view.View.from_message:12 of
 msgid "The timeout of the converted view."
 msgstr ""
 
 #: ../../api/ui_kit.rst 28a3de2a47e54084b6f9a9b85e58ffda
-#: 787aeffb30b548a38cbe20f0a065de37 bdf962475cee47d4ae16bdb523f4bdd4
-#: cebca2833179445fb4e661e106d5cc43 f4f15b52c843401587586464af1f15be
 msgid "Returns"
 msgstr ""
 
-#: 64c266a59d7f48e683effda66301b9a2 discord.ui.view.View.from_message:15 of
+#: 64c266a59d7f48e683effda66301b9a2 discord.ui.view.View.from_dict:10
+#: discord.ui.view.View.from_message:15 of
 msgid ""
 "The converted view. This always returns a :class:`View` and not one of "
 "its subclasses."
 msgstr ""
 
-#: 9718cb2e8075430da95c8d900f3ed7d8 discord.ui.view.View.from_message:17 of
+#: 9718cb2e8075430da95c8d900f3ed7d8 discord.ui.view.View.from_dict:12
+#: discord.ui.view.View.from_message:17 of
 msgid ":class:`View`"
+msgstr ""
+
+#: c392f64e411a44c39ed13c8cc5125f2a discord.ui.view.View.from_dict:1 of
+msgid "Converts a list of component dicts into a :class:`View`."
+msgstr ""
+
+#: 440ace76c1c843a0a6a9ed83aba2d54c discord.ui.view.View.from_dict:4 of
+msgid "The list of components to convert into a view."
 msgstr ""
 
 #: d149c73fdd87423abab34ae033ad3bb2 discord.ui.view.View.add_item:1 of
@@ -383,71 +375,75 @@ msgid "The item to add to the view."
 msgstr ""
 
 #: ../../api/ui_kit.rst 024152e81dad464c8dea98a5986784a2
-#: acf1210671c64fe0a94869a2ec5777fd
 msgid "Raises"
 msgstr ""
 
-#: 0c2448b08bed49c9b3a36391e2dfe223 discord.ui.view.View.add_item:7 of
+#: 0c2448b08bed49c9b3a36391e2dfe223 discord.ui.container.Container.add_item:7
+#: discord.ui.section.Section.add_item:7
+#: discord.ui.section.Section.set_accessory:8 discord.ui.view.View.add_item:7
+#: of
 msgid "An :class:`Item` was not passed."
 msgstr ""
 
 #: 98c9ab34af564e9bb33dff8527ada782 discord.ui.view.View.add_item:8 of
 msgid ""
-"Maximum number of children has been exceeded (25)     or the row the item"
+"Maximum number of children has been exceeded (40)     or the row the item"
 " is trying to be added to is full."
 msgstr ""
 
-#: 06d7048de769474a8bb1a6d4a2dc4250 0f024bf23b354403841f7dde8d71621a
-#: 3c90e45f56914ab3a3afc07c95abbe60 5ca2db4b948a4526bbe2f7733e9e1540
-#: 8a6327ab096844d5ab16d2316f29be99 c0e5fc96f0134c3ca7023b6236f2a3fd
-#: df7ded422fee4a2f97fa22d4a7adac87 discord.ui.modal.Modal.on_error:14
-#: discord.ui.modal.Modal.on_timeout:6 discord.ui.modal.Modal.stop:4
-#: discord.ui.view.View.add_item:10 discord.ui.view.View.clear_items:4
-#: discord.ui.view.View.disable_all_items:7
+#: 06d7048de769474a8bb1a6d4a2dc4250 3c90e45f56914ab3a3afc07c95abbe60
+#: discord.ui.media_gallery.MediaGallery.add_item:15
+#: discord.ui.modal.Modal.on_error:14 discord.ui.modal.Modal.on_timeout:6
+#: discord.ui.modal.Modal.stop:4 discord.ui.view.View.add_item:10
+#: discord.ui.view.View.clear_items:4 discord.ui.view.View.disable_all_items:7
 #: discord.ui.view.View.enable_all_items:7
 #: discord.ui.view.View.on_check_failure:9 discord.ui.view.View.on_error:18
-#: discord.ui.view.View.on_timeout:6 discord.ui.view.View.remove_item:7
-#: discord.ui.view.View.stop:6 e8a673c7ef7448448155a519934deb7a
-#: f0b9b386cb7f440d9ded8cbb48862408 fe97129bcb4d4e258ff0beb4c6390702 of
+#: discord.ui.view.View.on_timeout:6 discord.ui.view.View.remove_item:8
+#: discord.ui.view.View.stop:6 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 msgstr ""
 
-#: 0fab940276ef4a7dae31257c2ac244a7 discord.ui.view.View.remove_item:1 of
-msgid "Removes an item from the view."
+#: 536200fe32e54b84acbba439cbf907fd discord.ui.view.View.remove_item:1 of
+msgid ""
+"Removes an item from the view. If an :class:`int` or :class:`str` is "
+"passed, the item will be removed by Item ``id`` or ``custom_id`` "
+"respectively."
 msgstr ""
 
-#: 59807342ce744d8d886b5e2235ab0e2b discord.ui.view.View.remove_item:4 of
-msgid "The item to remove from the view."
+#: ab49d7efd6404221b72e504c584ff8e6 discord.ui.view.View.remove_item:5 of
+msgid "The item, item ``id``, or item ``custom_id`` to remove from the view."
 msgstr ""
 
 #: 3b8def86b7f849908a1d6f20d2c80e17 discord.ui.view.View.clear_items:1 of
 msgid "Removes all items from the view."
 msgstr ""
 
-#: 23615972dcdb414abf5f848a9a2ee1ee discord.ui.view.View.get_item:1 of
+#: 033e19cef0aa4171b98dc54b06a42afe discord.ui.view.View.get_item:1 of
 msgid ""
-"Get an item from the view with the given custom ID. Alias for "
-"`utils.get(view.children, custom_id=custom_id)`."
+"Gets an item from the view. Roughly equal to `utils.get(view.children, "
+"...)`. If an :class:`int` is provided, the item will be retrieved by "
+"``id``, otherwise by  ``custom_id``. This method will also search nested "
+"items."
 msgstr ""
 
-#: cbb9b6731f96427fb3201cdf6793994c discord.ui.view.View.get_item:4 of
+#: cbb9b6731f96427fb3201cdf6793994c discord.ui.view.View.get_item:6 of
 msgid "The custom_id of the item to get"
 msgstr ""
 
-#: 98fa144afc194f7d8515bd447103d0a2 discord.ui.view.View.get_item:7 of
-msgid "The item with the matching ``custom_id`` if it exists."
+#: 98fa144afc194f7d8515bd447103d0a2 discord.ui.view.View.get_item:9 of
+msgid "The item with the matching ``custom_id`` or ``id`` if it exists."
 msgstr ""
 
-#: 3d6d6e176c7f414092ad530cfe34fc1b discord.ui.view.View.get_item:8 of
+#: 3d6d6e176c7f414092ad530cfe34fc1b discord.ui.container.Container.get_item:10
+#: discord.ui.section.Section.get_item:9 discord.ui.view.View.get_item:10 of
 msgid "Optional[:class:`Item`]"
 msgstr ""
 
-#: 1a6fca5291324410a90c948c1a5ba32b 24255cea69ed481396a70f77f164a517
-#: 34fbdd6619144a00b71dc4a9dfbdf301 discord.ui.item.Item.callback:1
-#: discord.ui.modal.Modal.callback:1 discord.ui.modal.Modal.on_error:1
-#: discord.ui.modal.Modal.on_timeout:1 discord.ui.view.View.interaction_check:1
-#: discord.ui.view.View.on_error:1 discord.ui.view.View.on_timeout:1
-#: e983730f42794becb4c575857dd306d4 of
+#: 24255cea69ed481396a70f77f164a517 34fbdd6619144a00b71dc4a9dfbdf301
+#: discord.ui.item.Item.callback:1 discord.ui.modal.Modal.callback:1
+#: discord.ui.modal.Modal.on_error:1 discord.ui.modal.Modal.on_timeout:1
+#: discord.ui.view.View.interaction_check:1 discord.ui.view.View.on_error:1
+#: discord.ui.view.View.on_timeout:1 e983730f42794becb4c575857dd306d4 of
 msgid "|coro|"
 msgstr ""
 
@@ -480,8 +476,7 @@ msgid ""
 "failure and :meth:`on_error` is called."
 msgstr ""
 
-#: 1a432a43d45d41dd97862b1f0f19af7e 79b0908f8b1e4c90a0dbb2d347d1dd8c
-#: discord.ui.view.View.interaction_check:19
+#: 1a432a43d45d41dd97862b1f0f19af7e discord.ui.view.View.interaction_check:19
 #: discord.ui.view.View.on_check_failure:6 of
 msgid "The interaction that occurred."
 msgstr ""
@@ -510,13 +505,13 @@ msgid ""
 ":meth:`interaction_check` fails with an error."
 msgstr ""
 
-#: 875e47bef4214d1c8f6c288059a65b3b 99e74ef3f5f9466680a35e8deda8f23c
-#: discord.ui.modal.Modal.on_error:5 discord.ui.view.View.on_error:6 of
+#: 99e74ef3f5f9466680a35e8deda8f23c discord.ui.modal.Modal.on_error:5
+#: discord.ui.view.View.on_error:6 of
 msgid "The default implementation prints the traceback to stderr."
 msgstr ""
 
-#: 2238043a3f944ee984d06ec6486cb852 93edd4d9bd60459aa302fa40cea76916
-#: discord.ui.modal.Modal.on_error:8 discord.ui.view.View.on_error:9 of
+#: 2238043a3f944ee984d06ec6486cb852 discord.ui.modal.Modal.on_error:8
+#: discord.ui.view.View.on_error:9 of
 msgid "The exception that was raised."
 msgstr ""
 
@@ -524,8 +519,8 @@ msgstr ""
 msgid "The item that failed the dispatch."
 msgstr ""
 
-#: 24dd9c6954ba4b6f8baae26063abdfe1 93c2f8cbaba342cb942380efba1bcd38
-#: discord.ui.modal.Modal.on_error:11 discord.ui.view.View.on_error:15 of
+#: 24dd9c6954ba4b6f8baae26063abdfe1 discord.ui.modal.Modal.on_error:11
+#: discord.ui.view.View.on_error:15 of
 msgid "The interaction that led to the failure."
 msgstr ""
 
@@ -541,10 +536,9 @@ msgstr ""
 msgid "Whether the view has finished interacting."
 msgstr ""
 
-#: 3dd17f55957b46f69f70d89163d80c06 5e86d04d3f744d8e85483af1cc8e54f3
-#: discord.ui.modal.Modal.wait:4 discord.ui.view.View.is_dispatching:4
-#: discord.ui.view.View.is_finished:4 discord.ui.view.View.is_persistent:7
-#: f3f660e1e53145d7adcbd25a47dc519d ff0aea3ebb2f44c0874d3d169b0fc412 of
+#: discord.ui.modal.Modal.wait:4 discord.ui.view.View.is_components_v2:6
+#: discord.ui.view.View.is_dispatching:4 discord.ui.view.View.is_finished:4
+#: discord.ui.view.View.is_persistent:7 ff0aea3ebb2f44c0874d3d169b0fc412 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
@@ -560,6 +554,16 @@ msgstr ""
 msgid ""
 "A persistent view has all their components with a set ``custom_id`` and a"
 " :attr:`timeout` set to ``None``."
+msgstr ""
+
+#: a7c94233f3944c7f91a2fddae3d48713 discord.ui.view.View.is_components_v2:1 of
+msgid "Whether the view contains V2 components."
+msgstr ""
+
+#: 293d31404f4f40e18e090ebf37d18faa discord.ui.view.View.is_components_v2:3 of
+msgid ""
+"A view containing V2 components cannot be sent alongside message content "
+"or embeds."
 msgstr ""
 
 #: a350e14ae6094bf9a45da3bba4581ba1 discord.ui.view.View.wait:1 of
@@ -578,119 +582,239 @@ msgid ""
 " normally."
 msgstr ""
 
-#: 314de3c4bde54717b2849331287e748e discord.ui.view.View.disable_all_items:1 of
-msgid "Disables all items in the view."
+#: d7b6d5871f744324b100f604ccaa833a discord.ui.view.View.disable_all_items:1 of
+msgid "Disables all buttons and select menus in the view."
 msgstr ""
 
 #: 4072920264ba4042a24a4149853585d3 discord.ui.view.View.disable_all_items:4 of
 msgid "A list of items in `self.children` to not disable from the view."
 msgstr ""
 
-#: bf174030a36b4632b1cf6e1fc5fe4038 discord.ui.view.View.enable_all_items:1 of
-msgid "Enables all items in the view."
+#: d7b6d5871f744324b100f604ccaa833a discord.ui.view.View.enable_all_items:1 of
+msgid "Enables all buttons and select menus in the view."
 msgstr ""
 
 #: 156efa1c1fbf4918af0b9e99b8099feb discord.ui.view.View.enable_all_items:4 of
 msgid "A list of items in `self.children` to not enable from the view."
 msgstr ""
 
+#: 98518e1021d44560b6efc103b9e0993d discord.ui.view.View.copy_text:1 of
+msgid ""
+"Returns the text of all :class:`~discord.ui.TextDisplay` items in this "
+"View. Equivalent to the `Copy Text` option on Discord clients."
+msgstr ""
+
+#: discord.ui.container.Container.copy_text:5
+#: discord.ui.section.Section.copy_text:5
+#: discord.ui.text_display.TextDisplay.copy_text:4
+#: discord.ui.view.View.copy_text:5 ff0aea3ebb2f44c0874d3d169b0fc412 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`str\\``"
+msgstr ""
+
 #: 20e96e2aa54a45bfa5ad1c493abb7dd9 discord.ui.item.Item:1 of
 msgid "Represents the base UI item that all UI components inherit from."
 msgstr ""
 
-#: 9a2765dfcfb646e084e717be3bed4b85 discord.ui.item.Item:3 of
-msgid "The current UI items supported are:"
+#: 055cf67df1e94d0592bbc5d22013c323 discord.ui.item.Item:3 of
+msgid "The following are the original items:"
 msgstr ""
 
-#: 0b1b92a5722e4ab398df7f16d1135628 discord.ui.item.Item:5 of
+#: 0b1b92a5722e4ab398df7f16d1135628 discord.ui.container.Container:5
+#: discord.ui.item.Item:5 of
 msgid ":class:`discord.ui.Button`"
 msgstr ""
 
-#: b7356742ae8c4acebf71b6dc048626a3 discord.ui.item.Item:6 of
+#: b7356742ae8c4acebf71b6dc048626a3 discord.ui.container.Container:6
+#: discord.ui.item.Item:6 of
 msgid ":class:`discord.ui.Select`"
 msgstr ""
 
-#: 0e7a72fe224642d185c918757f0f0e07 528c932c0aa34b83a5705942f842b0ba
-#: 9afe95efb3f541b58748fae054975844 discord.ui.Button.row:1
-#: discord.ui.Item.row:1 discord.ui.Select.row:1 of
+#: 3c9474ceed6944429610eebc2a86a8c2 discord.ui.item.Item:8 of
+msgid "And the following are new items under the \"Components V2\" specification:"
+msgstr ""
+
+#: 0b1b92a5722e4ab398df7f16d1135628 discord.ui.container.Container:7
+#: discord.ui.item.Item:10 of
+msgid ":class:`discord.ui.Section`"
+msgstr ""
+
+#: 0b1b92a5722e4ab398df7f16d1135628 discord.ui.container.Container:8
+#: discord.ui.item.Item:11 of
+msgid ":class:`discord.ui.TextDisplay`"
+msgstr ""
+
+#: 0b1b92a5722e4ab398df7f16d1135628 discord.ui.item.Item:12 of
+msgid ":class:`discord.ui.Thumbnail`"
+msgstr ""
+
+#: b7356742ae8c4acebf71b6dc048626a3 discord.ui.container.Container:9
+#: discord.ui.item.Item:13 of
+msgid ":class:`discord.ui.MediaGallery`"
+msgstr ""
+
+#: b7356742ae8c4acebf71b6dc048626a3 discord.ui.container.Container:10
+#: discord.ui.item.Item:14 of
+msgid ":class:`discord.ui.File`"
+msgstr ""
+
+#: b7356742ae8c4acebf71b6dc048626a3 discord.ui.container.Container:11
+#: discord.ui.item.Item:15 of
+msgid ":class:`discord.ui.Separator`"
+msgstr ""
+
+#: 0b1b92a5722e4ab398df7f16d1135628 discord.ui.item.Item:16 of
+msgid ":class:`discord.ui.Container`"
+msgstr ""
+
+#: b2ba368092074ad2bad9d3812f0719ce discord.ui.item.Item:20 of
+msgid "Added V2 Components."
+msgstr ""
+
+#: 0e7a72fe224642d185c918757f0f0e07 discord.ui.Button.row:1
+#: discord.ui.Container.row:1 discord.ui.File.row:1 discord.ui.Item.row:1
+#: discord.ui.MediaGallery.row:1 discord.ui.Section.row:1
+#: discord.ui.Select.row:1 discord.ui.Separator.row:1
+#: discord.ui.TextDisplay.row:1 discord.ui.Thumbnail.row:1 of
 msgid "Gets or sets the row position of this item within its parent view."
 msgstr ""
 
-#: 0b8d5442a6da4f5f9388de5619105189 2966564565d947b68f3d47ce36a50edc
 #: 6a953251c3a04c189cbd3bb505c5064d discord.ui.Button.row:3
-#: discord.ui.Item.row:3 discord.ui.Select.row:3 of
+#: discord.ui.Container.row:3 discord.ui.File.row:3 discord.ui.Item.row:3
+#: discord.ui.MediaGallery.row:3 discord.ui.Section.row:3
+#: discord.ui.Select.row:3 discord.ui.Separator.row:3
+#: discord.ui.TextDisplay.row:3 discord.ui.Thumbnail.row:3 of
 msgid ""
 "The row position determines the vertical placement of the item in the UI."
-" The value must be an integer between 0 and 4 (inclusive), or ``None`` to"
-" indicate that no specific row is set."
+" The value must be an integer between 0 and 39 (inclusive), or ``None`` "
+"to indicate that no specific row is set."
 msgstr ""
 
-#: 049f4ecfd49145a38a13208975c18f13 4f78604fdc644108a15d19e0d86d527f
-#: 8b271c453f5e42cdbca0b51c70f6f541 discord.ui.Button.row:7
-#: discord.ui.Item.row:7 discord.ui.Select.row:7 of
+#: 049f4ecfd49145a38a13208975c18f13 discord.ui.Button.row:7
+#: discord.ui.Container.row:7 discord.ui.File.row:7 discord.ui.Item.row:7
+#: discord.ui.MediaGallery.row:7 discord.ui.Section.row:7
+#: discord.ui.Select.row:7 discord.ui.Separator.row:7
+#: discord.ui.TextDisplay.row:7 discord.ui.Thumbnail.row:7 of
 msgid "The row position of the item, or ``None`` if not explicitly set."
 msgstr ""
 
-#: 0d1b7b3ebb1843d7a08af32dba31680a c4b229dcc8e94342a05e13effb8385c2
-#: discord.ui.Button.row:8 discord.ui.Item.row:8 discord.ui.Select.row:8
+#: discord.ui.Button.id:6 discord.ui.Button.row:8 discord.ui.Container.id:6
+#: discord.ui.Container.row:8 discord.ui.File.id:6 discord.ui.File.row:8
+#: discord.ui.Item.id:6 discord.ui.Item.row:8 discord.ui.MediaGallery.id:6
+#: discord.ui.MediaGallery.row:8 discord.ui.Section.id:6
+#: discord.ui.Section.row:8 discord.ui.Select.id:6 discord.ui.Select.row:8
+#: discord.ui.Separator.id:6 discord.ui.Separator.row:8
+#: discord.ui.TextDisplay.id:6 discord.ui.TextDisplay.row:8
+#: discord.ui.Thumbnail.id:6 discord.ui.Thumbnail.row:8
 #: e38547a50c034ab9807a13ecc38ab43a of
 msgid "Optional[:class:`int`]"
 msgstr ""
 
-#: 0199d2a0f84848b48937a4d5853bf651 d83f11310ba64db093845d47b6b0f7a0
-#: discord.ui.Button.row:10 discord.ui.Item.row:10 discord.ui.Select.row:10
-#: e33203dc950d4e84a28c122aa39e6b4c of
-msgid "If the row value is not ``None`` and is outside the range [0, 4]."
+#: 0199d2a0f84848b48937a4d5853bf651 discord.ui.Button.row:10
+#: discord.ui.Container.row:10 discord.ui.File.row:10 discord.ui.Item.row:10
+#: discord.ui.MediaGallery.row:10 discord.ui.Section.row:10
+#: discord.ui.Select.row:10 discord.ui.Separator.row:10
+#: discord.ui.TextDisplay.row:10 discord.ui.Thumbnail.row:10 of
+msgid "If the row value is not ``None`` and is outside the range [0, 39]."
 msgstr ""
 
 #: d1f45a3b27da4ba69428076fe7aa9191 discord.ui.Button.width:1
-#: discord.ui.Item.width:1 discord.ui.Select.width:1 of
+#: discord.ui.Container.width:1 discord.ui.File.width:1 discord.ui.Item.width:1
+#: discord.ui.MediaGallery.width:1 discord.ui.Section.width:1
+#: discord.ui.Select.width:1 discord.ui.Separator.width:1
+#: discord.ui.TextDisplay.width:1 discord.ui.Thumbnail.width:1 of
 msgid "Gets the width of the item in the UI layout."
 msgstr ""
 
-#: 3fd84bb2467f4c9a9914bfaa38386fb9 64dfd6bbc90d43e78708b4d3e6d900b2
 #: 8e2598b65b2d4b9cb4ed1ca3d26d3d67 discord.ui.Button.width:3
-#: discord.ui.Item.width:3 discord.ui.Select.width:3 of
+#: discord.ui.Container.width:3 discord.ui.File.width:3 discord.ui.Item.width:3
+#: discord.ui.MediaGallery.width:3 discord.ui.Section.width:3
+#: discord.ui.Select.width:3 discord.ui.Separator.width:3
+#: discord.ui.TextDisplay.width:3 discord.ui.Thumbnail.width:3 of
 msgid ""
 "The width determines how much horizontal space this item occupies within "
 "its row."
 msgstr ""
 
 #: 0841d9930482419a831cb90ca1d54c5f discord.ui.Button.width:5
-#: discord.ui.Item.width:5 discord.ui.Select.width:5 of
+#: discord.ui.Container.width:5 discord.ui.File.width:5 discord.ui.Item.width:5
+#: discord.ui.MediaGallery.width:5 discord.ui.Section.width:5
+#: discord.ui.Select.width:5 discord.ui.Separator.width:5
+#: discord.ui.TextDisplay.width:5 discord.ui.Thumbnail.width:5 of
 msgid "The width of the item. Defaults to 1."
 msgstr ""
 
-#: 574e63a83c824cccaff8decf43609b50 9a526aac2e644b789d686cfd0caa5c6d
-#: discord.ui.Button.width:6 discord.ui.Item.width:6 discord.ui.Select.width:6
+#: discord.ui.Button.width:6 discord.ui.Container.width:6
+#: discord.ui.File.width:6 discord.ui.Item.width:6
+#: discord.ui.MediaGallery.width:6 discord.ui.Section.width:6
+#: discord.ui.Select.width:6 discord.ui.Separator.width:6
+#: discord.ui.TextDisplay.width:6 discord.ui.Thumbnail.width:6
 #: e7ab5b99207b41528e6ae4e7018d7a60 of
 msgid ":class:`int`"
 msgstr ""
 
+#: d1f45a3b27da4ba69428076fe7aa9191 discord.ui.Button.id:1
+#: discord.ui.Container.id:1 discord.ui.File.id:1 discord.ui.Item.id:1
+#: discord.ui.MediaGallery.id:1 discord.ui.Section.id:1 discord.ui.Select.id:1
+#: discord.ui.Separator.id:1 discord.ui.TextDisplay.id:1
+#: discord.ui.Thumbnail.id:1 of
+msgid "Gets this item's ID."
+msgstr ""
+
+#: 00a2a1707ded427a8a675aee688b3563 11902e9d3ece48348b8c0660eda1e7c3
+#: 2011c29e9b164747b92e03ca8e4f7dc4 27333f7269d84c08960dcadbab1960ab
+#: 60966c55178543578d48392122d37810 61c1e6f7577746b7b5de163c969e0841
+#: 7e4af08799644323918727e785d30cbb 84e5d559fa8342148f03cd3c50e825dc
+#: c2467f1ea20d43948bf10ab3894404cf c60931ba9e3b4c0d99cdf577a20009bc
+#: discord.ui.Button.id:3 discord.ui.Container.id:3 discord.ui.File.id:3
+#: discord.ui.Item.id:3 discord.ui.MediaGallery.id:3 discord.ui.Section.id:3
+#: discord.ui.Select.id:3 discord.ui.Separator.id:3 discord.ui.TextDisplay.id:3
+#: discord.ui.Thumbnail.id:3 of
+msgid ""
+"This can be set by the user when constructing an Item. If not, Discord "
+"will automatically provide one when the View is sent."
+msgstr ""
+
+#: ab49d7efd6404221b72e504c584ff8e6 discord.ui.Button.id:5
+#: discord.ui.Container.id:5 discord.ui.File.id:5 discord.ui.Item.id:5
+#: discord.ui.MediaGallery.id:5 discord.ui.Section.id:5 discord.ui.Select.id:5
+#: discord.ui.Separator.id:5 discord.ui.TextDisplay.id:5
+#: discord.ui.Thumbnail.id:5 of
+msgid "The ID of this item, or ``None`` if the user didn't set one."
+msgstr ""
+
 #: 055cf67df1e94d0592bbc5d22013c323 discord.ui.Button.view:1
-#: discord.ui.Item.view:1 discord.ui.Select.view:1 of
+#: discord.ui.Container.view:1 discord.ui.File.view:1 discord.ui.Item.view:1
+#: discord.ui.MediaGallery.view:1 discord.ui.Section.view:1
+#: discord.ui.Select.view:1 discord.ui.Separator.view:1
+#: discord.ui.TextDisplay.view:1 discord.ui.Thumbnail.view:1 of
 msgid "Gets the parent view associated with this item."
 msgstr ""
 
-#: 0b7f2e26bb8342949d3aa2c4ffc05240 313d2dfd0e054186b5309b0bc9593891
-#: d37b0580bb184040b8748482a98b1e0b discord.ui.Button.view:3
-#: discord.ui.Item.view:3 discord.ui.Select.view:3 of
+#: 313d2dfd0e054186b5309b0bc9593891 discord.ui.Button.view:3
+#: discord.ui.Container.view:3 discord.ui.File.view:3 discord.ui.Item.view:3
+#: discord.ui.MediaGallery.view:3 discord.ui.Section.view:3
+#: discord.ui.Select.view:3 discord.ui.Separator.view:3
+#: discord.ui.TextDisplay.view:3 discord.ui.Thumbnail.view:3 of
 msgid ""
 "The view refers to the container that holds this item. This is typically "
 "set automatically when the item is added to a view."
 msgstr ""
 
-#: 05bd49caf8884ea7884fd31a402e6272 9212d4ebc9bd4310860030e3e00d9aa7
 #: ab49d7efd6404221b72e504c584ff8e6 discord.ui.Button.view:6
-#: discord.ui.Item.view:6 discord.ui.Select.view:6 of
+#: discord.ui.Container.view:6 discord.ui.File.view:6 discord.ui.Item.view:6
+#: discord.ui.MediaGallery.view:6 discord.ui.Section.view:6
+#: discord.ui.Select.view:6 discord.ui.Separator.view:6
+#: discord.ui.TextDisplay.view:6 discord.ui.Thumbnail.view:6 of
 msgid ""
 "The parent view of this item, or ``None`` if the item is not attached to "
 "any view."
 msgstr ""
 
-#: 18819a9062ce44e5832579e33b33d183 b7dd0c5f308f47c9bd89f36498661b17
 #: d6f2e5d5e44c407b8d8bbb9c0b189365 discord.ui.Button.view:7
-#: discord.ui.Item.view:7 discord.ui.Select.view:7 of
+#: discord.ui.Container.view:7 discord.ui.File.view:7 discord.ui.Item.view:7
+#: discord.ui.MediaGallery.view:7 discord.ui.Section.view:7
+#: discord.ui.Select.view:7 discord.ui.Separator.view:7
+#: discord.ui.TextDisplay.view:7 discord.ui.Thumbnail.view:7 of
 msgid "Optional[:class:`View`]"
 msgstr ""
 
@@ -743,6 +867,28 @@ msgstr ""
 #: bf020129ab2a4825b8dfff6074481348 discord.ui.Button.sku_id:1
 #: discord.ui.button.Button:25 of
 msgid "The ID of the SKU this button refers to."
+msgstr ""
+
+#: c7feafdb9ed34fceaaf137f89a8fad12 discord.ui.button.Button:28 of
+msgid ""
+"The relative row this button belongs to. A Discord component can only "
+"have 5 rows. By default, items are arranged automatically into those 5 "
+"rows. If you'd like to control the relative positioning of the row then "
+"passing an index is advised. For example, row=1 will show up before "
+"row=2. Defaults to ``None``, which is automatic ordering. The row number "
+"must be between 0 and 4 (i.e. zero indexed).  .. warning::      This "
+"parameter does not work with V2 components or with more than 25 items in "
+"your view."
+msgstr ""
+
+#: b0401c9f48cb4a45886573ff700fe478 discord.ui.button.Button:36 of
+msgid ""
+"This parameter does not work with V2 components or with more than 25 "
+"items in your view."
+msgstr ""
+
+#: 47abb7d1e6094637a97fa3df6a95a8e8 discord.ui.button.Button:39 of
+msgid "The button's ID."
 msgstr ""
 
 #: discord.ui.Button.custom_id:1 e6884781decb43808438d3e9817dd29b of
@@ -873,6 +1019,29 @@ msgstr ""
 msgid "The number of options exceeds 25."
 msgstr ""
 
+#: discord.ui.container.Container.add_file:13
+#: discord.ui.container.Container.add_gallery:12
+#: discord.ui.container.Container.add_item:9
+#: discord.ui.container.Container.add_section:18
+#: discord.ui.container.Container.add_separator:13
+#: discord.ui.container.Container.add_text:10
+#: discord.ui.container.Container.disable_all_items:7
+#: discord.ui.container.Container.enable_all_items:7
+#: discord.ui.container.Container.remove_item:7
+#: discord.ui.media_gallery.MediaGallery.append_item:10
+#: discord.ui.modal.Modal.add_item:7 discord.ui.modal.Modal.remove_item:7
+#: discord.ui.section.Section.add_item:10
+#: discord.ui.section.Section.add_text:12
+#: discord.ui.section.Section.disable_all_items:8
+#: discord.ui.section.Section.enable_all_items:8
+#: discord.ui.section.Section.remove_item:8
+#: discord.ui.section.Section.set_accessory:10
+#: discord.ui.section.Section.set_thumbnail:16
+#: discord.ui.select.Select.add_option:28
+#: discord.ui.select.Select.append_option:9 ff0aea3ebb2f44c0874d3d169b0fc412 of
+msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.Self\\``"
+msgstr ""
+
 #: 21ff2a9da99b4440929eb12965b39a31 discord.ui.select.Select.append_option:1 of
 msgid "Appends an option to the select menu."
 msgstr ""
@@ -889,6 +1058,475 @@ msgid ""
 ":class:`discord.Role`]] | List[:class:`discord.abc.GuildChannel`] | None:"
 " A list of values that have been selected by the user. This will be "
 "``None`` if the select has not been interacted with yet."
+msgstr ""
+
+#: discord.ui.section.Section:1 e42dbe83104c4d07ba9cf0ef21c7f391 of
+msgid ""
+"Represents a UI section. Sections must have 1-3 (inclusive) items and an "
+"accessory set."
+msgstr ""
+
+#: cdbfac06da814f8cbdae3f798005b0aa discord.ui.section.Section:6 of
+msgid ""
+"The initial items contained in this section, up to 3. Currently only "
+"supports :class:`~discord.ui.TextDisplay`. Sections must have at least 1 "
+"item before being sent."
+msgstr ""
+
+#: a7ef7e248a784db3bb28699ee39b83af discord.ui.section.Section:11 of
+msgid ""
+"The section's accessory. This is displayed in the top right of the "
+"section. Currently only supports :class:`~discord.ui.Button` and "
+":class:`~discord.ui.Thumbnail`. Sections must have an accessory attached "
+"before being sent."
+msgstr ""
+
+#: 1a432a43d45d41dd97862b1f0f19af7e
+#: discord.ui.container.Container.add_section:15 discord.ui.section.Section:16
+#: of
+msgid "The section's ID."
+msgstr ""
+
+#: d149c73fdd87423abab34ae033ad3bb2 discord.ui.section.Section.add_item:1 of
+msgid "Adds an item to the section."
+msgstr ""
+
+#: 651c40af34754b2cbca1243c29182544 discord.ui.section.Section.add_item:4 of
+msgid "The item to add to the section."
+msgstr ""
+
+#: 3d4f7caeeeee4bf9849176d0b17c48b8 discord.ui.section.Section.add_item:8
+#: discord.ui.section.Section.add_text:10 of
+msgid "Maximum number of items has been exceeded (3)."
+msgstr ""
+
+#: d74ef86db3b84baa83b19399f917aeda discord.ui.section.Section.remove_item:1 of
+msgid ""
+"Removes an item from the section. If an :class:`int` or :class:`str` is "
+"passed, the item will be removed by Item ``id`` or ``custom_id`` "
+"respectively."
+msgstr ""
+
+#: 7fd54b986674467abbb28a2ced73f7d5 discord.ui.section.Section.remove_item:5 of
+msgid "The item, item ``id``, or item ``custom_id`` to remove from the section."
+msgstr ""
+
+#: 1b9bd16ebb134085ba5e1309bcda4b6d discord.ui.section.Section.get_item:1 of
+msgid ""
+"Get an item from this section. Alias for `utils.get(section.walk_items(),"
+" ...)`. If an ``int`` is provided, it will be retrieved by ``id``, "
+"otherwise it will check the accessory's ``custom_id``."
+msgstr ""
+
+#: cbb9b6731f96427fb3201cdf6793994c discord.ui.container.Container.get_item:6
+#: discord.ui.section.Section.get_item:5 of
+msgid "The id or custom_id of the item to get."
+msgstr ""
+
+#: 98fa144afc194f7d8515bd447103d0a2 discord.ui.section.Section.get_item:8 of
+msgid "The item with the matching ``id`` if it exists."
+msgstr ""
+
+#: 2027446701754f3794b31d4a61853116 discord.ui.section.Section.add_text:1 of
+msgid "Adds a :class:`TextDisplay` to the section."
+msgstr ""
+
+#: 7eef7bc7f5434d39baab02325cc1ee35 discord.ui.section.Section.add_text:4 of
+msgid "The content of the text display."
+msgstr ""
+
+#: 651c40af34754b2cbca1243c29182544 discord.ui.section.Section.add_text:7
+#: discord.ui.text_display.TextDisplay:9 of
+msgid "The text display's ID."
+msgstr ""
+
+#: a8c107f041ed4021944056e98e4b13ee discord.ui.section.Section.set_accessory:1
+#: of
+msgid "Set an item as the section's :attr:`accessory`."
+msgstr ""
+
+#: a57659147dc94f5f9d5929813436f625 discord.ui.section.Section.set_accessory:4
+#: of
+msgid ""
+"The item to set as accessory. Currently only supports "
+":class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`."
+msgstr ""
+
+#: 902d5d2743cc4e5d9a150d67d6dbf0c4 discord.ui.section.Section.set_thumbnail:1
+#: of
+msgid ""
+"Sets a :class:`Thumbnail` with the provided URL as the section's "
+":attr:`accessory`."
+msgstr ""
+
+#: 0dfdf29800e044d89a49e207c803d984 discord.ui.section.Section.set_thumbnail:4
+#: of
+msgid "The url of the thumbnail."
+msgstr ""
+
+#: 0abfcec6e5a4408a803463cec892a147 discord.ui.Thumbnail.description:1
+#: discord.ui.section.Section.set_thumbnail:7 discord.ui.thumbnail.Thumbnail:9
+#: of
+msgid "The thumbnail's description, up to 1024 characters."
+msgstr ""
+
+#: 390e0de65aca4e25bf50e5ae6a456657 discord.ui.Thumbnail.spoiler:1
+#: discord.ui.section.Section.set_thumbnail:10
+#: discord.ui.thumbnail.Thumbnail:12 of
+msgid "Whether the thumbnail has the spoiler overlay. Defaults to ``False``."
+msgstr ""
+
+#: 7c479a76628e4ff788fb5ce892488b81 b419baf4e6a44592b59bfc96271a175e
+#: discord.ui.section.Section.set_thumbnail:13
+#: discord.ui.thumbnail.Thumbnail:15 of
+msgid "The thumbnail's ID."
+msgstr ""
+
+#: 01f0168f669d4b0290965d97c05eaa78 discord.ui.section.Section.copy_text:1 of
+msgid ""
+"Returns the text of all :class:`~discord.ui.TextDisplay` items in this "
+"section. Equivalent to the `Copy Text` option on Discord clients."
+msgstr ""
+
+#: 4f53fdbd3a59401e9c345f065124710a
+#: discord.ui.section.Section.disable_all_items:1 of
+msgid ""
+"Disables all buttons and select menus in the section. At the moment, this"
+" only disables :attr:`accessory` if it is a button."
+msgstr ""
+
+#: 4072920264ba4042a24a4149853585d3
+#: discord.ui.container.Container.disable_all_items:4
+#: discord.ui.section.Section.disable_all_items:5 of
+msgid "A list of items in `self.items` to not disable from the view."
+msgstr ""
+
+#: discord.ui.section.Section.enable_all_items:1
+#: f3ea6df26b99495cbeb98f4621e76e2a of
+msgid ""
+"Enables all buttons and select menus in the section. At the moment, this "
+"only enables :attr:`accessory` if it is a button."
+msgstr ""
+
+#: 156efa1c1fbf4918af0b9e99b8099feb
+#: discord.ui.container.Container.enable_all_items:4
+#: discord.ui.section.Section.enable_all_items:5 of
+msgid "A list of items in `self.items` to not enable from the view."
+msgstr ""
+
+#: 28f795dbc1504eaf89ad7d34f12dab67 discord.ui.text_display.TextDisplay:1 of
+msgid ""
+"Represents a UI text display. A message can have up to 4000 characters "
+"across all :class:`TextDisplay` objects combined."
+msgstr ""
+
+#: 0abfcec6e5a4408a803463cec892a147 discord.ui.text_display.TextDisplay:6 of
+msgid "The text display's content, up to 4000 characters."
+msgstr ""
+
+#: b159c65de392440fac77f0ec9989f160 discord.ui.TextDisplay.content:1 of
+msgid "The text display's content."
+msgstr ""
+
+#: 7c2cbe415a8b40228e186e7c36f51d92
+#: discord.ui.text_display.TextDisplay.copy_text:1 of
+msgid ""
+"Returns the content of this text display. Equivalent to the `Copy Text` "
+"option on Discord clients."
+msgstr ""
+
+#: b9270d5d3b734251840a9f06eb712027 discord.ui.thumbnail.Thumbnail:1 of
+msgid "Represents a UI Thumbnail."
+msgstr ""
+
+#: 184670165d7b4edcaeeba684f7607fdb discord.ui.thumbnail.Thumbnail:6 of
+msgid ""
+"The url of the thumbnail. This can either be an arbitrary URL or an "
+"``attachment://`` URL to work with local files."
+msgstr ""
+
+#: 2b3710a8946a4678a5b387c8fe6eb4ed discord.ui.Thumbnail.url:1 of
+msgid ""
+"The URL of this thumbnail's media. This can either be an arbitrary URL or"
+" an ``attachment://`` URL."
+msgstr ""
+
+#: discord.ui.media_gallery.MediaGallery:1 e2717bcb113c41aea2923e51606df8f2 of
+msgid ""
+"Represents a UI Media Gallery. Galleries may contain up to 10 "
+":class:`MediaGalleryItem` objects."
+msgstr ""
+
+#: 2f917e72a1924778a62c52611093344a discord.ui.media_gallery.MediaGallery:6 of
+msgid "The initial items contained in this gallery, up to 10."
+msgstr ""
+
+#: 2f1d4094ef8f4f019a70fe83b1bf2cab afe7e6ba6afe410da66fbde75de53ea0
+#: discord.ui.container.Container.add_gallery:9
+#: discord.ui.media_gallery.MediaGallery:9 of
+msgid "The gallery's ID."
+msgstr ""
+
+#: 43bf0998de6443b9951e170b2abfe1dc
+#: discord.ui.media_gallery.MediaGallery.append_item:1 of
+msgid "Adds a :attr:`MediaGalleryItem` to the gallery."
+msgstr ""
+
+#: 24dd9c6954ba4b6f8baae26063abdfe1
+#: discord.ui.media_gallery.MediaGallery.append_item:4 of
+msgid "The gallery item to add to the gallery."
+msgstr ""
+
+#: 0c2448b08bed49c9b3a36391e2dfe223
+#: discord.ui.media_gallery.MediaGallery.append_item:7 of
+msgid "A :class:`MediaGalleryItem` was not passed."
+msgstr ""
+
+#: 3d4f7caeeeee4bf9849176d0b17c48b8
+#: discord.ui.media_gallery.MediaGallery.add_item:13
+#: discord.ui.media_gallery.MediaGallery.append_item:8 of
+msgid "Maximum number of items has been exceeded (10)."
+msgstr ""
+
+#: 2027446701754f3794b31d4a61853116
+#: discord.ui.media_gallery.MediaGallery.add_item:1 of
+msgid "Adds a new media item to the gallery."
+msgstr ""
+
+#: bbc20b8dc2614eefa90d0386f29140ec
+#: discord.ui.media_gallery.MediaGallery.add_item:4 of
+msgid ""
+"The URL of the media item. This can either be an arbitrary URL or an "
+"``attachment://`` URL."
+msgstr ""
+
+#: 760c50e112a04650a33bf2c56834b14f
+#: discord.ui.media_gallery.MediaGallery.add_item:7 of
+msgid "The media item's description, up to 1024 characters."
+msgstr ""
+
+#: 44b3331c42c24dd0871d7b6a7ac96dbe
+#: discord.ui.media_gallery.MediaGallery.add_item:10 of
+msgid "Whether the media item has the spoiler overlay."
+msgstr ""
+
+#: 51e6a1596c4a449f9a81c52ebddaa39e discord.ui.file.File:1 of
+msgid "Represents a UI File."
+msgstr ""
+
+#: discord.ui.file.File:4 f51a89732ddb4b7f8f056e8d62bbfffa of
+msgid ""
+"This component does not show media previews. Use :class:`MediaGallery` "
+"for previews instead."
+msgstr ""
+
+#: 65d97d636f5948b7b262fff63683f16d discord.ui.file.File:9 of
+msgid ""
+"The URL of this file. This must be an ``attachment://`` URL referring to "
+"a local file used with :class:`~discord.File`."
+msgstr ""
+
+#: acc1711d1e2247a99930ff1d6dc94787 discord.ui.file.File:12 of
+msgid "Whether this file has the spoiler overlay."
+msgstr ""
+
+#: 7eff0916811d4ee2b31c189597562605 discord.ui.file.File:15 of
+msgid "The file component's ID."
+msgstr ""
+
+#: 495795a867504df7b4e8daf02f749e64 a581557192c444938b2d3be47d370596
+#: discord.ui.File.url:1 discord.ui.container.Container.add_file:4 of
+msgid ""
+"The URL of this file's media. This must be an ``attachment://`` URL that "
+"references a :class:`~discord.File`."
+msgstr ""
+
+#: 390e0de65aca4e25bf50e5ae6a456657 discord.ui.File.spoiler:1
+#: discord.ui.container.Container.add_file:7 of
+msgid "Whether the file has the spoiler overlay. Defaults to ``False``."
+msgstr ""
+
+#: 3aa00fa1b0524f57b5984d7f80d72c47 discord.ui.File.name:1 of
+msgid "The name of this file, if provided by Discord."
+msgstr ""
+
+#: ab49d7efd6404221b72e504c584ff8e6 discord.ui.File.size:1 of
+msgid "The size of this file in bytes, if provided by Discord."
+msgstr ""
+
+#: d3ed8c14fbc14d40be6691f7709cfe09 discord.ui.separator.Separator:1 of
+msgid "Represents a UI Separator."
+msgstr ""
+
+#: 584df796ba3345878a51cb7cbbd2ad12 discord.ui.Separator.divider:1
+#: discord.ui.container.Container.add_separator:4
+#: discord.ui.separator.Separator:6 of
+msgid "Whether the separator is a divider. Defaults to ``True``."
+msgstr ""
+
+#: 026ef9ab44a84f77b066b67e2a714ff9 2e459c651fda44a0b719d50abfa4df7f
+#: cd8719caae424144aa8f1f2c37fc2374 discord.ui.Separator.spacing:1
+#: discord.ui.container.Container.add_separator:7
+#: discord.ui.separator.Separator:9 of
+msgid ""
+"The spacing size of the separator. Defaults to "
+":attr:`~discord.SeparatorSpacingSize.small`."
+msgstr ""
+
+#: 2238043a3f944ee984d06ec6486cb852
+#: discord.ui.container.Container.add_separator:10
+#: discord.ui.separator.Separator:12 of
+msgid "The separator's ID."
+msgstr ""
+
+#: d3ed8c14fbc14d40be6691f7709cfe09 discord.ui.container.Container:1 of
+msgid "Represents a UI Container."
+msgstr ""
+
+#: 9a2765dfcfb646e084e717be3bed4b85 discord.ui.container.Container:3 of
+msgid "The current items supported are as follows:"
+msgstr ""
+
+#: 2f917e72a1924778a62c52611093344a discord.ui.container.Container:16 of
+msgid "The initial items in this container."
+msgstr ""
+
+#: 55f2959aafef4d939f2a68b27ef9df0e discord.ui.container.Container:19 of
+msgid "The accent colour of the container. Aliased to ``color`` as well."
+msgstr ""
+
+#: 44b3331c42c24dd0871d7b6a7ac96dbe discord.ui.container.Container:22 of
+msgid "Whether this container has the spoiler overlay."
+msgstr ""
+
+#: 2238043a3f944ee984d06ec6486cb852 discord.ui.container.Container:25 of
+msgid "The container's ID."
+msgstr ""
+
+#: d149c73fdd87423abab34ae033ad3bb2 discord.ui.container.Container.add_item:1
+#: of
+msgid "Adds an item to the container."
+msgstr ""
+
+#: 651c40af34754b2cbca1243c29182544 discord.ui.container.Container.add_item:4
+#: of
+msgid "The item to add to the container."
+msgstr ""
+
+#: 75dda6574daa47d1af114297c96aa397
+#: discord.ui.container.Container.remove_item:1 of
+msgid ""
+"Removes an item from the container. If an int or str is passed, it will "
+"remove by Item :attr:`id` or ``custom_id`` respectively."
+msgstr ""
+
+#: ab49d7efd6404221b72e504c584ff8e6
+#: discord.ui.container.Container.remove_item:4 of
+msgid "The item, ``id``, or item ``custom_id`` to remove from the container."
+msgstr ""
+
+#: 8f9b751e4c5643d4b5bef56863405714 discord.ui.container.Container.get_item:1
+#: of
+msgid ""
+"Get an item from this container. Roughly equivalent to "
+"`utils.get(container.items, ...)`. If an ``int`` is provided, the item "
+"will be retrieved by ``id``, otherwise by ``custom_id``. This method will"
+" also search for nested items."
+msgstr ""
+
+#: 98fa144afc194f7d8515bd447103d0a2 discord.ui.container.Container.get_item:9
+#: of
+msgid "The item with the matching ``id`` or ``custom_id`` if it exists."
+msgstr ""
+
+#: 2027446701754f3794b31d4a61853116
+#: discord.ui.container.Container.add_section:1 of
+msgid "Adds a :class:`Section` to the container."
+msgstr ""
+
+#: 0e6d15c2f7ae4c29986e7dd0f1154f23
+#: discord.ui.container.Container.add_section:3 of
+msgid ""
+"To append a pre-existing :class:`Section`, use the :meth:`add_item` "
+"method, instead."
+msgstr ""
+
+#: 7ad3ccf42b494faaba9370aacc4ed1b5
+#: discord.ui.container.Container.add_section:7 of
+msgid ""
+"The items contained in this section, up to 3. Currently only supports "
+":class:`~discord.ui.TextDisplay`."
+msgstr ""
+
+#: discord.ui.container.Container.add_section:11
+#: fe6b58511c9044228ea795b7211ea852 of
+msgid ""
+"The section's accessory. This is displayed in the top right of the "
+"section. Currently only supports :class:`~discord.ui.Button` and "
+":class:`~discord.ui.Thumbnail`."
+msgstr ""
+
+#: 2027446701754f3794b31d4a61853116 discord.ui.container.Container.add_file:1
+#: discord.ui.container.Container.add_text:1 of
+msgid "Adds a :class:`TextDisplay` to the container."
+msgstr ""
+
+#: 7eef7bc7f5434d39baab02325cc1ee35 discord.ui.container.Container.add_text:4
+#: of
+msgid "The content of the TextDisplay"
+msgstr ""
+
+#: 651c40af34754b2cbca1243c29182544 discord.ui.container.Container.add_text:7
+#: of
+msgid "The text displays' ID."
+msgstr ""
+
+#: 2027446701754f3794b31d4a61853116
+#: discord.ui.container.Container.add_gallery:1 of
+msgid "Adds a :class:`MediaGallery` to the container."
+msgstr ""
+
+#: 0e6d15c2f7ae4c29986e7dd0f1154f23
+#: discord.ui.container.Container.add_gallery:3 of
+msgid ""
+"To append a pre-existing :class:`MediaGallery`, use :meth:`add_item` "
+"instead."
+msgstr ""
+
+#: 2f917e72a1924778a62c52611093344a
+#: discord.ui.container.Container.add_gallery:6 of
+msgid "The media this gallery contains."
+msgstr ""
+
+#: 90c6e5f8556c495dac0c65908098b956 discord.ui.container.Container.add_file:10
+#: of
+msgid "The file's ID."
+msgstr ""
+
+#: 2027446701754f3794b31d4a61853116
+#: discord.ui.container.Container.add_separator:1 of
+msgid "Adds a :class:`Separator` to the container."
+msgstr ""
+
+#: discord.ui.container.Container.copy_text:1 f1c3beea0cf548c9a18ab07a55dd7aca
+#: of
+msgid ""
+"Returns the text of all :class:`~discord.ui.TextDisplay` items in this "
+"container. Equivalent to the `Copy Text` option on Discord clients."
+msgstr ""
+
+#: 390e0de65aca4e25bf50e5ae6a456657 discord.ui.Container.spoiler:1 of
+msgid "Whether the container has the spoiler overlay. Defaults to ``False``."
+msgstr ""
+
+#: discord.ui.container.Container.disable_all_items:1
+#: f3ab0bff303f4ab0bc92ad8e670b876c of
+msgid "Disables all buttons and select menus in the container."
+msgstr ""
+
+#: 2fe7af6c22f2463595f2eccfb44d78d7
+#: discord.ui.container.Container.enable_all_items:1 of
+msgid "Enables all buttons and select menus in the container."
 msgstr ""
 
 #: b9270d5d3b734251840a9f06eb712027 discord.ui.modal.Modal:1 of
@@ -1028,6 +1666,12 @@ msgid ""
 "must be between 0 and 4 (i.e. zero indexed)."
 msgstr ""
 
+#: discord.ui.InputText.id:1 ec574afa04d14576800719412669e05c of
+msgid ""
+"The input text's ID. If not provided by the user, it is set sequentially "
+"by Discord."
+msgstr ""
+
 #: 53bbbf9910f6434a86d331c806dc2485 discord.ui.InputText.label:1 of
 msgid "The label of the input text field."
 msgstr ""
@@ -1064,5 +1708,48 @@ msgstr ""
 #~ "string representing the custom or "
 #~ "unicode emoji or an instance of "
 #~ ":class:`.PartialEmoji` or :class:`.Emoji`."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Maximum number of children has been "
+#~ "exceeded (25)     or the row the "
+#~ "item is trying to be added to "
+#~ "is full."
+#~ msgstr ""
+
+#~ msgid "Removes an item from the view."
+#~ msgstr ""
+
+#~ msgid "The item to remove from the view."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Get an item from the view with "
+#~ "the given custom ID. Alias for "
+#~ "`utils.get(view.children, custom_id=custom_id)`."
+#~ msgstr ""
+
+#~ msgid "The item with the matching ``custom_id`` if it exists."
+#~ msgstr ""
+
+#~ msgid "Disables all items in the view."
+#~ msgstr ""
+
+#~ msgid "Enables all items in the view."
+#~ msgstr ""
+
+#~ msgid "The current UI items supported are:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The row position determines the vertical"
+#~ " placement of the item in the "
+#~ "UI. The value must be an integer"
+#~ " between 0 and 4 (inclusive), or "
+#~ "``None`` to indicate that no specific"
+#~ " row is set."
+#~ msgstr ""
+
+#~ msgid "If the row value is not ``None`` and is outside the range [0, 4]."
 #~ msgstr ""
 

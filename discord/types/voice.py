@@ -33,7 +33,10 @@ from .member import MemberWithUser
 from .snowflake import Snowflake
 
 SupportedModes = Literal[
-    "xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"
+    "xsalsa20_poly1305_lite",
+    "xsalsa20_poly1305_suffix",
+    "xsalsa20_poly1305",
+    "aead_xchacha20_poly1305_rtpsize",
 ]
 
 
