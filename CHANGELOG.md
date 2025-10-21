@@ -30,6 +30,10 @@ These changes are available on the `master` branch, but have not yet been releas
   - Adds pre-typed and pre-constructed with select_type `ui.Select` aliases for the
     different select types: `ui.StringSelect`, `ui.UserSelect`, `ui.RoleSelect`,
     `ui.MentionableSelect`, and `ui.ChannelSelect`.
+- Added `store` parameter to `View` and `Modal` classes.
+  ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
+- Added `Webhook.parent` and `Webhook.from_interaction`
+  ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
 - Added the ability to use functions with any number of optional arguments and functions
   returning an awaitable as `Option.autocomplete`.
   ([#2914](https://github.com/Pycord-Development/pycord/pull/2914))
@@ -40,6 +44,23 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
 
 ### Changed
+
+- Overhauled support for Components V2 and new Modal components
+  ([#2904](https://github.com/Pycord-Development/pycord/pull/2904/))
+  - Revert `discord.ui.View` and `discord.ui.Modal` to 2.6.1 behavior; not compatible
+    with new features.
+  - Implemented `discord.ui.DesignerView` and `discord.ui.DesignerModal` to support new
+    components.
+  - `DesignerView` and `Container` do not support `Button` and `Select` directly; use
+    `discord.ui.ActionRow` instead.
+  - `DesignerModal` does not support `InputText` and `Select` directly; use
+    `discord.ui.Label` instead.
+  - Removed `InputText.description`, `Select.label` and `Select.description`; these are
+    now attributes of `Label`.
+  - `discord.ui.Item` is now a base class for `ViewItem` and `ModalItem`; all items
+    inherit from these.
+  - All view and modal classes now inherit from a base `ItemInterface` class, split into
+    `BaseView` and `BaseModal`
 
 ### Fixed
 
