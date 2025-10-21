@@ -1119,13 +1119,13 @@ class SlashCommand(ApplicationCommand):
                 ctx.value = op.get("value")
                 ctx.options = values
 
-                if len(inspect.signature(option.autocomplete).parameters) == 2:
+                if option.autocomplete._is_instance_method:
                     instance = getattr(option.autocomplete, "__self__", ctx.cog)
                     result = option.autocomplete(instance, ctx)
                 else:
                     result = option.autocomplete(ctx)
 
-                if asyncio.iscoroutinefunction(option.autocomplete):
+                if inspect.isawaitable(result):
                     result = await result
 
                 choices = [

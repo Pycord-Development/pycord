@@ -8,12 +8,15 @@ UI Kit helper for the Discord API
 :license: MIT, see LICENSE for more details.
 """
 
+from .action_row import *
 from .button import *
 from .container import *
+from .core import *
 from .file import *
 from .file_upload import *
 from .input_text import *
 from .item import *
+from .label import *
 from .media_gallery import *
 from .modal import *
 from .section import *

@@ -11,20 +11,29 @@ from discord import (
     User,
 )
 from discord.ui import (
+    ActionRow,
     Button,
     Container,
+    DesignerView,
     MediaGallery,
     Section,
     Select,
     Separator,
     TextDisplay,
     Thumbnail,
-    View,
     button,
 )
 
 
-class MyView(View):
+class MyRow(ActionRow):
+
+    @button(label="Delete Message", style=ButtonStyle.red, id=200)
+    async def delete_button(self, button: Button, interaction: Interaction):
+        await interaction.response.defer(invisible=True)
+        await interaction.message.delete()
+
+
+class MyView(DesignerView):
     def __init__(self, user: User):
         super().__init__(timeout=30)
         text1 = TextDisplay("### This is a sample `TextDisplay` in a `Section`.")
@@ -55,11 +64,8 @@ class MyView(View):
         self.add_item(
             TextDisplay("Above is a `MediaGallery` containing two `MediaGalleryItem`s.")
         )
-
-    @button(label="Delete Message", style=ButtonStyle.red, id=200)
-    async def delete_button(self, button: Button, interaction: Interaction):
-        await interaction.response.defer(invisible=True)
-        await interaction.message.delete()
+        row = MyRow()
+        self.add_item(row)
 
     async def on_timeout(self):
         self.get_item(200).disabled = True
