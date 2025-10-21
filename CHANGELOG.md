@@ -89,8 +89,8 @@ These changes are available on the `master` branch, but have not yet been releas
   parameters. ([#2952](https://github.com/Pycord-Development/pycord/pull/2952))
 - Fixed autocomplete crashing when using an async staticmethod.
   ([#2966](https://github.com/Pycord-Development/pycord/pull/2966))
-- Fixed attributes like :attr:`Member.display_banner` being ``None`` when the member 
-  has no guild specific banner, but does have a global one.
+- Fixed attributes like :attr:`Member.display_banner` being `None` when the member has
+  no guild specific banner, but does have a global one.
   ([#2968](https://github.com/Pycord-Development/pycord/pull/2949))
 
 ### Deprecated
