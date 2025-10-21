@@ -45,7 +45,7 @@ from ..role import Role
 from ..threads import Thread
 from ..user import User
 from ..utils import MISSING
-from .item import Item, ItemCallbackType
+from .item import ItemCallbackType, ModalItem, ViewItem
 
 __all__ = (
     "Select",
@@ -66,14 +66,16 @@ if TYPE_CHECKING:
     from ..abc import GuildChannel, Snowflake
     from ..types.components import SelectMenu as SelectMenuPayload
     from ..types.interactions import ComponentInteractionData
-    from .view import View
+    from .modal import DesignerModal
+    from .view import BaseView
 
 ST = TypeVar("ST", bound="Snowflake | str", covariant=True, default=Any)
 S = TypeVar("S", bound="Select")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="BaseView", covariant=True)
+M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class Select(Item[V], Generic[V, ST]):
+class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     """Represents a UI select menu.
 
     This is usually represented as a drop down menu.
@@ -90,7 +92,7 @@ class Select(Item[V], Generic[V, ST]):
 
     .. versionchanged:: 2.7
 
-        Can now be sent in :class:`discord.ui.Modal`.
+        Can now be sent in :class:`discord.ui.DesignerModal`.
 
     Parameters
     ----------
@@ -127,21 +129,11 @@ class Select(Item[V], Generic[V, ST]):
         rows. By default, items are arranged automatically into those 5 rows. If you'd
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
-        ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+        ordering. The row number must be between 0 and 4 (i.e. zero indexed). Does not work in :class:`ActionRow` or :class:`Label`.
     id: Optional[:class:`int`]
         The select menu's ID.
-    label: Optional[:class:`str`]
-        The label for the select menu. Only useable in modals.
-        Must be 45 characters or fewer.
-
-        .. versionadded:: 2.7
-    description: Optional[:class:`str`]
-        The description for the select menu. Only useable in modals.
-        Must be 100 characters or fewer.
-
-        .. versionadded:: 2.7
     required: Optional[:class:`bool`]
-        Whether the select is required or not. Only useable in modals. Defaults to ``True`` in modals.
+        Whether the select is required or not. Only useable when added to :class:`Label` for modals. Defaults to ``True`` in modals.
 
         .. versionadded:: 2.7
     default_values: Optional[Sequence[Union[:class:`discord.SelectDefaultValue`, :class:`discord.abc.Snowflake`]]]
@@ -187,8 +179,6 @@ class Select(Item[V], Generic[V, ST]):
         "disabled",
         "custom_id",
         "id",
-        "label",
-        "description",
         "required",
         "default_values",
     )
@@ -206,8 +196,6 @@ class Select(Item[V], Generic[V, ST]):
         disabled: bool = ...,
         row: int | None = ...,
         id: int | None = ...,
-        label: str | None = ...,
-        description: str | None = ...,
         required: bool | None = ...,
     ) -> None: ...
 
@@ -224,8 +212,6 @@ class Select(Item[V], Generic[V, ST]):
         disabled: bool = ...,
         row: int | None = ...,
         id: int | None = ...,
-        label: str | None = ...,
-        description: str | None = ...,
         required: bool | None = ...,
         default_values: Sequence[SelectDefaultValue | ST] | None = ...,
     ) -> None: ...
@@ -246,8 +232,6 @@ class Select(Item[V], Generic[V, ST]):
         disabled: bool = ...,
         row: int | None = ...,
         id: int | None = ...,
-        label: str | None = ...,
-        description: str | None = ...,
         required: bool | None = ...,
         default_values: Sequence[SelectDefaultValue | ST] | None = ...,
     ) -> None: ...
@@ -265,17 +249,11 @@ class Select(Item[V], Generic[V, ST]):
         disabled: bool = False,
         row: int | None = None,
         id: int | None = None,
-        label: str | None = None,
-        description: str | None = None,
         required: bool | None = None,
         default_values: Sequence[SelectDefaultValue | ST] | None = None,
     ) -> None:
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
-        if label and len(label) > 45:
-            raise ValueError("label must be 45 characters or fewer")
-        if description and len(description) > 100:
-            raise ValueError("description must be 100 characters or fewer")
         if channel_types and select_type is not ComponentType.channel_select:
             raise InvalidArgument(
                 "channel_types parameter is only valid for channel selects"
@@ -295,9 +273,6 @@ class Select(Item[V], Generic[V, ST]):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
-
-        self.label: str | None = label
-        self.description: str | None = description
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
@@ -732,7 +707,7 @@ class Select(Item[V], Generic[V, ST]):
         return 5
 
     def to_component_dict(self) -> SelectMenuPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     def refresh_component(self, component: SelectMenu) -> None:
         self._underlying = component
@@ -744,7 +719,9 @@ class Select(Item[V], Generic[V, ST]):
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
-    def refresh_from_modal(self, interaction: Interaction | dict, data: dict) -> None:
+    def refresh_from_modal(
+        self, interaction: Interaction | dict, data: SelectMenuPayload
+    ) -> None:
         self._selected_values = data.get("values", [])
         self._interaction = interaction
 
@@ -765,18 +742,13 @@ class Select(Item[V], Generic[V, ST]):
             default_values=component.default_values,
         )  # type: ignore
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
     def is_dispatchable(self) -> bool:
-        return True
+        return (bool(self.view._store) if self.view else True) and (
+            bool(self.modal._store) if self.modal else True
+        )
 
     def is_storable(self) -> bool:
-        return True
-
-    def uses_label(self) -> bool:
-        return bool(self.label or self.description or (self.required is not None))
+        return self.is_dispatchable()
 
 
 if TYPE_CHECKING:
@@ -867,7 +839,7 @@ def select(
     """A decorator that attaches a select menu to a component.
 
     The function being decorated should have three parameters, ``self`` representing
-    the :class:`discord.ui.View`, the :class:`discord.ui.Select` being pressed and
+    the :class:`discord.ui.View`, :class:`discord.ui.ActionRow` or :class:`discord.ui.Section`, the :class:`discord.ui.Select` being pressed and
     the :class:`discord.Interaction` you receive.
 
     In order to get the selected items that the user has chosen within the callback

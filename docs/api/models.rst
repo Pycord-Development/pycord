@@ -450,6 +450,11 @@ UI Components
     :members:
     :inherited-members:
 
+.. attributetable:: Label
+
+.. autoclass:: Label()
+    :members:
+
 .. attributetable:: FileUpload
 
 .. autoclass:: FileUpload()

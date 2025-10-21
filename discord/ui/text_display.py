@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, TypeVar
@@ -5,20 +29,23 @@ from typing import TYPE_CHECKING, TypeVar
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import _component_factory
 from ..enums import ComponentType
-from .item import Item
+from .item import ModalItem, ViewItem
 
 __all__ = ("TextDisplay",)
 
 if TYPE_CHECKING:
     from ..types.components import TextDisplayComponent as TextDisplayComponentPayload
-    from .view import View
+    from .core import ItemInterface
+    from .modal import DesignerModal
+    from .view import DesignerView
 
 
 T = TypeVar("T", bound="TextDisplay")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
+M = TypeVar("M", bound="DesignerModal", covariant=True)
 
 
-class TextDisplay(Item[V]):
+class TextDisplay(ViewItem[V], ModalItem[M]):
     """Represents a UI text display. A message can have up to 4000 characters across all :class:`TextDisplay` objects combined.
 
     .. versionadded:: 2.7
@@ -50,10 +77,6 @@ class TextDisplay(Item[V]):
         )
 
     @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
     def content(self) -> str:
         """The text display's content."""
         return self._underlying.content
@@ -62,12 +85,8 @@ class TextDisplay(Item[V]):
     def content(self, value: str) -> None:
         self._underlying.content = value
 
-    @property
-    def width(self) -> int:
-        return 5
-
     def to_component_dict(self) -> TextDisplayComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     def copy_text(self) -> str:
         """Returns the content of this text display. Equivalent to the `Copy Text` option on Discord clients."""

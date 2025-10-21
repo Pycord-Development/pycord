@@ -89,7 +89,7 @@ if TYPE_CHECKING:
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
-    from .ui.view import View
+    from .ui.view import BaseView
 
     InteractionChannel = Union[
         VoiceChannel,
@@ -164,7 +164,7 @@ class Interaction:
         The command that this interaction belongs to.
 
         .. versionadded:: 2.7
-    view: Optional[:class:`View`]
+    view: Optional[:class:`BaseView`]
         The view that this interaction belongs to.
 
         .. versionadded:: 2.7
@@ -257,7 +257,7 @@ class Interaction:
         )
 
         self.command: ApplicationCommand | None = None
-        self.view: View | None = None
+        self.view: BaseView | None = None
         self.modal: Modal | None = None
         self.attachment_size_limit: int = data.get("attachment_size_limit")
 
@@ -398,12 +398,7 @@ class Interaction:
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
         """Returns the followup webhook for followup interactions."""
-        payload = {
-            "id": self.application_id,
-            "type": 3,
-            "token": self.token,
-        }
-        return Webhook.from_state(data=payload, state=self._state)
+        return Webhook.from_interaction(interaction=self)
 
     def is_guild_authorised(self) -> bool:
         """:class:`bool`: Checks if the interaction is guild authorised.
@@ -522,7 +517,7 @@ class Interaction:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool = False,
@@ -557,7 +552,7 @@ class Interaction:
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -597,6 +592,8 @@ class Interaction:
             previous_allowed_mentions=previous_mentions,
             suppress=suppress,
         )
+        if view and self.message:
+            self._state.prevent_view_updates_for(self.message.id)
         adapter = async_context.get()
         http = self._state.http
         data = await adapter.edit_original_interaction_response(
@@ -947,7 +944,7 @@ class InteractionResponse:
         *,
         embed: Embed = None,
         embeds: list[Embed] = None,
-        view: View = None,
+        view: BaseView = None,
         tts: bool = False,
         ephemeral: bool = False,
         allowed_mentions: AllowedMentions = None,
@@ -972,7 +969,7 @@ class InteractionResponse:
             ``embeds`` parameter.
         tts: :class:`bool`
             Indicates if the message should be sent using text-to-speech.
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             The view to send with the message.
         ephemeral: :class:`bool`
             Indicates if the message should only be visible to the user who started the interaction.
@@ -1105,11 +1102,11 @@ class InteractionResponse:
         self._responded = True
         await self._process_callback_response(callback_response)
         if view:
+            view.parent = self._parent
             if not view.is_finished():
                 if ephemeral and view.timeout is None:
                     view.timeout = 15 * 60.0
 
-                view.parent = self._parent
                 if view.is_dispatchable():
                     self._parent._state.store_view(view)
 
@@ -1128,7 +1125,7 @@ class InteractionResponse:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
@@ -1155,7 +1152,7 @@ class InteractionResponse:
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -1191,6 +1188,8 @@ class InteractionResponse:
         if parent.type not in (InteractionType.component, InteractionType.modal_submit):
             return
 
+        is_cv2 = None
+
         payload = {}
         if content is not MISSING:
             payload["content"] = None if content is None else str(content)
@@ -1208,6 +1207,8 @@ class InteractionResponse:
         if view is not MISSING:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
+            if view and view.is_components_v2():
+                is_cv2 = True
 
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument(
@@ -1234,9 +1235,12 @@ class InteractionResponse:
                 # we keep previous attachments when adding new files
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
-        if suppress is not MISSING:
-            flags = MessageFlags._from_value(self._parent.message.flags.value)
-            flags.suppress_embeds = suppress
+        if suppress is not MISSING or is_cv2:
+            flags = MessageFlags._from_value(msg.flags.value)
+            if is_cv2:
+                flags.is_components_v2 = True
+            if suppress is not MISSING:
+                flags.suppress_embeds = suppress
             payload["flags"] = flags.value
 
         if allowed_mentions is None:
@@ -1486,7 +1490,7 @@ class InteractionMessage(Message):
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
@@ -1515,7 +1519,7 @@ class InteractionMessage(Message):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]

@@ -1,7 +1,30 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from __future__ import annotations
 
-from functools import partial
-from typing import TYPE_CHECKING, ClassVar, Iterator, TypeVar
+from typing import TYPE_CHECKING, Iterator, TypeVar
 
 from ..colour import Colour
 from ..components import ActionRow
@@ -9,13 +32,15 @@ from ..components import Container as ContainerComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find, get
+from .action_row import ActionRow
+from .button import Button
 from .file import File
-from .item import Item, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 from .media_gallery import MediaGallery
 from .section import Section
+from .select import Select
 from .separator import Separator
 from .text_display import TextDisplay
-from .view import _walk_all_components
 
 __all__ = ("Container",)
 
@@ -23,20 +48,19 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..types.components import ContainerComponent as ContainerComponentPayload
-    from .view import View
+    from .view import DesignerView
 
 
 C = TypeVar("C", bound="Container")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="DesignerView", covariant=True)
 
 
-class Container(Item[V]):
+class Container(ViewItem[V]):
     """Represents a UI Container.
 
     The current items supported are as follows:
 
-    - :class:`discord.ui.Button`
-    - :class:`discord.ui.Select`
+    - :class:`discord.ui.ActionRow`
     - :class:`discord.ui.Section`
     - :class:`discord.ui.TextDisplay`
     - :class:`discord.ui.MediaGallery`
@@ -47,7 +71,7 @@ class Container(Item[V]):
 
     Parameters
     ----------
-    *items: :class:`Item`
+    *items: :class:`ViewItem`
         The initial items in this container.
     colour: Union[:class:`Colour`, :class:`int`]
         The accent colour of the container. Aliased to ``color`` as well.
@@ -64,20 +88,17 @@ class Container(Item[V]):
         "id",
     )
 
-    __container_children_items__: ClassVar[list[ItemCallbackType]] = []
-
     def __init_subclass__(cls) -> None:
-        children: list[ItemCallbackType] = []
         for base in reversed(cls.__mro__):
             for member in base.__dict__.values():
                 if hasattr(member, "__discord_ui_model_type__"):
-                    children.append(member)
-
-        cls.__container_children_items__ = children
+                    raise ValueError(
+                        "The @button and @select decorators are incompatible with Container. Use ActionRow instead."
+                    )
 
     def __init__(
         self,
-        *items: Item,
+        *items: ViewItem,
         colour: int | Colour | None = None,
         color: int | Colour | None = None,
         spoiler: bool = False,
@@ -85,7 +106,7 @@ class Container(Item[V]):
     ):
         super().__init__()
 
-        self.items: list[Item] = []
+        self.items: list[ViewItem] = []
 
         self._underlying = ContainerComponent._raw_construct(
             type=ComponentType.container,
@@ -95,56 +116,38 @@ class Container(Item[V]):
             spoiler=spoiler,
         )
         self.color = colour or color
-
-        for func in self.__container_children_items__:
-            item: Item = func.__discord_ui_model_type__(
-                **func.__discord_ui_model_kwargs__
-            )
-            item.callback = partial(func, self, item)
-            self.add_item(item)
-            setattr(self, func.__name__, item)
         for i in items:
             self.add_item(i)
 
-    def _add_component_from_item(self, item: Item):
-        if item._underlying.is_v2():
-            self._underlying.components.append(item._underlying)
-        else:
-            found = False
-            for row in reversed(self._underlying.components):
-                if (
-                    isinstance(row, ActionRow) and row.width + item.width <= 5
-                ):  # If a valid ActionRow exists
-                    row.children.append(item._underlying)
-                    found = True
-                elif not isinstance(row, ActionRow):
-                    # create new row if last component is v2
-                    break
-            if not found:
-                row = ActionRow.with_components(item._underlying)
-                self._underlying.components.append(row)
+    def _add_component_from_item(self, item: ViewItem):
+        self._underlying.components.append(item._underlying)
 
-    def _set_components(self, items: list[Item]):
+    def _set_components(self, items: list[ViewItem]):
         self._underlying.components.clear()
         for item in items:
             self._add_component_from_item(item)
 
-    def add_item(self, item: Item) -> Self:
+    def add_item(self, item: ViewItem) -> Self:
         """Adds an item to the container.
 
         Parameters
         ----------
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item to add to the container.
 
         Raises
         ------
         TypeError
-            An :class:`Item` was not passed.
+            A :class:`ViewItem` was not passed.
         """
 
-        if not isinstance(item, Item):
-            raise TypeError(f"expected Item not {item.__class__!r}")
+        if not isinstance(item, ViewItem):
+            raise TypeError(f"expected ViewItem not {item.__class__!r}")
+
+        if isinstance(item, (Button, Select)):
+            raise TypeError(
+                f"{item.__class__!r} cannot be added directly. Use ActionRow instead."
+            )
 
         item._view = self.view
         if hasattr(item, "items"):
@@ -155,24 +158,27 @@ class Container(Item[V]):
         self._add_component_from_item(item)
         return self
 
-    def remove_item(self, item: Item | str | int) -> Self:
+    def remove_item(self, item: ViewItem | str | int) -> Self:
         """Removes an item from the container. If an int or str is passed, it will remove by Item :attr:`id` or ``custom_id`` respectively.
 
         Parameters
         ----------
-        item: Union[:class:`Item`, :class:`int`, :class:`str`]
+        item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, ``id``, or item ``custom_id`` to remove from the container.
         """
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            self.items.remove(item)
+            if isinstance(item, Container):
+                self.items.remove(item)
+            else:
+                item.parent.remove_item(item)
         except ValueError:
             pass
         return self
 
-    def get_item(self, id: str | int) -> Item | None:
+    def get_item(self, id: str | int) -> ViewItem | None:
         """Get an item from this container. Roughly equivalent to `utils.get(container.items, ...)`.
         If an ``int`` is provided, the item will be retrieved by ``id``, otherwise by ``custom_id``.
         This method will also search for nested items.
@@ -184,7 +190,7 @@ class Container(Item[V]):
 
         Returns
         -------
-        Optional[:class:`Item`]
+        Optional[:class:`ViewItem`]
             The item with the matching ``id`` or ``custom_id`` if it exists.
         """
         if not id:
@@ -198,10 +204,31 @@ class Container(Item[V]):
                         return child
         return child
 
+    def add_row(
+        self,
+        *items: ViewItem,
+        id: int | None = None,
+    ) -> Self:
+        """Adds an :class:`ActionRow` to the container.
+
+        To append a pre-existing :class:`ActionRow`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        *items: Union[:class:`Button`, :class:`Select`]
+            The items this action row contains.
+        id: Optiona[:class:`int`]
+            The action row's ID.
+        """
+
+        a = ActionRow(*items, id=id)
+
+        return self.add_item(a)
+
     def add_section(
         self,
-        *items: Item,
-        accessory: Item,
+        *items: ViewItem,
+        accessory: ViewItem,
         id: int | None = None,
     ) -> Self:
         """Adds a :class:`Section` to the container.
@@ -211,10 +238,10 @@ class Container(Item[V]):
 
         Parameters
         ----------
-        *items: :class:`Item`
+        *items: :class:`ViewItem`
             The items contained in this section, up to 3.
             Currently only supports :class:`~discord.ui.TextDisplay`.
-        accessory: Optional[:class:`Item`]
+        accessory: Optional[:class:`ViewItem`]
             The section's accessory. This is displayed in the top right of the section.
             Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
         id: Optional[:class:`int`]
@@ -242,7 +269,7 @@ class Container(Item[V]):
 
     def add_gallery(
         self,
-        *items: Item,
+        *items: ViewItem,
         id: int | None = None,
     ) -> Self:
         """Adds a :class:`MediaGallery` to the container.
@@ -334,22 +361,14 @@ class Container(Item[V]):
 
     color = colour
 
-    @Item.view.setter
+    @ViewItem.view.setter
     def view(self, value):
         self._view = value
         for item in self.items:
             item.parent = self
             item._view = value
-            if hasattr(item, "items"):
+            if hasattr(item, "items") or hasattr(item, "children"):
                 item.view = value
-
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
-    def width(self) -> int:
-        return 5
 
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.items)
@@ -360,24 +379,18 @@ class Container(Item[V]):
     def refresh_component(self, component: ContainerComponent) -> None:
         self._underlying = component
         i = 0
-        flattened = []
-        for c in component.components:
-            if isinstance(c, ActionRow):
-                flattened += c.children
-            else:
-                flattened.append(c)
-        for y in flattened:
+        for y in component.components:
             x = self.items[i]
             x.refresh_component(y)
             i += 1
 
-    def disable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def disable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Disables all buttons and select menus in the container.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.items` to not disable from the view.
         """
         for item in self.walk_items():
@@ -387,13 +400,13 @@ class Container(Item[V]):
                 item.disabled = True
         return self
 
-    def enable_all_items(self, *, exclusions: list[Item] | None = None) -> Self:
+    def enable_all_items(self, *, exclusions: list[ViewItem] | None = None) -> Self:
         """
         Enables all buttons and select menus in the container.
 
         Parameters
         ----------
-        exclusions: Optional[List[:class:`Item`]]
+        exclusions: Optional[List[:class:`ViewItem`]]
             A list of items in `self.items` to not enable from the view.
         """
         for item in self.walk_items():
@@ -403,7 +416,7 @@ class Container(Item[V]):
                 item.disabled = False
         return self
 
-    def walk_items(self) -> Iterator[Item]:
+    def walk_items(self) -> Iterator[ViewItem]:
         for item in self.items:
             if hasattr(item, "walk_items"):
                 yield from item.walk_items()
@@ -412,15 +425,13 @@ class Container(Item[V]):
 
     def to_component_dict(self) -> ContainerComponentPayload:
         self._set_components(self.items)
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     @classmethod
     def from_component(cls: type[C], component: ContainerComponent) -> C:
         from .view import _component_to_item
 
-        items = [
-            _component_to_item(c) for c in _walk_all_components(component.components)
-        ]
+        items = [_component_to_item(c) for c in component.components]
         return cls(
             *items,
             colour=component.accent_color,
