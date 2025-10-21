@@ -104,6 +104,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `positional` argument to `commands.Flag`.
+  ([#2443](https://github.com/Pycord-Development/pycord/pull/2443))
 - Added `Guild.fetch_role` method.
   ([#2528](https://github.com/Pycord-Development/pycord/pull/2528))
 - Added the following `AppInfo` attributes: `approximate_guild_count`,
