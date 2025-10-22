@@ -410,7 +410,7 @@ class Attachment(Hashable):
             The maximum size of each chunk to process.
 
         Yields
-        -------
+        ------
         :class:`bytes`
             A chunk of the file.
 
