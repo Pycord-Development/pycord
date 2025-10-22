@@ -12,6 +12,18 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.7.0rc2] - 2025-10-22
+
+### Added
+
 - Implemented `with_response` for interaction callbacks, adding
   `Interaction.callback.is_loading()` and `Interaction.callback.is_ephemeral()`.
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
@@ -1218,7 +1230,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...HEAD
+[2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
 [2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1
 [2.6.1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...v2.6.0
