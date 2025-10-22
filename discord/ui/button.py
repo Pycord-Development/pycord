@@ -32,7 +32,7 @@ from typing import TYPE_CHECKING, Callable, TypeVar
 from ..components import Button as ButtonComponent
 from ..enums import ButtonStyle, ComponentType
 from ..partial_emoji import PartialEmoji, _EmojiTag
-from .item import Item, ItemCallbackType
+from .item import ItemCallbackType, ViewItem
 
 __all__ = (
     "Button",
@@ -41,13 +41,14 @@ __all__ = (
 
 if TYPE_CHECKING:
     from ..emoji import AppEmoji, GuildEmoji
-    from .view import View
+    from ..types.components import ButtonComponent as ButtonComponentPayload
+    from .view import BaseView
 
 B = TypeVar("B", bound="Button")
-V = TypeVar("V", bound="View", covariant=True)
+V = TypeVar("V", bound="BaseView", covariant=True)
 
 
-class Button(Item[V]):
+class Button(ViewItem[V]):
     """Represents a UI button.
 
     .. versionadded:: 2.0
@@ -78,7 +79,7 @@ class Button(Item[V]):
 
         .. warning::
 
-            This parameter does not work with V2 components or with more than 25 items in your view.
+            This parameter does not work in :class:`ActionRow`.
 
     id: Optional[:class:`int`]
         The button's ID.
@@ -263,15 +264,13 @@ class Button(Item[V]):
             id=button.id,
         )
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    def to_component_dict(self):
-        return self._underlying.to_dict()
+    def to_component_dict(self) -> ButtonComponentPayload:
+        return super().to_component_dict()
 
     def is_dispatchable(self) -> bool:
-        return self.custom_id is not None
+        return (self.custom_id is not None) and (
+            bool(self.view._store) if self.view else True
+        )
 
     def is_storable(self) -> bool:
         return self.is_dispatchable()
@@ -294,11 +293,11 @@ def button(
     emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
     row: int | None = None,
     id: int | None = None,
-) -> Callable[[ItemCallbackType], ItemCallbackType]:
+) -> Callable[[ItemCallbackType[Button[V]]], Button[V]]:
     """A decorator that attaches a button to a component.
 
     The function being decorated should have three parameters, ``self`` representing
-    the :class:`discord.ui.View`, the :class:`discord.ui.Button` being pressed and
+    the :class:`discord.ui.View`, :class:`discord.ui.ActionRow` or :class:`discord.ui.Section`, the :class:`discord.ui.Button` being pressed, and
     the :class:`discord.Interaction` you receive.
 
     .. note::
@@ -328,6 +327,10 @@ def button(
         like to control the relative positioning of the row then passing an index is advised.
         For example, row=1 will show up before row=2. Defaults to ``None``, which is automatic
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
+
+        .. warning::
+
+            This parameter does not work in :class:`ActionRow`.
     """
 
     def decorator(func: ItemCallbackType) -> ItemCallbackType:
@@ -347,4 +350,4 @@ def button(
         }
         return func
 
-    return decorator
+    return decorator  # type: ignore # lie to the type checkers, because after a View is instated, the button callback is converted into a Button instance
