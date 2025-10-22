@@ -92,7 +92,7 @@ if TYPE_CHECKING:
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
-    from .ui.view import View
+    from .ui.view import BaseView
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
@@ -1208,26 +1208,6 @@ class Message(Hashable):
         del self.reactions[index]
         return reaction
 
-    def _update(self, data):
-        # In an update scheme, 'author' key has to be handled before 'member'
-        # otherwise they overwrite each other which is undesirable.
-        # Since there's no good way to do this we have to iterate over every
-        # handler rather than iterating over the keys which is a little slower
-        for key, handler in self._HANDLERS:
-            try:
-                value = data[key]
-            except KeyError:
-                continue
-            else:
-                handler(self, value)
-
-        # clear the cached properties
-        for attr in self._CACHED_SLOTS:
-            try:
-                delattr(self, attr)
-            except AttributeError:
-                pass
-
     def _handle_edited_timestamp(self, value: str) -> None:
         self._edited_timestamp = utils.parse_time(value)
 
@@ -1680,7 +1660,7 @@ class Message(Hashable):
         suppress: bool = ...,
         delete_after: float | None = ...,
         allowed_mentions: AllowedMentions | None = ...,
-        view: View | None = ...,
+        view: BaseView | None = ...,
     ) -> Message: ...
 
     async def edit(
@@ -1694,7 +1674,7 @@ class Message(Hashable):
         suppress: bool = MISSING,
         delete_after: float | None = None,
         allowed_mentions: AllowedMentions | None = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
     ) -> Message:
         """|coro|
 
@@ -1743,7 +1723,7 @@ class Message(Hashable):
             are used instead.
 
             .. versionadded:: 1.4
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
 
@@ -2432,7 +2412,7 @@ class PartialMessage(Hashable):
             to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
             If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
             are used instead.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
 

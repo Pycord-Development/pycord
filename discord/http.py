@@ -47,7 +47,7 @@ from .errors import (
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .soundboard import PartialSoundboardSound, SoundboardSound
-from .utils import MISSING, warn_deprecated
+from .utils import MISSING
 
 _log = logging.getLogger(__name__)
 
@@ -1019,38 +1019,6 @@ class HTTPClient:
 
     def edit_profile(self, payload: dict[str, Any]) -> Response[user.User]:
         return self.request(Route("PATCH", "/users/@me"), json=payload)
-
-    def change_my_nickname(
-        self,
-        guild_id: Snowflake,
-        nickname: str,
-        *,
-        reason: str | None = None,
-    ) -> Response[member.Nickname]:
-        r = Route("PATCH", "/guilds/{guild_id}/members/@me", guild_id=guild_id)
-        payload = {
-            "nick": nickname,
-        }
-        return self.request(r, json=payload, reason=reason)
-
-    def change_nickname(
-        self,
-        guild_id: Snowflake,
-        user_id: Snowflake,
-        nickname: str,
-        *,
-        reason: str | None = None,
-    ) -> Response[member.Member]:
-        r = Route(
-            "PATCH",
-            "/guilds/{guild_id}/members/{user_id}",
-            guild_id=guild_id,
-            user_id=user_id,
-        )
-        payload = {
-            "nick": nickname,
-        }
-        return self.request(r, json=payload, reason=reason)
 
     def edit_my_voice_state(
         self, guild_id: Snowflake, payload: dict[str, Any]
@@ -3163,6 +3131,19 @@ class HTTPClient:
         payload = {key: val for key, val in payload.items() if key in keys}
         return self.request(
             Route("PUT", "/guilds/{guild_id}/onboarding", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
+
+    def modify_guild_incident_actions(
+        self,
+        guild_id: Snowflake,
+        payload: guild.ModifyIncidents,
+        *,
+        reason: str | None = None,
+    ) -> Response[guild.IncidentsData]:
+        return self.request(
+            Route("PUT", "/guilds/{guild_id}/incident-actions", guild_id=guild_id),
             json=payload,
             reason=reason,
         )

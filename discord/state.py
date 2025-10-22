@@ -71,7 +71,7 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .ui.modal import Modal, ModalStore
-from .ui.view import View, ViewStore
+from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
 
 if TYPE_CHECKING:
@@ -357,13 +357,21 @@ class ConnectionState:
     def store_user(self, data: UserPayload) -> User:
         user_id = int(data["id"])
         try:
-            return self._users[user_id]
+            user = self._users[user_id]
         except KeyError:
             user = User(state=self, data=data)
             if user.discriminator != "0000":
                 self._users[user_id] = user
                 user._stored = True
             return user
+        else:
+            # Making sure we don't mutate the cached user
+            # because we cannot make sure it's up to date.
+            # but still return the updated version of the user.
+            # This make sure data like banner, etc are updated.
+            copied_user = user._copy(user)
+            copied_user._update(data)
+            return copied_user
 
     def deref_user(self, user_id: int) -> None:
         self._users.pop(user_id, None)
@@ -399,17 +407,20 @@ class ConnectionState:
         self._stickers[sticker_id] = sticker = GuildSticker(state=self, data=data)
         return sticker
 
-    def store_view(self, view: View, message_id: int | None = None) -> None:
+    def store_view(self, view: BaseView, message_id: int | None = None) -> None:
         self._view_store.add_view(view, message_id)
+
+    def purge_message_view(self, message_id: int) -> None:
+        self._view_store.remove_message_view(message_id)
 
     def store_modal(self, modal: Modal, message_id: int) -> None:
         self._modal_store.add_modal(modal, message_id)
 
-    def prevent_view_updates_for(self, message_id: int) -> View | None:
+    def prevent_view_updates_for(self, message_id: int) -> BaseView | None:
         return self._view_store.remove_message_tracking(message_id)
 
     @property
-    def persistent_views(self) -> Sequence[View]:
+    def persistent_views(self) -> Sequence[BaseView]:
         return self._view_store.persistent_views
 
     @property
@@ -604,7 +615,6 @@ class ConnectionState:
             raise
 
     async def _delay_ready(self) -> None:
-
         if self.cache_app_emojis and self.application_id:
             data = await self.http.get_all_application_emojis(self.application_id)
             for e in data.get("items", []):
@@ -677,7 +687,9 @@ class ConnectionState:
             else:
                 self.application_id = utils._get_as_snowflake(application, "id")
                 # flags will always be present here
-                self.application_flags = ApplicationFlags._from_value(application["flags"])  # type: ignore
+                self.application_flags = ApplicationFlags._from_value(
+                    application["flags"]
+                )  # type: ignore
 
         for guild_data in data["guilds"]:
             self._add_guild_from_data(guild_data)
@@ -775,21 +787,20 @@ class ConnectionState:
                 self._messages.remove(msg)  # type: ignore
 
     def parse_message_update(self, data) -> None:
-        raw = RawMessageUpdateEvent(data)
-        message = self._get_message(raw.message_id)
-        if message is not None:
-            older_message = copy.copy(message)
-            raw.cached_message = older_message
-            self.dispatch("raw_message_edit", raw)
-            message._update(data)
-            # Coerce the `after` parameter to take the new updated Member
-            # ref: #5999
-            older_message.author = message.author
-            self.dispatch("message_edit", older_message, message)
+        old_message = self._get_message(int(data["id"]))
+        channel, _ = self._get_guild_channel(data)
+        message = Message(channel=channel, data=data, state=self)
+        if self._messages is not None:
+            if old_message is not None:
+                self._messages.remove(old_message)
+            self._messages.append(message)
+        raw = RawMessageUpdateEvent(data, message)
+        self.dispatch("raw_message_edit", raw)
+        if old_message is not None:
+            self.dispatch("message_edit", old_message, message)
         else:
             if poll_data := data.get("poll"):
                 self.store_raw_poll(poll_data, raw)
-            self.dispatch("raw_message_edit", raw)
 
         if "components" in data and self._view_store.is_message_tracked(raw.message_id):
             self._view_store.update_from_message(raw.message_id, data["components"])
@@ -1378,7 +1389,9 @@ class ConnectionState:
         for emoji in before_stickers:
             self._stickers.pop(emoji.id, None)
         # guild won't be None here
-        guild.stickers = tuple(map(lambda d: self.store_sticker(guild, d), data["stickers"]))  # type: ignore
+        guild.stickers = tuple(
+            map(lambda d: self.store_sticker(guild, d), data["stickers"])
+        )  # type: ignore
         self.dispatch("guild_stickers_update", guild, before_stickers, guild.stickers)
 
     def _get_create_guild(self, data):
@@ -1583,7 +1596,10 @@ class ConnectionState:
         presences = data.get("presences", [])
 
         # the guild won't be None here
-        members = [Member(guild=guild, data=member, state=self) for member in data.get("members", [])]  # type: ignore
+        members = [
+            Member(guild=guild, data=member, state=self)
+            for member in data.get("members", [])
+        ]  # type: ignore
         _log.debug(
             "Processed a chunk for %s members in guild ID %s.", len(members), guild_id
         )

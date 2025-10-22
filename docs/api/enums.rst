@@ -505,6 +505,36 @@ of :class:`enum.Enum`.
     .. attribute:: channel_select
 
         Represents a channel select component.
+    .. attribute:: section
+
+        Represents a section component.
+    .. attribute:: text_display
+
+        Represents a text display component.
+    .. attribute:: thumbnail
+
+        Represents a thumbnail component.
+    .. attribute:: media_gallery
+
+        Represents a media gallery component.
+    .. attribute:: file
+
+        Represents a file component.
+    .. attribute:: separator
+
+        Represents a separator component.
+    .. attribute:: content_inventory_entry
+
+        Represents a content inventory entry component.
+    .. attribute:: container
+
+        Represents a container component.
+    .. attribute:: label
+
+        Represents a label component.
+    .. attribute:: file_upload
+
+        Represents a file upload component.
 
 .. class:: ButtonStyle
 
@@ -2584,3 +2614,19 @@ of :class:`enum.Enum`.
     .. attribute:: creation_date
 
         Sort by post creation date.
+
+.. class:: SelectDefaultValueType
+
+    Represents the default value type of a select menu.
+
+    .. attribute:: channel
+
+        The default value is a channel.
+
+    .. attribute:: role
+
+        The default value is a role.
+
+    .. attribute:: user
+
+        The default value is a user.
