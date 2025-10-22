@@ -330,7 +330,7 @@ class Attachment(Hashable):
         InvalidArgument
             Argument `chunksize` is less than 1.
         """
-        if chunksize:
+        if chunksize is not None:
             data = self.read_chunked(use_cached=use_cached, chunksize=chunksize)
         else:
             data = await self.read(use_cached=use_cached)
