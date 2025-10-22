@@ -49,7 +49,6 @@ if TYPE_CHECKING:
 
 
 class BaseEmoji(_EmojiTag, AssetMixin):
-
     __slots__: tuple[str, ...] = (
         "require_colons",
         "animated",
@@ -109,6 +108,13 @@ class BaseEmoji(_EmojiTag, AssetMixin):
         """Returns the URL of the emoji."""
         fmt = "gif" if self.animated else "png"
         return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
+
+    @property
+    def mention(self) -> str:
+        """Return a string that allows you to mention the emoji in a message."""
+        if self.animated:
+            return f"<a:{self.name}:{self.id}>"
+        return f"<:{self.name}:{self.id}>"
 
 
 class GuildEmoji(BaseEmoji):
@@ -345,7 +351,7 @@ class AppEmoji(BaseEmoji):
         super().__init__(state=state, data=data)
 
     def __repr__(self) -> str:
-        return "<AppEmoji" f" id={self.id} name={self.name!r} animated={self.animated}>"
+        return f"<AppEmoji id={self.id} name={self.name!r} animated={self.animated}>"
 
     @property
     def guild(self) -> Guild:
