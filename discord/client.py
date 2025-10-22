@@ -67,7 +67,7 @@ from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
 from .template import Template
 from .threads import Thread
-from .ui.view import View
+from .ui.view import BaseView
 from .user import ClientUser, User
 from .utils import _D, _FETCHABLE, MISSING
 from .voice_client import VoiceClient
@@ -90,7 +90,7 @@ if TYPE_CHECKING:
     from .poll import Poll
     from .soundboard import SoundboardSound
     from .threads import Thread, ThreadMember
-    from .ui.item import Item
+    from .ui.item import Item, ViewItem
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -562,19 +562,19 @@ class Client:
         traceback.print_exc()
 
     async def on_view_error(
-        self, error: Exception, item: Item, interaction: Interaction
+        self, error: Exception, item: ViewItem, interaction: Interaction
     ) -> None:
         """|coro|
 
         The default view error handler provided by the client.
 
-        This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
+        This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`.
 
         Parameters
         ----------
         error: :class:`Exception`
             The exception that was raised.
-        item: :class:`Item`
+        item: :class:`ViewItem`
             The item that the user interacted with.
         interaction: :class:`Interaction`
             The interaction that was received.
@@ -2100,8 +2100,8 @@ class Client:
         data = await state.http.start_private_message(user.id)
         return state.add_dm_channel(data)
 
-    def add_view(self, view: View, *, message_id: int | None = None) -> None:
-        """Registers a :class:`~discord.ui.View` for persistent listening.
+    def add_view(self, view: BaseView, *, message_id: int | None = None) -> None:
+        """Registers a :class:`~discord.ui.BaseView` for persistent listening.
 
         This method should be used for when a view is comprised of components
         that last longer than the lifecycle of the program.
@@ -2110,7 +2110,7 @@ class Client:
 
         Parameters
         ----------
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             The view to register for dispatching.
         message_id: Optional[:class:`int`]
             The message ID that the view is attached to. This is currently used to
@@ -2126,8 +2126,8 @@ class Client:
             and all their components have an explicitly provided ``custom_id``.
         """
 
-        if not isinstance(view, View):
-            raise TypeError(f"expected an instance of View not {view.__class__!r}")
+        if not isinstance(view, BaseView):
+            raise TypeError(f"expected an instance of BaseView not {view.__class__!r}")
 
         if not view.is_persistent():
             raise ValueError(
@@ -2138,7 +2138,7 @@ class Client:
         self._connection.store_view(view, message_id)
 
     @property
-    def persistent_views(self) -> Sequence[View]:
+    def persistent_views(self) -> Sequence[BaseView]:
         """A sequence of persistent views added to the client.
 
         .. versionadded:: 2.0

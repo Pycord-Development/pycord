@@ -726,6 +726,8 @@ class SlashCommand(ApplicationCommand):
 
     type = 1
 
+    parent: SlashCommandGroup | None
+
     def __new__(cls, *args, **kwargs) -> SlashCommand:
         self = super().__new__(cls)
 
