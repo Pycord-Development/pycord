@@ -12,6 +12,18 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.7.0rc2] - 2025-10-22
+
+### Added
+
 - Implemented `with_response` for interaction callbacks, adding
   `Interaction.callback.is_loading()` and `Interaction.callback.is_ephemeral()`.
   ([#2711](https://github.com/Pycord-Development/pycord/pull/2711))
@@ -47,6 +59,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for Guild Incidents via `Guild.incidents_data` and
   `Guild.modify_incident_actions()`.
   ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
+- Added `mention` property to `BaseEmoji`.
+  ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
 
 ### Changed
 
@@ -95,6 +109,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed attributes like :attr:`Member.display_banner` being `None` when the member has
   no guild specific banner, but does have a global one.
   ([#2968](https://github.com/Pycord-Development/pycord/pull/2949))
+- Fixed `__repr__` formatting for `AppEmoji`.
+  ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
 
 ### Deprecated
 
@@ -1217,7 +1233,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...HEAD
+[2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
 [2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1
 [2.6.1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/Pycord-Development/pycord/compare/v2.5.0...v2.6.0
