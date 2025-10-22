@@ -409,10 +409,10 @@ class Attachment(Hashable):
         chunksize: :class:`int`
             The maximum size of each chunk to process.
 
-        Returns
+        Yields
         -------
-        :class:`AsyncGenerator`
-            Generator of the contents of the attachment.
+        :class:`bytes`
+            A chunk of the file.
 
         Raises
         ------
