@@ -73,6 +73,10 @@ jobs:
       v_rule_id: ${{ steps.get_rule_ids.outputs.v_rule_id }}
       v_pattern: ${{ steps.get_rule_ids.outputs.v_pattern }}
     steps:
+      - name: Set up GitHub CLI
+        uses: wusatosi/setup-gh@v1.1
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
       - name: Get branch protection rule IDs
         id: get_rule_ids
         run: |
@@ -350,6 +354,10 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
     steps:
+      - name: Set up GitHub CLI
+        uses: wusatosi/setup-gh@v1.1
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
       - name: Restore master protection pattern
         if: ${{ needs.branch_protection_rename.outputs.master_rule_id != '' }}
         run: |
