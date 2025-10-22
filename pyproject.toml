@@ -1,7 +1,7 @@
 [build-system]
 requires = [
     "setuptools>=62.6,<=80.9.0",
-    "setuptools-scm>=6.2,<=9.2.0",
+    "setuptools-scm>=9.2,<=9.2.2",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -12,12 +12,11 @@ authors = [
 ]
 description = "A Python wrapper for the Discord API"
 readme = {content-type = "text/x-rst", file = "README.rst"}
-requires-python = ">=3.9"
+requires-python = ">=3.9, <3.14"
 license = "MIT"
 license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "License-Expression :: MIT",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",

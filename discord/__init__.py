@@ -47,6 +47,7 @@ from .file import *
 from .flags import *
 from .guild import *
 from .http import *
+from .incidents import *
 from .integrations import *
 from .interactions import *
 from .invite import *
@@ -60,11 +61,13 @@ from .partial_emoji import *
 from .permissions import *
 from .player import *
 from .poll import *
+from .primary_guild import *
 from .raw_models import *
 from .reaction import *
 from .role import *
 from .scheduled_events import *
 from .shard import *
+from .soundboard import *
 from .stage_instance import *
 from .sticker import *
 from .team import *

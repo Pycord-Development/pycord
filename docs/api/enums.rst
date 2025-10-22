@@ -505,6 +505,36 @@ of :class:`enum.Enum`.
     .. attribute:: channel_select
 
         Represents a channel select component.
+    .. attribute:: section
+
+        Represents a section component.
+    .. attribute:: text_display
+
+        Represents a text display component.
+    .. attribute:: thumbnail
+
+        Represents a thumbnail component.
+    .. attribute:: media_gallery
+
+        Represents a media gallery component.
+    .. attribute:: file
+
+        Represents a file component.
+    .. attribute:: separator
+
+        Represents a separator component.
+    .. attribute:: content_inventory_entry
+
+        Represents a content inventory entry component.
+    .. attribute:: container
+
+        Represents a container component.
+    .. attribute:: label
+
+        Represents a label component.
+    .. attribute:: file_upload
+
+        Represents a file upload component.
 
 .. class:: ButtonStyle
 
@@ -2362,7 +2392,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: advanced
 
-        Both default channels and questions (``OnboardingPrompt``s) will count towards the Onboarding requirements.
+        Both default channels and questions (``OnboardingPrompt``\s) will count towards the Onboarding requirements.
 
 .. class:: ReactionType
 
@@ -2501,6 +2531,20 @@ of :class:`enum.Enum`.
 
         The interaction is in a private DM or group DM channel.
 
+.. class:: VoiceChannelEffectAnimationType
+
+    Represents the type of animation for a voice channel effect.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: premium
+
+        The animation is a premium effect.
+
+    .. attribute:: basic
+
+        The animation is a basic effect.
+
 
 .. class:: SubscriptionStatus
 
@@ -2521,6 +2565,30 @@ of :class:`enum.Enum`.
         The subscription is inactive and the subscription owner is not being charged.
 
 
+
+.. class:: ThreadArchiveDuration
+
+    Represents the time before a thread is archived.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: one_hour
+
+        Indicates that the thread will be archived after 1 hour of inactivity.
+
+    .. attribute:: one_day
+
+        Indicates that the thread will be archived after 1 day of inactivity.
+
+    .. attribute:: three_days
+
+        Indicates that the thread will be archived after 3 days of inactivity.
+
+    .. attribute:: one_week
+
+        Indicates that the thread will be archived after 1 week of inactivity.
+
+
 .. class:: SeparatorSpacingSize
 
     Represents the padding size around a separator component.
@@ -2534,3 +2602,31 @@ of :class:`enum.Enum`.
     .. attribute:: large
 
         The separator uses large padding.
+
+.. class:: SortOrder
+
+    Used to represent the default sort order for posts in :class:`ForumChannel` and :class:`MediaChannel`.
+
+    .. attribute:: latest_activity
+
+        Sort by latest activity.
+
+    .. attribute:: creation_date
+
+        Sort by post creation date.
+
+.. class:: SelectDefaultValueType
+
+    Represents the default value type of a select menu.
+
+    .. attribute:: channel
+
+        The default value is a channel.
+
+    .. attribute:: role
+
+        The default value is a role.
+
+    .. attribute:: user
+
+        The default value is a user.

@@ -64,6 +64,7 @@ __all__ = (
     "MessageInteraction",
     "InteractionMetadata",
     "AuthorizingIntegrationOwners",
+    "InteractionCallback",
 )
 
 if TYPE_CHECKING:
@@ -86,11 +87,12 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .threads import Thread
     from .types.interactions import Interaction as InteractionPayload
-    from .types.interactions import InteractionData
+    from .types.interactions import InteractionCallback as InteractionCallbackPayload
+    from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
     from .ui.modal import Modal
-    from .ui.view import View
+    from .ui.view import BaseView
 
     InteractionChannel = Union[
         VoiceChannel,
@@ -156,11 +158,16 @@ class Interaction:
         The context in which this command was executed.
 
         .. versionadded:: 2.6
+    callback: Optional[:class:`InteractionCallback`]
+        The callback of the interaction. Contains information about the status of the interaction response.
+        Will be `None` until the interaction is responded to.
+
+        .. versionadded:: 2.7
     command: Optional[:class:`ApplicationCommand`]
         The command that this interaction belongs to.
 
         .. versionadded:: 2.7
-    view: Optional[:class:`View`]
+    view: Optional[:class:`BaseView`]
         The view that this interaction belongs to.
 
         .. versionadded:: 2.7
@@ -192,6 +199,7 @@ class Interaction:
         "entitlements",
         "context",
         "authorizing_integration_owners",
+        "callback",
         "command",
         "view",
         "modal",
@@ -216,6 +224,7 @@ class Interaction:
         self._state: ConnectionState = state
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
+        self.callback: InteractionCallback | None = None
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
@@ -251,7 +260,7 @@ class Interaction:
         )
 
         self.command: ApplicationCommand | None = None
-        self.view: View | None = None
+        self.view: BaseView | None = None
         self.modal: Modal | None = None
         self.attachment_size_limit: int = data.get("attachment_size_limit")
 
@@ -395,12 +404,7 @@ class Interaction:
     @utils.cached_slot_property("_cs_followup")
     def followup(self) -> Webhook:
         """Returns the followup webhook for followup interactions."""
-        payload = {
-            "id": self.application_id,
-            "type": 3,
-            "token": self.token,
-        }
-        return Webhook.from_state(data=payload, state=self._state)
+        return Webhook.from_interaction(interaction=self)
 
     def is_guild_authorised(self) -> bool:
         """:class:`bool`: Checks if the interaction is guild authorised.
@@ -474,7 +478,9 @@ class Interaction:
         # TODO: fix later to not raise?
         channel = self.channel
         if channel is None:
-            raise ClientException("Channel for message could not be resolved")
+            raise ClientException(
+                "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+            )
 
         adapter = async_context.get()
         http = self._state.http
@@ -521,7 +527,7 @@ class Interaction:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool = False,
@@ -556,7 +562,7 @@ class Interaction:
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -596,6 +602,8 @@ class Interaction:
             previous_allowed_mentions=previous_mentions,
             suppress=suppress,
         )
+        if view and self.message:
+            self._state.prevent_view_updates_for(self.message.id)
         adapter = async_context.get()
         http = self._state.http
         data = await adapter.edit_original_interaction_response(
@@ -612,11 +620,13 @@ class Interaction:
         # The message channel types should always match
         state = _InteractionMessageState(self, self._state)
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
-        if view and not view.is_finished():
+        if view:
+            if not view.is_finished():
+                view.refresh(message.components)
+                if view.is_dispatchable():
+                    self._state.store_view(view, message.id)
+
             view.message = message
-            view.refresh(message.components)
-            if view.is_dispatchable():
-                self._state.store_view(view, message.id)
 
         if delete_after is not None:
             await self.delete_original_response(delay=delete_after)
@@ -882,18 +892,21 @@ class InteractionResponse:
         if defer_type:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=defer_type,
-                    data=data,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=defer_type,
+                        data=data,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                    )
                 )
             )
             self._responded = True
+            await self._process_callback_response(callback_response)
 
     async def pong(self) -> None:
         """|coro|
@@ -916,17 +929,36 @@ class InteractionResponse:
         if parent.type is InteractionType.ping:
             adapter = async_context.get()
             http = parent._state.http
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    type=InteractionResponseType.pong.value,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        type=InteractionResponseType.pong.value,
+                    )
                 )
             )
             self._responded = True
+            await self._process_callback_response(callback_response)
+
+    async def _process_callback_response(
+        self, callback_response: InteractionCallbackResponse
+    ):
+        if callback_response.get("resource", {}).get("message"):
+            # TODO: fix later to not raise?
+            channel = self._parent.channel
+            if channel is None:
+                raise ClientException(
+                    "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
+                )
+            state = _InteractionMessageState(self._parent, self._parent._state)
+            message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
+            self._parent._original_response = message
+
+        self._parent.callback = InteractionCallback(callback_response["interaction"])
 
     async def send_message(
         self,
@@ -934,7 +966,7 @@ class InteractionResponse:
         *,
         embed: Embed = None,
         embeds: list[Embed] = None,
-        view: View = None,
+        view: BaseView = None,
         tts: bool = False,
         ephemeral: bool = False,
         allowed_mentions: AllowedMentions = None,
@@ -959,7 +991,7 @@ class InteractionResponse:
             ``embeds`` parameter.
         tts: :class:`bool`
             Indicates if the message should be sent using text-to-speech.
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             The view to send with the message.
         ephemeral: :class:`bool`
             Indicates if the message should only be visible to the user who started the interaction.
@@ -1019,7 +1051,7 @@ class InteractionResponse:
 
         flags = MessageFlags(ephemeral=ephemeral)
 
-        if view is not None:
+        if view:
             payload["components"] = view.to_components()
             if view.is_components_v2():
                 if embeds or content:
@@ -1070,16 +1102,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.channel_message.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.channel_message.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
@@ -1087,15 +1121,19 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view is not None:
-            if ephemeral and view.timeout is None:
-                view.timeout = 15 * 60.0
-
-            view.parent = self._parent
-            if view.is_dispatchable():
-                self._parent._state.store_view(view)
-
         self._responded = True
+        await self._process_callback_response(callback_response)
+        if view:
+            view.parent = self._parent
+            if not view.is_finished():
+                if ephemeral and view.timeout is None:
+                    view.timeout = 15 * 60.0
+
+                if view.is_dispatchable():
+                    self._parent._state.store_view(view)
+
+            view.message = await self._parent.original_response()
+
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
         return self._parent
@@ -1109,7 +1147,7 @@ class InteractionResponse:
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
@@ -1136,7 +1174,7 @@ class InteractionResponse:
         attachments: List[:class:`Attachment`]
             A list of attachments to keep in the message. If ``[]`` is passed
             then all attachments are removed.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -1172,6 +1210,8 @@ class InteractionResponse:
         if parent.type not in (InteractionType.component, InteractionType.modal_submit):
             return
 
+        is_cv2 = None
+
         payload = {}
         if content is not MISSING:
             payload["content"] = None if content is None else str(content)
@@ -1189,6 +1229,8 @@ class InteractionResponse:
         if view is not MISSING:
             state.prevent_view_updates_for(message_id)
             payload["components"] = [] if view is None else view.to_components()
+            if view and view.is_components_v2():
+                is_cv2 = True
 
         if file is not MISSING and files is not MISSING:
             raise InvalidArgument(
@@ -1215,9 +1257,12 @@ class InteractionResponse:
                 # we keep previous attachments when adding new files
                 payload["attachments"] = [a.to_dict() for a in msg.attachments]
 
-        if suppress is not MISSING:
-            flags = MessageFlags._from_value(self._parent.message.flags.value)
-            flags.suppress_embeds = suppress
+        if suppress is not MISSING or is_cv2:
+            flags = MessageFlags._from_value(msg.flags.value)
+            if is_cv2:
+                flags.is_components_v2 = True
+            if suppress is not MISSING:
+                flags.suppress_embeds = suppress
             payload["flags"] = flags.value
 
         if allowed_mentions is None:
@@ -1235,16 +1280,18 @@ class InteractionResponse:
         adapter = async_context.get()
         http = parent._state.http
         try:
-            await self._locked_response(
-                adapter.create_interaction_response(
-                    parent.id,
-                    parent.token,
-                    session=parent._session,
-                    type=InteractionResponseType.message_update.value,
-                    proxy=http.proxy,
-                    proxy_auth=http.proxy_auth,
-                    data=payload,
-                    files=files,
+            callback_response: InteractionCallbackResponse = (
+                await self._locked_response(
+                    adapter.create_interaction_response(
+                        parent.id,
+                        parent.token,
+                        session=parent._session,
+                        type=InteractionResponseType.message_update.value,
+                        proxy=http.proxy,
+                        proxy_auth=http.proxy_auth,
+                        data=payload,
+                        files=files,
+                    )
                 )
             )
         finally:
@@ -1252,11 +1299,13 @@ class InteractionResponse:
                 for file in files:
                     file.close()
 
-        if view and not view.is_finished():
-            view.message = msg
-            state.store_view(view, message_id)
-
         self._responded = True
+        await self._process_callback_response(callback_response)
+        if view:
+            if not view.is_finished():
+                state.store_view(view, message_id)
+            view.message = msg or await parent.original_response()
+
         if delete_after is not None:
             await self._parent.delete_original_response(delay=delete_after)
 
@@ -1292,7 +1341,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1305,6 +1354,7 @@ class InteractionResponse:
         )
 
         self._responded = True
+        await self._process_callback_response(callback_response)
 
     async def send_modal(self, modal: Modal) -> Interaction:
         """|coro|
@@ -1331,7 +1381,7 @@ class InteractionResponse:
         payload = modal.to_dict()
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1343,6 +1393,7 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        await self._process_callback_response(callback_response)
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
@@ -1376,7 +1427,7 @@ class InteractionResponse:
 
         adapter = async_context.get()
         http = parent._state.http
-        await self._locked_response(
+        callback_response: InteractionCallbackResponse = await self._locked_response(
             adapter.create_interaction_response(
                 parent.id,
                 parent.token,
@@ -1387,9 +1438,10 @@ class InteractionResponse:
             )
         )
         self._responded = True
+        await self._process_callback_response(callback_response)
         return self._parent
 
-    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> None:
+    async def _locked_response(self, coro: Coroutine[Any, Any, Any]) -> Any:
         """|coro|
 
         Wraps a response and makes sure that it's locked while executing.
@@ -1399,16 +1451,24 @@ class InteractionResponse:
         coro: Coroutine[Any]
             The coroutine to wrap.
 
+        Returns
+        -------
+        Any
+            The result of the coroutine.
+
         Raises
         ------
         InteractionResponded
             This interaction has already been responded to before.
+
+        .. versionchanged:: 2.7
+            Return the result of the coroutine
         """
         async with self._response_lock:
             if self.is_done():
                 coro.close()  # cleanup un-awaited coroutine
                 raise InteractionResponded(self._parent)
-            await coro
+            return await coro
 
 
 class _InteractionMessageState:
@@ -1458,7 +1518,7 @@ class InteractionMessage(Message):
         file: File = MISSING,
         files: list[File] = MISSING,
         attachments: list[Attachment] = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool | None = MISSING,
@@ -1487,7 +1547,7 @@ class InteractionMessage(Message):
         allowed_mentions: :class:`AllowedMentions`
             Controls the mentions being processed in this message.
             See :meth:`.abc.Messageable.send` for more information.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
         delete_after: Optional[:class:`float`]
@@ -1732,3 +1792,36 @@ class AuthorizingIntegrationOwners:
         if not self.guild_id:
             return None
         return self._state._get_guild(self.guild_id)
+
+
+class InteractionCallback:
+    """Information about the status of the interaction response.
+
+    .. versionadded:: 2.7
+    """
+
+    def __init__(self, data: InteractionCallbackPayload):
+        self._response_message_loading: bool = data.get(
+            "response_message_loading", False
+        )
+        self._response_message_ephemeral: bool = data.get(
+            "response_message_ephemeral", False
+        )
+
+    def __repr__(self):
+        return (
+            f"<InteractionCallback "
+            f"_response_message_loading={self._response_message_loading} "
+            f"_response_message_ephemeral={self._response_message_ephemeral}>"
+        )
+
+    def is_loading(self) -> bool:
+        """Indicates whether the response message is in a loading state."""
+        return self._response_message_loading
+
+    def is_ephemeral(self) -> bool:
+        """Indicates whether the response message is ephemeral.
+
+        This might be useful for determining if the message was forced to be ephemeral.
+        """
+        return self._response_message_ephemeral

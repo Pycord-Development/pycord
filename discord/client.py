@@ -31,7 +31,15 @@ import signal
 import sys
 import traceback
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generator, Sequence, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generator,
+    Sequence,
+    TypeVar,
+)
 
 import aiohttp
 
@@ -53,26 +61,36 @@ from .iterators import EntitlementIterator, GuildIterator
 from .mentions import AllowedMentions
 from .monetization import SKU, Entitlement
 from .object import Object
+from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .state import ConnectionState
 from .sticker import GuildSticker, StandardSticker, StickerPack, _sticker_factory
 from .template import Template
 from .threads import Thread
-from .ui.view import View
+from .ui.view import BaseView
 from .user import ClientUser, User
-from .utils import MISSING
+from .utils import _D, _FETCHABLE, MISSING
 from .voice_client import VoiceClient
 from .webhook import Webhook
 from .widget import Widget
 
 if TYPE_CHECKING:
     from .abc import GuildChannel, PrivateChannel, Snowflake, SnowflakeTime
-    from .channel import DMChannel
-    from .interaction import Interaction
+    from .channel import (
+        CategoryChannel,
+        DMChannel,
+        ForumChannel,
+        StageChannel,
+        TextChannel,
+        VoiceChannel,
+    )
+    from .interactions import Interaction
     from .member import Member
     from .message import Message
     from .poll import Poll
-    from .ui.item import Item
+    from .soundboard import SoundboardSound
+    from .threads import Thread, ThreadMember
+    from .ui.item import Item, ViewItem
     from .voice_client import VoiceProtocol
 
 __all__ = ("Client",)
@@ -544,13 +562,22 @@ class Client:
         traceback.print_exc()
 
     async def on_view_error(
-        self, error: Exception, item: Item, interaction: Interaction
+        self, error: Exception, item: ViewItem, interaction: Interaction
     ) -> None:
         """|coro|
 
         The default view error handler provided by the client.
 
-        This only fires for a view if you did not define its :func:`~discord.ui.View.on_error`.
+        This only fires for a view if you did not define its :func:`~discord.ui.BaseView.on_error`.
+
+        Parameters
+        ----------
+        error: :class:`Exception`
+            The exception that was raised.
+        item: :class:`ViewItem`
+            The item that the user interacted with.
+        interaction: :class:`Interaction`
+            The interaction that was received.
         """
 
         print(
@@ -568,6 +595,13 @@ class Client:
         The default implementation prints the traceback to stderr.
 
         This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+
+        Parameters
+        ----------
+        error: :class:`Exception`
+            The exception that was raised.
+        interaction: :class:`Interaction`
+            The interaction that was received.
         """
 
         print(f"Ignoring exception in modal {interaction.modal}:", file=sys.stderr)
@@ -1147,7 +1181,12 @@ class Client:
         for guild in self.guilds:
             yield from guild.members
 
-    async def get_or_fetch_user(self, id: int, /) -> User | None:
+    @utils.deprecated(
+        instead="Client.get_or_fetch(User, id)",
+        since="2.7",
+        removed="3.0",
+    )
+    async def get_or_fetch_user(self, id: int, /) -> User | None:  # TODO: Remove in 3.0
         """|coro|
 
         Looks up a user in the user cache or fetches if not found.
@@ -1163,7 +1202,49 @@ class Client:
             The user or ``None`` if not found.
         """
 
-        return await utils.get_or_fetch(obj=self, attr="user", id=id, default=None)
+        return await self.get_or_fetch(object_type=User, object_id=id, default=None)
+
+    async def get_or_fetch(
+        self: Client,
+        object_type: type[_FETCHABLE],
+        object_id: int | None,
+        default: _D = None,
+    ) -> _FETCHABLE | _D | None:
+        """
+        Shortcut method to get data from an object either by returning the cached version, or if it does not exist, attempting to fetch it from the API.
+
+        Parameters
+        ----------
+        object_type: Type[:class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji`]
+            Type of object to fetch or get.
+
+        object_id: :class:`int` | :data:`None`
+            ID of object to get. If :data:`None`, returns `default` if provided, else :data:`None`.
+
+        default: Any | :data:`None`
+            A default to return instead of raising if fetch fails.
+
+        Returns
+        -------
+        :class:`VoiceChannel` | :class:`TextChannel` | :class:`ForumChannel` | :class:`StageChannel` | :class:`CategoryChannel` | :class:`Thread` | :class:`User` | :class:`Guild` | :class:`GuildEmoji` | :class:`AppEmoji` | :data:`None`
+            The object if found, or `default` if provided when not found.
+
+        Raises
+        ------
+        :exc:`TypeError`
+            Raised when required parameters are missing or invalid types are provided.
+        :exc:`InvalidArgument`
+            Raised when an unsupported or incompatible object type is used.
+        """
+        try:
+            return await utils.get_or_fetch(
+                obj=self,
+                object_type=object_type,
+                object_id=object_id,
+                default=default,
+            )
+        except (HTTPException, ValueError, InvalidData):
+            return default
 
     # listeners/waiters
 
@@ -1295,7 +1376,7 @@ class Client:
         TypeError
             The ``func`` parameter is not a coroutine function.
         ValueError
-            The ``name`` (event name) does not start with 'on_'
+            The ``name`` (event name) does not start with ``on_``.
 
         Example
         -------
@@ -1359,7 +1440,7 @@ class Client:
         TypeError
             The function being listened to is not a coroutine.
         ValueError
-            The ``name`` (event name) does not start with 'on_'
+            The ``name`` (event name) does not start with ``on_``.
 
         Example
         -------
@@ -2019,8 +2100,8 @@ class Client:
         data = await state.http.start_private_message(user.id)
         return state.add_dm_channel(data)
 
-    def add_view(self, view: View, *, message_id: int | None = None) -> None:
-        """Registers a :class:`~discord.ui.View` for persistent listening.
+    def add_view(self, view: BaseView, *, message_id: int | None = None) -> None:
+        """Registers a :class:`~discord.ui.BaseView` for persistent listening.
 
         This method should be used for when a view is comprised of components
         that last longer than the lifecycle of the program.
@@ -2029,7 +2110,7 @@ class Client:
 
         Parameters
         ----------
-        view: :class:`discord.ui.View`
+        view: :class:`discord.ui.BaseView`
             The view to register for dispatching.
         message_id: Optional[:class:`int`]
             The message ID that the view is attached to. This is currently used to
@@ -2045,8 +2126,8 @@ class Client:
             and all their components have an explicitly provided ``custom_id``.
         """
 
-        if not isinstance(view, View):
-            raise TypeError(f"expected an instance of View not {view.__class__!r}")
+        if not isinstance(view, BaseView):
+            raise TypeError(f"expected an instance of BaseView not {view.__class__!r}")
 
         if not view.is_persistent():
             raise ValueError(
@@ -2057,7 +2138,7 @@ class Client:
         self._connection.store_view(view, message_id)
 
     @property
-    def persistent_views(self) -> Sequence[View]:
+    def persistent_views(self) -> Sequence[BaseView]:
         """A sequence of persistent views added to the client.
 
         .. versionadded:: 2.0
@@ -2312,3 +2393,46 @@ class Client:
         )
         if self._connection.cache_app_emojis and self._connection.get_emoji(emoji.id):
             self._connection.remove_emoji(emoji)
+
+    def get_sound(self, sound_id: int) -> SoundboardSound | None:
+        """Gets a :class:`.Sound` from the bot's sound cache.
+
+        .. versionadded:: 2.7
+
+        Parameters
+        ----------
+        sound_id: :class:`int`
+            The ID of the sound to get.
+
+        Returns
+        -------
+        Optional[:class:`.SoundboardSound`]
+            The sound with the given ID.
+        """
+        return self._connection._get_sound(sound_id)
+
+    @property
+    def sounds(self) -> list[SoundboardSound]:
+        """A list of all the sounds the bot can see.
+
+        .. versionadded:: 2.7
+        """
+        return self._connection.sounds
+
+    async def fetch_default_sounds(self) -> list[SoundboardSound]:
+        """|coro|
+
+        Fetches the bot's default sounds.
+
+        .. versionadded:: 2.7
+
+        Returns
+        -------
+        List[:class:`.SoundboardSound`]
+            The bot's default sounds.
+        """
+        data = await self._connection.http.get_default_sounds()
+        return [
+            SoundboardSound(http=self.http, state=self._connection, data=s)
+            for s in data
+        ]

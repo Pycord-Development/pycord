@@ -171,6 +171,8 @@ class BridgeCommand:
         The prefix-based version of this bridge command.
     """
 
+    __bridge__: bool = True
+
     __special_attrs__ = ["slash_variant", "ext_variant", "parent"]
 
     def __init__(self, callback, **kwargs):
@@ -185,8 +187,10 @@ class BridgeCommand:
     @property
     def name_localizations(self) -> dict[str, str] | None:
         """Returns name_localizations from :attr:`slash_variant`
-        You can edit/set name_localizations directly with
+           You can edit/set name_localizations directly with
+
         .. code-block:: python3
+
             bridge_command.name_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.name_localizations = {"en-UK": ..., "fr-FR": ...}
@@ -200,8 +204,10 @@ class BridgeCommand:
     @property
     def description_localizations(self) -> dict[str, str] | None:
         """Returns description_localizations from :attr:`slash_variant`
-        You can edit/set description_localizations directly with
+           You can edit/set description_localizations directly with
+
         .. code-block:: python3
+
             bridge_command.description_localizations["en-UK"] = ...  # or any other locale
             # or
             bridge_command.description_localizations = {"en-UK": ..., "fr-FR": ...}

@@ -71,6 +71,11 @@ Users
     .. automethod:: typing
         :async-with:
 
+.. attributetable:: PrimaryGuild
+
+.. autoclass:: PrimaryGuild()
+    :members:
+
 Messages
 --------
 
@@ -373,8 +378,13 @@ Interactions
 .. autoclass:: AuthorizingIntegrationOwners()
     :members:
 
-Message Components
-------------
+.. attributetable:: InteractionCallback
+
+.. autoclass:: InteractionCallback()
+    :members:
+
+UI Components
+------------------
 
 .. attributetable:: Component
 
@@ -437,6 +447,17 @@ Message Components
 .. attributetable:: Container
 
 .. autoclass:: Container()
+    :members:
+    :inherited-members:
+
+.. attributetable:: Label
+
+.. autoclass:: Label()
+    :members:
+
+.. attributetable:: FileUpload
+
+.. autoclass:: FileUpload()
     :members:
     :inherited-members:
 
@@ -555,6 +576,20 @@ Stickers
 .. autoclass:: GuildSticker()
     :members:
 
+Soundboard
+----------
+
+.. attributetable:: PartialSoundboardSound
+
+.. autoclass:: PartialSoundboardSound()
+    :members:
+
+.. attributetable:: SoundboardSound
+
+.. autoclass:: SoundboardSound()
+    :members:
+    :inherited-members:
+
 Events
 ------
 
@@ -636,6 +671,11 @@ Events
 .. attributetable:: RawVoiceChannelStatusUpdateEvent
 
 .. autoclass:: RawVoiceChannelStatusUpdateEvent()
+    :members:
+
+.. attributetable:: VoiceChannelEffectSendEvent
+
+.. autoclass:: VoiceChannelEffectSendEvent()
     :members:
 
 

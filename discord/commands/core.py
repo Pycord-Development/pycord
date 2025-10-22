@@ -726,6 +726,8 @@ class SlashCommand(ApplicationCommand):
 
     type = 1
 
+    parent: SlashCommandGroup | None
+
     def __new__(cls, *args, **kwargs) -> SlashCommand:
         self = super().__new__(cls)
 
@@ -806,6 +808,7 @@ class SlashCommand(ApplicationCommand):
             if option == inspect.Parameter.empty:
                 option = str
 
+            option = Option._strip_none_type(option)
             if self._is_typing_literal(option):
                 literal_values = get_args(option)
                 if not all(isinstance(v, (str, int, float)) for v in literal_values):
@@ -1118,13 +1121,13 @@ class SlashCommand(ApplicationCommand):
                 ctx.value = op.get("value")
                 ctx.options = values
 
-                if len(inspect.signature(option.autocomplete).parameters) == 2:
+                if option.autocomplete._is_instance_method:
                     instance = getattr(option.autocomplete, "__self__", ctx.cog)
                     result = option.autocomplete(instance, ctx)
                 else:
                     result = option.autocomplete(ctx)
 
-                if asyncio.iscoroutinefunction(option.autocomplete):
+                if inspect.isawaitable(result):
                     result = await result
 
                 choices = [
