@@ -12,6 +12,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `Attachment.read_chunked` and optional `chunksize` argument to `Attachment.save`
+  for retrieving attachments in chunks.
+  ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
+
 ### Changed
 
 ### Fixed
@@ -51,9 +55,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2914](https://github.com/Pycord-Development/pycord/pull/2914))
 - Added `ui.FileUpload` for modals and the `FileUpload` component.
   ([#2938](https://github.com/Pycord-Development/pycord/pull/2938))
-- Added `Attachment.read_chunked` and optional `chunksize` argument to `Attachment.save`
-  for retrieving attachments in chunks.
-  ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
 - Added `Permissions.bypass_slowmode`.
   ([#2939](https://github.com/Pycord-Development/pycord/pull/2939))
 - Added support for Guild Incidents via `Guild.incidents_data` and
