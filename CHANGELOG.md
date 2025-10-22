@@ -44,6 +44,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added support for Guild Incidents via `Guild.incidents_data` and
   `Guild.modify_incident_actions()`.
   ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
+- Added `mention` property to `BaseEmoji`.
+ ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
 
 ### Changed
 
@@ -92,6 +94,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed attributes like :attr:`Member.display_banner` being `None` when the member has
   no guild specific banner, but does have a global one.
   ([#2968](https://github.com/Pycord-Development/pycord/pull/2949))
+- Fixed `__repr__` formatting for `AppEmoji`.
+ ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
 
 ### Deprecated
 
