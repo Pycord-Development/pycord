@@ -391,7 +391,7 @@ class Attachment(Hashable):
         return data
 
     async def read_chunked(
-        self, *, use_cached: bool = False, chunksize: int | None = None
+        self, chunksize: int, *, use_cached: bool = False
     ) -> AsyncGenerator[bytes]:
         """|coro|
 
