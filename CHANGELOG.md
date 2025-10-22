@@ -45,7 +45,7 @@ These changes are available on the `master` branch, but have not yet been releas
   `Guild.modify_incident_actions()`.
   ([#2955](https://github.com/Pycord-Development/pycord/pull/2955))
 - Added `mention` property to `BaseEmoji`.
- ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
+  ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
 
 ### Changed
 
@@ -95,7 +95,7 @@ These changes are available on the `master` branch, but have not yet been releas
   no guild specific banner, but does have a global one.
   ([#2968](https://github.com/Pycord-Development/pycord/pull/2949))
 - Fixed `__repr__` formatting for `AppEmoji`.
- ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
+  ([#2972](https://github.com/Pycord-Development/pycord/pull/2972))
 
 ### Deprecated
 
