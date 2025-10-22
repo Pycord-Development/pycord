@@ -357,13 +357,21 @@ class ConnectionState:
     def store_user(self, data: UserPayload) -> User:
         user_id = int(data["id"])
         try:
-            return self._users[user_id]
+            user = self._users[user_id]
         except KeyError:
             user = User(state=self, data=data)
             if user.discriminator != "0000":
                 self._users[user_id] = user
                 user._stored = True
             return user
+        else:
+            # Making sure we don't mutate the cached user
+            # because we cannot make sure it's up to date.
+            # but still return the updated version of the user.
+            # This make sure data like banner, etc are updated.
+            copied_user = user._copy(user)
+            copied_user._update(data)
+            return copied_user
 
     def deref_user(self, user_id: int) -> None:
         self._users.pop(user_id, None)
