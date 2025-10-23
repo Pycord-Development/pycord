@@ -577,7 +577,6 @@ class View(BaseView):
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
-            item._view = self
             item.parent = self
             setattr(self, func.__name__, item)
             self.children.append(item)
@@ -884,8 +883,6 @@ class DesignerView(BaseView):
             )
 
         super().add_item(item)
-        if hasattr(item, "items"):
-            item.view = self
         return self
 
     def refresh(self, components: list[Component]):

@@ -351,13 +351,6 @@ class ActionRow(ViewItem[V]):
 
         return self.add_item(select)
 
-    @ViewItem.view.setter
-    def view(self, value):
-        self._view = value
-        for item in self.children:
-            item.parent = self
-            item._view = value
-
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.children)
 

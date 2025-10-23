@@ -359,15 +359,6 @@ class Container(ViewItem[V]):
 
     color = colour
 
-    @ViewItem.view.setter
-    def view(self, value):
-        self._view = value
-        for item in self.items:
-            item.parent = self
-            item._view = value
-            if hasattr(item, "items") or hasattr(item, "children"):
-                item.view = value
-
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.items)
 
