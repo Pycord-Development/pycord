@@ -214,6 +214,7 @@ class ViewItem(Item[V]):
             return self._view
         if self.parent:
             from .view import BaseView
+
             if isinstance(self.parent, BaseView):
                 return self.parent
             return self.parent.view
