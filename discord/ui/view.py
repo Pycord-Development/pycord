@@ -262,9 +262,9 @@ class BaseView(ItemInterface):
 
     def clear_items(self) -> Self:
         """Removes all items from this view."""
-        self.children.clear()
         for child in self.children:
             child.parent = None
+        self.children.clear()
         return self
 
     async def interaction_check(self, interaction: Interaction) -> bool:
