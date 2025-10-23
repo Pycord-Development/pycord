@@ -35,7 +35,7 @@ __all__ = (
     "ModalItem",
 )
 
-from ..utils import deprecated, warn_deprecated
+from ..utils import warn_deprecated
 
 if TYPE_CHECKING:
     from ..components import Component
@@ -213,6 +213,7 @@ class ViewItem(Item[V]):
         if self._view:
             return self._view
         if self.parent:
+            from .view import BaseView
             if isinstance(self.parent, BaseView):
                 return self.parent
             return self.parent.view
