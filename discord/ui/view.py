@@ -235,11 +235,10 @@ class BaseView(ItemInterface):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
 
         item.parent = self
-        item._view = self
         self.children.append(item)
         return self
 
-    def remove_item(self, item: ViewItem[V] | int | str) -> None:
+    def remove_item(self, item: ViewItem[V] | int | str) -> Self:
         """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
         the item will be removed by ViewItem ``id`` or ``custom_id`` respectively.
 
@@ -252,17 +251,20 @@ class BaseView(ItemInterface):
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            if isinstance(item.parent, BaseView):
+            if item.parent is self:
                 self.children.remove(item)
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
+        item.parent = None
         return self
 
-    def clear_items(self) -> None:
+    def clear_items(self) -> Self:
         """Removes all items from this view."""
         self.children.clear()
+        for child in self.children:
+            child.parent = None
         return self
 
     async def interaction_check(self, interaction: Interaction) -> bool:

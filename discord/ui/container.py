@@ -149,9 +149,6 @@ class Container(ViewItem[V]):
                 f"{item.__class__!r} cannot be added directly. Use ActionRow instead."
             )
 
-        item._view = self.view
-        if hasattr(item, "items"):
-            item.view = self
         item.parent = self
 
         self.items.append(item)
@@ -170,12 +167,13 @@ class Container(ViewItem[V]):
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            if isinstance(item, Container):
+            if item.parent is self:
                 self.items.remove(item)
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
+        item.parent = None
         return self
 
     def get_item(self, id: str | int) -> ViewItem | None:
