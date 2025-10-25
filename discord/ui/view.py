@@ -332,7 +332,7 @@ class BaseView(ItemInterface):
         A callback that is called when an item's callback or :meth:`interaction_check`
         fails with an error.
 
-        The default implementation prints the traceback to stderr.
+        The default implementation logs the traceback with the logging module.
 
         Parameters
         ----------
