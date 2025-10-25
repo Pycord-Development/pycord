@@ -16,6 +16,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Commands not properly parsing string-like / forward references annotations.
+  ([#2919](https://github.com/Pycord-Development/pycord/pull/2919))
+
 ### Deprecated
 
 ### Removed
