@@ -2565,6 +2565,63 @@ of :class:`enum.Enum`.
         The subscription is inactive and the subscription owner is not being charged.
 
 
+.. class:: ScheduledEventRecurrenceRuleFrequency
+
+    A scheduled event recurrence rule's frequency.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: yearly
+
+        The event will repeat on a yearly basis.
+
+    .. attribute:: monthly
+
+        The event will repeat on a monthly basis.
+
+    .. attribute:: weekly
+
+        The event will repeat on a weekly basis.
+
+    .. attribute:: daily
+
+        The event will repeat on a daily basis.
+
+
+.. class:: ScheduledEventWeekday
+
+    Represents a scheduled event weekday.
+
+    .. versionadded:: 2.7
+
+    .. attribute:: monday
+
+        Monday, the first day of the week. Index of 0.
+
+    .. attribute:: tuesday
+
+        Tuesday, the second day of the week. Index of 1.
+
+    .. attribute:: wednesday
+
+        Wednesday, the third day of the week. Index of 2.
+
+    .. attribute:: thursday
+
+        Thrusday, the fourth day of the week. Index of 3.
+
+    .. attribute:: friday
+
+        Friday, the fifth day of the week. Index of 4.
+
+    .. attribute:: saturday
+
+        Saturday, the sixth day of the week. Index of 5.
+
+    .. attribute:: sunday
+
+        Sunday, the seventh day of the week. Index of 6.
+
 
 .. class:: ThreadArchiveDuration
 
