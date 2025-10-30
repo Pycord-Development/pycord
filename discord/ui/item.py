@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
-
 import inspect
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
 
 from ..interactions import Interaction
 
@@ -51,14 +50,24 @@ M = TypeVar("M", bound="BaseModal", covariant=True)
 ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
 
 SetItemCallbackType_Interaction = Callable[[Interaction], Coroutine[Any, Any, Any]]
-SetItemCallbackType_InteractionView = Callable[[Interaction, V], Coroutine[Any, Any, Any]]
-SetItemCallbackType_InteractionViewItem = Callable[[Interaction, V, I], Coroutine[Any, Any, Any]]
+SetItemCallbackType_InteractionView = Callable[
+    [Interaction, V], Coroutine[Any, Any, Any]
+]
+SetItemCallbackType_InteractionViewItem = Callable[
+    [Interaction, V, I], Coroutine[Any, Any, Any]
+]
 
-SetItemCallbackType = SetItemCallbackType_Interaction | SetItemCallbackType_InteractionView | SetItemCallbackType_InteractionViewItem
+SetItemCallbackType = (
+    SetItemCallbackType_Interaction
+    | SetItemCallbackType_InteractionView
+    | SetItemCallbackType_InteractionViewItem
+)
 
 
 class _ProxyItemCallback:
-    def __init__(self, func: SetItemCallbackType, item: ViewItem, parameters: int) -> None:
+    def __init__(
+        self, func: SetItemCallbackType, item: ViewItem, parameters: int
+    ) -> None:
         self.func: SetItemCallbackType = func
         self.item: ViewItem = item
         self.parameters: int = parameters
@@ -70,6 +79,7 @@ class _ProxyItemCallback:
         if self.parameters >= 3:
             args.append(self.item)
         return self.func(*args)
+
 
 class Item(Generic[T]):
     """Represents the base UI item that all UI components inherit from.
@@ -270,13 +280,12 @@ class ViewItem(Item[V]):
         """
         if not inspect.iscoroutinefunction(func):
             raise TypeError("callback must be a coroutine function")
-        
+
         params = inspect.signature(func).parameters
         if len(params) < 1 or len(params) > 3:
             raise TypeError("callback must accept 1 to 3 parameters")
-        
 
-        self.callback = _ProxyItemCallback(func, self, len(params)) # type: ignore
+        self.callback = _ProxyItemCallback(func, self, len(params))  # type: ignore
 
 
 class ModalItem(Item[M]):
