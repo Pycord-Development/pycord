@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 from .snowflake import Snowflake
@@ -66,4 +67,3 @@ class PartialAppInfo(BaseAppInfo):
 class AppInstallParams(TypedDict):
     scopes: list[str]
     permissions: str
-

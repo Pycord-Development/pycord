@@ -35,7 +35,6 @@ import itertools
 import json
 import logging
 import re
-import sys
 import types
 import unicodedata
 import warnings
@@ -155,6 +154,7 @@ MISSING: Any = _MissingSentinel()
 
 if TYPE_CHECKING:
     from typing import ParamSpec
+
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
     from .commands.options import OptionChoice
@@ -1305,8 +1305,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     if isinstance(iterator, AsyncIterator):
         return _achunk(iterator, max_size)
     return _chunk(iterator, max_size)
-
-
 
 
 def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:

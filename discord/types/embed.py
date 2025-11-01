@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, TypedDict
 
-from typing import TypedDict
 from typing_extensions import NotRequired
 
 
@@ -102,4 +101,3 @@ class Embed(TypedDict, total=False):
     provider: EmbedProvider
     author: EmbedAuthor
     fields: list[EmbedField]
-

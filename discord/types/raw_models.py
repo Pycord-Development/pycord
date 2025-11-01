@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 from .automod import AutoModAction, AutoModTriggerType
@@ -164,4 +165,3 @@ class MessagePollVoteEvent(TypedDict):
     channel_id: Snowflake
     message_id: Snowflake
     answer_id: int
-

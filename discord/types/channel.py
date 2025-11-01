@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal, TypedDict, Union
 
-from typing import TypedDict
 from typing_extensions import NotRequired
 
 from ..enums import SortOrder
@@ -195,4 +194,3 @@ class VoiceChannelEffectSendEvent(TypedDict):
     animation_id: NotRequired[int]
     sound_id: NotRequired[Snowflake | int]
     sound_volume: NotRequired[float]
-

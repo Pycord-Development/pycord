@@ -44,4 +44,3 @@ class Team(TypedDict):
     owner_id: Snowflake
     members: list[TeamMember]
     icon: str | None
-

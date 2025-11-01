@@ -34,4 +34,3 @@ class Nameplate(TypedDict):
     asset: str
     label: str
     palette: str
-

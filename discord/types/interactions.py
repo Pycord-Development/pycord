@@ -43,6 +43,7 @@ if TYPE_CHECKING:
     from ..interactions import InteractionChannel
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 ApplicationCommandType = Literal[1, 2, 3]
@@ -295,4 +296,3 @@ class InteractionCallbackResource(TypedDict):
     # This is not fully typed as activities are out of scope
     activity_instance: NotRequired[dict]
     message: NotRequired[Message]
-

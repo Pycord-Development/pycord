@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 from discord.types.user import User
@@ -41,4 +42,3 @@ class SoundboardSound(TypedDict):
     guild_id: NotRequired[Snowflake]
     user: NotRequired[User]
     available: bool
-

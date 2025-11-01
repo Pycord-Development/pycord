@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal, TypedDict, Union
 
-from typing import TypedDict
 from typing_extensions import NotRequired
 
 from .automod import AutoModRule
@@ -295,4 +294,3 @@ class AuditLog(TypedDict):
     threads: list[Thread]
     scheduled_events: list[ScheduledEvent]
     auto_moderation_rules: list[AutoModRule]
-

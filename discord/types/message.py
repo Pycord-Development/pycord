@@ -42,6 +42,7 @@ if TYPE_CHECKING:
     from .interactions import InteractionMetadata, MessageInteraction
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 
@@ -195,4 +196,3 @@ class AllowedMentions(TypedDict):
     roles: SnowflakeList
     users: SnowflakeList
     replied_user: bool
-

@@ -49,4 +49,3 @@ class Template(TypedDict):
     source_guild_id: Snowflake
     serialized_source_guild: Guild
     is_dirty: bool | None
-

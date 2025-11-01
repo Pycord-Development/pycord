@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal, TypedDict, Union
 
-from typing import TypedDict
 from typing_extensions import NotRequired
 
 from .snowflake import Snowflake
@@ -82,4 +81,3 @@ class BotIntegration(BaseIntegration):
 
 
 Integration = Union[BaseIntegration, StreamIntegration, BotIntegration]
-

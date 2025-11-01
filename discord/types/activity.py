@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, TypedDict
 
-from typing import TypedDict
 from typing_extensions import NotRequired
 
 from .snowflake import Snowflake
@@ -110,4 +109,3 @@ class Activity(_BaseActivity, total=False):
     session_id: str | None
     instance: bool
     buttons: list[str]
-

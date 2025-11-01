@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 from .activity import Activity
@@ -63,4 +64,3 @@ class Widget(TypedDict):
 class WidgetSettings(TypedDict):
     enabled: bool
     channel_id: Snowflake | None
-

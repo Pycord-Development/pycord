@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, TypedDict
 
-from typing import TypedDict
 from typing_extensions import NotRequired, Required
 
 from .activity import PartialPresenceUpdate
@@ -211,4 +210,3 @@ class IncidentsData(TypedDict, total=False):
 class ModifyIncidents(TypedDict, total=False):
     invites_disabled_until: str | None
     dms_disabled_until: str | None
-

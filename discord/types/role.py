@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TypedDict
+
 from typing_extensions import NotRequired
 
 from .snowflake import Snowflake
@@ -55,4 +56,3 @@ class RoleTags(TypedDict, total=False):
     bot_id: Snowflake
     integration_id: Snowflake
     premium_subscriber: None
-

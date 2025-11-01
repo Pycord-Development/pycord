@@ -30,19 +30,22 @@ import datetime
 import functools
 import inspect
 import re
-import sys
 import types
 from collections import OrderedDict
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     Callable,
     Coroutine,
     Generator,
     Generic,
+    Literal,
     TypeVar,
     Union,
+    get_args,
+    get_origin,
 )
 
 from ..channel import PartialMessageable, _threaded_guild_channel_factory
@@ -71,8 +74,6 @@ from ..user import User
 from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_deprecated
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
-
-from typing import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -2156,4 +2157,3 @@ def validate_chat_input_description(description: Any, locale: str | None = None)
         if locale:
             error.args = (f"{error.args[0]} in locale {locale}",)
         raise error
-

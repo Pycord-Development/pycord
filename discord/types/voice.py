@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, TypedDict
 
-from typing import TypedDict
 from typing_extensions import NotRequired
 
 from .member import MemberWithUser
@@ -91,4 +90,3 @@ class VoiceReady(TypedDict):
     port: int
     modes: list[SupportedModes]
     heartbeat_interval: int
-
