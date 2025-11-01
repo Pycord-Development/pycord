@@ -10,6 +10,8 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+⚠️ **This version removes support for Python 3.9.** ⚠️
+
 ### Added
 
 ### Changed
@@ -19,6 +21,9 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Deprecated
 
 ### Removed
+
+- ⚠️ **Removed support for Python 3.9.**
+  ([#2986](https://github.com/Pycord-Development/pycord/pull/2986))
 
 ## [2.7.0rc2] - 2025-10-22
 
