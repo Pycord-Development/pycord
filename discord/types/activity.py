@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .snowflake import Snowflake
 from .user import PartialUser
@@ -109,3 +110,4 @@ class Activity(_BaseActivity, total=False):
     session_id: str | None
     instance: bool
     buttons: list[str]
+

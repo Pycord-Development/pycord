@@ -72,10 +72,7 @@ from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_depr
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
-if sys.version_info >= (3, 11):
-    from typing import Annotated, Literal, get_args, get_origin
-else:
-    from typing_extensions import Annotated, Literal, get_args, get_origin
+from typing import Annotated, Literal, get_args, get_origin
 
 __all__ = (
     "_BaseCommand",
@@ -93,7 +90,7 @@ __all__ = (
 )
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec
+    from typing import Concatenate, ParamSpec
 
     from .. import Permissions
     from ..cog import Cog
@@ -2159,3 +2156,4 @@ def validate_chat_input_description(description: Any, locale: str | None = None)
         if locale:
             error.args = (f"{error.args[0]} in locale {locale}",)
         raise error
+

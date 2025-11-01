@@ -154,8 +154,7 @@ class _MissingSentinel:
 MISSING: Any = _MissingSentinel()
 
 if TYPE_CHECKING:
-    from typing_extensions import ParamSpec
-
+    from typing import ParamSpec
     from .abc import Snowflake
     from .commands.context import AutocompleteContext
     from .commands.options import OptionChoice
@@ -1308,7 +1307,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     return _chunk(iterator, max_size)
 
 
-PY_310 = sys.version_info >= (3, 10)
 
 
 def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
@@ -1352,7 +1350,7 @@ def evaluate_annotation(
         is_literal = False
         args = tp.__args__
         if not hasattr(tp, "__origin__"):
-            if PY_310 and tp.__class__ is types.UnionType:  # type: ignore
+            if tp.__class__ is types.UnionType:  # type: ignore
                 converted = Union[args]  # type: ignore
                 return evaluate_annotation(converted, globals, locals, cache)
 
@@ -1364,8 +1362,6 @@ def evaluate_annotation(
             except ValueError:
                 pass
         if tp.__origin__ is Literal:
-            if not PY_310:
-                args = flatten_literal_params(tp.__args__)
             implicit_str = False
             is_literal = True
 

@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from ..enums import SortOrder
 from ..flags import ChannelFlags
@@ -194,3 +195,4 @@ class VoiceChannelEffectSendEvent(TypedDict):
     animation_id: NotRequired[int]
     sound_id: NotRequired[Snowflake | int]
     sound_volume: NotRequired[float]
+

@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .channel import ChannelType
 from .emoji import PartialEmoji
@@ -187,3 +188,4 @@ AllowedContainerComponents = Union[
     SeparatorComponent,
     SectionComponent,
 ]
+

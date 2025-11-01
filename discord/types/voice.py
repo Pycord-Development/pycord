@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .member import MemberWithUser
 from .snowflake import Snowflake
@@ -90,3 +91,4 @@ class VoiceReady(TypedDict):
     port: int
     modes: list[SupportedModes]
     heartbeat_interval: int
+

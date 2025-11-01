@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .automod import AutoModRule
 from .channel import ChannelType, PermissionOverwrite, VideoQualityMode
@@ -294,3 +295,4 @@ class AuditLog(TypedDict):
     threads: list[Thread]
     scheduled_events: list[ScheduledEvent]
     auto_moderation_rules: list[AutoModRule]
+

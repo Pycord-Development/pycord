@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .appinfo import PartialAppInfo
 from .channel import PartialChannel
@@ -92,3 +93,4 @@ class GatewayInviteDelete(TypedDict):
 
 
 GatewayInvite = Union[GatewayInviteCreate, GatewayInviteDelete]
+

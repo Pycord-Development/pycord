@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, Required, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired, Required
 
 from .activity import PartialPresenceUpdate
 from .channel import GuildChannel
@@ -210,3 +211,4 @@ class IncidentsData(TypedDict, total=False):
 class ModifyIncidents(TypedDict, total=False):
     invites_disabled_until: str | None
     dms_disabled_until: str | None
+

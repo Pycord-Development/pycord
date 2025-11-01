@@ -246,9 +246,28 @@ class Client:
     ):
         # self.ws is set in the connect method
         self.ws: DiscordWebSocket = None  # type: ignore
-        self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
-        )
+        # Prefer an explicitly provided loop. If none is provided, try to use
+        # a running loop (when constructed inside async code) and otherwise
+        # fall back to the event loop policy's get_event_loop implementation
+        # to avoid the deprecation warning for asyncio.get_event_loop().
+        if loop is not None:
+            self.loop: asyncio.AbstractEventLoop = loop
+        else:
+            try:
+                self.loop = asyncio.get_running_loop()
+            except RuntimeError:
+                # No running loop in this thread; explicitly create a new
+                # event loop and set it as the current event loop for this
+                # thread. This mirrors the previous behavior of
+                # asyncio.get_event_loop() (which would create and set a loop)
+                # but avoids emitting the deprecation warning on Python >=3.11.
+                self.loop = asyncio.new_event_loop()
+                try:
+                    asyncio.set_event_loop(self.loop)
+                except Exception:
+                    # If for some reason setting the loop fails, continue
+                    # using the locally created loop without setting it.
+                    pass
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
         )

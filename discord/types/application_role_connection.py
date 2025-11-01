@@ -26,7 +26,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 ApplicationRoleConnectionMetadataType = Literal[1, 2, 3, 4, 5, 6, 7, 8]
 
@@ -38,3 +39,4 @@ class ApplicationRoleConnectionMetadata(TypedDict):
     name_localizations: NotRequired[dict[str, str]]
     description: str
     description_localizations: NotRequired[dict[str, str]]
+

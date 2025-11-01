@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from ..flags import ChannelFlags
 from .snowflake import Snowflake
@@ -74,3 +75,4 @@ class ThreadPaginationPayload(TypedDict):
     threads: list[Thread]
     members: list[ThreadMember]
     has_more: bool
+

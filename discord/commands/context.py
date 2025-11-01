@@ -32,9 +32,7 @@ from discord.interactions import Interaction, InteractionMessage, InteractionRes
 from discord.webhook.async_ import Webhook
 
 if TYPE_CHECKING:
-    from typing import Awaitable, Callable
-
-    from typing_extensions import ParamSpec
+    from typing import Awaitable, Callable, ParamSpec
 
     import discord
 
@@ -439,3 +437,4 @@ class AutocompleteContext:
     @command.setter
     def command(self, value: ApplicationCommand | None) -> None:
         self.interaction.command = value
+

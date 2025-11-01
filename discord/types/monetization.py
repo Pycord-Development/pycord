@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .snowflake import Snowflake
 
@@ -76,3 +77,4 @@ class Subscription(TypedDict):
     status: SubscriptionStatus
     canceled_at: str | None
     country: NotRequired[str]
+

@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .channel import PartialChannel
 from .snowflake import Snowflake
@@ -63,3 +64,4 @@ class Webhook(PartialWebhook):
     avatar: NotRequired[str | None]
     channel_id: NotRequired[Snowflake]
     application_id: NotRequired[Snowflake | None]
+

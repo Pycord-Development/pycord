@@ -27,7 +27,8 @@ from __future__ import annotations
 
 from typing import Literal, Union
 
-from typing_extensions import NotRequired, TypedDict
+from typing import TypedDict
+from typing_extensions import NotRequired
 
 from .snowflake import Snowflake
 from .user import User
@@ -89,3 +90,4 @@ class EditGuildSticker(TypedDict, total=False):
 
 class ListPremiumStickerPacks(TypedDict):
     sticker_packs: list[StickerPack]
+

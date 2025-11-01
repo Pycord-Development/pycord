@@ -67,7 +67,7 @@ from .cooldowns import (
 from .errors import *
 
 if TYPE_CHECKING:
-    from typing_extensions import Concatenate, ParamSpec, TypeGuard
+    from typing import Concatenate, ParamSpec, TypeGuard
 
     from discord.message import Message
 
@@ -2501,3 +2501,4 @@ def after_invoke(coro) -> Callable[[T], T]:
         return func
 
     return decorator  # type: ignore
+
