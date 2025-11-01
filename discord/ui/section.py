@@ -162,6 +162,7 @@ class Section(ViewItem[V]):
             self.items.remove(item)
         except ValueError:
             pass
+        item.parent = None
         return self
 
     def get_item(self, id: int | str) -> ViewItem | None:
@@ -226,8 +227,7 @@ class Section(ViewItem[V]):
 
         if not isinstance(item, ViewItem):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
-        if self.view:
-            item._view = self.view
+
         item.parent = self
 
         self.accessory = item
@@ -259,13 +259,6 @@ class Section(ViewItem[V]):
         thumbnail = Thumbnail(url, description=description, spoiler=spoiler, id=id)
 
         return self.set_accessory(thumbnail)
-
-    @ViewItem.view.setter
-    def view(self, value):
-        self._view = value
-        for item in self.walk_items():
-            item._view = value
-            item.parent = self
 
     def copy_text(self) -> str:
         """Returns the text of all :class:`~discord.ui.TextDisplay` items in this section.
