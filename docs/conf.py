@@ -96,7 +96,7 @@ ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
 
 autodoc_member_order = "bysource"
-autodoc_typehints = "none"
+autodoc_typehints = "signature"
 # maybe consider this?
 # napoleon_attr_annotations = False
 
