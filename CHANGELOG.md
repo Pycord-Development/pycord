@@ -14,6 +14,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Support for **Python 3.14**.
+  ([#2948](https://github.com/Pycord-Development/pycord/pull/2948))
+
 ### Changed
 
 ### Fixed
