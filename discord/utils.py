@@ -1307,17 +1307,6 @@ def as_chunks(iterator: _Iter[T], max_size: int) -> _Iter[list[T]]:
     return _chunk(iterator, max_size)
 
 
-def flatten_literal_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
-    params = []
-    literal_cls = type(Literal[0])
-    for p in parameters:
-        if isinstance(p, literal_cls):
-            params.extend(p.__args__)
-        else:
-            params.append(p)
-    return tuple(params)
-
-
 def normalise_optional_params(parameters: Iterable[Any]) -> tuple[Any, ...]:
     none_cls = type(None)
     return tuple(p for p in parameters if p is not none_cls) + (none_cls,)
