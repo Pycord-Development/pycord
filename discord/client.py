@@ -264,10 +264,10 @@ class Client:
                 self.loop = asyncio.new_event_loop()
                 try:
                     asyncio.set_event_loop(self.loop)
-                except Exception:
-                    # If for some reason setting the loop fails, continue
+                except Exception as exc:
+                    # If for some reason setting the loop fails, log the exception and continue
                     # using the locally created loop without setting it.
-                    pass
+                    logging.exception("Failed to set event loop: %s", exc)
         self._listeners: dict[str, list[tuple[asyncio.Future, Callable[..., bool]]]] = (
             {}
         )
