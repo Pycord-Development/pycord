@@ -24,6 +24,8 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+
+import inspect
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -32,9 +34,8 @@ from typing import (
     Generic,
     TypeVar,
 )
-from typing_extensions import Self
 
-import inspect
+from typing_extensions import Self
 
 from ..interactions import Interaction
 
@@ -77,11 +78,11 @@ class _ProxyItemCallback:
 
     def __call__(self, interaction: Interaction) -> Coroutine[Any, Any, Any]:
         if self.parameters_amount == 1:
-            return self.func(interaction) # type: ignore # type checker doesn't like optional params
+            return self.func(interaction)  # type: ignore # type checker doesn't like optional params
         elif self.parameters_amount == 2:
-            return self.func(interaction, self.item) # type: ignore # type checker doesn't like optional params
+            return self.func(interaction, self.item)  # type: ignore # type checker doesn't like optional params
         elif self.parameters_amount == 3:
-            return self.func(interaction, self.item, self.item.view) # type: ignore # type checker doesn't like optional params
+            return self.func(interaction, self.item, self.item.view)  # type: ignore # type checker doesn't like optional params
         else:
             raise TypeError("callback must accept 1 to 3 parameters")
 
