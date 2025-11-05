@@ -24,9 +24,17 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import annotations
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Coroutine,
+    Generic,
+    TypeVar,
+)
+from typing_extensions import Self
 
 import inspect
-from typing import TYPE_CHECKING, Any, Callable, Coroutine, Generic, TypeVar
 
 from ..interactions import Interaction
 
@@ -43,42 +51,39 @@ if TYPE_CHECKING:
     from .modal import BaseModal
     from .view import BaseView
 
-I = TypeVar("I", bound="Item")
+I = TypeVar("I", bound="Item", covariant=True)
+
 T = TypeVar("T", bound="ItemInterface", covariant=True)
 V = TypeVar("V", bound="BaseView", covariant=True)
 M = TypeVar("M", bound="BaseModal", covariant=True)
+
+V_co = TypeVar("V_co", bound="BaseView", covariant=True)
+
 ItemCallbackType = Callable[[Any, I, Interaction], Coroutine[Any, Any, Any]]
-
-SetItemCallbackType_Interaction = Callable[[Interaction], Coroutine[Any, Any, Any]]
-SetItemCallbackType_InteractionView = Callable[
-    [Interaction, V], Coroutine[Any, Any, Any]
-]
-SetItemCallbackType_InteractionViewItem = Callable[
-    [Interaction, V, I], Coroutine[Any, Any, Any]
-]
-
 SetItemCallbackType = (
-    SetItemCallbackType_Interaction
-    | SetItemCallbackType_InteractionView
-    | SetItemCallbackType_InteractionViewItem
+    Callable[[Interaction], Coroutine[object, Any, Any]]
+    | Callable[[Interaction, I], Coroutine[object, Any, Any]]
+    | Callable[[Interaction, I, V], Coroutine[object, Any, Any]]
 )
 
 
 class _ProxyItemCallback:
     def __init__(
-        self, func: SetItemCallbackType, item: ViewItem, parameters: int
+        self, func: SetItemCallbackType, item: ViewItem, parameters_amount: int
     ) -> None:
         self.func: SetItemCallbackType = func
         self.item: ViewItem = item
-        self.parameters: int = parameters
+        self.parameters_amount: int = parameters_amount
 
     def __call__(self, interaction: Interaction) -> Coroutine[Any, Any, Any]:
-        args: list[Any] = [interaction]
-        if self.parameters >= 2:
-            args.append(self.item.view)
-        if self.parameters >= 3:
-            args.append(self.item)
-        return self.func(*args)
+        if self.parameters_amount == 1:
+            return self.func(interaction) # type: ignore # type checker doesn't like optional params
+        elif self.parameters_amount == 2:
+            return self.func(interaction, self.item) # type: ignore # type checker doesn't like optional params
+        elif self.parameters_amount == 3:
+            return self.func(interaction, self.item, self.item.view) # type: ignore # type checker doesn't like optional params
+        else:
+            raise TypeError("callback must accept 1 to 3 parameters")
 
 
 class Item(Generic[T]):
@@ -156,7 +161,7 @@ class Item(Generic[T]):
         self._underlying.id = value
 
 
-class ViewItem(Item[V]):
+class ViewItem(Item[V_co], Generic[V_co]):
     """Represents an item used in Views.
 
     The following are the original items supported in :class:`discord.ui.View`:
@@ -181,7 +186,7 @@ class ViewItem(Item[V]):
 
     def __init__(self):
         super().__init__()
-        self._view: V | None = None
+        self._view: V_co | None = None
         self._row: int | None = None
         self._rendered_row: int | None = None
         self.parent: ViewItem | BaseView | None = self.view
@@ -229,7 +234,7 @@ class ViewItem(Item[V]):
         return 1
 
     @property
-    def view(self) -> V | None:
+    def view(self) -> V_co | None:
         """Gets the parent view associated with this item.
 
         The view refers to the structure that holds this item. This is typically set
@@ -259,12 +264,12 @@ class ViewItem(Item[V]):
             The interaction that triggered this UI item.
         """
 
-    def set_callback(self, func: SetItemCallbackType, /) -> None:
+    def set_callback(self, func: SetItemCallbackType[Self, V_co], /) -> None:
         """Sets the callback for this item.
 
         Parameters
         ----------
-        func: Callable[..., Coroutine[Any, Any, Any]]
+        func
             The callback function to set.
 
             This function must be a coroutine that accepts 1 to 3 parameters:
@@ -282,7 +287,7 @@ class ViewItem(Item[V]):
             raise TypeError("callback must be a coroutine function")
 
         params = inspect.signature(func).parameters
-        if len(params) < 1 or len(params) > 3:
+        if len(params) > 3:
             raise TypeError("callback must accept 1 to 3 parameters")
 
         self.callback = _ProxyItemCallback(func, self, len(params))  # type: ignore
