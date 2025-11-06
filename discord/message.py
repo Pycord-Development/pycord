@@ -400,7 +400,7 @@ class Attachment(Hashable):
         Parameters
         ----------
         chunksize: :class:`int`
-            The maximum size of each chunk to process. Must be a positive non-null integer.
+            The maximum size of each chunk to process. Must be a positive integer.
         use_cached: :class:`bool`
             Whether to use :attr:`proxy_url` rather than :attr:`url` when downloading
             the attachment. This will allow attachments to be saved after deletion
