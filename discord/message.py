@@ -314,7 +314,7 @@ class Attachment(Hashable):
             deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
         chunksize: Optional[:class:`int`]
-            The maximum size of each chunk to process.
+            The maximum size of each chunk to process. Must be a positive non-null integer.
 
         Returns
         -------
@@ -336,7 +336,7 @@ class Attachment(Hashable):
             data = await self.read(use_cached=use_cached)
 
         if isinstance(fp, io.BufferedIOBase):
-            if chunksize:
+            if chunksize is not None:
                 written = 0
                 async for chunk in data:
                     written += fp.write(chunk)
@@ -347,7 +347,7 @@ class Attachment(Hashable):
             return written
         else:
             with open(fp, "wb") as f:
-                if chunksize:
+                if chunksize is not None:
                     written = 0
                     async for chunk in data:
                         written += f.write(chunk)
@@ -400,7 +400,7 @@ class Attachment(Hashable):
         Parameters
         ----------
         chunksize: :class:`int`
-            The maximum size of each chunk to process.
+            The maximum size of each chunk to process. Must be a positive non-null integer.
         use_cached: :class:`bool`
             Whether to use :attr:`proxy_url` rather than :attr:`url` when downloading
             the attachment. This will allow attachments to be saved after deletion
