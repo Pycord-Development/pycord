@@ -314,7 +314,7 @@ class Attachment(Hashable):
             deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
         chunksize: Optional[:class:`int`]
-            The maximum size of each chunk to process. Must be a positive non-null integer.
+            The maximum size of each chunk to process. Must be a positive integer.
 
         Returns
         -------
