@@ -184,6 +184,11 @@ class AppInfo:
         The public application flags, if set.
 
         .. versionadded:: 2.7
+
+    bot: Optional[:class:`User`]
+        The bot user associated with this application, if any.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -234,7 +239,9 @@ class AppInfo:
         self.bot_public: bool = data.get("bot_public", False)
         self.bot_require_code_grant: bool = data.get("bot_require_code_grant", False)
         owner_data = data.get("owner")
-        self.owner: User | None = state.create_user(owner_data) if owner_data is not None else None
+        self.owner: User | None = (
+            state.create_user(owner_data) if owner_data is not None else None
+        )
 
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
@@ -596,7 +603,9 @@ class IntegrationTypesConfig:
         self.guild = guild
         self.user = user
 
-    def _encode_install_params(self, value: AppInstallParams | None) -> dict[str, object] | None:
+    def _encode_install_params(
+        self, value: AppInstallParams | None
+    ) -> dict[str, object] | None:
         if value is None:
             return None
         return {"oauth2_install_params": value.to_payload()}
