@@ -275,7 +275,7 @@ class AppInfo:
         self.install_params: AppInstallParams | None = (
             AppInstallParams(install_params) if install_params else None
         )
-        self.tags: list[str] | None = data.get("tags", [])
+        self.tags: list[str] = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
         self.integration_types_config: dict[int, dict[str, object] | None] | None = (
             data.get("integration_types_config")
