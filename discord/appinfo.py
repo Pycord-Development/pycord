@@ -161,6 +161,7 @@ class AppInfo:
         "bot_public",
         "bot_require_code_grant",
         "owner",
+        "bot",
         "_icon",
         "_summary",
         "verify_key",
@@ -173,9 +174,15 @@ class AppInfo:
         "privacy_policy_url",
         "approximate_guild_count",
         "approximate_user_install_count",
+        "approximate_user_authorization_count",
+        "flags",
         "redirect_uris",
         "interactions_endpoint_url",
         "role_connections_verification_url",
+        "event_webhooks_url",
+        "event_webhooks_status",
+        "event_webhooks_types",
+        "integration_types_config",
         "install_params",
         "tags",
         "custom_install_url",
@@ -189,7 +196,7 @@ class AppInfo:
         self.name: str = data["name"]
         self.description: str = data["description"]
         self._icon: str | None = data["icon"]
-        self.rpc_origins: list[str] = data["rpc_origins"]
+        self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.bot_public: bool = data["bot_public"]
         self.bot_require_code_grant: bool = data["bot_require_code_grant"]
         self.owner: User = state.create_user(data["owner"])
@@ -199,6 +206,7 @@ class AppInfo:
 
         self._summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
+        self.bot: User | None = data.get("bot") and state.create_user(data["bot"])
 
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
@@ -213,6 +221,10 @@ class AppInfo:
         self.approximate_user_install_count: int | None = data.get(
             "approximate_user_install_count"
         )
+        self.approximate_user_authorization_count: int | None = data.get(
+            "approximate_user_authorization_count"
+        )
+        self.flags: int | None = data.get("flags")
         self.redirect_uris: list[str] | None = data.get("redirect_uris", [])
         self.interactions_endpoint_url: str | None = data.get(
             "interactions_endpoint_url"
@@ -220,6 +232,9 @@ class AppInfo:
         self.role_connections_verification_url: str | None = data.get(
             "role_connections_verification_url"
         )
+        self.event_webhooks_url: str | None = data.get("event_webhooks_url")
+        self.event_webhooks_status: int | None = data.get("event_webhooks_status")
+        self.event_webhooks_types: list[str] | None = data.get("event_webhooks_types")
 
         install_params = data.get("install_params")
         self.install_params: AppInstallParams | None = (
@@ -227,6 +242,9 @@ class AppInfo:
         )
         self.tags: list[str] | None = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
+        self.integration_types_config: dict[int, dict[str, object] | None] | None = (
+            data.get("integration_types_config")
+        )
 
     def __repr__(self) -> str:
         return (
@@ -234,6 +252,71 @@ class AppInfo:
             f"description={self.description!r} public={self.bot_public} "
             f"owner={self.owner!r}>"
         )
+
+    async def edit(
+        self,
+        *,
+        description: str | None = utils.MISSING,
+        terms_of_service_url: str | None = utils.MISSING,
+        privacy_policy_url: str | None = utils.MISSING,
+        role_connections_verification_url: str | None = utils.MISSING,
+        interactions_endpoint_url: str | None = utils.MISSING,
+        tags: list[str] | None = utils.MISSING,
+        install_params: dict | None = utils.MISSING,
+        custom_install_url: str | None = utils.MISSING,
+    ) -> "AppInfo":
+        """|coro|
+
+        Edit the current application's settings.
+
+        This method wraps the Edit Current Application endpoint and returns the updated application info.
+
+        Parameters
+        ----------
+        description: Optional[:class:`str`]
+            The new application description. Pass ``None`` to clear.
+        terms_of_service_url: Optional[:class:`str`]
+            The application's Terms of Service URL.
+        privacy_policy_url: Optional[:class:`str`]
+            The application's Privacy Policy URL.
+        role_connections_verification_url: Optional[:class:`str`]
+            The role connection verification URL for the application.
+        interactions_endpoint_url: Optional[:class:`str`]
+            The interactions endpoint callback URL.
+        tags: Optional[List[:class:`str`]]
+            List of tags for the application (max 5).
+        install_params: Optional[:class:`dict`]
+            Dict with keys ``scopes`` (list[str]) and ``permissions`` (str) used for default install link.
+        custom_install_url: Optional[:class:`str`]
+            The default custom authorization URL for the application.
+
+        Returns
+        -------
+        :class:`.AppInfo`
+            The updated application information.
+        """
+        payload: dict[str, object] = {}
+        if description is not utils.MISSING:
+            payload["description"] = description
+        if terms_of_service_url is not utils.MISSING:
+            payload["terms_of_service_url"] = terms_of_service_url
+        if privacy_policy_url is not utils.MISSING:
+            payload["privacy_policy_url"] = privacy_policy_url
+        if role_connections_verification_url is not utils.MISSING:
+            payload["role_connections_verification_url"] = (
+                role_connections_verification_url
+            )
+        if interactions_endpoint_url is not utils.MISSING:
+            payload["interactions_endpoint_url"] = interactions_endpoint_url
+        if tags is not utils.MISSING:
+            payload["tags"] = tags
+        if install_params is not utils.MISSING:
+            payload["install_params"] = install_params
+        if custom_install_url is not utils.MISSING:
+            payload["custom_install_url"] = custom_install_url
+
+        data = await self._state.http.edit_current_application(payload)
+        return AppInfo(self._state, data)
 
     @property
     def icon(self) -> Asset | None:
