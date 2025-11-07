@@ -22,6 +22,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed `TypeError` in paginator implementation when only passing `PageGroup` objects
+  and `show_menu` is falsy.
+  ([#2993](https://github.com/Pycord-Development/pycord/pull/2993))
+
 ### Deprecated
 
 ### Removed
