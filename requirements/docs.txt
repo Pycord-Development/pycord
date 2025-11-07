@@ -8,4 +8,4 @@ furo==2024.8.6
 sphinx-autodoc-typehints==3.5.2
 sphinx-intl==2.3.2
 typing_extensions==4.15.0
-levenshtein==0.27.1
+levenshtein==0.27.3

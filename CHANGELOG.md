@@ -10,7 +10,13 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+⚠️ **This version removes support for Python 3.9.** ⚠️
+
 ### Added
+
+- Added `Attachment.read_chunked` and added optional `chunksize` argument to
+  `Attachment.save` for retrieving attachments in chunks.
+  ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
 
 ### Changed
 
@@ -19,6 +25,9 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Deprecated
 
 ### Removed
+
+- ⚠️ **Removed support for Python 3.9.**
+  ([#2986](https://github.com/Pycord-Development/pycord/pull/2986))
 
 ## [2.7.0rc2] - 2025-10-22
 
