@@ -264,7 +264,7 @@ class AppInfo:
         tags: list[str] | None = utils.MISSING,
         install_params: dict | None = utils.MISSING,
         custom_install_url: str | None = utils.MISSING,
-    ) -> "AppInfo":
+    ) -> AppInfo:
         """|coro|
 
         Edit the current application's settings.
