@@ -567,7 +567,7 @@ class AppInstallParams:
             )
         return {
             "scopes": list(self.scopes),
-            "permissions": str(int(self.permissions.value)),
+            "permissions": str(self.permissions.value),
         }
 
 
