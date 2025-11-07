@@ -52,8 +52,6 @@ class BaseAppInfo(TypedDict):
     name: str
     description: str
     verify_key: str
-    # Deprecated by Discord but still present in some payloads; prefer 'description'.
-    summary: NotRequired[str]
 
     icon: NotRequired[str | None]
     cover_image: NotRequired[str]
