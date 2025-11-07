@@ -229,7 +229,7 @@ class AppInfo:
         self.id: int = int(data["id"])
         self.name: str = data["name"]
         self.description: str = data["description"]
-        self._icon: str | None = data["icon"]
+        self._icon: str | None = data.get("icon")
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.bot_public: bool = data["bot_public"]
         self.bot_require_code_grant: bool = data["bot_require_code_grant"]
