@@ -595,7 +595,7 @@ class IntegrationTypesConfig:
         self.guild = guild
         self.user = user
 
-    def _encode_install_params(self, value: AppInstallParams | None) -> dict | None:
+    def _encode_install_params(self, value: AppInstallParams | None) -> dict[str, object] | None:
         if value is None:
             return None
         return {"oauth2_install_params": value.to_payload()}
