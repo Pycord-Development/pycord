@@ -260,7 +260,7 @@ class AppInfo:
         )
         raw_flags = data.get("flags")
         self._flags: int | None = raw_flags if isinstance(raw_flags, int) else None
-        self.redirect_uris: list[str] | None = data.get("redirect_uris", [])
+        self.redirect_uris: list[str] = data.get("redirect_uris", [])
         self.interactions_endpoint_url: str | None = data.get(
             "interactions_endpoint_url"
         )
