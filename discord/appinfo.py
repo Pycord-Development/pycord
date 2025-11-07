@@ -231,9 +231,10 @@ class AppInfo:
         self.description: str = data["description"]
         self._icon: str | None = data.get("icon")
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
-        self.bot_public: bool = data["bot_public"]
-        self.bot_require_code_grant: bool = data["bot_require_code_grant"]
-        self.owner: User = state.create_user(data["owner"])
+        self.bot_public: bool = data.get("bot_public", False)
+        self.bot_require_code_grant: bool = data.get("bot_require_code_grant", False)
+        owner_data = data.get("owner")
+        self.owner: User | None = state.create_user(owner_data) if owner_data is not None else None
 
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
