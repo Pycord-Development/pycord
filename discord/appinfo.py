@@ -29,8 +29,8 @@ from typing import TYPE_CHECKING
 
 from . import utils
 from .asset import Asset
-from .permissions import Permissions
 from .flags import ApplicationFlags
+from .permissions import Permissions
 
 if TYPE_CHECKING:
     from .guild import Guild
@@ -309,14 +309,14 @@ class AppInfo:
         privacy_policy_url: str | None = utils.MISSING,
         interactions_endpoint_url: str | None = utils.MISSING,
         role_connections_verification_url: str | None = utils.MISSING,
-        install_params: "AppInstallParams | None" = utils.MISSING,
+        install_params: AppInstallParams | None = utils.MISSING,
         custom_install_url: str | None = utils.MISSING,
-        integration_types_config: "IntegrationTypesConfig | None" = utils.MISSING,
+        integration_types_config: IntegrationTypesConfig | None = utils.MISSING,
         flags: ApplicationFlags | None = utils.MISSING,
         event_webhooks_url: str | None = utils.MISSING,
         event_webhooks_status: bool = utils.MISSING,
         event_webhooks_types: list[str] | None = utils.MISSING,
-    ) -> "AppInfo":
+    ) -> AppInfo:
         """|coro|
 
         Edit the current application's settings.
