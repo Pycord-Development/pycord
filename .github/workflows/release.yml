@@ -202,7 +202,7 @@ jobs:
           python3 -m build --sdist
           python3 -m build --wheel
       - name: "Create GitHub Release"
-        uses: softprops/action-gh-release@v2.4.1
+        uses: softprops/action-gh-release@v2.4.2
         id: gh-release
         with:
           tag_name: "v${{ inputs.version }}"
