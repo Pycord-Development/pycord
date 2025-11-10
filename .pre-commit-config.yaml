@@ -31,7 +31,7 @@ repos:
       - id: isort
         exclude: \.(po|pot|yml|yaml)$
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.9.0
+    rev: 25.11.0
     hooks:
       - id: black
         args: [--safe, --quiet]
