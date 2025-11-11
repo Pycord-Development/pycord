@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 import argparse
 import importlib.metadata
+import logging
 import platform
 import sys
 from pathlib import Path
@@ -33,6 +34,8 @@ from typing import Tuple
 import aiohttp
 
 import discord
+
+_log = logging.getLogger(__name__)
 
 
 def show_version() -> None:
@@ -238,8 +241,8 @@ def newbot(parser, args) -> None:
         cogs.mkdir(exist_ok=True)
         init = cogs / "__init__.py"
         init.touch()
-    except OSError as exc:
-        print(f"warning: could not create cogs directory ({exc})")
+    except OSError:
+        _log.exception(f"Could not create cogs directory.")
 
     try:
         with open(str(new_directory / "config.py"), "w", encoding="utf-8") as fp:
@@ -258,18 +261,18 @@ def newbot(parser, args) -> None:
         try:
             with open(str(new_directory / ".gitignore"), "w", encoding="utf-8") as fp:
                 fp.write(_gitignore_template)
-        except OSError as exc:
-            print(f"warning: could not create .gitignore file ({exc})")
+        except OSError:
+            _log.exception(f"Could not create .gitignore file.")
 
-    print("successfully made bot at", new_directory)
+    print("Successfully made bot at", new_directory)
 
 
 def newcog(parser, args) -> None:
     cog_dir = to_path(parser, args.directory)
     try:
         cog_dir.mkdir(exist_ok=True)
-    except OSError as exc:
-        print(f"warning: could not create cogs directory ({exc})")
+    except OSError:
+        _log.exception(f"Could not create cogs directory.")
 
     directory = cog_dir / to_path(parser, args.name)
     directory = directory.with_suffix(".py")
