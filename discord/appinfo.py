@@ -141,9 +141,8 @@ class AppInfo:
 
         .. versionadded:: 2.7
 
-    integration_types_config: Optional[Dict[:class:`int`, Optional[Dict[:class:`str`, Any]]]]
-        Per-installation context configuration. Keys are ``0`` (guild) and ``1`` (user) mapping to an object containing
-        ``oauth2_install_params`` or ``None`` if cleared.
+    integration_types_config: Optional[:class:`IntegrationTypesConfig`]
+        Per-installation context configuration for guild (``0``) and user (``1``) contexts.
 
         .. versionadded:: 2.7
 
@@ -238,10 +237,7 @@ class AppInfo:
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.bot_public: bool = data.get("bot_public", False)
         self.bot_require_code_grant: bool = data.get("bot_require_code_grant", False)
-        owner_data = data.get("owner")
-        self.owner: User | None = (
-            state.create_user(owner_data) if owner_data is not None else None
-        )
+        self.owner: User | None = data.get("owner") and state.create_user(data["owner"])
 
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
@@ -266,8 +262,7 @@ class AppInfo:
         self.approximate_user_authorization_count: int | None = data.get(
             "approximate_user_authorization_count"
         )
-        raw_flags = data.get("flags")
-        self._flags: int | None = raw_flags if isinstance(raw_flags, int) else None
+        self._flags: int | None = data.get("flags")
         self.redirect_uris: list[str] = data.get("redirect_uris", [])
         self.interactions_endpoint_url: str | None = data.get(
             "interactions_endpoint_url"
@@ -279,13 +274,12 @@ class AppInfo:
         self.event_webhooks_status: int | None = data.get("event_webhooks_status")
         self.event_webhooks_types: list[str] | None = data.get("event_webhooks_types")
 
-        install_params = data.get("install_params")
-        self.install_params: AppInstallParams | None = (
-            AppInstallParams(install_params) if install_params else None
+        self.install_params: AppInstallParams | None = data.get("install_params") and (
+            AppInstallParams(data["install_params"])
         )
         self.tags: list[str] = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
-        self.integration_types_config: dict[int, dict[str, object] | None] | None = (
+        self.integration_types_config = IntegrationTypesConfig.from_payload(
             data.get("integration_types_config")
         )
 
@@ -301,6 +295,8 @@ class AppInfo:
         """The public application flags, if set.
 
         Returns an :class:`ApplicationFlags` instance or ``None`` when not present.
+
+        .. versionadded:: 2.7
         """
         if self._flags is None:
             return None
@@ -329,12 +325,10 @@ class AppInfo:
 
         Edit the current application's settings.
 
-        This method wraps the Edit Current Application endpoint and returns the updated application info.
-
         Parameters
         ----------
         description: Optional[:class:`str`]
-            The new application description. Pass ``None`` to clear.
+            The new application description or ``None`` to clear.
         icon: Optional[Union[:class:`bytes`, :class:`str`]]
             New icon image. If ``bytes`` is given it will be base64 encoded automatically. If a ``str`` is given it is assumed
             to be a pre-encoded base64 data URI or hash and sent as-is. Pass ``None`` to clear.
@@ -372,6 +366,8 @@ class AppInfo:
         -------
         :class:`.AppInfo`
             The updated application information.
+
+        .. versionadded:: 2.7
         """
         payload: dict[str, object] = {}
         if description is not utils.MISSING:
@@ -602,6 +598,29 @@ class IntegrationTypesConfig:
     ) -> None:
         self.guild = guild
         self.user = user
+
+    @classmethod
+    def from_payload(cls, data: dict | None) -> "IntegrationTypesConfig | None":
+        if data is None:
+            return None
+
+        def _get_ctx(raw: dict, key: int):
+            if key in raw:
+                return raw[key]
+            skey = str(key)
+            return raw.get(skey)
+
+        def _decode_ctx(value: dict | None) -> AppInstallParams | None:
+            if value is None:
+                return None
+            params = value.get("oauth2_install_params")
+            if not params:
+                return None
+            return AppInstallParams(params)
+
+        guild_ctx = _decode_ctx(_get_ctx(data, 0))
+        user_ctx = _decode_ctx(_get_ctx(data, 1))
+        return cls(guild=guild_ctx, user=user_ctx)
 
     def _encode_install_params(
         self, value: AppInstallParams | None
