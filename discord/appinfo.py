@@ -600,7 +600,7 @@ class IntegrationTypesConfig:
         self.user = user
 
     @classmethod
-    def from_payload(cls, data: dict | None) -> "IntegrationTypesConfig | None":
+    def from_payload(cls, data: dict | None) -> IntegrationTypesConfig | None:
         if data is None:
             return None
 
