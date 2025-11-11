@@ -418,17 +418,20 @@ class Paginator(discord.ui.View):
         self.default_page_group: int = 0
 
         if all(isinstance(pg, PageGroup) for pg in pages):
-            self.page_groups = self.pages if show_menu else None
-            if sum(pg.default is True for pg in self.page_groups) > 1:
+            if sum(pg.default is True for pg in pages) > 1:
                 raise ValueError("Only one PageGroup can be set as the default.")
-            for pg in self.page_groups:
+
+            default_pg_index = 0
+            for pg in pages:
                 if pg.default:
-                    self.default_page_group = self.page_groups.index(pg)
+                    default_pg_index = pages.index(pg)
                     break
+
             self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
+                pages[default_pg_index]
             )
 
+            self.page_groups = self.pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: list = custom_buttons
@@ -530,16 +533,20 @@ class Paginator(discord.ui.View):
         ) = (pages if pages is not None else self.pages)
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
-            self.page_groups = self.pages if self.show_menu else None
-            if sum(pg.default is True for pg in self.page_groups) > 1:
+            if sum(pg.default is True for pg in pages) > 1:
                 raise ValueError("Only one PageGroup can be set as the default.")
-            for pg in self.page_groups:
+
+            default_pg_index = 0
+            for pg in pages:
                 if pg.default:
-                    self.default_page_group = self.page_groups.index(pg)
+                    default_pg_index = pages.index(pg)
                     break
+
             self.pages: list[Page] = self.get_page_group_content(
-                self.page_groups[self.default_page_group]
+                pages[default_pg_index]
             )
+
+            self.page_groups = self.pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
