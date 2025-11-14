@@ -179,11 +179,6 @@ class AppInfo:
 
         .. versionadded:: 2.7
 
-    flags: Optional[:class:`ApplicationFlags`]
-        The public application flags, if set.
-
-        .. versionadded:: 2.7
-
     bot: Optional[:class:`User`]
         The bot user associated with this application, if any.
 
