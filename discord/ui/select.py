@@ -71,8 +71,8 @@ if TYPE_CHECKING:
 
 ST = TypeVar("ST", bound="Snowflake | str", covariant=True, default=Any)
 S = TypeVar("S", bound="Select")
-V = TypeVar("V", bound="BaseView", covariant=True)
-M = TypeVar("M", bound="DesignerModal", covariant=True, default=Any)
+V = TypeVar("V", bound="BaseView", covariant=True, default=BaseView)
+M = TypeVar("M", bound="DesignerModal", covariant=True, default=DesignerModal)
 
 
 class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
