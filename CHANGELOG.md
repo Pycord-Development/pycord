@@ -22,6 +22,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed breaking change in `ui.Select` Generic typing by adding default values to TypeVars. 
+  ([#3002](https://github.com/Pycord-Development/pycord/pull/3002))
+  
 ### Deprecated
 
 ### Removed
