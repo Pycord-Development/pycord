@@ -17,6 +17,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Attachment.read_chunked` and added optional `chunksize` argument to
   `Attachment.save` for retrieving attachments in chunks.
   ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
+- Added `AppInfo.edit()` method and missing fields.
+  ([#2994](https://github.com/Pycord-Development/pycord/pull/2994))
 
 ### Changed
 
