@@ -15,7 +15,7 @@ jobs:
       pr_id: ${{ steps.convert_outputs.outputs.pr_id }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-tags: true
       - name: "Install Python"
@@ -74,7 +74,7 @@ jobs:
     environment: translations
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: "Refresh Pull"
         run: |
           git fetch --all
