@@ -462,18 +462,6 @@ class AppInfo:
             return None
         return self._event_webhooks_status == 2
 
-    @event_webhooks_enabled.setter
-    def event_webhooks_enabled(self, value: bool | None) -> None:
-        """Set whether event webhooks are enabled.
-
-        Setting to ``True`` maps to the API value ``2`` (enabled), ``False`` maps to ``1`` (disabled),
-        and ``None`` clears the status (sets it to ``None``).
-        """
-        if value is None:
-            self._event_webhooks_status = None
-            return
-        self._event_webhooks_status = 2 if value else 1
-
 
 class PartialAppInfo:
     """Represents a partial AppInfo given by :func:`~discord.abc.GuildChannel.create_invite`
