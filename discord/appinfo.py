@@ -151,12 +151,6 @@ class AppInfo:
 
         .. versionadded:: 2.7
 
-    event_webhooks_status: Optional[:class:`int`]
-        The raw event webhooks status integer from the API (``2`` enabled, ``1`` disabled) if present.
-        Prefer :attr:`event_webhooks_enabled` for a boolean form.
-
-        .. versionadded:: 2.7
-
     event_webhooks_types: Optional[List[:class:`str`]]
         List of event webhook types subscribed to, if set.
 
@@ -213,7 +207,7 @@ class AppInfo:
         "interactions_endpoint_url",
         "role_connections_verification_url",
         "event_webhooks_url",
-        "event_webhooks_status",
+        "_event_webhooks_status",
         "event_webhooks_types",
         "integration_types_config",
         "install_params",
@@ -266,7 +260,7 @@ class AppInfo:
             "role_connections_verification_url"
         )
         self.event_webhooks_url: str | None = data.get("event_webhooks_url")
-        self.event_webhooks_status: int | None = data.get("event_webhooks_status")
+        self._event_webhooks_status: int | None = data.get("event_webhooks_status")
         self.event_webhooks_types: list[str] | None = data.get("event_webhooks_types")
 
         self.install_params: AppInstallParams | None = data.get("install_params") and (
@@ -461,13 +455,24 @@ class AppInfo:
     @property
     def event_webhooks_enabled(self) -> bool | None:
         """Returns whether event webhooks are enabled.
-
-        This is a convenience around :attr:`event_webhooks_status` where ``True`` means enabled and ``False`` means disabled.
+        This is a convenience around the raw API status integer where ``True`` means enabled and ``False`` means disabled.
         ``None`` indicates the status is not present.
         """
-        if self.event_webhooks_status is None:
+        if self._event_webhooks_status is None:
             return None
-        return self.event_webhooks_status == 2
+        return self._event_webhooks_status == 2
+
+    @event_webhooks_enabled.setter
+    def event_webhooks_enabled(self, value: bool | None) -> None:
+        """Set whether event webhooks are enabled.
+
+        Setting to ``True`` maps to the API value ``2`` (enabled), ``False`` maps to ``1`` (disabled),
+        and ``None`` clears the status (sets it to ``None``).
+        """
+        if value is None:
+            self._event_webhooks_status = None
+            return
+        self._event_webhooks_status = 2 if value else 1
 
 
 class PartialAppInfo:
