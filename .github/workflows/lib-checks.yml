@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: "Setup Python"
         uses: actions/setup-python@v6
         with:
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: "Setup Python"
         uses: actions/setup-python@v6
         with:
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: "Setup Python"
         uses: actions/setup-python@v6
         with:
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: "Setup Python"
         uses: actions/setup-python@v6
         with:
@@ -127,7 +127,7 @@ jobs:
       PYTHON: ${{ matrix.python-version }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: "Setup Python"
         uses: actions/setup-python@v6
         with:
