@@ -29,8 +29,7 @@ import asyncio
 import contextvars
 import datetime
 import inspect
-import sys
-import traceback
+import logging
 from collections.abc import Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar, cast
 
@@ -50,6 +49,8 @@ ET = TypeVar("ET", bound=Callable[[Any, BaseException], Awaitable[Any]])
 _current_loop_ctx: contextvars.ContextVar[int] = contextvars.ContextVar(
     "_current_loop_ctx", default=None
 )
+
+_log = logging.getLogger(__name__)
 
 
 class SleepHandle:
@@ -527,12 +528,9 @@ class Loop(Generic[LF]):
 
     async def _error(self, *args: Any) -> None:
         exception: Exception = args[-1]
-        print(
+        _log.error(
             f"Unhandled exception in internal background task {self.coro.__name__!r}.",
-            file=sys.stderr,
-        )
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
+            exc_info=exception,
         )
 
     def before_loop(self, coro: FT) -> FT:
@@ -597,7 +595,7 @@ class Loop(Generic[LF]):
 
         The coroutine must take only one argument the exception raised (except ``self`` in a class context).
 
-        By default, this prints to :data:`sys.stderr` however it could be
+        By default, this logs with the logging module however it could be
         overridden to have a different implementation.
 
         .. versionadded:: 1.4
