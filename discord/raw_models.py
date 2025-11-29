@@ -47,6 +47,7 @@ if TYPE_CHECKING:
     from .state import ConnectionState
     from .threads import Thread
     from .types.channel import VoiceChannelEffectSendEvent as VoiceChannelEffectSend
+    from .types.member import MemberUpdateEvent
     from .types.raw_models import (
         AuditLogEntryEvent,
     )
@@ -68,7 +69,6 @@ if TYPE_CHECKING:
         TypingEvent,
         VoiceChannelStatusUpdateEvent,
     )
-    from .types.member import MemberUpdateEvent
     from .user import User
 
 

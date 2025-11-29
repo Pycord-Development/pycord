@@ -85,12 +85,12 @@ if TYPE_CHECKING:
     from .types.channel import DMChannel as DMChannelPayload
     from .types.emoji import Emoji as EmojiPayload
     from .types.guild import Guild as GuildPayload
+    from .types.member import MemberUpdateEvent
     from .types.message import Message as MessagePayload
     from .types.poll import Poll as PollPayload
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
     from .voice_client import VoiceClient
-    from .types.member import MemberUpdateEvent
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
@@ -911,11 +911,13 @@ class ConnectionState:
                 if answer.id in counts:
                     counts[answer.id].count += 1
                 else:
-                    counts[answer.id] = PollAnswerCount({
-                        "id": answer.id,
-                        "count": 1,
-                        "me_voted": False,
-                    })
+                    counts[answer.id] = PollAnswerCount(
+                        {
+                            "id": answer.id,
+                            "count": 1,
+                            "me_voted": False,
+                        }
+                    )
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
             if answer is not None:
@@ -1362,7 +1364,6 @@ class ConnectionState:
                 if user_update:
                     self.dispatch("user_update", user_update[0], user_update[1])
 
-                print("adding new member to cache:", new_member)
                 guild._add_member(new_member)
 
         raw = RawMemberUpdateEvent(data, new_member)

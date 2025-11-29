@@ -17,8 +17,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Attachment.read_chunked` and added optional `chunksize` argument to
   `Attachment.save` for retrieving attachments in chunks.
   ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
-- Added a new event called `on_raw_member_update` that is dispatched when a member is updated,
-  regardless of cache status. ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
+- Added a new event called `on_raw_member_update` that is dispatched when a member is
+  updated, regardless of cache status.
+  ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
 
 ### Changed
 
