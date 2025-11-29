@@ -1329,8 +1329,6 @@ class ConnectionState:
 
     def parse_guild_member_update(self, data: MemberUpdateEvent) -> None:
         guild = self._get_guild(int(data["guild_id"]))
-        user = data["user"]
-        user_id = int(user["id"])
         if guild is None:
             _log.debug(
                 "GUILD_MEMBER_UPDATE referencing an unknown guild ID: %s. Discarding.",
@@ -1338,37 +1336,41 @@ class ConnectionState:
             )
             return
 
-        if not self.member_cache_flags.joined:
-            old_member = guild._members.pop(user_id, None)
-        else:
-            old_member = guild.get_member(user_id)
+        user = data["user"]
+        user_id = int(user["id"])
 
-        old_member = Member._copy(old_member) if old_member is not None else None
+        # Try to get the old member from cache
+        old_member: Member | None = guild.get_member(user_id)
+        old_member_copy: Member | None = (
+            Member._copy(old_member) if old_member is not None else None
+        )
 
+        # Always create or update the member object
         if old_member is not None:
+            old_member._update(data)
             new_member = old_member
-            new_member._update(data)
-
-            # handle user_update if necessary
-            user_update = old_member._update_inner_user(user)
-            if user_update:
-                self.dispatch("user_update", user_update[0], user_update[1])
-
-            self.dispatch("member_update", old_member, new_member)
         else:
             new_member = Member(guild=guild, data=data, state=self)  # type: ignore
 
-            if self.member_cache_flags.joined:
-                # Force an update on the inner user if necessary
-                user_update = new_member._update_inner_user(user)
-                if user_update:
-                    self.dispatch("user_update", user_update[0], user_update[1])
-
-                guild._add_member(new_member)
-
         raw = RawMemberUpdateEvent(data, new_member)
-        raw.cached_member = old_member
+        raw.cached_member = old_member_copy
         self.dispatch("raw_member_update", raw)
+
+        # Update the user cache if needed
+        user_update = None
+        if old_member_copy is not None:
+            user_update = old_member_copy._update_inner_user(user)
+        else:
+            user_update = new_member._update_inner_user(user)
+
+        if user_update:
+            self.dispatch("user_update", user_update[0], user_update[1])
+
+        if old_member_copy is not None:
+            self.dispatch("member_update", old_member_copy, new_member)
+        else:
+            if self.member_cache_flags.joined:
+                guild._add_member(new_member)
 
     def parse_guild_emojis_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
