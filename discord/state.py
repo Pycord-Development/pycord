@@ -1364,7 +1364,6 @@ class ConnectionState:
                 if user_update:
                     self.dispatch("user_update", user_update[0], user_update[1])
 
-                print("adding new member to cache:", new_member)
                 guild._add_member(new_member)
 
         raw = RawMemberUpdateEvent(data, new_member)
