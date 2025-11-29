@@ -64,6 +64,7 @@ if TYPE_CHECKING:
     from .types.member import Member as MemberPayload
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
+    from .types.member import MemberUpdateEvent as MemberUpdateEventPayload
     from .types.user import User as UserPayload
     from .types.voice import GuildVoiceState as GuildVoiceStatePayload
     from .types.voice import VoiceState as VoiceStatePayload
@@ -424,27 +425,28 @@ class Member(discord.abc.Messageable, _UserTag):
         ch = await self.create_dm()
         return ch
 
-    def _update(self, data: MemberPayload) -> None:
+    def _update(self, data: MemberPayload | MemberUpdateEventPayload) -> None:
         # the nickname change is optional,
         # if it isn't in the payload then it didn't change
         try:
-            self.nick = data["nick"]
+            self.nick = data["nick"]  # type: ignore # handled by the type-except
         except KeyError:
             pass
 
         try:
-            self.pending = data["pending"]
+            self.pending = data["pending"]  # type: ignore # handled by the type-except
         except KeyError:
             pass
 
         self.premium_since = utils.parse_time(data.get("premium_since"))
-        self._roles = utils.SnowflakeList(map(int, data["roles"]))
+        self._roles = utils.SnowflakeList(map(int, data["roles"]))  # type: ignore # the API is the same
         self._avatar = data.get("avatar")
         self._banner = data.get("banner")
         self.communication_disabled_until = utils.parse_time(
             data.get("communication_disabled_until")
         )
         self.flags = MemberFlags._from_value(data.get("flags", 0))
+        self.joined_at = utils.parse_time(data.get("joined_at")) or self.joined_at
 
     def _presence_update(
         self, data: PartialPresenceUpdate, user: UserPayload

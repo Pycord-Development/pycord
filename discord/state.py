@@ -90,6 +90,7 @@ if TYPE_CHECKING:
     from .types.sticker import GuildSticker as GuildStickerPayload
     from .types.user import User as UserPayload
     from .voice_client import VoiceClient
+    from .types.member import MemberUpdateEvent
 
     T = TypeVar("T")
     CS = TypeVar("CS", bound="ConnectionState")
@@ -910,9 +911,11 @@ class ConnectionState:
                 if answer.id in counts:
                     counts[answer.id].count += 1
                 else:
-                    counts[answer.id] = PollAnswerCount(
-                        {"id": answer.id, "count": 1, "me_voted": False}
-                    )
+                    counts[answer.id] = PollAnswerCount({
+                        "id": answer.id,
+                        "count": 1,
+                        "me_voted": False,
+                    })
         if poll is not None and user is not None:
             answer = poll.get_answer(raw.answer_id)
             if answer is not None:
@@ -1322,7 +1325,7 @@ class ConnectionState:
             )
         self.dispatch("raw_member_remove", raw)
 
-    def parse_guild_member_update(self, data) -> None:
+    def parse_guild_member_update(self, data: MemberUpdateEvent) -> None:
         guild = self._get_guild(int(data["guild_id"]))
         user = data["user"]
         user_id = int(user["id"])
@@ -1333,29 +1336,38 @@ class ConnectionState:
             )
             return
 
-        member = guild.get_member(user_id)
-        if member is not None:
-            old_member = Member._copy(member)
-            member._update(data)
-            user_update = member._update_inner_user(user)
+        if not self.member_cache_flags.joined:
+            old_member = guild._members.pop(user_id, None)
+        else:
+            old_member = guild.get_member(user_id)
+
+        old_member = Member._copy(old_member) if old_member is not None else None
+
+        if old_member is not None:
+            new_member = old_member
+            new_member._update(data)
+
+            # handle user_update if necessary
+            user_update = old_member._update_inner_user(user)
             if user_update:
                 self.dispatch("user_update", user_update[0], user_update[1])
 
-            self.dispatch("member_update", old_member, member)
+            self.dispatch("member_update", old_member, new_member)
         else:
-            if self.member_cache_flags.joined:
-                member = Member(data=data, guild=guild, state=self)
+            new_member = Member(guild=guild, data=data, state=self)  # type: ignore
 
+            if self.member_cache_flags.joined:
                 # Force an update on the inner user if necessary
-                user_update = member._update_inner_user(user)
+                user_update = new_member._update_inner_user(user)
                 if user_update:
                     self.dispatch("user_update", user_update[0], user_update[1])
 
-                guild._add_member(member)
-            _log.debug(
-                "GUILD_MEMBER_UPDATE referencing an unknown member ID: %s. Discarding.",
-                user_id,
-            )
+                print("adding new member to cache:", new_member)
+                guild._add_member(new_member)
+
+        raw = RawMemberUpdateEvent(data, new_member)
+        raw.cached_member = old_member
+        self.dispatch("raw_member_update", raw)
 
     def parse_guild_emojis_update(self, data) -> None:
         guild = self._get_guild(int(data["guild_id"]))
