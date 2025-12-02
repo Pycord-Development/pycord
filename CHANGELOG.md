@@ -10,7 +10,13 @@ possible (see our [Version Guarantees] for more info).
 
 These changes are available on the `master` branch, but have not yet been released.
 
+⚠️ **This version removes support for Python 3.9.** ⚠️
+
 ### Added
+
+- Added `Attachment.read_chunked` and added optional `chunksize` argument to
+  `Attachment.save` for retrieving attachments in chunks.
+  ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
 
 ### Changed
 
@@ -18,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed the `view` attribute on many view items being incorrect.
   ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
+- Fixed breaking change in `ui.Select` Generic typing by adding default values to
+  TypeVars. ([#3002](https://github.com/Pycord-Development/pycord/pull/3002))
 
 ### Deprecated
 
@@ -25,6 +33,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
 
 ### Removed
+
+- ⚠️ **Removed support for Python 3.9.**
+  ([#2986](https://github.com/Pycord-Development/pycord/pull/2986))
 
 ## [2.7.0rc2] - 2025-10-22
 
