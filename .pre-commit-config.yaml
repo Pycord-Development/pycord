@@ -21,7 +21,7 @@ repos:
   #          - --remove-duplicate-keys
   #          - --remove-unused-variables
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.0
+    rev: v3.21.2
     hooks:
       - id: pyupgrade
         exclude: \.(po|pot|yml|yaml)$
@@ -31,7 +31,7 @@ repos:
       - id: isort
         exclude: \.(po|pot|yml|yaml)$
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.9.0
+    rev: 25.11.0
     hooks:
       - id: black
         args: [--safe, --quiet]

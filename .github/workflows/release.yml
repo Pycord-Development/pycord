@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -108,7 +108,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -202,7 +202,7 @@ jobs:
           python3 -m build --sdist
           python3 -m build --wheel
       - name: "Create GitHub Release"
-        uses: softprops/action-gh-release@v2.4.1
+        uses: softprops/action-gh-release@v2.4.2
         id: gh-release
         with:
           tag_name: "v${{ inputs.version }}"
@@ -330,7 +330,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
