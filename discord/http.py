@@ -3213,7 +3213,7 @@ class HTTPClient:
     def application_info(self) -> Response[appinfo.AppInfo]:
         return self.request(Route("GET", "/oauth2/applications/@me"))
 
-    def edit_current_application(
+    def edit_current_application_info(
         self, payload: dict[str, Any]
     ) -> Response[appinfo.AppInfo]:
         return self.request(Route("PATCH", "/applications/@me"), json=payload)

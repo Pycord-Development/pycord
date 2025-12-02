@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .asset import Asset
@@ -358,7 +358,7 @@ class AppInfo:
 
         .. versionadded:: 2.7
         """
-        payload: dict[str, object] = {}
+        payload: dict[str, Any] = {}
         if description is not utils.MISSING:
             payload["description"] = description
         if icon is not utils.MISSING:
@@ -387,7 +387,7 @@ class AppInfo:
             if install_params is None:
                 payload["install_params"] = None
             else:
-                payload["install_params"] = install_params.to_payload()
+                payload["install_params"] = install_params._to_payload()
         if custom_install_url is not utils.MISSING:
             payload["custom_install_url"] = custom_install_url
         if integration_types_config is not utils.MISSING:
@@ -395,7 +395,7 @@ class AppInfo:
                 payload["integration_types_config"] = None
             else:
                 payload["integration_types_config"] = (
-                    integration_types_config.to_payload()
+                    integration_types_config._to_payload()
                 )
         if flags is not utils.MISSING:
             payload["flags"] = None if flags is None else flags.value
@@ -406,7 +406,7 @@ class AppInfo:
         if event_webhooks_types is not utils.MISSING:
             payload["event_webhooks_types"] = event_webhooks_types
 
-        data = await self._state.http.edit_current_application(payload)
+        data = await self._state.http.edit_current_application_info(payload)
         return AppInfo(self._state, data)
 
     @property
@@ -545,7 +545,7 @@ class AppInstallParams:
         self.scopes: list[str] = data.get("scopes", [])
         self.permissions: Permissions = Permissions(int(data["permissions"]))
 
-    def to_payload(self) -> dict[str, object]:
+    def _to_payload(self) -> dict[str, object]:
         """Serialize this object into an application install params payload.
 
         Returns
@@ -587,27 +587,30 @@ class IntegrationTypesConfig:
         self.guild = guild
         self.user = user
 
+    @staticmethod
+    def _get_ctx(raw: dict | None, key: int):
+        if raw is None:
+            return None
+        if key in raw:
+            return raw[key]
+        skey = str(key)
+        return raw.get(skey)
+
+    @staticmethod
+    def _decode_ctx(value: dict | None) -> AppInstallParams | None:
+        if value is None:
+            return None
+        params = value.get("oauth2_install_params")
+        if not params:
+            return None
+        return AppInstallParams(params)
+
     @classmethod
     def from_payload(cls, data: dict | None) -> IntegrationTypesConfig | None:
         if data is None:
             return None
-
-        def _get_ctx(raw: dict, key: int):
-            if key in raw:
-                return raw[key]
-            skey = str(key)
-            return raw.get(skey)
-
-        def _decode_ctx(value: dict | None) -> AppInstallParams | None:
-            if value is None:
-                return None
-            params = value.get("oauth2_install_params")
-            if not params:
-                return None
-            return AppInstallParams(params)
-
-        guild_ctx = _decode_ctx(_get_ctx(data, 0))
-        user_ctx = _decode_ctx(_get_ctx(data, 1))
+        guild_ctx = cls._decode_ctx(cls._get_ctx(data, 0))
+        user_ctx = cls._decode_ctx(cls._get_ctx(data, 1))
         return cls(guild=guild_ctx, user=user_ctx)
 
     def _encode_install_params(
@@ -615,9 +618,9 @@ class IntegrationTypesConfig:
     ) -> dict[str, object] | None:
         if value is None:
             return None
-        return {"oauth2_install_params": value.to_payload()}
+        return {"oauth2_install_params": value._to_payload()}
 
-    def to_payload(self) -> dict[int, dict[str, object] | None]:
+    def _to_payload(self) -> dict[int, dict[str, object] | None]:
         payload: dict[int, dict[str, object] | None] = {}
         if self.guild is not utils.MISSING:
             payload[0] = self._encode_install_params(self.guild)
