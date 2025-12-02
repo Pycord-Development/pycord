@@ -510,7 +510,11 @@ class Loop(Generic[LF]):
 
     def _can_be_cancelled(self) -> bool:
         return bool(
-            not self._is_being_cancelled and ((self._task is not MISSING and (self._task and not self._task.done())) or self._tasks)
+            not self._is_being_cancelled
+            and (
+                (self._task is not MISSING and (self._task and not self._task.done()))
+                or self._tasks
+            )
         )
 
     def cancel(self) -> None:
