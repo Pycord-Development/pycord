@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout repository
         id: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v6
         id: setup-python
@@ -35,7 +35,7 @@ jobs:
         id: generate-json
         run: python scripts/docs_json_exporter.py
       - name: Upload docs.json as artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v5.0.0
         id: artifact-upload
         with:
           name: Pycord Docs JSON

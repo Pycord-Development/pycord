@@ -27,12 +27,13 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import contextvars
 import datetime
 import inspect
 import logging
 import sys
 import traceback
-from collections.abc import Sequence
+from collections.abc import Coroutine, Sequence
 from typing import Any, Awaitable, Callable, Generic, TypeVar
 
 import aiohttp
@@ -49,6 +50,9 @@ _log = logging.getLogger(__name__)
 LF = TypeVar("LF", bound=_func)
 FT = TypeVar("FT", bound=_func)
 ET = TypeVar("ET", bound=Callable[[Any, BaseException], Awaitable[Any]])
+_current_loop_ctx: contextvars.ContextVar[int | None] = contextvars.ContextVar(
+    "_current_loop_ctx", default=None
+)
 
 
 def is_ambiguous(dt: datetime.datetime) -> bool:
@@ -90,7 +94,7 @@ class SleepHandle:
         self.handle = loop.call_later(relative_delta, self._safe_result, self.future)
 
     @staticmethod
-    def _safe_result(future: asyncio.Future) -> None:
+    def _safe_result(future: asyncio.Future[Any]) -> None:
         if not future.done():
             future.set_result(None)
 
@@ -130,6 +134,7 @@ class Loop(Generic[LF]):
         loop: asyncio.AbstractEventLoop | None,
         create_loop: bool,
         name: str | None,
+        overlap: bool | int,
     ) -> None:
         self.coro: LF = coro
         self.reconnect: bool = reconnect
@@ -148,6 +153,7 @@ class Loop(Generic[LF]):
             if name in (None, MISSING)
             else name
         )
+        self.overlap: bool | int = overlap
         self.count: int | None = count
         self._current_loop = 0
         self._handle: SleepHandle = MISSING
@@ -169,6 +175,7 @@ class Loop(Generic[LF]):
         self._is_being_cancelled = False
         self._has_failed = False
         self._stop_next_iteration = False
+        self._tasks: set[asyncio.Task[Any]] = set()
 
         if self.count is not None and self.count <= 0:
             raise ValueError("count must be greater than 0 or None.")
@@ -185,6 +192,30 @@ class Loop(Generic[LF]):
 
         if loop is None and not create_loop:
             discord.Client._pending_loops.add_loop(self)
+
+        if isinstance(overlap, bool):
+            if overlap:
+                self._run_with_semaphore = self._run_direct
+        elif isinstance(overlap, int):
+            if overlap <= 1:
+                raise ValueError("overlap as an integer must be greater than 1.")
+            self._semaphore = asyncio.Semaphore(overlap)
+            self._run_with_semaphore = self._semaphore_runner_factory()
+        else:
+            raise TypeError("overlap must be a bool or a positive integer.")
+
+    async def _run_direct(self, *args: Any, **kwargs: Any) -> None:
+        """Run the coroutine directly."""
+        await self.coro(*args, **kwargs)
+
+    def _semaphore_runner_factory(self) -> Callable[..., Coroutine[Any, Any, None]]:
+        """Return a function that runs the coroutine with a semaphore."""
+
+        async def runner(*args: Any, **kwargs: Any) -> None:
+            async with self._semaphore:
+                await self.coro(*args, **kwargs)
+
+        return runner
 
     async def _call_loop_function(self, name: str, *args: Any, **kwargs: Any) -> None:
         coro = getattr(self, f"_{name}")
@@ -245,7 +276,18 @@ class Loop(Generic[LF]):
                         await self._try_sleep_until(self._next_iteration)
                         self._next_iteration = self._get_next_sleep_time()
                 try:
-                    await self.coro(*args, **kwargs)
+                    token = _current_loop_ctx.set(self._current_loop)
+                    if not self.overlap:
+                        await self.coro(*args, **kwargs)
+                    else:
+                        task = asyncio.create_task(
+                            self._run_with_semaphore(*args, **kwargs),
+                            name=f"pycord-loop-{self.coro.__name__}-{self._current_loop}",
+                        )
+                        task.add_done_callback(self._tasks.discard)
+                        self._tasks.add(task)
+
+                    _current_loop_ctx.reset(token)
                     self._last_iteration_failed = False
                 except self._valid_exception as exc:
                     self._last_iteration_failed = True
@@ -273,6 +315,10 @@ class Loop(Generic[LF]):
 
         except asyncio.CancelledError:
             self._is_being_cancelled = True
+            if self._tasks:
+                for task in self._tasks:
+                    task.cancel()
+                await asyncio.gather(*self._tasks, return_exceptions=True)
             raise
         except Exception as exc:
             self._has_failed = True
@@ -301,6 +347,7 @@ class Loop(Generic[LF]):
             reconnect=self.reconnect,
             name=self.name,
             loop=self.loop,
+            overlap=self.overlap,
             create_loop=self._create_loop,
         )
         copy._injected = obj
@@ -353,7 +400,7 @@ class Loop(Generic[LF]):
     @property
     def current_loop(self) -> int:
         """The current iteration of the loop."""
-        return self._current_loop
+        return self._current_loop if (clc := _current_loop_ctx.get()) is None else clc
 
     @property
     def next_iteration(self) -> datetime.datetime | None:
@@ -463,13 +510,16 @@ class Loop(Generic[LF]):
 
     def _can_be_cancelled(self) -> bool:
         return bool(
-            not self._is_being_cancelled and self._task and not self._task.done()
+            not self._is_being_cancelled and ((self._task is not MISSING and (self._task and not self._task.done())) or self._tasks)
         )
 
     def cancel(self) -> None:
         """Cancels the internal task, if it is running."""
         if self._can_be_cancelled():
-            self._task.cancel()
+            if self._task is not MISSING:
+                self._task.cancel()
+            for task in self._tasks:
+                task.cancel()
 
     def restart(self, *args: Any, **kwargs: Any) -> None:
         r"""A convenience method to restart the internal task.
@@ -824,6 +874,7 @@ def loop(
     reconnect: bool = True,
     loop: asyncio.AbstractEventLoop | None = None,
     name: str | None = MISSING,
+    overlap: bool | int = False,
     create_loop: bool = False,
 ) -> Callable[[LF], Loop[LF]]:
     """A decorator that schedules a task in the background for you with
@@ -873,6 +924,11 @@ def loop(
         Defaults to ``False``.
 
         .. versionadded:: 2.7
+    overlap: Union[:class:`bool`, :class:`int`]
+        Controls whether overlapping executions of the task loop are allowed.
+        Set to False (default) to run iterations one at a time, True for unlimited overlap, or an int to cap the number of concurrent runs.
+
+        .. versionadded:: 2.7
 
     Raises
     ------
@@ -894,6 +950,7 @@ def loop(
             reconnect=reconnect,
             name=name,
             loop=loop,
+            overlap=overlap,
             create_loop=create_loop,
         )
 

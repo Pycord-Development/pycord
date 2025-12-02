@@ -29,7 +29,15 @@ import asyncio
 import logging
 import sys
 import weakref
-from typing import TYPE_CHECKING, Any, Coroutine, Iterable, Sequence, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    Coroutine,
+    Iterable,
+    Sequence,
+    TypeVar,
+)
 from urllib.parse import quote as _uriquote
 
 import aiohttp
@@ -47,7 +55,7 @@ from .errors import (
 from .file import VoiceMessage
 from .gateway import DiscordClientWebSocketResponse
 from .soundboard import PartialSoundboardSound, SoundboardSound
-from .utils import MISSING, warn_deprecated
+from .utils import MISSING
 
 _log = logging.getLogger(__name__)
 
@@ -397,6 +405,21 @@ class HTTPClient:
         async with self.__session.get(url) as resp:
             if resp.status == 200:
                 return await resp.read()
+            elif resp.status == 404:
+                raise NotFound(resp, "asset not found")
+            elif resp.status == 403:
+                raise Forbidden(resp, "cannot retrieve asset")
+            else:
+                raise HTTPException(resp, "failed to get asset")
+
+    async def stream_from_cdn(self, url: str, chunksize: int) -> AsyncGenerator[bytes]:
+        if not isinstance(chunksize, int) or chunksize < 1:
+            raise InvalidArgument("The chunksize must be a positive integer.")
+
+        async with self.__session.get(url) as resp:
+            if resp.status == 200:
+                async for chunk in resp.content.iter_chunked(chunksize):
+                    yield chunk
             elif resp.status == 404:
                 raise NotFound(resp, "asset not found")
             elif resp.status == 403:
@@ -3129,6 +3152,19 @@ class HTTPClient:
         payload = {key: val for key, val in payload.items() if key in keys}
         return self.request(
             Route("PUT", "/guilds/{guild_id}/onboarding", guild_id=guild_id),
+            json=payload,
+            reason=reason,
+        )
+
+    def modify_guild_incident_actions(
+        self,
+        guild_id: Snowflake,
+        payload: guild.ModifyIncidents,
+        *,
+        reason: str | None = None,
+    ) -> Response[guild.IncidentsData]:
+        return self.request(
+            Route("PUT", "/guilds/{guild_id}/incident-actions", guild_id=guild_id),
             json=payload,
             reason=reason,
         )

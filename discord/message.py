@@ -32,6 +32,7 @@ from os import PathLike
 from typing import (
     TYPE_CHECKING,
     Any,
+    AsyncGenerator,
     Callable,
     ClassVar,
     Sequence,
@@ -92,7 +93,7 @@ if TYPE_CHECKING:
     from .types.snowflake import SnowflakeList
     from .types.threads import ThreadArchiveDuration
     from .types.user import User as UserPayload
-    from .ui.view import View
+    from .ui.view import BaseView
     from .user import User
 
     MR = TypeVar("MR", bound="MessageReference")
@@ -290,6 +291,7 @@ class Attachment(Hashable):
         *,
         seek_begin: bool = True,
         use_cached: bool = False,
+        chunksize: int | None = None,
     ) -> int:
         """|coro|
 
@@ -311,6 +313,8 @@ class Attachment(Hashable):
             after the message is deleted. Note that this can still fail to download
             deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
+        chunksize: Optional[:class:`int`]
+            The maximum size of each chunk to process.
 
         Returns
         -------
@@ -323,16 +327,33 @@ class Attachment(Hashable):
             Saving the attachment failed.
         NotFound
             The attachment was deleted.
+        InvalidArgument
+            Argument `chunksize` is less than 1.
         """
-        data = await self.read(use_cached=use_cached)
+        if chunksize is not None:
+            data = self.read_chunked(use_cached=use_cached, chunksize=chunksize)
+        else:
+            data = await self.read(use_cached=use_cached)
+
         if isinstance(fp, io.BufferedIOBase):
-            written = fp.write(data)
+            if chunksize:
+                written = 0
+                async for chunk in data:
+                    written += fp.write(chunk)
+            else:
+                written = fp.write(data)
             if seek_begin:
                 fp.seek(0)
             return written
         else:
             with open(fp, "wb") as f:
-                return f.write(data)
+                if chunksize:
+                    written = 0
+                    async for chunk in data:
+                        written += f.write(chunk)
+                    return written
+                else:
+                    return f.write(data)
 
     async def read(self, *, use_cached: bool = False) -> bytes:
         """|coro|
@@ -368,6 +389,45 @@ class Attachment(Hashable):
         url = self.proxy_url if use_cached else self.url
         data = await self._http.get_from_cdn(url)
         return data
+
+    async def read_chunked(
+        self, chunksize: int, *, use_cached: bool = False
+    ) -> AsyncGenerator[bytes]:
+        """|coro|
+
+        Retrieves the content of this attachment in chunks as a :class:`AsyncGenerator` object of bytes.
+
+        Parameters
+        ----------
+        chunksize: :class:`int`
+            The maximum size of each chunk to process.
+        use_cached: :class:`bool`
+            Whether to use :attr:`proxy_url` rather than :attr:`url` when downloading
+            the attachment. This will allow attachments to be saved after deletion
+            more often, compared to the regular URL which is generally deleted right
+            after the message is deleted. Note that this can still fail to download
+            deleted attachments if too much time has passed, and it does not work
+            on some types of attachments.
+
+        Yields
+        ------
+        :class:`bytes`
+            A chunk of the file.
+
+        Raises
+        ------
+        HTTPException
+            Downloading the attachment failed.
+        Forbidden
+            You do not have permissions to access this attachment
+        NotFound
+            The attachment was deleted.
+        InvalidArgument
+            Argument `chunksize` is less than 1.
+        """
+        url = self.proxy_url if use_cached else self.url
+        async for chunk in self._http.stream_from_cdn(url, chunksize):
+            yield chunk
 
     async def to_file(self, *, use_cached: bool = False, spoiler: bool = False) -> File:
         """|coro|
@@ -1660,7 +1720,7 @@ class Message(Hashable):
         suppress: bool = ...,
         delete_after: float | None = ...,
         allowed_mentions: AllowedMentions | None = ...,
-        view: View | None = ...,
+        view: BaseView | None = ...,
     ) -> Message: ...
 
     async def edit(
@@ -1674,7 +1734,7 @@ class Message(Hashable):
         suppress: bool = MISSING,
         delete_after: float | None = None,
         allowed_mentions: AllowedMentions | None = MISSING,
-        view: View | None = MISSING,
+        view: BaseView | None = MISSING,
     ) -> Message:
         """|coro|
 
@@ -1723,7 +1783,7 @@ class Message(Hashable):
             are used instead.
 
             .. versionadded:: 1.4
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
 
@@ -2412,7 +2472,7 @@ class PartialMessage(Hashable):
             to the object, otherwise it uses the attributes set in :attr:`~discord.Client.allowed_mentions`.
             If no object is passed at all then the defaults given by :attr:`~discord.Client.allowed_mentions`
             are used instead.
-        view: Optional[:class:`~discord.ui.View`]
+        view: Optional[:class:`~discord.ui.BaseView`]
             The updated view to update this message with. If ``None`` is passed then
             the view is removed.
 

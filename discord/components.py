@@ -178,7 +178,7 @@ class ActionRow(Component):
 
     @property
     def width(self):
-        """Return the sum of the children's widths."""
+        """Returns the sum of the item's widths."""
         t = 0
         for item in self.children:
             t += 1 if item.type is ComponentType.button else 5
@@ -193,6 +193,10 @@ class ActionRow(Component):
 
     def walk_components(self) -> Iterator[Component]:
         yield from self.children
+
+    @property
+    def components(self) -> list[Component]:
+        return self.children
 
     def get_component(self, id: str | int) -> Component | None:
         """Get a component from this action row. Roughly equivalent to `utils.get(row.children, ...)`.
@@ -268,7 +272,7 @@ class InputText(Component):
         self.id: int | None = data.get("id")
         self.style: InputTextStyle = try_enum(InputTextStyle, data["style"])
         self.custom_id = data["custom_id"]
-        self.label: str = data.get("label", None)
+        self.label: str | None = data.get("label", None)
         self.placeholder: str | None = data.get("placeholder", None)
         self.min_length: int | None = data.get("min_length", None)
         self.max_length: int | None = data.get("max_length", None)
@@ -280,7 +284,6 @@ class InputText(Component):
             "type": 4,
             "id": self.id,
             "style": self.style.value,
-            "label": self.label,
         }
         if self.custom_id:
             payload["custom_id"] = self.custom_id
@@ -299,6 +302,9 @@ class InputText(Component):
 
         if self.value:
             payload["value"] = self.value
+
+        if self.label:
+            payload["label"] = self.label
 
         return payload  # type: ignore
 
@@ -1306,7 +1312,7 @@ class Label(Component):
     ``component`` may only be:
 
     - :class:`InputText`
-    - :class:`SelectMenu` (string)
+    - :class:`SelectMenu`
 
     This inherits from :class:`Component`.
 

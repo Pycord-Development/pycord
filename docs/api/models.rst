@@ -71,6 +71,11 @@ Users
     .. automethod:: typing
         :async-with:
 
+.. attributetable:: PrimaryGuild
+
+.. autoclass:: PrimaryGuild()
+    :members:
+
 Messages
 --------
 
@@ -444,6 +449,11 @@ UI Components
 .. autoclass:: Container()
     :members:
     :inherited-members:
+
+.. attributetable:: Label
+
+.. autoclass:: Label()
+    :members:
 
 .. attributetable:: FileUpload
 

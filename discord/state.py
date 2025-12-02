@@ -71,7 +71,7 @@ from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
 from .ui.modal import Modal, ModalStore
-from .ui.view import View, ViewStore
+from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
 
 if TYPE_CHECKING:
@@ -363,13 +363,21 @@ class ConnectionState:
     def store_user(self, data: UserPayload) -> User:
         user_id = int(data["id"])
         try:
-            return self._users[user_id]
+            user = self._users[user_id]
         except KeyError:
             user = User(state=self, data=data)
             if user.discriminator != "0000":
                 self._users[user_id] = user
                 user._stored = True
             return user
+        else:
+            # Making sure we don't mutate the cached user
+            # because we cannot make sure it's up to date.
+            # but still return the updated version of the user.
+            # This make sure data like banner, etc are updated.
+            copied_user = user._copy(user)
+            copied_user._update(data)
+            return copied_user
 
     def deref_user(self, user_id: int) -> None:
         self._users.pop(user_id, None)
@@ -405,17 +413,20 @@ class ConnectionState:
         self._stickers[sticker_id] = sticker = GuildSticker(state=self, data=data)
         return sticker
 
-    def store_view(self, view: View, message_id: int | None = None) -> None:
+    def store_view(self, view: BaseView, message_id: int | None = None) -> None:
         self._view_store.add_view(view, message_id)
+
+    def purge_message_view(self, message_id: int) -> None:
+        self._view_store.remove_message_view(message_id)
 
     def store_modal(self, modal: Modal, message_id: int) -> None:
         self._modal_store.add_modal(modal, message_id)
 
-    def prevent_view_updates_for(self, message_id: int) -> View | None:
+    def prevent_view_updates_for(self, message_id: int) -> BaseView | None:
         return self._view_store.remove_message_tracking(message_id)
 
     @property
-    def persistent_views(self) -> Sequence[View]:
+    def persistent_views(self) -> Sequence[BaseView]:
         return self._view_store.persistent_views
 
     @property
