@@ -22,10 +22,15 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed the `view` attribute on many view items being incorrect.
+  ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
 - Fixed breaking change in `ui.Select` Generic typing by adding default values to
   TypeVars. ([#3002](https://github.com/Pycord-Development/pycord/pull/3002))
 
 ### Deprecated
+
+- Deprecated manually setting the `view` attribute on view items.
+  ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
 
 ### Removed
 
