@@ -31,8 +31,6 @@ import collections.abc
 import copy
 import inspect
 import logging
-import sys
-import traceback
 from abc import ABC, abstractmethod
 from typing import (
     TYPE_CHECKING,
@@ -1240,7 +1238,7 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
 
         The default command error handler provided by the bot.
 
-        By default, this prints to :data:`sys.stderr` however it could be
+        By default, this logs with :meth:`logging.exception` however it could be
         overridden to have a different implementation.
 
         This only fires if you do not specify any listeners for command error.
@@ -1255,9 +1253,8 @@ class BotBase(ApplicationCommandMixin, CogMixin, ABC):
         if cog and cog.has_error_handler():
             return
 
-        print(f"Ignoring exception in command {context.command}:", file=sys.stderr)
-        traceback.print_exception(
-            type(exception), exception, exception.__traceback__, file=sys.stderr
+        _log.error(
+            f"Ignoring exception in command {context.command}.", exc_info=exception
         )
 
     # global check registration
