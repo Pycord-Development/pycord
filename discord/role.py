@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, TypeVar
 
-from typing_extensions import Self
+from typing_extensions import Self, deprecated
 
 from .asset import Asset
 from .colour import Colour
@@ -39,7 +39,7 @@ from .utils import (
     MISSING,
     _bytes_to_base64_data,
     _get_as_snowflake,
-    deprecated,
+    deprecated_message,
     snowflake_time,
     warn_deprecated,
 )
@@ -478,7 +478,7 @@ class Role(Hashable):
         return Permissions(self._permissions)
 
     @property
-    @deprecated("colours.primary", "2.7")
+    @deprecated(deprecated_message("colours.primary", "2.7"))
     def colour(self) -> Colour:
         """Returns the role colour. Equivalent to :attr:`colours.primary`.
         An alias exists under ``color``.
@@ -488,7 +488,7 @@ class Role(Hashable):
         return self.colours.primary
 
     @property
-    @deprecated("colors.primary", "2.7")
+    @deprecated(deprecated_message("colors.primary", "2.7"))
     def color(self) -> Colour:
         """Returns the role's primary color. Equivalent to :attr:`colors.primary`.
         An alias exists under ``colour``.
