@@ -457,8 +457,7 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: None
-        | (
+        pages: None | (
             list[PageGroup]
             | list[Page]
             | list[str]
@@ -529,7 +528,7 @@ class Paginator(discord.ui.View):
             | list[str]
             | list[Page]
             | list[list[discord.Embed] | discord.Embed]
-        ) = pages if pages is not None else self.pages
+        ) = (pages if pages is not None else self.pages)
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
             self.page_groups = self.pages if self.show_menu else None
@@ -957,8 +956,9 @@ class Paginator(discord.ui.View):
         ctx: Context,
         target: discord.abc.Messageable | None = None,
         target_message: str | None = None,
-        reference: None
-        | (discord.Message | discord.MessageReference | discord.PartialMessage) = None,
+        reference: None | (
+            discord.Message | discord.MessageReference | discord.PartialMessage
+        ) = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         mention_author: bool | None = None,
         delete_after: float | None = None,
