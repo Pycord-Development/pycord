@@ -21,6 +21,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2994](https://github.com/Pycord-Development/pycord/pull/2994))
 
 ### Changed
+ - Changed `BaseView.on_timeout` behavior: views no longer raise errors on timeout.
+  ([#3018](https://github.com/Pycord-Development/pycord/pull/3018))
 
 ### Fixed
 
