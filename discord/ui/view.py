@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import os
 import sys
 import time
@@ -42,11 +43,12 @@ from typing import (
 
 from typing_extensions import Self
 
+import discord
+
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
-from ..components import Component
+from ..components import Component, FileComponent, _component_factory
 from ..components import Container as ContainerComponent
-from ..components import FileComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
@@ -54,8 +56,6 @@ from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import _component_factory
-from ..utils import find
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
 
@@ -96,7 +96,6 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
 
 
 def _component_to_item(component: Component) -> ViewItem[V]:
-
     if isinstance(component, ButtonComponent):
         from .button import Button
 
@@ -309,9 +308,10 @@ class BaseView(ItemInterface):
                 message = self.message
 
             if message:
-                m = await message.edit(view=self)
-                if m:
-                    self._message = m
+                async with contextlib.suppress(discord.HTTPException):
+                    m = await message.edit(view=self)
+                    if m:
+                        self._message = m
 
     async def on_check_failure(self, interaction: Interaction) -> None:
         """|coro|
@@ -681,7 +681,7 @@ class View(BaseView):
 
         if item._underlying.is_v2():
             raise ValueError(
-                f"cannot use V2 components in View. Use DesignerView instead."
+                "cannot use V2 components in View. Use DesignerView instead."
             )
         if isinstance(item._underlying, ActionRowComponent):
             for i in item.children:
@@ -718,7 +718,9 @@ class View(BaseView):
     def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], ViewItem[V]] = {
-            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
+            (item.type.value, item.custom_id): item
+            for item in self.children
+            if item.is_dispatchable()  # type: ignore
         }
         children: list[ViewItem[V]] = [
             item for item in self.children if not item.is_dispatchable()
@@ -878,7 +880,7 @@ class DesignerView(BaseView):
 
         if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
-                f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
+                "cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)
@@ -909,9 +911,9 @@ class DesignerView(BaseView):
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (BaseView, ViewItem)
-        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = (
-            {}
-        )
+        self._views: dict[
+            tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]
+        ] = {}
         # message_id: View
         self._synced_message_views: dict[int, BaseView] = {}
         self._state: ConnectionState = state
@@ -942,7 +944,10 @@ class ViewStore:
         view._start_listening_from_store(self)
         for item in view.walk_children():
             if item.is_storable():
-                self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
+                self._views[(item.type.value, message_id, item.custom_id)] = (
+                    view,
+                    item,
+                )  # type: ignore
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
