@@ -20,6 +20,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Changed `BaseView.on_timeout` and `Paginator.on_timeout` behavior: views no longer
+  raise errors on timeout.
+  ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
+
 ### Fixed
 
 - Fixed breaking change in `ui.Select` Generic typing by adding default values to
