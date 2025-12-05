@@ -26,10 +26,10 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
-from .enums import ApplicationEventWebhookStatus, try_enum
 
 from . import utils
 from .asset import Asset
+from .enums import ApplicationEventWebhookStatus, try_enum
 from .flags import ApplicationFlags
 from .permissions import Permissions
 
