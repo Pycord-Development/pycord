@@ -25,10 +25,12 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .asset import Asset
+from .enums import ApplicationEventWebhookStatus, try_enum
+from .flags import ApplicationFlags
 from .permissions import Permissions
 
 if TYPE_CHECKING:
@@ -44,6 +46,8 @@ __all__ = (
     "AppInfo",
     "PartialAppInfo",
     "AppInstallParams",
+    "IntegrationTypesConfig",
+    "ApplicationEventWebhookStatus",
 )
 
 
@@ -134,8 +138,28 @@ class AppInfo:
 
         .. versionadded:: 2.7
 
-    install_params: Optional[List[:class:`AppInstallParams`]]
+    install_params: Optional[:class:`AppInstallParams`]
         The settings for the application's default in-app authorization link, if set.
+
+        .. versionadded:: 2.7
+
+    integration_types_config: Optional[:class:`IntegrationTypesConfig`]
+        Per-installation context configuration for guild (``0``) and user (``1``) contexts.
+
+        .. versionadded:: 2.7
+
+    event_webhooks_url: Optional[:class:`str`]
+        The URL used to receive application event webhooks, if set.
+
+        .. versionadded:: 2.7
+
+    event_webhooks_status: :class:`ApplicationEventWebhookStatus`
+        The status of event webhooks for the application.
+
+        .. versionadded:: 2.7
+
+    event_webhooks_types: Optional[List[:class:`str`]]
+        List of event webhook types subscribed to, if set.
 
         .. versionadded:: 2.7
 
@@ -150,6 +174,16 @@ class AppInfo:
         The default custom authorization URL for the application, if set.
 
         .. versionadded:: 2.7
+
+    approximate_user_authorization_count: Optional[:class:`int`]
+        The approximate count of users who have authorized the application, if any.
+
+        .. versionadded:: 2.7
+
+    bot: Optional[:class:`User`]
+        The bot user associated with this application, if any.
+
+        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -161,6 +195,7 @@ class AppInfo:
         "bot_public",
         "bot_require_code_grant",
         "owner",
+        "bot",
         "_icon",
         "_summary",
         "verify_key",
@@ -173,9 +208,15 @@ class AppInfo:
         "privacy_policy_url",
         "approximate_guild_count",
         "approximate_user_install_count",
+        "approximate_user_authorization_count",
+        "_flags",
         "redirect_uris",
         "interactions_endpoint_url",
         "role_connections_verification_url",
+        "event_webhooks_url",
+        "_event_webhooks_status",
+        "event_webhooks_types",
+        "integration_types_config",
         "install_params",
         "tags",
         "custom_install_url",
@@ -188,17 +229,18 @@ class AppInfo:
         self.id: int = int(data["id"])
         self.name: str = data["name"]
         self.description: str = data["description"]
-        self._icon: str | None = data["icon"]
-        self.rpc_origins: list[str] = data["rpc_origins"]
-        self.bot_public: bool = data["bot_public"]
-        self.bot_require_code_grant: bool = data["bot_require_code_grant"]
-        self.owner: User = state.create_user(data["owner"])
+        self._icon: str | None = data.get("icon")
+        self.rpc_origins: list[str] | None = data.get("rpc_origins")
+        self.bot_public: bool = data.get("bot_public", False)
+        self.bot_require_code_grant: bool = data.get("bot_require_code_grant", False)
+        self.owner: User | None = data.get("owner") and state.create_user(data["owner"])
 
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
 
         self._summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
+        self.bot: User | None = data.get("bot") and state.create_user(data["bot"])
 
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
@@ -213,20 +255,31 @@ class AppInfo:
         self.approximate_user_install_count: int | None = data.get(
             "approximate_user_install_count"
         )
-        self.redirect_uris: list[str] | None = data.get("redirect_uris", [])
+        self.approximate_user_authorization_count: int | None = data.get(
+            "approximate_user_authorization_count"
+        )
+        self._flags: int | None = data.get("flags")
+        self.redirect_uris: list[str] = data.get("redirect_uris", [])
         self.interactions_endpoint_url: str | None = data.get(
             "interactions_endpoint_url"
         )
         self.role_connections_verification_url: str | None = data.get(
             "role_connections_verification_url"
         )
+        self.event_webhooks_url: str | None = data.get("event_webhooks_url")
+        self.event_webhooks_status: ApplicationEventWebhookStatus | None = data.get(
+            "event_webhooks_status"
+        ) and try_enum(ApplicationEventWebhookStatus, data["event_webhooks_status"])
+        self.event_webhooks_types: list[str] | None = data.get("event_webhooks_types")
 
-        install_params = data.get("install_params")
-        self.install_params: AppInstallParams | None = (
-            AppInstallParams(install_params) if install_params else None
+        self.install_params: AppInstallParams | None = data.get("install_params") and (
+            AppInstallParams(data["install_params"])
         )
-        self.tags: list[str] | None = data.get("tags", [])
+        self.tags: list[str] = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
+        self.integration_types_config = IntegrationTypesConfig.from_payload(
+            data.get("integration_types_config")
+        )
 
     def __repr__(self) -> str:
         return (
@@ -234,6 +287,137 @@ class AppInfo:
             f"description={self.description!r} public={self.bot_public} "
             f"owner={self.owner!r}>"
         )
+
+    @property
+    def flags(self) -> ApplicationFlags | None:
+        """The public application flags, if set.
+
+        Returns an :class:`ApplicationFlags` instance or ``None`` when not present.
+
+        .. versionadded:: 2.7
+        """
+        if self._flags is None:
+            return None
+        return ApplicationFlags._from_value(self._flags)
+
+    async def edit(
+        self,
+        *,
+        description: str | None = utils.MISSING,
+        icon: bytes | None = utils.MISSING,
+        cover_image: bytes | None = utils.MISSING,
+        tags: list[str] | None = utils.MISSING,
+        terms_of_service_url: str | None = utils.MISSING,
+        privacy_policy_url: str | None = utils.MISSING,
+        interactions_endpoint_url: str | None = utils.MISSING,
+        role_connections_verification_url: str | None = utils.MISSING,
+        install_params: AppInstallParams | None = utils.MISSING,
+        custom_install_url: str | None = utils.MISSING,
+        integration_types_config: IntegrationTypesConfig | None = utils.MISSING,
+        flags: ApplicationFlags | None = utils.MISSING,
+        event_webhooks_url: str | None = utils.MISSING,
+        event_webhooks_status: ApplicationEventWebhookStatus = utils.MISSING,
+        event_webhooks_types: list[str] | None = utils.MISSING,
+    ) -> AppInfo:
+        """|coro|
+
+        Edit the current application's settings.
+
+        Parameters
+        ----------
+        description: Optional[:class:`str`]
+            The new application description or ``None`` to clear.
+        icon: Optional[Union[:class:`bytes`, :class:`str`]]
+            New icon image. If ``bytes`` is given it will be base64 encoded automatically. If a ``str`` is given it is assumed
+            to be a pre-encoded base64 data URI or hash and sent as-is. Pass ``None`` to clear.
+        cover_image: Optional[Union[:class:`bytes`, :class:`str`]]
+            New cover image for the store embed. If ``bytes`` is given it will be base64 encoded automatically. If a ``str`` is given it is assumed
+            to be a pre-encoded base64 data URI or hash and sent as-is. Pass ``None`` to clear.
+        tags: Optional[List[:class:`str`]]
+            List of tags for the application (max 5). Pass ``None`` to clear.
+        terms_of_service_url: Optional[:class:`str`]
+            The application's Terms of Service URL. Pass ``None`` to clear.
+        privacy_policy_url: Optional[:class:`str`]
+            The application's Privacy Policy URL. Pass ``None`` to clear.
+        interactions_endpoint_url: Optional[:class:`str`]
+            The interactions endpoint callback URL. Pass ``None`` to clear.
+        role_connections_verification_url: Optional[:class:`str`]
+            The role connection verification URL for the application. Pass ``None`` to clear.
+        install_params: Optional[:class:`AppInstallParams`]
+            Settings for the application's default in-app authorization link. Pass ``None`` to clear. Omit entirely to leave unchanged.
+        custom_install_url: Optional[:class:`str`]
+            The default custom authorization URL for the application. Pass ``None`` to clear.
+        integration_types_config: Optional[:class:`IntegrationTypesConfig`]
+            Object specifying per-installation context configuration (guild and/or user). You may set contexts individually
+            and omit others to leave them unchanged. Pass the object with a context explicitly set to ``None`` to clear just that
+            context, or pass ``None`` to clear the entire integration types configuration.
+        flags: Optional[:class:`ApplicationFlags`]
+            Application public flags. Pass ``None`` to clear (not typical).
+        event_webhooks_url: Optional[:class:`str`]
+            Event webhooks callback URL for receiving application webhook events. Pass ``None`` to clear.
+        event_webhooks_status: :class:`ApplicationEventWebhookStatus`
+            The desired webhook status. Pass an :class:`ApplicationEventWebhookStatus` value to set
+            a specific status (``DISABLED``=1, ``ENABLED``=2, ``DISABLED_BY_DISCORD``=3).
+        event_webhooks_types: Optional[List[:class:`str`]]
+            List of webhook event types to subscribe to. Pass ``None`` to clear.
+
+        Returns
+        -------
+        :class:`.AppInfo`
+            The updated application information.
+
+        .. versionadded:: 2.7
+        """
+        payload: dict[str, Any] = {}
+        if description is not utils.MISSING:
+            payload["description"] = description
+        if icon is not utils.MISSING:
+            if icon is None:
+                payload["icon"] = None
+            else:
+                payload["icon"] = utils._bytes_to_base64_data(icon)
+        if cover_image is not utils.MISSING:
+            if cover_image is None:
+                payload["cover_image"] = None
+            else:
+                payload["cover_image"] = utils._bytes_to_base64_data(cover_image)
+        if tags is not utils.MISSING:
+            payload["tags"] = tags
+        if terms_of_service_url is not utils.MISSING:
+            payload["terms_of_service_url"] = terms_of_service_url
+        if privacy_policy_url is not utils.MISSING:
+            payload["privacy_policy_url"] = privacy_policy_url
+        if interactions_endpoint_url is not utils.MISSING:
+            payload["interactions_endpoint_url"] = interactions_endpoint_url
+        if role_connections_verification_url is not utils.MISSING:
+            payload["role_connections_verification_url"] = (
+                role_connections_verification_url
+            )
+        if install_params is not utils.MISSING:
+            if install_params is None:
+                payload["install_params"] = None
+            else:
+                payload["install_params"] = install_params._to_payload()
+        if custom_install_url is not utils.MISSING:
+            payload["custom_install_url"] = custom_install_url
+        if integration_types_config is not utils.MISSING:
+            if integration_types_config is None:
+                payload["integration_types_config"] = None
+            else:
+                payload["integration_types_config"] = (
+                    integration_types_config._to_payload()
+                )
+        if flags is not utils.MISSING:
+            payload["flags"] = None if flags is None else flags.value
+        if event_webhooks_url is not utils.MISSING:
+            payload["event_webhooks_url"] = event_webhooks_url
+        if event_webhooks_status is not utils.MISSING:
+            payload["event_webhooks_status"] = event_webhooks_status.value
+        if event_webhooks_types is not utils.MISSING:
+            payload["event_webhooks_types"] = event_webhooks_types
+
+        data = await self._state.http.edit_current_application_info(payload)
+        return AppInfo(self._state, data)
 
     @property
     def icon(self) -> Asset | None:
@@ -360,3 +544,86 @@ class AppInstallParams:
     def __init__(self, data: AppInstallParamsPayload) -> None:
         self.scopes: list[str] = data.get("scopes", [])
         self.permissions: Permissions = Permissions(int(data["permissions"]))
+
+    def _to_payload(self) -> dict[str, object]:
+        """Serialize this object into an application install params payload.
+
+        Returns
+        -------
+        Dict[str, Any]
+            A dict with ``scopes`` and ``permissions`` (string form) suitable for the API.
+        """
+        if self.permissions.value > 0 and "bot" not in self.scopes:
+            raise ValueError(
+                "'bot' must be in install_params.scopes if permissions are requested"
+            )
+        return {
+            "scopes": list(self.scopes),
+            "permissions": str(self.permissions.value),
+        }
+
+
+class IntegrationTypesConfig:
+    """Represents per-installation context configuration for an application.
+
+    This object is used to build the payload for the ``integration_types_config`` field when editing an application.
+
+    Parameters
+    ----------
+    guild: Optional[:class:`AppInstallParams`]
+        The configuration for the guild installation context. Omit to leave unchanged; pass ``None`` to clear.
+    user: Optional[:class:`AppInstallParams`]
+        The configuration for the user installation context. Omit to leave unchanged; pass ``None`` to clear.
+    """
+
+    __slots__ = ("guild", "user")
+
+    def __init__(
+        self,
+        *,
+        guild: AppInstallParams | None = utils.MISSING,
+        user: AppInstallParams | None = utils.MISSING,
+    ) -> None:
+        self.guild = guild
+        self.user = user
+
+    @staticmethod
+    def _get_ctx(raw: dict | None, key: int):
+        if raw is None:
+            return None
+        if key in raw:
+            return raw[key]
+        skey = str(key)
+        return raw.get(skey)
+
+    @staticmethod
+    def _decode_ctx(value: dict | None) -> AppInstallParams | None:
+        if value is None:
+            return None
+        params = value.get("oauth2_install_params")
+        if not params:
+            return None
+        return AppInstallParams(params)
+
+    @classmethod
+    def from_payload(cls, data: dict | None) -> IntegrationTypesConfig | None:
+        if data is None:
+            return None
+        guild_ctx = cls._decode_ctx(cls._get_ctx(data, 0))
+        user_ctx = cls._decode_ctx(cls._get_ctx(data, 1))
+        return cls(guild=guild_ctx, user=user_ctx)
+
+    def _encode_install_params(
+        self, value: AppInstallParams | None
+    ) -> dict[str, object] | None:
+        if value is None:
+            return None
+        return {"oauth2_install_params": value._to_payload()}
+
+    def _to_payload(self) -> dict[int, dict[str, object] | None]:
+        payload: dict[int, dict[str, object] | None] = {}
+        if self.guild is not utils.MISSING:
+            payload[0] = self._encode_install_params(self.guild)
+        if self.user is not utils.MISSING:
+            payload[1] = self._encode_install_params(self.user)
+        return payload
