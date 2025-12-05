@@ -47,8 +47,9 @@ import discord
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
-from ..components import Component, FileComponent, _component_factory
+from ..components import Component
 from ..components import Container as ContainerComponent
+from ..components import FileComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
@@ -56,6 +57,7 @@ from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
+from ..components import _component_factory
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
 
@@ -911,9 +913,9 @@ class DesignerView(BaseView):
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (BaseView, ViewItem)
-        self._views: dict[
-            tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]
-        ] = {}
+        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = (
+            {}
+        )
         # message_id: View
         self._synced_message_views: dict[int, BaseView] = {}
         self._state: ConnectionState = state
