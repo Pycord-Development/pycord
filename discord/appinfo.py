@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
+from .enums import ApplicationEventWebhookStatus, try_enum
 
 from . import utils
 from .asset import Asset
@@ -46,6 +47,7 @@ __all__ = (
     "PartialAppInfo",
     "AppInstallParams",
     "IntegrationTypesConfig",
+    "ApplicationEventWebhookStatus",
 )
 
 
@@ -148,6 +150,11 @@ class AppInfo:
 
     event_webhooks_url: Optional[:class:`str`]
         The URL used to receive application event webhooks, if set.
+
+        .. versionadded:: 2.7
+
+    event_webhooks_status: :class:`ApplicationEventWebhookStatus`
+        The status of event webhooks for the application.
 
         .. versionadded:: 2.7
 
@@ -260,7 +267,9 @@ class AppInfo:
             "role_connections_verification_url"
         )
         self.event_webhooks_url: str | None = data.get("event_webhooks_url")
-        self._event_webhooks_status: int | None = data.get("event_webhooks_status")
+        self.event_webhooks_status: ApplicationEventWebhookStatus | None = data.get(
+            "event_webhooks_status"
+        ) and try_enum(ApplicationEventWebhookStatus, data["event_webhooks_status"])
         self.event_webhooks_types: list[str] | None = data.get("event_webhooks_types")
 
         self.install_params: AppInstallParams | None = data.get("install_params") and (
@@ -307,7 +316,7 @@ class AppInfo:
         integration_types_config: IntegrationTypesConfig | None = utils.MISSING,
         flags: ApplicationFlags | None = utils.MISSING,
         event_webhooks_url: str | None = utils.MISSING,
-        event_webhooks_status: bool = utils.MISSING,
+        event_webhooks_status: ApplicationEventWebhookStatus = utils.MISSING,
         event_webhooks_types: list[str] | None = utils.MISSING,
     ) -> AppInfo:
         """|coro|
@@ -346,8 +355,9 @@ class AppInfo:
             Application public flags. Pass ``None`` to clear (not typical).
         event_webhooks_url: Optional[:class:`str`]
             Event webhooks callback URL for receiving application webhook events. Pass ``None`` to clear.
-        event_webhooks_status: :class:`bool`
-            Whether webhook events are enabled. ``True`` maps to API value ``2`` (enabled), ``False`` maps to ``1`` (disabled).
+        event_webhooks_status: :class:`ApplicationEventWebhookStatus`
+            The desired webhook status. Pass an :class:`ApplicationEventWebhookStatus` value to set
+            a specific status (``DISABLED``=1, ``ENABLED``=2, ``DISABLED_BY_DISCORD``=3).
         event_webhooks_types: Optional[List[:class:`str`]]
             List of webhook event types to subscribe to. Pass ``None`` to clear.
 
@@ -402,7 +412,7 @@ class AppInfo:
         if event_webhooks_url is not utils.MISSING:
             payload["event_webhooks_url"] = event_webhooks_url
         if event_webhooks_status is not utils.MISSING:
-            payload["event_webhooks_status"] = 2 if event_webhooks_status else 1
+            payload["event_webhooks_status"] = event_webhooks_status.value
         if event_webhooks_types is not utils.MISSING:
             payload["event_webhooks_types"] = event_webhooks_types
 
@@ -451,16 +461,6 @@ class AppInfo:
             reference="https://discord.com/developers/docs/resources/application#application-object-application-structure",
         )
         return self._summary
-
-    @property
-    def event_webhooks_enabled(self) -> bool | None:
-        """Returns whether event webhooks are enabled.
-        This is a convenience around the raw API status integer where ``True`` means enabled and ``False`` means disabled.
-        ``None`` indicates the status is not present.
-        """
-        if self._event_webhooks_status is None:
-            return None
-        return self._event_webhooks_status == 2
 
 
 class PartialAppInfo:
