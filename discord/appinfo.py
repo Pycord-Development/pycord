@@ -327,12 +327,10 @@ class AppInfo:
         ----------
         description: Optional[:class:`str`]
             The new application description or ``None`` to clear.
-        icon: Optional[Union[:class:`bytes`, :class:`str`]]
-            New icon image. If ``bytes`` is given it will be base64 encoded automatically. If a ``str`` is given it is assumed
-            to be a pre-encoded base64 data URI or hash and sent as-is. Pass ``None`` to clear.
-        cover_image: Optional[Union[:class:`bytes`, :class:`str`]]
-            New cover image for the store embed. If ``bytes`` is given it will be base64 encoded automatically. If a ``str`` is given it is assumed
-            to be a pre-encoded base64 data URI or hash and sent as-is. Pass ``None`` to clear.
+        icon: Optional[:class:`bytes`]
+            New icon image. If ``bytes`` is given it will be base64 encoded automatically. Pass ``None`` to clear.
+        cover_image: Optional[:class:`bytes`]
+            New cover image for the store embed. If ``bytes`` is given it will be base64 encoded automatically. Pass ``None`` to clear.
         tags: Optional[List[:class:`str`]]
             List of tags for the application (max 5). Pass ``None`` to clear.
         terms_of_service_url: Optional[:class:`str`]
