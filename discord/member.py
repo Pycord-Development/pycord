@@ -716,7 +716,13 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def voice(self) -> VoiceState | None:
-        """Returns the member's current voice state."""
+        """Returns the member's current voice state.
+
+        Returns
+        -------
+        Optional[:class:`VoiceState`]
+            The member's voice state or ``None`` if the member is not in a voice channel.
+        """
         return self.guild._voice_state_for(self._user.id)
 
     @property
