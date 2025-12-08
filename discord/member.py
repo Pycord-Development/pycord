@@ -719,8 +719,8 @@ class Member(discord.abc.Messageable, _UserTag):
         """
         Returns
         -------
-        Optional[:class:`VoiceState`]: 
-        	The member's current voice state.
+        Optional[:class:`VoiceState`]:
+                The member's current voice state.
         """
         return self.guild._voice_state_for(self._user.id)
 
