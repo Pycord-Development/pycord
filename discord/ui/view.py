@@ -246,6 +246,11 @@ class BaseView(ItemInterface):
         ----------
         item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, item ``id``, or item ``custom_id`` to remove from the view.
+
+        Returns
+        -------
+        :class:`BaseView`
+            The view instance.
         """
 
         if isinstance(item, (str, int)):
