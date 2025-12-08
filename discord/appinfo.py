@@ -153,8 +153,8 @@ class AppInfo:
 
         .. versionadded:: 2.7
 
-    event_webhooks_status: :class:`ApplicationEventWebhookStatus`
-        The status of event webhooks for the application.
+    event_webhooks_status: Optional[:class:`ApplicationEventWebhookStatus`]
+        The status of event webhooks for the application, if set.
 
         .. versionadded:: 2.7
 
