@@ -222,7 +222,7 @@ class ViewItem(Item[V]):
 
     @view.setter
     def view(self, value: V | None) -> None:
-        warn_deprecated("Manually setting .view", since="2.7", removed="2.8")
+        warn_deprecated("Manually setting .view", since="2.7", removed="3.0")
         self._view = value
 
     async def callback(self, interaction: Interaction):
