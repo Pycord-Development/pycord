@@ -55,6 +55,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
+from ..enums import ChannelType
 from ..utils import find
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
@@ -310,7 +311,11 @@ class BaseView(ItemInterface):
         if self.disable_on_timeout:
             self.disable_all_items()
 
-            if not self._message or self._message.flags.ephemeral:
+            if (
+                not self._message
+                or self._message.flags.ephemeral
+                or (self._message.channel.type == ChannelType.private)
+            ):
                 message = self.parent
             else:
                 message = self.message
