@@ -61,6 +61,7 @@ __all__ = (
     "EmbeddedActivity",
     "ScheduledEventStatus",
     "ScheduledEventPrivacyLevel",
+    "ScheduledEventEntityType",
     "ScheduledEventLocationType",
     "InputTextStyle",
     "SlashCommandOptionType",
@@ -953,6 +954,14 @@ class ScheduledEventPrivacyLevel(Enum):
 
     def __int__(self):
         return self.value
+
+
+class ScheduledEventEntityType(Enum):
+    """Scheduled event entity type"""
+
+    stage_instance = 1
+    voice = 2
+    external = 3
 
 
 class ScheduledEventLocationType(Enum):
