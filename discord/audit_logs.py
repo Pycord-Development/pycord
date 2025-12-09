@@ -357,19 +357,6 @@ class AuditLogChanges:
                 if transformer:
                     before = transformer(entry, before)
 
-                if attr == "location" and hasattr(self.before, "entity_type"):
-                    from .scheduled_events import ScheduledEventLocation
-
-                    if (
-                        self.before.entity_type
-                        is enums.ScheduledEventEntityType.external
-                    ):
-                        before = ScheduledEventLocation(state=state, value=before)
-                    elif hasattr(self.before, "channel"):
-                        before = ScheduledEventLocation(
-                            state=state, value=self.before.channel
-                        )
-
             try:
                 after = elem["new_value"]
             except KeyError:
@@ -377,18 +364,6 @@ class AuditLogChanges:
             else:
                 if transformer:
                     after = transformer(entry, after)
-
-            if attr == "location" and hasattr(self.after, "entity_type"):
-                from .scheduled_events import ScheduledEventLocation
-
-                if self.after.entity_type is enums.ScheduledEventEntityType.external:
-                    after = ScheduledEventLocation(state=state, value=after)
-                elif hasattr(self.after, "channel"):
-                    after = ScheduledEventLocation(
-                        state=state, value=self.after.channel
-                    )
-
-            setattr(self.after, attr, after)
 
         # add an alias
         if hasattr(self.after, "colour"):

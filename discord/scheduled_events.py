@@ -41,12 +41,10 @@ from .enums import (
 from .errors import ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
-from .object import Object
 from .utils import warn_deprecated
 
 __all__ = (
     "ScheduledEvent",
-    "ScheduledEventLocation",
     "ScheduledEventEntityMetadata",
     "ScheduledEventRecurrenceRule",
     "ScheduledEventRecurrenceNWeekday",
@@ -57,70 +55,12 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .state import ConnectionState
-    from .types.channel import StageChannel, VoiceChannel
     from .types.scheduled_events import (
         ScheduledEvent as ScheduledEventPayload,
         ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
     )
 
 MISSING = utils.MISSING
-
-
-class ScheduledEventLocation:
-    """Represents a scheduled event's location.
-
-    Setting the ``value`` to its corresponding type will set the location type automatically:
-
-    +------------------------+---------------------------------------------------+
-    |     Type of Input      |                   Location Type                   |
-    +========================+===================================================+
-    | :class:`StageChannel`  | :attr:`ScheduledEventLocationType.stage_instance` |
-    | :class:`VoiceChannel`  | :attr:`ScheduledEventLocationType.voice`          |
-    | :class:`str`           | :attr:`ScheduledEventLocationType.external`       |
-    +------------------------+---------------------------------------------------+
-
-    .. versionadded:: 2.0
-
-    Attributes
-    ----------
-    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
-        The actual location of the scheduled event.
-    type: :class:`ScheduledEventLocationType`
-        The type of location.
-    """
-
-    __slots__ = (
-        "_state",
-        "value",
-    )
-
-    def __init__(
-        self,
-        *,
-        state: ConnectionState,
-        value: str | int | StageChannel | VoiceChannel,
-    ):
-        self._state = state
-        self.value: str | StageChannel | VoiceChannel | Object
-        if isinstance(value, int):
-            self.value = self._state.get_channel(id=int(value)) or Object(id=int(value))
-        else:
-            self.value = value
-
-    def __repr__(self) -> str:
-        return f"<ScheduledEventLocation value={self.value!r} type={self.type}>"
-
-    def __str__(self) -> str:
-        return str(self.value)
-
-    @property
-    def type(self) -> ScheduledEventEntityType:
-        if isinstance(self.value, str):
-            return ScheduledEventEntityType.external
-        elif self.value.__class__.__name__ == "StageChannel":
-            return ScheduledEventEntityType.stage_instance
-        elif self.value.__class__.__name__ == "VoiceChannel":
-            return ScheduledEventEntityType.voice
 
 
 class ScheduledEventEntityMetadata:
@@ -185,7 +125,7 @@ class ScheduledEventRecurrenceNWeekday:
         return f"<ScheduledEventRecurrenceNWeekday n={self.n} day={self.day}>"
 
     def to_payload(self) -> dict[str, int]:
-        return {"n": int(self.n), "day": int(self.day)}
+        return {"n": int(self.n), "day": int(self.day.value)}
 
 
 class ScheduledEventRecurrenceRule:
@@ -234,7 +174,7 @@ class ScheduledEventRecurrenceRule:
         self,
         *,
         start: datetime.datetime,
-        frequency: ScheduledEventRecurrenceFrequency | int,
+        frequency: ScheduledEventRecurrenceFrequency,
         interval: int,
         end: datetime.datetime | None = None,
         by_weekday: list[ScheduledEventRecurrenceWeekday | int] | None = None,
@@ -247,9 +187,7 @@ class ScheduledEventRecurrenceRule:
     ) -> None:
         self.start: datetime.datetime = start
         self.end: datetime.datetime | None = end
-        self.frequency: ScheduledEventRecurrenceFrequency = try_enum(
-            ScheduledEventRecurrenceFrequency, frequency
-        )
+        self.frequency: ScheduledEventRecurrenceFrequency = frequency
         self.interval: int = interval
         self.by_weekday: list[ScheduledEventRecurrenceWeekday] | None = (
             [try_enum(ScheduledEventRecurrenceWeekday, day) for day in by_weekday]
@@ -311,7 +249,7 @@ class ScheduledEventRecurrenceRule:
     def to_payload(self) -> dict[str, Any]:
         payload: dict[str, Any] = {
             "start": self.start.isoformat(),
-            "frequency": int(self.frequency),
+            "frequency": int(self.frequency.value),
             "interval": int(self.interval),
         }
 
@@ -319,7 +257,7 @@ class ScheduledEventRecurrenceRule:
             payload["end"] = self.end.isoformat()
 
         if self.by_weekday is not None:
-            payload["by_weekday"] = [int(day) for day in self.by_weekday]
+            payload["by_weekday"] = [int(day.value) for day in self.by_weekday]
 
         if self.by_n_weekday is not None:
             payload["by_n_weekday"] = [
@@ -327,7 +265,7 @@ class ScheduledEventRecurrenceRule:
             ]
 
         if self.by_month is not None:
-            payload["by_month"] = [int(month) for month in self.by_month]
+            payload["by_month"] = [int(month.value) for month in self.by_month]
 
         if self.by_month_day is not None:
             payload["by_month_day"] = self.by_month_day
@@ -378,9 +316,6 @@ class ScheduledEvent(Hashable):
         The time when the event is supposed to end.
     status: :class:`ScheduledEventStatus`
         The status of the scheduled event.
-    location: :class:`ScheduledEventLocation`
-        The location of the event.
-        See :class:`ScheduledEventLocation` for more information.
     user_count: :class:`int`
         The number of users that have marked themselves as interested in the event.
     creator_id: Optional[:class:`int`]
@@ -476,14 +411,7 @@ class ScheduledEvent(Hashable):
         self.user_count: int | None = data.get("user_count")
         self.creator_id: int | None = utils._get_as_snowflake(data, "creator_id")
         self.creator: Member | None = creator
-
-        channel_id = data.get("channel_id", None)
-        if channel_id is None and entity_metadata_data:
-            self.location = ScheduledEventLocation(
-                state=state, value=entity_metadata_data["location"]
-            )
-        else:
-            self.location = ScheduledEventLocation(state=state, value=int(channel_id))
+        self.channel_id = data.get("channel_id", None)
 
     def __str__(self) -> str:
         return self.name
@@ -499,6 +427,7 @@ class ScheduledEvent(Hashable):
             f"status={self.status.name} "
             f"user_count={self.user_count} "
             f"creator_id={self.creator_id}>"
+            f"channel_id={self.channel_id}>"
         )
 
     @property
@@ -544,14 +473,14 @@ class ScheduledEvent(Hashable):
         reason: str | None = None,
         name: str = MISSING,
         description: str = MISSING,
-        status: int | ScheduledEventStatus = MISSING,
+        status: ScheduledEventStatus = MISSING,
         entity_type: ScheduledEventEntityType = MISSING,
         scheduled_start_time: datetime.datetime = MISSING,
         scheduled_end_time: datetime.datetime = MISSING,
         image: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
-        recurrence_rule: ScheduledEventRecurrenceRule | dict = MISSING,
+        recurrence_rule: ScheduledEventRecurrenceRule | None = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
 
@@ -625,13 +554,13 @@ class ScheduledEvent(Hashable):
             payload["description"] = description
 
         if status is not MISSING:
-            payload["status"] = int(status)
+            payload["status"] = int(status.value)
 
         if entity_type is not MISSING:
             payload["entity_type"] = int(entity_type.value)
 
         if privacy_level is not MISSING:
-            payload["privacy_level"] = int(privacy_level)
+            payload["privacy_level"] = int(privacy_level.value)
 
         if entity_metadata is not MISSING:
             if entity_metadata is None:
