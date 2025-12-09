@@ -63,6 +63,9 @@ __all__ = (
     "ScheduledEventPrivacyLevel",
     "ScheduledEventEntityType",
     "ScheduledEventEntityType",
+    "ScheduledEventRecurrenceFrequency",
+    "ScheduledEventRecurrenceWeekday",
+    "ScheduledEventRecurrenceMonth",
     "InputTextStyle",
     "SlashCommandOptionType",
     "AutoModTriggerType",
@@ -962,6 +965,44 @@ class ScheduledEventEntityType(Enum):
     stage_instance = 1
     voice = 2
     external = 3
+
+
+class ScheduledEventRecurrenceFrequency(Enum):
+    """Scheduled event recurrence frequency"""
+
+    yearly = 0
+    monthly = 1
+    weekly = 2
+    daily = 3
+
+
+class ScheduledEventRecurrenceWeekday(Enum):
+    """Scheduled event recurrence weekday"""
+
+    monday = 0
+    tuesday = 1
+    wednesday = 2
+    thursday = 3
+    friday = 4
+    saturday = 5
+    sunday = 6
+
+
+class ScheduledEventRecurrenceMonth(Enum):
+    """Scheduled event recurrence month"""
+
+    january = 1
+    february = 2
+    march = 3
+    april = 4
+    may = 5
+    june = 6
+    july = 7
+    august = 8
+    september = 9
+    october = 10
+    november = 11
+    december = 12
 
 
 class AutoModTriggerType(Enum):

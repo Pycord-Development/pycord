@@ -93,6 +93,7 @@ from .role import Role, RoleColours
 from .scheduled_events import (
     ScheduledEvent,
     ScheduledEventEntityMetadata,
+    ScheduledEventRecurrenceRule,
 )
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
@@ -4230,7 +4231,7 @@ class Guild(Hashable):
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
         image: bytes = MISSING,
-        recurrence_rule: dict = MISSING,
+        recurrence_rule: ScheduledEventRecurrenceRule | None = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
         Creates a scheduled event.
@@ -4263,7 +4264,7 @@ class Guild(Hashable):
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
             The cover image of the scheduled event
-        recurrence_rule: Optional[:class:`dict`]
+        recurrence_rule: Optional[Union[:class:`ScheduledEventRecurrenceRule`, :class:`dict`]]
             The definition for how often this event should recur.
 
         Returns
@@ -4297,7 +4298,10 @@ class Guild(Hashable):
             payload["image"] = utils._bytes_to_base64_data(image)
 
         if recurrence_rule is not MISSING:
-            payload["recurrence_rule"] = recurrence_rule
+            if recurrence_rule is None:
+                payload["recurrence_rule"] = None
+            else:
+                payload["recurrence_rule"] = recurrence_rule.to_payload()
 
         if entity_type == ScheduledEventEntityType.external:
             if entity_metadata is MISSING or entity_metadata is None:
