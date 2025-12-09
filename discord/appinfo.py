@@ -233,14 +233,20 @@ class AppInfo:
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
         self.bot_public: bool = data.get("bot_public", False)
         self.bot_require_code_grant: bool = data.get("bot_require_code_grant", False)
-        self.owner: User | None = data.get("owner") and state.create_user(data["owner"])
+        self.owner: User | None = (
+            state.create_user(owner)
+            if (owner := data.get("owner")) is not None
+            else None
+        )
 
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
 
         self._summary: str = data["summary"]
         self.verify_key: str = data["verify_key"]
-        self.bot: User | None = data.get("bot") and state.create_user(data["bot"])
+        self.bot: User | None = (
+            state.create_user(bot) if (bot := data.get("bot")) is not None else None
+        )
 
         self.guild_id: int | None = utils._get_as_snowflake(data, "guild_id")
 
@@ -267,13 +273,17 @@ class AppInfo:
             "role_connections_verification_url"
         )
         self.event_webhooks_url: str | None = data.get("event_webhooks_url")
-        self.event_webhooks_status: ApplicationEventWebhookStatus | None = data.get(
-            "event_webhooks_status"
-        ) and try_enum(ApplicationEventWebhookStatus, data["event_webhooks_status"])
+        self.event_webhooks_status: ApplicationEventWebhookStatus | None = (
+            try_enum(ApplicationEventWebhookStatus, status)
+            if (status := data.get("event_webhooks_status")) is not None
+            else None
+        )
         self.event_webhooks_types: list[str] | None = data.get("event_webhooks_types")
 
-        self.install_params: AppInstallParams | None = data.get("install_params") and (
-            AppInstallParams(data["install_params"])
+        self.install_params: AppInstallParams | None = (
+            AppInstallParams(install_params)
+            if (install_params := data.get("install_params")) is not None
+            else None
         )
         self.tags: list[str] = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
