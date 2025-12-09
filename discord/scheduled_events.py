@@ -32,10 +32,10 @@ from .asset import Asset
 from .enums import (
     ScheduledEventEntityType,
     ScheduledEventPrivacyLevel,
-    ScheduledEventStatus,
     ScheduledEventRecurrenceFrequency,
     ScheduledEventRecurrenceMonth,
     ScheduledEventRecurrenceWeekday,
+    ScheduledEventStatus,
     try_enum,
 )
 from .errors import ValidationError
@@ -55,8 +55,8 @@ if TYPE_CHECKING:
     from .guild import Guild
     from .member import Member
     from .state import ConnectionState
+    from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
     from .types.scheduled_events import (
-        ScheduledEvent as ScheduledEventPayload,
         ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
     )
 
@@ -255,15 +255,15 @@ class ScheduledEventRecurrenceRule:
     def to_payload(self) -> dict[str, Any]:
         """Convert the recurrence rule to an API payload.
 
-        Raises
-        ------
-        ValidationError
-            If the recurrence rule violates Discord's system limitations.
-
         Returns
         -------
         dict[str, Any]
             The recurrence rule as a dictionary suitable for the Discord API.
+
+        Raises
+        ------
+        ValidationError
+            If the recurrence rule violates Discord's system limitations.
         """
         self.validate()
 
