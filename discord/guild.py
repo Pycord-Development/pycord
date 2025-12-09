@@ -58,7 +58,7 @@ from .enums import (
     NotificationLevel,
     NSFWLevel,
     OnboardingMode,
-    ScheduledEventLocationType,
+    ScheduledEventEntityType,
     ScheduledEventPrivacyLevel,
     SortOrder,
     VerificationLevel,
@@ -66,7 +66,13 @@ from .enums import (
     VoiceRegion,
     try_enum,
 )
-from .errors import ClientException, HTTPException, InvalidArgument, InvalidData
+from .errors import (
+    ClientException,
+    HTTPException,
+    InvalidArgument,
+    InvalidData,
+    ValidationError,
+)
 from .file import File
 from .flags import SystemChannelFlags
 from .incidents import IncidentsData
@@ -84,7 +90,10 @@ from .monetization import Entitlement
 from .onboarding import Onboarding
 from .permissions import PermissionOverwrite
 from .role import Role, RoleColours
-from .scheduled_events import ScheduledEvent, ScheduledEventLocation
+from .scheduled_events import (
+    ScheduledEvent,
+    ScheduledEventEntityMetadata,
+)
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
@@ -4215,13 +4224,19 @@ class Guild(Hashable):
         description: str = MISSING,
         start_time: datetime.datetime,
         end_time: datetime.datetime = MISSING,
-        location: str | int | VoiceChannel | StageChannel | ScheduledEventLocation,
+        entity_type: ScheduledEventEntityType,
+        entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
+        channel_id: int = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = ScheduledEventPrivacyLevel.guild_only,
         reason: str | None = None,
         image: bytes = MISSING,
+        recurrence_rule: dict = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
         Creates a scheduled event.
+
+        For EXTERNAL events, ``entity_metadata`` with a location and ``end_time`` are required.
+        For STAGE_INSTANCE or VOICE events, ``channel_id`` is required.
 
         Parameters
         ----------
@@ -4233,16 +4248,23 @@ class Guild(Hashable):
             A datetime object of when the scheduled event is supposed to start.
         end_time: Optional[:class:`datetime.datetime`]
             A datetime object of when the scheduled event is supposed to end.
-        location: :class:`ScheduledEventLocation`
-            The location of where the event is happening.
+            Required for EXTERNAL events.
+        entity_type: :class:`ScheduledEventEntityType`
+            The type of scheduled event (STAGE_INSTANCE, VOICE, or EXTERNAL).
+        entity_metadata: Optional[:class:`ScheduledEventEntityMetadata`]
+            The entity metadata (required for EXTERNAL events with a location).
+        channel_id: Optional[Union[:class:`int`, :class:`VoiceChannel`, :class:`StageChannel`]]
+            The channel ID for STAGE_INSTANCE or VOICE events.
+            Can be a channel object or a snowflake ID.
         privacy_level: :class:`ScheduledEventPrivacyLevel`
             The privacy level of the event. Currently, the only possible value
-            is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default,
-            so there is no need to change this parameter.
+            is :attr:`ScheduledEventPrivacyLevel.guild_only`, which is default.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
             The cover image of the scheduled event
+        recurrence_rule: Optional[:class:`dict`]
+            The definition for how often this event should recur.
 
         Returns
         -------
@@ -4255,33 +4277,51 @@ class Guild(Hashable):
             You do not have the Manage Events permission.
         HTTPException
             The operation failed.
+        ValidationError
+            Invalid parameters for the event type.
         """
         payload: dict[str, str | int] = {
             "name": name,
             "scheduled_start_time": start_time.isoformat(),
             "privacy_level": int(privacy_level),
+            "entity_type": int(entity_type.value),
         }
-
-        if not isinstance(location, ScheduledEventLocation):
-            location = ScheduledEventLocation(state=self._state, value=location)
-
-        payload["entity_type"] = location.type.value
-
-        if location.type == ScheduledEventLocationType.external:
-            payload["channel_id"] = None
-            payload["entity_metadata"] = {"location": location.value}
-        else:
-            payload["channel_id"] = location.value.id
-            payload["entity_metadata"] = None
-
-        if description is not MISSING:
-            payload["description"] = description
 
         if end_time is not MISSING:
             payload["scheduled_end_time"] = end_time.isoformat()
 
+        if description is not MISSING:
+            payload["description"] = description
+
         if image is not MISSING:
             payload["image"] = utils._bytes_to_base64_data(image)
+
+        if recurrence_rule is not MISSING:
+            payload["recurrence_rule"] = recurrence_rule
+
+        if entity_type == ScheduledEventEntityType.external:
+            if entity_metadata is MISSING or entity_metadata is None:
+                raise ValidationError(
+                    "entity_metadata with a location is required for EXTERNAL events."
+                )
+            if not entity_metadata.location:
+                raise ValidationError(
+                    "entity_metadata.location cannot be empty for EXTERNAL events."
+                )
+            if end_time is MISSING:
+                raise ValidationError(
+                    "scheduled_end_time is required for EXTERNAL events."
+                )
+
+            payload["channel_id"] = None
+            payload["entity_metadata"] = entity_metadata.to_payload()
+        else:
+            if channel_id is MISSING:
+                raise ValidationError(
+                    "channel_id is required for STAGE_INSTANCE and VOICE events."
+                )
+
+            payload["channel_id"] = channel_id
 
         data = await self._state.http.create_scheduled_event(
             guild_id=self.id, reason=reason, **payload

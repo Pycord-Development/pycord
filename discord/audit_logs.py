@@ -318,7 +318,11 @@ class AuditLogChanges:
                 "$add_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.before, self.after, entry, elem["new_value"], attr  # type: ignore
+                    self.before,
+                    self.after,
+                    entry,
+                    elem["new_value"],
+                    attr,  # type: ignore
                 )
                 continue
             elif attr in [
@@ -327,7 +331,11 @@ class AuditLogChanges:
                 "$remove_allow_list",
             ]:
                 self._handle_trigger_metadata(
-                    self.after, self.before, entry, elem["new_value"], attr  # type: ignore
+                    self.after,
+                    self.before,
+                    entry,
+                    elem["new_value"],
+                    attr,  # type: ignore
                 )
                 continue
 
@@ -348,21 +356,6 @@ class AuditLogChanges:
             else:
                 if transformer:
                     before = transformer(entry, before)
-
-            if attr == "location" and hasattr(self.before, "location_type"):
-                from .scheduled_events import ScheduledEventLocation
-
-                if (
-                    self.before.location_type
-                    is enums.ScheduledEventLocationType.external
-                ):
-                    before = ScheduledEventLocation(state=state, value=before)
-                elif hasattr(self.before, "channel"):
-                    before = ScheduledEventLocation(
-                        state=state, value=self.before.channel
-                    )
-
-            setattr(self.before, attr, before)
 
             try:
                 after = elem["new_value"]
@@ -691,7 +684,12 @@ class AuditLogEntry(Hashable):
             "uses": changeset.uses,
         }
 
-        obj = Invite(state=self._state, data=fake_payload, guild=self.guild, channel=changeset.channel)  # type: ignore
+        obj = Invite(
+            state=self._state,
+            data=fake_payload,
+            guild=self.guild,
+            channel=changeset.channel,
+        )  # type: ignore
         try:
             obj.inviter = changeset.inviter
         except AttributeError:

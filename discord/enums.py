@@ -964,14 +964,6 @@ class ScheduledEventEntityType(Enum):
     external = 3
 
 
-class ScheduledEventLocationType(Enum):
-    """Scheduled event location type"""
-
-    stage_instance = 1
-    voice = 2
-    external = 3
-
-
 class AutoModTriggerType(Enum):
     """Automod trigger type"""
 

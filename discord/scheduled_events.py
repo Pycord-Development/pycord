@@ -31,7 +31,6 @@ from . import utils
 from .asset import Asset
 from .enums import (
     ScheduledEventEntityType,
-    ScheduledEventLocationType,
     ScheduledEventPrivacyLevel,
     ScheduledEventStatus,
     try_enum,
@@ -107,13 +106,13 @@ class ScheduledEventLocation:
         return str(self.value)
 
     @property
-    def type(self) -> ScheduledEventLocationType:
+    def type(self) -> ScheduledEventEntityType:
         if isinstance(self.value, str):
-            return ScheduledEventLocationType.external
+            return ScheduledEventEntityType.external
         elif self.value.__class__.__name__ == "StageChannel":
-            return ScheduledEventLocationType.stage_instance
+            return ScheduledEventEntityType.stage_instance
         elif self.value.__class__.__name__ == "VoiceChannel":
-            return ScheduledEventLocationType.voice
+            return ScheduledEventEntityType.voice
 
 
 class ScheduledEventEntityMetadata:
