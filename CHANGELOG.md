@@ -29,6 +29,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2993](https://github.com/Pycord-Development/pycord/pull/2993))
 - Fixed breaking change in `ui.Select` Generic typing by adding default values to
   TypeVars. ([#3002](https://github.com/Pycord-Development/pycord/pull/3002))
+- Fixed `View`'s `disable_on_timeout` not working in private (DM) channels.
+  ([#3016](https://github.com/Pycord-Development/pycord/pull/3016))
 
 ### Deprecated
 
