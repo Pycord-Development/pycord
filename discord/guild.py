@@ -4285,7 +4285,7 @@ class Guild(Hashable):
             "name": name,
             "scheduled_start_time": scheduled_start_time.isoformat(),
             "privacy_level": int(privacy_level),
-            "entity_type": int(entity_type.value),
+            "entity_type": int(entity_type),
         }
 
         if scheduled_end_time is not MISSING:

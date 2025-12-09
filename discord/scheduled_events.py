@@ -118,14 +118,14 @@ class ScheduledEventRecurrenceNWeekday:
     def __init__(self, *, n: int, day: ScheduledEventRecurrenceWeekday | int) -> None:
         self.n: int = n
         self.day: ScheduledEventRecurrenceWeekday = try_enum(
-            ScheduledEventRecurrenceWeekday, day
+            ScheduledEventRecurrenceWeekday, int(day)
         )
 
     def __repr__(self) -> str:
         return f"<ScheduledEventRecurrenceNWeekday n={self.n} day={self.day}>"
 
     def to_payload(self) -> dict[str, int]:
-        return {"n": int(self.n), "day": int(self.day.value)}
+        return {"n": int(self.n), "day": int(self.day)}
 
 
 class ScheduledEventRecurrenceRule:
@@ -174,12 +174,11 @@ class ScheduledEventRecurrenceRule:
         self,
         *,
         start: datetime.datetime,
-        frequency: ScheduledEventRecurrenceFrequency,
+        frequency: ScheduledEventRecurrenceFrequency | int,
         interval: int,
         end: datetime.datetime | None = None,
         by_weekday: list[ScheduledEventRecurrenceWeekday | int] | None = None,
-        by_n_weekday: list[ScheduledEventRecurrenceNWeekday | dict[str, int]]
-        | None = None,
+        by_n_weekday: list[ScheduledEventRecurrenceNWeekday] | None = None,
         by_month: list[ScheduledEventRecurrenceMonth | int] | None = None,
         by_month_day: list[int] | None = None,
         by_year_day: list[int] | None = None,
@@ -187,25 +186,19 @@ class ScheduledEventRecurrenceRule:
     ) -> None:
         self.start: datetime.datetime = start
         self.end: datetime.datetime | None = end
-        self.frequency: ScheduledEventRecurrenceFrequency = frequency
+        self.frequency: ScheduledEventRecurrenceFrequency = try_enum(
+            ScheduledEventRecurrenceFrequency, int(frequency)
+        )
         self.interval: int = interval
         self.by_weekday: list[ScheduledEventRecurrenceWeekday] | None = (
-            [try_enum(ScheduledEventRecurrenceWeekday, day) for day in by_weekday]
-            if by_weekday is not None
+            [try_enum(ScheduledEventRecurrenceWeekday, int(day)) for day in by_weekday]
+            if by_weekday
             else None
         )
-        if by_n_weekday is not None:
-            self.by_n_weekday = [
-                entry
-                if isinstance(entry, ScheduledEventRecurrenceNWeekday)
-                else ScheduledEventRecurrenceNWeekday(**entry)
-                for entry in by_n_weekday
-            ]
-        else:
-            self.by_n_weekday = None
+        self.by_n_weekday: list[ScheduledEventRecurrenceNWeekday] | None = by_n_weekday
         self.by_month: list[ScheduledEventRecurrenceMonth] | None = (
-            [try_enum(ScheduledEventRecurrenceMonth, month) for month in by_month]
-            if by_month is not None
+            [try_enum(ScheduledEventRecurrenceMonth, int(month)) for month in by_month]
+            if by_month
             else None
         )
         self.by_month_day: list[int] | None = by_month_day
@@ -224,7 +217,13 @@ class ScheduledEventRecurrenceRule:
     ) -> ScheduledEventRecurrenceRule:
         start = utils.parse_time(data["start"])
         end = utils.parse_time(data.get("end"))
-        by_weekday = data.get("by_weekday")
+
+        raw_by_weekday = data.get("by_weekday")
+        by_weekday = (
+            [try_enum(ScheduledEventRecurrenceWeekday, day) for day in raw_by_weekday]
+            if raw_by_weekday
+            else None
+        )
 
         raw_by_n_weekday = data.get("by_n_weekday")
         by_n_weekday = (
@@ -233,23 +232,44 @@ class ScheduledEventRecurrenceRule:
             else None
         )
 
+        raw_by_month = data.get("by_month")
+        by_month = (
+            [try_enum(ScheduledEventRecurrenceMonth, month) for month in raw_by_month]
+            if raw_by_month
+            else None
+        )
+
         return cls(
             start=start,
             end=end,
-            frequency=data["frequency"],
+            frequency=try_enum(ScheduledEventRecurrenceFrequency, data["frequency"]),
             interval=data["interval"],
             by_weekday=by_weekday,
             by_n_weekday=by_n_weekday,
-            by_month=data.get("by_month"),
+            by_month=by_month,
             by_month_day=data.get("by_month_day"),
             by_year_day=data.get("by_year_day"),
             count=data.get("count"),
         )
 
     def to_payload(self) -> dict[str, Any]:
+        """Convert the recurrence rule to an API payload.
+
+        Raises
+        ------
+        ValidationError
+            If the recurrence rule violates Discord's system limitations.
+
+        Returns
+        -------
+        dict[str, Any]
+            The recurrence rule as a dictionary suitable for the Discord API.
+        """
+        self.validate()
+
         payload: dict[str, Any] = {
             "start": self.start.isoformat(),
-            "frequency": int(self.frequency.value),
+            "frequency": self.frequency.value,
             "interval": int(self.interval),
         }
 
@@ -257,7 +277,7 @@ class ScheduledEventRecurrenceRule:
             payload["end"] = self.end.isoformat()
 
         if self.by_weekday is not None:
-            payload["by_weekday"] = [int(day.value) for day in self.by_weekday]
+            payload["by_weekday"] = [int(day) for day in self.by_weekday]
 
         if self.by_n_weekday is not None:
             payload["by_n_weekday"] = [
@@ -265,7 +285,7 @@ class ScheduledEventRecurrenceRule:
             ]
 
         if self.by_month is not None:
-            payload["by_month"] = [int(month.value) for month in self.by_month]
+            payload["by_month"] = [int(month) for month in self.by_month]
 
         if self.by_month_day is not None:
             payload["by_month_day"] = self.by_month_day
@@ -277,6 +297,116 @@ class ScheduledEventRecurrenceRule:
             payload["count"] = self.count
 
         return payload
+
+    def validate(self) -> None:
+        """Validate the recurrence rule against Discord's system limitations.
+
+        Raises
+        ------
+        ValidationError
+            If the recurrence rule violates any system limitations.
+        """
+        # Mutually exclusive combinations
+        has_by_weekday = self.by_weekday is not None
+        has_by_n_weekday = self.by_n_weekday is not None
+        has_by_month = self.by_month is not None
+        has_by_month_day = self.by_month_day is not None
+
+        if has_by_weekday and has_by_n_weekday:
+            raise ValidationError("by_weekday and by_n_weekday are mutually exclusive")
+
+        if has_by_month and has_by_n_weekday:
+            raise ValidationError("by_month and by_n_weekday are mutually exclusive")
+
+        if has_by_month != has_by_month_day:
+            raise ValidationError(
+                "by_month and by_month_day must both be provided together"
+            )
+
+        # Daily frequency (0) constraints
+        if self.frequency == ScheduledEventRecurrenceFrequency.yearly:
+            if has_by_weekday:
+                raise ValidationError("by_weekday is not valid for yearly events")
+
+        # Weekly frequency (2) constraints
+        if self.frequency == ScheduledEventRecurrenceFrequency.weekly:
+            if has_by_weekday:
+                if len(self.by_weekday) != 1:
+                    raise ValidationError(
+                        "by_weekday must have exactly 1 day for weekly events"
+                    )
+
+            if has_by_n_weekday:
+                raise ValidationError("by_n_weekday is not valid for weekly events")
+
+            if has_by_month or has_by_month_day:
+                raise ValidationError(
+                    "by_month and by_month_day are not valid for weekly events"
+                )
+
+            # interval can only be 2 (every-other week) or 1 (weekly)
+            if self.interval not in (1, 2):
+                raise ValidationError("interval for weekly events can only be 1 or 2")
+
+        # Daily frequency (3) constraints
+        if self.frequency == ScheduledEventRecurrenceFrequency.daily:
+            if has_by_n_weekday:
+                raise ValidationError("by_n_weekday is not valid for daily events")
+
+            if has_by_month or has_by_month_day:
+                raise ValidationError(
+                    "by_month and by_month_day are not valid for daily events"
+                )
+
+            if has_by_weekday:
+                # Validate known sets of weekdays for daily events
+                allowed_sets = [
+                    [0, 1, 2, 3, 4],  # Monday - Friday
+                    [1, 2, 3, 4, 5],  # Tuesday - Saturday
+                    [6, 0, 1, 2, 3],  # Sunday - Thursday
+                    [4, 5],  # Friday & Saturday
+                    [5, 6],  # Saturday & Sunday
+                    [6, 0],  # Sunday & Monday
+                ]
+                weekday_values = [day.value for day in self.by_weekday]
+                weekday_values.sort()
+
+                if weekday_values not in allowed_sets:
+                    raise ValidationError(
+                        "by_weekday for daily events must be one of the allowed sets: "
+                        "[0,1,2,3,4], [1,2,3,4,5], [6,0,1,2,3], [4,5], [5,6], [6,0]"
+                    )
+
+        # Monthly frequency (1) constraints
+        if self.frequency == ScheduledEventRecurrenceFrequency.monthly:
+            if has_by_n_weekday:
+                if len(self.by_n_weekday) != 1:
+                    raise ValidationError(
+                        "by_n_weekday must have exactly 1 entry for monthly events"
+                    )
+
+            if has_by_weekday:
+                raise ValidationError("by_weekday is not valid for monthly events")
+
+            if has_by_month or has_by_month_day:
+                raise ValidationError(
+                    "by_month and by_month_day are not valid for monthly events"
+                )
+
+        # Yearly frequency (0) constraints
+        if self.frequency == ScheduledEventRecurrenceFrequency.yearly:
+            if has_by_n_weekday:
+                raise ValidationError("by_n_weekday is not valid for yearly events")
+
+            if not (has_by_month and has_by_month_day):
+                raise ValidationError(
+                    "by_month and by_month_day must both be provided for yearly events"
+                )
+
+            if len(self.by_month) != 1 or len(self.by_month_day) != 1:
+                raise ValidationError(
+                    "by_month and by_month_day must each have exactly 1 entry for yearly events"
+                )
 
 
 class ScheduledEvent(Hashable):
@@ -554,13 +684,13 @@ class ScheduledEvent(Hashable):
             payload["description"] = description
 
         if status is not MISSING:
-            payload["status"] = int(status.value)
+            payload["status"] = int(status)
 
         if entity_type is not MISSING:
-            payload["entity_type"] = int(entity_type.value)
+            payload["entity_type"] = int(entity_type)
 
         if privacy_level is not MISSING:
-            payload["privacy_level"] = int(privacy_level.value)
+            payload["privacy_level"] = int(privacy_level)
 
         if entity_metadata is not MISSING:
             if entity_metadata is None:

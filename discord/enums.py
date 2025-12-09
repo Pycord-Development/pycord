@@ -966,6 +966,9 @@ class ScheduledEventEntityType(Enum):
     voice = 2
     external = 3
 
+    def __int__(self):
+        return self.value
+
 
 class ScheduledEventRecurrenceFrequency(Enum):
     """Scheduled event recurrence frequency"""
@@ -974,6 +977,9 @@ class ScheduledEventRecurrenceFrequency(Enum):
     monthly = 1
     weekly = 2
     daily = 3
+
+    def __int__(self):
+        return self.value
 
 
 class ScheduledEventRecurrenceWeekday(Enum):
@@ -986,6 +992,9 @@ class ScheduledEventRecurrenceWeekday(Enum):
     friday = 4
     saturday = 5
     sunday = 6
+
+    def __int__(self):
+        return self.value
 
 
 class ScheduledEventRecurrenceMonth(Enum):
@@ -1003,6 +1012,9 @@ class ScheduledEventRecurrenceMonth(Enum):
     october = 10
     november = 11
     december = 12
+
+    def __int__(self):
+        return self.value
 
 
 class AutoModTriggerType(Enum):
