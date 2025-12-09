@@ -214,7 +214,7 @@ class AppInfo:
         "interactions_endpoint_url",
         "role_connections_verification_url",
         "event_webhooks_url",
-        "_event_webhooks_status",
+        "event_webhooks_status",
         "event_webhooks_types",
         "integration_types_config",
         "install_params",
