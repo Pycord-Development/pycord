@@ -62,7 +62,7 @@ __all__ = (
     "ScheduledEventStatus",
     "ScheduledEventPrivacyLevel",
     "ScheduledEventEntityType",
-    "ScheduledEventLocationType",
+    "ScheduledEventEntityType",
     "InputTextStyle",
     "SlashCommandOptionType",
     "AutoModTriggerType",

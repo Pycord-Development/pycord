@@ -131,8 +131,11 @@ class ScheduledEventEntityMetadata:
 
     __slots__ = ("location",)
 
-    def __init__(self, *, data: dict[str, str]) -> str | None:
-        self.location: str | None = data.get("location")
+    def __init__(
+        self,
+        location: str | None = None,
+    ) -> None:
+        self.location: str | None = location
 
     def __repr__(self) -> str:
         return f"<ScheduledEventEntityMetadata location={self.location!r}>"
@@ -182,9 +185,9 @@ class ScheduledEvent(Hashable):
         The name of the scheduled event.
     description: Optional[:class:`str`]
         The description of the scheduled event.
-    start_time: :class:`datetime.datetime`
+    scheduled_start_time: :class:`datetime.datetime`
         The time when the event will start
-    end_time: Optional[:class:`datetime.datetime`]
+    scheduled_end_time: Optional[:class:`datetime.datetime`]
         The time when the event is supposed to end.
     status: :class:`ScheduledEventStatus`
         The status of the scheduled event.
@@ -217,8 +220,8 @@ class ScheduledEvent(Hashable):
         "id",
         "name",
         "description",
-        "start_time",
-        "end_time",
+        "scheduled_start_time",
+        "scheduled_end_time",
         "status",
         "creator_id",
         "creator",
@@ -251,12 +254,12 @@ class ScheduledEvent(Hashable):
         self.name: str = data.get("name")
         self.description: str | None = data.get("description", None)
         self._image: str | None = data.get("image", None)
-        self.start_time: datetime.datetime = datetime.datetime.fromisoformat(
+        self.scheduled_start_time: datetime.datetime = datetime.datetime.fromisoformat(
             data.get("scheduled_start_time")
         )
-        if end_time := data.get("scheduled_end_time", None):
-            end_time = datetime.datetime.fromisoformat(end_time)
-        self.end_time: datetime.datetime | None = end_time
+        if scheduled_end_time := data.get("scheduled_end_time", None):
+            scheduled_end_time = datetime.datetime.fromisoformat(scheduled_end_time)
+        self.scheduled_end_time: datetime.datetime | None = scheduled_end_time
         self.status: ScheduledEventStatus = try_enum(
             ScheduledEventStatus, data.get("status")
         )
@@ -272,7 +275,7 @@ class ScheduledEvent(Hashable):
 
         entity_metadata_data = data.get("entity_metadata")
         self.entity_metadata: ScheduledEventEntityMetadata | None = (
-            ScheduledEventEntityMetadata(data=entity_metadata_data)
+            ScheduledEventEntityMetadata(location=entity_metadata_data.get("location"))
             if entity_metadata_data
             else None
         )
@@ -299,7 +302,7 @@ class ScheduledEvent(Hashable):
             f"name={self.name} "
             f"description={self.description} "
             f"start_time={self.start_time} "
-            f"end_time={self.end_time} "
+            f"end_time={self.scheduled_end_time} "
             f"location={self.location!r} "
             f"status={self.status.name} "
             f"user_count={self.user_count} "
@@ -351,9 +354,8 @@ class ScheduledEvent(Hashable):
         description: str = MISSING,
         status: int | ScheduledEventStatus = MISSING,
         entity_type: ScheduledEventEntityType = MISSING,
-        start_time: datetime.datetime = MISSING,
-        end_time: datetime.datetime = MISSING,
-        cover: bytes | None = MISSING,
+        scheduled_start_time: datetime.datetime = MISSING,
+        scheduled_end_time: datetime.datetime = MISSING,
         image: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
@@ -390,9 +392,9 @@ class ScheduledEvent(Hashable):
         entity_type: :class:`ScheduledEventEntityType`
             The type of scheduled event. When changing to EXTERNAL, you must also provide
             ``entity_metadata`` with a location and ``scheduled_end_time``.
-        start_time: :class:`datetime.datetime`
+        scheduled_start_time: :class:`datetime.datetime`
             The new starting time for the event (ISO8601 format).
-        end_time: :class:`datetime.datetime`
+        scheduled_end_time: :class:`datetime.datetime`
             The new ending time of the event (ISO8601 format).
         privacy_level: :class:`ScheduledEventPrivacyLevel`
             The privacy level of the event. Currently only GUILD_ONLY is supported.
@@ -434,7 +436,7 @@ class ScheduledEvent(Hashable):
             payload["status"] = int(status)
 
         if entity_type is not MISSING:
-            payload["entity_type"] = int(entity_type)
+            payload["entity_type"] = int(entity_type.value)
 
         if privacy_level is not MISSING:
             payload["privacy_level"] = int(privacy_level)
@@ -454,11 +456,11 @@ class ScheduledEvent(Hashable):
             else:
                 payload["image"] = utils._bytes_to_base64_data(image)
 
-        if start_time is not MISSING:
-            payload["scheduled_start_time"] = start_time.isoformat()
+        if scheduled_start_time is not MISSING:
+            payload["scheduled_start_time"] = scheduled_start_time.isoformat()
 
-        if end_time is not MISSING:
-            payload["scheduled_end_time"] = end_time.isoformat()
+        if scheduled_end_time is not MISSING:
+            payload["scheduled_end_time"] = scheduled_end_time.isoformat()
 
         if (
             entity_type is not MISSING
@@ -473,7 +475,9 @@ class ScheduledEvent(Hashable):
                     "entity_metadata.location cannot be empty for EXTERNAL events."
                 )
 
-            has_end_time = end_time is not MISSING or self.end_time is not None
+            has_end_time = (
+                scheduled_end_time is not MISSING or self.scheduled_end_time is not None
+            )
             if not has_end_time:
                 raise ValidationError(
                     "scheduled_end_time is required for EXTERNAL events."

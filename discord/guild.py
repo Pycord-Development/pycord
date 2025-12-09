@@ -4222,8 +4222,8 @@ class Guild(Hashable):
         *,
         name: str,
         description: str = MISSING,
-        start_time: datetime.datetime,
-        end_time: datetime.datetime = MISSING,
+        scheduled_start_time: datetime.datetime,
+        scheduled_end_time: datetime.datetime = MISSING,
         entity_type: ScheduledEventEntityType,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
         channel_id: int = MISSING,
@@ -4244,9 +4244,9 @@ class Guild(Hashable):
             The name of the scheduled event.
         description: Optional[:class:`str`]
             The description of the scheduled event.
-        start_time: :class:`datetime.datetime`
+        scheduled_start_time: :class:`datetime.datetime`
             A datetime object of when the scheduled event is supposed to start.
-        end_time: Optional[:class:`datetime.datetime`]
+        scheduled_end_time: Optional[:class:`datetime.datetime`]
             A datetime object of when the scheduled event is supposed to end.
             Required for EXTERNAL events.
         entity_type: :class:`ScheduledEventEntityType`
@@ -4282,13 +4282,13 @@ class Guild(Hashable):
         """
         payload: dict[str, str | int] = {
             "name": name,
-            "scheduled_start_time": start_time.isoformat(),
+            "scheduled_start_time": scheduled_start_time.isoformat(),
             "privacy_level": int(privacy_level),
             "entity_type": int(entity_type.value),
         }
 
-        if end_time is not MISSING:
-            payload["scheduled_end_time"] = end_time.isoformat()
+        if scheduled_end_time is not MISSING:
+            payload["scheduled_end_time"] = scheduled_end_time.isoformat()
 
         if description is not MISSING:
             payload["description"] = description
@@ -4308,7 +4308,7 @@ class Guild(Hashable):
                 raise ValidationError(
                     "entity_metadata.location cannot be empty for EXTERNAL events."
                 )
-            if end_time is MISSING:
+            if scheduled_end_time is MISSING:
                 raise ValidationError(
                     "scheduled_end_time is required for EXTERNAL events."
                 )

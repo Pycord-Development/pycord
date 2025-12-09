@@ -278,8 +278,8 @@ class AuditLogChanges:
         "type": (None, _transform_type),
         "status": (None, _enum_transformer(enums.ScheduledEventStatus)),
         "entity_type": (
-            "location_type",
-            _enum_transformer(enums.ScheduledEventLocationType),
+            "entity_type",
+            _enum_transformer(enums.ScheduledEventEntityType),
         ),
         "command_id": ("command_id", _transform_snowflake),
         "image_hash": ("image", _transform_scheduled_event_image),
@@ -357,6 +357,19 @@ class AuditLogChanges:
                 if transformer:
                     before = transformer(entry, before)
 
+                if attr == "location" and hasattr(self.before, "entity_type"):
+                    from .scheduled_events import ScheduledEventLocation
+
+                    if (
+                        self.before.entity_type
+                        is enums.ScheduledEventEntityType.external
+                    ):
+                        before = ScheduledEventLocation(state=state, value=before)
+                    elif hasattr(self.before, "channel"):
+                        before = ScheduledEventLocation(
+                            state=state, value=self.before.channel
+                        )
+
             try:
                 after = elem["new_value"]
             except KeyError:
@@ -365,13 +378,10 @@ class AuditLogChanges:
                 if transformer:
                     after = transformer(entry, after)
 
-            if attr == "location" and hasattr(self.after, "location_type"):
+            if attr == "location" and hasattr(self.after, "entity_type"):
                 from .scheduled_events import ScheduledEventLocation
 
-                if (
-                    self.after.location_type
-                    is enums.ScheduledEventLocationType.external
-                ):
+                if self.after.entity_type is enums.ScheduledEventEntityType.external:
                     after = ScheduledEventLocation(state=state, value=after)
                 elif hasattr(self.after, "channel"):
                     after = ScheduledEventLocation(
