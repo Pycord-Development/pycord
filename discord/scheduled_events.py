@@ -42,7 +42,7 @@ from .errors import ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
 from .object import Object
-from .utils import warn_deprecated, deprecated
+from .utils import deprecated, warn_deprecated
 
 __all__ = (
     "ScheduledEvent",
@@ -638,9 +638,7 @@ class ScheduledEvent(Hashable):
     @property
     @deprecated(instead="entity_metadata.location", since="2.7", removed="3.0")
     def location(self) -> ScheduledEventLocation | None:
-        """
-        Returns the location of the event.
-        """
+        """Returns the location of the event."""
         if self.channel_id is None:
             self.location = ScheduledEventLocation(
                 state=self._state, value=self.entity_metadata.location

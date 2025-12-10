@@ -30,7 +30,6 @@ from collections import namedtuple
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
-
 __all__ = (
     "Enum",
     "ChannelType",
