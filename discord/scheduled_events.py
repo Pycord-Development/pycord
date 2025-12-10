@@ -41,10 +41,12 @@ from .enums import (
 from .errors import ValidationError
 from .iterators import ScheduledEventSubscribersIterator
 from .mixins import Hashable
-from .utils import warn_deprecated
+from .object import Object
+from .utils import warn_deprecated, deprecated
 
 __all__ = (
     "ScheduledEvent",
+    "ScheduledEventLocation",
     "ScheduledEventEntityMetadata",
     "ScheduledEventRecurrenceRule",
     "ScheduledEventRecurrenceNWeekday",
@@ -52,6 +54,7 @@ __all__ = (
 
 if TYPE_CHECKING:
     from .abc import Snowflake
+    from .channel import StageChannel, VoiceChannel
     from .guild import Guild
     from .member import Member
     from .state import ConnectionState
@@ -59,8 +62,81 @@ if TYPE_CHECKING:
     from .types.scheduled_events import (
         ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
     )
+else:
+    ConnectionState = None
+    StageChannel = None
+    VoiceChannel = None
 
 MISSING = utils.MISSING
+
+
+class ScheduledEventLocation:
+    """Represents a scheduled event's location.
+
+    Setting the ``value`` to its corresponding type will set the location type automatically:
+
+    +------------------------+-----------------------------------------------+
+    |     Type of Input      |                Location Type                  |
+    +========================+===============================================+
+    | :class:`StageChannel`  | :attr:`ScheduledEventEntityType.stage_instance` |
+    | :class:`VoiceChannel`  | :attr:`ScheduledEventEntityType.voice`          |
+    | :class:`str`           | :attr:`ScheduledEventEntityType.external`       |
+    +------------------------+-----------------------------------------------+
+
+    .. deprecated:: 2.7
+        Use :class:`ScheduledEventEntityMetadata` instead.
+
+    .. versionadded:: 2.0
+
+    Attributes
+    ----------
+    value: Union[:class:`str`, :class:`StageChannel`, :class:`VoiceChannel`, :class:`Object`]
+        The actual location of the scheduled event.
+    type: :class:`ScheduledEventEntityType`
+        The type of location.
+    """
+
+    __slots__ = (
+        "_state",
+        "value",
+    )
+
+    def __init__(
+        self,
+        *,
+        state: ConnectionState | None = None,
+        value: str | int | StageChannel | VoiceChannel | None = None,
+    ) -> None:
+        warn_deprecated("ScheduledEventLocation", "ScheduledEventEntityMetadata", "2.7")
+        self._state: ConnectionState | None = state
+        self.value: str | StageChannel | VoiceChannel | Object | None
+        if value is None:
+            self.value = None
+        elif isinstance(value, int):
+            self.value = (
+                self._state.get_channel(id=int(value)) or Object(id=int(value))
+                if self._state
+                else Object(id=int(value))
+            )
+        else:
+            self.value = value
+
+    def __repr__(self) -> str:
+        return f"<ScheduledEventLocation value={self.value!r} type={self.type}>"
+
+    def __str__(self) -> str:
+        return str(self.value) if self.value else ""
+
+    @property
+    def type(self) -> ScheduledEventEntityType:
+        """The type of location."""
+        if isinstance(self.value, str):
+            return ScheduledEventEntityType.external
+        elif self.value.__class__.__name__ == "StageChannel":
+            return ScheduledEventEntityType.stage_instance
+        elif self.value.__class__.__name__ == "VoiceChannel":
+            return ScheduledEventEntityType.voice
+        return ScheduledEventEntityType.voice
 
 
 class ScheduledEventEntityMetadata:
@@ -477,7 +553,6 @@ class ScheduledEvent(Hashable):
         "status",
         "creator_id",
         "creator",
-        "location",
         "guild",
         "_state",
         "_image",
@@ -561,9 +636,57 @@ class ScheduledEvent(Hashable):
         )
 
     @property
+    @deprecated(instead="entity_metadata.location", since="2.7", removed="3.0")
+    def location(self) -> ScheduledEventLocation | None:
+        """
+        Returns the location of the event.
+        """
+        if self.channel_id is None:
+            self.location = ScheduledEventLocation(
+                state=self._state, value=self.entity_metadata.location
+            )
+        else:
+            self.location = ScheduledEventLocation(
+                state=self._state, value=self.channel_id
+            )
+
+    @property
     def created_at(self) -> datetime.datetime:
         """Returns the scheduled event's creation time in UTC."""
         return utils.snowflake_time(self.id)
+
+    @property
+    @deprecated(instead="scheduled_start_time", since="2.7", removed="3.0")
+    def start_time(self) -> datetime.datetime:
+        """
+        Returns the scheduled start time of the event.
+
+        .. deprecated:: 2.7
+            Use :attr:`scheduled_start_time` instead.
+        """
+        return self.scheduled_start_time
+
+    @property
+    @deprecated(instead="scheduled_end_time", since="2.7", removed="3.0")
+    def end_time(self) -> datetime.datetime | None:
+        """
+        Returns the scheduled end time of the event.
+
+        .. deprecated:: 2.7
+            Use :attr:`scheduled_end_time` instead.
+        """
+        return self.scheduled_end_time
+
+    @property
+    @deprecated(instead="user_count", since="2.7", removed="3.0")
+    def subscriber_count(self) -> int | None:
+        """
+        Returns the number of users subscribed to the event.
+
+        .. deprecated:: 2.7
+            Use :attr:`user_count` instead.
+        """
+        return self.user_count
 
     @property
     def interested(self) -> int | None:
@@ -604,10 +727,14 @@ class ScheduledEvent(Hashable):
         name: str = MISSING,
         description: str = MISSING,
         status: ScheduledEventStatus = MISSING,
+        location: (
+            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
+        ) = MISSING,
         entity_type: ScheduledEventEntityType = MISSING,
         scheduled_start_time: datetime.datetime = MISSING,
         scheduled_end_time: datetime.datetime = MISSING,
         image: bytes | None = MISSING,
+        cover: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
         recurrence_rule: ScheduledEventRecurrenceRule | None = MISSING,
@@ -659,6 +786,11 @@ class ScheduledEvent(Hashable):
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
             The cover image of the scheduled event.
+        cover: Optional[:class:`bytes`]
+            The cover image of the scheduled event.
+
+            .. deprecated:: 2.7
+                Use ``image`` instead.
 
         Returns
         -------
@@ -703,6 +835,19 @@ class ScheduledEvent(Hashable):
                 payload["recurrence_rule"] = recurrence_rule.to_payload()
             else:
                 payload["recurrence_rule"] = recurrence_rule
+
+        if cover is not MISSING:
+            warn_deprecated("cover", "image", "2.7", "3.0")
+            if image is MISSING:
+                image = cover
+
+        if location is not MISSING:
+            warn_deprecated("location", "entity_metadata", "2.7", "3.0")
+            if entity_metadata is MISSING:
+                if not isinstance(location, (ScheduledEventLocation)):
+                    location = ScheduledEventLocation(state=self._state, value=location)
+                if location.type == ScheduledEventEntityType.external:
+                    entity_metadata = ScheduledEventEntityMetadata(str(location))
 
         if image is not MISSING:
             if image is None:

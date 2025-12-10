@@ -30,6 +30,7 @@ from collections import namedtuple
 from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
+
 __all__ = (
     "Enum",
     "ChannelType",
@@ -62,7 +63,7 @@ __all__ = (
     "ScheduledEventStatus",
     "ScheduledEventPrivacyLevel",
     "ScheduledEventEntityType",
-    "ScheduledEventEntityType",
+    "ScheduledEventLocationType",
     "ScheduledEventRecurrenceFrequency",
     "ScheduledEventRecurrenceWeekday",
     "ScheduledEventRecurrenceMonth",
@@ -968,6 +969,10 @@ class ScheduledEventEntityType(Enum):
 
     def __int__(self):
         return self.value
+
+
+class ScheduledEventLocationType(ScheduledEventEntityType):
+    """Scheduled event location type (deprecated alias for ScheduledEventEntityType)"""
 
 
 class ScheduledEventRecurrenceFrequency(Enum):
