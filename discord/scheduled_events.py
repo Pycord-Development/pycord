@@ -578,7 +578,7 @@ class ScheduledEvent(Hashable):
         self.exceptions: list[Object] = list(
             map(
                 Object,
-                data.get("guild_scheduled_events_exceptions", []) or [],
+                data.get("guild_scheduled_events_exceptions") or [],
             ),
         )
 
