@@ -33,6 +33,7 @@ from .enums import (
     ScheduledEventEntityType,
     ScheduledEventPrivacyLevel,
     ScheduledEventRecurrenceFrequency,
+    ScheduledEventRecurrenceInterval,
     ScheduledEventRecurrenceMonth,
     ScheduledEventRecurrenceWeekday,
     ScheduledEventStatus,
@@ -217,7 +218,7 @@ class ScheduledEventRecurrenceRule:
         Ending time of the recurrence interval.
     frequency: :class:`ScheduledEventRecurrenceFrequency`
         How often the event occurs.
-    interval: :class:`int`
+    interval: :class:`ScheduledEventRecurrenceInterval`
         The spacing between events for the given frequency.
     by_weekday: Optional[list[:class:`ScheduledEventRecurrenceWeekday`]]
         Specific days within a week for the event to recur on.
@@ -251,7 +252,7 @@ class ScheduledEventRecurrenceRule:
         *,
         start: datetime.datetime,
         frequency: ScheduledEventRecurrenceFrequency | int,
-        interval: int,
+        interval: ScheduledEventRecurrenceInterval | int,
         end: datetime.datetime | None = None,
         by_weekday: list[ScheduledEventRecurrenceWeekday | int] | None = None,
         by_n_weekday: list[ScheduledEventRecurrenceNWeekday] | None = None,
@@ -265,7 +266,9 @@ class ScheduledEventRecurrenceRule:
         self.frequency: ScheduledEventRecurrenceFrequency = try_enum(
             ScheduledEventRecurrenceFrequency, int(frequency)
         )
-        self.interval: int = interval
+        self.interval: ScheduledEventRecurrenceInterval = try_enum(
+            ScheduledEventRecurrenceInterval, int(interval)
+        )
         self.by_weekday: list[ScheduledEventRecurrenceWeekday] | None = (
             [try_enum(ScheduledEventRecurrenceWeekday, int(day)) for day in by_weekday]
             if by_weekday
@@ -319,7 +322,7 @@ class ScheduledEventRecurrenceRule:
             start=start,
             end=end,
             frequency=try_enum(ScheduledEventRecurrenceFrequency, data["frequency"]),
-            interval=data["interval"],
+            interval=try_enum(ScheduledEventRecurrenceInterval, data["interval"]),
             by_weekday=by_weekday,
             by_n_weekday=by_n_weekday,
             by_month=by_month,
@@ -784,12 +787,6 @@ class ScheduledEvent(Hashable):
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
             The cover image of the scheduled event.
-        cover: Optional[:class:`bytes`]
-            The cover image of the scheduled event.
-
-            .. deprecated:: 2.7
-                Use ``image`` instead.
-
         Returns
         -------
         Optional[:class:`.ScheduledEvent`]

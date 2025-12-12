@@ -1021,6 +1021,16 @@ class ScheduledEventRecurrenceMonth(Enum):
         return self.value
 
 
+class ScheduledEventRecurrenceInterval(Enum):
+    """Scheduled event recurrence interval spacing"""
+
+    single = 1
+    every_other = 2
+
+    def __int__(self):
+        return self.value
+
+
 class AutoModTriggerType(Enum):
     """Automod trigger type"""
 
