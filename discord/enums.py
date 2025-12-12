@@ -84,6 +84,7 @@ __all__ = (
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
+    "ApplicationEventWebhookStatus",
 )
 
 
@@ -1129,6 +1130,14 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class ApplicationEventWebhookStatus(Enum):
+    """Represents the application event webhook status."""
+
+    DISABLED = 1
+    ENABLED = 2
+    DISABLED_BY_DISCORD = 3
 
 
 T = TypeVar("T")
