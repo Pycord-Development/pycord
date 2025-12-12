@@ -971,7 +971,7 @@ class ScheduledEventEntityType(Enum):
 
 
 class ScheduledEventLocationType(ScheduledEventEntityType):
-    """Scheduled event location type (deprecated alias for ScheduledEventEntityType)"""
+    """Scheduled event location type (deprecated alias for :class:`ScheduledEventEntityType`)"""
 
 
 class ScheduledEventRecurrenceFrequency(Enum):
