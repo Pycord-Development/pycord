@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, overload
 
 from . import utils
 from .asset import Asset
@@ -246,6 +246,54 @@ class ScheduledEventRecurrenceRule:
         "by_year_day",
         "count",
     )
+
+    @overload
+    def __init__(
+        self,
+        *,
+        start: datetime.datetime,
+        frequency: ScheduledEventRecurrenceFrequency | int,
+        interval: ScheduledEventRecurrenceInterval | int,
+        end: datetime.datetime | None = None,
+        by_weekday: list[ScheduledEventRecurrenceWeekday | int],
+        by_n_weekday: None = None,
+        by_month: None = None,
+        by_month_day: None = None,
+        by_year_day: list[int] | None = None,
+        count: int | None = None,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        *,
+        start: datetime.datetime,
+        frequency: ScheduledEventRecurrenceFrequency | int,
+        interval: ScheduledEventRecurrenceInterval | int,
+        end: datetime.datetime | None = None,
+        by_weekday: None = None,
+        by_n_weekday: list[ScheduledEventRecurrenceNWeekday],
+        by_month: None = None,
+        by_month_day: None = None,
+        by_year_day: list[int] | None = None,
+        count: int | None = None,
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        *,
+        start: datetime.datetime,
+        frequency: ScheduledEventRecurrenceFrequency | int,
+        interval: ScheduledEventRecurrenceInterval | int,
+        end: datetime.datetime | None = None,
+        by_weekday: None = None,
+        by_n_weekday: None = None,
+        by_month: list[ScheduledEventRecurrenceMonth | int],
+        by_month_day: list[int],
+        by_year_day: list[int] | None = None,
+        count: int | None = None,
+    ) -> None: ...
 
     def __init__(
         self,
