@@ -787,6 +787,7 @@ class ScheduledEvent(Hashable):
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
             The cover image of the scheduled event.
+
         Returns
         -------
         Optional[:class:`.ScheduledEvent`]
