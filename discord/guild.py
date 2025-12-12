@@ -1119,6 +1119,18 @@ class Guild(Hashable):
         """
         return self._roles.get(role_id)
 
+    async def fetch_roles_member_counts(self) -> dict[int, int]:
+        """|coro|
+        Fetches a mapping of role IDs to their member counts for this guild.
+
+        Returns
+        -------
+        Dict[:class:`int`, :class:`int`]
+            A mapping of role IDs to their member counts.
+        """
+        r = await self._state.http.get_roles_member_counts(self.id)
+        return {int(role_id): count for role_id, count in r.items()}
+
     @property
     def default_role(self) -> Role:
         """Gets the @everyone role that all members have by default."""
