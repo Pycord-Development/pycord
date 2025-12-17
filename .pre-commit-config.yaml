@@ -4,7 +4,7 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         exclude: \.(po|pot|yml|yaml)$
@@ -21,17 +21,17 @@ repos:
   #          - --remove-duplicate-keys
   #          - --remove-unused-variables
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
+    rev: v3.21.0
     hooks:
       - id: pyupgrade
         exclude: \.(po|pot|yml|yaml)$
   - repo: https://github.com/PyCQA/isort
-    rev: 6.0.1
+    rev: 7.0.0
     hooks:
       - id: isort
         exclude: \.(po|pot|yml|yaml)$
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 25.9.0
     hooks:
       - id: black
         args: [--safe, --quiet]
@@ -87,7 +87,7 @@ repos:
         args: [--prose-wrap=always, --print-width=88]
         exclude: \.(po|pot|yml|yaml)$
   - repo: https://github.com/DanielNoord/pydocstringformatter
-    rev: v0.7.3
+    rev: v0.7.5
     hooks:
       - id: pydocstringformatter
         exclude: \.(po|pot|yml|yaml)$

@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) 2021-present Pycord Development
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from __future__ import annotations
 
 import os
@@ -5,14 +29,16 @@ from typing import TYPE_CHECKING
 
 from ..components import InputText as InputTextComponent
 from ..enums import ComponentType, InputTextStyle
+from .item import ModalItem
 
-__all__ = ("InputText",)
+__all__ = ("InputText", "TextInput")
 
 if TYPE_CHECKING:
+    from ..interactions import Interaction
     from ..types.components import InputText as InputTextComponentPayload
 
 
-class InputText:
+class InputText(ModalItem):
     """Represents a UI text input field.
 
     .. versionadded:: 2.0
@@ -48,21 +74,34 @@ class InputText:
         ordering. The row number must be between 0 and 4 (i.e. zero indexed).
     """
 
+    __item_repr_attributes__: tuple[str, ...] = (
+        "label",
+        "placeholder",
+        "value",
+        "required",
+        "style",
+        "min_length",
+        "max_length",
+        "custom_id",
+        "id",
+    )
+
     def __init__(
         self,
         *,
         style: InputTextStyle = InputTextStyle.short,
         custom_id: str | None = None,
-        label: str,
+        label: str | None = None,
         placeholder: str | None = None,
         min_length: int | None = None,
         max_length: int | None = None,
         required: bool | None = True,
         value: str | None = None,
         row: int | None = None,
+        id: int | None = None,
     ):
         super().__init__()
-        if len(str(label)) > 45:
+        if label and len(str(label)) > 45:
             raise ValueError("label must be 45 characters or fewer")
         if min_length and (min_length < 0 or min_length > 4000):
             raise ValueError("min_length must be between 0 and 4000")
@@ -88,14 +127,17 @@ class InputText:
             max_length=max_length,
             required=required,
             value=value,
+            id=id,
         )
         self._input_value = False
         self.row = row
         self._rendered_row: int | None = None
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
+    def __repr__(self) -> str:
+        attrs = " ".join(
+            f"{key}={getattr(self, key)!r}" for key in self.__item_repr_attributes__
+        )
+        return f"<{self.__class__.__name__} {attrs}>"
 
     @property
     def style(self) -> InputTextStyle:
@@ -207,7 +249,15 @@ class InputText:
         return 5
 
     def to_component_dict(self) -> InputTextComponentPayload:
-        return self._underlying.to_dict()
+        return super().to_component_dict()
 
     def refresh_state(self, data) -> None:
-        self._input_value = data["value"]
+        self._input_value = data.get("value", None)
+
+    def refresh_from_modal(
+        self, interaction: Interaction, data: InputTextComponentPayload
+    ) -> None:
+        return self.refresh_state(data)
+
+
+TextInput = InputText

@@ -1,11 +1,11 @@
 -r _.txt
-pylint~=3.3.6
-pytest~=8.3.5
-pytest-asyncio~=0.24.0
+pylint~=3.3.8
+pytest~=8.4.1
+pytest-asyncio~=1.2.0
 # pytest-order~=1.0.1
-mypy~=1.15.0
-coverage~=7.7
-pre-commit==4.2.0
+mypy~=1.18.1
+coverage~=7.10
+pre-commit==4.3.0
 codespell==2.4.1
-bandit==1.8.3
-flake8==7.1.2
+bandit==1.8.6
+flake8==7.3.0

@@ -554,7 +554,6 @@ class ScheduledEvent(Hashable):
         self.recurrence_rule: ScheduledEventRecurrenceRule | None = (
             ScheduledEventRecurrenceRule._from_data(
                 data.get("recurrence_rule"),
-                state,
             )
         )
 

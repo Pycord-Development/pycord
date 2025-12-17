@@ -1,6 +1,7 @@
 name: Bug Report
 description: Report broken or incorrect behaviour
 labels: ["unconfirmed bug"]
+type: Bug
 body:
   - type: markdown
     attributes:
@@ -59,6 +60,7 @@ body:
         This command required v1.1.0 or higher of the library. If this errors out then
         show some basic information involving your system such as operating system and
         Python version.
+      render: bash
     validations:
       required: true
   - type: checkboxes

@@ -59,6 +59,8 @@ VerificationLevel = Literal[0, 1, 2, 3, 4]
 NSFWLevel = Literal[0, 1, 2, 3]
 PremiumTier = Literal[0, 1, 2, 3]
 GuildFeature = Literal[
+    "ACTIVITY_FEED_DISABLED_BY_USER",
+    "ACTIVITY_FEED_ENABLED_BY_USER",
     "ANIMATED_BANNER",
     "ANIMATED_ICON",
     "APPLICATION_COMMAND_PERMISSIONS_V2",
@@ -80,6 +82,8 @@ GuildFeature = Literal[
     "MEMBER_VERIFICATION_GATE_ENABLED",
     "MONETIZATION_ENABLED",
     "MORE_EMOJI",
+    "MORE_SOUNDBOARD",
+    "SOUNDBOARD",
     "MORE_STICKERS",
     "NEWS",
     "NEW_THREAD_PERMISSIONS",
@@ -88,6 +92,7 @@ GuildFeature = Literal[
     "PREVIEW_ENABLED",
     "ROLE_ICONS",
     "ROLE_SUBSCRIPTIONS_ENABLED",
+    "RAID_ALERTS_DISABLED",
     "SEVEN_DAY_THREAD_ARCHIVE",
     "TEXT_IN_VOICE_ENABLED",
     "THREAD_DEFAULT_AUTO_ARCHIVE_DURATION",
@@ -98,6 +103,7 @@ GuildFeature = Literal[
     "VERIFIED",
     "VIP_REGIONS",
     "WELCOME_SCREEN_ENABLED",
+    "ENHANCED_ROLE_COLORS",
 ]
 
 
@@ -158,6 +164,7 @@ class Guild(_BaseGuildPreview):
     premium_tier: PremiumTier
     preferred_locale: str
     public_updates_channel_id: Snowflake | None
+    incidents_data: IncidentsData | None
 
 
 class InviteGuild(Guild, total=False):
@@ -191,3 +198,15 @@ class GuildMFAModify(TypedDict):
 class GuildBulkBan(TypedDict):
     banned_users: list[Snowflake]
     failed_users: list[Snowflake]
+
+
+class IncidentsData(TypedDict, total=False):
+    invites_disabled_until: str | None
+    dms_disabled_until: str | None
+    dm_spam_detected_at: str | None
+    raid_detected_at: str | None
+
+
+class ModifyIncidents(TypedDict, total=False):
+    invites_disabled_until: str | None
+    dms_disabled_until: str | None

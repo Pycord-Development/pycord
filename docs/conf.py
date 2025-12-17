@@ -96,7 +96,7 @@ ogp_site_url = "https://pycord.dev/"
 ogp_image = "https://pycord.dev/static/img/logo.png"
 
 autodoc_member_order = "bysource"
-autodoc_typehints = "none"
+autodoc_typehints = "signature"
 # maybe consider this?
 # napoleon_attr_annotations = False
 
@@ -499,7 +499,7 @@ linkcheck_exclude_documents = [
 linkcheck_anchors_ignore_for_url = [r"https://github.com/Delitefully/DiscordLists"]
 
 modindex_common_prefix = ["discord."]
-# suppress_warnings = ['autosectionlabel.*']
+suppress_warnings = ["autosectionlabel.*"]
 myst_enable_extensions = [
     "amsmath",
     "attrs_inline",

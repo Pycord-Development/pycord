@@ -11,36 +11,84 @@ bot = commands.Bot(
 )
 
 
-class MyModal(discord.ui.Modal):
+class MyModal(discord.ui.DesignerModal):
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(
+        first_input = discord.ui.Label(
+            "Short Input",
             discord.ui.InputText(
-                label="Short Input",
                 placeholder="Placeholder Test",
             ),
+        )
+        second_input = discord.ui.Label(
+            "Longer Input",
             discord.ui.InputText(
-                label="Longer Input",
+                placeholder="Placeholder Test",
                 value="Longer Value\nSuper Long Value",
                 style=discord.InputTextStyle.long,
             ),
+            description="You can also describe the purpose of this input.",
+        )
+        select = discord.ui.Label(
+            "What's your favorite color?",
+            discord.ui.Select(
+                placeholder="Select a color",
+                options=[
+                    discord.SelectOption(label="Red", emoji="🟥"),
+                    discord.SelectOption(label="Green", emoji="🟩"),
+                    discord.SelectOption(label="Blue", emoji="🟦"),
+                ],
+                required=False,
+            ),
+            description="If it is not listed, skip this question.",
+        )
+        file = discord.ui.Label(
+            "What's your favorite picture?",
+            discord.ui.FileUpload(
+                max_values=1,
+                required=False,
+            ),
+            description="You may only pick one! Chose wisely!",
+        )
+        super().__init__(
+            first_input,
+            second_input,
+            discord.ui.TextDisplay(
+                "# Personal Questions"
+            ),  # TextDisplay does NOT use Label
+            select,
+            file,
             *args,
             **kwargs,
         )
 
     async def callback(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         embed = discord.Embed(
             title="Your Modal Results",
             fields=[
                 discord.EmbedField(
-                    name="First Input", value=self.children[0].value, inline=False
+                    name="First Input", value=self.children[0].item.value, inline=False
                 ),
                 discord.EmbedField(
-                    name="Second Input", value=self.children[1].value, inline=False
+                    name="Second Input", value=self.children[1].item.value, inline=False
+                ),
+                discord.EmbedField(
+                    name="Favorite Color",
+                    value=self.children[3].item.values[0],
+                    inline=False,
                 ),
             ],
             color=discord.Color.random(),
         )
-        await interaction.response.send_message(embeds=[embed])
+        attachment = (
+            self.children[4].item.values[0] if self.children[4].item.values else None
+        )
+        if attachment:
+            embed.set_image(url=f"attachment://{attachment.filename}")
+        await interaction.followup.send(
+            embeds=[embed],
+            files=[await attachment.to_file()] if attachment else [],
+        )
 
 
 @bot.slash_command(name="modaltest")

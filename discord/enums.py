@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import types
 from collections import namedtuple
+from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar, TypeVar, Union
 
 __all__ = (
@@ -71,13 +72,20 @@ __all__ = (
     "PromptType",
     "OnboardingMode",
     "ReactionType",
+    "VoiceChannelEffectAnimationType",
     "SKUType",
     "EntitlementType",
     "EntitlementOwnerType",
     "IntegrationType",
     "InteractionContextType",
+    "PollLayoutType",
+    "MessageReferenceType",
+    "ThreadArchiveDuration",
+    "SubscriptionStatus",
+    "SeparatorSpacingSize",
     "ScheduledEventRecurrenceFrequency",
     "ScheduledEventWeekday",
+    "SelectDefaultValueType",
 )
 
 
@@ -268,6 +276,12 @@ class MessageType(Enum):
     stage_raise_hand = 30
     stage_topic = 31
     guild_application_premium_subscription = 32
+    guild_incident_alert_mode_enabled = 36
+    guild_incident_alert_mode_disabled = 37
+    guild_incident_report_raid = 38
+    guild_incident_report_false_alarm = 39
+    purchase_notification = 44
+    poll_result = 46
 
 
 class VoiceRegion(Enum):
@@ -714,6 +728,16 @@ class ComponentType(Enum):
     role_select = 6
     mentionable_select = 7
     channel_select = 8
+    section = 9
+    text_display = 10
+    thumbnail = 11
+    media_gallery = 12
+    file = 13
+    separator = 14
+    content_inventory_entry = 16
+    container = 17
+    label = 18
+    file_upload = 19
 
     def __int__(self):
         return self.value
@@ -1057,6 +1081,23 @@ class PollLayoutType(Enum):
     default = 1
 
 
+class VoiceChannelEffectAnimationType(Enum):
+    """Voice channel effect animation type.
+
+    .. versionadded:: 2.7
+    """
+
+    premium = 0
+    basic = 1
+
+
+class MessageReferenceType(Enum):
+    """The type of the message reference object"""
+
+    default = 0
+    forward = 1
+
+
 class SubscriptionStatus(Enum):
     """The status of a subscription."""
 
@@ -1084,6 +1125,33 @@ class ScheduledEventWeekday(Enum):
     friday = 4
     saturday = 5
     sunday = 6
+
+
+class ThreadArchiveDuration(IntEnum):
+    """The time set until a thread is automatically archived."""
+
+    one_hour = 60
+    one_day = 1440
+    three_days = 4320
+    one_week = 10080
+
+
+class SeparatorSpacingSize(Enum):
+    """A separator component's spacing size."""
+
+    small = 1
+    large = 2
+
+    def __int__(self):
+        return self.value
+
+
+class SelectDefaultValueType(Enum):
+    """Represents the default value type of a select menu."""
+
+    channel = "channel"
+    role = "role"
+    user = "user"
 
 
 T = TypeVar("T")
