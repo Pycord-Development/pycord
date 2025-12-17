@@ -236,11 +236,10 @@ class BaseView(ItemInterface):
             raise TypeError(f"expected ViewItem not {item.__class__!r}")
 
         item.parent = self
-        item._view = self
         self.children.append(item)
         return self
 
-    def remove_item(self, item: ViewItem[V] | int | str) -> None:
+    def remove_item(self, item: ViewItem[V] | int | str) -> Self:
         """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
         the item will be removed by ViewItem ``id`` or ``custom_id`` respectively.
 
@@ -248,21 +247,29 @@ class BaseView(ItemInterface):
         ----------
         item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
             The item, item ``id``, or item ``custom_id`` to remove from the view.
+
+        Returns
+        -------
+        :class:`BaseView`
+            The view instance.
         """
 
         if isinstance(item, (str, int)):
             item = self.get_item(item)
         try:
-            if isinstance(item.parent, BaseView):
+            if item.parent is self:
                 self.children.remove(item)
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
+        item.parent = None
         return self
 
-    def clear_items(self) -> None:
+    def clear_items(self) -> Self:
         """Removes all items from this view."""
+        for child in self.children:
+            child.parent = None
         self.children.clear()
         return self
 
@@ -580,7 +587,6 @@ class View(BaseView):
                 **func.__discord_ui_model_kwargs__
             )
             item.callback = partial(func, self, item)
-            item._view = self
             item.parent = self
             setattr(self, func.__name__, item)
             self.children.append(item)
@@ -887,8 +893,6 @@ class DesignerView(BaseView):
             )
 
         super().add_item(item)
-        if hasattr(item, "items"):
-            item.view = self
         return self
 
     def refresh(self, components: list[Component]):
