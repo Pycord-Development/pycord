@@ -1190,6 +1190,11 @@ class Guild(Hashable):
             A mapping of role IDs to their member counts. Can be accessed
             with either role IDs (:class:`int`) or Snowflake objects (e.g., :class:`Role`).
 
+        Raises
+        ------
+        :exc:`HTTPException`
+            Fetching the role member counts failed.
+
         Examples
         --------
 
