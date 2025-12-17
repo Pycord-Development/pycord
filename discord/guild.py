@@ -37,6 +37,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    TypeVar,
     Union,
     overload,
 )
@@ -134,6 +135,8 @@ if TYPE_CHECKING:
     ]
     ByCategoryItem = Tuple[Optional[CategoryChannel], List[GuildChannel]]
 
+T = TypeVar("T")
+
 
 class BanEntry(NamedTuple):
     reason: str | None
@@ -185,7 +188,7 @@ class GuildRoleCounts(dict[int, int]):
         return super().__getitem__(key)
 
     @override
-    def get(self, key: int | abc.Snowflake, default: Any = None) -> int | None:
+    def get(self, key: int | abc.Snowflake, default: T = None) -> int | T:
         """Get the member count for a role, returning a default if not found.
 
         Parameters
@@ -203,6 +206,24 @@ class GuildRoleCounts(dict[int, int]):
         if isinstance(key, abc.Snowflake):
             key = key.id
         return super().get(key, default)
+
+    @override
+    def __contains__(self, key: int | abc.Snowflake) -> bool:
+        """Check if a role ID or Snowflake object is in the counts.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+
+        Returns
+        -------
+        :class:`bool`
+            ``True`` if the role ID is present, ``False`` otherwise.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().__contains__(key)
 
 
 class Guild(Hashable):
