@@ -17,7 +17,7 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Attachment.read_chunked` and added optional `chunksize` argument to
   `Attachment.save` for retrieving attachments in chunks.
   ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
-- Added `Guild.fetch_roles_member_counts`.
+- Added `Guild.fetch_roles_member_counts` method and `GuildRoleCounts` class.
   ([#3020](https://github.com/Pycord-Development/pycord/pull/3020))
 
 ### Changed
