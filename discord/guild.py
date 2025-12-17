@@ -184,7 +184,25 @@ class GuildRoleCounts(dict[int, int]):
             key = key.id
         return super().__getitem__(key)
 
+    @override
+    def get(self, key: int | abc.Snowflake, default: Any = None) -> int | None:
+        """Get the member count for a role, returning a default if not found.
 
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+        default: Any
+            The value to return if the role ID is not found.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The member count for the role, or ``default`` if the role is not present.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().get(key, default)
 class Guild(Hashable):
     """Represents a Discord guild.
 
