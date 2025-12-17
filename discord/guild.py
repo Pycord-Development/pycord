@@ -1169,6 +1169,24 @@ class Guild(Hashable):
         :class:`GuildRoleCounts`
             A mapping of role IDs to their member counts. Can be accessed
             with either role IDs (:class:`int`) or Snowflake objects (e.g., :class:`Role`).
+
+        Examples
+        --------
+
+        Getting member counts using role IDs:
+
+        .. code-block:: python3
+
+            counts = await guild.fetch_roles_member_counts()
+            member_count = counts[123456789]
+
+        Using a role object:
+
+        .. code-block:: python3
+
+            counts = await guild.fetch_roles_member_counts()
+            role = guild.get_role(123456789)
+            member_count = counts[role]
         """
         r = await self._state.http.get_roles_member_counts(self.id)
         return GuildRoleCounts({int(role_id): count for role_id, count in r.items()})
