@@ -203,6 +203,8 @@ class GuildRoleCounts(dict[int, int]):
         if isinstance(key, abc.Snowflake):
             key = key.id
         return super().get(key, default)
+
+
 class Guild(Hashable):
     """Represents a Discord guild.
 
