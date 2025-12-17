@@ -158,6 +158,10 @@ class GuildRoleCounts(dict[int, int]):
     """
 
     @override
+    def __repr__(self):
+        return f"<GuildRoleCounts {super().__repr__()}>"
+
+    @override
     def __getitem__(self, key: int | abc.Snowflake) -> int:
         """Get the member count for a role.
 
