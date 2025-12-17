@@ -41,6 +41,8 @@ from typing import (
     overload,
 )
 
+from typing_extensions import override
+
 from . import abc, utils
 from .asset import Asset
 from .automod import AutoModAction, AutoModRule, AutoModTriggerMetadata
@@ -94,7 +96,7 @@ from .utils import _D, _FETCHABLE
 from .welcome_screen import WelcomeScreen, WelcomeScreenChannel
 from .widget import Widget
 
-__all__ = ("BanEntry", "Guild")
+__all__ = ("BanEntry", "Guild", "GuildRoleCounts")
 
 MISSING = utils.MISSING
 
@@ -144,6 +146,39 @@ class _GuildLimit(NamedTuple):
     soundboard: int
     bitrate: float
     filesize: int
+
+
+class GuildRoleCounts(dict[int, int]):
+    """A dictionary subclass that maps role IDs to their member counts.
+
+    This class allows accessing member counts by either role ID (:class:`int`) or by
+    a Snowflake object (which has an ``.id`` attribute).
+
+    .. versionadded:: 2.7
+    """
+
+    @override
+    def __getitem__(self, key: int | abc.Snowflake) -> int:
+        """Get the member count for a role.
+
+        Parameters
+        ----------
+        key: Union[:class:`int`, :class:`~discord.abc.Snowflake`]
+            The role ID or a Snowflake object (e.g., a :class:`Role`).
+
+        Returns
+        -------
+        :class:`int`
+            The member count for the role.
+
+        Raises
+        ------
+        KeyError
+            The role ID was not found.
+        """
+        if isinstance(key, abc.Snowflake):
+            key = key.id
+        return super().__getitem__(key)
 
 
 class Guild(Hashable):
@@ -1119,17 +1154,20 @@ class Guild(Hashable):
         """
         return self._roles.get(role_id)
 
-    async def fetch_roles_member_counts(self) -> dict[int, int]:
+    async def fetch_roles_member_counts(self) -> GuildRoleCounts:
         """|coro|
         Fetches a mapping of role IDs to their member counts for this guild.
 
+        .. versionadded:: 2.7
+
         Returns
         -------
-        Dict[:class:`int`, :class:`int`]
-            A mapping of role IDs to their member counts.
+        :class:`GuildRoleCounts`
+            A mapping of role IDs to their member counts. Can be accessed
+            with either role IDs (:class:`int`) or Snowflake objects (e.g., :class:`Role`).
         """
         r = await self._state.http.get_roles_member_counts(self.id)
-        return {int(role_id): count for role_id, count in r.items()}
+        return GuildRoleCounts({int(role_id): count for role_id, count in r.items()})
 
     @property
     def default_role(self) -> Role:
