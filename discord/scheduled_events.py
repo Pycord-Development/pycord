@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, overload
 
 from . import utils
 from .asset import Asset
@@ -227,6 +227,36 @@ class ScheduledEventRecurrenceRule:
         "_state",
     )
 
+    @overload
+    def __init__(
+        self,
+        start_date: datetime.datetime,
+        frequency: Literal[ScheduledEventRecurrenceFrequency.monthly],
+        interval: Literal[1],
+        *,
+        n_weekdays: list[NWeekDay],
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        start_date: datetime.datetime,
+        frequency: Literal[ScheduledEventRecurrenceFrequency.yearly],
+        interval: Literal[1],
+        *,
+        month_days: list[datetime.date],
+    ) -> None: ...
+
+    @overload
+    def __init__(
+        self,
+        start_date: datetime.datetime,
+        frequency: Literal[ScheduledEventRecurrenceFrequency.weekly],
+        interval: Literal[1, 2],
+        *,
+        weekdays: list[WeekDay | ScheduledEventWeekday],
+    ) -> None: ...
+
     def __init__(
         self,
         start_date: datetime.datetime,
@@ -241,15 +271,14 @@ class ScheduledEventRecurrenceRule:
         self.frequency: ScheduledEventRecurrenceFrequency = frequency
         self.interval: Literal[1, 2] = interval
 
-        self.count: int | None = None
-        self.end_date: datetime.datetime | None = None
-
         self._weekdays: list[ScheduledEventWeekday] = self._parse_weekdays(weekdays)
         self._n_weekdays: list[NWeekDay] = n_weekdays
         self._month_days: list[datetime.date] = month_days
-        self._year_days: list[int] = MISSING
 
-        self._state: ConnectionState | None = None
+        # these attributes can only be received, not sent
+        self._year_days: list[int] = MISSING
+        self.count: int | None = None
+        self.end_date: datetime.datetime | None = None
 
     def __repr__(self) -> str:
         return f"<ScheduledEventRecurrenceRule start_date={self.start_date} frequency={self.frequency} interval={self.interval}>"
@@ -261,7 +290,16 @@ class ScheduledEventRecurrenceRule:
         """
         if self._weekdays is MISSING:
             return []
-        return self._weekdays.copy()
+        return self._weekdays
+
+    @weekdays.setter
+    def weekdays(self, value: list[int | ScheduledEventWeekday] | None) -> None:
+        if value is None:
+            if self.frequency is ScheduledEventRecurrenceFrequency.weekly:
+                raise ValueError("can't set weekdays to None when frequency is set as weekly")
+            self._weekdays = MISSING
+        else:
+            self._weekdays = self._parse_weekdays(value)
 
     @property
     def n_weekdays(self) -> list[NWeekDay]:
@@ -270,7 +308,16 @@ class ScheduledEventRecurrenceRule:
         """
         if self._n_weekdays is MISSING:
             return []
-        return self._n_weekdays.copy()
+        return self._n_weekdays
+
+    @n_weekdays.setter
+    def n_weekdays(self, value: list[NWeekDay] | None) -> None:
+        if value is None:
+            if self.frequency is ScheduledEventRecurrenceFrequency.monthly:
+                raise ValueError("can't set n_weekdays to None when frequency is set as monthly")
+            self._n_weekdays = MISSING
+        else:
+            self._n_weekdays = value
 
     @property
     def month_days(self) -> list[datetime.date]:
@@ -279,7 +326,16 @@ class ScheduledEventRecurrenceRule:
         """
         if self._month_days is MISSING:
             return []
-        return self._month_days.copy()
+        return self._month_days
+
+    @month_days.setter
+    def month_days(self, value: list[datetime.date] | None) -> None:
+        if value is None:
+            if self.frequency is ScheduledEventRecurrenceFrequency.yearly:
+                raise ValueError("can't set month_days to None when frequency is set as yearly")
+            self._month_days = MISSING
+        else:
+            self._month_days = value
 
     @property
     def year_days(self) -> list[int]:
@@ -288,79 +344,7 @@ class ScheduledEventRecurrenceRule:
         """
         if self._year_days is MISSING:
             return []
-        return self._year_days.copy()
-
-    def copy(self) -> ScheduledEventRecurrenceRule:
-        """Creates a stateless copy of this object that allows for
-        methods such as :meth:`.edit` to be used on.
-
-        Returns
-        -------
-        :class:`ScheduledEventRecurrenceRule`
-            The recurrence rule copy.
-        """
-
-        return ScheduledEventRecurrenceRule(
-            start_date=self.start_date,
-            frequency=self.frequency,
-            interval=self.interval,
-            weekdays=self._weekdays,  # pyright: ignore[reportArgumentType]
-            n_weekdays=self._n_weekdays,
-            month_days=self._month_days,
-        )
-
-    def edit(
-        self,
-        *,
-        weekdays: list[WeekDay | ScheduledEventWeekday] | None = MISSING,
-        n_weekdays: list[NWeekDay] | None = MISSING,
-        month_days: list[datetime.date] | None = MISSING,
-    ) -> Self:
-        """Edits this recurrence rule.
-
-        If this recurrence rule was obtained from the API you will need to
-        :meth:`.copy` it in order to edit it.
-
-        Parameters
-        ----------
-        weekdays: List[Union[:class:`int`, :class:`ScheduledEventWeekday`]]
-            The weekdays the event will recur on. Must be between 0 (Monday) and 6 (Sunday).
-        n_weekdays: List[Tuple[:class:`int`, :class:`int`]]
-            A (week, weekday) tuple pair list that represents the specific ``weekday``, from 0 (Monday)
-            to 6 (Sunday), on ``week`` on which this event will recur on.
-        month_days: List[:class:`datetime.date`]
-            A list containing the specific day on a month when the event will recur on. The year
-            is ignored.
-
-        Returns
-        -------
-        :class:`ScheduledEventRecurrenceRule`
-            The updated recurrence rule.
-
-        Raises
-        ------
-        ClientException
-            You cannot edit this recurrence rule.
-        """
-
-        if self._state is not None:
-            raise ClientException("You cannot edit this recurrence rule")
-
-        for value, attr in (
-            (weekdays, "_weekdays"),
-            (n_weekdays, "_n_weekdays"),
-            (month_days, "_month_days"),
-        ):
-            if value is None:
-                setattr(self, attr, MISSING)
-            elif value is not MISSING:
-                if attr == "_weekdays":
-                    value = self._parse_weekdays(
-                        weekdays
-                    )  # pyright: ignore[reportArgumentType]
-                setattr(self, attr, value)
-
-        return self
+        return self._year_days
 
     def _get_month_days_payload(self) -> tuple[list[int], list[int]]:
         months, days = map(list, zip(*((m.month, m.day) for m in self._month_days)))
@@ -372,10 +356,12 @@ class ScheduledEventRecurrenceRule:
         return [datetime.date(1, month, day) for month, day in zip(months, days)]
 
     def _parse_weekdays(
-        self, weekdays: list[WeekDay | ScheduledEventWeekday]
+        self, weekdays: list[WeekDay | ScheduledEventWeekday] | MISSING,
     ) -> list[ScheduledEventWeekday]:
+        if weekdays is MISSING:
+            return []
         return [
-            w if w is ScheduledEventWeekday else try_enum(ScheduledEventWeekday, w)
+            w if isinstance(w, ScheduledEventWeekday) else try_enum(ScheduledEventWeekday, w)
             for w in weekdays
         ]
 
@@ -384,7 +370,7 @@ class ScheduledEventRecurrenceRule:
 
     @classmethod
     def _from_data(
-        cls, data: ScheduledEventRecurrenceRulePayload | None, state: ConnectionState
+        cls, data: ScheduledEventRecurrenceRulePayload | None,
     ) -> Self | None:
         if data is None:
             return None
@@ -392,13 +378,12 @@ class ScheduledEventRecurrenceRule:
         start = utils.parse_time(data["start"])
         end = utils.parse_time(data.get("end"))
 
-        self = cls(
+        self = cls(  # pyright: ignore[reportCallIssue]
             start_date=start,
             frequency=try_enum(ScheduledEventRecurrenceFrequency, data["frequency"]),
             interval=int(data["interval"]),  # pyright: ignore[reportArgumentType]
         )
 
-        self._state = state
         self.end_date = end
         self.count = data.get("count")
 
@@ -507,11 +492,6 @@ class ScheduledEvent(Hashable):
         The recurrence rule this scheduled event follows.
 
         .. versionadded:: 2.7
-    exceptions: List[:class:`Object`]
-        A list of objects that represents the events on the recurrence rule that were
-        cancelled or moved out of it.
-
-        .. versionadded:: 2.7
     """
 
     __slots__ = (
@@ -529,7 +509,6 @@ class ScheduledEvent(Hashable):
         "_image",
         "subscriber_count",
         "recurrence_rule",
-        "exceptions",
     )
 
     def __init__(
@@ -550,8 +529,11 @@ class ScheduledEvent(Hashable):
         self.start_time: datetime.datetime = datetime.datetime.fromisoformat(
             data.get("scheduled_start_time")
         )
-        if end_time := data.get("scheduled_end_time", None):
-            end_time = datetime.datetime.fromisoformat(end_time)
+
+        end_time: datetime.datetime | None = None
+        if et := data.get("scheduled_end_time", None):
+            end_time = datetime.datetime.fromisoformat(et)
+
         self.end_time: datetime.datetime | None = end_time
         self.status: ScheduledEventStatus = try_enum(
             ScheduledEventStatus, data.get("status")
@@ -574,12 +556,6 @@ class ScheduledEvent(Hashable):
                 data.get("recurrence_rule"),
                 state,
             )
-        )
-        self.exceptions: list[Object] = list(
-            map(
-                Object,
-                data.get("guild_scheduled_events_exceptions", []) or [],
-            ),
         )
 
     def __str__(self) -> str:
