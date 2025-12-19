@@ -1870,20 +1870,8 @@ def check_any(*checks: Check) -> Callable[[T], T]:
 
     .. versionadded:: 1.3
 
-    Parameters
-    ------------
-    \*checks: Callable[[:class:`Context`], :class:`bool`]
-        An argument list of checks that have been decorated with
-        the :func:`check` decorator.
-
-    Raises
-    ------
-    TypeError
-        A check passed has not been decorated with the :func:`check`
-        decorator.
-
     Examples
-    ---------
+    --------
 
     Creating a basic check to see if it's the bot owner or
     the server owner:
@@ -1899,6 +1887,18 @@ def check_any(*checks: Check) -> Callable[[T], T]:
         @commands.check_any(commands.is_owner(), is_guild_owner())
         async def only_for_owners(ctx):
             await ctx.send('Hello mister owner!')
+
+    Parameters
+    ------------
+    \*checks: Callable[[:class:`Context`], :class:`bool`]
+        An argument list of checks that have been decorated with
+        the :func:`check` decorator.
+
+    Raises
+    ------
+    TypeError
+        A check passed has not been decorated with the :func:`check`
+        decorator.
 
     """
 
