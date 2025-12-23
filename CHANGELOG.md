@@ -24,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed the `view` attribute on many view items being incorrect.
+  ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
 - Fixed `TypeError` in paginator implementation when only passing `PageGroup` objects
   and `show_menu` is falsy.
   ([#2993](https://github.com/Pycord-Development/pycord/pull/2993))
@@ -33,6 +35,9 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3016](https://github.com/Pycord-Development/pycord/pull/3016))
 
 ### Deprecated
+
+- Deprecated manually setting the `view` attribute on view items.
+  ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
 
 ### Removed
 
