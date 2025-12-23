@@ -315,7 +315,9 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             max_values=max_values if max_values is not None else self.max_values,
             disabled=disabled if disabled is not None else self.disabled,
             options=options if options is not None else self.options,
-            channel_types=channel_types if channel_types is not None else self.channel_types,
+            channel_types=(
+                channel_types if channel_types is not None else self.channel_types
+            ),
             id=id or self.id,
             required=required if required is not None else self.required,
             default_values=default_values or self.default_values,

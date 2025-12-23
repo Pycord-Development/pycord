@@ -152,9 +152,7 @@ class MediaGallery(ViewItem[V]):
             pass
         return self
 
-    def replace_item(
-        self, index: int, new_item: MediaGalleryItem
-    ) -> Self:
+    def replace_item(self, index: int, new_item: MediaGalleryItem) -> Self:
         """Directly replace an item in this gallery by index.
 
         Parameters
