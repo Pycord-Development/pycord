@@ -65,13 +65,15 @@ class MediaGallery(ViewItem[V]):
     def __init__(self, *items: MediaGalleryItem, id: int | None = None):
         super().__init__()
 
-        self._underlying = self._generate_underlying(
-            id=id, items=items
-        )
+        self._underlying = self._generate_underlying(id=id, items=items)
 
-    def _generate_underlying(self, id: int | None = None, items: list[MediaGalleryItem] | None = None) -> MediaGalleryComponent:
+    def _generate_underlying(
+        self, id: int | None = None, items: list[MediaGalleryItem] | None = None
+    ) -> MediaGalleryComponent:
         return MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery, id=id or self.id, items=[i for i in items] if items else []
+            type=ComponentType.media_gallery,
+            id=id or self.id,
+            items=[i for i in items] if items else [],
         )
 
     @property

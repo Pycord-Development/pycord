@@ -78,7 +78,10 @@ class File(ViewItem[V]):
         )
 
     def _generate_underlying(
-        self, file: UnfurledMediaItem | None = None, spoiler: bool | None = None, id: int | None = None
+        self,
+        file: UnfurledMediaItem | None = None,
+        spoiler: bool | None = None,
+        id: int | None = None,
     ) -> FileComponent:
         return FileComponent._raw_construct(
             type=ComponentType.file,
