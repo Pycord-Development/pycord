@@ -924,6 +924,9 @@ class DesignerView(BaseView):
             The view instance.
         """
 
+        if not isinstance(new_item, ViewItem):
+            raise TypeError(f"expected ViewItem not {new_item.__class__!r}")
+
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
         if not original_item:

@@ -185,6 +185,9 @@ class ActionRow(ViewItem[V]):
             The new item to insert into the row.
         """
 
+        if not isinstance(new_item, (Select, Button)):
+            raise TypeError(f"expected Select or Button, not {new_item.__class__!r}")
+
         if isinstance(original_item, (str, int)):
             original_item = self.get_item(original_item)
         if not original_item:

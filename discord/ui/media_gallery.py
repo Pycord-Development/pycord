@@ -74,7 +74,7 @@ class MediaGallery(ViewItem[V]):
         return MediaGalleryComponent._raw_construct(
             type=ComponentType.media_gallery,
             id=id or self.id,
-            items=[i for i in items] if items else [],
+            items=[i for i in items] if items else [i for i in self.items or []],
         )
 
     @property
@@ -137,7 +137,41 @@ class MediaGallery(ViewItem[V]):
 
         return self.append_item(item)
 
+    def remove_item(self, index: int) -> Self:
+        """Removes an item from the gallery.
+
+        Parameters
+        ----------
+        index: :class:`int`
+            The index of the item to remove from the gallery.
+        """
+
+        try:
+            self.items.pop(item)
+        except IndexError:
+            pass
+        return self
+
+    def replace_item(
+        self, index: int, new_item: MediaGalleryItem
+    ) -> Self:
+        """Directly replace an item in this gallery by index.
+
+        Parameters
+        ----------
+        original_item: :class:`int`
+            The index of the item to replace in this gallery.
+        new_item: :class:`MediaGalleryItem`
+            The new item to insert into the gallery.
+        """
+
+        if not isinstance(new_item, MediaGalleryItem):
+            raise TypeError(f"expected MediaGalleryItem not {new_item.__class__!r}")
+        self.items[i] = new_item
+        return self
+
     def to_component_dict(self) -> MediaGalleryComponentPayload:
+        self.underlying = self._generate_underlying()
         return super().to_component_dict()
 
     @classmethod
