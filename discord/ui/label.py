@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from ..emoji import AppEmoji, GuildEmoji
-    from ..interaction import Interaction
+    from ..interactions import Interaction
     from ..partial_emoji import PartialEmoji, _EmojiTag
     from ..types.components import LabelComponent as LabelComponentPayload
     from .modal import DesignerModal
