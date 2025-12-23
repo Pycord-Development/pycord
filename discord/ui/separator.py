@@ -89,7 +89,7 @@ class Separator(ViewItem[V]):
             type=ComponentType.separator,
             id=id or self.id,
             divider=divider if divider is not None else self.divider,
-            spacing=spacing,
+            spacing=spacing or self.spacing,
         )
 
     @property
