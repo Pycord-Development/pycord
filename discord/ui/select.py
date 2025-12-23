@@ -308,7 +308,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         super()._generate_underlying(SelectMenu)
         return SelectMenu._raw_construct(
             custom_id=custom_id or self.custom_id,
-            type=select_type or self.select_type,
+            type=type or self.type,
             placeholder=placeholder or self.placeholder,
             min_values=min_values if min_values is not None else self.min_values,
             max_values=max_values if max_values is not None else self.max_values,
