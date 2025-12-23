@@ -1136,10 +1136,7 @@ class SelectDefaultValueType(Enum):
 
 
 class ApplicationEventWebhookStatus(Enum):
-    """Represents the application event webhook status.
-
-    .. versionadded:: 2.7
-    """
+    """Represents the application event webhook status."""
 
     DISABLED = 1
     ENABLED = 2
