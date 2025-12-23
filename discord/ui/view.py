@@ -54,6 +54,8 @@ from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
+from ..components import InputText as InputTextComponent
+from ..components import FileUpload as FileUploadComponent
 from ..components import _component_factory
 from ..enums import ChannelType
 from ..utils import find
@@ -142,6 +144,14 @@ def _component_to_item(component: Component) -> ViewItem[V]:
         from .label import Label
 
         return Label.from_component(component)
+    if isinstance(component, InputTextComponent):
+        from .input_text import InputText
+
+        return InputText.from_component(component)
+    if isinstance(component, FileUploadComponent):
+        from .file_upload import FileUpload
+
+        return FileUpload.from_component(component)
     return ViewItem.from_component(component)
 
 
@@ -893,6 +903,39 @@ class DesignerView(BaseView):
             )
 
         super().add_item(item)
+        return self
+
+    def replace_item(self, original_item: ViewItem[V] | str | int, new_item: ViewItem[V]) -> Self:
+        """Directly replace an item in this view.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
+
+        Parameters
+        ----------
+        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+            The item, item ``id``, or item ``custom_id`` to replace in the view.
+        new_item: :class:`ViewItem`
+            The new item to insert into the view.
+
+        Returns
+        -------
+        :class:`BaseView`
+            The view instance.
+        """
+
+        if isinstance(original_item, (str, int)):
+            original_item = self.get_item(original_item)
+        if not original_item:
+            raise ValueError(f"Could not find original_item in view.")
+        try:
+            if original_item.parent is self:
+                i = self.children.index(original_item)
+                new_item.parent = self
+                self.children[i] = new_item
+                original_item.parent = None
+            else:
+                original_item.parent.replace_item(original_item, new_item)
+        except ValueError:
+            raise ValueError(f"Could not find original_item in view.")
         return self
 
     def refresh(self, components: list[Component]):

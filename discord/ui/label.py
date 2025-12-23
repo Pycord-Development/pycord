@@ -415,8 +415,8 @@ class Label(ModalItem[M]):
 
         item = _component_to_item(component.component)
         return cls(
-            item,
-            id=component.id,
             label=component.label,
+            item=item,
+            id=component.id,
             description=component.description,
         )

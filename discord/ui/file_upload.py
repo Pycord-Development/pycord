@@ -158,3 +158,14 @@ class FileUpload(ModalItem):
             )
             for attachment_id in values
         ]
+
+    @classmethod
+    def from_component(cls: type[FileUpload], component: FileUploadComponent) -> FileUpload:
+
+        return cls(
+            custom_id=component.custom_id,
+            min_values=component.min_values,
+            max_values=component.max_values,
+            required=component.required,
+            id=component.id,
+        )

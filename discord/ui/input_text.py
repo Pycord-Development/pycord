@@ -259,5 +259,20 @@ class InputText(ModalItem):
     ) -> None:
         return self.refresh_state(data)
 
+    @classmethod
+    def from_component(type[InputText], component: InputTextComponent) -> InputText:
+
+        return cls(
+            style=component.style,
+            custom_id=component.custom_id,
+            label=component.label,
+            placeholder=component.placeholder,
+            min_length=component.min_length,
+            max_length=component.max_length,
+            required=component.required,
+            value=component.value,
+            id=component.id,
+        )
+
 
 TextInput = InputText
