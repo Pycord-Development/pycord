@@ -95,10 +95,8 @@ class Label(ModalItem[M]):
 
         self.item: ModalItem = None
 
-        self._underlying = LabelComponent._raw_construct(
-            type=ComponentType.label,
+        self._underlying = self._generate_underlying(
             id=id,
-            component=None,
             label=label,
             description=description,
         )
@@ -113,7 +111,25 @@ class Label(ModalItem[M]):
             self.item.modal = value
 
     def _set_component_from_item(self, item: ModalItem):
-        self._underlying.component = item._underlying
+        self.underlying.component = item._generate_underlying()
+
+    def _generate_underlying(
+        self,
+        label: str | None = None,
+        description: str | None = None,
+        id: int | None = None,
+    ) -> LabelComponent:
+        label = LabelComponent._raw_construct(
+            type=ComponentType.label,
+            id=id or self.id,
+            component=None,
+            label=label or self.label,
+            description=description or self.description,
+        )
+
+        if self.item:
+            label.component = self.item._generate_underlying()
+        return label
 
     def set_item(self, item: ModalItem) -> Self:
         """Set this label's item.
@@ -372,20 +388,20 @@ class Label(ModalItem[M]):
     @property
     def label(self) -> str:
         """The label text. Must be 45 characters or fewer."""
-        return self._underlying.label
+        return self.underlying.label
 
     @label.setter
     def label(self, value: str) -> None:
-        self._underlying.label = value
+        self.underlying.label = value
 
     @property
     def description(self) -> str | None:
         """The description for this label. Must be 100 characters or fewer."""
-        return self._underlying.description
+        return self.underlying.description
 
     @description.setter
     def description(self, value: str | None) -> None:
-        self._underlying.description = value
+        self.underlying.description = value
 
     def is_dispatchable(self) -> bool:
         return self.item.is_dispatchable()
@@ -394,7 +410,7 @@ class Label(ModalItem[M]):
         return self.item.is_persistent()
 
     def refresh_component(self, component: LabelComponent) -> None:
-        self._underlying = component
+        self.underlying = component
         self.item.refresh_component(component.component)
 
     def walk_items(self) -> Iterator[ModalItem]:

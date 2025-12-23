@@ -65,13 +65,18 @@ class MediaGallery(ViewItem[V]):
     def __init__(self, *items: MediaGalleryItem, id: int | None = None):
         super().__init__()
 
-        self._underlying = MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery, id=id, items=[i for i in items]
+        self._underlying = self._generate_underlying(
+            id=id, items=items
+        )
+
+    def _generate_underlying(self, id: int | None = None, items: list[MediaGalleryItem] | None = None) -> MediaGalleryComponent:
+        return MediaGalleryComponent._raw_construct(
+            type=ComponentType.media_gallery, id=id or self.id, items=[i for i in items] if items else []
         )
 
     @property
     def items(self):
-        return self._underlying.items
+        return self.underlying.items
 
     def append_item(self, item: MediaGalleryItem) -> Self:
         """Adds a :attr:`MediaGalleryItem` to the gallery.
@@ -95,7 +100,7 @@ class MediaGallery(ViewItem[V]):
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
 
-        self._underlying.items.append(item)
+        self.underlying.items.append(item)
         return self
 
     def add_item(

@@ -276,7 +276,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
-        self._underlying: SelectMenu = SelectMenu._raw_construct(
+        self._underlying: SelectMenu = self._generate_underlying(
             custom_id=custom_id,
             type=select_type,
             placeholder=placeholder,
@@ -290,6 +290,35 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             default_values=self._handle_default_values(default_values, select_type),
         )
         self.row = row
+
+    def _generate_underlying(
+        self,
+        select_type: ComponentType | None = None,
+        custom_id: str | None = None,
+        placeholder: str | None = None,
+        min_values: int = None,
+        max_values: int = None,
+        options: list[SelectOption] | None = None,
+        channel_types: list[ChannelType] | None = None,
+        disabled: bool = None,
+        row: int | None = None,
+        id: int | None = None,
+        required: bool | None = None,
+        default_values: Sequence[SelectDefaultValue | ST] | None = None,
+    ) -> SelectMenu:
+        return SelectMenu._raw_construct(
+            custom_id=custom_id or self.custom_id,
+            type=select_type or self.select_type,
+            placeholder=placeholder or self.placeholder,
+            min_values=min_values if min_values is not None else self.min_values,
+            max_values=max_values if max_values is not None else self.max_values,
+            disabled=disabled if disabled is not None else self.disabled,
+            options=options or self.options,
+            channel_types=channel_types or self.channel_types,
+            id=id or self.id,
+            required=required if required is not None else self.required,
+            default_values=default_values or self.default_values,
+        )
 
     def _handle_default_values(
         self,
@@ -338,7 +367,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     @property
     def custom_id(self) -> str:
         """The ID of the select menu that gets received during an interaction."""
-        return self._underlying.custom_id
+        return self.underlying.custom_id
 
     @custom_id.setter
     def custom_id(self, value: str):
@@ -346,13 +375,13 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             raise TypeError("custom_id must be None or str")
         if len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
-        self._underlying.custom_id = value
+        self.underlying.custom_id = value
         self._provided_custom_id = value is not None
 
     @property
     def placeholder(self) -> str | None:
         """The placeholder text that is shown if nothing is selected, if any."""
-        return self._underlying.placeholder
+        return self.underlying.placeholder
 
     @placeholder.setter
     def placeholder(self, value: str | None):
@@ -361,74 +390,74 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if value and len(value) > 150:
             raise ValueError("placeholder must be 150 characters or fewer")
 
-        self._underlying.placeholder = value
+        self.underlying.placeholder = value
 
     @property
     def min_values(self) -> int:
         """The minimum number of items that must be chosen for this select menu."""
-        return self._underlying.min_values
+        return self.underlying.min_values
 
     @min_values.setter
     def min_values(self, value: int):
         if value < 0 or value > 25:
             raise ValueError("min_values must be between 0 and 25")
-        self._underlying.min_values = int(value)
+        self.underlying.min_values = int(value)
 
     @property
     def max_values(self) -> int:
         """The maximum number of items that must be chosen for this select menu."""
-        return self._underlying.max_values
+        return self.underlying.max_values
 
     @max_values.setter
     def max_values(self, value: int):
         if value < 1 or value > 25:
             raise ValueError("max_values must be between 1 and 25")
-        self._underlying.max_values = int(value)
+        self.underlying.max_values = int(value)
 
     @property
     def disabled(self) -> bool:
         """Whether the select is disabled or not."""
-        return self._underlying.disabled
+        return self.underlying.disabled
 
     @property
     def required(self) -> bool:
         """Whether the select is required or not. Only applicable in modal selects."""
-        return self._underlying.required
+        return self.underlying.required
 
     @required.setter
     def required(self, value: bool):
-        self._underlying.required = value
+        self.underlying.required = value
 
     @disabled.setter
     def disabled(self, value: bool):
-        self._underlying.disabled = bool(value)
+        self.underlying.disabled = bool(value)
 
     @property
     def channel_types(self) -> list[ChannelType]:
         """A list of channel types that can be selected in this menu."""
-        return self._underlying.channel_types
+        return self.underlying.channel_types
 
     @channel_types.setter
     def channel_types(self, value: list[ChannelType]):
-        if self._underlying.type is not ComponentType.channel_select:
+        if self.underlying.type is not ComponentType.channel_select:
             raise InvalidArgument("channel_types can only be set on channel selects")
-        self._underlying.channel_types = value
+        self.underlying.channel_types = value
 
     @property
     def options(self) -> list[SelectOption]:
         """A list of options that can be selected in this menu."""
-        return self._underlying.options
+        return self.underlying.options
 
     @options.setter
     def options(self, value: list[SelectOption]):
-        if self._underlying.type is not ComponentType.string_select:
+        if self.underlying.type is not ComponentType.string_select:
             raise InvalidArgument("options can only be set on string selects")
         if not isinstance(value, list):
             raise TypeError("options must be a list of SelectOption")
         if not all(isinstance(obj, SelectOption) for obj in value):
             raise TypeError("all list items must subclass SelectOption")
 
-        self._underlying.options = value
+        self.underlying.options = value
 
     @property
     def default_values(self) -> list[SelectDefaultValue]:
@@ -437,14 +466,14 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
         .. versionadded:: 2.7
         """
-        return self._underlying.default_values
+        return self.underlying.default_values
 
     @default_values.setter
     def default_values(
         self, values: Sequence[SelectDefaultValue | Snowflake] | None
     ) -> None:
         default_values = self._handle_default_values(values, self.type)
-        self._underlying.default_values = default_values
+        self.underlying.default_values = default_values
 
     def add_default_value(
         self,
@@ -553,7 +582,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
                 f"expected a SelectDefaultValue object, got {value.__class__.__name__}"
             )
 
-        self._underlying.default_values.append(value)
+        self.underlying.default_values.append(value)
         return self
 
     def add_option(
@@ -592,7 +621,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         ValueError
             The number of options exceeds 25.
         """
-        if self._underlying.type is not ComponentType.string_select:
+        if self.underlying.type is not ComponentType.string_select:
             raise Exception("options can only be set on string selects")
 
         option = SelectOption(
@@ -618,13 +647,13 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         ValueError
             The number of options exceeds 25.
         """
-        if self._underlying.type is not ComponentType.string_select:
+        if self.underlying.type is not ComponentType.string_select:
             raise Exception("options can only be set on string selects")
 
-        if len(self._underlying.options) > 25:
+        if len(self.underlying.options) > 25:
             raise ValueError("maximum number of options already provided")
 
-        self._underlying.options.append(option)
+        self.underlying.options.append(option)
         return self
 
     @property
@@ -636,7 +665,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         if self._interaction is None or self._interaction.data is None:
             # The select has not been interacted with yet
             return []
-        select_type = self._underlying.type
+        select_type = self.underlying.type
         if select_type is ComponentType.string_select:
             return self._selected_values  # type: ignore # ST is str
         resolved = []
@@ -710,7 +739,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         return super().to_component_dict()
 
     def refresh_component(self, component: SelectMenu) -> None:
-        self._underlying = component
+        self.underlying = component
 
     def refresh_state(self, interaction: Interaction | dict) -> None:
         data: ComponentInteractionData = (

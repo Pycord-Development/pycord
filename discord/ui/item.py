@@ -68,12 +68,12 @@ class Item(Generic[T]):
         self.parent: Item | ItemInterface | None = None
 
     def to_component_dict(self) -> dict[str, Any]:
-        if not self._underlying:
+        if not self.underlying:
             raise NotImplementedError
-        return self._underlying.to_dict()
+        return self.underlying.to_dict()
 
     def refresh_component(self, component: Component) -> None:
-        self._underlying = component
+        self.underlying = component
 
     def refresh_state(self, interaction: Interaction) -> None:
         return None
@@ -83,10 +83,21 @@ class Item(Generic[T]):
         return cls()
 
     @property
+    def underlying(self) -> Component:
+        return self._underlying
+
+    @underlying.setter
+    def underlying(self, value: Component) -> None:
+        self._underlying = value
+
+    @property
     def type(self) -> ComponentType:
-        if not self._underlying:
+        if not self.underlying:
             raise NotImplementedError
-        return self._underlying.type
+        return self.underlying.type
+
+    def _generate_underlying(self) -> Component:
+        raise NotImplementedError
 
     def is_dispatchable(self) -> bool:
         return False
@@ -117,13 +128,13 @@ class Item(Generic[T]):
         Optional[:class:`int`]
             The ID of this item, or ``None`` if the user didn't set one.
         """
-        return self._underlying and self._underlying.id
+        return self.underlying and self.underlying.id
 
     @id.setter
     def id(self, value) -> None:
-        if not self._underlying:
+        if not self.underlying:
             return
-        self._underlying.id = value
+        self.underlying.id = value
 
 
 class ViewItem(Item[V]):

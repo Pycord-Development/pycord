@@ -72,30 +72,42 @@ class Separator(ViewItem[V]):
     ):
         super().__init__()
 
-        self._underlying = SeparatorComponent._raw_construct(
-            type=ComponentType.separator,
+        self._underlying = self._generate_underlying(
             id=id,
             divider=divider,
+            spacing=spacing,
+        )
+
+    def _generate_underlying(
+        self,
+        divider: bool | None = None,
+        spacing: SeparatorSpacingSize | None = None,
+        id: int | None = None,
+    ) -> SeparatorComponent:
+        return SeparatorComponent._raw_construct(
+            type=ComponentType.separator,
+            id=id or self.id,
+            divider=divider if divider is not None else self.divider,
             spacing=spacing,
         )
 
     @property
     def divider(self) -> bool:
         """Whether the separator is a divider. Defaults to ``True``."""
-        return self._underlying.divider
+        return self.underlying.divider
 
     @divider.setter
     def divider(self, value: bool) -> None:
-        self._underlying.divider = value
+        self.underlying.divider = value
 
     @property
     def spacing(self) -> SeparatorSpacingSize:
         """The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`."""
-        return self._underlying.spacing
+        return self.underlying.spacing
 
     @spacing.setter
     def spacing(self, value: SeparatorSpacingSize) -> None:
-        self._underlying.spacing = value
+        self.underlying.spacing = value
 
     def to_component_dict(self) -> SeparatorComponentPayload:
         return super().to_component_dict()

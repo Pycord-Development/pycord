@@ -372,7 +372,7 @@ class BaseView(ItemInterface):
 
         A view containing V2 components cannot be sent alongside message content or embeds.
         """
-        return any([item._underlying.is_v2() for item in self.children])
+        return any([item.underlying.is_v2() for item in self.children])
 
     async def _scheduled_task(self, item: ViewItem[V], interaction: Interaction):
         try:
@@ -700,11 +700,11 @@ class View(BaseView):
             or the row the item is trying to be added to is full.
         """
 
-        if item._underlying.is_v2():
+        if item.underlying.is_v2():
             raise ValueError(
                 f"cannot use V2 components in View. Use DesignerView instead."
             )
-        if isinstance(item._underlying, ActionRowComponent):
+        if isinstance(item.underlying, ActionRowComponent):
             for i in item.children:
                 self.add_item(i)
             return self
@@ -897,7 +897,7 @@ class DesignerView(BaseView):
             Maximum number of items has been exceeded (40)
         """
 
-        if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
+        if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
                 f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )

@@ -69,47 +69,65 @@ class File(ViewItem[V]):
     def __init__(self, url: str, *, spoiler: bool = False, id: int | None = None):
         super().__init__()
 
-        self.file = UnfurledMediaItem(url)
+        file = UnfurledMediaItem(url)
 
-        self._underlying = FileComponent._raw_construct(
-            type=ComponentType.file,
+        self._underlying = self._generate_underlying(
             id=id,
-            file=self.file,
+            file=file,
             spoiler=spoiler,
         )
 
+    def _generate_underlying(
+        self, file: UnfurledMediaItem | None = None, spoiler: bool | None = None, id: int | None = None
+    ) -> FileComponent:
+        return FileComponent._raw_construct(
+            type=ComponentType.file,
+            id=id or self.id,
+            file=file or self.file,
+            spoiler=spoiler if spoiler is not None else self.spoiler,
+        )
+
+    @property
+    def file(self) -> UnfurledMediaItem:
+        """The file's unerlying media item."""
+        return self.underlying.file
+
+    @file.setter
+    def url(self, value: UnfurledMediaItem) -> None:
+        self.underlying.file = value
+
     @property
     def url(self) -> str:
-        """The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`."""
-        return self._underlying.file and self._underlying.file.url
+        """The URL of this file's underlying media. This must be an ``attachment://`` URL that references a :class:`~discord.File`."""
+        return self.underlying.file and self.underlying.file.url
 
     @url.setter
     def url(self, value: str) -> None:
-        self._underlying.file.url = value
+        self.underlying.file.url = value
 
     @property
     def spoiler(self) -> bool:
         """Whether the file has the spoiler overlay. Defaults to ``False``."""
-        return self._underlying.spoiler
+        return self.underlying.spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
-        self._underlying.spoiler = spoiler
+        self.underlying.spoiler = spoiler
 
     @property
     def name(self) -> str:
         """The name of this file, if provided by Discord."""
-        return self._underlying.name
+        return self.underlying.name
 
     @property
     def size(self) -> int:
         """The size of this file in bytes, if provided by Discord."""
-        return self._underlying.size
+        return self.underlying.size
 
     def refresh_component(self, component: FileComponent) -> None:
-        original = self._underlying.file
+        original = self.underlying.file
         component.file._static_url = original._static_url
-        self._underlying = component
+        self.underlying = component
 
     def to_component_dict(self) -> FileComponentPayload:
         return super().to_component_dict()
