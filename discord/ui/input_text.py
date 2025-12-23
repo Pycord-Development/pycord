@@ -260,7 +260,9 @@ class InputText(ModalItem):
         return self.refresh_state(data)
 
     @classmethod
-    def from_component(cls: type[InputText], component: InputTextComponent) -> InputText:
+    def from_component(
+        cls: type[InputText], component: InputTextComponent
+    ) -> InputText:
 
         return cls(
             style=component.style,
