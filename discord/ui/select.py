@@ -301,7 +301,6 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         options: list[SelectOption] | None = None,
         channel_types: list[ChannelType] | None = None,
         disabled: bool = None,
-        row: int | None = None,
         id: int | None = None,
         required: bool | None = None,
         default_values: Sequence[SelectDefaultValue | ST] | None = None,
