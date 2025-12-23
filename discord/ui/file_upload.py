@@ -90,6 +90,7 @@ class FileUpload(ModalItem):
         required: bool = None,
         id: int | None = None,
     ) -> FileUploadComponent:
+        super()._generate_underlying(FileUploadComponent)
         return FileUploadComponent._raw_construct(
             type=ComponentType.file_upload,
             custom_id=custom_id or self.custom_id,

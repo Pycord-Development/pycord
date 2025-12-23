@@ -80,6 +80,7 @@ class TextDisplay(ViewItem[V], ModalItem[M]):
         content: str | None = None,
         id: int | None = None,
     ) -> TextDisplayComponent:
+        super()._generate_underlying(TextDisplayComponent)
         return TextDisplayComponent._raw_construct(
             type=ComponentType.text_display,
             id=id or self.id,

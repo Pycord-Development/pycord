@@ -126,15 +126,16 @@ class Container(ViewItem[V]):
 
     def _generate_underlying(
         self,
-        color: int | Colour | None = None,
+        accent_color: int | Colour | None = None,
         spoiler: bool = False,
         id: int | None = None,
     ) -> ContainerComponent:
+        super()._generate_underlying(ContainerComponent)
         container = ContainerComponent._raw_construct(
             type=ComponentType.container,
             id=id or self.id,
             components=[],
-            accent_color=Colour.resolve_value(colour or color or self.colour),
+            accent_color=Colour.resolve_value(accent_color self.colour),
             spoiler=spoiler or self.spoiler,
         )
         for i in self.items:

@@ -70,6 +70,7 @@ class MediaGallery(ViewItem[V]):
     def _generate_underlying(
         self, id: int | None = None, items: list[MediaGalleryItem] | None = None
     ) -> MediaGalleryComponent:
+        super()._generate_underlying(MediaGalleryComponent)
         return MediaGalleryComponent._raw_construct(
             type=ComponentType.media_gallery,
             id=id or self.id,

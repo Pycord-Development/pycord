@@ -92,6 +92,7 @@ class Thumbnail(ViewItem[V]):
         spoiler: bool | None = False,
         id: int | None = None,
     ) -> ThumbnailComponent:
+        super()._generate_underlying(ThumbnailComponent)
         return ThumbnailComponent._raw_construct(
             type=ComponentType.thumbnail,
             id=id or self.id,

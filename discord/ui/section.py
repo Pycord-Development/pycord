@@ -117,6 +117,7 @@ class Section(ViewItem[V]):
             self._add_component_from_item(item)
 
     def _generate_underlying(self, id: int | None = None) -> SectionComponent:
+        super()._generate_underlying(SectionComponent)
         section = SectionComponent._raw_construct(
             type=ComponentType.section,
             id=id or self.id,

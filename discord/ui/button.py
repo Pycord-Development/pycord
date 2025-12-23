@@ -170,6 +170,7 @@ class Button(ViewItem[V]):
         sku_id: int | None = None,
         id: int | None = None,
     ) -> ButtonComponent:
+        super()._generate_underlying(ButtonComponent)
         return ButtonComponent._raw_construct(
             type=ComponentType.button,
             custom_id=custom_id or self.custom_id,

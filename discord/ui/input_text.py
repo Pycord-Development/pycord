@@ -150,6 +150,7 @@ class InputText(ModalItem):
         value: str | None = None,
         id: int | None = None,
     ) -> InputTextComponent:
+        super()._generate_underlying(InputTextComponent)
         return InputTextComponent._raw_construct(
             type=ComponentType.input_text,
             style=style or self.style,

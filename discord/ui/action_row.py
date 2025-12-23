@@ -116,6 +116,7 @@ class ActionRow(ViewItem[V]):
             self._add_component_from_item(item)
 
     def _generate_underlying(self, id: int | None = None) -> ActionRowComponent:
+        super()._generate_underlying(ActionRowComponent)
         row = ActionRowComponent._raw_construct(
             type=ComponentType.action_row,
             id=id or self.id,

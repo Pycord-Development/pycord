@@ -119,6 +119,7 @@ class Label(ModalItem[M]):
         description: str | None = None,
         id: int | None = None,
     ) -> LabelComponent:
+        super()._generate_underlying(LabelComponent)
         label = LabelComponent._raw_construct(
             type=ComponentType.label,
             id=id or self.id,

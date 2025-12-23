@@ -83,6 +83,7 @@ class File(ViewItem[V]):
         spoiler: bool | None = None,
         id: int | None = None,
     ) -> FileComponent:
+        super()._generate_underlying(FileComponent)
         return FileComponent._raw_construct(
             type=ComponentType.file,
             id=id or self.id,

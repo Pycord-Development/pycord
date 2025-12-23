@@ -84,6 +84,7 @@ class Separator(ViewItem[V]):
         spacing: SeparatorSpacingSize | None = None,
         id: int | None = None,
     ) -> SeparatorComponent:
+        super()._generate_underlying(SeparatorComponent)
         return SeparatorComponent._raw_construct(
             type=ComponentType.separator,
             id=id or self.id,

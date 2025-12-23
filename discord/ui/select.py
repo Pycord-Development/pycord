@@ -306,6 +306,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         required: bool | None = None,
         default_values: Sequence[SelectDefaultValue | ST] | None = None,
     ) -> SelectMenu:
+        super()._generate_underlying(SelectMenu)
         return SelectMenu._raw_construct(
             custom_id=custom_id or self.custom_id,
             type=select_type or self.select_type,
