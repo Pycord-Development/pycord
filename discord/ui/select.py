@@ -293,7 +293,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
     def _generate_underlying(
         self,
-        select_type: ComponentType | None = None,
+        type: ComponentType | None = None,
         custom_id: str | None = None,
         placeholder: str | None = None,
         min_values: int = None,
