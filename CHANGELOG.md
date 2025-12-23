@@ -22,7 +22,6 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added `Guild.fetch_roles_member_counts` method and `GuildRoleCounts` class.
   ([#3020](https://github.com/Pycord-Development/pycord/pull/3020))
 
-
 ### Changed
 
 ### Fixed
