@@ -135,7 +135,7 @@ class Container(ViewItem[V]):
             type=ComponentType.container,
             id=id or self.id,
             components=[],
-            accent_color=Colour.resolve_value(accent_color self.colour),
+            accent_color=Colour.resolve_value(accent_color, self.colour),
             spoiler=spoiler or self.spoiler,
         )
         for i in self.items:
