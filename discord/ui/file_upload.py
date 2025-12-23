@@ -160,7 +160,9 @@ class FileUpload(ModalItem):
         ]
 
     @classmethod
-    def from_component(cls: type[FileUpload], component: FileUploadComponent) -> FileUpload:
+    def from_component(
+        cls: type[FileUpload], component: FileUploadComponent
+    ) -> FileUpload:
 
         return cls(
             custom_id=component.custom_id,

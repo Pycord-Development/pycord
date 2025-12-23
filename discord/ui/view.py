@@ -47,6 +47,8 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
+from ..components import FileUpload as FileUploadComponent
+from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
@@ -54,8 +56,6 @@ from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import InputText as InputTextComponent
-from ..components import FileUpload as FileUploadComponent
 from ..components import _component_factory
 from ..enums import ChannelType
 from ..utils import find
@@ -905,7 +905,9 @@ class DesignerView(BaseView):
         super().add_item(item)
         return self
 
-    def replace_item(self, original_item: ViewItem[V] | str | int, new_item: ViewItem[V]) -> Self:
+    def replace_item(
+        self, original_item: ViewItem[V] | str | int, new_item: ViewItem[V]
+    ) -> Self:
         """Directly replace an item in this view.
         If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
 

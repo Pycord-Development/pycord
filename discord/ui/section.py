@@ -168,7 +168,9 @@ class Section(ViewItem[V]):
         item.parent = None
         return self
 
-    def replace_item(self, original_item: ViewItem | str | int, new_item: ViewItem) -> Self:
+    def replace_item(
+        self, original_item: ViewItem | str | int, new_item: ViewItem
+    ) -> Self:
         """Directly replace an item in this section.
         If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
 
