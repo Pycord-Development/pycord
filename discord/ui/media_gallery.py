@@ -147,7 +147,7 @@ class MediaGallery(ViewItem[V]):
         """
 
         try:
-            self.items.pop(item)
+            self.items.pop(index)
         except IndexError:
             pass
         return self
@@ -165,7 +165,7 @@ class MediaGallery(ViewItem[V]):
 
         if not isinstance(new_item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {new_item.__class__!r}")
-        self.items[i] = new_item
+        self.items[index] = new_item
         return self
 
     def to_component_dict(self) -> MediaGalleryComponentPayload:
