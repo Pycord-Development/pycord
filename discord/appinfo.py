@@ -333,6 +333,8 @@ class AppInfo:
 
         Edit the current application's settings.
 
+        .. versionadded:: 2.7
+
         Parameters
         ----------
         description: Optional[:class:`str`]
@@ -373,8 +375,6 @@ class AppInfo:
         -------
         :class:`.AppInfo`
             The updated application information.
-
-        .. versionadded:: 2.7
         """
         payload: dict[str, Any] = {}
         if description is not utils.MISSING:
@@ -556,6 +556,8 @@ class AppInstallParams:
     def _to_payload(self) -> dict[str, object]:
         """Serialize this object into an application install params payload.
 
+        .. versionadded:: 2.7
+
         Returns
         -------
         Dict[str, Any]
@@ -575,6 +577,8 @@ class IntegrationTypesConfig:
     """Represents per-installation context configuration for an application.
 
     This object is used to build the payload for the ``integration_types_config`` field when editing an application.
+
+    .. versionadded:: 2.7
 
     Parameters
     ----------
@@ -629,6 +633,15 @@ class IntegrationTypesConfig:
         return {"oauth2_install_params": value._to_payload()}
 
     def _to_payload(self) -> dict[int, dict[str, object] | None]:
+        """Serialize this configuration into the payload expected by the API.
+
+        Returns
+        -------
+        Dict[int, Dict[str, object] | None]
+            Mapping of integration context IDs to encoded install parameters, or ``None`` to clear.
+
+        .. versionadded:: 2.7
+        """
         payload: dict[int, dict[str, object] | None] = {}
         if self.guild is not utils.MISSING:
             payload[0] = self._encode_install_params(self.guild)
