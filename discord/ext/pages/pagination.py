@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import contextlib
 from typing import List
 
 import discord
@@ -604,11 +605,12 @@ class Paginator(discord.ui.View):
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
-            await self.message.edit(
-                view=self,
-                files=files or [],
-                attachments=[],
-            )
+            async with contextlib.suppress(discord.HTTPException):
+                await self.message.edit(
+                    view=self,
+                    files=files or [],
+                    attachments=[],
+                )
 
     async def disable(
         self,
@@ -716,7 +718,9 @@ class Paginator(discord.ui.View):
 
         try:
             if interaction:
-                await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+                await (
+                    interaction.response.defer()
+                )  # needed to force webhook message edit route for files kwarg support
                 await interaction.followup.edit_message(
                     message_id=self.message.id,
                     content=page.content,
