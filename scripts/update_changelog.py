@@ -10,9 +10,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--path", default="CHANGELOG.md", help="Path to CHANGELOG.md")
     parser.add_argument("--version", required=True, help="Version being released")
     parser.add_argument("--previous-tag", required=True, help="Previous git tag")
-    parser.add_argument("--branch", required=True, help="Branch name for Unreleased copy")
+    parser.add_argument(
+        "--branch", required=True, help="Branch name for Unreleased copy"
+    )
     parser.add_argument("--repository", required=True, help="owner/repo for links")
-    parser.add_argument("--date", default=None, help="Release date (YYYY-MM-DD); defaults to today")
+    parser.add_argument(
+        "--date", default=None, help="Release date (YYYY-MM-DD); defaults to today"
+    )
     return parser.parse_args()
 
 
@@ -92,18 +96,29 @@ def render_release_body(categories: dict[str, list[str]]) -> str:
 
 
 def update_links(text: str, version: str, previous_tag: str, repository: str) -> str:
-    unreleased_link = f"[unreleased]: https://github.com/{repository}/compare/v{version}...HEAD"
+    unreleased_link = (
+        f"[unreleased]: https://github.com/{repository}/compare/v{version}...HEAD"
+    )
     release_link = f"[{version}]: https://github.com/{repository}/compare/{previous_tag}...v{version}"
 
     updated = re.sub(r"^\[unreleased\]: .*", unreleased_link, text, flags=re.M)
 
     if re.search(rf"^\[{re.escape(version)}\]: ", updated, flags=re.M):
-        updated = re.sub(rf"^\[{re.escape(version)}\]: .*", release_link, updated, flags=re.M)
+        updated = re.sub(
+            rf"^\[{re.escape(version)}\]: .*", release_link, updated, flags=re.M
+        )
     else:
+
         def insert_after_unreleased(match: re.Match) -> str:
             return match.group(0) + "\n" + release_link
 
-        new_updated = re.sub(r"^\[unreleased\]: .*$", insert_after_unreleased, updated, flags=re.M, count=1)
+        new_updated = re.sub(
+            r"^\[unreleased\]: .*$",
+            insert_after_unreleased,
+            updated,
+            flags=re.M,
+            count=1,
+        )
         if new_updated == updated:
             new_updated = updated.rstrip("\n") + "\n" + release_link + "\n"
         updated = new_updated

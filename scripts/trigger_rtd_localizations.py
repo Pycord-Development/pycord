@@ -7,7 +7,9 @@ import urllib.request
 
 
 def trigger_build(project: str, version: str, token: str) -> None:
-    url = f"https://readthedocs.org/api/v3/projects/{project}/versions/{version}/builds/"
+    url = (
+        f"https://readthedocs.org/api/v3/projects/{project}/versions/{version}/builds/"
+    )
     data = json.dumps({}).encode("utf-8")
     req = urllib.request.Request(
         url,
@@ -20,15 +22,32 @@ def trigger_build(project: str, version: str, token: str) -> None:
     )
     with urllib.request.urlopen(req) as resp:  # noqa: S310
         if resp.status >= 300:
-            raise RuntimeError(f"Build trigger failed for {project}:{version} with status {resp.status}")
+            raise RuntimeError(
+                f"Build trigger failed for {project}:{version} with status {resp.status}"
+            )
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Trigger Read the Docs builds for localization projects.")
-    parser.add_argument("--project", action="append", required=True, help="Localization project slug. Can be repeated.")
-    parser.add_argument("--version", default="master", help="Version to build (default: master).")
-    parser.add_argument("--token", help="Read the Docs token (overrides READTHEDOCS_TOKEN env).")
-    parser.add_argument("--dry-run", action="store_true", help="Print planned builds instead of sending.")
+    parser = argparse.ArgumentParser(
+        description="Trigger Read the Docs builds for localization projects."
+    )
+    parser.add_argument(
+        "--project",
+        action="append",
+        required=True,
+        help="Localization project slug. Can be repeated.",
+    )
+    parser.add_argument(
+        "--version", default="master", help="Version to build (default: master)."
+    )
+    parser.add_argument(
+        "--token", help="Read the Docs token (overrides READTHEDOCS_TOKEN env)."
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print planned builds instead of sending.",
+    )
     args = parser.parse_args()
 
     token = args.token or os.environ.get("READTHEDOCS_TOKEN")
