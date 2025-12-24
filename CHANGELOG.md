@@ -11,12 +11,14 @@ possible (see our [Version Guarantees] for more info).
 These changes are available on the `master` branch, but have not yet been released.
 
 ### Added
+
 - Added `replace_item` to `DesignerView`, `Section`, `Container`, `ActionRow`, &
   `MediaGallery` ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 
 ### Changed
 
 ### Fixed
+
 - Fixed core issues with modifying items in `Container` and `Section`
   ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 
