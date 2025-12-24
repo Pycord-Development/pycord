@@ -270,6 +270,12 @@ jobs:
     needs: [docs_release, lib_release, pre_config]
     environment: release
     steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
       - name: "Notify Discord"
         env:
           VERSION: ${{ needs.pre_config.outputs.version }}
