@@ -162,7 +162,7 @@ jobs:
           git config user.name "NyuwBot"
           git config user.email "nyuw@aitsys.dev"
           DATE=$(date +'%Y-%m-%d')
-          python scripts/update_changelog.py \
+          python scripts/release_changelog.py \
             --path CHANGELOG.md \
             --version "$VERSION" \
             --previous-tag "$PREVIOUS_TAG" \
@@ -260,7 +260,7 @@ jobs:
         env:
           READTHEDOCS_TOKEN: ${{ secrets.READTHEDOCS_TOKEN }}
         run: |
-          python3 scripts/manage_rtd_version.py \
+          python3 scripts/release_rtd_versions.py \
             --project pycord \
             --version "${{ needs.pre_config.outputs.version }}" \
             --sync
@@ -283,7 +283,7 @@ jobs:
           PREVIOUS_FINAL_TAG: ${{ needs.pre_config.outputs.previous_final_tag }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           REPOSITORY: ${{ github.repository }}
-        run: python scripts/notify_discord.py
+        run: python scripts/discord_release_notification.py
 
   determine_milestone_id:
     runs-on: ubuntu-latest
