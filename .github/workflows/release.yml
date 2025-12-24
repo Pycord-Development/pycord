@@ -332,7 +332,7 @@ jobs:
       - name: "Create New Milestone"
         run: |
           gh extension install valeriobelli/gh-milestone
-          gh milestone create "${{ needs.determine_milestone_id.outputs.new_milestone_version }}"
+          gh milestone create -t "${{ needs.determine_milestone_id.outputs.new_milestone_version }}"
 
 #  branch_protection_restore:
 #    runs-on: ubuntu-latest
