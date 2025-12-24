@@ -19,6 +19,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2956](https://github.com/Pycord-Development/pycord/pull/2956))
 - Added `Guild.fetch_roles_member_counts` method and `GuildRoleCounts` class.
   ([#3020](https://github.com/Pycord-Development/pycord/pull/3020))
+- Added `replace_item` to `DesignerView`, `Section`, `Container`, `ActionRow`, & `MediaGallery`
+  ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 
 ### Changed
 
@@ -33,6 +35,8 @@ These changes are available on the `master` branch, but have not yet been releas
   TypeVars. ([#3002](https://github.com/Pycord-Development/pycord/pull/3002))
 - Fixed `View`'s `disable_on_timeout` not working in private (DM) channels.
   ([#3016](https://github.com/Pycord-Development/pycord/pull/3016))
+- Fixed core issues with modifying items in `Container` and `Section`
+  ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 
 ### Deprecated
 
