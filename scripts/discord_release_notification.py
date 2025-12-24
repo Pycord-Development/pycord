@@ -78,7 +78,7 @@ def send_webhook(webhook_url: str, content: str) -> None:
         },
         method="POST",
     )
-    with urllib.request.urlopen(req) as resp: # nosec - not applicable
+    with urllib.request.urlopen(req) as resp:  # nosec - not applicable
         if resp.status >= 300:
             raise RuntimeError(f"Webhook post failed with status {resp.status}")
 

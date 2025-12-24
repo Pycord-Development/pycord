@@ -21,6 +21,7 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Removed
 
 ## [2.7.0] - 2025-12-24
+
 ### Added
 
 - Added `Attachment.read_chunked` and added optional `chunksize` argument to
@@ -325,6 +326,7 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#2986](https://github.com/Pycord-Development/pycord/pull/2986))
 - Removed deprecated support for `Option` in `BridgeCommand`, use `BridgeOption`
   instead. ([#2731](https://github.com/Pycord-Development/pycord/pull/2731))
+
 ## [2.7.0rc2] - 2025-10-22
 
 ### Added
