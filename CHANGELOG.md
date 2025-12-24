@@ -20,15 +20,27 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added a new event called `on_raw_member_update` that is dispatched when a member is
   updated, regardless of cache status.
   ([#3012](https://github.com/Pycord-Development/pycord/pull/3012))
+- Added `Guild.fetch_roles_member_counts` method and `GuildRoleCounts` class.
+  ([#3020](https://github.com/Pycord-Development/pycord/pull/3020))
 
 ### Changed
 
 ### Fixed
 
+- Fixed the `view` attribute on many view items being incorrect.
+  ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
+- Fixed `TypeError` in paginator implementation when only passing `PageGroup` objects
+  and `show_menu` is falsy.
+  ([#2993](https://github.com/Pycord-Development/pycord/pull/2993))
 - Fixed breaking change in `ui.Select` Generic typing by adding default values to
   TypeVars. ([#3002](https://github.com/Pycord-Development/pycord/pull/3002))
+- Fixed `View`'s `disable_on_timeout` not working in private (DM) channels.
+  ([#3016](https://github.com/Pycord-Development/pycord/pull/3016))
 
 ### Deprecated
+
+- Deprecated manually setting the `view` attribute on view items.
+  ([#2981](https://github.com/Pycord-Development/pycord/pull/2981))
 
 ### Removed
 
