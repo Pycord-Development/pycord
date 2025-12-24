@@ -44,7 +44,7 @@ def trigger_build(project: str, version: str, token: str) -> None:
         },
         method="POST",
     )
-    with urllib.request.urlopen(req) as resp:  # noqa: S310
+    with urllib.request.urlopen(req) as resp: # nosec - not applicable
         if resp.status >= 300:
             raise RuntimeError(
                 f"Build trigger failed for {project}:{version} with status {resp.status}"

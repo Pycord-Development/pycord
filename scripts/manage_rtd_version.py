@@ -44,7 +44,7 @@ def sync_versions(project: str, token: str) -> None:
         },
         method="POST",
     )
-    with urllib.request.urlopen(req) as resp:  # noqa: S310
+    with urllib.request.urlopen(req) as resp: # nosec - not applicable
         if resp.status >= 300:
             raise RuntimeError(
                 f"Sync versions failed for {project} with status {resp.status}"
@@ -63,7 +63,7 @@ def activate_version(project: str, docs_version: str, hidden: bool, token: str) 
         },
         method="PATCH",
     )
-    with urllib.request.urlopen(req) as resp:  # noqa: S310
+    with urllib.request.urlopen(req) as resp: # nosec - not applicable
         if resp.status >= 300:
             raise RuntimeError(
                 f"Activating version {docs_version} for {project} failed with status {resp.status}"
