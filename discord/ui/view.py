@@ -889,7 +889,8 @@ class DesignerView(BaseView):
             view.add_item(_component_to_item(component))
         return view
 
-    def add_item(self, 
+    def add_item(
+        self,
         item: ViewItem[V],
         *,
         index: int | None = None,
@@ -928,9 +929,12 @@ class DesignerView(BaseView):
             Maximum number of items has been exceeded (40)
         """
         if (
-            before and after
-            or before and (index is not None)
-            or after and (index is not None)
+            before
+            and after
+            or before
+            and (index is not None)
+            or after
+            and (index is not None)
         ):
             raise ValueError("Can only specify one of before, after, and index.")
 

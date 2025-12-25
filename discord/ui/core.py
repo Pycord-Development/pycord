@@ -116,7 +116,7 @@ class ItemInterface:
         return [item.to_component_dict() for item in self.children]
 
     def get_item(self, custom_id: str | int | None = None, **attrs: Any) -> Item | None:
-        """Gets an item from this structure. Roughly equal to `utils.get(self.children, **attrs)`.
+        r"""Gets an item from this structure. Roughly equal to `utils.get(self.children, **attrs)`.
         If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by  ``custom_id``.
         This method will also search nested items.
         If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
@@ -165,7 +165,8 @@ class ItemInterface:
             attrget = attrgetter
             for i in self.children:
                 converted = [
-                    (attrget(attr.replace("__", ".")), value) for attr, value in attrs.items()
+                    (attrget(attr.replace("__", ".")), value)
+                    for attr, value in attrs.items()
                 ]
                 try:
                     if _all(pred(elem) == value for pred, value in converted):
