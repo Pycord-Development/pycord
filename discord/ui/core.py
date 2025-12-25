@@ -27,8 +27,8 @@ from __future__ import annotations
 import asyncio
 import time
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, Callable
 from operator import attrgetter
+from typing import TYPE_CHECKING, Any, Callable
 
 from ..utils import find, get
 from .item import Item, ItemCallbackType
