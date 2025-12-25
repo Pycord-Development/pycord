@@ -251,6 +251,13 @@ class BaseModal(ItemInterface):
         A callback that is called when a modal's timeout elapses without being explicitly stopped.
         """
 
+    def walk_children(self) -> Iterator[ModalItem]:
+        for item in self.children:
+            if hasattr(item, "walk_items"):
+                yield from item.walk_items()
+            else:
+                yield item
+
 
 class Modal(BaseModal):
     """Represents a legacy UI modal for InputText components.

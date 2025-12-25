@@ -107,6 +107,14 @@ class ActionRow(ViewItem[V]):
         for i in items:
             self.add_item(i)
 
+    @property
+    def items(self) -> list[ViewItem]:
+        return self.children
+
+    @items.setter
+    def items(self, value: list[ViewItem]) -> None:
+        self.children = value
+
     def _add_component_from_item(self, item: ViewItem):
         self.underlying.children.append(item._generate_underlying())
 

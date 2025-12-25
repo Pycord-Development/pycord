@@ -823,6 +823,14 @@ class DesignerView(BaseView):
             *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
         )
 
+    @property
+    def items(self) -> list[ViewItem[V]]:
+        return self.children
+
+    @items.setter
+    def items(self, value: list[ViewItem[V]]) -> None:
+        self.children = value
+
     @classmethod
     def from_message(
         cls, message: Message, /, *, timeout: float | None = 180.0
@@ -881,13 +889,36 @@ class DesignerView(BaseView):
             view.add_item(_component_to_item(component))
         return view
 
-    def add_item(self, item: ViewItem[V]) -> Self:
+    def add_item(self, 
+        item: ViewItem[V],
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+        into: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the view.
+
+        .. warning::
+
+            You may specify only **one** of ``index``, ``before``, & ``after``. ``into`` will work together with those parameters.
+
+        .. versionchanged:: 2.7.1
+            Added new parameters ``index``, ``before``, ``after``, & ``into``.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the view.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`children`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        into: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **into** the specified item. This would be equivalent to `into.add_item(item)`, where `into` is a :class:`ViewItem`.
+            If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
@@ -896,6 +927,12 @@ class DesignerView(BaseView):
         ValueError
             Maximum number of items has been exceeded (40)
         """
+        if (
+            before and after
+            or before and (index is not None)
+            or after and (index is not None)
+        ):
+            raise ValueError("Can only specify one of before, after, and index.")
 
         if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
@@ -909,7 +946,7 @@ class DesignerView(BaseView):
         self, original_item: ViewItem[V] | str | int, new_item: ViewItem[V]
     ) -> Self:
         """Directly replace an item in this view.
-        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by ``custom_id``.
 
         Parameters
         ----------
