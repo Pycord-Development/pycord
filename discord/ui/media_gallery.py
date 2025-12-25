@@ -65,13 +65,21 @@ class MediaGallery(ViewItem[V]):
     def __init__(self, *items: MediaGalleryItem, id: int | None = None):
         super().__init__()
 
-        self._underlying = MediaGalleryComponent._raw_construct(
-            type=ComponentType.media_gallery, id=id, items=[i for i in items]
+        self._underlying = self._generate_underlying(id=id, items=items)
+
+    def _generate_underlying(
+        self, id: int | None = None, items: list[MediaGalleryItem] | None = None
+    ) -> MediaGalleryComponent:
+        super()._generate_underlying(MediaGalleryComponent)
+        return MediaGalleryComponent._raw_construct(
+            type=ComponentType.media_gallery,
+            id=id or self.id,
+            items=[i for i in items] if items else [i for i in self.items or []],
         )
 
     @property
     def items(self):
-        return self._underlying.items
+        return self.underlying.items
 
     def append_item(self, item: MediaGalleryItem) -> Self:
         """Adds a :attr:`MediaGalleryItem` to the gallery.
@@ -95,7 +103,7 @@ class MediaGallery(ViewItem[V]):
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
 
-        self._underlying.items.append(item)
+        self.underlying.items.append(item)
         return self
 
     def add_item(
@@ -129,7 +137,39 @@ class MediaGallery(ViewItem[V]):
 
         return self.append_item(item)
 
+    def remove_item(self, index: int) -> Self:
+        """Removes an item from the gallery.
+
+        Parameters
+        ----------
+        index: :class:`int`
+            The index of the item to remove from the gallery.
+        """
+
+        try:
+            self.items.pop(index)
+        except IndexError:
+            pass
+        return self
+
+    def replace_item(self, index: int, new_item: MediaGalleryItem) -> Self:
+        """Directly replace an item in this gallery by index.
+
+        Parameters
+        ----------
+        original_item: :class:`int`
+            The index of the item to replace in this gallery.
+        new_item: :class:`MediaGalleryItem`
+            The new item to insert into the gallery.
+        """
+
+        if not isinstance(new_item, MediaGalleryItem):
+            raise TypeError(f"expected MediaGalleryItem not {new_item.__class__!r}")
+        self.items[index] = new_item
+        return self
+
     def to_component_dict(self) -> MediaGalleryComponentPayload:
+        self.underlying = self._generate_underlying()
         return super().to_component_dict()
 
     @classmethod

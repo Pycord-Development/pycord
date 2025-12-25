@@ -47,6 +47,8 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
+from ..components import FileUpload as FileUploadComponent
+from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
@@ -142,6 +144,14 @@ def _component_to_item(component: Component) -> ViewItem[V]:
         from .label import Label
 
         return Label.from_component(component)
+    if isinstance(component, InputTextComponent):
+        from .input_text import InputText
+
+        return InputText.from_component(component)
+    if isinstance(component, FileUploadComponent):
+        from .file_upload import FileUpload
+
+        return FileUpload.from_component(component)
     return ViewItem.from_component(component)
 
 
@@ -362,7 +372,7 @@ class BaseView(ItemInterface):
 
         A view containing V2 components cannot be sent alongside message content or embeds.
         """
-        return any([item._underlying.is_v2() for item in self.children])
+        return any([item.underlying.is_v2() for item in self.children])
 
     async def _scheduled_task(self, item: ViewItem[V], interaction: Interaction):
         try:
@@ -690,11 +700,11 @@ class View(BaseView):
             or the row the item is trying to be added to is full.
         """
 
-        if item._underlying.is_v2():
+        if item.underlying.is_v2():
             raise ValueError(
                 f"cannot use V2 components in View. Use DesignerView instead."
             )
-        if isinstance(item._underlying, ActionRowComponent):
+        if isinstance(item.underlying, ActionRowComponent):
             for i in item.children:
                 self.add_item(i)
             return self
@@ -813,6 +823,14 @@ class DesignerView(BaseView):
             *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
         )
 
+    @property
+    def items(self) -> list[ViewItem[V]]:
+        return self.children
+
+    @items.setter
+    def items(self, value: list[ViewItem[V]]) -> None:
+        self.children = value
+
     @classmethod
     def from_message(
         cls, message: Message, /, *, timeout: float | None = 180.0
@@ -871,13 +889,37 @@ class DesignerView(BaseView):
             view.add_item(_component_to_item(component))
         return view
 
-    def add_item(self, item: ViewItem[V]) -> Self:
+    def add_item(
+        self,
+        item: ViewItem[V],
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+        into: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the view.
+
+        .. warning::
+
+            You may specify only **one** of ``index``, ``before``, & ``after``. ``into`` will work together with those parameters.
+
+        .. versionchanged:: 2.7.1
+            Added new parameters ``index``, ``before``, ``after``, & ``into``.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the view.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`children`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        into: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **into** the specified item. This would be equivalent to `into.add_item(item)`, where `into` is a :class:`ViewItem`.
+            If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
@@ -886,13 +928,60 @@ class DesignerView(BaseView):
         ValueError
             Maximum number of items has been exceeded (40)
         """
+        if (
+            before
+            and after
+            or before
+            and (index is not None)
+            or after
+            and (index is not None)
+        ):
+            raise ValueError("Can only specify one of before, after, and index.")
 
-        if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
+        if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
                 f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)
+        return self
+
+    def replace_item(
+        self, original_item: ViewItem[V] | str | int, new_item: ViewItem[V]
+    ) -> Self:
+        """Directly replace an item in this view.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+            The item, item ``id``, or item ``custom_id`` to replace in the view.
+        new_item: :class:`ViewItem`
+            The new item to insert into the view.
+
+        Returns
+        -------
+        :class:`BaseView`
+            The view instance.
+        """
+
+        if not isinstance(new_item, ViewItem):
+            raise TypeError(f"expected ViewItem not {new_item.__class__!r}")
+
+        if isinstance(original_item, (str, int)):
+            original_item = self.get_item(original_item)
+        if not original_item:
+            raise ValueError(f"Could not find original_item in view.")
+        try:
+            if original_item.parent is self:
+                i = self.children.index(original_item)
+                new_item.parent = self
+                self.children[i] = new_item
+                original_item.parent = None
+            else:
+                original_item.parent.replace_item(original_item, new_item)
+        except ValueError:
+            raise ValueError(f"Could not find original_item in view.")
         return self
 
     def refresh(self, components: list[Component]):

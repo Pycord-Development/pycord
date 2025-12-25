@@ -30,7 +30,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, Iterator, TypeVar
 
 from ..enums import ComponentType
 from ..utils import find
@@ -250,6 +250,13 @@ class BaseModal(ItemInterface):
 
         A callback that is called when a modal's timeout elapses without being explicitly stopped.
         """
+
+    def walk_children(self) -> Iterator[ModalItem]:
+        for item in self.children:
+            if hasattr(item, "walk_items"):
+                yield from item.walk_items()
+            else:
+                yield item
 
 
 class Modal(BaseModal):

@@ -108,24 +108,39 @@ class Container(ViewItem[V]):
 
         self.items: list[ViewItem] = []
 
-        self._underlying = ContainerComponent._raw_construct(
-            type=ComponentType.container,
+        self._underlying = self._generate_underlying(
             id=id,
-            components=[],
-            accent_color=None,
+            accent_color=colour or color,
             spoiler=spoiler,
         )
-        self.color = colour or color
         for i in items:
             self.add_item(i)
 
     def _add_component_from_item(self, item: ViewItem):
-        self._underlying.components.append(item._underlying)
+        self.underlying.components.append(item._generate_underlying())
 
     def _set_components(self, items: list[ViewItem]):
-        self._underlying.components.clear()
+        self.underlying.components.clear()
         for item in items:
             self._add_component_from_item(item)
+
+    def _generate_underlying(
+        self,
+        accent_color: int | Colour | None = None,
+        spoiler: bool = False,
+        id: int | None = None,
+    ) -> ContainerComponent:
+        super()._generate_underlying(ContainerComponent)
+        container = ContainerComponent._raw_construct(
+            type=ComponentType.container,
+            id=id or self.id,
+            components=[],
+            accent_color=Colour.resolve_value(accent_color or self.colour),
+            spoiler=spoiler or self.spoiler,
+        )
+        for i in self.items:
+            container.components.append(i._generate_underlying())
+        return container
 
     def add_item(self, item: ViewItem) -> Self:
         """Adds an item to the container.
@@ -174,6 +189,36 @@ class Container(ViewItem[V]):
         except ValueError:
             pass
         item.parent = None
+        return self
+
+    def replace_item(
+        self, original_item: ViewItem | str | int, new_item: ViewItem
+    ) -> Self:
+        """Directly replace an item in this container.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
+
+        Parameters
+        ----------
+        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+            The item, item ``id``, or item ``custom_id`` to replace in the container.
+        new_item: :class:`ViewItem`
+            The new item to insert into the container.
+        """
+
+        if isinstance(original_item, (str, int)):
+            original_item = self.get_item(original_item)
+        if not original_item:
+            raise ValueError(f"Could not find original_item in container.")
+        try:
+            if original_item.parent is self:
+                i = self.items.index(original_item)
+                new_item.parent = self
+                self.items[i] = new_item
+                original_item.parent = None
+            else:
+                original_item.parent.replace_item(original_item, new_item)
+        except ValueError:
+            raise ValueError(f"Could not find original_item in container.")
         return self
 
     def get_item(self, id: str | int) -> ViewItem | None:
@@ -335,27 +380,19 @@ class Container(ViewItem[V]):
     @property
     def spoiler(self) -> bool:
         """Whether the container has the spoiler overlay. Defaults to ``False``."""
-        return self._underlying.spoiler
+        return self.underlying.spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
-        self._underlying.spoiler = spoiler
+        self.underlying.spoiler = spoiler
 
     @property
     def colour(self) -> Colour | None:
-        return self._underlying.accent_color
+        return self.underlying.accent_color
 
     @colour.setter
     def colour(self, value: int | Colour | None):  # type: ignore
-        if value is None or isinstance(value, Colour):
-            self._underlying.accent_color = value
-        elif isinstance(value, int):
-            self._underlying.accent_color = Colour(value=value)
-        else:
-            raise TypeError(
-                "Expected discord.Colour, int, or None but received"
-                f" {value.__class__.__name__} instead."
-            )
+        self.underlying.accent_color = Colour.resolve_value(value)
 
     color = colour
 
@@ -366,7 +403,7 @@ class Container(ViewItem[V]):
         return all(item.is_persistent() for item in self.items)
 
     def refresh_component(self, component: ContainerComponent) -> None:
-        self._underlying = component
+        self.underlying = component
         i = 0
         for y in component.components:
             x = self.items[i]
@@ -413,7 +450,7 @@ class Container(ViewItem[V]):
                 yield item
 
     def to_component_dict(self) -> ContainerComponentPayload:
-        self._set_components(self.items)
+        self._underlying = self._generate_underlying()
         return super().to_component_dict()
 
     @classmethod
