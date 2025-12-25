@@ -30,7 +30,7 @@ import sys
 import time
 from functools import partial
 from itertools import groupby
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar, Iterator
 
 from ..enums import ComponentType
 from ..utils import find
