@@ -28,6 +28,7 @@ import asyncio
 import time
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Callable
+from operator import attrgetter
 
 from ..utils import find, get
 from .item import Item, ItemCallbackType
@@ -169,8 +170,8 @@ class ItemInterface:
                     for attr, value in attrs.items()
                 ]
                 try:
-                    if _all(pred(elem) == value for pred, value in converted):
-                        return elem
+                    if _all(pred(i) == value for pred, value in converted):
+                        return i
                 except:
                     pass
                 if hasattr(i, "get_item"):
