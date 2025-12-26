@@ -40,7 +40,7 @@ CT = TypeVar("CT", bound="Colour")
 
 
 class Colour:
-    """Represents a Discord role colour. This class is similar
+    """Represents a Colour. This class is similar
     to a (red, green, blue) :class:`tuple`.
 
     There is an alias for this called Color.
