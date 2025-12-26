@@ -14,6 +14,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
+- Migrated away from `utils.deprecated` to `typing.deprecated` for deprecation warnings.
+  ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
+
 ### Fixed
 
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
