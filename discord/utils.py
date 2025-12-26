@@ -94,7 +94,6 @@ else:
 __all__ = (
     "parse_time",
     "warn_deprecated",
-    "deprecated",
     "oauth_url",
     "snowflake_time",
     "time_snowflake",
