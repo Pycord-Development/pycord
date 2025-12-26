@@ -50,6 +50,7 @@ from .flags import ChannelFlags, MessageFlags
 from .invite import Invite
 from .iterators import HistoryIterator, MessagePinIterator
 from .mentions import AllowedMentions
+from .object import Object
 from .partial_emoji import PartialEmoji, _EmojiTag
 from .permissions import PermissionOverwrite, Permissions
 from .role import Role
@@ -1207,6 +1208,7 @@ class GuildChannel:
         target_type: InviteTarget | None = None,
         target_user: User | None = None,
         target_application_id: int | None = None,
+        roles: list[Role | Object] | None = None,
     ) -> Invite:
         """|coro|
 
@@ -1258,6 +1260,9 @@ class GuildChannel:
 
             .. versionadded:: 2.0
 
+        roles: Optional[List[Union[:class:`.Role`, :class:`.Object`]]]
+            The roles to give a user when joining through this invite.
+
         Returns
         -------
         :class:`~discord.Invite`
@@ -1282,6 +1287,7 @@ class GuildChannel:
             target_type=target_type.value if target_type else None,
             target_user_id=target_user.id if target_user else None,
             target_application_id=target_application_id,
+            roles=[r.id for r in roles] if roles else None,
         )
         invite = Invite.from_incomplete(data=data, state=self._state)
         if target_event:
