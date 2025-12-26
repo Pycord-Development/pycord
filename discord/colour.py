@@ -29,6 +29,8 @@ import colorsys
 import random
 from typing import Any, TypeVar
 
+from typing_extensions import deprecated
+
 __all__ = (
     "Colour",
     "Color",
@@ -299,6 +301,9 @@ class Colour:
         return cls(0x99AAB5)
 
     @classmethod
+    @deprecated(
+        "Colour.dark_theme is deprecated since version 2.7.1 and will be removed in version 3.0. This is not relevant anymore since Discord provides the custom themes feature."
+    )
     def dark_theme(cls: type[CT]) -> CT:
         """A factory method that returns a :class:`Colour` with a value of ``0x36393F``.
         This will appear transparent on Discord's dark theme.
@@ -332,6 +337,9 @@ class Colour:
         return cls(0xF47FFF)
 
     @classmethod
+    @deprecated(
+        "Colour.embed_background is deprecated since version 2.7.1 and will be removed in version 3.0. This is not relevant anymore since Discord provides the custom themes feature."
+    )
     def embed_background(cls: type[CT], theme: str = "dark") -> CT:
         """A factory method that returns a :class:`Colour` corresponding to the
         embed colours on discord clients, with a value of:
