@@ -21,6 +21,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
+- Deprecated `Colour.dark_theme()` and `Colour.embed_background()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+
 ### Removed
 
 ## [2.7.0] - 2025-12-24
