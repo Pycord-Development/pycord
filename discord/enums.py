@@ -84,6 +84,7 @@ __all__ = (
     "SubscriptionStatus",
     "SeparatorSpacingSize",
     "SelectDefaultValueType",
+    "ApplicationEventWebhookStatus",
 )
 
 
@@ -1059,7 +1060,10 @@ class EntitlementOwnerType(Enum):
 
 
 class IntegrationType(Enum):
-    """The application's integration type"""
+    """The application's integration type.
+
+    .. versionadded:: 2.7
+    """
 
     guild_install = 0
     user_install = 1
@@ -1129,6 +1133,14 @@ class SelectDefaultValueType(Enum):
     channel = "channel"
     role = "role"
     user = "user"
+
+
+class ApplicationEventWebhookStatus(Enum):
+    """Represents the application event webhook status."""
+
+    DISABLED = 1
+    ENABLED = 2
+    DISABLED_BY_DISCORD = 3
 
 
 T = TypeVar("T")
