@@ -23,9 +23,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
-from .snowflake import SnowflakeList
+from .snowflake import Snowflake, SnowflakeList
 from .user import User
 
 
@@ -66,3 +66,20 @@ class MemberWithUser(_OptionalMemberWithUser):
 
 class UserWithMember(User, total=False):
     member: _OptionalMemberWithUser
+
+
+class MemberUpdateEvent(TypedDict):
+    guild_id: Snowflake
+    user: User
+    roles: list[Snowflake]
+    nick: NotRequired[str | None]
+    avatar: NotRequired[str | None]
+    banner: NotRequired[str | None]
+    joined_at: NotRequired[str | None]
+    premium_since: NotRequired[str | None]
+    deaf: NotRequired[bool | None]
+    mute: NotRequired[bool | None]
+    pending: NotRequired[bool | None]
+    communication_disabled_until: NotRequired[str | None]
+    flags: NotRequired[int | None]
+    avatar_decoration_data: NotRequired[dict | None]
