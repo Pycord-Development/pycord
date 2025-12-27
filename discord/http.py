@@ -185,9 +185,7 @@ class HTTPClient:
         loop: asyncio.AbstractEventLoop | None = None,
         unsync_clock: bool = True,
     ) -> None:
-        self.loop: asyncio.AbstractEventLoop = (
-            asyncio.get_event_loop() if loop is None else loop
-        )
+        self.loop: asyncio.AbstractEventLoop = loop or MISSING
         self.connector = connector
         self.__session: aiohttp.ClientSession = MISSING  # filled in static_login
         self._locks: weakref.WeakValueDictionary = weakref.WeakValueDictionary()
