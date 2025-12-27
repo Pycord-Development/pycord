@@ -29,6 +29,8 @@ import asyncio
 import datetime
 from typing import TYPE_CHECKING, Any, Coroutine, Union
 
+from typing_extensions import deprecated
+
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
 from .enums import (
@@ -222,6 +224,7 @@ class Interaction:
         self._session: ClientSession = state.http._HTTPClient__session
         self._original_response: InteractionMessage | None = None
         self.callback: InteractionCallback | None = None
+        self._cs_channel: InteractionChannel | None = MISSING
         self._from_data(data)
 
     def _from_data(self, data: InteractionPayload):
@@ -350,14 +353,19 @@ class Interaction:
         """Indicates whether the interaction is a message component."""
         return self.type == InteractionType.component
 
-    @utils.cached_slot_property("_cs_channel")
-    @utils.deprecated("Interaction.channel", "2.7", stacklevel=4)
+    @property
+    @deprecated(
+        "Interaction.cached_channel is deprecated since version 2.7, consider using Interaction.channel instead."
+    )
     def cached_channel(self) -> InteractionChannel | None:
         """The cached channel from which the interaction was sent.
         DM channels are not resolved. These are :class:`PartialMessageable` instead.
 
         .. deprecated:: 2.7
         """
+        if self._cs_channel is not MISSING:
+            return self._cs_channel
+        r: InteractionChannel | None = None
         guild = self.guild
         channel = guild and guild._resolve_channel(self.channel_id)
         if channel is None:
@@ -367,11 +375,11 @@ class Interaction:
                     if self.guild_id is not None
                     else ChannelType.private
                 )
-                return PartialMessageable(
-                    state=self._state, id=self.channel_id, type=type
-                )
-            return None
-        return channel
+                r = PartialMessageable(state=self._state, id=self.channel_id, type=type)
+        else:
+            r = channel
+        self._cs_channel = r
+        return r
 
     @property
     def permissions(self) -> Permissions:
@@ -489,7 +497,9 @@ class Interaction:
         self._original_response = message
         return message
 
-    @utils.deprecated("Interaction.original_response", "2.2")
+    @deprecated(
+        "Interaction.original_message is deprecated since version 2.2, consider using Interaction.original_response instead."
+    )
     async def original_message(self):
         """An alias for :meth:`original_response`.
 
@@ -622,7 +632,9 @@ class Interaction:
 
         return message
 
-    @utils.deprecated("Interaction.edit_original_response", "2.2")
+    @deprecated(
+        "Interaction.edit_original_message is deprecated since version 2.2, consider using Interaction.edit_original_response instead."
+    )
     async def edit_original_message(self, **kwargs):
         """An alias for :meth:`edit_original_response`.
 
@@ -680,7 +692,9 @@ class Interaction:
         else:
             await func
 
-    @utils.deprecated("Interaction.delete_original_response", "2.2")
+    @deprecated(
+        "Interaction.delete_original_message is deprecated since version 2.2, consider using Interaction.delete_original_response instead."
+    )
     async def delete_original_message(self, **kwargs):
         """An alias for :meth:`delete_original_response`.
 
@@ -1374,7 +1388,9 @@ class InteractionResponse:
         self._parent._state.store_modal(modal, self._parent.user.id)
         return self._parent
 
-    @utils.deprecated("a button with type ButtonType.premium", "2.6")
+    @deprecated(
+        "InteractionResponse.premium_required is deprecated since version 2.6, consider using a button with type ButtonType.premium instead."
+    )
     async def premium_required(self) -> Interaction:
         """|coro|
 
