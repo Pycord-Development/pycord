@@ -31,8 +31,42 @@ from .snowflake import Snowflake
 from .user import User
 
 ScheduledEventStatus = Literal[1, 2, 3, 4]
-ScheduledEventLocationType = Literal[1, 2, 3]
+ScheduledEventEntityType = Literal[1, 2, 3]
 ScheduledEventPrivacyLevel = Literal[2]
+ScheduledEventRecurrenceFrequency = Literal[0, 1, 2, 3]
+ScheduledEventRecurrenceWeekday = Literal[0, 1, 2, 3, 4, 5, 6]
+ScheduledEventRecurrenceMonth = Literal[
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+]
+
+
+class ScheduledEventRecurrenceNWeekday(TypedDict):
+    n: int
+    day: ScheduledEventRecurrenceWeekday
+
+
+class ScheduledEventRecurrenceRule(TypedDict, total=False):
+    start: str
+    end: str | None
+    frequency: ScheduledEventRecurrenceFrequency
+    interval: int
+    by_weekday: list[ScheduledEventRecurrenceWeekday]
+    by_n_weekday: list[ScheduledEventRecurrenceNWeekday]
+    by_month: list[ScheduledEventRecurrenceMonth]
+    by_month_day: list[int]
+    by_year_day: list[int]
+    count: int
 
 
 class ScheduledEvent(TypedDict):
@@ -47,11 +81,12 @@ class ScheduledEvent(TypedDict):
     scheduled_end_time: str | None
     privacy_level: ScheduledEventPrivacyLevel
     status: ScheduledEventStatus
-    entity_type: ScheduledEventLocationType
+    entity_type: ScheduledEventEntityType
     entity_id: Snowflake
     entity_metadata: ScheduledEventEntityMetadata
     creator: User
     user_count: int | None
+    recurrence_rule: ScheduledEventRecurrenceRule | None
 
 
 class ScheduledEventEntityMetadata(TypedDict):
