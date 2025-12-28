@@ -454,8 +454,7 @@ class Role(Hashable):
         - The bot's top role is above this role
 
         .. versionadded:: 2.0
-
-        .. versionchanged: 2.7.1
+        .. versionchanged:: 2.7.1
             Added check for :attr:`~Permissions.manage_roles` permission
         """
         me = self.guild.me
