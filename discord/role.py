@@ -451,6 +451,7 @@ class Role(Hashable):
         return (
             not self.is_default()
             and not self.managed
+            and me.guild_permissions.manage_roles
             and (me.top_role > self or me.id == self.guild.owner_id)
         )
 
