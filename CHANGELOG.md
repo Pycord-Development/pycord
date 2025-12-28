@@ -18,6 +18,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
+- Fixed `Interaction.channel` not being resolved with user-install commands ran in
+  guilds the bot is not in.
+  ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
 
 ### Deprecated
 
