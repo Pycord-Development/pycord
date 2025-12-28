@@ -443,9 +443,14 @@ class Role(Hashable):
         return self.tags is not None and self.tags.is_integration()
 
     def is_assignable(self) -> bool:
-        """Whether the role is able to be assigned or removed by the bot.
+        """Whether the role is able to be assigned or removed by the bot. This checks whether all of the following conditions are true
+        - The role is not the guild's default role
+        - The role is not managed
+        - The bot has the :attr:`~Permissions.manage_roles` permission
+        - The bot's top role is above this role
 
         .. versionadded:: 2.0
+        .. versionchanged: 2.7.1 Added check for :attr:`~Permissions.manage_roles` permission
         """
         me = self.guild.me
         return (
