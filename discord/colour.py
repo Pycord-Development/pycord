@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import colorsys
 import random
-from typing import Any, TypeVar
+from typing import Any
 
 from typing_extensions import Self, deprecated, override
 
@@ -35,8 +35,6 @@ __all__ = (
     "Colour",
     "Color",
 )
-
-CT = TypeVar("CT", bound="Colour")
 
 
 class Colour:
