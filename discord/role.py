@@ -445,7 +445,7 @@ class Role(Hashable):
     def is_assignable(self) -> bool:
         """Whether the role is able to be assigned or removed by the bot. This checks whether all of the following conditions are true:
 
-        - The role is not the guild's default role
+        - The role is not the guild's :attr:`Guild.default_role`
 
         - The role is not managed
 
@@ -462,7 +462,7 @@ class Role(Hashable):
             not self.is_default()
             and not self.managed
             and me.guild_permissions.manage_roles
-            and (me.top_role > self or me.id == self.guild.owner_id)
+            and me.top_role > self
         )
 
     def is_available_for_purchase(self) -> bool:
