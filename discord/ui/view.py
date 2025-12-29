@@ -59,7 +59,6 @@ from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..enums import ChannelType
-from ..utils import find
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
 
@@ -323,7 +322,7 @@ class BaseView(ItemInterface):
                 message = self.message
 
             if message:
-                async with contextlib.suppress(discord.HTTPException):
+                with contextlib.suppress(discord.NotFound, discord.Forbidden):
                     m = await message.edit(view=self)
                 if m:
                     self._message = m
@@ -923,9 +922,9 @@ class DesignerView(BaseView):
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (BaseView, ViewItem)
-        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = (
-            {}
-        )
+        self._views: dict[
+            tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]
+        ] = {}
         # message_id: View
         self._synced_message_views: dict[int, BaseView] = {}
         self._state: ConnectionState = state

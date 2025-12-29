@@ -460,7 +460,8 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: None | (
+        pages: None
+        | (
             list[PageGroup]
             | list[Page]
             | list[str]
@@ -531,7 +532,7 @@ class Paginator(discord.ui.View):
             | list[str]
             | list[Page]
             | list[list[discord.Embed] | discord.Embed]
-        ) = (pages if pages is not None else self.pages)
+        ) = pages if pages is not None else self.pages
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
             if sum(pg.default is True for pg in pages) > 1:
@@ -605,7 +606,7 @@ class Paginator(discord.ui.View):
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
-            with contextlib.suppress(discord.HTTPException):
+            with contextlib.suppress(discord.NotFound, discord.Forbidden):
                 await self.message.edit(
                     view=self,
                     files=files or [],
@@ -963,9 +964,8 @@ class Paginator(discord.ui.View):
         ctx: Context,
         target: discord.abc.Messageable | None = None,
         target_message: str | None = None,
-        reference: None | (
-            discord.Message | discord.MessageReference | discord.PartialMessage
-        ) = None,
+        reference: None
+        | (discord.Message | discord.MessageReference | discord.PartialMessage) = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         mention_author: bool | None = None,
         delete_after: float | None = None,
