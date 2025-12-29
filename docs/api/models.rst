@@ -94,6 +94,11 @@ Messages
 .. autoclass:: MessageSnapshot()
     :members:
 
+.. attributetable:: ForwardedMessage
+
+.. autoclass:: ForwardedMessage()
+    :members:
+
 .. attributetable:: DeletedReferencedMessage
 
 .. autoclass:: DeletedReferencedMessage()
