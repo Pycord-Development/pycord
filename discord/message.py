@@ -754,8 +754,11 @@ class ForwardedMessage:
         .. note::
             This list will be empty if the message was forwarded to a different place, e.g., from a DM to a guild, or
             from one guild to another.
-    role_mentions: List[Union[:class:`Role`, :class:`Object`]]
+    role_mentions: List[:class:`Role`]
         A list of :class:`Role` that were originally mentioned.
+
+        .. warning::
+            This is only available using :meth:`abc.Messageable.fetch_message`.
     stickers: List[:class:`StickerItem`]
         A list of sticker items given to the original message.
     components: List[:class:`Component`]
