@@ -107,7 +107,7 @@ __all__ = (
     "MessageCall",
     "DeletedReferencedMessage",
     "ForwardedMessage",
-    "MessageSnapshot"
+    "MessageSnapshot",
 )
 
 
