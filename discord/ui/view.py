@@ -713,7 +713,7 @@ class View(BaseView):
         self.__weights.add_item(item)
         return self
 
-    def remove_item(self, item: ViewItem[V] | int | str) -> None:
+    def remove_item(self, item: ViewItem[V] | int | str) -> Self:
         """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
         the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
@@ -730,7 +730,7 @@ class View(BaseView):
             pass
         return self
 
-    def clear_items(self) -> None:
+    def clear_items(self) -> Self:
         """Removes all items from the view."""
         super().clear_items()
         self.__weights.clear()
