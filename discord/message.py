@@ -803,6 +803,7 @@ class ForwardedMessage:
         self.mentions: list[User] = [
             state.create_user(data=user) for user in data["mentions"]
         ]
+        self.type: MessageType = try_enum(MessageType, data["type"])
         self._edited_timestamp: datetime.datetime | None = utils.parse_time(
             data["edited_timestamp"]
         )
