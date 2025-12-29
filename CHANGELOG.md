@@ -20,7 +20,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-
 ### Fixed
 
 - Fixed `TypeError` in paginator implementation when only passing `PageGroup` objects
@@ -30,9 +29,8 @@ These changes are available on the `master` branch, but have not yet been releas
   TypeVars. ([#3002](https://github.com/Pycord-Development/pycord/pull/3002))
 - Fixed `View`'s `disable_on_timeout` not working in private (DM) channels.
   ([#3016](https://github.com/Pycord-Development/pycord/pull/3016))
-- Fixed `BaseView.on_timeout` and `Paginator.on_timeout` behavior: views no longer
-  raise errors on timeout.
-  ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
+- Fixed `BaseView.on_timeout` and `Paginator.on_timeout` behavior: views no longer raise
+  errors on timeout. ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
 
 ### Deprecated
 
