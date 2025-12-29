@@ -750,6 +750,10 @@ class ForwardedMessage:
         Extra features of the original message.
     mentions: List[:class:`User`]
         A list of :class:`User` that were originally mentioned.
+
+        .. note::
+            This list will be empty if the message was forwarded to a different place, e.g., from a DM to a guild, or
+            from one guild to another.
     role_mentions: List[Union[:class:`Role`, :class:`Object`]]
         A list of :class:`Role` that were originally mentioned.
     stickers: List[:class:`StickerItem`]
