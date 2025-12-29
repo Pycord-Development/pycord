@@ -605,7 +605,7 @@ class Paginator(discord.ui.View):
             page = self.pages[self.current_page]
             page = self.get_page_content(page)
             files = page.update_files()
-            async with contextlib.suppress(discord.HTTPException):
+            with contextlib.suppress(discord.HTTPException):
                 await self.message.edit(
                     view=self,
                     files=files or [],
