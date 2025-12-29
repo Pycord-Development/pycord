@@ -238,8 +238,6 @@ class BaseModal(ItemInterface):
         ----------
         error: :class:`Exception`
             The exception that was raised.
-        modal: :class:`BaseModal`
-            The modal that failed the dispatch.
         interaction: :class:`~discord.Interaction`
             The interaction that led to the failure.
         """
