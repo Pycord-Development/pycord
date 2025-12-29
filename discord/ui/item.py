@@ -35,6 +35,8 @@ __all__ = (
     "ModalItem",
 )
 
+from ..utils import warn_deprecated
+
 if TYPE_CHECKING:
     from ..components import Component
     from ..enums import ComponentType
@@ -152,7 +154,7 @@ class ViewItem(Item[V]):
         self._view: V | None = None
         self._row: int | None = None
         self._rendered_row: int | None = None
-        self.parent: ViewItem | BaseView | None = self.view
+        self.parent: ViewItem | BaseView | None = None
 
     @property
     def row(self) -> int | None:
@@ -208,10 +210,19 @@ class ViewItem(Item[V]):
         Optional[:class:`BaseView`]
             The parent view of this item, or ``None`` if the item is not attached to any view.
         """
-        return self._view
+        if self._view:
+            return self._view
+        if self.parent:
+            from .view import BaseView
+
+            if isinstance(self.parent, BaseView):
+                return self.parent
+            return self.parent.view
+        return None
 
     @view.setter
-    def view(self, value) -> None:
+    def view(self, value: V | None) -> None:
+        warn_deprecated("Manually setting .view", since="2.7", removed="3.0")
         self._view = value
 
     async def callback(self, interaction: Interaction):

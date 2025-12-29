@@ -20,7 +20,7 @@ jobs:
     environment: translations
     steps:
       - name: "Checkout Repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-tags: true
       - name: "Install Python"
@@ -44,7 +44,7 @@ jobs:
           sphinx-intl update -p ./build/locales ${{ vars.SPHINX_LANGUAGES }}
         working-directory: ./docs
       - name: "Crowdin"
-        uses: crowdin/github-action@v2.12.0
+        uses: crowdin/github-action@v2.13.0
         with:
           upload_sources: true
           upload_translations: false
