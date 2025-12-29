@@ -21,6 +21,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
+- Fixed `ForwardedMessage.mentions` not being populated. ([#3051](https://github.com/Pycord-Development/pycord/pull/3051))
 
 ### Deprecated
 
