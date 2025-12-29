@@ -14,7 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Changed
 
-- Migrated away from `utils.deprecated` in favor of `warnings.deprecated` for deprecation warnings.
+- Migrated away from `utils.deprecated` in favor of `warnings.deprecated` for
+  deprecation warnings.
   ([#3042](https://github.com/Pycord-Development/pycord/pull/3042))
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
