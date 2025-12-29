@@ -116,74 +116,74 @@ class AppInfo:
     approximate_guild_count: Optional[:class:`int`]
         The approximate count of guilds to which the app has been added, if any.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     approximate_user_install_count: Optional[:class:`int`]
         The approximate count of users who have installed the application, if any.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     redirect_uris: Optional[List[:class:`str`]]
         The list of redirect URIs for the application, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     interactions_endpoint_url: Optional[:class:`str`]
         The interactions endpoint URL for the application, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     role_connections_verification_url: Optional[:class:`str`]
         The role connection verification URL for the application, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     install_params: Optional[:class:`AppInstallParams`]
         The settings for the application's default in-app authorization link, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     integration_types_config: Optional[:class:`IntegrationTypesConfig`]
         Per-installation context configuration for guild (``0``) and user (``1``) contexts.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     event_webhooks_url: Optional[:class:`str`]
         The URL used to receive application event webhooks, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     event_webhooks_status: Optional[:class:`ApplicationEventWebhookStatus`]
         The status of event webhooks for the application, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     event_webhooks_types: Optional[List[:class:`str`]]
         List of event webhook types subscribed to, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     tags: Optional[List[:class:`str`]]
         The list of tags describing the content and functionality of the app, if set.
 
         Maximium of 5 tags.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     custom_install_url: Optional[:class:`str`]
         The default custom authorization URL for the application, if set.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     approximate_user_authorization_count: Optional[:class:`int`]
         The approximate count of users who have authorized the application, if any.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
     bot: Optional[:class:`User`]
         The bot user associated with this application, if any.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
     """
 
     __slots__ = (
@@ -231,7 +231,7 @@ class AppInfo:
         self.description: str = data["description"]
         self._icon: str | None = data.get("icon")
         self.rpc_origins: list[str] | None = data.get("rpc_origins")
-        self.bot_public: bool = data.get("bot_public", False)
+        self.bot_public: bool = data.get("bot_public", True)
         self.bot_require_code_grant: bool = data.get("bot_require_code_grant", False)
         self.owner: User | None = (
             state.create_user(owner)
@@ -242,7 +242,7 @@ class AppInfo:
         team: TeamPayload | None = data.get("team")
         self.team: Team | None = Team(state, team) if team else None
 
-        self._summary: str = data["summary"]
+        self._summary: str | None = data.get("summary")
         self.verify_key: str = data["verify_key"]
         self.bot: User | None = (
             state.create_user(bot) if (bot := data.get("bot")) is not None else None
@@ -287,8 +287,8 @@ class AppInfo:
         )
         self.tags: list[str] = data.get("tags", [])
         self.custom_install_url: str | None = data.get("custom_install_url")
-        self.integration_types_config = IntegrationTypesConfig.from_payload(
-            data.get("integration_types_config")
+        self.integration_types_config: IntegrationTypesConfig | None = (
+            IntegrationTypesConfig.from_payload(data.get("integration_types_config"))
         )
 
     def __repr__(self) -> str:
@@ -304,7 +304,7 @@ class AppInfo:
 
         Returns an :class:`ApplicationFlags` instance or ``None`` when not present.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
         """
         if self._flags is None:
             return None
@@ -333,7 +333,7 @@ class AppInfo:
 
         Edit the current application's settings.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
         Parameters
         ----------
@@ -366,8 +366,7 @@ class AppInfo:
         event_webhooks_url: Optional[:class:`str`]
             Event webhooks callback URL for receiving application webhook events. Pass ``None`` to clear.
         event_webhooks_status: :class:`ApplicationEventWebhookStatus`
-            The desired webhook status. Pass an :class:`ApplicationEventWebhookStatus` value to set
-            a specific status (``DISABLED``=1, ``ENABLED``=2, ``DISABLED_BY_DISCORD``=3).
+            The desired webhook status.
         event_webhooks_types: Optional[List[:class:`str`]]
             List of webhook event types to subscribe to. Pass ``None`` to clear.
 
@@ -537,7 +536,7 @@ class PartialAppInfo:
 class AppInstallParams:
     """Represents the settings for the custom authorization URL of an application.
 
-    .. versionadded:: 2.7
+    .. versionadded:: 2.7.1
 
     Attributes
     ----------
@@ -556,7 +555,7 @@ class AppInstallParams:
     def _to_payload(self) -> dict[str, object]:
         """Serialize this object into an application install params payload.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
 
         Returns
         -------
@@ -578,7 +577,7 @@ class IntegrationTypesConfig:
 
     This object is used to build the payload for the ``integration_types_config`` field when editing an application.
 
-    .. versionadded:: 2.7
+    .. versionadded:: 2.7.1
 
     Parameters
     ----------
@@ -600,7 +599,9 @@ class IntegrationTypesConfig:
         self.user = user
 
     @staticmethod
-    def _get_ctx(raw: dict | None, key: int):
+    def _get_ctx(
+        raw: dict[int | str, dict[str, object] | None] | None, key: int
+    ) -> dict[str, object] | None:
         if raw is None:
             return None
         if key in raw:
@@ -609,7 +610,7 @@ class IntegrationTypesConfig:
         return raw.get(skey)
 
     @staticmethod
-    def _decode_ctx(value: dict | None) -> AppInstallParams | None:
+    def _decode_ctx(value: dict[str, Any] | None) -> AppInstallParams | None:
         if value is None:
             return None
         params = value.get("oauth2_install_params")
@@ -618,7 +619,9 @@ class IntegrationTypesConfig:
         return AppInstallParams(params)
 
     @classmethod
-    def from_payload(cls, data: dict | None) -> IntegrationTypesConfig | None:
+    def from_payload(
+        cls, data: dict[int | str, dict[str, Any] | None] | None
+    ) -> IntegrationTypesConfig | None:
         if data is None:
             return None
         guild_ctx = cls._decode_ctx(cls._get_ctx(data, 0))
@@ -627,22 +630,22 @@ class IntegrationTypesConfig:
 
     def _encode_install_params(
         self, value: AppInstallParams | None
-    ) -> dict[str, object] | None:
+    ) -> dict[str, dict[str, Any]] | None:
         if value is None:
             return None
         return {"oauth2_install_params": value._to_payload()}
 
-    def _to_payload(self) -> dict[int, dict[str, object] | None]:
+    def _to_payload(self) -> dict[int, dict[str, dict[str, Any]] | None]:
         """Serialize this configuration into the payload expected by the API.
 
         Returns
         -------
-        Dict[int, Dict[str, object] | None]
+        Dict[int, Dict[str, Dict[str, Any]] | None]
             Mapping of integration context IDs to encoded install parameters, or ``None`` to clear.
 
-        .. versionadded:: 2.7
+        .. versionadded:: 2.7.1
         """
-        payload: dict[int, dict[str, object] | None] = {}
+        payload: dict[int, dict[str, dict[str, Any]] | None] = {}
         if self.guild is not utils.MISSING:
             payload[0] = self._encode_install_params(self.guild)
         if self.user is not utils.MISSING:

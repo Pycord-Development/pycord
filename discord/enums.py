@@ -1060,10 +1060,7 @@ class EntitlementOwnerType(Enum):
 
 
 class IntegrationType(Enum):
-    """The application's integration type.
-
-    .. versionadded:: 2.7
-    """
+    """The application's integration type."""
 
     guild_install = 0
     user_install = 1
@@ -1138,9 +1135,9 @@ class SelectDefaultValueType(Enum):
 class ApplicationEventWebhookStatus(Enum):
     """Represents the application event webhook status."""
 
-    DISABLED = 1
-    ENABLED = 2
-    DISABLED_BY_DISCORD = 3
+    disabled = 1
+    enabled = 2
+    disabled_by_discord = 3
 
 
 T = TypeVar("T")

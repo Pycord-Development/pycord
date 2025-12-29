@@ -2636,7 +2636,7 @@ of :class:`enum.Enum`.
 
     Represents the application event webhook status.
 
-    .. versionadded:: 2.7
+    .. versionadded:: 2.7.1
 
     .. attribute:: DISABLED
 
