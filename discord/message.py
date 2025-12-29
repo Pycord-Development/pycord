@@ -748,8 +748,8 @@ class ForwardedMessage:
         A list of attachments given to the original message.
     flags: :class:`MessageFlags`
         Extra features of the original message.
-    mentions: List[Union[:class:`abc.User`, :class:`Object`]]
-        A list of :class:`Member` that were originally mentioned.
+    mentions: List[Union[:class:`abc.User`, :class:`~Member`, :class:`Object`]]
+        A list of :class:`Member` or :class:`abc.User` that were originally mentioned.
     role_mentions: List[Union[:class:`Role`, :class:`Object`]]
         A list of :class:`Role` that were originally mentioned.
     stickers: List[:class:`StickerItem`]
@@ -793,6 +793,12 @@ class ForwardedMessage:
         self.components: list[Component] = [
             _component_factory(d) for d in data.get("components", [])
         ]
+        self.mentions: list[User | Member] = []
+        for user in data["mentions"]:
+            if user.get("member"):
+                self.mentions.append(Member(data=user["member"], state=state))
+            else:
+                self.mentions.append(User(data=user, state=state))
         self._edited_timestamp: datetime.datetime | None = utils.parse_time(
             data["edited_timestamp"]
         )
