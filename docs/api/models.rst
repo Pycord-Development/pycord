@@ -89,6 +89,11 @@ Messages
 .. autoclass:: Message()
     :members:
 
+.. attributetable:: MessageSnapshot
+
+.. autoclass:: MessageSnapshot()
+    :members:
+
 .. attributetable:: DeletedReferencedMessage
 
 .. autoclass:: DeletedReferencedMessage()

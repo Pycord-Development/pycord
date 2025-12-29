@@ -107,6 +107,7 @@ __all__ = (
     "MessageCall",
     "DeletedReferencedMessage",
     "ForwardedMessage",
+    "MessageSnapshot"
 )
 
 
@@ -1023,7 +1024,7 @@ class Message(Hashable):
         The call information associated with this message, if applicable.
 
         .. versionadded:: 2.6
-    snapshots: Optional[List[:class:`MessageSnapshots`]]
+    snapshots: Optional[List[:class:`MessageSnapshot`]]
         The snapshots attached to this message, if applicable.
 
         .. versionadded:: 2.7
