@@ -748,8 +748,8 @@ class ForwardedMessage:
         A list of attachments given to the original message.
     flags: :class:`MessageFlags`
         Extra features of the original message.
-    mentions: List[Union[:class:`abc.User`, :class:`Object`]]
-        A list of :class:`abc.User` that were originally mentioned.
+    mentions: List[:class:`User`]
+        A list of :class:`User` that were originally mentioned.
     role_mentions: List[Union[:class:`Role`, :class:`Object`]]
         A list of :class:`Role` that were originally mentioned.
     stickers: List[:class:`StickerItem`]
