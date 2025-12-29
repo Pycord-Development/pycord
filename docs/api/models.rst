@@ -231,6 +231,11 @@ Role
 .. autoclass:: RoleColours
     :members:
 
+.. attributetable:: GuildRoleCounts
+
+.. autoclass:: GuildRoleCounts()
+    :members:
+
 Scheduled Event
 ~~~~~~~~~~~~~~~
 

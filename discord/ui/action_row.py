@@ -140,7 +140,6 @@ class ActionRow(ViewItem[V]):
         if self.width + item.width > 5:
             raise ValueError(f"Not enough space left on this ActionRow")
 
-        item._view = self.view
         item.parent = self
 
         self.children.append(item)
@@ -162,6 +161,7 @@ class ActionRow(ViewItem[V]):
             self.children.remove(item)
         except ValueError:
             pass
+        item.parent = None
         return self
 
     def get_item(self, id: str | int) -> ViewItem | None:
@@ -350,13 +350,6 @@ class ActionRow(ViewItem[V]):
         )
 
         return self.add_item(select)
-
-    @ViewItem.view.setter
-    def view(self, value):
-        self._view = value
-        for item in self.children:
-            item.parent = self
-            item._view = value
 
     def is_dispatchable(self) -> bool:
         return any(item.is_dispatchable() for item in self.children)

@@ -28,6 +28,7 @@ jobs:
       is_rc: ${{ steps.determine_vars.outputs.is_rc }}
       version: ${{ steps.determine_vars.outputs.version }}
       previous_tag: ${{ steps.determine_vars.outputs.previous_tag }}
+      previous_final_tag: ${{ steps.determine_vars.outputs.previous_final_tag }}
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Repository"
@@ -41,18 +42,24 @@ jobs:
         env:
           VERSION: ${{ github.event.inputs.version }}
         run: |
-          VALID_VERSION_REGEX='^([0-9]+\.[0-9]+\.[0-9]+((a|b|rc|\.dev|\.post)[0-9]+)?)$'
+          set -euo pipefail
+          VALID_VERSION_REGEX='^[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$'
           if ! [[ $VERSION =~ $VALID_VERSION_REGEX ]]; then
-            echo "::error::Invalid version string '$VERSION'. Must match PEP 440 (e.g. 1.2.0, 1.2.0rc1, 1.2.0.dev1, 1.2.0a1, 1.2.0b1, 1.2.0.post1)"
-            exit 1
-          fi
-          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+rc[0-9]+$ ]]; then
-            echo "::error::Unsupported version string '$VERSION'. Only normal releases (e.g. 1.2.3) and rc (e.g. 1.2.3rc1) are supported at this time."
+            echo "::error::Invalid version string '$VERSION'. Only releases like 1.2.3 and release candidates like 1.2.3rc1 are supported."
             exit 1
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git describe --tags --abbrev=0 2>/dev/null || true)
+          if [[ -z "$PREVIOUS_TAG" ]]; then
+            echo "::error::Could not determine previous tag. Ensure at least one tag exists."
+            exit 1
+          fi
           echo "previous_tag=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
+          PREVIOUS_FINAL_TAG=$(git tag --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n1 || true)
+          if [[ -z "$PREVIOUS_FINAL_TAG" ]]; then
+            PREVIOUS_FINAL_TAG=$PREVIOUS_TAG
+          fi
+          echo "previous_final_tag=${PREVIOUS_FINAL_TAG}" >> $GITHUB_OUTPUT
           MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
           echo "branch_name=v${MAJOR_MINOR_VERSION}.x" >> $GITHUB_OUTPUT
           if [[ $VERSION == *rc* ]]; then
@@ -146,6 +153,8 @@ jobs:
         shell: bash
         env:
           VERSION: ${{ inputs.version }}
+          PREVIOUS_TAG: ${{ needs.pre_config.outputs.previous_tag }}
+          PREVIOUS_FINAL_TAG: ${{ needs.pre_config.outputs.previous_final_tag }}
           REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           BRANCH: ${{ github.ref_name }}
@@ -153,10 +162,14 @@ jobs:
           git config user.name "NyuwBot"
           git config user.email "nyuw@aitsys.dev"
           DATE=$(date +'%Y-%m-%d')
-          sed -i "/These changes are available on the \`.*\` branch, but have not yet been released\./{N;d;}" CHANGELOG.md
-          sed -i "s/## \[Unreleased\]/## [$VERSION] - $DATE/" CHANGELOG.md
-          sed -i "0,/## \[$VERSION\]/ s|## \[$VERSION\]|## [Unreleased]\n\nThese changes are available on the \`$BRANCH\` branch, but have not yet been released.\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Deprecated\n\n### Removed\n\n&|" CHANGELOG.md
-          sed -i "s|\[unreleased\]:.*|[unreleased]: https://github.com/$REPOSITORY/compare/v$VERSION...HEAD\n[$VERSION]: https://github.com/$REPOSITORY/compare/$(git describe --tags --abbrev=0 @^)...v$VERSION|" CHANGELOG.md
+          python scripts/release_changelog.py \
+            --path CHANGELOG.md \
+            --version "$VERSION" \
+            --previous-tag "$PREVIOUS_TAG" \
+            --previous-final-tag "$PREVIOUS_FINAL_TAG" \
+            --branch "$BRANCH" \
+            --repository "$REPOSITORY" \
+            --date "$DATE"
           git add CHANGELOG.md
           git commit -m "chore(release): update CHANGELOG.md for version $VERSION"
       - name: "Commit and Push Changelog to ${{ github.ref_name }}"
@@ -202,7 +215,7 @@ jobs:
           python3 -m build --sdist
           python3 -m build --wheel
       - name: "Create GitHub Release"
-        uses: softprops/action-gh-release@v2.4.2
+        uses: softprops/action-gh-release@v2.5.0
         id: gh-release
         with:
           tag_name: "v${{ inputs.version }}"
@@ -235,67 +248,42 @@ jobs:
   docs_release:
     runs-on: ubuntu-latest
     needs: [lib_release, pre_config]
-    if:
-      ${{ needs.pre_config.outputs.is_rc == 'false' || (needs.pre_config.outputs.is_rc
-      == 'true' && endsWith(needs.pre_config.outputs.version, '0rc1')) }}
     environment: release
     steps:
-      - name: "Sync Versions on Read the Docs"
-        run: |
-          curl --location --request POST 'https://readthedocs.org/api/v3/projects/pycord/sync-versions/' \
-          --header 'Content-Type: application/json' \
-          --header "Authorization: Token ${{ secrets.READTHEDOCS_TOKEN }}"
+      - name: "Checkout repository"
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
-      - name: "Activate and Show Version on Read the Docs"
+      - name: "Sync and activate version on Read the Docs"
+        env:
+          READTHEDOCS_TOKEN: ${{ secrets.READTHEDOCS_TOKEN }}
         run: |
-          VERSION=${{ needs.pre_config.outputs.version }}
-          MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          HIDDEN=$([[ $VERSION == *rc* ]] && echo true || echo false)
-          if [[ $VERSION == *rc* ]]; then
-            DOCS_VERSION="v${MAJOR_MINOR_VERSION}.x"
-          else
-            DOCS_VERSION="v$VERSION"
-          fi
-          curl --location --request PATCH "https://readthedocs.org/api/v3/projects/pycord/versions/$DOCS_VERSION/" \
-          --header 'Content-Type: application/json' \
-          --header "Authorization: Token ${{ secrets.READTHEDOCS_TOKEN }}" \
-          --data '{
-              "active": true,
-              "hidden": $HIDDEN
-          }'
+          python3 scripts/release_rtd_versions.py \
+            --project pycord \
+            --version "${{ needs.pre_config.outputs.version }}" \
+            --sync
 
   inform_discord:
     runs-on: ubuntu-latest
     needs: [docs_release, lib_release, pre_config]
     environment: release
     steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
       - name: "Notify Discord"
-        run: |
-          VERSION=${{ needs.pre_config.outputs.version }}
-          MAJOR_MINOR_VERSION=$(echo $VERSION | grep -oE '^[0-9]+\.[0-9]+')
-          DOCS_URL="<https://docs.pycord.dev/en/v$VERSION/changelog.html>"
-          GITHUB_COMPARE_URL="<https://github.com/Pycord-Development/pycord/compare/${{ needs.pre_config.outputs.previous_tag }}...v$VERSION>"
-          GITHUB_RELEASE_URL="<https://github.com/Pycord-Development/pycord/releases/tag/v$VERSION>"
-          PYPI_RELEASE_URL="<https://pypi.org/project/py-cord/$VERSION/>"
-          if [[ $VERSION == *rc* ]]; then
-            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v$VERSION Release Candidate ($MAJOR_MINOR_VERSION) is available!\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}@here\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}This is a pre-release (release candidate) for testing and feedback.\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}Check out the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL), and [PyPI release page]($PYPI_RELEASE_URL).\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}Please try it out and let us know your feedback or any issues!"
-          else
-            ANNOUNCEMENT="## <:pycord:1063211537008955495> Pycord v${VERSION} is out!\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}@everyone\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}You can view the changelog here: <$DOCS_URL>\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}Feel free to take a look at the [GitHub changelog]($GITHUB_COMPARE_URL), [GitHub release page]($GITHUB_RELEASE_URL) and the [PyPI release page]($PYPI_RELEASE_URL).\n\n"
-            ANNOUNCEMENT="${ANNOUNCEMENT}You can install this version by running the following command:\n\`\`\`sh\npip install -U py-cord==$VERSION\n\`\`\`"
-          fi
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "{\"content\":\"$ANNOUNCEMENT\",\"allowed_mentions\":{\"parse\":[\"everyone\",\"roles\"]}}" \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+        env:
+          VERSION: ${{ needs.pre_config.outputs.version }}
+          PREVIOUS_TAG: ${{ needs.pre_config.outputs.previous_tag }}
+          PREVIOUS_FINAL_TAG: ${{ needs.pre_config.outputs.previous_final_tag }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPOSITORY: ${{ github.repository }}
+        run: python scripts/discord_release_notification.py
 
   determine_milestone_id:
     runs-on: ubuntu-latest
@@ -344,7 +332,7 @@ jobs:
       - name: "Create New Milestone"
         run: |
           gh extension install valeriobelli/gh-milestone
-          gh milestone create "${{ needs.determine_milestone_id.outputs.new_milestone_version }}"
+          gh milestone create -t "${{ needs.determine_milestone_id.outputs.new_milestone_version }}"
 
 #  branch_protection_restore:
 #    runs-on: ubuntu-latest
