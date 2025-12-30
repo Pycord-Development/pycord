@@ -803,7 +803,7 @@ class ForwardedMessage:
         self.mentions: list[User] = [
             state.create_user(data=user) for user in data["mentions"]
         ]
-        self.role_mentions = []
+        self.role_mentions: list[Role] = []
         if isinstance(self.guild, Guild) and data.get("mention_roles"):
             for role_id in map(int, data["mention_roles"]):
                 role = self.guild.get_role(role_id)
