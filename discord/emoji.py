@@ -107,7 +107,9 @@ class BaseEmoji(_EmojiTag, AssetMixin):
     def url(self) -> str:
         """Returns the URL of the emoji."""
         url = f"{Asset.BASE}/emojis/{self.id}.{self.extension}"
-        return (url + "?animated=true") if self.animated else url
+        if self.animated:
+            url += "?animated=true"
+        return url
 
     @property
     def mention(self) -> str:
@@ -120,7 +122,7 @@ class BaseEmoji(_EmojiTag, AssetMixin):
     def extension(self) -> str:
         """Return the file extension of the emoji.
 
-        .. versionadded:: 2.8
+        .. versionadded:: 2.7.1
         """
         return "webp" if self.animated else "png"
 
