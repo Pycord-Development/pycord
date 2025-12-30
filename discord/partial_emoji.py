@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Any, TypedDict, TypeVar
+from typing import TYPE_CHECKING, Any, TypedDict, TypeVar, Literal
 
 from . import utils
 from .asset import Asset, AssetMixin
@@ -251,7 +251,7 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         return url
 
     @property
-    def extension(self) -> str:
+    def extension(self) -> Literal["webp", "png"]:
         """Return the file extension of the emoji.
 
         .. versionadded:: 2.7.1

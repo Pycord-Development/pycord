@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Iterator
+from typing import TYPE_CHECKING, Any, Iterator, Literal
 
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
@@ -119,7 +119,7 @@ class BaseEmoji(_EmojiTag, AssetMixin):
         return f"<:{self.name}:{self.id}>"
 
     @property
-    def extension(self) -> str:
+    def extension(self) -> Literal["webp", "png"]:
         """Return the file extension of the emoji.
 
         .. versionadded:: 2.7.1
