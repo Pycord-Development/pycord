@@ -2638,14 +2638,13 @@ of :class:`enum.Enum`.
 
     .. versionadded:: 2.7.1
 
-    .. attribute:: DISABLED
+    .. attribute:: disabled
 
         The application webhook is disabled.
 
-    .. attribute:: ENABLED
+    .. attribute:: enabled
 
         The application webhook is enabled.
 
-    .. attribute:: DISABLED_BY_DISCORD
-
+    .. attribute:: disabled_by_discord
         The application webhook has been disabled by Discord.
