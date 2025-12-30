@@ -250,7 +250,10 @@ class PartialEmoji(_EmojiTag, AssetMixin):
 
     @property
     def extension(self) -> str:
-        """Return the file extension of the emoji."""
+        """Return the file extension of the emoji.
+
+        .. versionadded:: 2.8
+        """
         return "webp" if self.animated else "png"
 
     async def read(self) -> bytes:
