@@ -324,8 +324,8 @@ class BaseView(ItemInterface):
             if message:
                 with contextlib.suppress(discord.NotFound, discord.Forbidden):
                     m = await message.edit(view=self)
-                if m:
-                    self._message = m
+                    if m:
+                        self._message = m
 
     async def on_check_failure(self, interaction: Interaction) -> None:
         """|coro|
@@ -922,9 +922,9 @@ class DesignerView(BaseView):
 class ViewStore:
     def __init__(self, state: ConnectionState):
         # (component_type, message_id, custom_id): (BaseView, ViewItem)
-        self._views: dict[tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]] = (
-            {}
-        )
+        self._views: dict[
+            tuple[int, int | None, str], tuple[BaseView, ViewItem[V]]
+        ] = {}
         # message_id: View
         self._synced_message_views: dict[int, BaseView] = {}
         self._state: ConnectionState = state
