@@ -245,8 +245,13 @@ class PartialEmoji(_EmojiTag, AssetMixin):
         if self.is_unicode_emoji():
             return ""
 
-        fmt = "gif" if self.animated else "png"
-        return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
+        url = f"{Asset.BASE}/emojis/{self.id}.{self.extension}"
+        return (url + "?animated=true") if self.animated else url
+
+    @property
+    def extension(self) -> str:
+        """Return the file extension of the emoji."""
+        return "webp" if self.animated else "png"
 
     async def read(self) -> bytes:
         if self.is_unicode_emoji():
