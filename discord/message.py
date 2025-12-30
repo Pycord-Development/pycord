@@ -803,6 +803,13 @@ class ForwardedMessage:
         self.mentions: list[User] = [
             state.create_user(data=user) for user in data["mentions"]
         ]
+        self.role_mentions = []
+        if isinstance(self.guild, Guild) and data.get("mention_roles"):
+            for role_id in map(int, data["mention_roles"]):
+                role = self.guild.get_role(role_id)
+                if role is not None:
+                    self.role_mentions.append(role)
+
         self.type: MessageType = try_enum(MessageType, data["type"])
         self._edited_timestamp: datetime.datetime | None = utils.parse_time(
             data["edited_timestamp"]
