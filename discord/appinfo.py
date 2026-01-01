@@ -116,7 +116,7 @@ class AppInfo:
     approximate_guild_count: Optional[:class:`int`]
         The approximate count of guilds to which the app has been added, if any.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.7
 
     approximate_user_install_count: Optional[:class:`int`]
         The approximate count of users who have installed the application, if any.
