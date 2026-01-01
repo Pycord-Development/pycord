@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `.extension` attribute to emojis to get their file extension.
+  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+
 ### Changed
 
 - Migrated away from `utils.deprecated` in favor of `warnings.deprecated` for
@@ -24,6 +27,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
+- Fixed downloading animated emojis which were originally uploaded as WebP files by
+  changing the `.url` extension of animated emojis from .gif to .webp.
+  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 
 ### Deprecated
 
