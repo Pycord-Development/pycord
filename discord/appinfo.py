@@ -121,7 +121,7 @@ class AppInfo:
     approximate_user_install_count: Optional[:class:`int`]
         The approximate count of users who have installed the application, if any.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.7
 
     redirect_uris: Optional[List[:class:`str`]]
         The list of redirect URIs for the application, if set.
