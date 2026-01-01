@@ -136,7 +136,7 @@ class AppInfo:
     role_connections_verification_url: Optional[:class:`str`]
         The role connection verification URL for the application, if set.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.7
 
     install_params: Optional[:class:`AppInstallParams`]
         The settings for the application's default in-app authorization link, if set.
