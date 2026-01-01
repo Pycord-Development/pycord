@@ -43,7 +43,6 @@ from typing import (
 
 from typing_extensions import Self
 
-import discord
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
@@ -61,6 +60,7 @@ from ..components import _component_factory
 from ..enums import ChannelType
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
+from ..errors import NotFound, Forbidden
 
 __all__ = (
     "BaseView",
@@ -322,7 +322,7 @@ class BaseView(ItemInterface):
                 message = self.message
 
             if message:
-                with contextlib.suppress(discord.NotFound, discord.Forbidden):
+                with contextlib.suppress(NotFound, Forbidden):
                     m = await message.edit(view=self)
                     if m:
                         self._message = m
