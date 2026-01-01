@@ -131,7 +131,7 @@ class AppInfo:
     interactions_endpoint_url: Optional[:class:`str`]
         The interactions endpoint URL for the application, if set.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.7
 
     role_connections_verification_url: Optional[:class:`str`]
         The role connection verification URL for the application, if set.
