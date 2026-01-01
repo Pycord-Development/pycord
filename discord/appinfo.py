@@ -126,7 +126,7 @@ class AppInfo:
     redirect_uris: Optional[List[:class:`str`]]
         The list of redirect URIs for the application, if set.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.7
 
     interactions_endpoint_url: Optional[:class:`str`]
         The interactions endpoint URL for the application, if set.
