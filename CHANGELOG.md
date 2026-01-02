@@ -33,9 +33,9 @@ These changes are available on the `master` branch, but have not yet been releas
 ### Removed
 
 - Removed `Guild.set_mfa_required` as this requires owner permissions
-  ([#3066](https://github.com/Pycord-Development/pycord/pull/3056))
+  ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
 - Removed the `owner` keyword argument from `Guild.edit` as this requires owner
-  permissions ([#3066](https://github.com/Pycord-Development/pycord/pull/3056))
+  permissions ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
 
 ## [2.7.0] - 2025-12-24
 
