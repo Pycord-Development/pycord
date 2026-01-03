@@ -36,6 +36,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
 - Removed the `owner` keyword argument from `Guild.edit` as this requires owner
   permissions ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+- Removed `Guild.delete` as this requires owner permissions
+  ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
 
 ## [2.7.0] - 2025-12-24
 

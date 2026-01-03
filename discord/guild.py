@@ -2082,21 +2082,6 @@ class Guild(Hashable):
         """
         await self._state.http.leave_guild(self.id)
 
-    async def delete(self) -> None:
-        """|coro|
-
-        Deletes the guild. You must be the guild owner to delete the
-        guild.
-
-        Raises
-        ------
-        HTTPException
-            Deleting the guild failed.
-        Forbidden
-            You do not have permissions to delete the guild.
-        """
-        await self._state.http.delete_guild(self.id)
-
     async def edit(
         self,
         *,
@@ -2214,8 +2199,7 @@ class Guild(Hashable):
             Editing the guild failed.
         InvalidArgument
             The image format passed in to ``icon`` is invalid. It must be
-            PNG or JPG. This is also raised if you are not the owner of the
-            guild and request an ownership transfer.
+            PNG or JPG.
 
         Returns
         --------
