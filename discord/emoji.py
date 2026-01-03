@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Iterator
+from typing import TYPE_CHECKING, Any, Iterator, Literal
 
 from .asset import Asset, AssetMixin
 from .partial_emoji import PartialEmoji, _EmojiTag
@@ -106,8 +106,10 @@ class BaseEmoji(_EmojiTag, AssetMixin):
     @property
     def url(self) -> str:
         """Returns the URL of the emoji."""
-        fmt = "gif" if self.animated else "png"
-        return f"{Asset.BASE}/emojis/{self.id}.{fmt}"
+        url = f"{Asset.BASE}/emojis/{self.id}.{self.extension}"
+        if self.animated:
+            url += "?animated=true"
+        return url
 
     @property
     def mention(self) -> str:
@@ -115,6 +117,14 @@ class BaseEmoji(_EmojiTag, AssetMixin):
         if self.animated:
             return f"<a:{self.name}:{self.id}>"
         return f"<:{self.name}:{self.id}>"
+
+    @property
+    def extension(self) -> Literal["webp", "png"]:
+        """Return the file extension of the emoji.
+
+        .. versionadded:: 2.7.1
+        """
+        return "webp" if self.animated else "png"
 
 
 class GuildEmoji(BaseEmoji):
