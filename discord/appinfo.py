@@ -168,7 +168,7 @@ class AppInfo:
 
         Maximium of 5 tags.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.7
 
     custom_install_url: Optional[:class:`str`]
         The default custom authorization URL for the application, if set.
