@@ -43,7 +43,6 @@ from typing import (
 
 from typing_extensions import Self
 
-
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
 from ..components import Component
@@ -58,9 +57,9 @@ from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..enums import ChannelType
+from ..errors import Forbidden, NotFound
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
-from ..errors import NotFound, Forbidden
 
 __all__ = (
     "BaseView",
