@@ -173,7 +173,7 @@ class AppInfo:
     custom_install_url: Optional[:class:`str`]
         The default custom authorization URL for the application, if set.
 
-        .. versionadded:: 2.7.1
+        .. versionadded:: 2.7
 
     approximate_user_authorization_count: Optional[:class:`int`]
         The approximate count of users who have authorized the application, if any.
