@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 from typing import List
+from typing_extensions import Self
 
 import discord
 from discord.errors import DiscordException
@@ -908,6 +909,12 @@ class Paginator(discord.ui.View):
                 self.remove_item(item)
         for item in custom_view.children:
             self.add_item(item)
+
+    def clear_items(self) -> Self:
+        # Necessary override due to behavior of Item.parent, see #3057
+        self.children.clear()
+        self._View__weights.clear()
+        return self
 
     def get_page_group_content(self, page_group: PageGroup) -> list[Page]:
         """Returns a converted list of `Page` objects for the given page group based on the content of its pages."""
