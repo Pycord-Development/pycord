@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `.extension` attribute to emojis to get their file extension.
+  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+
 ### Changed
 
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
@@ -19,10 +22,16 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
-  was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
 - Fixed `BaseView.on_timeout` and `Paginator.on_timeout` behavior: views no longer raise
   errors on timeout. ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
+- Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
+  was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
+- Fixed downloading animated emojis which were originally uploaded as WebP files by
+  changing the `.url` extension of animated emojis from .gif to .webp.
+  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Fixed `Interaction.channel` not being resolved with user-installed commands ran in
+  guilds which the bot is not a member of.
+  ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
 
 ### Deprecated
 
