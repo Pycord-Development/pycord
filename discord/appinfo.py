@@ -536,7 +536,7 @@ class PartialAppInfo:
 class AppInstallParams:
     """Represents the settings for the custom authorization URL of an application.
 
-    .. versionadded:: 2.7.1
+    .. versionadded:: 2.7
 
     Attributes
     ----------
