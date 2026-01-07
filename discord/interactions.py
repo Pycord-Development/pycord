@@ -598,8 +598,8 @@ class Interaction:
             suppress=suppress,
         )
         _message = self.message or self._original_response
-        if view and message:
-            self._state.prevent_view_updates_for(message.id)
+        if view and _message:
+            self._state.prevent_view_updates_for(_message.id)
         adapter = async_context.get()
         http = self._state.http
         data = await adapter.edit_original_interaction_response(
