@@ -618,7 +618,7 @@ class Interaction:
         message = InteractionMessage(state=state, channel=self.channel, data=data)  # type: ignore
         if view:
             if not view.is_finished():
-                view.refresh(message.components)
+                view._refresh(message.components)
                 if view.is_dispatchable():
                     self._state.store_view(view, message.id)
 
