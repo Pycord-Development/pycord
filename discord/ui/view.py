@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import sys
 import time
@@ -74,6 +75,8 @@ if TYPE_CHECKING:
     from ..message import Message
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
+
+_log = logging.getLogger(__name__)
 
 V = TypeVar("V", bound="BaseView", covariant=True)
 
@@ -996,4 +999,7 @@ class ViewStore:
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
         components = [_component_factory(d, state=self._state) for d in components]
-        view.refresh(components)
+        try:
+            view.refresh(components)
+        except:
+            _log.warning(f"Failed to refresh View {view} from Message {message_id} due to mismatched state. Items may not have complete data.")

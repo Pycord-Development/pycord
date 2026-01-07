@@ -597,8 +597,9 @@ class Interaction:
             previous_allowed_mentions=previous_mentions,
             suppress=suppress,
         )
-        if view and self.message:
-            self._state.prevent_view_updates_for(self.message.id)
+        _message = self.message or self._original_response
+        if view and message:
+            self._state.prevent_view_updates_for(message.id)
         adapter = async_context.get()
         http = self._state.http
         data = await adapter.edit_original_interaction_response(
@@ -1191,7 +1192,7 @@ class InteractionResponse:
             raise InteractionResponded(self._parent)
 
         parent = self._parent
-        msg = parent.message
+        msg = parent.message or parent._original_response
         state = parent._state
         message_id = msg.id if msg else None
         if parent.type not in (InteractionType.component, InteractionType.modal_submit):
