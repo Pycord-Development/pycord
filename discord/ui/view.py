@@ -1002,4 +1002,6 @@ class ViewStore:
         try:
             view._refresh(components)
         except:
-            _log.warning(f"Failed to refresh View {view} from Message {message_id} due to mismatched state. Items may not have complete data.")
+            _log.warning(
+                f"Failed to refresh View {view} from Message {message_id} due to mismatched state. Items may not have complete data."
+            )
