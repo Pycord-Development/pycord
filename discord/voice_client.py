@@ -652,10 +652,10 @@ class VoiceClient(VoiceProtocol):
         nonce[:4] = data[-4:]
         data = data[:-4]
 
-        r = box.decrypt(bytes(data), bytes(header), bytes(nonce))
-        # Discord adds 8 bytes of data before the opus data.
-        # This can be removed, and at this time, discarded as it is unclear what they are for.
-        return r[8:]
+        # The decrypted data is the opus packet directly - no stripping needed.
+        # The first byte is the opus TOC byte (e.g., 0x7c for config=15 stereo).
+        # Stripping bytes here corrupts the opus stream and causes decode failures.
+        return box.decrypt(bytes(data), bytes(header), bytes(nonce))
 
     @staticmethod
     def strip_header_ext(data):
