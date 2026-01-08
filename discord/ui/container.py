@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Iterator, TypeVar
 
 from ..colour import Colour
-from ..components import ActionRow
+from ..components import MediaGalleryItem
 from ..components import Container as ContainerComponent
 from ..components import _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
@@ -312,7 +312,7 @@ class Container(ViewItem[V]):
 
     def add_gallery(
         self,
-        *items: ViewItem,
+        *items: MediaGalleryItem,
         id: int | None = None,
     ) -> Self:
         """Adds a :class:`MediaGallery` to the container.

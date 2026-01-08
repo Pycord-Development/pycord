@@ -57,7 +57,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..enums import ChannelType
+from ..enums import ChannelType, SeparatorSpacingSize
 from ..utils import find
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
@@ -72,6 +72,7 @@ __all__ = (
 
 
 if TYPE_CHECKING:
+    from ..components import MediaGalleryItem
     from ..interactions import Interaction, InteractionMessage
     from ..message import Message
     from ..state import ConnectionState
@@ -983,6 +984,159 @@ class DesignerView(BaseView):
         except ValueError:
             raise ValueError(f"Could not find original_item in view.")
         return self
+
+    def add_row(
+        self,
+        *items: ViewItem[V],
+        id: int | None = None,
+    ) -> Self:
+        """Adds an :class:`ActionRow` to the view.
+
+        To append a pre-existing :class:`ActionRow`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        *items: Union[:class:`Button`, :class:`Select`]
+            The items this action row contains.
+        id: Optiona[:class:`int`]
+            The action row's ID.
+        """
+
+        a = ActionRow(*items, id=id)
+
+        return self.add_item(a)
+
+    def add_container(
+        self,
+        *items: ViewItem[V],
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`Container` to the view.
+
+        To append a pre-existing :class:`Container`, use the
+        :meth:`add_item` method, instead.
+
+        Parameters
+        ----------
+        *items: :class:`ViewItem`
+            The items contained in this container.
+        accessory: Optional[:class:`ViewItem`]
+        id: Optional[:class:`int`]
+            The container's ID.
+        """
+        from .container import Container
+
+        container = Container(*items, id=id)
+
+        return self.add_item(container)
+
+    def add_section(
+        self,
+        *items: ViewItem[V],
+        accessory: ViewItem[V],
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`Section` to the view.
+
+        To append a pre-existing :class:`Section`, use the
+        :meth:`add_item` method, instead.
+
+        Parameters
+        ----------
+        *items: :class:`ViewItem`
+            The items contained in this section, up to 3.
+            Currently only supports :class:`~discord.ui.TextDisplay`.
+        accessory: Optional[:class:`ViewItem`]
+            The section's accessory. This is displayed in the top right of the section.
+            Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        id: Optional[:class:`int`]
+            The section's ID.
+        """
+        from .section import Section
+
+        section = Section(*items, accessory=accessory, id=id)
+
+        return self.add_item(section)
+
+    def add_text(self, content: str, id: int | None = None) -> Self:
+        """Adds a :class:`TextDisplay` to the view.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The content of the TextDisplay
+        id: Optiona[:class:`int`]
+            The text displays' ID.
+        """
+        from .text_display import TextDisplay
+
+        text = TextDisplay(content, id=id)
+
+        return self.add_item(text)
+
+    def add_gallery(
+        self,
+        *items: MediaGalleryItem,
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`MediaGallery` to the view.
+
+        To append a pre-existing :class:`MediaGallery`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        *items: :class:`MediaGalleryItem`
+            The media this gallery contains.
+        id: Optiona[:class:`int`]
+            The gallery's ID.
+        """
+        from .media_gallery import MediaGallery
+
+        g = MediaGallery(*items, id=id)
+
+        return self.add_item(g)
+
+    def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> Self:
+        """Adds a :class:`TextDisplay` to the view.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
+        spoiler: Optional[:class:`bool`]
+            Whether the file has the spoiler overlay. Defaults to ``False``.
+        id: Optiona[:class:`int`]
+            The file's ID.
+        """
+        from .file import File
+
+        f = File(url, spoiler=spoiler, id=id)
+
+        return self.add_item(f)
+
+    def add_separator(
+        self,
+        *,
+        divider: bool = True,
+        spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`Separator` to the container.
+
+        Parameters
+        ----------
+        divider: :class:`bool`
+            Whether the separator is a divider. Defaults to ``True``.
+        spacing: :class:`~discord.SeparatorSpacingSize`
+            The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
+        id: Optional[:class:`int`]
+            The separator's ID.
+        """
+        from .separator import Separator
+
+        s = Separator(divider=divider, spacing=spacing, id=id)
+
+        return self.add_item(s)
 
     def refresh(self, components: list[Component]):
         # Refreshes view data using discord's values
