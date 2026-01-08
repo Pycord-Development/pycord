@@ -27,9 +27,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Iterator, TypeVar
 
 from ..colour import Colour
-from ..components import MediaGalleryItem
 from ..components import Container as ContainerComponent
-from ..components import _component_factory
+from ..components import MediaGalleryItem, _component_factory
 from ..enums import ComponentType, SeparatorSpacingSize
 from ..utils import find, get
 from .action_row import ActionRow
