@@ -341,7 +341,7 @@ class ActionRow(ViewItem[V]):
         id: int | None = None,
         default_values: Sequence[SelectDefaultValue] | None = None,
     ) -> Self:
-        """Adds a :class:`Select` to the container.
+        """Adds a :class:`Select` to the action row.
 
         To append a pre-existing :class:`Select`, use the
         :meth:`add_item` method instead.
