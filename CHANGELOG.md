@@ -30,6 +30,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Interaction.channel` not being resolved with user-installed commands ran in
   guilds which the bot is not a member of.
   ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
+- Added missing documentation to `Interaction.respond` and `ApplicationContext.respond` methods.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 ### Deprecated
 

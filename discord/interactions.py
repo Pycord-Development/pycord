@@ -705,6 +705,40 @@ class Interaction:
         Sends either a response or a message using the followup webhook determined by whether the interaction
         has been responded to or not.
 
+        Parameters
+        ----------
+        content: Optional[:class:`str`]
+            The content of the message to send.
+        embeds: List[:class:`Embed`]
+            A list of embeds to send with the content. Maximum of 10. This cannot
+            be mixed with the ``embed`` parameter.
+        embed: :class:`Embed`
+            The rich embed for the content to send. This cannot be mixed with
+            ``embeds`` parameter.
+        tts: :class:`bool`
+            Indicates if the message should be sent using text-to-speech.
+        view: :class:`discord.ui.BaseView`
+            The view to send with the message.
+        ephemeral: :class:`bool`
+            Indicates if the message should only be visible to the user who started the interaction.
+            If a view is sent with an ephemeral message, and it has no timeout set then the timeout
+            is set to 15 minutes.
+        allowed_mentions: :class:`AllowedMentions`
+            Controls the mentions being processed in this message.
+            See :meth:`.abc.Messageable.send` for more information.
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
+        file: :class:`File`
+            The file to upload.
+        files: List[:class:`File`]
+            A list of files to upload. Must be a maximum of 10.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
+
+
         Returns
         -------
         Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
