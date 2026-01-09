@@ -738,7 +738,6 @@ class Interaction:
 
             .. versionadded:: 2.6
 
-
         Returns
         -------
         Union[:class:`discord.Interaction`, :class:`discord.WebhookMessage`]:
