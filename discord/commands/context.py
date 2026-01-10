@@ -283,30 +283,30 @@ class ApplicationContext(discord.abc.Messageable):
 
     @overload
     async def respond(
-        self,
-        content: Any | None = None,
-        *args,
-        embed: Embed = None,
-        embeds: list[Embed] = None,
-        view: BaseView = None,
-        tts: bool = False,
-        ephemeral: bool = False,
-        allowed_mentions: AllowedMentions = None,
-        file: File = None,
-        files: list[File] = None,
-        poll: Poll = None,
-        delete_after: float = None,
-        **kwargs,
-    ): ...
+            self,
+            content: Any | None = None,
+            *args,
+            embed: Embed = None,
+            embeds: list[Embed] = None,
+            view: BaseView = None,
+            tts: bool = False,
+            ephemeral: bool = False,
+            allowed_mentions: AllowedMentions = None,
+            file: File = None,
+            files: list[File] = None,
+            poll: Poll = None,
+            delete_after: float = None,
+            **kwargs,
+    ) -> Interaction | WebhookMessage: ...
 
     @overload
-    async def respond(self, *args, **kwargs): ...
+    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage: ...
 
     @discord.utils.copy_doc(Interaction.respond)
     async def respond(
-        self, *args, **kwargs
-    ) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
-        return self.interaction.respond
+            self, *args, **kwargs
+    ) -> Interaction | WebhookMessage:
+        return await self.interaction.respond(*args, **kwargs)
 
     @property
     @discord.utils.copy_doc(InteractionResponse.send_message)
