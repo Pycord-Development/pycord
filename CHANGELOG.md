@@ -35,12 +35,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Removed
 
-- Removed `Guild.set_mfa_required` and `Guild.delete` as these require owner permissions
+- Removed guild creation and ownership related methods and arguments as they're
+  not allowed for bots anymore.
   ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-- Removed the `owner` keyword argument from `Guild.edit` as this requires owner
-  permissions ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-- Removed `Template.create_guild` and `Client.create_guild` as bots can no longer create
-  guilds ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed `Guild.set_mfa_required`, `Guild.delete`, `Template.create_guild`
+    and `Client.create_guild`.
+  - Removed the `owner` keyword argument from `Guild.edit`.
 
 ## [2.7.0] - 2025-12-24
 
