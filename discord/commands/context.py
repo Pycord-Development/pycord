@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar, overload
 
 import discord.abc
 from discord.interactions import Interaction, InteractionMessage, InteractionResponse
@@ -38,15 +38,19 @@ if TYPE_CHECKING:
 
     import discord
 
-    from .. import Bot
+    from .. import AllowedMentions, Bot
     from ..client import ClientUser
     from ..cog import Cog
+    from ..embeds import Embed
+    from ..file import File
     from ..guild import Guild
     from ..interactions import InteractionChannel
     from ..member import Member
     from ..message import Message
     from ..permissions import Permissions
+    from ..poll import Poll
     from ..state import ConnectionState
+    from ..ui import BaseView
     from ..user import User
     from ..voice_client import VoiceClient
     from ..webhook import WebhookMessage
@@ -277,9 +281,30 @@ class ApplicationContext(discord.abc.Messageable):
     def send_modal(self) -> Callable[..., Awaitable[Interaction]]:
         return self.interaction.response.send_modal
 
-    @property
+    @overload
+    async def respond(self,
+                      content: Any | None = None,
+                      *args,
+                      embed: Embed = None,
+                      embeds: list[Embed] = None,
+                      view: BaseView = None,
+                      tts: bool = False,
+                      ephemeral: bool = False,
+                      allowed_mentions: AllowedMentions = None,
+                      file: File = None,
+                      files: list[File] = None,
+                      poll: Poll = None,
+                      delete_after: float = None,
+                      **kwargs
+                      ):
+        ...
+
+    @overload
+    async def respond(self, *args, **kwargs):
+        ...
+
     @discord.utils.copy_doc(Interaction.respond)
-    def respond(
+    async def respond(
         self, *args, **kwargs
     ) -> Callable[..., Awaitable[Interaction | WebhookMessage]]:
         return self.interaction.respond
