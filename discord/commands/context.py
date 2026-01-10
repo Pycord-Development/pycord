@@ -282,26 +282,25 @@ class ApplicationContext(discord.abc.Messageable):
         return self.interaction.response.send_modal
 
     @overload
-    async def respond(self,
-                      content: Any | None = None,
-                      *args,
-                      embed: Embed = None,
-                      embeds: list[Embed] = None,
-                      view: BaseView = None,
-                      tts: bool = False,
-                      ephemeral: bool = False,
-                      allowed_mentions: AllowedMentions = None,
-                      file: File = None,
-                      files: list[File] = None,
-                      poll: Poll = None,
-                      delete_after: float = None,
-                      **kwargs
-                      ):
-        ...
+    async def respond(
+        self,
+        content: Any | None = None,
+        *args,
+        embed: Embed = None,
+        embeds: list[Embed] = None,
+        view: BaseView = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions = None,
+        file: File = None,
+        files: list[File] = None,
+        poll: Poll = None,
+        delete_after: float = None,
+        **kwargs,
+    ): ...
 
     @overload
-    async def respond(self, *args, **kwargs):
-        ...
+    async def respond(self, *args, **kwargs): ...
 
     @discord.utils.copy_doc(Interaction.respond)
     async def respond(
