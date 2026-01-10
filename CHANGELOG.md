@@ -12,6 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `replace_item` to `DesignerView`, `Section`, `Container`, `ActionRow`, &
+  `MediaGallery` ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 - Added `.extension` attribute to emojis to get their file extension.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 
@@ -22,6 +24,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed core issues with modifying items in `Container` and `Section`
+  ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
 - Fixed downloading animated emojis which were originally uploaded as WebP files by

@@ -70,7 +70,7 @@ from .soundboard import PartialSoundboardSound, SoundboardSound
 from .stage_instance import StageInstance
 from .sticker import GuildSticker
 from .threads import Thread, ThreadMember
-from .ui.modal import Modal, ModalStore
+from .ui.modal import BaseModal, ModalStore
 from .ui.view import BaseView, ViewStore
 from .user import ClientUser, User
 
@@ -413,7 +413,7 @@ class ConnectionState:
     def purge_message_view(self, message_id: int) -> None:
         self._view_store.remove_message_view(message_id)
 
-    def store_modal(self, modal: Modal, message_id: int) -> None:
+    def store_modal(self, modal: BaseModal, message_id: int) -> None:
         self._modal_store.add_modal(modal, message_id)
 
     def prevent_view_updates_for(self, message_id: int) -> BaseView | None:
