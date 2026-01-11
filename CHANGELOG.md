@@ -33,8 +33,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added missing documentation and function parameters to `Interaction.respond` and
   `ApplicationContext.respond` methods.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
-- Fixed optional parameters of `InteractionResponse.send_message` not being typed as such.
-  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed optional parameters of `InteractionResponse.send_message` not being typed as
+  such. ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 ### Deprecated
 
