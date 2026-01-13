@@ -46,7 +46,7 @@ from .permissions import Permissions
 from .primary_guild import PrimaryGuild
 from .role import RoleColours
 from .user import BaseUser, User, _UserTag
-from .utils import MISSING
+from .utils import MISSING, copy_doc
 
 __all__ = (
     "VoiceState",
@@ -62,7 +62,7 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .types.activity import PartialPresenceUpdate
-    from .types.member import Member as MemberPayload
+    from .types.member import Member as MemberPayload, Member
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
@@ -534,9 +534,9 @@ class Member(discord.abc.Messageable, _UserTag):
         for the member. If the default colour is the one rendered then an instance
         of :meth:`Colour.default` is returned.
 
-        There is an alias for this named :attr:`color`.
+        This is an alias for ``Member.colours.primary``.
         """
-        return self.colors.primary
+        return self.colours.primary
 
     @property
     def color(self) -> Colour:
@@ -544,9 +544,9 @@ class Member(discord.abc.Messageable, _UserTag):
         the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
         is returned.
 
-        There is an alias for this named :attr:`colour`.
+        This is an alias for ``Member.colours.primary``.
         """
-        return self.colour
+        return self.colours.primary
 
     @property
     def colours(self) -> RoleColours:
@@ -571,7 +571,9 @@ class Member(discord.abc.Messageable, _UserTag):
     def colors(self) -> RoleColours:
         """A property that returns the rendered :class:`RoleColours` for the member.
         If the default color is the one rendered then an instance
-        of :meth:`Colour.default` is returned. Equivalent to :attr:`colours`.
+        of :meth:`Colour.default` is returned.
+
+        This is an alias for :attr:`colours`.
 
         .. versionadded:: 2.8
         """
