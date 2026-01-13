@@ -62,7 +62,8 @@ if TYPE_CHECKING:
     from .role import Role
     from .state import ConnectionState
     from .types.activity import PartialPresenceUpdate
-    from .types.member import Member as MemberPayload, Member
+    from .types.member import Member
+    from .types.member import Member as MemberPayload
     from .types.member import MemberWithUser as MemberWithUserPayload
     from .types.member import UserWithMember as UserWithMemberPayload
     from .types.user import User as UserPayload
