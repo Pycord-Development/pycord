@@ -30,11 +30,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Interaction.channel` not being resolved with user-installed commands ran in
   guilds which the bot is not a member of.
   ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
-- Added missing documentation and function parameters to `Interaction.respond` and
-  `ApplicationContext.respond` methods.
+- Fixed `Interaction.respond` and `ApplicationContext.respond` methods to explicitly
+  list their accepted parameters.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
-- Fixed optional parameters of `InteractionResponse.send_message` not being typed as
-  such. ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed an issue where the optional parameters of `InteractionResponse.send_message` were
+  being typed as optional.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 ### Deprecated
 
