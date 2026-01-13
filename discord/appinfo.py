@@ -142,7 +142,7 @@ class AppInfo:
         The settings for the application's default in-app authorization link, if set.
 
         .. versionchanged:: 2.7.1
-        	Fixed incorrect type documentation.
+                Fixed incorrect type documentation.
 
     integration_types_config: Optional[:class:`IntegrationTypesConfig`]
         Per-installation context configuration for guild (``0``) and user (``1``) contexts.
