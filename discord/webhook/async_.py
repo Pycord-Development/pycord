@@ -648,7 +648,7 @@ def handle_message_parameters(
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
     thread_name: str | None = None,
-    silent: bool = False
+    silent: bool = False,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")

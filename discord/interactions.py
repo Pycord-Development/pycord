@@ -1110,7 +1110,11 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        flags = MessageFlags(ephemeral=ephemeral, suppress_notifications=silent, suppress_embeds=suppress_embeds)
+        flags = MessageFlags(
+            ephemeral=ephemeral,
+            suppress_notifications=silent,
+            suppress_embeds=suppress_embeds,
+        )
 
         if view:
             payload["components"] = view.to_components()
