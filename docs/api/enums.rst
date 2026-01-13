@@ -2647,4 +2647,4 @@ of :class:`enum.Enum`.
         The application webhook is enabled.
 
     .. attribute:: disabled_by_discord
-        The application webhook has been disabled by Discord.
+        The application webhook is disabled by Discord.
