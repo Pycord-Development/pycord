@@ -1791,7 +1791,7 @@ class Webhook(BaseWebhook):
 
             .. versionadded:: 2.6
         silent: :class:`bool`
-            Whether the message should trigger push and desktop notifications
+            Whether the message should trigger push and desktop notifications.
 
             .. versionadded:: 2.8
         suppress_embeds: :class:`bool`

@@ -761,7 +761,8 @@ class Interaction:
 
             .. versionadded:: 2.6
         silent: :class:`bool`
-            Whether the message should trigger push and desktop notifications
+            Whether the message should trigger push and desktop notifications. Does not apply to followups of
+            deferred interactions, as these never cause notifications.
 
             .. versionadded:: 2.8
         suppress_embeds: :class:`bool`
@@ -1065,7 +1066,7 @@ class InteractionResponse:
 
             .. versionadded:: 2.6
         silent: :class:`bool`
-            Whether the message should trigger push and desktop notifications
+            Whether the message should trigger push and desktop notifications.
 
             .. versionadded:: 2.8
         suppress_embeds: :class:`bool`
