@@ -46,7 +46,7 @@ from .permissions import Permissions
 from .primary_guild import PrimaryGuild
 from .role import RoleColours
 from .user import BaseUser, User, _UserTag
-from .utils import MISSING, copy_doc
+from .utils import MISSING
 
 __all__ = (
     "VoiceState",
@@ -553,7 +553,9 @@ class Member(discord.abc.Messageable, _UserTag):
     def colours(self) -> RoleColours:
         """A property that returns the rendered :class:`RoleColours` for
         the member. If the default color is the one rendered then an instance of :meth:`RoleColours.default`
-        is returned. There is an alias for this named :attr:`colors`.
+        is returned.
+
+        There is an alias for this named :attr:`colors`.
 
         .. versionadded:: 2.8
         """
