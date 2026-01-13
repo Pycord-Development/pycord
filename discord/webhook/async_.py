@@ -648,6 +648,7 @@ def handle_message_parameters(
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
     thread_name: str | None = None,
+    silent: bool = False
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")
@@ -671,6 +672,7 @@ def handle_message_parameters(
     flags = MessageFlags(
         suppress_embeds=suppress,
         ephemeral=ephemeral,
+        suppress_notifications=silent,
     )
 
     if view is not MISSING:
@@ -1706,6 +1708,8 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: bool = False,
         delete_after: float = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> WebhookMessage | None:
         """|coro|
 
@@ -1786,6 +1790,14 @@ class Webhook(BaseWebhook):
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether the message should trigger push and desktop notifications
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether embeds for links will be suppressed from appearing.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1872,6 +1884,8 @@ class Webhook(BaseWebhook):
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
             thread_name=thread_name,
+            silent=silent,
+            suppress=suppress_embeds,
         )
         adapter = async_context.get()
         thread_id: int | None = None

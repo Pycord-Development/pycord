@@ -714,6 +714,8 @@ class Interaction:
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
         **kwargs: Any,
     ) -> Interaction | WebhookMessage: ...
 
@@ -758,6 +760,14 @@ class Interaction:
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether the message should trigger push and desktop notifications
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether embeds for links will be suppressed from appearing.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1015,6 +1025,8 @@ class InteractionResponse:
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction:
         """|coro|
 
@@ -1052,6 +1064,14 @@ class InteractionResponse:
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether the message should trigger push and desktop notifications
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether embeds for links will be suppressed from appearing.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1090,7 +1110,7 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        flags = MessageFlags(ephemeral=ephemeral)
+        flags = MessageFlags(ephemeral=ephemeral, suppress_notifications=silent, suppress_embeds=suppress_embeds)
 
         if view:
             payload["components"] = view.to_components()
