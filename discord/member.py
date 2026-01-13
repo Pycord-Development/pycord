@@ -44,6 +44,7 @@ from .flags import MemberFlags
 from .object import Object
 from .permissions import Permissions
 from .primary_guild import PrimaryGuild
+from .role import RoleColours
 from .user import BaseUser, User, _UserTag
 from .utils import MISSING
 
@@ -529,11 +530,31 @@ class Member(discord.abc.Messageable, _UserTag):
 
     @property
     def colour(self) -> Colour:
-        """A property that returns a colour denoting the rendered colour
+        """A property that returns a colour denoting the rendered primary colour
         for the member. If the default colour is the one rendered then an instance
         of :meth:`Colour.default` is returned.
 
         There is an alias for this named :attr:`color`.
+        """
+        return self.colors.primary
+
+    @property
+    def color(self) -> Colour:
+        """A property that returns a color denoting the primary rendered color for
+        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
+        is returned.
+
+        There is an alias for this named :attr:`colour`.
+        """
+        return self.colour
+
+    @property
+    def colours(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for
+        the member. If the default color is the one rendered then an instance of :meth:`RoleColours.default`
+        is returned. There is an alias for this named :attr:`colors`.
+
+        .. versionadded:: 2.8
         """
 
         roles = self.roles[1:]  # remove @everyone
@@ -542,19 +563,19 @@ class Member(discord.abc.Messageable, _UserTag):
         # if the highest is the default colour then the next one with a colour
         # is chosen instead
         for role in reversed(roles):
-            if role.colour.value:
-                return role.colour
-        return Colour.default()
+            if role.colours.primary.value:
+                return role.colours
+        return RoleColours.default()
 
     @property
-    def color(self) -> Colour:
-        """A property that returns a color denoting the rendered color for
-        the member. If the default color is the one rendered then an instance of :meth:`Colour.default`
-        is returned.
+    def colors(self) -> RoleColours:
+        """A property that returns the rendered :class:`RoleColours` for the member.
+        If the default color is the one rendered then an instance
+        of :meth:`Colour.default` is returned. Equivalent to :attr:`colours`.
 
-        There is an alias for this named :attr:`colour`.
+        .. versionadded:: 2.8
         """
-        return self.colour
+        return self.colours
 
     @property
     def roles(self) -> list[Role]:
