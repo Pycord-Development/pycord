@@ -287,7 +287,6 @@ class ApplicationContext(discord.abc.Messageable):
         content: Any | None = None,
         *args: Any,
         embed: Embed | None = None,
-        embeds: list[Embed] | None = None,
         view: BaseView | None = None,
         tts: bool = False,
         ephemeral: bool = False,
@@ -300,7 +299,21 @@ class ApplicationContext(discord.abc.Messageable):
     ) -> Interaction | WebhookMessage: ...
 
     @overload
-    async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage: ...
+    async def respond(
+        self,
+        content: Any | None = None,
+        *args: Any,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+        **kwargs: Any,
+    ) -> Interaction | WebhookMessage: ...
 
     @discord.utils.copy_doc(Interaction.respond)
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
