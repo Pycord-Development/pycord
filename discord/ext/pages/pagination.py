@@ -431,7 +431,7 @@ class Paginator(discord.ui.View):
                 pages[default_pg_index]
             )
 
-            self.page_groups = self.pages if show_menu else None
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: list = custom_buttons
@@ -459,7 +459,8 @@ class Paginator(discord.ui.View):
 
     async def update(
         self,
-        pages: None | (
+        pages: None
+        | (
             list[PageGroup]
             | list[Page]
             | list[str]
@@ -530,7 +531,7 @@ class Paginator(discord.ui.View):
             | list[str]
             | list[Page]
             | list[list[discord.Embed] | discord.Embed]
-        ) = (pages if pages is not None else self.pages)
+        ) = pages if pages is not None else self.pages
         self.show_menu = show_menu if show_menu is not None else self.show_menu
         if pages is not None and all(isinstance(pg, PageGroup) for pg in pages):
             if sum(pg.default is True for pg in pages) > 1:
@@ -546,7 +547,7 @@ class Paginator(discord.ui.View):
                 pages[default_pg_index]
             )
 
-            self.page_groups = self.pages if show_menu else None
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
@@ -716,7 +717,9 @@ class Paginator(discord.ui.View):
 
         try:
             if interaction:
-                await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+                await (
+                    interaction.response.defer()
+                )  # needed to force webhook message edit route for files kwarg support
                 await interaction.followup.edit_message(
                     message_id=self.message.id,
                     content=page.content,
@@ -959,9 +962,8 @@ class Paginator(discord.ui.View):
         ctx: Context,
         target: discord.abc.Messageable | None = None,
         target_message: str | None = None,
-        reference: None | (
-            discord.Message | discord.MessageReference | discord.PartialMessage
-        ) = None,
+        reference: None
+        | (discord.Message | discord.MessageReference | discord.PartialMessage) = None,
         allowed_mentions: discord.AllowedMentions | None = None,
         mention_author: bool | None = None,
         delete_after: float | None = None,
