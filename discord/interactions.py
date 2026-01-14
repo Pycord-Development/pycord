@@ -703,7 +703,6 @@ class Interaction:
     async def respond(
         self,
         content: Any | None = None,
-        *args: Any,
         embed: Embed | None = None,
         view: BaseView | None = None,
         tts: bool = False,
@@ -713,14 +712,12 @@ class Interaction:
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
-        **kwargs: Any,
     ) -> Interaction | WebhookMessage: ...
 
     @overload
     async def respond(
         self,
         content: Any | None = None,
-        *args: Any,
         embeds: list[Embed] | None = None,
         view: BaseView | None = None,
         tts: bool = False,
@@ -730,7 +727,6 @@ class Interaction:
         files: list[File] | None = None,
         poll: Poll | None = None,
         delete_after: float | None = None,
-        **kwargs: Any,
     ) -> Interaction | WebhookMessage: ...
 
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:

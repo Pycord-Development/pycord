@@ -34,7 +34,7 @@ These changes are available on the `master` branch, but have not yet been releas
   list their accepted parameters.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 - Fixed an issue where the optional parameters of `InteractionResponse.send_message`
-  were being typed as optional.
+  weren't type hinted as optional.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 ### Deprecated
