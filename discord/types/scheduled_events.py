@@ -35,6 +35,25 @@ ScheduledEventEntityType = Literal[1, 2, 3]
 ScheduledEventPrivacyLevel = Literal[2]
 
 
+class ScheduledEvent(TypedDict):
+    id: Snowflake
+    guild_id: Snowflake
+    channel_id: Snowflake
+    creator_id: Snowflake
+    name: str
+    description: str
+    image: str | None
+    scheduled_start_time: str
+    scheduled_end_time: str | None
+    privacy_level: ScheduledEventPrivacyLevel
+    status: ScheduledEventStatus
+    entity_type: ScheduledEventEntityType
+    entity_id: Snowflake
+    entity_metadata: ScheduledEventEntityMetadata
+    creator: User
+    user_count: int | None
+
+
 class ScheduledEventEntityMetadata(TypedDict):
     location: str
 
