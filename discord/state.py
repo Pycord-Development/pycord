@@ -1709,7 +1709,6 @@ class ConnectionState:
         event = guild.get_scheduled_event(int(data["guild_scheduled_event_id"]))
         if event:
             event._cached_subscribers.add(user_id)
-            guild._add_scheduled_event(event)
             member = guild.get_member(user_id)
             if member is not None:
                 self.dispatch("scheduled_event_user_add", event, member)
@@ -1734,7 +1733,6 @@ class ConnectionState:
         event = guild.get_scheduled_event(int(data["guild_scheduled_event_id"]))
         if event:
             event._cached_subscribers.discard(user_id)
-            guild._add_scheduled_event(event)
             member = guild.get_member(user_id)
             if member is not None:
                 self.dispatch("scheduled_event_user_remove", event, member)
