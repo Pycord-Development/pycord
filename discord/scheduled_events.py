@@ -489,30 +489,32 @@ class ScheduledEvent(Hashable):
         if status is not MISSING:
             payload["status"] = int(status)
 
-        if entity_type is not MISSING:
-            payload["entity_type"] = int(entity_type)
-
         if privacy_level is not MISSING:
             payload["privacy_level"] = int(privacy_level)
-
-        if entity_metadata is not MISSING:
-            if entity_metadata is None:
-                payload["entity_metadata"] = None
-            else:
-                payload["entity_metadata"] = entity_metadata.to_payload()
-
-        if cover is not MISSING:
-            warn_deprecated("cover", "image", "2.7", "3.0")
-            if image is MISSING:
-                image = cover
 
         if location is not MISSING:
             warn_deprecated("location", "entity_metadata", "2.7", "3.0")
             if entity_metadata is MISSING:
                 if not isinstance(location, (ScheduledEventLocation)):
                     location = ScheduledEventLocation(state=self._state, value=location)
+                    if entity_type is MISSING:
+                        entity_type = location.type
                 if location.type == ScheduledEventEntityType.external:
                     entity_metadata = ScheduledEventEntityMetadata(str(location))
+
+        if cover is not MISSING:
+            warn_deprecated("cover", "image", "2.7", "3.0")
+            if image is MISSING:
+                image = cover
+
+        if entity_type is not MISSING:
+            payload["entity_type"] = int(entity_type)
+
+        if entity_metadata is not MISSING:
+            if entity_metadata is None:
+                payload["entity_metadata"] = None
+            else:
+                payload["entity_metadata"] = entity_metadata.to_payload()
 
         if image is not MISSING:
             if image is None:
