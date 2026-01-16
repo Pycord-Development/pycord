@@ -288,7 +288,7 @@ class ScheduledEvent(Hashable):
             else None
         )
 
-        self._cached_subscribers: dict[int, int] = {}
+        self._cached_subscribers: set[int] = set()
         self.user_count: int | None = data.get("user_count")
         self.creator_id: int | None = utils._get_as_snowflake(data, "creator_id")
         self.creator: Member | None = creator
