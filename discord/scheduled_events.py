@@ -404,12 +404,12 @@ class ScheduledEvent(Hashable):
         location: (
             str | int | VoiceChannel | StageChannel | ScheduledEventLocation
         ) = MISSING,
-        entity_type: ScheduledEventEntityType = MISSING,
         scheduled_start_time: datetime.datetime = MISSING,
         scheduled_end_time: datetime.datetime = MISSING,
         image: bytes | None = MISSING,
         cover: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = MISSING,
+        entity_type: ScheduledEventEntityType = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
@@ -440,15 +440,15 @@ class ScheduledEvent(Hashable):
             to use :meth:`.start`, :meth:`.complete`, and
             :meth:`.cancel` to edit statuses instead.
             Valid transitions: SCHEDULED → ACTIVE, ACTIVE → COMPLETED, SCHEDULED → CANCELED.
-        entity_type: :class:`ScheduledEventEntityType`
-            The type of scheduled event. When changing to EXTERNAL, you must also provide
-            ``entity_metadata`` with a location and ``scheduled_end_time``.
         scheduled_start_time: :class:`datetime.datetime`
             The new starting time for the event (ISO8601 format).
         scheduled_end_time: :class:`datetime.datetime`
             The new ending time of the event (ISO8601 format).
         privacy_level: :class:`ScheduledEventPrivacyLevel`
             The privacy level of the event. Currently only GUILD_ONLY is supported.
+        entity_type: :class:`ScheduledEventEntityType`
+            The type of scheduled event. When changing to EXTERNAL, you must also provide
+            ``entity_metadata`` with a location and ``scheduled_end_time``.
         entity_metadata: Optional[:class:`ScheduledEventEntityMetadata`]
             Additional metadata for the scheduled event.
             When set for EXTERNAL events, must contain a location.
