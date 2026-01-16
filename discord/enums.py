@@ -63,9 +63,6 @@ __all__ = (
     "ScheduledEventPrivacyLevel",
     "ScheduledEventEntityType",
     "ScheduledEventLocationType",
-    "ScheduledEventRecurrenceFrequency",
-    "ScheduledEventRecurrenceWeekday",
-    "ScheduledEventRecurrenceMonth",
     "InputTextStyle",
     "SlashCommandOptionType",
     "AutoModTriggerType",
@@ -972,63 +969,6 @@ class ScheduledEventEntityType(Enum):
 
 class ScheduledEventLocationType(ScheduledEventEntityType):
     """Scheduled event location type (deprecated alias for :class:`ScheduledEventEntityType`)"""
-
-
-class ScheduledEventRecurrenceFrequency(Enum):
-    """Scheduled event recurrence frequency"""
-
-    yearly = 0
-    monthly = 1
-    weekly = 2
-    daily = 3
-
-    def __int__(self):
-        return self.value
-
-
-class ScheduledEventRecurrenceWeekday(Enum):
-    """Scheduled event recurrence weekday"""
-
-    monday = 0
-    tuesday = 1
-    wednesday = 2
-    thursday = 3
-    friday = 4
-    saturday = 5
-    sunday = 6
-
-    def __int__(self):
-        return self.value
-
-
-class ScheduledEventRecurrenceMonth(Enum):
-    """Scheduled event recurrence month"""
-
-    january = 1
-    february = 2
-    march = 3
-    april = 4
-    may = 5
-    june = 6
-    july = 7
-    august = 8
-    september = 9
-    october = 10
-    november = 11
-    december = 12
-
-    def __int__(self):
-        return self.value
-
-
-class ScheduledEventRecurrenceInterval(Enum):
-    """Scheduled event recurrence interval spacing"""
-
-    single = 1
-    every_other = 2
-
-    def __int__(self):
-        return self.value
 
 
 class AutoModTriggerType(Enum):

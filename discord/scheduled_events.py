@@ -25,17 +25,13 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any, overload
+from typing import TYPE_CHECKING, Any
 
 from . import utils
 from .asset import Asset
 from .enums import (
     ScheduledEventEntityType,
     ScheduledEventPrivacyLevel,
-    ScheduledEventRecurrenceFrequency,
-    ScheduledEventRecurrenceInterval,
-    ScheduledEventRecurrenceMonth,
-    ScheduledEventRecurrenceWeekday,
     ScheduledEventStatus,
     try_enum,
 )
@@ -49,8 +45,6 @@ __all__ = (
     "ScheduledEvent",
     "ScheduledEventLocation",
     "ScheduledEventEntityMetadata",
-    "ScheduledEventRecurrenceRule",
-    "ScheduledEventRecurrenceNWeekday",
 )
 
 if TYPE_CHECKING:
@@ -60,9 +54,6 @@ if TYPE_CHECKING:
     from .member import Member
     from .state import ConnectionState
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
-    from .types.scheduled_events import (
-        ScheduledEventRecurrenceRule as ScheduledEventRecurrenceRulePayload,
-    )
 else:
     ConnectionState = None
     StageChannel = None
@@ -179,363 +170,6 @@ class ScheduledEventEntityMetadata:
         return {"location": self.location}
 
 
-class ScheduledEventRecurrenceNWeekday:
-    """Represents a recurrence rule n-weekday entry.
-
-    Attributes
-    ----------
-    n: :class:`int`
-        The week to reoccur on. 1 - 5.
-    day: :class:`ScheduledEventRecurrenceWeekday`
-        The day within the week to reoccur on.
-    """
-
-    __slots__ = ("n", "day")
-
-    def __init__(self, *, n: int, day: ScheduledEventRecurrenceWeekday | int) -> None:
-        self.n: int = n
-        self.day: ScheduledEventRecurrenceWeekday = try_enum(
-            ScheduledEventRecurrenceWeekday, int(day)
-        )
-
-    def __repr__(self) -> str:
-        return f"<ScheduledEventRecurrenceNWeekday n={self.n} day={self.day}>"
-
-    def to_payload(self) -> dict[str, int]:
-        return {"n": int(self.n), "day": int(self.day)}
-
-
-class ScheduledEventRecurrenceRule:
-    """Represents a recurrence rule for a scheduled event.
-
-    Discord's recurrence rule is a subset of :mod:`dateutil.rrule` / iCalendar.
-
-    Attributes
-    ----------
-    start: :class:`datetime.datetime`
-        Starting time of the recurrence interval.
-    end: Optional[:class:`datetime.datetime`]
-        Ending time of the recurrence interval.
-    frequency: :class:`ScheduledEventRecurrenceFrequency`
-        How often the event occurs.
-    interval: :class:`ScheduledEventRecurrenceInterval`
-        The spacing between events for the given frequency.
-    by_weekday: Optional[list[:class:`ScheduledEventRecurrenceWeekday`]]
-        Specific days within a week for the event to recur on.
-    by_n_weekday: Optional[list[:class:`ScheduledEventRecurrenceNWeekday`]]
-        Specific days within a specific week to recur on.
-    by_month: Optional[list[:class:`ScheduledEventRecurrenceMonth`]]
-        Specific months for the event to recur on.
-    by_month_day: Optional[list[:class:`int`]]
-        Specific dates within a month for the event to recur on.
-    by_year_day: Optional[list[:class:`int`]]
-        Specific day numbers within a year for the event to recur on (1-364).
-    count: Optional[:class:`int`]
-        Number of times the event can recur before stopping.
-    """
-
-    __slots__ = (
-        "start",
-        "end",
-        "frequency",
-        "interval",
-        "by_weekday",
-        "by_n_weekday",
-        "by_month",
-        "by_month_day",
-        "by_year_day",
-        "count",
-    )
-
-    @overload
-    def __init__(
-        self,
-        *,
-        start: datetime.datetime,
-        frequency: ScheduledEventRecurrenceFrequency | int,
-        interval: ScheduledEventRecurrenceInterval | int,
-        end: datetime.datetime | None = None,
-        by_weekday: list[ScheduledEventRecurrenceWeekday | int],
-        by_n_weekday: None = None,
-        by_month: None = None,
-        by_month_day: None = None,
-        by_year_day: list[int] | None = None,
-        count: int | None = None,
-    ) -> None: ...
-
-    @overload
-    def __init__(
-        self,
-        *,
-        start: datetime.datetime,
-        frequency: ScheduledEventRecurrenceFrequency | int,
-        interval: ScheduledEventRecurrenceInterval | int,
-        end: datetime.datetime | None = None,
-        by_weekday: None = None,
-        by_n_weekday: list[ScheduledEventRecurrenceNWeekday],
-        by_month: None = None,
-        by_month_day: None = None,
-        by_year_day: list[int] | None = None,
-        count: int | None = None,
-    ) -> None: ...
-
-    @overload
-    def __init__(
-        self,
-        *,
-        start: datetime.datetime,
-        frequency: ScheduledEventRecurrenceFrequency | int,
-        interval: ScheduledEventRecurrenceInterval | int,
-        end: datetime.datetime | None = None,
-        by_weekday: None = None,
-        by_n_weekday: None = None,
-        by_month: list[ScheduledEventRecurrenceMonth | int],
-        by_month_day: list[int],
-        by_year_day: list[int] | None = None,
-        count: int | None = None,
-    ) -> None: ...
-
-    def __init__(
-        self,
-        *,
-        start: datetime.datetime,
-        frequency: ScheduledEventRecurrenceFrequency | int,
-        interval: ScheduledEventRecurrenceInterval | int,
-        end: datetime.datetime | None = None,
-        by_weekday: list[ScheduledEventRecurrenceWeekday | int] | None = None,
-        by_n_weekday: list[ScheduledEventRecurrenceNWeekday] | None = None,
-        by_month: list[ScheduledEventRecurrenceMonth | int] | None = None,
-        by_month_day: list[int] | None = None,
-        by_year_day: list[int] | None = None,
-        count: int | None = None,
-    ) -> None:
-        self.start: datetime.datetime = start
-        self.end: datetime.datetime | None = end
-        self.frequency: ScheduledEventRecurrenceFrequency = try_enum(
-            ScheduledEventRecurrenceFrequency, int(frequency)
-        )
-        self.interval: ScheduledEventRecurrenceInterval = try_enum(
-            ScheduledEventRecurrenceInterval, int(interval)
-        )
-        self.by_weekday: list[ScheduledEventRecurrenceWeekday] | None = (
-            [try_enum(ScheduledEventRecurrenceWeekday, int(day)) for day in by_weekday]
-            if by_weekday
-            else None
-        )
-        self.by_n_weekday: list[ScheduledEventRecurrenceNWeekday] | None = by_n_weekday
-        self.by_month: list[ScheduledEventRecurrenceMonth] | None = (
-            [try_enum(ScheduledEventRecurrenceMonth, int(month)) for month in by_month]
-            if by_month
-            else None
-        )
-        self.by_month_day: list[int] | None = by_month_day
-        self.by_year_day: list[int] | None = by_year_day
-        self.count: int | None = count
-
-    def __repr__(self) -> str:
-        return (
-            f"<ScheduledEventRecurrenceRule frequency={self.frequency} "
-            f"interval={self.interval} start={self.start!r} end={self.end!r}>"
-        )
-
-    @classmethod
-    def from_data(
-        cls, data: ScheduledEventRecurrenceRulePayload
-    ) -> ScheduledEventRecurrenceRule:
-        start = utils.parse_time(data["start"])
-        end = utils.parse_time(data.get("end"))
-
-        raw_by_weekday = data.get("by_weekday")
-        by_weekday = (
-            [try_enum(ScheduledEventRecurrenceWeekday, day) for day in raw_by_weekday]
-            if raw_by_weekday
-            else None
-        )
-
-        raw_by_n_weekday = data.get("by_n_weekday")
-        by_n_weekday = (
-            [ScheduledEventRecurrenceNWeekday(**entry) for entry in raw_by_n_weekday]
-            if raw_by_n_weekday
-            else None
-        )
-
-        raw_by_month = data.get("by_month")
-        by_month = (
-            [try_enum(ScheduledEventRecurrenceMonth, month) for month in raw_by_month]
-            if raw_by_month
-            else None
-        )
-
-        return cls(
-            start=start,
-            end=end,
-            frequency=try_enum(ScheduledEventRecurrenceFrequency, data["frequency"]),
-            interval=try_enum(ScheduledEventRecurrenceInterval, data["interval"]),
-            by_weekday=by_weekday,
-            by_n_weekday=by_n_weekday,
-            by_month=by_month,
-            by_month_day=data.get("by_month_day"),
-            by_year_day=data.get("by_year_day"),
-            count=data.get("count"),
-        )
-
-    def to_payload(self) -> dict[str, Any]:
-        """Convert the recurrence rule to an API payload.
-
-        Returns
-        -------
-        dict[str, Any]
-            The recurrence rule as a dictionary suitable for the Discord API.
-
-        Raises
-        ------
-        ValidationError
-            If the recurrence rule violates Discord's system limitations.
-        """
-        self.validate()
-
-        payload: dict[str, Any] = {
-            "start": self.start.isoformat(),
-            "frequency": self.frequency.value,
-            "interval": int(self.interval),
-        }
-
-        if self.end is not None:
-            payload["end"] = self.end.isoformat()
-
-        if self.by_weekday is not None:
-            payload["by_weekday"] = [int(day) for day in self.by_weekday]
-
-        if self.by_n_weekday is not None:
-            payload["by_n_weekday"] = [
-                entry.to_payload() for entry in self.by_n_weekday
-            ]
-
-        if self.by_month is not None:
-            payload["by_month"] = [int(month) for month in self.by_month]
-
-        if self.by_month_day is not None:
-            payload["by_month_day"] = self.by_month_day
-
-        if self.by_year_day is not None:
-            payload["by_year_day"] = self.by_year_day
-
-        if self.count is not None:
-            payload["count"] = self.count
-
-        return payload
-
-    def validate(self) -> None:
-        """Validate the recurrence rule against Discord's system limitations.
-
-        Raises
-        ------
-        ValidationError
-            If the recurrence rule violates any system limitations.
-        """
-        # Mutually exclusive combinations
-        has_by_weekday = self.by_weekday is not None
-        has_by_n_weekday = self.by_n_weekday is not None
-        has_by_month = self.by_month is not None
-        has_by_month_day = self.by_month_day is not None
-
-        if has_by_weekday and has_by_n_weekday:
-            raise ValidationError("by_weekday and by_n_weekday are mutually exclusive")
-
-        if has_by_month and has_by_n_weekday:
-            raise ValidationError("by_month and by_n_weekday are mutually exclusive")
-
-        if has_by_month != has_by_month_day:
-            raise ValidationError(
-                "by_month and by_month_day must both be provided together"
-            )
-
-        # Daily frequency (0) constraints
-        if self.frequency == ScheduledEventRecurrenceFrequency.yearly:
-            if has_by_weekday:
-                raise ValidationError("by_weekday is not valid for yearly events")
-
-        # Weekly frequency (2) constraints
-        if self.frequency == ScheduledEventRecurrenceFrequency.weekly:
-            if has_by_weekday:
-                if len(self.by_weekday) != 1:
-                    raise ValidationError(
-                        "by_weekday must have exactly 1 day for weekly events"
-                    )
-
-            if has_by_n_weekday:
-                raise ValidationError("by_n_weekday is not valid for weekly events")
-
-            if has_by_month or has_by_month_day:
-                raise ValidationError(
-                    "by_month and by_month_day are not valid for weekly events"
-                )
-
-            # interval can only be 2 (every-other week) or 1 (weekly)
-            if self.interval not in (1, 2):
-                raise ValidationError("interval for weekly events can only be 1 or 2")
-
-        # Daily frequency (3) constraints
-        if self.frequency == ScheduledEventRecurrenceFrequency.daily:
-            if has_by_n_weekday:
-                raise ValidationError("by_n_weekday is not valid for daily events")
-
-            if has_by_month or has_by_month_day:
-                raise ValidationError(
-                    "by_month and by_month_day are not valid for daily events"
-                )
-
-            if has_by_weekday:
-                # Validate known sets of weekdays for daily events
-                allowed_sets = [
-                    [0, 1, 2, 3, 4],  # Monday - Friday
-                    [1, 2, 3, 4, 5],  # Tuesday - Saturday
-                    [6, 0, 1, 2, 3],  # Sunday - Thursday
-                    [4, 5],  # Friday & Saturday
-                    [5, 6],  # Saturday & Sunday
-                    [6, 0],  # Sunday & Monday
-                ]
-                weekday_values = [day.value for day in self.by_weekday]
-                weekday_values.sort()
-
-                if weekday_values not in allowed_sets:
-                    raise ValidationError(
-                        "by_weekday for daily events must be one of the allowed sets: "
-                        "[0,1,2,3,4], [1,2,3,4,5], [6,0,1,2,3], [4,5], [5,6], [6,0]"
-                    )
-
-        # Monthly frequency (1) constraints
-        if self.frequency == ScheduledEventRecurrenceFrequency.monthly:
-            if has_by_n_weekday:
-                if len(self.by_n_weekday) != 1:
-                    raise ValidationError(
-                        "by_n_weekday must have exactly 1 entry for monthly events"
-                    )
-
-            if has_by_weekday:
-                raise ValidationError("by_weekday is not valid for monthly events")
-
-            if has_by_month or has_by_month_day:
-                raise ValidationError(
-                    "by_month and by_month_day are not valid for monthly events"
-                )
-
-        # Yearly frequency (0) constraints
-        if self.frequency == ScheduledEventRecurrenceFrequency.yearly:
-            if has_by_n_weekday:
-                raise ValidationError("by_n_weekday is not valid for yearly events")
-
-            if not (has_by_month and has_by_month_day):
-                raise ValidationError(
-                    "by_month and by_month_day must both be provided for yearly events"
-                )
-
-            if len(self.by_month) != 1 or len(self.by_month_day) != 1:
-                raise ValidationError(
-                    "by_month and by_month_day must each have exactly 1 entry for yearly events"
-                )
-
-
 class ScheduledEvent(Hashable):
     """Represents a Discord Guild Scheduled Event.
 
@@ -591,8 +225,6 @@ class ScheduledEvent(Hashable):
         The ID of an entity associated with the scheduled event.
     entity_metadata: Optional[:class:`ScheduledEventEntityMetadata`]
         Additional metadata for the scheduled event (e.g., location for EXTERNAL events).
-    recurrence_rule: Optional[:class:`ScheduledEventRecurrenceRule`]
-        The definition for how often this event should recur.
     """
 
     __slots__ = (
@@ -611,7 +243,6 @@ class ScheduledEvent(Hashable):
         "_cached_subscribers",
         "entity_type",
         "privacy_level",
-        "recurrence_rule",
         "channel_id",
         "entity_id",
         "entity_metadata",
@@ -646,12 +277,6 @@ class ScheduledEvent(Hashable):
         )
         self.privacy_level: ScheduledEventPrivacyLevel = try_enum(
             ScheduledEventPrivacyLevel, data.get("privacy_level")
-        )
-        recurrence_rule_data = data.get("recurrence_rule")
-        self.recurrence_rule: ScheduledEventRecurrenceRule | None = (
-            ScheduledEventRecurrenceRule.from_data(recurrence_rule_data)
-            if recurrence_rule_data
-            else None
         )
         self.channel_id: int | None = utils._get_as_snowflake(data, "channel_id")
         self.entity_id: int | None = utils._get_as_snowflake(data, "entity_id")
@@ -786,7 +411,6 @@ class ScheduledEvent(Hashable):
         cover: bytes | None = MISSING,
         privacy_level: ScheduledEventPrivacyLevel = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
-        recurrence_rule: ScheduledEventRecurrenceRule | None = MISSING,
     ) -> ScheduledEvent | None:
         """|coro|
 
@@ -829,8 +453,6 @@ class ScheduledEvent(Hashable):
             Additional metadata for the scheduled event.
             When set for EXTERNAL events, must contain a location.
             Will be silently discarded by Discord for non-EXTERNAL events.
-        recurrence_rule: Union[:class:`ScheduledEventRecurrenceRule`, :class:`dict`]
-            The definition for how often this event should recur.
         reason: Optional[:class:`str`]
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
@@ -873,12 +495,6 @@ class ScheduledEvent(Hashable):
                 payload["entity_metadata"] = None
             else:
                 payload["entity_metadata"] = entity_metadata.to_payload()
-
-        if recurrence_rule is not MISSING:
-            if isinstance(recurrence_rule, ScheduledEventRecurrenceRule):
-                payload["recurrence_rule"] = recurrence_rule.to_payload()
-            else:
-                payload["recurrence_rule"] = recurrence_rule
 
         if cover is not MISSING:
             warn_deprecated("cover", "image", "2.7", "3.0")
