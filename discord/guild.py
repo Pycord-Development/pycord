@@ -41,7 +41,7 @@ from typing import (
     Union,
     overload,
 )
-from .scheduled_events import ScheduledEventLocation
+
 from typing_extensions import override
 
 from . import abc, utils
@@ -96,6 +96,7 @@ from .role import Role, RoleColours
 from .scheduled_events import (
     ScheduledEvent,
     ScheduledEventEntityMetadata,
+    ScheduledEventLocation,
 )
 from .soundboard import SoundboardSound
 from .stage_instance import StageInstance
@@ -4293,11 +4294,9 @@ class Guild(Hashable):
         description: str = MISSING,
         start_time: datetime.datetime,
         end_time: datetime.datetime = MISSING,
-        location: str
-        | int
-        | VoiceChannel
-        | StageChannel
-        | ScheduledEventLocation = MISSING,
+        location: (
+            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
+        ) = MISSING,
         reason: str | None = None,
         image: bytes = MISSING,
     ) -> ScheduledEvent | None: ...
@@ -4324,11 +4323,9 @@ class Guild(Hashable):
         description: str = MISSING,
         scheduled_start_time: datetime.datetime,
         scheduled_end_time: datetime.datetime = MISSING,
-        location: str
-        | int
-        | VoiceChannel
-        | StageChannel
-        | ScheduledEventLocation = MISSING,
+        location: (
+            str | int | VoiceChannel | StageChannel | ScheduledEventLocation
+        ) = MISSING,
         entity_type: ScheduledEventEntityType = MISSING,
         entity_metadata: ScheduledEventEntityMetadata | None = MISSING,
         channel_id: int = MISSING,
