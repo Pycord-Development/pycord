@@ -967,6 +967,7 @@ class ScheduledEventEntityType(Enum):
         return self.value
 
 
+# TODO(Paillat-dev): Add @deprecated notice using warnings.deprecated in relevant PR
 class ScheduledEventLocationType(ScheduledEventEntityType):
     """Scheduled event location type (deprecated alias for :class:`ScheduledEventEntityType`)"""
 
