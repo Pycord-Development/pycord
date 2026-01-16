@@ -462,6 +462,7 @@ class ScheduledEvent(Hashable):
             The cover image of the scheduled event.
             .. deprecated:: 2.7
                 Use the ``image`` parameter instead.
+
         Returns
         -------
         Optional[:class:`.ScheduledEvent`]
