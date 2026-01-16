@@ -67,13 +67,13 @@ class ScheduledEventLocation:
 
     Setting the ``value`` to its corresponding type will set the location type automatically:
 
-    +------------------------+-----------------------------------------------+
-    |     Type of Input      |                Location Type                  |
-    +========================+===============================================+
-    | :class:`StageChannel`  | :attr:`ScheduledEventEntityType.stage_instance` |
-    | :class:`VoiceChannel`  | :attr:`ScheduledEventEntityType.voice`          |
-    | :class:`str`           | :attr:`ScheduledEventEntityType.external`       |
-    +------------------------+-----------------------------------------------+
+    +------------------------+---------------------------------------------------+
+    |     Type of Input      |                   Location Type                   |
+    +========================+===================================================+
+    | :class:`StageChannel`  | :attr:`ScheduledEventLocationType.stage_instance` |
+    | :class:`VoiceChannel`  | :attr:`ScheduledEventLocationType.voice`          |
+    | :class:`str`           | :attr:`ScheduledEventLocationType.external`       |
+    +------------------------+---------------------------------------------------+
 
     .. deprecated:: 2.7
         Use :class:`ScheduledEventEntityMetadata` instead.
@@ -363,6 +363,7 @@ class ScheduledEvent(Hashable):
         return self.user_count
 
     @property
+    @deprecated(instead="user_count", since="2.7", removed="3.0")
     def interested(self) -> int | None:
         """An alias to :attr:`.user_count`"""
         return self.user_count
@@ -457,7 +458,10 @@ class ScheduledEvent(Hashable):
             The reason to show in the audit log.
         image: Optional[:class:`bytes`]
             The cover image of the scheduled event.
-
+        cover: Optional[:class:`bytes`]
+            The cover image of the scheduled event.
+            .. deprecated:: 2.7
+                Use the ``image`` parameter instead.
         Returns
         -------
         Optional[:class:`.ScheduledEvent`]
