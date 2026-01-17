@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-24 14:40+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -66,8 +66,7 @@ msgstr ""
 #: 95d1ec3d0f144201a711952e040146be bb06477aff3d4ac398c2b90dfc77b732
 #: be224dfe5e9f4390b28f0c12baedd70e c4851b106cef42399e6a64f61c78fd3e
 #: d414290a24964ae2827a233b80f9d820 daf51d42250a4b68a63ce4a569ff39d8
-#: ecc99c5f64b747e49d92d73c86da310a fcee5fb1439849cb91efe93d9ca99a9e
-#: fe14b112db024067910f4c9edd3a2966
+#: fcee5fb1439849cb91efe93d9ca99a9e fe14b112db024067910f4c9edd3a2966
 msgid "Parameters"
 msgstr ""
 
@@ -101,7 +100,6 @@ msgstr ""
 #: ../../ext/bridge/api.rst 145bd739c2fe4aff906e41e5bcc428ad
 #: 59d0f08676f541b5b40d4eb3830146af 5ba572703a4e4af88ec233bfad6f0c14
 #: 648fa6421bf940e5b202bd6565384518 7f5fa723e8af44a78f11ee8eb2f6ff67
-#: c102617394d14eb786c58ca83d415312 cb3f7e3974f148e19e43b78db36e24e6
 #: e198af69a1d8498ea9d0efdb944c67b4
 msgid "Return type"
 msgstr ""
@@ -248,35 +246,23 @@ msgid ":class:`.BridgeExtCommand`"
 msgstr ""
 
 #: 191eaf3d235142118f52b1abb1b5cb13
-#: discord.ext.bridge.BridgeCommand.name_localizations:1 of
-msgid ""
-"Returns name_localizations from :attr:`slash_variant` You can edit/set "
-"name_localizations directly with .. code-block:: python3"
+#: discord.ext.bridge.BridgeCommand.name_localizations:5 of
+msgid "Returns name_localizations from :attr:`slash_variant`"
 msgstr ""
 
-#: 201f3f3932184f08a7790734fe0c0df9
-#: discord.ext.bridge.BridgeCommand.name_localizations:4 of
-#, python-brace-format
-msgid ""
-"bridge_command.name_localizations[\"en-UK\"] = ...  # or any other locale"
-" # or bridge_command.name_localizations = {\"en-UK\": ..., \"fr-FR\": "
-"...}"
+#: 191eaf3d235142118f52b1abb1b5cb13
+#: discord.ext.bridge.BridgeCommand.name_localizations:6 of
+msgid "You can edit/set name_localizations directly with"
 msgstr ""
 
 #: 9000d83f46db48c88492fd4b3d99c08b
-#: discord.ext.bridge.BridgeCommand.description_localizations:1 of
-msgid ""
-"Returns description_localizations from :attr:`slash_variant` You can "
-"edit/set description_localizations directly with .. code-block:: python3"
+#: discord.ext.bridge.BridgeCommand.description_localizations:5 of
+msgid "Returns description_localizations from :attr:`slash_variant`"
 msgstr ""
 
-#: 664bc2c5a41e47f7b116b97ca69052f3
-#: discord.ext.bridge.BridgeCommand.description_localizations:4 of
-#, python-brace-format
-msgid ""
-"bridge_command.description_localizations[\"en-UK\"] = ...  # or any other"
-" locale # or bridge_command.description_localizations = {\"en-UK\": ..., "
-"\"fr-FR\": ...}"
+#: 9000d83f46db48c88492fd4b3d99c08b
+#: discord.ext.bridge.BridgeCommand.description_localizations:6 of
+msgid "You can edit/set description_localizations directly with"
 msgstr ""
 
 #: b3a675d4098741a9b1cae5c41f38c6e9
@@ -292,6 +278,7 @@ msgid "The bot to add the command to."
 msgstr ""
 
 #: 89a3b017daba4d45b6db08bfd3046c9b 927e81b21d1f42ca92a240294c3af3ee
+#: discord.ext.bridge.context.BridgeContext.defer:12
 #: discord.ext.bridge.context.BridgeExtContext.delete:12
 #: discord.ext.bridge.core.BridgeCommand.add_to:7 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
@@ -615,9 +602,8 @@ msgstr ""
 msgid "Helper for @overload to raise when called."
 msgstr ""
 
-#: 0ce390d55fbb4f518af7dbde2a8fc4b4 12f4cce4c9d24748b98e3746f8edba6a
-#: 47958ab3fa804196bbed67e7d4128770 9cbe5a9cbe914b528ad81f23a4ad5481
-#: 9eeff2bc29d04f65a81322028a9e98bb de66e4aa5b244b38acf315ebadaa5346
+#: 12f4cce4c9d24748b98e3746f8edba6a 47958ab3fa804196bbed67e7d4128770
+#: 9cbe5a9cbe914b528ad81f23a4ad5481 de66e4aa5b244b38acf315ebadaa5346
 #: discord.ext.bridge.context.BridgeContext.defer:1
 #: discord.ext.bridge.context.BridgeContext.edit:1
 #: discord.ext.bridge.context.BridgeContext.reply:1
@@ -657,12 +643,11 @@ msgid ""
 "In :class:`BridgeExtContext`, this will be "
 ":meth:`~discord.abc.Messageable.trigger_typing` while in "
 ":class:`BridgeApplicationContext`, this will be "
-":attr:`~.ApplicationContext.defer`. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
+":attr:`~.ApplicationContext.defer`."
 msgstr ""
 
 #: 6b331c393af24345a6dc904dd6177bd9
-#: discord.ext.bridge.context.BridgeContext.defer:10 of
+#: discord.ext.bridge.context.BridgeContext.defer:8 of
 msgid ""
 "There is no ``trigger_typing`` alias for this method. ``trigger_typing`` "
 "will always provide the same functionality across contexts."
@@ -807,5 +792,43 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "BridgeOption"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Returns name_localizations from "
+#~ ":attr:`slash_variant` You can edit/set "
+#~ "name_localizations directly with .. code-"
+#~ "block:: python3"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "bridge_command.name_localizations[\"en-UK\"] = ..."
+#~ "  # or any other locale # or"
+#~ " bridge_command.name_localizations = {\"en-UK\":"
+#~ " ..., \"fr-FR\": ...}"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Returns description_localizations from "
+#~ ":attr:`slash_variant` You can edit/set "
+#~ "description_localizations directly with .. "
+#~ "code-block:: python3"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "bridge_command.description_localizations[\"en-UK\"] = "
+#~ "...  # or any other locale # "
+#~ "or bridge_command.description_localizations = "
+#~ "{\"en-UK\": ..., \"fr-FR\": ...}"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Defers the command with the respective"
+#~ " approach to the current context. In"
+#~ " :class:`BridgeExtContext`, this will be "
+#~ ":meth:`~discord.abc.Messageable.trigger_typing` while in"
+#~ " :class:`BridgeApplicationContext`, this will be"
+#~ " :attr:`~.ApplicationContext.defer`. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:obj\\:\\`None\\``"
 #~ msgstr ""
 
