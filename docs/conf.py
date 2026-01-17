@@ -123,7 +123,7 @@ rst_prolog = """
 """
 
 # Add any paths that contain templates here, relative to this directory.
-# templates_path = ["_templates"]
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
 source_suffix = {
@@ -344,7 +344,18 @@ html_js_files = ["js/custom.js"]
 # html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+html_sidebars = {
+    "**": [
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/scroll-start.html",
+        "sidebar/navigation.html",
+        "sidebar/ethical-ads.html",
+        "sidebar/width-selector.html",
+        "sidebar/scroll-end.html",
+        "sidebar/variant-selector.html",
+    ]
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
