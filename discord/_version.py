@@ -30,13 +30,11 @@ import re
 import warnings
 from importlib.metadata import PackageNotFoundError, version
 
-from typing_extensions import TypedDict
+from typing_extensions import TypedDict, deprecated
 
 __all__ = ("__version__", "VersionInfo", "version_info")
 
 from typing import Literal, NamedTuple
-
-from .utils import deprecated
 
 try:
     __version__ = version("py-cord")
@@ -84,27 +82,37 @@ class VersionInfo(NamedTuple):
         _advanced = value
 
     @property
-    @deprecated("releaselevel", "2.4")
+    @deprecated(
+        "VersionInfo.release_level is deprecated since version 2.4, consider using releaselevel instead."
+    )
     def release_level(self) -> Literal["alpha", "beta", "candidate", "final"]:
         return self.releaselevel
 
     @property
-    @deprecated('.advanced["serial"]', "2.4")
+    @deprecated(
+        'VersionInfo.serial is deprecated since version 2.4, consider using .advanced["serial"] instead.'
+    )
     def serial(self) -> int:
         return self.advanced["serial"]
 
     @property
-    @deprecated('.advanced["build"]', "2.4")
+    @deprecated(
+        'VersionInfo.build is deprecated since version 2.4, consider using .advanced["build"] instead.'
+    )
     def build(self) -> int | None:
         return self.advanced["build"]
 
     @property
-    @deprecated('.advanced["commit"]', "2.4")
+    @deprecated(
+        'VersionInfo.commit is deprecated since version 2.4, consider using .advanced["commit"] instead.'
+    )
     def commit(self) -> str | None:
         return self.advanced["commit"]
 
     @property
-    @deprecated('.advanced["date"]', "2.4")
+    @deprecated(
+        'VersionInfo.date is deprecated since version 2.4, consider using .advanced["date"] instead.'
+    )
     def date(self) -> datetime.date | None:
         return self.advanced["date"]
 
