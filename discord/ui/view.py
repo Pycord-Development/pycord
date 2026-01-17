@@ -1001,10 +1001,11 @@ class DesignerView(BaseView):
         id: Optiona[:class:`int`]
             The action row's ID.
         """
+        from .action_row import ActionRow
 
-        a = ActionRow(*items, id=id)
+        row = ActionRow(*items, id=id)
 
-        return self.add_item(a)
+        return self.add_item(row)
 
     def add_container(
         self,
