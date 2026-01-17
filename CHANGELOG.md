@@ -12,16 +12,38 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added `.extension` attribute to emojis to get their file extension.
+  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+
 ### Changed
+
+- Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
+  permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
 
 ### Fixed
 
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
+- Fixed downloading animated emojis which were originally uploaded as WebP files by
+  changing the `.url` extension of animated emojis from .gif to .webp.
+  ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Fixed `Interaction.channel` not being resolved with user-installed commands ran in
+  guilds which the bot is not a member of.
+  ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
+
+- Fixed incorrect page group assignment in `Paginator`.
+  ([#3065](https://github.com/Pycord-Development/pycord/pull/3065))
 
 ### Deprecated
 
 ### Removed
+
+- Removed guild creation and ownership related methods and arguments as they're not
+  allowed for bots anymore.
+  ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed `Guild.set_mfa_required`, `Guild.delete`, `Template.create_guild` and
+    `Client.create_guild`.
+  - Removed the `owner` keyword argument from `Guild.edit`.
 
 ## [2.7.0] - 2025-12-24
 
