@@ -263,9 +263,9 @@ class Container(ViewItem[V]):
             The action row's ID.
         """
 
-        a = ActionRow(*items, id=id)
+        row = ActionRow(*items, id=id)
 
-        return self.add_item(a)
+        return self.add_item(row)
 
     def add_section(
         self,

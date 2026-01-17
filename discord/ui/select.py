@@ -319,7 +319,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             ),
             id=id or self.id,
             required=required if required is not None else self.required,
-            default_values=default_values or self.default_values,
+            default_values=default_values or self.default_values or [],
         )
 
     def _handle_default_values(
