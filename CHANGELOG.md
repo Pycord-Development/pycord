@@ -35,6 +35,9 @@ These changes are available on the `master` branch, but have not yet been releas
   guilds which the bot is not a member of.
   ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
 
+- Fixed incorrect page group assignment in `Paginator`.
+  ([#3065](https://github.com/Pycord-Development/pycord/pull/3065))
+
 ### Deprecated
 
 ### Removed

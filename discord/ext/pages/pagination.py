@@ -433,7 +433,7 @@ class Paginator(discord.ui.View):
                 pages[default_pg_index]
             )
 
-            self.page_groups = self.pages if show_menu else None
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.buttons = {}
         self.custom_buttons: list = custom_buttons
@@ -548,7 +548,7 @@ class Paginator(discord.ui.View):
                 pages[default_pg_index]
             )
 
-            self.page_groups = self.pages if show_menu else None
+            self.page_groups = pages if show_menu else None
         self.page_count = max(len(self.pages) - 1, 0)
         self.current_page = current_page if current_page <= self.page_count else 0
         # Apply config changes, if specified
@@ -718,7 +718,9 @@ class Paginator(discord.ui.View):
 
         try:
             if interaction:
-                await interaction.response.defer()  # needed to force webhook message edit route for files kwarg support
+                await (
+                    interaction.response.defer()
+                )  # needed to force webhook message edit route for files kwarg support
                 await interaction.followup.edit_message(
                     message_id=self.message.id,
                     content=page.content,
