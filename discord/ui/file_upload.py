@@ -68,7 +68,6 @@ class FileUpload(ModalItem):
         self._attachments: list[Attachment] | None = None
 
         self._underlying: FileUploadComponent = self._generate_underlying(
-            type=ComponentType.file_upload,
             custom_id=custom_id,
             min_values=min_values,
             max_values=max_values,
