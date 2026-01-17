@@ -147,6 +147,7 @@ class Button(ViewItem[V]):
                     f" {emoji.__class__}"
                 )
 
+        self.row = row
         self._underlying = self._generate_underlying(
             custom_id=custom_id,
             url=url,
@@ -157,7 +158,6 @@ class Button(ViewItem[V]):
             sku_id=sku_id,
             id=id,
         )
-        self.row = row
 
     def _generate_underlying(
         self,

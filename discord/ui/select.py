@@ -276,6 +276,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
         self._provided_custom_id = custom_id is not None
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
+        self.row = row
         self._underlying: SelectMenu = self._generate_underlying(
             custom_id=custom_id,
             type=select_type,
@@ -289,7 +290,6 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
             required=required,
             default_values=self._handle_default_values(default_values, select_type),
         )
-        self.row = row
 
     def _generate_underlying(
         self,

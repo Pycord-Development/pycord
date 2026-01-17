@@ -65,6 +65,7 @@ class FileUpload(ModalItem):
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
+        self._attachments: list[Attachment] | None = None
 
         self._underlying: FileUploadComponent = self._generate_underlying(
             type=ComponentType.file_upload,
@@ -74,7 +75,6 @@ class FileUpload(ModalItem):
             required=required,
             id=id,
         )
-        self._attachments: list[Attachment] | None = None
 
     def __repr__(self) -> str:
         attrs = " ".join(

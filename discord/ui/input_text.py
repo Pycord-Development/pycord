@@ -116,6 +116,9 @@ class InputText(ModalItem):
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
+        self._input_value = False
+        self.row = row
+        self._rendered_row: int | None = None
 
         self._underlying = self._generate_underlying(
             style=style,
@@ -128,9 +131,6 @@ class InputText(ModalItem):
             value=value,
             id=id,
         )
-        self._input_value = False
-        self.row = row
-        self._rendered_row: int | None = None
 
     def __repr__(self) -> str:
         attrs = " ".join(
