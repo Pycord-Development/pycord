@@ -134,7 +134,7 @@ class Component:
             try:
                 value = kwargs[slot]
             except KeyError:
-                pass
+                setattr(self, slot, None)
             else:
                 setattr(self, slot, value)
         return self
