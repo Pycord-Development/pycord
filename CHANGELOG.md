@@ -14,11 +14,15 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `.extension` attribute to emojis to get their file extension.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added `Member.colours` and `Member.colors` properties.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 
 ### Changed
 
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
+- Changed `Member.colour` and `Member.color` to be aliases for `Member.colours.primary`.
+  ([#3063](https://github.com/Pycord-Development/pycord/pull/3063))
 
 ### Fixed
 
