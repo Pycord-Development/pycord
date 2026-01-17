@@ -1688,7 +1688,7 @@ class Messageable:
             if view.is_dispatchable():
                 state.store_view(view, ret.id)
             view.message = ret
-            view.refresh(ret.components)
+            view._refresh(ret.components)
 
         if delete_after is not None:
             await ret.delete(delay=delete_after)

@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import sys
 import time
@@ -74,6 +75,8 @@ if TYPE_CHECKING:
     from ..message import Message
     from ..state import ConnectionState
     from ..types.components import Component as ComponentPayload
+
+_log = logging.getLogger(__name__)
 
 V = TypeVar("V", bound="BaseView", covariant=True)
 
@@ -726,7 +729,7 @@ class View(BaseView):
         self.__weights.clear()
         return self
 
-    def refresh(self, components: list[Component]):
+    def _refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], ViewItem[V]] = {
             (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
@@ -895,7 +898,7 @@ class DesignerView(BaseView):
         super().add_item(item)
         return self
 
-    def refresh(self, components: list[Component]):
+    def _refresh(self, components: list[Component]):
         # Refreshes view data using discord's values
         # Assumes the components and items are identical
         if not components:
@@ -996,4 +999,9 @@ class ViewStore:
         # pre-req: is_message_tracked == true
         view = self._synced_message_views[message_id]
         components = [_component_factory(d, state=self._state) for d in components]
-        view.refresh(components)
+        try:
+            view._refresh(components)
+        except:
+            _log.warning(
+                f"Failed to refresh View {view} from Message {message_id} due to mismatched state. Items may not have complete data."
+            )
