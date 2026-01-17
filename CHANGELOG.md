@@ -14,6 +14,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `.extension` attribute to emojis to get their file extension.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added `silent` and `suppress_embeds` parameters to `ApplicationContext.respond`,
+  `Interaction.respond` and `InteractionResponse.send_message`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
 
@@ -30,6 +33,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Interaction.channel` not being resolved with user-installed commands ran in
   guilds which the bot is not a member of.
   ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
+- Fixed `Interaction.respond` and `ApplicationContext.respond` methods to explicitly
+  list their accepted parameters.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed an issue where the optional parameters of `InteractionResponse.send_message`
+  weren't type hinted as optional.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 - Fixed incorrect page group assignment in `Paginator`.
   ([#3065](https://github.com/Pycord-Development/pycord/pull/3065))
