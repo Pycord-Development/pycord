@@ -27,14 +27,11 @@ for i, line in enumerate(changelog_lines):
         changelog_lines[i] = "[version guarantees]: version_guarantees.rst\n"
         break
 
-CHANGELOG_TEXT = (
-    "".join(changelog_lines)
-    + """
+CHANGELOG_TEXT = "".join(changelog_lines) + """
 ## Older Versions
 
 A changelog for versions prior to v2.0 can be found [here](old_changelog.rst).
 """
-)
 
 
 # Only write if it's changed to avoid recompiling the docs
