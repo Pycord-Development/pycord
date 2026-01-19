@@ -12,7 +12,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added support getting and setting recurrence rules on `ScheduledEvent`s.
+- Added recurrence rules for `ScheduledEvent` objects.
   ([#2749](https://github.com/Pycord-Development/pycord/pull/2749))
 
 ### Changed

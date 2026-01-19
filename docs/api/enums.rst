@@ -2608,7 +2608,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: thursday
 
-        Thrusday, with an index of 3.
+        Thursday, with an index of 3.
 
     .. attribute:: friday
 
