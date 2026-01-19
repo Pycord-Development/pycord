@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pycord Documentation\n"
-"POT-Creation-Date: 2025-06-24 08:32-0000\n"
-"PO-Revision-Date: 2025-06-24 08:32-0000\n"
+"POT-Creation-Date: 2026-01-13 18:06-0000\n"
+"PO-Revision-Date: 2026-01-13 18:06-0000\n"
 "Last-Translator: \n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -12,40 +12,40 @@ msgstr ""
 "X-Generator: Crowdin\n"
 
 msgid "Application Info"
-msgstr "Application Info"
+msgstr "Anwendungsinfo"
 
 msgid "Represents the application info for the bot provided by Discord."
-msgstr "Represents the application info for the bot provided by Discord."
+msgstr "Stellt die Anwendungsinformationen für den Bot von Discord dar."
 
 msgid "The application ID."
-msgstr "The application ID."
+msgstr "Die Anwendungs-ID."
 
 msgid "type"
-msgstr "type"
+msgstr "Typ"
 
 msgid ":class:`int`"
 msgstr ":class:`int`"
 
 msgid "The application name."
-msgstr "The application name."
+msgstr "Der Anwendungsname."
 
 msgid ":class:`str`"
 msgstr ":class:`str`"
 
 msgid "The application owner."
-msgstr "The application owner."
+msgstr "Der Anwendungseigentümer."
 
 msgid ":class:`User`"
 msgstr ":class:`User`"
 
 msgid "The application's team."
-msgstr "The application's team."
+msgstr "Das Team der Anwendung."
 
 msgid "Optional[:class:`Team`]"
 msgstr "Optional[:class:`Team`]"
 
 msgid "The application description."
-msgstr "The application description."
+msgstr "Die Anwendungsbeschreibung."
 
 msgid "Whether the bot can be invited by anyone or if it is locked to the application owner."
 msgstr "Whether the bot can be invited by anyone or if it is locked to the application owner."
