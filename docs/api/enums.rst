@@ -2608,7 +2608,7 @@ of :class:`enum.Enum`.
 
     .. attribute:: thursday
 
-        Thrusday, the fourth day of the week. Index of 3.
+        Thursday, the fourth day of the week. Index of 3.
 
     .. attribute:: friday
 
