@@ -296,7 +296,9 @@ class ScheduledEventRecurrenceRule:
     def weekdays(self, value: list[int | ScheduledEventWeekday] | None) -> None:
         if value is None:
             if self.frequency is ScheduledEventRecurrenceFrequency.weekly:
-                raise ValueError("can't set weekdays to None when frequency is set as weekly")
+                raise ValueError(
+                    "can't set weekdays to None when frequency is set as weekly"
+                )
             self._weekdays = MISSING
         else:
             self._weekdays = self._parse_weekdays(value)
@@ -314,7 +316,9 @@ class ScheduledEventRecurrenceRule:
     def n_weekdays(self, value: list[NWeekDay] | None) -> None:
         if value is None:
             if self.frequency is ScheduledEventRecurrenceFrequency.monthly:
-                raise ValueError("can't set n_weekdays to None when frequency is set as monthly")
+                raise ValueError(
+                    "can't set n_weekdays to None when frequency is set as monthly"
+                )
             self._n_weekdays = MISSING
         else:
             self._n_weekdays = value
@@ -332,7 +336,9 @@ class ScheduledEventRecurrenceRule:
     def month_days(self, value: list[datetime.date] | None) -> None:
         if value is None:
             if self.frequency is ScheduledEventRecurrenceFrequency.yearly:
-                raise ValueError("can't set month_days to None when frequency is set as yearly")
+                raise ValueError(
+                    "can't set month_days to None when frequency is set as yearly"
+                )
             self._month_days = MISSING
         else:
             self._month_days = value
@@ -356,12 +362,17 @@ class ScheduledEventRecurrenceRule:
         return [datetime.date(1, month, day) for month, day in zip(months, days)]
 
     def _parse_weekdays(
-        self, weekdays: list[WeekDay | ScheduledEventWeekday] | MISSING,
+        self,
+        weekdays: list[WeekDay | ScheduledEventWeekday] | MISSING,
     ) -> list[ScheduledEventWeekday]:
         if weekdays is MISSING:
             return []
         return [
-            w if isinstance(w, ScheduledEventWeekday) else try_enum(ScheduledEventWeekday, w)
+            (
+                w
+                if isinstance(w, ScheduledEventWeekday)
+                else try_enum(ScheduledEventWeekday, w)
+            )
             for w in weekdays
         ]
 
@@ -370,7 +381,8 @@ class ScheduledEventRecurrenceRule:
 
     @classmethod
     def _from_data(
-        cls, data: ScheduledEventRecurrenceRulePayload | None,
+        cls,
+        data: ScheduledEventRecurrenceRulePayload | None,
     ) -> Self | None:
         if data is None:
             return None
