@@ -89,6 +89,16 @@ Messages
 .. autoclass:: Message()
     :members:
 
+.. attributetable:: MessageSnapshot
+
+.. autoclass:: MessageSnapshot()
+    :members:
+
+.. attributetable:: ForwardedMessage
+
+.. autoclass:: ForwardedMessage()
+    :members:
+
 .. attributetable:: DeletedReferencedMessage
 
 .. autoclass:: DeletedReferencedMessage()
@@ -229,6 +239,11 @@ Role
 .. attributetable:: RoleColours
 
 .. autoclass:: RoleColours
+    :members:
+
+.. attributetable:: GuildRoleCounts
+
+.. autoclass:: GuildRoleCounts()
     :members:
 
 Scheduled Event

@@ -32,6 +32,7 @@ from os import PathLike
 from typing import (
     TYPE_CHECKING,
     Any,
+    AsyncGenerator,
     Callable,
     ClassVar,
     Sequence,
@@ -106,6 +107,7 @@ __all__ = (
     "MessageCall",
     "DeletedReferencedMessage",
     "ForwardedMessage",
+    "MessageSnapshot",
 )
 
 
@@ -290,6 +292,7 @@ class Attachment(Hashable):
         *,
         seek_begin: bool = True,
         use_cached: bool = False,
+        chunksize: int | None = None,
     ) -> int:
         """|coro|
 
@@ -311,6 +314,8 @@ class Attachment(Hashable):
             after the message is deleted. Note that this can still fail to download
             deleted attachments if too much time has passed, and it does not work
             on some types of attachments.
+        chunksize: Optional[:class:`int`]
+            The maximum size of each chunk to process. Must be a positive integer.
 
         Returns
         -------
@@ -323,16 +328,33 @@ class Attachment(Hashable):
             Saving the attachment failed.
         NotFound
             The attachment was deleted.
+        InvalidArgument
+            Argument `chunksize` is less than 1.
         """
-        data = await self.read(use_cached=use_cached)
+        if chunksize is not None:
+            data = self.read_chunked(use_cached=use_cached, chunksize=chunksize)
+        else:
+            data = await self.read(use_cached=use_cached)
+
         if isinstance(fp, io.BufferedIOBase):
-            written = fp.write(data)
+            if chunksize is not None:
+                written = 0
+                async for chunk in data:
+                    written += fp.write(chunk)
+            else:
+                written = fp.write(data)
             if seek_begin:
                 fp.seek(0)
             return written
         else:
             with open(fp, "wb") as f:
-                return f.write(data)
+                if chunksize is not None:
+                    written = 0
+                    async for chunk in data:
+                        written += f.write(chunk)
+                    return written
+                else:
+                    return f.write(data)
 
     async def read(self, *, use_cached: bool = False) -> bytes:
         """|coro|
@@ -368,6 +390,45 @@ class Attachment(Hashable):
         url = self.proxy_url if use_cached else self.url
         data = await self._http.get_from_cdn(url)
         return data
+
+    async def read_chunked(
+        self, chunksize: int, *, use_cached: bool = False
+    ) -> AsyncGenerator[bytes]:
+        """|coro|
+
+        Retrieves the content of this attachment in chunks as a :class:`AsyncGenerator` object of bytes.
+
+        Parameters
+        ----------
+        chunksize: :class:`int`
+            The maximum size of each chunk to process. Must be a positive integer.
+        use_cached: :class:`bool`
+            Whether to use :attr:`proxy_url` rather than :attr:`url` when downloading
+            the attachment. This will allow attachments to be saved after deletion
+            more often, compared to the regular URL which is generally deleted right
+            after the message is deleted. Note that this can still fail to download
+            deleted attachments if too much time has passed, and it does not work
+            on some types of attachments.
+
+        Yields
+        ------
+        :class:`bytes`
+            A chunk of the file.
+
+        Raises
+        ------
+        HTTPException
+            Downloading the attachment failed.
+        Forbidden
+            You do not have permissions to access this attachment
+        NotFound
+            The attachment was deleted.
+        InvalidArgument
+            Argument `chunksize` is less than 1.
+        """
+        url = self.proxy_url if use_cached else self.url
+        async for chunk in self._http.stream_from_cdn(url, chunksize):
+            yield chunk
 
     async def to_file(self, *, use_cached: bool = False, spoiler: bool = False) -> File:
         """|coro|
@@ -687,10 +748,17 @@ class ForwardedMessage:
         A list of attachments given to the original message.
     flags: :class:`MessageFlags`
         Extra features of the original message.
-    mentions: List[Union[:class:`abc.User`, :class:`Object`]]
-        A list of :class:`Member` that were originally mentioned.
-    role_mentions: List[Union[:class:`Role`, :class:`Object`]]
+    mentions: List[:class:`User`]
+        A list of :class:`User` that were originally mentioned.
+
+        .. note::
+            This list will be empty if the message was forwarded to a different place, e.g., from a DM to a guild, or
+            from one guild to another.
+    role_mentions: List[:class:`Role`]
         A list of :class:`Role` that were originally mentioned.
+
+        .. warning::
+            This is only available using :meth:`abc.Messageable.fetch_message`.
     stickers: List[:class:`StickerItem`]
         A list of sticker items given to the original message.
     components: List[:class:`Component`]
@@ -732,6 +800,17 @@ class ForwardedMessage:
         self.components: list[Component] = [
             _component_factory(d) for d in data.get("components", [])
         ]
+        self.mentions: list[User] = [
+            state.create_user(data=user) for user in data["mentions"]
+        ]
+        self.role_mentions: list[Role] = []
+        if isinstance(self.guild, Guild) and data.get("mention_roles"):
+            for role_id in map(int, data["mention_roles"]):
+                role = self.guild.get_role(role_id)
+                if role is not None:
+                    self.role_mentions.append(role)
+
+        self.type: MessageType = try_enum(MessageType, data["type"])
         self._edited_timestamp: datetime.datetime | None = utils.parse_time(
             data["edited_timestamp"]
         )
@@ -963,7 +1042,7 @@ class Message(Hashable):
         The call information associated with this message, if applicable.
 
         .. versionadded:: 2.6
-    snapshots: Optional[List[:class:`MessageSnapshots`]]
+    snapshots: Optional[List[:class:`MessageSnapshot`]]
         The snapshots attached to this message, if applicable.
 
         .. versionadded:: 2.7

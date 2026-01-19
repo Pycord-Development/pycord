@@ -300,6 +300,7 @@ class Interaction:
 
         channel = data.get("channel")
         data_ch_type: int | None = channel.get("type") if channel else None
+        factory: Any | None = None
 
         if data_ch_type is not None:
             factory, ch_type = _threaded_channel_factory(data_ch_type)
@@ -308,6 +309,11 @@ class Interaction:
 
         if self.channel is None and self.guild:
             self.channel = self.guild._resolve_channel(self.channel_id)
+            if self.channel is None and factory is not None:
+                self.channel = factory(
+                    state=self._state, data=channel, guild=self.guild
+                )
+
         if self.channel is None and self.channel_id is not None:
             ch_type = (
                 ChannelType.text if self.guild_id is not None else ChannelType.private
@@ -469,7 +475,6 @@ class Interaction:
         if self._original_response is not None:
             return self._original_response
 
-        # TODO: fix later to not raise?
         channel = self.channel
         if channel is None:
             raise ClientException(
@@ -933,7 +938,11 @@ class InteractionResponse:
                     "Channel for message could not be resolved. Please open a issue on GitHub if you encounter this error."
                 )
             state = _InteractionMessageState(self._parent, self._parent._state)
-            message = InteractionMessage(state=state, channel=channel, data=callback_response["resource"]["message"])  # type: ignore
+            message = InteractionMessage(
+                state=state,
+                channel=channel,
+                data=callback_response["resource"]["message"],
+            )  # type: ignore
             self._parent._original_response = message
 
         self._parent.callback = InteractionCallback(callback_response["interaction"])
