@@ -2596,31 +2596,31 @@ of :class:`enum.Enum`.
 
     .. attribute:: monday
 
-        Monday, the first day of the week. Index of 0.
+        Monday, with an index of 0.
 
     .. attribute:: tuesday
 
-        Tuesday, the second day of the week. Index of 1.
+        Tuesday, with an index of 1.
 
     .. attribute:: wednesday
 
-        Wednesday, the third day of the week. Index of 2.
+        Wednesday, with an index of 2.
 
     .. attribute:: thursday
 
-        Thrusday, the fourth day of the week. Index of 3.
+        Thrusday, with an index of 3.
 
     .. attribute:: friday
 
-        Friday, the fifth day of the week. Index of 4.
+        Friday, with an index of 4.
 
     .. attribute:: saturday
 
-        Saturday, the sixth day of the week. Index of 5.
+        Saturday, with an index of 5.
 
     .. attribute:: sunday
 
-        Sunday, the seventh day of the week. Index of 6.
+        Sunday, with an index of 6.
 
 
 .. class:: ThreadArchiveDuration
