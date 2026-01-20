@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-11 09:03+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.16.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../api/utils.rst:6 b2f28caecc924db59cc0bfda2cf725bb
 msgid "Utility Functions"
@@ -41,17 +41,8 @@ msgid ""
 "moment it finds a valid entry."
 msgstr ""
 
-#: ../../api/utils.rst 050571d8ce744379a07e80a62aa94870
-#: 1c60fdf432a34262b02af7df598af358 201c050fc14d44f0810c776b20c676a1
-#: 35c87733e7a44f0abc2df0b1b7ea12be 39fbbccdd8e84cfbb3dd88b8836b653e
-#: 4182382f67e146d09cff1cbee0f070a5 4b7d6b239eb844b0a07455620184eb3e
-#: 55701d63ab734c498871b0f9b16d1c6d 5f476066bcaf4eae9d5ca625db8badcf
-#: 6a62a020e98a4607844e6a1d92754354 7a0f3e4603c446ee80192ad6a4c2a275
-#: 8a406056f674402fbda55a5b21a97010 8cd9a4a6430f4d4083e18c8cf19fcf48
-#: ab4317ac344e484ab6269743deb00536 ac91098994644d18b800c34e375c9751
-#: b2325f4789474a608227307565f07ab8 b2eaf3d8463e41408acf895a2e2016b6
-#: d084c891f79846a089b9181a6952a853 discord.utils.get_or_fetch
-#: e235bd384d1b429d8285ad37f2d4a591 f8bf8feea079450998152dcff00e95c1 of
+#: ../../api/utils.rst 1c60fdf432a34262b02af7df598af358
+#: 8cd9a4a6430f4d4083e18c8cf19fcf48 f8bf8feea079450998152dcff00e95c1
 msgid "Parameters"
 msgstr ""
 
@@ -63,17 +54,8 @@ msgstr ""
 msgid "The iterable to search through."
 msgstr ""
 
-#: ../../api/utils.rst 02dcab3cde5943e6b6bb51bb073c78d3
-#: 17bce3950d8d41f999cfc959de1c8005 2b2c738b3ccb483f9981028c7a67eb93
-#: 2eb1e3111512438984551edfa1d65489 392e00c2a71444519c80974c8388009c
-#: 3c6d52d4b8354e06b6ce0fcf3b086c85 54a28def4381478084624d76e12f9f45
-#: 6284d5d5ec2c4d81b0867bef1a730df0 737183e407f044cfbdeb3520b0664458
-#: 74261c6f68334a9c9832b03ab14c173c 77e1c55771274774bc9154f8b83f65fc
-#: 7b6ea48218734b5d9fdac096eb1869e9 8c58ff1ae8594e3885fc52f7276a6393
-#: abf23af895704f009e6e57170df2e2c3 ae19383e27b04626a84993ee6c1dc6c2
-#: b240a7e64248402482220648f8d25d89 c287aafc3232425da8ccd5cca5f25e2d
-#: discord.utils.get_or_fetch eaf3c063f00646c9a476d69b6683b0ac
-#: eb0e0c983f3c4751858bc3209d71caf8 f43529e1bd0a4b11aa3c197db4892dee of
+#: ../../api/utils.rst 392e00c2a71444519c80974c8388009c
+#: 737183e407f044cfbdeb3520b0664458 c287aafc3232425da8ccd5cca5f25e2d
 msgid "Return type"
 msgstr ""
 
@@ -112,9 +94,8 @@ msgid ""
 "returned."
 msgstr ""
 
-#: 3521bfb272664038a752ad0c4215b894 38fdef3a74ae45a48840ee240fd21411
-#: 3924fb9efa21466e8ad1606af419115d discord.utils.basic_autocomplete:22
-#: discord.utils.get:16 discord.utils.get_or_fetch:28 of
+#: 3521bfb272664038a752ad0c4215b894 3924fb9efa21466e8ad1606af419115d
+#: discord.utils.basic_autocomplete:22 discord.utils.get:16 of
 msgid "Examples"
 msgstr ""
 
@@ -139,83 +120,75 @@ msgstr ""
 msgid "Keyword arguments that denote attributes to search with."
 msgstr ""
 
-#: 047a5517f469416aab2b765c3711e2c9 813a458483fc4657bb6de6015318ea4c
-#: discord.utils.get_or_fetch:1 discord.utils.sleep_until:1 of
-msgid "|coro|"
+#: 520ff8a5c1ec4b298bab95ae66408248 discord.utils.get_or_fetch:1 of
+msgid ""
+"Shortcut method to get data from an object either by returning the cached"
+" version, or if it does not exist, attempting to fetch it from the API."
 msgstr ""
 
-#: 6059a0ee37c84b7c968bbb3180cd4061 discord.utils.get_or_fetch:3 of
-msgid ""
-"Attempts to get an attribute from the object in cache. If it fails, it "
-"will attempt to fetch it. If the fetch also fails, an error will be "
-"raised."
+#: 44457c74e11f4bcb86593baff8be9dab discord.utils.get_or_fetch:4 of
+msgid "The object to operate on."
 msgstr ""
 
 #: 99c21646a64544a7a66635fe89a62488 discord.utils.get_or_fetch:7 of
-msgid "The object to use the get or fetch methods in"
+msgid "Type of object to fetch or get."
 msgstr ""
 
-#: 722b7174a36e40d9ad7f4158e4dec713 discord.utils.get_or_fetch:10 of
-msgid ""
-"The attribute to get or fetch. Note the object must have both a ``get_`` "
-"and ``fetch_`` method for this attribute."
+#: 76666113277241cd984dd81b6a08f3d5 discord.utils.get_or_fetch:10 of
+msgid "ID of object to get."
 msgstr ""
 
-#: d12701e421f14168a8c064b63bbca7d1 discord.utils.get_or_fetch:13 of
-msgid "The ID of the object"
+#: bebeace681de4c4b82947227d8b175ce discord.utils.get_or_fetch:13 of
+msgid "The value to return instead of raising if fetching fails."
 msgstr ""
 
-#: bebeace681de4c4b82947227d8b175ce discord.utils.get_or_fetch:16 of
-msgid ""
-"The default value to return if the object is not found, instead of "
-"raising an error."
-msgstr ""
-
-#: ../../api/utils.rst 1fec765e695e4742b8b12fe2c089354f
-#: 2cada1fbf84b404fb2628ac3f35b19ed 36f7538b818747bba0d09bfdca701d0c
-#: 410c4260d88e4f388018236761fc0965 5a9fd330b31e4c7c8844cdf8c620430b
-#: 5e2662c472244430a1c5f927e8ad5742 6a6845d4e22b436ca97dfac93491f478
-#: 7fd927630bce466fb5d388f8d11fcdb4 8035ef1de15d4808923a8f8d047577bc
-#: 80cac2a2e81441b287f204bf5131b09d 96d038e7361c4ea69e5d5fb8389f92dd
-#: b9b2c90b77b84eb5805166bc365f005b c1a779448b8c416f9893dcbbbc8b8ae1
-#: c2f878aa2d944761ba684104b753f875 c9e6df7e45324f84a24e0117930a36a1
-#: discord.utils.get_or_fetch e4958f5419174efea8ba08cb566b5fe0
-#: fa6b89a60707475d9f9f29fe605228b4 of
+#: ../../api/utils.rst 5e2662c472244430a1c5f927e8ad5742
 msgid "Returns"
 msgstr ""
 
-#: 44457c74e11f4bcb86593baff8be9dab discord.utils.get_or_fetch:19 of
-msgid "The object found or the default value."
+#: 84313e97bed5435dabdbd4a5cdd6edc2 discord.utils.get_or_fetch:16 of
+msgid ""
+"The object if found, or `default` if provided when not found. Returns "
+":data:`None` only if `object_id` is :data:`None` and no `default` is "
+"given."
 msgstr ""
 
-#: 30b0356fd64d4d41b7a8e2cad0506d17 discord.utils.get_or_fetch of
+#: b60e442306ed4e4aaf3dd8e21e38679f discord.utils.get_or_fetch:18 of
+msgid ""
+":class:`~discord.VoiceChannel` | :class:`~discord.TextChannel` | "
+":class:`~discord.ForumChannel` | :class:`~discord.StageChannel` | "
+":class:`~discord.CategoryChannel` | :class:`~discord.Thread` | "
+":class:`~discord.User` | :class:`~discord.Guild` | :class:`~discord.Role`"
+" | :class:`~discord.Member` | :class:`~discord.GuildEmoji` | "
+":class:`~discord.AppEmoji` | :data:`None`"
+msgstr ""
+
+#: ../../api/utils.rst 30b0356fd64d4d41b7a8e2cad0506d17
 msgid "Raises"
 msgstr ""
 
-#: discord.utils.get_or_fetch:22 f118d1f7f46440f8b25a14d07b483c94 of
-msgid "The object is missing a ``get_`` or ``fetch_`` method"
+#: 4ee4bee631814f8e856ac6059e4424c1 discord.utils.get_or_fetch:20 of
+msgid "Raised when required parameters are missing or invalid types are provided."
 msgstr ""
 
-#: 044578fd72984f17b794e0b1b3b98deb discord.utils.get_or_fetch:23 of
-msgid "Invalid ID for the object"
+#: discord.utils.get_or_fetch:21 fde9d7dd26a0448bad36939a82ee9fe8 of
+msgid "Raised when an unsupported or incompatible object type is used."
 msgstr ""
 
-#: a32ef12495724e3592521d9a0b9e1a9a discord.utils.get_or_fetch:24 of
-msgid "An error occurred fetching the object"
+#: 044578fd72984f17b794e0b1b3b98deb discord.utils.get_or_fetch:22 of
+msgid "Invalid ID for the object."
 msgstr ""
 
-#: 8cf54e47d9784ec687e61aee0ab3215c discord.utils.get_or_fetch:25 of
-msgid "You do not have permission to fetch the object"
+#: a32ef12495724e3592521d9a0b9e1a9a discord.utils.get_or_fetch:23 of
+msgid "An error occurred fetching the object."
 msgstr ""
 
-#: 10c9649c25a64cd0a556bf2a290e0a61 discord.utils.get_or_fetch:29 of
-msgid "Getting a guild from a guild ID: ::"
+#: 8cf54e47d9784ec687e61aee0ab3215c discord.utils.get_or_fetch:24 of
+msgid "You do not have permission to fetch the object."
 msgstr ""
 
-#: 78c2fa52a132456abfb980a83613441d discord.utils.get_or_fetch:33 of
-msgid ""
-"Getting a channel from the guild. If the channel is not found, return "
-"None: ::"
+#: 724889f6251d439db77e79a59ea25511 discord.utils.get_or_fetch:25 of
+msgid "Raised when the object resolves to a different guild."
 msgstr ""
 
 #: discord.utils.oauth_url:1 fe4a3d1e945e470898618bbdafc75294 of
@@ -266,10 +239,7 @@ msgstr ""
 msgid "The OAuth2 URL for inviting the bot into guilds."
 msgstr ""
 
-#: 00e022b285884d4caddb3d3d92874d00 1691932c989c44919f5464baf2015706
-#: 35c97cbad62a46f6bbbcc1e7cd22ec91 365ce5216faf447abc535b71d88ddd14
-#: 7f98ae082d164224a29428f14d1e0e6d 9590c8c38e8b4cf78813d5435267d058
-#: 983c0fcb3ba3401e9e63e6128fb8cc0d discord.utils.escape_markdown:21
+#: 365ce5216faf447abc535b71d88ddd14 discord.utils.escape_markdown:21
 #: discord.utils.escape_mentions:18 discord.utils.format_dt:36
 #: discord.utils.oauth_url:29 discord.utils.remove_markdown:19
 #: discord.utils.resolve_invite:8 discord.utils.resolve_template:10 of
@@ -365,8 +335,7 @@ msgstr ""
 msgid "A list of user IDs found in the string."
 msgstr ""
 
-#: 7683abc8d79f4cff8f52ada8f6f537fe b7adc5671b74425aa0dc7620d4e36e60
-#: bf95fb3638ae4162a3ede56e570d575d discord.utils.raw_channel_mentions:10
+#: b7adc5671b74425aa0dc7620d4e36e60 discord.utils.raw_channel_mentions:10
 #: discord.utils.raw_mentions:10 discord.utils.raw_role_mentions:10 of
 msgid "List[:class:`int`]"
 msgstr ""
@@ -419,6 +388,10 @@ msgstr ""
 msgid "The template code."
 msgstr ""
 
+#: 813a458483fc4657bb6de6015318ea4c discord.utils.sleep_until:1 of
+msgid "|coro|"
+msgstr ""
+
 #: 759a5b88a9474bde911dc404a88a4c7d discord.utils.sleep_until:3 of
 msgid "Sleep until a specified time."
 msgstr ""
@@ -454,8 +427,8 @@ msgstr ""
 msgid "The current aware datetime in UTC."
 msgstr ""
 
-#: 3d3d51edb6044a099f7629a77d8811e9 56bd424aabf44587a6ffcec02aaa5af0
-#: discord.utils.snowflake_time:8 discord.utils.utcnow:9 of
+#: 3d3d51edb6044a099f7629a77d8811e9 discord.utils.snowflake_time:8
+#: discord.utils.utcnow:9 of
 msgid ":class:`datetime.datetime`"
 msgstr ""
 
@@ -629,8 +602,8 @@ msgid ""
 "+ 1`` to be inclusive, ``high=False`` to be exclusive"
 msgstr ""
 
-#: 156dc943215f43459e046968ed3d56f3 707b6da896314b699199545f50ffaa4c
-#: discord.utils.generate_snowflake:5 discord.utils.time_snowflake:10 of
+#: 707b6da896314b699199545f50ffaa4c discord.utils.generate_snowflake:5
+#: discord.utils.time_snowflake:10 of
 msgid ""
 "A datetime object to convert to a snowflake. If naive, the timezone is "
 "assumed to be local time."
@@ -640,13 +613,13 @@ msgstr ""
 msgid "Whether to set the lower 22 bit to high or low."
 msgstr ""
 
-#: 36df0fad6db443f498326d3435c79e77 685eec1e29a2446e99fd2c65c95ed67e
-#: discord.utils.generate_snowflake:9 discord.utils.time_snowflake:17 of
+#: 685eec1e29a2446e99fd2c65c95ed67e discord.utils.generate_snowflake:9
+#: discord.utils.time_snowflake:17 of
 msgid "The snowflake representing the time given."
 msgstr ""
 
 #: 1592ca8f639d49108573be44e12cd05c discord.utils.generate_snowflake:10
-#: discord.utils.time_snowflake:18 f921d097fcff48d2ba649bf347797916 of
+#: discord.utils.time_snowflake:18 of
 msgid ":class:`int`"
 msgstr ""
 
@@ -837,4 +810,55 @@ msgid ""
 "\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\ "
 "\\\\\\(\\`\\`T\\`\\`\\)\\]\\]`"
 msgstr ""
+
+#~ msgid ""
+#~ "Attempts to get an attribute from "
+#~ "the object in cache. If it fails,"
+#~ " it will attempt to fetch it. "
+#~ "If the fetch also fails, an error"
+#~ " will be raised."
+#~ msgstr ""
+
+#~ msgid "The object to use the get or fetch methods in"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The attribute to get or fetch. "
+#~ "Note the object must have both a"
+#~ " ``get_`` and ``fetch_`` method for "
+#~ "this attribute."
+#~ msgstr ""
+
+#~ msgid "The ID of the object"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The default value to return if the"
+#~ " object is not found, instead of "
+#~ "raising an error."
+#~ msgstr ""
+
+#~ msgid "The object found or the default value."
+#~ msgstr ""
+
+#~ msgid "The object is missing a ``get_`` or ``fetch_`` method"
+#~ msgstr ""
+
+#~ msgid "Invalid ID for the object"
+#~ msgstr ""
+
+#~ msgid "An error occurred fetching the object"
+#~ msgstr ""
+
+#~ msgid "You do not have permission to fetch the object"
+#~ msgstr ""
+
+#~ msgid "Getting a guild from a guild ID: ::"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Getting a channel from the guild. "
+#~ "If the channel is not found, "
+#~ "return None: ::"
+#~ msgstr ""
 
