@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import os
 from typing import TYPE_CHECKING
+from typing_extensions import Self
 
 from ..components import CheckboxGroup as CheckboxGroupComponent
 from ..components import CheckboxGroupOption
 from ..enums import ComponentType
+from ..utils import MISSING
 from .item import ModalItem
 
 __all__ = ("CheckboxGroup",)
@@ -213,7 +215,7 @@ class CheckboxGroup(ModalItem):
 
         return self.append_option(option)
 
-    def append_option(self, option: SelectOption) -> Self:
+    def append_option(self, option: RadioGroupOption) -> Self:
         """Appends an option to the checkbox group.
 
         Parameters

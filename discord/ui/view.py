@@ -149,7 +149,7 @@ def _component_to_item(component: Component) -> ViewItem[V] | ModalItem | Item:
         from .radio_group import RadioGroup
 
         return RadioGroup.from_component(component)
-    if isinstance(component, CheckboxgroupComponent):
+    if isinstance(component, CheckboxGroupComponent):
         from .checkbox_group import CheckboxGroup
 
         return CheckboxGroup.from_component(component)

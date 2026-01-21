@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import os
 from typing import TYPE_CHECKING
+from typing_extensions import Self
 
 from ..components import RadioGroup as RadioGroupComponent
 from ..components import RadioGroupOption
 from ..enums import ComponentType
+from ..utils import MISSING
 from .item import ModalItem
 
 __all__ = ("RadioGroup",)
@@ -167,7 +169,7 @@ class RadioGroup(ModalItem):
 
         return self.append_option(option)
 
-    def append_option(self, option: SelectOption) -> Self:
+    def append_option(self, option: RadioGroupOption) -> Self:
         """Appends an option to the radio group.
 
         Parameters
