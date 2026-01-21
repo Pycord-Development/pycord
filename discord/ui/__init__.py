@@ -10,6 +10,8 @@ UI Kit helper for the Discord API
 
 from .action_row import *
 from .button import *
+from .checkbox import *
+from .checkbox_group import *
 from .container import *
 from .core import *
 from .file import *
@@ -19,12 +21,10 @@ from .item import *
 from .label import *
 from .media_gallery import *
 from .modal import *
+from .radio_group import *
 from .section import *
 from .select import *
 from .separator import *
 from .text_display import *
 from .thumbnail import *
 from .view import *
-from .radio_group import *
-from .checkbox_group import *
-from .checkbox import *
