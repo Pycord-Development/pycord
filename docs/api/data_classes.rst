@@ -41,6 +41,16 @@ dynamic attributes in mind.
 .. autoclass:: UnfurledMediaItem
     :members:
 
+.. attributetable:: RadioGroupOption
+
+.. autoclass:: RadioGroupOption
+    :members:
+
+.. attributetable:: CheckboxGroupOption
+
+.. autoclass:: CheckboxGroupOption
+    :members:
+
 .. attributetable:: Intents
 
 .. autoclass:: Intents
