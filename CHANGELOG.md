@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `.extension` attribute to emojis to get their file extension.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added `RadioGroup`, `CheckboxGroup`, & `Checkbox` for modals.
+  ([#3073](https://github.com/Pycord-Development/pycord/pull/3073))
 
 ### Changed
 

@@ -183,3 +183,21 @@ Objects
 .. autoclass:: discord.ui.FileUpload
     :members:
     :inherited-members:
+
+.. attributetable:: discord.ui.RadioGroup
+
+.. autoclass:: discord.ui.RadioGroup
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.CheckboxGroup
+
+.. autoclass:: discord.ui.CheckboxGroup
+    :members:
+    :inherited-members:
+
+.. attributetable:: discord.ui.Checkbox
+
+.. autoclass:: discord.ui.Checkbox
+    :members:
+    :inherited-members:

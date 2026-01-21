@@ -35,7 +35,6 @@ from typing import TYPE_CHECKING, Any, TypeVar
 from ..enums import ComponentType
 from ..utils import find
 from .core import ItemInterface
-from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ModalItem
 from .label import Label

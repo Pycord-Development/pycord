@@ -253,6 +253,9 @@ class ModalItem(Item[M]):
     - :class:`discord.ui.InputText`
     - :class:`discord.ui.Select`
     - :class:`discord.ui.FileUpload`
+    - :class:`discord.ui.RadioGroup`
+    - :class:`discord.ui.CheckboxGroup`
+    - :class:`discord.ui.Checkbox`
 
     .. versionadded:: 2.7
     """

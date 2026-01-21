@@ -165,7 +165,7 @@ class LabelComponent(BaseComponent):
     type: Literal[18]
     label: str
     description: NotRequired[str]
-    component: SelectMenu | InputText | FileUploadComponent
+    component: SelectMenu | InputText | FileUploadComponent | RadioGroupComponent | CheckboxComponent | CheckboxGroupComponent
 
 
 class FileUploadComponent(BaseComponent):
