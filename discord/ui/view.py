@@ -54,11 +54,14 @@ from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
+from ..components import RadioGroup as RadioGroupComponent
+from ..components import CheckboxGroup as CheckboxGroupComponent
+from ..components import Checkbox as CheckboxComponent
 from ..components import _component_factory
 from ..enums import ChannelType
 from ..utils import find
 from .core import ItemInterface
-from .item import ItemCallbackType, ViewItem
+from .item import ItemCallbackType, ViewItem, ModalItem, Item
 
 __all__ = (
     "BaseView",

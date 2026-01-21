@@ -155,6 +155,84 @@ class CheckboxGroup(ModalItem):
         """The values selected by the user."""
         return self._selected_values
 
+    @property
+    def options(self) -> list[CheckboxGroupOption]:
+        """A list of options that can be selected in this group."""
+        return self._underlying.options
+
+    @options.setter
+    def options(self, value: list[CheckboxGroupOption]):
+        if not isinstance(value, list):
+            raise TypeError("options must be a list of CheckboxGroupOption")
+        if len(value) > 10:
+            raise ValueError("you may only provide up to 10 options.")
+        if not all(isinstance(obj, CheckboxGroupOption) for obj in value):
+            raise TypeError("all list items must subclass CheckboxGroupOption")
+
+        self._underlying.options = value
+
+    def add_option(
+        self,
+        *,
+        label: str,
+        value: str = MISSING,
+        description: str | None = None,
+        default: bool = False,
+    ) -> Self:
+        """Adds an option to the checkbox group.
+
+        To append a pre-existing :class:`discord.CheckboxGroupOption` use the
+        :meth:`append_option` method instead.
+
+        Parameters
+        ----------
+        label: :class:`str`
+            The label of the option. This is displayed to users.
+            Can only be up to 100 characters.
+        value: :class:`str`
+            The value of the option. This is not displayed to users.
+            If not given, defaults to the label. Can only be up to 100 characters.
+        description: Optional[:class:`str`]
+            An additional description of the option, if any.
+            Can only be up to 100 characters.
+        default: :class:`bool`
+            Whether this option is selected by default.
+
+        Raises
+        ------
+        ValueError
+            The number of options exceeds 10.
+        """
+
+        option = CheckboxGroupOption(
+            label=label,
+            value=value,
+            description=description,
+            default=default,
+        )
+
+        return self.append_option(option)
+
+    def append_option(self, option: SelectOption) -> Self:
+        """Appends an option to the checkbox group.
+
+        Parameters
+        ----------
+        option: :class:`discord.CheckboxGroupOption`
+            The option to append to the checkbox group.
+
+        Raises
+        ------
+        ValueError
+            The number of options exceeds 10.
+        """
+
+        if len(self._underlying.options) >= 10:
+            raise ValueError("maximum number of options already provided")
+
+        self._underlying.options.append(option)
+        return self
+
     def to_component_dict(self) -> CheckboxGroupComponentPayload:
         return self._underlying.to_dict()
 
