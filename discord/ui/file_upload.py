@@ -57,7 +57,7 @@ class FileUpload(ModalItem):
         if min_values and (min_values < 0 or min_values > 10):
             raise ValueError("min_values must be between 0 and 10")
         if max_values and (max_values < 1 or max_values > 10):
-            raise ValueError("max_length must be between 1 and 10")
+            raise ValueError("max_values must be between 1 and 10")
         if custom_id is not None and not isinstance(custom_id, str):
             raise TypeError(
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
@@ -106,7 +106,7 @@ class FileUpload(ModalItem):
 
     @property
     def min_values(self) -> int | None:
-        """The minimum number of files that must be uploaded. Defaults to 0."""
+        """The minimum number of files that must be uploaded."""
         return self._underlying.min_values
 
     @min_values.setter
