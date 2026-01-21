@@ -96,7 +96,7 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
             yield item
 
 
-def _component_to_item(component: Component) -> ViewItem[V]:
+def _component_to_item(component: Component) -> ViewItem[V] | ModalItem | Item:
 
     if isinstance(component, ButtonComponent):
         from .button import Button
@@ -142,7 +142,19 @@ def _component_to_item(component: Component) -> ViewItem[V]:
         from .label import Label
 
         return Label.from_component(component)
-    return ViewItem.from_component(component)
+    if isinstance(component, RadioGroupComponent):
+        from .radio_group import RadioGroup
+
+        return RadioGroup.from_component(component)
+    if isinstance(component, CheckboxgroupComponent):
+        from .checkbox_group import CheckboxGroup
+
+        return CheckboxGroup.from_component(component)
+    if isinstance(component, CheckboxComponent):
+        from .checkbox import Checkbox
+
+        return Checkbox.from_component(component)
+    return Item.from_component(component)
 
 
 class _ViewWeights:
