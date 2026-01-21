@@ -27,18 +27,24 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Iterator, Literal, TypeVar, overload
 
+from ..components import CheckboxGroupOption
 from ..components import Label as LabelComponent
-from ..components import SelectDefaultValue, SelectOption, _component_factory, RadioGroupOption, CheckboxGroupOption
+from ..components import (
+    RadioGroupOption,
+    SelectDefaultValue,
+    SelectOption,
+    _component_factory,
+)
 from ..enums import ButtonStyle, ChannelType, ComponentType, InputTextStyle
 from ..utils import find, get
 from .button import Button
+from .checkbox import Checkbox
+from .checkbox_group import CheckboxGroup
 from .file_upload import FileUpload
 from .input_text import InputText
 from .item import ItemCallbackType, ModalItem
-from .select import Select
 from .radio_group import RadioGroup
-from .checkbox_group import CheckboxGroup
-from .checkbox import Checkbox
+from .select import Select
 
 __all__ = ("Label",)
 
