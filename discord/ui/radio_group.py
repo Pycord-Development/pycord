@@ -42,7 +42,7 @@ class RadioGroup(ModalItem):
     def __init__(
         self,
         *,
-        custom_id: str | None = None
+        custom_id: str | None = None,
         options: list[RadioGroupOption] | None = None,
         required: bool = True,
         id: int | None = None,

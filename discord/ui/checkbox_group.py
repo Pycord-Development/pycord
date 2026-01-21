@@ -50,7 +50,7 @@ class CheckboxGroup(ModalItem):
     def __init__(
         self,
         *,
-        custom_id: str | None = None
+        custom_id: str | None = None,
         options: list[CheckboxGroupOption] | None = None,
         min_values: int | None = None,
         max_values: int | None = None,
