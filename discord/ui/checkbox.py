@@ -99,7 +99,7 @@ class Checkbox(ModalItem):
         self._underlying.default = bool(value)
 
     @property
-    def value(self) -> str | None:
+    def value(self) -> bool | None:
         """Whether this checkbox was selected or not by the user."""
         return self._value
 
