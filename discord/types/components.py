@@ -176,7 +176,8 @@ class FileUploadComponent(BaseComponent):
 
 class RadioGroupOption(TypedDict):
     value: str,
-    label: str,
+    value: str
+    label: str
     description: NotRequired[str]
     default: NotRequired[bool]
 
@@ -189,8 +190,8 @@ class RadioGroupComponent(BaseComponent):
 
 
 class CheckboxGroupOption(TypedDict):
-    value: str,
-    label: str,
+    value: str
+    label: str
     description: NotRequired[str]
     default: NotRequired[bool]
 
