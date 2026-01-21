@@ -47,6 +47,11 @@ if TYPE_CHECKING:
     from .emoji import AppEmoji, GuildEmoji
     from .types.components import ActionRow as ActionRowPayload
     from .types.components import ButtonComponent as ButtonComponentPayload
+    from .types.components import CheckboxComponent as CheckboxComponentPayload
+    from .types.components import (
+        CheckboxGroupComponent as CheckboxGroupComponentPayload,
+    )
+    from .types.components import CheckboxGroupOption as CheckboxGroupOptionPayload
     from .types.components import Component as ComponentPayload
     from .types.components import ContainerComponent as ContainerComponentPayload
     from .types.components import FileComponent as FileComponentPayload
@@ -55,6 +60,8 @@ if TYPE_CHECKING:
     from .types.components import LabelComponent as LabelComponentPayload
     from .types.components import MediaGalleryComponent as MediaGalleryComponentPayload
     from .types.components import MediaGalleryItem as MediaGalleryItemPayload
+    from .types.components import RadioGroupComponent as RadioGroupComponentPayload
+    from .types.components import RadioGroupOption as RadioGroupOptionPayload
     from .types.components import SectionComponent as SectionComponentPayload
     from .types.components import SelectDefaultValue as SelectDefaultValuePayload
     from .types.components import SelectMenu as SelectMenuPayload
@@ -63,11 +70,6 @@ if TYPE_CHECKING:
     from .types.components import TextDisplayComponent as TextDisplayComponentPayload
     from .types.components import ThumbnailComponent as ThumbnailComponentPayload
     from .types.components import UnfurledMediaItem as UnfurledMediaItemPayload
-    from .types.components import CheckboxGroupComponent as CheckboxGroupComponentPayload
-    from .types.components import CheckboxGroupOption as CheckboxGroupOptionPayload
-    from .types.components import RadioGroupComponent as RadioGroupComponentPayload
-    from .types.components import RadioGroupOption as RadioGroupOptionPayload
-    from .types.components import CheckboxComponent as CheckboxComponentPayload
 
 __all__ = (
     "Component",
@@ -92,7 +94,7 @@ __all__ = (
     "RadioGroupOption",
     "CheckboxGroup",
     "CheckboxGroupOption",
-    "Checkbox"
+    "Checkbox",
 )
 
 C = TypeVar("C", bound="Component")
@@ -1341,7 +1343,7 @@ class Label(Component):
     __slots__: tuple[str, ...] = ("component", "label", "description")
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: LabelComponentPayload):
         self.type: ComponentType = try_enum(ComponentType, data["type"])
@@ -1399,7 +1401,7 @@ class FileUpload(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: FileUploadComponentPayload):
         self.type = ComponentType.file_upload
@@ -1461,7 +1463,7 @@ class RadioGroup(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: RadioGroupComponentPayload):
         self.type = ComponentType.radio_group
@@ -1476,7 +1478,7 @@ class RadioGroup(Component):
         payload = {
             "type": 21,
             "custom_id": self.custom_id,
-            "options": [opt.to_dict() for opt in self.options]
+            "options": [opt.to_dict() for opt in self.options],
         }
         if self.id is not None:
             payload["id"] = self.id
@@ -1611,7 +1613,7 @@ class CheckboxGroup(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: CheckboxGroupComponentPayload):
         self.type = ComponentType.checkbox_group
@@ -1628,7 +1630,7 @@ class CheckboxGroup(Component):
         payload = {
             "type": 22,
             "custom_id": self.custom_id,
-            "options": [opt.to_dict() for opt in self.options]
+            "options": [opt.to_dict() for opt in self.options],
         }
         if self.id is not None:
             payload["id"] = self.id
@@ -1760,7 +1762,7 @@ class Checkbox(Component):
     )
 
     __repr_info__: ClassVar[tuple[str, ...]] = __slots__
-    versions: tuple[int, ...] = (2, )
+    versions: tuple[int, ...] = (2,)
 
     def __init__(self, data: CheckboxComponentPayload):
         self.type = ComponentType.checkbox
@@ -1772,7 +1774,7 @@ class Checkbox(Component):
         payload = {
             "type": 23,
             "custom_id": self.custom_id,
-            "options": [opt.to_dict() for opt in self.options]
+            "options": [opt.to_dict() for opt in self.options],
         }
         if self.id is not None:
             payload["id"] = self.id
