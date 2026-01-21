@@ -175,7 +175,7 @@ class FileUploadComponent(BaseComponent):
 
 
 class RadioGroupOption(TypedDict):
-    value: str,
+    value: str
     value: str
     label: str
     description: NotRequired[str]
