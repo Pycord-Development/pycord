@@ -23,7 +23,7 @@ class FileUpload(ModalItem):
     Parameters
     ----------
     custom_id: Optional[:class:`str`]
-        The ID of the input text field that gets received during an interaction.
+        The ID of the file upload field that gets received during an interaction.
     min_values: Optional[:class:`int`]
         The minimum number of files that must be uploaded.
         Defaults to 0 and must be between 0 and 10, inclusive.
