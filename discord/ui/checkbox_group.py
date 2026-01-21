@@ -216,7 +216,7 @@ class CheckboxGroup(ModalItem):
 
         return self.append_option(option)
 
-    def append_option(self, option: RadioGroupOption) -> Self:
+    def append_option(self, option: CheckboxGroupOption) -> Self:
         """Appends an option to the checkbox group.
 
         Parameters
