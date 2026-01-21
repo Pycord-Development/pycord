@@ -12,7 +12,9 @@ __all__ = ("CheckboxGroup",)
 
 if TYPE_CHECKING:
     from ..interactions import Interaction
-    from ..types.components import CheckboxGroupComponent as CheckboxGroupComponentPayload
+    from ..types.components import (
+        CheckboxGroupComponent as CheckboxGroupComponentPayload,
+    )
 
 
 class CheckboxGroup(ModalItem):
