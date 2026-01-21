@@ -44,24 +44,24 @@ from typing_extensions import Self
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
+from ..components import Checkbox as CheckboxComponent
+from ..components import CheckboxGroup as CheckboxGroupComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
+from ..components import RadioGroup as RadioGroupComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
-from ..components import RadioGroup as RadioGroupComponent
-from ..components import CheckboxGroup as CheckboxGroupComponent
-from ..components import Checkbox as CheckboxComponent
 from ..components import _component_factory
 from ..enums import ChannelType
 from ..utils import find
 from .core import ItemInterface
-from .item import ItemCallbackType, ViewItem, ModalItem, Item
+from .item import Item, ItemCallbackType, ModalItem, ViewItem
 
 __all__ = (
     "BaseView",
