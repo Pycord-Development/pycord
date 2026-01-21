@@ -11,9 +11,7 @@ __all__ = ("Checkbox",)
 
 if TYPE_CHECKING:
     from ..interactions import Interaction
-    from ..types.components import (
-        CheckboxComponent as CheckboxComponentPayload,
-    )
+    from ..types.components import CheckboxComponent as CheckboxComponentPayload
 
 
 class Checkbox(ModalItem):

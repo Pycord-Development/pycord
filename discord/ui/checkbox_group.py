@@ -72,14 +72,16 @@ class CheckboxGroup(ModalItem):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
 
-        self._underlying: CheckboxGroupComponent = CheckboxGroupComponent._raw_construct(
-            type=ComponentType.checkbox_group,
-            custom_id=custom_id,
-            options=options or [],
-            min_values=min_values,
-            max_values=max_values,
-            required=required,
-            id=id,
+        self._underlying: CheckboxGroupComponent = (
+            CheckboxGroupComponent._raw_construct(
+                type=ComponentType.checkbox_group,
+                custom_id=custom_id,
+                options=options or [],
+                min_values=min_values,
+                max_values=max_values,
+                required=required,
+                id=id,
+            )
         )
         self._selected_values: list[str] = []
 
