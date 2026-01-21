@@ -27,7 +27,9 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Iterator, Literal, TypeVar, overload
 
-from ..components import CheckboxGroupOption
+from ..components import (
+    CheckboxGroupOption,
+)
 from ..components import Label as LabelComponent
 from ..components import (
     RadioGroupOption,
