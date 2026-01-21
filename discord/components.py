@@ -1774,7 +1774,6 @@ class Checkbox(Component):
         payload = {
             "type": 23,
             "custom_id": self.custom_id,
-            "options": [opt.to_dict() for opt in self.options],
         }
         if self.id is not None:
             payload["id"] = self.id
