@@ -547,6 +547,8 @@ class View(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
@@ -563,8 +565,6 @@ class View(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
-    store: Optional[:class:`bool`]
-        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     __view_children_items__: ClassVar[list[ItemCallbackType]] = []
@@ -783,6 +783,8 @@ class DesignerView(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
@@ -799,8 +801,6 @@ class DesignerView(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
-    store: Optional[:class:`bool`]
-        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     MAX_ITEMS: int = 40

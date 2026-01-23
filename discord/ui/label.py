@@ -74,6 +74,11 @@ class Label(ModalItem[M]):
         The description for this label. Must be 100 characters or fewer.
     id: Optional[:class:`int`]
         The label's ID.
+
+    Attributes
+    ----------
+    item: :class:`ViewItem`
+        The label's attached item.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (

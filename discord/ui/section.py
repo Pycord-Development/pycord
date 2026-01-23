@@ -66,6 +66,13 @@ class Section(ViewItem[V]):
         Sections must have an accessory attached before being sent.
     id: Optional[:class:`int`]
         The section's ID.
+
+    Attributes
+    ----------
+    items: List[:class:`ViewItem`]
+        The list of items in this section.
+    accessory: :class:`ViewItem`
+        The section's accessory, displayed in the top right of the section.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (

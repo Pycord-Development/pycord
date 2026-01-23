@@ -78,6 +78,11 @@ class Container(ViewItem[V]):
         Whether this container has the spoiler overlay.
     id: Optional[:class:`int`]
         The container's ID.
+
+    Attributes
+    ----------
+    items: List[:class:`ViewItem`]
+        The list of items in this container.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (

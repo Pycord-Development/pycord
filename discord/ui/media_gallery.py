@@ -51,10 +51,15 @@ class MediaGallery(ViewItem[V]):
 
     Parameters
     ----------
-    *items: :class:`MediaGalleryItem`
+    *items: :class:`~discord.MediaGalleryItem`
         The initial items contained in this gallery, up to 10.
     id: Optional[:class:`int`]
         The gallery's ID.
+
+    Attributes
+    ----------
+    items: List[:class:`~discord.MediaGalleryItem`]
+        The list of media items in this gallery.
     """
 
     __item_repr_attributes__: tuple[str, ...] = (
@@ -78,8 +83,19 @@ class MediaGallery(ViewItem[V]):
         )
 
     @property
-    def items(self):
+    def items(self) -> list[MediaGalleryItem]:
+        """The list of media items in this gallery."""
         return self.underlying.items
+
+    @items.setter
+    def items(self, value: list[MediaGalleryItem]) -> None:
+        if len(value) > 10:
+            raise ValueError("may not set more than 10 items in a gallery.")
+
+        if not all(isinstance(i, MediaGalleryItem) for i in value):
+            raise TypeError(f"items must be a list of MediaGalleryItem, not {i.__class__!r}")
+        
+        self.underlying.items = value
 
     def append_item(self, item: MediaGalleryItem) -> Self:
         """Adds a :attr:`MediaGalleryItem` to the gallery.
@@ -98,7 +114,7 @@ class MediaGallery(ViewItem[V]):
         """
 
         if len(self.items) >= 10:
-            raise ValueError("maximum number of children exceeded")
+            raise ValueError("maximum number of items exceeded")
 
         if not isinstance(item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {item.__class__!r}")
@@ -165,11 +181,11 @@ class MediaGallery(ViewItem[V]):
 
         if not isinstance(new_item, MediaGalleryItem):
             raise TypeError(f"expected MediaGalleryItem not {new_item.__class__!r}")
-        self.items[index] = new_item
+        self._underlying.items[index] = new_item
         return self
 
     def to_component_dict(self) -> MediaGalleryComponentPayload:
-        self.underlying = self._generate_underlying()
+        self._underlying = self._generate_underlying()
         return super().to_component_dict()
 
     @classmethod
