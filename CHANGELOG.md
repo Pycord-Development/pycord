@@ -30,6 +30,18 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed `Interaction.channel` not being resolved with user-installed commands ran in
   guilds which the bot is not a member of.
   ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
+- Fixed the `ForwardedMessage.mentions`, `ForwardedMessage.role_mentions`, and
+  `ForwardedMessage.type` attributes not being populated.
+  ([#3051](https://github.com/Pycord-Development/pycord/pull/3051))
+
+- Fixed incorrect page group assignment in `Paginator`.
+  ([#3065](https://github.com/Pycord-Development/pycord/pull/3065))
+- Fixed `Interaction.respond` and `ApplicationContext.respond` methods to explicitly
+  list their accepted parameters.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed an issue where the optional parameters of `InteractionResponse.send_message`
+  weren't type hinted as optional.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 ### Deprecated
 
