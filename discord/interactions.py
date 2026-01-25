@@ -596,9 +596,9 @@ class Interaction:
         if suppress is not None:
             warn_deprecated("suppress", "suppress_embeds", "2.8")
             if suppress_embeds is None:
-	            suppress_embeds = suppress
-	    elif suppress_embeds is None:
-	    	suppress_embeds = False
+                suppress_embeds = suppress
+        elif suppress_embeds is None:
+            suppress_embeds = False
         params = handle_message_parameters(
             content=content,
             file=file,
