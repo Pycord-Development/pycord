@@ -526,8 +526,8 @@ class Interaction:
         view: BaseView | None = MISSING,
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
-        suppress: bool = False,
-        suppress_embeds: bool = False,
+        suppress: bool | None = None,
+        suppress_embeds: bool = None,
     ) -> InteractionMessage:
         """|coro|
 
@@ -593,9 +593,12 @@ class Interaction:
         """
 
         previous_mentions: AllowedMentions | None = self._state.allowed_mentions
-        if suppress:
+        if suppress is not None:
             warn_deprecated("suppress", "suppress_embeds", "2.8")
-            suppress_embeds = suppress
+            if suppress_embeds is None:
+	            suppress_embeds = suppress
+	    elif suppress_embeds is None:
+	    	suppress_embeds = False
         params = handle_message_parameters(
             content=content,
             file=file,

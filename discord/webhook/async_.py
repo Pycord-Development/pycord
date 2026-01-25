@@ -650,7 +650,7 @@ def handle_message_parameters(
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool | None = None,
     thread_name: str | None = None,
-    suppress_embeds: bool = False,
+    suppress_embeds: bool = None,
     silent: bool = False,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
@@ -672,8 +672,11 @@ def handle_message_parameters(
     if attachments is not MISSING:
         _attachments = [a.to_dict() for a in attachments]
     if suppress is not None:
-        suppress_embeds = suppress
         warn_deprecated("suppress", "suppress_embeds", "2.8")
+        if suppress_embeds is None:
+	        suppress_embeds = suppress
+	elif suppress_embeds is None:
+		suppress_embeds = False
     flags = MessageFlags(
         suppress_embeds=suppress_embeds,
         ephemeral=ephemeral,
