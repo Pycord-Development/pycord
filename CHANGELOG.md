@@ -36,6 +36,12 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed incorrect page group assignment in `Paginator`.
   ([#3065](https://github.com/Pycord-Development/pycord/pull/3065))
+- Fixed `Interaction.respond` and `ApplicationContext.respond` methods to explicitly
+  list their accepted parameters.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed an issue where the optional parameters of `InteractionResponse.send_message`
+  weren't type hinted as optional.
+  ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 ### Deprecated
 
