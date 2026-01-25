@@ -1026,16 +1026,18 @@ class InteractionResponse:
         self,
         content: Any | None = None,
         *,
-        embed: Embed = None,
-        embeds: list[Embed] = None,
-        view: BaseView = None,
+        embed: Embed | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
         tts: bool = False,
         ephemeral: bool = False,
-        allowed_mentions: AllowedMentions = None,
-        file: File = None,
-        files: list[File] = None,
-        poll: Poll = None,
-        delete_after: float = None,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> Interaction:
         """|coro|
 
@@ -1073,6 +1075,14 @@ class InteractionResponse:
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`Poll`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1111,7 +1121,11 @@ class InteractionResponse:
         if content is not None:
             payload["content"] = str(content)
 
-        flags = MessageFlags(ephemeral=ephemeral)
+        flags = MessageFlags(
+            ephemeral=ephemeral,
+            suppress_notifications=silent,
+            suppress_embeds=suppress_embeds,
+        )
 
         if view:
             payload["components"] = view.to_components()
