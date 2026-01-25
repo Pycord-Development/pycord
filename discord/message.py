@@ -1849,7 +1849,8 @@ class Message(Hashable):
 
         if suppress is not MISSING:
             warn_deprecated("suppress", "suppress_embeds", "2.8")
-            suppress_embeds = suppress
+            if suppress_embeds is MISSING:
+                suppress_embeds = suppress
 
         if suppress_embeds is not MISSING:
             flags.suppress_embeds = suppress_embeds

@@ -1580,9 +1580,11 @@ class Messageable:
                 )
             embeds = [embed.to_dict() for embed in embeds]
 
-        if suppress:
-            suppress_embeds = suppress
+        if suppress is not None:
             warn_deprecated("suppress", "suppress_embeds", "2.8")
+            if suppress_embeds is None:
+                suppress_embeds = suppress
+
         flags = MessageFlags(
             suppress_embeds=bool(suppress_embeds),
             suppress_notifications=bool(silent),

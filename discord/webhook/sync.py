@@ -525,12 +525,14 @@ class SyncWebhookMessage(Message):
         elif isinstance(self.channel, Thread):
             thread = Object(self.channel.id)
 
-        if suppress is MISSING:
-            suppress = self.flags.suppress_embeds
-
         if suppress is not MISSING:
             warn_deprecated("suppress", "suppress_embeds", "2.8")
-            suppress_embeds = suppress
+            if suppress_embeds is MISSING:
+                suppress_embeds = suppress
+
+        if suppress_embeds is MISSING:
+            suppress_embeds = self.flags.suppress_embeds
+
         return self._state._webhook.edit_message(
             self.id,
             content=content,

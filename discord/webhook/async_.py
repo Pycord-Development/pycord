@@ -648,7 +648,7 @@ def handle_message_parameters(
     applied_tags: list[Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
-    suppress: bool = False,
+    suppress: bool | None = None,
     thread_name: str | None = None,
     suppress_embeds: bool = False,
     silent: bool = False,
@@ -671,8 +671,8 @@ def handle_message_parameters(
     _attachments = []
     if attachments is not MISSING:
         _attachments = [a.to_dict() for a in attachments]
-    if suppress:
-        suppress_embeds = True
+    if suppress is not None:
+        suppress_embeds = suppress
         warn_deprecated("suppress", "suppress_embeds", "2.8")
     flags = MessageFlags(
         suppress_embeds=suppress_embeds,
