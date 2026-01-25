@@ -1529,7 +1529,7 @@ class Messageable:
             Whether to suppress embeds for the message.
 
             .. deprecated:: 2.8
-        suppress_embeds: :class:`bool`Expand commentComment on line R778ResolvedCode has comments. Press enter to view.
+        suppress_embeds: :class:`bool`
             Whether to suppress embeds for the message.
 
             .. versionadded:: 2.8
