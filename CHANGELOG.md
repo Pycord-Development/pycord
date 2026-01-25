@@ -48,6 +48,10 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
+- Deprecated `suppress`-parameter in all applicable message-related methods. Does not
+  affect any functions related to voice.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+
 ### Removed
 
 - Removed guild creation and ownership related methods and arguments as they're not
