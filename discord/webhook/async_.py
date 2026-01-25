@@ -1791,11 +1791,11 @@ class Webhook(BaseWebhook):
 
             .. versionadded:: 2.6
         silent: :class:`bool`
-            Whether the message should trigger push and desktop notifications.
+            Whether to suppress push and desktop notifications for the message.
 
             .. versionadded:: 2.8
         suppress_embeds: :class:`bool`
-            Whether embeds for links will be suppressed from appearing.
+            Whether to suppress embeds for the message.
 
             .. versionadded:: 2.8
 
