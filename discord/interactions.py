@@ -47,6 +47,7 @@ from .monetization import Entitlement
 from .object import Object
 from .permissions import Permissions
 from .user import User
+from .utils import warn_deprecated
 from .webhook.async_ import (
     Webhook,
     WebhookMessage,
@@ -526,6 +527,7 @@ class Interaction:
         allowed_mentions: AllowedMentions | None = None,
         delete_after: float | None = None,
         suppress: bool = False,
+        suppress_embeds: bool = False,
     ) -> InteractionMessage:
         """|coro|
 
@@ -567,6 +569,12 @@ class Interaction:
         suppress: :class:`bool`
             Whether to suppress embeds for the message.
 
+            .. deprecated:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
+
         Returns
         -------
         :class:`InteractionMessage`
@@ -585,6 +593,9 @@ class Interaction:
         """
 
         previous_mentions: AllowedMentions | None = self._state.allowed_mentions
+        if suppress:
+            warn_deprecated("suppress", "suppress_embeds", "2.8")
+            suppress_embeds = suppress
         params = handle_message_parameters(
             content=content,
             file=file,
@@ -595,7 +606,7 @@ class Interaction:
             view=view,
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
-            suppress=suppress,
+            suppress=suppress_embeds,
         )
         if view and self.message:
             self._state.prevent_view_updates_for(self.message.id)

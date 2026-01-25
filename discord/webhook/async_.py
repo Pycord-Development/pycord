@@ -63,6 +63,8 @@ __all__ = (
     "PartialWebhookGuild",
 )
 
+from ..utils import warn_deprecated
+
 _log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -648,6 +650,7 @@ def handle_message_parameters(
     previous_allowed_mentions: AllowedMentions | None = None,
     suppress: bool = False,
     thread_name: str | None = None,
+    suppress_embeds: bool = False,
     silent: bool = False,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
@@ -668,9 +671,11 @@ def handle_message_parameters(
     _attachments = []
     if attachments is not MISSING:
         _attachments = [a.to_dict() for a in attachments]
-
+    if suppress:
+        suppress_embeds = True
+        warn_deprecated("suppress", "suppress_embeds", "2.8")
     flags = MessageFlags(
-        suppress_embeds=suppress,
+        suppress_embeds=suppress_embeds,
         ephemeral=ephemeral,
         suppress_notifications=silent,
     )
@@ -1663,6 +1668,8 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: Literal[True],
         delete_after: float = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> WebhookMessage: ...
 
     @overload
@@ -1686,6 +1693,8 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> None: ...
 
     async def send(
