@@ -771,7 +771,7 @@ class Interaction:
             The poll to send.
 
             .. versionadded:: 2.6
-        silent: :class:`Poll`
+        silent: :class:`bool`
             Whether to suppress push and desktop notifications for the message.
 
             .. versionadded:: 2.8
@@ -1075,7 +1075,7 @@ class InteractionResponse:
             The poll to send.
 
             .. versionadded:: 2.6
-        silent: :class:`Poll`
+        silent: :class:`bool`
             Whether to suppress push and desktop notifications for the message.
 
             .. versionadded:: 2.8
