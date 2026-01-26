@@ -14,8 +14,13 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `.extension` attribute to emojis to get their file extension.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
-- Added `silent` and `suppress_embeds` parameters to `ApplicationContext.respond`,
-  `Interaction.respond` and `InteractionResponse.send_message`.
+- Added `silent` parameter to all methods that send messages, including
+  `ApplicationContext.respond`, `Interaction.respond` and
+  `InteractionResponse.send_message`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `suppress_embeds` parameter to all methods that send messages, replacing the
+  deprecated `suppress`, including `ApplicationContext.respond`, `Interaction.respond`
+  and `InteractionResponse.send_message`.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
