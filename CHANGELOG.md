@@ -12,7 +12,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added `.extension` attribute to emojis to get their file extension.
+- Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added `silent` parameter to all methods that send messages, including
   `ApplicationContext.respond`, `Interaction.respond` and
@@ -32,23 +32,23 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
-- Fixed downloading animated emojis which were originally uploaded as WebP files by
-  changing the `.url` extension of animated emojis from .gif to .webp.
+- Fixed an issue with downloading animated emojis which were originally uploaded as WebP
+  files by changing the `.url` extension of animated emojis from `.gif` to `.webp`.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
-- Fixed `Interaction.channel` not being resolved with user-installed commands ran in
-  guilds which the bot is not a member of.
+- Fixed the `Interaction.channel` attribute not being properly resolved with
+  user-installed commands ran in guilds of which the bot is not a member.
   ([#3047](https://github.com/Pycord-Development/pycord/pull/3047))
-- Fixed the `ForwardedMessage.mentions`, `ForwardedMessage.role_mentions`, and
-  `ForwardedMessage.type` attributes not being populated.
+- Fixed the following `ForwardedMessage` attributes not being populated:
+  `ForwardedMessage.mentions`, `ForwardedMessage.role_mentions`, and
+  `ForwardedMessage.type`.
   ([#3051](https://github.com/Pycord-Development/pycord/pull/3051))
-
-- Fixed incorrect page group assignment in `Paginator`.
+- Fixed incorrect page group assignment in paginators.
   ([#3065](https://github.com/Pycord-Development/pycord/pull/3065))
-- Fixed `Interaction.respond` and `ApplicationContext.respond` methods to explicitly
-  list their accepted parameters.
+- Fixed the `Interaction.respond` and `ApplicationContext.respond` methods to explicitly
+  list the accepted parameters.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
-- Fixed an issue where the optional parameters of `InteractionResponse.send_message`
-  weren't type hinted as optional.
+- Fixed an issue where the optional parameters of the `InteractionResponse.send_message`
+  method were not type-hinted as optional.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 
 ### Deprecated
@@ -59,12 +59,11 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Removed
 
-- Removed guild creation and ownership related methods and arguments as they're not
-  allowed for bots anymore.
-  ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-  - Removed `Guild.set_mfa_required`, `Guild.delete`, `Template.create_guild` and
-    `Client.create_guild`.
-  - Removed the `owner` keyword argument from `Guild.edit`.
+- Removed the guild creation and ownership-related methods and arguments due to updated
+  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+    `Template.create_guild`, and `Client.create_guild`.
+  - Removed the `owner` argument from the method `Guild.edit`.
 
 ## [2.7.0] - 2025-12-24
 
