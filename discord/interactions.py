@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime
-from typing import TYPE_CHECKING, Any, Coroutine, Union
+from typing import TYPE_CHECKING, Any, Coroutine, Union, overload
 
 from . import utils
 from .channel import ChannelType, PartialMessageable, _threaded_channel_factory
@@ -700,11 +700,74 @@ class Interaction:
         """
         return await self.delete_original_response(**kwargs)
 
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embed: Embed | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+    ) -> Interaction | WebhookMessage: ...
+
+    @overload
+    async def respond(
+        self,
+        content: Any | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
+        tts: bool = False,
+        ephemeral: bool = False,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
+    ) -> Interaction | WebhookMessage: ...
+
     async def respond(self, *args, **kwargs) -> Interaction | WebhookMessage:
         """|coro|
 
         Sends either a response or a message using the followup webhook determined by whether the interaction
         has been responded to or not.
+
+        Parameters
+        ----------
+        content: Optional[:class:`str`]
+            The content of the message to send.
+        embeds: List[:class:`Embed`]
+            A list of embeds to send with the content. Maximum of 10. This cannot
+            be mixed with the ``embed`` parameter.
+        embed: :class:`Embed`
+            The rich embed for the content to send. This cannot be mixed with
+            ``embeds`` parameter.
+        tts: :class:`bool`
+            Indicates if the message should be sent using text-to-speech.
+        view: :class:`discord.ui.BaseView`
+            The view to send with the message.
+        ephemeral: :class:`bool`
+            Indicates if the message should only be visible to the user who started the interaction.
+            If a view is sent with an ephemeral message, and it has no timeout set then the timeout
+            is set to 15 minutes.
+        allowed_mentions: :class:`AllowedMentions`
+            Controls the mentions being processed in this message.
+            See :meth:`.abc.Messageable.send` for more information.
+        delete_after: :class:`float`
+            If provided, the number of seconds to wait in the background
+            before deleting the message we just sent.
+        file: :class:`File`
+            The file to upload.
+        files: List[:class:`File`]
+            A list of files to upload. Must be a maximum of 10.
+        poll: :class:`Poll`
+            The poll to send.
+
+            .. versionadded:: 2.6
 
         Returns
         -------
@@ -952,16 +1015,16 @@ class InteractionResponse:
         self,
         content: Any | None = None,
         *,
-        embed: Embed = None,
-        embeds: list[Embed] = None,
-        view: BaseView = None,
+        embed: Embed | None = None,
+        embeds: list[Embed] | None = None,
+        view: BaseView | None = None,
         tts: bool = False,
         ephemeral: bool = False,
-        allowed_mentions: AllowedMentions = None,
-        file: File = None,
-        files: list[File] = None,
-        poll: Poll = None,
-        delete_after: float = None,
+        allowed_mentions: AllowedMentions | None = None,
+        file: File | None = None,
+        files: list[File] | None = None,
+        poll: Poll | None = None,
+        delete_after: float | None = None,
     ) -> Interaction:
         """|coro|
 

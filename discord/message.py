@@ -107,6 +107,7 @@ __all__ = (
     "MessageCall",
     "DeletedReferencedMessage",
     "ForwardedMessage",
+    "MessageSnapshot",
 )
 
 
@@ -747,10 +748,17 @@ class ForwardedMessage:
         A list of attachments given to the original message.
     flags: :class:`MessageFlags`
         Extra features of the original message.
-    mentions: List[Union[:class:`abc.User`, :class:`Object`]]
-        A list of :class:`Member` that were originally mentioned.
-    role_mentions: List[Union[:class:`Role`, :class:`Object`]]
+    mentions: List[:class:`User`]
+        A list of :class:`User` that were originally mentioned.
+
+        .. note::
+            This list will be empty if the message was forwarded to a different place, e.g., from a DM to a guild, or
+            from one guild to another.
+    role_mentions: List[:class:`Role`]
         A list of :class:`Role` that were originally mentioned.
+
+        .. warning::
+            This is only available using :meth:`abc.Messageable.fetch_message`.
     stickers: List[:class:`StickerItem`]
         A list of sticker items given to the original message.
     components: List[:class:`Component`]
@@ -792,6 +800,17 @@ class ForwardedMessage:
         self.components: list[Component] = [
             _component_factory(d) for d in data.get("components", [])
         ]
+        self.mentions: list[User] = [
+            state.create_user(data=user) for user in data["mentions"]
+        ]
+        self.role_mentions: list[Role] = []
+        if isinstance(self.guild, Guild) and data.get("mention_roles"):
+            for role_id in map(int, data["mention_roles"]):
+                role = self.guild.get_role(role_id)
+                if role is not None:
+                    self.role_mentions.append(role)
+
+        self.type: MessageType = try_enum(MessageType, data["type"])
         self._edited_timestamp: datetime.datetime | None = utils.parse_time(
             data["edited_timestamp"]
         )
@@ -1023,7 +1042,7 @@ class Message(Hashable):
         The call information associated with this message, if applicable.
 
         .. versionadded:: 2.6
-    snapshots: Optional[List[:class:`MessageSnapshots`]]
+    snapshots: Optional[List[:class:`MessageSnapshot`]]
         The snapshots attached to this message, if applicable.
 
         .. versionadded:: 2.7
