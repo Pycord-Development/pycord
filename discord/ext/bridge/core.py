@@ -181,7 +181,9 @@ class BridgeCommand:
         self.parent = kwargs.pop("parent", None)
         self.slash_variant: BridgeSlashCommand = kwargs.pop(
             "slash_variant", None
-        ) or BridgeSlashCommand(callback, **kwargs)  # type: ignore
+        ) or BridgeSlashCommand(
+            callback, **kwargs
+        )  # type: ignore
 
         self.ext_variant: BridgeExtCommand = kwargs.pop(
             "ext_variant", None
