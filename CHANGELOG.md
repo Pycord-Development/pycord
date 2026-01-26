@@ -18,8 +18,9 @@ These changes are available on the `master` branch, but have not yet been releas
   `ApplicationContext.respond`, `Interaction.respond` and
   `InteractionResponse.send_message`.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
-- Added `suppress_embeds` parameter to all methods that send messages, replacing `suppress`, including `ApplicationContext.respond`, `Interaction.respond`
-  and `InteractionResponse.send_message`.
+- Added `suppress_embeds` parameter to all methods that send messages, replacing
+  `suppress`, including `ApplicationContext.respond`, `Interaction.respond` and
+  `InteractionResponse.send_message`.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
@@ -52,8 +53,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Deprecated
 
-- Deprecated the `suppress` parameter in all applicable message-related methods. Does not
-  affect any functions related to voice.
+- Deprecated the `suppress` parameter in all applicable message-related methods. Does
+  not affect any functions related to voice.
   ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
