@@ -1263,7 +1263,8 @@ class GuildChannel:
 
         roles: Optional[List[Union[:class:`.Role`, :class:`.Object`]]]
             The roles to give a user when joining through this invite.
-            You must need the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
+
+            You must have the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
 
             .. versionadded:: 2.8
 
