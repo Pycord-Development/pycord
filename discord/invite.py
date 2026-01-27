@@ -375,6 +375,22 @@ class InviteTargetUsers:
             with open(fp, "wb") as f:
                 return f.write(data)
 
+    async def get_user_ids(self) -> list[int]:
+        """|coro|
+
+        Retrieves a list of user IDs that can accept this invite. This internally
+        reads the invite's target users CSV file and parses the user IDs from it.
+
+        Returns
+        -------
+        list[int]
+            A list of user IDs that can accept this invite.
+        """
+        return [
+            int(line.split(",")[0])
+            for line in (await self.read()).decode().splitlines()
+        ]
+
     async def edit(self, target_users_file: File) -> None:
         """|coro|
 
