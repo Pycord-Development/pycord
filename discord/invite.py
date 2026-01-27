@@ -39,6 +39,7 @@ __all__ = (
     "PartialInviteGuild",
     "Invite",
 )
+from .role import Role
 
 if TYPE_CHECKING:
     from .abc import GuildChannel
@@ -50,7 +51,9 @@ if TYPE_CHECKING:
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
     from .types.invite import VanityInvite as VanityInvitePayload
+    from .types.role import Role as RolePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
+    from .types.snowflake import Snowflake
     from .user import User
 
     InviteGuildType = Union[Guild, "PartialInviteGuild", Object]
@@ -325,6 +328,10 @@ class Invite(Hashable):
         .. versionadded:: 2.0
     scheduled_event: Optional[:class:`ScheduledEvent`]
         The scheduled event linked with the invite.
+    roles: List[Union[:class:`Role`, :class:`Object`]]
+        The roles that will be assigned to a user that joins via this invite.
+
+        .. versionadded:: 2.8
     """
 
     __slots__ = (
@@ -346,6 +353,7 @@ class Invite(Hashable):
         "scheduled_event",
         "target_application",
         "expires_at",
+        "roles",
     )
 
     BASE = "https://discord.gg"
@@ -411,6 +419,10 @@ class Invite(Hashable):
         application = data.get("target_application")
         self.target_application: PartialAppInfo | None = (
             PartialAppInfo(data=application, state=state) if application else None
+        )
+
+        self.roles: list[Object | Role] = self._resolve_roles(
+            role_ids=data.get("role_ids") or [], roles=data.get("roles") or []
         )
 
     @classmethod
@@ -483,6 +495,23 @@ class Invite(Hashable):
 
         return PartialInviteChannel(data)
 
+    def _resolve_roles(
+        self, role_ids: list[Snowflake], roles: list[RolePayload]
+    ) -> list[Object | Role]:
+        if self.guild is not None and not isinstance(self.guild, PartialInviteGuild):
+            if roles:
+                result: list[Object | Role] = [
+                    Role(guild=self.guild, data=role, state=self._state)
+                    for role in roles
+                ]
+                return result
+            return [
+                self.guild.get_role(int(role_id)) or Object(role_id)
+                for role_id in role_ids
+            ]
+        else:
+            return [Object(role_id) for role_id in role_ids]
+
     def __str__(self) -> str:
         return self.url
 
@@ -491,7 +520,9 @@ class Invite(Hashable):
             f"<Invite code={self.code!r} guild={self.guild!r} "
             f"online={self.approximate_presence_count} "
             f"members={self.approximate_member_count} "
-            f"scheduled_event={self.scheduled_event}>"
+            f"scheduled_event={self.scheduled_event!r} "
+            f"roles={self.roles!r}"
+            f">"
         )
 
     def __hash__(self) -> int:
