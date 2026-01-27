@@ -95,3 +95,12 @@ class GatewayInviteDelete(TypedDict):
 
 
 GatewayInvite = Union[GatewayInviteCreate, GatewayInviteDelete]
+
+
+class InviteTargetUsersJobStatus(TypedDict):
+    status: Literal[0, 1, 2, 3]
+    total_users: int
+    processed_users: int
+    created_at: str
+    completed_at: str | None
+    error_message: NotRequired[str]

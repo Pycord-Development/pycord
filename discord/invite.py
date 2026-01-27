@@ -25,11 +25,22 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
+import datetime
+import io
+import os
 from typing import TYPE_CHECKING, TypeVar, Union
+
+from discord.file import File
 
 from .appinfo import PartialAppInfo
 from .asset import Asset
-from .enums import ChannelType, InviteTarget, VerificationLevel, try_enum
+from .enums import (
+    ChannelType,
+    InviteTarget,
+    InviteTargetUsersJobStatusCode,
+    VerificationLevel,
+    try_enum,
+)
 from .mixins import Hashable
 from .object import Object
 from .utils import _get_as_snowflake, parse_time, snowflake_time
@@ -50,6 +61,9 @@ if TYPE_CHECKING:
     from .types.invite import GatewayInvite as GatewayInvitePayload
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
+    from .types.invite import (
+        InviteTargetUsersJobStatus as InviteTargetUsersJobStausPayload,
+    )
     from .types.invite import VanityInvite as VanityInvitePayload
     from .types.role import Role as RolePayload
     from .types.scheduled_events import ScheduledEvent as ScheduledEventPayload
@@ -58,8 +72,6 @@ if TYPE_CHECKING:
 
     InviteGuildType = Union[Guild, "PartialInviteGuild", Object]
     InviteChannelType = Union[GuildChannel, "PartialInviteChannel", Object]
-
-    import datetime
 
 
 class PartialInviteChannel:
@@ -223,6 +235,99 @@ class PartialInviteGuild:
         return Asset._from_guild_image(
             self._state, self.id, self._splash, path="splashes"
         )
+
+
+class InviteTargetUsersJobStaus:
+    def __init__(self, *, data: InviteTargetUsersJobStausPayload):
+        self.total_users: int = data["total_users"]
+        self.processed_users: int = data["processed_users"]
+        self.created_at: datetime.datetime = datetime.datetime.fromisoformat(
+            data["created_at"]
+        )
+        self.completed_at: datetime.datetime | None = (
+            datetime.datetime.fromisoformat(data["completed_at"])
+            if data["completed_at"] is not None
+            else None
+        )
+        self.error_message: str | None = data.get("error_message")
+        self.status: InviteTargetUsersJobStatusCode = try_enum(
+            InviteTargetUsersJobStatusCode, data["status"]
+        )
+
+    def __repr__(self) -> str:
+        return (
+            f"<InviteTargetUsersJobStaus total_users={self.total_users} processed_users={self.processed_users} "
+            f"created_at={self.created_at} completed_at={self.completed_at} error_message={self.error_message} "
+            f"status={self.status}>"
+        )
+
+
+class InviteTargetUsers:
+    """
+    Represents the target users CSV file for an invite.
+
+    Attributes
+    ----------
+    invite_code: str
+        The invite code for which the target users are associated.
+
+    .. versionadded:: 2.8
+    """
+
+    def __init__(
+        self,
+        *,
+        state: ConnectionState,
+        invite_code: str,
+    ):
+        self._state: ConnectionState = state
+        self.invite_code: str = invite_code
+
+    async def read(self) -> bytes:
+        """|coro|
+
+        Retrieves this invite's target users CSV file as a :class:`bytes` object.
+
+        Returns
+        -------
+        :class:`bytes`
+            The content of the CSV file.
+
+        Raises
+        ------
+        DiscordException
+            There was no internal connection state.
+        HTTPException
+            Downloading the file failed.
+        NotFound
+            This invite does not have any target users set.
+        """
+        return await self._state.http.get_invite_target_users(self.invite_code)
+
+    async def save(
+        self,
+        fp: str | bytes | os.PathLike[str] | io.BufferedIOBase,
+        *,
+        seek_begin: bool = True,
+    ) -> int:
+        data = await self.read()
+        if isinstance(fp, io.BufferedIOBase):
+            written = fp.write(data)
+            if seek_begin:
+                fp.seek(0)
+            return written
+        else:
+            with open(fp, "wb") as f:
+                return f.write(data)
+
+    async def edit(self, target_users_file: File) -> None:
+        await self._state.http.update_invite_target_users(
+            self.invite_code, file=target_users_file
+        )
+
+    async def get_job_status(self) -> InviteTargetUsersJobStaus:
+        r = await self._state.http.get_invite_target_users_job_status(self.invite_code)
+        return InviteTargetUsersJobStaus(data=r)
 
 
 I = TypeVar("I", bound="Invite")
@@ -537,6 +642,10 @@ class Invite(Hashable):
     def url(self) -> str:
         """A property that retrieves the invite URL."""
         return f"{self.BASE}/{self.code}{f'?event={self.scheduled_event.id}' if self.scheduled_event else ''}"
+
+    @property
+    def target_users(self) -> InviteTargetUsers:
+        return InviteTargetUsers(invite_code=self.code, state=self._state)
 
     async def delete(self, *, reason: str | None = None):
         """|coro|

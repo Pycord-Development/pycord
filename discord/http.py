@@ -92,6 +92,9 @@ if TYPE_CHECKING:
         welcome_screen,
         widget,
     )
+    from .types.invite import (
+        InviteTargetUsersJobStatus as InviteTargetUsersJobStausPayload,
+    )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
 
@@ -103,16 +106,19 @@ if TYPE_CHECKING:
 API_VERSION: int = 10
 
 
-async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str:
-    text = await response.text(encoding="utf-8")
+async def json_or_text(
+    response: aiohttp.ClientResponse,
+) -> dict[str, Any] | str | bytes:
     try:
         if response.headers["content-type"] == "application/json":
-            return utils._from_json(text)
+            return utils._from_json(await response.text(encoding="utf-8"))
+        elif response.headers["content-type"] == "text/csv":
+            return await response.read()
     except KeyError:
         # Thanks Cloudflare
         pass
 
-    return text
+    return await response.text(encoding="utf-8")
 
 
 class Route:
@@ -281,7 +287,7 @@ class HTTPClient:
             await self._global_over.wait()
 
         response: aiohttp.ClientResponse | None = None
-        data: dict[str, Any] | str | None = None
+        data: dict[str, Any] | str | bytes | None = None
         await lock.acquire()
         with MaybeUnlock(lock) as maybe_lock:
             for tries in range(5):
@@ -2131,7 +2137,7 @@ class HTTPClient:
 
         form = [
             {
-                "name": "file",
+                "name": "target_users_file",
                 "value": file.fp,
                 "filename": file.filename,
                 "content_type": "text/csv",
@@ -2142,7 +2148,7 @@ class HTTPClient:
             },
         ]
 
-        return self.request(route, form=form, files=[file])
+        return self.request(route, form=form)
 
     def get_invite(
         self,
@@ -2162,6 +2168,46 @@ class HTTPClient:
 
         return self.request(
             Route("GET", "/invites/{invite_id}", invite_id=invite_id), params=params
+        )
+
+    def get_invite_target_users(
+        self,
+        invite_id: str,
+    ) -> Response[bytes]:
+        return self.request(
+            Route("GET", "/invites/{invite_id}/target-users", invite_id=invite_id)
+        )
+
+    def update_invite_target_users(
+        self,
+        invite_id: str,
+        *,
+        file: File,
+    ) -> Response[invite.Invite]:
+        form = [
+            {
+                "name": "target_users_file",
+                "value": file.fp,
+                "filename": file.filename,
+                "content_type": "text/csv",
+            },
+        ]
+
+        return self.request(
+            Route("PUT", "/invites/{invite_id}/target-users", invite_id=invite_id),
+            form=form,
+        )
+
+    def get_invite_target_users_job_status(
+        self,
+        invite_id: str,
+    ) -> Response[InviteTargetUsersJobStausPayload]:
+        return self.request(
+            Route(
+                "GET",
+                "/invites/{invite_id}/target-users/job-status",
+                invite_id=invite_id,
+            ),
         )
 
     def invites_from(self, guild_id: Snowflake) -> Response[list[invite.Invite]]:
