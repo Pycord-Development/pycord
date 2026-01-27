@@ -49,6 +49,8 @@ __all__ = (
     "PartialInviteChannel",
     "PartialInviteGuild",
     "Invite",
+    "InviteTargetUsers",
+    "InviteTargetUsersJobStatus",
 )
 from .role import Role
 
@@ -237,7 +239,27 @@ class PartialInviteGuild:
         )
 
 
-class InviteTargetUsersJobStaus:
+class InviteTargetUsersJobStatus:
+    """Represents the status of a target users processing job for an invite.
+
+    .. versionadded:: 2.8
+
+    Attributes
+    ----------
+    total_users: :class:`int`
+        The total number of users to process.
+    processed_users: :class:`int`
+        The number of users that have been processed so far.
+    created_at: :class:`datetime.datetime`
+        When the job was created.
+    completed_at: Optional[:class:`datetime.datetime`]
+        When the job was completed. ``None`` if the job is still processing.
+    error_message: Optional[:class:`str`]
+        The error message if the job failed. ``None`` if no error occurred.
+    status: :class:`InviteTargetUsersJobStatusCode`
+        The current status of the job.
+    """
+
     def __init__(self, *, data: InviteTargetUsersJobStausPayload):
         self.total_users: int = data["total_users"]
         self.processed_users: int = data["processed_users"]
@@ -256,7 +278,7 @@ class InviteTargetUsersJobStaus:
 
     def __repr__(self) -> str:
         return (
-            f"<InviteTargetUsersJobStaus total_users={self.total_users} processed_users={self.processed_users} "
+            f"<InviteTargetUsersJobStatus total_users={self.total_users} processed_users={self.processed_users} "
             f"created_at={self.created_at} completed_at={self.completed_at} error_message={self.error_message} "
             f"status={self.status}>"
         )
@@ -310,6 +332,34 @@ class InviteTargetUsers:
         *,
         seek_begin: bool = True,
     ) -> int:
+        """|coro|
+
+        Saves this invite's target users CSV file into a file-like object.
+
+        Parameters
+        ----------
+        fp: Union[:class:`io.BufferedIOBase`, :class:`os.PathLike`]
+            The file-like object to save this file to or the filename
+            to use. If a filename is passed then a file is created with that
+            filename and used instead.
+        seek_begin: :class:`bool`
+            Whether to seek to the beginning of the file after saving is
+            successfully done.
+
+        Returns
+        -------
+        :class:`int`
+            The number of bytes written.
+
+        Raises
+        ------
+        DiscordException
+            There was no internal connection state.
+        HTTPException
+            Downloading the file failed.
+        NotFound
+            This invite does not have any target users set.
+        """
         data = await self.read()
         if isinstance(fp, io.BufferedIOBase):
             written = fp.write(data)
@@ -321,13 +371,47 @@ class InviteTargetUsers:
                 return f.write(data)
 
     async def edit(self, target_users_file: File) -> None:
+        """|coro|
+
+        Updates the target users list for this invite.
+
+        Parameters
+        ----------
+        target_users_file: :class:`File`
+            A CSV file with a single column of user IDs for all the users able to accept this invite.
+
+        Raises
+        ------
+        HTTPException
+            Updating the target users failed.
+        Forbidden
+            You do not have permissions to edit this invite.
+        NotFound
+            The invite is invalid or expired.
+        """
         await self._state.http.update_invite_target_users(
             self.invite_code, file=target_users_file
         )
 
-    async def get_job_status(self) -> InviteTargetUsersJobStaus:
+    async def get_job_status(self) -> InviteTargetUsersJobStatus:
+        """|coro|
+
+        Retrieves the status of the target users processing job for this invite.
+
+        Returns
+        -------
+        :class:`InviteTargetUsersJobStatus`
+            The job status information.
+
+        Raises
+        ------
+        HTTPException
+            Fetching the job status failed.
+        NotFound
+            The invite is invalid or expired.
+        """
         r = await self._state.http.get_invite_target_users_job_status(self.invite_code)
-        return InviteTargetUsersJobStaus(data=r)
+        return InviteTargetUsersJobStatus(data=r)
 
 
 I = TypeVar("I", bound="Invite")
@@ -645,6 +729,10 @@ class Invite(Hashable):
 
     @property
     def target_users(self) -> InviteTargetUsers:
+        """An :class:`InviteTargetUsers` object for managing the target users list for this invite.
+
+        .. versionadded:: 2.8
+        """
         return InviteTargetUsers(invite_code=self.code, state=self._state)
 
     async def delete(self, *, reason: str | None = None):

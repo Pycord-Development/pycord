@@ -223,6 +223,16 @@ Invites
 .. autoclass:: Invite()
     :members:
 
+.. attributetable:: InviteTargetUsers
+
+.. autoclass:: InviteTargetUsers()
+    :members:
+
+.. attributetable:: InviteTargetUsersJobStatus
+
+.. autoclass:: InviteTargetUsersJobStatus()
+    :members:
+
 Role
 ~~~~
 
