@@ -41,6 +41,7 @@ import aiohttp
 
 from . import utils
 from .activity import BaseActivity
+from .constants import GATEWAY_VERSION
 from .enums import SpeakingState
 from .errors import ConnectionClosed, InvalidArgument
 
@@ -420,7 +421,6 @@ class DiscordWebSocket:
                 },
                 "compress": True,
                 "large_threshold": 250,
-                "v": 3,
             },
         }
 
@@ -845,7 +845,7 @@ class DiscordVoiceWebSocket:
     @classmethod
     async def from_client(cls, client, *, resume=False, hook=None):
         """Creates a voice websocket for the :class:`VoiceClient`."""
-        gateway = f"wss://{client.endpoint}/?v=8"
+        gateway = f"wss://{client.endpoint}/?v={GATEWAY_VERSION}&encoding=json"
         http = client._state.http
         socket = await http.ws_connect(gateway, compress=15)
         ws = cls(socket, loop=client.loop, hook=hook)

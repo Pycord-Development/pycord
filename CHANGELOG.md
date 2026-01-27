@@ -19,6 +19,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
+- Unified HTTP and voice gateway to use shared API version constants (v10) to avoid
+  drift between REST and gateway versions.
+  ([#3080](https://github.com/Pycord-Development/pycord/pull/3080))
 
 ### Fixed
 
