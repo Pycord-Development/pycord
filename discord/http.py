@@ -43,6 +43,7 @@ from urllib.parse import quote as _uriquote
 import aiohttp
 
 from . import __version__, utils
+from .constants import API_VERSION
 from .errors import (
     DiscordServerError,
     Forbidden,
@@ -99,8 +100,6 @@ if TYPE_CHECKING:
     BE = TypeVar("BE", bound=BaseException)
     MU = TypeVar("MU", bound="MaybeUnlock")
     Response = Coroutine[Any, Any, T]
-
-API_VERSION: int = 10
 
 
 async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str:
