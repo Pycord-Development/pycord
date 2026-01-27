@@ -1283,33 +1283,19 @@ class GuildChannel:
             The channel that was passed is a category or an invalid channel.
         """
 
-        if target_users_file is None:
-            data = await self._state.http.create_invite(
-                self.id,
-                reason=reason,
-                max_age=max_age,
-                max_uses=max_uses,
-                temporary=temporary,
-                unique=unique,
-                target_type=target_type.value if target_type else None,
-                target_user_id=target_user.id if target_user else None,
-                target_application_id=target_application_id,
-                roles=[str(r.id) for r in roles] if roles else None,
-            )
-        else:
-            data = await self._state.http.create_invite_multipart(
-                self.id,
-                reason=reason,
-                max_age=max_age,
-                max_uses=max_uses,
-                temporary=temporary,
-                unique=unique,
-                target_type=target_type.value if target_type else None,
-                target_user_id=target_user.id if target_user else None,
-                target_application_id=target_application_id,
-                roles=[str(r.id) for r in roles] if roles else None,
-                file=target_users_file,
-            )
+        data = await self._state.http.create_invite(
+            self.id,
+            reason=reason,
+            max_age=max_age,
+            max_uses=max_uses,
+            temporary=temporary,
+            unique=unique,
+            target_type=target_type.value if target_type else None,
+            target_user_id=target_user.id if target_user else None,
+            target_application_id=target_application_id,
+            roles=[str(r.id) for r in roles] if roles else None,
+            target_users_file=target_users_file,
+        )
         invite = Invite.from_incomplete(data=data, state=self._state)
 
         if target_event:
