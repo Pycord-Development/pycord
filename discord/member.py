@@ -471,18 +471,19 @@ class Member(discord.abc.Messageable, _UserTag):
             u.primary_guild,
         )
         # These keys seem to always be available
-        pg = user.get("primary_guild")
-        primary_guild = PrimaryGuild(pg, state=self._state)
-        if u.primary_guild:
-            if u.primary_guild.identity_guild_id == primary_guild.identity_guild_id:
-                primary_guild = u.primary_guild
+        primary_guild = PrimaryGuild(user.get("primary_guild"), state=self._state)
+        if (
+            u.primary_guild
+            and u.primary_guild.identity_guild_id == primary_guild.identity_guild_id
+        ):
+            primary_guild = u.primary_guild
         modified = (
             user["username"],
             user["avatar"],
             user["discriminator"],
             user.get("global_name", None) or None,
             user.get("public_flags", 0),
-            primary_guild if pg["identity_enabled"] else None,
+            primary_guild if primary_guild.identity_enabled else None,
         )
         if original != modified:
             to_return = User._copy(self._user)
