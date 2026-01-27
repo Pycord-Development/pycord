@@ -1263,6 +1263,9 @@ class GuildChannel:
 
         roles: Optional[List[Union[:class:`.Role`, :class:`.Object`]]]
             The roles to give a user when joining through this invite.
+            You must need the :attr:`~Permissions.manage_roles` permission to do this and roles cannot be higher than your own.
+
+            .. versionadded:: 2.8
 
         target_users_file: Optional[:class:`File`]
             A CSV file with a single column of user IDs for all the users able to accept this invite.

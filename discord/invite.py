@@ -288,12 +288,12 @@ class InviteTargetUsers:
     """
     Represents the target users CSV file for an invite.
 
+    .. versionadded:: 2.8
+
     Attributes
     ----------
     invite_code: str
         The invite code for which the target users are associated.
-
-    .. versionadded:: 2.8
     """
 
     def __init__(
@@ -310,6 +310,9 @@ class InviteTargetUsers:
 
         Retrieves this invite's target users CSV file as a :class:`bytes` object.
 
+        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        permission to do this.
+
         Returns
         -------
         :class:`bytes`
@@ -323,6 +326,8 @@ class InviteTargetUsers:
             Downloading the file failed.
         NotFound
             This invite does not have any target users set.
+        Forbidden
+            You do not have permission to view the target users.
         """
         return await self._state.http.get_invite_target_users(self.invite_code)
 
@@ -335,6 +340,9 @@ class InviteTargetUsers:
         """|coro|
 
         Saves this invite's target users CSV file into a file-like object.
+
+        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        permission to do this.
 
         Parameters
         ----------
@@ -359,6 +367,8 @@ class InviteTargetUsers:
             Downloading the file failed.
         NotFound
             This invite does not have any target users set.
+        Forbidden
+            You do not have permission to view the target users.
         """
         data = await self.read()
         if isinstance(fp, io.BufferedIOBase):
@@ -374,6 +384,8 @@ class InviteTargetUsers:
         """|coro|
 
         Updates the target users list for this invite.
+
+        You must have created this invite or the :attr:`~Permissions.manage_guild` permission to do this.
 
         Parameters
         ----------
@@ -398,6 +410,9 @@ class InviteTargetUsers:
 
         Retrieves the status of the target users processing job for this invite.
 
+        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        permission to do this.
+
         Returns
         -------
         :class:`InviteTargetUsersJobStatus`
@@ -409,6 +424,8 @@ class InviteTargetUsers:
             Fetching the job status failed.
         NotFound
             The invite is invalid or expired.
+        Forbidden
+            You do not have permission to view the target users.
         """
         r = await self._state.http.get_invite_target_users_job_status(self.invite_code)
         return InviteTargetUsersJobStatus(data=r)
