@@ -700,13 +700,12 @@ class Invite(Hashable):
     def _resolve_roles(
         self, role_ids: list[Snowflake], roles: list[RolePayload]
     ) -> list[Object | Role]:
+        if roles and self.guild is not None:
+            result: list[Object | Role] = [
+                Role(guild=self.guild, data=role, state=self._state) for role in roles
+            ]
+            return result
         if self.guild is not None and not isinstance(self.guild, PartialInviteGuild):
-            if roles:
-                result: list[Object | Role] = [
-                    Role(guild=self.guild, data=role, state=self._state)
-                    for role in roles
-                ]
-                return result
             return [
                 self.guild.get_role(int(role_id)) or Object(role_id)
                 for role_id in role_ids
