@@ -65,7 +65,7 @@ class Invite(IncompleteInvite):
     target_user: NotRequired[PartialUser]
     target_type: NotRequired[InviteTargetType]
     target_application: NotRequired[PartialAppInfo]
-    roles: list[Role]
+    roles: NotRequired[list[Role]]
 
 
 class InviteWithCounts(Invite, _GuildPreviewUnique):

@@ -27,7 +27,7 @@ These changes are available on the `master` branch, but have not yet been releas
   - Added `InviteTargetUsersJobStatus` class to track the status of target users
     processing jobs.
   - Added `InviteTargetUsersJobStatusCode` enum for job status codes.
-    ([#3044(https://github.com/Pycord-Development/pycord/pull/3044))
+    ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 

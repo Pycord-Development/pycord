@@ -93,7 +93,7 @@ if TYPE_CHECKING:
         widget,
     )
     from .types.invite import (
-        InviteTargetUsersJobStatus as InviteTargetUsersJobStausPayload,
+        InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
     from .types.snowflake import Snowflake, SnowflakeList
     from .types.soundboard import SoundboardSound as SoundboardSoundPayload
@@ -2089,7 +2089,7 @@ class HTTPClient:
                     "value": utils._to_json(payload),
                 },
             ]
-            return self.request(route, form=form)
+            return self.request(route, reason=reason, form=form)
 
         return self.request(route, reason=reason, json=payload)
 

@@ -64,7 +64,7 @@ if TYPE_CHECKING:
     from .types.invite import Invite as InvitePayload
     from .types.invite import InviteGuild as InviteGuildPayload
     from .types.invite import (
-        InviteTargetUsersJobStatus as InviteTargetUsersJobStausPayload,
+        InviteTargetUsersJobStatus as InviteTargetUsersJobStatusPayload,
     )
     from .types.invite import VanityInvite as VanityInvitePayload
     from .types.role import Role as RolePayload
@@ -250,8 +250,8 @@ class InviteTargetUsersJobStatus:
         The total number of users to process.
     processed_users: :class:`int`
         The number of users that have been processed so far.
-    created_at: :class:`datetime.datetime`
-        When the job was created.
+    created_at: Optional[:class:`datetime.datetime`]
+        When the job was created. ``None`` if the creation time is not available.
     completed_at: Optional[:class:`datetime.datetime`]
         When the job was completed. ``None`` if the job is still processing.
     error_message: Optional[:class:`str`]
