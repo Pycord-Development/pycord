@@ -33,7 +33,9 @@ from .channel import ChannelType
 from .emoji import PartialEmoji
 from .snowflake import Snowflake
 
-ComponentType = Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19]
+ComponentType = Literal[
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23
+]
 ButtonStyle = Literal[1, 2, 3, 4, 5, 6]
 InputTextStyle = Literal[1, 2]
 SeparatorSpacingSize = Literal[1, 2]
@@ -163,7 +165,14 @@ class LabelComponent(BaseComponent):
     type: Literal[18]
     label: str
     description: NotRequired[str]
-    component: SelectMenu | InputText | FileUploadComponent
+    component: (
+        SelectMenu
+        | InputText
+        | FileUploadComponent
+        | RadioGroupComponent
+        | CheckboxComponent
+        | CheckboxGroupComponent
+    )
 
 
 class FileUploadComponent(BaseComponent):
@@ -172,6 +181,42 @@ class FileUploadComponent(BaseComponent):
     max_values: NotRequired[int]
     min_values: NotRequired[int]
     required: NotRequired[bool]
+
+
+class RadioGroupOption(TypedDict):
+    value: str
+    label: str
+    description: NotRequired[str]
+    default: NotRequired[bool]
+
+
+class RadioGroupComponent(BaseComponent):
+    type: Literal[21]
+    custom_id: str
+    required: NotRequired[bool]
+    options: list[RadioGroupOption]
+
+
+class CheckboxGroupOption(TypedDict):
+    value: str
+    label: str
+    description: NotRequired[str]
+    default: NotRequired[bool]
+
+
+class CheckboxGroupComponent(BaseComponent):
+    type: Literal[22]
+    custom_id: str
+    required: NotRequired[bool]
+    options: list[CheckboxGroupOption]
+    max_values: NotRequired[int]
+    min_values: NotRequired[int]
+
+
+class CheckboxComponent(BaseComponent):
+    type: Literal[23]
+    custom_id: str
+    default: NotRequired[bool]
 
 
 Component = Union[

@@ -44,11 +44,14 @@ from typing_extensions import Self
 
 from ..components import ActionRow as ActionRowComponent
 from ..components import Button as ButtonComponent
+from ..components import Checkbox as CheckboxComponent
+from ..components import CheckboxGroup as CheckboxGroupComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
+from ..components import RadioGroup as RadioGroupComponent
 from ..components import Section as SectionComponent
 from ..components import SelectMenu as SelectComponent
 from ..components import Separator as SeparatorComponent
@@ -58,7 +61,7 @@ from ..components import _component_factory
 from ..enums import ChannelType
 from ..utils import find
 from .core import ItemInterface
-from .item import ItemCallbackType, ViewItem
+from .item import Item, ItemCallbackType, ModalItem, ViewItem
 
 __all__ = (
     "BaseView",
@@ -96,7 +99,7 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
             yield item
 
 
-def _component_to_item(component: Component) -> ViewItem[V]:
+def _component_to_item(component: Component) -> ViewItem[V] | ModalItem | Item:
 
     if isinstance(component, ButtonComponent):
         from .button import Button
@@ -142,7 +145,19 @@ def _component_to_item(component: Component) -> ViewItem[V]:
         from .label import Label
 
         return Label.from_component(component)
-    return ViewItem.from_component(component)
+    if isinstance(component, RadioGroupComponent):
+        from .radio_group import RadioGroup
+
+        return RadioGroup.from_component(component)
+    if isinstance(component, CheckboxGroupComponent):
+        from .checkbox_group import CheckboxGroup
+
+        return CheckboxGroup.from_component(component)
+    if isinstance(component, CheckboxComponent):
+        from .checkbox import Checkbox
+
+        return Checkbox.from_component(component)
+    return Item.from_component(component)
 
 
 class _ViewWeights:
