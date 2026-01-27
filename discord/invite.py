@@ -263,13 +263,9 @@ class InviteTargetUsersJobStatus:
     def __init__(self, *, data: InviteTargetUsersJobStausPayload):
         self.total_users: int = data["total_users"]
         self.processed_users: int = data["processed_users"]
-        self.created_at: datetime.datetime = datetime.datetime.fromisoformat(
-            data["created_at"]
-        )
-        self.completed_at: datetime.datetime | None = (
-            datetime.datetime.fromisoformat(data["completed_at"])
-            if data["completed_at"] is not None
-            else None
+        self.created_at: datetime.datetime | None = parse_time(data.get("created_at"))
+        self.completed_at: datetime.datetime | None = parse_time(
+            data.get("completed_at")
         )
         self.error_message: str | None = data.get("error_message")
         self.status: InviteTargetUsersJobStatusCode = try_enum(
