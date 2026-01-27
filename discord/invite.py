@@ -30,8 +30,6 @@ import io
 import os
 from typing import TYPE_CHECKING, TypeVar, Union
 
-from discord.file import File
-
 from .appinfo import PartialAppInfo
 from .asset import Asset
 from .enums import (
@@ -41,8 +39,10 @@ from .enums import (
     VerificationLevel,
     try_enum,
 )
+from .file import File
 from .mixins import Hashable
 from .object import Object
+from .role import Role
 from .utils import _get_as_snowflake, parse_time, snowflake_time
 
 __all__ = (
@@ -52,7 +52,6 @@ __all__ = (
     "InviteTargetUsers",
     "InviteTargetUsersJobStatus",
 )
-from .role import Role
 
 if TYPE_CHECKING:
     from .abc import GuildChannel
