@@ -101,6 +101,7 @@ if TYPE_CHECKING:
     MU = TypeVar("MU", bound="MaybeUnlock")
     Response = Coroutine[Any, Any, T]
 
+
 async def json_or_text(response: aiohttp.ClientResponse) -> dict[str, Any] | str:
     text = await response.text(encoding="utf-8")
     try:
