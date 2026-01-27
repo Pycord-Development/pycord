@@ -2034,7 +2034,7 @@ class HTTPClient:
 
     # Invite management
 
-    def create_invite(
+    def _create_invite_payload(
         self,
         channel_id: Snowflake,
         *,
@@ -2047,9 +2047,8 @@ class HTTPClient:
         target_user_id: Snowflake | None = None,
         target_application_id: Snowflake | None = None,
         roles: list[Snowflake] | None = None,
-    ) -> Response[invite.Invite]:
-        r = Route("POST", "/channels/{channel_id}/invites", channel_id=channel_id)
-        payload = {
+    ) -> tuple[Route, dict[str, Any]]:
+        payload: dict[str, Any] = {
             "max_age": max_age,
             "max_uses": max_uses,
             "temporary": temporary,
@@ -2068,7 +2067,82 @@ class HTTPClient:
         if roles:
             payload["role_ids"] = roles
 
-        return self.request(r, reason=reason, json=payload)
+        return (
+            Route("POST", "/channels/{channel_id}/invites", channel_id=channel_id),
+            payload,
+        )
+
+    def create_invite(
+        self,
+        channel_id: Snowflake,
+        *,
+        reason: str | None = None,
+        max_age: int = 0,
+        max_uses: int = 0,
+        temporary: bool = False,
+        unique: bool = True,
+        target_type: invite.InviteTargetType | None = None,
+        target_user_id: Snowflake | None = None,
+        target_application_id: Snowflake | None = None,
+        roles: list[Snowflake] | None = None,
+    ) -> Response[invite.Invite]:
+        route, payload = self._create_invite_payload(
+            channel_id=channel_id,
+            reason=reason,
+            max_age=max_age,
+            max_uses=max_uses,
+            temporary=temporary,
+            unique=unique,
+            target_type=target_type,
+            target_user_id=target_user_id,
+            target_application_id=target_application_id,
+            roles=roles,
+        )
+
+        return self.request(route, reason=reason, json=payload)
+
+    def create_invite_multipart(
+        self,
+        channel_id: Snowflake,
+        *,
+        file: File,
+        reason: str | None = None,
+        max_age: int = 0,
+        max_uses: int = 0,
+        temporary: bool = False,
+        unique: bool = True,
+        target_type: invite.InviteTargetType | None = None,
+        target_user_id: Snowflake | None = None,
+        target_application_id: Snowflake | None = None,
+        roles: list[Snowflake] | None = None,
+    ) -> Response[invite.Invite]:
+        route, payload = self._create_invite_payload(
+            channel_id=channel_id,
+            reason=reason,
+            max_age=max_age,
+            max_uses=max_uses,
+            temporary=temporary,
+            unique=unique,
+            target_type=target_type,
+            target_user_id=target_user_id,
+            target_application_id=target_application_id,
+            roles=roles,
+        )
+
+        form = [
+            {
+                "name": "file",
+                "value": file.fp,
+                "filename": file.filename,
+                "content_type": "text/csv",
+            },
+            {
+                "name": "payload_json",
+                "value": utils._to_json(payload),
+            },
+        ]
+
+        return self.request(route, form=form, files=[file])
 
     def get_invite(
         self,
