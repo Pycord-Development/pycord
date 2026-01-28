@@ -42,6 +42,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed an issue where the optional parameters of the `InteractionResponse.send_message`
   method were not type-hinted as optional.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed `AttributeError` when using methods from other classes as `Option.autocomplete`.
+  ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
 
 ### Removed
 
