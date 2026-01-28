@@ -62,7 +62,7 @@ class PrimaryGuild:
     def __repr__(self) -> str:
         return f"<PrimaryGuild identity_guild_id={self.identity_guild_id} identity_enabled={self.identity_enabled} tag={self.tag}>"
 
-    def __eq__(self, other: object):
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, PrimaryGuild):
             return NotImplemented
 
