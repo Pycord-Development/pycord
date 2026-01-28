@@ -62,6 +62,16 @@ class PrimaryGuild:
     def __repr__(self) -> str:
         return f"<PrimaryGuild identity_guild_id={self.identity_guild_id} identity_enabled={self.identity_enabled} tag={self.tag}>"
 
+    def __eq__(self, other: object):
+        if not isinstance(other, PrimaryGuild):
+            return NotImplemented
+
+        return (
+            self.identity_guild_id == other.identity_guild_id
+            and self.identity_enabled == other.identity_enabled
+            and self.tag == other.tag
+        )
+
     @cached_property
     def badge(self) -> Asset | None:
         """Returns the badge asset, if available.

@@ -471,12 +471,8 @@ class Member(discord.abc.Messageable, _UserTag):
             u.primary_guild,
         )
         # These keys seem to always be available
-        primary_guild = PrimaryGuild(user.get("primary_guild"), state=self._state)
-        if (
-            u.primary_guild
-            and u.primary_guild.identity_guild_id == primary_guild.identity_guild_id
-        ):
-            primary_guild = u.primary_guild
+        new_pg = PrimaryGuild(user["primary_guild"], state=self._state)
+        primary_guild = u.primary_guild if u.primary_guild == new_pg else new_pg
         modified = (
             user["username"],
             user["avatar"],
