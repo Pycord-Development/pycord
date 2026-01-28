@@ -2125,13 +2125,13 @@ class HTTPClient:
         self,
         invite_id: str,
         *,
-        file: File,
+        target_users_file: File,
     ) -> Response[invite.Invite]:
         form = [
             {
                 "name": "target_users_file",
-                "value": file.fp,
-                "filename": file.filename,
+                "value": target_users_file.fp,
+                "filename": target_users_file.filename,
                 "content_type": "text/csv",
             },
         ]

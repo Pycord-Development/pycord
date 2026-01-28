@@ -413,7 +413,7 @@ class InviteTargetUsers:
             The invite is invalid or expired.
         """
         await self._state.http.update_invite_target_users(
-            self.invite_code, file=target_users_file
+            self.invite_code, target_users_file=target_users_file
         )
 
     async def get_job_status(self) -> InviteTargetUsersJobStatus:
