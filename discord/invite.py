@@ -381,6 +381,9 @@ class InviteTargetUsers:
         Retrieves a list of user IDs that can accept this invite. This internally
         reads the invite's target users CSV file and parses the user IDs from it.
 
+        You must have created this invite or the :attr:`~Permissions.manage_guild` or :attr:`~Permissions.view_audit_log`
+        permission to do this.
+
         Returns
         -------
         list[int]
