@@ -14,6 +14,14 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added `silent` parameter to all methods that send messages, including
+  `ApplicationContext.respond`, `Interaction.respond` and
+  `InteractionResponse.send_message`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
+- Added `suppress_embeds` parameter to all methods that send messages, replacing
+  `suppress`, including `ApplicationContext.respond`, `Interaction.respond` and
+  `InteractionResponse.send_message`.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Changed
 
@@ -42,6 +50,12 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed an issue where the optional parameters of the `InteractionResponse.send_message`
   method were not type-hinted as optional.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+
+### Deprecated
+
+- Deprecated the `suppress` parameter in all applicable message-related methods. Does
+  not affect any functions related to voice.
+  ([#3062](https://github.com/Pycord-Development/pycord/pull/3062))
 
 ### Removed
 

@@ -63,6 +63,8 @@ __all__ = (
     "PartialWebhookGuild",
 )
 
+from ..utils import warn_deprecated
+
 _log = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -646,8 +648,10 @@ def handle_message_parameters(
     applied_tags: list[Snowflake] = MISSING,
     allowed_mentions: AllowedMentions | None = MISSING,
     previous_allowed_mentions: AllowedMentions | None = None,
-    suppress: bool = False,
+    suppress: bool | None = None,
     thread_name: str | None = None,
+    suppress_embeds: bool = None,
+    silent: bool = False,
 ) -> ExecuteWebhookParameters:
     if files is not MISSING and file is not MISSING:
         raise TypeError("Cannot mix file and files keyword arguments.")
@@ -667,10 +671,16 @@ def handle_message_parameters(
     _attachments = []
     if attachments is not MISSING:
         _attachments = [a.to_dict() for a in attachments]
-
+    if suppress is not None:
+        warn_deprecated("suppress", "suppress_embeds", "2.8")
+        if suppress_embeds is None:
+            suppress_embeds = suppress
+    elif suppress_embeds is None:
+        suppress_embeds = False
     flags = MessageFlags(
-        suppress_embeds=suppress,
+        suppress_embeds=suppress_embeds,
         ephemeral=ephemeral,
+        suppress_notifications=silent,
     )
 
     if view is not MISSING:
@@ -1661,6 +1671,8 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: Literal[True],
         delete_after: float = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> WebhookMessage: ...
 
     @overload
@@ -1684,6 +1696,8 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: Literal[False] = ...,
         delete_after: float = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> None: ...
 
     async def send(
@@ -1706,6 +1720,8 @@ class Webhook(BaseWebhook):
         applied_tags: list[Snowflake] = MISSING,
         wait: bool = False,
         delete_after: float = None,
+        silent: bool = False,
+        suppress_embeds: bool = False,
     ) -> WebhookMessage | None:
         """|coro|
 
@@ -1786,6 +1802,14 @@ class Webhook(BaseWebhook):
             The poll to send.
 
             .. versionadded:: 2.6
+        silent: :class:`bool`
+            Whether to suppress push and desktop notifications for the message.
+
+            .. versionadded:: 2.8
+        suppress_embeds: :class:`bool`
+            Whether to suppress embeds for the message.
+
+            .. versionadded:: 2.8
 
         Returns
         -------
@@ -1872,6 +1896,8 @@ class Webhook(BaseWebhook):
             allowed_mentions=allowed_mentions,
             previous_allowed_mentions=previous_mentions,
             thread_name=thread_name,
+            silent=silent,
+            suppress=suppress_embeds,
         )
         adapter = async_context.get()
         thread_id: int | None = None
