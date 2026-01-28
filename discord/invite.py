@@ -259,7 +259,7 @@ class InviteTargetUsersJobStatus:
         The current status of the job.
     """
 
-    def __init__(self, *, data: InviteTargetUsersJobStausPayload):
+    def __init__(self, *, data: InviteTargetUsersJobStatusPayload):
         self.total_users: int = data["total_users"]
         self.processed_users: int = data["processed_users"]
         self.created_at: datetime.datetime | None = parse_time(data.get("created_at"))

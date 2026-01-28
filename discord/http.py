@@ -2144,7 +2144,7 @@ class HTTPClient:
     def get_invite_target_users_job_status(
         self,
         invite_id: str,
-    ) -> Response[InviteTargetUsersJobStausPayload]:
+    ) -> Response[InviteTargetUsersJobStatusPayload]:
         return self.request(
             Route(
                 "GET",
