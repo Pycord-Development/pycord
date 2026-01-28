@@ -12,22 +12,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added support for community invite features including role assignment and target user
-  management.
-  - Added `roles` parameter to `GuildChannel.create_invite()` to assign roles when users
-    join via invite.
-  - Added `target_users_file` parameter to `GuildChannel.create_invite()` to restrict
-    invite usage to specific users.
-  - Added `Invite.roles` attribute containing roles assigned to users joining via the
-    invite.
-  - Added `Invite.target_users` property returning an `InviteTargetUsers` object for
-    managing the target users list.
-  - Added `InviteTargetUsers` class with methods `read()`, `save()`, `edit()`, and
-    `get_job_status()` for target users management.
-  - Added `InviteTargetUsersJobStatus` class to track the status of target users
-    processing jobs.
-  - Added `InviteTargetUsersJobStatusCode` enum for job status codes.
-    ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
+- Added support for community invite features.
+  ([#3044](https://github.com/Pycord-Development/pycord/pull/3044))
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 
