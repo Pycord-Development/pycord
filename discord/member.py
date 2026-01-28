@@ -471,8 +471,9 @@ class Member(discord.abc.Messageable, _UserTag):
             u.primary_guild,
         )
         # These keys seem to always be available
-        new_primary_guild_data = user.get("primary_guild")
-        if new_primary_guild_data and new_primary_guild_data.get("identity_enabled"):
+        if (
+            new_primary_guild_data := user.get("primary_guild")
+        ) and new_primary_guild_data.get("identity_enabled"):
             new_primary_guild: PrimaryGuild | None = PrimaryGuild(
                 new_primary_guild_data, state=self._state
             )
