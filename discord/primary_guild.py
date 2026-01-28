@@ -40,6 +40,19 @@ class PrimaryGuild:
 
     .. versionadded:: 2.7
 
+    .. container:: operations
+
+        .. describe:: x == y
+
+            Checks if two Primary Guilds are equal.
+
+        .. describe:: x != y
+
+            Checks if two Primary Guilds are not equal.
+
+    .. versionchanged:: 2.7.1
+        Primary Guilds are now comparable.
+
     Attributes
     ----------
     identity_guild_id: int

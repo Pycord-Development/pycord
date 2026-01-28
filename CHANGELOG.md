@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added the ability to compare instances of `PrimaryGuild`.
+  ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
 
 ### Changed
 
