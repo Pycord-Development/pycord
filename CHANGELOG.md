@@ -14,6 +14,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
+- Added the ability to compare instances of `PrimaryGuild`.
+  ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
 
 ### Changed
 
@@ -42,6 +44,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed an issue where the optional parameters of the `InteractionResponse.send_message`
   method were not type-hinted as optional.
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
+- Fixed the update of a user's `primary_guild` to now cause an `on_user_update` event to
+  fire. ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
 
 ### Removed
 
