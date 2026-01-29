@@ -94,7 +94,7 @@ class MediaGallery(ViewItem[V]):
 
         if not all(isinstance(i, MediaGalleryItem) for i in value):
             raise TypeError(
-                f"items must be a list of MediaGalleryItem, not {i.__class__!r}"
+                f"items must be a list of MediaGalleryItem."
             )
 
         self.underlying.items = value
