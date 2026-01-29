@@ -1,4 +1,5 @@
 sphinx==9.1.0
+sphinxcontrib_trio==1.2.0
 sphinxcontrib-websupport==2.0.0
 myst-parser[linkify]==5.0.0
 sphinxext-opengraph==0.13.0
