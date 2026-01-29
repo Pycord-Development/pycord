@@ -12,7 +12,11 @@ bot = discord.Bot(debug_guilds=[...])
 
 @bot.slash_command()
 @option("name", description="Enter your name")
-@option("pokemon", description="Choose your starter Pokémon", choices=["Bulbasaur", "Squirtle", "Charmander", "Pikachu"])
+@option(
+    "pokemon",
+    description="Choose your starter Pokémon",
+    choices=["Bulbasaur", "Squirtle", "Charmander", "Pikachu"],
+)
 @option(
     "age",
     description="Enter your age",
