@@ -270,81 +270,172 @@ class ApplicationCommandMixin(ABC):
         """
 
         # We can suggest the user to upsert, edit, delete, or bulk upsert the commands
+        class DefaultComparison:
+            """
+            Comparison rule for when there are multiple default values that should be considered equivalent when comparing 2 objects.
+            Allows for a custom check to be passed for further control over equality.
+
+            Attributes
+            ----------
+            defaults: :class:`tuple`
+                The values that should be considered equivalent to each other
+            callback: Callable[[Any, Any], bool]
+                A callable that will do additional comparison on the objects if neither are a default value.
+                Defaults to a `!=` comparison.
+                It should accept the 2 objects as arguments and return True if they should be considered equivalent
+                and False otherwise.
+            """
+
+            def __init__(
+                self,
+                defaults: tuple[Any, ...],
+                callback: Callable[[Any, Any], bool] = lambda x, y: x != y,
+            ):
+                self.defaults = defaults
+                self.callback = callback
+
+            def _check_defaults(self, local, remote) -> bool | None:
+                defaults = (local in self.defaults) + (remote in self.defaults)
+                if defaults == 2:
+                    # Both are defaults, so they can be counted as the same
+                    return False
+                elif defaults == 0:
+                    # Neither are defaults so the callback has to be used
+                    return None
+                else:
+                    # Only one is a default, so the command must be out of sync
+                    return True
+
+            def check(self, local, remote) -> bool:
+                if (rtn := self._check_defaults(local, remote)) is not None:
+                    return rtn
+                else:
+                    return self.callback(local, remote)
+
+        class DefaultSetComparison(DefaultComparison):
+            def check(self, local, remote) -> bool:
+                try:
+                    local = set(local)
+                except TypeError:
+                    pass
+                try:
+                    remote = set(remote)
+                except TypeError:
+                    pass
+                return super().check(local, remote)
+
+        type NestedComparison = dict[str, NestedComparison | DefaultComparison]
+
+        def _compare_defaults(
+            obj: Mapping[str, Any] | Any,
+            match: Mapping[str, Any] | Any,
+            schema: NestedComparison,
+        ) -> bool:
+            if not isinstance(match, Mapping) or not isinstance(obj, Mapping):
+                return obj != match
+            for field, comparison in schema.items():
+                remote = match.get(field, MISSING)
+                local = obj.get(field, MISSING)
+                if isinstance(comparison, dict):
+                    _compare_defaults(local, remote, comparison)
+                elif isinstance(comparison, DefaultComparison):
+                    if comparison.check(local, remote):
+                        return True
+            return False
 
         def _check_command(cmd: ApplicationCommand, match: Mapping[str, Any]) -> bool:
+            cmd = cmd.to_dict()
+
+            option_default_values = ([], MISSING)
+
+            def _option_comparison_check(local, remote) -> bool:
+                matching = (local in option_default_values) + (
+                    remote in option_default_values
+                )
+                if matching == 2:
+                    return False
+                elif matching == 1:
+                    return True
+                else:
+                    return len(local) != len(remote) or any(
+                        [
+                            _compare_defaults(local[x], remote[x], option_defaults)
+                            for x in range(len(local))
+                        ]
+                    )
+
+            choices_default_values = ([], MISSING)
+
+            def _choices_comparison_check(local, remote) -> bool:
+                matching = (local in choices_default_values) + (
+                    remote in choices_default_values
+                )
+                if matching == 2:
+                    return False
+                elif matching == 1:
+                    return True
+                else:
+                    return len(local) != len(remote) or any(
+                        [
+                            _compare_defaults(local[x], remote[x], choices_defaults)
+                            for x in range(len(local))
+                        ]
+                    )
+
+            defaults: NestedComparison = {
+                "type": DefaultComparison((1, MISSING)),
+                "name": DefaultComparison(()),
+                "description": DefaultComparison((MISSING,)),
+                "name_localizations": DefaultComparison((None, {}, MISSING)),
+                "description_localizations": DefaultComparison((None, {}, MISSING)),
+                "options": DefaultComparison(
+                    option_default_values, _option_comparison_check
+                ),
+                "default_member_permissions": DefaultComparison((None, MISSING)),
+                "nsfw": DefaultComparison((False, MISSING)),
+                # TODO: Change the below default if needed to use the correct default integration types and contexts
+                "integration_types": DefaultSetComparison(
+                    (MISSING, {0, 1}), lambda x, y: set(x) != set(y)
+                ),
+                # Discord States That This Defaults To "your app's configured contexts"
+                "contexts": DefaultSetComparison(
+                    (None, {0, 1, 2}, MISSING), lambda x, y: set(x) != set(y)
+                ),
+            }
+            option_defaults: NestedComparison = {
+                "type": DefaultComparison(()),
+                "name": DefaultComparison(()),
+                "description": DefaultComparison(()),
+                "name_localizations": DefaultComparison((None, {}, MISSING)),
+                "description_localizations": DefaultComparison((None, {}, MISSING)),
+                "required": DefaultComparison((False, MISSING)),
+                "choices": DefaultComparison(
+                    choices_default_values, _choices_comparison_check
+                ),
+                "channel_types": DefaultComparison(([], MISSING)),
+                "min_value": DefaultComparison((MISSING,)),
+                "max_value": DefaultComparison((MISSING,)),
+                "min_length": DefaultComparison((MISSING,)),
+                "max_length": DefaultComparison((MISSING,)),
+                "autocomplete": DefaultComparison((MISSING, False)),
+            }
+            choices_defaults: NestedComparison = {
+                "name": DefaultComparison(()),
+                "name_localizations": DefaultComparison((None, {}, MISSING)),
+                "value": DefaultComparison(()),
+            }
+
             if isinstance(cmd, SlashCommandGroup):
                 if len(cmd.subcommands) != len(match.get("options", [])):
                     return True
                 for i, subcommand in enumerate(cmd.subcommands):
-                    match_ = next(
-                        (
-                            data
-                            for data in match["options"]
-                            if data["name"] == subcommand.name
-                        ),
-                        MISSING,
+                    match_ = find(
+                        lambda x: x["name"] == subcommand.name, match["options"]
                     )
-                    if match_ is not MISSING and _check_command(subcommand, match_):
+                    if match_ is not None and _check_command(subcommand, match_):
                         return True
             else:
-                as_dict = cmd.to_dict()
-                to_check = {
-                    "nsfw": None,
-                    "default_member_permissions": None,
-                    "name": None,
-                    "description": None,
-                    "name_localizations": None,
-                    "description_localizations": None,
-                    "options": [
-                        "type",
-                        "name",
-                        "description",
-                        "autocomplete",
-                        "choices",
-                        "name_localizations",
-                        "description_localizations",
-                    ],
-                    "contexts": None,
-                    "integration_types": None,
-                }
-                for check, value in to_check.items():
-                    if type(to_check[check]) == list:
-                        # We need to do some falsy conversion here
-                        # The API considers False (autocomplete) and [] (choices) to be falsy values
-                        falsy_vals = (False, [])
-                        for opt in value:
-                            cmd_vals = (
-                                [val.get(opt, MISSING) for val in as_dict[check]]
-                                if check in as_dict
-                                else []
-                            )
-                            for i, val in enumerate(cmd_vals):
-                                if val in falsy_vals:
-                                    cmd_vals[i] = MISSING
-                            if match.get(
-                                check, MISSING
-                            ) is not MISSING and cmd_vals != [
-                                val.get(opt, MISSING) for val in match[check]
-                            ]:
-                                # We have a difference
-                                return True
-                    elif (attr := getattr(cmd, check, None)) != (
-                        found := match.get(check)
-                    ):
-                        # We might have a difference
-                        if "localizations" in check and bool(attr) == bool(found):
-                            # unlike other attrs, localizations are MISSING by default
-                            continue
-                        elif (
-                            check == "default_permission"
-                            and attr is True
-                            and found is None
-                        ):
-                            # This is a special case
-                            # TODO: Remove for perms v2
-                            continue
-                        return True
-            return False
+                return _compare_defaults(cmd, match, defaults)
 
         return_value = []
         cmds = self.pending_application_commands.copy()
