@@ -119,6 +119,18 @@ class Colour:
         return self.r, self.g, self.b
 
     @classmethod
+    def resolve_value(cls: type[CT], value: int | Colour | None) -> CT:
+        if value is None or isinstance(value, Colour):
+            return value
+        elif isinstance(value, int):
+            return cls(value=value)
+        else:
+            raise TypeError(
+                "Expected discord.Colour, int, or None but received"
+                f" {value.__class__.__name__} instead."
+            )
+
+    @classmethod
     def from_rgb(cls: type[CT], r: int, g: int, b: int) -> CT:
         """Constructs a :class:`Colour` from an RGB tuple."""
         return cls((r << 16) + (g << 8) + b)

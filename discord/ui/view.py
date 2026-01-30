@@ -47,6 +47,8 @@ from ..components import Button as ButtonComponent
 from ..components import Component
 from ..components import Container as ContainerComponent
 from ..components import FileComponent
+from ..components import FileUpload as FileUploadComponent
+from ..components import InputText as InputTextComponent
 from ..components import Label as LabelComponent
 from ..components import MediaGallery as MediaGalleryComponent
 from ..components import Section as SectionComponent
@@ -55,7 +57,7 @@ from ..components import Separator as SeparatorComponent
 from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
-from ..enums import ChannelType
+from ..enums import ChannelType, SeparatorSpacingSize
 from ..utils import find
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
@@ -70,6 +72,7 @@ __all__ = (
 
 
 if TYPE_CHECKING:
+    from ..components import MediaGalleryItem
     from ..interactions import Interaction, InteractionMessage
     from ..message import Message
     from ..state import ConnectionState
@@ -142,6 +145,14 @@ def _component_to_item(component: Component) -> ViewItem[V]:
         from .label import Label
 
         return Label.from_component(component)
+    if isinstance(component, InputTextComponent):
+        from .input_text import InputText
+
+        return InputText.from_component(component)
+    if isinstance(component, FileUploadComponent):
+        from .file_upload import FileUpload
+
+        return FileUpload.from_component(component)
     return ViewItem.from_component(component)
 
 
@@ -362,7 +373,7 @@ class BaseView(ItemInterface):
 
         A view containing V2 components cannot be sent alongside message content or embeds.
         """
-        return any([item._underlying.is_v2() for item in self.children])
+        return any([item.underlying.is_v2() for item in self.children])
 
     async def _scheduled_task(self, item: ViewItem[V], interaction: Interaction):
         try:
@@ -536,6 +547,8 @@ class View(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
@@ -552,8 +565,6 @@ class View(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
-    store: Optional[:class:`bool`]
-        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     __view_children_items__: ClassVar[list[ItemCallbackType]] = []
@@ -690,11 +701,11 @@ class View(BaseView):
             or the row the item is trying to be added to is full.
         """
 
-        if item._underlying.is_v2():
+        if item.underlying.is_v2():
             raise ValueError(
                 f"cannot use V2 components in View. Use DesignerView instead."
             )
-        if isinstance(item._underlying, ActionRowComponent):
+        if isinstance(item.underlying, ActionRowComponent):
             for i in item.children:
                 self.add_item(i)
             return self
@@ -703,7 +714,7 @@ class View(BaseView):
         self.__weights.add_item(item)
         return self
 
-    def remove_item(self, item: ViewItem[V] | int | str) -> None:
+    def remove_item(self, item: ViewItem[V] | int | str) -> Self:
         """Removes an item from the view. If an :class:`int` or :class:`str` is passed,
         the item will be removed by Item ``id`` or ``custom_id`` respectively.
 
@@ -720,7 +731,7 @@ class View(BaseView):
             pass
         return self
 
-    def clear_items(self) -> None:
+    def clear_items(self) -> Self:
         """Removes all items from the view."""
         super().clear_items()
         self.__weights.clear()
@@ -772,6 +783,8 @@ class DesignerView(BaseView):
     timeout: Optional[:class:`float`]
         Timeout in seconds from last interaction with the UI before no longer accepting input. Defaults to 180.0.
         If ``None`` then there is no timeout.
+    store: Optional[:class:`bool`]
+        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
 
     Attributes
     ----------
@@ -788,8 +801,6 @@ class DesignerView(BaseView):
     parent: Optional[:class:`.Interaction`]
         The parent interaction which this view was sent from.
         If ``None`` then the view was not sent using :meth:`InteractionResponse.send_message`.
-    store: Optional[:class:`bool`]
-        Whether this view should be stored for callback listening. Setting it to ``False`` will ignore item callbacks and prevent their values from being refreshed. Defaults to ``True``.
     """
 
     MAX_ITEMS: int = 40
@@ -812,6 +823,14 @@ class DesignerView(BaseView):
         super().__init__(
             *items, timeout=timeout, disable_on_timeout=disable_on_timeout, store=store
         )
+
+    @property
+    def items(self) -> list[ViewItem[V]]:
+        return self.children
+
+    @items.setter
+    def items(self, value: list[ViewItem[V]]) -> None:
+        self.children = value
 
     @classmethod
     def from_message(
@@ -871,13 +890,37 @@ class DesignerView(BaseView):
             view.add_item(_component_to_item(component))
         return view
 
-    def add_item(self, item: ViewItem[V]) -> Self:
+    def add_item(
+        self,
+        item: ViewItem[V],
+        *,
+        index: int | None = None,
+        before: ViewItem[V] | str | int | None = None,
+        after: ViewItem[V] | str | int | None = None,
+        into: ViewItem[V] | str | int | None = None,
+    ) -> Self:
         """Adds an item to the view.
+
+        .. warning::
+
+            You may specify only **one** of ``index``, ``before``, & ``after``. ``into`` will work together with those parameters.
+
+        .. versionchanged:: 2.7.1
+            Added new parameters ``index``, ``before``, ``after``, & ``into``.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the view.
+        index: Optional[class:`int`]
+            Add the new item at the specific index of :attr:`children`. Same behavior as Python's :func:`~list.insert`.
+        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
+        into: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
+            Add the new item **into** the specified item. This would be equivalent to `into.add_item(item)`, where `into` is a :class:`ViewItem`.
+            If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
@@ -886,14 +929,215 @@ class DesignerView(BaseView):
         ValueError
             Maximum number of items has been exceeded (40)
         """
+        if (
+            before
+            and after
+            or before
+            and (index is not None)
+            or after
+            and (index is not None)
+        ):
+            raise ValueError("Can only specify one of before, after, and index.")
 
-        if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
+        if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
                 f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)
         return self
+
+    def replace_item(
+        self, original_item: ViewItem[V] | str | int, new_item: ViewItem[V]
+    ) -> Self:
+        """Directly replace an item in this view.
+        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by ``custom_id``.
+
+        Parameters
+        ----------
+        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
+            The item, item ``id``, or item ``custom_id`` to replace in the view.
+        new_item: :class:`ViewItem`
+            The new item to insert into the view.
+
+        Returns
+        -------
+        :class:`BaseView`
+            The view instance.
+        """
+
+        if not isinstance(new_item, ViewItem):
+            raise TypeError(f"expected ViewItem not {new_item.__class__!r}")
+
+        if isinstance(original_item, (str, int)):
+            original_item = self.get_item(original_item)
+        if not original_item:
+            raise ValueError(f"Could not find original_item in view.")
+        try:
+            if original_item.parent is self:
+                i = self.children.index(original_item)
+                new_item.parent = self
+                self.children[i] = new_item
+                original_item.parent = None
+            else:
+                original_item.parent.replace_item(original_item, new_item)
+        except ValueError:
+            raise ValueError(f"Could not find original_item in view.")
+        return self
+
+    def add_row(
+        self,
+        *items: ViewItem[V],
+        id: int | None = None,
+    ) -> Self:
+        """Adds an :class:`ActionRow` to the view.
+
+        To append a pre-existing :class:`ActionRow`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        *items: Union[:class:`Button`, :class:`Select`]
+            The items this action row contains.
+        id: Optiona[:class:`int`]
+            The action row's ID.
+        """
+        from .action_row import ActionRow
+
+        row = ActionRow(*items, id=id)
+
+        return self.add_item(row)
+
+    def add_container(
+        self,
+        *items: ViewItem[V],
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`Container` to the view.
+
+        To append a pre-existing :class:`Container`, use the
+        :meth:`add_item` method, instead.
+
+        Parameters
+        ----------
+        *items: :class:`ViewItem`
+            The items contained in this container.
+        accessory: Optional[:class:`ViewItem`]
+        id: Optional[:class:`int`]
+            The container's ID.
+        """
+        from .container import Container
+
+        container = Container(*items, id=id)
+
+        return self.add_item(container)
+
+    def add_section(
+        self,
+        *items: ViewItem[V],
+        accessory: ViewItem[V],
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`Section` to the view.
+
+        To append a pre-existing :class:`Section`, use the
+        :meth:`add_item` method, instead.
+
+        Parameters
+        ----------
+        *items: :class:`ViewItem`
+            The items contained in this section, up to 3.
+            Currently only supports :class:`~discord.ui.TextDisplay`.
+        accessory: Optional[:class:`ViewItem`]
+            The section's accessory. This is displayed in the top right of the section.
+            Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
+        id: Optional[:class:`int`]
+            The section's ID.
+        """
+        from .section import Section
+
+        section = Section(*items, accessory=accessory, id=id)
+
+        return self.add_item(section)
+
+    def add_text(self, content: str, id: int | None = None) -> Self:
+        """Adds a :class:`TextDisplay` to the view.
+
+        Parameters
+        ----------
+        content: :class:`str`
+            The content of the TextDisplay
+        id: Optiona[:class:`int`]
+            The text displays' ID.
+        """
+        from .text_display import TextDisplay
+
+        text = TextDisplay(content, id=id)
+
+        return self.add_item(text)
+
+    def add_gallery(
+        self,
+        *items: MediaGalleryItem,
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`MediaGallery` to the view.
+
+        To append a pre-existing :class:`MediaGallery`, use :meth:`add_item` instead.
+
+        Parameters
+        ----------
+        *items: :class:`MediaGalleryItem`
+            The media this gallery contains.
+        id: Optiona[:class:`int`]
+            The gallery's ID.
+        """
+        from .media_gallery import MediaGallery
+
+        g = MediaGallery(*items, id=id)
+
+        return self.add_item(g)
+
+    def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> Self:
+        """Adds a :class:`TextDisplay` to the view.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
+        spoiler: Optional[:class:`bool`]
+            Whether the file has the spoiler overlay. Defaults to ``False``.
+        id: Optiona[:class:`int`]
+            The file's ID.
+        """
+        from .file import File
+
+        f = File(url, spoiler=spoiler, id=id)
+
+        return self.add_item(f)
+
+    def add_separator(
+        self,
+        *,
+        divider: bool = True,
+        spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
+        id: int | None = None,
+    ) -> Self:
+        """Adds a :class:`Separator` to the container.
+
+        Parameters
+        ----------
+        divider: :class:`bool`
+            Whether the separator is a divider. Defaults to ``True``.
+        spacing: :class:`~discord.SeparatorSpacingSize`
+            The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
+        id: Optional[:class:`int`]
+            The separator's ID.
+        """
+        from .separator import Separator
+
+        s = Separator(divider=divider, spacing=spacing, id=id)
+
+        return self.add_item(s)
 
     def refresh(self, components: list[Component]):
         # Refreshes view data using discord's values
