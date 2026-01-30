@@ -17,6 +17,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Added the ability to compare instances of `PrimaryGuild`.
   ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
 
+- Added recurrence rules for `ScheduledEvent` objects.
+  ([#2749](https://github.com/Pycord-Development/pycord/pull/2749))
+
 ### Changed
 
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
