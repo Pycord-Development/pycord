@@ -49,6 +49,9 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fixed the update of a user's `primary_guild` to now cause an `on_user_update` event to
   fire. ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
 
+- Deprecated `Colour.dark_theme()` and `Colour.embed_background()`.
+  ([#3043](https://github.com/Pycord-Development/pycord/pull/3043))
+
 ### Removed
 
 - Removed the guild creation and ownership-related methods and arguments due to updated
