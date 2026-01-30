@@ -740,7 +740,6 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         """Gets the width of the item in the UI layout.
 
         The width determines how much horizontal space this item occupies within its row.
-        This attribute is not compatible with :class:`discord.ui.DesignerView`.
 
         Returns
         -------
