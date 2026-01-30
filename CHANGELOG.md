@@ -21,6 +21,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Updated `Role.is_assignable()` to also check whether the bot has the `MANAGE_ROLES`
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
+- Updated the docs' Sphinx version to v9.
+  ([#3067](https://github.com/Pycord-Development/pycord/pull/3067))
 
 ### Fixed
 
