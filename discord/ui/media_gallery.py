@@ -93,9 +93,7 @@ class MediaGallery(ViewItem[V]):
             raise ValueError("may not set more than 10 items in a gallery.")
 
         if not all(isinstance(i, MediaGalleryItem) for i in value):
-            raise TypeError(
-                f"items must be a list of MediaGalleryItem."
-            )
+            raise TypeError(f"items must be a list of MediaGalleryItem.")
 
         self.underlying.items = value
 
