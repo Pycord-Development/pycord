@@ -252,6 +252,8 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
         required: bool | None = None,
         default_values: Sequence[SelectDefaultValue | ST] | None = None,
     ) -> None:
+        self._row: int | None = None
+        self._rendered_row: int | None = None
         if options and select_type is not ComponentType.string_select:
             raise InvalidArgument("options parameter is only valid for string selects")
         if channel_types and select_type is not ComponentType.channel_select:
@@ -735,7 +737,47 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
     @property
     def width(self) -> int:
+        """Gets the width of the item in the UI layout.
+
+        The width determines how much horizontal space this item occupies within its row.
+        This attribute is not compatible with :class:`discord.ui.DesignerView`.
+
+        Returns
+        -------
+        :class:`int`
+            The width of the item. Select menus have a width of 5.
+        """
         return 5
+
+    @property
+    def row(self) -> int | None:
+        """Gets or sets the row position of this item within its parent view.
+
+        The row position determines the vertical placement of the item in the UI.
+        The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate
+        that no specific row is set.
+        This attribute is not compatible with :class:`discord.ui.DesignerView`.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The row position of the item, or ``None`` if not explicitly set.
+
+        Raises
+        ------
+        ValueError
+            If the row value is not ``None`` and is outside the range [0, 4].
+        """
+        return self._row
+
+    @row.setter
+    def row(self, value: int | None):
+        if value is None:
+            self._row = None
+        elif 5 > value >= 0:
+            self._row = value
+        else:
+            raise ValueError("row cannot be negative or greater than or equal to 5")
 
     def to_component_dict(self) -> SelectMenuPayload:
         return super().to_component_dict()
