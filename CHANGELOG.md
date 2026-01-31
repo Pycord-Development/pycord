@@ -48,6 +48,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 - Fixed the update of a user's `primary_guild` to now cause an `on_user_update` event to
   fire. ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Fixed an error when using methods from other classes regarding option autocompletes.
+  ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
 
 ### Removed
 
