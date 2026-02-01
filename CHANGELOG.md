@@ -22,8 +22,7 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
-- Fixed `BaseView.on_timeout` and `Paginator.on_timeout` behavior: views no longer raise
-  unnecessary errors on timeout.
+- Fixed an issue where views raised unnecessary errors on timeout.
   ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
