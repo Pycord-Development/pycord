@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pycord 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-02 04:28+0000\n"
+"POT-Creation-Date: 2026-01-17 21:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -83,7 +83,6 @@ msgid "The ID of the object."
 msgstr ""
 
 #: ../../docstring 0b6bdc9f79764717a733eb7a5958f520
-#: 0d8cf03e305c441a937b9d418b558488 3cde02c1afdd471284767db5f3c67801
 #: 45420bc3f5e249dd8ef820bdb4863ddc 6c4d566dbc03451c823e41e2f0cb5dd1
 #: 723831052aca4c2d94163331d498fab4 756b428ff3f9484e91ab6d231993be61
 #: d04be24516744c6cb0d8a75985d21242 d658a315c6b74568a6988f7cbfd0bfd5
@@ -131,8 +130,8 @@ msgstr ""
 #: discord.MessageFlags.suppress_notifications discord.MessageFlags.urgent
 #: discord.Permissions.add_reactions discord.Permissions.administrator
 #: discord.Permissions.attach_files discord.Permissions.ban_members
-#: discord.Permissions.change_nickname discord.Permissions.connect
-#: discord.Permissions.create_instant_invite
+#: discord.Permissions.bypass_slowmode discord.Permissions.change_nickname
+#: discord.Permissions.connect discord.Permissions.create_instant_invite
 #: discord.Permissions.create_private_threads
 #: discord.Permissions.create_public_threads discord.Permissions.deafen_members
 #: discord.Permissions.embed_links discord.Permissions.external_emojis
@@ -145,7 +144,7 @@ msgstr ""
 #: discord.Permissions.manage_threads discord.Permissions.manage_webhooks
 #: discord.Permissions.mention_everyone discord.Permissions.moderate_members
 #: discord.Permissions.move_members discord.Permissions.mute_members
-#: discord.Permissions.priority_speaker
+#: discord.Permissions.pin_messages discord.Permissions.priority_speaker
 #: discord.Permissions.read_message_history discord.Permissions.read_messages
 #: discord.Permissions.request_to_speak discord.Permissions.send_messages
 #: discord.Permissions.send_messages_in_threads discord.Permissions.send_polls
@@ -185,8 +184,9 @@ msgstr ""
 #: discord.SystemChannelFlags.premium_subscriptions discord.activity.Activity
 #: discord.activity.CustomActivity discord.activity.Game
 #: discord.activity.Streaming discord.colour.Colour
-#: discord.components.SelectOption discord.components.UnfurledMediaItem
-#: discord.embeds.Embed discord.embeds.EmbedAuthor discord.embeds.EmbedField
+#: discord.components.MediaGalleryItem discord.components.SelectOption
+#: discord.components.UnfurledMediaItem discord.embeds.Embed
+#: discord.embeds.EmbedAuthor discord.embeds.EmbedField
 #: discord.embeds.EmbedFooter discord.embeds.EmbedMedia
 #: discord.embeds.EmbedProvider discord.file.File
 #: discord.flags.ApplicationFlags discord.flags.AttachmentFlags
@@ -218,10 +218,17 @@ msgstr ""
 msgid ":class:`int`"
 msgstr ""
 
+#: 1f065119b988464eb863d1f164649246 discord.object.Object:36 of
+msgid "The model this object's ID is based off."
+msgstr ""
+
+#: 530c33a7c302431cbd3d33ded378f0ba discord.object.Object:38 of
+msgid "type[:class:`abc.Snowflake`]"
+msgstr ""
+
 #: ../../api/data_classes.rst 17d3622dc479450a9951e9f01f4e961e
-#: 62c0635de0e14e85b11eb228a093d50b bc227baf3a35408b8f5380ffa74958b7
-#: d463224bd212438b803261a9fa1b966a discord.poll.Poll.add_answer
-#: discord.poll.PollAnswer.voters e10fd84d147f4b71b2d38959065e253c of
+#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters
+#: e10fd84d147f4b71b2d38959065e253c of
 msgid "Parameters"
 msgstr ""
 
@@ -241,25 +248,22 @@ msgstr ""
 msgid "Returns the increment id that made the snowflake."
 msgstr ""
 
-#: 0d8b907771e64532af760f81f51e6054 303f5f553a71428285d200852504cec9
-#: discord.components.SelectOption:1 of
+#: 0d8b907771e64532af760f81f51e6054 discord.components.SelectOption:1 of
 msgid "Represents a :class:`discord.SelectMenu`'s option."
 msgstr ""
 
-#: 836aee37573f4fb99a2e2ba8cd2ac24e 8d9e3b5226b84a4d9a95bccfb7d8ccc5
-#: discord.components.SelectOption:3 of
+#: 836aee37573f4fb99a2e2ba8cd2ac24e discord.components.SelectOption:3 of
 msgid "These can be created by users."
 msgstr ""
 
-#: b0f1217cfaff4c189043c1907c804416 c56b411c300a4ce08a3948b4da36a990
-#: discord.components.SelectOption:9 of
+#: b0f1217cfaff4c189043c1907c804416 discord.components.SelectOption:9 of
 msgid ""
 "The label of the option. This is displayed to users. Can only be up to "
 "100 characters."
 msgstr ""
 
-#: 05be8ec42ca842988501f59cc34e4060 bf029a45ccb14764ab8bb9e4b6849d2a
-#: discord.activity.Game:31 discord.activity.Streaming:55
+#: 05be8ec42ca842988501f59cc34e4060 discord.activity.Game:31
+#: discord.activity.Streaming:55 discord.components.MediaGalleryItem:11
 #: discord.components.SelectOption:12 discord.components.SelectOption:20
 #: discord.components.UnfurledMediaItem:11 discord.embeds.Embed:25
 #: discord.embeds.Embed:34 discord.embeds.Embed:42 discord.embeds.Embed:49
@@ -274,34 +278,31 @@ msgstr ""
 msgid ":class:`str`"
 msgstr ""
 
-#: 11123714def448fdbeccc9ee4f80c118 579e6accca914c3998466750119550fe
-#: discord.components.SelectOption:16 of
+#: 579e6accca914c3998466750119550fe discord.components.SelectOption:16 of
 msgid ""
 "The value of the option. This is not displayed to users. If not provided "
 "when constructed then it defaults to the label. Can only be up to 100 "
 "characters."
 msgstr ""
 
-#: c56b411c300a4ce08a3948b4da36a990 df26f5a7b24d4b6d906959574c93288e
-#: discord.components.SelectOption:24 of
+#: df26f5a7b24d4b6d906959574c93288e discord.components.SelectOption:24 of
 msgid ""
 "An additional description of the option, if any. Can only be up to 100 "
 "characters."
 msgstr ""
 
-#: 1829644e9c8741b9ab3d3326ded2df0a 3963803bd3104b1f89165daeab20d80a
-#: discord.activity.Activity:22 discord.activity.Activity:28
-#: discord.activity.Activity:40 discord.activity.Activity:46
-#: discord.activity.CustomActivity:27 discord.activity.CustomActivity:39
-#: discord.activity.Streaming:29 discord.activity.Streaming:35
-#: discord.activity.Streaming:41 discord.activity.Streaming:49
+#: 3963803bd3104b1f89165daeab20d80a discord.activity.Activity:22
+#: discord.activity.Activity:28 discord.activity.Activity:40
+#: discord.activity.Activity:46 discord.activity.CustomActivity:27
+#: discord.activity.CustomActivity:39 discord.activity.Streaming:29
+#: discord.activity.Streaming:35 discord.activity.Streaming:41
+#: discord.activity.Streaming:49 discord.components.MediaGalleryItem:17
 #: discord.components.SelectOption:27 discord.file.File:30 discord.file.File:36
 #: of
 msgid "Optional[:class:`str`]"
 msgstr ""
 
-#: 5c9b407cffa7482394bcebc4fc8cd412 discord.components.SelectOption:31
-#: e588f36be137417db4a513b55beb6351 of
+#: 5c9b407cffa7482394bcebc4fc8cd412 discord.components.SelectOption:31 of
 msgid "Whether this option is selected by default."
 msgstr ""
 
@@ -353,8 +354,8 @@ msgstr ""
 #: discord.MessageFlags.suppress_notifications:7 discord.MessageFlags.urgent:5
 #: discord.Permissions.add_reactions:3 discord.Permissions.administrator:5
 #: discord.Permissions.attach_files:3 discord.Permissions.ban_members:3
-#: discord.Permissions.change_nickname:3 discord.Permissions.connect:3
-#: discord.Permissions.create_instant_invite:3
+#: discord.Permissions.bypass_slowmode:5 discord.Permissions.change_nickname:3
+#: discord.Permissions.connect:3 discord.Permissions.create_instant_invite:3
 #: discord.Permissions.create_private_threads:5
 #: discord.Permissions.create_public_threads:5
 #: discord.Permissions.deafen_members:3 discord.Permissions.embed_links:3
@@ -368,7 +369,8 @@ msgstr ""
 #: discord.Permissions.manage_threads:5 discord.Permissions.manage_webhooks:3
 #: discord.Permissions.mention_everyone:3
 #: discord.Permissions.moderate_members:5 discord.Permissions.move_members:3
-#: discord.Permissions.mute_members:3 discord.Permissions.priority_speaker:3
+#: discord.Permissions.mute_members:3 discord.Permissions.pin_messages:5
+#: discord.Permissions.priority_speaker:3
 #: discord.Permissions.read_message_history:3
 #: discord.Permissions.read_messages:5 discord.Permissions.request_to_speak:5
 #: discord.Permissions.send_messages:3
@@ -419,30 +421,187 @@ msgstr ""
 msgid ":class:`bool`"
 msgstr ""
 
-#: 804bbf20fe6c4418a6f03780ed6e383d 83b108a10aa446cdb6eebaab379b4174
-#: discord.SelectOption.emoji:1 of
+#: 83b108a10aa446cdb6eebaab379b4174 discord.SelectOption.emoji:1 of
 msgid "The emoji of the option, if available."
 msgstr ""
 
-#: 7356eae6e80c48cabddc24248342e844 discord.components.UnfurledMediaItem:1 of
-msgid "Represents an Unfurled Media Item used in Components V2."
+#: 0d8b907771e64532af760f81f51e6054 discord.components.SelectDefaultValue:1 of
+msgid "Represents a :class:`discord.SelectMenu`\\s default value."
 msgstr ""
 
-#: 815a8f8542054043b415faafbdbedde0 discord.components.UnfurledMediaItem:3 of
+#: discord.components.SelectDefaultValue:3 ed11ba2e8fdf41c5913bd62a1219d38b of
+msgid ""
+"This is only applicable to selects of type other than "
+":attr:`ComponentType.string_select`."
+msgstr ""
+
+#: 94e1c27077194521b4f136371fed68b5 discord.components.SelectDefaultValue:8 of
+msgid ""
+"The model type this select default value is based of.  Below, is a table "
+"defining the model instance type and the default value type it will be "
+"mapped:  "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | Model Type                        | Default Value Type"
+"                                                       | "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.User`             | "
+":attr:`discord.SelectDefaultValueType.user`                              "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.Member`           | "
+":attr:`discord.SelectDefaultValueType.user`                              "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.Role`             | "
+":attr:`discord.SelectDefaultValueType.role`                              "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.abc.GuildChannel` | "
+":attr:`discord.SelectDefaultValueType.channel`                           "
+"| "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+" | :class:`discord.Object`           | depending on "
+":attr:`discord.Object.type`, it will be mapped to any above | "
+"+-----------------------------------+--------------------------------------------------------------------------+"
+"  If you pass a model that is not defined in the table, ``TypeError`` "
+"will be raised.  .. note::      The :class:`discord.abc.GuildChannel` "
+"protocol includes :class:`discord.TextChannel`, "
+":class:`discord.VoiceChannel`, :class:`discord.StageChannel`,     "
+":class:`discord.ForumChannel`, :class:`discord.Thread`, "
+":class:`discord.MediaChannel`. This list is not exhaustive, and is bound "
+"to change     based of the new channel types Discord adds."
+msgstr ""
+
+#: 5113353d66b34c79ac9f94b266959aee discord.components.SelectDefaultValue:8 of
+msgid "The model type this select default value is based of."
+msgstr ""
+
+#: c1818bd3775f4614afa0d1d7a1dd8033 discord.components.SelectDefaultValue:10 of
+msgid ""
+"Below, is a table defining the model instance type and the default value "
+"type it will be mapped:"
+msgstr ""
+
+#: 06117d4991d64482ab3bd74ddd051afa discord.components.SelectDefaultValue:13 of
+msgid "Model Type"
+msgstr ""
+
+#: 31a6a31f1e2a4f6c89f8e09d116e13b5 discord.components.SelectDefaultValue:13 of
+msgid "Default Value Type"
+msgstr ""
+
+#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.components.SelectDefaultValue:15 of
+msgid ":class:`discord.User`"
+msgstr ""
+
+#: b9c00d207ff344a785797d438b29557e bf81f532f3c4408c953bc791766b1012
+#: discord.components.SelectDefaultValue:15
+#: discord.components.SelectDefaultValue:17 of
+msgid ":attr:`discord.SelectDefaultValueType.user`"
+msgstr ""
+
+#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.components.SelectDefaultValue:17 of
+msgid ":class:`discord.Member`"
+msgstr ""
+
+#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.components.SelectDefaultValue:19 of
+msgid ":class:`discord.Role`"
+msgstr ""
+
+#: 31e15f285fb24881815932b4cb687e2a discord.components.SelectDefaultValue:19 of
+msgid ":attr:`discord.SelectDefaultValueType.role`"
+msgstr ""
+
+#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.components.SelectDefaultValue:21 of
+msgid ":class:`discord.abc.GuildChannel`"
+msgstr ""
+
+#: discord.components.SelectDefaultValue:21 ed9fa3ec682643c789ac6e36d4ff4355 of
+msgid ":attr:`discord.SelectDefaultValueType.channel`"
+msgstr ""
+
+#: 5ed3d2c88b4d4d4a96d200c1bf406751 discord.components.SelectDefaultValue:23 of
+msgid ":class:`discord.Object`"
+msgstr ""
+
+#: 02a58db1eab5463baa142133b71249de discord.components.SelectDefaultValue:23 of
+msgid "depending on :attr:`discord.Object.type`, it will be mapped to any above"
+msgstr ""
+
+#: 1b458b2962d8427cae5c71b01efb2634 discord.components.SelectDefaultValue:26 of
+msgid ""
+"If you pass a model that is not defined in the table, ``TypeError`` will "
+"be raised."
+msgstr ""
+
+#: 8abbf5dec0e64482a1ae289de2c80164 discord.components.SelectDefaultValue:30 of
+msgid ""
+"The :class:`discord.abc.GuildChannel` protocol includes "
+":class:`discord.TextChannel`, :class:`discord.VoiceChannel`, "
+":class:`discord.StageChannel`, :class:`discord.ForumChannel`, "
+":class:`discord.Thread`, :class:`discord.MediaChannel`. This list is not "
+"exhaustive, and is bound to change based of the new channel types Discord"
+" adds."
+msgstr ""
+
+#: 063facd6e7d64b6f93f3cf83c02270c3 discord.components.SelectDefaultValue:35 of
+msgid "The ID of the default value. This cannot be used with ``object``."
+msgstr ""
+
+#: a2fcc50995664b789e7912d698d3672b discord.components.SelectDefaultValue:38 of
+msgid "The default value type. This cannot be used with ``object``."
+msgstr ""
+
+#: ../../api/data_classes.rst 564b493c7da74b0a8b0026dc729e05e4
+#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters of
+msgid "Raises"
+msgstr ""
+
+#: 2ecc679ce1c7422699f8e90e5f670aa7 discord.components.SelectDefaultValue:41 of
+msgid ""
+"You did not provide any parameter, you provided all parameters, or you "
+"provided ``id`` but not ``type``."
+msgstr ""
+
+#: discord.components.MediaGalleryItem:1 f484eca39a0b48beb3dbe96fe7018043 of
+msgid "Represents an item used in the :class:`MediaGallery` component."
+msgstr ""
+
+#: 815a8f8542054043b415faafbdbedde0 discord.components.MediaGalleryItem:3
+#: discord.components.UnfurledMediaItem:3 of
 msgid ""
 "This is used as an underlying component for other media-based components "
 "such as :class:`Thumbnail`, :class:`FileComponent`, and "
 ":class:`MediaGalleryItem`."
 msgstr ""
 
+#: 092b6ba6ce244e53b6ce5f7e4e9500c1 discord.components.MediaGalleryItem:9 of
+msgid ""
+"The URL of this gallery item. This can either be an arbitrary URL or an "
+"``attachment://`` URL to work with local files."
+msgstr ""
+
+#: 0a5e30d5b723463f96cc62cf934ffa34 discord.components.MediaGalleryItem:15 of
+msgid "The gallery item's description, up to 1024 characters."
+msgstr ""
+
+#: 4bf08b434a2d4714995daee269da72e6 discord.components.MediaGalleryItem:21 of
+msgid "Whether the gallery item is a spoiler."
+msgstr ""
+
+#: cab588e9a2574d4583001470cbd6d49d discord.components.MediaGalleryItem:23
+#: discord.poll.Poll.has_ended:4 of
+msgid "Optional[:class:`bool`]"
+msgstr ""
+
+#: 7356eae6e80c48cabddc24248342e844 discord.components.UnfurledMediaItem:1 of
+msgid "Represents an Unfurled Media Item used in Components V2."
+msgstr ""
+
 #: 092b6ba6ce244e53b6ce5f7e4e9500c1 discord.components.UnfurledMediaItem:9 of
 msgid ""
 "The URL of this media item. This can either be an arbitrary URL or an "
 "``attachment://`` URL to work with local files."
-msgstr ""
-
-#: 5b063163bfaf4930af9d387ef066d6ec discord.UnfurledMediaItem.url:1 of
-msgid "Returns this media item's url."
 msgstr ""
 
 #: discord.flags.Intents:1 e2e452e939b041f88f583aded7ed5bad of
@@ -558,8 +717,7 @@ msgid "A factory method that creates a :class:`Intents` with everything enabled.
 msgstr ""
 
 #: ../../api/data_classes.rst 06117d4991d64482ab3bd74ddd051afa
-#: 4cec06d96aa540ca837c06faf1eda4aa discord.poll.Poll.add_answer
-#: discord.poll.PollAnswer.voters of
+#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters of
 msgid "Return type"
 msgstr ""
 
@@ -1672,12 +1830,12 @@ msgstr ""
 #: discord.permissions.Permissions.is_strict_superset:5
 #: discord.permissions.Permissions.is_subset:5
 #: discord.permissions.Permissions.is_superset:5
-#: discord.shard.ShardInfo.is_closed:4 of
+#: discord.shard.ShardInfo.is_closed:4
+#: discord.shard.ShardInfo.is_ws_ratelimited:9 of
 msgid ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
 msgstr ""
 
-#: 336386f348c2475b83c479b3376548af 7b6aba613fd1494aa813bfbe67e79186
-#: discord.message.Message.add_reaction:1
+#: 7b6aba613fd1494aa813bfbe67e79186 discord.message.Message.add_reaction:1
 #: discord.message.Message.clear_reaction:1
 #: discord.message.Message.clear_reactions:1 discord.message.Message.delete:1
 #: discord.message.Message.forward_to:1 discord.message.Message.pin:1
@@ -1700,9 +1858,9 @@ msgstr ""
 msgid "If the shard is already disconnected this does nothing."
 msgstr ""
 
-#: 2aeb0522710e4223920fd1c621bb6bb9 682dc42cdccd42f3a7f85235164dfb67
-#: discord.embeds.Embed.append_field:9 discord.embeds.Embed.clear_fields:4
-#: discord.embeds.Embed.remove_field:15 discord.message.Message.add_reaction:20
+#: 2aeb0522710e4223920fd1c621bb6bb9 discord.embeds.Embed.append_field:9
+#: discord.embeds.Embed.clear_fields:4 discord.embeds.Embed.remove_field:15
+#: discord.message.Message.add_reaction:20
 #: discord.message.Message.clear_reaction:20
 #: discord.message.Message.clear_reactions:11 discord.message.Message.delete:24
 #: discord.message.Message.pin:18 discord.message.Message.publish:14
@@ -1737,11 +1895,10 @@ msgstr ""
 #: of
 msgid ""
 "This can be useful to know when deciding whether you should query members"
-" using HTTP or via the gateway. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+" using HTTP or via the gateway."
 msgstr ""
 
-#: ../../api/data_classes.rst:50 e4e4b4653ed64e5bb6d330ca5bee9fe8
+#: ../../api/data_classes.rst:55 e4e4b4653ed64e5bb6d330ca5bee9fe8
 msgid "Message"
 msgstr ""
 
@@ -1789,20 +1946,23 @@ msgid ""
 "to ``True``."
 msgstr ""
 
-#: c44ec110894948148069a5bc458fe5b9 discord.mentions.AllowedMentions.all:1 of
+#: b8790ac5bab648788e3c6a7efe91a8c6 discord.mentions.AllowedMentions.all:1 of
 msgid ""
 "A factory method that returns a :class:`AllowedMentions` with all fields "
-"explicitly set to ``True`` :rtype: "
+"explicitly set to ``True``"
+msgstr ""
+
+#: 1fba130190d641938864033a7f9fa35d discord.mentions.AllowedMentions.all:6
+#: discord.mentions.AllowedMentions.none:6 of
+msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
 " \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
 msgstr ""
 
-#: d9a6fb9e04ea469881c25941627a7172 discord.mentions.AllowedMentions.none:1 of
+#: 6e9068a2c344478ba5bb4ee0f556045a discord.mentions.AllowedMentions.none:1 of
 msgid ""
 "A factory method that returns a :class:`AllowedMentions` with all fields "
-"set to ``False`` :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
+"set to ``False``"
 msgstr ""
 
 #: 7356eae6e80c48cabddc24248342e844 discord.message.MessageReference:1 of
@@ -2034,11 +2194,6 @@ msgstr ""
 msgid "The reason for deleting the message. Shows up on the audit log."
 msgstr ""
 
-#: ../../api/data_classes.rst 564b493c7da74b0a8b0026dc729e05e4
-#: discord.poll.Poll.add_answer discord.poll.PollAnswer.voters of
-msgid "Raises"
-msgstr ""
-
 #: b41a10938385430fbde90c12f035c739 discord.message.Message.delete:20 of
 msgid "You do not have proper permissions to delete the message."
 msgstr ""
@@ -2082,8 +2237,8 @@ msgstr ""
 #: daa1cb3817894aabbb0ea1a18b81421d discord.message.Message.pin:5
 #: discord.message.Message.unpin:5 of
 msgid ""
-"You must have the :attr:`~Permissions.manage_messages` permission to do "
-"this in a non-private channel context."
+"You must have the :attr:`~Permissions.pin_messages` permission to do this"
+" in a non-private channel context."
 msgstr ""
 
 #: 689db2ebc4e949cbad070710a8741095 discord.message.Message.pin:9 of
@@ -2524,7 +2679,7 @@ msgstr ""
 msgid "Whether the attachment is a spoiler."
 msgstr ""
 
-#: ../../api/data_classes.rst:78 5672173d06bd46829384d84e99bed65e
+#: ../../api/data_classes.rst:83 5672173d06bd46829384d84e99bed65e
 msgid "Embed"
 msgstr ""
 
@@ -3047,7 +3202,7 @@ msgstr ""
 msgid "The URL of the provider."
 msgstr ""
 
-#: ../../api/data_classes.rst:112 646f8ad2d43d4dce987005a50de9a4cf
+#: ../../api/data_classes.rst:117 646f8ad2d43d4dce987005a50de9a4cf
 msgid "Poll"
 msgstr ""
 
@@ -3104,7 +3259,7 @@ msgstr ""
 msgid "Optional[:class:`PollResults`]"
 msgstr ""
 
-#: ../../docstring 095344d640ad4e3686d6f8d4fa1b42a0 discord.Poll.expiry:1 of
+#: 095344d640ad4e3686d6f8d4fa1b42a0 discord.Poll.expiry:1 of
 msgid ""
 "An aware datetime object that specifies the date and time in UTC when the"
 " poll will end."
@@ -3118,10 +3273,6 @@ msgstr ""
 
 #: 307037856f4043509e0e2ea6ab1e1788 discord.poll.Poll.has_ended:3 of
 msgid "Returns a boolean if :attr:`results` is available, otherwise ``None``."
-msgstr ""
-
-#: cab588e9a2574d4583001470cbd6d49d discord.poll.Poll.has_ended:4 of
-msgid "Optional[:class:`bool`]"
 msgstr ""
 
 #: b6b03dc921914dbe85dc2d2be6b6cb5c discord.poll.Poll.total_votes:1 of
@@ -3340,7 +3491,7 @@ msgstr ""
 msgid "The total number of votes on this poll."
 msgstr ""
 
-#: ../../api/data_classes.rst:142 43ab35acc0f9434b8e53132a073d8d22
+#: ../../api/data_classes.rst:147 43ab35acc0f9434b8e53132a073d8d22
 msgid "Flags"
 msgstr ""
 
@@ -3946,7 +4097,7 @@ msgid ""
 ":class:`~discord.OnboardingPrompt`."
 msgstr ""
 
-#: ../../api/data_classes.rst:195 4d2438b9745240cd93782603979ee00b
+#: ../../api/data_classes.rst:200 4d2438b9745240cd93782603979ee00b
 msgid "Colour"
 msgstr ""
 
@@ -4012,20 +4163,23 @@ msgid "Constructs a :class:`Colour` from an RGB tuple."
 msgstr ""
 
 #: a0f8ca655ace4281904460b701a12e9d discord.colour.Colour.blue:4
-#: discord.colour.Colour.blurple:4 discord.colour.Colour.dark_blue:4
+#: discord.colour.Colour.blurple:4 discord.colour.Colour.brand_green:6
+#: discord.colour.Colour.brand_red:6 discord.colour.Colour.dark_blue:4
 #: discord.colour.Colour.dark_gold:4 discord.colour.Colour.dark_green:4
 #: discord.colour.Colour.dark_grey:4 discord.colour.Colour.dark_magenta:4
 #: discord.colour.Colour.dark_orange:4 discord.colour.Colour.dark_purple:4
 #: discord.colour.Colour.dark_red:4 discord.colour.Colour.dark_teal:4
-#: discord.colour.Colour.darker_grey:4 discord.colour.Colour.default:4
-#: discord.colour.Colour.embed_background:14 discord.colour.Colour.from_hsv:9
-#: discord.colour.Colour.from_rgb:9 discord.colour.Colour.gold:4
+#: discord.colour.Colour.dark_theme:7 discord.colour.Colour.darker_grey:4
+#: discord.colour.Colour.default:4 discord.colour.Colour.embed_background:14
+#: discord.colour.Colour.from_hsv:9 discord.colour.Colour.from_rgb:9
+#: discord.colour.Colour.fuchsia:6 discord.colour.Colour.gold:4
 #: discord.colour.Colour.green:4 discord.colour.Colour.greyple:4
 #: discord.colour.Colour.light_grey:4 discord.colour.Colour.lighter_grey:4
-#: discord.colour.Colour.magenta:4 discord.colour.Colour.og_blurple:4
-#: discord.colour.Colour.orange:4 discord.colour.Colour.purple:4
-#: discord.colour.Colour.random:16 discord.colour.Colour.red:4
-#: discord.colour.Colour.teal:4 of
+#: discord.colour.Colour.magenta:4 discord.colour.Colour.nitro_pink:6
+#: discord.colour.Colour.og_blurple:4 discord.colour.Colour.orange:4
+#: discord.colour.Colour.purple:4 discord.colour.Colour.random:16
+#: discord.colour.Colour.red:4 discord.colour.Colour.teal:4
+#: discord.colour.Colour.yellow:6 of
 msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
 " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
@@ -4073,12 +4227,10 @@ msgid ""
 "``0x11806a``."
 msgstr ""
 
-#: 2809c53d29824df69166201321bc9fec discord.colour.Colour.brand_green:1 of
+#: b3537fcb5c5e400faa8fa6d3adc61e0f discord.colour.Colour.brand_green:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
-"``0x57F287``. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+"``0x57F287``."
 msgstr ""
 
 #: 6cc5d6aadbb64f25b32f9664d58ed82e discord.colour.Colour.green:1 of
@@ -4153,12 +4305,10 @@ msgid ""
 "``0xa84300``."
 msgstr ""
 
-#: bf01a50532b5404dae7505a55a88a477 discord.colour.Colour.brand_red:1 of
+#: 4ac07d277e394779972f7a7047b96483 discord.colour.Colour.brand_red:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
-"``0xED4245``. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+"``0xED4245``."
 msgstr ""
 
 #: 4eeea91e793a4fc19914d97c20797aab discord.colour.Colour.red:1 of
@@ -4218,34 +4368,25 @@ msgstr ""
 #: discord.colour.Colour.dark_theme:1 ea6a540eff9141a58a4abebcb923706a of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
-"``0x36393F``. This will appear transparent on Discord's dark theme. "
-":rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+"``0x36393F``. This will appear transparent on Discord's dark theme."
 msgstr ""
 
-#: b662095d005e4d848cdbb33fbcc79457 discord.colour.Colour.fuchsia:1 of
+#: discord.colour.Colour.fuchsia:1 ffc576a6a0b647c994a91fc1ab89147f of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
-"``0xEB459E``. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+"``0xEB459E``."
 msgstr ""
 
-#: d041d59442644a0597c6274311bc6482 discord.colour.Colour.yellow:1 of
+#: a3ddc438b7fb47a8892de380f8a38f52 discord.colour.Colour.yellow:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
-"``0xFEE75C``. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+"``0xFEE75C``."
 msgstr ""
 
-#: 9082218ea3464ffb99c07f1fddb70e17 discord.colour.Colour.nitro_pink:1 of
+#: 47a39aa405ea4c29a2c3f3987ce0d07e discord.colour.Colour.nitro_pink:1 of
 msgid ""
 "A factory method that returns a :class:`Colour` with a value of "
-"``0xf47fff``. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+"``0xf47fff``."
 msgstr ""
 
 #: 1a28ea6d58c74dc396e00736389a7fe5 discord.colour.Colour.embed_background:1 of
@@ -4273,7 +4414,7 @@ msgid ""
 "\"amoled\"."
 msgstr ""
 
-#: ../../api/data_classes.rst:203 9905f7d99ac846c088e3402bdc9a380a
+#: ../../api/data_classes.rst:208 9905f7d99ac846c088e3402bdc9a380a
 msgid "Activity"
 msgstr ""
 
@@ -4657,7 +4798,7 @@ msgstr ""
 msgid "It always returns :attr:`ActivityType.custom`."
 msgstr ""
 
-#: ../../api/data_classes.rst:231 60d410b462c140fd9d5d5d85a0ca55ef
+#: ../../api/data_classes.rst:236 60d410b462c140fd9d5d5d85a0ca55ef
 msgid "Permissions"
 msgstr ""
 
@@ -4771,8 +4912,15 @@ msgid ""
 " set to ``False``."
 msgstr ""
 
-#: 1fba130190d641938864033a7f9fa35d discord.permissions.Permissions.all:5
+#: 1fba130190d641938864033a7f9fa35d discord.permissions.Permissions.advanced:7
+#: discord.permissions.Permissions.all:5
+#: discord.permissions.Permissions.all_channel:25
+#: discord.permissions.Permissions.general:13
+#: discord.permissions.Permissions.membership:7
 #: discord.permissions.Permissions.none:5
+#: discord.permissions.Permissions.stage:7
+#: discord.permissions.Permissions.stage_moderator:7
+#: discord.permissions.Permissions.text:13
 #: discord.permissions.Permissions.voice:5 of
 msgid ""
 ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
@@ -4790,70 +4938,68 @@ msgstr ""
 msgid ""
 "A :class:`Permissions` with all channel-specific permissions set to "
 "``True`` and the guild-specific ones set to ``False``. The guild-specific"
-" permissions are currently: :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+" permissions are currently:"
 msgstr ""
 
 #: 3d33edd78b4a44af96d1174e80fe38df
-#: discord.permissions.Permissions.all_channel:7 of
+#: discord.permissions.Permissions.all_channel:5 of
 msgid ":attr:`manage_emojis`"
 msgstr ""
 
 #: 67c5f2685a8140feb38876faa140bf2a
-#: discord.permissions.Permissions.all_channel:8 of
+#: discord.permissions.Permissions.all_channel:6 of
 msgid ":attr:`view_audit_log`"
 msgstr ""
 
-#: discord.permissions.Permissions.all_channel:9
+#: discord.permissions.Permissions.all_channel:7
 #: eb56391df8e94861af5a6a8409c17d6f of
 msgid ":attr:`view_guild_insights`"
 msgstr ""
 
 #: 9233959505d54774aefa37968742a69c
-#: discord.permissions.Permissions.all_channel:10 of
+#: discord.permissions.Permissions.all_channel:8 of
 msgid ":attr:`view_creator_monetization_analytics`"
 msgstr ""
 
 #: 7b554c4be8944c03a6ef76c5b73eede5
-#: discord.permissions.Permissions.all_channel:11 of
+#: discord.permissions.Permissions.all_channel:9 of
 msgid ":attr:`manage_guild`"
 msgstr ""
 
 #: 7f33532c524d48eeb208f2f316ac7879
-#: discord.permissions.Permissions.all_channel:12 of
+#: discord.permissions.Permissions.all_channel:10 of
 msgid ":attr:`change_nickname`"
 msgstr ""
 
 #: 606ad5d3e5084e568298891c3b0588e7
-#: discord.permissions.Permissions.all_channel:13 of
+#: discord.permissions.Permissions.all_channel:11 of
 msgid ":attr:`manage_nicknames`"
 msgstr ""
 
 #: 48fc50f3db1a4049aa6ed259c0016e20
-#: discord.permissions.Permissions.all_channel:14 of
+#: discord.permissions.Permissions.all_channel:12 of
 msgid ":attr:`kick_members`"
 msgstr ""
 
-#: discord.permissions.Permissions.all_channel:15
+#: discord.permissions.Permissions.all_channel:13
 #: e7d64bc06aef4cc7837d72e3051db957 of
 msgid ":attr:`ban_members`"
 msgstr ""
 
 #: c502768910914af6a4de9d4bbf12a158
-#: discord.permissions.Permissions.all_channel:16 of
+#: discord.permissions.Permissions.all_channel:14 of
 msgid ":attr:`administrator`"
 msgstr ""
 
 #: 58e62e0ef9144695b99159ad964e9797
-#: discord.permissions.Permissions.all_channel:18 of
+#: discord.permissions.Permissions.all_channel:16 of
 msgid ""
 "Added :attr:`stream`, :attr:`priority_speaker` and "
 ":attr:`use_slash_commands` permissions."
 msgstr ""
 
 #: 1ac70319723b451d9c8b3252e52b6e79
-#: discord.permissions.Permissions.all_channel:21 of
+#: discord.permissions.Permissions.all_channel:19 of
 msgid ""
 "Added :attr:`create_public_threads`, :attr:`create_private_threads`, "
 ":attr:`manage_threads`, :attr:`use_external_stickers`, "
@@ -4861,16 +5007,14 @@ msgid ""
 "permissions."
 msgstr ""
 
-#: ba6992e7084e41a4ae1fb6437f90c395 discord.permissions.Permissions.general:1
+#: 7f71cb30e267401b9a2a1ff63f4884ab discord.permissions.Permissions.general:1
 #: of
 msgid ""
 "A factory method that creates a :class:`Permissions` with all \"General\""
-" permissions from the official Discord UI set to ``True``. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+" permissions from the official Discord UI set to ``True``."
 msgstr ""
 
-#: 150148bc2a3e43f7b18149bb6897ee01 discord.permissions.Permissions.general:6
+#: 150148bc2a3e43f7b18149bb6897ee01 discord.permissions.Permissions.general:4
 #: of
 msgid ""
 "Permission :attr:`read_messages` is now included in the general "
@@ -4880,36 +5024,31 @@ msgid ""
 "of the general permissions."
 msgstr ""
 
-#: 58e62e0ef9144695b99159ad964e9797 discord.permissions.Permissions.general:11
+#: 58e62e0ef9144695b99159ad964e9797 discord.permissions.Permissions.general:9
 #: of
 msgid "Added :attr:`view_creator_monetization_analytics` permission."
 msgstr ""
 
-#: 454540f845e641959058f28badf30ad5
+#: 7f71cb30e267401b9a2a1ff63f4884ab
 #: discord.permissions.Permissions.membership:1 of
 msgid ""
 "A factory method that creates a :class:`Permissions` with all "
-"\"Membership\" permissions from the official Discord UI set to ``True``. "
-":rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+"\"Membership\" permissions from the official Discord UI set to ``True``."
 msgstr ""
 
-#: 289554b113484936916b5ee1ab0fd38e discord.permissions.Permissions.text:1 of
+#: 7f71cb30e267401b9a2a1ff63f4884ab discord.permissions.Permissions.text:1 of
 msgid ""
 "A factory method that creates a :class:`Permissions` with all \"Text\" "
-"permissions from the official Discord UI set to ``True``. :rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+"permissions from the official Discord UI set to ``True``."
 msgstr ""
 
-#: c4688cf0c33a417e92f5c0627d33378d discord.permissions.Permissions.text:6 of
+#: c4688cf0c33a417e92f5c0627d33378d discord.permissions.Permissions.text:4 of
 msgid ""
 "Permission :attr:`read_messages` is no longer part of the text "
 "permissions. Added :attr:`use_slash_commands` permission."
 msgstr ""
 
-#: 04d50f609e1643f79c50c26c2356c391 discord.permissions.Permissions.text:10 of
+#: 04d50f609e1643f79c50c26c2356c391 discord.permissions.Permissions.text:8 of
 msgid ""
 "Added :attr:`create_public_threads`, :attr:`create_private_threads`, "
 ":attr:`manage_threads`, :attr:`send_messages_in_threads` and "
@@ -4922,33 +5061,24 @@ msgid ""
 "permissions from the official Discord UI set to ``True``."
 msgstr ""
 
-#: a5f10e0b445a4afea2ac4f0bf2629b7a discord.permissions.Permissions.stage:1 of
+#: 7f71cb30e267401b9a2a1ff63f4884ab discord.permissions.Permissions.stage:1 of
 msgid ""
 "A factory method that creates a :class:`Permissions` with all \"Stage "
-"Channel\" permissions from the official Discord UI set to ``True``. "
-":rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+"Channel\" permissions from the official Discord UI set to ``True``."
 msgstr ""
 
-#: 5e21d8ef96414ceda6df2f9e5f577da1
+#: 7f71cb30e267401b9a2a1ff63f4884ab
 #: discord.permissions.Permissions.stage_moderator:1 of
 msgid ""
 "A factory method that creates a :class:`Permissions` with all \"Stage "
-"Moderator\" permissions from the official Discord UI set to ``True``. "
-":rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+"Moderator\" permissions from the official Discord UI set to ``True``."
 msgstr ""
 
-#: 6d2820f27e4e4332a814576db3003b76 discord.permissions.Permissions.advanced:1
+#: 7f71cb30e267401b9a2a1ff63f4884ab discord.permissions.Permissions.advanced:1
 #: of
 msgid ""
 "A factory method that creates a :class:`Permissions` with all "
-"\"Advanced\" permissions from the official Discord UI set to ``True``. "
-":rtype: "
-":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
-" \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+"\"Advanced\" permissions from the official Discord UI set to ``True``."
 msgstr ""
 
 #: 3cd8edc5bc9945299d62e81b1d2258bb discord.permissions.Permissions.update:1 of
@@ -5057,12 +5187,14 @@ msgstr ""
 
 #: ../../docstring 30ebd7d1308943ae874ed4dd75a44ba8
 #: discord.Permissions.manage_messages:1 of
-msgid "Returns ``True`` if a user can delete or pin messages in a text channel."
+msgid "Returns ``True`` if a user can delete messages in a text channel."
 msgstr ""
 
-#: ../../docstring 07e3d2dc854b48da9ed38f4648f6a7bf
+#: ../../docstring 89e2f390c3b448c686b6693767698924
 #: discord.Permissions.manage_messages:5 of
-msgid "Note that there are currently no ways to edit other people's messages."
+msgid ""
+"Starting from January 12th 2026, this will no longer grant the ability to"
+" pin/unpin messages. Use :attr:`pin_messages` instead."
 msgstr ""
 
 #: ../../docstring c0be8484ebc040b98fb0939998361c92
@@ -5085,8 +5217,8 @@ msgstr ""
 #: ../../docstring dd01266c445141a097c673b102981c4d
 #: discord.Permissions.mention_everyone:1 of
 msgid ""
-"Returns ``True`` if a user's @everyone or @here will mention everyone in "
-"the text channel."
+"Returns ``True`` if a user's ``@everyone``, ``@here`` or role mentions "
+"will mention in the text channel."
 msgstr ""
 
 #: ../../docstring 2651f553500e45a693e270f7c2aeb8c3
@@ -5287,6 +5419,16 @@ msgstr ""
 msgid "This only applies to apps that are also not installed to the guild."
 msgstr ""
 
+#: ../../docstring 21e49f2607d948d1aac14cf0bde7222d
+#: discord.Permissions.pin_messages:1 of
+msgid "Returns ``True`` if a member can pin/unpin messages."
+msgstr ""
+
+#: ../../docstring daaadff474a3483883ac2174fe2530b1
+#: discord.Permissions.bypass_slowmode:1 of
+msgid "Returns ``True`` if a user can bypass slowmode."
+msgstr ""
+
 #: 53d4e7fb59b34e38b6649fc978006797 discord.permissions.PermissionOverwrite:1
 #: of
 msgid "A type that is used to represent a channel specific permission."
@@ -5375,7 +5517,7 @@ msgstr ""
 msgid "A list of key/value pairs to bulk update with."
 msgstr ""
 
-#: ../../api/data_classes.rst:244 9b867a9572674a3a8c8653b44c9f9b72
+#: ../../api/data_classes.rst:249 9b867a9572674a3a8c8653b44c9f9b72
 msgid "Application Role Connections"
 msgstr ""
 
@@ -5443,5 +5585,167 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Optional[Union[:class:`Emoji`, :class:`PartialEmoji`, :class:`str`]]"
+#~ msgstr ""
+
+#~ msgid "Returns this media item's url."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "This can be useful to know when"
+#~ " deciding whether you should query "
+#~ "members using HTTP or via the "
+#~ "gateway. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`bool\\``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`AllowedMentions` with all fields "
+#~ "explicitly set to ``True`` :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`AllowedMentions` with all fields set"
+#~ " to ``False`` :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`A\\`\\`\\, bound\\= AllowedMentions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You must have the "
+#~ ":attr:`~Permissions.manage_messages` permission to "
+#~ "do this in a non-private channel"
+#~ " context."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`Colour` with a value of "
+#~ "``0x57F287``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`Colour` with a value of "
+#~ "``0xED4245``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`Colour` with a value of "
+#~ "``0x36393F``. This will appear transparent "
+#~ "on Discord's dark theme. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`Colour` with a value of "
+#~ "``0xEB459E``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`Colour` with a value of "
+#~ "``0xFEE75C``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that returns a "
+#~ ":class:`Colour` with a value of "
+#~ "``0xf47fff``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`CT\\`\\`\\, bound\\= Colour\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A :class:`Permissions` with all channel-"
+#~ "specific permissions set to ``True`` and"
+#~ " the guild-specific ones set to "
+#~ "``False``. The guild-specific permissions "
+#~ "are currently: :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that creates a "
+#~ ":class:`Permissions` with all \"General\" "
+#~ "permissions from the official Discord UI"
+#~ " set to ``True``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that creates a "
+#~ ":class:`Permissions` with all \"Membership\" "
+#~ "permissions from the official Discord UI"
+#~ " set to ``True``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that creates a "
+#~ ":class:`Permissions` with all \"Text\" "
+#~ "permissions from the official Discord UI"
+#~ " set to ``True``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that creates a "
+#~ ":class:`Permissions` with all \"Stage "
+#~ "Channel\" permissions from the official "
+#~ "Discord UI set to ``True``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that creates a "
+#~ ":class:`Permissions` with all \"Stage "
+#~ "Moderator\" permissions from the official "
+#~ "Discord UI set to ``True``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "A factory method that creates a "
+#~ ":class:`Permissions` with all \"Advanced\" "
+#~ "permissions from the official Discord UI"
+#~ " set to ``True``. :rtype: "
+#~ ":sphinx_autodoc_typehints_type:`\\:py\\:class\\:\\`\\~typing.TypeVar\\`\\\\"
+#~ " \\\\\\(\\`\\`P\\`\\`\\, bound\\= Permissions\\)`"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Returns ``True`` if a user can "
+#~ "delete or pin messages in a text"
+#~ " channel."
+#~ msgstr ""
+
+#~ msgid "Note that there are currently no ways to edit other people's messages."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Returns ``True`` if a user's @everyone"
+#~ " or @here will mention everyone in"
+#~ " the text channel."
 #~ msgstr ""
 
