@@ -50,6 +50,8 @@ These changes are available on the `master` branch, but have not yet been releas
   fire. ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
 - Fixed an error when using methods from other classes regarding option autocompletes.
   ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
+- Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
+  ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
 
 ### Removed
 
