@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools>=62.6,<=80.9.0",
+    "setuptools>=77.0.3,<=80.9.0",
     "setuptools-scm>=9.2,<=9.2.2",
 ]
 build-backend = "setuptools.build_meta"
@@ -8,10 +8,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "py-cord"
 authors = [
-    {name = "Pycord Development"}
+    { name = "Pycord Development" }
 ]
 description = "A Python wrapper for the Discord API"
-readme = {content-type = "text/x-rst", file = "README.rst"}
+readme = { content-type = "text/x-rst", file = "README.rst" }
 requires-python = ">=3.10, <3.14"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -56,13 +56,13 @@ packages = [
 ]
 
 [tool.setuptools.dynamic]
-dependencies = {file = "requirements/_.txt"}
-readme = {content-type = "text/x-rst", file = "README.rst"}
+dependencies = { file = "requirements/_.txt" }
+readme = { content-type = "text/x-rst", file = "README.rst" }
 
 [tool.setuptools.dynamic.optional-dependencies]
-docs = {file = "requirements/docs.txt"}
-speed = {file = "requirements/speed.txt"}
-voice = {file = "requirements/voice.txt"}
+docs = { file = "requirements/docs.txt" }
+speed = { file = "requirements/speed.txt" }
+voice = { file = "requirements/voice.txt" }
 
 [tool.setuptools_scm]
 

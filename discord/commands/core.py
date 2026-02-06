@@ -1121,7 +1121,7 @@ class SlashCommand(ApplicationCommand):
                 ctx.value = op.get("value")
                 ctx.options = values
 
-                if option.autocomplete._is_instance_method:
+                if option._autocomplete_is_instance_method:
                     instance = getattr(option.autocomplete, "__self__", ctx.cog)
                     result = option.autocomplete(instance, ctx)
                 else:
