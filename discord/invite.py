@@ -391,7 +391,9 @@ class InviteTargetUsers:
         """
         return [
             int(line.split(",")[0])
-            for line in (await self.read()).decode().splitlines()
+            for line in (await self.read())
+            .decode()
+            .splitlines()[1:]  # first line is standardized "user_ids" header
         ]
 
     async def edit(self, target_users_file: File) -> None:
