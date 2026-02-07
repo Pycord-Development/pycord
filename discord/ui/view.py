@@ -59,8 +59,8 @@ from ..components import TextDisplay as TextDisplayComponent
 from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..enums import ChannelType, SeparatorSpacingSize
-from ..utils import find
 from ..errors import Forbidden, NotFound
+from ..utils import find
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
 
