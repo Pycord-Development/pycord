@@ -553,6 +553,8 @@ class Invite(Hashable):
     roles: List[Union[:class:`Role`, :class:`Object`]]
         The roles that will be assigned to a user that joins via this invite.
 
+        When using `Client.fetch_invite`, these may be partial role objects and have nullish attributes.
+
         .. versionadded:: 2.8
     """
 
