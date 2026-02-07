@@ -916,12 +916,6 @@ class Paginator(discord.ui.View):
         for item in custom_view.children:
             self.add_item(item)
 
-    def clear_items(self) -> Self:
-        # Necessary override due to behavior of Item.parent, see #3057
-        self.children.clear()
-        self._View__weights.clear()
-        return self
-
     def get_page_group_content(self, page_group: PageGroup) -> list[Page]:
         """Returns a converted list of `Page` objects for the given page group based on the content of its pages."""
         return [self.get_page_content(page) for page in page_group.pages]
