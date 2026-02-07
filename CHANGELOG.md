@@ -31,6 +31,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 - Fixed core issues with modifying items in `Container` and `Section`
   ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
+- Fixed an issue where views raised unnecessary errors on timeout.
+  ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
   was cached. ([#3038](https://github.com/Pycord-Development/pycord/pull/3038))
 - Fixed an issue with downloading animated emojis which were originally uploaded as WebP
@@ -53,6 +55,10 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3061](https://github.com/Pycord-Development/pycord/pull/3061))
 - Fixed the update of a user's `primary_guild` to now cause an `on_user_update` event to
   fire. ([#3077](https://github.com/Pycord-Development/pycord/pull/3077))
+- Fixed an error when using methods from other classes regarding option autocompletes.
+  ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
+- Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
+  ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
 
 ### Removed
 

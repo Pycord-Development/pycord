@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import os
 import sys
 import time
@@ -59,6 +60,7 @@ from ..components import Thumbnail as ThumbnailComponent
 from ..components import _component_factory
 from ..enums import ChannelType, SeparatorSpacingSize
 from ..utils import find
+from ..errors import Forbidden, NotFound
 from .core import ItemInterface
 from .item import ItemCallbackType, ViewItem
 
@@ -100,7 +102,6 @@ def _walk_all_components_v2(components: list[Component]) -> Iterator[Component]:
 
 
 def _component_to_item(component: Component) -> ViewItem[V]:
-
     if isinstance(component, ButtonComponent):
         from .button import Button
 
@@ -332,9 +333,10 @@ class BaseView(ItemInterface):
                 message = self.message
 
             if message:
-                m = await message.edit(view=self)
-                if m:
-                    self._message = m
+                with contextlib.suppress(NotFound, Forbidden):
+                    m = await message.edit(view=self)
+                    if m:
+                        self._message = m
 
     async def on_check_failure(self, interaction: Interaction) -> None:
         """|coro|
@@ -703,7 +705,7 @@ class View(BaseView):
 
         if item.underlying.is_v2():
             raise ValueError(
-                f"cannot use V2 components in View. Use DesignerView instead."
+                "cannot use V2 components in View. Use DesignerView instead."
             )
         if isinstance(item.underlying, ActionRowComponent):
             for i in item.children:
@@ -740,7 +742,9 @@ class View(BaseView):
     def refresh(self, components: list[Component]):
         # This is pretty hacky at the moment
         old_state: dict[tuple[int, str], ViewItem[V]] = {
-            (item.type.value, item.custom_id): item for item in self.children if item.is_dispatchable()  # type: ignore
+            (item.type.value, item.custom_id): item
+            for item in self.children
+            if item.is_dispatchable()  # type: ignore
         }
         children: list[ViewItem[V]] = [
             item for item in self.children if not item.is_dispatchable()
@@ -941,7 +945,7 @@ class DesignerView(BaseView):
 
         if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
-                f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
+                "cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)
@@ -1195,7 +1199,10 @@ class ViewStore:
         view._start_listening_from_store(self)
         for item in view.walk_children():
             if item.is_storable():
-                self._views[(item.type.value, message_id, item.custom_id)] = (view, item)  # type: ignore
+                self._views[(item.type.value, message_id, item.custom_id)] = (
+                    view,
+                    item,
+                )  # type: ignore
 
         if message_id is not None:
             self._synced_message_views[message_id] = view
