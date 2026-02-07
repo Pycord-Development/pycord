@@ -65,7 +65,7 @@ async def get_invite_target_users(ctx: discord.ApplicationContext, code: str):
         return await ctx.respond(
             "You can only get target users from invites from this server."
         )
-    user_ids = await invite.target_users.get_user_ids()
+    user_ids = await invite.target_users.fetch_user_ids()
     await ctx.respond(f"Target user IDs: {user_ids}")
 
 
