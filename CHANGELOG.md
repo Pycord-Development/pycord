@@ -12,9 +12,6 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
-- Added `replace_item` to `DesignerView`, `Section`, `Container`, `ActionRow`, &
-  `MediaGallery` ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
-- Added `.extension` attribute to emojis to get their file extension.
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added the ability to compare instances of `PrimaryGuild`.
