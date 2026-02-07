@@ -78,41 +78,65 @@ class Thumbnail(ViewItem[V]):
 
         media = UnfurledMediaItem(url)
 
-        self._underlying = ThumbnailComponent._raw_construct(
-            type=ComponentType.thumbnail,
+        self._underlying = self._generate_underlying(
             id=id,
             media=media,
             description=description,
             spoiler=spoiler,
         )
 
+    def _generate_underlying(
+        self,
+        media: UnfurledMediaItem | None = None,
+        description: str | None = None,
+        spoiler: bool | None = False,
+        id: int | None = None,
+    ) -> ThumbnailComponent:
+        super()._generate_underlying(ThumbnailComponent)
+        return ThumbnailComponent._raw_construct(
+            type=ComponentType.thumbnail,
+            id=id or self.id,
+            media=media or self.media,
+            description=description or self.description,
+            spoiler=spoiler if spoiler is not None else self.spoiler,
+        )
+
+    @property
+    def media(self) -> UnfurledMediaItem:
+        """The thumbnail's unerlying media item."""
+        return self.underlying.media
+
+    @media.setter
+    def media(self, value: UnfurledMediaItem) -> None:
+        self.underlying.media = value
+
     @property
     def url(self) -> str:
         """The URL of this thumbnail's media. This can either be an arbitrary URL or an ``attachment://`` URL."""
-        return self._underlying.media and self._underlying.media.url
+        return self.underlying.media and self.underlying.media.url
 
     @url.setter
     def url(self, value: str) -> None:
-        self._underlying.media.url = value
+        self.underlying.media.url = value
 
     @property
     def description(self) -> str | None:
         """The thumbnail's description, up to 1024 characters."""
-        return self._underlying.description
+        return self.underlying.description
 
     @description.setter
     def description(self, description: str | None) -> None:
-        self._underlying.description = description
+        self.underlying.description = description
 
     @property
     def spoiler(self) -> bool:
         """Whether the thumbnail has the spoiler overlay. Defaults to ``False``."""
 
-        return self._underlying.spoiler
+        return self.underlying.spoiler
 
     @spoiler.setter
     def spoiler(self, spoiler: bool) -> None:
-        self._underlying.spoiler = spoiler
+        self.underlying.spoiler = spoiler
 
     def to_component_dict(self) -> ThumbnailComponentPayload:
         return super().to_component_dict()
