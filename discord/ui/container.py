@@ -188,41 +188,11 @@ class Container(ViewItem[V]):
         try:
             if item.parent is self:
                 self.items.remove(item)
+                item.parent = None
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
-        item.parent = None
-        return self
-
-    def replace_item(
-        self, original_item: ViewItem | str | int, new_item: ViewItem
-    ) -> Self:
-        """Directly replace an item in this container.
-        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
-
-        Parameters
-        ----------
-        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
-            The item, item ``id``, or item ``custom_id`` to replace in the container.
-        new_item: :class:`ViewItem`
-            The new item to insert into the container.
-        """
-
-        if isinstance(original_item, (str, int)):
-            original_item = self.get_item(original_item)
-        if not original_item:
-            raise ValueError(f"Could not find original_item in container.")
-        try:
-            if original_item.parent is self:
-                i = self.items.index(original_item)
-                new_item.parent = self
-                self.items[i] = new_item
-                original_item.parent = None
-            else:
-                original_item.parent.replace_item(original_item, new_item)
-        except ValueError:
-            raise ValueError(f"Could not find original_item in container.")
         return self
 
     def get_item(self, id: str | int) -> ViewItem | None:

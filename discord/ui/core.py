@@ -116,68 +116,30 @@ class ItemInterface:
     def to_components(self) -> list[dict[str, Any]]:
         return [item.to_component_dict() for item in self.children]
 
-    def get_item(self, custom_id: str | int | None = None, **attrs: Any) -> Item | None:
-        r"""Gets an item from this structure. Roughly equal to `utils.get(self.children, **attrs)`.
+    def get_item(self, custom_id: str | int) -> Item | None:
+        """Gets an item from this structure. Roughly equal to `utils.get(self.children, ...)`.
         If an :class:`int` is provided, the item will be retrieved by ``id``, otherwise by  ``custom_id``.
         This method will also search nested items.
-        If ``attrs`` are provided, it will check them by logical AND as done in :func:`~utils.get`.
-        To have a nested attribute search (i.e. search by ``x.y``) then pass in ``x__y`` as the keyword argument.
-
-        Examples
-        ---------
-
-        Basic usage:
-
-        .. code-block:: python3
-
-            container = my_view.get(1234)
-
-        Attribute matching:
-
-        .. code-block:: python3
-
-            button = my_view.get(label='Click me!', style=discord.ButtonStyle.danger)
 
         Parameters
         ----------
-        custom_id: Optional[Union[:class:`str`, :class:`int`]]
+        custom_id: Union[:class:`str`, :class:`int`]
             The id of the item to get
-        \*\*attrs
-            Keyword arguments that denote attributes to search with.
 
         Returns
         -------
         Optional[:class:`Item`]
-            The item with the matching ``custom_id``, ``id``, or ``attrs`` if it exists.
+            The item with the matching ``custom_id`` or ``id`` if it exists.
         """
-        if not (custom_id or attrs):
+        if not custom_id:
             return None
-        child = None
-        if custom_id:
-            attr = "id" if isinstance(custom_id, int) else "custom_id"
-            child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
-            if not child:
-                for i in self.children:
-                    if hasattr(i, "get_item"):
-                        if child := i.get_item(custom_id):
-                            return child
-        elif attrs:
-            _all = all
-            attrget = attrgetter
+        attr = "id" if isinstance(custom_id, int) else "custom_id"
+        child = find(lambda i: getattr(i, attr, None) == custom_id, self.children)
+        if not child:
             for i in self.children:
-                converted = [
-                    (attrget(attr.replace("__", ".")), value)
-                    for attr, value in attrs.items()
-                ]
-                try:
-                    if _all(pred(i) == value for pred, value in converted):
-                        return i
-                except:
-                    pass
                 if hasattr(i, "get_item"):
-                    if child := i.get_item(custom_id, **attrs):
+                    if child := i.get_item(custom_id):
                         return child
-
         return child
 
     def add_item(self, item: Item) -> Self:

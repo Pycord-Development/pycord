@@ -181,42 +181,9 @@ class Section(ViewItem[V]):
                 self.accessory = None
             else:
                 self.items.remove(item)
+            item.parent = None
         except ValueError:
             pass
-        item.parent = None
-        return self
-
-    def replace_item(
-        self, original_item: ViewItem | str | int, new_item: ViewItem
-    ) -> Self:
-        """Directly replace an item in this section.
-        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
-
-        Parameters
-        ----------
-        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
-            The item, item ``id``, or item ``custom_id`` to replace in the section.
-        new_item: :class:`ViewItem`
-            The new item to insert into the section.
-        """
-
-        if not isinstance(new_item, ViewItem):
-            raise TypeError(f"expected ViewItem not {new_item.__class__!r}")
-
-        if isinstance(original_item, (str, int)):
-            original_item = self.get_item(original_item)
-        if not original_item:
-            raise ValueError(f"Could not find original_item in section.")
-        try:
-            if original_item is self.accessory:
-                self.accessory = new_item
-            else:
-                i = self.items.index(original_item)
-                self.items[i] = new_item
-            original_item.parent = None
-            new_item.parent = self
-        except ValueError:
-            raise ValueError(f"Could not find original_item in section.")
         return self
 
     def get_item(self, id: int | str) -> ViewItem | None:

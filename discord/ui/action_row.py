@@ -174,39 +174,9 @@ class ActionRow(ViewItem[V]):
             item = self.get_item(item)
         try:
             self.children.remove(item)
+            item.parent = None
         except ValueError:
             pass
-        item.parent = None
-        return self
-
-    def replace_item(
-        self, original_item: ViewItem | str | int, new_item: ViewItem
-    ) -> Self:
-        """Directly replace an item in this row.
-        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by  ``custom_id``.
-
-        Parameters
-        ----------
-        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
-            The item, item ``id``, or item ``custom_id`` to replace in the row.
-        new_item: :class:`ViewItem`
-            The new item to insert into the row.
-        """
-
-        if not isinstance(new_item, (Select, Button)):
-            raise TypeError(f"expected Select or Button, not {new_item.__class__!r}")
-
-        if isinstance(original_item, (str, int)):
-            original_item = self.get_item(original_item)
-        if not original_item:
-            raise ValueError(f"Could not find original_item in row.")
-        try:
-            i = self.children.index(original_item)
-            new_item.parent = self
-            self.children[i] = new_item
-            original_item.parent = None
-        except ValueError:
-            raise ValueError(f"Could not find original_item in row.")
         return self
 
     def get_item(self, id: str | int) -> ViewItem | None:

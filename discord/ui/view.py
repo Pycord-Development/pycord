@@ -271,11 +271,11 @@ class BaseView(ItemInterface):
         try:
             if item.parent is self:
                 self.children.remove(item)
+                item.parent = None
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def clear_items(self) -> Self:
@@ -894,37 +894,13 @@ class DesignerView(BaseView):
             view.add_item(_component_to_item(component))
         return view
 
-    def add_item(
-        self,
-        item: ViewItem[V],
-        *,
-        index: int | None = None,
-        before: ViewItem[V] | str | int | None = None,
-        after: ViewItem[V] | str | int | None = None,
-        into: ViewItem[V] | str | int | None = None,
-    ) -> Self:
+    def add_item(self, item: ViewItem[V]) -> Self:
         """Adds an item to the view.
-
-        .. warning::
-
-            You may specify only **one** of ``index``, ``before``, & ``after``. ``into`` will work together with those parameters.
-
-        .. versionchanged:: 2.7.1
-            Added new parameters ``index``, ``before``, ``after``, & ``into``.
 
         Parameters
         ----------
         item: :class:`ViewItem`
             The item to add to the view.
-        index: Optional[class:`int`]
-            Add the new item at the specific index of :attr:`children`. Same behavior as Python's :func:`~list.insert`.
-        before: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
-            Add the new item **before** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
-        after: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
-            Add the new item **after** the specified item. If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
-        into: Optional[Union[:class:`ViewItem`, :class:`int`, :class:`str`]]
-            Add the new item **into** the specified item. This would be equivalent to `into.add_item(item)`, where `into` is a :class:`ViewItem`.
-            If an :class:`int` is provided, the item will be detected by ``id``, otherwise by ``custom_id``.
 
         Raises
         ------
@@ -933,215 +909,14 @@ class DesignerView(BaseView):
         ValueError
             Maximum number of items has been exceeded (40)
         """
-        if (
-            before
-            and after
-            or before
-            and (index is not None)
-            or after
-            and (index is not None)
-        ):
-            raise ValueError("Can only specify one of before, after, and index.")
 
-        if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
+        if isinstance(item._underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
-                "cannot add Select or Button to DesignerView directly. Use ActionRow instead."
+                f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)
         return self
-
-    def replace_item(
-        self, original_item: ViewItem[V] | str | int, new_item: ViewItem[V]
-    ) -> Self:
-        """Directly replace an item in this view.
-        If an :class:`int` is provided, the item will be replaced by ``id``, otherwise by ``custom_id``.
-
-        Parameters
-        ----------
-        original_item: Union[:class:`ViewItem`, :class:`int`, :class:`str`]
-            The item, item ``id``, or item ``custom_id`` to replace in the view.
-        new_item: :class:`ViewItem`
-            The new item to insert into the view.
-
-        Returns
-        -------
-        :class:`BaseView`
-            The view instance.
-        """
-
-        if not isinstance(new_item, ViewItem):
-            raise TypeError(f"expected ViewItem not {new_item.__class__!r}")
-
-        if isinstance(original_item, (str, int)):
-            original_item = self.get_item(original_item)
-        if not original_item:
-            raise ValueError(f"Could not find original_item in view.")
-        try:
-            if original_item.parent is self:
-                i = self.children.index(original_item)
-                new_item.parent = self
-                self.children[i] = new_item
-                original_item.parent = None
-            else:
-                original_item.parent.replace_item(original_item, new_item)
-        except ValueError:
-            raise ValueError(f"Could not find original_item in view.")
-        return self
-
-    def add_row(
-        self,
-        *items: ViewItem[V],
-        id: int | None = None,
-    ) -> Self:
-        """Adds an :class:`ActionRow` to the view.
-
-        To append a pre-existing :class:`ActionRow`, use :meth:`add_item` instead.
-
-        Parameters
-        ----------
-        *items: Union[:class:`Button`, :class:`Select`]
-            The items this action row contains.
-        id: Optiona[:class:`int`]
-            The action row's ID.
-        """
-        from .action_row import ActionRow
-
-        row = ActionRow(*items, id=id)
-
-        return self.add_item(row)
-
-    def add_container(
-        self,
-        *items: ViewItem[V],
-        id: int | None = None,
-    ) -> Self:
-        """Adds a :class:`Container` to the view.
-
-        To append a pre-existing :class:`Container`, use the
-        :meth:`add_item` method, instead.
-
-        Parameters
-        ----------
-        *items: :class:`ViewItem`
-            The items contained in this container.
-        accessory: Optional[:class:`ViewItem`]
-        id: Optional[:class:`int`]
-            The container's ID.
-        """
-        from .container import Container
-
-        container = Container(*items, id=id)
-
-        return self.add_item(container)
-
-    def add_section(
-        self,
-        *items: ViewItem[V],
-        accessory: ViewItem[V],
-        id: int | None = None,
-    ) -> Self:
-        """Adds a :class:`Section` to the view.
-
-        To append a pre-existing :class:`Section`, use the
-        :meth:`add_item` method, instead.
-
-        Parameters
-        ----------
-        *items: :class:`ViewItem`
-            The items contained in this section, up to 3.
-            Currently only supports :class:`~discord.ui.TextDisplay`.
-        accessory: Optional[:class:`ViewItem`]
-            The section's accessory. This is displayed in the top right of the section.
-            Currently only supports :class:`~discord.ui.Button` and :class:`~discord.ui.Thumbnail`.
-        id: Optional[:class:`int`]
-            The section's ID.
-        """
-        from .section import Section
-
-        section = Section(*items, accessory=accessory, id=id)
-
-        return self.add_item(section)
-
-    def add_text(self, content: str, id: int | None = None) -> Self:
-        """Adds a :class:`TextDisplay` to the view.
-
-        Parameters
-        ----------
-        content: :class:`str`
-            The content of the TextDisplay
-        id: Optiona[:class:`int`]
-            The text displays' ID.
-        """
-        from .text_display import TextDisplay
-
-        text = TextDisplay(content, id=id)
-
-        return self.add_item(text)
-
-    def add_gallery(
-        self,
-        *items: MediaGalleryItem,
-        id: int | None = None,
-    ) -> Self:
-        """Adds a :class:`MediaGallery` to the view.
-
-        To append a pre-existing :class:`MediaGallery`, use :meth:`add_item` instead.
-
-        Parameters
-        ----------
-        *items: :class:`MediaGalleryItem`
-            The media this gallery contains.
-        id: Optiona[:class:`int`]
-            The gallery's ID.
-        """
-        from .media_gallery import MediaGallery
-
-        g = MediaGallery(*items, id=id)
-
-        return self.add_item(g)
-
-    def add_file(self, url: str, spoiler: bool = False, id: int | None = None) -> Self:
-        """Adds a :class:`TextDisplay` to the view.
-
-        Parameters
-        ----------
-        url: :class:`str`
-            The URL of this file's media. This must be an ``attachment://`` URL that references a :class:`~discord.File`.
-        spoiler: Optional[:class:`bool`]
-            Whether the file has the spoiler overlay. Defaults to ``False``.
-        id: Optiona[:class:`int`]
-            The file's ID.
-        """
-        from .file import File
-
-        f = File(url, spoiler=spoiler, id=id)
-
-        return self.add_item(f)
-
-    def add_separator(
-        self,
-        *,
-        divider: bool = True,
-        spacing: SeparatorSpacingSize = SeparatorSpacingSize.small,
-        id: int | None = None,
-    ) -> Self:
-        """Adds a :class:`Separator` to the container.
-
-        Parameters
-        ----------
-        divider: :class:`bool`
-            Whether the separator is a divider. Defaults to ``True``.
-        spacing: :class:`~discord.SeparatorSpacingSize`
-            The spacing size of the separator. Defaults to :attr:`~discord.SeparatorSpacingSize.small`.
-        id: Optional[:class:`int`]
-            The separator's ID.
-        """
-        from .separator import Separator
-
-        s = Separator(divider=divider, spacing=spacing, id=id)
-
-        return self.add_item(s)
 
     def refresh(self, components: list[Component]):
         # Refreshes view data using discord's values
