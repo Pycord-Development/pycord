@@ -27,8 +27,6 @@ from __future__ import annotations
 import contextlib
 from typing import List
 
-from typing_extensions import Self
-
 import discord
 from discord.errors import DiscordException
 from discord.ext.bridge import BridgeContext
