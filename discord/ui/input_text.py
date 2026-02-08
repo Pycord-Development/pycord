@@ -116,9 +116,11 @@ class InputText(ModalItem):
                 f"expected custom_id to be str, not {custom_id.__class__.__name__}"
             )
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
+        self._input_value = False
+        self.row = row
+        self._rendered_row: int | None = None
 
-        self._underlying = InputTextComponent._raw_construct(
-            type=ComponentType.input_text,
+        self._underlying = self._generate_underlying(
             style=style,
             custom_id=custom_id,
             label=label,
@@ -129,9 +131,6 @@ class InputText(ModalItem):
             value=value,
             id=id,
         )
-        self._input_value = False
-        self.row = row
-        self._rendered_row: int | None = None
 
     def __repr__(self) -> str:
         attrs = " ".join(
@@ -139,10 +138,36 @@ class InputText(ModalItem):
         )
         return f"<{self.__class__.__name__} {attrs}>"
 
+    def _generate_underlying(
+        self,
+        style: InputTextStyle | None = None,
+        custom_id: str | None = None,
+        label: str | None = None,
+        placeholder: str | None = None,
+        min_length: int | None = None,
+        max_length: int | None = None,
+        required: bool | None = True,
+        value: str | None = None,
+        id: int | None = None,
+    ) -> InputTextComponent:
+        super()._generate_underlying(InputTextComponent)
+        return InputTextComponent._raw_construct(
+            type=ComponentType.input_text,
+            style=style or self.style,
+            custom_id=custom_id or self.custom_id,
+            label=label or self.label,
+            placeholder=placeholder or self.placeholder,
+            min_length=min_length or self.min_length,
+            max_length=max_length or self.max_length,
+            required=required or self.required,
+            value=value or self.value,
+            id=id or self.id,
+        )
+
     @property
     def style(self) -> InputTextStyle:
         """The style of the input text field."""
-        return self._underlying.style
+        return self.underlying.style
 
     @style.setter
     def style(self, value: InputTextStyle):
@@ -150,12 +175,12 @@ class InputText(ModalItem):
             raise TypeError(
                 f"style must be of type InputTextStyle not {value.__class__.__name__}"
             )
-        self._underlying.style = value
+        self.underlying.style = value
 
     @property
     def custom_id(self) -> str:
         """The ID of the input text field that gets received during an interaction."""
-        return self._underlying.custom_id
+        return self.underlying.custom_id
 
     @custom_id.setter
     def custom_id(self, value: str):
@@ -163,12 +188,12 @@ class InputText(ModalItem):
             raise TypeError(
                 f"custom_id must be None or str not {value.__class__.__name__}"
             )
-        self._underlying.custom_id = value
+        self.underlying.custom_id = value
 
     @property
     def label(self) -> str:
         """The label of the input text field."""
-        return self._underlying.label
+        return self.underlying.label
 
     @label.setter
     def label(self, value: str):
@@ -176,12 +201,12 @@ class InputText(ModalItem):
             raise TypeError(f"label should be str not {value.__class__.__name__}")
         if len(value) > 45:
             raise ValueError("label must be 45 characters or fewer")
-        self._underlying.label = value
+        self.underlying.label = value
 
     @property
     def placeholder(self) -> str | None:
         """The placeholder text that is shown before anything is entered, if any."""
-        return self._underlying.placeholder
+        return self.underlying.placeholder
 
     @placeholder.setter
     def placeholder(self, value: str | None):
@@ -189,12 +214,12 @@ class InputText(ModalItem):
             raise TypeError(f"placeholder must be None or str not {value.__class__.__name__}")  # type: ignore
         if value and len(value) > 100:
             raise ValueError("placeholder must be 100 characters or fewer")
-        self._underlying.placeholder = value
+        self.underlying.placeholder = value
 
     @property
     def min_length(self) -> int | None:
         """The minimum number of characters that must be entered. Defaults to 0."""
-        return self._underlying.min_length
+        return self.underlying.min_length
 
     @min_length.setter
     def min_length(self, value: int | None):
@@ -202,12 +227,12 @@ class InputText(ModalItem):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
         if value and (value < 0 or value) > 4000:
             raise ValueError("min_length must be between 0 and 4000")
-        self._underlying.min_length = value
+        self.underlying.min_length = value
 
     @property
     def max_length(self) -> int | None:
         """The maximum number of characters that can be entered."""
-        return self._underlying.max_length
+        return self.underlying.max_length
 
     @max_length.setter
     def max_length(self, value: int | None):
@@ -215,18 +240,18 @@ class InputText(ModalItem):
             raise TypeError(f"min_length must be None or int not {value.__class__.__name__}")  # type: ignore
         if value and (value <= 0 or value > 4000):
             raise ValueError("max_length must be between 1 and 4000")
-        self._underlying.max_length = value
+        self.underlying.max_length = value
 
     @property
     def required(self) -> bool | None:
         """Whether the input text field is required or not. Defaults to ``True``."""
-        return self._underlying.required
+        return self.underlying.required
 
     @required.setter
     def required(self, value: bool | None):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool not {value.__class__.__name__}")  # type: ignore
-        self._underlying.required = bool(value)
+        self.underlying.required = bool(value)
 
     @property
     def value(self) -> str | None:
@@ -234,7 +259,7 @@ class InputText(ModalItem):
         if self._input_value is not False:
             # only False on init, otherwise the value was either set or cleared
             return self._input_value  # type: ignore
-        return self._underlying.value
+        return self.underlying.value
 
     @value.setter
     def value(self, value: str | None):
@@ -242,7 +267,7 @@ class InputText(ModalItem):
             raise TypeError(f"value must be None or str not {value.__class__.__name__}")  # type: ignore
         if value and len(str(value)) > 4000:
             raise ValueError("value must be 4000 characters or fewer")
-        self._underlying.value = value
+        self.underlying.value = value
 
     @property
     def width(self) -> int:
@@ -258,6 +283,23 @@ class InputText(ModalItem):
         self, interaction: Interaction, data: InputTextComponentPayload
     ) -> None:
         return self.refresh_state(data)
+
+    @classmethod
+    def from_component(
+        cls: type[InputText], component: InputTextComponent
+    ) -> InputText:
+
+        return cls(
+            style=component.style,
+            custom_id=component.custom_id,
+            label=component.label,
+            placeholder=component.placeholder,
+            min_length=component.min_length,
+            max_length=component.max_length,
+            required=component.required,
+            value=component.value,
+            id=component.id,
+        )
 
 
 TextInput = InputText
