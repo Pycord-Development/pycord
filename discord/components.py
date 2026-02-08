@@ -1449,7 +1449,7 @@ class RadioGroup(Component):
     options: List[:class:`RadioGroupOption`]
         A list of options that can be selected in this group.
     required: Optional[:class:`bool`]
-        Whether the radio group requires a selection or not. Defaults to `True`.
+        Whether the radio group requires a selection or not. Defaults to ``True``.
     id: Optional[:class:`int`]
         The radio group's ID.
     """
