@@ -1597,7 +1597,7 @@ class CheckboxGroup(Component):
     max_values: Optional[:class:`int`]
         The maximum number of options that can be selected.
     required: Optional[:class:`bool`]
-        Whether the checkbox group requires a selection or not. Defaults to `True`.
+        Whether the checkbox group requires a selection or not. Defaults to ``True``.
     id: Optional[:class:`int`]
         The checkbox group's ID.
     """
