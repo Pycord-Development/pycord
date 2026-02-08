@@ -97,7 +97,7 @@ class File(ViewItem[V]):
         return self.underlying.file
 
     @file.setter
-    def url(self, value: UnfurledMediaItem) -> None:
+    def file(self, value: UnfurledMediaItem) -> None:
         self.underlying.file = value
 
     @property

@@ -771,9 +771,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
 
     @row.setter
     def row(self, value: int | None):
-        if value is None:
-            self._row = None
-        elif 5 > value >= 0:
+        if value is None or 5 > value >= 0:
             self._row = value
         else:
             raise ValueError("row cannot be negative or greater than or equal to 5")

@@ -107,7 +107,7 @@ class Thumbnail(ViewItem[V]):
         return self.underlying.media
 
     @media.setter
-    def url(self, value: UnfurledMediaItem) -> None:
+    def media(self, value: UnfurledMediaItem) -> None:
         self.underlying.media = value
 
     @property

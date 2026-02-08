@@ -174,9 +174,9 @@ class ActionRow(ViewItem[V]):
             item = self.get_item(item)
         try:
             self.children.remove(item)
+            item.parent = None
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def replace_item(

@@ -271,11 +271,11 @@ class BaseView(ItemInterface):
         try:
             if item.parent is self:
                 self.children.remove(item)
+                item.parent = None
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def clear_items(self) -> Self:
@@ -945,7 +945,7 @@ class DesignerView(BaseView):
 
         if isinstance(item.underlying, (SelectComponent, ButtonComponent)):
             raise ValueError(
-                "cannot add Select or Button to DesignerView directly. Use ActionRow instead."
+                f"cannot add Select or Button to DesignerView directly. Use ActionRow instead."
             )
 
         super().add_item(item)

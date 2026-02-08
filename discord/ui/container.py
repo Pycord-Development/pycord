@@ -188,11 +188,11 @@ class Container(ViewItem[V]):
         try:
             if item.parent is self:
                 self.items.remove(item)
+                item.parent = None
             else:
                 item.parent.remove_item(item)
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def replace_item(

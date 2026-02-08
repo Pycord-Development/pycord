@@ -181,9 +181,9 @@ class Section(ViewItem[V]):
                 self.accessory = None
             else:
                 self.items.remove(item)
+            item.parent = None
         except ValueError:
             pass
-        item.parent = None
         return self
 
     def replace_item(

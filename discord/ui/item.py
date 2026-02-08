@@ -169,11 +169,12 @@ class ViewItem(Item[V]):
 
     @property
     def row(self) -> int | None:
+        warn_deprecated("Accessing .row from CV2 Items", since="2.7.1", removed="3.0")
         return None
 
     @row.setter
-    def row(self, value: int | None):
-        raise NotImplementedError
+    def row(self, value: int | None) -> None:
+        warn_deprecated("Setting .row on CV2 Items", since="2.7.1", removed="3.0")
 
     @property
     def width(self) -> int:
