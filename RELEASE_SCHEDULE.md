@@ -1,6 +1,7 @@
 # Pycord Release Schedule
 
-Status: Draft Authors: <Paillat-dev paillat@pycord.dev>
+Status: Draft
+Authors: <Paillat-dev paillat@pycord.dev>
 
 ## Purpose & Prior Precedent
 
