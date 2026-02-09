@@ -1399,8 +1399,6 @@ class SlashCommandGroup(ApplicationCommand):
     ) -> Callable[[Callable], SlashCommand]:
         """A shortcut decorator for adding a subcommand to this slash command group.
 
-        .. versionadded:: 2.8
-
         Returns
         -------
         Callable[..., :class:`SlashCommand`]
