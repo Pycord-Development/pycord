@@ -955,8 +955,8 @@ class ApplicationCommandMixin(ABC):
         """
         return self.application_command(cls=MessageCommand, **kwargs)
 
-    def application_command(self, cls: Type[C] = SlashCommand, **kwargs):
-        """A shortcut decorator that converts the provided function into 
+    def application_command(self, cls: type[C] = SlashCommand, **kwargs):
+        """A shortcut decorator that converts the provided function into
         an application command via :func:`command` and adds it to
         the internal command list via :meth:`~.Bot.add_application_command`.
 
