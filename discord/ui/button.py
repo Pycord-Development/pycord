@@ -110,6 +110,8 @@ class Button(ViewItem[V]):
         row: int | None = None,
         id: int | None = None,
     ):
+        self._row: int | None = None
+        self._rendered_row: int | None = None
         super().__init__()
         if label and len(str(label)) > 80:
             raise ValueError("label must be 80 characters or fewer")
@@ -147,8 +149,8 @@ class Button(ViewItem[V]):
                     f" {emoji.__class__}"
                 )
 
-        self._underlying = ButtonComponent._raw_construct(
-            type=ComponentType.button,
+        self.row = row
+        self._underlying = self._generate_underlying(
             custom_id=custom_id,
             url=url,
             disabled=disabled,
@@ -158,16 +160,39 @@ class Button(ViewItem[V]):
             sku_id=sku_id,
             id=id,
         )
-        self.row = row
+
+    def _generate_underlying(
+        self,
+        style: ButtonStyle | None = None,
+        label: str | None = None,
+        disabled: bool = False,
+        custom_id: str | None = None,
+        url: str | None = None,
+        emoji: str | GuildEmoji | AppEmoji | PartialEmoji | None = None,
+        sku_id: int | None = None,
+        id: int | None = None,
+    ) -> ButtonComponent:
+        super()._generate_underlying(ButtonComponent)
+        return ButtonComponent._raw_construct(
+            type=ComponentType.button,
+            custom_id=custom_id or self.custom_id,
+            url=url or self.url,
+            disabled=disabled or self.disabled,
+            label=label or self.label,
+            style=style or self.style,
+            emoji=emoji or self.emoji,
+            sku_id=sku_id or self.sku_id,
+            id=id or self.id,
+        )
 
     @property
     def style(self) -> ButtonStyle:
         """The style of the button."""
-        return self._underlying.style
+        return self.underlying.style
 
     @style.setter
     def style(self, value: ButtonStyle):
-        self._underlying.style = value
+        self.underlying.style = value
 
     @property
     def custom_id(self) -> str | None:
@@ -175,7 +200,7 @@ class Button(ViewItem[V]):
 
         If this button is for a URL, it does not have a custom ID.
         """
-        return self._underlying.custom_id
+        return self.underlying.custom_id
 
     @custom_id.setter
     def custom_id(self, value: str | None):
@@ -183,53 +208,53 @@ class Button(ViewItem[V]):
             raise TypeError("custom_id must be None or str")
         if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
-        self._underlying.custom_id = value
+        self.underlying.custom_id = value
         self._provided_custom_id = value is not None
 
     @property
     def url(self) -> str | None:
         """The URL this button sends you to."""
-        return self._underlying.url
+        return self.underlying.url
 
     @url.setter
     def url(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise TypeError("url must be None or str")
-        self._underlying.url = value
+        self.underlying.url = value
 
     @property
     def disabled(self) -> bool:
         """Whether the button is disabled or not."""
-        return self._underlying.disabled
+        return self.underlying.disabled
 
     @disabled.setter
     def disabled(self, value: bool):
-        self._underlying.disabled = bool(value)
+        self.underlying.disabled = bool(value)
 
     @property
     def label(self) -> str | None:
         """The label of the button, if available."""
-        return self._underlying.label
+        return self.underlying.label
 
     @label.setter
     def label(self, value: str | None):
         if value and len(str(value)) > 80:
             raise ValueError("label must be 80 characters or fewer")
-        self._underlying.label = str(value) if value is not None else value
+        self.underlying.label = str(value) if value is not None else value
 
     @property
     def emoji(self) -> PartialEmoji | None:
         """The emoji of the button, if available."""
-        return self._underlying.emoji
+        return self.underlying.emoji
 
     @emoji.setter
     def emoji(self, value: str | GuildEmoji | AppEmoji | PartialEmoji | None):  # type: ignore
         if value is None:
-            self._underlying.emoji = None
+            self.underlying.emoji = None
         elif isinstance(value, str):
-            self._underlying.emoji = PartialEmoji.from_str(value)
+            self.underlying.emoji = PartialEmoji.from_str(value)
         elif isinstance(value, _EmojiTag):
-            self._underlying.emoji = value._to_partial()
+            self.underlying.emoji = value._to_partial()
         else:
             raise TypeError(
                 "expected str, GuildEmoji, AppEmoji, or PartialEmoji, received"
@@ -239,16 +264,57 @@ class Button(ViewItem[V]):
     @property
     def sku_id(self) -> int | None:
         """The ID of the SKU this button refers to."""
-        return self._underlying.sku_id
+        return self.underlying.sku_id
 
     @sku_id.setter
     def sku_id(self, value: int | None):  # type: ignore
         if value is None:
-            self._underlying.sku_id = None
+            self.underlying.sku_id = None
         elif isinstance(value, int):
-            self._underlying.sku_id = value
+            self.underlying.sku_id = value
         else:
             raise TypeError(f"expected int or None, received {value.__class__} instead")
+
+    @property
+    def width(self) -> int:
+        """Gets the width of the item in the UI layout.
+
+        The width determines how much horizontal space this item occupies within its row.
+
+        Returns
+        -------
+        :class:`int`
+            The width of the item. Buttons have a width of 1.
+        """
+        return 1
+
+    @property
+    def row(self) -> int | None:
+        """Gets or sets the row position of this item within its parent view.
+
+        The row position determines the vertical placement of the item in the UI.
+        The value must be an integer between 0 and 4 (inclusive), or ``None`` to indicate
+        that no specific row is set.
+        This attribute is not compatible with :class:`discord.ui.DesignerView`.
+
+        Returns
+        -------
+        Optional[:class:`int`]
+            The row position of the item, or ``None`` if not explicitly set.
+
+        Raises
+        ------
+        ValueError
+            If the row value is not ``None`` and is outside the range [0, 4].
+        """
+        return self._row
+
+    @row.setter
+    def row(self, value: int | None):
+        if value is None or 5 > value >= 0:
+            self._row = value
+        else:
+            raise ValueError("row cannot be negative or greater than or equal to 5")
 
     @classmethod
     def from_component(cls: type[B], button: ButtonComponent) -> B:
@@ -281,7 +347,7 @@ class Button(ViewItem[V]):
         return super().is_persistent()
 
     def refresh_component(self, button: ButtonComponent) -> None:
-        self._underlying = button
+        self.underlying = button
 
 
 def button(
