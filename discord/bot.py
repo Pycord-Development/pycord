@@ -42,7 +42,6 @@ from typing import (
     Generator,
     Literal,
     Mapping,
-    Type,
     TypeVar,
 )
 
