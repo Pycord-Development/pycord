@@ -8,8 +8,19 @@ possible (see our [Version Guarantees] for more info).
 
 ## [Unreleased]
 
-These changes are available on the `master` branch, but have not yet been released.
+These changes are available on the `cherry/2.7.1` branch, but have not yet been released.
 
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+## [2.7.1] - 2026-02-09
 ### Added
 
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
@@ -56,9 +67,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
 - Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
   ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
-
-### Removed
-
 ## [2.7.0] - 2025-12-24
 
 ### Added
@@ -1576,7 +1584,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...HEAD
+[2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
 [2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1
