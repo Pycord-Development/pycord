@@ -594,7 +594,7 @@ class Client:
         The default modal error handler provided by the client.
         The default implementation prints the traceback to stderr.
 
-        This only fires for a modal if you did not define its :func:`~discord.ui.Modal.on_error`.
+        This only fires for a modal if you did not define its :func:`~discord.ui.BaseModal.on_error`.
 
         Parameters
         ----------
@@ -1706,55 +1706,6 @@ class Client:
             Getting the guild failed.
         """
         data = await self.http.get_guild(guild_id, with_counts=with_counts)
-        return Guild(data=data, state=self._connection)
-
-    async def create_guild(
-        self,
-        *,
-        name: str,
-        icon: bytes = MISSING,
-        code: str = MISSING,
-    ) -> Guild:
-        """|coro|
-
-        Creates a :class:`.Guild`.
-
-        Bot accounts in more than 10 guilds are not allowed to create guilds.
-
-        Parameters
-        ----------
-        name: :class:`str`
-            The name of the guild.
-        icon: Optional[:class:`bytes`]
-            The :term:`py:bytes-like object` representing the icon. See :meth:`.ClientUser.edit`
-            for more details on what is expected.
-        code: :class:`str`
-            The code for a template to create the guild with.
-
-            .. versionadded:: 1.4
-
-        Returns
-        -------
-        :class:`.Guild`
-            The guild created. This is not the same guild that is
-            added to cache.
-
-        Raises
-        ------
-        :exc:`HTTPException`
-            Guild creation failed.
-        :exc:`InvalidArgument`
-            Invalid icon image format given. Must be PNG or JPG.
-        """
-        if icon is not MISSING:
-            icon_base64 = utils._bytes_to_base64_data(icon)
-        else:
-            icon_base64 = None
-
-        if code:
-            data = await self.http.create_from_template(code, name, icon_base64)
-        else:
-            data = await self.http.create_guild(name, icon_base64)
         return Guild(data=data, state=self._connection)
 
     async def fetch_stage_instance(self, channel_id: int, /) -> StageInstance:
