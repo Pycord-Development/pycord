@@ -26,6 +26,7 @@ These changes are available on the `master` branch, but have not yet been releas
     `Template.create_guild`, and `Client.create_guild`.
 
 ## [2.7.1] - 2026-02-09
+
 ### Added
 
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
