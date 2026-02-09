@@ -68,44 +68,44 @@ jobs:
             echo "is_rc=false" >> $GITHUB_OUTPUT
           fi
 
-#  branch_protection_rename:
-#    needs: [safety_check]
-#    runs-on: ubuntu-latest
-#    environment: release
-#    env:
-#      GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-#    outputs:
-#      master_rule_id: ${{ steps.get_rule_ids.outputs.master_rule_id }}
-#      master_pattern: ${{ steps.get_rule_ids.outputs.master_pattern }}
-#      v_rule_id: ${{ steps.get_rule_ids.outputs.v_rule_id }}
-#      v_pattern: ${{ steps.get_rule_ids.outputs.v_pattern }}
-#    steps:
-#      - name: Set up GitHub CLI
-#        uses: wusatosi/setup-gh@v1.1
-#        with:
-#          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
-#      - name: Get branch protection rule IDs
-#        id: get_rule_ids
-#        run: |
-#          gh api repos/${{ github.repository }}/branch-protection-rules > rules.json
-#          MASTER_ID=$(jq -r '.[] | select(.pattern == "master") | .id' rules.json)
-#          MASTER_PATTERN=$(jq -r '.[] | select(.pattern == "master") | .pattern' rules.json)
-#          V_ID=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .id' rules.json)
-#          V_PATTERN=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .pattern' rules.json)
-#          echo "master_rule_id=$MASTER_ID" >> $GITHUB_OUTPUT
-#          echo "master_pattern=$MASTER_PATTERN" >> $GITHUB_OUTPUT
-#          echo "v_rule_id=$V_ID" >> $GITHUB_OUTPUT
-#          echo "v_pattern=$V_PATTERN" >> $GITHUB_OUTPUT
-#      - name: Rename master protection to temp-master
-#        if: ${{ steps.get_rule_ids.outputs.master_rule_id != '' }}
-#        run: |
-#          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.master_rule_id }} \
-#            -X PATCH -F pattern="temp-master"
-#      - name: Rename v*.* protection to temp-v
-#        if: ${{ steps.get_rule_ids.outputs.v_rule_id != '' }}
-#        run: |
-#          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.v_rule_id }} \
-#            -X PATCH -F pattern="temp-v"
+  #  branch_protection_rename:
+  #    needs: [safety_check]
+  #    runs-on: ubuntu-latest
+  #    environment: release
+  #    env:
+  #      GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+  #    outputs:
+  #      master_rule_id: ${{ steps.get_rule_ids.outputs.master_rule_id }}
+  #      master_pattern: ${{ steps.get_rule_ids.outputs.master_pattern }}
+  #      v_rule_id: ${{ steps.get_rule_ids.outputs.v_rule_id }}
+  #      v_pattern: ${{ steps.get_rule_ids.outputs.v_pattern }}
+  #    steps:
+  #      - name: Set up GitHub CLI
+  #        uses: wusatosi/setup-gh@v1.1
+  #        with:
+  #          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+  #      - name: Get branch protection rule IDs
+  #        id: get_rule_ids
+  #        run: |
+  #          gh api repos/${{ github.repository }}/branch-protection-rules > rules.json
+  #          MASTER_ID=$(jq -r '.[] | select(.pattern == "master") | .id' rules.json)
+  #          MASTER_PATTERN=$(jq -r '.[] | select(.pattern == "master") | .pattern' rules.json)
+  #          V_ID=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .id' rules.json)
+  #          V_PATTERN=$(jq -r '.[] | select(.pattern | test("^v[0-9]+\\.[0-9]+\\.x$")) | .pattern' rules.json)
+  #          echo "master_rule_id=$MASTER_ID" >> $GITHUB_OUTPUT
+  #          echo "master_pattern=$MASTER_PATTERN" >> $GITHUB_OUTPUT
+  #          echo "v_rule_id=$V_ID" >> $GITHUB_OUTPUT
+  #          echo "v_pattern=$V_PATTERN" >> $GITHUB_OUTPUT
+  #      - name: Rename master protection to temp-master
+  #        if: ${{ steps.get_rule_ids.outputs.master_rule_id != '' }}
+  #        run: |
+  #          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.master_rule_id }} \
+  #            -X PATCH -F pattern="temp-master"
+  #      - name: Rename v*.* protection to temp-v
+  #        if: ${{ steps.get_rule_ids.outputs.v_rule_id != '' }}
+  #        run: |
+  #          gh api repos/${{ github.repository }}/branch-protection-rules/${{ steps.get_rule_ids.outputs.v_rule_id }} \
+  #            -X PATCH -F pattern="temp-v"
 
   lib_release:
     needs: [pre_config] # , branch_protection_rename
@@ -265,25 +265,25 @@ jobs:
             --version "${{ needs.pre_config.outputs.version }}" \
             --sync
 
-  inform_discord:
-    runs-on: ubuntu-latest
-    needs: [docs_release, lib_release, pre_config]
-    environment: release
-    steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-          fetch-tags: true
+  #inform_discord:
+  #  runs-on: ubuntu-latest
+  #  needs: [docs_release, lib_release, pre_config]
+  #  environment: release
+  #  steps:
+  #    - name: "Checkout repository"
+  #      uses: actions/checkout@v6
+  #      with:
+  #        fetch-depth: 0
+  #        fetch-tags: true
 
-      - name: "Notify Discord"
-        env:
-          VERSION: ${{ needs.pre_config.outputs.version }}
-          PREVIOUS_TAG: ${{ needs.pre_config.outputs.previous_tag }}
-          PREVIOUS_FINAL_TAG: ${{ needs.pre_config.outputs.previous_final_tag }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          REPOSITORY: ${{ github.repository }}
-        run: python scripts/discord_release_notification.py
+  #     - name: "Notify Discord"
+  #      env:
+  #       VERSION: ${{ needs.pre_config.outputs.version }}
+  #       PREVIOUS_TAG: ${{ needs.pre_config.outputs.previous_tag }}
+  #       PREVIOUS_FINAL_TAG: ${{ needs.pre_config.outputs.previous_final_tag }}
+  #       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  #       REPOSITORY: ${{ github.repository }}
+  #      run: python scripts/discord_release_notification.py
 
   determine_milestone_id:
     runs-on: ubuntu-latest
@@ -310,8 +310,7 @@ jobs:
   close_milestone:
     runs-on: ubuntu-latest
     needs: [determine_milestone_id, pre_config]
-    if:
-      ${{ !contains(needs.pre_config.outputs.version, 'rc') &&
+    if: ${{ !contains(needs.pre_config.outputs.version, 'rc') &&
       endsWith(needs.pre_config.outputs.version, '.0') }}
     environment: release
     env:
