@@ -1402,8 +1402,8 @@ class SlashCommandGroup(ApplicationCommand):
         Returns
         -------
         Callable[..., :class:`SlashCommand`]
-        A decorator that converts the provided function into a :class:`.SlashCommand`, adds it to this group,
-        then returns it.
+            A decorator that converts the provided function into a :class:`.SlashCommand`,
+            adds it to this group, then returns it.
         """
 
         def wrap(func) -> T:
