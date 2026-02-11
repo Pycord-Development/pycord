@@ -129,8 +129,8 @@ class CheckboxGroup(ModalItem):
             type=ComponentType.checkbox_group,
             custom_id=custom_id or self.custom_id,
             options=options if options is not None else self.options,
-            min_values=min_values or self.min_values,
-            max_values=max_values or self.max_values,
+            min_values=min_values if min_values is not None else self.min_values,
+            max_values=max_values if max_values is not None else self.max_values,
             required=required if required is not None else self.required,
             id=id or self.id,
         )
