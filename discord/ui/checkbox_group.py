@@ -188,7 +188,7 @@ class CheckboxGroup(ModalItem):
         self.underlying.required = bool(value)
 
     @property
-    def values(self) -> str | None:
+    def values(self) -> list[str]:
         """The values selected by the user."""
         return self._selected_values
 
