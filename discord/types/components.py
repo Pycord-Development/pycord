@@ -49,7 +49,7 @@ class BaseComponent(TypedDict):
 
 class ActionRow(BaseComponent):
     type: Literal[1]
-    components: list[ButtonComponent | InputText | SelectMenu]
+    components: list[AllowedActionRowComponents]
 
 
 class ButtonComponent(BaseComponent):
@@ -108,8 +108,8 @@ class TextDisplayComponent(BaseComponent):
 
 class SectionComponent(BaseComponent):
     type: Literal[9]
-    components: list[TextDisplayComponent]
-    accessory: NotRequired[ThumbnailComponent | ButtonComponent]
+    components: list[AllowedSectionComponents]
+    accessory: NotRequired[AllowedSectionAccessories]
 
 
 class UnfurledMediaItem(TypedDict):
@@ -165,14 +165,7 @@ class LabelComponent(BaseComponent):
     type: Literal[18]
     label: str
     description: NotRequired[str]
-    component: (
-        SelectMenu
-        | InputText
-        | FileUploadComponent
-        | RadioGroupComponent
-        | CheckboxComponent
-        | CheckboxGroupComponent
-    )
+    component: AllowedLabelComponents
 
 
 class FileUploadComponent(BaseComponent):
@@ -220,9 +213,14 @@ class CheckboxComponent(BaseComponent):
 
 
 Component = Union[
-    ActionRow, ButtonComponent, SelectMenu, InputText, FileUploadComponent
+    ActionRow, ButtonComponent, SelectMenu, InputText, TextDisplayComponent, SectionComponent, ThumbnailComponent, MediaGalleryComponent, FileComponent, SeparatorComponent, ContainerComponent, LabelComponent, FileUploadComponent, RadioGroupComponent, CheckboxGroupComponent, CheckboxComponent
 ]
 
+AllowedActionRowComponents = Union[ButtonComponent, InputText, SelectMenu]
+
+AllowedSectionAccessories = Union[ThumbnailComponent, ButtonComponent]
+
+AllowedSectionComponents = Union[TextDisplayComponent]
 
 AllowedContainerComponents = Union[
     ActionRow,
@@ -231,4 +229,13 @@ AllowedContainerComponents = Union[
     FileComponent,
     SeparatorComponent,
     SectionComponent,
+]
+
+AllowedLabelComponents = Union[
+    SelectMenu,
+    InputText,
+    FileUploadComponent,
+    RadioGroupComponent,
+    CheckboxComponent,
+    CheckboxGroupComponent,
 ]
