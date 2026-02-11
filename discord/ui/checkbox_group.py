@@ -95,6 +95,8 @@ class CheckboxGroup(ModalItem):
         self,
         custom_id: str | None = None,
         options: list[CheckboxGroupOption] | None = None,
+        min_values: int | None = None,
+        max_values: int | None = None,
         required: bool | None = None,
         id: int | None = None,
     ) -> CheckboxGroupComponent:
