@@ -213,7 +213,22 @@ class CheckboxComponent(BaseComponent):
 
 
 Component = Union[
-    ActionRow, ButtonComponent, SelectMenu, InputText, TextDisplayComponent, SectionComponent, ThumbnailComponent, MediaGalleryComponent, FileComponent, SeparatorComponent, ContainerComponent, LabelComponent, FileUploadComponent, RadioGroupComponent, CheckboxGroupComponent, CheckboxComponent
+    ActionRow,
+    ButtonComponent,
+    SelectMenu,
+    InputText,
+    TextDisplayComponent,
+    SectionComponent,
+    ThumbnailComponent,
+    MediaGalleryComponent,
+    FileComponent,
+    SeparatorComponent,
+    ContainerComponent,
+    LabelComponent,
+    FileUploadComponent,
+    RadioGroupComponent,
+    CheckboxGroupComponent,
+    CheckboxComponent,
 ]
 
 AllowedActionRowComponents = Union[ButtonComponent, InputText, SelectMenu]
