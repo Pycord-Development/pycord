@@ -141,7 +141,7 @@ class RadioGroup(ModalItem):
 
     @property
     def value(self) -> str | None:
-        """The value selected by the user."""
+        """The value selected by the user. May return ``None`` if this radio group is optional or has not been sent yet."""
         return self._selected_value
 
     @property
