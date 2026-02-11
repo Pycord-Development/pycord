@@ -58,15 +58,14 @@ class RadioGroup(ModalItem):
         if not isinstance(required, bool):
             raise TypeError(f"required must be bool not {required.__class__.__name__}")  # type: ignore
         custom_id = os.urandom(16).hex() if custom_id is None else custom_id
+        self._selected_value: str | None = None
 
-        self._underlying: RadioGroupComponent = RadioGroupComponent._raw_construct(
-            type=ComponentType.radio_group,
+        self._underlying: RadioGroupComponent = self._generate_underlying(
             custom_id=custom_id,
             options=options or [],
             required=required,
             id=id,
         )
-        self._selected_value: str | None = None
 
     def __repr__(self) -> str:
         attrs = " ".join(
@@ -74,19 +73,26 @@ class RadioGroup(ModalItem):
         )
         return f"<{self.__class__.__name__} {attrs}>"
 
-    @property
-    def type(self) -> ComponentType:
-        return self._underlying.type
-
-    @property
-    def id(self) -> int | None:
-        """The ID of this component. If not provided by the user, it is set sequentially by Discord."""
-        return self._underlying.id
+    def _generate_underlying(
+        self,
+        custom_id: str | None = None,
+        options: list[RadioGroupOption] | None = None,
+        required: bool | None = None,
+        id: int | None = None,
+    ) -> RadioGroupComponent:
+        super()._generate_underlying(RadioGroupComponent)
+        return RadioGroupComponent._raw_construct(
+            type=ComponentType.radio_group,
+            custom_id=custom_id or self.custom_id,
+            options=options if options is not None else self.options,
+            required=required if required is not None else self.required,
+            id=id or self.id,
+        )
 
     @property
     def custom_id(self) -> str:
         """The custom id that gets received during an interaction."""
-        return self._underlying.custom_id
+        return self.underlying.custom_id
 
     @custom_id.setter
     def custom_id(self, value: str):
@@ -94,18 +100,20 @@ class RadioGroup(ModalItem):
             raise TypeError(
                 f"custom_id must be None or str not {value.__class__.__name__}"
             )
-        self._underlying.custom_id = value
+        if value and len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
+        self.underlying.custom_id = value
 
     @property
     def required(self) -> bool:
         """Whether an option selection is required or not. Defaults to ``True``"""
-        return self._underlying.required
+        return self.underlying.required
 
     @required.setter
     def required(self, value: bool):
         if not isinstance(value, bool):
             raise TypeError(f"required must be bool, not {value.__class__.__name__}")  # type: ignore
-        self._underlying.required = bool(value)
+        self.underlying.required = bool(value)
 
     @property
     def value(self) -> str | None:
@@ -115,7 +123,7 @@ class RadioGroup(ModalItem):
     @property
     def options(self) -> list[RadioGroupOption]:
         """A list of options that can be selected in this group."""
-        return self._underlying.options
+        return self.underlying.options
 
     @options.setter
     def options(self, value: list[RadioGroupOption]):
@@ -126,7 +134,7 @@ class RadioGroup(ModalItem):
         if not all(isinstance(obj, RadioGroupOption) for obj in value):
             raise TypeError("all list items must subclass RadioGroupOption")
 
-        self._underlying.options = value
+        self.underlying.options = value
 
     def add_option(
         self,
@@ -184,14 +192,14 @@ class RadioGroup(ModalItem):
             The number of options exceeds 10.
         """
 
-        if len(self._underlying.options) >= 10:
+        if len(self.underlying.options) >= 10:
             raise ValueError("maximum number of options already provided")
 
-        self._underlying.options.append(option)
+        self.underlying.options.append(option)
         return self
 
     def to_component_dict(self) -> RadioGroupComponentPayload:
-        return self._underlying.to_dict()
+        return self.underlying.to_dict()
 
     def refresh_state(self, data) -> None:
         self._selected_value = data.get("value", None)

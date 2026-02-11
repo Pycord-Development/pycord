@@ -100,15 +100,6 @@ class FileUpload(ModalItem):
         )
 
     @property
-    def type(self) -> ComponentType:
-        return self.underlying.type
-
-    @property
-    def id(self) -> int | None:
-        """The ID of this component. If not provided by the user, it is set sequentially by Discord."""
-        return self.underlying.id
-
-    @property
     def custom_id(self) -> str:
         """The custom id that gets received during an interaction."""
         return self.underlying.custom_id
@@ -119,6 +110,8 @@ class FileUpload(ModalItem):
             raise TypeError(
                 f"custom_id must be None or str not {value.__class__.__name__}"
             )
+        if value and len(value) > 100:
+            raise ValueError("custom_id must be 100 characters or fewer")
         self.underlying.custom_id = value
 
     @property

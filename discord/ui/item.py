@@ -92,6 +92,7 @@ class Item(Generic[T]):
 
     @property
     def type(self) -> ComponentType:
+        """The underlying component's type."""
         if not self.underlying:
             raise NotImplementedError
         return self.underlying.type

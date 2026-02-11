@@ -377,7 +377,7 @@ class Select(ViewItem[V], ModalItem[M], Generic[V, M, ST]):
     def custom_id(self, value: str):
         if not isinstance(value, str):
             raise TypeError("custom_id must be None or str")
-        if len(value) > 100:
+        if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self.underlying.custom_id = value
         self._provided_custom_id = value is not None

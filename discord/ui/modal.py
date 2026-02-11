@@ -157,7 +157,7 @@ class BaseModal(ItemInterface):
             raise TypeError(
                 f"expected custom_id to be str, not {value.__class__.__name__}"
             )
-        if len(value) > 100:
+        if value and len(value) > 100:
             raise ValueError("custom_id must be 100 characters or fewer")
         self._custom_id = value
 
