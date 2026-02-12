@@ -23,9 +23,6 @@ These changes are available on the `master` branch, but have not yet been releas
   permission. ([#3048](https://github.com/Pycord-Development/pycord/pull/3048))
 - Updated the docs' Sphinx version to v9.
   ([#3067](https://github.com/Pycord-Development/pycord/pull/3067))
-- Pinned all `docs` dependencies to Python 3.13 and above. This is the version the docs
-  are built with, so this ensures that the docs dependencies are kept up to date.
-  ([#3096](https://github.com/Pycord-Development/pycord/pull/3096))
 
 ### Fixed
 
