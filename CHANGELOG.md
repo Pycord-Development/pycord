@@ -54,6 +54,8 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3082](https://github.com/Pycord-Development/pycord/pull/3082))
 - Fixed `ext.pages.Paginator` not working anymore when using `custom_view`.
   ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
+- Fixed `get_or_fetch()` not supporting `Thread` objects.
+  ([#3101](https://github.com/Pycord-Development/pycord/pull/3101))
 
 ### Removed
 
@@ -1184,7 +1186,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
 - `get_application_command()` now supports retrieving subcommands and subcommand groups.
   ([#1678](https://github.com/Pycord-Development/pycord/pull/1678))
--
 
 ### Removed
 
