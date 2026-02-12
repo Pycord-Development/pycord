@@ -88,7 +88,7 @@ if TYPE_CHECKING:
     from .types.interactions import InteractionCallbackResponse, InteractionData
     from .types.interactions import InteractionMetadata as InteractionMetadataPayload
     from .types.interactions import MessageInteraction as MessageInteractionPayload
-    from .ui.modal import Modal
+    from .ui.modal import BaseModal
     from .ui.view import BaseView
 
     InteractionChannel = Union[
@@ -168,7 +168,7 @@ class Interaction:
         The view that this interaction belongs to.
 
         .. versionadded:: 2.7
-    modal: Optional[:class:`Modal`]
+    modal: Optional[:class:`BaseModal`]
         The modal that this interaction belongs to.
 
         .. versionadded:: 2.7
@@ -258,7 +258,7 @@ class Interaction:
 
         self.command: ApplicationCommand | None = None
         self.view: BaseView | None = None
-        self.modal: Modal | None = None
+        self.modal: BaseModal | None = None
         self.attachment_size_limit: int = data.get("attachment_size_limit")
 
         self.message: Message | None = None
@@ -1406,14 +1406,14 @@ class InteractionResponse:
         self._responded = True
         await self._process_callback_response(callback_response)
 
-    async def send_modal(self, modal: Modal) -> Interaction:
+    async def send_modal(self, modal: BaseModal) -> Interaction:
         """|coro|
         Responds to this interaction by sending a modal dialog.
         This cannot be used to respond to another modal dialog submission.
 
         Parameters
         ----------
-        modal: :class:`discord.ui.Modal`
+        modal: :class:`discord.ui.BaseModal`
             The modal dialog to display to the user.
 
         Raises

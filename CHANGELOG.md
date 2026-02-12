@@ -12,6 +12,23 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+- Removed the guild creation and ownership-related methods and arguments due to updated
+  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
+  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
+    `Template.create_guild`, and `Client.create_guild`.
+
+## [2.7.1] - 2026-02-09
+
+### Added
+
 - Added `.extension` attribute to the `AppEmoji` and `GuildEmoji` classes.
   ([#3055](https://github.com/Pycord-Development/pycord/pull/3055))
 - Added the ability to compare instances of `PrimaryGuild`.
@@ -26,6 +43,8 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Fixed
 
+- Fixed core issues with modifying items in `Container` and `Section`
+  ([#3032](https://github.com/Pycord-Development/pycord/pull/3032))
 - Fixed an issue where views raised unnecessary errors on timeout.
   ([#3019](https://github.com/Pycord-Development/pycord/pull/3019))
 - Fixed `RawMessageUpdateEvent.cached_message` being always `None` even when the message
@@ -56,14 +75,6 @@ These changes are available on the `master` branch, but have not yet been releas
   ([#3090](https://github.com/Pycord-Development/pycord/pull/3090))
 - Fixed `get_or_fetch()` not supporting `Thread` objects.
   ([#3101](https://github.com/Pycord-Development/pycord/pull/3101))
-
-### Removed
-
-- Removed the guild creation and ownership-related methods and arguments due to updated
-  restrictions. ([#3056](https://github.com/Pycord-Development/pycord/pull/3056))
-  - Removed the following methods: `Guild.set_mfa_required`, `Guild.delete`,
-    `Template.create_guild`, and `Client.create_guild`.
-  - Removed the `owner` argument from the method `Guild.edit`.
 
 ## [2.7.0] - 2025-12-24
 
@@ -1581,7 +1592,8 @@ These changes are available on the `master` branch, but have not yet been releas
 - Fix py3.10 UnionType checks issue.
   ([#1240](https://github.com/Pycord-Development/pycord/pull/1240))
 
-[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...HEAD
+[unreleased]: https://github.com/Pycord-Development/pycord/compare/v2.7.1...HEAD
+[2.7.1]: https://github.com/Pycord-Development/pycord/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc2...v2.7.0
 [2.7.0rc2]: https://github.com/Pycord-Development/pycord/compare/v2.7.0rc1...v2.7.0rc2
 [2.7.0rc1]: https://github.com/Pycord-Development/pycord/compare/v2.6.0...v2.7.0rc1
