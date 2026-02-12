@@ -12,6 +12,9 @@ These changes are available on the `master` branch, but have not yet been releas
 
 ### Added
 
+- Added string-like / forward references annotations support to command `Option`s.
+  ([#2919](https://github.com/Pycord-Development/pycord/pull/2919))
+
 ### Changed
 
 ### Fixed

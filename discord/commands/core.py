@@ -33,6 +33,7 @@ import re
 import sys
 import types
 from collections import OrderedDict
+from collections.abc import Iterator
 from enum import Enum
 from typing import (
     TYPE_CHECKING,
@@ -65,7 +66,15 @@ from ..object import Object
 from ..role import Role
 from ..threads import Thread
 from ..user import User
-from ..utils import MISSING, async_all, find, maybe_coroutine, utcnow, warn_deprecated
+from ..utils import (
+    MISSING,
+    async_all,
+    find,
+    maybe_coroutine,
+    resolve_annotation,
+    utcnow,
+    warn_deprecated,
+)
 from .context import ApplicationContext, AutocompleteContext
 from .options import Option, OptionChoice
 
@@ -311,7 +320,11 @@ class ApplicationCommand(_BaseCommand, Generic[CogT, P, T]):
             "2.6",
             reference="https://discord.com/developers/docs/change-log#userinstallable-apps-preview",
         )
-        return InteractionContextType.guild in self.contexts and len(self.contexts) == 1
+        return (
+            self.contexts is not None
+            and InteractionContextType.guild in self.contexts
+            and len(self.contexts) == 1
+        )
 
     @guild_only.setter
     def guild_only(self, value: bool) -> None:
@@ -778,32 +791,40 @@ class SlashCommand(ApplicationCommand):
         else:
             self.options = self._parse_options(params)
 
-    def _check_required_params(self, params):
-        params = iter(params.items())
+    def _check_required_params(
+        self, params: OrderedDict[str, inspect.Parameter]
+    ) -> Iterator[tuple[str, inspect.Parameter]]:
+        params_iter = iter(params.items())
         required_params = (
             ["self", "context"] if self.attached_to_group or self.cog else ["context"]
         )
         for p in required_params:
             try:
-                next(params)
+                next(params_iter)
             except StopIteration:
                 raise ClientException(
                     f'Callback for {self.name} command is missing "{p}" parameter.'
                 )
 
-        return params
+        return params_iter
 
-    def _parse_options(self, params, *, check_params: bool = True) -> list[Option]:
+    def _parse_options(
+        self, params: OrderedDict[str, inspect.Parameter], *, check_params: bool = True
+    ) -> list[Option]:
         if check_params:
-            params = self._check_required_params(params)
+            params_iter = self._check_required_params(params)
         else:
-            params = iter(params.items())
+            params_iter = iter(params.items())
 
         final_options = []
-        for p_name, p_obj in params:
+        cache = {}
+        for p_name, p_obj in params_iter:
             option = p_obj.annotation
             if option == inspect.Parameter.empty:
                 option = str
+
+            if isinstance(option, str):
+                option = resolve_annotation(option, globals(), locals(), cache)
 
             option = Option._strip_none_type(option)
             if self._is_typing_literal(option):
